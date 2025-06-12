@@ -12,44 +12,30 @@
 
 #include "E_TimeOut_fbt.h"
 
-USE_STRING_ID(ATimeOut);
 USE_STRING_ID(E_TimeOut);
 USE_STRING_ID(TimeOutSocket);
 
 DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, STRID(E_TimeOut))
 
-const SAdapterInstanceDef FORTE_E_TimeOut::scmAdapterInstances[] = {{STRID(ATimeOut), STRID(TimeOutSocket), false}};
-
 namespace {
-  const auto cSocketNameIds = std::array{STRID(ATimeOut)};
-}
+  const auto cSocketNameIds = std::array{STRID(TimeOutSocket)};
 
-const SFBInterfaceSpec FORTE_E_TimeOut::scmFBInterfaceSpec = {0,
-                                                              nullptr,
-                                                              nullptr,
-                                                              nullptr,
-                                                              nullptr,
-                                                              0,
-                                                              nullptr,
-                                                              nullptr,
-                                                              nullptr,
-                                                              nullptr,
-                                                              0,
-                                                              nullptr,
-                                                              nullptr,
-                                                              0,
-                                                              nullptr,
-                                                              nullptr,
-                                                              0,
-                                                              nullptr,
-                                                              1,
-                                                              scmAdapterInstances,
-                                                              cSocketNameIds,
-                                                              {}};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = {},
+      .mEITypeNames = {},
+      .mEONames = {},
+      .mEOTypeNames = {},
+      .mDINames = {},
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = cSocketNameIds,
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_E_TimeOut::FORTE_E_TimeOut(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
-    CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     mActive(false),
     var_TimeOutSocket(STRID(TimeOutSocket), *this, 0) {};
 

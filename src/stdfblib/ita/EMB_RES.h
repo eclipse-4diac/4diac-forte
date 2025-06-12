@@ -28,7 +28,6 @@ class EMB_RES : public CResource {
 
   private:
     forte::core::CInternalFB<FORTE_E_RESTART> fb_START;
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

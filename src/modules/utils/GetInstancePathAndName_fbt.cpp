@@ -32,43 +32,29 @@ USE_STRING_ID(STRING);
 
 DEFINE_FIRMWARE_FB(FORTE_GetInstancePathAndName, STRID(GetInstancePathAndName))
 
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataInputNames[] = {STRID(Sep)};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataInputTypeIds[] = {STRID(CHAR)};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataOutputNames[] = {STRID(Path), STRID(Name)};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmDataOutputTypeIds[] = {STRID(STRING),
-                                                                                           STRID(STRING)};
-const TDataIOID FORTE_GetInstancePathAndName::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_GetInstancePathAndName::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventInputTypeIds[] = {STRID(Event)};
-const TDataIOID FORTE_GetInstancePathAndName::scmEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_GetInstancePathAndName::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_GetInstancePathAndName::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_GetInstancePathAndName::scmFBInterfaceSpec = {1,
-                                                                           scmEventInputNames,
-                                                                           scmEventInputTypeIds,
-                                                                           scmEIWith,
-                                                                           scmEIWithIndexes,
-                                                                           1,
-                                                                           scmEventOutputNames,
-                                                                           scmEventOutputTypeIds,
-                                                                           scmEOWith,
-                                                                           scmEOWithIndexes,
-                                                                           1,
-                                                                           scmDataInputNames,
-                                                                           scmDataInputTypeIds,
-                                                                           2,
-                                                                           scmDataOutputNames,
-                                                                           scmDataOutputTypeIds,
-                                                                           0,
-                                                                           nullptr,
-                                                                           0,
-                                                                           nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(Sep)};
+  const auto cDataOutputNames = std::array{STRID(Path), STRID(Name)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_GetInstancePathAndName::FORTE_GetInstancePathAndName(const CStringDictionary::TStringId paInstanceNameId,
                                                            forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
     var_Sep(0x2f_CHAR),
     conn_CNF(*this, 0),
     conn_Sep(nullptr),
@@ -103,8 +89,8 @@ void FORTE_GetInstancePathAndName::readInputData(const TEventID paEIID) {
 void FORTE_GetInstancePathAndName::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_Path, conn_Path);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_Name, conn_Name);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_Path, conn_Path);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_Name, conn_Name);
       break;
     }
     default: break;

@@ -23,8 +23,6 @@ class FORTE_ArrowheadPublishAdp : public CAdapter {
 
   private:
   private:
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
   public:
     CIEC_PublishEvent &publishEvent() {
@@ -42,9 +40,6 @@ class FORTE_ArrowheadPublishAdp : public CAdapter {
     }
 
   private:
-    static const TForteInt16 scmEIWithIndexes[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
   public:
     static const TEventID scmEventpublishID = 0;
@@ -53,14 +48,8 @@ class FORTE_ArrowheadPublishAdp : public CAdapter {
     }
 
   private:
-    static const TForteInt16 scmEOWithIndexes[];
-    static const TDataIOID scmEOWith[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
 
-    static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
   public:
     ADAPTER_CTOR(FORTE_ArrowheadPublishAdp) {};

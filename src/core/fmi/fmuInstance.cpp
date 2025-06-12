@@ -165,7 +165,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock *paFB) {
         std::vector<fmuValueContainer *> *outputs = new std::vector<fmuValueContainer *>;
         std::vector<fmuValueContainer *> *inputs = new std::vector<fmuValueContainer *>;
 
-        for (unsigned int i = 2; i < paFB->getFBInterfaceSpec().mNumDIs; i++) {
+        for (unsigned int i = 2; i < paFB->getFBInterfaceSpec().getNumDIs(); i++) {
           type = getConnectedDataType(i, true, paFB);
           fmuValueContainer *newValue = new fmuValueContainer(fmuValueContainer::getValueFromType(type), false);
           inputs->push_back(newValue); // if an error occur, the fmuValueContainer will have the flag error to true.
@@ -175,7 +175,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock *paFB) {
                                                   << " ADDED SUCCESSFULLY\n")
         }
 
-        for (unsigned int i = 2; i < paFB->getFBInterfaceSpec().mNumDOs; i++) {
+        for (unsigned int i = 2; i < paFB->getFBInterfaceSpec().getNumDOs(); i++) {
           type = getConnectedDataType(i, false, paFB);
           fmuValueContainer *newValue = new fmuValueContainer(fmuValueContainer::getValueFromType(type), false);
           newValue->setCallbackArgument(newValue);
@@ -268,7 +268,7 @@ void fmuInstance::fillInterfaceElementsArray(CFunctionBlock *paFB, bool isInput,
                                              << " ADDED SUCCESSFULLY\n")
     }
   } else {
-    unsigned int noOfElements = isInput ? paFB->getFBInterfaceSpec().mNumDIs : paFB->getFBInterfaceSpec().mNumDOs;
+    unsigned int noOfElements = isInput ? paFB->getFBInterfaceSpec().getNumDIs() : paFB->getFBInterfaceSpec().getNumDOs();
     for (unsigned int i = 0; i < noOfElements; i++) {
       FMU_DEBUG_LOG(this,
                     "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "."

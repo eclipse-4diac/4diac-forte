@@ -28,9 +28,10 @@ USE_STRING_ID(UINT);
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_MUX, STRID(GEN_E_MUX));
 
-const CStringDictionary::TStringId GEN_E_MUX::scmDataOutputNames[] = {STRID(K)};
-
-const CStringDictionary::TStringId GEN_E_MUX::scmEventOutputNames[] = {STRID(EO)};
+namespace {
+  const auto cDataOutputNames = std::array{STRID(K)};
+  const auto cEventOutputNames = std::array{STRID(EO)};
+} // namespace
 
 GEN_E_MUX::GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
@@ -43,7 +44,7 @@ void GEN_E_MUX::setInitialValues() {
 }
 
 void GEN_E_MUX::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if (paEIID < getFBInterfaceSpec().mNumEIs) {
+  if (paEIID < getFBInterfaceSpec().getNumEIs()) {
     var_K = CIEC_UINT(static_cast<TForteUInt16>(paEIID));
     sendOutputEvent(scmEventEOID, paECET);
   }
@@ -70,31 +71,22 @@ bool GEN_E_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     ++acPos;
     if ('M' != *acPos) {
       // we have an underscore and it is not the first underscore after E
-      paInterfaceSpec.mNumEIs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
+      size_t numEIs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
 
-      if (paInterfaceSpec.mNumEIs < CFunctionBlock::scmMaxInterfaceEvents && paInterfaceSpec.mNumEIs >= 2) {
-        scmEventInputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumEIs);
+      if (numEIs < CFunctionBlock::scmMaxInterfaceEvents && numEIs >= 2) {
+        generateGenericInterfacePointNameArray("EI", mEventInputNames, numEIs);
 
-        generateGenericInterfacePointNameArray("EI", scmEventInputNames.get(), paInterfaceSpec.mNumEIs);
-
-        paInterfaceSpec.mEINames = scmEventInputNames.get();
-        paInterfaceSpec.mNumEOs = 1;
-        paInterfaceSpec.mEONames = scmEventOutputNames;
-        paInterfaceSpec.mEITypeNames = nullptr;
-        paInterfaceSpec.mEOTypeNames = nullptr;
-        paInterfaceSpec.mNumDIs = 0;
-        paInterfaceSpec.mDINames = nullptr;
-        paInterfaceSpec.mDIDataTypeNames = nullptr;
-        paInterfaceSpec.mNumDOs = 1;
-        paInterfaceSpec.mDONames = scmDataOutputNames;
+        paInterfaceSpec.mEINames = mEventInputNames;
+        paInterfaceSpec.mEONames = cEventOutputNames;
+        paInterfaceSpec.mDONames = cDataOutputNames;
         return true;
       } else {
-        if (paInterfaceSpec.mNumEIs >= CFunctionBlock::scmMaxInterfaceEvents) {
-          DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs exceeds maximum of %d.\n",
-                       paInterfaceSpec.mNumEIs, CFunctionBlock::scmMaxInterfaceEvents);
+        if (numEIs >= CFunctionBlock::scmMaxInterfaceEvents) {
+          DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs exceeds maximum of %d.\n", numEIs,
+                       CFunctionBlock::scmMaxInterfaceEvents);
         } else {
           DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs smaller than minimum of 2.\n",
-                       paInterfaceSpec.mNumEIs);
+                       numEIs);
         }
       }
     }

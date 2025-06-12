@@ -21,14 +21,11 @@ class FORTE_QueryServiceOpcUa : public CCompositeFB {
     DECLARE_FIRMWARE_FB(FORTE_QueryServiceOpcUa)
 
   private:
-    static const TForteInt16 scmEOWithIndexes[];
-    static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_QueryServicesAdp &queryServices() {
       return (*static_cast<FORTE_QueryServicesAdp *>(getAdapterUnchecked(0)));
     };
     static const int scm_nqueryServicesAdpNum = 0;
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const SCFB_FBInstanceData scmInternalFBs[];
 
@@ -46,7 +43,6 @@ class FORTE_QueryServiceOpcUa : public CCompositeFB {
   public:
     FORTE_QueryServiceOpcUa(const CStringDictionary::TStringId paInstanceNameId,
                             forte::core::CFBContainer &paContainer) :
-        CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {};
 
     ~FORTE_QueryServiceOpcUa() override = default;
 };

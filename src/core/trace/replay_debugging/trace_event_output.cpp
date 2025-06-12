@@ -9,7 +9,7 @@ void CFunctionBlock::traceOutputEvent(TEventID paEOID, CEventChainExecutionThrea
       return;
     }
 
-    std::vector<std::string> outputs(getFBInterfaceSpec().mNumDOs);
+    std::vector<std::string> outputs(getFBInterfaceSpec().getNumDOs());
     std::vector<const char *> outputs_c_str(outputs.size());
 
     for (TPortId i = 0; i < outputs.size(); ++i) {

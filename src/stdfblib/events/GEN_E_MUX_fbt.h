@@ -36,12 +36,7 @@ class GEN_E_MUX final : public CGenFunctionBlock<CFunctionBlock> {
     }
 
   private:
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-
-    std::unique_ptr<CStringDictionary::TStringId[]> scmEventInputNames;
     static const TEventID scmEventEOID = 0;
-    static const CStringDictionary::TStringId scmEventOutputNames[];
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -50,6 +45,8 @@ class GEN_E_MUX final : public CGenFunctionBlock<CFunctionBlock> {
     void setInitialValues() override;
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+
+    std::vector<CStringDictionary::TStringId> mEventInputNames;
 
   public:
     GEN_E_MUX(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

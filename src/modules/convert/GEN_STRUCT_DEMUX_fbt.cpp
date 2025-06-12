@@ -27,12 +27,11 @@ USE_STRING_ID(REQ);
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX, STRID(GEN_STRUCT_DEMUX));
 
-const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventInputTypeIds[] = {STRID(Event)};
-const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const CStringDictionary::TStringId GEN_STRUCT_DEMUX::scmDataInputNames[] = {STRID(IN)};
+namespace {
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataInputNames = std::array{STRID(IN)};
+} // namespace
 
 void GEN_STRUCT_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if (scmEventREQID == paEIID) {
@@ -53,7 +52,7 @@ void GEN_STRUCT_DEMUX::readInputData(TEventID) {
 }
 
 void GEN_STRUCT_DEMUX::writeOutputData(TEventID) {
-  for (TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
+  for (TPortId i = 0; i < getFBInterfaceSpec().getNumDOs(); ++i) {
     writeData(1 + i, *mConfiguredDOPorts[i], mGenDOConns[i]);
   }
 }
@@ -95,11 +94,9 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
     configuredMemberNamesStr = configuredMemberNamesStr.substr(endIndex + STRUCT_NAME_SEPARATOR.size());
     std::vector<std::string_view> configuredMemberNames = getConfiguredMemberNames(configuredMemberNamesStr);
     structSize = configuredMemberNames.size();
-    mDoNames = std::make_unique<CStringDictionary::TStringId[]>(structSize);
     fillConfiguredInterfaceSpec(configuredMemberNames);
   } else {
     structSize = var_IN->getStructSize();
-    mDoNames = std::make_unique<CStringDictionary::TStringId[]>(structSize);
     fillInterfaceSpec();
   }
   if (structSize == 0 || structSize >= cgInvalidPortId) { // the structure size must be non zero and less than
@@ -109,26 +106,21 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
     return false;
   }
 
-  paInterfaceSpec.mNumEIs = 1;
-  paInterfaceSpec.mEINames = scmEventInputNames;
-  paInterfaceSpec.mEITypeNames = scmEventInputTypeIds;
-  paInterfaceSpec.mNumEOs = 1;
-  paInterfaceSpec.mEONames = scmEventOutputNames;
-  paInterfaceSpec.mEOTypeNames = scmEventOutputTypeIds;
-  paInterfaceSpec.mNumDIs = 1;
-  paInterfaceSpec.mDINames = scmDataInputNames;
-  paInterfaceSpec.mNumDOs = structSize;
-  paInterfaceSpec.mDONames = mDoNames.get();
+  paInterfaceSpec.mEINames = cEventInputNames;
+  paInterfaceSpec.mEONames = cEventOutputNames;
+  paInterfaceSpec.mDINames = cDataInputNames;
+  paInterfaceSpec.mDONames = mDoNames;
 
   return true;
 }
 
 void GEN_STRUCT_DEMUX::fillConfiguredInterfaceSpec(std::vector<std::string_view> &paConfiguredMemberNames) {
   mConfiguredDOPorts.reserve(paConfiguredMemberNames.size());
+  mDoNames.reserve(paConfiguredMemberNames.size());
   for (size_t i = 0; i < paConfiguredMemberNames.size(); ++i) {
     CStringDictionary::TStringId memberNameId =
         CStringDictionary::insert(paConfiguredMemberNames[i].data(), paConfiguredMemberNames[i].length());
-    mDoNames[i] = memberNameId;
+    mDoNames.emplace_back(memberNameId);
     CIEC_ANY *member = getNestedMember(memberNameId, var_IN.get());
     mConfiguredDOPorts.emplace_back(member);
   }
@@ -137,9 +129,10 @@ void GEN_STRUCT_DEMUX::fillConfiguredInterfaceSpec(std::vector<std::string_view>
 void GEN_STRUCT_DEMUX::fillInterfaceSpec() {
   size_t structSize = var_IN->getStructSize();
   mConfiguredDOPorts.reserve(structSize);
+  mDoNames.reserve(structSize);
   for (size_t i = 0; i < structSize; ++i) {
     CIEC_ANY *member = var_IN->getMember(i);
-    mDoNames[i] = var_IN->elementNames()[i];
+    mDoNames.emplace_back(var_IN->elementNames()[i]);
     mConfiguredDOPorts.emplace_back(member);
   }
 }

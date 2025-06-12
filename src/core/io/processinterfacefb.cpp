@@ -74,7 +74,7 @@ void CProcessInterfaceFB::readInputData(const TEventID paEIID) {
 }
 
 void CProcessInterfaceFB::writeOutputData(const TEventID paEIID) {
-  size_t numDIs = getFBInterfaceSpec().mNumDIs;
+  size_t numDIs = getFBInterfaceSpec().getNumDIs();
   switch (paEIID) {
     case scmEventINITOID: {
       writeData(numDIs + 0, var_QO, conn_QO);

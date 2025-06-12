@@ -31,48 +31,32 @@ USE_STRING_ID(Tmin);
 USE_STRING_ID(WCET_EO1);
 USE_STRING_ID(WCET_EO2);
 
-
 DEFINE_FIRMWARE_FB(FORTE_RT_E_SWITCH, STRID(RT_E_SWITCH))
 
-const CStringDictionary::TStringId FORTE_RT_E_SWITCH::scmDataInputNames[] = {
-    STRID(QI), STRID(G), STRID(Tmin), STRID(Deadline_EO1), STRID(WCET_EO1), STRID(Deadline_EO2), STRID(WCET_EO2)};
-const CStringDictionary::TStringId FORTE_RT_E_SWITCH::scmDataInputTypeIds[] = {
-    STRID(BOOL), STRID(BOOL), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME)};
-const CStringDictionary::TStringId FORTE_RT_E_SWITCH::scmDataOutputNames[] = {STRID(QO)};
-const CStringDictionary::TStringId FORTE_RT_E_SWITCH::scmDataOutputTypeIds[] = {STRID(BOOL)};
-const TDataIOID FORTE_RT_E_SWITCH::scmEIWith[] = {0, 2, 3, 4, 5, 6, scmWithListDelimiter, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_SWITCH::scmEIWithIndexes[] = {0, 7};
-const CStringDictionary::TStringId FORTE_RT_E_SWITCH::scmEventInputNames[] = {STRID(INIT), STRID(EI)};
-const CStringDictionary::TStringId FORTE_RT_E_SWITCH::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-const TDataIOID FORTE_RT_E_SWITCH::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_SWITCH::scmEOWithIndexes[] = {0, -1, -1};
-const CStringDictionary::TStringId FORTE_RT_E_SWITCH::scmEventOutputNames[] = {STRID(INITO), STRID(EO1), STRID(EO2)};
-const CStringDictionary::TStringId FORTE_RT_E_SWITCH::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event),
-                                                                                 STRID(Event)};
-const SFBInterfaceSpec FORTE_RT_E_SWITCH::scmFBInterfaceSpec = {2,
-                                                                scmEventInputNames,
-                                                                scmEventInputTypeIds,
-                                                                scmEIWith,
-                                                                scmEIWithIndexes,
-                                                                3,
-                                                                scmEventOutputNames,
-                                                                scmEventOutputTypeIds,
-                                                                scmEOWith,
-                                                                scmEOWithIndexes,
-                                                                7,
-                                                                scmDataInputNames,
-                                                                scmDataInputTypeIds,
-                                                                1,
-                                                                scmDataOutputNames,
-                                                                scmDataOutputTypeIds,
-                                                                0,
-                                                                nullptr,
-                                                                0,
-                                                                nullptr};
+namespace {
+  const auto cDataInputNames = std::array{
+      STRID(QI), STRID(G), STRID(Tmin), STRID(Deadline_EO1), STRID(WCET_EO1), STRID(Deadline_EO2), STRID(WCET_EO2)};
+  const auto cDataOutputNames = std::array{STRID(QO)};
+  const auto cEventInputNames = std::array{STRID(INIT), STRID(EI)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(EO1), STRID(EO2)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event), STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_RT_E_SWITCH::FORTE_RT_E_SWITCH(const CStringDictionary::TStringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_EO1(*this, 1),
     conn_EO2(*this, 2),
@@ -158,7 +142,7 @@ void FORTE_RT_E_SWITCH::readInputData(TEventID paEIID) {
 void FORTE_RT_E_SWITCH::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
       break;
     }
     case scmEventEO1ID: {

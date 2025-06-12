@@ -38,42 +38,30 @@ USE_STRING_ID(TIME);
 
 DEFINE_FIRMWARE_FB(FORTE_E_PULSE, STRID(E_PULSE))
 
-const CStringDictionary::TStringId FORTE_E_PULSE::scmDataInputNames[] = {STRID(PT)};
-const CStringDictionary::TStringId FORTE_E_PULSE::scmDataInputTypeIds[] = {STRID(TIME)};
-const CStringDictionary::TStringId FORTE_E_PULSE::scmDataOutputNames[] = {STRID(Q)};
-const CStringDictionary::TStringId FORTE_E_PULSE::scmDataOutputTypeIds[] = {STRID(BOOL)};
-const TDataIOID FORTE_E_PULSE::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_PULSE::scmEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_E_PULSE::scmEventInputNames[] = {STRID(REQ), STRID(R)};
-const CStringDictionary::TStringId FORTE_E_PULSE::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
-const TDataIOID FORTE_E_PULSE::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_PULSE::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_PULSE::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_E_PULSE::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_E_PULSE::scmFBInterfaceSpec = {2,
-                                                            scmEventInputNames,
-                                                            scmEventInputTypeIds,
-                                                            scmEIWith,
-                                                            scmEIWithIndexes,
-                                                            1,
-                                                            scmEventOutputNames,
-                                                            scmEventOutputTypeIds,
-                                                            scmEOWith,
-                                                            scmEOWithIndexes,
-                                                            1,
-                                                            scmDataInputNames,
-                                                            scmDataInputTypeIds,
-                                                            1,
-                                                            scmDataOutputNames,
-                                                            scmDataOutputTypeIds,
-                                                            0,
-                                                            nullptr,
-                                                            0,
-                                                            nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(PT)};
+  const auto cDataOutputNames = std::array{STRID(Q)};
+  const auto cEventInputNames = std::array{STRID(REQ), STRID(R)};
+  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
+
 
 FORTE_E_PULSE::FORTE_E_PULSE(const CStringDictionary::TStringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_E_DELAY(STRID(E_DELAY), *this),
     fb_E_SR(STRID(E_SR), *this),
     conn_CNF(*this, 0),
@@ -121,7 +109,7 @@ void FORTE_E_PULSE::readInputData(const TEventID paEIID) {
 void FORTE_E_PULSE::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, fb_E_SR->conn_Q.getValue(), conn_Q);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, fb_E_SR->conn_Q.getValue(), conn_Q);
       break;
     }
     default: break;

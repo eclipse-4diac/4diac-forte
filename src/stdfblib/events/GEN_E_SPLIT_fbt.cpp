@@ -20,7 +20,9 @@ USE_STRING_ID(GEN_E_SPLIT);
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT, STRID(GEN_E_SPLIT))
 
-const CStringDictionary::TStringId GEN_E_SPLIT::scmEventInputNames[] = {STRID(EI)};
+namespace {
+  const auto cEventInputNames = std::array{STRID(EI)};
+}
 
 GEN_E_SPLIT::GEN_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {};
@@ -28,7 +30,7 @@ GEN_E_SPLIT::GEN_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, fo
 void GEN_E_SPLIT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventEIID:
-      for (TEventID i = 0; i < getFBInterfaceSpec().mNumEOs; ++i) {
+      for (TEventID i = 0; i < getFBInterfaceSpec().getNumEOs(); ++i) {
         sendOutputEvent(i, paECET);
       }
       break;
@@ -49,32 +51,21 @@ bool GEN_E_SPLIT::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
   if (nullptr != acPos) {
     ++acPos; // move after underscore
     // we have an underscore
-    paInterfaceSpec.mNumEOs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
+    size_t numEOs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
 
-    if (paInterfaceSpec.mNumEOs < CFunctionBlock::scmMaxInterfaceEvents && paInterfaceSpec.mNumEOs >= 2) {
-      scmEventOutputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumEOs);
+    if (numEOs < CFunctionBlock::scmMaxInterfaceEvents && numEOs >= 2) {
+      generateGenericInterfacePointNameArray("EO", mEventOutputNames, numEOs);
 
-      generateGenericInterfacePointNameArray("EO", scmEventOutputNames.get(), paInterfaceSpec.mNumEOs);
-
-      paInterfaceSpec.mNumEIs = 1;
-      paInterfaceSpec.mEINames = scmEventInputNames;
-      paInterfaceSpec.mEONames = scmEventOutputNames.get();
-      paInterfaceSpec.mEITypeNames = nullptr;
-      paInterfaceSpec.mEOTypeNames = nullptr;
-      paInterfaceSpec.mNumDIs = 0;
-      paInterfaceSpec.mDINames = nullptr;
-      paInterfaceSpec.mDIDataTypeNames = nullptr;
-      paInterfaceSpec.mNumDOs = 0;
-      paInterfaceSpec.mDONames = nullptr;
-      paInterfaceSpec.mDODataTypeNames = nullptr;
+      paInterfaceSpec.mEINames = cEventInputNames;
+      paInterfaceSpec.mEONames = mEventOutputNames;
       return true;
     } else {
-      if (paInterfaceSpec.mNumEOs >= CFunctionBlock::scmMaxInterfaceEvents) {
+      if (numEOs >= CFunctionBlock::scmMaxInterfaceEvents) {
         DEVLOG_ERROR("Cannot configure FB-Instance E_SPLIT_%d. Number of event outputs exceeds maximum of %d.\n",
-                     paInterfaceSpec.mNumEOs, CFunctionBlock::scmMaxInterfaceEvents);
+                     numEOs, CFunctionBlock::scmMaxInterfaceEvents);
       } else {
         DEVLOG_ERROR("Cannot configure FB-Instance E_SPLIT_%d. Number of event outputs smaller than minimum of 2.\n",
-                     paInterfaceSpec.mNumEOs);
+                     numEOs);
       }
     }
   }

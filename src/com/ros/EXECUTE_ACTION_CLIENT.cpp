@@ -42,48 +42,28 @@ USE_STRING_ID(STRING);
 
 DEFINE_FIRMWARE_FB(FORTE_EXECUTE_ACTION_CLIENT, STRID(EXECUTE_ACTION_CLIENT))
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataInputNames[] = {
-    STRID(QI), STRID(ACTIONNAMESPACE), STRID(ACTIONMSGNAME), STRID(COMMAND), STRID(ID1), STRID(ID2)};
+namespace {
+  const auto cDataInputNames =
+      std::array{STRID(QI), STRID(ACTIONNAMESPACE), STRID(ACTIONMSGNAME), STRID(COMMAND), STRID(ID1), STRID(ID2)};
+  const auto cDataOutputNames =
+      std::array{STRID(QO), STRID(FBSTATUS), STRID(ACTIONSTATUS), STRID(RESULT), STRID(ID), STRID(STATE)};
+  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
 
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataInputTypeIds[] = {
-    STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(DINT), STRID(DINT)};
-
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataOutputNames[] = {
-    STRID(QO), STRID(FBSTATUS), STRID(ACTIONSTATUS), STRID(RESULT), STRID(ID), STRID(STATE)};
-
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmDataOutputTypeIds[] = {
-    STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(DINT), STRID(STRING)};
-
-const TForteInt16 FORTE_EXECUTE_ACTION_CLIENT::scmEIWithIndexes[] = {0, 4};
-const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scmEIWith[] = {0, 1, 2, scmWithListDelimiter, 0,
-                                                            3, 4, 5, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-
-const TDataIOID FORTE_EXECUTE_ACTION_CLIENT::scmEOWith[] = {
-    0, 1, scmWithListDelimiter, 0, 1, 2, 4, 3, scmWithListDelimiter, 5, scmWithListDelimiter};
-const TForteInt16 FORTE_EXECUTE_ACTION_CLIENT::scmEOWithIndexes[] = {0, 3, 9};
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
-const CStringDictionary::TStringId FORTE_EXECUTE_ACTION_CLIENT::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-
-const SFBInterfaceSpec FORTE_EXECUTE_ACTION_CLIENT::scmFBInterfaceSpec = {2,
-                                                                          scmEventInputNames,
-                                                                          scmEventInputTypeIds,
-                                                                          scmEIWith,
-                                                                          scmEIWithIndexes,
-                                                                          2,
-                                                                          scmEventOutputNames,
-                                                                          scmEventOutputTypeIds,
-                                                                          scmEOWith,
-                                                                          scmEOWithIndexes,
-                                                                          6,
-                                                                          scmDataInputNames,
-                                                                          scmDataInputTypeIds,
-                                                                          6,
-                                                                          scmDataOutputNames,
-                                                                          scmDataOutputTypeIds,
-                                                                          0,
-                                                                          0};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 void FORTE_EXECUTE_ACTION_CLIENT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {

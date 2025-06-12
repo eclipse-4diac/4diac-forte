@@ -52,55 +52,32 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(PLC01A1ConfigFB, STRID(PLC01A1))
 
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataInputNames[] = {
-    STRID(QI),   STRID(IN1),  STRID(IN2),  STRID(IN3),  STRID(IN4),  STRID(IN5),
-    STRID(IN6),  STRID(IN7),  STRID(IN8),  STRID(OUT1), STRID(OUT2), STRID(OUT3),
-    STRID(OUT4), STRID(OUT5), STRID(OUT6), STRID(OUT7), STRID(OUT8), STRID(UpdateInterval)};
-
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataInputTypeIds[] = {
-    STRID(BOOL),    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
-    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
-    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(UINT)};
-
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
-const TForteInt16 PLC01A1ConfigFB::scmEIWithIndexes[] = {0};
-const TDataIOID PLC01A1ConfigFB::scmEIWith[] = {
-    0, 17, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, scmWithListDelimiter};
-const TForteInt16 PLC01A1ConfigFB::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventInputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventInputTypeIds[] = {STRID(EInit)};
-const TDataIOID PLC01A1ConfigFB::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 PLC01A1ConfigFB::scmEOWithIndexes[] = {0, 3, -1};
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
-const CStringDictionary::TStringId PLC01A1ConfigFB::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-const SFBInterfaceSpec PLC01A1ConfigFB::scmFBInterfaceSpec = {1,
-                                                              scmEventInputNames,
-                                                              scmEventInputTypeIds,
-                                                              scmEIWith,
-                                                              scmEIWithIndexes,
-                                                              2,
-                                                              scmEventOutputNames,
-                                                              scmEventOutputTypeIds,
-                                                              scmEOWith,
-                                                              scmEOWithIndexes,
-                                                              18,
-                                                              scmDataInputNames,
-                                                              scmDataInputTypeIds,
-                                                              18,
-                                                              scmDataInputNames,
-                                                              scmDataInputTypeIds,
-                                                              2,
-                                                              scmDataOutputNames,
-                                                              scmDataOutputTypeIds,
-                                                              0,
-                                                              nullptr,
-                                                              0,
-                                                              nullptr};
+namespace {
+  const auto cDataInputNames =
+      std::array{STRID(QI),   STRID(IN1),  STRID(IN2),  STRID(IN3),  STRID(IN4),  STRID(IN5),
+                 STRID(IN6),  STRID(IN7),  STRID(IN8),  STRID(OUT1), STRID(OUT2), STRID(OUT3),
+                 STRID(OUT4), STRID(OUT5), STRID(OUT6), STRID(OUT7), STRID(OUT8), STRID(UpdateInterval)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  const auto cEventInputNames = std::array{STRID(INIT)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit)};
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 PLC01A1ConfigFB::PLC01A1ConfigFB(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_IN1(u""_WSTRING),
     var_IN2(u""_WSTRING),
@@ -239,13 +216,13 @@ void PLC01A1ConfigFB::readInputData(const TEventID paEIID) {
 void PLC01A1ConfigFB::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     case scmEventINDID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

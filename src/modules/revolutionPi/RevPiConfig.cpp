@@ -107,12 +107,12 @@ const TForteInt16 RevPiConfig::scm_anEIWithIndexes[] = {0};
 const TDataIOID RevPiConfig::scm_anEIWith[] = {0,  29, 1,  2,  3,  4,  5,  6,  9,  8,  7,  10, 11, 12, 13, 14,
                                                15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 255};
 const CStringDictionary::TStringId RevPiConfig::scm_anEventInputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId RevPiConfig::scmEventInputTypeIds[] = {STRID(EInit)};
+const auto cEventInputTypeIds = std::array{STRID(EInit)};
 
 const TDataIOID RevPiConfig::scm_anEOWith[] = {0, 1, 255, 0, 1, 255};
 const TForteInt16 RevPiConfig::scm_anEOWithIndexes[] = {0, 3, -1};
 const CStringDictionary::TStringId RevPiConfig::scm_anEventOutputNames[] = {STRID(INITO), STRID(IND)};
-const CStringDictionary::TStringId RevPiConfig::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
+const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
 
 const SFBInterfaceSpec RevPiConfig::scm_stFBInterfaceSpec = {1,
                                                              scm_anEventInputNames,

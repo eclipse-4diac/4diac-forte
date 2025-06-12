@@ -30,20 +30,9 @@ class FORTE_signalprocessing__distance__RangeBasedPulse final : public CSimpleFB
     DECLARE_FIRMWARE_FB(FORTE_signalprocessing__distance__RangeBasedPulse)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     static const TEventID scmEventREQID = 0;
-    static const TDataIOID scmEIWith[];
-    static const TForteInt16 scmEIWithIndexes[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
     static const TEventID scmEventCNFID = 0;
-    static const TDataIOID scmEOWith[];
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const CStringDictionary::TStringId scmInternalsNames[];
     static const CStringDictionary::TStringId scmInternalsTypeIds[];

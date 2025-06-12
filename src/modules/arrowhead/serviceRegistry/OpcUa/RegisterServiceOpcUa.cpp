@@ -74,12 +74,21 @@ USE_STRING_ID(unregisterService);
 
 DEFINE_FIRMWARE_FB(FORTE_RegisterServiceOpcUa, STRID(RegisterServiceOpcUa))
 
-const TForteInt16 FORTE_RegisterServiceOpcUa::scmEOWithIndexes[] = {-1};
-const SAdapterInstanceDef FORTE_RegisterServiceOpcUa::scmAdapterInstances[] = {
-    {STRID(RegisterServiceAdp), STRID(registerService), false}};
+namespace {
+  const auto cSocketNameIds = std::array{STRID(registerService)};
 
-const SFBInterfaceSpec FORTE_RegisterServiceOpcUa::scmFBInterfaceSpec = {
-    0, 0, nullptr, 0, 0, 0, 0, nullptr, 0, 0, 0, 0, 0, 0, 0, 0, 1, scmAdapterInstances};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = {},
+      .mEITypeNames = {},
+      .mEONames = {},
+      .mEOTypeNames = {},
+      .mDINames = {},
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = cSocketNameIds,
+      .mPlugNames = {},
+  };
+} // namespace
 
 const SCFB_FBInstanceData FORTE_RegisterServiceOpcUa::scmInternalFBs[] = {
     {STRID(InitFlagReg), STRID(E_SR)},

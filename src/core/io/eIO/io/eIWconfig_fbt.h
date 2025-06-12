@@ -12,41 +12,17 @@
 
 #pragma once
 
-#include "adapterconn.h"
-#include "anyadapter.h"
-#include "core/funcbloc.h"
+#include "eConfigFB.h"
 #include "core/datatypes/forte_word.h"
 #include "core/datatypes/forte_wstring.h"
 #include "eGenAdapter_adp.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
-
-#include "eIW_fbt.h"
-#include "eConfigFB.h"
 
 class FORTE_eIWconfig final : public CeConfigFB {
     DECLARE_FIRMWARE_FB(FORTE_eIWconfig)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     static const TEventID scmEventCONFID = 0;
-    static const TDataIOID scmEIWith[];
-    static const TForteInt16 scmEIWithIndexes[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
     static const TEventID scmEventCNFID = 0;
-    static const TDataIOID scmEOWith[];
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const int scmeIWAdpNum = 0;
-    static const SAdapterInstanceDef scmAdapterInstances[];
-
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 

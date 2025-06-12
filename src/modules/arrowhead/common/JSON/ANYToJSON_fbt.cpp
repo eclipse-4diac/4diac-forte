@@ -25,42 +25,32 @@ USE_STRING_ID(STRING);
 
 DEFINE_FIRMWARE_FB(FORTE_ANYToJSON, STRID(ANYToJSON))
 
-const CStringDictionary::TStringId FORTE_ANYToJSON::scmDataInputNames[] = {STRID(input)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(input)};
+  
+  
+  const auto cDataOutputNames = std::array{STRID(output)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_ANYToJSON::scmDataInputTypeIds[] = {STRID(ANY)};
-
-const CStringDictionary::TStringId FORTE_ANYToJSON::scmDataOutputNames[] = {STRID(output)};
-
-const CStringDictionary::TStringId FORTE_ANYToJSON::scmDataOutputTypeIds[] = {STRID(STRING)};
-
-const TForteInt16 FORTE_ANYToJSON::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_ANYToJSON::scmEIWith[] = {0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_ANYToJSON::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_ANYToJSON::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_ANYToJSON::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_ANYToJSON::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_ANYToJSON::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_ANYToJSON::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_ANYToJSON::scmFBInterfaceSpec = {1,
-                                                              scmEventInputNames,
-                                                              scmEventInputTypeIds,
-                                                              scmEIWith,
-                                                              scmEIWithIndexes,
-                                                              1,
-                                                              scmEventOutputNames,
-                                                              scmEventOutputTypeIds,
-                                                              scmEOWith,
-                                                              scmEOWithIndexes,
-                                                              1,
-                                                              scmDataInputNames,
-                                                              scmDataInputTypeIds,
-                                                              1,
-                                                              scmDataOutputNames,
-                                                              scmDataOutputTypeIds,
-                                                              0,
-                                                              0};
 
 void FORTE_ANYToJSON::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if (scmEventREQID == paEIID) {

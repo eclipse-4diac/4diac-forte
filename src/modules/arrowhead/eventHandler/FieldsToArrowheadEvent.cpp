@@ -28,44 +28,34 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToArrowheadEvent, STRID(FieldsToArrowheadEvent))
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadEvent::scmDataInputNames[] = {
-    STRID(type), STRID(payload), STRID(timestamp), STRID(eventMetadata)};
+namespace {
+  const auto cDataInputNames = std::array{
+      STRID(type), STRID(payload), STRID(timestamp), STRID(eventMetadata)};
+  
+      STRID(WSTRING), STRID(WSTRING), STRID(DATE_AND_TIME), STRID(ARRAY), 10, STRID(WSTRING)};
+  
+  const auto cDataOutputNames = std::array{STRID(arrowheadEvent)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadEvent::scmDataInputTypeIds[] = {
-    STRID(WSTRING), STRID(WSTRING), STRID(DATE_AND_TIME), STRID(ARRAY), 10, STRID(WSTRING)};
-
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadEvent::scmDataOutputNames[] = {STRID(arrowheadEvent)};
-
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadEvent::scmDataOutputTypeIds[] = {STRID(ArrowheadEvent)};
-
-const TForteInt16 FORTE_FieldsToArrowheadEvent::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToArrowheadEvent::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadEvent::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadEvent::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_FieldsToArrowheadEvent::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FieldsToArrowheadEvent::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadEvent::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadEvent::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_FieldsToArrowheadEvent::scmFBInterfaceSpec = {1,
-                                                                           scmEventInputNames,
-                                                                           scmEventInputTypeIds,
-                                                                           scmEIWith,
-                                                                           scmEIWithIndexes,
-                                                                           1,
-                                                                           scmEventOutputNames,
-                                                                           scmEventOutputTypeIds,
-                                                                           scmEOWith,
-                                                                           scmEOWithIndexes,
-                                                                           4,
-                                                                           scmDataInputNames,
-                                                                           scmDataInputTypeIds,
-                                                                           1,
-                                                                           scmDataOutputNames,
-                                                                           scmDataOutputTypeIds,
-                                                                           0,
-                                                                           0};
 
 void FORTE_FieldsToArrowheadEvent::alg_REQ() {
   CIEC_INT i;

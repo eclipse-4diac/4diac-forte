@@ -21,14 +21,11 @@ class FORTE_RequestOrchestrationHTTP : public CCompositeFB {
     DECLARE_FIRMWARE_FB(FORTE_RequestOrchestrationHTTP)
 
   private:
-    static const TForteInt16 scmEOWithIndexes[];
-    static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_OrchestratorRequestAdp &requestOrchestration() {
       return (*static_cast<FORTE_OrchestratorRequestAdp *>(getAdapterUnchecked(0)));
     };
     static const int scm_nrequestOrchestrationAdpNum = 0;
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const SCFB_FBInstanceData scmInternalFBs[];
 
@@ -46,7 +43,6 @@ class FORTE_RequestOrchestrationHTTP : public CCompositeFB {
   public:
     FORTE_RequestOrchestrationHTTP(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
-        CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {};
 
     ~FORTE_RequestOrchestrationHTTP() override = default;
 };

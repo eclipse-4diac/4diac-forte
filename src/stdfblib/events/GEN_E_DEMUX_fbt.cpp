@@ -26,20 +26,18 @@ USE_STRING_ID(UINT);
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX, STRID(GEN_E_DEMUX))
 
-const CStringDictionary::TStringId GEN_E_DEMUX::scmDataInputNames[] = {STRID(K)};
-const CStringDictionary::TStringId GEN_E_DEMUX::scmDIDataTypeIds[] = {STRID(UINT)};
-
-const CStringDictionary::TStringId GEN_E_DEMUX::scmEventInputNames[] = {STRID(EI)};
-const CStringDictionary::TStringId GEN_E_DEMUX::scmEventInputTypeIds[] = {STRID(Event)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(K)};
+  const auto cEventInputNames = std::array{STRID(EI)};
+} // namespace
 
 GEN_E_DEMUX::GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
-    mEventOutputNames(nullptr),
     conn_K(nullptr) {
 }
 
 void GEN_E_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if (scmEventEIID == paEIID && static_cast<CIEC_UINT::TValueType>(var_K) < getFBInterfaceSpec().mNumEOs) {
+  if (scmEventEIID == paEIID && static_cast<CIEC_UINT::TValueType>(var_K) < getFBInterfaceSpec().getNumEOs()) {
     sendOutputEvent(static_cast<CIEC_UINT::TValueType>(var_K),
                     paECET); // the value of K corresponds to the output event ID;
   }
@@ -67,24 +65,14 @@ bool GEN_E_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
     ++acPos;
     if ('D' != *acPos) {
       // we have an underscore and it is not the first underscore after E
-      paInterfaceSpec.mNumEOs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
+      size_t numEOs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
 
-      if (paInterfaceSpec.mNumEOs < CFunctionBlock::scmMaxInterfaceEvents) {
-        mEventOutputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumEOs);
+      if (numEOs < CFunctionBlock::scmMaxInterfaceEvents) {
+        generateGenericInterfacePointNameArray("EO", mEventOutputNames, numEOs);
 
-        generateGenericInterfacePointNameArray("EO", mEventOutputNames.get(), paInterfaceSpec.mNumEOs);
-
-        paInterfaceSpec.mNumEIs = 1;
-        paInterfaceSpec.mEINames = scmEventInputNames;
-        paInterfaceSpec.mEONames = mEventOutputNames.get();
-        paInterfaceSpec.mEITypeNames = scmEventInputTypeIds;
-        paInterfaceSpec.mEOTypeNames = nullptr;
-        paInterfaceSpec.mNumDIs = 1;
-        paInterfaceSpec.mDINames = scmDataInputNames;
-        paInterfaceSpec.mDIDataTypeNames = scmDIDataTypeIds;
-        paInterfaceSpec.mNumDOs = 0;
-        paInterfaceSpec.mDONames = nullptr;
-        paInterfaceSpec.mDODataTypeNames = nullptr;
+        paInterfaceSpec.mEINames = cEventInputNames;
+        paInterfaceSpec.mEONames = mEventOutputNames;
+        paInterfaceSpec.mDINames = cDataInputNames;
         return true;
       }
     }

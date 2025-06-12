@@ -40,7 +40,6 @@ class DebugDevice : public CDevice {
     // to avoid condition variables and such
     std::promise<void> mKillSignal;
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 

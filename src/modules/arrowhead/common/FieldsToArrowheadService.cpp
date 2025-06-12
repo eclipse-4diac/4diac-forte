@@ -26,44 +26,34 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToArrowheadService, STRID(FieldsToArrowheadService))
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadService::scmDataInputNames[] = {
-    STRID(serviceDefinition), STRID(interfaces), STRID(serviceMetadata)};
+namespace {
+  const auto cDataInputNames = std::array{
+      STRID(serviceDefinition), STRID(interfaces), STRID(serviceMetadata)};
+  
+      STRID(WSTRING), STRID(ARRAY), 10, STRID(WSTRING), STRID(ARRAY), 10, STRID(WSTRING)};
+  
+  const auto cDataOutputNames = std::array{STRID(arrowheadService)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadService::scmDataInputTypeIds[] = {
-    STRID(WSTRING), STRID(ARRAY), 10, STRID(WSTRING), STRID(ARRAY), 10, STRID(WSTRING)};
-
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadService::scmDataOutputNames[] = {STRID(arrowheadService)};
-
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadService::scmDataOutputTypeIds[] = {STRID(ArrowheadService)};
-
-const TForteInt16 FORTE_FieldsToArrowheadService::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToArrowheadService::scmEIWith[] = {0, 1, 2, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadService::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadService::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_FieldsToArrowheadService::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FieldsToArrowheadService::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadService::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadService::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_FieldsToArrowheadService::scmFBInterfaceSpec = {1,
-                                                                             scmEventInputNames,
-                                                                             scmEventInputTypeIds,
-                                                                             scmEIWith,
-                                                                             scmEIWithIndexes,
-                                                                             1,
-                                                                             scmEventOutputNames,
-                                                                             scmEventOutputTypeIds,
-                                                                             scmEOWith,
-                                                                             scmEOWithIndexes,
-                                                                             3,
-                                                                             scmDataInputNames,
-                                                                             scmDataInputTypeIds,
-                                                                             1,
-                                                                             scmDataOutputNames,
-                                                                             scmDataOutputTypeIds,
-                                                                             0,
-                                                                             0};
 
 void FORTE_FieldsToArrowheadService::alg_REQ() {
   CIEC_INT i;

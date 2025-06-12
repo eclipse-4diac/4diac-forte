@@ -17,43 +17,33 @@
 
 DEFINE_FIRMWARE_FB(FORTE_GET_CHAN_INFO, STRID(GET_CHAN_INFO))
 
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmDataInputNames[] = {STRID(SYMB_NAME)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(SYMB_NAME)};
+  
+  
+  const auto cDataOutputNames = std::array{STRID(RET_CODE), STRID(MOD_NB),
+                                                                                  STRID(CHAN_NB)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(INIT)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit)};
+  
+  const auto cEventOutputNames = std::array{STRID(INITO)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmDataInputTypeIds[] = {STRID(STRING)};
-
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmDataOutputNames[] = {STRID(RET_CODE), STRID(MOD_NB),
-                                                                                STRID(CHAN_NB)};
-
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmDataOutputTypeIds[] = {STRID(INT), STRID(INT), STRID(INT)};
-
-const TForteInt16 FORTE_GET_CHAN_INFO::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_GET_CHAN_INFO::scmEIWith[] = {0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmEventInputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmEventInputTypeIds[] = {STRID(EInit)};
-
-const TDataIOID FORTE_GET_CHAN_INFO::scmEOWith[] = {0, 1, 2, scmWithListDelimiter};
-const TForteInt16 FORTE_GET_CHAN_INFO::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmEventOutputNames[] = {STRID(INITO)};
-const CStringDictionary::TStringId FORTE_GET_CHAN_INFO::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_GET_CHAN_INFO::scmFBInterfaceSpec = {1,
-                                                                  scmEventInputNames,
-                                                                  scmEventInputTypeIds,
-                                                                  scmEIWith,
-                                                                  scmEIWithIndexes,
-                                                                  1,
-                                                                  scmEventOutputNames,
-                                                                  scmEventOutputTypeIds,
-                                                                  scmEOWith,
-                                                                  scmEOWithIndexes,
-                                                                  1,
-                                                                  scmDataInputNames,
-                                                                  scmDataInputTypeIds,
-                                                                  3,
-                                                                  scmDataOutputNames,
-                                                                  scmDataOutputTypeIds,
-                                                                  0,
-                                                                  0};
 
 void FORTE_GET_CHAN_INFO::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {

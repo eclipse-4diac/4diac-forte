@@ -77,11 +77,10 @@ public:                                                                         
                                                                                                                        \
 private:
 
-// const SFBInterfaceSpec& getFBInterfaceSpec() const override { return scmFBInterfaceSpec;}
 
 #define DEFINE_GENERIC_FIRMWARE_FB(fbclass, fbTypeNameId)                                                              \
   const forte::core::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass((fbTypeNameId), std::string_view{},            \
-                                                                        fbclass::createFB, 0);                         \
+                                                                        fbclass::createFB);                            \
   FORTE_DUMMY_INIT_DEF(fbclass)
 
 #define GET_TYPE_HASH(_1, ...) _1
@@ -91,8 +90,7 @@ private:
  */
 #define DEFINE_FIRMWARE_FB(fbclass, fbTypeNameId, ...)                                                                 \
   const forte::core::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass(                                               \
-      (fbTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}), fbclass::createFB,                 \
-      &(fbclass::scmFBInterfaceSpec));                                                                                 \
+      (fbTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}), fbclass::createFB);                \
   FORTE_DUMMY_INIT_DEF(fbclass)                                                                                        \
   CStringDictionary::TStringId fbclass::getFBTypeId() const {                                                          \
     return (fbTypeNameId);                                                                                             \
@@ -116,8 +114,7 @@ private:
 //!\ingroup CORE This define is used to create the implementation for the above definition.
 #define DEFINE_ADAPTER_TYPE(adapterclass, adapterTypeNameId, ...)                                                      \
   const forte::core::CAdapterTypeEntry adapterclass::csmAdapterTypeEntry_##adapterclass(                               \
-      (adapterTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}), adapterclass::createAdapter,  \
-      &scmFBInterfaceSpecSocket);                                                                                      \
+      (adapterTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}), adapterclass::createAdapter); \
   forte::CAdapter *adapterclass::createAdapter(CStringDictionary::TStringId paInstanceNameId,                          \
                                                forte::core::CFBContainer &paContainer, bool paIsPlug,                  \
                                                TForteUInt8 paParentAdapterlistID) {                                    \
@@ -201,56 +198,39 @@ namespace forte::core {
       std::string_view mTypeHash;
   };
 
-  class CSpecTypeEntry : public CTypeEntry {
-    public:
-      const SFBInterfaceSpec *getInterfaceSpec() const {
-        return mSocketInterfaceSpec;
-      }
-
-    protected:
-      constexpr CSpecTypeEntry(CStringDictionary::TStringId paTypeNameId,
-                               std::string_view paTypeHash,
-                               const SFBInterfaceSpec *paSocketInterfaceSpec);
-
-    private:
-      const SFBInterfaceSpec *mSocketInterfaceSpec;
-  };
-
   //! The base class for all function block types entries in the type lib.
-  class CFBTypeEntry : public CSpecTypeEntry {
+  class CFBTypeEntry : public CTypeEntry {
     public:
       CFBTypeEntry(CStringDictionary::TStringId paTypeNameId,
                    std::string_view paTypeHash,
-                   TFunctionBlockCreateFunc pa_pfuncCreateFB,
-                   const SFBInterfaceSpec *paSocketInterfaceSpec);
+                   TFunctionBlockCreateFunc paCreateFB);
 
       CFunctionBlock *createFBInstance(CStringDictionary::TStringId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) {
-        return m_pfuncFBCreationFunc(paInstanceNameId, paContainer);
+        return mFBCreationFunc(paInstanceNameId, paContainer);
       }
 
     private:
-      TFunctionBlockCreateFunc m_pfuncFBCreationFunc;
+      TFunctionBlockCreateFunc mFBCreationFunc;
   };
 
   /*!\brief Class for adapter type entries in the type lib.
    */
-  class CAdapterTypeEntry : public CSpecTypeEntry {
+  class CAdapterTypeEntry : public CTypeEntry {
     public:
       CAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId,
                         std::string_view paTypeHash,
-                        TAdapterCreateFunc pa_pfuncCreateAdapter,
-                        const SFBInterfaceSpec *paSocketInterfaceSpec);
+                        TAdapterCreateFunc paCreateAdapter);
 
       forte::CAdapter *createAdapterInstance(CStringDictionary::TStringId paInstanceNameId,
                                              forte::core::CFBContainer &paContainer,
                                              bool paIsPlug,
                                              TForteUInt8 paParentAdapterlistID) {
-        return m_pfuncAdapterCreationFunc(paInstanceNameId, paContainer, paIsPlug, paParentAdapterlistID);
+        return mAdapterCreationFunc(paInstanceNameId, paContainer, paIsPlug, paParentAdapterlistID);
       }
 
     private:
-      TAdapterCreateFunc m_pfuncAdapterCreationFunc;
+      TAdapterCreateFunc mAdapterCreationFunc;
   };
 
   //! The base class for all data type entries in the type lib.
@@ -258,7 +238,7 @@ namespace forte::core {
     public:
       CDataTypeEntry(CStringDictionary::TStringId paTypeNameId,
                      std::string_view paTypeHash,
-                     TDataTypeCreateFunc paDTCreateFunc,
+                     TDataTypeCreateFunc paCreateDT,
                      size_t paSize);
 
       CIEC_ANY *createDataTypeInstance(TForteByte *paDataBuf) {

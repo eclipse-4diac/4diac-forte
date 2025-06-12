@@ -27,20 +27,9 @@ class FORTE_F_LINT_TO_ULINT final : public CSimpleFB {
   DECLARE_FIRMWARE_FB(FORTE_F_LINT_TO_ULINT)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     static const TEventID scmEventREQID = 0;
-    static const TDataIOID scmEIWith[];
-    static const TForteInt16 scmEIWithIndexes[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
     static const TEventID scmEventCNFID = 0;
-    static const TDataIOID scmEOWith[];
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     CIEC_ANY *getVarInternal(size_t) override;
 

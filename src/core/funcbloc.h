@@ -72,10 +72,6 @@ class CFunctionBlock : public forte::core::CFBContainer {
     using CFBContainer::NameIterator;
 
   public:
-    constexpr static TDataIOID scmWithListDelimiter = cgInvalidPortId; //!< value identifying the end of a with list
-    constexpr static TForteInt16 scmNoDataAssociated =
-        static_cast<TForteInt16>(cgInvalidPortId); //!< value identifying the end of a with list
-
     /*!\brief Possible states of a runable object.
      *
      */
@@ -241,7 +237,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
       traceInputEvent(paEIID);
 #endif // FORTE_TRACE_CTF
       if (E_FBStates::Running == getState()) {
-        if (paEIID < getFBInterfaceSpec().mNumEIs) {
+        if (paEIID < getFBInterfaceSpec().getNumEIs()) {
           readInputData(paEIID);
 #ifdef FORTE_SUPPORT_MONITORING
           // Count Event for monitoring
@@ -374,7 +370,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
 #endif // FORTE_TRACE_CTF
 
     void addInputEventConnection(TEventID paEIID) {
-      if (getFBInterfaceSpec().mEITypeNames != nullptr) {
+      if (!getFBInterfaceSpec().mEITypeNames.empty()) {
         mInputEventConnectionCount[paEIID]++;
       }
       incConnRefCount();
@@ -427,7 +423,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
 #ifdef FORTE_TRACE_CTF
       traceOutputEvent(paEO, paECET);
 #endif // FORTE_TRACE_CTF
-      size_t numEOs = getFBInterfaceSpec().mNumEOs;
+      size_t numEOs = getFBInterfaceSpec().getNumEOs();
       if (paEO < numEOs) {
         writeOutputData(paEO);
         getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(paECET);
@@ -481,7 +477,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
       }
 #endif // FORTE_SUPPORT_MONITORING
 #ifdef FORTE_TRACE_CTF
-      traceWriteData(paAbsDataPortNum - mInterfaceSpec.mNumDIs, paValue);
+      traceWriteData(paAbsDataPortNum - mInterfaceSpec.getNumDIs(), paValue);
 #endif // FORTE_TRACE_CTF
     }
 
@@ -549,8 +545,8 @@ class CFunctionBlock : public forte::core::CFBContainer {
     /*!\brief initialize the data structure which holds connection counts per pin
      */
     void setupInputConnectionTrackingData() {
-      if (getFBInterfaceSpec().mEITypeNames != nullptr) {
-        mInputEventConnectionCount = std::make_unique<size_t[]>(getFBInterfaceSpec().mNumEIs);
+      if (!getFBInterfaceSpec().mEITypeNames.empty()) {
+        mInputEventConnectionCount = std::make_unique<size_t[]>(getFBInterfaceSpec().getNumEIs());
       }
     }
 

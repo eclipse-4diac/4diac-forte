@@ -13,42 +13,32 @@
 
 DEFINE_FIRMWARE_FB(FORTE_SVIreceive_1, STRID(SVIreceive_1))
 
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmDataInputNames[] = {STRID(QI), STRID(ID)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(QI), STRID(ID)};
+  
+  
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(RD_1)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING)};
-
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmDataOutputNames[] = {STRID(QO), STRID(RD_1)};
-
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(ANY)};
-
-const TForteInt16 FORTE_SVIreceive_1::scmEIWithIndexes[] = {0, 3};
-const TDataIOID FORTE_SVIreceive_1::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-
-const TDataIOID FORTE_SVIreceive_1::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_SVIreceive_1::scmEOWithIndexes[] = {0, 2, -1};
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
-const CStringDictionary::TStringId FORTE_SVIreceive_1::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-
-const SFBInterfaceSpec FORTE_SVIreceive_1::scmFBInterfaceSpec = {2,
-                                                                 scmEventInputNames,
-                                                                 scmEventInputTypeIds,
-                                                                 scmEIWith,
-                                                                 scmEIWithIndexes,
-                                                                 2,
-                                                                 scmEventOutputNames,
-                                                                 scmEventOutputTypeIds,
-                                                                 scmEOWith,
-                                                                 scmEOWithIndexes,
-                                                                 2,
-                                                                 scmDataInputNames,
-                                                                 scmDataInputTypeIds,
-                                                                 2,
-                                                                 scmDataOutputNames,
-                                                                 scmDataOutputTypeIds,
-                                                                 0,
-                                                                 0};
 
 void FORTE_SVIreceive_1::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {

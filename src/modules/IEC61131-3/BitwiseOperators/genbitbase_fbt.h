@@ -51,13 +51,7 @@ class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
     CIEC_ANY_BIT_VARIANT var_OUT;
 
   private:
-    std::unique_ptr<CStringDictionary::TStringId[]> mDataInputNames;
-
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-
-    static const CStringDictionary::TStringId scmEventInputNames[];
-
-    static const CStringDictionary::TStringId scmEventOutputNames[];
+    std::vector<CStringDictionary::TStringId> mDataInputNames;
 
     void readInputData(TEventID paEI) override;
     void writeOutputData(TEventID paEO) override;

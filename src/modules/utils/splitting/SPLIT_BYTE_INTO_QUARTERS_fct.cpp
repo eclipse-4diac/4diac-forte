@@ -42,44 +42,30 @@ USE_STRING_ID(SPLIT_BYTE_INTO_QUARTERS);
 
 DEFINE_FIRMWARE_FB(FORTE_SPLIT_BYTE_INTO_QUARTERS, STRID(SPLIT_BYTE_INTO_QUARTERS))
 
-const CStringDictionary::TStringId FORTE_SPLIT_BYTE_INTO_QUARTERS::scmDataInputNames[] = {STRID(IN)};
-const CStringDictionary::TStringId FORTE_SPLIT_BYTE_INTO_QUARTERS::scmDataInputTypeIds[] = {STRID(BYTE)};
-const CStringDictionary::TStringId FORTE_SPLIT_BYTE_INTO_QUARTERS::scmDataOutputNames[] = {
-    STRID(QUARTER_BYTE_00), STRID(QUARTER_BYTE_01), STRID(QUARTER_BYTE_02), STRID(QUARTER_BYTE_03)};
-const CStringDictionary::TStringId FORTE_SPLIT_BYTE_INTO_QUARTERS::scmDataOutputTypeIds[] = {STRID(BYTE), STRID(BYTE),
-                                                                                             STRID(BYTE), STRID(BYTE)};
-const TDataIOID FORTE_SPLIT_BYTE_INTO_QUARTERS::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_SPLIT_BYTE_INTO_QUARTERS::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_SPLIT_BYTE_INTO_QUARTERS::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_SPLIT_BYTE_INTO_QUARTERS::scmEventInputTypeIds[] = {STRID(Event)};
-const TDataIOID FORTE_SPLIT_BYTE_INTO_QUARTERS::scmEOWith[] = {0, 1, 2, 3, scmWithListDelimiter};
-const TForteInt16 FORTE_SPLIT_BYTE_INTO_QUARTERS::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_SPLIT_BYTE_INTO_QUARTERS::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_SPLIT_BYTE_INTO_QUARTERS::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_SPLIT_BYTE_INTO_QUARTERS::scmFBInterfaceSpec = {1,
-                                                                             scmEventInputNames,
-                                                                             scmEventInputTypeIds,
-                                                                             scmEIWith,
-                                                                             scmEIWithIndexes,
-                                                                             1,
-                                                                             scmEventOutputNames,
-                                                                             scmEventOutputTypeIds,
-                                                                             scmEOWith,
-                                                                             scmEOWithIndexes,
-                                                                             1,
-                                                                             scmDataInputNames,
-                                                                             scmDataInputTypeIds,
-                                                                             4,
-                                                                             scmDataOutputNames,
-                                                                             scmDataOutputTypeIds,
-                                                                             0,
-                                                                             nullptr,
-                                                                             0,
-                                                                             nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cDataOutputNames =
+      std::array{STRID(QUARTER_BYTE_00), STRID(QUARTER_BYTE_01), STRID(QUARTER_BYTE_02), STRID(QUARTER_BYTE_03)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_SPLIT_BYTE_INTO_QUARTERS::FORTE_SPLIT_BYTE_INTO_QUARTERS(const CStringDictionary::TStringId paInstanceNameId,
                                                                forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_QUARTER_BYTE_00(*this, 0, var_QUARTER_BYTE_00),
@@ -109,10 +95,10 @@ void FORTE_SPLIT_BYTE_INTO_QUARTERS::readInputData(const TEventID paEIID) {
 void FORTE_SPLIT_BYTE_INTO_QUARTERS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QUARTER_BYTE_00, conn_QUARTER_BYTE_00);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_QUARTER_BYTE_01, conn_QUARTER_BYTE_01);
-      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_QUARTER_BYTE_02, conn_QUARTER_BYTE_02);
-      writeData(scmFBInterfaceSpec.mNumDIs + 3, var_QUARTER_BYTE_03, conn_QUARTER_BYTE_03);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QUARTER_BYTE_00, conn_QUARTER_BYTE_00);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_QUARTER_BYTE_01, conn_QUARTER_BYTE_01);
+      writeData(cFBInterfaceSpec.getNumDIs() + 2, var_QUARTER_BYTE_02, conn_QUARTER_BYTE_02);
+      writeData(cFBInterfaceSpec.getNumDIs() + 3, var_QUARTER_BYTE_03, conn_QUARTER_BYTE_03);
       break;
     }
     default: break;
@@ -177,15 +163,15 @@ void func_SPLIT_BYTE_INTO_QUARTERS(CIEC_BYTE st_lv_IN,
   st_lv_QUARTER_BYTE_03 = 0_BYTE;
 
 #line 15 "SPLIT_BYTE_INTO_QUARTERS.fct"
-  st_lv_QUARTER_BYTE_00 =
-      func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, FORTE_quarterconst::var_BYTE_QUARTER_00), FORTE_quarterconst::var_SHIFT_QUARTER_00);
+  st_lv_QUARTER_BYTE_00 = func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, FORTE_quarterconst::var_BYTE_QUARTER_00),
+                                   FORTE_quarterconst::var_SHIFT_QUARTER_00);
 #line 16 "SPLIT_BYTE_INTO_QUARTERS.fct"
-  st_lv_QUARTER_BYTE_01 =
-      func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, FORTE_quarterconst::var_BYTE_QUARTER_01), FORTE_quarterconst::var_SHIFT_QUARTER_01);
+  st_lv_QUARTER_BYTE_01 = func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, FORTE_quarterconst::var_BYTE_QUARTER_01),
+                                   FORTE_quarterconst::var_SHIFT_QUARTER_01);
 #line 17 "SPLIT_BYTE_INTO_QUARTERS.fct"
-  st_lv_QUARTER_BYTE_02 =
-      func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, FORTE_quarterconst::var_BYTE_QUARTER_02), FORTE_quarterconst::var_SHIFT_QUARTER_02);
+  st_lv_QUARTER_BYTE_02 = func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, FORTE_quarterconst::var_BYTE_QUARTER_02),
+                                   FORTE_quarterconst::var_SHIFT_QUARTER_02);
 #line 18 "SPLIT_BYTE_INTO_QUARTERS.fct"
-  st_lv_QUARTER_BYTE_03 =
-      func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, FORTE_quarterconst::var_BYTE_QUARTER_03), FORTE_quarterconst::var_SHIFT_QUARTER_03);
+  st_lv_QUARTER_BYTE_03 = func_SHR(func_AND<CIEC_BYTE>(st_lv_IN, FORTE_quarterconst::var_BYTE_QUARTER_03),
+                                   FORTE_quarterconst::var_SHIFT_QUARTER_03);
 }

@@ -27,44 +27,34 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToPublishEvent, STRID(FieldsToPublishEvent))
 
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataInputNames[] = {STRID(source), STRID(event),
-                                                                                      STRID(deliveryCompleteUri)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(source), STRID(event),
+                                                                                        STRID(deliveryCompleteUri)};
+  
+      STRID(ArrowheadSystem), STRID(ArrowheadEvent), STRID(WSTRING)};
+  
+  const auto cDataOutputNames = std::array{STRID(publishEvent)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataInputTypeIds[] = {
-    STRID(ArrowheadSystem), STRID(ArrowheadEvent), STRID(WSTRING)};
-
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataOutputNames[] = {STRID(publishEvent)};
-
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmDataOutputTypeIds[] = {STRID(PublishEvent)};
-
-const TForteInt16 FORTE_FieldsToPublishEvent::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToPublishEvent::scmEIWith[] = {0, 1, 2, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_FieldsToPublishEvent::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FieldsToPublishEvent::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_FieldsToPublishEvent::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_FieldsToPublishEvent::scmFBInterfaceSpec = {1,
-                                                                         scmEventInputNames,
-                                                                         scmEventInputTypeIds,
-                                                                         scmEIWith,
-                                                                         scmEIWithIndexes,
-                                                                         1,
-                                                                         scmEventOutputNames,
-                                                                         scmEventOutputTypeIds,
-                                                                         scmEOWith,
-                                                                         scmEOWithIndexes,
-                                                                         3,
-                                                                         scmDataInputNames,
-                                                                         scmDataInputTypeIds,
-                                                                         1,
-                                                                         scmDataOutputNames,
-                                                                         scmDataOutputTypeIds,
-                                                                         0,
-                                                                         0};
 
 void FORTE_FieldsToPublishEvent::alg_REQ() {
   publishEvent().source() = source();

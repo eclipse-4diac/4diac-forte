@@ -43,52 +43,32 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_PLCnextAXLSESC, STRID(PLCnextAXLSESC))
 
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmDataInputNames[] = {STRID(QI)};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmDataInputTypeIds[] = {STRID(BOOL)};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
-const TDataIOID FORTE_PLCnextAXLSESC::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_PLCnextAXLSESC::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventInputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventInputTypeIds[] = {STRID(EInit)};
-const TDataIOID FORTE_PLCnextAXLSESC::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_PLCnextAXLSESC::scmEOWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSESC::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
-const SAdapterInstanceDef FORTE_PLCnextAXLSESC::scmAdapterInstances[] = {
-    {STRID(PLCnextBusAdapter), STRID(BusAdapterIn), false}, {STRID(PLCnextBusAdapter), STRID(BusAdapterOut), true}};
-
 namespace {
+  const auto cDataInputNames = std::array{STRID(QI)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  const auto cEventInputNames = std::array{STRID(INIT)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit)};
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
+  const auto cEventOutputTypeIds = std::array{STRID(EInit), STRID(Event)};
   const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
   const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
-} // namespace
 
-const SFBInterfaceSpec FORTE_PLCnextAXLSESC::scmFBInterfaceSpec = {1,
-                                                                   scmEventInputNames,
-                                                                   scmEventInputTypeIds,
-                                                                   scmEIWith,
-                                                                   scmEIWithIndexes,
-                                                                   2,
-                                                                   scmEventOutputNames,
-                                                                   scmEventOutputTypeIds,
-                                                                   scmEOWith,
-                                                                   scmEOWithIndexes,
-                                                                   1,
-                                                                   scmDataInputNames,
-                                                                   scmDataInputTypeIds,
-                                                                   2,
-                                                                   scmDataOutputNames,
-                                                                   scmDataOutputTypeIds,
-                                                                   0,
-                                                                   nullptr,
-                                                                   2,
-                                                                   scmAdapterInstances,
-                                                                   cSocketNameIds,
-                                                                   cPlugNameIds};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = cSocketNameIds,
+      .mPlugNames = cPlugNameIds,
+  };
+} // namespace
 
 FORTE_PLCnextAXLSESC::FORTE_PLCnextAXLSESC(const CStringDictionary::TStringId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer) :
-    PLCnextSlaveHandler(PLCnextSlaveHandler::NoUsage, paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    PLCnextSlaveHandler(PLCnextSlaveHandler::NoUsage, paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
@@ -117,13 +97,13 @@ void FORTE_PLCnextAXLSESC::readInputData(const TEventID paEIID) {
 void FORTE_PLCnextAXLSESC::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     case scmEventINDID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

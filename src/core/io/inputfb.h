@@ -48,7 +48,9 @@ namespace forte::core::io {
           conn_IN(*this, 2, var_IN) {
       }
 
-      CInputFB(forte::core::CFBContainer &paContainer, const SFBInterfaceSpec& paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+      CInputFB(forte::core::CFBContainer &paContainer,
+               const SFBInterfaceSpec &paInterfaceSpec,
+               const CStringDictionary::TStringId paInstanceNameId) :
           CProcessInterfaceFB(paContainer, paInterfaceSpec, paInstanceNameId),
           var_IN(),
           conn_IND(*this, 2),
@@ -112,18 +114,12 @@ namespace forte::core::io {
         }
       }
 
-      static const CStringDictionary::TStringId scmDataInputNames[];
-      static const CStringDictionary::TStringId scmDataInputTypeIds[];
-      static const CStringDictionary::TStringId scmDataOutputNames[];
-      static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-      static const TDataIOID scmEIWith[];
-      static const TForteInt16 scmEIWithIndexes[];
-      static const CStringDictionary::TStringId scmEventInputNames[];
-      static const CStringDictionary::TStringId scmEventInputTypeIds[];
-      static const TDataIOID scmEOWith[];
-      static const TForteInt16 scmEOWithIndexes[];
-      static const CStringDictionary::TStringId scmEventOutputNames[];
-      static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+      static const std::array<const CStringDictionary::TStringId, 2> scmEventInputNames;
+      static const std::array<const CStringDictionary::TStringId, 2> scmEventInputTypeIds;
+      static const std::array<const CStringDictionary::TStringId, 3> scmEventOutputNames;
+      static const std::array<const CStringDictionary::TStringId, 3> scmEventOutputTypeIds;
+      static const std::array<const CStringDictionary::TStringId, 2> scmDataInputNames;
+      static const std::array<const CStringDictionary::TStringId, 3> scmDataOutputNames;
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override {
         switch (paEIID) {
@@ -143,15 +139,15 @@ namespace forte::core::io {
       void writeOutputData(TEventID paEIID) final override {
         switch (paEIID) {
           case scmEventCNFID: {
-            writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-            writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
-            writeData(scmFBInterfaceSpec.mNumDIs + 2, var_IN, conn_IN);
+            writeData(scmFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+            writeData(scmFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
+            writeData(scmFBInterfaceSpec.getNumDIs() + 2, var_IN, conn_IN);
             break;
           }
           case scmEventINDID: {
-            writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-            writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
-            writeData(scmFBInterfaceSpec.mNumDIs + 2, var_IN, conn_IN);
+            writeData(scmFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+            writeData(scmFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
+            writeData(scmFBInterfaceSpec.getNumDIs() + 2, var_IN, conn_IN);
             break;
           }
           default: CProcessInterfaceFB::writeOutputData(paEIID); break;
@@ -177,51 +173,32 @@ namespace forte::core::io {
   };
 
   template<class T>
-  const CStringDictionary::TStringId CInputFB<T>::scmDataInputNames[] = {STRID(QI), STRID(PARAMS)};
+  const std::array<const CStringDictionary::TStringId, 2> CInputFB<T>::scmEventInputNames = {STRID(INIT), STRID(REQ)};
   template<class T>
-  const CStringDictionary::TStringId CInputFB<T>::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING)};
+  const std::array<const CStringDictionary::TStringId, 2> CInputFB<T>::scmEventInputTypeIds = {STRID(EInit),
+                                                                                               STRID(Event)};
   template<class T>
-  const CStringDictionary::TStringId CInputFB<T>::scmDataOutputNames[] = {STRID(QO), STRID(STATUS), STRID(IN)};
+  const std::array<const CStringDictionary::TStringId, 3> CInputFB<T>::scmEventOutputNames = {STRID(INITO), STRID(CNF),
+                                                                                              STRID(IND)};
   template<class T>
-  const CStringDictionary::TStringId CInputFB<T>::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING),
-                                                                            forte::CDataTypeTrait<T>::scmDataTypeName};
+  const std::array<const CStringDictionary::TStringId, 3> CInputFB<T>::scmEventOutputTypeIds = {
+      STRID(EInit), STRID(Event), STRID(Event)};
   template<class T>
-  const TDataIOID CInputFB<T>::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, scmWithListDelimiter};
+  const std::array<const CStringDictionary::TStringId, 2> CInputFB<T>::scmDataInputNames = {STRID(QI), STRID(PARAMS)};
   template<class T>
-  const TForteInt16 CInputFB<T>::scmEIWithIndexes[] = {0, 3};
+  const std::array<const CStringDictionary::TStringId, 3> CInputFB<T>::scmDataOutputNames = {STRID(QO), STRID(STATUS),
+                                                                                             STRID(IN)};
   template<class T>
-  const CStringDictionary::TStringId CInputFB<T>::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
-  template<class T>
-  const CStringDictionary::TStringId CInputFB<T>::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-  template<class T>
-  const TDataIOID CInputFB<T>::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter, 0,
-                                              1, 2, scmWithListDelimiter};
-  template<class T>
-  const TForteInt16 CInputFB<T>::scmEOWithIndexes[] = {0, 3, 7};
-  template<class T>
-  const CStringDictionary::TStringId CInputFB<T>::scmEventOutputNames[] = {STRID(INITO), STRID(CNF), STRID(IND)};
-  template<class T>
-  const CStringDictionary::TStringId CInputFB<T>::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event), STRID(Event)};
-  template<class T>
-  const SFBInterfaceSpec CInputFB<T>::scmFBInterfaceSpec = {2,
-                                                            scmEventInputNames,
-                                                            scmEventInputTypeIds,
-                                                            scmEIWith,
-                                                            scmEIWithIndexes,
-                                                            3,
-                                                            scmEventOutputNames,
-                                                            scmEventOutputTypeIds,
-                                                            scmEOWith,
-                                                            scmEOWithIndexes,
-                                                            2,
-                                                            scmDataInputNames,
-                                                            scmDataInputTypeIds,
-                                                            3,
-                                                            scmDataOutputNames,
-                                                            scmDataOutputTypeIds,
-                                                            0,
-                                                            nullptr,
-                                                            0,
-                                                            nullptr};
+  const SFBInterfaceSpec CInputFB<T>::scmFBInterfaceSpec = {
+      .mEINames = scmEventInputNames,
+      .mEITypeNames = scmEventInputTypeIds,
+      .mEONames = scmEventOutputNames,
+      .mEOTypeNames = scmEventOutputTypeIds,
+      .mDINames = scmDataInputNames,
+      .mDONames = scmDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
 
 } // namespace forte::core::io

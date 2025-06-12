@@ -35,43 +35,27 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(GPIOChipConfigFB, STRID(GPIOChip))
 
-const CStringDictionary::TStringId GPIOChipConfigFB::scmDataInputNames[] = {
-    STRID(QI),       STRID(VALUE),    STRID(ChipNumber), STRID(LineNumber), STRID(ReadWriteMode),
-    STRID(BiasMode), STRID(ActiveLow)};
-
-const CStringDictionary::TStringId GPIOChipConfigFB::scmDataInputTypeIds[] = {
-    STRID(BOOL), STRID(WSTRING), STRID(UINT), STRID(UINT), STRID(UINT), STRID(UINT), STRID(BOOL)};
-
-const CStringDictionary::TStringId GPIOChipConfigFB::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-
-const CStringDictionary::TStringId GPIOChipConfigFB::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
-
-const TForteInt16 GPIOChipConfigFB::scmEIWithIndexes[] = {0};
-const TDataIOID GPIOChipConfigFB::scmEIWith[] = {0, 1, 2, 3, 4, 5, 6, scmWithListDelimiter};
-const CStringDictionary::TStringId GPIOChipConfigFB::scmEventInputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId GPIOChipConfigFB::scmEventInputTypeIds[] = {STRID(EInit)};
-const TDataIOID GPIOChipConfigFB::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 GPIOChipConfigFB::scmEOWithIndexes[] = {0, 3, -1};
-const CStringDictionary::TStringId GPIOChipConfigFB::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
-const CStringDictionary::TStringId GPIOChipConfigFB::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-const SFBInterfaceSpec GPIOChipConfigFB::scmFBInterfaceSpec = {1,
-                                                               scmEventInputNames,
-                                                               scmEventInputTypeIds,
-                                                               scmEIWith,
-                                                               scmEIWithIndexes,
-                                                               2,
-                                                               scmEventOutputNames,
-                                                               scmEventOutputTypeIds,
-                                                               scmEOWith,
-                                                               scmEOWithIndexes,
-                                                               7,
-                                                               scmDataInputNames,
-                                                               scmDataInputTypeIds,
-                                                               2,
-                                                               scmDataOutputNames,
-                                                               scmDataOutputTypeIds,
-                                                               0,
-                                                               0};
+namespace {
+  const auto cDataInputNames =
+      std::array{STRID(QI),       STRID(VALUE),    STRID(ChipNumber), STRID(LineNumber), STRID(ReadWriteMode),
+                 STRID(BiasMode), STRID(ActiveLow)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  const auto cEventInputNames = std::array{STRID(INIT)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit)};
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 void GPIOChipConfigFB::setInitialValues() {
   ChipNumber() = 0_UINT;
@@ -89,7 +73,7 @@ void GPIOChipConfigFB::readInputData(const TEventID paEIID) {
 
 void GPIOChipConfigFB::writeOutputData(const TEventID paEIID) {
   for (auto i = 0; i < 2; i++) {
-    writeData(scmFBInterfaceSpec.mNumDIs + i, *mDOs[i], mDOConns[i]);
+    writeData(cFBInterfaceSpec.getNumDIs() + i, *mDOs[i], mDOConns[i]);
   }
 }
 

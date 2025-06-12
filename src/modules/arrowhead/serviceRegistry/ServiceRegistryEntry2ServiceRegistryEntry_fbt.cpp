@@ -22,47 +22,37 @@ USE_STRING_ID(ServiceRegistryEntry2ServiceRegistryEntry);
 
 DEFINE_FIRMWARE_FB(FORTE_ServiceRegistryEntry2ServiceRegistryEntry, STRID(ServiceRegistryEntry2ServiceRegistryEntry))
 
-const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmDataInputNames[] = {STRID(IN)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN)};
+  
+      STRID(ServiceRegistryEntry)};
+  
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  
+      STRID(ServiceRegistryEntry)};
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{
+      STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{
+      STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{
+      STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmDataInputTypeIds[] = {
-    STRID(ServiceRegistryEntry)};
-
-const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmDataOutputNames[] = {STRID(OUT)};
-
-const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmDataOutputTypeIds[] = {
-    STRID(ServiceRegistryEntry)};
-
-const TForteInt16 FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmEIWith[] = {0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmEventInputTypeIds[] = {
-    STRID(Event)};
-
-const TDataIOID FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmEventOutputNames[] = {
-    STRID(CNF)};
-const CStringDictionary::TStringId FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmEventOutputTypeIds[] = {
-    STRID(Event)};
-
-const SFBInterfaceSpec FORTE_ServiceRegistryEntry2ServiceRegistryEntry::scmFBInterfaceSpec = {1,
-                                                                                              scmEventInputNames,
-                                                                                              scmEventInputTypeIds,
-                                                                                              scmEIWith,
-                                                                                              scmEIWithIndexes,
-                                                                                              1,
-                                                                                              scmEventOutputNames,
-                                                                                              scmEventOutputTypeIds,
-                                                                                              scmEOWith,
-                                                                                              scmEOWithIndexes,
-                                                                                              1,
-                                                                                              scmDataInputNames,
-                                                                                              scmDataInputTypeIds,
-                                                                                              1,
-                                                                                              scmDataOutputNames,
-                                                                                              scmDataOutputTypeIds,
-                                                                                              0,
-                                                                                              0};
 
 void FORTE_ServiceRegistryEntry2ServiceRegistryEntry::executeEvent(TEventID paEIID,
                                                                    CEventChainExecutionThread *const paECET) {

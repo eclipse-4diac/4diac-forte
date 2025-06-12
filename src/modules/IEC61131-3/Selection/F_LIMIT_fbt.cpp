@@ -28,49 +28,28 @@ USE_STRING_ID(REQ);
 
 DEFINE_FIRMWARE_FB(FORTE_F_LIMIT, STRID(F_LIMIT))
 
-const CStringDictionary::TStringId FORTE_F_LIMIT::scmDataInputNames[] = {STRID(MN), STRID(IN), STRID(MX)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(MN), STRID(IN), STRID(MX)};
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
 
-const CStringDictionary::TStringId FORTE_F_LIMIT::scmDataInputTypeIds[] = {STRID(ANY_ELEMENTARY), STRID(ANY_ELEMENTARY),
-                                                                           STRID(ANY_ELEMENTARY)};
-
-const CStringDictionary::TStringId FORTE_F_LIMIT::scmDataOutputNames[] = {STRID(OUT)};
-
-const CStringDictionary::TStringId FORTE_F_LIMIT::scmDataOutputTypeIds[] = {STRID(ANY_ELEMENTARY)};
-
-const TDataIOID FORTE_F_LIMIT::scmEIWith[] = {0, 2, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_F_LIMIT::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_LIMIT::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_F_LIMIT::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_F_LIMIT::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_LIMIT::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_LIMIT::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_F_LIMIT::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_F_LIMIT::scmFBInterfaceSpec = {1,
-                                                            scmEventInputNames,
-                                                            scmEventInputTypeIds,
-                                                            scmEIWith,
-                                                            scmEIWithIndexes,
-                                                            1,
-                                                            scmEventOutputNames,
-                                                            scmEventOutputTypeIds,
-                                                            scmEOWith,
-                                                            scmEOWithIndexes,
-                                                            3,
-                                                            scmDataInputNames,
-                                                            scmDataInputTypeIds,
-                                                            1,
-                                                            scmDataOutputNames,
-                                                            scmDataOutputTypeIds,
-                                                            0,
-                                                            nullptr,
-                                                            0,
-                                                            nullptr};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_F_LIMIT::FORTE_F_LIMIT(const CStringDictionary::TStringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_MN(CIEC_ANY_ELEMENTARY_VARIANT()),
     var_IN(CIEC_ANY_ELEMENTARY_VARIANT()),
     var_MX(CIEC_ANY_ELEMENTARY_VARIANT()),
@@ -105,7 +84,7 @@ void FORTE_F_LIMIT::readInputData(TEventID paEIID) {
 void FORTE_F_LIMIT::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
       break;
     }
     default: break;

@@ -24,9 +24,7 @@ USE_STRING_ID(QD);
 USE_STRING_ID(QU);
 USE_STRING_ID(UINT);
 
-const SFBInterfaceSpec gcEmptyInterface = {0,       nullptr, nullptr, nullptr, nullptr, 0,       nullptr,
-                                           nullptr, nullptr, nullptr, 0,       nullptr, nullptr, 0,
-                                           nullptr, nullptr, 0,       nullptr, 0,       nullptr};
+const SFBInterfaceSpec gcEmptyInterface = {};
 
 class CInternalVarTestFB : public CBasicFB {
 

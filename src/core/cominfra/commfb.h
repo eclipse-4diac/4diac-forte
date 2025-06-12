@@ -105,17 +105,8 @@ namespace forte {
         std::unique_ptr<CIEC_ANY *[]> mGenDOs;
 
       private:
-        static const CStringDictionary::TStringId scmRequesterEventInputNameIds[];
-        static const CStringDictionary::TStringId scmRequesterEventOutputNameIds[];
-
-        static const CStringDictionary::TStringId scmResponderEventInputNameIds[];
-        static const CStringDictionary::TStringId scmResponderEventOutputNameIds[];
-
-        static const CStringDictionary::TStringId scmEventInputTypeIds[];
-        static const CStringDictionary::TStringId scmEventOutputTypeIds[];
-
-        std::unique_ptr<CStringDictionary::TStringId[]> mDiNames;
-        std::unique_ptr<CStringDictionary::TStringId[]> mDoNames;
+        std::vector<CStringDictionary::TStringId> mDiNames;
+        std::vector<CStringDictionary::TStringId> mDoNames;
 
         bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 

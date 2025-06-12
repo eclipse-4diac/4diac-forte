@@ -27,37 +27,26 @@ USE_STRING_ID(STRING);
 
 DEFINE_FIRMWARE_FB(FORTE_E_TRIG, STRID(E_TRIG))
 
-const CStringDictionary::TStringId FORTE_E_TRIG::scmDataInputNames[] = {STRID(EVENTTYPE)};
-const CStringDictionary::TStringId FORTE_E_TRIG::scmDataInputTypeIds[] = {STRID(STRING)};
-const TDataIOID FORTE_E_TRIG::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_TRIG::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_TRIG::scmEventInputNames[] = {STRID(REQ)};
-const TForteInt16 FORTE_E_TRIG::scmEOWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_E_TRIG::scmEventOutputNames[] = {STRID(CNF)};
-const SFBInterfaceSpec FORTE_E_TRIG::scmFBInterfaceSpec = {1,
-                                                           scmEventInputNames,
-                                                           nullptr,
-                                                           scmEIWith,
-                                                           scmEIWithIndexes,
-                                                           1,
-                                                           scmEventOutputNames,
-                                                           nullptr,
-                                                           nullptr,
-                                                           scmEOWithIndexes,
-                                                           1,
-                                                           scmDataInputNames,
-                                                           scmDataInputTypeIds,
-                                                           0,
-                                                           nullptr,
-                                                           nullptr,
-                                                           0,
-                                                           nullptr,
-                                                           0,
-                                                           nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(EVENTTYPE)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_E_TRIG::FORTE_E_TRIG(const CStringDictionary::TStringId paInstanceNameId,
                            forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_EVENTTYPE(""_STRING),
     conn_CNF(*this, 0),
     conn_EVENTTYPE(nullptr) {};
@@ -141,10 +130,10 @@ void FORTE_E_TRIG::triggerEventsOfType(TEventTypeID paEventTypeId,
                                        CEventChainExecutionThread *const paECET) {
   const SFBInterfaceSpec &interfaceSpec = paFb->getFBInterfaceSpec();
   // most of the FBs will only have the basic event type -> mEITypes == nullptr
-  if (interfaceSpec.mEITypeNames == nullptr) {
+  if (interfaceSpec.mEITypeNames.empty()) {
     return;
   }
-  for (TEventID eventId = 0; eventId < interfaceSpec.mNumEIs; eventId++) {
+  for (TEventID eventId = 0; eventId < interfaceSpec.getNumEIs(); eventId++) {
     if (interfaceSpec.getEIType(eventId) == paEventTypeId && !paFb->isInputEventConnected(eventId)) {
       paECET->addEventEntry(TEventEntry(*paFb, eventId));
     }

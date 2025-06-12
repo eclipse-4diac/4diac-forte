@@ -38,51 +38,30 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_PLCnextMaster, STRID(PLCnextMaster))
 
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmDataInputNames[] = {STRID(QI), STRID(SlaveUpdateInterval)};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmDataInputTypeIds[] = {STRID(BOOL), STRID(UINT)};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
-const TDataIOID FORTE_PLCnextMaster::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_PLCnextMaster::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventInputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventInputTypeIds[] = {STRID(EInit)};
-const TDataIOID FORTE_PLCnextMaster::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_PLCnextMaster::scmEOWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
-const CStringDictionary::TStringId FORTE_PLCnextMaster::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
-const SAdapterInstanceDef FORTE_PLCnextMaster::scmAdapterInstances[] = {
-    {STRID(PLCnextBusAdapter), STRID(BusAdapterOut), true}};
-
 namespace {
+  const auto cDataInputNames = std::array{STRID(QI), STRID(SlaveUpdateInterval)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  const auto cEventInputNames = std::array{STRID(INIT)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit)};
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
+  const auto cEventOutputTypeIds = std::array{STRID(EInit), STRID(Event)};
   const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = cPlugNameIds,
+  };
 } // namespace
-
-const SFBInterfaceSpec FORTE_PLCnextMaster::scmFBInterfaceSpec = {1,
-                                                                  scmEventInputNames,
-                                                                  scmEventInputTypeIds,
-                                                                  scmEIWith,
-                                                                  scmEIWithIndexes,
-                                                                  2,
-                                                                  scmEventOutputNames,
-                                                                  scmEventOutputTypeIds,
-                                                                  scmEOWith,
-                                                                  scmEOWithIndexes,
-                                                                  2,
-                                                                  scmDataInputNames,
-                                                                  scmDataInputTypeIds,
-                                                                  2,
-                                                                  scmDataOutputNames,
-                                                                  scmDataOutputTypeIds,
-                                                                  0,
-                                                                  nullptr,
-                                                                  1,
-                                                                  scmAdapterInstances,
-                                                                  {},
-                                                                  cPlugNameIds};
 
 FORTE_PLCnextMaster::FORTE_PLCnextMaster(const CStringDictionary::TStringId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer) :
-    forte::core::io::IOConfigFBMultiMaster(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    forte::core::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_SlaveUpdateInterval(25_UINT),
     var_QO(0_BOOL),
@@ -116,13 +95,13 @@ void FORTE_PLCnextMaster::readInputData(const TEventID paEIID) {
 void FORTE_PLCnextMaster::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     case scmEventINDID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

@@ -14,15 +14,15 @@
 
 #pragma once
 
+#include <vector>
 #include "genfb.h"
+#include "stringdict.h"
 
 class GEN_E_SPLIT final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT)
 
   private:
     static const TEventID scmEventEIID = 0;
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    std::unique_ptr<CStringDictionary::TStringId[]> scmEventOutputNames;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -30,6 +30,8 @@ class GEN_E_SPLIT final : public CGenFunctionBlock<CFunctionBlock> {
     void writeOutputData(TEventID paEIID) override;
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+
+    std::vector<CStringDictionary::TStringId> mEventOutputNames;
 
   public:
     GEN_E_SPLIT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

@@ -24,27 +24,18 @@ class FORTE_ARTimeOut : public forte::CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_ARTimeOut)
 
   private:
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     public:
       static const TEventID scmEventTimeOutID = 0;
 
     private:
-    static const TForteInt16 scmEIWithIndexes[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
     public:
       static const TEventID scmEventSTARTID = 0;
       static const TEventID scmEventSTOPID = 1;
 
     private:
-    static const TDataIOID scmEOWith[];
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
 
   protected:
-    static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
 
-    static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
     void setInitialValues() override;
   public:

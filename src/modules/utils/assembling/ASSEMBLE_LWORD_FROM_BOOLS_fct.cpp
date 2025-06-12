@@ -102,65 +102,39 @@ USE_STRING_ID(REQ);
 
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_LWORD_FROM_BOOLS, STRID(ASSEMBLE_LWORD_FROM_BOOLS))
 
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmDataInputNames[] = {
-    STRID(BIT_00), STRID(BIT_01), STRID(BIT_02), STRID(BIT_03), STRID(BIT_04), STRID(BIT_05), STRID(BIT_06),
-    STRID(BIT_07), STRID(BIT_08), STRID(BIT_09), STRID(BIT_10), STRID(BIT_11), STRID(BIT_12), STRID(BIT_13),
-    STRID(BIT_14), STRID(BIT_15), STRID(BIT_16), STRID(BIT_17), STRID(BIT_18), STRID(BIT_19), STRID(BIT_20),
-    STRID(BIT_21), STRID(BIT_22), STRID(BIT_23), STRID(BIT_24), STRID(BIT_25), STRID(BIT_26), STRID(BIT_27),
-    STRID(BIT_28), STRID(BIT_29), STRID(BIT_30), STRID(BIT_31), STRID(BIT_32), STRID(BIT_33), STRID(BIT_34),
-    STRID(BIT_35), STRID(BIT_36), STRID(BIT_37), STRID(BIT_38), STRID(BIT_39), STRID(BIT_40), STRID(BIT_41),
-    STRID(BIT_42), STRID(BIT_43), STRID(BIT_44), STRID(BIT_45), STRID(BIT_46), STRID(BIT_47), STRID(BIT_48),
-    STRID(BIT_49), STRID(BIT_50), STRID(BIT_51), STRID(BIT_52), STRID(BIT_53), STRID(BIT_54), STRID(BIT_55),
-    STRID(BIT_56), STRID(BIT_57), STRID(BIT_58), STRID(BIT_59), STRID(BIT_60), STRID(BIT_61), STRID(BIT_62),
-    STRID(BIT_63)};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmDataInputTypeIds[] = {
-    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL),
-    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL),
-    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL),
-    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL),
-    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL),
-    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL),
-    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL),
-    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL)};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmDataOutputNames[] = {STRID()};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmDataOutputTypeIds[] = {STRID(LWORD)};
-const TDataIOID FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEIWith[] = {
-    0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10, 11, 12,
-    13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-    26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38,
-    39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51,
-    52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, scmWithListDelimiter};
-const TForteInt16 FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEventInputTypeIds[] = {STRID(Event)};
-const TDataIOID FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_ASSEMBLE_LWORD_FROM_BOOLS::scmFBInterfaceSpec = {1,
-                                                                              scmEventInputNames,
-                                                                              scmEventInputTypeIds,
-                                                                              scmEIWith,
-                                                                              scmEIWithIndexes,
-                                                                              1,
-                                                                              scmEventOutputNames,
-                                                                              scmEventOutputTypeIds,
-                                                                              scmEOWith,
-                                                                              scmEOWithIndexes,
-                                                                              64,
-                                                                              scmDataInputNames,
-                                                                              scmDataInputTypeIds,
-                                                                              1,
-                                                                              scmDataOutputNames,
-                                                                              scmDataOutputTypeIds,
-                                                                              0,
-                                                                              nullptr,
-                                                                              0,
-                                                                              nullptr};
+namespace {
+  const auto cDataInputNames = std::array{
+      STRID(BIT_00), STRID(BIT_01), STRID(BIT_02), STRID(BIT_03), STRID(BIT_04), STRID(BIT_05), STRID(BIT_06),
+      STRID(BIT_07), STRID(BIT_08), STRID(BIT_09), STRID(BIT_10), STRID(BIT_11), STRID(BIT_12), STRID(BIT_13),
+      STRID(BIT_14), STRID(BIT_15), STRID(BIT_16), STRID(BIT_17), STRID(BIT_18), STRID(BIT_19), STRID(BIT_20),
+      STRID(BIT_21), STRID(BIT_22), STRID(BIT_23), STRID(BIT_24), STRID(BIT_25), STRID(BIT_26), STRID(BIT_27),
+      STRID(BIT_28), STRID(BIT_29), STRID(BIT_30), STRID(BIT_31), STRID(BIT_32), STRID(BIT_33), STRID(BIT_34),
+      STRID(BIT_35), STRID(BIT_36), STRID(BIT_37), STRID(BIT_38), STRID(BIT_39), STRID(BIT_40), STRID(BIT_41),
+      STRID(BIT_42), STRID(BIT_43), STRID(BIT_44), STRID(BIT_45), STRID(BIT_46), STRID(BIT_47), STRID(BIT_48),
+      STRID(BIT_49), STRID(BIT_50), STRID(BIT_51), STRID(BIT_52), STRID(BIT_53), STRID(BIT_54), STRID(BIT_55),
+      STRID(BIT_56), STRID(BIT_57), STRID(BIT_58), STRID(BIT_59), STRID(BIT_60), STRID(BIT_61), STRID(BIT_62),
+      STRID(BIT_63)};
+  const auto cDataOutputNames = std::array{STRID()};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_ASSEMBLE_LWORD_FROM_BOOLS::FORTE_ASSEMBLE_LWORD_FROM_BOOLS(const CStringDictionary::TStringId paInstanceNameId,
                                                                  forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_BIT_00(nullptr),
     conn_BIT_01(nullptr),
@@ -373,7 +347,7 @@ void FORTE_ASSEMBLE_LWORD_FROM_BOOLS::readInputData(const TEventID paEIID) {
 void FORTE_ASSEMBLE_LWORD_FROM_BOOLS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_, conn_);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
       break;
     }
     default: break;

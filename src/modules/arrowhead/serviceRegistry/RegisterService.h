@@ -23,8 +23,6 @@ class FORTE_RegisterService : public CCompositeFB {
     DECLARE_FIRMWARE_FB(FORTE_RegisterService)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
     CIEC_ServiceRegistryEntry &serviceRegistryEntry() {
       return *static_cast<CIEC_ServiceRegistryEntry *>(getDI(0));
     };
@@ -35,24 +33,15 @@ class FORTE_RegisterService : public CCompositeFB {
 
     static const TEventID scmEventregisterID = 0;
     static const TEventID scmEventunregisterID = 1;
-    static const TForteInt16 scmEIWithIndexes[];
-    static const TDataIOID scmEIWith[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventdoneRegisterID = 0;
     static const TEventID scmEventdoneUnregisterID = 1;
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_RegisterServiceAdp &registerService() {
       return (*static_cast<FORTE_RegisterServiceAdp *>(getAdapterUnchecked(0)));
     };
     static const int scm_nregisterServiceAdpNum = 0;
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const SCFB_FBConnectionData scmEventConnections[];
 
@@ -61,7 +50,6 @@ class FORTE_RegisterService : public CCompositeFB {
 
   public:
     FORTE_RegisterService(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-        CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {};
 
     ~FORTE_RegisterService() override = default;
 };

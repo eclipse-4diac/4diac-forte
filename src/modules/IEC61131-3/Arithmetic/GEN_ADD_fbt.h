@@ -55,7 +55,7 @@ class GEN_ADD final : public CGenFunctionBlock<CFunctionBlock> {
 
     CEventConnection conn_CNF;
     std::unique_ptr<CIEC_ANY_MAGNITUDE_VARIANT[]> mGenDIs;
-    std::unique_ptr<CStringDictionary::TStringId[]> mDINames;
+    std::vector<CStringDictionary::TStringId> mDINames;
     CIEC_ANY_MAGNITUDE_VARIANT var_OUT;
     COutDataConnection<CIEC_ANY_MAGNITUDE_VARIANT> conn_OUT;
 

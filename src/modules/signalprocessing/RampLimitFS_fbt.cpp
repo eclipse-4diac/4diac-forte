@@ -46,48 +46,31 @@ USE_STRING_ID(ZERO);
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS, STRID(signalprocessing__RampLimitFS))
 
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataInputNames[] = {
-    STRID(PV), STRID(VAL_ZERO), STRID(SLOW), STRID(FAST), STRID(VAL_FULL)};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataInputTypeIds[] = {
-    STRID(DINT), STRID(DINT), STRID(DINT), STRID(DINT), STRID(DINT)};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataOutputNames[] = {STRID(OUT)};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmDataOutputTypeIds[] = {STRID(DINT)};
-const TDataIOID FORTE_signalprocessing__RampLimitFS::scmEIWith[] = {
-    1, scmWithListDelimiter, 2, scmWithListDelimiter, 3, scmWithListDelimiter, 2, scmWithListDelimiter,
-    3, scmWithListDelimiter, 4, scmWithListDelimiter, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_signalprocessing__RampLimitFS::scmEIWithIndexes[] = {0, 2, 4, 6, 8, 10, 12};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventInputNames[] = {
-    STRID(ZERO), STRID(UP_SLOW), STRID(UP_FAST), STRID(DOWN_SLOW), STRID(DOWN_FAST), STRID(FULL), STRID(LOAD)};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventInputTypeIds[] = {
-    STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
-const TDataIOID FORTE_signalprocessing__RampLimitFS::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_signalprocessing__RampLimitFS::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_signalprocessing__RampLimitFS::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_signalprocessing__RampLimitFS::scmFBInterfaceSpec = {7,
-                                                                                  scmEventInputNames,
-                                                                                  scmEventInputTypeIds,
-                                                                                  scmEIWith,
-                                                                                  scmEIWithIndexes,
-                                                                                  1,
-                                                                                  scmEventOutputNames,
-                                                                                  scmEventOutputTypeIds,
-                                                                                  scmEOWith,
-                                                                                  scmEOWithIndexes,
-                                                                                  5,
-                                                                                  scmDataInputNames,
-                                                                                  scmDataInputTypeIds,
-                                                                                  1,
-                                                                                  scmDataOutputNames,
-                                                                                  scmDataOutputTypeIds,
-                                                                                  0,
-                                                                                  nullptr,
-                                                                                  0,
-                                                                                  nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(PV), STRID(VAL_ZERO), STRID(SLOW), STRID(FAST), STRID(VAL_FULL)};
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cEventInputNames = std::array{STRID(ZERO),      STRID(UP_SLOW), STRID(UP_FAST), STRID(DOWN_SLOW),
+                                           STRID(DOWN_FAST), STRID(FULL),    STRID(LOAD)};
+  const auto cEventInputTypeIds =
+      std::array{STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_signalprocessing__RampLimitFS::FORTE_signalprocessing__RampLimitFS(
     const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
     conn_CNF(*this, 0),
     conn_PV(nullptr),
     conn_VAL_ZERO(nullptr),
@@ -158,7 +141,7 @@ void FORTE_signalprocessing__RampLimitFS::readInputData(const TEventID paEIID) {
 void FORTE_signalprocessing__RampLimitFS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
       break;
     }
     default: break;

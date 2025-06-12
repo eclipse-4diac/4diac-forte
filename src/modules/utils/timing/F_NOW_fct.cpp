@@ -34,39 +34,26 @@ USE_STRING_ID(utils__timing__F_NOW);
 
 DEFINE_FIRMWARE_FB(FORTE_utils__timing__F_NOW, STRID(utils__timing__F_NOW))
 
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmDataOutputNames[] = {STRID()};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmDataOutputTypeIds[] = {STRID(DATE_AND_TIME)};
-const TForteInt16 FORTE_utils__timing__F_NOW::scmEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmEventInputTypeIds[] = {STRID(Event)};
-const TDataIOID FORTE_utils__timing__F_NOW::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_utils__timing__F_NOW::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_utils__timing__F_NOW::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_utils__timing__F_NOW::scmFBInterfaceSpec = {1,
-                                                                         scmEventInputNames,
-                                                                         scmEventInputTypeIds,
-                                                                         nullptr,
-                                                                         scmEIWithIndexes,
-                                                                         1,
-                                                                         scmEventOutputNames,
-                                                                         scmEventOutputTypeIds,
-                                                                         scmEOWith,
-                                                                         scmEOWithIndexes,
-                                                                         0,
-                                                                         nullptr,
-                                                                         nullptr,
-                                                                         1,
-                                                                         scmDataOutputNames,
-                                                                         scmDataOutputTypeIds,
-                                                                         0,
-                                                                         nullptr,
-                                                                         0,
-                                                                         nullptr};
+const auto cDataOutputNames = std::array{STRID()};
+const auto cEventInputNames = std::array{STRID(REQ)};
+const auto cEventInputTypeIds = std::array{STRID(Event)};
+const auto cEventOutputNames = std::array{STRID(CNF)};
+const auto cEventOutputTypeIds = std::array{STRID(Event)};
+const SFBInterfaceSpec cFBInterfaceSpec = {
+    .mEINames = cEventInputNames,
+    .mEITypeNames = cEventInputTypeIds,
+    .mEONames = cEventOutputNames,
+    .mEOTypeNames = cEventOutputTypeIds,
+    .mDINames = {},
+    .mDONames = cDataOutputNames,
+    .mDIONames = {},
+    .mSocketNames = {},
+    .mPlugNames = {},
+};
 
 FORTE_utils__timing__F_NOW::FORTE_utils__timing__F_NOW(const CStringDictionary::TStringId paInstanceNameId,
                                                        forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_(*this, 0, var_) {
 }
@@ -82,7 +69,7 @@ void FORTE_utils__timing__F_NOW::readInputData(TEventID) {
 void FORTE_utils__timing__F_NOW::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_, conn_);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
       break;
     }
     default: break;

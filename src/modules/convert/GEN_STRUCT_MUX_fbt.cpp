@@ -22,12 +22,11 @@ USE_STRING_ID(REQ);
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX, STRID(GEN_STRUCT_MUX));
 
-const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventInputTypeIds[] = {STRID(Event)};
-const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId GEN_STRUCT_MUX::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const CStringDictionary::TStringId GEN_STRUCT_MUX::scmDataOutputNames[] = {STRID(OUT)};
+namespace {
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+} // namespace
 
 void GEN_STRUCT_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if (scmEventREQID == paEIID) {
@@ -43,13 +42,13 @@ GEN_STRUCT_MUX::GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceName
 }
 
 void GEN_STRUCT_MUX::readInputData(TEventID) {
-  for (TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
+  for (TPortId i = 0; i < getFBInterfaceSpec().getNumDIs(); ++i) {
     readData(i, *var_OUT->getMember(i), mGenDIConns[i]);
   }
 }
 
 void GEN_STRUCT_MUX::writeOutputData(TEventID) {
-  writeData(getFBInterfaceSpec().mNumDIs + 0, *var_OUT, *conn_OUT);
+  writeData(getFBInterfaceSpec().getNumDIs() + 0, *var_OUT, *conn_OUT);
 }
 
 bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
@@ -85,16 +84,10 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
 
   conn_OUT = std::make_unique<CGenDataConnection>(*this, 0, *var_OUT);
 
-  paInterfaceSpec.mNumEIs = 1;
-  paInterfaceSpec.mEINames = scmEventInputNames;
-  paInterfaceSpec.mEITypeNames = scmEventInputTypeIds;
-  paInterfaceSpec.mNumEOs = 1;
-  paInterfaceSpec.mEONames = scmEventOutputNames;
-  paInterfaceSpec.mEOTypeNames = scmEventOutputTypeIds;
-  paInterfaceSpec.mNumDIs = structSize;
-  paInterfaceSpec.mDINames = var_OUT->elementNames();
-  paInterfaceSpec.mNumDOs = 1;
-  paInterfaceSpec.mDONames = scmDataOutputNames;
+  paInterfaceSpec.mEINames = cEventInputNames;
+  paInterfaceSpec.mEONames = cEventOutputNames;
+  paInterfaceSpec.mDINames = std::span(var_OUT->elementNames(), var_OUT->getStructSize());
+  paInterfaceSpec.mDONames = cDataOutputNames;
   return true;
 }
 

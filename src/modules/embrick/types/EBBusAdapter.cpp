@@ -29,61 +29,37 @@ USE_STRING_ID(UINT);
 USE_STRING_ID(UpdateInterval);
 
 namespace {
-  const CStringDictionary::TStringId scmDataInputNames[] = {STRID(QO)};
-  const CStringDictionary::TStringId scmDataInputTypeIds[] = {STRID(BOOL)};
-  const CStringDictionary::TStringId scmDataOutputNames[] = {STRID(QI), STRID(MasterId), STRID(Index),
-                                                             STRID(UpdateInterval)};
-  const CStringDictionary::TStringId scmDataOutputTypeIds[] = {STRID(BOOL), STRID(UINT), STRID(UINT), STRID(UINT)};
-  const TDataIOID scmEIWith[] = {0, CFunctionBlock::scmWithListDelimiter};
-  const TForteInt16 scmEIWithIndexes[] = {0};
-  const CStringDictionary::TStringId scmEventInputNames[] = {STRID(INITO)};
-  const CStringDictionary::TStringId scmEventInputTypeIds[] = {STRID(EInit)};
-  const TDataIOID scmEOWith[] = {2, 3, 1, 0, CFunctionBlock::scmWithListDelimiter};
-  const TForteInt16 scmEOWithIndexes[] = {0};
-  const CStringDictionary::TStringId scmEventOutputNames[] = {STRID(INIT)};
-  const CStringDictionary::TStringId scmEventOutputTypeIds[] = {STRID(EInit)};
+  const CStringDictionary::TStringId cDataInputNames[] = {STRID(QO)};
+  const CStringDictionary::TStringId cDataOutputNames[] = {STRID(QI), STRID(MasterId), STRID(Index),
+                                                           STRID(UpdateInterval)};
+  const CStringDictionary::TStringId cEventInputNames[] = {STRID(INITO)};
+  const CStringDictionary::TStringId cEventInputTypeIds[] = {STRID(EInit)};
+  const CStringDictionary::TStringId cEventOutputNames[] = {STRID(INIT)};
+  const CStringDictionary::TStringId cEventOutputTypeIds[] = {STRID(EInit)};
 
-  const SFBInterfaceSpec scmFBInterfaceSpecSocket = {1,
-                                                     scmEventInputNames,
-                                                     scmEventInputTypeIds,
-                                                     scmEIWith,
-                                                     scmEIWithIndexes,
-                                                     1,
-                                                     scmEventOutputNames,
-                                                     scmEventOutputTypeIds,
-                                                     scmEOWith,
-                                                     scmEOWithIndexes,
-                                                     1,
-                                                     scmDataInputNames,
-                                                     scmDataInputTypeIds,
-                                                     4,
-                                                     scmDataOutputNames,
-                                                     scmDataOutputTypeIds,
-                                                     0,
-                                                     nullptr,
-                                                     0,
-                                                     nullptr};
+  const SFBInterfaceSpec scmFBInterfaceSpecSocket = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
 
-  const SFBInterfaceSpec scmFBInterfaceSpecPlug = {1,
-                                                   scmEventOutputNames,
-                                                   scmEventOutputTypeIds,
-                                                   scmEOWith,
-                                                   scmEOWithIndexes,
-                                                   1,
-                                                   scmEventInputNames,
-                                                   scmEventInputTypeIds,
-                                                   scmEIWith,
-                                                   scmEIWithIndexes,
-                                                   4,
-                                                   scmDataOutputNames,
-                                                   scmDataOutputTypeIds,
-                                                   1,
-                                                   scmDataInputNames,
-                                                   scmDataInputTypeIds,
-                                                   0,
-                                                   nullptr,
-                                                   0,
-                                                   nullptr};
+  const SFBInterfaceSpec scmFBInterfaceSpecPlug = {
+      .mEINames = cEventOutputNames,
+      .mEITypeNames = cEventOutputTypeIds,
+      .mEONames = cEventInputNames,
+      .mEOTypeNames = cEventInputTypeIds,
+      .mDINames = cDataOutputNames,
+      .mDONames = cDataInputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
 
   const auto scmSlaveConfigurationIO = std::array<const TForteUInt8, 1>{3};
 
@@ -132,7 +108,7 @@ void FORTE_EBBusAdapter_Plug::readInputData(TEventID paEIID) {
 
 void FORTE_EBBusAdapter_Plug::writeOutputData(TEventID paEIID) {
   if (paEIID == scmEventINITOID) {
-    writeData(scmFBInterfaceSpecPlug.mNumDIs + 0, var_QO, conn_QO);
+    writeData(scmFBInterfaceSpecPlug.getNumDIs() + 0, var_QO, conn_QO);
   }
 }
 
@@ -195,10 +171,10 @@ void FORTE_EBBusAdapter_Socket::readInputData(TEventID paEIID) {
 
 void FORTE_EBBusAdapter_Socket::writeOutputData(TEventID paEIID) {
   if (paEIID == scmEventINITID) {
-    writeData(scmFBInterfaceSpecSocket.mNumDIs + 0, var_QI, conn_QI);
-    writeData(scmFBInterfaceSpecSocket.mNumDIs + 1, var_MasterId, conn_MasterId);
-    writeData(scmFBInterfaceSpecSocket.mNumDIs + 2, var_Index, conn_MasterIndex);
-    writeData(scmFBInterfaceSpecSocket.mNumDIs + 3, var_UpdateInterval, conn_UpdateInterval);
+    writeData(scmFBInterfaceSpecSocket.getNumDIs() + 0, var_QI, conn_QI);
+    writeData(scmFBInterfaceSpecSocket.getNumDIs() + 1, var_MasterId, conn_MasterId);
+    writeData(scmFBInterfaceSpecSocket.getNumDIs() + 2, var_Index, conn_MasterIndex);
+    writeData(scmFBInterfaceSpecSocket.getNumDIs() + 3, var_UpdateInterval, conn_UpdateInterval);
   }
 }
 

@@ -36,7 +36,6 @@ class Config_EMB_RES final : public CResource {
     CDataConnection *conn_opcua_namespace;
     COutDataConnection<CIEC_WSTRING> conn_opcua_namespace_int;
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const CStringDictionary::TStringId scmVarInputNameIds[];
     static const CStringDictionary::TStringId scmDIDataTypeIds[];

@@ -34,13 +34,9 @@ class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
     }
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[], scmDIDataTypeIds[];
-
     static const TEventID scmEventEIID = 0;
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
-    std::unique_ptr<CStringDictionary::TStringId[]> mEventOutputNames;
+    std::vector<CStringDictionary::TStringId> mEventOutputNames;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 

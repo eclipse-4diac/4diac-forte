@@ -60,59 +60,35 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_PLCnextAXLSEDI16, STRID(PLCnextAXLSEDI16))
 
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmDataInputNames[] = {
-    STRID(QI),    STRID(DI_1),  STRID(DI_2),  STRID(DI_3),  STRID(DI_4),  STRID(DI_5),
-    STRID(DI_6),  STRID(DI_7),  STRID(DI_8),  STRID(DI_9),  STRID(DI_10), STRID(DI_11),
-    STRID(DI_12), STRID(DI_13), STRID(DI_14), STRID(DI_15), STRID(DI_16)};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmDataInputTypeIds[] = {
-    STRID(BOOL),   STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING),
-    STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING),
-    STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING)};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
-const TDataIOID FORTE_PLCnextAXLSEDI16::scmEIWith[] = {0, 1,  2,  3,  4,  5,  6,  7,  8,
-                                                       9, 10, 11, 12, 13, 14, 15, 16, scmWithListDelimiter};
-const TForteInt16 FORTE_PLCnextAXLSEDI16::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventInputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventInputTypeIds[] = {STRID(EInit)};
-const TDataIOID FORTE_PLCnextAXLSEDI16::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_PLCnextAXLSEDI16::scmEOWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
-const CStringDictionary::TStringId FORTE_PLCnextAXLSEDI16::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
-const SAdapterInstanceDef FORTE_PLCnextAXLSEDI16::scmAdapterInstances[] = {
-    {STRID(PLCnextBusAdapter), STRID(BusAdapterIn), false}, {STRID(PLCnextBusAdapter), STRID(BusAdapterOut), true}};
-
 namespace {
+  const auto cDataInputNames =
+      std::array{STRID(QI),    STRID(DI_1),  STRID(DI_2),  STRID(DI_3),  STRID(DI_4),  STRID(DI_5),
+                 STRID(DI_6),  STRID(DI_7),  STRID(DI_8),  STRID(DI_9),  STRID(DI_10), STRID(DI_11),
+                 STRID(DI_12), STRID(DI_13), STRID(DI_14), STRID(DI_15), STRID(DI_16)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  const auto cEventInputNames = std::array{STRID(INIT)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit)};
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
+  const auto cEventOutputTypeIds = std::array{STRID(EInit), STRID(Event)};
   const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
   const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
-} // namespace
 
-const SFBInterfaceSpec FORTE_PLCnextAXLSEDI16::scmFBInterfaceSpec = {1,
-                                                                     scmEventInputNames,
-                                                                     scmEventInputTypeIds,
-                                                                     scmEIWith,
-                                                                     scmEIWithIndexes,
-                                                                     2,
-                                                                     scmEventOutputNames,
-                                                                     scmEventOutputTypeIds,
-                                                                     scmEOWith,
-                                                                     scmEOWithIndexes,
-                                                                     17,
-                                                                     scmDataInputNames,
-                                                                     scmDataInputTypeIds,
-                                                                     2,
-                                                                     scmDataOutputNames,
-                                                                     scmDataOutputTypeIds,
-                                                                     0,
-                                                                     nullptr,
-                                                                     2,
-                                                                     scmAdapterInstances,
-                                                                     cSocketNameIds,
-                                                                     cPlugNameIds};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = cSocketNameIds,
+      .mPlugNames = cPlugNameIds,
+  };
+} // namespace
 
 FORTE_PLCnextAXLSEDI16::FORTE_PLCnextAXLSEDI16(const CStringDictionary::TStringId paInstanceNameId,
                                                forte::core::CFBContainer &paContainer) :
-    PLCnextSlaveHandler(PLCnextSlaveHandler::Input, paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    PLCnextSlaveHandler(PLCnextSlaveHandler::Input, paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_DI_1(""_STRING),
     var_DI_2(""_STRING),
@@ -205,13 +181,13 @@ void FORTE_PLCnextAXLSEDI16::readInputData(const TEventID paEIID) {
 void FORTE_PLCnextAXLSEDI16::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     case scmEventINDID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

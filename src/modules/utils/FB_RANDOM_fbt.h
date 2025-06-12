@@ -35,24 +35,11 @@ class FORTE_FB_RANDOM final : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FB_RANDOM)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventREQID = 1;
-    static const TDataIOID scmEIWith[];
-    static const TForteInt16 scmEIWithIndexes[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventCNFID = 1;
-    static const TDataIOID scmEOWith[];
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     CIEC_ANY *getVarInternal(size_t) override;
 

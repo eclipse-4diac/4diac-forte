@@ -42,9 +42,7 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
   // Test for FB with internal vars
 
   class CInternalVarTestFB : public CBasicFB {
-      const SFBInterfaceSpec gcEmptyInterface = {0,       nullptr, nullptr, nullptr, nullptr, 0,       nullptr,
-                                                 nullptr, nullptr, nullptr, 0,       nullptr, nullptr, 0,
-                                                 nullptr, nullptr, 0,       nullptr, 0,       nullptr};
+      const SFBInterfaceSpec gcEmptyInterface = {};
 
     public:
       CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) :

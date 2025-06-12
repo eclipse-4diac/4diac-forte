@@ -50,45 +50,31 @@ USE_STRING_ID(UpdateInterval);
 
 DEFINE_FIRMWARE_FB(FORTE_Esp32EthernetKitIO, STRID(Esp32EthernetKitIO))
 
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataInputNames[] = {
-    STRID(QI), STRID(LED0), STRID(SW0), STRID(ADC_CH_0), STRID(PWM), STRID(UpdateInterval)};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataInputTypeIds[] = {
-    STRID(BOOL), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(TIME)};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING)};
-const TDataIOID FORTE_Esp32EthernetKitIO::scmEIWith[] = {0, 5, 1, 2, 3, 4, scmWithListDelimiter};
-const TForteInt16 FORTE_Esp32EthernetKitIO::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventInputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventInputTypeIds[] = {STRID(EInit)};
-const TDataIOID FORTE_Esp32EthernetKitIO::scmEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_Esp32EthernetKitIO::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventOutputNames[] = {STRID(INITO)};
-const CStringDictionary::TStringId FORTE_Esp32EthernetKitIO::scmEventOutputTypeIds[] = {STRID(EInit)};
-const SFBInterfaceSpec FORTE_Esp32EthernetKitIO::scmFBInterfaceSpec = {1,
-                                                                       scmEventInputNames,
-                                                                       scmEventInputTypeIds,
-                                                                       scmEIWith,
-                                                                       scmEIWithIndexes,
-                                                                       1,
-                                                                       scmEventOutputNames,
-                                                                       scmEventOutputTypeIds,
-                                                                       scmEOWith,
-                                                                       scmEOWithIndexes,
-                                                                       6,
-                                                                       scmDataInputNames,
-                                                                       scmDataInputTypeIds,
-                                                                       2,
-                                                                       scmDataOutputNames,
-                                                                       scmDataOutputTypeIds,
-                                                                       0,
-                                                                       nullptr,
-                                                                       0,
-                                                                       nullptr};
+namespace {
+  const auto cDataInputNames =
+      std::array{STRID(QI), STRID(LED0), STRID(SW0), STRID(ADC_CH_0), STRID(PWM), STRID(UpdateInterval)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  const auto cEventInputNames = std::array{STRID(INIT)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit)};
+  const auto cEventOutputNames = std::array{STRID(INITO)};
+  const auto cEventOutputTypeIds = std::array{STRID(EInit)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const CStringDictionary::TStringId paInstanceNameId,
                                                    forte::core::CFBContainer &paContainer) :
 #pragma region base class spec
-    FORTE_ZephyrIOBase(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    FORTE_ZephyrIOBase(paContainer, cFBInterfaceSpec, paInstanceNameId),
 #pragma endregion base class spec
     var_QI(0_BOOL),
     var_LED0(""_STRING),
@@ -141,8 +127,8 @@ void FORTE_Esp32EthernetKitIO::readInputData(const TEventID paEIID) {
 void FORTE_Esp32EthernetKitIO::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

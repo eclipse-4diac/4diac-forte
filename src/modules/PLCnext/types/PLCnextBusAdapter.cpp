@@ -33,62 +33,38 @@ USE_STRING_ID(UpdateInterval);
 
 DEFINE_ADAPTER_TYPE(FORTE_PLCnextBusAdapter, STRID(PLCnextBusAdapter))
 
-const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmDataInputNames[] = {STRID(QO)};
-const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmDataInputTypeIds[] = {STRID(BOOL)};
-const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmDataOutputNames[] = {
-    STRID(QI), STRID(MasterId), STRID(Index), STRID(UpdateInterval)};
-const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(UINT),
-                                                                                      STRID(UINT), STRID(UINT)};
-const TDataIOID FORTE_PLCnextBusAdapter::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_PLCnextBusAdapter::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmEventInputNames[] = {STRID(INITO)};
-const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmEventInputTypeIds[] = {STRID(EInit)};
-const TDataIOID FORTE_PLCnextBusAdapter::scmEOWith[] = {2, 3, 1, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_PLCnextBusAdapter::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmEventOutputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_PLCnextBusAdapter::scmEventOutputTypeIds[] = {STRID(EInit)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(QO)};
+  const auto cDataOutputNames = std::array{STRID(QI), STRID(MasterId), STRID(Index), STRID(UpdateInterval)};
+  const auto cEventInputNames = std::array{STRID(INITO)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit)};
+  const auto cEventOutputNames = std::array{STRID(INIT)};
+  const auto cEventOutputTypeIds = std::array{STRID(EInit)};
 
-const SFBInterfaceSpec FORTE_PLCnextBusAdapter::scmFBInterfaceSpecSocket = {1,
-                                                                            scmEventInputNames,
-                                                                            scmEventInputTypeIds,
-                                                                            scmEIWith,
-                                                                            scmEIWithIndexes,
-                                                                            1,
-                                                                            scmEventOutputNames,
-                                                                            scmEventOutputTypeIds,
-                                                                            scmEOWith,
-                                                                            scmEOWithIndexes,
-                                                                            1,
-                                                                            scmDataInputNames,
-                                                                            scmDataInputTypeIds,
-                                                                            4,
-                                                                            scmDataOutputNames,
-                                                                            scmDataOutputTypeIds,
-                                                                            0,
-                                                                            nullptr,
-                                                                            0,
-                                                                            nullptr};
+  const SFBInterfaceSpec cFBInterfaceSpecSocket = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
 
-const SFBInterfaceSpec FORTE_PLCnextBusAdapter::scmFBInterfaceSpecPlug = {1,
-                                                                          scmEventOutputNames,
-                                                                          scmEventOutputTypeIds,
-                                                                          scmEOWith,
-                                                                          scmEOWithIndexes,
-                                                                          1,
-                                                                          scmEventInputNames,
-                                                                          scmEventInputTypeIds,
-                                                                          scmEIWith,
-                                                                          scmEIWithIndexes,
-                                                                          4,
-                                                                          scmDataOutputNames,
-                                                                          scmDataOutputTypeIds,
-                                                                          1,
-                                                                          scmDataInputNames,
-                                                                          scmDataInputTypeIds,
-                                                                          0,
-                                                                          nullptr,
-                                                                          0,
-                                                                          nullptr};
+  const SFBInterfaceSpec cFBInterfaceSpecPlug = {
+      .mEINames = cEventOutputNames,
+      .mEITypeNames = cEventOutputTypeIds,
+      .mEONames = cEventInputNames,
+      .mEOTypeNames = cEventInputTypeIds,
+      .mDINames = cDataOutputNames,
+      .mDONames = cDataInputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_PLCnextBusAdapter::FORTE_PLCnextBusAdapter(forte::core::CFBContainer &paContainer,
                                                  const SFBInterfaceSpec &paInterfaceSpec,
@@ -114,8 +90,7 @@ void FORTE_PLCnextBusAdapter::setInitialValues() {
 FORTE_PLCnextBusAdapter_Plug::FORTE_PLCnextBusAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
                                                            forte::core::CFBContainer &paContainer,
                                                            TForteUInt8 paParentAdapterlistID) :
-    FORTE_PLCnextBusAdapter(
-        paContainer, FORTE_PLCnextBusAdapter::scmFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
+    FORTE_PLCnextBusAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_INITO(*this, 0),
     conn_QI(nullptr),
     conn_MasterId(nullptr),
@@ -196,8 +171,7 @@ CDataConnection *FORTE_PLCnextBusAdapter_Plug::getDOConUnchecked(const TPortId p
 FORTE_PLCnextBusAdapter_Socket::FORTE_PLCnextBusAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
                                                                forte::core::CFBContainer &paContainer,
                                                                TForteUInt8 paParentAdapterlistID) :
-    FORTE_PLCnextBusAdapter(
-        paContainer, FORTE_PLCnextBusAdapter::scmFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
+    FORTE_PLCnextBusAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_INIT(*this, 0),
     conn_QO(nullptr),
     conn_QI(*this, 0, var_QI),

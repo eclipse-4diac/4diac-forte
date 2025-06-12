@@ -33,27 +33,27 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_F_WSTRING_AS_LREAL, STRID(F_WSTRING_AS_LREAL))
 
-const CStringDictionary::TStringId FORTE_F_WSTRING_AS_LREAL::scmDataInputNames[] = {STRID(IN)};
-const CStringDictionary::TStringId FORTE_F_WSTRING_AS_LREAL::scmDataInputTypeIds[] = {STRID(WSTRING)};
-const CStringDictionary::TStringId FORTE_F_WSTRING_AS_LREAL::scmDataOutputNames[] = {STRID(OUT)};
-const CStringDictionary::TStringId FORTE_F_WSTRING_AS_LREAL::scmDataOutputTypeIds[] = {STRID(LREAL)};
-const TDataIOID FORTE_F_WSTRING_AS_LREAL::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_WSTRING_AS_LREAL::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_WSTRING_AS_LREAL::scmEventInputNames[] = {STRID(REQ)};
-const TDataIOID FORTE_F_WSTRING_AS_LREAL::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_WSTRING_AS_LREAL::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_WSTRING_AS_LREAL::scmEventOutputNames[] = {STRID(CNF)};
-const SFBInterfaceSpec FORTE_F_WSTRING_AS_LREAL::scmFBInterfaceSpec = {
-  1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
+
 
 FORTE_F_WSTRING_AS_LREAL::FORTE_F_WSTRING_AS_LREAL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(u""_WSTRING),
     var_OUT(0_LREAL),
     conn_CNF(*this, 0),
@@ -95,7 +95,7 @@ void FORTE_F_WSTRING_AS_LREAL::readInputData(const TEventID paEIID) {
 void FORTE_F_WSTRING_AS_LREAL::writeOutputData(const TEventID paEIID) {
   switch(paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
       break;
     }
     default:

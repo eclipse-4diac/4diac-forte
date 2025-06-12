@@ -81,12 +81,12 @@ class CGenFunctionBlock : public T {
     template<typename Arg>
     void writeArgument(TPortId paIndex, const Arg &paArg) {
       const SFBInterfaceSpec &interfaceSpec = T::getFBInterfaceSpec();
-      if (paIndex < interfaceSpec.mNumDIs) {
+      if (paIndex < interfaceSpec.getNumDIs()) {
         T::getDIFromPortId(paIndex)->setValue(paArg);
-      } else if (paIndex < interfaceSpec.mNumDIs + interfaceSpec.mNumDIOs) {
-        T::getDIOFromPortId(paIndex - interfaceSpec.mNumDIs)->setValue(paArg);
-      } else if (paIndex < interfaceSpec.mNumDIs + interfaceSpec.mNumDIOs + interfaceSpec.mNumDOs) {
-        T::getDOFromPortId(paIndex - interfaceSpec.mNumDIs - interfaceSpec.mNumDIOs)->setValue(paArg);
+      } else if (paIndex < interfaceSpec.getNumDIs() + interfaceSpec.getNumDIOs()) {
+        T::getDIOFromPortId(paIndex - interfaceSpec.getNumDIs())->setValue(paArg);
+      } else if (paIndex < interfaceSpec.getNumDIs() + interfaceSpec.getNumDIOs() + interfaceSpec.getNumDOs()) {
+        T::getDOFromPortId(paIndex - interfaceSpec.getNumDIs() - interfaceSpec.getNumDIOs())->setValue(paArg);
       }
     }
 
@@ -99,10 +99,10 @@ class CGenFunctionBlock : public T {
     template<typename Arg>
     void writeInputArgument(TPortId paIndex, const Arg &paArg) {
       const SFBInterfaceSpec &interfaceSpec = T::getFBInterfaceSpec();
-      if (paIndex < interfaceSpec.mNumDIs) {
+      if (paIndex < interfaceSpec.getNumDIs()) {
         T::getDIFromPortId(paIndex)->setValue(paArg);
-      } else if (paIndex < interfaceSpec.mNumDIs + interfaceSpec.mNumDIOs) {
-        T::getDIOFromPortId(paIndex - interfaceSpec.mNumDIs)->setValue(paArg);
+      } else if (paIndex < interfaceSpec.getNumDIs() + interfaceSpec.getNumDIOs()) {
+        T::getDIOFromPortId(paIndex - interfaceSpec.getNumDIs())->setValue(paArg);
       } // skip DO
     }
 
@@ -115,25 +115,26 @@ class CGenFunctionBlock : public T {
     template<typename Arg>
     void readOutputArgument(TPortId paIndex, Arg &&paArg) {
       const SFBInterfaceSpec &interfaceSpec = T::getFBInterfaceSpec();
-      if (paIndex < interfaceSpec.mNumDIs) {
+      if (paIndex < interfaceSpec.getNumDIs()) {
         // do nothing
-      } else if (paIndex < interfaceSpec.mNumDIs + interfaceSpec.mNumDIOs) {
+      } else if (paIndex < interfaceSpec.getNumDIs() + interfaceSpec.getNumDIOs()) {
         if constexpr (std::is_const_v<std::remove_reference_t<Arg>>) {
           DEVLOG_ERROR("[CGenFunctionBlock] Trying to pass const argument to in/out variable\n");
         } else {
-          paArg.setValue(T::getDIOFromPortId(paIndex - interfaceSpec.mNumDIs)->unwrap());
+          paArg.setValue(T::getDIOFromPortId(paIndex - interfaceSpec.getNumDIs())->unwrap());
         }
-      } else if (paIndex < interfaceSpec.mNumDIs + interfaceSpec.mNumDIOs + interfaceSpec.mNumDOs) {
+      } else if (paIndex < interfaceSpec.getNumDIs() + interfaceSpec.getNumDIOs() + interfaceSpec.getNumDOs()) {
         if constexpr (std::is_const_v<std::remove_reference_t<Arg>>) {
           DEVLOG_ERROR("[CGenFunctionBlock] Trying to pass const argument to output variable\n");
         } else {
-          paArg.setValue(T::getDOFromPortId(paIndex - interfaceSpec.mNumDIs - interfaceSpec.mNumDIOs)->unwrap());
+          paArg.setValue(
+              T::getDOFromPortId(paIndex - interfaceSpec.getNumDIs() - interfaceSpec.getNumDIOs())->unwrap());
         }
       }
     }
 
     static void generateGenericInterfacePointNameArray(const char *const paPrefix,
-                                                       CStringDictionary::TStringId *paNamesArayStart,
+                                                       std::vector<CStringDictionary::TStringId> &paNamesArayStart,
                                                        size_t paNumGenericDataPoints);
 
     void setupFBInterface();
@@ -149,7 +150,7 @@ class CGenFunctionBlock : public T {
     void createGenEOCons() {
       if (getGenEONums()) {
         mGenEOConns.reserve(getGenEONums());
-        for (size_t i = getGenEOOffset(); i < getGenInterfaceSpec().mNumEOs; ++i) {
+        for (size_t i = getGenEOOffset(); i < getGenInterfaceSpec().getNumEOs(); ++i) {
           mGenEOConns.emplace_back(*this, i);
         }
       }
@@ -164,7 +165,7 @@ class CGenFunctionBlock : public T {
     void createGenDOCons() {
       if (getGenDONums()) {
         mGenDOConns.reserve(getGenDONums());
-        for (size_t i = getGenDOOffset(); i < getGenInterfaceSpec().mNumDOs; ++i) {
+        for (size_t i = getGenDOOffset(); i < getGenInterfaceSpec().getNumDOs(); ++i) {
           mGenDOConns.emplace_back(*this, i, *getDO(i));
         }
       }
@@ -175,7 +176,7 @@ class CGenFunctionBlock : public T {
     }
 
     size_t getGenEONums() {
-      return getGenInterfaceSpec().mNumEOs - getGenEOOffset();
+      return getGenInterfaceSpec().getNumEOs() - getGenEOOffset();
     }
 
     virtual size_t getGenEOOffset() {
@@ -183,7 +184,7 @@ class CGenFunctionBlock : public T {
     }
 
     size_t getGenDINums() {
-      return getGenInterfaceSpec().mNumDIs - getGenDIOffset();
+      return getGenInterfaceSpec().getNumDIs() - getGenDIOffset();
     }
 
     virtual size_t getGenDIOffset() {
@@ -191,7 +192,7 @@ class CGenFunctionBlock : public T {
     }
 
     size_t getGenDONums() {
-      return getGenInterfaceSpec().mNumDOs - getGenDOOffset();
+      return getGenInterfaceSpec().getNumDOs() - getGenDOOffset();
     }
 
     virtual size_t getGenDOOffset() {
@@ -268,11 +269,11 @@ void CGenFunctionBlock<T>::setInitialValues() {
   T::setInitialValues();
   const SFBInterfaceSpec &interfaceSpec = T::getFBInterfaceSpec();
 
-  for (TPortId i = 0; i < interfaceSpec.mNumDIs; ++i) {
+  for (TPortId i = 0; i < interfaceSpec.getNumDIs(); ++i) {
     getDI(i)->reset();
   }
 
-  for (TPortId i = 0; i < interfaceSpec.mNumDOs; ++i) {
+  for (TPortId i = 0; i < interfaceSpec.getNumDOs(); ++i) {
     getDO(i)->reset();
   }
 
@@ -286,9 +287,10 @@ void CGenFunctionBlock<T>::setInitialValues() {
 }
 
 template<class T>
-void CGenFunctionBlock<T>::generateGenericInterfacePointNameArray(const char *const paPrefix,
-                                                                  CStringDictionary::TStringId *paNamesArayStart,
-                                                                  size_t paNumGenericDataPoints) {
+void CGenFunctionBlock<T>::generateGenericInterfacePointNameArray(
+    const char *const paPrefix,
+    std::vector<CStringDictionary::TStringId> &paNamesArayStart,
+    size_t paNumGenericDataPoints) {
   size_t len = strlen(paPrefix);
 
   unsigned int noOfDigits = 0;
@@ -306,6 +308,7 @@ void CGenFunctionBlock<T>::generateGenericInterfacePointNameArray(const char *co
     for (size_t i = 0; i <= noOfDigits; i++) {
       acBuffer[len + i] = '\0';
     }
+    paNamesArayStart.reserve(paNamesArayStart.size() + paNumGenericDataPoints);
 
     for (size_t i = 1; i <= paNumGenericDataPoints; i++) {
       if (i < 10) { // 1 digit
@@ -324,7 +327,7 @@ void CGenFunctionBlock<T>::generateGenericInterfacePointNameArray(const char *co
         }
         acBuffer[len + 2] = static_cast<char>(0x30 + i % 10);
       }
-      paNamesArayStart[i - 1] = CStringDictionary::insert(acBuffer);
+      paNamesArayStart.emplace_back(CStringDictionary::insert(acBuffer));
     }
   } else {
     DEVLOG_ERROR("CFunctionBlock::generateGenericInterfacePointNameArray won't be able to create all the generics "

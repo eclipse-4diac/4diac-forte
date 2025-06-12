@@ -46,45 +46,26 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(DEV_MGR, STRID(DEV_MGR))
 
-const CStringDictionary::TStringId DEV_MGR::scmDataInputNames[] = {STRID(QI), STRID(ID), STRID(RESP)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(QI), STRID(ID), STRID(RESP)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS), STRID(DST), STRID(RQST)};
+  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
 
-const CStringDictionary::TStringId DEV_MGR::scmDataInputTypeIds[] = {STRID(BOOL), STRID(WSTRING), STRID(STRING)};
-
-const CStringDictionary::TStringId DEV_MGR::scmDataOutputNames[] = {STRID(QO), STRID(STATUS), STRID(DST), STRID(RQST)};
-
-const CStringDictionary::TStringId DEV_MGR::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(STRING),
-                                                                      STRID(STRING)};
-
-const TForteInt16 DEV_MGR::scmEIWithIndexes[] = {0, -1};
-const TDataIOID DEV_MGR::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId DEV_MGR::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
-const CStringDictionary::TStringId DEV_MGR::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-
-const TDataIOID DEV_MGR::scmEOWith[] = {0, 1, scmWithListDelimiter, 2, 3, scmWithListDelimiter};
-const TForteInt16 DEV_MGR::scmEOWithIndexes[] = {0, -1, 3};
-const CStringDictionary::TStringId DEV_MGR::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
-const CStringDictionary::TStringId DEV_MGR::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-
-const SFBInterfaceSpec DEV_MGR::scmFBInterfaceSpec = {2,
-                                                      scmEventInputNames,
-                                                      scmEventInputTypeIds,
-                                                      scmEIWith,
-                                                      scmEIWithIndexes,
-                                                      2,
-                                                      scmEventOutputNames,
-                                                      scmEventOutputTypeIds,
-                                                      scmEOWith,
-                                                      scmEOWithIndexes,
-                                                      3,
-                                                      scmDataInputNames,
-                                                      scmDataInputTypeIds,
-                                                      4,
-                                                      scmDataOutputNames,
-                                                      scmDataOutputTypeIds,
-                                                      0,
-                                                      nullptr,
-                                                      0,
-                                                      nullptr};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 void DEV_MGR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if (scmEventINITID == paEIID) {
@@ -128,7 +109,7 @@ DEV_MGR::DEV_MGR(CStringDictionary::TStringId paInstanceNameId, forte::core::CFB
     CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Server),
     mDevice(*paContainer.getDevice()),
     mCommandParser(mDevice) {
-  getGenInterfaceSpec() = scmFBInterfaceSpec;
+  getGenInterfaceSpec() = cFBInterfaceSpec;
 }
 
 bool DEV_MGR::initialize() {
@@ -150,7 +131,7 @@ bool DEV_MGR::executeCommand(const char *const paDest, char *paCommand) {
 }
 
 void DEV_MGR::createGenInputData() {
-  size_t numGenDIs = getFBInterfaceSpec().mNumDIs - 2;
+  size_t numGenDIs = getFBInterfaceSpec().getNumDIs() - 2;
   mGenDIs = std::unique_ptr<CIEC_ANY *[]>(new CIEC_ANY *[numGenDIs]);
   for (size_t i = 0; i < numGenDIs; ++i) {
     mGenDIs[i] = new CIEC_STRING();
@@ -158,7 +139,7 @@ void DEV_MGR::createGenInputData() {
 }
 
 void DEV_MGR::createGenOutputData() {
-  size_t numGenDOs = getFBInterfaceSpec().mNumDOs - 2;
+  size_t numGenDOs = getFBInterfaceSpec().getNumDOs() - 2;
   mGenDOs = std::unique_ptr<CIEC_ANY *[]>(new CIEC_ANY *[numGenDOs]);
   for (size_t i = 0; i < numGenDOs; ++i) {
     mGenDOs[i] = new CIEC_STRING();

@@ -22,38 +22,26 @@ USE_STRING_ID(START);
 USE_STRING_ID(STOP);
 USE_STRING_ID(TIME);
 
+namespace {
+  const auto cEINameIds = std::array{STRID(START), STRID(STOP)};
+  const auto cEONameIds = std::array{STRID(EO)};
+  const auto cDINameIds = std::array{STRID(DT)};
 
-const CStringDictionary::TStringId CTimedFB::scmEINameIds[] = {STRID(START), STRID(STOP)};
-const CStringDictionary::TStringId CTimedFB::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
-const CStringDictionary::TStringId CTimedFB::scmEONameIds[] = {STRID(EO)};
-const CStringDictionary::TStringId CTimedFB::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-
-const CStringDictionary::TStringId CTimedFB::scmDINameIds[] = {STRID(DT)};
-const CStringDictionary::TStringId CTimedFB::scmDIDataTypeNameIds[] = {STRID(TIME)};
-
-const SFBInterfaceSpec CTimedFB::scmFBInterfaceSpec = {2,
-                                                       scmEINameIds,
-                                                       scmEventInputTypeIds,
-                                                       nullptr,
-                                                       nullptr,
-                                                       1,
-                                                       scmEONameIds,
-                                                       scmEventOutputTypeIds,
-                                                       nullptr,
-                                                       nullptr,
-                                                       1,
-                                                       scmDINameIds,
-                                                       scmDIDataTypeNameIds,
-                                                       0,
-                                                       nullptr,
-                                                       nullptr,
-                                                       0,
-                                                       nullptr,
-                                                       0,
-                                                       nullptr};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEINameIds,
+      .mEITypeNames = {},
+      .mEONames = cEONameIds,
+      .mEOTypeNames = {},
+      .mDINames = cDINameIds,
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_DT(0_TIME),
     conn_DT(nullptr),
     conn_EO(*this, 0) {

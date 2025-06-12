@@ -29,9 +29,9 @@ GEN_OR::GEN_OR(const CStringDictionary::TStringId paInstanceNameId, forte::core:
 void GEN_OR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventREQID:
-      if (getFBInterfaceSpec().mNumDIs) {
+      if (getFBInterfaceSpec().getNumDIs()) {
         var_OUT = var_IN(0);
-        for (size_t i = 1; i < getFBInterfaceSpec().mNumDIs; ++i) {
+        for (size_t i = 1; i < getFBInterfaceSpec().getNumDIs(); ++i) {
           var_OUT = std::visit([](auto &&paOUT, auto &&paIN) -> CIEC_ANY_BIT_VARIANT { return func_OR(paOUT, paIN); },
                                static_cast<CIEC_ANY_BIT_VARIANT::variant &>(var_OUT),
                                static_cast<CIEC_ANY_BIT_VARIANT::variant &>(var_IN(i)));

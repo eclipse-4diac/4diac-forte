@@ -23,34 +23,22 @@ USE_STRING_ID(WARM);
 
 DEFINE_FIRMWARE_FB(FORTE_E_RESTART, STRID(E_RESTART))
 
-const TForteInt16 FORTE_E_RESTART::scmEOWithIndexes[] = {-1, -1, -1};
-const CStringDictionary::TStringId FORTE_E_RESTART::scmEventOutputNames[] = {STRID(COLD), STRID(WARM), STRID(STOP)};
-const CStringDictionary::TStringId FORTE_E_RESTART::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event),
-                                                                               STRID(Event)};
-const SFBInterfaceSpec FORTE_E_RESTART::scmFBInterfaceSpec = {0,
-                                                              nullptr,
-                                                              nullptr,
-                                                              nullptr,
-                                                              nullptr,
-                                                              3,
-                                                              scmEventOutputNames,
-                                                              scmEventOutputTypeIds,
-                                                              nullptr,
-                                                              scmEOWithIndexes,
-                                                              0,
-                                                              nullptr,
-                                                              nullptr,
-                                                              0,
-                                                              nullptr,
-                                                              nullptr,
-                                                              0,
-                                                              nullptr,
-                                                              0,
-                                                              nullptr};
+const auto cEventOutputNames = std::array{STRID(COLD), STRID(WARM), STRID(STOP)};
+const SFBInterfaceSpec cFBInterfaceSpec = {
+    .mEINames = {},
+    .mEITypeNames = {},
+    .mEONames = cEventOutputNames,
+    .mEOTypeNames = {},
+    .mDINames = {},
+    .mDONames = {},
+    .mDIONames = {},
+    .mSocketNames = {},
+    .mPlugNames = {},
+};
 
 FORTE_E_RESTART::FORTE_E_RESTART(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
-    CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     mEventToSend(cgInvalidEventID),
     conn_COLD(*this, 0),
     conn_WARM(*this, 1),

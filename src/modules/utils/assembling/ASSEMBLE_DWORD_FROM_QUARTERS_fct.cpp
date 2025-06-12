@@ -57,49 +57,33 @@ USE_STRING_ID(REQ);
 
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_QUARTERS, STRID(ASSEMBLE_DWORD_FROM_QUARTERS))
 
-const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::scmDataInputNames[] = {
-    STRID(QUARTER_BYTE_00), STRID(QUARTER_BYTE_01), STRID(QUARTER_BYTE_02), STRID(QUARTER_BYTE_03),
-    STRID(QUARTER_BYTE_04), STRID(QUARTER_BYTE_05), STRID(QUARTER_BYTE_06), STRID(QUARTER_BYTE_07),
-    STRID(QUARTER_BYTE_08), STRID(QUARTER_BYTE_09), STRID(QUARTER_BYTE_10), STRID(QUARTER_BYTE_11),
-    STRID(QUARTER_BYTE_12), STRID(QUARTER_BYTE_13), STRID(QUARTER_BYTE_14), STRID(QUARTER_BYTE_15)};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::scmDataInputTypeIds[] = {
-    STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE),
-    STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE), STRID(BYTE)};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::scmDataOutputNames[] = {STRID()};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::scmDataOutputTypeIds[] = {STRID(DWORD)};
-const TDataIOID FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::scmEIWith[] = {
-    0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, scmWithListDelimiter};
-const TForteInt16 FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::scmEventInputTypeIds[] = {STRID(Event)};
-const TDataIOID FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::scmFBInterfaceSpec = {1,
-                                                                                 scmEventInputNames,
-                                                                                 scmEventInputTypeIds,
-                                                                                 scmEIWith,
-                                                                                 scmEIWithIndexes,
-                                                                                 1,
-                                                                                 scmEventOutputNames,
-                                                                                 scmEventOutputTypeIds,
-                                                                                 scmEOWith,
-                                                                                 scmEOWithIndexes,
-                                                                                 16,
-                                                                                 scmDataInputNames,
-                                                                                 scmDataInputTypeIds,
-                                                                                 1,
-                                                                                 scmDataOutputNames,
-                                                                                 scmDataOutputTypeIds,
-                                                                                 0,
-                                                                                 nullptr,
-                                                                                 0,
-                                                                                 nullptr};
+namespace {
+  const auto cDataInputNames =
+      std::array{STRID(QUARTER_BYTE_00), STRID(QUARTER_BYTE_01), STRID(QUARTER_BYTE_02), STRID(QUARTER_BYTE_03),
+                 STRID(QUARTER_BYTE_04), STRID(QUARTER_BYTE_05), STRID(QUARTER_BYTE_06), STRID(QUARTER_BYTE_07),
+                 STRID(QUARTER_BYTE_08), STRID(QUARTER_BYTE_09), STRID(QUARTER_BYTE_10), STRID(QUARTER_BYTE_11),
+                 STRID(QUARTER_BYTE_12), STRID(QUARTER_BYTE_13), STRID(QUARTER_BYTE_14), STRID(QUARTER_BYTE_15)};
+  const auto cDataOutputNames = std::array{STRID()};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::FORTE_ASSEMBLE_DWORD_FROM_QUARTERS(
     const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_QUARTER_BYTE_00(nullptr),
     conn_QUARTER_BYTE_01(nullptr),
@@ -168,7 +152,7 @@ void FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::readInputData(const TEventID paEIID) {
 void FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_, conn_);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
       break;
     }
     default: break;

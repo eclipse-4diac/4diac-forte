@@ -28,14 +28,12 @@ USE_STRING_ID(REQ);
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY, STRID(GEN_ARRAY2ARRAY))
 
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmDataInputNames[] = {STRID(IN)};
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmDataOutputNames[] = {STRID(OUT)};
-
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmEventInputTypeIds[] = {STRID(Event)};
-
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId GEN_ARRAY2ARRAY::scmEventOutputTypeIds[] = {STRID(Event)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+} // namespace
 
 GEN_ARRAY2ARRAY::GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
@@ -87,14 +85,10 @@ bool GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfa
   conn_OUT.getValue().setup(arrayLength, valueTypeID);
 
   // create the interface Specification
-  paInterfaceSpec.mNumEIs = 1;
-  paInterfaceSpec.mEINames = scmEventInputNames;
-  paInterfaceSpec.mNumEOs = 1;
-  paInterfaceSpec.mEONames = scmEventOutputNames;
-  paInterfaceSpec.mNumDIs = 1;
-  paInterfaceSpec.mDINames = scmDataInputNames;
-  paInterfaceSpec.mNumDOs = 1;
-  paInterfaceSpec.mDONames = scmDataOutputNames;
+  paInterfaceSpec.mEINames = cEventInputNames;
+  paInterfaceSpec.mEONames = cEventOutputNames;
+  paInterfaceSpec.mDINames = cDataInputNames;
+  paInterfaceSpec.mDONames = cDataOutputNames;
   return true;
 }
 

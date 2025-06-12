@@ -34,32 +34,24 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(RMT_RES, STRID(RMT_RES));
 
-const CStringDictionary::TStringId RMT_RES::scmVarInputNameIds[] = {STRID(MGR_ID)};
-const CStringDictionary::TStringId RMT_RES::scmDIDataTypeIds[] = {STRID(WSTRING)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(MGR_ID)};
 
-const SFBInterfaceSpec RMT_RES::scmFBInterfaceSpec = {0,
-                                                      nullptr,
-                                                      nullptr,
-                                                      nullptr,
-                                                      nullptr,
-                                                      0,
-                                                      nullptr,
-                                                      nullptr,
-                                                      nullptr,
-                                                      nullptr,
-                                                      1,
-                                                      scmVarInputNameIds,
-                                                      scmDIDataTypeIds,
-                                                      0,
-                                                      nullptr,
-                                                      nullptr,
-                                                      0,
-                                                      nullptr,
-                                                      0,
-                                                      nullptr};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = {},
+      .mEITypeNames = {},
+      .mEONames = {},
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 RMT_RES::RMT_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
-    CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
+    CResource(paDevice, cFBInterfaceSpec, paInstanceNameId),
     conn_MGR_ID(nullptr),
     conn_MGR_ID_int(*this, 0, u""_WSTRING),
     fb_START(STRID(START), *this),

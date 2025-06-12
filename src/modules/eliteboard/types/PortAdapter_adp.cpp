@@ -12,6 +12,15 @@
 
 #include "PortAdapter_adp.h"
 
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
+package fb.test;
+
+using namespace std::literals;
+
 USE_STRING_ID(DWORD);
 USE_STRING_ID(Event);
 USE_STRING_ID(GPIO_Port_Addr);
@@ -19,91 +28,155 @@ USE_STRING_ID(MAP);
 USE_STRING_ID(MAPO);
 USE_STRING_ID(PortAdapter);
 
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+namespace {
+  const auto cEventInputNames = std::array{STRID(MAPO)};
+  const auto cEventOutputNames = std::array{STRID(MAP)};
+  const auto cDataOutputNames = std::array{STRID(GPIO_Port_Addr)};
+
+  const SFBInterfaceSpec cFBInterfaceSpecSocket = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = {},
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+
+  const SFBInterfaceSpec cFBInterfaceSpecPlug = {
+      .mEINames = cEventOutputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventInputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataOutputNames,
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
 DEFINE_ADAPTER_TYPE(FORTE_PortAdapter, STRID(PortAdapter))
 
-const CStringDictionary::TStringId FORTE_PortAdapter::scmDataOutputNames[] = {STRID(GPIO_Port_Addr)};
-const CStringDictionary::TStringId FORTE_PortAdapter::scmDataOutputTypeIds[] = {STRID(DWORD)};
-const TForteInt16 FORTE_PortAdapter::scmEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_PortAdapter::scmEventInputNames[] = {STRID(MAPO)};
-const TDataIOID FORTE_PortAdapter::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_PortAdapter::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_PortAdapter::scmEventOutputNames[] = {STRID(MAP)};
 
-const CStringDictionary::TStringId FORTE_PortAdapter::scmEventInputTypeIds[] = {STRID(Event)};
-const CStringDictionary::TStringId FORTE_PortAdapter::scmEventOutputTypeIds[] = {STRID(Event)};
+FORTE_PortAdapter::FORTE_PortAdapter(forte::core::CFBContainer &paContainer,
+                             const SFBInterfaceSpec &paInterfaceSpec,
+                             const CStringDictionary::TStringId paInstanceNameId,
+                             TForteUInt8 paParentAdapterlistID) :
+    CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
+    var_GPIO_Port_Addr(0_DWORD) {
+}
 
-const SFBInterfaceSpec FORTE_PortAdapter::scmFBInterfaceSpecSocket = {1,
-                                                                      scmEventInputNames,
-                                                                      scmEventInputTypeIds,
-                                                                      nullptr,
-                                                                      scmEIWithIndexes,
-                                                                      1,
-                                                                      scmEventOutputNames,
-                                                                      scmEventOutputTypeIds,
-                                                                      scmEOWith,
-                                                                      scmEOWithIndexes,
-                                                                      0,
-                                                                      nullptr,
-                                                                      nullptr,
-                                                                      1,
-                                                                      scmDataOutputNames,
-                                                                      scmDataOutputTypeIds,
-                                                                      0,
-                                                                      nullptr,
-                                                                      0,
-                                                                      nullptr};
+void FORTE_PortAdapter::setInitialValues() {
+  forte::CAdapter::setInitialValues();
+  var_GPIO_Port_Addr = 0_DWORD;
+}
 
-const SFBInterfaceSpec FORTE_PortAdapter::scmFBInterfaceSpecPlug = {1,
-                                                                    scmEventOutputNames,
-                                                                    scmEventOutputTypeIds,
-                                                                    scmEOWith,
-                                                                    scmEOWithIndexes,
-                                                                    1,
-                                                                    scmEventInputNames,
-                                                                    scmEventInputTypeIds,
-                                                                    nullptr,
-                                                                    scmEIWithIndexes,
-                                                                    1,
-                                                                    scmDataOutputNames,
-                                                                    scmDataOutputTypeIds,
-                                                                    0,
-                                                                    nullptr,
-                                                                    nullptr,
-                                                                    0,
-                                                                    nullptr,
-                                                                    0,
-                                                                    nullptr};
 
-void FORTE_PortAdapter::readInputData(const TEventID paEIID) {
-  if (isSocket()) {
-    // nothing to do
-  } else {
-    switch (paEIID) {
-      case scmEventMAPID: {
-        readData(0, *mDIs[0], mDIConns[0]);
-        break;
+FORTE_PortAdapter_Plug::FORTE_PortAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+                                         forte::core::CFBContainer &paContainer,
+                                         TForteUInt8 paParentAdapterlistID) :
+    FORTE_PortAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
+    conn_MAPO(*this, 0),
+    conn_GPIO_Port_Addr(nullptr) {
+}
+
+void FORTE_PortAdapter_Plug::readInputData(const TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventMAPID: {
+      readData(0, var_GPIO_Port_Addr, conn_GPIO_Port_Addr);
+      if(auto peer = static_cast<FORTE_PortAdapter_Socket *>(getPeer()); peer) {
+        peer->var_GPIO_Port_Addr = var_GPIO_Port_Addr;
       }
-      default: break;
+      break;
     }
+    default:
+      break;
   }
 }
 
-void FORTE_PortAdapter::writeOutputData(const TEventID paEIID) {
-  if (isSocket()) {
-    switch (paEIID) {
-      case scmEventMAPID: {
-        writeData(getFBInterfaceSpec().mNumDIs + 0, *mDOs[0], mDOConns[0]);
-        break;
-      }
-      default: break;
-    }
-  } else {
-    // nothing to do
+void FORTE_PortAdapter_Plug::writeOutputData(TEventID) {
+  // nothing to do
+}
+CIEC_ANY *FORTE_PortAdapter_Plug::getDI(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_GPIO_Port_Addr;
   }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_PortAdapter_Plug::getDO(size_t) {
+  return nullptr;
+}
+
+CEventConnection *FORTE_PortAdapter_Plug::getEOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_MAPO;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_PortAdapter_Plug::getDIConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_GPIO_Port_Addr;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_PortAdapter_Plug::getDOConUnchecked(TPortId) {
+  return nullptr;
+}
+
+
+FORTE_PortAdapter_Socket::FORTE_PortAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+                                         forte::core::CFBContainer &paContainer,
+                                         TForteUInt8 paParentAdapterlistID) :
+    FORTE_PortAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
+    conn_MAP(*this, 0),
+    conn_GPIO_Port_Addr(*this, 0, var_GPIO_Port_Addr) {
+}
+
+void FORTE_PortAdapter_Socket::readInputData(TEventID) {
+  // nothing to do
+}
+
+void FORTE_PortAdapter_Socket::writeOutputData(const TEventID paEIID) {
+  switch(paEIID) {
+    case scmEventMAPID: {
+      writeData(0, var_GPIO_Port_Addr, conn_GPIO_Port_Addr);
+      break;
+    }
+    default:
+      break;
+  }
+}
+CIEC_ANY *FORTE_PortAdapter_Socket::getDI(size_t) {
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_PortAdapter_Socket::getDO(const size_t paIndex) {
+  switch(paIndex) {
+    case 0: return &var_GPIO_Port_Addr;
+  }
+  return nullptr;
+}
+
+CEventConnection *FORTE_PortAdapter_Socket::getEOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_MAP;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_PortAdapter_Socket::getDIConUnchecked(TPortId) {
+  return nullptr;
+}
+
+CDataConnection *FORTE_PortAdapter_Socket::getDOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
+    case 0: return &conn_GPIO_Port_Addr;
+  }
+  return nullptr;
 }

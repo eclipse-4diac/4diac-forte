@@ -23,8 +23,6 @@ class FORTE_SubscribeEvent : public CCompositeFB {
     DECLARE_FIRMWARE_FB(FORTE_SubscribeEvent)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
     CIEC_EventFilter &eventFilter() {
       return *static_cast<CIEC_EventFilter *>(getDI(0));
     };
@@ -35,24 +33,15 @@ class FORTE_SubscribeEvent : public CCompositeFB {
 
     static const TEventID scmEventSubscribeID = 0;
     static const TEventID scmEventUnsubscribeID = 1;
-    static const TForteInt16 scmEIWithIndexes[];
-    static const TDataIOID scmEIWith[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventSubscribedID = 0;
     static const TEventID scmEventUnsubscribedID = 1;
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_SubscribeEventAdp &SubscribeEventAdp() {
       return (*static_cast<FORTE_SubscribeEventAdp *>(getAdapterUnchecked(0)));
     };
     static const int scmSubscribeEventAdpAdpNum = 0;
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const SCFB_FBConnectionData scmEventConnections[];
 
@@ -61,7 +50,6 @@ class FORTE_SubscribeEvent : public CCompositeFB {
 
   public:
     FORTE_SubscribeEvent(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-        CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {};
 
     ~FORTE_SubscribeEvent() override = default;
 };

@@ -33,51 +33,30 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_IORevPiCore, STRID(IORevPiCore))
 
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataInputNames[] = {STRID(QI), STRID(UpdateInterval)};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataInputTypeIds[] = {STRID(BOOL), STRID(UINT)};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
-const TDataIOID FORTE_IORevPiCore::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_IORevPiCore::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventInputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventInputTypeIds[] = {STRID(EInit)};
-const TDataIOID FORTE_IORevPiCore::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_IORevPiCore::scmEOWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventOutputNames[] = {STRID(INITO), STRID(IND)};
-const CStringDictionary::TStringId FORTE_IORevPiCore::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-const SAdapterInstanceDef FORTE_IORevPiCore::scmAdapterInstances[] = {
-    {STRID(IORevPiBusAdapter), STRID(BusAdapterOut), true}};
-
 namespace {
+  const auto cDataInputNames = std::array{STRID(QI), STRID(UpdateInterval)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  const auto cEventInputNames = std::array{STRID(INIT)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit)};
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
+  const auto cEventOutputTypeIds = std::array{STRID(EInit), STRID(Event)};
   const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = cPlugNameIds,
+  };
 } // namespace
-
-const SFBInterfaceSpec FORTE_IORevPiCore::scmFBInterfaceSpec = {1,
-                                                                scmEventInputNames,
-                                                                scmEventInputTypeIds,
-                                                                scmEIWith,
-                                                                scmEIWithIndexes,
-                                                                2,
-                                                                scmEventOutputNames,
-                                                                scmEventOutputTypeIds,
-                                                                scmEOWith,
-                                                                scmEOWithIndexes,
-                                                                2,
-                                                                scmDataInputNames,
-                                                                scmDataInputTypeIds,
-                                                                2,
-                                                                scmDataOutputNames,
-                                                                scmDataOutputTypeIds,
-                                                                0,
-                                                                nullptr,
-                                                                1,
-                                                                scmAdapterInstances,
-                                                                {},
-                                                                cPlugNameIds};
 
 FORTE_IORevPiCore::FORTE_IORevPiCore(const CStringDictionary::TStringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
-    forte::core::io::IOConfigFBMultiMaster(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    forte::core::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_UpdateInterval(25_UINT),
     conn_INITO(*this, 0),
     conn_IND(*this, 1),
@@ -119,13 +98,13 @@ void FORTE_IORevPiCore::readInputData(const TEventID paEIID) {
 void FORTE_IORevPiCore::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     case scmEventINDID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

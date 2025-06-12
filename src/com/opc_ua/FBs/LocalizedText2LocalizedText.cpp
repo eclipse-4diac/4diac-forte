@@ -24,48 +24,36 @@ USE_STRING_ID(REQ);
 
 DEFINE_FIRMWARE_FB(FORTE_LocalizedText2LocalizedText, STRID(LocalizedText2LocalizedText))
 
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmDataInputNames[] = {STRID(IN)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN)};
+  
+  
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmDataInputTypeIds[] = {STRID(LocalizedText)};
-
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmDataOutputNames[] = {STRID(OUT)};
-
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmDataOutputTypeIds[] = {STRID(LocalizedText)};
-
-const TForteInt16 FORTE_LocalizedText2LocalizedText::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_LocalizedText2LocalizedText::scmEIWith[] = {0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_LocalizedText2LocalizedText::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_LocalizedText2LocalizedText::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_LocalizedText2LocalizedText::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_LocalizedText2LocalizedText::scmFBInterfaceSpec = {1,
-                                                                                scmEventInputNames,
-                                                                                scmEventInputTypeIds,
-                                                                                scmEIWith,
-                                                                                scmEIWithIndexes,
-                                                                                1,
-                                                                                scmEventOutputNames,
-                                                                                scmEventOutputTypeIds,
-                                                                                scmEOWith,
-                                                                                scmEOWithIndexes,
-                                                                                1,
-                                                                                scmDataInputNames,
-                                                                                scmDataInputTypeIds,
-                                                                                1,
-                                                                                scmDataOutputNames,
-                                                                                scmDataOutputTypeIds,
-                                                                                0,
-                                                                                nullptr,
-                                                                                0,
-                                                                                nullptr};
 
 FORTE_LocalizedText2LocalizedText::FORTE_LocalizedText2LocalizedText(CStringDictionary::TStringId paInstanceNameId,
                                                                      forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_LocalizedText()),
     var_OUT(CIEC_LocalizedText()),
     conn_CNF(*this, 0),
@@ -93,7 +81,7 @@ void FORTE_LocalizedText2LocalizedText::readInputData(TEventID paEIID) {
 void FORTE_LocalizedText2LocalizedText::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
       break;
     }
     default: break;

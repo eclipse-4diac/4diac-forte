@@ -37,42 +37,30 @@ USE_STRING_ID(ULINT);
 
 DEFINE_FIRMWARE_FB(FORTE_TIMESTAMP_NS, STRID(TIMESTAMP_NS))
 
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmDataInputNames[] = {STRID(startDate)};
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmDataInputTypeIds[] = {STRID(DATE_AND_TIME)};
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmDataOutputNames[] = {STRID()};
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmDataOutputTypeIds[] = {STRID(ULINT)};
-const TDataIOID FORTE_TIMESTAMP_NS::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_TIMESTAMP_NS::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmEventInputTypeIds[] = {STRID(Event)};
-const TDataIOID FORTE_TIMESTAMP_NS::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_TIMESTAMP_NS::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_TIMESTAMP_NS::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_TIMESTAMP_NS::scmFBInterfaceSpec = {1,
-                                                                 scmEventInputNames,
-                                                                 scmEventInputTypeIds,
-                                                                 scmEIWith,
-                                                                 scmEIWithIndexes,
-                                                                 1,
-                                                                 scmEventOutputNames,
-                                                                 scmEventOutputTypeIds,
-                                                                 scmEOWith,
-                                                                 scmEOWithIndexes,
-                                                                 1,
-                                                                 scmDataInputNames,
-                                                                 scmDataInputTypeIds,
-                                                                 1,
-                                                                 scmDataOutputNames,
-                                                                 scmDataOutputTypeIds,
-                                                                 0,
-                                                                 nullptr,
-                                                                 0,
-                                                                 nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(startDate)};
+  const auto cDataOutputNames = std::array{STRID()};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
+
 
 FORTE_TIMESTAMP_NS::FORTE_TIMESTAMP_NS(const CStringDictionary::TStringId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_startDate(0_DATE_AND_TIME),
     conn_CNF(*this, 0),
     conn_startDate(nullptr),
@@ -97,7 +85,7 @@ void FORTE_TIMESTAMP_NS::readInputData(const TEventID paEIID) {
 void FORTE_TIMESTAMP_NS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_, conn_);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
       break;
     }
     default: break;

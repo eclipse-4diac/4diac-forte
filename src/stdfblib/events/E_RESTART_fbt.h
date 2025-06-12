@@ -24,11 +24,7 @@ class FORTE_E_RESTART final : public CEventSourceFB {
     static const TEventID scmEventCOLDID = 0;
     static const TEventID scmEventWARMID = 1;
     static const TEventID scmEventSTOPID = 2;
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     // semaphore to ensure proper handling of STOP execution state change
     forte::arch::CSemaphore mSuspendSemaphore;

@@ -25,11 +25,8 @@
  */
 class CTimedFB : public CEventSourceFB {
   protected:
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
     static const CStringDictionary::TStringId scmEINameIds[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
     static const CStringDictionary::TStringId scmEONameIds[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
     static const CStringDictionary::TStringId scmDINameIds[];
     static const CStringDictionary::TStringId scmDIDataTypeNameIds[];
 

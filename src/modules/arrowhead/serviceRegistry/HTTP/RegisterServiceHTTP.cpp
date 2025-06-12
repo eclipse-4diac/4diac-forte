@@ -57,12 +57,22 @@ USE_STRING_ID(unregisterService);
 
 DEFINE_FIRMWARE_FB(FORTE_RegisterServiceHTTP, STRID(RegisterServiceHTTP))
 
-const TForteInt16 FORTE_RegisterServiceHTTP::scmEOWithIndexes[] = {-1};
-const SAdapterInstanceDef FORTE_RegisterServiceHTTP::scmAdapterInstances[] = {
-    {STRID(RegisterServiceAdp), STRID(registerService), false}};
+namespace {
+  const auto cSocketNameIds = std::array{STRID(registerService)};
 
-const SFBInterfaceSpec FORTE_RegisterServiceHTTP::scmFBInterfaceSpec = {
-    0, 0, nullptr, 0, 0, 0, 0, nullptr, 0, 0, 0, 0, 0, 0, 0, 0, 1, scmAdapterInstances};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = {},
+      .mEITypeNames = {},
+      .mEONames = {},
+      .mEOTypeNames = {},
+      .mDINames = {},
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = cSocketNameIds,
+      .mPlugNames = {},
+  };
+
+} // namespace
 
 const SCFB_FBInstanceData FORTE_RegisterServiceHTTP::scmInternalFBs[] = {
     {STRID(Register), STRID(CLIENT_1_2)},

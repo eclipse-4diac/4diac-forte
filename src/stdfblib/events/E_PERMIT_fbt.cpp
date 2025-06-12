@@ -29,39 +29,28 @@ USE_STRING_ID(PERMIT);
 
 DEFINE_FIRMWARE_FB(FORTE_E_PERMIT, STRID(E_PERMIT))
 
-const CStringDictionary::TStringId FORTE_E_PERMIT::scmDataInputNames[] = {STRID(PERMIT)};
-const CStringDictionary::TStringId FORTE_E_PERMIT::scmDataInputTypeIds[] = {STRID(BOOL)};
-const TDataIOID FORTE_E_PERMIT::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_PERMIT::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_PERMIT::scmEventInputNames[] = {STRID(EI)};
-const CStringDictionary::TStringId FORTE_E_PERMIT::scmEventInputTypeIds[] = {STRID(Event)};
-const TForteInt16 FORTE_E_PERMIT::scmEOWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_E_PERMIT::scmEventOutputNames[] = {STRID(EO)};
-const CStringDictionary::TStringId FORTE_E_PERMIT::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_E_PERMIT::scmFBInterfaceSpec = {1,
-                                                             scmEventInputNames,
-                                                             scmEventInputTypeIds,
-                                                             scmEIWith,
-                                                             scmEIWithIndexes,
-                                                             1,
-                                                             scmEventOutputNames,
-                                                             scmEventOutputTypeIds,
-                                                             nullptr,
-                                                             scmEOWithIndexes,
-                                                             1,
-                                                             scmDataInputNames,
-                                                             scmDataInputTypeIds,
-                                                             0,
-                                                             nullptr,
-                                                             nullptr,
-                                                             0,
-                                                             nullptr,
-                                                             0,
-                                                             nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(PERMIT)};
+  const auto cEventInputNames = std::array{STRID(EI)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(EO)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_E_PERMIT::FORTE_E_PERMIT(const CStringDictionary::TStringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
     conn_EO(*this, 0),
     conn_PERMIT(nullptr) {
 }

@@ -16,13 +16,9 @@
 USE_STRING_ID(eGenAdapter);
 
 namespace {
-  const SFBInterfaceSpec scmFBInterfaceSpecSocket = {0,       nullptr, nullptr, nullptr, nullptr, 0,       nullptr,
-                                                     nullptr, nullptr, nullptr, 0,       nullptr, nullptr, 0,
-                                                     nullptr, nullptr, 0,       nullptr, 0,       nullptr};
+  const SFBInterfaceSpec scmFBInterfaceSpecSocket = {};
 
-  const SFBInterfaceSpec scmFBInterfaceSpecPlug = {0,       nullptr, nullptr, nullptr, nullptr, 0,       nullptr,
-                                                   nullptr, nullptr, nullptr, 0,       nullptr, nullptr, 0,
-                                                   nullptr, nullptr, 0,       nullptr, 0,       nullptr};
+  const SFBInterfaceSpec scmFBInterfaceSpecPlug = {};
 
 } // namespace
 

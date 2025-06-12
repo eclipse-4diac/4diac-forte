@@ -41,11 +41,11 @@ namespace forte {
         }
 
         TPortId getNumSD() const {
-          return getFBInterfaceSpec().mNumDIs - 2;
+          return getFBInterfaceSpec().getNumDIs() - 2;
         }
 
         TPortId getNumRD() const {
-          return getFBInterfaceSpec().mNumDOs - 2;
+          return getFBInterfaceSpec().getNumDOs() - 2;
         }
 
         virtual CIEC_ANY **getSDs() = 0;

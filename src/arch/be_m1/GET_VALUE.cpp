@@ -18,42 +18,32 @@
 
 DEFINE_FIRMWARE_FB(FORTE_GET_VALUE, STRID(GET_VALUE))
 
-const CStringDictionary::TStringId FORTE_GET_VALUE::scmDataInputNames[] = {STRID(MOD_NB), STRID(CHAN_NB)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(MOD_NB), STRID(CHAN_NB)};
+  
+  
+  const auto cDataOutputNames = std::array{STRID(RET_CODE), STRID(VALUE)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_GET_VALUE::scmDataInputTypeIds[] = {STRID(INT), STRID(INT)};
-
-const CStringDictionary::TStringId FORTE_GET_VALUE::scmDataOutputNames[] = {STRID(RET_CODE), STRID(VALUE)};
-
-const CStringDictionary::TStringId FORTE_GET_VALUE::scmDataOutputTypeIds[] = {STRID(INT), STRID(SINT)};
-
-const TForteInt16 FORTE_GET_VALUE::scmEIWithIndexes[] = {0, 2};
-const TDataIOID FORTE_GET_VALUE::scmEIWith[] = {0, scmWithListDelimiter, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_GET_VALUE::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
-const CStringDictionary::TStringId FORTE_GET_VALUE::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-
-const TDataIOID FORTE_GET_VALUE::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_GET_VALUE::scmEOWithIndexes[] = {0, 2, -1};
-const CStringDictionary::TStringId FORTE_GET_VALUE::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
-const CStringDictionary::TStringId FORTE_GET_VALUE::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-
-const SFBInterfaceSpec FORTE_GET_VALUE::scmFBInterfaceSpec = {2,
-                                                              scmEventInputNames,
-                                                              scmEventInputTypeIds,
-                                                              scmEIWith,
-                                                              scmEIWithIndexes,
-                                                              2,
-                                                              scmEventOutputNames,
-                                                              scmEventOutputTypeIds,
-                                                              scmEOWith,
-                                                              scmEOWithIndexes,
-                                                              2,
-                                                              scmDataInputNames,
-                                                              scmDataInputTypeIds,
-                                                              2,
-                                                              scmDataOutputNames,
-                                                              scmDataOutputTypeIds,
-                                                              0,
-                                                              0};
 
 void FORTE_GET_VALUE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {

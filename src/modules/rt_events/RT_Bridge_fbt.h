@@ -41,10 +41,8 @@ class FORTE_GEN_RT_Bridge final : public CGenFunctionBlock<CFunctionBlock> {
   private:
     static const TEventID scmEventRDID = 0;
     static const TEventID scmEventWRID = 1;
-    static const CStringDictionary::TStringId scmEventInputNames[];
 
     static const TEventID scmEventRDOID = 0;
-    static const CStringDictionary::TStringId scmEventOutputNames[];
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -59,6 +57,6 @@ class FORTE_GEN_RT_Bridge final : public CGenFunctionBlock<CFunctionBlock> {
     std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDIs;
     std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDOs;
 
-    std::unique_ptr<CStringDictionary::TStringId[]> mDINames;
-    std::unique_ptr<CStringDictionary::TStringId[]> mDONames;
+    std::vector<CStringDictionary::TStringId> mDINames;
+    std::vector<CStringDictionary::TStringId> mDONames;
 };

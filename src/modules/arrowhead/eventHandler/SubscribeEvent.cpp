@@ -26,41 +26,26 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_SubscribeEvent, STRID(SubscribeEvent))
 
-const CStringDictionary::TStringId FORTE_SubscribeEvent::scmDataInputNames[] = {STRID(eventFilter), STRID(endpoint)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(eventFilter), STRID(endpoint)};
+  const auto cEventInputNames = std::array{STRID(Subscribe), STRID(Unsubscribe)};
+  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(Subscribed), STRID(Unsubscribed)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cPlugNameIds = std::array{STRID(SubscribeEventAdp)};
 
-const CStringDictionary::TStringId FORTE_SubscribeEvent::scmDataInputTypeIds[] = {STRID(EventFilter), STRID(WSTRING)};
-
-const TForteInt16 FORTE_SubscribeEvent::scmEIWithIndexes[] = {0, 3};
-const TDataIOID FORTE_SubscribeEvent::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_SubscribeEvent::scmEventInputNames[] = {STRID(Subscribe), STRID(Unsubscribe)};
-const CStringDictionary::TStringId FORTE_SubscribeEvent::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
-
-const TForteInt16 FORTE_SubscribeEvent::scmEOWithIndexes[] = {-1, -1, -1};
-const CStringDictionary::TStringId FORTE_SubscribeEvent::scmEventOutputNames[] = {STRID(Subscribed),
-                                                                                  STRID(Unsubscribed)};
-const CStringDictionary::TStringId FORTE_SubscribeEvent::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-
-const SAdapterInstanceDef FORTE_SubscribeEvent::scmAdapterInstances[] = {
-    {STRID(SubscribeEventAdp), STRID(SubscribeEventAdp), true}};
-
-const SFBInterfaceSpec FORTE_SubscribeEvent::scmFBInterfaceSpec = {2,
-                                                                   scmEventInputNames,
-                                                                   scmEventInputTypeIds,
-                                                                   scmEIWith,
-                                                                   scmEIWithIndexes,
-                                                                   2,
-                                                                   scmEventOutputNames,
-                                                                   scmEventOutputTypeIds,
-                                                                   0,
-                                                                   0,
-                                                                   2,
-                                                                   scmDataInputNames,
-                                                                   scmDataInputTypeIds,
-                                                                   0,
-                                                                   0,
-                                                                   0,
-                                                                   1,
-                                                                   scmAdapterInstances};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = cPlugNameIds,
+  };
+} // namespace
 
 const SCFB_FBConnectionData FORTE_SubscribeEvent::scmEventConnections[] = {
     {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(Unsubscribe)), -1,

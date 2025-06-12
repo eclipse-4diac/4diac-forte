@@ -48,67 +48,43 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_EBSlave2181, STRID(EBSlave2181))
 
-const CStringDictionary::TStringId FORTE_EBSlave2181::scmDataInputNames[] = {STRID(QI),
-                                                                             STRID(DigitalInput_1),
-                                                                             STRID(DigitalInput_2),
-                                                                             STRID(DigitalInput_3),
-                                                                             STRID(DigitalInput_4),
-                                                                             STRID(DigitalInput_5),
-                                                                             STRID(DigitalInput_6),
-                                                                             STRID(DigitalInput_7),
-                                                                             STRID(DigitalInput_8),
-                                                                             STRID(DigitalOutput_1),
-                                                                             STRID(DigitalOutput_2),
-                                                                             STRID(DigitalOutput_3),
-                                                                             STRID(DigitalOutput_4),
-                                                                             STRID(DigitalOutput_5),
-                                                                             STRID(DigitalOutput_6),
-                                                                             STRID(DigitalOutput_7),
-                                                                             STRID(DigitalOutput_8),
-                                                                             STRID(UpdateInterval)};
-const CStringDictionary::TStringId FORTE_EBSlave2181::scmDataInputTypeIds[] = {
-    STRID(BOOL),    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
-    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
-    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(UINT)};
-const CStringDictionary::TStringId FORTE_EBSlave2181::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-const CStringDictionary::TStringId FORTE_EBSlave2181::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
-const TDataIOID FORTE_EBSlave2181::scmEIWith[] = {1,  2,  5,  3,  4,  6,  7,  8, 9,
-                                                  10, 11, 12, 13, 14, 15, 16, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_EBSlave2181::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_EBSlave2181::scmEventInputNames[] = {STRID(MAP)};
-const TDataIOID FORTE_EBSlave2181::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_EBSlave2181::scmEOWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_EBSlave2181::scmEventOutputNames[] = {STRID(MAPO), STRID(IND)};
-const SAdapterInstanceDef FORTE_EBSlave2181::scmAdapterInstances[] = {
-    {STRID(EBBusAdapter), STRID(BusAdapterIn), false}, {STRID(EBBusAdapter), STRID(BusAdapterOut), true}};
-
 namespace {
+  const auto cDataInputNames = std::array{STRID(QI),
+                                          STRID(DigitalInput_1),
+                                          STRID(DigitalInput_2),
+                                          STRID(DigitalInput_3),
+                                          STRID(DigitalInput_4),
+                                          STRID(DigitalInput_5),
+                                          STRID(DigitalInput_6),
+                                          STRID(DigitalInput_7),
+                                          STRID(DigitalInput_8),
+                                          STRID(DigitalOutput_1),
+                                          STRID(DigitalOutput_2),
+                                          STRID(DigitalOutput_3),
+                                          STRID(DigitalOutput_4),
+                                          STRID(DigitalOutput_5),
+                                          STRID(DigitalOutput_6),
+                                          STRID(DigitalOutput_7),
+                                          STRID(DigitalOutput_8),
+                                          STRID(UpdateInterval)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  const auto cEventInputNames = std::array{STRID(MAP)};
+  const auto cEventOutputNames = std::array{STRID(MAPO), STRID(IND)};
   const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
   const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
-} // namespace
 
-const SFBInterfaceSpec FORTE_EBSlave2181::scmFBInterfaceSpec = {1,
-                                                                scmEventInputNames,
-                                                                nullptr,
-                                                                scmEIWith,
-                                                                scmEIWithIndexes,
-                                                                2,
-                                                                scmEventOutputNames,
-                                                                nullptr,
-                                                                scmEOWith,
-                                                                scmEOWithIndexes,
-                                                                18,
-                                                                scmDataInputNames,
-                                                                scmDataInputTypeIds,
-                                                                2,
-                                                                scmDataOutputNames,
-                                                                scmDataOutputTypeIds,
-                                                                0,
-                                                                nullptr,
-                                                                2,
-                                                                scmAdapterInstances,
-                                                                cSocketNameIds,
-                                                                cPlugNameIds};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = cSocketNameIds,
+      .mPlugNames = cPlugNameIds,
+  };
+} // namespace
 
 FORTE_EBSlave2181::FORTE_EBSlave2181(const CStringDictionary::TStringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
@@ -116,7 +92,7 @@ FORTE_EBSlave2181::FORTE_EBSlave2181(const CStringDictionary::TStringId paInstan
                  scmSlaveConfigurationIONum,
                  EmbrickSlaveHandler::G_8Di8Do,
                  paContainer,
-                 scmFBInterfaceSpec,
+                 cFBInterfaceSpec,
                  paInstanceNameId),
     conn_MAPO(*this, 0),
     conn_IND(*this, 1),
@@ -193,12 +169,12 @@ void FORTE_EBSlave2181::readInputData(const TEventID paEIID) {
 void FORTE_EBSlave2181::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventMAPOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
       break;
     }
     case scmEventINDID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

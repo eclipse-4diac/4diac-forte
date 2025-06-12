@@ -42,44 +42,29 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_SET_LOCAL_ADS_ADDRESS, STRID(SET_LOCAL_ADS_ADDRESS))
 
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataInputNames[] = {STRID(QI), STRID(PARAMS)};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING)};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataOutputNames[] = {STRID(QO), STRID(STATUS),
-                                                                                        STRID(LOCAL_ADS_ADDRESS)};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING),
-                                                                                          STRID(STRING)};
-const TDataIOID FORTE_SET_LOCAL_ADS_ADDRESS::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_SET_LOCAL_ADS_ADDRESS::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventInputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventInputTypeIds[] = {STRID(EInit)};
-const TDataIOID FORTE_SET_LOCAL_ADS_ADDRESS::scmEOWith[] = {0, 1, 2, scmWithListDelimiter};
-const TForteInt16 FORTE_SET_LOCAL_ADS_ADDRESS::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventOutputNames[] = {STRID(INITO)};
-const CStringDictionary::TStringId FORTE_SET_LOCAL_ADS_ADDRESS::scmEventOutputTypeIds[] = {STRID(EInit)};
-const SFBInterfaceSpec FORTE_SET_LOCAL_ADS_ADDRESS::scmFBInterfaceSpec = {1,
-                                                                          scmEventInputNames,
-                                                                          scmEventInputTypeIds,
-                                                                          scmEIWith,
-                                                                          scmEIWithIndexes,
-                                                                          1,
-                                                                          scmEventOutputNames,
-                                                                          scmEventOutputTypeIds,
-                                                                          scmEOWith,
-                                                                          scmEOWithIndexes,
-                                                                          2,
-                                                                          scmDataInputNames,
-                                                                          scmDataInputTypeIds,
-                                                                          3,
-                                                                          scmDataOutputNames,
-                                                                          scmDataOutputTypeIds,
-                                                                          0,
-                                                                          nullptr,
-                                                                          0,
-                                                                          nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(QI), STRID(PARAMS)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS), STRID(LOCAL_ADS_ADDRESS)};
+  const auto cEventInputNames = std::array{STRID(INIT)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit)};
+  const auto cEventOutputNames = std::array{STRID(INITO)};
+  const auto cEventOutputTypeIds = std::array{STRID(EInit)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_SET_LOCAL_ADS_ADDRESS::FORTE_SET_LOCAL_ADS_ADDRESS(const CStringDictionary::TStringId paInstanceNameId,
                                                          forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_PARAMS(""_STRING),
     var_QO(0_BOOL),
@@ -143,9 +128,9 @@ void FORTE_SET_LOCAL_ADS_ADDRESS::readInputData(const TEventID paEIID) {
 void FORTE_SET_LOCAL_ADS_ADDRESS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
-      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_LOCAL_ADS_ADDRESS, conn_LOCAL_ADS_ADDRESS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 2, var_LOCAL_ADS_ADDRESS, conn_LOCAL_ADS_ADDRESS);
       break;
     }
     default: break;

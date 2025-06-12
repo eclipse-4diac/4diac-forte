@@ -85,8 +85,8 @@ void CBaseFB::toString(std::string &paTargetBuf) const {
 
 #ifdef FORTE_TRACE_CTF
 void CBaseFB::traceInstanceData() {
-  std::vector<std::string> inputs(getFBInterfaceSpec().mNumDIs);
-  std::vector<std::string> outputs(getFBInterfaceSpec().mNumDOs);
+  std::vector<std::string> inputs(getFBInterfaceSpec().getNumDIs());
+  std::vector<std::string> outputs(getFBInterfaceSpec().getNumDOs());
   std::vector<std::string> internals(cmVarInternals ? cmVarInternals->mNumIntVars : 0);
   std::vector<std::string> internalFbs(getChildren().size());
   std::vector<const char *> inputs_c_str(inputs.size());

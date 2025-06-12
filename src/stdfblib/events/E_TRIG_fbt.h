@@ -23,17 +23,9 @@ class FORTE_E_TRIG final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_E_TRIG)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
     static const TEventID scmEventREQID = 0;
-    static const TDataIOID scmEIWith[];
-    static const TForteInt16 scmEIWithIndexes[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
     static const TEventID scmEventCNFID = 0;
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     CEventChainExecutionThread *mEcet;
 

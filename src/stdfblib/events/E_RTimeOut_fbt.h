@@ -27,9 +27,7 @@ class FORTE_E_RTimeOut final : public CCompositeFB {
   DECLARE_FIRMWARE_FB(FORTE_E_RTimeOut)
 
   private:
-    static const SAdapterInstanceDef scmAdapterInstances[];
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const SCFB_FBInstanceData scmInternalFBs[];
     static const SCFB_FBConnectionData scmEventConnections[];

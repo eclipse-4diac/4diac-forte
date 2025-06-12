@@ -28,44 +28,34 @@ USE_STRING_ID(version);
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceQueryForm, STRID(FieldsToServiceQueryForm))
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataInputNames[] = {
-    STRID(service), STRID(metadataSearch), STRID(pingProviders), STRID(version)};
+namespace {
+  const auto cDataInputNames = std::array{
+      STRID(service), STRID(metadataSearch), STRID(pingProviders), STRID(version)};
+  
+      STRID(ArrowheadService), STRID(BOOL), STRID(BOOL), STRID(DINT)};
+  
+  const auto cDataOutputNames = std::array{STRID(serviceQueryForm)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataInputTypeIds[] = {
-    STRID(ArrowheadService), STRID(BOOL), STRID(BOOL), STRID(DINT)};
-
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataOutputNames[] = {STRID(serviceQueryForm)};
-
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmDataOutputTypeIds[] = {STRID(ServiceQueryForm)};
-
-const TForteInt16 FORTE_FieldsToServiceQueryForm::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToServiceQueryForm::scmEIWith[] = {0, 3, 2, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_FieldsToServiceQueryForm::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FieldsToServiceQueryForm::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_FieldsToServiceQueryForm::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_FieldsToServiceQueryForm::scmFBInterfaceSpec = {1,
-                                                                             scmEventInputNames,
-                                                                             scmEventInputTypeIds,
-                                                                             scmEIWith,
-                                                                             scmEIWithIndexes,
-                                                                             1,
-                                                                             scmEventOutputNames,
-                                                                             scmEventOutputTypeIds,
-                                                                             scmEOWith,
-                                                                             scmEOWithIndexes,
-                                                                             4,
-                                                                             scmDataInputNames,
-                                                                             scmDataInputTypeIds,
-                                                                             1,
-                                                                             scmDataOutputNames,
-                                                                             scmDataOutputTypeIds,
-                                                                             0,
-                                                                             0};
 
 void FORTE_FieldsToServiceQueryForm::alg_REQ() {
   serviceQueryForm().service() = service();

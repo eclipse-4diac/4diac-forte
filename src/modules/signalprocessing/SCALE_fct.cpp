@@ -38,44 +38,29 @@ USE_STRING_ID(signalprocessing__SCALE);
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE, STRID(signalprocessing__SCALE))
 
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataInputNames[] = {
-    STRID(IN), STRID(MAX_IN), STRID(MIN_IN), STRID(MAX_OUT), STRID(MIN_OUT)};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataInputTypeIds[] = {
-    STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL)};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataOutputNames[] = {STRID()};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmDataOutputTypeIds[] = {STRID(REAL)};
-const TDataIOID FORTE_signalprocessing__SCALE::scmEIWith[] = {0, 1, 2, 3, 4, scmWithListDelimiter};
-const TForteInt16 FORTE_signalprocessing__SCALE::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmEventInputTypeIds[] = {STRID(Event)};
-const TDataIOID FORTE_signalprocessing__SCALE::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_signalprocessing__SCALE::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_signalprocessing__SCALE::scmFBInterfaceSpec = {1,
-                                                                            scmEventInputNames,
-                                                                            scmEventInputTypeIds,
-                                                                            scmEIWith,
-                                                                            scmEIWithIndexes,
-                                                                            1,
-                                                                            scmEventOutputNames,
-                                                                            scmEventOutputTypeIds,
-                                                                            scmEOWith,
-                                                                            scmEOWithIndexes,
-                                                                            5,
-                                                                            scmDataInputNames,
-                                                                            scmDataInputTypeIds,
-                                                                            1,
-                                                                            scmDataOutputNames,
-                                                                            scmDataOutputTypeIds,
-                                                                            0,
-                                                                            nullptr,
-                                                                            0,
-                                                                            nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN), STRID(MAX_IN), STRID(MIN_IN), STRID(MAX_OUT), STRID(MIN_OUT)};
+  const auto cDataOutputNames = std::array{STRID()};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_signalprocessing__SCALE::FORTE_signalprocessing__SCALE(const CStringDictionary::TStringId paInstanceNameId,
                                                              forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_MAX_IN(nullptr),
@@ -111,7 +96,7 @@ void FORTE_signalprocessing__SCALE::readInputData(const TEventID paEIID) {
 void FORTE_signalprocessing__SCALE::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_, conn_);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
       break;
     }
     default: break;

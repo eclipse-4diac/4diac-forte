@@ -39,15 +39,13 @@ USE_STRING_ID(STRING);
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER, STRID(GEN_CSV_WRITER));
 
-const CStringDictionary::TStringId GEN_CSV_WRITER::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-
-const CStringDictionary::TStringId GEN_CSV_WRITER::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING)};
-
-const CStringDictionary::TStringId GEN_CSV_WRITER::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
-const CStringDictionary::TStringId GEN_CSV_WRITER::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-
-const CStringDictionary::TStringId GEN_CSV_WRITER::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
-const CStringDictionary::TStringId GEN_CSV_WRITER::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
+namespace {
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+} // namespace
 
 const CIEC_STRING GEN_CSV_WRITER::scmOK = "OK"_STRING;
 const CIEC_STRING GEN_CSV_WRITER::scmFileAlreadyOpened = "File already opened"_STRING;
@@ -105,7 +103,7 @@ void GEN_CSV_WRITER::readInputData(TEventID paEI) {
 }
 
 void GEN_CSV_WRITER::writeOutputData(TEventID) {
-  size_t numDIs = getFBInterfaceSpec().mNumDIs;
+  size_t numDIs = getFBInterfaceSpec().getNumDIs();
   writeData(numDIs + 0, var_QO, conn_QO);
   writeData(numDIs + 1, var_STATUS, conn_STATUS);
 }
@@ -114,24 +112,17 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
   const char *acPos = strrchr(paConfigString, '_');
   if (nullptr != acPos) {
     acPos++;
-    paInterfaceSpec.mNumDIs = static_cast<TPortId>(forte::core::util::strtoul(acPos, nullptr, 10) +
-                                                   2); // we have in addition to the SDs a QI and FILE_NAME data inputs
-
-    mDataInputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
-
-    mDataInputNames[0] = STRID(QI);
-    mDataInputNames[1] = STRID(FILE_NAME);
-    generateGenericInterfacePointNameArray("SD_", &(mDataInputNames[2]), paInterfaceSpec.mNumDIs - 2);
+    size_t numGenDIs = static_cast<TPortId>(forte::core::util::strtoul(acPos, nullptr, 10));
+    mDataInputNames.reserve(numGenDIs + 2);
+    mDataInputNames.emplace_back(STRID(QI));
+    mDataInputNames.emplace_back(STRID(FILE_NAME));
+    generateGenericInterfacePointNameArray("SD_", mDataInputNames, numGenDIs);
 
     // create the interface Specification
-    paInterfaceSpec.mNumEIs = 2;
-    paInterfaceSpec.mEINames = scmEventInputNames;
-    paInterfaceSpec.mNumEOs = 2;
-    paInterfaceSpec.mEONames = scmEventOutputNames;
-    paInterfaceSpec.mDINames = mDataInputNames.get();
-    paInterfaceSpec.mNumDOs = 2;
-    paInterfaceSpec.mDONames = scmDataOutputNames;
-    paInterfaceSpec.mDODataTypeNames = scmDataOutputTypeIds;
+    paInterfaceSpec.mEINames = cEventInputNames;
+    paInterfaceSpec.mEONames = cEventOutputNames;
+    paInterfaceSpec.mDINames = mDataInputNames;
+    paInterfaceSpec.mDONames = cDataOutputNames;
     return true;
   }
   return false;
@@ -176,11 +167,11 @@ void GEN_CSV_WRITER::closeCSVFile() {
 
 bool GEN_CSV_WRITER::areDIsSameArrayLength(size_t &commonArraySize) {
   constexpr TPortId firstDataDI = 2;
-  if (getFBInterfaceSpec().mNumDIs <= firstDataDI) {
+  if (getFBInterfaceSpec().getNumDIs() <= firstDataDI) {
     return false;
   }
 
-  for (TPortId i = firstDataDI; i < getFBInterfaceSpec().mNumDIs; i++) {
+  for (TPortId i = firstDataDI; i < getFBInterfaceSpec().getNumDIs(); i++) {
     auto &value = getDI(i)->unwrap();
     if (value.getDataTypeID() != CIEC_ANY::e_ARRAY) {
       return false;
@@ -206,7 +197,7 @@ void GEN_CSV_WRITER::writeCSVFileLine() {
     }
 
     for (size_t line = 0; line < numLines; line++) {
-      for (TPortId i = 2; i < getFBInterfaceSpec().mNumDIs; i++) {
+      for (TPortId i = 2; i < getFBInterfaceSpec().getNumDIs(); i++) {
         auto &value = getDI(i)->unwrap();
         if (multiline) {
           auto &array = static_cast<const CIEC_ARRAY &>(value);

@@ -22,44 +22,34 @@ USE_STRING_ID(REQ);
 
 DEFINE_FIRMWARE_FB(FORTE_OrchestrationForm2OrchestrationForm, STRID(OrchestrationForm2OrchestrationForm))
 
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmDataInputNames[] = {STRID(IN)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN)};
+  
+      STRID(OrchestrationForm)};
+  
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  
+      STRID(OrchestrationForm)};
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmDataInputTypeIds[] = {
-    STRID(OrchestrationForm)};
-
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmDataOutputNames[] = {STRID(OUT)};
-
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmDataOutputTypeIds[] = {
-    STRID(OrchestrationForm)};
-
-const TForteInt16 FORTE_OrchestrationForm2OrchestrationForm::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_OrchestrationForm2OrchestrationForm::scmEIWith[] = {0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_OrchestrationForm2OrchestrationForm::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_OrchestrationForm2OrchestrationForm::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_OrchestrationForm2OrchestrationForm::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_OrchestrationForm2OrchestrationForm::scmFBInterfaceSpec = {1,
-                                                                                        scmEventInputNames,
-                                                                                        scmEventInputTypeIds,
-                                                                                        scmEIWith,
-                                                                                        scmEIWithIndexes,
-                                                                                        1,
-                                                                                        scmEventOutputNames,
-                                                                                        scmEventOutputTypeIds,
-                                                                                        scmEOWith,
-                                                                                        scmEOWithIndexes,
-                                                                                        1,
-                                                                                        scmDataInputNames,
-                                                                                        scmDataInputTypeIds,
-                                                                                        1,
-                                                                                        scmDataOutputNames,
-                                                                                        scmDataOutputTypeIds,
-                                                                                        0,
-                                                                                        0};
 
 void FORTE_OrchestrationForm2OrchestrationForm::executeEvent(TEventID paEIID,
                                                              CEventChainExecutionThread *const paECET) {

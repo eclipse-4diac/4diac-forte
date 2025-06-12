@@ -42,15 +42,9 @@ class GEN_STRUCT_DEMUX final : public CGenFunctionBlock<CFunctionBlock> {
     static constexpr char NESTED_VAR_SEPARATOR = '%';
     static constexpr std::string_view STRUCT_NAME_SEPARATOR = "____";
 
-    static const CStringDictionary::TStringId scmDataInputNames[];
-
     static const TEventID scmEventREQID = 0;
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventCNFID = 0;
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -68,7 +62,7 @@ class GEN_STRUCT_DEMUX final : public CGenFunctionBlock<CFunctionBlock> {
     CEventConnection conn_CNF;
     std::unique_ptr<CIEC_STRUCT> var_IN;
     CDataConnection *conn_IN;
-    std::unique_ptr<CStringDictionary::TStringId[]> mDoNames;
+    std::vector<CStringDictionary::TStringId> mDoNames;
     std::vector<CIEC_ANY *> mConfiguredDOPorts;
 
   public:

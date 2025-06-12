@@ -23,11 +23,11 @@ USE_STRING_ID(CNF);
 USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 
-const CStringDictionary::TStringId CGenBitBase::scmDataOutputNames[] = {STRID(OUT)};
-
-const CStringDictionary::TStringId CGenBitBase::scmEventInputNames[] = {STRID(REQ)};
-
-const CStringDictionary::TStringId CGenBitBase::scmEventOutputNames[] = {STRID(CNF)};
+namespace {
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+} // namespace
 
 CGenBitBase::CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
@@ -42,42 +42,37 @@ void CGenBitBase::readInputData(TEventID) {
 }
 
 void CGenBitBase::writeOutputData(TEventID) {
-  writeData(getFBInterfaceSpec().mNumDIs + 0, var_OUT, conn_OUT);
+  writeData(getFBInterfaceSpec().getNumDIs() + 0, var_OUT, conn_OUT);
 }
 
 bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
   const char *pcPos = strrchr(paConfigString, '_');
-
+  size_t numDIs = 0;
   if (nullptr != pcPos) {
     pcPos++;
     // we have an underscore and it is the first underscore after AND
-    paInterfaceSpec.mNumDIs = static_cast<TPortId>(forte::core::util::strtoul(pcPos, nullptr, 10));
+    numDIs = static_cast<TPortId>(forte::core::util::strtoul(pcPos, nullptr, 10));
     DEVLOG_DEBUG("DIs: %d;\n", paInterfaceSpec.mNumDIs);
   } else {
     return false;
   }
 
-  if (paInterfaceSpec.mNumDIs < 2) {
+  if (numDIs < 2) {
     return false;
   }
 
   // now the number of needed eventInputs and dataOutputs are available in the integer array
   // create the eventInputs
-  if (paInterfaceSpec.mNumDIs < CFunctionBlock::scmMaxInterfaceEvents) {
+  if (numDIs < CFunctionBlock::scmMaxInterfaceEvents) {
 
     // create the data inputs
-    mDataInputNames = std::make_unique<CStringDictionary::TStringId[]>(paInterfaceSpec.mNumDIs);
-
-    generateGenericInterfacePointNameArray("IN_", mDataInputNames.get(), paInterfaceSpec.mNumDIs);
+    generateGenericInterfacePointNameArray("IN_", mDataInputNames, numDIs);
 
     // setup the interface Specification
-    paInterfaceSpec.mNumEIs = 1;
-    paInterfaceSpec.mEINames = scmEventInputNames;
-    paInterfaceSpec.mNumEOs = 1;
-    paInterfaceSpec.mEONames = scmEventOutputNames;
-    paInterfaceSpec.mDINames = mDataInputNames.get();
-    paInterfaceSpec.mNumDOs = 1;
-    paInterfaceSpec.mDONames = scmDataOutputNames;
+    paInterfaceSpec.mEINames = cEventInputNames;
+    paInterfaceSpec.mEONames = cEventOutputNames;
+    paInterfaceSpec.mDINames = mDataInputNames;
+    paInterfaceSpec.mDONames = cDataOutputNames;
     return true;
   }
   return false;
@@ -96,5 +91,5 @@ CDataConnection *CGenBitBase::getDOConUnchecked(TPortId paDONum) {
 }
 
 void CGenBitBase::createGenInputData() {
-  mGenDIs = std::make_unique<CIEC_ANY_BIT_VARIANT[]>(getFBInterfaceSpec().mNumDIs);
+  mGenDIs = std::make_unique<CIEC_ANY_BIT_VARIANT[]>(getFBInterfaceSpec().getNumDIs());
 }

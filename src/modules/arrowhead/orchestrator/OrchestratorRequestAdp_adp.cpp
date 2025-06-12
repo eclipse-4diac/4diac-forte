@@ -25,55 +25,37 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_ADAPTER_TYPE(FORTE_OrchestratorRequestAdp, STRID(OrchestratorRequestAdp))
 
-const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scmDataInputNames[] = {STRID(orchestrationResponse)};
+const auto cDataInputNames = std::array{STRID(orchestrationResponse)};
 
-const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scmDataInputTypeIds[] = {STRID(ARRAY), 10,
                                                                                           STRID(OrchestrationForm)};
 
-const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scmDataOutputNames[] = {STRID(serviceRequestForm),
+const auto cDataOutputNames = std::array{STRID(serviceRequestForm),
                                                                                          STRID(endpoint)};
 
-const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scmDataOutputTypeIds[] = {STRID(ServiceRequestForm),
                                                                                            STRID(WSTRING)};
 
-const TDataIOID FORTE_OrchestratorRequestAdp::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_OrchestratorRequestAdp::scmEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scmEventInputNames[] = {STRID(responseReceived)};
+const auto cEventInputNames = std::array{STRID(responseReceived)};
 
-const TDataIOID FORTE_OrchestratorRequestAdp::scmEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_OrchestratorRequestAdp::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_OrchestratorRequestAdp::scmEventOutputNames[] = {STRID(requestOrchestator)};
+const auto cEventOutputNames = std::array{STRID(requestOrchestator)};
 
 const SFBInterfaceSpec FORTE_OrchestratorRequestAdp::scmFBInterfaceSpecSocket = {1,
                                                                                  scmEventInputNames,
-                                                                                 scmEIWith,
-                                                                                 scmEIWithIndexes,
                                                                                  1,
                                                                                  scmEventOutputNames,
-                                                                                 scmEOWith,
-                                                                                 scmEOWithIndexes,
                                                                                  1,
                                                                                  scmDataInputNames,
-                                                                                 scmDataInputTypeIds,
                                                                                  2,
                                                                                  scmDataOutputNames,
-                                                                                 scmDataOutputTypeIds,
                                                                                  0,
                                                                                  0};
 
 const SFBInterfaceSpec FORTE_OrchestratorRequestAdp::scmFBInterfaceSpecPlug = {1,
                                                                                scmEventOutputNames,
-                                                                               scmEOWith,
-                                                                               scmEOWithIndexes,
                                                                                1,
                                                                                scmEventInputNames,
-                                                                               scmEIWith,
-                                                                               scmEIWithIndexes,
                                                                                2,
                                                                                scmDataOutputNames,
-                                                                               scmDataOutputTypeIds,
                                                                                1,
                                                                                scmDataInputNames,
-                                                                               scmDataInputTypeIds,
                                                                                0,
                                                                                0};

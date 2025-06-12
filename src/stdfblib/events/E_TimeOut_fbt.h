@@ -29,9 +29,7 @@ class FORTE_E_TimeOut final : public CEventSourceFB {
 
   private:
     static const int scmTimeOutSocketAdpNum = 0;
-    static const SAdapterInstanceDef scmAdapterInstances[];
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     bool mActive; //!> flag to indicate that the timed fb is currently active
 

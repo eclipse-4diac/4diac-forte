@@ -26,8 +26,6 @@ class FORTE_FieldsToServiceRequestForm : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToServiceRequestForm)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
     CIEC_ArrowheadSystem &requesterSystem() {
       return *static_cast<CIEC_ArrowheadSystem *>(getDI(0));
     };
@@ -67,25 +65,14 @@ class FORTE_FieldsToServiceRequestForm : public CBasicFB {
       return *static_cast<CIEC_ARRAY<> *>(getDI(5));
     };
 
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     CIEC_ServiceRequestForm &serviceRequestForm() {
       return *static_cast<CIEC_ServiceRequestForm *>(getDO(0));
     };
 
     static const TEventID scmEventREQID = 0;
-    static const TForteInt16 scmEIWithIndexes[];
-    static const TDataIOID scmEIWith[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventCNFID = 0;
-    static const TForteInt16 scmEOWithIndexes[];
-    static const TDataIOID scmEOWith[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     void alg_REQ();
     static const TForteInt16 scmStateSTART = 0;
@@ -99,7 +86,6 @@ class FORTE_FieldsToServiceRequestForm : public CBasicFB {
   public:
     FORTE_FieldsToServiceRequestForm(CStringDictionary::TStringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
-        CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, 0) {};
 
     ~FORTE_FieldsToServiceRequestForm() override = default;
 };

@@ -29,13 +29,11 @@ USE_STRING_ID(REQ);
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2VALUES, STRID(GEN_ARRAY2VALUES))
 
-const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmDataInputNames[] = {STRID(IN)};
-
-const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventInputTypeIds[] = {STRID(Event)};
-
-const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId GEN_ARRAY2VALUES::scmEventOutputTypeIds[] = {STRID(Event)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+} // namespace
 
 GEN_ARRAY2VALUES::GEN_ARRAY2VALUES(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
@@ -48,7 +46,7 @@ void GEN_ARRAY2VALUES::executeEvent(TEventID paEIID, CEventChainExecutionThread 
   switch (paEIID) {
     case scmEventREQID:
 
-      for (size_t output_index = 0; output_index < getFBInterfaceSpec().mNumDOs; output_index++) {
+      for (size_t output_index = 0; output_index < getFBInterfaceSpec().getNumDOs(); output_index++) {
         // copy input values to array
         getDO(static_cast<unsigned int>(output_index))->setValue(var_IN[output_index]);
       }
@@ -64,7 +62,7 @@ void GEN_ARRAY2VALUES::readInputData(TEventID) {
 }
 
 void GEN_ARRAY2VALUES::writeOutputData(TEventID) {
-  for (TPortId i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
+  for (TPortId i = 0; i < getFBInterfaceSpec().getNumDOs(); ++i) {
     writeData(1 + i, mGenDOs[i], mGenDOConns[i]);
   }
 }
@@ -92,26 +90,21 @@ bool GEN_ARRAY2VALUES::createInterfaceSpec(const char *paConfigString, SFBInterf
   }
 
   // create the data outputs
-  mDataOutputNames = std::make_unique<CStringDictionary::TStringId[]>(numDOs);
-  generateGenericInterfacePointNameArray("OUT_", mDataOutputNames.get(), numDOs);
+  generateGenericInterfacePointNameArray("OUT_", mDataOutputNames, numDOs);
 
   // configure array input
   var_IN.setup(numDOs, arrayValueTypeId);
 
   // create the interface Specification
-  paInterfaceSpec.mNumEIs = 1;
-  paInterfaceSpec.mEINames = scmEventInputNames;
-  paInterfaceSpec.mNumEOs = 1;
-  paInterfaceSpec.mEONames = scmEventOutputNames;
-  paInterfaceSpec.mNumDIs = 1;
-  paInterfaceSpec.mDINames = scmDataInputNames;
-  paInterfaceSpec.mNumDOs = numDOs;
-  paInterfaceSpec.mDONames = mDataOutputNames.get();
+  paInterfaceSpec.mEINames = cEventInputNames;
+  paInterfaceSpec.mEONames = cEventOutputNames;
+  paInterfaceSpec.mDINames = cDataInputNames;
+  paInterfaceSpec.mDONames = mDataOutputNames;
   return true;
 }
 
 void GEN_ARRAY2VALUES::createGenOutputData() {
-  mGenDOs = std::make_unique<CIEC_ANY_VARIANT[]>(getFBInterfaceSpec().mNumDOs);
+  mGenDOs = std::make_unique<CIEC_ANY_VARIANT[]>(getFBInterfaceSpec().getNumDOs());
 }
 
 CEventConnection *GEN_ARRAY2VALUES::getEOConUnchecked(TPortId paEONum) {

@@ -51,41 +51,27 @@ USE_STRING_ID(UINT);
 
 DEFINE_FIRMWARE_FB(FORTE_E_BLINK_TRAIN, STRID(E_BLINK_TRAIN))
 
-const CStringDictionary::TStringId FORTE_E_BLINK_TRAIN::scmDataInputNames[] = {STRID(TIMELOW), STRID(TIMEHIGH),
-                                                                               STRID(N)};
-const CStringDictionary::TStringId FORTE_E_BLINK_TRAIN::scmDataInputTypeIds[] = {STRID(TIME), STRID(TIME), STRID(UINT)};
-const CStringDictionary::TStringId FORTE_E_BLINK_TRAIN::scmDataOutputNames[] = {STRID(OUT)};
-const CStringDictionary::TStringId FORTE_E_BLINK_TRAIN::scmDataOutputTypeIds[] = {STRID(BOOL)};
-const TDataIOID FORTE_E_BLINK_TRAIN::scmEIWith[] = {0, 1, 2, scmWithListDelimiter};
-const TForteInt16 FORTE_E_BLINK_TRAIN::scmEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_E_BLINK_TRAIN::scmEventInputNames[] = {STRID(START), STRID(STOP)};
-const TDataIOID FORTE_E_BLINK_TRAIN::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_BLINK_TRAIN::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_BLINK_TRAIN::scmEventOutputNames[] = {STRID(CNF)};
-const SFBInterfaceSpec FORTE_E_BLINK_TRAIN::scmFBInterfaceSpec = {2,
-                                                                  scmEventInputNames,
-                                                                  nullptr,
-                                                                  scmEIWith,
-                                                                  scmEIWithIndexes,
-                                                                  1,
-                                                                  scmEventOutputNames,
-                                                                  nullptr,
-                                                                  scmEOWith,
-                                                                  scmEOWithIndexes,
-                                                                  3,
-                                                                  scmDataInputNames,
-                                                                  scmDataInputTypeIds,
-                                                                  1,
-                                                                  scmDataOutputNames,
-                                                                  scmDataOutputTypeIds,
-                                                                  0,
-                                                                  nullptr,
-                                                                  0,
-                                                                  nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(TIMELOW), STRID(TIMEHIGH), STRID(N)};
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cEventInputNames = std::array{STRID(START), STRID(STOP)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_E_BLINK_TRAIN::FORTE_E_BLINK_TRAIN(const CStringDictionary::TStringId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_E_TP(STRID(E_TP), *this),
     fb_E_TRAIN(STRID(E_TRAIN), *this),
     fb_ADD_2(STRID(ADD_2), "ADD_2", *this),
@@ -152,7 +138,7 @@ void FORTE_E_BLINK_TRAIN::readInputData(const TEventID paEIID) {
 void FORTE_E_BLINK_TRAIN::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, fb_E_TP->conn_Q.getValue(), conn_OUT);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, fb_E_TP->conn_Q.getValue(), conn_OUT);
       break;
     }
     default: break;

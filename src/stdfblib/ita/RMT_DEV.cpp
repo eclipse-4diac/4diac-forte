@@ -19,15 +19,24 @@ USE_STRING_ID(WSTRING);
 
 #include <stringdict.h>
 
-const CStringDictionary::TStringId RMT_DEV::scmDINameIds[] = {STRID(MGR_ID)};
-const CStringDictionary::TStringId RMT_DEV::scmDIDataTypeIds[] = {STRID(WSTRING)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(MGR_ID)};
 
-const SFBInterfaceSpec RMT_DEV::scmFBInterfaceSpec = {
-    0, nullptr,      nullptr,          nullptr, nullptr, 0,       nullptr, nullptr, nullptr, nullptr,
-    1, scmDINameIds, scmDIDataTypeIds, 0,       nullptr, nullptr, 0,       nullptr, 0,       nullptr};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = {},
+      .mEITypeNames = {},
+      .mEONames = {},
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 RMT_DEV::RMT_DEV(const std::string &paMGR_ID) :
-    CDevice(scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
+    CDevice(cFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
     conn_MGR_ID_int(*this, 0, u""_WSTRING),
     conn_MGR_ID(nullptr),
     MGR(STRID(MGR), *this) {

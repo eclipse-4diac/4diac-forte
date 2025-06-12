@@ -57,12 +57,21 @@ USE_STRING_ID(Unsubscribed);
 
 DEFINE_FIRMWARE_FB(FORTE_SubscribeEventHTTP, STRID(SubscribeEventHTTP))
 
-const TForteInt16 FORTE_SubscribeEventHTTP::scmEOWithIndexes[] = {-1};
-const SAdapterInstanceDef FORTE_SubscribeEventHTTP::scmAdapterInstances[] = {
-    {STRID(SubscribeEventAdp), STRID(SubscribeEventAdp), false}};
+namespace {
+  const auto cSocketNameIds = std::array{STRID(SubscribeEventAdp)};
 
-const SFBInterfaceSpec FORTE_SubscribeEventHTTP::scmFBInterfaceSpec = {
-    0, 0, nullptr, 0, 0, 0, 0, nullptr, 0, 0, 0, 0, 0, 0, 0, 0, 1, scmAdapterInstances};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = {},
+      .mEITypeNames = {},
+      .mEONames = {},
+      .mEOTypeNames = {},
+      .mDINames = {},
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = cSocketNameIds,
+      .mPlugNames = {},
+  };
+} // namespace
 
 const SCFB_FBInstanceData FORTE_SubscribeEventHTTP::scmInternalFBs[] = {
     {STRID(InitFlagReg), STRID(E_SR)},

@@ -14,6 +14,16 @@
 
 #include "FB_CTU_LINT_fbt.h"
 
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_lint.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
+
+using namespace std::literals;
+
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);
 USE_STRING_ID(CU);
@@ -26,63 +36,32 @@ USE_STRING_ID(Q);
 USE_STRING_ID(R);
 USE_STRING_ID(REQ);
 
-#include "forte_bool.h"
-#include "forte_lint.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+namespace {
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataInputNames = std::array{STRID(CU), STRID(R), STRID(PV)};
+  const auto cDataOutputNames = std::array{STRID(Q), STRID(CV)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {.mEINames = cEventInputNames,
+                                                 .mEITypeNames = {},
+                                                 .mEONames = cEventOutputNames,
+                                                 .mEOTypeNames = {},
+                                                 .mDINames = cDataInputNames,
+                                                 .mDONames = cDataOutputNames,
+                                                 .mDIONames = {},
+                                                 .mSocketNames = {},
+                                                 .mPlugNames = {}};
+}
 
 DEFINE_FIRMWARE_FB(FORTE_FB_CTU_LINT, STRID(FB_CTU_LINT))
 
-const CStringDictionary::TStringId FORTE_FB_CTU_LINT::scmDataInputNames[] = {STRID(CU), STRID(R), STRID(PV)};
 
-const CStringDictionary::TStringId FORTE_FB_CTU_LINT::scmDataInputTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(LINT)};
-
-const CStringDictionary::TStringId FORTE_FB_CTU_LINT::scmDataOutputNames[] = {STRID(Q), STRID(CV)};
-
-const CStringDictionary::TStringId FORTE_FB_CTU_LINT::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(LINT)};
-
-const TDataIOID FORTE_FB_CTU_LINT::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_FB_CTU_LINT::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_FB_CTU_LINT::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_FB_CTU_LINT::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_FB_CTU_LINT::scmEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_FB_CTU_LINT::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_FB_CTU_LINT::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_FB_CTU_LINT::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_FB_CTU_LINT::scmFBInterfaceSpec = {1,
-                                                                scmEventInputNames,
-                                                                scmEventInputTypeIds,
-                                                                scmEIWith,
-                                                                scmEIWithIndexes,
-                                                                1,
-                                                                scmEventOutputNames,
-                                                                scmEventOutputTypeIds,
-                                                                scmEOWith,
-                                                                scmEOWithIndexes,
-                                                                3,
-                                                                scmDataInputNames,
-                                                                scmDataInputTypeIds,
-                                                                2,
-                                                                scmDataOutputNames,
-                                                                scmDataOutputTypeIds,
-                                                                0,
-                                                                nullptr,
-                                                                0,
-                                                                nullptr};
-
-FORTE_FB_CTU_LINT::FORTE_FB_CTU_LINT(CStringDictionary::TStringId paInstanceNameId,
-                                     forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
-    var_CU(false_BOOL),
-    var_R(false_BOOL),
-    var_PV(CIEC_LINT(0)),
-    var_Q(false_BOOL),
-    var_CV(CIEC_LINT(0)),
+FORTE_FB_CTU_LINT::FORTE_FB_CTU_LINT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    var_CU(0_BOOL),
+    var_R(0_BOOL),
+    var_PV(0_LINT),
+    var_Q(0_BOOL),
+    var_CV(0_LINT),
     conn_CNF(*this, 0),
     conn_CU(nullptr),
     conn_R(nullptr),
@@ -91,49 +70,56 @@ FORTE_FB_CTU_LINT::FORTE_FB_CTU_LINT(CStringDictionary::TStringId paInstanceName
     conn_CV(*this, 1, var_CV) {
 }
 
-void FORTE_FB_CTU_LINT::alg_REQ(void) {
-
-  if (var_R) {
-    var_CV = CIEC_LINT(0);
-  } else if (func_AND<CIEC_BOOL>(var_CU,
-                                 func_LT(var_CV, CIEC_LINT(std::numeric_limits<CIEC_LINT::TValueType>::max())))) {
-    var_CV = func_ADD<CIEC_LINT>(var_CV, CIEC_LINT(1));
-  }
-  var_Q = func_GE(var_CV, var_PV);
+void FORTE_FB_CTU_LINT::setInitialValues() {
+  CSimpleFB::setInitialValues();
+  var_CU = 0_BOOL;
+  var_R = 0_BOOL;
+  var_PV = 0_LINT;
+  var_Q = 0_BOOL;
+  var_CV = 0_LINT;
 }
 
-void FORTE_FB_CTU_LINT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID: alg_REQ(); break;
-    default: break;
+void FORTE_FB_CTU_LINT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  switch(paEIID) {
+    case scmEventREQID:
+      enterStateREQ(paECET);
+      break;
+    default:
+      break;
   }
+}
+
+void FORTE_FB_CTU_LINT::enterStateREQ(CEventChainExecutionThread *const paECET) {
+  alg_REQ();
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void FORTE_FB_CTU_LINT::readInputData(TEventID paEIID) {
-  switch (paEIID) {
+void FORTE_FB_CTU_LINT::readInputData(const TEventID paEIID) {
+  switch(paEIID) {
     case scmEventREQID: {
       readData(0, var_CU, conn_CU);
       readData(1, var_R, conn_R);
       break;
     }
-    default: break;
+    default:
+      break;
   }
 }
 
-void FORTE_FB_CTU_LINT::writeOutputData(TEventID paEIID) {
-  switch (paEIID) {
+void FORTE_FB_CTU_LINT::writeOutputData(const TEventID paEIID) {
+  switch(paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_Q, conn_Q);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_CV, conn_CV);
+      writeData(3, var_Q, conn_Q);
+      writeData(4, var_CV, conn_CV);
       break;
     }
-    default: break;
+    default:
+      break;
   }
 }
 
-CIEC_ANY *FORTE_FB_CTU_LINT::getDI(size_t paIndex) {
-  switch (paIndex) {
+CIEC_ANY *FORTE_FB_CTU_LINT::getDI(const size_t paIndex) {
+  switch(paIndex) {
     case 0: return &var_CU;
     case 1: return &var_R;
     case 2: return &var_PV;
@@ -141,23 +127,23 @@ CIEC_ANY *FORTE_FB_CTU_LINT::getDI(size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_FB_CTU_LINT::getDO(size_t paIndex) {
-  switch (paIndex) {
+CIEC_ANY *FORTE_FB_CTU_LINT::getDO(const size_t paIndex) {
+  switch(paIndex) {
     case 0: return &var_Q;
     case 1: return &var_CV;
   }
   return nullptr;
 }
 
-CEventConnection *FORTE_FB_CTU_LINT::getEOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
+CEventConnection *FORTE_FB_CTU_LINT::getEOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
-CDataConnection **FORTE_FB_CTU_LINT::getDIConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
+CDataConnection **FORTE_FB_CTU_LINT::getDIConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
     case 0: return &conn_CU;
     case 1: return &conn_R;
     case 2: return &conn_PV;
@@ -165,8 +151,8 @@ CDataConnection **FORTE_FB_CTU_LINT::getDIConUnchecked(TPortId paIndex) {
   return nullptr;
 }
 
-CDataConnection *FORTE_FB_CTU_LINT::getDOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
+CDataConnection *FORTE_FB_CTU_LINT::getDOConUnchecked(const TPortId paIndex) {
+  switch(paIndex) {
     case 0: return &conn_Q;
     case 1: return &conn_CV;
   }
@@ -177,10 +163,17 @@ CIEC_ANY *FORTE_FB_CTU_LINT::getVarInternal(size_t) {
   return nullptr;
 }
 
-void FORTE_FB_CTU_LINT::setInitialValues() {
-  var_CU = false_BOOL;
-  var_R = false_BOOL;
-  var_PV = 0_LINT;
-  var_Q = false_BOOL;
-  var_CV = 0_LINT;
+void FORTE_FB_CTU_LINT::alg_REQ(void) {
+
+  #line 2 "FB_CTU_LINT.fbt"
+  if (var_R) {
+    #line 3 "FB_CTU_LINT.fbt"
+    var_CV = 0_LINT;
+  }
+  else if (func_AND<CIEC_BOOL>(var_CU, func_LT(var_CV, 9223372036854775807_LINT))) {
+    #line 5 "FB_CTU_LINT.fbt"
+    var_CV = func_ADD<CIEC_LINT>(var_CV, 1_LINT);
+  }
+  #line 7 "FB_CTU_LINT.fbt"
+  var_Q = func_GE(var_CV, var_PV);
 }

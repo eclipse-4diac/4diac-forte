@@ -32,39 +32,26 @@ bool FORTE_TEST_CONDITION::smfinalReportPrinted = false;
 
 DEFINE_FIRMWARE_FB(FORTE_TEST_CONDITION, STRID(TEST_CONDITION))
 
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmDataInputNames[] = {STRID(check)};
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmDataInputTypeIds[] = {STRID(BOOL)};
-const TDataIOID FORTE_TEST_CONDITION::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_TEST_CONDITION::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventInputTypeIds[] = {STRID(Event)};
-const TForteInt16 FORTE_TEST_CONDITION::scmEOWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_TEST_CONDITION::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_TEST_CONDITION::scmFBInterfaceSpec = {1,
-                                                                   scmEventInputNames,
-                                                                   scmEventInputTypeIds,
-                                                                   scmEIWith,
-                                                                   scmEIWithIndexes,
-                                                                   1,
-                                                                   scmEventOutputNames,
-                                                                   scmEventOutputTypeIds,
-                                                                   nullptr,
-                                                                   scmEOWithIndexes,
-                                                                   1,
-                                                                   scmDataInputNames,
-                                                                   scmDataInputTypeIds,
-                                                                   0,
-                                                                   nullptr,
-                                                                   nullptr,
-                                                                   0,
-                                                                   nullptr,
-                                                                   0,
-                                                                   nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(check)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_TEST_CONDITION::FORTE_TEST_CONDITION(const CStringDictionary::TStringId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_check(nullptr) {};
 

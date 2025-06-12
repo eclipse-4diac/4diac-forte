@@ -27,13 +27,6 @@ class FORTE_Port final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_Port)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    static const int scmPortInAdapterAdpNum = 0;
-    static const SAdapterInstanceDef scmAdapterInstances[];
-
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
@@ -68,7 +61,7 @@ class FORTE_Port final : public CFunctionBlock {
     CIEC_STRING var_Pin14;
     CIEC_STRING var_Pin15;
 
-    FORTE_PortAdapter var_PortInAdapter;
+    forte::CSocketPin<FORTE_PortAdapter_Socket> var_PortInAdapter;
 
     CDataConnection *conn_Pin0;
     CDataConnection *conn_Pin1;
@@ -89,7 +82,7 @@ class FORTE_Port final : public CFunctionBlock {
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
-    CAdapter *getAdapterUnchecked(size_t) override;
+    forte::ISocketPin *getSocketPinUnchecked(size_t) override;
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;

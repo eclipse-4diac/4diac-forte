@@ -45,52 +45,29 @@ USE_STRING_ID(signalprocessing__DualHysteresis);
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__DualHysteresis, STRID(signalprocessing__DualHysteresis))
 
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataInputNames[] = {
-    STRID(QI), STRID(MI), STRID(DEAD), STRID(HYSTERESIS), STRID(INPUT)};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataInputTypeIds[] = {
-    STRID(BOOL), STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL)};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataOutputNames[] = {
-    STRID(QO), STRID(DO_UP), STRID(DO_DOWN)};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmDataOutputTypeIds[] = {
-    STRID(BOOL), STRID(BOOL), STRID(BOOL)};
-const TDataIOID FORTE_signalprocessing__DualHysteresis::scmEIWith[] = {0, scmWithListDelimiter, 0, 1, 2, 4,
-                                                                       3, scmWithListDelimiter};
-const TForteInt16 FORTE_signalprocessing__DualHysteresis::scmEIWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventInputNames[] = {STRID(INIT),
-                                                                                                   STRID(REQ)};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventInputTypeIds[] = {STRID(EInit),
-                                                                                                     STRID(Event)};
-const TDataIOID FORTE_signalprocessing__DualHysteresis::scmEOWith[] = {0, scmWithListDelimiter, 1, 2,
-                                                                       scmWithListDelimiter};
-const TForteInt16 FORTE_signalprocessing__DualHysteresis::scmEOWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventOutputNames[] = {STRID(INITO),
-                                                                                                    STRID(CNF)};
-const CStringDictionary::TStringId FORTE_signalprocessing__DualHysteresis::scmEventOutputTypeIds[] = {STRID(EInit),
-                                                                                                      STRID(Event)};
-const SFBInterfaceSpec FORTE_signalprocessing__DualHysteresis::scmFBInterfaceSpec = {2,
-                                                                                     scmEventInputNames,
-                                                                                     scmEventInputTypeIds,
-                                                                                     scmEIWith,
-                                                                                     scmEIWithIndexes,
-                                                                                     2,
-                                                                                     scmEventOutputNames,
-                                                                                     scmEventOutputTypeIds,
-                                                                                     scmEOWith,
-                                                                                     scmEOWithIndexes,
-                                                                                     5,
-                                                                                     scmDataInputNames,
-                                                                                     scmDataInputTypeIds,
-                                                                                     3,
-                                                                                     scmDataOutputNames,
-                                                                                     scmDataOutputTypeIds,
-                                                                                     0,
-                                                                                     nullptr,
-                                                                                     0,
-                                                                                     nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(QI), STRID(MI), STRID(DEAD), STRID(HYSTERESIS), STRID(INPUT)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(DO_UP), STRID(DO_DOWN)};
+  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_signalprocessing__DualHysteresis::FORTE_signalprocessing__DualHysteresis(
     const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
     var_QI(0_BOOL),
     var_MI(0.5_REAL),
     var_DEAD(0.1_REAL),
@@ -233,12 +210,12 @@ void FORTE_signalprocessing__DualHysteresis::readInputData(const TEventID paEIID
 void FORTE_signalprocessing__DualHysteresis::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
       break;
     }
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_DO_UP, conn_DO_UP);
-      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_DO_DOWN, conn_DO_DOWN);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_DO_UP, conn_DO_UP);
+      writeData(cFBInterfaceSpec.getNumDIs() + 2, var_DO_DOWN, conn_DO_DOWN);
       break;
     }
     default: break;

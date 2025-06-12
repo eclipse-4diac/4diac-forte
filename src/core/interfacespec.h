@@ -26,55 +26,46 @@
 
 using TDataIOID = TPortId; //!< \ingroup CORE Type for holding an data In- or output ID
 
-/*!\ingroup CORE\brief Structure to hold all data of adapters instantiated in the function block.
- */
-struct SAdapterInstanceDef {
-    CStringDictionary::TStringId mAdapterTypeNameID; //!< Adapter type name
-    CStringDictionary::TStringId mAdapterNameID; //!< Adapter instance name
-    bool mIsPlug; //!< Flag for distinction of adapter nature (plug/socket)
-};
-
 /*!\ingroup CORE\brief Structure to hold all the data for specifying a function block interface.
  */
 struct SFBInterfaceSpec {
-    TEventID mNumEIs; //!< Number of event inputs
-    const CStringDictionary::TStringId *mEINames; //!< List of the event input names
-    const CStringDictionary::TStringId *mEITypeNames; //!< List of the event input types
-    const TDataIOID
-        *mEIWith; //!< Input WITH reference list. This list contains an array of input data ids. For each input event
-                  //!< the associated data inputs are listed. The start for each input event is specified in the
-                  //!< mEIWithIndexes field. The end is defined by the value scmWithListDelimiter.
-    const TForteInt16
-        *mEIWithIndexes; //!< Index list for each input event. This list gives for each input event an entry in the
-                         //!< mEIWith. Input events are numbered starting from 0. if the input event has no assciated
-                         //!< data inputs -1 is the entry at this event inputs postion.
-    TEventID mNumEOs; //!< Number of event outputs
-    const CStringDictionary::TStringId *mEONames; //!< List of the event output names
-    const CStringDictionary::TStringId *mEOTypeNames; //!< List of the event output types
-    const TDataIOID
-        *mEOWith; //!< Output WITH reference list. This list contains an array of output data ids. For each output event
-                  //!< the associated data outputs are listed. The start for each output event is specified in the
-                  //!< mEOWithIndexes field. The end is defined by the value scmWithListDelimiter.
-    const TForteInt16
-        *mEOWithIndexes; //!< Index list for each output event. This list gives for each output event an entry in the
-                         //!< mEOWith. Output events are numbered starting from 0. If the output event has no assciated
-                         //!< data outputs -1 is the entry at this event outputs postion. Additionally at the postion
-                         //!< mNumEOs in this list an index to an own list in the mEOWith list is stored specifying all
-                         //!< output data port that are not associated with any output event. That values will be
-                         //!< updated on every FB invocation.
-    TPortId mNumDIs; //!< Number of data inputs
-    const CStringDictionary::TStringId *mDINames; //!< List of the data input names
-    const CStringDictionary::TStringId *mDIDataTypeNames; //!< List of the data type names for the data inputs
-    TPortId mNumDOs; //!< Number of data outputs
-    const CStringDictionary::TStringId *mDONames; //!< List of the data output names
-    const CStringDictionary::TStringId *mDODataTypeNames; //!< List of the data type names for the data outputs
-    TPortId mNumDIOs; //!< Number of data inouts
-    const CStringDictionary::TStringId *mDIONames; //!< List of the data inout names
-    TPortId mNumAdapters; //!< Number of Adapters
-    const SAdapterInstanceDef *mAdapterInstanceDefinition; //!< List of adapter instances
-
+    std::span<const CStringDictionary::TStringId> mEINames; //!< List of the event input names
+    std::span<const CStringDictionary::TStringId> mEITypeNames; //!< List of the event input types
+    std::span<const CStringDictionary::TStringId> mEONames; //!< List of the event output names
+    std::span<const CStringDictionary::TStringId> mEOTypeNames; //!< List of the event output types
+    std::span<const CStringDictionary::TStringId> mDINames; //!< List of the data input names
+    std::span<const CStringDictionary::TStringId> mDONames; //!< List of the data output names
+    std::span<const CStringDictionary::TStringId> mDIONames; //!< List of the data inout names
     std::span<const CStringDictionary::TStringId> mSocketNames;
     std::span<const CStringDictionary::TStringId> mPlugNames;
+
+    size_t getNumEIs() const {
+      return mEINames.size();
+    }
+
+    size_t getNumEOs() const {
+      return mEONames.size();
+    }
+
+    size_t getNumDIs() const {
+      return mDINames.size();
+    }
+
+    size_t getNumDOs() const {
+      return mDONames.size();
+    }
+
+    size_t getNumDIOs() const {
+      return mDIONames.size();
+    }
+
+    size_t getNumSockets() const {
+      return mSocketNames.size();
+    }
+
+    size_t getNumPlugs() const {
+      return mPlugNames.size();
+    }
 
     /*!\brief Get the ID of a specific event input of the FB.
      *

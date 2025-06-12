@@ -36,44 +36,34 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(fileWriter, STRID(fileWriter))
 
-const CStringDictionary::TStringId fileWriter::scmDataInputNames[] = {STRID(QI), STRID(FILE_NAME), STRID(S1),
-                                                                      STRID(APPEND), STRID(APPCHAR)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(QI), STRID(FILE_NAME), STRID(S1),
+                                                                        STRID(APPEND), STRID(APPCHAR)};
+  
+                                                                          STRID(BOOL), STRID(STRING)};
+  
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId fileWriter::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(STRING),
-                                                                        STRID(BOOL), STRID(STRING)};
-
-const CStringDictionary::TStringId fileWriter::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-
-const CStringDictionary::TStringId fileWriter::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
-
-const TForteInt16 fileWriter::scmEIWithIndexes[] = {0, 3};
-const TDataIOID fileWriter::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, 2, 3, 4, scmWithListDelimiter};
-const CStringDictionary::TStringId fileWriter::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
-const CStringDictionary::TStringId fileWriter::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-
-const TDataIOID fileWriter::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 fileWriter::scmEOWithIndexes[] = {0, 3, -1};
-const CStringDictionary::TStringId fileWriter::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
-const CStringDictionary::TStringId fileWriter::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-
-const SFBInterfaceSpec fileWriter::scmFBInterfaceSpec = {2,
-                                                         scmEventInputNames,
-                                                         scmEventInputTypeIds,
-                                                         scmEIWith,
-                                                         scmEIWithIndexes,
-                                                         2,
-                                                         scmEventOutputNames,
-                                                         scmEventOutputTypeIds,
-                                                         scmEOWith,
-                                                         scmEOWithIndexes,
-                                                         5,
-                                                         scmDataInputNames,
-                                                         scmDataInputTypeIds,
-                                                         2,
-                                                         scmDataOutputNames,
-                                                         scmDataOutputTypeIds,
-                                                         0,
-                                                         0};
 
 const char *const fileWriter::scmOK = "OK";
 const char *const fileWriter::scmNotInitialised = "Not initialized";
@@ -105,7 +95,7 @@ void fileWriter::executeEvent(TEventID paEIID,
 }
 
 fileWriter::fileWriter(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId) {
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId) {
   mFile.rdbuf()->pubsetbuf(nullptr, 0); // disable buffer to avoid latency
 }
 

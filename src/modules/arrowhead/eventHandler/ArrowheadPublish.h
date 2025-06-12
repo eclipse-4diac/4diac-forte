@@ -23,8 +23,6 @@ class FORTE_ArrowheadPublish : public CCompositeFB {
     DECLARE_FIRMWARE_FB(FORTE_ArrowheadPublish)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
     CIEC_PublishEvent &publishEvent() {
       return *static_cast<CIEC_PublishEvent *>(getDI(0));
     };
@@ -34,23 +32,14 @@ class FORTE_ArrowheadPublish : public CCompositeFB {
     };
 
     static const TEventID scmEventpublishID = 0;
-    static const TForteInt16 scmEIWithIndexes[];
-    static const TDataIOID scmEIWith[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventpublishedID = 0;
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_ArrowheadPublishAdp &ArrowheadPublishAdp() {
       return (*static_cast<FORTE_ArrowheadPublishAdp *>(getAdapterUnchecked(0)));
     };
     static const int scmArrowheadPublishAdpAdpNum = 0;
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const SCFB_FBConnectionData scmEventConnections[];
 
@@ -60,7 +49,6 @@ class FORTE_ArrowheadPublish : public CCompositeFB {
   public:
     FORTE_ArrowheadPublish(const CStringDictionary::TStringId paInstanceNameId,
                            forte::core::CFBContainer &paContainer) :
-        CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {};
 
     ~FORTE_ArrowheadPublish() override = default;
 };

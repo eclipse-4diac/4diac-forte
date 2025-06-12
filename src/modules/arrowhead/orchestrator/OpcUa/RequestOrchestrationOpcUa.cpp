@@ -68,12 +68,21 @@ USE_STRING_ID(START);
 
 DEFINE_FIRMWARE_FB(FORTE_RequestOrchestrationOpcUa, STRID(RequestOrchestrationOpcUa))
 
-const TForteInt16 FORTE_RequestOrchestrationOpcUa::scmEOWithIndexes[] = {-1};
-const SAdapterInstanceDef FORTE_RequestOrchestrationOpcUa::scmAdapterInstances[] = {
-    {STRID(OrchestratorRequestAdp), STRID(requestOrchestration), false}};
+namespace {
+  const auto cSocketNameIds = std::array{STRID(requestOrchestration)};
 
-const SFBInterfaceSpec FORTE_RequestOrchestrationOpcUa::scmFBInterfaceSpec = {
-    0, 0, nullptr, 0, 0, 0, 0, nullptr, 0, 0, 0, 0, 0, 0, 0, 0, 1, scmAdapterInstances};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = {},
+      .mEITypeNames = {},
+      .mEONames = {},
+      .mEOTypeNames = {},
+      .mDINames = {},
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = cSocketNameIds,
+      .mPlugNames = {},
+  };
+} // namespace
 
 const SCFB_FBInstanceData FORTE_RequestOrchestrationOpcUa::scmInternalFBs[] = {
     {STRID(APPEND_STRING_3), STRID(APPEND_STRING_3)},

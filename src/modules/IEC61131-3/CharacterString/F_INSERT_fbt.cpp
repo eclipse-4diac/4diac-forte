@@ -29,49 +29,27 @@ USE_STRING_ID(REQ);
 
 DEFINE_FIRMWARE_FB(FORTE_F_INSERT, STRID(F_INSERT))
 
-const CStringDictionary::TStringId FORTE_F_INSERT::scmDataInputNames[] = {STRID(IN1), STRID(IN2), STRID(P)};
-
-const CStringDictionary::TStringId FORTE_F_INSERT::scmDataInputTypeIds[] = {STRID(ANY_STRING), STRID(ANY_STRING),
-                                                                            STRID(ANY_INT)};
-
-const CStringDictionary::TStringId FORTE_F_INSERT::scmDataOutputNames[] = {STRID(OUT)};
-
-const CStringDictionary::TStringId FORTE_F_INSERT::scmDataOutputTypeIds[] = {STRID(ANY_STRING)};
-
-const TDataIOID FORTE_F_INSERT::scmEIWith[] = {0, 1, 2, scmWithListDelimiter};
-const TForteInt16 FORTE_F_INSERT::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_INSERT::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_F_INSERT::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_F_INSERT::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_INSERT::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_INSERT::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_F_INSERT::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_F_INSERT::scmFBInterfaceSpec = {1,
-                                                             scmEventInputNames,
-                                                             scmEventInputTypeIds,
-                                                             scmEIWith,
-                                                             scmEIWithIndexes,
-                                                             1,
-                                                             scmEventOutputNames,
-                                                             scmEventOutputTypeIds,
-                                                             scmEOWith,
-                                                             scmEOWithIndexes,
-                                                             3,
-                                                             scmDataInputNames,
-                                                             scmDataInputTypeIds,
-                                                             1,
-                                                             scmDataOutputNames,
-                                                             scmDataOutputTypeIds,
-                                                             0,
-                                                             nullptr,
-                                                             0,
-                                                             nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN1), STRID(IN2), STRID(P)};
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_F_INSERT::FORTE_F_INSERT(const CStringDictionary::TStringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_STRING_VARIANT()),
     var_IN2(CIEC_ANY_STRING_VARIANT()),
     var_P(CIEC_ANY_INT_VARIANT()),
@@ -119,7 +97,7 @@ void FORTE_F_INSERT::readInputData(TEventID paEIID) {
 void FORTE_F_INSERT::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
       break;
     }
     default: break;

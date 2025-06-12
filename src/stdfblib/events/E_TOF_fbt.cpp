@@ -43,41 +43,29 @@ USE_STRING_ID(TIME);
 
 DEFINE_FIRMWARE_FB(FORTE_E_TOF, STRID(E_TOF))
 
-const CStringDictionary::TStringId FORTE_E_TOF::scmDataInputNames[] = {STRID(IN), STRID(PT)};
-const CStringDictionary::TStringId FORTE_E_TOF::scmDataInputTypeIds[] = {STRID(BOOL), STRID(TIME)};
-const CStringDictionary::TStringId FORTE_E_TOF::scmDataOutputNames[] = {STRID(Q)};
-const CStringDictionary::TStringId FORTE_E_TOF::scmDataOutputTypeIds[] = {STRID(BOOL)};
-const TDataIOID FORTE_E_TOF::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_E_TOF::scmEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_E_TOF::scmEventInputNames[] = {STRID(REQ), STRID(R)};
-const CStringDictionary::TStringId FORTE_E_TOF::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
-const TDataIOID FORTE_E_TOF::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_TOF::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_TOF::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_E_TOF::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_E_TOF::scmFBInterfaceSpec = {2,
-                                                          scmEventInputNames,
-                                                          scmEventInputTypeIds,
-                                                          scmEIWith,
-                                                          scmEIWithIndexes,
-                                                          1,
-                                                          scmEventOutputNames,
-                                                          scmEventOutputTypeIds,
-                                                          scmEOWith,
-                                                          scmEOWithIndexes,
-                                                          2,
-                                                          scmDataInputNames,
-                                                          scmDataInputTypeIds,
-                                                          1,
-                                                          scmDataOutputNames,
-                                                          scmDataOutputTypeIds,
-                                                          0,
-                                                          nullptr,
-                                                          0,
-                                                          nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN), STRID(PT)};
+  const auto cDataOutputNames = std::array{STRID(Q)};
+  const auto cEventInputNames = std::array{STRID(REQ), STRID(R)};
+  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
+
 
 FORTE_E_TOF::FORTE_E_TOF(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_E_SWITCH(STRID(E_SWITCH), *this),
     fb_E_DELAY(STRID(E_DELAY), *this),
     fb_E_RS(STRID(E_RS), *this),
@@ -136,7 +124,7 @@ void FORTE_E_TOF::readInputData(const TEventID paEIID) {
 void FORTE_E_TOF::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, fb_E_RS->conn_Q.getValue(), conn_Q);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, fb_E_RS->conn_Q.getValue(), conn_Q);
       break;
     }
     default: break;

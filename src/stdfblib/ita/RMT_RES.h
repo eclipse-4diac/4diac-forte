@@ -42,7 +42,6 @@ class RMT_RES final : public CResource {
     forte::core::CInternalFB<FORTE_E_SR> fb_MGR_FF;
     forte::core::CInternalFB<DEV_MGR> fb_MGR;
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const CStringDictionary::TStringId scmVarInputNameIds[];
     static const CStringDictionary::TStringId scmDIDataTypeIds[];

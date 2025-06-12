@@ -43,19 +43,12 @@ class GEN_ARRAY2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
     CDataConnection *getDOConUnchecked(TPortId paDONum) override;
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
 
-    static const CStringDictionary::TStringId scmDataOutputNames[];
 
     static const TEventID scmEventREQID = 0;
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventCNFID = 0;
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 

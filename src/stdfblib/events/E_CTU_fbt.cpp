@@ -35,41 +35,29 @@ USE_STRING_ID(UINT);
 
 DEFINE_FIRMWARE_FB(FORTE_E_CTU, STRID(E_CTU))
 
-const CStringDictionary::TStringId FORTE_E_CTU::scmDataInputNames[] = {STRID(PV)};
-const CStringDictionary::TStringId FORTE_E_CTU::scmDataInputTypeIds[] = {STRID(UINT)};
-const CStringDictionary::TStringId FORTE_E_CTU::scmDataOutputNames[] = {STRID(Q), STRID(CV)};
-const CStringDictionary::TStringId FORTE_E_CTU::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(UINT)};
-const TDataIOID FORTE_E_CTU::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_CTU::scmEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_E_CTU::scmEventInputNames[] = {STRID(CU), STRID(R)};
-const CStringDictionary::TStringId FORTE_E_CTU::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
-const TDataIOID FORTE_E_CTU::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_E_CTU::scmEOWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_E_CTU::scmEventOutputNames[] = {STRID(CUO), STRID(RO)};
-const CStringDictionary::TStringId FORTE_E_CTU::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-const SFBInterfaceSpec FORTE_E_CTU::scmFBInterfaceSpec = {2,
-                                                          scmEventInputNames,
-                                                          scmEventInputTypeIds,
-                                                          scmEIWith,
-                                                          scmEIWithIndexes,
-                                                          2,
-                                                          scmEventOutputNames,
-                                                          scmEventOutputTypeIds,
-                                                          scmEOWith,
-                                                          scmEOWithIndexes,
-                                                          1,
-                                                          scmDataInputNames,
-                                                          scmDataInputTypeIds,
-                                                          2,
-                                                          scmDataOutputNames,
-                                                          scmDataOutputTypeIds,
-                                                          0,
-                                                          nullptr,
-                                                          0,
-                                                          nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(PV)};
+  const auto cDataOutputNames = std::array{STRID(Q), STRID(CV)};
+  const auto cEventInputNames = std::array{STRID(CU), STRID(R)};
+  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CUO), STRID(RO)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
+
 
 FORTE_E_CTU::FORTE_E_CTU(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
     conn_CUO(*this, 0),
     conn_RO(*this, 1),
     conn_PV(nullptr),
@@ -146,13 +134,13 @@ void FORTE_E_CTU::readInputData(const TEventID paEIID) {
 void FORTE_E_CTU::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCUOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_Q, conn_Q);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_CV, conn_CV);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_Q, conn_Q);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_CV, conn_CV);
       break;
     }
     case scmEventROID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_Q, conn_Q);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_CV, conn_CV);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_Q, conn_Q);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_CV, conn_CV);
       break;
     }
     default: break;

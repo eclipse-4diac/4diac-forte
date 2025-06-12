@@ -24,41 +24,27 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_ArrowheadPublish, STRID(ArrowheadPublish))
 
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmDataInputNames[] = {STRID(publishEvent), STRID(endpoint)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(publishEvent), STRID(endpoint)};
+  const auto cEventInputNames = std::array{STRID(publish)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(published)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
 
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmDataInputTypeIds[] = {STRID(PublishEvent),
-                                                                                    STRID(WSTRING)};
+  const auto cPlugNameIds = std::array{STRID(ArrowheadPublishAdp)};
 
-const TForteInt16 FORTE_ArrowheadPublish::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_ArrowheadPublish::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventInputNames[] = {STRID(publish)};
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TForteInt16 FORTE_ArrowheadPublish::scmEOWithIndexes[] = {-1, -1};
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventOutputNames[] = {STRID(published)};
-const CStringDictionary::TStringId FORTE_ArrowheadPublish::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SAdapterInstanceDef FORTE_ArrowheadPublish::scmAdapterInstances[] = {
-    {STRID(ArrowheadPublishAdp), STRID(ArrowheadPublishAdp), true}};
-
-const SFBInterfaceSpec FORTE_ArrowheadPublish::scmFBInterfaceSpec = {1,
-                                                                     scmEventInputNames,
-                                                                     scmEventInputTypeIds,
-                                                                     scmEIWith,
-                                                                     scmEIWithIndexes,
-                                                                     1,
-                                                                     scmEventOutputNames,
-                                                                     scmEventOutputTypeIds,
-                                                                     0,
-                                                                     0,
-                                                                     2,
-                                                                     scmDataInputNames,
-                                                                     scmDataInputTypeIds,
-                                                                     0,
-                                                                     0,
-                                                                     0,
-                                                                     1,
-                                                                     scmAdapterInstances};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = cPlugNameIds,
+  };
+} // namespace
 
 const SCFB_FBConnectionData FORTE_ArrowheadPublish::scmEventConnections[] = {
     {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(publish)), -1,

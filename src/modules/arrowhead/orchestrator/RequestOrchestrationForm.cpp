@@ -28,49 +28,27 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_RequestOrchestrationForm, STRID(RequestOrchestrationForm))
 
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmDataInputNames[] = {STRID(serviceRequestForm),
-                                                                                          STRID(endpoint)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(serviceRequestForm), STRID(endpoint)};
+  const auto cDataOutputNames = std::array{STRID(orchestrationResponse)};
+  const auto cEventInputNames = std::array{STRID(requestOrchestator)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(responseReceived)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cPlugNameIds = std::array{STRID(requestOrchestration)};
 
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmDataInputTypeIds[] = {STRID(ServiceRequestForm),
-                                                                                            STRID(WSTRING)};
-
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmDataOutputNames[] = {
-    STRID(orchestrationResponse)};
-
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmDataOutputTypeIds[] = {STRID(ARRAY), 10,
-                                                                                             STRID(OrchestrationForm)};
-
-const TForteInt16 FORTE_RequestOrchestrationForm::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_RequestOrchestrationForm::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmEventInputNames[] = {STRID(requestOrchestator)};
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_RequestOrchestrationForm::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_RequestOrchestrationForm::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmEventOutputNames[] = {STRID(responseReceived)};
-const CStringDictionary::TStringId FORTE_RequestOrchestrationForm::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SAdapterInstanceDef FORTE_RequestOrchestrationForm::scmAdapterInstances[] = {
-    {STRID(OrchestratorRequestAdp), STRID(requestOrchestration), true}};
-
-const SFBInterfaceSpec FORTE_RequestOrchestrationForm::scmFBInterfaceSpec = {1,
-                                                                             scmEventInputNames,
-                                                                             scmEventInputTypeIds,
-                                                                             scmEIWith,
-                                                                             scmEIWithIndexes,
-                                                                             1,
-                                                                             scmEventOutputNames,
-                                                                             scmEventOutputTypeIds,
-                                                                             scmEOWith,
-                                                                             scmEOWithIndexes,
-                                                                             2,
-                                                                             scmDataInputNames,
-                                                                             scmDataInputTypeIds,
-                                                                             1,
-                                                                             scmDataOutputNames,
-                                                                             scmDataOutputTypeIds,
-                                                                             1,
-                                                                             scmAdapterInstances};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = cPlugNameIds,
+  };
+} // namespace
 
 const SCFB_FBConnectionData FORTE_RequestOrchestrationForm::scmEventConnections[] = {
     {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(requestOrchestator)), -1,

@@ -27,44 +27,34 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToArrowheadSystem, STRID(FieldsToArrowheadSystem))
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataInputNames[] = {
-    STRID(systemName), STRID(address), STRID(port), STRID(authenticationInfo)};
+namespace {
+  const auto cDataInputNames = std::array{
+      STRID(systemName), STRID(address), STRID(port), STRID(authenticationInfo)};
+  
+      STRID(WSTRING), STRID(WSTRING), STRID(DINT), STRID(WSTRING)};
+  
+  const auto cDataOutputNames = std::array{STRID(arrowheadSystem)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataInputTypeIds[] = {
-    STRID(WSTRING), STRID(WSTRING), STRID(DINT), STRID(WSTRING)};
-
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataOutputNames[] = {STRID(arrowheadSystem)};
-
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmDataOutputTypeIds[] = {STRID(ArrowheadSystem)};
-
-const TForteInt16 FORTE_FieldsToArrowheadSystem::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToArrowheadSystem::scmEIWith[] = {3, 2, 1, 0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_FieldsToArrowheadSystem::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FieldsToArrowheadSystem::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_FieldsToArrowheadSystem::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_FieldsToArrowheadSystem::scmFBInterfaceSpec = {1,
-                                                                            scmEventInputNames,
-                                                                            scmEventInputTypeIds,
-                                                                            scmEIWith,
-                                                                            scmEIWithIndexes,
-                                                                            1,
-                                                                            scmEventOutputNames,
-                                                                            scmEventOutputTypeIds,
-                                                                            scmEOWith,
-                                                                            scmEOWithIndexes,
-                                                                            4,
-                                                                            scmDataInputNames,
-                                                                            scmDataInputTypeIds,
-                                                                            1,
-                                                                            scmDataOutputNames,
-                                                                            scmDataOutputTypeIds,
-                                                                            0,
-                                                                            0};
 
 void FORTE_FieldsToArrowheadSystem::alg_REQ() {
   arrowheadSystem().systemName() = systemName();

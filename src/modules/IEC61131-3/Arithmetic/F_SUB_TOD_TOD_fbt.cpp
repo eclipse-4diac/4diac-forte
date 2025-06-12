@@ -29,49 +29,28 @@ USE_STRING_ID(TIME_OF_DAY);
 
 DEFINE_FIRMWARE_FB(FORTE_F_SUB_TOD_TOD, STRID(F_SUB_TOD_TOD))
 
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TOD::scmDataInputNames[] = {STRID(IN1), STRID(IN2)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN1), STRID(IN2)};
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
 
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TOD::scmDataInputTypeIds[] = {STRID(TIME_OF_DAY),
-                                                                                 STRID(TIME_OF_DAY)};
-
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TOD::scmDataOutputNames[] = {STRID(OUT)};
-
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TOD::scmDataOutputTypeIds[] = {STRID(TIME)};
-
-const TDataIOID FORTE_F_SUB_TOD_TOD::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_F_SUB_TOD_TOD::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TOD::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TOD::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_F_SUB_TOD_TOD::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_SUB_TOD_TOD::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TOD::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_F_SUB_TOD_TOD::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_F_SUB_TOD_TOD::scmFBInterfaceSpec = {1,
-                                                                  scmEventInputNames,
-                                                                  scmEventInputTypeIds,
-                                                                  scmEIWith,
-                                                                  scmEIWithIndexes,
-                                                                  1,
-                                                                  scmEventOutputNames,
-                                                                  scmEventOutputTypeIds,
-                                                                  scmEOWith,
-                                                                  scmEOWithIndexes,
-                                                                  2,
-                                                                  scmDataInputNames,
-                                                                  scmDataInputTypeIds,
-                                                                  1,
-                                                                  scmDataOutputNames,
-                                                                  scmDataOutputTypeIds,
-                                                                  0,
-                                                                  nullptr,
-                                                                  0,
-                                                                  nullptr};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_F_SUB_TOD_TOD::FORTE_F_SUB_TOD_TOD(const CStringDictionary::TStringId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_TIME_OF_DAY(0)),
     var_IN2(CIEC_TIME_OF_DAY(0)),
     var_OUT(CIEC_TIME(0)),
@@ -103,7 +82,7 @@ void FORTE_F_SUB_TOD_TOD::readInputData(TEventID paEIID) {
 void FORTE_F_SUB_TOD_TOD::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
       break;
     }
     default: break;

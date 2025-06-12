@@ -26,15 +26,24 @@ USE_STRING_ID(WSTRING);
 
 #include "arch/timerHandlerFactory.h"
 
-const CStringDictionary::TStringId FakeTimeDev::scmDINameIds[] = {STRID(MGR_ID), STRID(FakeTime)};
-const CStringDictionary::TStringId FakeTimeDev::scmDIDataTypeIds[] = {STRID(WSTRING), STRID(TIME)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(MGR_ID), STRID(FakeTime)};
 
-const SFBInterfaceSpec FakeTimeDev::scmFBInterfaceSpec = {
-    0, nullptr,      nullptr,          nullptr, nullptr, 0,       nullptr, nullptr, nullptr, nullptr,
-    2, scmDINameIds, scmDIDataTypeIds, 0,       nullptr, nullptr, 0,       nullptr, 0,       nullptr};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = {},
+      .mEITypeNames = {},
+      .mEONames = {},
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FakeTimeDev::FakeTimeDev(const std::string &paMGR_ID) :
-    CDevice(scmFBInterfaceSpec, initializeTimer()),
+    CDevice(cFBInterfaceSpec, initializeTimer()),
     conn_MGR_ID(*this, 0, u""_WSTRING),
     conn_FakeTime(*this, 0, 0_TIME),
     MGR(STRID(MGR), *this) {

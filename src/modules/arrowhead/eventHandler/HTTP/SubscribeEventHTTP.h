@@ -21,14 +21,11 @@ class FORTE_SubscribeEventHTTP : public CCompositeFB {
     DECLARE_FIRMWARE_FB(FORTE_SubscribeEventHTTP)
 
   private:
-    static const TForteInt16 scmEOWithIndexes[];
-    static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_SubscribeEventAdp &SubscribeEventAdp() {
       return (*static_cast<FORTE_SubscribeEventAdp *>(getAdapterUnchecked(0)));
     };
     static const int scmSubscribeEventAdpAdpNum = 0;
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const SCFB_FBInstanceData scmInternalFBs[];
 
@@ -46,7 +43,6 @@ class FORTE_SubscribeEventHTTP : public CCompositeFB {
   public:
     FORTE_SubscribeEventHTTP(const CStringDictionary::TStringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
-        CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {};
 
     ~FORTE_SubscribeEventHTTP() override = default;
 };

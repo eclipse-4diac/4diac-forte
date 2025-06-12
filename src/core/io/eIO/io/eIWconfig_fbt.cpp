@@ -11,14 +11,7 @@
  *******************************************************************************/
 
 #include "eIWconfig_fbt.h"
-
-#include "adapterconn.h"
-#include "eGenAdapter_adp.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "eIW_fbt.h"
 
 USE_STRING_ID(BT);
 USE_STRING_ID(CNF);
@@ -33,43 +26,31 @@ USE_STRING_ID(eGenAdapter);
 USE_STRING_ID(eIW);
 USE_STRING_ID(eIWconfig);
 
-DEFINE_FIRMWARE_FB(FORTE_eIWconfig, STRID(eIWconfig))
+namespace {
+  const auto cEventInputNames = std::array{STRID(CONF)};
+  const auto cDataInputNames = std::array{STRID(ST), STRID(BT), STRID(GRAD)};
+  const auto cDataOutputNames = std::array{STRID(STATUS)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cPlugNames = std::array{STRID(eIW)};
 
-const CStringDictionary::TStringId FORTE_eIWconfig::scmDataInputNames[] = {STRID(ST), STRID(BT), STRID(GRAD)};
-const CStringDictionary::TStringId FORTE_eIWconfig::scmDataInputTypeIds[] = {STRID(WORD), STRID(WORD), STRID(WORD)};
-const CStringDictionary::TStringId FORTE_eIWconfig::scmDataOutputNames[] = {STRID(STATUS)};
-const CStringDictionary::TStringId FORTE_eIWconfig::scmDataOutputTypeIds[] = {STRID(WSTRING)};
-const TDataIOID FORTE_eIWconfig::scmEIWith[] = {0, 1, 2, scmWithListDelimiter};
-const TForteInt16 FORTE_eIWconfig::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_eIWconfig::scmEventInputNames[] = {STRID(CONF)};
-const TDataIOID FORTE_eIWconfig::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_eIWconfig::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_eIWconfig::scmEventOutputNames[] = {STRID(CNF)};
-const SAdapterInstanceDef FORTE_eIWconfig::scmAdapterInstances[] = {{STRID(eGenAdapter), STRID(eIW), false}};
-const SFBInterfaceSpec FORTE_eIWconfig::scmFBInterfaceSpec = {1,
-                                                              scmEventInputNames,
-                                                              nullptr,
-                                                              scmEIWith,
-                                                              scmEIWithIndexes,
-                                                              1,
-                                                              scmEventOutputNames,
-                                                              nullptr,
-                                                              scmEOWith,
-                                                              scmEOWithIndexes,
-                                                              3,
-                                                              scmDataInputNames,
-                                                              scmDataInputTypeIds,
-                                                              1,
-                                                              scmDataOutputNames,
-                                                              scmDataOutputTypeIds,
-                                                              0,
-                                                              nullptr,
-                                                              1,
-                                                              scmAdapterInstances};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = cPlugNames,
+  };
+} // namespace
+
+DEFINE_FIRMWARE_FB(FORTE_eIWconfig, STRID(eIWconfig))
 
 FORTE_eIWconfig::FORTE_eIWconfig(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
-    CeConfigFB(paInstanceNameId, scmFBInterfaceSpec, paContainer),
+    CeConfigFB(paInstanceNameId, cFBInterfaceSpec, paContainer),
     var_ST(0_WORD),
     var_BT(0_WORD),
     var_GRAD(0_WORD),

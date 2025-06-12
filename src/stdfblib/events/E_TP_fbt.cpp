@@ -41,41 +41,29 @@ USE_STRING_ID(TIME);
 
 DEFINE_FIRMWARE_FB(FORTE_E_TP, STRID(E_TP))
 
-const CStringDictionary::TStringId FORTE_E_TP::scmDataInputNames[] = {STRID(IN), STRID(PT)};
-const CStringDictionary::TStringId FORTE_E_TP::scmDataInputTypeIds[] = {STRID(BOOL), STRID(TIME)};
-const CStringDictionary::TStringId FORTE_E_TP::scmDataOutputNames[] = {STRID(Q)};
-const CStringDictionary::TStringId FORTE_E_TP::scmDataOutputTypeIds[] = {STRID(BOOL)};
-const TDataIOID FORTE_E_TP::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_TP::scmEIWithIndexes[] = {0, 3};
-const CStringDictionary::TStringId FORTE_E_TP::scmEventInputNames[] = {STRID(REQ), STRID(R)};
-const CStringDictionary::TStringId FORTE_E_TP::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
-const TDataIOID FORTE_E_TP::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_TP::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_TP::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_E_TP::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_E_TP::scmFBInterfaceSpec = {2,
-                                                         scmEventInputNames,
-                                                         scmEventInputTypeIds,
-                                                         scmEIWith,
-                                                         scmEIWithIndexes,
-                                                         1,
-                                                         scmEventOutputNames,
-                                                         scmEventOutputTypeIds,
-                                                         scmEOWith,
-                                                         scmEOWithIndexes,
-                                                         2,
-                                                         scmDataInputNames,
-                                                         scmDataInputTypeIds,
-                                                         1,
-                                                         scmDataOutputNames,
-                                                         scmDataOutputTypeIds,
-                                                         0,
-                                                         nullptr,
-                                                         0,
-                                                         nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN), STRID(PT)};
+  const auto cDataOutputNames = std::array{STRID(Q)};
+  const auto cEventInputNames = std::array{STRID(REQ), STRID(R)};
+  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
+
 
 FORTE_E_TP::FORTE_E_TP(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_E_DELAY(STRID(E_DELAY), *this),
     fb_E_RS(STRID(E_RS), *this),
     fb_E_PERMIT(STRID(E_PERMIT), *this),
@@ -138,7 +126,7 @@ void FORTE_E_TP::readInputData(const TEventID paEIID) {
 void FORTE_E_TP::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, fb_E_RS->conn_Q.getValue(), conn_Q);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, fb_E_RS->conn_Q.getValue(), conn_Q);
       break;
     }
     default: break;

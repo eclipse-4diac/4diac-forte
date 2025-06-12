@@ -38,50 +38,27 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_EBSlave2301, STRID(EBSlave2301))
 
-const CStringDictionary::TStringId FORTE_EBSlave2301::scmDataInputNames[] = {
-    STRID(QI),      STRID(Relay_1), STRID(Relay_2), STRID(Relay_3),
-    STRID(Relay_4), STRID(Relay_5), STRID(Relay_6), STRID(UpdateInterval)};
-const CStringDictionary::TStringId FORTE_EBSlave2301::scmDataInputTypeIds[] = {
-    STRID(BOOL),    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
-    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(UINT)};
-const CStringDictionary::TStringId FORTE_EBSlave2301::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-const CStringDictionary::TStringId FORTE_EBSlave2301::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
-const TDataIOID FORTE_EBSlave2301::scmEIWith[] = {1, 2, 3, 4, 5, 6, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_EBSlave2301::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_EBSlave2301::scmEventInputNames[] = {STRID(MAP)};
-const TDataIOID FORTE_EBSlave2301::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_EBSlave2301::scmEOWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_EBSlave2301::scmEventOutputNames[] = {STRID(MAPO), STRID(IND)};
-const SAdapterInstanceDef FORTE_EBSlave2301::scmAdapterInstances[] = {
-    {STRID(EBBusAdapter), STRID(BusAdapterIn), false}, {STRID(EBBusAdapter), STRID(BusAdapterOut), true}};
-
 namespace {
+  const auto cDataInputNames = std::array{STRID(QI),      STRID(Relay_1), STRID(Relay_2), STRID(Relay_3),
+                                          STRID(Relay_4), STRID(Relay_5), STRID(Relay_6), STRID(UpdateInterval)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  const auto cEventInputNames = std::array{STRID(MAP)};
+  const auto cEventOutputNames = std::array{STRID(MAPO), STRID(IND)};
   const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
   const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
-} // namespace
 
-const SFBInterfaceSpec FORTE_EBSlave2301::scmFBInterfaceSpec = {1,
-                                                                scmEventInputNames,
-                                                                nullptr,
-                                                                scmEIWith,
-                                                                scmEIWithIndexes,
-                                                                2,
-                                                                scmEventOutputNames,
-                                                                nullptr,
-                                                                scmEOWith,
-                                                                scmEOWithIndexes,
-                                                                8,
-                                                                scmDataInputNames,
-                                                                scmDataInputTypeIds,
-                                                                2,
-                                                                scmDataOutputNames,
-                                                                scmDataOutputTypeIds,
-                                                                0,
-                                                                nullptr,
-                                                                2,
-                                                                scmAdapterInstances,
-                                                                cSocketNameIds,
-                                                                cPlugNameIds};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = cSocketNameIds,
+      .mPlugNames = cPlugNameIds,
+  };
+} // namespace
 
 FORTE_EBSlave2301::FORTE_EBSlave2301(const CStringDictionary::TStringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
@@ -89,7 +66,7 @@ FORTE_EBSlave2301::FORTE_EBSlave2301(const CStringDictionary::TStringId paInstan
                  scmSlaveConfigurationIONum,
                  EmbrickSlaveHandler::G_2RelNo4RelCo,
                  paContainer,
-                 scmFBInterfaceSpec,
+                 cFBInterfaceSpec,
                  paInstanceNameId),
     conn_MAPO(*this, 0),
     conn_IND(*this, 1),
@@ -136,12 +113,12 @@ void FORTE_EBSlave2301::readInputData(const TEventID paEIID) {
 void FORTE_EBSlave2301::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventMAPOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
       break;
     }
     case scmEventINDID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

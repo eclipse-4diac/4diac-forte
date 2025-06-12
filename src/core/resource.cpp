@@ -93,7 +93,7 @@ namespace {
 
   void createEOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
     const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
-    for (size_t i = 0; i < spec.mNumEOs; i++) {
+    for (size_t i = 0; i < spec.getNumEOs(); i++) {
       const CEventConnection *eConn = paFb.getEOConnection(spec.mEONames[i]);
       if (eConn) {
         for (const auto &it : eConn->getDestinationList()) {
@@ -106,7 +106,7 @@ namespace {
 
   void createDOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
     const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
-    for (size_t i = 0; i < spec.mNumDIs; i++) {
+    for (size_t i = 0; i < spec.getNumDIs(); i++) {
       const CDataConnection *const dConn = paFb.getDIConnection(spec.mDINames[i]);
       if (dConn != nullptr) {
         createConnectionResponseMessage(*dConn, paFb, spec.mDINames[i], paReqResult);
@@ -382,7 +382,7 @@ EMGMResponse CResource::changeExecutionState(EMGMCommandType paCommand) {
 
   if (retVal == EMGMResponse::Ready) {
     if (paCommand == EMGMCommandType::Start) { // on start, sample inputs
-      for (TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
+      for (TPortId i = 0; i < getFBInterfaceSpec().getNumDIs(); ++i) {
         CDataConnection *conn = *getDIConUnchecked(i);
         if (conn != nullptr) {
           conn->readData(*getDI(i));

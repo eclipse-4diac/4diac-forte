@@ -39,11 +39,6 @@ class FakeTimeDev : public CDevice {
     writeValue(forte::core::TNameIdentifier &paNameList, const std::string &paValue, bool paForce = false) override;
 
   private:
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
-
-    static const CStringDictionary::TStringId scmDINameIds[];
-    static const CStringDictionary::TStringId scmDIDataTypeIds[];
-
     COutDataConnection<CIEC_WSTRING> conn_MGR_ID;
     COutDataConnection<CIEC_TIME> conn_FakeTime;
 

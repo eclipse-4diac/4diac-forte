@@ -28,43 +28,28 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_RegisterService, STRID(RegisterService))
 
-const CStringDictionary::TStringId FORTE_RegisterService::scmDataInputNames[] = {STRID(serviceRegistryEntry),
-                                                                                 STRID(endpoint)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(serviceRegistryEntry), STRID(endpoint)};
 
-const CStringDictionary::TStringId FORTE_RegisterService::scmDataInputTypeIds[] = {STRID(ServiceRegistryEntry),
-                                                                                   STRID(WSTRING)};
+  const auto cEventInputNames = std::array{STRID(register), STRID(unregister)};
+  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(doneRegister), STRID(doneUnregister)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
 
-const TForteInt16 FORTE_RegisterService::scmEIWithIndexes[] = {0, 3};
-const TDataIOID FORTE_RegisterService::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_RegisterService::scmEventInputNames[] = {STRID(register), STRID(unregister)};
-const CStringDictionary::TStringId FORTE_RegisterService::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
+  const auto cPlugNameIds = std::array{STRID(registerService)};
 
-const TForteInt16 FORTE_RegisterService::scmEOWithIndexes[] = {-1, -1, -1};
-const CStringDictionary::TStringId FORTE_RegisterService::scmEventOutputNames[] = {STRID(doneRegister),
-                                                                                   STRID(doneUnregister)};
-const CStringDictionary::TStringId FORTE_RegisterService::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-
-const SAdapterInstanceDef FORTE_RegisterService::scmAdapterInstances[] = {
-    {STRID(RegisterServiceAdp), STRID(registerService), true}};
-
-const SFBInterfaceSpec FORTE_RegisterService::scmFBInterfaceSpec = {2,
-                                                                    scmEventInputNames,
-                                                                    scmEventInputTypeIds,
-                                                                    scmEIWith,
-                                                                    scmEIWithIndexes,
-                                                                    2,
-                                                                    scmEventOutputNames,
-                                                                    scmEventOutputTypeIds,
-                                                                    0,
-                                                                    0,
-                                                                    2,
-                                                                    scmDataInputNames,
-                                                                    scmDataInputTypeIds,
-                                                                    0,
-                                                                    0,
-                                                                    0,
-                                                                    1,
-                                                                    scmAdapterInstances};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = cPlugNameIds,
+  };
+} // namespace
 
 const SCFB_FBConnectionData FORTE_RegisterService::scmEventConnections[] = {
     {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(register)), -1,

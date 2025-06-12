@@ -43,39 +43,22 @@ USE_STRING_ID(TIME);
 
 DEFINE_FIRMWARE_FB(FORTE_E_STOPWATCH, STRID(E_STOPWATCH))
 
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmDataOutputNames[] = {STRID(TD)};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmDataOutputTypeIds[] = {STRID(TIME)};
-const TForteInt16 FORTE_E_STOPWATCH::scmEIWithIndexes[] = {-1, -1, -1, -1};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventInputNames[] = {STRID(START), STRID(ET), STRID(STOP),
-                                                                              STRID(RESET)};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventInputTypeIds[] = {STRID(Event), STRID(Event),
-                                                                                STRID(Event), STRID(Event)};
-const TDataIOID FORTE_E_STOPWATCH::scmEOWith[] = {0, scmWithListDelimiter, 0, scmWithListDelimiter,
-                                                  0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_STOPWATCH::scmEOWithIndexes[] = {0, 2, 4};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventOutputNames[] = {STRID(EO), STRID(ETO), STRID(RESETO)};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event),
-                                                                                 STRID(Event)};
-const SFBInterfaceSpec FORTE_E_STOPWATCH::scmFBInterfaceSpec = {4,
-                                                                scmEventInputNames,
-                                                                scmEventInputTypeIds,
-                                                                nullptr,
-                                                                scmEIWithIndexes,
-                                                                3,
-                                                                scmEventOutputNames,
-                                                                scmEventOutputTypeIds,
-                                                                scmEOWith,
-                                                                scmEOWithIndexes,
-                                                                0,
-                                                                nullptr,
-                                                                nullptr,
-                                                                1,
-                                                                scmDataOutputNames,
-                                                                scmDataOutputTypeIds,
-                                                                0,
-                                                                nullptr,
-                                                                0,
-                                                                nullptr};
+const auto cDataOutputNames = std::array{STRID(TD)};
+const auto cEventInputNames = std::array{STRID(START), STRID(ET), STRID(STOP), STRID(RESET)};
+const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
+const auto cEventOutputNames = std::array{STRID(EO), STRID(ETO), STRID(RESETO)};
+const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event), STRID(Event)};
+const SFBInterfaceSpec cFBInterfaceSpec = {
+    .mEINames = cEventInputNames,
+    .mEITypeNames = cEventInputTypeIds,
+    .mEONames = cEventOutputNames,
+    .mEOTypeNames = cEventOutputTypeIds,
+    .mDINames = {},
+    .mDONames = cDataOutputNames,
+    .mDIONames = {},
+    .mSocketNames = {},
+    .mPlugNames = {},
+};
 
 const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmInternalsNames[] = {STRID(startTime)};
 const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmInternalsTypeIds[] = {STRID(TIME)};
@@ -83,7 +66,7 @@ const SInternalVarsInformation FORTE_E_STOPWATCH::scmInternalVars = {1, scmInter
 
 FORTE_E_STOPWATCH::FORTE_E_STOPWATCH(const CStringDictionary::TStringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
+    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
     conn_EO(*this, 0),
     conn_ETO(*this, 1),
     conn_RESETO(*this, 2),
@@ -183,15 +166,15 @@ void FORTE_E_STOPWATCH::readInputData(TEventID) {
 void FORTE_E_STOPWATCH::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventEOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_TD, conn_TD);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_TD, conn_TD);
       break;
     }
     case scmEventETOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_TD, conn_TD);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_TD, conn_TD);
       break;
     }
     case scmEventRESETOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_TD, conn_TD);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_TD, conn_TD);
       break;
     }
     default: break;

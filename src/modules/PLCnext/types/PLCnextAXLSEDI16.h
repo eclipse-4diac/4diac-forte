@@ -36,26 +36,12 @@ class FORTE_PLCnextAXLSEDI16 final : public PLCnextSlaveHandler {
     DECLARE_FIRMWARE_FB(FORTE_PLCnextAXLSEDI16)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     static const TEventID scmEventINITID = 0;
-    static const TDataIOID scmEIWith[];
-    static const TForteInt16 scmEIWithIndexes[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventINDID = 1;
-    static const TDataIOID scmEOWith[];
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
     static const int scmBusAdapterInAdpNum = 0;
     static const int scmBusAdapterOutAdpNum = 1;
-    static const SAdapterInstanceDef scmAdapterInstances[];
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 

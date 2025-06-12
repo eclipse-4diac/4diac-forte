@@ -25,42 +25,32 @@ USE_STRING_ID(STRING);
 
 DEFINE_FIRMWARE_FB(FORTE_GetArrayResponseFromJSON, STRID(GetArrayResponseFromJSON))
 
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataInputNames[] = {STRID(response)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(response)};
+  
+  
+  const auto cDataOutputNames = std::array{STRID(output)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataInputTypeIds[] = {STRID(STRING)};
-
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataOutputNames[] = {STRID(output)};
-
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmDataOutputTypeIds[] = {STRID(ANY)};
-
-const TForteInt16 FORTE_GetArrayResponseFromJSON::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_GetArrayResponseFromJSON::scmEIWith[] = {0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_GetArrayResponseFromJSON::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_GetArrayResponseFromJSON::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_GetArrayResponseFromJSON::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_GetArrayResponseFromJSON::scmFBInterfaceSpec = {1,
-                                                                             scmEventInputNames,
-                                                                             scmEventInputTypeIds,
-                                                                             scmEIWith,
-                                                                             scmEIWithIndexes,
-                                                                             1,
-                                                                             scmEventOutputNames,
-                                                                             scmEventOutputTypeIds,
-                                                                             scmEOWith,
-                                                                             scmEOWithIndexes,
-                                                                             1,
-                                                                             scmDataInputNames,
-                                                                             scmDataInputTypeIds,
-                                                                             1,
-                                                                             scmDataOutputNames,
-                                                                             scmDataOutputTypeIds,
-                                                                             0,
-                                                                             0};
 
 bool FORTE_GetArrayResponseFromJSON::isResponseEmpty(char *paText) {
   while (']' != *paText) {

@@ -21,14 +21,11 @@ class FORTE_RegisterServiceOpcUa : public CCompositeFB {
     DECLARE_FIRMWARE_FB(FORTE_RegisterServiceOpcUa)
 
   private:
-    static const TForteInt16 scmEOWithIndexes[];
-    static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_RegisterServiceAdp &registerService() {
       return (*static_cast<FORTE_RegisterServiceAdp *>(getAdapterUnchecked(0)));
     };
     static const int scm_nregisterServiceAdpNum = 0;
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const SCFB_FBInstanceData scmInternalFBs[];
 
@@ -46,7 +43,6 @@ class FORTE_RegisterServiceOpcUa : public CCompositeFB {
   public:
     FORTE_RegisterServiceOpcUa(const CStringDictionary::TStringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
-        CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {};
 
     ~FORTE_RegisterServiceOpcUa() override = default;
 };

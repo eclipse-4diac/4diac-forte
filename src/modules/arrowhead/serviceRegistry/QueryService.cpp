@@ -29,47 +29,27 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_QueryService, STRID(QueryService))
 
-const CStringDictionary::TStringId FORTE_QueryService::scmDataInputNames[] = {STRID(serviceQueryForm), STRID(address)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(serviceQueryForm), STRID(address)};
+  const auto cDataOutputNames = std::array{STRID(serviceEntries)};
+  const auto cEventInputNames = std::array{STRID(query)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(queried)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cPlugNameIds = std::array{STRID(queryServices)};
 
-const CStringDictionary::TStringId FORTE_QueryService::scmDataInputTypeIds[] = {STRID(ServiceQueryForm),
-                                                                                STRID(WSTRING)};
-
-const CStringDictionary::TStringId FORTE_QueryService::scmDataOutputNames[] = {STRID(serviceEntries)};
-
-const CStringDictionary::TStringId FORTE_QueryService::scmDataOutputTypeIds[] = {STRID(ARRAY), 10,
-                                                                                 STRID(ServiceRegistryEntry)};
-
-const TForteInt16 FORTE_QueryService::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_QueryService::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_QueryService::scmEventInputNames[] = {STRID(query)};
-const CStringDictionary::TStringId FORTE_QueryService::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_QueryService::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_QueryService::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_QueryService::scmEventOutputNames[] = {STRID(queried)};
-const CStringDictionary::TStringId FORTE_QueryService::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SAdapterInstanceDef FORTE_QueryService::scmAdapterInstances[] = {
-    {STRID(QueryServicesAdp), STRID(queryServices), true}};
-
-const SFBInterfaceSpec FORTE_QueryService::scmFBInterfaceSpec = {1,
-                                                                 scmEventInputNames,
-                                                                 scmEventInputTypeIds,
-                                                                 scmEIWith,
-                                                                 scmEIWithIndexes,
-                                                                 1,
-                                                                 scmEventOutputNames,
-                                                                 scmEventOutputTypeIds,
-                                                                 scmEOWith,
-                                                                 scmEOWithIndexes,
-                                                                 2,
-                                                                 scmDataInputNames,
-                                                                 scmDataInputTypeIds,
-                                                                 1,
-                                                                 scmDataOutputNames,
-                                                                 scmDataOutputTypeIds,
-                                                                 1,
-                                                                 scmAdapterInstances};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = cPlugNameIds,
+  };
+} // namespace
 
 const SCFB_FBConnectionData FORTE_QueryService::scmEventConnections[] = {
     {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(query)), -1,

@@ -39,47 +39,31 @@ USE_STRING_ID(TIME);
 USE_STRING_ID(UINT);
 USE_STRING_ID(WCET);
 
-
 DEFINE_FIRMWARE_FB(FORTE_RT_E_TRAIN, STRID(RT_E_TRAIN))
 
-const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmDataInputNames[] = {STRID(DT), STRID(N), STRID(Deadline),
-                                                                            STRID(WCET)};
-const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmDataInputTypeIds[] = {STRID(TIME), STRID(UINT), STRID(TIME),
-                                                                              STRID(TIME)};
-const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmDataOutputNames[] = {STRID(CV)};
-const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmDataOutputTypeIds[] = {STRID(UINT)};
-const TDataIOID FORTE_RT_E_TRAIN::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_TRAIN::scmEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmEventInputNames[] = {STRID(START), STRID(STOP)};
-const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
-const TDataIOID FORTE_RT_E_TRAIN::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_TRAIN::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmEventOutputNames[] = {STRID(EO)};
-const CStringDictionary::TStringId FORTE_RT_E_TRAIN::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_RT_E_TRAIN::scmFBInterfaceSpec = {2,
-                                                               scmEventInputNames,
-                                                               scmEventInputTypeIds,
-                                                               scmEIWith,
-                                                               scmEIWithIndexes,
-                                                               1,
-                                                               scmEventOutputNames,
-                                                               scmEventOutputTypeIds,
-                                                               scmEOWith,
-                                                               scmEOWithIndexes,
-                                                               4,
-                                                               scmDataInputNames,
-                                                               scmDataInputTypeIds,
-                                                               1,
-                                                               scmDataOutputNames,
-                                                               scmDataOutputTypeIds,
-                                                               0,
-                                                               nullptr,
-                                                               0,
-                                                               nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(DT), STRID(N), STRID(Deadline), STRID(WCET)};
+  const auto cDataOutputNames = std::array{STRID(CV)};
+  const auto cEventInputNames = std::array{STRID(START), STRID(STOP)};
+  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(EO)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_RT_E_TRAIN::FORTE_RT_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_RT_E_CYCLE(STRID(RT_E_CYCLE), *this),
     fb_E_CTU(STRID(E_CTU), *this),
     fb_E_SWITCH(STRID(E_SWITCH), *this),
@@ -156,7 +140,7 @@ void FORTE_RT_E_TRAIN::readInputData(TEventID paEIID) {
 void FORTE_RT_E_TRAIN::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventEOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, fb_E_CTU->conn_CV.getValue(), conn_CV);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, fb_E_CTU->conn_CV.getValue(), conn_CV);
       break;
     }
     default: break;

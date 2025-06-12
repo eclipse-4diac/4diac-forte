@@ -40,7 +40,6 @@ class RMT_DEV : public CDevice {
     void setMGR_ID(const std::string &paVal);
 
   private:
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const CStringDictionary::TStringId scmDINameIds[];
     static const CStringDictionary::TStringId scmDIDataTypeIds[];

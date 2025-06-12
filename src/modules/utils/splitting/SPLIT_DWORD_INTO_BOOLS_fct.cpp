@@ -69,54 +69,34 @@ USE_STRING_ID(SPLIT_DWORD_INTO_BOOLS);
 
 DEFINE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_BOOLS, STRID(SPLIT_DWORD_INTO_BOOLS))
 
-const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_BOOLS::scmDataInputNames[] = {STRID(IN)};
-const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_BOOLS::scmDataInputTypeIds[] = {STRID(DWORD)};
-const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_BOOLS::scmDataOutputNames[] = {
-    STRID(BIT_00), STRID(BIT_01), STRID(BIT_02), STRID(BIT_03), STRID(BIT_04), STRID(BIT_05), STRID(BIT_06),
-    STRID(BIT_07), STRID(BIT_08), STRID(BIT_09), STRID(BIT_10), STRID(BIT_11), STRID(BIT_12), STRID(BIT_13),
-    STRID(BIT_14), STRID(BIT_15), STRID(BIT_16), STRID(BIT_17), STRID(BIT_18), STRID(BIT_19), STRID(BIT_20),
-    STRID(BIT_21), STRID(BIT_22), STRID(BIT_23), STRID(BIT_24), STRID(BIT_25), STRID(BIT_26), STRID(BIT_27),
-    STRID(BIT_28), STRID(BIT_29), STRID(BIT_30), STRID(BIT_31)};
-const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_BOOLS::scmDataOutputTypeIds[] = {
-    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL),
-    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL),
-    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL),
-    STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL), STRID(BOOL)};
-const TDataIOID FORTE_SPLIT_DWORD_INTO_BOOLS::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_SPLIT_DWORD_INTO_BOOLS::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_BOOLS::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_BOOLS::scmEventInputTypeIds[] = {STRID(Event)};
-const TDataIOID FORTE_SPLIT_DWORD_INTO_BOOLS::scmEOWith[] = {
-    0,  1,  2,  3,  4,  5,  6,  7,  8,  9,  10,
-    11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21,
-    22, 23, 24, 25, 26, 27, 28, 29, 30, 31, scmWithListDelimiter};
-const TForteInt16 FORTE_SPLIT_DWORD_INTO_BOOLS::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_BOOLS::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_SPLIT_DWORD_INTO_BOOLS::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_SPLIT_DWORD_INTO_BOOLS::scmFBInterfaceSpec = {1,
-                                                                           scmEventInputNames,
-                                                                           scmEventInputTypeIds,
-                                                                           scmEIWith,
-                                                                           scmEIWithIndexes,
-                                                                           1,
-                                                                           scmEventOutputNames,
-                                                                           scmEventOutputTypeIds,
-                                                                           scmEOWith,
-                                                                           scmEOWithIndexes,
-                                                                           1,
-                                                                           scmDataInputNames,
-                                                                           scmDataInputTypeIds,
-                                                                           32,
-                                                                           scmDataOutputNames,
-                                                                           scmDataOutputTypeIds,
-                                                                           0,
-                                                                           nullptr,
-                                                                           0,
-                                                                           nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cDataOutputNames = std::array{
+      STRID(BIT_00), STRID(BIT_01), STRID(BIT_02), STRID(BIT_03), STRID(BIT_04), STRID(BIT_05), STRID(BIT_06),
+      STRID(BIT_07), STRID(BIT_08), STRID(BIT_09), STRID(BIT_10), STRID(BIT_11), STRID(BIT_12), STRID(BIT_13),
+      STRID(BIT_14), STRID(BIT_15), STRID(BIT_16), STRID(BIT_17), STRID(BIT_18), STRID(BIT_19), STRID(BIT_20),
+      STRID(BIT_21), STRID(BIT_22), STRID(BIT_23), STRID(BIT_24), STRID(BIT_25), STRID(BIT_26), STRID(BIT_27),
+      STRID(BIT_28), STRID(BIT_29), STRID(BIT_30), STRID(BIT_31)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_SPLIT_DWORD_INTO_BOOLS::FORTE_SPLIT_DWORD_INTO_BOOLS(const CStringDictionary::TStringId paInstanceNameId,
                                                            forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_BIT_00(*this, 0, var_BIT_00),
@@ -202,38 +182,38 @@ void FORTE_SPLIT_DWORD_INTO_BOOLS::readInputData(const TEventID paEIID) {
 void FORTE_SPLIT_DWORD_INTO_BOOLS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_BIT_00, conn_BIT_00);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_BIT_01, conn_BIT_01);
-      writeData(scmFBInterfaceSpec.mNumDIs + 2, var_BIT_02, conn_BIT_02);
-      writeData(scmFBInterfaceSpec.mNumDIs + 3, var_BIT_03, conn_BIT_03);
-      writeData(scmFBInterfaceSpec.mNumDIs + 4, var_BIT_04, conn_BIT_04);
-      writeData(scmFBInterfaceSpec.mNumDIs + 5, var_BIT_05, conn_BIT_05);
-      writeData(scmFBInterfaceSpec.mNumDIs + 6, var_BIT_06, conn_BIT_06);
-      writeData(scmFBInterfaceSpec.mNumDIs + 7, var_BIT_07, conn_BIT_07);
-      writeData(scmFBInterfaceSpec.mNumDIs + 8, var_BIT_08, conn_BIT_08);
-      writeData(scmFBInterfaceSpec.mNumDIs + 9, var_BIT_09, conn_BIT_09);
-      writeData(scmFBInterfaceSpec.mNumDIs + 10, var_BIT_10, conn_BIT_10);
-      writeData(scmFBInterfaceSpec.mNumDIs + 11, var_BIT_11, conn_BIT_11);
-      writeData(scmFBInterfaceSpec.mNumDIs + 12, var_BIT_12, conn_BIT_12);
-      writeData(scmFBInterfaceSpec.mNumDIs + 13, var_BIT_13, conn_BIT_13);
-      writeData(scmFBInterfaceSpec.mNumDIs + 14, var_BIT_14, conn_BIT_14);
-      writeData(scmFBInterfaceSpec.mNumDIs + 15, var_BIT_15, conn_BIT_15);
-      writeData(scmFBInterfaceSpec.mNumDIs + 16, var_BIT_16, conn_BIT_16);
-      writeData(scmFBInterfaceSpec.mNumDIs + 17, var_BIT_17, conn_BIT_17);
-      writeData(scmFBInterfaceSpec.mNumDIs + 18, var_BIT_18, conn_BIT_18);
-      writeData(scmFBInterfaceSpec.mNumDIs + 19, var_BIT_19, conn_BIT_19);
-      writeData(scmFBInterfaceSpec.mNumDIs + 20, var_BIT_20, conn_BIT_20);
-      writeData(scmFBInterfaceSpec.mNumDIs + 21, var_BIT_21, conn_BIT_21);
-      writeData(scmFBInterfaceSpec.mNumDIs + 22, var_BIT_22, conn_BIT_22);
-      writeData(scmFBInterfaceSpec.mNumDIs + 23, var_BIT_23, conn_BIT_23);
-      writeData(scmFBInterfaceSpec.mNumDIs + 24, var_BIT_24, conn_BIT_24);
-      writeData(scmFBInterfaceSpec.mNumDIs + 25, var_BIT_25, conn_BIT_25);
-      writeData(scmFBInterfaceSpec.mNumDIs + 26, var_BIT_26, conn_BIT_26);
-      writeData(scmFBInterfaceSpec.mNumDIs + 27, var_BIT_27, conn_BIT_27);
-      writeData(scmFBInterfaceSpec.mNumDIs + 28, var_BIT_28, conn_BIT_28);
-      writeData(scmFBInterfaceSpec.mNumDIs + 29, var_BIT_29, conn_BIT_29);
-      writeData(scmFBInterfaceSpec.mNumDIs + 30, var_BIT_30, conn_BIT_30);
-      writeData(scmFBInterfaceSpec.mNumDIs + 31, var_BIT_31, conn_BIT_31);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_BIT_00, conn_BIT_00);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_BIT_01, conn_BIT_01);
+      writeData(cFBInterfaceSpec.getNumDIs() + 2, var_BIT_02, conn_BIT_02);
+      writeData(cFBInterfaceSpec.getNumDIs() + 3, var_BIT_03, conn_BIT_03);
+      writeData(cFBInterfaceSpec.getNumDIs() + 4, var_BIT_04, conn_BIT_04);
+      writeData(cFBInterfaceSpec.getNumDIs() + 5, var_BIT_05, conn_BIT_05);
+      writeData(cFBInterfaceSpec.getNumDIs() + 6, var_BIT_06, conn_BIT_06);
+      writeData(cFBInterfaceSpec.getNumDIs() + 7, var_BIT_07, conn_BIT_07);
+      writeData(cFBInterfaceSpec.getNumDIs() + 8, var_BIT_08, conn_BIT_08);
+      writeData(cFBInterfaceSpec.getNumDIs() + 9, var_BIT_09, conn_BIT_09);
+      writeData(cFBInterfaceSpec.getNumDIs() + 10, var_BIT_10, conn_BIT_10);
+      writeData(cFBInterfaceSpec.getNumDIs() + 11, var_BIT_11, conn_BIT_11);
+      writeData(cFBInterfaceSpec.getNumDIs() + 12, var_BIT_12, conn_BIT_12);
+      writeData(cFBInterfaceSpec.getNumDIs() + 13, var_BIT_13, conn_BIT_13);
+      writeData(cFBInterfaceSpec.getNumDIs() + 14, var_BIT_14, conn_BIT_14);
+      writeData(cFBInterfaceSpec.getNumDIs() + 15, var_BIT_15, conn_BIT_15);
+      writeData(cFBInterfaceSpec.getNumDIs() + 16, var_BIT_16, conn_BIT_16);
+      writeData(cFBInterfaceSpec.getNumDIs() + 17, var_BIT_17, conn_BIT_17);
+      writeData(cFBInterfaceSpec.getNumDIs() + 18, var_BIT_18, conn_BIT_18);
+      writeData(cFBInterfaceSpec.getNumDIs() + 19, var_BIT_19, conn_BIT_19);
+      writeData(cFBInterfaceSpec.getNumDIs() + 20, var_BIT_20, conn_BIT_20);
+      writeData(cFBInterfaceSpec.getNumDIs() + 21, var_BIT_21, conn_BIT_21);
+      writeData(cFBInterfaceSpec.getNumDIs() + 22, var_BIT_22, conn_BIT_22);
+      writeData(cFBInterfaceSpec.getNumDIs() + 23, var_BIT_23, conn_BIT_23);
+      writeData(cFBInterfaceSpec.getNumDIs() + 24, var_BIT_24, conn_BIT_24);
+      writeData(cFBInterfaceSpec.getNumDIs() + 25, var_BIT_25, conn_BIT_25);
+      writeData(cFBInterfaceSpec.getNumDIs() + 26, var_BIT_26, conn_BIT_26);
+      writeData(cFBInterfaceSpec.getNumDIs() + 27, var_BIT_27, conn_BIT_27);
+      writeData(cFBInterfaceSpec.getNumDIs() + 28, var_BIT_28, conn_BIT_28);
+      writeData(cFBInterfaceSpec.getNumDIs() + 29, var_BIT_29, conn_BIT_29);
+      writeData(cFBInterfaceSpec.getNumDIs() + 30, var_BIT_30, conn_BIT_30);
+      writeData(cFBInterfaceSpec.getNumDIs() + 31, var_BIT_31, conn_BIT_31);
       break;
     }
     default: break;

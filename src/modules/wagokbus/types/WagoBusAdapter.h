@@ -16,34 +16,9 @@
 class FORTE_WagoBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_WagoBusAdapter)
 
-  private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-
   public:
     static const TEventID scmEventINITOID = 0;
-
-  private:
-    static const TDataIOID scmEIWith[];
-    static const TForteInt16 scmEIWithIndexes[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
-
-  public:
     static const TEventID scmEventINITID = 0;
-
-  private:
-    static const TDataIOID scmEOWith[];
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
-
-  protected:
-    static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
-
-    static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
     void setInitialValues() override;
 

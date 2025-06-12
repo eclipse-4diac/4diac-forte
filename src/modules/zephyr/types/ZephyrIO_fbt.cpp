@@ -45,43 +45,31 @@ USE_STRING_ID(ZephyrIO);
 
 DEFINE_FIRMWARE_FB(FORTE_ZephyrIO, STRID(ZephyrIO))
 
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmDataInputNames[] = {STRID(QI), STRID(UpdateInterval)};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmDataInputTypeIds[] = {STRID(BOOL), STRID(TIME)};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING)};
-const TDataIOID FORTE_ZephyrIO::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_ZephyrIO::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventInputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventInputTypeIds[] = {STRID(EInit)};
-const TDataIOID FORTE_ZephyrIO::scmEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_ZephyrIO::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventOutputNames[] = {STRID(INITO)};
-const CStringDictionary::TStringId FORTE_ZephyrIO::scmEventOutputTypeIds[] = {STRID(EInit)};
-const SFBInterfaceSpec FORTE_ZephyrIO::scmFBInterfaceSpec = {1,
-                                                             scmEventInputNames,
-                                                             scmEventInputTypeIds,
-                                                             scmEIWith,
-                                                             scmEIWithIndexes,
-                                                             1,
-                                                             scmEventOutputNames,
-                                                             scmEventOutputTypeIds,
-                                                             scmEOWith,
-                                                             scmEOWithIndexes,
-                                                             2,
-                                                             scmDataInputNames,
-                                                             scmDataInputTypeIds,
-                                                             2,
-                                                             scmDataOutputNames,
-                                                             scmDataOutputTypeIds,
-                                                             0,
-                                                             nullptr,
-                                                             0,
-                                                             nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(QI), STRID(UpdateInterval)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  const auto cEventInputNames = std::array{STRID(INIT)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit)};
+  const auto cEventOutputNames = std::array{STRID(INITO)};
+  const auto cEventOutputTypeIds = std::array{STRID(EInit)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
+
 
 FORTE_ZephyrIO::FORTE_ZephyrIO(const CStringDictionary::TStringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
 #pragma region base class spec
-    FORTE_ZephyrIOBase(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    FORTE_ZephyrIOBase(paContainer, cFBInterfaceSpec, paInstanceNameId),
 #pragma endregion base class spec
     var_QI(0_BOOL),
     var_UpdateInterval(40000000_TIME),
@@ -118,8 +106,8 @@ void FORTE_ZephyrIO::readInputData(const TEventID paEIID) {
 void FORTE_ZephyrIO::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

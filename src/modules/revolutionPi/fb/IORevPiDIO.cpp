@@ -62,83 +62,54 @@ using namespace forte::core::io;
 
 DEFINE_FIRMWARE_FB(FORTE_IORevPiDIO, STRID(IORevPiDIO))
 
-const CStringDictionary::TStringId FORTE_IORevPiDIO::scmDataInputNames[] = {STRID(QI),
-                                                                            STRID(DigitalInput_1),
-                                                                            STRID(DigitalInput_2),
-                                                                            STRID(DigitalInput_3),
-                                                                            STRID(DigitalInput_4),
-                                                                            STRID(DigitalInput_5),
-                                                                            STRID(DigitalInput_6),
-                                                                            STRID(DigitalInput_7),
-                                                                            STRID(DigitalInput_8),
-                                                                            STRID(DigitalInput_9),
-                                                                            STRID(DigitalInput_10),
-                                                                            STRID(DigitalInput_11),
-                                                                            STRID(DigitalInput_12),
-                                                                            STRID(DigitalInput_13),
-                                                                            STRID(DigitalInput_14),
-                                                                            STRID(DigitalOutput_1),
-                                                                            STRID(DigitalOutput_2),
-                                                                            STRID(DigitalOutput_3),
-                                                                            STRID(DigitalOutput_4),
-                                                                            STRID(DigitalOutput_5),
-                                                                            STRID(DigitalOutput_6),
-                                                                            STRID(DigitalOutput_7),
-                                                                            STRID(DigitalOutput_8),
-                                                                            STRID(DigitalOutput_9),
-                                                                            STRID(DigitalOutput_10),
-                                                                            STRID(DigitalOutput_11),
-                                                                            STRID(DigitalOutput_12),
-                                                                            STRID(DigitalOutput_13),
-                                                                            STRID(DigitalOutput_14)};
-const CStringDictionary::TStringId FORTE_IORevPiDIO::scmDataInputTypeIds[] = {
-    STRID(BOOL),   STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING),
-    STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING),
-    STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING),
-    STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING),
-    STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING), STRID(STRING)};
-const CStringDictionary::TStringId FORTE_IORevPiDIO::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-const CStringDictionary::TStringId FORTE_IORevPiDIO::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
-const TDataIOID FORTE_IORevPiDIO::scmEIWith[] = {1,  2,  5,  3,  4,  6,  7,  8,  15, 16,
-                                                 17, 18, 19, 20, 21, 22, 0,  14, 13, 12,
-                                                 11, 10, 9,  23, 24, 25, 26, 27, 28, scmWithListDelimiter};
-const TForteInt16 FORTE_IORevPiDIO::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_IORevPiDIO::scmEventInputNames[] = {STRID(MAP)};
-const CStringDictionary::TStringId FORTE_IORevPiDIO::scmEventInputTypeIds[] = {STRID(Event)};
-const TDataIOID FORTE_IORevPiDIO::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_IORevPiDIO::scmEOWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_IORevPiDIO::scmEventOutputNames[] = {STRID(MAPO), STRID(IND)};
-const CStringDictionary::TStringId FORTE_IORevPiDIO::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-const SAdapterInstanceDef FORTE_IORevPiDIO::scmAdapterInstances[] = {
-    {STRID(IORevPiBusAdapter), STRID(BusAdapterOut), true}, {STRID(IORevPiBusAdapter), STRID(BusAdapterIn), false}};
-
 namespace {
+  const auto cDataInputNames = std::array{STRID(QI),
+                                          STRID(DigitalInput_1),
+                                          STRID(DigitalInput_2),
+                                          STRID(DigitalInput_3),
+                                          STRID(DigitalInput_4),
+                                          STRID(DigitalInput_5),
+                                          STRID(DigitalInput_6),
+                                          STRID(DigitalInput_7),
+                                          STRID(DigitalInput_8),
+                                          STRID(DigitalInput_9),
+                                          STRID(DigitalInput_10),
+                                          STRID(DigitalInput_11),
+                                          STRID(DigitalInput_12),
+                                          STRID(DigitalInput_13),
+                                          STRID(DigitalInput_14),
+                                          STRID(DigitalOutput_1),
+                                          STRID(DigitalOutput_2),
+                                          STRID(DigitalOutput_3),
+                                          STRID(DigitalOutput_4),
+                                          STRID(DigitalOutput_5),
+                                          STRID(DigitalOutput_6),
+                                          STRID(DigitalOutput_7),
+                                          STRID(DigitalOutput_8),
+                                          STRID(DigitalOutput_9),
+                                          STRID(DigitalOutput_10),
+                                          STRID(DigitalOutput_11),
+                                          STRID(DigitalOutput_12),
+                                          STRID(DigitalOutput_13),
+                                          STRID(DigitalOutput_14)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  const auto cEventInputNames = std::array{STRID(MAP)};
+  const auto cEventOutputNames = std::array{STRID(MAPO), STRID(IND)};
   const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
   const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
-} // namespace
 
-const SFBInterfaceSpec FORTE_IORevPiDIO::scmFBInterfaceSpec = {1,
-                                                               scmEventInputNames,
-                                                               scmEventInputTypeIds,
-                                                               scmEIWith,
-                                                               scmEIWithIndexes,
-                                                               2,
-                                                               scmEventOutputNames,
-                                                               scmEventOutputTypeIds,
-                                                               scmEOWith,
-                                                               scmEOWithIndexes,
-                                                               29,
-                                                               scmDataInputNames,
-                                                               scmDataInputTypeIds,
-                                                               2,
-                                                               scmDataOutputNames,
-                                                               scmDataOutputTypeIds,
-                                                               0,
-                                                               nullptr,
-                                                               2,
-                                                               scmAdapterInstances,
-                                                               cSocketNameIds,
-                                                               cPlugNameIds};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = cSocketNameIds,
+      .mPlugNames = cPlugNameIds,
+  };
+} // namespace
 
 const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIONum = 0;
@@ -146,7 +117,7 @@ const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIONum = 0;
 FORTE_IORevPiDIO::FORTE_IORevPiDIO(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     IOConfigFBMultiSlave(
-        scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 96, paContainer, scmFBInterfaceSpec, paInstanceNameId),
+        scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 96, paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_MAPO(*this, 0),
     conn_IND(*this, 1),
     conn_QI(nullptr),
@@ -258,12 +229,12 @@ void FORTE_IORevPiDIO::readInputData(const TEventID paEIID) {
 void FORTE_IORevPiDIO::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventMAPOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
       break;
     }
     case scmEventINDID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

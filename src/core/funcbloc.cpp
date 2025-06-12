@@ -66,7 +66,7 @@ void CFunctionBlock::deinitialize() {
   CFBContainer::deinitialize();
 
   // disconnect all event connections
-  for (TPortId eoId = 0; eoId < getFBInterfaceSpec().mNumEOs; eoId++) {
+  for (TPortId eoId = 0; eoId < getFBInterfaceSpec().getNumEOs(); eoId++) {
     CEventConnection *eoConn = getEOConUnchecked(eoId);
     for (auto connPoint : eoConn->getDestinationList()) {
       eoConn->disconnect(connPoint.getFB(), connPoint.getPortId());
@@ -74,7 +74,7 @@ void CFunctionBlock::deinitialize() {
   }
 
   // disconnect all data input connections
-  for (TPortId diId = 0; diId < getFBInterfaceSpec().mNumDIs; diId++) {
+  for (TPortId diId = 0; diId < getFBInterfaceSpec().getNumDIs(); diId++) {
     CDataConnection *diConn = *getDIConUnchecked(diId);
     if (diConn != nullptr) {
       diConn->disconnect(*this, getFBInterfaceSpec().mDINames[diId]);
@@ -93,7 +93,7 @@ void CFunctionBlock::deinitialize() {
   }
 
   // disconnect all dio input connections
-  for (TPortId dioId = 0; dioId < getFBInterfaceSpec().mNumDIOs; dioId++) {
+  for (TPortId dioId = 0; dioId < getFBInterfaceSpec().getNumDIOs(); dioId++) {
     CDataConnection *dioConn = *getDIOInConUnchecked(dioId);
     if (dioConn != nullptr) {
       dioConn->disconnect(*this, getFBInterfaceSpec().mDIONames[dioId]);
@@ -115,7 +115,7 @@ CEventConnection *CFunctionBlock::getEOConnection(CStringDictionary::TStringId p
 }
 
 bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *paDataCon) {
-  if (paDIPortId >= getFBInterfaceSpec().mNumDIs) { // catch invalid ID
+  if (paDIPortId >= getFBInterfaceSpec().getNumDIs()) { // catch invalid ID
     return false;
   }
 
@@ -142,7 +142,7 @@ bool CFunctionBlock::configureGenericDI(TPortId paDIPortId, const CIEC_ANY &paRe
 }
 
 bool CFunctionBlock::connectDIO(TPortId paDIOPortId, CInOutDataConnection *paDataCon) {
-  if (paDIOPortId >= getFBInterfaceSpec().mNumDIOs) { // catch invalid ID
+  if (paDIOPortId >= getFBInterfaceSpec().getNumDIOs()) { // catch invalid ID
     return false;
   }
 
@@ -211,7 +211,7 @@ CInOutDataConnection *CFunctionBlock::getDIOOutConnection(CStringDictionary::TSt
 }
 
 bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue) {
-  if (paDOPortId >= getFBInterfaceSpec().mNumDOs) {
+  if (paDOPortId >= getFBInterfaceSpec().getNumDOs()) {
     return false;
   }
   CIEC_ANY *dataOutput = getDO(paDOPortId);
@@ -238,21 +238,21 @@ CIEC_ANY *CFunctionBlock::getDataInput(CStringDictionary::TStringId paDINameId) 
 }
 
 CIEC_ANY *CFunctionBlock::getDIFromPortId(TPortId paDIPortId) {
-  if (paDIPortId < getFBInterfaceSpec().mNumDIs) {
+  if (paDIPortId < getFBInterfaceSpec().getNumDIs()) {
     return getDI(paDIPortId);
   }
   return nullptr;
 }
 
 CIEC_ANY *CFunctionBlock::getDOFromPortId(TPortId paDOPortId) {
-  if (paDOPortId < getFBInterfaceSpec().mNumDOs) {
+  if (paDOPortId < getFBInterfaceSpec().getNumDOs()) {
     return getDO(paDOPortId);
   }
   return nullptr;
 }
 
 CIEC_ANY *CFunctionBlock::getDIOFromPortId(TPortId paDIPortId) {
-  if (paDIPortId < getFBInterfaceSpec().mNumDIOs) {
+  if (paDIPortId < getFBInterfaceSpec().getNumDIOs()) {
     return getDIO(paDIPortId);
   }
   return nullptr;
@@ -390,8 +390,9 @@ CConnection::Wrapper CFunctionBlock::getOutputConnection(forte::core::TNameIdent
 #ifdef FORTE_SUPPORT_MONITORING
 void CFunctionBlock::setupEventMonitoringData() {
   freeEventMonitoringData();
-  mEventMonitorCount.resize(getFBInterfaceSpec().mNumEIs + getFBInterfaceSpec().mNumEOs);
-  mForces.resize(getFBInterfaceSpec().mNumDIs + getFBInterfaceSpec().mNumDOs + getFBInterfaceSpec().mNumDIOs);
+  mEventMonitorCount.resize(getFBInterfaceSpec().getNumEIs() + getFBInterfaceSpec().getNumEOs());
+  mForces.resize(getFBInterfaceSpec().getNumDIs() + getFBInterfaceSpec().getNumDOs() +
+                 getFBInterfaceSpec().getNumDIOs());
 }
 
 void CFunctionBlock::freeEventMonitoringData() {
@@ -404,7 +405,7 @@ TForteUInt32 &CFunctionBlock::getEIMonitorData(TEventID paEIID) {
 }
 
 TForteUInt32 &CFunctionBlock::getEOMonitorData(TEventID paEOID) {
-  return mEventMonitorCount[getFBInterfaceSpec().mNumEIs + paEOID];
+  return mEventMonitorCount[getFBInterfaceSpec().getNumEIs() + paEOID];
 }
 
 TAbsDataPortNum CFunctionBlock::getAbsDataPortNum(CStringDictionary::TStringId paPortNameId) const {
@@ -416,12 +417,12 @@ TAbsDataPortNum CFunctionBlock::getAbsDataPortNum(CStringDictionary::TStringId p
   auto &interfaceSpec = getFBInterfaceSpec();
   paPortId = getFBInterfaceSpec().getDOID(paPortNameId);
   if (paPortId != cgInvalidPortId) {
-    return interfaceSpec.mNumDIs + paPortId;
+    return interfaceSpec.getNumDIs() + paPortId;
   }
 
   paPortId = getFBInterfaceSpec().getDIOID(paPortNameId);
   if (paPortId != cgInvalidPortId) {
-    return interfaceSpec.mNumDIs + interfaceSpec.mNumDOs + paPortId;
+    return interfaceSpec.getNumDIs() + interfaceSpec.getNumDOs() + paPortId;
   }
 
   return INVALID_ABS_DATA_PORT_ID;
@@ -433,10 +434,10 @@ void CFunctionBlock::setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValu
   if (paForceValue) {
     auto &interfaceSpec = getFBInterfaceSpec();
 
-    if ((interfaceSpec.mNumDIs <= paAbsDataPortNum) &&
-        (paAbsDataPortNum < interfaceSpec.mNumDIs + interfaceSpec.mNumDOs)) {
+    if ((interfaceSpec.getNumDIs() <= paAbsDataPortNum) &&
+        (paAbsDataPortNum < interfaceSpec.getNumDIs() + interfaceSpec.getNumDOs())) {
       // it is a data output mirror the forced value there
-      TPortId doPortId = paAbsDataPortNum - interfaceSpec.mNumDIs;
+      TPortId doPortId = paAbsDataPortNum - interfaceSpec.getNumDIs();
       CDataConnection *con = getDOConUnchecked(doPortId);
       con->writeData(*getDO(doPortId));
     }
@@ -448,17 +449,17 @@ void CFunctionBlock::setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValu
 void CFunctionBlock::toString(std::string &paTargetBuf) const {
   paTargetBuf += '(';
 
-  for (size_t i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
+  for (size_t i = 0; i < getFBInterfaceSpec().getNumDIs(); ++i) {
     forte::core::util::writeToStringNameValuePair(paTargetBuf, getFBInterfaceSpec().mDINames[i], getDI(i));
     paTargetBuf += csmToStringSeparator;
   }
 
-  for (size_t i = 0; i < getFBInterfaceSpec().mNumDOs; ++i) {
+  for (size_t i = 0; i < getFBInterfaceSpec().getNumDOs(); ++i) {
     forte::core::util::writeToStringNameValuePair(paTargetBuf, getFBInterfaceSpec().mDONames[i], getDO(i));
     paTargetBuf += csmToStringSeparator;
   }
 
-  for (size_t i = 0; i < getFBInterfaceSpec().mNumDIOs; ++i) {
+  for (size_t i = 0; i < getFBInterfaceSpec().getNumDIOs(); ++i) {
     forte::core::util::writeToStringNameValuePair(paTargetBuf, getFBInterfaceSpec().mDIONames[i], getDIO(i));
     paTargetBuf += csmToStringSeparator;
   }

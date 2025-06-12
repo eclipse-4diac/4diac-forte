@@ -22,62 +22,39 @@ USE_STRING_ID(WagoBusAdapter);
 
 DEFINE_ADAPTER_TYPE(FORTE_WagoBusAdapter, STRID(WagoBusAdapter))
 
-const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmDataInputNames[] = {STRID(QO)};
-const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmDataInputTypeIds[] = {STRID(BOOL)};
-const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmDataOutputNames[] = {STRID(QI), STRID(MasterId),
-                                                                                 STRID(Index)};
-const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(UINT),
-                                                                                   STRID(UINT)};
-const TDataIOID FORTE_WagoBusAdapter::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_WagoBusAdapter::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmEventInputNames[] = {STRID(INITO)};
-const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmEventInputTypeIds[] = {STRID(EInit)};
-const TDataIOID FORTE_WagoBusAdapter::scmEOWith[] = {2, 1, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_WagoBusAdapter::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmEventOutputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_WagoBusAdapter::scmEventOutputTypeIds[] = {STRID(EInit)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(QO)};
+  const auto cDataOutputNames = std::array{STRID(QI), STRID(MasterId), STRID(Index)};
+  const auto cEventInputNames = std::array{STRID(INITO)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit)};
+  const auto cEventOutputNames = std::array{STRID(INIT)};
+  const auto cEventOutputTypeIds = std::array{STRID(EInit)};
 
-const SFBInterfaceSpec FORTE_WagoBusAdapter::scmFBInterfaceSpecSocket = {1,
-                                                                         scmEventInputNames,
-                                                                         scmEventInputTypeIds,
-                                                                         scmEIWith,
-                                                                         scmEIWithIndexes,
-                                                                         1,
-                                                                         scmEventOutputNames,
-                                                                         scmEventOutputTypeIds,
-                                                                         scmEOWith,
-                                                                         scmEOWithIndexes,
-                                                                         1,
-                                                                         scmDataInputNames,
-                                                                         scmDataInputTypeIds,
-                                                                         3,
-                                                                         scmDataOutputNames,
-                                                                         scmDataOutputTypeIds,
-                                                                         0,
-                                                                         nullptr,
-                                                                         0,
-                                                                         nullptr};
+  const SFBInterfaceSpec cFBInterfaceSpecSocket = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
 
-const SFBInterfaceSpec FORTE_WagoBusAdapter::scmFBInterfaceSpecPlug = {1,
-                                                                       scmEventOutputNames,
-                                                                       scmEventOutputTypeIds,
-                                                                       scmEOWith,
-                                                                       scmEOWithIndexes,
-                                                                       1,
-                                                                       scmEventInputNames,
-                                                                       scmEventInputTypeIds,
-                                                                       scmEIWith,
-                                                                       scmEIWithIndexes,
-                                                                       3,
-                                                                       scmDataOutputNames,
-                                                                       scmDataOutputTypeIds,
-                                                                       1,
-                                                                       scmDataInputNames,
-                                                                       scmDataInputTypeIds,
-                                                                       0,
-                                                                       nullptr,
-                                                                       0,
-                                                                       nullptr};
+  const SFBInterfaceSpec cFBInterfaceSpecPlug = {
+      .mEINames = cEventOutputNames,
+      .mEITypeNames = cEventOutputTypeIds,
+      .mEONames = cEventInputNames,
+      .mEOTypeNames = cEventInputTypeIds,
+      .mDINames = cDataOutputNames,
+      .mDONames = cDataInputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+
+} // namespace
 
 FORTE_WagoBusAdapter::FORTE_WagoBusAdapter(forte::core::CFBContainer &paContainer,
                                            const SFBInterfaceSpec &paInterfaceSpec,
@@ -101,8 +78,7 @@ void FORTE_WagoBusAdapter::setInitialValues() {
 FORTE_WagoBusAdapter_Plug::FORTE_WagoBusAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
                                                      forte::core::CFBContainer &paContainer,
                                                      TForteUInt8 paParentAdapterlistID) :
-    FORTE_WagoBusAdapter(
-        paContainer, FORTE_WagoBusAdapter::scmFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
+    FORTE_WagoBusAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_INITO(*this, 0),
     conn_QI(nullptr),
     conn_MasterId(nullptr),
@@ -178,8 +154,7 @@ CDataConnection *FORTE_WagoBusAdapter_Plug::getDOConUnchecked(const TPortId paIn
 FORTE_WagoBusAdapter_Socket::FORTE_WagoBusAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
                                                          forte::core::CFBContainer &paContainer,
                                                          TForteUInt8 paParentAdapterlistID) :
-    FORTE_WagoBusAdapter(
-        paContainer, FORTE_WagoBusAdapter::scmFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
+    FORTE_WagoBusAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_INIT(*this, 0),
     conn_QO(nullptr),
     conn_QI(*this, 0, var_QI),

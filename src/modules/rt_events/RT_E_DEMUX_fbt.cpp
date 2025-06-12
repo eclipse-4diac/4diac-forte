@@ -38,52 +38,33 @@ USE_STRING_ID(WCET1);
 USE_STRING_ID(WCET2);
 USE_STRING_ID(WCET3);
 
-
 DEFINE_FIRMWARE_FB(FORTE_RT_E_DEMUX, STRID(RT_E_DEMUX))
 
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataInputNames[] = {
-    STRID(QI),    STRID(K),         STRID(Tmin),  STRID(Deadline0), STRID(WCET0), STRID(Deadline1),
-    STRID(WCET1), STRID(Deadline2), STRID(WCET2), STRID(Deadline3), STRID(WCET3)};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataInputTypeIds[] = {
-    STRID(BOOL), STRID(UINT), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME),
-    STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME), STRID(TIME)};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataOutputNames[] = {STRID(QO)};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmDataOutputTypeIds[] = {STRID(BOOL)};
-const TDataIOID FORTE_RT_E_DEMUX::scmEIWith[] = {
-    0, 2, 3, 4, 5, 6, 7, 8, 9, 10, scmWithListDelimiter, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_DEMUX::scmEIWithIndexes[] = {0, 11};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventInputNames[] = {STRID(INIT), STRID(EI)};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-const TDataIOID FORTE_RT_E_DEMUX::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_DEMUX::scmEOWithIndexes[] = {0, -1, -1, -1, -1};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventOutputNames[] = {STRID(INITO), STRID(EO0), STRID(EO1),
-                                                                              STRID(EO2), STRID(EO3)};
-const CStringDictionary::TStringId FORTE_RT_E_DEMUX::scmEventOutputTypeIds[] = {
-    STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
-const SFBInterfaceSpec FORTE_RT_E_DEMUX::scmFBInterfaceSpec = {2,
-                                                               scmEventInputNames,
-                                                               scmEventInputTypeIds,
-                                                               scmEIWith,
-                                                               scmEIWithIndexes,
-                                                               5,
-                                                               scmEventOutputNames,
-                                                               scmEventOutputTypeIds,
-                                                               scmEOWith,
-                                                               scmEOWithIndexes,
-                                                               11,
-                                                               scmDataInputNames,
-                                                               scmDataInputTypeIds,
-                                                               1,
-                                                               scmDataOutputNames,
-                                                               scmDataOutputTypeIds,
-                                                               0,
-                                                               nullptr,
-                                                               0,
-                                                               nullptr};
+namespace {
+  const auto cDataInputNames =
+      std::array{STRID(QI),    STRID(K),         STRID(Tmin),  STRID(Deadline0), STRID(WCET0), STRID(Deadline1),
+                 STRID(WCET1), STRID(Deadline2), STRID(WCET2), STRID(Deadline3), STRID(WCET3)};
+  const auto cDataOutputNames = std::array{STRID(QO)};
+  const auto cEventInputNames = std::array{STRID(INIT), STRID(EI)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(EO0), STRID(EO1), STRID(EO2), STRID(EO3)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_RT_E_DEMUX::FORTE_RT_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_EO0(*this, 1),
     conn_EO1(*this, 2),
@@ -207,7 +188,7 @@ void FORTE_RT_E_DEMUX::readInputData(TEventID paEIID) {
 void FORTE_RT_E_DEMUX::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
       break;
     }
     case scmEventEO0ID: {

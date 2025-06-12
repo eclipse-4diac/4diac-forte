@@ -41,15 +41,9 @@ class GEN_VALUES2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
     CDataConnection *getDOConUnchecked(TPortId paDONum) override;
 
   private:
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-
     static const TEventID scmEventREQID = 0;
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventCNFID = 0;
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -58,7 +52,7 @@ class GEN_VALUES2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    std::unique_ptr<CStringDictionary::TStringId[]> mDataInputNames;
+    std::vector<CStringDictionary::TStringId> mDataInputNames;
     CEventConnection conn_CNF;
     CIEC_ARRAY_DYNAMIC var_OUT;
     COutDataConnection<CIEC_ARRAY_DYNAMIC> conn_OUT;

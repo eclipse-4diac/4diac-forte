@@ -42,53 +42,41 @@ USE_STRING_ID(PortK);
 
 DEFINE_FIRMWARE_FB(FORTE_EliteBoard, STRID(EliteBoard))
 
-const TForteInt16 FORTE_EliteBoard::scmEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_EliteBoard::scmEventInputNames[] = {STRID(MAP)};
-const TForteInt16 FORTE_EliteBoard::scmEOWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_EliteBoard::scmEventOutputNames[] = {STRID(MAPO)};
-const SAdapterInstanceDef FORTE_EliteBoard::scmAdapterInstances[] = {
-    {STRID(PortAdapter), STRID(PortA), true}, {STRID(PortAdapter), STRID(PortB), true},
-    {STRID(PortAdapter), STRID(PortC), true}, {STRID(PortAdapter), STRID(PortD), true},
-    {STRID(PortAdapter), STRID(PortE), true}, {STRID(PortAdapter), STRID(PortF), true},
-    {STRID(PortAdapter), STRID(PortG), true}, {STRID(PortAdapter), STRID(PortH), true},
-    {STRID(PortAdapter), STRID(PortI), true}, {STRID(PortAdapter), STRID(PortJ), true},
-    {STRID(PortAdapter), STRID(PortK), true}};
-const SFBInterfaceSpec FORTE_EliteBoard::scmFBInterfaceSpec = {1,
-                                                               scmEventInputNames,
-                                                               nullptr,
-                                                               nullptr,
-                                                               scmEIWithIndexes,
-                                                               1,
-                                                               scmEventOutputNames,
-                                                               nullptr,
-                                                               nullptr,
-                                                               scmEOWithIndexes,
-                                                               0,
-                                                               nullptr,
-                                                               nullptr,
-                                                               0,
-                                                               nullptr,
-                                                               nullptr,
-                                                               0,
-                                                               nullptr,
-                                                               11,
-                                                               scmAdapterInstances};
+namespace {
+  const auto cEventInputNames = std::array{STRID(MAP)};
+  const auto cEventOutputNames = std::array{STRID(MAPO)};
+  const auto cPlugNameIds =
+      std::array{STRID(PortA), STRID(PortB), STRID(PortC), STRID(PortD), STRID(PortE), STRID(PortF),
+                 STRID(PortG), STRID(PortH), STRID(PortI), STRID(PortJ), STRID(PortK)};
+
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = {},
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = cPlugNameIds,
+  };
+} // namespace
 
 FORTE_EliteBoard::FORTE_EliteBoard(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
-    IOConfigFBController(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    IOConfigFBController(paContainer, cFBInterfaceSpec, paInstanceNameId),
     mEventHandler{getExtEvHandler<EliteBoardDeviceController>(*this)},
-    var_PortA(STRID(PortA), *this, true),
-    var_PortB(STRID(PortB), *this, true),
-    var_PortC(STRID(PortC), *this, true),
-    var_PortD(STRID(PortD), *this, true),
-    var_PortE(STRID(PortE), *this, true),
-    var_PortF(STRID(PortF), *this, true),
-    var_PortG(STRID(PortG), *this, true),
-    var_PortH(STRID(PortH), *this, true),
-    var_PortI(STRID(PortI), *this, true),
-    var_PortJ(STRID(PortJ), *this, true),
-    var_PortK(STRID(PortK), *this, true),
+    var_PortA(STRID(PortA), *this, 0),
+    var_PortB(STRID(PortB), *this, 1),
+    var_PortC(STRID(PortC), *this, 2),
+    var_PortD(STRID(PortD), *this, 3),
+    var_PortE(STRID(PortE), *this, 4),
+    var_PortF(STRID(PortF), *this, 5),
+    var_PortG(STRID(PortG), *this, 6),
+    var_PortH(STRID(PortH), *this, 7),
+    var_PortI(STRID(PortI), *this, 8),
+    var_PortJ(STRID(PortJ), *this, 9),
+    var_PortK(STRID(PortK), *this, 10),
     conn_MAPO(*this, 0) {};
 
 bool FORTE_EliteBoard::initialize() {
@@ -170,7 +158,7 @@ CIEC_ANY *FORTE_EliteBoard::getDO(size_t) {
   return nullptr;
 }
 
-CAdapter *FORTE_EliteBoard::getAdapterUnchecked(const size_t paIndex) {
+forte::IPlugPin *FORTE_EliteBoard::getPlugPinUnchecked(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_PortA;
     case 1: return &var_PortB;

@@ -30,18 +30,15 @@ USE_STRING_ID(REQ);
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY, STRID(GEN_VALUES2ARRAY))
 
-const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmDataOutputNames[] = {STRID(OUT)};
-
-const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmEventInputTypeIds[] = {STRID(Event)};
-
-const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId GEN_VALUES2ARRAY::scmEventOutputTypeIds[] = {STRID(Event)};
+namespace {
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+} // namespace
 
 GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
-    mDataInputNames(nullptr),
     conn_CNF(*this, 0),
     conn_OUT(*this, 0, var_OUT) {
 }
@@ -49,7 +46,7 @@ GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstance
 void GEN_VALUES2ARRAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventREQID:
-      for (unsigned int input_index = 0; input_index < getFBInterfaceSpec().mNumDIs; input_index++) {
+      for (unsigned int input_index = 0; input_index < getFBInterfaceSpec().getNumDIs(); input_index++) {
         // copy input values to array
         var_OUT[input_index].setValue(*getDI(input_index));
       }
@@ -59,13 +56,13 @@ void GEN_VALUES2ARRAY::executeEvent(TEventID paEIID, CEventChainExecutionThread 
 }
 
 void GEN_VALUES2ARRAY::readInputData(TEventID) {
-  for (TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
+  for (TPortId i = 0; i < getFBInterfaceSpec().getNumDIs(); ++i) {
     readData(i, mGenDIs[i], mGenDIConns[i]);
   }
 }
 
 void GEN_VALUES2ARRAY::writeOutputData(TEventID) {
-  writeData(getFBInterfaceSpec().mNumDIs + 0, var_OUT, conn_OUT);
+  writeData(getFBInterfaceSpec().getNumDIs() + 0, var_OUT, conn_OUT);
 }
 
 bool GEN_VALUES2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
@@ -89,27 +86,21 @@ bool GEN_VALUES2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterf
     return false;
   }
   // create the data inputs
-  mDataInputNames = std::make_unique<CStringDictionary::TStringId[]>(numDIs);
-
-  generateGenericInterfacePointNameArray("IN_", mDataInputNames.get(), numDIs);
+  generateGenericInterfacePointNameArray("IN_", mDataInputNames, numDIs);
 
   // create data output type
   var_OUT.setup(numDIs, arrayValueTypeId);
 
   // create the interface Specification
-  paInterfaceSpec.mNumEIs = 1;
-  paInterfaceSpec.mEINames = scmEventInputNames;
-  paInterfaceSpec.mNumEOs = 1;
-  paInterfaceSpec.mEONames = scmEventOutputNames;
-  paInterfaceSpec.mNumDIs = numDIs;
-  paInterfaceSpec.mDINames = mDataInputNames.get();
-  paInterfaceSpec.mNumDOs = 1;
-  paInterfaceSpec.mDONames = scmDataOutputNames;
+  paInterfaceSpec.mEINames = cEventInputNames;
+  paInterfaceSpec.mEONames = cEventOutputNames;
+  paInterfaceSpec.mDINames = mDataInputNames;
+  paInterfaceSpec.mDONames = cDataOutputNames;
   return true;
 }
 
 void GEN_VALUES2ARRAY::createGenInputData() {
-  mGenDIs = std::make_unique<CIEC_ANY_VARIANT[]>(getFBInterfaceSpec().mNumDIs);
+  mGenDIs = std::make_unique<CIEC_ANY_VARIANT[]>(getFBInterfaceSpec().getNumDIs());
 }
 
 CEventConnection *GEN_VALUES2ARRAY::getEOConUnchecked(TPortId paEONum) {

@@ -33,48 +33,38 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceRegistryEntry, STRID(FieldsToServiceRegistryEntry))
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmDataInputNames[] = {
-    STRID(providedService), STRID(provider), STRID(serviceURI), STRID(version), STRID(udp), STRID(ttl),
-    STRID(metadata)};
+namespace {
+  const auto cDataInputNames = std::array{
+      STRID(providedService), STRID(provider), STRID(serviceURI), STRID(version), STRID(udp), STRID(ttl),
+      STRID(metadata)};
+  
+      STRID(ArrowheadService), STRID(ArrowheadSystem), STRID(WSTRING), STRID(DINT), STRID(BOOL), STRID(DINT),
+      STRID(WSTRING)};
+  
+  const auto cDataOutputNames = std::array{
+      STRID(serviceRegistryEntry)};
+  
+      STRID(ServiceRegistryEntry)};
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmDataInputTypeIds[] = {
-    STRID(ArrowheadService), STRID(ArrowheadSystem), STRID(WSTRING), STRID(DINT), STRID(BOOL), STRID(DINT),
-    STRID(WSTRING)};
-
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmDataOutputNames[] = {
-    STRID(serviceRegistryEntry)};
-
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmDataOutputTypeIds[] = {
-    STRID(ServiceRegistryEntry)};
-
-const TForteInt16 FORTE_FieldsToServiceRegistryEntry::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToServiceRegistryEntry::scmEIWith[] = {6, 5, 4, 3, 2, 1, 0, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_FieldsToServiceRegistryEntry::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FieldsToServiceRegistryEntry::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRegistryEntry::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_FieldsToServiceRegistryEntry::scmFBInterfaceSpec = {1,
-                                                                                 scmEventInputNames,
-                                                                                 scmEventInputTypeIds,
-                                                                                 scmEIWith,
-                                                                                 scmEIWithIndexes,
-                                                                                 1,
-                                                                                 scmEventOutputNames,
-                                                                                 scmEventOutputTypeIds,
-                                                                                 scmEOWith,
-                                                                                 scmEOWithIndexes,
-                                                                                 7,
-                                                                                 scmDataInputNames,
-                                                                                 scmDataInputTypeIds,
-                                                                                 1,
-                                                                                 scmDataOutputNames,
-                                                                                 scmDataOutputTypeIds,
-                                                                                 0,
-                                                                                 0};
 
 void FORTE_FieldsToServiceRegistryEntry::alg_REQ() {
   serviceRegistryEntry().providedService() = providedService();

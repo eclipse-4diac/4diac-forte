@@ -22,57 +22,33 @@ USE_STRING_ID(TIME);
 USE_STRING_ID(TimeOut);
 
 namespace {
-  const CStringDictionary::TStringId scmDataOutputNames[] = {STRID(DT)};
-  const CStringDictionary::TStringId scmDataOutputTypeIds[] = {STRID(TIME)};
-  const TForteInt16 scmEIWithIndexes[] = {-1};
-  const CStringDictionary::TStringId scmEventInputNames[] = {STRID(TimeOut)};
-  const CStringDictionary::TStringId scmEventInputTypeIds[] = {STRID(Event)};
-  const TDataIOID scmEOWith[] = {0, CFunctionBlock::scmWithListDelimiter};
-  const TForteInt16 scmEOWithIndexes[] = {0, -1};
-  const CStringDictionary::TStringId scmEventOutputNames[] = {STRID(START), STRID(STOP)};
-  const CStringDictionary::TStringId scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
+  const auto cDataOutputNames = std::array{STRID(DT)};
+  const auto cEventInputNames = std::array{STRID(TimeOut)};
+  const auto cEventOutputNames = std::array{STRID(START), STRID(STOP)};
 
-  const SFBInterfaceSpec scmFBInterfaceSpecSocket = {1,
-                                                     scmEventInputNames,
-                                                     scmEventInputTypeIds,
-                                                     nullptr,
-                                                     scmEIWithIndexes,
-                                                     2,
-                                                     scmEventOutputNames,
-                                                     scmEventOutputTypeIds,
-                                                     scmEOWith,
-                                                     scmEOWithIndexes,
-                                                     0,
-                                                     nullptr,
-                                                     nullptr,
-                                                     1,
-                                                     scmDataOutputNames,
-                                                     scmDataOutputTypeIds,
-                                                     0,
-                                                     nullptr,
-                                                     0,
-                                                     nullptr};
+  const SFBInterfaceSpec cFBInterfaceSpecSocket = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = {},
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
 
-  const SFBInterfaceSpec scmFBInterfaceSpecPlug = {2,
-                                                   scmEventOutputNames,
-                                                   scmEventOutputTypeIds,
-                                                   scmEOWith,
-                                                   scmEOWithIndexes,
-                                                   1,
-                                                   scmEventInputNames,
-                                                   scmEventInputTypeIds,
-                                                   nullptr,
-                                                   scmEIWithIndexes,
-                                                   1,
-                                                   scmDataOutputNames,
-                                                   scmDataOutputTypeIds,
-                                                   0,
-                                                   nullptr,
-                                                   nullptr,
-                                                   0,
-                                                   nullptr,
-                                                   0,
-                                                   nullptr};
+  const SFBInterfaceSpec cFBInterfaceSpecPlug = {
+      .mEINames = cEventOutputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventInputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataOutputNames,
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
 } // namespace
 
 DEFINE_ADAPTER_TYPE(FORTE_ATimeOut, STRID(ATimeOut))
@@ -91,7 +67,7 @@ FORTE_ATimeOut::FORTE_ATimeOut(forte::core::CFBContainer &paContainer,
 FORTE_ATimeOut_Plug::FORTE_ATimeOut_Plug(CStringDictionary::TStringId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer,
                                          TForteUInt8 paParentAdapterlistID) :
-    FORTE_ATimeOut(paContainer, scmFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
+    FORTE_ATimeOut(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_TimeOUT(*this, 0) {
 }
 
@@ -134,7 +110,7 @@ FORTE_ATimeOut_Socket *FORTE_ATimeOut_Plug::getSocket() {
 FORTE_ATimeOut_Socket::FORTE_ATimeOut_Socket(CStringDictionary::TStringId paInstanceNameId,
                                              forte::core::CFBContainer &paContainer,
                                              TForteUInt8 paParentAdapterlistID) :
-    FORTE_ATimeOut(paContainer, scmFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
+    FORTE_ATimeOut(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_START(*this, 0),
     conn_STOP(*this, 1),
     conn_DT(*this, 0, var_DT) {

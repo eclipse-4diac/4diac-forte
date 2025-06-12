@@ -27,41 +27,30 @@ USE_STRING_ID(WCET);
 
 DEFINE_FIRMWARE_FB(FORTE_RT_E_CYCLE, STRID(RT_E_CYCLE))
 
-const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scmDataInputNames[] = {STRID(DT), STRID(Deadline), STRID(WCET)};
-const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scmDataInputTypeIds[] = {STRID(TIME), STRID(TIME), STRID(TIME)};
-const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scmDataOutputNames[] = {STRID(QO)};
-const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scmDataOutputTypeIds[] = {STRID(BOOL)};
-const TDataIOID FORTE_RT_E_CYCLE::scmEIWith[] = {0, 1, 2, scmWithListDelimiter};
-const TForteInt16 FORTE_RT_E_CYCLE::scmEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scmEventInputNames[] = {STRID(START), STRID(STOP)};
-const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scmEventInputTypeIds[] = {STRID(Event), STRID(Event)};
-const TForteInt16 FORTE_RT_E_CYCLE::scmEOWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scmEventOutputNames[] = {STRID(EO)};
-const CStringDictionary::TStringId FORTE_RT_E_CYCLE::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_RT_E_CYCLE::scmFBInterfaceSpec = {2,
-                                                               scmEventInputNames,
-                                                               scmEventInputTypeIds,
-                                                               scmEIWith,
-                                                               scmEIWithIndexes,
-                                                               1,
-                                                               scmEventOutputNames,
-                                                               scmEventOutputTypeIds,
-                                                               nullptr,
-                                                               scmEOWithIndexes,
-                                                               3,
-                                                               scmDataInputNames,
-                                                               scmDataInputTypeIds,
-                                                               1,
-                                                               scmDataOutputNames,
-                                                               scmDataOutputTypeIds,
-                                                               0,
-                                                               nullptr,
-                                                               0,
-                                                               nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(DT), STRID(Deadline), STRID(WCET)};
+  const auto cDataOutputNames = std::array{STRID(QO)};
+  const auto cEventInputNames = std::array{STRID(START), STRID(STOP)};
+  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(EO)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
+
 
 FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
-    CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_EO(*this, 0),
     conn_DT(nullptr),
     conn_Deadline(nullptr),

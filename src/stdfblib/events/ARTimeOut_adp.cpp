@@ -30,36 +30,41 @@ USE_STRING_ID(TimeOut);
 
 DEFINE_ADAPTER_TYPE(FORTE_ARTimeOut, STRID(ARTimeOut))
 
-const CStringDictionary::TStringId FORTE_ARTimeOut::scmDataOutputNames[] = {STRID(DT)};
-const CStringDictionary::TStringId FORTE_ARTimeOut::scmDataOutputTypeIds[] = {STRID(TIME)};
-const TForteInt16 FORTE_ARTimeOut::scmEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_ARTimeOut::scmEventInputNames[] = {STRID(TimeOut)};
-const TDataIOID FORTE_ARTimeOut::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_ARTimeOut::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_ARTimeOut::scmEventOutputNames[] = {STRID(START), STRID(STOP)};
+namespace {
+  const auto cDataOutputNames = std::array{STRID(DT)};
+  const auto cEventInputNames = std::array{STRID(TimeOut)};
+  const auto cEventOutputNames = std::array{STRID(START), STRID(STOP)};
 
-const SFBInterfaceSpec FORTE_ARTimeOut::scmFBInterfaceSpecSocket = {
-  1, scmEventInputNames, nullptr, nullptr, scmEIWithIndexes,
-  2, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
-  0, nullptr, nullptr,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+  const SFBInterfaceSpec cFBInterfaceSpecSocket = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = {},
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
 
-const SFBInterfaceSpec FORTE_ARTimeOut::scmFBInterfaceSpecPlug = {
-  2, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
-  1, scmEventInputNames, nullptr, nullptr, scmEIWithIndexes,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr, nullptr,
-  0, nullptr,
-  0, nullptr
-};
+  const SFBInterfaceSpec cFBInterfaceSpecPlug = {
+      .mEINames = cEventOutputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventInputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataOutputNames,
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+
+} // namespace
 
 FORTE_ARTimeOut::FORTE_ARTimeOut(forte::core::CFBContainer &paContainer,
-                             const SFBInterfaceSpec &paInterfaceSpec,
-                             const CStringDictionary::TStringId paInstanceNameId,
-                             TForteUInt8 paParentAdapterlistID) :
+                                 const SFBInterfaceSpec &paInterfaceSpec,
+                                 const CStringDictionary::TStringId paInstanceNameId,
+                                 TForteUInt8 paParentAdapterlistID) :
     CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     var_DT(0_TIME) {
 }
@@ -69,26 +74,24 @@ void FORTE_ARTimeOut::setInitialValues() {
   var_DT = 0_TIME;
 }
 
-
 FORTE_ARTimeOut_Plug::FORTE_ARTimeOut_Plug(CStringDictionary::TStringId paInstanceNameId,
-                                         forte::core::CFBContainer &paContainer,
-                                         TForteUInt8 paParentAdapterlistID) :
-    FORTE_ARTimeOut(paContainer, FORTE_ARTimeOut::scmFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
+                                           forte::core::CFBContainer &paContainer,
+                                           TForteUInt8 paParentAdapterlistID) :
+    FORTE_ARTimeOut(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_TimeOut(*this, 0),
     conn_DT(nullptr) {
 }
 
 void FORTE_ARTimeOut_Plug::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventSTARTID: {
       readData(0, var_DT, conn_DT);
-      if(auto peer = static_cast<FORTE_ARTimeOut_Socket *>(getPeer()); peer) {
+      if (auto peer = static_cast<FORTE_ARTimeOut_Socket *>(getPeer()); peer) {
         peer->var_DT = var_DT;
       }
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
@@ -96,7 +99,7 @@ void FORTE_ARTimeOut_Plug::writeOutputData(TEventID) {
   // nothing to do
 }
 CIEC_ANY *FORTE_ARTimeOut_Plug::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_DT;
   }
   return nullptr;
@@ -107,14 +110,14 @@ CIEC_ANY *FORTE_ARTimeOut_Plug::getDO(size_t) {
 }
 
 CEventConnection *FORTE_ARTimeOut_Plug::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_TimeOut;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_ARTimeOut_Plug::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_DT;
   }
   return nullptr;
@@ -124,11 +127,10 @@ CDataConnection *FORTE_ARTimeOut_Plug::getDOConUnchecked(TPortId) {
   return nullptr;
 }
 
-
 FORTE_ARTimeOut_Socket::FORTE_ARTimeOut_Socket(CStringDictionary::TStringId paInstanceNameId,
-                                         forte::core::CFBContainer &paContainer,
-                                         TForteUInt8 paParentAdapterlistID) :
-    FORTE_ARTimeOut(paContainer, FORTE_ARTimeOut::scmFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
+                                               forte::core::CFBContainer &paContainer,
+                                               TForteUInt8 paParentAdapterlistID) :
+    FORTE_ARTimeOut(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_START(*this, 0),
     conn_STOP(*this, 1),
     conn_DT(*this, 0, var_DT) {
@@ -139,13 +141,12 @@ void FORTE_ARTimeOut_Socket::readInputData(TEventID) {
 }
 
 void FORTE_ARTimeOut_Socket::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventSTARTID: {
       writeData(0, var_DT, conn_DT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 CIEC_ANY *FORTE_ARTimeOut_Socket::getDI(size_t) {
@@ -153,14 +154,14 @@ CIEC_ANY *FORTE_ARTimeOut_Socket::getDI(size_t) {
 }
 
 CIEC_ANY *FORTE_ARTimeOut_Socket::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_DT;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_ARTimeOut_Socket::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_START;
     case 1: return &conn_STOP;
   }
@@ -172,7 +173,7 @@ CDataConnection **FORTE_ARTimeOut_Socket::getDIConUnchecked(TPortId) {
 }
 
 CDataConnection *FORTE_ARTimeOut_Socket::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_DT;
   }
   return nullptr;

@@ -25,44 +25,34 @@ USE_STRING_ID(REQ);
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToPreferredProvider, STRID(FieldsToPreferredProvider))
 
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmDataInputNames[] = {STRID(providerSystem),
-                                                                                           STRID(providerCloud)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(providerSystem),
+                                                                                             STRID(providerCloud)};
+  
+                                                                                               STRID(ArrowheadCloud)};
+  
+  const auto cDataOutputNames = std::array{STRID(preferredProvider)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmDataInputTypeIds[] = {STRID(ArrowheadSystem),
-                                                                                             STRID(ArrowheadCloud)};
-
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmDataOutputNames[] = {STRID(preferredProvider)};
-
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmDataOutputTypeIds[] = {STRID(PreferredProvider)};
-
-const TForteInt16 FORTE_FieldsToPreferredProvider::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToPreferredProvider::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_FieldsToPreferredProvider::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FieldsToPreferredProvider::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_FieldsToPreferredProvider::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_FieldsToPreferredProvider::scmFBInterfaceSpec = {1,
-                                                                              scmEventInputNames,
-                                                                              scmEventInputTypeIds,
-                                                                              scmEIWith,
-                                                                              scmEIWithIndexes,
-                                                                              1,
-                                                                              scmEventOutputNames,
-                                                                              scmEventOutputTypeIds,
-                                                                              scmEOWith,
-                                                                              scmEOWithIndexes,
-                                                                              2,
-                                                                              scmDataInputNames,
-                                                                              scmDataInputTypeIds,
-                                                                              1,
-                                                                              scmDataOutputNames,
-                                                                              scmDataOutputTypeIds,
-                                                                              0,
-                                                                              0};
 
 void FORTE_FieldsToPreferredProvider::alg_REQ() {
   preferredProvider().providerSystem() = providerSystem();

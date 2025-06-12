@@ -25,8 +25,10 @@ USE_STRING_ID(WR);
 
 DEFINE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge, STRID(GEN_RT_Bridge))
 
-const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventInputNames[] = {STRID(RD), STRID(WR)};
-const CStringDictionary::TStringId FORTE_GEN_RT_Bridge::scmEventOutputNames[] = {STRID(RDO)};
+namespace {
+  const auto cEventInputNames = std::array{STRID(RD), STRID(WR)};
+  const auto cEventOutputNames = std::array{STRID(RDO)};
+} // namespace
 
 FORTE_GEN_RT_Bridge::FORTE_GEN_RT_Bridge(const CStringDictionary::TStringId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer) :
@@ -41,7 +43,7 @@ void FORTE_GEN_RT_Bridge::executeEvent(const TEventID paEIID, CEventChainExecuti
   switch (paEIID) {
     case scmEventRDID: sendOutputEvent(scmEventRDOID, paECET); break;
     case scmEventWRID:
-      for (size_t i = 0; i < getFBInterfaceSpec().mNumDIs; i++) {
+      for (size_t i = 0; i < getFBInterfaceSpec().getNumDIs(); i++) {
         getDO(i)->setValue(getDI(i)->unwrap());
       }
       break;
@@ -50,7 +52,7 @@ void FORTE_GEN_RT_Bridge::executeEvent(const TEventID paEIID, CEventChainExecuti
 
 void FORTE_GEN_RT_Bridge::readInputData(const TEventID paEIID) {
   if (paEIID == scmEventWRID) {
-    for (size_t i = 0; i < getFBInterfaceSpec().mNumDIs; i++) {
+    for (size_t i = 0; i < getFBInterfaceSpec().getNumDIs(); i++) {
       readData(i, mGenDIs[i], mGenDIConns[i]);
     }
   }
@@ -58,8 +60,8 @@ void FORTE_GEN_RT_Bridge::readInputData(const TEventID paEIID) {
 
 void FORTE_GEN_RT_Bridge::writeOutputData(const TEventID paEIID) {
   if (paEIID == scmEventRDOID) {
-    for (size_t i = 0; i < getFBInterfaceSpec().mNumDOs; i++) {
-      writeData(getFBInterfaceSpec().mNumDIs + i, mGenDOs[i], mGenDOConns[i]);
+    for (size_t i = 0; i < getFBInterfaceSpec().getNumDOs(); i++) {
+      writeData(getFBInterfaceSpec().getNumDIs() + i, mGenDOs[i], mGenDOConns[i]);
     }
   }
 }
@@ -79,17 +81,14 @@ bool FORTE_GEN_RT_Bridge::createInterfaceSpec(const char *paConfigString, SFBInt
     return false;
   }
 
-  paInterfaceSpec.mEINames = scmEventInputNames;
-  paInterfaceSpec.mEONames = scmEventOutputNames;
+  paInterfaceSpec.mEINames = cEventInputNames;
+  paInterfaceSpec.mEONames = cEventOutputNames;
 
-  mDINames = std::make_unique<CStringDictionary::TStringId[]>(numPorts);
-  generateGenericInterfacePointNameArray("SD_", mDINames.get(), numPorts);
+  generateGenericInterfacePointNameArray("SD_", mDINames, numPorts);
+  generateGenericInterfacePointNameArray("RD_", mDONames, numPorts);
 
-  mDONames = std::make_unique<CStringDictionary::TStringId[]>(numPorts);
-  generateGenericInterfacePointNameArray("RD_", mDONames.get(), numPorts);
-
-  paInterfaceSpec.mDINames = mDINames.get();
-  paInterfaceSpec.mDONames = mDONames.get();
+  paInterfaceSpec.mDINames = mDINames;
+  paInterfaceSpec.mDONames = mDONames;
 
   return true;
 }
@@ -107,9 +106,9 @@ CEventConnection *FORTE_GEN_RT_Bridge::getEOConUnchecked(TPortId paIndex) {
 }
 
 void FORTE_GEN_RT_Bridge::createGenInputData() {
-  mGenDIs = std::make_unique<CIEC_ANY_VARIANT[]>(getFBInterfaceSpec().mNumDIs);
+  mGenDIs = std::make_unique<CIEC_ANY_VARIANT[]>(getFBInterfaceSpec().getNumDIs());
 }
 
 void FORTE_GEN_RT_Bridge::createGenOutputData() {
-  mGenDOs = std::make_unique<CIEC_ANY_VARIANT[]>(getFBInterfaceSpec().mNumDOs);
+  mGenDOs = std::make_unique<CIEC_ANY_VARIANT[]>(getFBInterfaceSpec().getNumDOs());
 }

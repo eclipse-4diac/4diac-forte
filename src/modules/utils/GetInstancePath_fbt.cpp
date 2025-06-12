@@ -25,42 +25,30 @@ USE_STRING_ID(STRING);
 
 DEFINE_FIRMWARE_FB(FORTE_GetInstancePath, STRID(GetInstancePath))
 
-const CStringDictionary::TStringId FORTE_GetInstancePath::scmDataInputNames[] = {STRID(Sep)};
-const CStringDictionary::TStringId FORTE_GetInstancePath::scmDataInputTypeIds[] = {STRID(CHAR)};
-const CStringDictionary::TStringId FORTE_GetInstancePath::scmDataOutputNames[] = {STRID(Path)};
-const CStringDictionary::TStringId FORTE_GetInstancePath::scmDataOutputTypeIds[] = {STRID(STRING)};
-const TDataIOID FORTE_GetInstancePath::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_GetInstancePath::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_GetInstancePath::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_GetInstancePath::scmEventInputTypeIds[] = {STRID(Event)};
-const TDataIOID FORTE_GetInstancePath::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_GetInstancePath::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_GetInstancePath::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_GetInstancePath::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_GetInstancePath::scmFBInterfaceSpec = {1,
-                                                                    scmEventInputNames,
-                                                                    scmEventInputTypeIds,
-                                                                    scmEIWith,
-                                                                    scmEIWithIndexes,
-                                                                    1,
-                                                                    scmEventOutputNames,
-                                                                    scmEventOutputTypeIds,
-                                                                    scmEOWith,
-                                                                    scmEOWithIndexes,
-                                                                    1,
-                                                                    scmDataInputNames,
-                                                                    scmDataInputTypeIds,
-                                                                    1,
-                                                                    scmDataOutputNames,
-                                                                    scmDataOutputTypeIds,
-                                                                    0,
-                                                                    nullptr,
-                                                                    0,
-                                                                    nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(Sep)};
+  const auto cDataOutputNames = std::array{STRID(Path)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
+
 
 FORTE_GetInstancePath::FORTE_GetInstancePath(const CStringDictionary::TStringId paInstanceNameId,
                                              forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_Sep(0x2f_CHAR),
     conn_CNF(*this, 0),
     conn_Sep(nullptr),
@@ -91,7 +79,7 @@ void FORTE_GetInstancePath::readInputData(const TEventID paEIID) {
 void FORTE_GetInstancePath::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_Path, conn_Path);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_Path, conn_Path);
       break;
     }
     default: break;

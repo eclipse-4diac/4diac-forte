@@ -20,32 +20,24 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(Config_EMB_RES, STRID(Config_EMB_RES));
 
-const CStringDictionary::TStringId Config_EMB_RES::scmVarInputNameIds[] = {STRID(OPCUA_Namespace)};
-const CStringDictionary::TStringId Config_EMB_RES::scmDIDataTypeIds[] = {STRID(WSTRING)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(OPCUA_Namespace)};
 
-const SFBInterfaceSpec Config_EMB_RES::scmFBInterfaceSpec = {0,
-                                                             nullptr,
-                                                             nullptr,
-                                                             nullptr,
-                                                             nullptr,
-                                                             0,
-                                                             nullptr,
-                                                             nullptr,
-                                                             nullptr,
-                                                             nullptr,
-                                                             1,
-                                                             scmVarInputNameIds,
-                                                             scmDIDataTypeIds,
-                                                             0,
-                                                             nullptr,
-                                                             nullptr,
-                                                             0,
-                                                             nullptr,
-                                                             0,
-                                                             nullptr};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = {},
+      .mEITypeNames = {},
+      .mEONames = {},
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 Config_EMB_RES::Config_EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
-    CResource(paDevice, scmFBInterfaceSpec, paInstanceNameId),
+    CResource(paDevice, cFBInterfaceSpec, paInstanceNameId),
     fb_START(STRID(START), *this),
     conn_opcua_namespace(nullptr),
     conn_opcua_namespace_int(*this, 0, u""_WSTRING) {

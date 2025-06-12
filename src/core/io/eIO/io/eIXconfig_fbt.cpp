@@ -11,13 +11,7 @@
  *******************************************************************************/
 
 #include "eIXconfig_fbt.h"
-
-#include "eGenAdapter_adp.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "eIX_fbt.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);
@@ -31,43 +25,31 @@ USE_STRING_ID(eGenAdapter);
 USE_STRING_ID(eIX);
 USE_STRING_ID(eIXconfig);
 
-DEFINE_FIRMWARE_FB(FORTE_eIXconfig, STRID(eIXconfig))
+namespace {
+  const auto cEventInputNames = std::array{STRID(CONF)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataInputNames = std::array{STRID(FE), STRID(RE)};
+  const auto cDataOutputNames = std::array{STRID(STATUS)};
+  const auto cSocketNames = std::array{STRID(eIX)};
 
-const CStringDictionary::TStringId FORTE_eIXconfig::scmDataInputNames[] = {STRID(FE), STRID(RE)};
-const CStringDictionary::TStringId FORTE_eIXconfig::scmDataInputTypeIds[] = {STRID(BOOL), STRID(BOOL)};
-const CStringDictionary::TStringId FORTE_eIXconfig::scmDataOutputNames[] = {STRID(STATUS)};
-const CStringDictionary::TStringId FORTE_eIXconfig::scmDataOutputTypeIds[] = {STRID(WSTRING)};
-const TDataIOID FORTE_eIXconfig::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_eIXconfig::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_eIXconfig::scmEventInputNames[] = {STRID(CONF)};
-const TDataIOID FORTE_eIXconfig::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_eIXconfig::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_eIXconfig::scmEventOutputNames[] = {STRID(CNF)};
-const SAdapterInstanceDef FORTE_eIXconfig::scmAdapterInstances[] = {{STRID(eGenAdapter), STRID(eIX), false}};
-const SFBInterfaceSpec FORTE_eIXconfig::scmFBInterfaceSpec = {1,
-                                                              scmEventInputNames,
-                                                              nullptr,
-                                                              scmEIWith,
-                                                              scmEIWithIndexes,
-                                                              1,
-                                                              scmEventOutputNames,
-                                                              nullptr,
-                                                              scmEOWith,
-                                                              scmEOWithIndexes,
-                                                              2,
-                                                              scmDataInputNames,
-                                                              scmDataInputTypeIds,
-                                                              1,
-                                                              scmDataOutputNames,
-                                                              scmDataOutputTypeIds,
-                                                              0,
-                                                              nullptr,
-                                                              1,
-                                                              scmAdapterInstances};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = cSocketNames,
+      .mPlugNames = {},
+  };
+} // namespace
+
+DEFINE_FIRMWARE_FB(FORTE_eIXconfig, STRID(eIXconfig))
 
 FORTE_eIXconfig::FORTE_eIXconfig(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
-    CeConfigFB(paInstanceNameId, scmFBInterfaceSpec, paContainer),
+    CeConfigFB(paInstanceNameId, cFBInterfaceSpec, paContainer),
     var_FE(0_BOOL),
     var_RE(0_BOOL),
     var_STATUS(u""_WSTRING),

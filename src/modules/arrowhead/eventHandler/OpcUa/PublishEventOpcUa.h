@@ -21,14 +21,11 @@ class FORTE_PublishEventOpcUa : public CCompositeFB {
     DECLARE_FIRMWARE_FB(FORTE_PublishEventOpcUa)
 
   private:
-    static const TForteInt16 scmEOWithIndexes[];
-    static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_ArrowheadPublishAdp &publishEvent() {
       return (*static_cast<FORTE_ArrowheadPublishAdp *>(getAdapterUnchecked(0)));
     };
     static const int scm_npublishEventAdpNum = 0;
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const SCFB_FBInstanceData scmInternalFBs[];
 
@@ -46,7 +43,6 @@ class FORTE_PublishEventOpcUa : public CCompositeFB {
   public:
     FORTE_PublishEventOpcUa(const CStringDictionary::TStringId paInstanceNameId,
                             forte::core::CFBContainer &paContainer) :
-        CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {};
 
     ~FORTE_PublishEventOpcUa() override = default;
 };

@@ -16,35 +16,21 @@
 
 #pragma once
 
-#include "funcbloc.h"
-#include "forte_bool.h"
-#include "forte_time.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/funcbloc.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_time.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 class FORTE_FB_TP final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_FB_TP)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-    static const TEventID scmEventREQID = 0;
-    static const TDataIOID scmEIWith[];
-    static const TForteInt16 scmEIWithIndexes[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
     static const TEventID scmEventCNFID = 0;
-    static const TDataIOID scmEOWith[];
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
-
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
+    static const TEventID scmEventREQID = 0;
 
     bool edgeFlag;
     CIEC_TIME start;
@@ -56,30 +42,37 @@ class FORTE_FB_TP final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_FB_TP(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_FB_TP(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_IN;
     CIEC_TIME var_PT;
+
     CIEC_BOOL var_Q;
     CIEC_TIME var_ET;
+
     CEventConnection conn_CNF;
+
     CDataConnection *conn_IN;
     CDataConnection *conn_PT;
+
     COutDataConnection<CIEC_BOOL> conn_Q;
     COutDataConnection<CIEC_TIME> conn_ET;
+
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
-    void evt_REQ(const CIEC_BOOL &pa_IN, const CIEC_TIME &pa_PT, CIEC_BOOL &pa_Q, CIEC_TIME &pa_ET) {
-      var_IN = pa_IN;
-      var_PT = pa_PT;
-      receiveInputEvent(scmEventREQID, nullptr);
-      pa_Q = var_Q;
-      pa_ET = var_ET;
+
+    void evt_REQ(const CIEC_BOOL &paIN, const CIEC_TIME &paPT, CIEC_BOOL &paQ, CIEC_TIME &paET) {
+      var_IN = paIN;
+      var_PT = paPT;
+      executeEvent(scmEventREQID, nullptr);
+      paQ = var_Q;
+      paET = var_ET;
     }
-    void operator()(const CIEC_BOOL &pa_IN, const CIEC_TIME &pa_PT, CIEC_BOOL &pa_Q, CIEC_TIME &pa_ET) {
-      evt_REQ(pa_IN, pa_PT, pa_Q, pa_ET);
+
+    void operator()(const CIEC_BOOL &paIN, const CIEC_TIME &paPT, CIEC_BOOL &paQ, CIEC_TIME &paET) {
+      evt_REQ(paIN, paPT, paQ, paET);
     }
 };

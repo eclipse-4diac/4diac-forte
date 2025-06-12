@@ -43,8 +43,6 @@ class FORTE_EXECUTE_ACTION_SERVER : public CEventSourceFB {
     reapp_msgs::ExecuteResult m_Result;
     ExecuteGoalConstPtr m_GoalConstPtr;
 
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
     CIEC_BOOL &QI() {
       return *static_cast<CIEC_BOOL *>(getDI(0));
     };
@@ -69,8 +67,6 @@ class FORTE_EXECUTE_ACTION_SERVER : public CEventSourceFB {
       return *static_cast<CIEC_STRING *>(getDI(5));
     };
 
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     CIEC_BOOL &QO() {
       return *static_cast<CIEC_BOOL *>(getDO(0));
     };
@@ -97,19 +93,10 @@ class FORTE_EXECUTE_ACTION_SERVER : public CEventSourceFB {
 
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventRSPID = 1;
-    static const TForteInt16 scmEIWithIndexes[];
-    static const TDataIOID scmEIWith[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventINDID = 1;
-    static const TForteInt16 scmEOWithIndexes[];
-    static const TDataIOID scmEOWith[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -118,7 +105,6 @@ class FORTE_EXECUTE_ACTION_SERVER : public CEventSourceFB {
   public:
     FORTE_EXECUTE_ACTION_SERVER(const CStringDictionary::TStringId paInstanceNameId,
                                 forte::core::CFBContainer &paContainer) :
-        CEventSourceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
         m_nh(0),
         m_RosNamespace(""),
         m_RosMsgName(""),

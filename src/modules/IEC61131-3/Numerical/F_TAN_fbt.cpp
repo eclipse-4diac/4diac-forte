@@ -26,47 +26,35 @@ USE_STRING_ID(REQ);
 
 DEFINE_FIRMWARE_FB(FORTE_F_TAN, STRID(F_TAN))
 
-const CStringDictionary::TStringId FORTE_F_TAN::scmDataInputNames[] = {STRID(IN)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN)};
+  
+  
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_F_TAN::scmDataInputTypeIds[] = {STRID(ANY_REAL)};
-
-const CStringDictionary::TStringId FORTE_F_TAN::scmDataOutputNames[] = {STRID(OUT)};
-
-const CStringDictionary::TStringId FORTE_F_TAN::scmDataOutputTypeIds[] = {STRID(ANY_REAL)};
-
-const TDataIOID FORTE_F_TAN::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_TAN::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_TAN::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_F_TAN::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_F_TAN::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_TAN::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_TAN::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_F_TAN::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_F_TAN::scmFBInterfaceSpec = {1,
-                                                          scmEventInputNames,
-                                                          scmEventInputTypeIds,
-                                                          scmEIWith,
-                                                          scmEIWithIndexes,
-                                                          1,
-                                                          scmEventOutputNames,
-                                                          scmEventOutputTypeIds,
-                                                          scmEOWith,
-                                                          scmEOWithIndexes,
-                                                          1,
-                                                          scmDataInputNames,
-                                                          scmDataInputTypeIds,
-                                                          1,
-                                                          scmDataOutputNames,
-                                                          scmDataOutputTypeIds,
-                                                          0,
-                                                          nullptr,
-                                                          0,
-                                                          nullptr};
 
 FORTE_F_TAN::FORTE_F_TAN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_REAL_VARIANT()),
     var_OUT(CIEC_ANY_REAL_VARIANT()),
     conn_CNF(*this, 0),
@@ -96,7 +84,7 @@ void FORTE_F_TAN::readInputData(TEventID paEIID) {
 void FORTE_F_TAN::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
       break;
     }
     default: break;

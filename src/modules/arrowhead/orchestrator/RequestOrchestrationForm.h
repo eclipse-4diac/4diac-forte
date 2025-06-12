@@ -25,8 +25,6 @@ class FORTE_RequestOrchestrationForm : public CCompositeFB {
     DECLARE_FIRMWARE_FB(FORTE_RequestOrchestrationForm)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
     CIEC_ServiceRequestForm &serviceRequestForm() {
       return *static_cast<CIEC_ServiceRequestForm *>(getDI(0));
     };
@@ -35,8 +33,6 @@ class FORTE_RequestOrchestrationForm : public CCompositeFB {
       return *static_cast<CIEC_WSTRING *>(getDI(1));
     };
 
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     CIEC_OrchestrationForm *orchestrationResponse() {
       return (CIEC_OrchestrationForm *) (*static_cast<CIEC_ARRAY<> *>(
           getDO(0)))[0]; // the first element marks the start of the array
@@ -47,24 +43,14 @@ class FORTE_RequestOrchestrationForm : public CCompositeFB {
     };
 
     static const TEventID scmEventrequestOrchestatorID = 0;
-    static const TForteInt16 scmEIWithIndexes[];
-    static const TDataIOID scmEIWith[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventresponseReceivedID = 0;
-    static const TForteInt16 scmEOWithIndexes[];
-    static const TDataIOID scmEOWith[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    static const SAdapterInstanceDef scmAdapterInstances[];
 
     FORTE_OrchestratorRequestAdp &requestOrchestration() {
       return (*static_cast<FORTE_OrchestratorRequestAdp *>(getAdapterUnchecked(0)));
     };
     static const int scm_nrequestOrchestrationAdpNum = 0;
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     static const SCFB_FBConnectionData scmEventConnections[];
 
@@ -74,7 +60,6 @@ class FORTE_RequestOrchestrationForm : public CCompositeFB {
   public:
     FORTE_RequestOrchestrationForm(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
-        CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData) {};
 
     ~FORTE_RequestOrchestrationForm() override = default;
 };

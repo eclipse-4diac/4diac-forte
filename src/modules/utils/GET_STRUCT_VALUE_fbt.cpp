@@ -30,48 +30,36 @@ USE_STRING_ID(STRING);
 
 DEFINE_FIRMWARE_FB(FORTE_GET_STRUCT_VALUE, STRID(GET_STRUCT_VALUE))
 
-const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scmDataInputNames[] = {STRID(in_struct), STRID(member)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(in_struct), STRID(member)};
+  
+  
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(output)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scmDataInputTypeIds[] = {STRID(ANY), STRID(STRING)};
-
-const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scmDataOutputNames[] = {STRID(QO), STRID(output)};
-
-const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(ANY)};
-
-const TDataIOID FORTE_GET_STRUCT_VALUE::scmEIWith[] = {1, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_GET_STRUCT_VALUE::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_GET_STRUCT_VALUE::scmEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_GET_STRUCT_VALUE::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_GET_STRUCT_VALUE::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_GET_STRUCT_VALUE::scmFBInterfaceSpec = {1,
-                                                                     scmEventInputNames,
-                                                                     scmEventInputTypeIds,
-                                                                     scmEIWith,
-                                                                     scmEIWithIndexes,
-                                                                     1,
-                                                                     scmEventOutputNames,
-                                                                     scmEventOutputTypeIds,
-                                                                     scmEOWith,
-                                                                     scmEOWithIndexes,
-                                                                     2,
-                                                                     scmDataInputNames,
-                                                                     scmDataInputTypeIds,
-                                                                     2,
-                                                                     scmDataOutputNames,
-                                                                     scmDataOutputTypeIds,
-                                                                     0,
-                                                                     nullptr,
-                                                                     0,
-                                                                     nullptr};
 
 FORTE_GET_STRUCT_VALUE::FORTE_GET_STRUCT_VALUE(const CStringDictionary::TStringId paInstanceNameId,
                                                forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_in_struct(CIEC_ANY_VARIANT()),
     var_member("s"_STRING),
     var_QO(false_BOOL),
@@ -138,8 +126,8 @@ void FORTE_GET_STRUCT_VALUE::readInputData(TEventID paEIID) {
 void FORTE_GET_STRUCT_VALUE::writeOutputData(TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_output, conn_output);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_output, conn_output);
       break;
     }
     default: break;

@@ -33,27 +33,27 @@ USE_STRING_ID(TIME_OF_DAY);
 
 DEFINE_FIRMWARE_FB(FORTE_F_DT_TO_TOD, STRID(F_DT_TO_TOD))
 
-const CStringDictionary::TStringId FORTE_F_DT_TO_TOD::scmDataInputNames[] = {STRID(IN)};
-const CStringDictionary::TStringId FORTE_F_DT_TO_TOD::scmDataInputTypeIds[] = {STRID(DATE_AND_TIME)};
-const CStringDictionary::TStringId FORTE_F_DT_TO_TOD::scmDataOutputNames[] = {STRID(OUT)};
-const CStringDictionary::TStringId FORTE_F_DT_TO_TOD::scmDataOutputTypeIds[] = {STRID(TIME_OF_DAY)};
-const TDataIOID FORTE_F_DT_TO_TOD::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_DT_TO_TOD::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_DT_TO_TOD::scmEventInputNames[] = {STRID(REQ)};
-const TDataIOID FORTE_F_DT_TO_TOD::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_DT_TO_TOD::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_DT_TO_TOD::scmEventOutputNames[] = {STRID(CNF)};
-const SFBInterfaceSpec FORTE_F_DT_TO_TOD::scmFBInterfaceSpec = {
-  1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
-FORTE_F_DT_TO_TOD::FORTE_F_DT_TO_TOD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
+FORTE_F_DT_TO_TOD::FORTE_F_DT_TO_TOD(const CStringDictionary::TStringId paInstanceNameId,
+                                     forte::core::CFBContainer &paContainer) :
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(0_DATE_AND_TIME),
     var_OUT(0_TIME_OF_DAY),
     conn_CNF(*this, 0),
@@ -67,12 +67,9 @@ void FORTE_F_DT_TO_TOD::setInitialValues() {
 }
 
 void FORTE_F_DT_TO_TOD::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventREQID:
-      enterStateREQ(paECET);
-      break;
-    default:
-      break;
+  switch (paEIID) {
+    case scmEventREQID: enterStateREQ(paECET); break;
+    default: break;
   }
 }
 
@@ -82,57 +79,55 @@ void FORTE_F_DT_TO_TOD::enterStateREQ(CEventChainExecutionThread *const paECET) 
 }
 
 void FORTE_F_DT_TO_TOD::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_F_DT_TO_TOD::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_F_DT_TO_TOD::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_F_DT_TO_TOD::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_F_DT_TO_TOD::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_F_DT_TO_TOD::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_F_DT_TO_TOD::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -144,6 +139,6 @@ CIEC_ANY *FORTE_F_DT_TO_TOD::getVarInternal(size_t) {
 
 void FORTE_F_DT_TO_TOD::alg_REQ(void) {
 
-  #line 2 "F_DT_TO_TOD.fbt"
+#line 2 "F_DT_TO_TOD.fbt"
   var_OUT = func_DT_TO_TOD(var_IN);
 }

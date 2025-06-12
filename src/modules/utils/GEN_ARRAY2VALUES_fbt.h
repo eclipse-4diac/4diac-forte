@@ -44,17 +44,11 @@ class GEN_ARRAY2VALUES final : public CGenFunctionBlock<CFunctionBlock> {
     CDataConnection **getDIConUnchecked(const TPortId paIndex) override;
 
   private:
-    std::unique_ptr<CStringDictionary::TStringId[]> mDataOutputNames;
-
-    static const CStringDictionary::TStringId scmDataInputNames[];
+    std::vector<CStringDictionary::TStringId> mDataOutputNames;
 
     static const TEventID scmEventREQID = 0;
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventCNFID = 0;
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     // self-defined members
 

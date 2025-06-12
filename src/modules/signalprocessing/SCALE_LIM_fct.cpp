@@ -42,46 +42,31 @@ USE_STRING_ID(signalprocessing__SCALE_LIM);
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE_LIM, STRID(signalprocessing__SCALE_LIM))
 
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmDataInputNames[] = {
-    STRID(IN),      STRID(MAX_IN),  STRID(MIN_IN),      STRID(MAX_IN_LIM), STRID(MIN_IN_LIM),
-    STRID(MAX_OUT), STRID(MIN_OUT), STRID(MAX_OUT_FIX), STRID(MIN_OUT_FIX)};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmDataInputTypeIds[] = {
-    STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL),
-    STRID(REAL), STRID(REAL), STRID(REAL), STRID(REAL)};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmDataOutputNames[] = {STRID()};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmDataOutputTypeIds[] = {STRID(REAL)};
-const TDataIOID FORTE_signalprocessing__SCALE_LIM::scmEIWith[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, scmWithListDelimiter};
-const TForteInt16 FORTE_signalprocessing__SCALE_LIM::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmEventInputTypeIds[] = {STRID(Event)};
-const TDataIOID FORTE_signalprocessing__SCALE_LIM::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_signalprocessing__SCALE_LIM::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_signalprocessing__SCALE_LIM::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_signalprocessing__SCALE_LIM::scmFBInterfaceSpec = {1,
-                                                                                scmEventInputNames,
-                                                                                scmEventInputTypeIds,
-                                                                                scmEIWith,
-                                                                                scmEIWithIndexes,
-                                                                                1,
-                                                                                scmEventOutputNames,
-                                                                                scmEventOutputTypeIds,
-                                                                                scmEOWith,
-                                                                                scmEOWithIndexes,
-                                                                                9,
-                                                                                scmDataInputNames,
-                                                                                scmDataInputTypeIds,
-                                                                                1,
-                                                                                scmDataOutputNames,
-                                                                                scmDataOutputTypeIds,
-                                                                                0,
-                                                                                nullptr,
-                                                                                0,
-                                                                                nullptr};
+namespace {
+  const auto cDataInputNames =
+      std::array{STRID(IN),      STRID(MAX_IN),  STRID(MIN_IN),      STRID(MAX_IN_LIM), STRID(MIN_IN_LIM),
+                 STRID(MAX_OUT), STRID(MIN_OUT), STRID(MAX_OUT_FIX), STRID(MIN_OUT_FIX)};
+  const auto cDataOutputNames = std::array{STRID()};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_signalprocessing__SCALE_LIM::FORTE_signalprocessing__SCALE_LIM(
     const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_MAX_IN(nullptr),
@@ -129,7 +114,7 @@ void FORTE_signalprocessing__SCALE_LIM::readInputData(const TEventID paEIID) {
 void FORTE_signalprocessing__SCALE_LIM::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_, conn_);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
       break;
     }
     default: break;

@@ -27,47 +27,31 @@ USE_STRING_ID(QO);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 
-
 DEFINE_FIRMWARE_FB(FORTE_POWERLINK_MN, STRID(POWERLINK_MN))
 
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataInputNames[] = {STRID(QI), STRID(CDC_CFG), STRID(APP_CFG),
-                                                                              STRID(DEV_NAME)};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING),
-                                                                                STRID(STRING), STRID(STRING)};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING)};
-const TDataIOID FORTE_POWERLINK_MN::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
-const TForteInt16 FORTE_POWERLINK_MN::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventInputNames[] = {STRID(INIT)};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventInputTypeIds[] = {STRID(EInit)};
-const TDataIOID FORTE_POWERLINK_MN::scmEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_POWERLINK_MN::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventOutputNames[] = {STRID(INITO)};
-const CStringDictionary::TStringId FORTE_POWERLINK_MN::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_POWERLINK_MN::scmFBInterfaceSpec = {1,
-                                                                 scmEventInputNames,
-                                                                 scmEventInputTypeIds,
-                                                                 scmEIWith,
-                                                                 scmEIWithIndexes,
-                                                                 1,
-                                                                 scmEventOutputNames,
-                                                                 scmEventOutputTypeIds,
-                                                                 scmEOWith,
-                                                                 scmEOWithIndexes,
-                                                                 4,
-                                                                 scmDataInputNames,
-                                                                 scmDataInputTypeIds,
-                                                                 2,
-                                                                 scmDataOutputNames,
-                                                                 scmDataOutputTypeIds,
-                                                                 0,
-                                                                 nullptr,
-                                                                 0,
-                                                                 nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(QI), STRID(CDC_CFG), STRID(APP_CFG), STRID(DEV_NAME)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  const auto cEventInputNames = std::array{STRID(INIT)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit)};
+  const auto cEventOutputNames = std::array{STRID(INITO)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_POWERLINK_MN::FORTE_POWERLINK_MN(const CStringDictionary::TStringId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_QI(nullptr),
     conn_CDC_CFG(nullptr),
@@ -118,8 +102,8 @@ void FORTE_POWERLINK_MN::readInputData(const TEventID paEIID) {
 void FORTE_POWERLINK_MN::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

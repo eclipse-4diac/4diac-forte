@@ -12,43 +12,32 @@
  *******************************************************************************/
 
 #include "STEST_END_fbt.h"
+#include "device.h"
 
 USE_STRING_ID(Event);
 USE_STRING_ID(REQ);
 USE_STRING_ID(STEST_END);
 
-#include "../../stdfblib/ita/RMT_DEV.h"
-#include "forte_thread.h"
-
 DEFINE_FIRMWARE_FB(FORTE_STEST_END, STRID(STEST_END))
 
-const TForteInt16 FORTE_STEST_END::scmEIWithIndexes[] = {-1};
-const CStringDictionary::TStringId FORTE_STEST_END::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_STEST_END::scmEventInputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_STEST_END::scmFBInterfaceSpec = {1,
-                                                              scmEventInputNames,
-                                                              scmEventInputTypeIds,
-                                                              nullptr,
-                                                              scmEIWithIndexes,
-                                                              0,
-                                                              nullptr,
-                                                              nullptr,
-                                                              nullptr,
-                                                              nullptr,
-                                                              0,
-                                                              nullptr,
-                                                              nullptr,
-                                                              0,
-                                                              nullptr,
-                                                              nullptr,
-                                                              0,
-                                                              nullptr,
-                                                              0,
-                                                              nullptr};
+namespace {
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = {},
+      .mEOTypeNames = {},
+      .mDINames = {},
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_STEST_END::FORTE_STEST_END(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId) {};
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId) {};
 
 void FORTE_STEST_END::executeEvent(TEventID paEIID, CEventChainExecutionThread *const) {
   if (scmEventREQID == paEIID) {

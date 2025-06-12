@@ -18,12 +18,22 @@
 #include "deviceFactory.h"
 #include "devlog.h"
 
-const SFBInterfaceSpec MultiDevice::scmFBInterfaceSpec = {0,       nullptr, nullptr, nullptr, nullptr, 0,       nullptr,
-                                                          nullptr, nullptr, nullptr, 0,       nullptr, nullptr, 0,
-                                                          nullptr, nullptr, 0,       nullptr, 0,       nullptr};
+namespace {
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = {},
+      .mEITypeNames = {},
+      .mEONames = {},
+      .mEOTypeNames = {},
+      .mDINames = {},
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
 MultiDevice::MultiDevice(const std::string &paMGRID) :
-    CDevice(scmFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
+    CDevice(cFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
     mMGRID(paMGRID) {
 
   // avoid creating another MultiDevice in case it was set to it in cmake

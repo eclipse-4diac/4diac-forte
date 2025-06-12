@@ -43,42 +43,30 @@ USE_STRING_ID(VAL);
 
 DEFINE_FIRMWARE_FB(FORTE_FB_RANDOM, STRID(FB_RANDOM))
 
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataInputNames[] = {STRID(SEED)};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataInputTypeIds[] = {STRID(UINT)};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataOutputNames[] = {STRID(VAL)};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmDataOutputTypeIds[] = {STRID(REAL)};
-const TDataIOID FORTE_FB_RANDOM::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FB_RANDOM::scmEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-const TDataIOID FORTE_FB_RANDOM::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FB_RANDOM::scmEOWithIndexes[] = {-1, 0};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
-const CStringDictionary::TStringId FORTE_FB_RANDOM::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
-const SFBInterfaceSpec FORTE_FB_RANDOM::scmFBInterfaceSpec = {2,
-                                                              scmEventInputNames,
-                                                              scmEventInputTypeIds,
-                                                              scmEIWith,
-                                                              scmEIWithIndexes,
-                                                              2,
-                                                              scmEventOutputNames,
-                                                              scmEventOutputTypeIds,
-                                                              scmEOWith,
-                                                              scmEOWithIndexes,
-                                                              1,
-                                                              scmDataInputNames,
-                                                              scmDataInputTypeIds,
-                                                              1,
-                                                              scmDataOutputNames,
-                                                              scmDataOutputTypeIds,
-                                                              0,
-                                                              nullptr,
-                                                              0,
-                                                              nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(SEED)};
+  const auto cDataOutputNames = std::array{STRID(VAL)};
+  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
+
 
 FORTE_FB_RANDOM::FORTE_FB_RANDOM(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
     var_SEED(0_UINT),
     var_VAL(0_REAL),
     conn_INITO(*this, 0),
@@ -156,7 +144,7 @@ void FORTE_FB_RANDOM::readInputData(const TEventID paEIID) {
 void FORTE_FB_RANDOM::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_VAL, conn_VAL);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_VAL, conn_VAL);
       break;
     }
     default: break;

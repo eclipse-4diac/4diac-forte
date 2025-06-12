@@ -34,55 +34,45 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToEventFilter, STRID(FieldsToEventFilter))
 
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmDataInputNames[] = {
-    STRID(eventType), STRID(consumer),       STRID(sources),   STRID(startDate),
-    STRID(endDate),   STRID(filterMetadata), STRID(notifyUri), STRID(matchMetadata)};
+namespace {
+  const auto cDataInputNames = std::array{
+      STRID(eventType), STRID(consumer),       STRID(sources),   STRID(startDate),
+      STRID(endDate),   STRID(filterMetadata), STRID(notifyUri), STRID(matchMetadata)};
+  
+                                                                                         STRID(ArrowheadSystem),
+                                                                                         STRID(ARRAY),
+                                                                                         10,
+                                                                                         STRID(ArrowheadSystem),
+                                                                                         STRID(DATE_AND_TIME),
+                                                                                         STRID(DATE_AND_TIME),
+                                                                                         STRID(ARRAY),
+                                                                                         10,
+                                                                                         STRID(WSTRING),
+                                                                                         STRID(WSTRING),
+                                                                                         STRID(BOOL)};
+  
+  const auto cDataOutputNames = std::array{STRID(eventFilter)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmDataInputTypeIds[] = {STRID(WSTRING),
-                                                                                       STRID(ArrowheadSystem),
-                                                                                       STRID(ARRAY),
-                                                                                       10,
-                                                                                       STRID(ArrowheadSystem),
-                                                                                       STRID(DATE_AND_TIME),
-                                                                                       STRID(DATE_AND_TIME),
-                                                                                       STRID(ARRAY),
-                                                                                       10,
-                                                                                       STRID(WSTRING),
-                                                                                       STRID(WSTRING),
-                                                                                       STRID(BOOL)};
-
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmDataOutputNames[] = {STRID(eventFilter)};
-
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmDataOutputTypeIds[] = {STRID(EventFilter)};
-
-const TForteInt16 FORTE_FieldsToEventFilter::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToEventFilter::scmEIWith[] = {0, 1, 3, 6, 2, 4, 5, 7, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_FieldsToEventFilter::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FieldsToEventFilter::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_FieldsToEventFilter::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_FieldsToEventFilter::scmFBInterfaceSpec = {1,
-                                                                        scmEventInputNames,
-                                                                        scmEventInputTypeIds,
-                                                                        scmEIWith,
-                                                                        scmEIWithIndexes,
-                                                                        1,
-                                                                        scmEventOutputNames,
-                                                                        scmEventOutputTypeIds,
-                                                                        scmEOWith,
-                                                                        scmEOWithIndexes,
-                                                                        8,
-                                                                        scmDataInputNames,
-                                                                        scmDataInputTypeIds,
-                                                                        1,
-                                                                        scmDataOutputNames,
-                                                                        scmDataOutputTypeIds,
-                                                                        0,
-                                                                        0};
 
 void FORTE_FieldsToEventFilter::alg_REQ() {
   CIEC_INT i;

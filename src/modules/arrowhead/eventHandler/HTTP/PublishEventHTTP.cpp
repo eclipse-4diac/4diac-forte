@@ -49,12 +49,21 @@ USE_STRING_ID(SD_1);
 
 DEFINE_FIRMWARE_FB(FORTE_PublishEventHTTP, STRID(PublishEventHTTP))
 
-const TForteInt16 FORTE_PublishEventHTTP::scmEOWithIndexes[] = {-1};
-const SAdapterInstanceDef FORTE_PublishEventHTTP::scmAdapterInstances[] = {
-    {STRID(ArrowheadPublishAdp), STRID(publishEvent), false}};
+namespace {
+  const auto cSocketNameIds = std::array{STRID(publishEvent)};
 
-const SFBInterfaceSpec FORTE_PublishEventHTTP::scmFBInterfaceSpec = {
-    0, 0, nullptr, 0, 0, 0, 0, nullptr, 0, 0, 0, 0, 0, 0, 0, 0, 1, scmAdapterInstances};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = {},
+      .mEITypeNames = {},
+      .mEONames = {},
+      .mEOTypeNames = {},
+      .mDINames = {},
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = cSocketNameIds,
+      .mPlugNames = {},
+  };
+} // namespace
 
 const SCFB_FBInstanceData FORTE_PublishEventHTTP::scmInternalFBs[] = {
     {STRID(ANYToJSON), STRID(ANYToJSON)},

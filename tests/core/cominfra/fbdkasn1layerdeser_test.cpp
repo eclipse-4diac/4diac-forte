@@ -83,26 +83,29 @@ USE_STRING_ID(WSTRING);
 
 using namespace std::string_literals;
 
+namespace {
+  static const auto scmInputTypes = std::array{STRID(BOOL), STRID(BOOL)};
+}
+
 class CDeserTestMockCommFB : public forte::com_infra::CCommFB {
 
   public:
     CDeserTestMockCommFB(TForteUInt8 paNumRD, const CStringDictionary::TStringId *const paDODataTypeNames) :
-        forte::com_infra::CCommFB(CStringDictionary::scmInvalidStringId, mResource, forte::com_infra::e_Publisher) {
+        forte::com_infra::CCommFB(CStringDictionary::scmInvalidStringId, mResource, forte::com_infra::e_Publisher),
+        mDODataTypeNames(paDODataTypeNames) {
+
+      mDoTypes.reserve(2 + paNumRD);
+      mDoTypes.push_back(scmInputTypes[0]);
+      mDoTypes.push_back(scmInputTypes[1]);
+      for (size_t i = 0; i < paNumRD; i++) {
+        mDoTypes.emplace_back(paDODataTypeNames[i]);
+      }
 
       SFBInterfaceSpec &mockFBInterface(getGenInterfaceSpec());
-      mockFBInterface.mEINames = nullptr;
-      mockFBInterface.mEIWith = nullptr;
-      mockFBInterface.mEIWithIndexes = nullptr;
-      mockFBInterface.mNumEOs = 0;
-      mockFBInterface.mEONames = nullptr;
-      mockFBInterface.mEOWith = nullptr;
-      mockFBInterface.mEOWithIndexes = nullptr;
-      mockFBInterface.mNumDIs = 2;
-      mockFBInterface.mDINames = nullptr;
-      mockFBInterface.mDIDataTypeNames = scmInputTypes;
-      mockFBInterface.mNumDOs = paNumRD + 2U;
-      mockFBInterface.mDONames = nullptr;
-      mockFBInterface.mDODataTypeNames = paDODataTypeNames;
+      mockFBInterface.mEINames = {};
+      mockFBInterface.mEONames = {};
+      mockFBInterface.mDINames = scmInputTypes;
+      mockFBInterface.mDONames = mDoTypes;
 
       setupFBInterface();
     }
@@ -111,8 +114,8 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB {
 
   protected:
     void createGenOutputData() override {
-      size_t numGenDOs = getFBInterfaceSpec().mNumDOs - 2;
-      const CStringDictionary::TStringId *datarTypeIds = getFBInterfaceSpec().mDODataTypeNames + 2;
+      size_t numGenDOs = getFBInterfaceSpec().getNumDOs() - 2;
+      const CStringDictionary::TStringId *datarTypeIds = mDODataTypeNames + 2;
       TForteByte *varsData = nullptr;
       mGenDOs = std::make_unique<CIEC_ANY *[]>(numGenDOs);
       for (size_t i = 0; i < numGenDOs; ++i) {
@@ -125,11 +128,11 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB {
     }
 
   private:
-    static const CStringDictionary::TStringId scmInputTypes[];
+    const CStringDictionary::TStringId *mDODataTypeNames;
+    std::vector<CStringDictionary::TStringId> mDoTypes;
     static EMB_RES mResource;
 };
 
-const CStringDictionary::TStringId CDeserTestMockCommFB::scmInputTypes[] = {STRID(BOOL), STRID(BOOL)};
 EMB_RES CDeserTestMockCommFB::mResource(CStringDictionary::scmInvalidStringId, mResource);
 
 BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)

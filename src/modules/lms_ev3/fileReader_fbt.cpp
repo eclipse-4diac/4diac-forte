@@ -34,42 +34,32 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(fileReader, STRID(fileReader))
 
-const CStringDictionary::TStringId fileReader::scmDataInputNames[] = {STRID(QI), STRID(FILE_NAME)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(QI), STRID(FILE_NAME)};
+  
+  
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS), STRID(S1)};
+  
+  
+  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId fileReader::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING)};
-
-const CStringDictionary::TStringId fileReader::scmDataOutputNames[] = {STRID(QO), STRID(STATUS), STRID(S1)};
-
-const CStringDictionary::TStringId fileReader::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING), STRID(STRING)};
-
-const TForteInt16 fileReader::scmEIWithIndexes[] = {0, 3};
-const TDataIOID fileReader::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, scmWithListDelimiter};
-const CStringDictionary::TStringId fileReader::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
-const CStringDictionary::TStringId fileReader::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-
-const TDataIOID fileReader::scmEOWith[] = {0, 1, 2, scmWithListDelimiter, 0, 1, 2, scmWithListDelimiter};
-const TForteInt16 fileReader::scmEOWithIndexes[] = {0, 4, -1};
-const CStringDictionary::TStringId fileReader::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
-const CStringDictionary::TStringId fileReader::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-
-const SFBInterfaceSpec fileReader::scmFBInterfaceSpec = {2,
-                                                         scmEventInputNames,
-                                                         scmEventInputTypeIds,
-                                                         scmEIWith,
-                                                         scmEIWithIndexes,
-                                                         2,
-                                                         scmEventOutputNames,
-                                                         scmEventOutputTypeIds,
-                                                         scmEOWith,
-                                                         scmEOWithIndexes,
-                                                         2,
-                                                         scmDataInputNames,
-                                                         scmDataInputTypeIds,
-                                                         3,
-                                                         scmDataOutputNames,
-                                                         scmDataOutputTypeIds,
-                                                         0,
-                                                         0};
 
 const char *const fileReader::scmOK = "OK";
 const char *const fileReader::scmNotInitialised = "Not initialized";
@@ -100,7 +90,7 @@ void fileReader::executeEvent(TEventID paEIID,
 }
 
 fileReader::fileReader(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId) {
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId) {
   mFile.rdbuf()->pubsetbuf(nullptr, 0); // disable buffer to avoid latency
 }
 

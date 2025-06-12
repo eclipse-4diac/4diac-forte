@@ -25,22 +25,15 @@ namespace forte::core::io {
   template<class T>
   class CeInputFB : public CInputFB<T> {
     private:
-      static const SAdapterInstanceDef scmAdapterInstances[];
-
       using CInputFB<T>::scmEventInputNames;
       using CInputFB<T>::scmEventInputTypeIds;
-      using CInputFB<T>::scmEIWith;
-      using CInputFB<T>::scmEIWithIndexes;
 
       using CInputFB<T>::scmEventOutputNames;
       using CInputFB<T>::scmEventOutputTypeIds;
-      using CInputFB<T>::scmEOWith;
-      using CInputFB<T>::scmEOWithIndexes;
 
       using CInputFB<T>::scmDataInputNames;
-      using CInputFB<T>::scmDataInputTypeIds;
       using CInputFB<T>::scmDataOutputNames;
-      using CInputFB<T>::scmDataOutputTypeIds;
+      static const std::array<const CStringDictionary::TStringId, 1> scmPlugs;
 
     protected:
       using CInputFB<T>::var_IN;
@@ -114,27 +107,18 @@ namespace forte::core::io {
   };
 
   template<class T>
-  const SAdapterInstanceDef CeInputFB<T>::scmAdapterInstances[] = {{STRID(eGenAdapter), STRID(eCONF), true}};
+  const std::array<const CStringDictionary::TStringId, 1> CeInputFB<T>::scmPlugs = {STRID(eCONF)};
 
   template<class T>
-  const SFBInterfaceSpec CeInputFB<T>::scmFBInterfaceSpec = {2,
-                                                             scmEventInputNames,
-                                                             scmEventInputTypeIds,
-                                                             scmEIWith,
-                                                             scmEIWithIndexes,
-                                                             3,
-                                                             scmEventOutputNames,
-                                                             scmEventOutputTypeIds,
-                                                             scmEOWith,
-                                                             scmEOWithIndexes,
-                                                             2,
-                                                             scmDataInputNames,
-                                                             scmDataInputTypeIds,
-                                                             3,
-                                                             scmDataOutputNames,
-                                                             scmDataOutputTypeIds,
-                                                             0,
-                                                             nullptr,
-                                                             1,
-                                                             scmAdapterInstances};
+  const SFBInterfaceSpec CeInputFB<T>::scmFBInterfaceSpec = {
+      .mEINames = scmEventInputNames,
+      .mEITypeNames = scmEventInputTypeIds,
+      .mEONames = scmEventOutputNames,
+      .mEOTypeNames = scmEventOutputTypeIds,
+      .mDINames = scmDataInputNames,
+      .mDONames = scmDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = scmPlugs,
+  };
 } // namespace forte::core::io

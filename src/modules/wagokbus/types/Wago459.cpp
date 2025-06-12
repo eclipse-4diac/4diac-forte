@@ -30,54 +30,33 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_Wago459, STRID(Wago459))
 
-const CStringDictionary::TStringId FORTE_Wago459::scmDataInputNames[] = {
-    STRID(QI), STRID(AnalogInput_1), STRID(AnalogInput_2), STRID(AnalogInput_3), STRID(AnalogInput_4)};
-const CStringDictionary::TStringId FORTE_Wago459::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING), STRID(STRING),
-                                                                           STRID(STRING), STRID(STRING)};
-const CStringDictionary::TStringId FORTE_Wago459::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
-const CStringDictionary::TStringId FORTE_Wago459::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
-const TDataIOID FORTE_Wago459::scmEIWith[] = {1, 2, 3, 4, 0, scmWithListDelimiter};
-const TForteInt16 FORTE_Wago459::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_Wago459::scmEventInputNames[] = {STRID(MAP)};
-const CStringDictionary::TStringId FORTE_Wago459::scmEventInputTypeIds[] = {STRID(Event)};
-const TDataIOID FORTE_Wago459::scmEOWith[] = {0, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_Wago459::scmEOWithIndexes[] = {0, 2};
-const CStringDictionary::TStringId FORTE_Wago459::scmEventOutputNames[] = {STRID(MAPO), STRID(IND)};
-const CStringDictionary::TStringId FORTE_Wago459::scmEventOutputTypeIds[] = {STRID(Event), STRID(Event)};
-const SAdapterInstanceDef FORTE_Wago459::scmAdapterInstances[] = {{STRID(WagoBusAdapter), STRID(BusAdapterOut), true},
-                                                                  {STRID(WagoBusAdapter), STRID(BusAdapterIn), false}};
-
 namespace {
+  const auto cDataInputNames =
+      std::array{STRID(QI), STRID(AnalogInput_1), STRID(AnalogInput_2), STRID(AnalogInput_3), STRID(AnalogInput_4)};
+  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
+  const auto cEventInputNames = std::array{STRID(MAP)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(MAPO), STRID(IND)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
   const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
   const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
-} // namespace
 
-const SFBInterfaceSpec FORTE_Wago459::scmFBInterfaceSpec = {1,
-                                                            scmEventInputNames,
-                                                            scmEventInputTypeIds,
-                                                            scmEIWith,
-                                                            scmEIWithIndexes,
-                                                            2,
-                                                            scmEventOutputNames,
-                                                            scmEventOutputTypeIds,
-                                                            scmEOWith,
-                                                            scmEOWithIndexes,
-                                                            5,
-                                                            scmDataInputNames,
-                                                            scmDataInputTypeIds,
-                                                            2,
-                                                            scmDataOutputNames,
-                                                            scmDataOutputTypeIds,
-                                                            0,
-                                                            nullptr,
-                                                            2,
-                                                            scmAdapterInstances,
-                                                            cSocketNameIds,
-                                                            cPlugNameIds};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = cSocketNameIds,
+      .mPlugNames = cPlugNameIds,
+  };
+} // namespace
 
 FORTE_Wago459::FORTE_Wago459(const CStringDictionary::TStringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
-    WagoSlaveBase(459, paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    WagoSlaveBase(459, paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_AnalogInput_1(""_STRING),
     var_AnalogInput_2(""_STRING),
@@ -122,12 +101,12 @@ void FORTE_Wago459::readInputData(const TEventID paEIID) {
 void FORTE_Wago459::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventMAPOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
       break;
     }
     case scmEventINDID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_QO, conn_QO);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_STATUS, conn_STATUS);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
       break;
     }
     default: break;

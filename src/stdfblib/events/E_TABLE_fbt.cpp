@@ -42,42 +42,27 @@ USE_STRING_ID(UINT);
 
 DEFINE_FIRMWARE_FB(FORTE_E_TABLE, STRID(E_TABLE))
 
-const CStringDictionary::TStringId FORTE_E_TABLE::scmDataInputNames[] = {STRID(DT), STRID(N)};
-const CStringDictionary::TStringId FORTE_E_TABLE::scmDataInputTypeIds[] = {
-    STRID(ARRAY), static_cast<CStringDictionary::TStringId>(0), static_cast<CStringDictionary::TStringId>(3),
-    STRID(TIME), STRID(UINT)};
-const CStringDictionary::TStringId FORTE_E_TABLE::scmDataOutputNames[] = {STRID(CV)};
-const CStringDictionary::TStringId FORTE_E_TABLE::scmDataOutputTypeIds[] = {STRID(UINT)};
-const TDataIOID FORTE_E_TABLE::scmEIWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_E_TABLE::scmEIWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_E_TABLE::scmEventInputNames[] = {STRID(START), STRID(STOP)};
-const TDataIOID FORTE_E_TABLE::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_E_TABLE::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_E_TABLE::scmEventOutputNames[] = {STRID(EO)};
-const SFBInterfaceSpec FORTE_E_TABLE::scmFBInterfaceSpec = {2,
-                                                            scmEventInputNames,
-                                                            nullptr,
-                                                            scmEIWith,
-                                                            scmEIWithIndexes,
-                                                            1,
-                                                            scmEventOutputNames,
-                                                            nullptr,
-                                                            scmEOWith,
-                                                            scmEOWithIndexes,
-                                                            2,
-                                                            scmDataInputNames,
-                                                            scmDataInputTypeIds,
-                                                            1,
-                                                            scmDataOutputNames,
-                                                            scmDataOutputTypeIds,
-                                                            0,
-                                                            nullptr,
-                                                            0,
-                                                            nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(DT), STRID(N)};
+  const auto cDataOutputNames = std::array{STRID(CV)};
+  const auto cEventInputNames = std::array{STRID(START), STRID(STOP)};
+  const auto cEventOutputNames = std::array{STRID(EO)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_E_TABLE::FORTE_E_TABLE(const CStringDictionary::TStringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, scmFBNData),
     fb_E_TABLE_CTRL(STRID(E_TABLE_CTRL), *this),
     fb_E_DELAY(STRID(E_DELAY), *this),
     conn_EO(*this, 0),
@@ -136,7 +121,7 @@ void FORTE_E_TABLE::readInputData(const TEventID paEIID) {
 void FORTE_E_TABLE::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventEOID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, fb_E_TABLE_CTRL->conn_CV.getValue(), conn_CV);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, fb_E_TABLE_CTRL->conn_CV.getValue(), conn_CV);
       break;
     }
     default: break;

@@ -77,7 +77,7 @@ bool CCompositeFB::initialize() {
 
 bool CCompositeFB::connectDI(TPortId paDIPortId, CDataConnection *paDataCon) {
   if (cgInternal2InterfaceMarker & paDIPortId) { // internal-to-interface connection?
-    return (paDIPortId & cgInternal2InterfaceRemovalMask) < getFBInterfaceSpec().mNumDOs;
+    return (paDIPortId & cgInternal2InterfaceRemovalMask) < getFBInterfaceSpec().getNumDOs();
   }
   return CFunctionBlock::connectDI(paDIPortId, paDataCon);
 }
@@ -161,7 +161,7 @@ void CCompositeFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *con
     TEventID internalEvent = static_cast<TEventID>(paEIID & cgInternal2InterfaceRemovalMask);
     sendOutputEvent(internalEvent, paECET);
   } else {
-    if (paEIID < getFBInterfaceSpec().mNumEIs && mInterface2InternalEventCons[paEIID]) {
+    if (paEIID < getFBInterfaceSpec().getNumEIs() && mInterface2InternalEventCons[paEIID]) {
       mInterface2InternalEventCons[paEIID]->triggerEvent(paECET);
     }
   }
@@ -189,8 +189,8 @@ void CCompositeFB::createEventConnections() {
 }
 
 void CCompositeFB::prepareIf2InEventCons() {
-  mInterface2InternalEventCons.reserve(getFBInterfaceSpec().mNumEIs);
-  for (TPortId i = 0; i < getFBInterfaceSpec().mNumEIs; i++) {
+  mInterface2InternalEventCons.reserve(getFBInterfaceSpec().getNumEIs());
+  for (TPortId i = 0; i < getFBInterfaceSpec().getNumEIs(); i++) {
     mInterface2InternalEventCons.emplace_back(std::make_unique<CEventConnection>(*this, i));
   }
 }

@@ -44,7 +44,7 @@ GEN_ADD::GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, forte::cor
 void GEN_ADD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if (paEIID == scmEventREQID) {
     var_OUT = mGenDIs[0];
-    for (size_t i = 1; i < getFBInterfaceSpec().mNumDIs; ++i) {
+    for (size_t i = 1; i < getFBInterfaceSpec().getNumDIs(); ++i) {
       var_OUT = std::visit(
           [](auto &&paOUT, auto &&paIN) -> CIEC_ANY_MAGNITUDE_VARIANT {
             using T = std::decay_t<decltype(paOUT)>;
@@ -65,13 +65,13 @@ void GEN_ADD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const pa
 }
 
 void GEN_ADD::readInputData(TEventID) {
-  for (TPortId i = 0; i < getFBInterfaceSpec().mNumDIs; ++i) {
+  for (TPortId i = 0; i < getFBInterfaceSpec().getNumDIs(); ++i) {
     readData(i, mGenDIs[i], mGenDIConns[i]);
   }
 }
 
 void GEN_ADD::writeOutputData(TEventID) {
-  writeData(getFBInterfaceSpec().mNumDIs + 0, var_OUT, conn_OUT);
+  writeData(getFBInterfaceSpec().getNumDIs() + 0, var_OUT, conn_OUT);
 }
 
 bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
@@ -91,16 +91,11 @@ bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
 
   // now the number of needed eventInputs and dataOutputs are available in the integer array
   // create the eventInputs
-  mDINames = std::make_unique<CStringDictionary::TStringId[]>(numDIs);
-  generateGenericInterfacePointNameArray("IN", mDINames.get(), numDIs);
+  generateGenericInterfacePointNameArray("IN", mDINames, numDIs);
 
-  paInterfaceSpec.mNumEIs = 1;
   paInterfaceSpec.mEINames = eventInputNames;
-  paInterfaceSpec.mNumEOs = 1;
   paInterfaceSpec.mEONames = eventOutputNames;
-  paInterfaceSpec.mNumDIs = numDIs;
-  paInterfaceSpec.mDINames = mDINames.get();
-  paInterfaceSpec.mNumDOs = 1;
+  paInterfaceSpec.mDINames = mDINames;
   paInterfaceSpec.mDONames = dataOutputNames;
 
   return true;
@@ -111,7 +106,7 @@ CEventConnection *GEN_ADD::getEOConUnchecked(TPortId paEONum) {
 }
 
 void GEN_ADD::createGenInputData() {
-  mGenDIs = std::make_unique<CIEC_ANY_MAGNITUDE_VARIANT[]>(getFBInterfaceSpec().mNumDIs);
+  mGenDIs = std::make_unique<CIEC_ANY_MAGNITUDE_VARIANT[]>(getFBInterfaceSpec().getNumDIs());
 }
 
 CIEC_ANY *GEN_ADD::getDI(size_t paDINum) {

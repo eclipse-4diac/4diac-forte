@@ -33,40 +33,27 @@ USE_STRING_ID(REQ);
 
 DEFINE_FIRMWARE_FB(FORTE_F_BOOL_TO_DINT, STRID(F_BOOL_TO_DINT))
 
-const CStringDictionary::TStringId FORTE_F_BOOL_TO_DINT::scmDataInputNames[] = {STRID(IN)};
-const CStringDictionary::TStringId FORTE_F_BOOL_TO_DINT::scmDataInputTypeIds[] = {STRID(BOOL)};
-const CStringDictionary::TStringId FORTE_F_BOOL_TO_DINT::scmDataOutputNames[] = {STRID(OUT)};
-const CStringDictionary::TStringId FORTE_F_BOOL_TO_DINT::scmDataOutputTypeIds[] = {STRID(DINT)};
-const TDataIOID FORTE_F_BOOL_TO_DINT::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_BOOL_TO_DINT::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_BOOL_TO_DINT::scmEventInputNames[] = {STRID(REQ)};
-const TDataIOID FORTE_F_BOOL_TO_DINT::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_F_BOOL_TO_DINT::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_F_BOOL_TO_DINT::scmEventOutputNames[] = {STRID(CNF)};
-const SFBInterfaceSpec FORTE_F_BOOL_TO_DINT::scmFBInterfaceSpec = {1,
-                                                                   scmEventInputNames,
-                                                                   nullptr,
-                                                                   scmEIWith,
-                                                                   scmEIWithIndexes,
-                                                                   1,
-                                                                   scmEventOutputNames,
-                                                                   nullptr,
-                                                                   scmEOWith,
-                                                                   scmEOWithIndexes,
-                                                                   1,
-                                                                   scmDataInputNames,
-                                                                   scmDataInputTypeIds,
-                                                                   1,
-                                                                   scmDataOutputNames,
-                                                                   scmDataOutputTypeIds,
-                                                                   0,
-                                                                   nullptr,
-                                                                   0,
-                                                                   nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_F_BOOL_TO_DINT::FORTE_F_BOOL_TO_DINT(const CStringDictionary::TStringId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(false_BOOL),
     var_OUT(0_DINT),
     conn_CNF(*this, 0),
@@ -104,7 +91,7 @@ void FORTE_F_BOOL_TO_DINT::readInputData(const TEventID paEIID) {
 void FORTE_F_BOOL_TO_DINT::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
       break;
     }
     default: break;

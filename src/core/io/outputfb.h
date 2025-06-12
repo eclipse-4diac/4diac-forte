@@ -93,18 +93,12 @@ namespace forte::core::io {
       }
 
     private:
-      static const CStringDictionary::TStringId scmDataInputNames[];
-      static const CStringDictionary::TStringId scmDataInputTypeIds[];
-      static const CStringDictionary::TStringId scmDataOutputNames[];
-      static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-      static const TDataIOID scmEIWith[];
-      static const TForteInt16 scmEIWithIndexes[];
-      static const CStringDictionary::TStringId scmEventInputNames[];
-      static const CStringDictionary::TStringId scmEventInputTypeIds[];
-      static const TDataIOID scmEOWith[];
-      static const TForteInt16 scmEOWithIndexes[];
-      static const CStringDictionary::TStringId scmEventOutputNames[];
-      static const CStringDictionary::TStringId scmEventOutputTypeIds[];
+      static const std::array<const CStringDictionary::TStringId, 2> scmEventInputNames;
+      static const std::array<const CStringDictionary::TStringId, 2> scmEventInputTypeIds;
+      static const std::array<const CStringDictionary::TStringId, 2> scmEventOutputNames;
+      static const std::array<const CStringDictionary::TStringId, 2> scmEventOutputTypeIds;
+      static const std::array<const CStringDictionary::TStringId, 3> scmDataInputNames;
+      static const std::array<const CStringDictionary::TStringId, 2> scmDataOutputNames;
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) final override {
         if (paEIID == scmEventREQID) {
@@ -148,50 +142,32 @@ namespace forte::core::io {
   };
 
   template<class T>
-  const CStringDictionary::TStringId COutputFB<T>::scmDataInputNames[] = {STRID(QI), STRID(PARAMS), STRID(OUT)};
+  const std::array<const CStringDictionary::TStringId, 2> COutputFB<T>::scmEventInputNames = {STRID(INIT), STRID(REQ)};
   template<class T>
-  const CStringDictionary::TStringId COutputFB<T>::scmDataInputTypeIds[] = {STRID(BOOL), STRID(STRING),
-                                                                            forte::CDataTypeTrait<T>::scmDataTypeName};
+  const std::array<const CStringDictionary::TStringId, 2> COutputFB<T>::scmEventInputTypeIds = {STRID(EInit),
+                                                                                                STRID(Event)};
   template<class T>
-  const CStringDictionary::TStringId COutputFB<T>::scmDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+  const std::array<const CStringDictionary::TStringId, 2> COutputFB<T>::scmEventOutputNames = {STRID(INITO),
+                                                                                               STRID(CNF)};
   template<class T>
-  const CStringDictionary::TStringId COutputFB<T>::scmDataOutputTypeIds[] = {STRID(BOOL), STRID(STRING)};
+  const std::array<const CStringDictionary::TStringId, 2> COutputFB<T>::scmEventOutputTypeIds = {STRID(EInit),
+                                                                                                 STRID(Event)};
   template<class T>
-  const TDataIOID COutputFB<T>::scmEIWith[] = {0, 1, scmWithListDelimiter, 0, 2, scmWithListDelimiter};
+  const std::array<const CStringDictionary::TStringId, 3> COutputFB<T>::scmDataInputNames = {STRID(QI), STRID(PARAMS),
+                                                                                             STRID(OUT)};
   template<class T>
-  const TForteInt16 COutputFB<T>::scmEIWithIndexes[] = {0, 3};
+  const std::array<const CStringDictionary::TStringId, 2> COutputFB<T>::scmDataOutputNames = {STRID(QO), STRID(STATUS)};
   template<class T>
-  const CStringDictionary::TStringId COutputFB<T>::scmEventInputNames[] = {STRID(INIT), STRID(REQ)};
-  template<class T>
-  const CStringDictionary::TStringId COutputFB<T>::scmEventInputTypeIds[] = {STRID(EInit), STRID(Event)};
-  template<class T>
-  const TDataIOID COutputFB<T>::scmEOWith[] = {0, 1, scmWithListDelimiter, 0, 1, scmWithListDelimiter};
-  template<class T>
-  const TForteInt16 COutputFB<T>::scmEOWithIndexes[] = {0, 3};
-  template<class T>
-  const CStringDictionary::TStringId COutputFB<T>::scmEventOutputNames[] = {STRID(INITO), STRID(CNF)};
-  template<class T>
-  const CStringDictionary::TStringId COutputFB<T>::scmEventOutputTypeIds[] = {STRID(EInit), STRID(Event)};
-  template<class T>
-  const SFBInterfaceSpec COutputFB<T>::scmFBInterfaceSpec = {2,
-                                                             scmEventInputNames,
-                                                             scmEventInputTypeIds,
-                                                             scmEIWith,
-                                                             scmEIWithIndexes,
-                                                             2,
-                                                             scmEventOutputNames,
-                                                             scmEventOutputTypeIds,
-                                                             scmEOWith,
-                                                             scmEOWithIndexes,
-                                                             3,
-                                                             scmDataInputNames,
-                                                             scmDataInputTypeIds,
-                                                             2,
-                                                             scmDataOutputNames,
-                                                             scmDataOutputTypeIds,
-                                                             0,
-                                                             nullptr,
-                                                             0,
-                                                             nullptr};
+  const SFBInterfaceSpec COutputFB<T>::scmFBInterfaceSpec = {
+      .mEINames = scmEventInputNames,
+      .mEITypeNames = scmEventInputTypeIds,
+      .mEONames = scmEventOutputNames,
+      .mEOTypeNames = scmEventOutputTypeIds,
+      .mDINames = scmDataInputNames,
+      .mDONames = scmDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
 
 } // namespace forte::core::io

@@ -27,19 +27,12 @@ USE_STRING_ID(REQ);
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE, STRID(GEN_F_MOVE))
 
-const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmDataInputNames[] = {STRID(IN)};
-
-const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmDataOutputNames[] = {STRID(OUT)};
-
-const TDataIOID GEN_FORTE_F_MOVE::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 GEN_FORTE_F_MOVE::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID GEN_FORTE_F_MOVE::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 GEN_FORTE_F_MOVE::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId GEN_FORTE_F_MOVE::scmEventOutputTypeIds[] = {STRID(Event)};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+} // namespace
 
 GEN_FORTE_F_MOVE::GEN_FORTE_F_MOVE(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
@@ -80,18 +73,10 @@ bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterf
 
   conn_OUT = std::make_unique<CGenDataConnection>(*this, 0, *mIn);
 
-  paInterfaceSpec.mNumEIs = 1;
-  paInterfaceSpec.mEINames = scmEventInputNames;
-  paInterfaceSpec.mEIWith = scmEIWith;
-  paInterfaceSpec.mEIWithIndexes = scmEIWithIndexes;
-  paInterfaceSpec.mNumEOs = 1;
-  paInterfaceSpec.mEONames = scmEventOutputNames;
-  paInterfaceSpec.mEOWith = scmEOWith;
-  paInterfaceSpec.mEOWithIndexes = scmEOWithIndexes;
-  paInterfaceSpec.mNumDIs = 1;
-  paInterfaceSpec.mDINames = scmDataInputNames;
-  paInterfaceSpec.mNumDOs = 1;
-  paInterfaceSpec.mDONames = scmDataOutputNames;
+  paInterfaceSpec.mEINames = cEventInputNames;
+  paInterfaceSpec.mEONames = cEventOutputNames;
+  paInterfaceSpec.mDINames = cDataInputNames;
+  paInterfaceSpec.mDONames = cDataOutputNames;
 
   return true;
 }

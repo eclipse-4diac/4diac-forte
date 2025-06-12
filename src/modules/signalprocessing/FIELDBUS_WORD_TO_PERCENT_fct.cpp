@@ -40,49 +40,29 @@ USE_STRING_ID(WORD);
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT, STRID(signalprocessing__FIELDBUS_WORD_TO_PERCENT))
 
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmDataInputNames[] = {STRID(WI)};
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmDataInputTypeIds[] = {
-    STRID(WORD)};
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmDataOutputNames[] = {STRID(),
-                                                                                                             STRID(WO)};
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmDataOutputTypeIds[] = {
-    STRID(REAL), STRID(WORD)};
-const TDataIOID FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEventInputNames[] = {
-    STRID(REQ)};
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEventInputTypeIds[] = {
-    STRID(Event)};
-const TDataIOID FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEventOutputNames[] = {
-    STRID(CNF)};
-const CStringDictionary::TStringId FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmEventOutputTypeIds[] = {
-    STRID(Event)};
-const SFBInterfaceSpec FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::scmFBInterfaceSpec = {1,
-                                                                                               scmEventInputNames,
-                                                                                               scmEventInputTypeIds,
-                                                                                               scmEIWith,
-                                                                                               scmEIWithIndexes,
-                                                                                               1,
-                                                                                               scmEventOutputNames,
-                                                                                               scmEventOutputTypeIds,
-                                                                                               scmEOWith,
-                                                                                               scmEOWithIndexes,
-                                                                                               1,
-                                                                                               scmDataInputNames,
-                                                                                               scmDataInputTypeIds,
-                                                                                               2,
-                                                                                               scmDataOutputNames,
-                                                                                               scmDataOutputTypeIds,
-                                                                                               0,
-                                                                                               nullptr,
-                                                                                               0,
-                                                                                               nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(WI)};
+  const auto cDataOutputNames = std::array{STRID(), STRID(WO)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT(
     const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_WI(nullptr),
     conn_(*this, 0, var_),
@@ -108,8 +88,8 @@ void FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::readInputData(const TEven
 void FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_, conn_);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_WO, conn_WO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_WO, conn_WO);
       break;
     }
     default: break;
@@ -168,8 +148,9 @@ CIEC_REAL func_FIELDBUS_WORD_TO_PERCENT(CIEC_WORD st_lv_WI, CIEC_WORD &st_lv_WO)
 #line 14 "FIELDBUS_WORD_TO_PERCENT.fct"
     st_lv_WO = st_lv_WI;
 #line 15 "FIELDBUS_WORD_TO_PERCENT.fct"
-    st_ret_val = func_DIV<CIEC_REAL>(func_UDINT_TO_REAL(func_WORD_TO_UDINT(st_lv_WO)),
-                                     func_UDINT_TO_REAL(func_WORD_TO_UDINT(FORTE_signalprocessing__FIELDBUS_SIGNAL::var_VALID_SIGNAL_W)));
+    st_ret_val = func_DIV<CIEC_REAL>(
+        func_UDINT_TO_REAL(func_WORD_TO_UDINT(st_lv_WO)),
+        func_UDINT_TO_REAL(func_WORD_TO_UDINT(FORTE_signalprocessing__FIELDBUS_SIGNAL::var_VALID_SIGNAL_W)));
   }
 
   return st_ret_val;

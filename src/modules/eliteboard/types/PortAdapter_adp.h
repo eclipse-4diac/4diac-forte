@@ -12,63 +12,86 @@
 
 #pragma once
 
-#include "adapter.h"
-#include "typelib.h"
-#include "forte_dword.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/adapter.h"
+#include "core/datatypes/forte_dword.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
-class FORTE_PortAdapter final : public CAdapter {
+class FORTE_PortAdapter : public forte::CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_PortAdapter)
 
   private:
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
+    public:
+      static const TEventID scmEventMAPID = 0;
 
+    private:
+    public:
+      static const TEventID scmEventMAPOID = 0;
+
+    private:
+
+    void setInitialValues() override;
   public:
-    static const TEventID scmEventMAPOID = 0;
-
-  private:
-    static const TForteInt16 scmEIWithIndexes[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
-
-  public:
-    static const TEventID scmEventMAPID = 0;
-
-  private:
-    static const TDataIOID scmEOWith[];
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
-
-    static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
-
-    static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
-
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-
-  public:
-    CIEC_DWORD &var_GPIO_Port_Addr() {
-      return *static_cast<CIEC_DWORD *>((isSocket()) ? getDO(0) : getDI(0));
-    }
+    CIEC_DWORD var_GPIO_Port_Addr;
 
     TEventID evt_MAPO() {
-      return mParentAdapterListEventID + scmEventMAPOID;
+      return getParentAdapterListEventID() + scmEventMAPOID;
     }
 
     TEventID evt_MAP() {
-      return mParentAdapterListEventID + scmEventMAPID;
+      return getParentAdapterListEventID() + scmEventMAPID;
     }
 
-    FORTE_PortAdapter(CStringDictionary::TStringId paAdapterInstanceName,
-                      forte::core::CFBContainer &paContainer,
-                      bool paIsPlug) :
-        CAdapter(paContainer, scmFBInterfaceSpecSocket, paAdapterInstanceName, scmFBInterfaceSpecPlug, paIsPlug) {};
+    ~FORTE_PortAdapter() override = default;
 
-    virtual ~FORTE_PortAdapter() = default;
+  protected:
+    FORTE_PortAdapter(forte::core::CFBContainer &paContainer,
+                  const SFBInterfaceSpec &paInterfaceSpec,
+                  const CStringDictionary::TStringId paInstanceNameId,
+                  TForteUInt8 paParentAdapterlistID);
+};
+
+class FORTE_PortAdapter_Plug final : public FORTE_PortAdapter {
+  public:
+    FORTE_PortAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+                        forte::core::CFBContainer &paContainer,
+                        TForteUInt8 paParentAdapterlistID);
+    ~FORTE_PortAdapter_Plug() override = default;
+
+    CEventConnection conn_MAPO;
+
+    CDataConnection *conn_GPIO_Port_Addr;
+
+  private:
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
+};
+
+class FORTE_PortAdapter_Socket final : public FORTE_PortAdapter {
+  public:
+    FORTE_PortAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+                        forte::core::CFBContainer &paContainer,
+                        TForteUInt8 paParentAdapterlistID);
+    ~FORTE_PortAdapter_Socket() override = default;
+
+    CEventConnection conn_MAP;
+
+    COutDataConnection<CIEC_DWORD> conn_GPIO_Port_Addr;
+
+  private:
+    void readInputData(TEventID paEIID) override;
+    void writeOutputData(TEventID paEIID) override;
+    CIEC_ANY *getDI(size_t) override;
+    CIEC_ANY *getDO(size_t) override;
+    CEventConnection *getEOConUnchecked(TPortId) override;
+    CDataConnection **getDIConUnchecked(TPortId) override;
+    CDataConnection *getDOConUnchecked(TPortId) override;
 };

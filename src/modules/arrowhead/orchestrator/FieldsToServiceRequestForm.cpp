@@ -33,56 +33,46 @@ USE_STRING_ID(WSTRING);
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceRequestForm, STRID(FieldsToServiceRequestForm))
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataInputNames[] = {
-    STRID(requesterSystem),    STRID(requesterCloud),     STRID(requestedService),
-    STRID(orchestrationFlags), STRID(preferredProviders), STRID(requestedQoS)};
+namespace {
+  const auto cDataInputNames = std::array{
+      STRID(requesterSystem),    STRID(requesterCloud),     STRID(requestedService),
+      STRID(orchestrationFlags), STRID(preferredProviders), STRID(requestedQoS)};
+  
+                                                                                                STRID(ArrowheadCloud),
+                                                                                                STRID(ArrowheadService),
+                                                                                                STRID(ARRAY),
+                                                                                                10,
+                                                                                                STRID(WSTRING),
+                                                                                                STRID(ARRAY),
+                                                                                                10,
+                                                                                                STRID(PreferredProvider),
+                                                                                                STRID(ARRAY),
+                                                                                                10,
+                                                                                                STRID(WSTRING)};
+  
+  const auto cDataOutputNames = std::array{STRID(serviceRequestForm)};
+  
+      STRID(ServiceRequestForm)};
+  
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
 
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataInputTypeIds[] = {STRID(ArrowheadSystem),
-                                                                                              STRID(ArrowheadCloud),
-                                                                                              STRID(ArrowheadService),
-                                                                                              STRID(ARRAY),
-                                                                                              10,
-                                                                                              STRID(WSTRING),
-                                                                                              STRID(ARRAY),
-                                                                                              10,
-                                                                                              STRID(PreferredProvider),
-                                                                                              STRID(ARRAY),
-                                                                                              10,
-                                                                                              STRID(WSTRING)};
-
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataOutputNames[] = {STRID(serviceRequestForm)};
-
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmDataOutputTypeIds[] = {
-    STRID(ServiceRequestForm)};
-
-const TForteInt16 FORTE_FieldsToServiceRequestForm::scmEIWithIndexes[] = {0};
-const TDataIOID FORTE_FieldsToServiceRequestForm::scmEIWith[] = {0, 1, 5, 4, 3, 2, scmWithListDelimiter};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmEventInputTypeIds[] = {STRID(Event)};
-
-const TDataIOID FORTE_FieldsToServiceRequestForm::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_FieldsToServiceRequestForm::scmEOWithIndexes[] = {0, -1};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_FieldsToServiceRequestForm::scmEventOutputTypeIds[] = {STRID(Event)};
-
-const SFBInterfaceSpec FORTE_FieldsToServiceRequestForm::scmFBInterfaceSpec = {1,
-                                                                               scmEventInputNames,
-                                                                               scmEventInputTypeIds,
-                                                                               scmEIWith,
-                                                                               scmEIWithIndexes,
-                                                                               1,
-                                                                               scmEventOutputNames,
-                                                                               scmEventOutputTypeIds,
-                                                                               scmEOWith,
-                                                                               scmEOWithIndexes,
-                                                                               6,
-                                                                               scmDataInputNames,
-                                                                               scmDataInputTypeIds,
-                                                                               1,
-                                                                               scmDataOutputNames,
-                                                                               scmDataOutputTypeIds,
-                                                                               0,
-                                                                               0};
 
 void FORTE_FieldsToServiceRequestForm::alg_REQ() {
   CIEC_INT i;

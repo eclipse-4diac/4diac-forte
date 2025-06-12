@@ -39,42 +39,30 @@ USE_STRING_ID(WORD);
 
 DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_BYTES, STRID(SPLIT_WORD_INTO_BYTES))
 
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmDataInputNames[] = {STRID(IN)};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmDataInputTypeIds[] = {STRID(WORD)};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmDataOutputNames[] = {STRID(BYTE_00), STRID(BYTE_01)};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmDataOutputTypeIds[] = {STRID(BYTE), STRID(BYTE)};
-const TDataIOID FORTE_SPLIT_WORD_INTO_BYTES::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_SPLIT_WORD_INTO_BYTES::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmEventInputNames[] = {STRID(REQ)};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmEventInputTypeIds[] = {STRID(Event)};
-const TDataIOID FORTE_SPLIT_WORD_INTO_BYTES::scmEOWith[] = {0, 1, scmWithListDelimiter};
-const TForteInt16 FORTE_SPLIT_WORD_INTO_BYTES::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmEventOutputNames[] = {STRID(CNF)};
-const CStringDictionary::TStringId FORTE_SPLIT_WORD_INTO_BYTES::scmEventOutputTypeIds[] = {STRID(Event)};
-const SFBInterfaceSpec FORTE_SPLIT_WORD_INTO_BYTES::scmFBInterfaceSpec = {1,
-                                                                          scmEventInputNames,
-                                                                          scmEventInputTypeIds,
-                                                                          scmEIWith,
-                                                                          scmEIWithIndexes,
-                                                                          1,
-                                                                          scmEventOutputNames,
-                                                                          scmEventOutputTypeIds,
-                                                                          scmEOWith,
-                                                                          scmEOWithIndexes,
-                                                                          1,
-                                                                          scmDataInputNames,
-                                                                          scmDataInputTypeIds,
-                                                                          2,
-                                                                          scmDataOutputNames,
-                                                                          scmDataOutputTypeIds,
-                                                                          0,
-                                                                          nullptr,
-                                                                          0,
-                                                                          nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cDataOutputNames = std::array{STRID(BYTE_00), STRID(BYTE_01)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+}
+
 
 FORTE_SPLIT_WORD_INTO_BYTES::FORTE_SPLIT_WORD_INTO_BYTES(const CStringDictionary::TStringId paInstanceNameId,
                                                          forte::core::CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId),
+    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_BYTE_00(*this, 0, var_BYTE_00),
@@ -100,8 +88,8 @@ void FORTE_SPLIT_WORD_INTO_BYTES::readInputData(const TEventID paEIID) {
 void FORTE_SPLIT_WORD_INTO_BYTES::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_BYTE_00, conn_BYTE_00);
-      writeData(scmFBInterfaceSpec.mNumDIs + 1, var_BYTE_01, conn_BYTE_01);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_BYTE_00, conn_BYTE_00);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_BYTE_01, conn_BYTE_01);
       break;
     }
     default: break;

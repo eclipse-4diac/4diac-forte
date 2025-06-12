@@ -21,14 +21,10 @@ class FORTE_GET_CHAN_INFO : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_GET_CHAN_INFO)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
     CIEC_STRING &SYMB_NAME() {
       return *static_cast<CIEC_STRING *>(getDI(0));
     };
 
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     CIEC_INT &RET_CODE() {
       return *static_cast<CIEC_INT *>(getDO(0));
     };
@@ -42,18 +38,9 @@ class FORTE_GET_CHAN_INFO : public CFunctionBlock {
     };
 
     static const TEventID scmEventINITID = 0;
-    static const TForteInt16 scmEIWithIndexes[];
-    static const TDataIOID scmEIWith[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventINITOID = 0;
-    static const TForteInt16 scmEOWithIndexes[];
-    static const TDataIOID scmEOWith[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -62,7 +49,6 @@ class FORTE_GET_CHAN_INFO : public CFunctionBlock {
 
   public:
     FORTE_GET_CHAN_INFO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-        CFunctionBlock(paContainer, scmFBInterfaceSpec, paInstanceNameId) {};
 
     ~FORTE_GET_CHAN_INFO() override = default;
 };

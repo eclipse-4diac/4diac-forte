@@ -44,18 +44,11 @@ class GEN_CSV_WRITER final : public CGenFunctionBlock<CFunctionBlock> {
     COutDataConnection<CIEC_BOOL> conn_QO;
     COutDataConnection<CIEC_STRING> conn_STATUS;
 
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
-
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventREQID = 1;
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventCNFID = 1;
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -96,7 +89,7 @@ class GEN_CSV_WRITER final : public CGenFunctionBlock<CFunctionBlock> {
 
     decltype(forte_fopen(nullptr, nullptr)) mCSVFile;
 
-    std::unique_ptr<CStringDictionary::TStringId[]> mDataInputNames;
+    std::vector<CStringDictionary::TStringId> mDataInputNames;
 
     std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDIs;
 

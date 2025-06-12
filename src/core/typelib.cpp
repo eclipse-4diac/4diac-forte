@@ -80,37 +80,28 @@ constexpr forte::core::CTypeEntry::CTypeEntry(CStringDictionary::TStringId paTyp
     mTypeHash(paTypeHash) {
 }
 
-constexpr forte::core::CSpecTypeEntry::CSpecTypeEntry(CStringDictionary::TStringId paTypeNameId,
-                                                      std::string_view paTypeHash,
-                                                      const SFBInterfaceSpec *paSocketInterfaceSpec) :
-    CTypeEntry(paTypeNameId, paTypeHash),
-    mSocketInterfaceSpec(paSocketInterfaceSpec) {
-}
-
 forte::core::CFBTypeEntry::CFBTypeEntry(CStringDictionary::TStringId paTypeNameId,
                                         std::string_view paTypeHash,
-                                        TFunctionBlockCreateFunc pa_pfuncCreateFB,
-                                        const SFBInterfaceSpec *paSocketInterfaceSpec) :
-    CSpecTypeEntry(paTypeNameId, paTypeHash, paSocketInterfaceSpec),
-    m_pfuncFBCreationFunc(pa_pfuncCreateFB) {
+                                        TFunctionBlockCreateFunc paCreateFB) :
+    CTypeEntry(paTypeNameId, paTypeHash),
+    mFBCreationFunc(paCreateFB) {
   addFBType(this);
 }
 
 forte::core::CAdapterTypeEntry::CAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId,
                                                   std::string_view paTypeHash,
-                                                  TAdapterCreateFunc pa_pfuncCreateAdapter,
-                                                  const SFBInterfaceSpec *paSocketInterfaceSpec) :
-    CSpecTypeEntry(paTypeNameId, paTypeHash, paSocketInterfaceSpec),
-    m_pfuncAdapterCreationFunc(pa_pfuncCreateAdapter) {
+                                                  TAdapterCreateFunc paCreateAdapter) :
+    CTypeEntry(paTypeNameId, paTypeHash),
+    mAdapterCreationFunc(paCreateAdapter) {
   addAdapterType(this);
 }
 
 forte::core::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId paTypeNameId,
                                             std::string_view paTypeHash,
-                                            TDataTypeCreateFunc pafuncDTCreateFunc,
+                                            TDataTypeCreateFunc paCreateDT,
                                             size_t paSize) :
     CTypeEntry(paTypeNameId, paTypeHash),
-    mDTCreateFunc(pafuncDTCreateFunc),
+    mDTCreateFunc(paCreateDT),
     mSize(paSize) {
   addDataType(this);
 }

@@ -25,8 +25,6 @@ class FORTE_QueryServicesAdp : public CAdapter {
 
   private:
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
 
   public:
     CIEC_ServiceRegistryEntry *serviceEntries() {
@@ -39,8 +37,6 @@ class FORTE_QueryServicesAdp : public CAdapter {
     };
 
   private:
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
 
   public:
     CIEC_ServiceQueryForm &serviceQueryForm() {
@@ -58,10 +54,6 @@ class FORTE_QueryServicesAdp : public CAdapter {
     }
 
   private:
-    static const TForteInt16 scmEIWithIndexes[];
-    static const TDataIOID scmEIWith[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
   public:
     static const TEventID scmEventqueryID = 0;
@@ -70,14 +62,8 @@ class FORTE_QueryServicesAdp : public CAdapter {
     }
 
   private:
-    static const TForteInt16 scmEOWithIndexes[];
-    static const TDataIOID scmEOWith[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
-    static const SFBInterfaceSpec scmFBInterfaceSpecSocket;
 
-    static const SFBInterfaceSpec scmFBInterfaceSpecPlug;
 
   public:
     ADAPTER_CTOR(FORTE_QueryServicesAdp) {};

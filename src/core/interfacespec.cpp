@@ -20,65 +20,55 @@
  *******************************************************************************/
 
 #include "interfacespec.h"
+#include "datatype.h"
 
 USE_STRING_ID(Event);
 
 namespace {
-  TPortId getPortId(CStringDictionary::TStringId paPortNameId,
-                    TPortId paMaxPortNames,
-                    const CStringDictionary::TStringId *paPortNames) {
-    for (TPortId i = 0; i < paMaxPortNames; ++i) {
-      if (paPortNameId == paPortNames[i]) {
-        return i;
-      }
-    }
-    return cgInvalidPortId;
-  }
 
   TPortId getPortId(CStringDictionary::TStringId paPortNameId,
                     std::span<const CStringDictionary::TStringId> paPortNames) {
-    for (TPortId i = 0; i < paPortNames.size(); ++i) {
-      if (paPortNameId == paPortNames[i]) {
-        return i;
-      }
+    auto it = std::find(paPortNames.begin(), paPortNames.end(), paPortNameId);
+    if (it == paPortNames.end()) {
+      return cgInvalidPortId;
     }
-    return cgInvalidPortId;
+    return static_cast<TPortId>(it - paPortNames.begin());
   }
 
 } // namespace
 
 TEventID SFBInterfaceSpec::getEIID(CStringDictionary::TStringId paEINameId) const {
-  return static_cast<TEventID>(getPortId(paEINameId, mNumEIs, mEINames));
+  return static_cast<TEventID>(getPortId(paEINameId, mEINames));
 }
 
 TEventID SFBInterfaceSpec::getEOID(CStringDictionary::TStringId paEONameId) const {
-  return static_cast<TEventID>(getPortId(paEONameId, mNumEOs, mEONames));
+  return static_cast<TEventID>(getPortId(paEONameId, mEONames));
 }
 
 CStringDictionary::TStringId SFBInterfaceSpec::getEIType(TEventID paEIID) const {
-  if (mEITypeNames != nullptr) {
+  if (!mEITypeNames.empty()) {
     return mEITypeNames[paEIID];
   }
   return STRID(Event);
 }
 
 CStringDictionary::TStringId SFBInterfaceSpec::getEOType(TEventID paEOID) const {
-  if (mEOTypeNames != nullptr) {
+  if (!mEOTypeNames.empty()) {
     return mEOTypeNames[paEOID];
   }
   return STRID(Event);
 }
 
 TPortId SFBInterfaceSpec::getDIID(CStringDictionary::TStringId paDINameId) const {
-  return getPortId(paDINameId, mNumDIs, mDINames);
+  return getPortId(paDINameId, mDINames);
 }
 
 TPortId SFBInterfaceSpec::getDOID(CStringDictionary::TStringId paDONameId) const {
-  return getPortId(paDONameId, mNumDOs, mDONames);
+  return getPortId(paDONameId, mDONames);
 }
 
 TPortId SFBInterfaceSpec::getDIOID(CStringDictionary::TStringId paDIONameId) const {
-  return getPortId(paDIONameId, mNumDIOs, mDIONames);
+  return getPortId(paDIONameId, mDIONames);
 }
 
 TPortId SFBInterfaceSpec::getPlugID(CStringDictionary::TStringId paPlugNameId) const {

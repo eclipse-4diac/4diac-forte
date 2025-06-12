@@ -31,11 +31,7 @@ class FORTE_EliteBoard final : public IOConfigFBController {
 
   private:
     static const TEventID scmEventMAPID = 0;
-    static const TForteInt16 scmEIWithIndexes[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
     static const TEventID scmEventMAPOID = 0;
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
     static const int scmPortAAdpNum = 0;
     static const int scmPortBAdpNum = 1;
     static const int scmPortCAdpNum = 2;
@@ -47,9 +43,6 @@ class FORTE_EliteBoard final : public IOConfigFBController {
     static const int scmPortIAdpNum = 8;
     static const int scmPortJAdpNum = 9;
     static const int scmPortKAdpNum = 10;
-    static const SAdapterInstanceDef scmAdapterInstances[];
-
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -64,31 +57,32 @@ class FORTE_EliteBoard final : public IOConfigFBController {
     int configPorts(CEventChainExecutionThread *const paECET);
 
     // IOConfigFBController
-    EliteBoardDeviceController& mEventHandler;
-    IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution);
-    void setConfig() {}
+    EliteBoardDeviceController &mEventHandler;
+    IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
+    void setConfig() override {
+    }
 
   public:
     FORTE_EliteBoard(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     bool initialize() override;
 
-    FORTE_PortAdapter var_PortA;
-    FORTE_PortAdapter var_PortB;
-    FORTE_PortAdapter var_PortC;
-    FORTE_PortAdapter var_PortD;
-    FORTE_PortAdapter var_PortE;
-    FORTE_PortAdapter var_PortF;
-    FORTE_PortAdapter var_PortG;
-    FORTE_PortAdapter var_PortH;
-    FORTE_PortAdapter var_PortI;
-    FORTE_PortAdapter var_PortJ;
-    FORTE_PortAdapter var_PortK;
+    forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortA;
+    forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortB;
+    forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortC;
+    forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortD;
+    forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortE;
+    forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortF;
+    forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortG;
+    forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortH;
+    forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortI;
+    forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortJ;
+    forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortK;
 
     CEventConnection conn_MAPO;
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
-    CAdapter *getAdapterUnchecked(size_t) override;
+    forte::IPlugPin *getPlugPinUnchecked(size_t) override;
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;

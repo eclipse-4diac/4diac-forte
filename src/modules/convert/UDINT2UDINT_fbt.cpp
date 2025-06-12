@@ -31,27 +31,27 @@ USE_STRING_ID(UDINT2UDINT);
 
 DEFINE_FIRMWARE_FB(FORTE_UDINT2UDINT, STRID(UDINT2UDINT))
 
-const CStringDictionary::TStringId FORTE_UDINT2UDINT::scmDataInputNames[] = {STRID(IN)};
-const CStringDictionary::TStringId FORTE_UDINT2UDINT::scmDataInputTypeIds[] = {STRID(UDINT)};
-const CStringDictionary::TStringId FORTE_UDINT2UDINT::scmDataOutputNames[] = {STRID(OUT)};
-const CStringDictionary::TStringId FORTE_UDINT2UDINT::scmDataOutputTypeIds[] = {STRID(UDINT)};
-const TDataIOID FORTE_UDINT2UDINT::scmEIWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_UDINT2UDINT::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_UDINT2UDINT::scmEventInputNames[] = {STRID(REQ)};
-const TDataIOID FORTE_UDINT2UDINT::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_UDINT2UDINT::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_UDINT2UDINT::scmEventOutputNames[] = {STRID(CNF)};
-const SFBInterfaceSpec FORTE_UDINT2UDINT::scmFBInterfaceSpec = {
-  1, scmEventInputNames, nullptr, scmEIWith, scmEIWithIndexes,
-  1, scmEventOutputNames, nullptr, scmEOWith, scmEOWithIndexes,
-  1, scmDataInputNames, scmDataInputTypeIds,
-  1, scmDataOutputNames, scmDataOutputTypeIds,
-  0, nullptr,
-  0, nullptr
-};
+namespace {
+  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
-FORTE_UDINT2UDINT::FORTE_UDINT2UDINT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, nullptr),
+FORTE_UDINT2UDINT::FORTE_UDINT2UDINT(const CStringDictionary::TStringId paInstanceNameId,
+                                     forte::core::CFBContainer &paContainer) :
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
     var_IN(0_UDINT),
     var_OUT(0_UDINT),
     conn_CNF(*this, 0),
@@ -65,12 +65,9 @@ void FORTE_UDINT2UDINT::setInitialValues() {
 }
 
 void FORTE_UDINT2UDINT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventREQID:
-      enterStateREQ(paECET);
-      break;
-    default:
-      break;
+  switch (paEIID) {
+    case scmEventREQID: enterStateREQ(paECET); break;
+    default: break;
   }
 }
 
@@ -80,57 +77,55 @@ void FORTE_UDINT2UDINT::enterStateREQ(CEventChainExecutionThread *const paECET) 
 }
 
 void FORTE_UDINT2UDINT::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_UDINT2UDINT::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_OUT, conn_OUT);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_UDINT2UDINT::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_UDINT2UDINT::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_UDINT2UDINT::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_UDINT2UDINT::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_UDINT2UDINT::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -142,6 +137,6 @@ CIEC_ANY *FORTE_UDINT2UDINT::getVarInternal(size_t) {
 
 void FORTE_UDINT2UDINT::alg_REQ(void) {
 
-  #line 2 "UDINT2UDINT.fbt"
+#line 2 "UDINT2UDINT.fbt"
   var_OUT = var_IN;
 }

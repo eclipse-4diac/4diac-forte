@@ -39,15 +39,10 @@ class GEN_STRUCT_MUX final : public CGenFunctionBlock<CFunctionBlock> {
     CDataConnection *getDOConUnchecked(const TPortId paIndex) override;
 
   private:
-    static const CStringDictionary::TStringId scmDataOutputNames[];
 
     static const TEventID scmEventREQID = 0;
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
 
     static const TEventID scmEventCNFID = 0;
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 

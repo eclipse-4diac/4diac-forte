@@ -40,41 +40,23 @@ USE_STRING_ID(UDINT);
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__distance__RangeBasedPulse,
                    STRID(signalprocessing__distance__RangeBasedPulse))
 
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmDataInputNames[] = {
-    STRID(DIST_IN), STRID(DIST_OFF), STRID(DIST_HIGH), STRID(DIST_LOW)};
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmDataInputTypeIds[] = {
-    STRID(UDINT), STRID(UDINT), STRID(UDINT), STRID(UDINT)};
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmDataOutputNames[] = {STRID(Q)};
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmDataOutputTypeIds[] = {
-    STRID(BOOL)};
-const TDataIOID FORTE_signalprocessing__distance__RangeBasedPulse::scmEIWith[] = {0, 1, 2, 3, scmWithListDelimiter};
-const TForteInt16 FORTE_signalprocessing__distance__RangeBasedPulse::scmEIWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmEventInputNames[] = {
-    STRID(REQ)};
-const TDataIOID FORTE_signalprocessing__distance__RangeBasedPulse::scmEOWith[] = {0, scmWithListDelimiter};
-const TForteInt16 FORTE_signalprocessing__distance__RangeBasedPulse::scmEOWithIndexes[] = {0};
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmEventOutputNames[] = {
-    STRID(CNF)};
-const SFBInterfaceSpec FORTE_signalprocessing__distance__RangeBasedPulse::scmFBInterfaceSpec = {1,
-                                                                                                scmEventInputNames,
-                                                                                                nullptr,
-                                                                                                scmEIWith,
-                                                                                                scmEIWithIndexes,
-                                                                                                1,
-                                                                                                scmEventOutputNames,
-                                                                                                nullptr,
-                                                                                                scmEOWith,
-                                                                                                scmEOWithIndexes,
-                                                                                                4,
-                                                                                                scmDataInputNames,
-                                                                                                scmDataInputTypeIds,
-                                                                                                1,
-                                                                                                scmDataOutputNames,
-                                                                                                scmDataOutputTypeIds,
-                                                                                                0,
-                                                                                                nullptr,
-                                                                                                0,
-                                                                                                nullptr};
+namespace {
+  const auto cDataInputNames = std::array{STRID(DIST_IN), STRID(DIST_OFF), STRID(DIST_HIGH), STRID(DIST_LOW)};
+  const auto cDataOutputNames = std::array{STRID(Q)};
+  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
 
 const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmInternalsNames[] = {
     STRID(DIST_REMAINDER)};
@@ -85,7 +67,7 @@ const SInternalVarsInformation FORTE_signalprocessing__distance__RangeBasedPulse
 
 FORTE_signalprocessing__distance__RangeBasedPulse::FORTE_signalprocessing__distance__RangeBasedPulse(
     const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, scmFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
     conn_CNF(*this, 0),
     conn_DIST_IN(nullptr),
     conn_DIST_OFF(nullptr),
@@ -132,7 +114,7 @@ void FORTE_signalprocessing__distance__RangeBasedPulse::readInputData(const TEve
 void FORTE_signalprocessing__distance__RangeBasedPulse::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
-      writeData(scmFBInterfaceSpec.mNumDIs + 0, var_Q, conn_Q);
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_Q, conn_Q);
       break;
     }
     default: break;
