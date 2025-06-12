@@ -22,7 +22,9 @@ jobs:
         id: find_sources
         run: |
           FILES=$(find src/ -type f \( -name "*.cpp" -o -name "*.cc" -o -name "*.c" -o -name "*.h" -o -name "*.hpp" \))
-
+          echo "files<<EOF" >> $GITHUB_OUTPUT
+          echo "$FILES" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
       - name: Run clang-format check
         run: |
           echo "${{ steps.find_sources.outputs.files }}" | xargs clang-format --dry-run --Werror
