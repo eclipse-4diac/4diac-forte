@@ -53,7 +53,7 @@ namespace {
 
 FORTE_F_DT_TO_TOD::FORTE_F_DT_TO_TOD(const CStringDictionary::TStringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_DATE_AND_TIME),
     var_OUT(0_TIME_OF_DAY),
     conn_CNF(*this, 0),

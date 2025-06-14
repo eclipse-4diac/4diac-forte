@@ -50,7 +50,7 @@ namespace {
 } // namespace
 
 FORTE_E_SR::FORTE_E_SR(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO(*this, 0),
     conn_Q(*this, 0, var_Q) {
 }

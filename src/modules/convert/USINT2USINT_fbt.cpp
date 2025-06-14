@@ -51,7 +51,7 @@ namespace {
 
 FORTE_USINT2USINT::FORTE_USINT2USINT(const CStringDictionary::TStringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_USINT),
     var_OUT(0_USINT),
     conn_CNF(*this, 0),

@@ -56,18 +56,13 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-} // namespace
 
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmInternalsNames[] = {
-    STRID(DIST_REMAINDER)};
-const CStringDictionary::TStringId FORTE_signalprocessing__distance__RangeBasedPulse::scmInternalsTypeIds[] = {
-    STRID(UDINT)};
-const SInternalVarsInformation FORTE_signalprocessing__distance__RangeBasedPulse::scmInternalVars = {
-    1, scmInternalsNames, scmInternalsTypeIds};
+  const auto cInternalsNames = std::array{STRID(DIST_REMAINDER)};
+} // namespace
 
 FORTE_signalprocessing__distance__RangeBasedPulse::FORTE_signalprocessing__distance__RangeBasedPulse(
     const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
     conn_CNF(*this, 0),
     conn_DIST_IN(nullptr),
     conn_DIST_OFF(nullptr),

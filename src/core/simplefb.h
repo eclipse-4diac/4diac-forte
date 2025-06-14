@@ -25,8 +25,8 @@ class CSimpleFB : public CBaseFB {
     CSimpleFB(forte::core::CFBContainer &paContainer,
               const SFBInterfaceSpec &paInterfaceSpec,
               CStringDictionary::TStringId paInstanceNameId,
-              const SInternalVarsInformation *const paVarInternals) :
-        CBaseFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternals) {
+              std::span<const CStringDictionary::TStringId> paVarInternalNames) :
+        CBaseFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternalNames) {
     }
 
     void setInitialValues() override = 0;

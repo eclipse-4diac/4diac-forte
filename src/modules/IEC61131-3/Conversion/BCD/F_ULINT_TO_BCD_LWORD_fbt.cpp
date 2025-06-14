@@ -53,7 +53,7 @@ namespace {
 
 FORTE_F_ULINT_TO_BCD_LWORD::FORTE_F_ULINT_TO_BCD_LWORD(const CStringDictionary::TStringId paInstanceNameId,
                                                        forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_ULINT),
     var_OUT(0_LWORD),
     conn_CNF(*this, 0),

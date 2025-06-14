@@ -21,21 +21,12 @@
 #include "resource.h"
 #include "string_utils.h"
 
-TPortId SInternalVarsInformation::getVarId(CStringDictionary::TStringId paInternalName) const {
-  for (TPortId i = 0; i < mNumIntVars; ++i) {
-    if (mIntVarsNames[i] == paInternalName) {
-      return i;
-    }
-  }
-  return cgInvalidPortId;
-}
-
 CBaseFB::CBaseFB(forte::core::CFBContainer &paContainer,
                  const SFBInterfaceSpec &paInterfaceSpec,
                  const CStringDictionary::TStringId paInstanceNameId,
-                 const SInternalVarsInformation *const paVarInternals) :
+                 std::span<const CStringDictionary::TStringId> paVarInternalNames) :
     CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
-    cmVarInternals(paVarInternals) {
+    cmVarInternalNames(paVarInternalNames) {
 }
 
 void CBaseFB::setInitialValues() {
@@ -51,11 +42,10 @@ CIEC_ANY *CBaseFB::getVar(CStringDictionary::TStringId *paNameList, unsigned int
 }
 
 CIEC_ANY *CBaseFB::getInternalVar(CStringDictionary::TStringId paInternalName) {
-  if (cmVarInternals != nullptr) {
-    TPortId unVarId = cmVarInternals->getVarId(paInternalName);
-    if (unVarId != cgInvalidPortId) {
-      return getVarInternal(unVarId);
-    }
+  TPortId unVarId = forte::getPortId(paInternalName, cmVarInternalNames);
+
+  if (unVarId != cgInvalidPortId) {
+    return getVarInternal(unVarId);
   }
   return nullptr;
 }
@@ -63,7 +53,7 @@ CIEC_ANY *CBaseFB::getInternalVar(CStringDictionary::TStringId paInternalName) {
 void CBaseFB::toString(std::string &paTargetBuf) const {
   CFunctionBlock::toString(paTargetBuf);
 
-  if (cmVarInternals == nullptr || cmVarInternals->mNumIntVars == 0) {
+  if (cmVarInternalNames.empty()) {
     return; // nothing to do
   }
 
@@ -73,9 +63,9 @@ void CBaseFB::toString(std::string &paTargetBuf) const {
     paTargetBuf += csmToStringSeparator;
   }
 
-  for (size_t i = 0; i < cmVarInternals->mNumIntVars; ++i) {
-    forte::core::util::writeToStringNameValuePair(paTargetBuf, cmVarInternals->mIntVarsNames[i], getVarInternal(i));
-    if (i != cmVarInternals->mNumIntVars - 1) {
+  for (size_t i = 0; i < cmVarInternalNames.size(); ++i) {
+    forte::core::util::writeToStringNameValuePair(paTargetBuf, cmVarInternalNames[i], getVarInternal(i));
+    if (i != cmVarInternalNames.size() - 1) {
       paTargetBuf += csmToStringSeparator;
     }
   }
@@ -87,7 +77,7 @@ void CBaseFB::toString(std::string &paTargetBuf) const {
 void CBaseFB::traceInstanceData() {
   std::vector<std::string> inputs(getFBInterfaceSpec().getNumDIs());
   std::vector<std::string> outputs(getFBInterfaceSpec().getNumDOs());
-  std::vector<std::string> internals(cmVarInternals ? cmVarInternals->mNumIntVars : 0);
+  std::vector<std::string> internals(cmVarInternalNames.size());
   std::vector<std::string> internalFbs(getChildren().size());
   std::vector<const char *> inputs_c_str(inputs.size());
   std::vector<const char *> outputs_c_str(outputs.size());

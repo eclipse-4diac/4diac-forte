@@ -53,7 +53,7 @@ namespace {
 
 
 FORTE_F_LREAL_TO_USINT::FORTE_F_LREAL_TO_USINT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_LREAL),
     var_OUT(0_USINT),
     conn_CNF(*this, 0),

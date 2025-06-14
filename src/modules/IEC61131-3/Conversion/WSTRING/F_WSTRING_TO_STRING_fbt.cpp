@@ -53,7 +53,7 @@ namespace {
 
 
 FORTE_F_WSTRING_TO_STRING::FORTE_F_WSTRING_TO_STRING(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(u""_WSTRING),
     var_OUT(""_STRING),
     conn_CNF(*this, 0),

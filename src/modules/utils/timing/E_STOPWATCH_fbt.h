@@ -40,11 +40,6 @@ class FORTE_E_STOPWATCH final : public CBasicFB {
     static const TEventID scmEventETOID = 1;
     static const TEventID scmEventRESETOID = 2;
 
-
-    static const CStringDictionary::TStringId scmInternalsNames[];
-    static const CStringDictionary::TStringId scmInternalsTypeIds[];
-    static const SInternalVarsInformation scmInternalVars;
-
     CIEC_TIME var_startTime;
 
     CIEC_ANY *getVarInternal(size_t) override;

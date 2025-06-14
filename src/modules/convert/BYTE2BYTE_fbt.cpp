@@ -51,7 +51,7 @@ namespace {
 
 FORTE_BYTE2BYTE::FORTE_BYTE2BYTE(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_BYTE),
     var_OUT(0_BYTE),
     conn_CNF(*this, 0),

@@ -49,7 +49,7 @@ namespace {
 
 FORTE_E_SWITCH::FORTE_E_SWITCH(const CStringDictionary::TStringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO0(*this, 0),
     conn_EO1(*this, 1),
     conn_G(nullptr) {

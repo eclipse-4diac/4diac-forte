@@ -48,17 +48,16 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
+
+  const auto cInternalsNames = std::array{STRID(MEM)};
+
 } // namespace
 
 DEFINE_FIRMWARE_FB(FORTE_FB_F_TRIG, STRID(FB_F_TRIG))
 
-const CStringDictionary::TStringId FORTE_FB_F_TRIG::scmInternalsNames[] = {STRID(MEM)};
-const CStringDictionary::TStringId FORTE_FB_F_TRIG::scmInternalsTypeIds[] = {STRID(BOOL)};
-const SInternalVarsInformation FORTE_FB_F_TRIG::scmInternalVars = {1, scmInternalsNames, scmInternalsTypeIds};
-
 FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
     var_MEM(true_BOOL),
     var_CLK(0_BOOL),
     var_Q(0_BOOL),

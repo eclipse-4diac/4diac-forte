@@ -23,15 +23,11 @@
 #include "core/datatypes/forte_array_variable.h"
 
 class FORTE_FB_F_TRIG final : public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_FB_F_TRIG)
+    DECLARE_FIRMWARE_FB(FORTE_FB_F_TRIG)
 
   private:
     static const TEventID scmEventCNFID = 0;
     static const TEventID scmEventREQID = 0;
-
-    static const CStringDictionary::TStringId scmInternalsNames[];
-    static const CStringDictionary::TStringId scmInternalsTypeIds[];
-    static const SInternalVarsInformation scmInternalVars;
 
     CIEC_BOOL var_MEM;
 
@@ -76,4 +72,3 @@ class FORTE_FB_F_TRIG final : public CSimpleFB {
       evt_REQ(paCLK, paQ);
     }
 };
-

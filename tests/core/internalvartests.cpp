@@ -17,23 +17,21 @@
 #include <basicfb.h>
 #include "fbcontainermock.h"
 
-USE_STRING_ID(BOOL);
 USE_STRING_ID(CV);
 USE_STRING_ID(DT);
 USE_STRING_ID(QD);
 USE_STRING_ID(QU);
-USE_STRING_ID(UINT);
 
 const SFBInterfaceSpec gcEmptyInterface = {};
 
 class CInternalVarTestFB : public CBasicFB {
 
   public:
-    CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) :
+    CInternalVarTestFB(std::span<const CStringDictionary::TStringId> paVarInternalNames) :
         CBasicFB(CFBContainerMock::smDefaultFBContMock,
                  gcEmptyInterface,
                  CStringDictionary::scmInvalidStringId,
-                 paVarInternals),
+                 paVarInternalNames),
         var_QU(false_BOOL),
         var_QD(false_BOOL),
         var_CV(0_UINT) {
@@ -94,23 +92,11 @@ class CInternalVarTestFB : public CBasicFB {
 
 BOOST_AUTO_TEST_SUITE(internal_vars)
 
-BOOST_AUTO_TEST_CASE(checkNullInternalVarsAreAllowed) {
-  // check that we can create an FB where we have a 0 internal struct which has all parts set to zero
-  CStringDictionary::TStringId namelist[1] = {STRID(DT)};
-
-  CInternalVarTestFB testFB(nullptr);
-  BOOST_CHECK(nullptr == testFB.getVar(namelist, 1));
-  // check that we should at least get the ECC variable
-  namelist[0] = CStringDictionary::insert("!ECC");
-  BOOST_CHECK(nullptr != testFB.getVar(namelist, 1));
-}
-
 BOOST_AUTO_TEST_CASE(checkEmptyInternalVarsAreAllowed) {
   // check that we can create an FB where we have a var internal struct which has all parts set to zero
-  SInternalVarsInformation varData = {0, nullptr, nullptr};
   CStringDictionary::TStringId namelist[1] = {STRID(DT)};
 
-  CInternalVarTestFB testFB(&varData);
+  CInternalVarTestFB testFB({});
   BOOST_CHECK(nullptr == testFB.getVar(namelist, 1));
   // check that we should at least get the ECC variable
   namelist[0] = CStringDictionary::insert("!ECC");
@@ -118,16 +104,12 @@ BOOST_AUTO_TEST_CASE(checkEmptyInternalVarsAreAllowed) {
 }
 
 BOOST_AUTO_TEST_CASE(sampleInteralVarList) {
+  auto varInternalNames = std::array{STRID(QU), STRID(QD), STRID(CV)};
 
-  CStringDictionary::TStringId varInternalNames[] = {STRID(QU), STRID(QD), STRID(CV)};
-  CStringDictionary::TStringId varInternalTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(UINT)};
-
-  SInternalVarsInformation varData{3, varInternalNames, varInternalTypeIds};
-
-  CInternalVarTestFB testFB(&varData);
+  CInternalVarTestFB testFB(varInternalNames);
   BOOST_ASSERT(testFB.initialize());
 
-  for (size_t i = 0; i < varData.mNumIntVars; i++) {
+  for (size_t i = 0; i < varInternalNames.size(); i++) {
     CIEC_ANY *var = testFB.getVar(&(varInternalNames[i]), 1);
     BOOST_CHECK(nullptr != var);
     BOOST_CHECK_EQUAL(var, testFB.getVarInternal(static_cast<unsigned int>(i)));
@@ -139,13 +121,9 @@ BOOST_AUTO_TEST_CASE(sampleInteralVarList) {
 }
 
 BOOST_AUTO_TEST_CASE(testToStringWithInternalVariables) {
+  auto varInternalNames = std::array{STRID(QU), STRID(QD), STRID(CV)};
 
-  CStringDictionary::TStringId varInternalNames[] = {STRID(QU), STRID(QD), STRID(CV)};
-  CStringDictionary::TStringId varInternalTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(UINT)};
-
-  SInternalVarsInformation varData{3, varInternalNames, varInternalTypeIds};
-
-  CInternalVarTestFB testFB(&varData);
+  CInternalVarTestFB testFB(varInternalNames);
   BOOST_ASSERT(testFB.initialize());
   constexpr char result[] = "(QU:=FALSE, QD:=FALSE, CV:=0)";
   std::string buffer;

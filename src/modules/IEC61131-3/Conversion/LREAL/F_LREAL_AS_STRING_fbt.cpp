@@ -53,7 +53,7 @@ namespace {
 
 
 FORTE_F_LREAL_AS_STRING::FORTE_F_LREAL_AS_STRING(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_LREAL),
     var_OUT(""_STRING),
     conn_CNF(*this, 0),

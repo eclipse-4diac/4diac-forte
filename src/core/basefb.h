@@ -21,18 +21,6 @@
 
 #include "funcbloc.h"
 
-/*!\ingroup CORE
- * \brief structure to hold the data needed for creating the internal vars
- *
- */
-struct SInternalVarsInformation {
-    TPortId mNumIntVars; //!< Number of internal vars
-    const CStringDictionary::TStringId *mIntVarsNames; //!< List of the internalvarsnames
-    const CStringDictionary::TStringId *mIntVarsDataTypeNames; //!< List of the data type names for the internal vars
-
-    TPortId getVarId(CStringDictionary::TStringId paInternalName) const;
-};
-
 class CBaseFB : public CFunctionBlock {
   public:
     ~CBaseFB() override = default;
@@ -49,7 +37,7 @@ class CBaseFB : public CFunctionBlock {
     CBaseFB(forte::core::CFBContainer &paContainer,
             const SFBInterfaceSpec &paInterfaceSpec,
             CStringDictionary::TStringId paInstanceNameId,
-            const SInternalVarsInformation *const paVarInternals);
+            std::span<const CStringDictionary::TStringId> paVarInternalNames);
 
     /*! \brief Get the internal variable with given number
      *
@@ -73,5 +61,5 @@ class CBaseFB : public CFunctionBlock {
      */
     CIEC_ANY *getInternalVar(CStringDictionary::TStringId paInternalName);
 
-    const SInternalVarsInformation *const cmVarInternals; //!< struct holding the information on the internal vars.
+    const std::span<const CStringDictionary::TStringId> cmVarInternalNames;
 };

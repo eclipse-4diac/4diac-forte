@@ -53,7 +53,7 @@ namespace {
 
 
 FORTE_F_LWORD_TO_SINT::FORTE_F_LWORD_TO_SINT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_LWORD),
     var_OUT(0_SINT),
     conn_CNF(*this, 0),

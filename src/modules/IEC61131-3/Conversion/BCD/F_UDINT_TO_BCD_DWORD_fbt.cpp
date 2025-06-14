@@ -53,7 +53,7 @@ namespace {
 
 FORTE_F_UDINT_TO_BCD_DWORD::FORTE_F_UDINT_TO_BCD_DWORD(const CStringDictionary::TStringId paInstanceNameId,
                                                        forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_UDINT),
     var_OUT(0_DWORD),
     conn_CNF(*this, 0),

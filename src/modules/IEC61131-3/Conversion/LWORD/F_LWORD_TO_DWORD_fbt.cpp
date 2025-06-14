@@ -53,7 +53,7 @@ namespace {
 
 
 FORTE_F_LWORD_TO_DWORD::FORTE_F_LWORD_TO_DWORD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_LWORD),
     var_OUT(0_DWORD),
     conn_CNF(*this, 0),

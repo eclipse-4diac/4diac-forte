@@ -53,7 +53,7 @@ namespace {
 
 
 FORTE_F_WORD_TO_INT::FORTE_F_WORD_TO_INT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_WORD),
     var_OUT(0_INT),
     conn_CNF(*this, 0),

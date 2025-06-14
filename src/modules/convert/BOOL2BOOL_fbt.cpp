@@ -51,7 +51,7 @@ namespace {
 
 FORTE_BOOL2BOOL::FORTE_BOOL2BOOL(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(false_BOOL),
     var_OUT(false_BOOL),
     conn_CNF(*this, 0),

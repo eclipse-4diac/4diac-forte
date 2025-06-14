@@ -24,25 +24,21 @@
 
 USE_STRING_ID(Event);
 
-namespace {
-
-  TPortId getPortId(CStringDictionary::TStringId paPortNameId,
-                    std::span<const CStringDictionary::TStringId> paPortNames) {
-    auto it = std::find(paPortNames.begin(), paPortNames.end(), paPortNameId);
-    if (it == paPortNames.end()) {
-      return cgInvalidPortId;
-    }
-    return static_cast<TPortId>(it - paPortNames.begin());
+TPortId forte::getPortId(CStringDictionary::TStringId paPortNameId,
+                         std::span<const CStringDictionary::TStringId> paPortNames) {
+  auto it = std::find(paPortNames.begin(), paPortNames.end(), paPortNameId);
+  if (it == paPortNames.end()) {
+    return cgInvalidPortId;
   }
-
-} // namespace
+  return static_cast<TPortId>(it - paPortNames.begin());
+}
 
 TEventID SFBInterfaceSpec::getEIID(CStringDictionary::TStringId paEINameId) const {
-  return static_cast<TEventID>(getPortId(paEINameId, mEINames));
+  return static_cast<TEventID>(forte::getPortId(paEINameId, mEINames));
 }
 
 TEventID SFBInterfaceSpec::getEOID(CStringDictionary::TStringId paEONameId) const {
-  return static_cast<TEventID>(getPortId(paEONameId, mEONames));
+  return static_cast<TEventID>(forte::getPortId(paEONameId, mEONames));
 }
 
 CStringDictionary::TStringId SFBInterfaceSpec::getEIType(TEventID paEIID) const {
@@ -60,21 +56,21 @@ CStringDictionary::TStringId SFBInterfaceSpec::getEOType(TEventID paEOID) const 
 }
 
 TPortId SFBInterfaceSpec::getDIID(CStringDictionary::TStringId paDINameId) const {
-  return getPortId(paDINameId, mDINames);
+  return forte::getPortId(paDINameId, mDINames);
 }
 
 TPortId SFBInterfaceSpec::getDOID(CStringDictionary::TStringId paDONameId) const {
-  return getPortId(paDONameId, mDONames);
+  return forte::getPortId(paDONameId, mDONames);
 }
 
 TPortId SFBInterfaceSpec::getDIOID(CStringDictionary::TStringId paDIONameId) const {
-  return getPortId(paDIONameId, mDIONames);
+  return forte::getPortId(paDIONameId, mDIONames);
 }
 
 TPortId SFBInterfaceSpec::getPlugID(CStringDictionary::TStringId paPlugNameId) const {
-  return getPortId(paPlugNameId, mPlugNames);
+  return forte::getPortId(paPlugNameId, mPlugNames);
 }
 
 TPortId SFBInterfaceSpec::getSocketID(CStringDictionary::TStringId paSocketNameId) const {
-  return getPortId(paSocketNameId, mSocketNames);
+  return forte::getPortId(paSocketNameId, mSocketNames);
 }

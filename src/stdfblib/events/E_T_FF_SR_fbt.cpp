@@ -53,7 +53,7 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
 
 FORTE_E_T_FF_SR::FORTE_E_T_FF_SR(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_Q(0_BOOL),
     conn_EO(*this, 0),
     conn_Q(*this, 0, var_Q) {

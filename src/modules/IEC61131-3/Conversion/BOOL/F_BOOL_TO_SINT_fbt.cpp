@@ -53,7 +53,7 @@ namespace {
 
 FORTE_F_BOOL_TO_SINT::FORTE_F_BOOL_TO_SINT(const CStringDictionary::TStringId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(false_BOOL),
     var_OUT(0_SINT),
     conn_CNF(*this, 0),

@@ -45,11 +45,11 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
       const SFBInterfaceSpec gcEmptyInterface = {};
 
     public:
-      CInternalVarTestFB(const SInternalVarsInformation *paVarInternals) :
+      CInternalVarTestFB(std::span<const CStringDictionary::TStringId> paVarInternalNames) :
           CBasicFB(CFBContainerMock::smDefaultFBContMock,
                    gcEmptyInterface,
                    CStringDictionary::scmInvalidStringId,
-                   paVarInternals) {
+                   paVarInternalNames) {
       }
 
       CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
@@ -105,10 +105,8 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
       CIEC_UINT var_CV;
   };
 
-  CStringDictionary::TStringId varInternalNames[] = {STRID(QU), STRID(QD), STRID(CV)};
-  CStringDictionary::TStringId varInternalTypeIds[] = {STRID(BOOL), STRID(BOOL), STRID(UINT)};
-  SInternalVarsInformation varData{3, varInternalNames, varInternalTypeIds};
-  CInternalVarTestFB testFb(&varData);
+  const auto cInternalsNames = std::array{STRID(QU), STRID(QD), STRID(CV)};
+  CInternalVarTestFB testFb(cInternalsNames);
   BOOST_ASSERT(testFb.initialize());
 }
 

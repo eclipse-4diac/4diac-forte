@@ -29,10 +29,6 @@ class FORTE_FB_R_TRIG final : public CSimpleFB {
     static const TEventID scmEventCNFID = 0;
     static const TEventID scmEventREQID = 0;
 
-    static const CStringDictionary::TStringId scmInternalsNames[];
-    static const CStringDictionary::TStringId scmInternalsTypeIds[];
-    static const SInternalVarsInformation scmInternalVars;
-
     CIEC_BOOL var_MEM;
 
     CIEC_ANY *getVarInternal(size_t) override;

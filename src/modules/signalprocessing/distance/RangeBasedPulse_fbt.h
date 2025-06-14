@@ -33,11 +33,6 @@ class FORTE_signalprocessing__distance__RangeBasedPulse final : public CSimpleFB
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
 
-
-    static const CStringDictionary::TStringId scmInternalsNames[];
-    static const CStringDictionary::TStringId scmInternalsTypeIds[];
-    static const SInternalVarsInformation scmInternalVars;
-
     CIEC_UDINT var_DIST_REMAINDER;
 
     CIEC_ANY *getVarInternal(size_t) override;

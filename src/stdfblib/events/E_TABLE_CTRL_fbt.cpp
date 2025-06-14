@@ -63,7 +63,7 @@ namespace {
 
 FORTE_E_TABLE_CTRL::FORTE_E_TABLE_CTRL(const CStringDictionary::TStringId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_DT(CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),
     var_N(0_UINT),
     var_DTO(0_TIME),

@@ -56,7 +56,7 @@ DEFINE_FIRMWARE_FB(FORTE_FB_CTU_DINT, STRID(FB_CTU_DINT))
 
 
 FORTE_FB_CTU_DINT::FORTE_FB_CTU_DINT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_CU(0_BOOL),
     var_R(0_BOOL),
     var_PV(0_DINT),

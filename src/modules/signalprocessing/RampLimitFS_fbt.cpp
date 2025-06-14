@@ -70,7 +70,7 @@ namespace {
 
 FORTE_signalprocessing__RampLimitFS::FORTE_signalprocessing__RampLimitFS(
     const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CNF(*this, 0),
     conn_PV(nullptr),
     conn_VAL_ZERO(nullptr),

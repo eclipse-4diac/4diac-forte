@@ -53,7 +53,7 @@ namespace {
 
 
 FORTE_F_STRING_AS_TIME::FORTE_F_STRING_AS_TIME(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(""_STRING),
     var_OUT(0_TIME),
     conn_CNF(*this, 0),

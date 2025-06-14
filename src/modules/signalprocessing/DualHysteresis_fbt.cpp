@@ -67,7 +67,7 @@ namespace {
 
 FORTE_signalprocessing__DualHysteresis::FORTE_signalprocessing__DualHysteresis(
     const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_QI(0_BOOL),
     var_MI(0.5_REAL),
     var_DEAD(0.1_REAL),

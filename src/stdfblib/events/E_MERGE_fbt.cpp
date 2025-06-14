@@ -47,7 +47,7 @@ namespace {
 } // namespace
 FORTE_E_MERGE::FORTE_E_MERGE(const CStringDictionary::TStringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO(*this, 0) {
 }
 

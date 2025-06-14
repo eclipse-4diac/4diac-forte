@@ -53,7 +53,7 @@ namespace {
 
 FORTE_F_ANY_AS_STRING::FORTE_F_ANY_AS_STRING(const CStringDictionary::TStringId paInstanceNameId,
                                              forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_OUT(*this, 0, var_OUT) {

@@ -51,7 +51,7 @@ namespace {
 
 FORTE_UDINT2UDINT::FORTE_UDINT2UDINT(const CStringDictionary::TStringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_UDINT),
     var_OUT(0_UDINT),
     conn_CNF(*this, 0),

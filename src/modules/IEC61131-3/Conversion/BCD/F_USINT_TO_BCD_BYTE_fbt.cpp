@@ -53,7 +53,7 @@ namespace {
 
 FORTE_F_USINT_TO_BCD_BYTE::FORTE_F_USINT_TO_BCD_BYTE(const CStringDictionary::TStringId paInstanceNameId,
                                                      forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_USINT),
     var_OUT(0_BYTE),
     conn_CNF(*this, 0),

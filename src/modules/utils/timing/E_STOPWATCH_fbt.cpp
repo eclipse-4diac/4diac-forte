@@ -43,30 +43,30 @@ USE_STRING_ID(TIME);
 
 DEFINE_FIRMWARE_FB(FORTE_E_STOPWATCH, STRID(E_STOPWATCH))
 
-const auto cDataOutputNames = std::array{STRID(TD)};
-const auto cEventInputNames = std::array{STRID(START), STRID(ET), STRID(STOP), STRID(RESET)};
-const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
-const auto cEventOutputNames = std::array{STRID(EO), STRID(ETO), STRID(RESETO)};
-const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event), STRID(Event)};
-const SFBInterfaceSpec cFBInterfaceSpec = {
-    .mEINames = cEventInputNames,
-    .mEITypeNames = cEventInputTypeIds,
-    .mEONames = cEventOutputNames,
-    .mEOTypeNames = cEventOutputTypeIds,
-    .mDINames = {},
-    .mDONames = cDataOutputNames,
-    .mDIONames = {},
-    .mSocketNames = {},
-    .mPlugNames = {},
-};
+namespace {
+  const auto cDataOutputNames = std::array{STRID(TD)};
+  const auto cEventInputNames = std::array{STRID(START), STRID(ET), STRID(STOP), STRID(RESET)};
+  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
+  const auto cEventOutputNames = std::array{STRID(EO), STRID(ETO), STRID(RESETO)};
+  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event), STRID(Event)};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = cEventInputTypeIds,
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = cEventOutputTypeIds,
+      .mDINames = {},
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
 
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmInternalsNames[] = {STRID(startTime)};
-const CStringDictionary::TStringId FORTE_E_STOPWATCH::scmInternalsTypeIds[] = {STRID(TIME)};
-const SInternalVarsInformation FORTE_E_STOPWATCH::scmInternalVars = {1, scmInternalsNames, scmInternalsTypeIds};
+  const auto cInternalsNames = std::array{STRID(startTime)};
+} // namespace
 
 FORTE_E_STOPWATCH::FORTE_E_STOPWATCH(const CStringDictionary::TStringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
-    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, &scmInternalVars),
+    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
     conn_EO(*this, 0),
     conn_ETO(*this, 1),
     conn_RESETO(*this, 2),

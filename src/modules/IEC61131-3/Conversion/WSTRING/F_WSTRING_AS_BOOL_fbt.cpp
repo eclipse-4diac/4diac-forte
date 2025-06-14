@@ -54,7 +54,7 @@ namespace {
 
 FORTE_F_WSTRING_AS_BOOL::FORTE_F_WSTRING_AS_BOOL(const CStringDictionary::TStringId paInstanceNameId,
                                                  forte::core::CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, nullptr),
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(u""_WSTRING),
     var_OUT(false_BOOL),
     conn_CNF(*this, 0),

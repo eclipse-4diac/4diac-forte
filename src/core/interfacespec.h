@@ -116,3 +116,8 @@ struct SFBInterfaceSpec {
 
     TPortId getSocketID(CStringDictionary::TStringId paSocketNameId) const;
 };
+
+namespace forte {
+  TPortId getPortId(CStringDictionary::TStringId paPortNameId,
+                    std::span<const CStringDictionary::TStringId> paPortNames);
+}
