@@ -139,7 +139,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED {
      * \param paMemberNameId the string id of the member name
      * \return on a valid member name id a pointer to the member var otherwise 0
      */
-    CIEC_ANY *getMemberNamed(std::span<CStringDictionary::TStringId> paMemberNameId);
+    CIEC_ANY *getMemberNamed(std::span<const CStringDictionary::TStringId> paMemberNameId);
 
     size_t getMemberIndex(CStringDictionary::TStringId paMemberNameId);
 

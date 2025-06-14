@@ -108,7 +108,8 @@ EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock &paDstFB,
   return EMGMResponse::Ready;
 }
 
-CConnection::Wrapper CDataConnection::getDelegatingConnection(forte::core::TNameIdentifier &paSrcNameList) {
+CConnection::Wrapper CDataConnection::getDelegatingConnection(
+    const std::span<const CStringDictionary::TStringId> paSrcNameList) {
   switch (getValue().getDataTypeID()) {
     case CIEC_ANY::e_BOOL:
       if (paSrcNameList.size() == 1 && paSrcNameList.front() == STRID(NOT)) {

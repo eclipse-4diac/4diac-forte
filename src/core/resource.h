@@ -130,7 +130,7 @@ class CResource : public CFunctionBlock {
       return true;
     }
 
-    CConnection::Wrapper getOutputConnection(forte::core::TNameIdentifier &paSrcNameList) override;
+    CConnection::Wrapper getOutputConnection(std::span<const CStringDictionary::TStringId> paSrcNameList) override;
 
   protected:
     CResource(const SFBInterfaceSpec &paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);

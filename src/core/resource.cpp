@@ -574,14 +574,13 @@ CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList) {
   return var;
 }
 
-CConnection::Wrapper CResource::getOutputConnection(forte::core::TNameIdentifier &paSrcNameList) {
+CConnection::Wrapper CResource::getOutputConnection(const std::span<const CStringDictionary::TStringId> paSrcNameList) {
   if (paSrcNameList.empty()) {
     return CConnection::Wrapper();
   }
   CStringDictionary::TStringId name = paSrcNameList.front();
   if (const auto conn = getResIf2InConnection(name); conn) {
-    paSrcNameList.erase(paSrcNameList.cbegin());
-    return conn->getDelegatingConnection(paSrcNameList);
+    return conn->getDelegatingConnection(paSrcNameList.subspan(1));
   }
   return CFunctionBlock::getOutputConnection(paSrcNameList);
 }

@@ -14,6 +14,7 @@
  *   Martin Jobst
  *    - add erase functions
  *    - add equality operators
+ *    - add iterator-based constructor
  *******************************************************************************/
 #pragma once
 
@@ -44,11 +45,17 @@ namespace forte::core::util {
       inplace_vector() : mNumElements(0) {
       }
 
-      constexpr inplace_vector(std::initializer_list<value_type> il) {
-        // TODO: improve this to eliminate all static initialization code in stringdict.cpp
-        for (auto elt : il) {
-          mDataStorage[mNumElements++] = elt;
-        }
+      constexpr inplace_vector(std::initializer_list<value_type> il) :
+        mNumElements(il.size()) {
+        assert(size() <= capacity());
+        std::copy(il.begin(), il.end(), mDataStorage.begin());
+      }
+
+      template<typename U>
+      constexpr inplace_vector(U first, U last) :
+        mNumElements(std::distance(first, last)) {
+        assert(size() <= capacity());
+        std::copy(first, last, mDataStorage.begin());
       }
 
       void clear() {

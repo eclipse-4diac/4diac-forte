@@ -34,7 +34,7 @@ class CDataConnection : public CConnection {
 
     EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
 
-    Wrapper getDelegatingConnection(forte::core::TNameIdentifier &paSrcNameList) override;
+    Wrapper getDelegatingConnection(std::span<const CStringDictionary::TStringId> paSrcNameList) override;
 
     void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
 

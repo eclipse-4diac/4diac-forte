@@ -23,9 +23,9 @@ namespace forte::core::internal {
       CMemberDataConnection(CFunctionBlock &paSrcFB,
                                   const TPortId paSrcPortId,
                                   CIEC_ANY &paMember,
-                                  const TNameIdentifier &paMemberName) :
+                                  const std::span<const CStringDictionary::TStringId> paMemberName) :
         CDelegatingDataConnection(paSrcFB, paSrcPortId, paMember),
-        cmMemberName(paMemberName) {
+        cmMemberName(paMemberName.begin(), paMemberName.end()) {
       }
 
       void readData(CIEC_ANY &paValue) const override {

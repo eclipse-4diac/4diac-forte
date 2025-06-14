@@ -28,6 +28,25 @@ BOOST_AUTO_TEST_CASE(newEmptyNameList) {
   BOOST_CHECK_EQUAL(0, identifier.size());
 }
 
+BOOST_AUTO_TEST_CASE(newListInitializedNameList) {
+  forte::core::TNameIdentifier identifier{17, 4, 21};
+
+  BOOST_TEST(identifier.size() == 3);
+  BOOST_TEST(identifier[0] == 17);
+  BOOST_TEST(identifier[1] == 4);
+  BOOST_TEST(identifier[2] == 21);
+}
+
+BOOST_AUTO_TEST_CASE(newIteratorInitializedNameList) {
+  auto values = std::array{17, 4, 21};
+  forte::core::TNameIdentifier identifier(values.begin(), values.end());
+
+  BOOST_TEST(identifier.size() == 3);
+  BOOST_TEST(identifier[0] == 17);
+  BOOST_TEST(identifier[1] == 4);
+  BOOST_TEST(identifier[2] == 21);
+}
+
 BOOST_AUTO_TEST_CASE(capacity) {
   // check that we have the capacity as configured in cmake
   forte::core::TNameIdentifier identifier;

@@ -16,6 +16,7 @@
 #define _CONN_H_
 
 #include <memory>
+#include <span>
 #include <type_traits>
 
 #include "mgmcmd.h"
@@ -125,11 +126,11 @@ class CConnection {
      * @return a delegating connection for the name, an empty wrapper if there is no such delegating connection,
      *          or this if the name list was empty
      */
-    virtual Wrapper getDelegatingConnection(forte::core::TNameIdentifier &paSrcNameList) {
+    virtual Wrapper getDelegatingConnection(const std::span<const CStringDictionary::TStringId> paSrcNameList) {
       if (paSrcNameList.empty()) {
         return Wrapper(this);
       }
-      return Wrapper();
+      return {};
     }
 
     /*! \brief Get the source string of the connection

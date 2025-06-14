@@ -344,7 +344,7 @@ EMGMResponse CFunctionBlock::changeExecutionState(EMGMCommandType paCommand) {
   return nRetVal;
 }
 
-CConnection *CFunctionBlock::getInputConnection(forte::core::TNameIdentifier &paDstNameList) {
+CConnection *CFunctionBlock::getInputConnection(const std::span<const CStringDictionary::TStringId> paDstNameList) {
   if (paDstNameList.empty()) {
     return nullptr;
   }
@@ -361,26 +361,23 @@ CConnection *CFunctionBlock::getInputConnection(forte::core::TNameIdentifier &pa
   return CFBContainer::getInputConnection(paDstNameList);
 }
 
-CConnection::Wrapper CFunctionBlock::getOutputConnection(forte::core::TNameIdentifier &paSrcNameList) {
+CConnection::Wrapper CFunctionBlock::getOutputConnection(
+    const std::span<const CStringDictionary::TStringId> paSrcNameList) {
   if (paSrcNameList.empty()) {
-    return CConnection::Wrapper();
+    return {};
   }
   CStringDictionary::TStringId name = paSrcNameList.front();
   if (const auto conn = getEOConnection(name); conn) {
-    paSrcNameList.erase(paSrcNameList.cbegin());
-    return conn->getDelegatingConnection(paSrcNameList);
+    return conn->getDelegatingConnection(paSrcNameList.subspan(1));
   };
   if (const auto conn = getDOConnection(name); conn) {
-    paSrcNameList.erase(paSrcNameList.cbegin());
-    return conn->getDelegatingConnection(paSrcNameList);
+    return conn->getDelegatingConnection(paSrcNameList.subspan(1));
   };
   if (const auto conn = getDIOOutConnection(name); conn) {
-    paSrcNameList.erase(paSrcNameList.cbegin());
-    return conn->getDelegatingConnection(paSrcNameList);
+    return conn->getDelegatingConnection(paSrcNameList.subspan(1));
   };
   if (const auto plug = getPlugPin(name); plug) {
-    paSrcNameList.erase(paSrcNameList.cbegin());
-    return plug->getAdapterCon().getDelegatingConnection(paSrcNameList);
+    return plug->getAdapterCon().getDelegatingConnection(paSrcNameList.subspan(1));
   };
   return CFBContainer::getOutputConnection(paSrcNameList);
 }

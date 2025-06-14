@@ -38,7 +38,7 @@ CIEC_ANY *CIEC_STRUCT::getMemberNamed(const char *paMemberName) {
   return nullptr;
 }
 
-CIEC_ANY *CIEC_STRUCT::getMemberNamed(std::span<CStringDictionary::TStringId> paMemberName) {
+CIEC_ANY *CIEC_STRUCT::getMemberNamed(const std::span<const CStringDictionary::TStringId> paMemberName) {
   if (paMemberName.empty()) {
     return nullptr;
   }

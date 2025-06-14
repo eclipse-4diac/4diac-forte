@@ -228,26 +228,25 @@ EMGMResponse CFBContainer::changeExecutionState(EMGMCommandType paCommand) {
   return retVal;
 }
 
-CConnection *CFBContainer::getInputConnection(TNameIdentifier &paDstNameList) {
+CConnection *CFBContainer::getInputConnection(const std::span<const CStringDictionary::TStringId> paDstNameList) {
   if (paDstNameList.empty()) {
     return nullptr;
   }
   CStringDictionary::TStringId name = paDstNameList.front();
   if (const auto child = getChild(name); child) {
-    paDstNameList.erase(paDstNameList.begin());
-    return child->getInputConnection(paDstNameList);
+    return child->getInputConnection(paDstNameList.subspan(1));
   }
   return nullptr;
 }
 
-CConnection::Wrapper CFBContainer::getOutputConnection(TNameIdentifier &paSrcNameList) {
+CConnection::Wrapper CFBContainer::getOutputConnection(
+    const std::span<const CStringDictionary::TStringId> paSrcNameList) {
   if (paSrcNameList.empty()) {
     return CConnection::Wrapper();
   }
   CStringDictionary::TStringId name = paSrcNameList.front();
   if (const auto child = getChild(name); child) {
-    paSrcNameList.erase(paSrcNameList.begin());
-    return child->getOutputConnection(paSrcNameList);
+    return child->getOutputConnection(paSrcNameList.subspan(1));
   }
   return CConnection::Wrapper();
 }
