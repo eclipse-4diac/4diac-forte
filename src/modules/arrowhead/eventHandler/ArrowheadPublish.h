@@ -35,22 +35,16 @@ class FORTE_ArrowheadPublish : public CCompositeFB {
 
     static const TEventID scmEventpublishedID = 0;
 
-
     FORTE_ArrowheadPublishAdp &ArrowheadPublishAdp() {
       return (*static_cast<FORTE_ArrowheadPublishAdp *>(getAdapterUnchecked(0)));
     };
     static const int scmArrowheadPublishAdpAdpNum = 0;
 
-    static const SCFB_FBConnectionData scmEventConnections[];
-
-    static const SCFB_FBConnectionData scmDataConnections[];
-    static const SCFB_FBNData scmFBNData;
-
   public:
     FORTE_ArrowheadPublish(const CStringDictionary::TStringId paInstanceNameId,
                            forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_ArrowheadPublish() override = default;
+        ~FORTE_ArrowheadPublish() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

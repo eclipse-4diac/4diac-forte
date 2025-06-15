@@ -42,12 +42,6 @@ class FORTE_E_BLINK_TRAIN final : public CCompositeFB {
     static const TEventID scmEventSTOPID = 1;
     static const TEventID scmEventCNFID = 0;
 
-
-    static const SCFB_FBInstanceData scmInternalFBs[];
-    static const SCFB_FBConnectionData scmEventConnections[];
-    static const SCFB_FBConnectionData scmDataConnections[];
-    static const SCFB_FBNData scmFBNData;
-
     forte::core::CInternalFB<FORTE_E_PULSE> fb_E_TP;
     forte::core::CInternalFB<FORTE_E_TRAIN> fb_E_TRAIN;
     forte::core::CInternalFB<GEN_ADD> fb_ADD_2;

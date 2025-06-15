@@ -31,13 +31,6 @@ class FORTE_E_R_TRIG : public CCompositeFB {
     static const TEventID scmEventEIID = 0;
     static const TEventID scmEventEOID = 0;
 
-
-    static const SCFB_FBInstanceData scmInternalFBs[];
-    static const SCFB_FBParameter scmParamters[];
-    static const SCFB_FBConnectionData scmEventConnections[];
-    static const SCFB_FBConnectionData scmDataConnections[];
-    static const SCFB_FBNData scmFBNData;
-
     forte::core::CInternalFB<FORTE_E_D_FF> fb_E_D_FF;
     forte::core::CInternalFB<FORTE_E_SWITCH> fb_E_SWITCH;
 

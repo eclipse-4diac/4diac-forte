@@ -42,12 +42,6 @@ class FORTE_E_TRAIN final : public CCompositeFB {
     static const TEventID scmEventSTOPID = 1;
     static const TEventID scmEventEOID = 0;
 
-
-    static const SCFB_FBInstanceData scmInternalFBs[];
-    static const SCFB_FBConnectionData scmEventConnections[];
-    static const SCFB_FBConnectionData scmDataConnections[];
-    static const SCFB_FBNData scmFBNData;
-
     forte::core::CInternalFB<FORTE_E_CTU> fb_CTR;
     forte::core::CInternalFB<FORTE_E_SWITCH> fb_GATE;
     forte::core::CInternalFB<FORTE_E_DELAY> fb_DLY;

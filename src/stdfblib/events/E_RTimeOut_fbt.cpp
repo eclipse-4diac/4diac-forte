@@ -48,36 +48,33 @@ namespace {
       .mSocketNames = cSocketNameIds,
       .mPlugNames = {},
   };
+
+  const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
+      {STRID(TimeOutSocket), STRID(START), STRID(DLY), STRID(START)},
+      {STRID(TimeOutSocket), STRID(STOP), STRID(DLY), STRID(STOP)},
+      {STRID(DLY), STRID(EO), STRID(TimeOutSocket), STRID(TimeOut)},
+  });
+
+  const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
+      {STRID(TimeOutSocket), STRID(DT), STRID(DLY), STRID(DT)},
+  });
+
+  const SCFB_FBNData cFBNData = {
+      .mEventConnections = cEventConnections,
+      .mDataConnections = cDataConnections,
+      .mAdapterConnections = {},
+  };
 } // namespace
 
 FORTE_E_RTimeOut::FORTE_E_RTimeOut(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_DLY(STRID(DLY), *this),
     var_TimeOutSocket(STRID(TimeOutSocket), *this, forte::cgCFBParentAdapterlistIDMarker) {};
 
 void FORTE_E_RTimeOut::setInitialValues() {
   CCompositeFB::setInitialValues();
 }
-
-const SCFB_FBInstanceData FORTE_E_RTimeOut::scmInternalFBs[] = {{STRID(DLY), STRID(E_RDELAY)}};
-
-const SCFB_FBConnectionData FORTE_E_RTimeOut::scmEventConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(TimeOutSocket), STRID(START)), CCompositeFB::scmAdapterMarker | 0,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(START)), 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(TimeOutSocket), STRID(STOP)), CCompositeFB::scmAdapterMarker | 0,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(STOP)), 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(EO)), 0,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(TimeOutSocket), STRID(TimeOut)), CCompositeFB::scmAdapterMarker | 0},
-};
-
-const SCFB_FBConnectionData FORTE_E_RTimeOut::scmDataConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(TimeOutSocket), STRID(DT)), CCompositeFB::scmAdapterMarker | 0,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(DLY), STRID(DT)), 0},
-};
-
-const SCFB_FBNData FORTE_E_RTimeOut::scmFBNData = {1, scmInternalFBs,     3, scmEventConnections,
-                                                   1, scmDataConnections, 0, nullptr};
 
 void FORTE_E_RTimeOut::readInputData(TEventID) {
   // nothing to do

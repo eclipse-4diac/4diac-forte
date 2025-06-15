@@ -38,12 +38,6 @@ class FORTE_E_TABLE final : public CCompositeFB {
     static const TEventID scmEventSTOPID = 1;
     static const TEventID scmEventEOID = 0;
 
-
-    static const SCFB_FBInstanceData scmInternalFBs[];
-    static const SCFB_FBConnectionData scmEventConnections[];
-    static const SCFB_FBConnectionData scmDataConnections[];
-    static const SCFB_FBNData scmFBNData;
-
     forte::core::CInternalFB<FORTE_E_TABLE_CTRL> fb_E_TABLE_CTRL;
     forte::core::CInternalFB<FORTE_E_DELAY> fb_E_DELAY;
 

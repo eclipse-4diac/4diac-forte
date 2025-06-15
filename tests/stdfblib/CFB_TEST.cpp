@@ -61,11 +61,39 @@ namespace {
       .mPlugNames = {},
   };
 
+  const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
+      {CStringDictionary::scmInvalidStringId, STRID(SET), STRID(E_MUX_2), STRID(EI1)},
+      {CStringDictionary::scmInvalidStringId, STRID(RESET), STRID(E_MUX_2), STRID(EI2)},
+      {STRID(E_MUX_2), STRID(EO), STRID(PERMIT_OP), STRID(EI)},
+      {STRID(SET_CHANGED), STRID(EO1), CStringDictionary::scmInvalidStringId, STRID(CNF)},
+      {STRID(SET_CHANGED), STRID(EO0), STRID(E_SR), STRID(S)},
+      {STRID(RESET_CHANGED), STRID(EO0), CStringDictionary::scmInvalidStringId, STRID(CNF)},
+      {STRID(RESET_CHANGED), STRID(EO1), STRID(E_SR), STRID(R)},
+      {STRID(PERMIT_OP), STRID(EO), STRID(E_DEMUX_2), STRID(EI)},
+      {STRID(E_DEMUX_2), STRID(EO1), STRID(SET_CHANGED), STRID(EI)},
+      {STRID(E_DEMUX_2), STRID(EO2), STRID(RESET_CHANGED), STRID(EI)},
+      {STRID(E_SR), STRID(EO), CStringDictionary::scmInvalidStringId, STRID(CNF)},
+      {STRID(E_SR), STRID(EO), CStringDictionary::scmInvalidStringId, STRID(CHANGED)},
+  });
+
+  const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
+      {CStringDictionary::scmInvalidStringId, STRID(QI), STRID(PERMIT_OP), STRID(PERMIT)},
+      {STRID(E_SR), STRID(Q), CStringDictionary::scmInvalidStringId, STRID(QO)},
+      {STRID(E_SR), STRID(Q), STRID(SET_CHANGED), STRID(G)},
+      {STRID(E_SR), STRID(Q), STRID(RESET_CHANGED), STRID(G)},
+      {STRID(E_MUX_2), STRID(K), STRID(E_DEMUX_2), STRID(K)},
+  });
+
+  const SCFB_FBNData cFBNData = {
+      .mEventConnections = cEventConnections,
+      .mDataConnections = cDataConnections,
+      .mAdapterConnections = {},
+  };
 } // namespace
 
 FORTE_CFB_TEST::FORTE_CFB_TEST(const CStringDictionary::TStringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_PERMIT_OP(STRID(PERMIT_OP), *this),
     fb_E_SR(STRID(E_SR), *this),
     fb_SET_CHANGED(STRID(SET_CHANGED), *this),
@@ -82,52 +110,6 @@ void FORTE_CFB_TEST::setInitialValues() {
   conn_if2in_QI.getValue() = 0_BOOL;
   fb_E_SR->conn_Q.getValue() = 0_BOOL;
 }
-
-const SCFB_FBInstanceData FORTE_CFB_TEST::scmInternalFBs[] = {
-    {STRID(PERMIT_OP), STRID(E_PERMIT)},  {STRID(E_SR), STRID(E_SR)},       {STRID(SET_CHANGED), STRID(E_SWITCH)},
-    {STRID(E_DEMUX_2), STRID(E_DEMUX_2)}, {STRID(E_MUX_2), STRID(E_MUX_2)}, {STRID(RESET_CHANGED), STRID(E_SWITCH)},
-};
-
-const SCFB_FBConnectionData FORTE_CFB_TEST::scmEventConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(SET)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(EI1)),
-     4},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(RESET)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(EI2)),
-     4},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(EO)), 4,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(PERMIT_OP), STRID(EI)), 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(EO1)), 2,
-     GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(EO0)), 2,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(S)), 1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(EO0)), 5,
-     GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(EO1)), 5,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(R)), 1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(PERMIT_OP), STRID(EO)), 0,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(EI)), 3},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(EO1)), 3,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(EI)), 2},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(EO2)), 3,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(EI)), 5},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(EO)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(EO)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CHANGED)),
-     -1},
-};
-
-const SCFB_FBConnectionData FORTE_CFB_TEST::scmDataConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(QI)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(PERMIT_OP), STRID(PERMIT)), 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(Q)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(QO)), -1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(Q)), 1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(SET_CHANGED), STRID(G)), 2},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SR), STRID(Q)), 1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(RESET_CHANGED), STRID(G)), 5},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_MUX_2), STRID(K)), 4,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX_2), STRID(K)), 3},
-};
-
-const SCFB_FBNData FORTE_CFB_TEST::scmFBNData = {
-    6, scmInternalFBs, 12, scmEventConnections, 5, scmDataConnections, 0, nullptr, 0, nullptr};
 
 void FORTE_CFB_TEST::readInputData(const TEventID paEIID) {
   switch (paEIID) {

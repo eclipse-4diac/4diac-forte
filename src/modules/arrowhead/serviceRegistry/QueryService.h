@@ -46,21 +46,17 @@ class FORTE_QueryService : public CCompositeFB {
 
     static const TEventID scmEventqueriedID = 0;
 
-
     FORTE_QueryServicesAdp &queryServices() {
       return (*static_cast<FORTE_QueryServicesAdp *>(getAdapterUnchecked(0)));
     };
     static const int scm_nqueryServicesAdpNum = 0;
 
-    static const SCFB_FBConnectionData scmEventConnections[];
-
-    static const SCFB_FBConnectionData scmDataConnections[];
     static const SCFB_FBNData scmFBNData;
 
   public:
     FORTE_QueryService(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_QueryService() override = default;
+        ~FORTE_QueryService() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

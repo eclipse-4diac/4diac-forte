@@ -46,19 +46,19 @@ namespace {
   };
 } // namespace
 
-const SCFB_FBConnectionData FORTE_ArrowheadPublish::scmEventConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(publish)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(publish)), CCompositeFB::scmAdapterMarker | 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(published)),
-     CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(published)), -1},
+const SCFB_FBConnectionData FORTE_ArrowheadPublish::auto cEventConnections = std::to_array<SCFB_FBConnectionData>{
+    {CStringDictionary::scmInvalidStringId, STRID(publish), -1,
+     STRID(ArrowheadPublishAdp), STRID(publish)), CCompositeFB::scmAdapterMarker | 0},
+    {STRID(ArrowheadPublishAdp), STRID(published)),
+     CCompositeFB::scmAdapterMarker | 0, CStringDictionary::scmInvalidStringId, STRID(published), -1},
 };
 
-const SCFB_FBConnectionData FORTE_ArrowheadPublish::scmDataConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(publishEvent)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(publishEvent)),
+const SCFB_FBConnectionData FORTE_ArrowheadPublishauto cDataConnections = std::to_array<SCFB_FBConnectionData>{
+    {CStringDictionary::scmInvalidStringId, STRID(publishEvent), -1,
+     STRID(ArrowheadPublishAdp), STRID(publishEvent)),
      CCompositeFB::scmAdapterMarker | 0},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(endpoint)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ArrowheadPublishAdp), STRID(endpoint)),
+    {CStringDictionary::scmInvalidStringId, STRID(endpoint), -1,
+     STRID(ArrowheadPublishAdp), STRID(endpoint)),
      CCompositeFB::scmAdapterMarker | 0},
 };
 

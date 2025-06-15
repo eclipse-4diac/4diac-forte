@@ -24,16 +24,9 @@
 #include "E_RDELAY_fbt.h"
 
 class FORTE_E_RTimeOut final : public CCompositeFB {
-  DECLARE_FIRMWARE_FB(FORTE_E_RTimeOut)
+    DECLARE_FIRMWARE_FB(FORTE_E_RTimeOut)
 
   private:
-
-
-    static const SCFB_FBInstanceData scmInternalFBs[];
-    static const SCFB_FBConnectionData scmEventConnections[];
-    static const SCFB_FBConnectionData scmDataConnections[];
-    static const SCFB_FBNData scmFBNData;
-
     forte::core::CInternalFB<FORTE_E_RDELAY> fb_DLY;
 
     void readInputData(TEventID paEIID) override;
@@ -53,4 +46,3 @@ class FORTE_E_RTimeOut final : public CCompositeFB {
     CDataConnection *getDOConUnchecked(TPortId) override;
     CDataConnection *getIf2InConUnchecked(TPortId) override;
 };
-

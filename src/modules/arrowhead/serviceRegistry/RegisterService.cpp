@@ -49,28 +49,19 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = cPlugNameIds,
   };
+
+  const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
+      {CStringDictionary::scmInvalidStringId, STRID(register), STRID(registerService), STRID(registerService)},
+      {CStringDictionary::scmInvalidStringId, STRID(unregister), STRID(registerService), STRID(unregisterService)},
+      {STRID(registerService), STRID(doneRegister), CStringDictionary::scmInvalidStringId, STRID(doneRegister)},
+      {STRID(registerService), STRID(doneUnregister), CStringDictionary::scmInvalidStringId, STRID(doneUnregister)},
+  });
+
+  const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
+      {CStringDictionary::scmInvalidStringId, STRID(serviceRegistryEntry), STRID(registerService),
+       STRID(serviceRegistryEntry)},
+      {CStringDictionary::scmInvalidStringId, STRID(endpoint), STRID(registerService), STRID(endpoint)},
+  });
 } // namespace
 
-const SCFB_FBConnectionData FORTE_RegisterService::scmEventConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(register)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(registerService), STRID(registerService)),
-     CCompositeFB::scmAdapterMarker | 0},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(unregister)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(registerService), STRID(unregisterService)),
-     CCompositeFB::scmAdapterMarker | 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(registerService), STRID(doneRegister)), CCompositeFB::scmAdapterMarker | 0,
-     GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(doneRegister)), -1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(registerService), STRID(doneUnregister)),
-     CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(doneUnregister)), -1},
-};
-
-const SCFB_FBConnectionData FORTE_RegisterService::scmDataConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(serviceRegistryEntry)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(registerService), STRID(serviceRegistryEntry)),
-     CCompositeFB::scmAdapterMarker | 0},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(endpoint)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(registerService), STRID(endpoint)), CCompositeFB::scmAdapterMarker | 0},
-};
-
-const SCFB_FBNData FORTE_RegisterService::scmFBNData = {
-    0, 0, 4, scmEventConnections, 0, 0, 2, scmDataConnections, 0, 0, 0, nullptr, 0, 0};
+const SCFB_FBNData FORTE_RegisterService::scmFBNData = {0, 0, cEventConnections, cDataConnections, {}, 0, 0};

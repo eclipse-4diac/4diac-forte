@@ -37,21 +37,17 @@ class FORTE_RegisterService : public CCompositeFB {
     static const TEventID scmEventdoneRegisterID = 0;
     static const TEventID scmEventdoneUnregisterID = 1;
 
-
     FORTE_RegisterServiceAdp &registerService() {
       return (*static_cast<FORTE_RegisterServiceAdp *>(getAdapterUnchecked(0)));
     };
     static const int scm_nregisterServiceAdpNum = 0;
 
-    static const SCFB_FBConnectionData scmEventConnections[];
-
-    static const SCFB_FBConnectionData scmDataConnections[];
     static const SCFB_FBNData scmFBNData;
 
   public:
     FORTE_RegisterService(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_RegisterService() override = default;
+        ~FORTE_RegisterService() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

@@ -66,11 +66,35 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
+
+  const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
+      {CStringDictionary::scmInvalidStringId, STRID(START), STRID(E_TABLE), STRID(START)},
+      {CStringDictionary::scmInvalidStringId, STRID(STOP), STRID(E_TABLE), STRID(STOP)},
+      {STRID(E_TABLE), STRID(EO), STRID(F_SUB), STRID(REQ)},
+      {STRID(F_SUB), STRID(CNF), STRID(E_DEMUX), STRID(EI)},
+      {STRID(E_DEMUX), STRID(EO0), CStringDictionary::scmInvalidStringId, STRID(EO0)},
+      {STRID(E_DEMUX), STRID(EO1), CStringDictionary::scmInvalidStringId, STRID(EO1)},
+      {STRID(E_DEMUX), STRID(EO2), CStringDictionary::scmInvalidStringId, STRID(EO2)},
+      {STRID(E_DEMUX), STRID(EO3), CStringDictionary::scmInvalidStringId, STRID(EO3)},
+  });
+
+  const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
+      {CStringDictionary::scmInvalidStringId, STRID(DT), STRID(E_TABLE), STRID(DT)},
+      {CStringDictionary::scmInvalidStringId, STRID(N), STRID(E_TABLE), STRID(N)},
+      {STRID(E_TABLE), STRID(CV), STRID(F_SUB), STRID(IN1)},
+      {STRID(F_SUB), STRID(OUT), STRID(E_DEMUX), STRID(K)},
+  });
+
+  const SCFB_FBNData cFBNData = {
+      .mEventConnections = cEventConnections,
+      .mDataConnections = cDataConnections,
+      .mAdapterConnections = {},
+  };
 } // namespace
 
 FORTE_E_N_TABLE::FORTE_E_N_TABLE(const CStringDictionary::TStringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_TABLE(STRID(E_TABLE), *this),
     fb_E_DEMUX(STRID(E_DEMUX), *this),
     fb_F_SUB(STRID(F_SUB), *this),
@@ -91,40 +115,6 @@ void FORTE_E_N_TABLE::setInitialValues() {
 void FORTE_E_N_TABLE::setFBNetworkInitialValues() {
   fb_F_SUB->var_IN2 = 1_UINT;
 }
-
-const SCFB_FBInstanceData FORTE_E_N_TABLE::scmInternalFBs[] = {
-    {STRID(E_TABLE), STRID(E_TABLE)}, {STRID(E_DEMUX), STRID(E_DEMUX)}, {STRID(F_SUB), STRID(F_SUB)}};
-
-const SCFB_FBConnectionData FORTE_E_N_TABLE::scmEventConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(START)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(START)), 0},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(STOP)),
-     0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(EO)), 0,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_SUB), STRID(REQ)), 2},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_SUB), STRID(CNF)), 2,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EI)), 1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EO0)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO0)),
-     -1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EO1)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO1)),
-     -1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EO2)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO2)),
-     -1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(EO3)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO3)),
-     -1},
-};
-
-const SCFB_FBConnectionData FORTE_E_N_TABLE::scmDataConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(DT)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(DT)), 0},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(N)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(N)), 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TABLE), STRID(CV)), 0,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_SUB), STRID(IN1)), 2},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_SUB), STRID(OUT)), 2,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DEMUX), STRID(K)), 1},
-};
-
-const SCFB_FBNData FORTE_E_N_TABLE::scmFBNData = {
-    3, scmInternalFBs, 8, scmEventConnections, 4, scmDataConnections, 0, nullptr, 0, nullptr};
 
 void FORTE_E_N_TABLE::readInputData(const TEventID paEIID) {
   switch (paEIID) {

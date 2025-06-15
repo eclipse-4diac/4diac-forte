@@ -38,7 +38,6 @@ USE_STRING_ID(START);
 USE_STRING_ID(STOP);
 USE_STRING_ID(TIME);
 
-
 DEFINE_FIRMWARE_FB(FORTE_E_TP, STRID(E_TP))
 
 namespace {
@@ -59,11 +58,32 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
 
+  const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
+      {STRID(E_RS), STRID(EO), CStringDictionary::scmInvalidStringId, STRID(CNF)},
+      {CStringDictionary::scmInvalidStringId, STRID(R), STRID(E_DELAY), STRID(STOP)},
+      {CStringDictionary::scmInvalidStringId, STRID(R), STRID(E_RS), STRID(R)},
+      {STRID(E_DELAY), STRID(EO), STRID(E_RS), STRID(R)},
+      {CStringDictionary::scmInvalidStringId, STRID(REQ), STRID(E_PERMIT), STRID(EI)},
+      {STRID(E_PERMIT), STRID(EO), STRID(E_RS), STRID(S)},
+      {STRID(E_PERMIT), STRID(EO), STRID(E_DELAY), STRID(START)},
+  });
+
+  const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
+      {CStringDictionary::scmInvalidStringId, STRID(PT), STRID(E_DELAY), STRID(DT)},
+      {STRID(E_RS), STRID(Q), CStringDictionary::scmInvalidStringId, STRID(Q)},
+      {CStringDictionary::scmInvalidStringId, STRID(IN), STRID(E_PERMIT), STRID(PERMIT)},
+  });
+
+  const SCFB_FBNData cFBNData = {
+      .mEventConnections = cEventConnections,
+      .mDataConnections = cDataConnections,
+      .mAdapterConnections = {},
+  };
+} // namespace
 
 FORTE_E_TP::FORTE_E_TP(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_DELAY(STRID(E_DELAY), *this),
     fb_E_RS(STRID(E_RS), *this),
     fb_E_PERMIT(STRID(E_PERMIT), *this),
@@ -79,34 +99,6 @@ void FORTE_E_TP::setInitialValues() {
   conn_if2in_PT.getValue() = 0_TIME;
   fb_E_RS->conn_Q.getValue() = 0_BOOL;
 }
-
-const SCFB_FBInstanceData FORTE_E_TP::scmInternalFBs[] = {
-    {STRID(E_DELAY), STRID(E_DELAY)}, {STRID(E_RS), STRID(E_RS)}, {STRID(E_PERMIT), STRID(E_PERMIT)}};
-
-const SCFB_FBConnectionData FORTE_E_TP::scmEventConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_RS), STRID(EO)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(R)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(STOP)),
-     0},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(R)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_RS), STRID(R)), 1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(EO)), 0,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_RS), STRID(R)), 1},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(REQ)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT), STRID(EI)),
-     2},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT), STRID(EO)), 2,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_RS), STRID(S)), 1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT), STRID(EO)), 2,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(START)), 0},
-};
-
-const SCFB_FBConnectionData FORTE_E_TP::scmDataConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(PT)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_DELAY), STRID(DT)), 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_RS), STRID(Q)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(Q)), -1},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(IN)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT), STRID(PERMIT)), 2},
-};
-
-const SCFB_FBNData FORTE_E_TP::scmFBNData = {
-    3, scmInternalFBs, 7, scmEventConnections, 3, scmDataConnections, 0, nullptr, 0, nullptr};
 
 void FORTE_E_TP::readInputData(const TEventID paEIID) {
   switch (paEIID) {

@@ -50,22 +50,22 @@ namespace {
   };
 } // namespace
 
-const SCFB_FBConnectionData FORTE_RequestOrchestrationForm::scmEventConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(requestOrchestator)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(requestOrchestator)),
+const SCFB_FBConnectionData FORTE_RequestOrchestrationForm::auto cEventConnections = std::to_array<SCFB_FBConnectionData>{
+    {CStringDictionary::scmInvalidStringId, STRID(requestOrchestator), -1,
+     STRID(requestOrchestration), STRID(requestOrchestator)),
      CCompositeFB::scmAdapterMarker | 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(responseReceived)),
-     CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(responseReceived)), -1},
+    {STRID(requestOrchestration), STRID(responseReceived)),
+     CCompositeFB::scmAdapterMarker | 0, CStringDictionary::scmInvalidStringId, STRID(responseReceived), -1},
 };
 
-const SCFB_FBConnectionData FORTE_RequestOrchestrationForm::scmDataConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(serviceRequestForm)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(serviceRequestForm)),
+const SCFB_FBConnectionData FORTE_RequestOrchestrationFormauto cDataConnections = std::to_array<SCFB_FBConnectionData>{
+    {CStringDictionary::scmInvalidStringId, STRID(serviceRequestForm), -1,
+     STRID(requestOrchestration), STRID(serviceRequestForm)),
      CCompositeFB::scmAdapterMarker | 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(orchestrationResponse)),
-     CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(orchestrationResponse)), -1},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(endpoint)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(endpoint)),
+    {STRID(requestOrchestration), STRID(orchestrationResponse)),
+     CCompositeFB::scmAdapterMarker | 0, CStringDictionary::scmInvalidStringId, STRID(orchestrationResponse), -1},
+    {CStringDictionary::scmInvalidStringId, STRID(endpoint), -1,
+     STRID(requestOrchestration), STRID(endpoint)),
      CCompositeFB::scmAdapterMarker | 0},
 };
 

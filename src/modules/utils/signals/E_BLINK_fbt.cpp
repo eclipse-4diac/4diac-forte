@@ -65,11 +65,34 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
+
+  const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
+      {STRID(E_CYCLE), STRID(EO), STRID(E_TP), STRID(REQ)},
+      {CStringDictionary::scmInvalidStringId, STRID(START), STRID(ADD_2), STRID(REQ)},
+      {STRID(ADD_2), STRID(CNF), STRID(E_CYCLE), STRID(START)},
+      {CStringDictionary::scmInvalidStringId, STRID(STOP), STRID(E_CYCLE), STRID(STOP)},
+      {CStringDictionary::scmInvalidStringId, STRID(STOP), STRID(E_TP), STRID(R)},
+      {STRID(E_TP), STRID(CNF), CStringDictionary::scmInvalidStringId, STRID(CNF)},
+  });
+
+  const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
+      {STRID(ADD_2), STRID(OUT), STRID(E_CYCLE), STRID(DT)},
+      {CStringDictionary::scmInvalidStringId, STRID(TIMELOW), STRID(ADD_2), STRID(IN1)},
+      {CStringDictionary::scmInvalidStringId, STRID(TIMEHIGH), STRID(ADD_2), STRID(IN2)},
+      {CStringDictionary::scmInvalidStringId, STRID(TIMEHIGH), STRID(E_TP), STRID(PT)},
+      {STRID(E_TP), STRID(Q), CStringDictionary::scmInvalidStringId, STRID(OUT)},
+  });
+
+  const SCFB_FBNData cFBNData = {
+      .mEventConnections = cEventConnections,
+      .mDataConnections = cDataConnections,
+      .mAdapterConnections = {},
+  };
 } // namespace
 
 FORTE_E_BLINK::FORTE_E_BLINK(const CStringDictionary::TStringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_TP(STRID(E_TP), *this),
     fb_E_CYCLE(STRID(E_CYCLE), *this),
     fb_ADD_2(STRID(ADD_2), "ADD_2", *this),
@@ -85,36 +108,6 @@ void FORTE_E_BLINK::setInitialValues() {
   conn_if2in_TIMEHIGH.getValue() = 0_TIME;
   fb_E_TP->conn_Q.getValue() = 0_BOOL;
 }
-
-const SCFB_FBInstanceData FORTE_E_BLINK::scmInternalFBs[] = {
-    {STRID(E_TP), STRID(E_PULSE)}, {STRID(E_CYCLE), STRID(E_CYCLE)}, {STRID(ADD_2), STRID(ADD_2)}};
-
-const SCFB_FBConnectionData FORTE_E_BLINK::scmEventConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CYCLE), STRID(EO)), 1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(REQ)), 0},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(START)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(REQ)),
-     2},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(CNF)), 2,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CYCLE), STRID(START)), 1},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CYCLE), STRID(STOP)),
-     1},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(STOP)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(R)), 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(CNF)), 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(CNF)), -1}};
-
-const SCFB_FBConnectionData FORTE_E_BLINK::scmDataConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(OUT)), 2,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_CYCLE), STRID(DT)), 1},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(TIMELOW)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(IN1)),
-     2},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(TIMEHIGH)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ADD_2), STRID(IN2)), 2},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(TIMEHIGH)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(PT)),
-     0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_TP), STRID(Q)), 0, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(OUT)), -1},
-};
-
-const SCFB_FBNData FORTE_E_BLINK::scmFBNData = {
-    3, scmInternalFBs, 6, scmEventConnections, 4, scmDataConnections, 0, nullptr, 0, nullptr};
 
 void FORTE_E_BLINK::readInputData(const TEventID paEIID) {
   switch (paEIID) {

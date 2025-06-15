@@ -21,30 +21,16 @@ class FORTE_RegisterServiceOpcUa : public CCompositeFB {
     DECLARE_FIRMWARE_FB(FORTE_RegisterServiceOpcUa)
 
   private:
-
     FORTE_RegisterServiceAdp &registerService() {
       return (*static_cast<FORTE_RegisterServiceAdp *>(getAdapterUnchecked(0)));
     };
     static const int scm_nregisterServiceAdpNum = 0;
 
-    static const SCFB_FBInstanceData scmInternalFBs[];
-
-    static const SCFB_FBParameter scmParamters[];
-
-    static const SCFB_FBConnectionData scmEventConnections[];
-
-    static const SCFB_FBFannedOutConnectionData scmFannedOutEventConnections[];
-
-    static const SCFB_FBConnectionData scmDataConnections[];
-
-    static const SCFB_FBFannedOutConnectionData scmFannedOutDataConnections[];
-    static const SCFB_FBNData scmFBNData;
-
   public:
     FORTE_RegisterServiceOpcUa(const CStringDictionary::TStringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_RegisterServiceOpcUa() override = default;
+        ~FORTE_RegisterServiceOpcUa() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

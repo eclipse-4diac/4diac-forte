@@ -57,14 +57,6 @@ constexpr TAbsDataPortNum INVALID_ABS_DATA_PORT_ID = static_cast<TAbsDataPortNum
 
 typedef CStringDictionary::TStringId TEventTypeID;
 
-/*!
- * \brief Instance and type name of to be created FBs. Used in CFBs FBNs and BFB/SFBs internal FBs
- */
-struct SCFB_FBInstanceData {
-    CStringDictionary::TStringId mFBInstanceNameId;
-    CStringDictionary::TStringId mFBTypeNameId;
-};
-
 /*!\ingroup CORE\brief Base class for all function blocks.
  */
 class CFunctionBlock : public forte::core::CFBContainer {

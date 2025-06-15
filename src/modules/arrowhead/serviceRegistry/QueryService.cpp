@@ -49,24 +49,17 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = cPlugNameIds,
   };
+
+  const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
+      {CStringDictionary::scmInvalidStringId, STRID(query), STRID(queryServices), STRID(query)},
+      {STRID(queryServices), STRID(queried), CStringDictionary::scmInvalidStringId, STRID(queried)},
+  });
+
+  const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
+      {CStringDictionary::scmInvalidStringId, STRID(serviceQueryForm), STRID(queryServices), STRID(serviceQueryForm)},
+      {STRID(queryServices), STRID(serviceEntries), CStringDictionary::scmInvalidStringId, STRID(serviceEntries)},
+      {CStringDictionary::scmInvalidStringId, STRID(address), STRID(queryServices), STRID(endpoint)},
+  });
 } // namespace
 
-const SCFB_FBConnectionData FORTE_QueryService::scmEventConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(query)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(queryServices), STRID(query)), CCompositeFB::scmAdapterMarker | 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(queryServices), STRID(queried)), CCompositeFB::scmAdapterMarker | 0,
-     GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(queried)), -1},
-};
-
-const SCFB_FBConnectionData FORTE_QueryService::scmDataConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(serviceQueryForm)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(queryServices), STRID(serviceQueryForm)),
-     CCompositeFB::scmAdapterMarker | 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(queryServices), STRID(serviceEntries)), CCompositeFB::scmAdapterMarker | 0,
-     GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(serviceEntries)), -1},
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(address)), -1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(queryServices), STRID(endpoint)), CCompositeFB::scmAdapterMarker | 0},
-};
-
-const SCFB_FBNData FORTE_QueryService::scmFBNData = {
-    0, 0, 2, scmEventConnections, 0, 0, 3, scmDataConnections, 0, 0, 0, nullptr, 0, 0};
+const SCFB_FBNData FORTE_QueryService::scmFBNData = {0, 0, cEventConnections, cDataConnections, {}, 0, 0};

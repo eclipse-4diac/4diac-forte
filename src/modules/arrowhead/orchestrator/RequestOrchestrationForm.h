@@ -46,22 +46,16 @@ class FORTE_RequestOrchestrationForm : public CCompositeFB {
 
     static const TEventID scmEventresponseReceivedID = 0;
 
-
     FORTE_OrchestratorRequestAdp &requestOrchestration() {
       return (*static_cast<FORTE_OrchestratorRequestAdp *>(getAdapterUnchecked(0)));
     };
     static const int scm_nrequestOrchestrationAdpNum = 0;
 
-    static const SCFB_FBConnectionData scmEventConnections[];
-
-    static const SCFB_FBConnectionData scmDataConnections[];
-    static const SCFB_FBNData scmFBNData;
-
   public:
     FORTE_RequestOrchestrationForm(const CStringDictionary::TStringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_RequestOrchestrationForm() override = default;
+        ~FORTE_RequestOrchestrationForm() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

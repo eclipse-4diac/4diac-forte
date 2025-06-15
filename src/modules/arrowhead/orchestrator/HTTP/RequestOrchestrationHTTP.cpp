@@ -86,54 +86,54 @@ const SCFB_FBParameter FORTE_RequestOrchestrationHTTP::scmParamters[] = {
     {0, STRID(IN_3), "STRING#/orchestration; POST; application/json]"},
 };
 
-const SCFB_FBConnectionData FORTE_RequestOrchestrationHTTP::scmEventConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(APPEND_STRING_3), STRID(CNF)), 0,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING), STRID(REQ)), 4},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING), STRID(CNF)), 4,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlag), STRID(S)), 2},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlag), STRID(EO)), 2,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Request), STRID(INIT)), 1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT), STRID(EO)), 3,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Request), STRID(REQ)), 1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ANYToJSON), STRID(CNF)), 5,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(APPEND_STRING_3), STRID(REQ)), 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Request), STRID(CNF)), 1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlag), STRID(R)), 2},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Request), STRID(INITO)), 1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT), STRID(EI)), 3},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(requestOrchestator)),
-     CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ANYToJSON), STRID(REQ)), 5},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GetHTTPOrchestrationForm), STRID(CNF)), 6,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(responseReceived)),
+const SCFB_FBConnectionData FORTE_RequestOrchestrationHTTP::auto cEventConnections = std::to_array<SCFB_FBConnectionData>{
+    {STRID(APPEND_STRING_3), STRID(CNF)), 0,
+     STRID(F_STRING_TO_WSTRING), STRID(REQ)), 4},
+    {STRID(F_STRING_TO_WSTRING), STRID(CNF)), 4,
+     STRID(InitFlag), STRID(S)), 2},
+    {STRID(InitFlag), STRID(EO)), 2,
+     STRID(Request), STRID(INIT)), 1},
+    {STRID(E_PERMIT), STRID(EO)), 3,
+     STRID(Request), STRID(REQ)), 1},
+    {STRID(ANYToJSON), STRID(CNF)), 5,
+     STRID(APPEND_STRING_3), STRID(REQ)), 0},
+    {STRID(Request), STRID(CNF)), 1,
+     STRID(InitFlag), STRID(R)), 2},
+    {STRID(Request), STRID(INITO)), 1,
+     STRID(E_PERMIT), STRID(EI)), 3},
+    {STRID(requestOrchestration), STRID(requestOrchestator)),
+     CCompositeFB::scmAdapterMarker | 0, STRID(ANYToJSON), STRID(REQ)), 5},
+    {STRID(GetHTTPOrchestrationForm), STRID(CNF)), 6,
+     STRID(requestOrchestration), STRID(responseReceived)),
      CCompositeFB::scmAdapterMarker | 0},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_RequestOrchestrationHTTP::scmFannedOutEventConnections[] = {
-    {5, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GetHTTPOrchestrationForm), STRID(REQ)), 6},
+    {5, STRID(GetHTTPOrchestrationForm), STRID(REQ)), 6},
 };
 
-const SCFB_FBConnectionData FORTE_RequestOrchestrationHTTP::scmDataConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(APPEND_STRING_3), STRID(OUT)), 0,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING), STRID(IN)), 4},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(F_STRING_TO_WSTRING), STRID(OUT)), 4,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Request), STRID(ID)), 1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(InitFlag), STRID(Q)), 2,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_PERMIT), STRID(PERMIT)), 3},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ANYToJSON), STRID(output)), 5,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Request), STRID(SD_1)), 1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(serviceRequestForm)),
-     CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(ANYToJSON), STRID(input)), 5},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(endpoint)),
-     CCompositeFB::scmAdapterMarker | 0, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(APPEND_STRING_3), STRID(IN_2)), 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Request), STRID(RD_2)), 1,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GetHTTPOrchestrationForm), STRID(response)), 6},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(GetHTTPOrchestrationForm), STRID(output)), 6,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(requestOrchestration), STRID(orchestrationResponse)),
+const SCFB_FBConnectionData FORTE_RequestOrchestrationHTTPauto cDataConnections = std::to_array<SCFB_FBConnectionData>{
+    {STRID(APPEND_STRING_3), STRID(OUT)), 0,
+     STRID(F_STRING_TO_WSTRING), STRID(IN)), 4},
+    {STRID(F_STRING_TO_WSTRING), STRID(OUT)), 4,
+     STRID(Request), STRID(ID)), 1},
+    {STRID(InitFlag), STRID(Q)), 2,
+     STRID(E_PERMIT), STRID(PERMIT)), 3},
+    {STRID(ANYToJSON), STRID(output)), 5,
+     STRID(Request), STRID(SD_1)), 1},
+    {STRID(requestOrchestration), STRID(serviceRequestForm)),
+     CCompositeFB::scmAdapterMarker | 0, STRID(ANYToJSON), STRID(input)), 5},
+    {STRID(requestOrchestration), STRID(endpoint)),
+     CCompositeFB::scmAdapterMarker | 0, STRID(APPEND_STRING_3), STRID(IN_2)), 0},
+    {STRID(Request), STRID(RD_2)), 1,
+     STRID(GetHTTPOrchestrationForm), STRID(response)), 6},
+    {STRID(GetHTTPOrchestrationForm), STRID(output)), 6,
+     STRID(requestOrchestration), STRID(orchestrationResponse)),
      CCompositeFB::scmAdapterMarker | 0},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_RequestOrchestrationHTTP::scmFannedOutDataConnections[] = {
-    {2, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(Request), STRID(QI)), 1},
+    {2, STRID(Request), STRID(QI)), 1},
 };
 
 const SCFB_FBNData FORTE_RequestOrchestrationHTTP::scmFBNData = {

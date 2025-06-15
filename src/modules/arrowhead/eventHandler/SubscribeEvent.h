@@ -37,21 +37,15 @@ class FORTE_SubscribeEvent : public CCompositeFB {
     static const TEventID scmEventSubscribedID = 0;
     static const TEventID scmEventUnsubscribedID = 1;
 
-
     FORTE_SubscribeEventAdp &SubscribeEventAdp() {
       return (*static_cast<FORTE_SubscribeEventAdp *>(getAdapterUnchecked(0)));
     };
     static const int scmSubscribeEventAdpAdpNum = 0;
 
-    static const SCFB_FBConnectionData scmEventConnections[];
-
-    static const SCFB_FBConnectionData scmDataConnections[];
-    static const SCFB_FBNData scmFBNData;
-
   public:
     FORTE_SubscribeEvent(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_SubscribeEvent() override = default;
+        ~FORTE_SubscribeEvent() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

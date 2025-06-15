@@ -46,11 +46,28 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
+
+  const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
+      {CStringDictionary::scmInvalidStringId, STRID(EI), STRID(E_D_FF), STRID(CLK)},
+      {STRID(E_D_FF), STRID(EO), STRID(E_SWITCH), STRID(EI)},
+      {STRID(E_SWITCH), STRID(EO0), CStringDictionary::scmInvalidStringId, STRID(EO)},
+  });
+
+  const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
+      {CStringDictionary::scmInvalidStringId, STRID(QI), STRID(E_D_FF), STRID(D)},
+      {STRID(E_D_FF), STRID(Q), STRID(E_SWITCH), STRID(G)},
+  });
+
+  const SCFB_FBNData cFBNData = {
+      .mEventConnections = cEventConnections,
+      .mDataConnections = cDataConnections,
+      .mAdapterConnections = {},
+  };
 } // namespace
 
 FORTE_E_F_TRIG::FORTE_E_F_TRIG(const CStringDictionary::TStringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
-    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, scmFBNData),
+    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_D_FF(STRID(E_D_FF), *this),
     fb_E_SWITCH(STRID(E_SWITCH), *this),
     conn_EO(*this, 0),
@@ -60,26 +77,6 @@ FORTE_E_F_TRIG::FORTE_E_F_TRIG(const CStringDictionary::TStringId paInstanceName
 void FORTE_E_F_TRIG::setInitialValues() {
   conn_if2in_QI.getValue() = 0_BOOL;
 }
-
-const SCFB_FBInstanceData FORTE_E_F_TRIG::scmInternalFBs[] = {{STRID(E_D_FF), STRID(E_D_FF)},
-                                                              {STRID(E_SWITCH), STRID(E_SWITCH)}};
-
-const SCFB_FBConnectionData FORTE_E_F_TRIG::scmEventConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EI)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_D_FF), STRID(CLK)), 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_D_FF), STRID(EO)), 0,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(EI)), 1},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(EO0)), 1, GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(EO)),
-     -1},
-};
-
-const SCFB_FBConnectionData FORTE_E_F_TRIG::scmDataConnections[] = {
-    {GENERATE_CONNECTION_PORT_ID_1_ARG(STRID(QI)), -1, GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_D_FF), STRID(D)), 0},
-    {GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_D_FF), STRID(Q)), 0,
-     GENERATE_CONNECTION_PORT_ID_2_ARG(STRID(E_SWITCH), STRID(G)), 1},
-};
-
-const SCFB_FBNData FORTE_E_F_TRIG::scmFBNData = {
-    2, scmInternalFBs, 3, scmEventConnections, 2, scmDataConnections, 0, nullptr, 0, nullptr};
 
 void FORTE_E_F_TRIG::readInputData(TEventID paEIID) {
   switch (paEIID) {

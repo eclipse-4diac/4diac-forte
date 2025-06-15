@@ -19,6 +19,7 @@
 #include <string.h>
 #include "cfb.h"
 #include "adapter.h"
+#include "stringdict.h"
 
 namespace {
   bool forwardGenericDI(CFunctionBlock &dstFB, const CStringDictionary::TStringId dstId, const CIEC_ANY &paRefValue) {
@@ -84,11 +85,10 @@ bool CCompositeFB::connectDI(TPortId paDIPortId, CDataConnection *paDataCon) {
 
 bool CCompositeFB::configureGenericDI(const TPortId paDIPortId, const CIEC_ANY &paRefValue) {
   const CStringDictionary::TStringId ifSrcId = getFBInterfaceSpec().mDINames[paDIPortId];
-  for (unsigned int index = 0; index < cmFBNData.mNumDataConnections; index++) {
-    if (auto [srcId, srcFBNum, dstId, dstFBNum] = cmFBNData.mDataConnections[index];
-        srcFBNum == -1 && srcId == ifSrcId) {
-      CFunctionBlock *dstFB = getFunctionBlock(dstFBNum);
-      if (!dstFB || !forwardGenericDI(*dstFB, dstId, paRefValue)) {
+  for (auto &currentConn : cmFBNData.mDataConnections) {
+    if (currentConn.mSrcFBNameId == CStringDictionary::scmInvalidStringId && currentConn.mSrcId == ifSrcId) {
+      CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNameId);
+      if (!dstFB || !forwardGenericDI(*dstFB, currentConn.mDstId, paRefValue)) {
         return false;
       };
     }
@@ -98,11 +98,11 @@ bool CCompositeFB::configureGenericDI(const TPortId paDIPortId, const CIEC_ANY &
 
 bool CCompositeFB::configureGenericDIO(const TPortId paDIOPortId, const CIEC_ANY &paRefValue) {
   const CStringDictionary::TStringId ifSrcId = getFBInterfaceSpec().mDIONames[paDIOPortId];
-  for (unsigned int index = 0; index < cmFBNData.mNumDataConnections; index++) {
-    if (auto [srcId, srcFBNum, dstId, dstFBNum] = cmFBNData.mDataConnections[index];
-        srcFBNum == -1 && srcId == ifSrcId) {
-      CFunctionBlock *dstFB = getFunctionBlock(dstFBNum);
-      if (!dstFB || (!forwardGenericDI(*dstFB, dstId, paRefValue) && !forwardGenericDIO(*dstFB, dstId, paRefValue))) {
+  for (auto &currentConn : cmFBNData.mDataConnections) {
+    if (currentConn.mSrcFBNameId == CStringDictionary::scmInvalidStringId && currentConn.mSrcId == ifSrcId) {
+      CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNameId);
+      if (!dstFB || (!forwardGenericDI(*dstFB, currentConn.mDstId, paRefValue) &&
+                     !forwardGenericDIO(*dstFB, currentConn.mDstId, paRefValue))) {
         return false;
       };
     }
@@ -112,11 +112,10 @@ bool CCompositeFB::configureGenericDIO(const TPortId paDIOPortId, const CIEC_ANY
 
 bool CCompositeFB::configureGenericDO(const TPortId paDOPortId, const CIEC_ANY &paRefValue) {
   const CStringDictionary::TStringId ifDstId = getFBInterfaceSpec().mDONames[paDOPortId];
-  for (unsigned int index = 0; index < cmFBNData.mNumDataConnections; index++) {
-    if (auto [srcId, srcFBNum, dstId, dstFBNum] = cmFBNData.mDataConnections[index];
-        dstFBNum == -1 && dstId == ifDstId) {
-      CFunctionBlock *srcFB = getFunctionBlock(srcFBNum);
-      if (!srcFB || !forwardGenericDO(*srcFB, srcId, paRefValue)) {
+  for (auto &currentConn : cmFBNData.mDataConnections) {
+    if (currentConn.mDstFBNameId == CStringDictionary::scmInvalidStringId && currentConn.mDstId == ifDstId) {
+      CFunctionBlock *srcFB = getFunctionBlock(currentConn.mSrcFBNameId);
+      if (!srcFB || !forwardGenericDO(*srcFB, currentConn.mSrcId, paRefValue)) {
         return false;
       };
     }
@@ -171,16 +170,15 @@ void CCompositeFB::createEventConnections() {
   prepareIf2InEventCons(); // the interface to internal event connections are needed even if they are not connected
                            // therefore we have to create them correctly in any case
 
-  for (size_t i = 0; i < cmFBNData.mNumEventConnections; ++i) {
-    const SCFB_FBConnectionData *currentConn = &(cmFBNData.mEventConnections[i]);
-    CFunctionBlock *srcFB = getFunctionBlock(currentConn->mSrcFBNum);
-    CFunctionBlock *dstFB = getFunctionBlock(currentConn->mDstFBNum);
+  for (auto &currentConn : cmFBNData.mEventConnections) {
+    CFunctionBlock *srcFB = getFunctionBlock(currentConn.mSrcFBNameId);
+    CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNameId);
 
     if ((nullptr != srcFB) && (nullptr != dstFB)) {
       CEventConnection *evConn =
-          (this == srcFB) ? mInterface2InternalEventCons[getFBInterfaceSpec().getEIID(currentConn->mSrcId)].get()
-                          : srcFB->getEOConnection(currentConn->mSrcId);
-      establishConnection(evConn, *dstFB, currentConn->mDstId);
+          (this == srcFB) ? mInterface2InternalEventCons[getFBInterfaceSpec().getEIID(currentConn.mSrcId)].get()
+                          : srcFB->getEOConnection(currentConn.mSrcId);
+      establishConnection(evConn, *dstFB, currentConn.mDstId);
     } else {
       // FIXME implement way to inform FB creator that creation failed
       DEVLOG_ERROR("Could not create event connection in CFB");
@@ -206,11 +204,10 @@ void CCompositeFB::establishConnection(CConnection *paCon,
 }
 
 void CCompositeFB::createDataConnections() {
-  for (size_t i = 0; i < cmFBNData.mNumDataConnections; ++i) {
-    const SCFB_FBConnectionData &currentConn(cmFBNData.mDataConnections[i]);
+  for (auto &currentConn : cmFBNData.mDataConnections) {
     // FIXME implement way to inform FB creator that creation failed
-    CFunctionBlock *srcFB = getFunctionBlock(currentConn.mSrcFBNum);
-    CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNum);
+    CFunctionBlock *srcFB = getFunctionBlock(currentConn.mSrcFBNameId);
+    CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNameId);
 
     if ((srcFB != nullptr) && (dstFB != nullptr)) {
       establishConnection(getDataConn(srcFB, currentConn.mSrcId), *dstFB, currentConn.mDstId);
@@ -244,11 +241,10 @@ CDataConnection *CCompositeFB::getDataConn(CFunctionBlock *paSrcFB, CStringDicti
 }
 
 void CCompositeFB::createAdapterConnections() {
-  for (size_t i = 0; i < cmFBNData.mNumAdapterConnections; ++i) {
-    const SCFB_FBConnectionData &currentConn(cmFBNData.mAdapterConnections[i]);
+  for (auto &currentConn : cmFBNData.mAdapterConnections) {
     // FIXME implement way to inform FB creator that creation failed
-    CFunctionBlock *const srcFB = getFunctionBlock(currentConn.mSrcFBNum);
-    CFunctionBlock *const dstFB = getFunctionBlock(currentConn.mDstFBNum);
+    CFunctionBlock *const srcFB = getFunctionBlock(currentConn.mSrcFBNameId);
+    CFunctionBlock *const dstFB = getFunctionBlock(currentConn.mDstFBNameId);
 
     if ((nullptr != srcFB) && (nullptr != dstFB)) {
       if (auto plug = srcFB->getPlugPin(currentConn.mSrcId); plug != nullptr) {
@@ -263,40 +259,12 @@ void CCompositeFB::createAdapterConnections() {
 }
 
 void CCompositeFB::setFBNetworkInitialValues() {
-  for (size_t i = 0; i < cmFBNData.mNumParams; ++i) {
-    const SCFB_FBParameter &currentParam(cmFBNData.mParams[i]);
-    CFunctionBlock *child = getFunctionBlock(currentParam.mFBNum);
-    if (child != nullptr) {
-      CIEC_ANY *di = child->getDataInput(currentParam.mDINameID);
-      if (di != nullptr) {
-        di->fromString(currentParam.mParamValue);
-      } else {
-        DEVLOG_ERROR("Could not get data input for setting a parameter");
-      }
-    } else {
-      DEVLOG_ERROR("Could not get child FB for setting a parameter");
-    }
-  }
+  // per default we do not have initial values of internal blocks
 }
 
-CFunctionBlock *CCompositeFB::getFunctionBlock(int paFBNum) {
-  if (-1 == paFBNum) {
+CFunctionBlock *CCompositeFB::getFunctionBlock(CStringDictionary::TStringId paFBNameId) {
+  if (paFBNameId == CStringDictionary::scmInvalidStringId) {
     return this;
   }
-  if (0 <= paFBNum) {
-    TForteUInt32 fbNum = static_cast<TForteUInt32>(paFBNum);
-    if (scmAdapterMarker == (scmAdapterMarker & fbNum)) {
-      fbNum &= scmAdapterFBRange;
-      if (fbNum < getFBInterfaceSpec().mPlugNames.size()) {
-        return getPlugPinUnchecked(fbNum)->getAdapterBlock();
-      } else if (fbNum < getFBInterfaceSpec().mPlugNames.size() + getFBInterfaceSpec().mSocketNames.size()) {
-        return getSocketPinUnchecked(fbNum - getFBInterfaceSpec().mPlugNames.size())->getAdapterBlock();
-      }
-    } else {
-      if (fbNum < cmFBNData.mNumFBs) {
-        return forte::core::CFBContainer::getFB(cmFBNData.mFBInstances[fbNum].mFBInstanceNameId);
-      }
-    }
-  }
-  return nullptr;
+  return forte::core::CFBContainer::getFB(paFBNameId);
 }

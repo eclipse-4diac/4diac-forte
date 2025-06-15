@@ -25,29 +25,10 @@ class FORTE_CFB_TEST final : public CCompositeFB {
     DECLARE_FIRMWARE_FB(FORTE_CFB_TEST)
 
   private:
-    static const CStringDictionary::TStringId scmDataInputNames[];
-    static const CStringDictionary::TStringId scmDataInputTypeIds[];
-    static const CStringDictionary::TStringId scmDataOutputNames[];
-    static const CStringDictionary::TStringId scmDataOutputTypeIds[];
     static const TEventID scmEventSETID = 0;
     static const TEventID scmEventRESETID = 1;
-    static const TDataIOID scmEIWith[];
-    static const TForteInt16 scmEIWithIndexes[];
-    static const CStringDictionary::TStringId scmEventInputNames[];
-    static const CStringDictionary::TStringId scmEventInputTypeIds[];
     static const TEventID scmEventCNFID = 0;
     static const TEventID scmEventCHANGEDID = 1;
-    static const TDataIOID scmEOWith[];
-    static const TForteInt16 scmEOWithIndexes[];
-    static const CStringDictionary::TStringId scmEventOutputNames[];
-    static const CStringDictionary::TStringId scmEventOutputTypeIds[];
-
-    static const SFBInterfaceSpec scmFBInterfaceSpec;
-
-    static const SCFB_FBInstanceData scmInternalFBs[];
-    static const SCFB_FBConnectionData scmEventConnections[];
-    static const SCFB_FBConnectionData scmDataConnections[];
-    static const SCFB_FBNData scmFBNData;
 
     forte::core::CInternalFB<FORTE_E_PERMIT> fb_PERMIT_OP;
     forte::core::CInternalFB<FORTE_E_SR> fb_E_SR;
