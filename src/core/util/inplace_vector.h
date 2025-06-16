@@ -15,6 +15,7 @@
  *    - add erase functions
  *    - add equality operators
  *    - add iterator-based constructor
+ *    - add const begin/end iterators
  *******************************************************************************/
 #pragma once
 
@@ -142,11 +143,19 @@ namespace forte::core::util {
         return mDataStorage.data();
       }
 
+      const_iterator begin() const {
+        return mDataStorage.data();
+      }
+
       const_iterator cbegin() const {
         return mDataStorage.data();
       }
 
       iterator end() {
+        return mDataStorage.data() + mNumElements;
+      }
+
+      const_iterator end() const {
         return mDataStorage.data() + mNumElements;
       }
 

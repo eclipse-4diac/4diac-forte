@@ -67,6 +67,23 @@ class CDataConnection : public CConnection {
      */
     virtual CIEC_ANY &getValue() = 0;
 
+    [[nodiscard]] virtual bool isGathering() const {
+      return false;
+    }
+
+    /*!
+     * \brief Get a member connection for the given name
+     * @param paMemberName The member name
+     * @return a member connection for the name, nullptr if there is no such member connection,
+     *          or this if the name list was empty
+     */
+    virtual CDataConnection *getMemberConnection(const std::span<const CStringDictionary::TStringId> paMemberName) {
+      if (paMemberName.empty()) {
+        return this;
+      }
+      return nullptr;
+    }
+
   protected:
     /*! \brief check if the the given data points are compatible so that a connection can be established
      *
@@ -77,7 +94,14 @@ class CDataConnection : public CConnection {
     static bool canBeConnected(const CIEC_ANY &paSrcDataPoint, const CIEC_ANY &paDstDataPoint);
 
     virtual EMGMResponse
-    establishDataConnection(CFunctionBlock &paDstFB, const TPortId paDstPortId, const CIEC_ANY &paDstDataPoint);
+    establishDataConnection(CFunctionBlock &paDstFB, TPortId paDstPortId, const CIEC_ANY &paDstDataPoint);
+
+  private:
+    EMGMResponse
+    establishGatheringConnection(CFunctionBlock &paDstFB,
+                                 TPortId paDstPortId,
+                                 CIEC_ANY &paDstDataPoint,
+                                 std::span<const CStringDictionary::TStringId> paDstPortNameId);
 };
 
 template<typename T>

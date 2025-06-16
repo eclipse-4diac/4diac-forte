@@ -16,6 +16,7 @@
  *******************************************************************************/
 #include "dataconn.h"
 #include "funcbloc.h"
+#include "gatherdataconn.h"
 #include "membdataconn.h"
 #include "mgmcmd.h"
 #include "negdataconn.h"
@@ -28,7 +29,7 @@ CDataConnection::CDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPor
 
 EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB,
                                       const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
-  if (paDstPortNameId.size() != 1) {
+  if (paDstPortNameId.empty()) {
     return EMGMResponse::NoSuchObject;
   }
 
@@ -37,8 +38,10 @@ EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB,
     return EMGMResponse::NoSuchObject;
   }
 
-  const CIEC_ANY *dstDataPoint = paDstFB.getDIFromPortId(dstPortId);
-  const EMGMResponse retVal = CDataConnection::establishDataConnection(paDstFB, dstPortId, *dstDataPoint);
+  CIEC_ANY *dstDataPoint = paDstFB.getDIFromPortId(dstPortId);
+  const EMGMResponse retVal = paDstPortNameId.size() == 1
+                                ? CDataConnection::establishDataConnection(paDstFB, dstPortId, *dstDataPoint)
+                                : establishGatheringConnection(paDstFB, dstPortId, *dstDataPoint, paDstPortNameId);
   if (retVal != EMGMResponse::Ready) {
     return retVal;
   }
@@ -49,7 +52,7 @@ EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB,
 
 EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
                                                     const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
-  if (paDstPortNameId.size() != 1) {
+  if (paDstPortNameId.empty()) {
     return EMGMResponse::NoSuchObject;
   }
 
@@ -58,8 +61,11 @@ EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
     return EMGMResponse::NoSuchObject;
   }
 
-  const CIEC_ANY *dstDataPoint = paDstFB.getDataOutput(paDstPortNameId.front());
-  return establishDataConnection(paDstFB, dstPortId | cgInternal2InterfaceMarker, *dstDataPoint);
+  CIEC_ANY *dstDataPoint = paDstFB.getDataOutput(paDstPortNameId.front());
+  return paDstPortNameId.size() == 1
+           ? establishDataConnection(paDstFB, dstPortId | cgInternal2InterfaceMarker, *dstDataPoint)
+           : establishGatheringConnection(paDstFB, dstPortId | cgInternal2InterfaceMarker, *dstDataPoint,
+                                          paDstPortNameId);
 }
 
 void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint) {
@@ -71,11 +77,7 @@ void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint)
 
 EMGMResponse CDataConnection::disconnect(CFunctionBlock &paDstFB,
                                          const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
-  if (paDstPortNameId.size() != 1) {
-    return EMGMResponse::NoSuchObject;
-  }
-
-  if (paDstFB.getDIConnection(paDstPortNameId.front()) != this) {
+  if (paDstPortNameId.empty()) {
     return EMGMResponse::NoSuchObject;
   }
 
@@ -84,7 +86,29 @@ EMGMResponse CDataConnection::disconnect(CFunctionBlock &paDstFB,
     return EMGMResponse::NoSuchObject;
   }
 
-  paDstFB.connectDI(dstPortId, nullptr);
+  CDataConnection *dstConnection = paDstFB.getDIConnection(paDstPortNameId.front());
+  if (!dstConnection) {
+    return EMGMResponse::NoSuchObject;
+  }
+
+  if (paDstPortNameId.size() == 1) {
+    if (dstConnection != this) {
+      return EMGMResponse::NoSuchObject;
+    }
+    paDstFB.connectDI(dstPortId, nullptr);
+  } else if (dstConnection->isGathering()) {
+    const auto dstGatheringConnection = static_cast<forte::core::internal::CGatheringDataConnection *>(dstConnection);
+    EMGMResponse retVal = dstGatheringConnection->removeMemberConnection(paDstPortNameId.subspan(1));
+    if (retVal != EMGMResponse::Ready) {
+      return retVal;
+    }
+    if (dstGatheringConnection->empty()) {
+      paDstFB.connectDI(dstPortId, nullptr);
+      delete dstConnection;
+    }
+  } else {
+    return EMGMResponse::NoSuchObject;
+  }
   getSourceId().getFB().decConnRefCount();
   return EMGMResponse::Ready;
 }
@@ -120,6 +144,41 @@ EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock &paDstFB,
     return EMGMResponse::InvalidState;
   }
   return EMGMResponse::Ready;
+}
+
+EMGMResponse CDataConnection::establishGatheringConnection(CFunctionBlock &paDstFB,
+                                                      const TPortId paDstPortId,
+                                                      CIEC_ANY &paDstDataPoint,
+                                                      const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
+  if (paDstDataPoint.getDataTypeID() != CIEC_ANY::e_STRUCT) {
+    return EMGMResponse::NoSuchObject;
+  }
+
+  auto &dstStruct = static_cast<CIEC_STRUCT &>(paDstDataPoint);
+  CIEC_ANY *dstMember = dstStruct.getMemberNamed(paDstPortNameId.subspan(1));
+  if (!dstMember) {
+    return EMGMResponse::NoSuchObject;
+  }
+
+  if (getValue().getDataTypeID() == CIEC_ANY::e_ANY) {
+    handleAnySrcPortConnection(*dstMember);
+  } else if (!canBeConnected(getValue(), *dstMember)) {
+    return EMGMResponse::InvalidOperation;
+  }
+
+  CDataConnection *dstConnection = paDstFB.getDIConnection(paDstPortNameId.front());
+  if (!dstConnection) {
+    dstConnection = new forte::core::internal::CGatheringDataConnection(paDstFB, paDstPortId, dstStruct);
+    if (!paDstFB.connectDI(paDstPortId, dstConnection)) {
+      delete dstConnection;
+      return EMGMResponse::InvalidState;
+    }
+  } else if (!dstConnection->isGathering()) {
+    return EMGMResponse::InvalidState;
+  }
+
+  auto dstGatheringConnection = static_cast<forte::core::internal::CGatheringDataConnection *>(dstConnection);
+  return dstGatheringConnection->addMemberConnection(paDstPortNameId.subspan(1), *this);
 }
 
 CConnection::Wrapper CDataConnection::getDelegatingConnection(

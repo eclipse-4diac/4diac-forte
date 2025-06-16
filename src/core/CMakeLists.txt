@@ -40,6 +40,7 @@ forte_add_sourcefile_h(forte_st_util.h)
 forte_add_sourcefile_h(delegdataconn.h)
 forte_add_sourcefile_hcpp(negdataconn)
 forte_add_sourcefile_hcpp(membdataconn)
+forte_add_sourcefile_hcpp(gatherdataconn)
 
 forte_add_ecet(CEventChainExecutionThread ecet "standard")
 

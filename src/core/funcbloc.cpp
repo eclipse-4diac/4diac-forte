@@ -350,13 +350,17 @@ CConnection *CFunctionBlock::getInputConnection(const std::span<const CStringDic
   }
   CStringDictionary::TStringId name = paDstNameList.front();
   if (const auto conn = getDIConnection(name); conn) {
-    return conn;
+    return conn->getMemberConnection(paDstNameList.subspan(1));
   };
   if (const auto conn = getDIOInConnection(name); conn) {
-    return conn;
+    if (paDstNameList.size() == 1) {
+      return conn;
+    }
   };
   if (const auto skt = getSocketPin(name); skt) {
-    return skt->getAdapterCon();
+    if (paDstNameList.size() == 1) {
+      return skt->getAdapterCon();
+    }
   };
   return CFBContainer::getInputConnection(paDstNameList);
 }
