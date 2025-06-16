@@ -102,6 +102,7 @@ forte_add_systemtest_soft(Test_Soft_Fail_Alaways_Inverted fail_example.fboot 5)
 SET_TESTS_PROPERTIES(Test_Soft_Fail_Alaways_Inverted PROPERTIES WILL_FAIL TRUE)
 
 forte_add_systemtest_hard(Test_Negating_Connection negatingConnection.fboot 5)
+forte_add_systemtest_hard(Test_Gathering_Connection gatheringConnection.fboot 5)
 
 forte_add_systemtest_hard(Test_SEND_RECV_null comSendRecvNull.fboot 5)
 
