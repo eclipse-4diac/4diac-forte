@@ -10,4 +10,9 @@
 #    Jose Cabral  - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
+target_sources(forte_systemtest PRIVATE
+        GatheringTestStruct_dtp.h
+        GatheringTestStruct_dtp.cpp
+)
+
 add_subdirectory(modules)
