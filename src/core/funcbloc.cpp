@@ -69,7 +69,7 @@ void CFunctionBlock::deinitialize() {
   for (TPortId eoId = 0; eoId < getFBInterfaceSpec().getNumEOs(); eoId++) {
     CEventConnection *eoConn = getEOConUnchecked(eoId);
     for (auto connPoint : eoConn->getDestinationList()) {
-      eoConn->disconnect(connPoint.getFB(), connPoint.getPortId());
+      eoConn->disconnect(connPoint.getFB(), std::array{connPoint.getPortId()});
     }
   }
 
@@ -77,7 +77,7 @@ void CFunctionBlock::deinitialize() {
   for (TPortId diId = 0; diId < getFBInterfaceSpec().getNumDIs(); diId++) {
     CDataConnection *diConn = *getDIConUnchecked(diId);
     if (diConn != nullptr) {
-      diConn->disconnect(*this, getFBInterfaceSpec().mDINames[diId]);
+      diConn->disconnect(*this, std::array{getFBInterfaceSpec().mDINames[diId]});
       if (diConn->isDelegating()) {
         delete diConn;
       }
@@ -88,7 +88,7 @@ void CFunctionBlock::deinitialize() {
   for (TPortId aiId = 0; aiId < getFBInterfaceSpec().mSocketNames.size(); aiId++) {
     forte::ISocketPin *skt = getSocketPinUnchecked(aiId);
     if (skt->getAdapterCon() != nullptr) {
-      skt->getAdapterCon()->disconnect(*this, getFBInterfaceSpec().mSocketNames[aiId]);
+      skt->getAdapterCon()->disconnect(*this, std::array{getFBInterfaceSpec().mSocketNames[aiId]});
     }
   }
 
@@ -96,7 +96,7 @@ void CFunctionBlock::deinitialize() {
   for (TPortId dioId = 0; dioId < getFBInterfaceSpec().getNumDIOs(); dioId++) {
     CDataConnection *dioConn = *getDIOInConUnchecked(dioId);
     if (dioConn != nullptr) {
-      dioConn->disconnect(*this, getFBInterfaceSpec().mDIONames[dioId]);
+      dioConn->disconnect(*this, std::array{getFBInterfaceSpec().mDIONames[dioId]});
     }
   }
 }

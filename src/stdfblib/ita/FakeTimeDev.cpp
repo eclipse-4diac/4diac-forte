@@ -60,7 +60,7 @@ bool FakeTimeDev::initialize() {
   }
 
   // we need to manually crate this connection as the MGR is not managed by device
-  conn_MGR_ID.connect(MGR, STRID(MGR_ID));
+  conn_MGR_ID.connect(MGR, std::array{STRID(MGR_ID)});
   return true;
 }
 

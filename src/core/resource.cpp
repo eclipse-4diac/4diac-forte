@@ -417,44 +417,40 @@ EMGMResponse CResource::createConnection(forte::core::SManagementCMD &paCommand)
 
 EMGMResponse CResource::createConnection(forte::core::TNameIdentifier &paSrcNameList,
                                          forte::core::TNameIdentifier &paDstNameList) {
+  if (paSrcNameList.empty() || paDstNameList.empty()) {
+    return EMGMResponse::NoSuchObject;
+  }
+
   CConnection::Wrapper con = getOutputConnection(paSrcNameList);
   if (!con) {
     return EMGMResponse::NoSuchObject;
   }
 
-  CStringDictionary::TStringId portName = paDstNameList.back();
-  paDstNameList.pop_back();
   auto runner = paDstNameList.cbegin();
-  CFunctionBlock *dstFB = getFB(runner, paDstNameList.cend());
-  if (!dstFB || (runner != paDstNameList.cend())) {
+  CFunctionBlock *dstFB = getFB(runner, paDstNameList.cend() - 1);
+  if (!dstFB) {
     return EMGMResponse::NoSuchObject;
   }
-  EMGMResponse retVal = con->connect(*dstFB, portName);
+  EMGMResponse retVal = con->connect(*dstFB, {runner, paDstNameList.cend()});
   if (retVal == EMGMResponse::Ready) {
     con.release();
   }
   return retVal;
 }
 
-namespace {
-  bool isConnPort(CFunctionBlock *const paFB,
-                  forte::core::TNameIdentifier::const_iterator paNameListIt,
-                  forte::core::TNameIdentifier::const_iterator paNameListEnd) {
-    return paFB != nullptr && paNameListIt + 1 == paNameListEnd;
-  }
-} // namespace
-
 EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcNameList,
                                          forte::core::TNameIdentifier &paDstNameList) {
 
-  auto dstIt = paDstNameList.cbegin();
-  CFunctionBlock *dstFB = getFB(dstIt, paDstNameList.cend());
-
-  if (!isConnPort(dstFB, dstIt, paDstNameList.cend())) {
+  if (paSrcNameList.empty() || paDstNameList.empty()) {
     return EMGMResponse::NoSuchObject;
   }
 
-  CStringDictionary::TStringId dstPortName = *dstIt;
+  auto dstIt = paDstNameList.cbegin();
+  CFunctionBlock *dstFB = getFB(dstIt, paDstNameList.cend() - 1);
+  if (!dstFB) {
+    return EMGMResponse::NoSuchObject;
+  }
+
   // first check if the destination has an input connection with the given name
   if (CConnection *dstCon = getInputConnection(paDstNameList)) {
     forte::core::TNameIdentifier dstConSourceNameList;
@@ -463,7 +459,7 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
     if (dstConSourceNameList != paSrcNameList) {
       return EMGMResponse::NoSuchObject;
     }
-    const EMGMResponse retVal = dstCon->disconnect(*dstFB, dstPortName);
+    const EMGMResponse retVal = dstCon->disconnect(*dstFB, {dstIt, paDstNameList.cend()});
     if (retVal == EMGMResponse::Ready && dstCon->isDelegating()) {
       delete dstCon;
     }
@@ -472,7 +468,7 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
 
   // otherwise check if the source has an output connection with the given name
   if (const CConnection::Wrapper srcCon = getOutputConnection(paSrcNameList)) {
-    return srcCon->disconnect(*dstFB, dstPortName);
+    return srcCon->disconnect(*dstFB, {dstIt, paDstNameList.cend()});
   }
 
   return EMGMResponse::NoSuchObject;

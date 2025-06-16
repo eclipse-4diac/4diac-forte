@@ -53,7 +53,7 @@ bool RMT_DEV::initialize() {
   }
 
   // we need to manually create this connection as the MGR is not managed by device
-  conn_MGR_ID_int.connect(MGR, STRID(MGR_ID));
+  conn_MGR_ID_int.connect(MGR, std::array{STRID(MGR_ID)});
   return true;
 }
 

@@ -88,7 +88,10 @@ class CCompositeFB : public CFunctionBlock {
 
     void createEventConnections();
     void prepareIf2InEventCons();
-    void establishConnection(CConnection *paCon, CFunctionBlock &paDstFb, CStringDictionary::TStringId paDstNameId);
+
+    void establishConnection(CConnection *paCon,
+                             CFunctionBlock &paDstFb,
+                             std::span<const CStringDictionary::TStringId> paDstNameId);
     void createDataConnections();
     CDataConnection *getDataConn(CFunctionBlock *paSrcFB, CStringDictionary::TStringId paSrcNameId);
     void createAdapterConnections();

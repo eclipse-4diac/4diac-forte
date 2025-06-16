@@ -28,11 +28,14 @@ class CDataConnection : public CConnection {
   public:
     CDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId);
 
-    EMGMResponse connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse connect(CFunctionBlock &paDstFB,
+                         std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
 
-    EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
+                                       std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
 
-    EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse disconnect(CFunctionBlock &paDstFB,
+                            std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
 
     Wrapper getDelegatingConnection(std::span<const CStringDictionary::TStringId> paSrcNameList) override;
 

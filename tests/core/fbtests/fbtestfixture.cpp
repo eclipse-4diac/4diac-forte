@@ -86,17 +86,18 @@ CFBTestFixtureBase::~CFBTestFixtureBase() {
 
   for (size_t i = 0; i < interfaceSpec.getNumEOs(); i++) {
     CEventConnection *eventCon = mFBUnderTest->getEOConnection(interfaceSpec.mEONames[i]);
-    BOOST_CHECK_EQUAL(EMGMResponse::Ready, eventCon->disconnect(*this, interfaceSpec.mEONames[i]));
+    BOOST_CHECK_EQUAL(EMGMResponse::Ready, eventCon->disconnect(*this, std::array{interfaceSpec.mEONames[i]}));
   }
 
   for (size_t i = 0; i < interfaceSpec.getNumDOs(); ++i) {
     CDataConnection *dataCon = mFBUnderTest->getDOConnection(interfaceSpec.mDONames[i]);
 
-    BOOST_CHECK_EQUAL(EMGMResponse::Ready, dataCon->disconnect(*this, interfaceSpec.mDONames[i]));
+    BOOST_CHECK_EQUAL(EMGMResponse::Ready, dataCon->disconnect(*this, std::array{interfaceSpec.mDONames[i]}));
   }
 
   for (size_t i = 0; i < interfaceSpec.getNumDIs(); ++i) {
-    BOOST_CHECK_EQUAL(EMGMResponse::Ready, mDIConnections[i]->disconnect(*mFBUnderTest, interfaceSpec.mDINames[i]));
+    BOOST_CHECK_EQUAL(EMGMResponse::Ready,
+                      mDIConnections[i]->disconnect(*mFBUnderTest, std::array{interfaceSpec.mDINames[i]}));
   }
 
   performFBDeleteTests();
@@ -302,7 +303,7 @@ void CFBTestFixtureBase::createEventOutputConnections() {
 
   for (TPortId i = 0; i < interfaceSpec.getNumEOs(); i++) {
     CEventConnection *eventCon = mFBUnderTest->getEOConnection(interfaceSpec.mEONames[i]);
-    BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, eventCon->connect(*this, interfaceSpec.mEONames[i]));
+    BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, eventCon->connect(*this, std::array{interfaceSpec.mEONames[i]}));
   }
 }
 
@@ -312,7 +313,7 @@ void CFBTestFixtureBase::createDataInputConnections() {
 
   for (size_t i = 0; i < interfaceSpec.getNumDIs(); ++i) {
     auto &con = mDIConnections.emplace_back(std::make_unique<CFBTestInputDataConn>(*this, *mInputDataBuffers[i]));
-    BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, con->connect(*mFBUnderTest, interfaceSpec.mDINames[i]));
+    BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, con->connect(*mFBUnderTest, std::array{interfaceSpec.mDINames[i]}));
   }
 }
 
@@ -322,7 +323,7 @@ void CFBTestFixtureBase::createDataOutputConnections() {
   for (size_t i = 0; i < interfaceSpec.getNumDOs(); ++i) {
     if (CFBTestConn::canBeConnected(*mOutputDataBuffers[i], *mFBUnderTest->getDataOutput(interfaceSpec.mDONames[i]))) {
       CDataConnection *dataCon = mFBUnderTest->getDOConnection(interfaceSpec.mDONames[i]);
-      BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, dataCon->connect(*this, interfaceSpec.mDONames[i]));
+      BOOST_REQUIRE_EQUAL(EMGMResponse::Ready, dataCon->connect(*this, std::array{interfaceSpec.mDONames[i]}));
     }
   }
 }

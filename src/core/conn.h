@@ -95,13 +95,14 @@ class CConnection {
      *     - NoSuchObject... The destination is not a valid input.
      *     - InvalidState... The specified connection already exists.
      */
-    virtual EMGMResponse connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) = 0;
+    virtual EMGMResponse connect(CFunctionBlock &paDstFB,
+                                 std::span<const CStringDictionary::TStringId> paDstPortNameId) = 0;
 
     /*!\brief establish an event connection of a CFB to an event output of the CFB.
      *
      */
     virtual EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
-                                               CStringDictionary::TStringId paDstPortNameId) = 0;
+                                               std::span<const CStringDictionary::TStringId> paDstPortNameId) = 0;
 
     /*! \brief Disconnects the connection.
      *
@@ -118,7 +119,8 @@ class CConnection {
      *     - NoSuchObject... The destination is not a valid input.
      *     - InvalidState... this connection is not connected to the destination
      */
-    virtual EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) = 0;
+    virtual EMGMResponse disconnect(CFunctionBlock &paDstFB,
+                                    std::span<const CStringDictionary::TStringId> paDstPortNameId) = 0;
 
     /*!
      * \brief Get a delegating connection for the given name

@@ -16,35 +16,47 @@
 
 #include "funcbloc.h"
 
-EMGMResponse CInOutDataConnection::connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
+EMGMResponse CInOutDataConnection::connect(CFunctionBlock &paDstFB,
+                                           const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
   // Check if the superclass connect is working (connection with plain IN)
   EMGMResponse retVal = CDataConnection::connect(paDstFB, paDstPortNameId);
-
   if (retVal != EMGMResponse::NoSuchObject) {
     return retVal; // we already have a connection
   }
 
-  const TPortId dstPortId = paDstFB.getFBInterfaceSpec().getDIOID(paDstPortNameId);
-  if (cgInvalidPortId != dstPortId) {
-    CIEC_ANY *dstDataPoint = paDstFB.getDIOFromPortId(dstPortId);
-    retVal = establishDataConnection(paDstFB, dstPortId, *dstDataPoint);
-    if (retVal == EMGMResponse::Ready) {
-      paDstFB.incConnRefCount();
-      getSourceId().getFB().incConnRefCount();
-    }
+  if (paDstPortNameId.size() != 1) {
+    return EMGMResponse::NoSuchObject;
   }
 
-  return retVal;
+  const TPortId dstPortId = paDstFB.getFBInterfaceSpec().getDIOID(paDstPortNameId.front());
+  if (dstPortId == cgInvalidEventID) {
+    return EMGMResponse::NoSuchObject;
+  }
+
+  const CIEC_ANY *dstDataPoint = paDstFB.getDIOFromPortId(dstPortId);
+  retVal = establishDataConnection(paDstFB, dstPortId, *dstDataPoint);
+  if (retVal != EMGMResponse::Ready) {
+    return retVal;
+  }
+
+  paDstFB.incConnRefCount();
+  getSourceId().getFB().incConnRefCount();
+  return EMGMResponse::Ready;
 }
 
-EMGMResponse CInOutDataConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
+EMGMResponse CInOutDataConnection::disconnect(CFunctionBlock &paDstFB,
+                                              const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
   EMGMResponse retVal = CDataConnection::disconnect(paDstFB, paDstPortNameId);
   if (retVal != EMGMResponse::NoSuchObject) {
     return retVal; // we already have a connection
   }
 
-  const TPortId dstPortId = paDstFB.getFBInterfaceSpec().getDIOID(paDstPortNameId);
-  if (cgInvalidPortId == dstPortId) {
+  if (paDstPortNameId.size() != 1) {
+    return EMGMResponse::NoSuchObject;
+  }
+
+  const TPortId dstPortId = paDstFB.getFBInterfaceSpec().getDIOID(paDstPortNameId.front());
+  if (dstPortId == cgInvalidEventID) {
     return EMGMResponse::NoSuchObject;
   }
 

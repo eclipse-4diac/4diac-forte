@@ -178,7 +178,7 @@ void CCompositeFB::createEventConnections() {
       CEventConnection *evConn =
           (this == srcFB) ? mInterface2InternalEventCons[getFBInterfaceSpec().getEIID(currentConn.mSrcId)].get()
                           : srcFB->getEOConnection(currentConn.mSrcId);
-      establishConnection(evConn, *dstFB, currentConn.mDstId);
+      establishConnection(evConn, *dstFB, std::array{currentConn.mDstId});
     } else {
       // FIXME implement way to inform FB creator that creation failed
       DEVLOG_ERROR("Could not create event connection in CFB");
@@ -195,7 +195,7 @@ void CCompositeFB::prepareIf2InEventCons() {
 
 void CCompositeFB::establishConnection(CConnection *paCon,
                                        CFunctionBlock &paDstFb,
-                                       CStringDictionary::TStringId paDstNameId) {
+                                       const std::span<const CStringDictionary::TStringId> paDstNameId) {
   if (this == &paDstFb) {
     paCon->connectToCFBInterface(paDstFb, paDstNameId);
   } else {
@@ -210,7 +210,7 @@ void CCompositeFB::createDataConnections() {
     CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNameId);
 
     if ((srcFB != nullptr) && (dstFB != nullptr)) {
-      establishConnection(getDataConn(srcFB, currentConn.mSrcId), *dstFB, currentConn.mDstId);
+      establishConnection(getDataConn(srcFB, currentConn.mSrcId), *dstFB, std::array{currentConn.mDstId});
       if (srcFB == this) {
         // Data connections track on the source side the number of destinations. For interface to internals we don't
         // want that. Therefore, we have to revert that ref count change.
@@ -248,7 +248,7 @@ void CCompositeFB::createAdapterConnections() {
 
     if ((nullptr != srcFB) && (nullptr != dstFB)) {
       if (auto plug = srcFB->getPlugPin(currentConn.mSrcId); plug != nullptr) {
-        plug->getAdapterCon().connect(*dstFB, currentConn.mDstId);
+        plug->getAdapterCon().connect(*dstFB, std::array{currentConn.mDstId});
       } else {
         DEVLOG_ERROR("[CFB Creation] Adapter source is not a plug!");
       }

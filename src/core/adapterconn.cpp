@@ -27,13 +27,18 @@ CAdapterConnection::~CAdapterConnection() {
   performDisconnect();
 }
 
-EMGMResponse CAdapterConnection::connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
+EMGMResponse CAdapterConnection::connect(CFunctionBlock &paDstFB,
+                                         std::span<const CStringDictionary::TStringId> paDstPortNameId) {
   if (mSocket != nullptr) {
     // we are already connected
     return EMGMResponse::InvalidState;
   }
 
-  ISocketPin *socket = paDstFB.getSocketPin(paDstPortNameId);
+  if (paDstPortNameId.size() != 1) {
+    return EMGMResponse::NoSuchObject;
+  }
+
+  ISocketPin *socket = paDstFB.getSocketPin(paDstPortNameId.front());
   if (socket == nullptr) {
     return EMGMResponse::NoSuchObject;
   }
@@ -57,18 +62,23 @@ EMGMResponse CAdapterConnection::connect(CFunctionBlock &paDstFB, CStringDiction
   return EMGMResponse::Ready;
 }
 
-EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock &, CStringDictionary::TStringId) {
+EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock &, std::span<const CStringDictionary::TStringId>) {
   return EMGMResponse::InvalidOperation; // currently we are not supporting adapter connections accross interface
                                          // boundaries
 }
 
-EMGMResponse CAdapterConnection::disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) {
+EMGMResponse CAdapterConnection::disconnect(CFunctionBlock &paDstFB,
+                                            const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
   if (mSocket == nullptr) {
     // we are not connected
     return EMGMResponse::InvalidState;
   }
 
-  ISocketPin *socket = paDstFB.getSocketPin(paDstPortNameId);
+  if (paDstPortNameId.size() != 1) {
+    return EMGMResponse::NoSuchObject;
+  }
+
+  ISocketPin *socket = paDstFB.getSocketPin(paDstPortNameId.front());
   if (socket == nullptr || socket != mSocket) {
     return EMGMResponse::NoSuchObject;
   }

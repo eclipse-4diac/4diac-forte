@@ -26,9 +26,11 @@ class CInOutDataConnection : public CDataConnection {
         mValue(paValue) {
     }
 
-    EMGMResponse connect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse connect(CFunctionBlock &paDstFB,
+                         std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
 
-    EMGMResponse disconnect(CFunctionBlock &paDstFB, CStringDictionary::TStringId paDstPortNameId) override;
+    EMGMResponse disconnect(CFunctionBlock &paDstFB,
+                            std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
 
     void getSourcePortName(forte::core::TNameIdentifier &paResult) const override;
 
