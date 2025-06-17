@@ -172,11 +172,13 @@ CFunctionBlock *CFBContainer::getFB(CStringDictionary::TStringId paFBName) {
 }
 
 CFunctionBlock *CFBContainer::getFB(NameIterator &paNameListIt, NameIterator paNameListEnd) {
-  CFBContainer *childCont = getChild(*paNameListIt);
-  if (childCont != nullptr) {
-    // remove the container from the name list
-    ++paNameListIt;
-    return childCont->getFB(paNameListIt, paNameListEnd);
+  if (paNameListIt != paNameListEnd) {
+    CFBContainer *childCont = getChild(*paNameListIt);
+    if (childCont != nullptr) {
+      // remove the container from the name list
+      ++paNameListIt;
+      return childCont->getFB(paNameListIt, paNameListEnd);
+    }
   }
   // we are the last FB in the name list
   return isFB() ? static_cast<CFunctionBlock *>(this) : nullptr;
