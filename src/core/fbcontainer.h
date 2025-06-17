@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2024 fortiss GmbH, Primetals Technologies Austria GmbH
+ * Copyright (c) 2015, 2025 fortiss GmbH, Primetals Technologies Austria GmbH
  *                          Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
@@ -12,9 +12,10 @@
  *   Alois Zoitl - initial implementation and rework communication infrastructure
  *               - merged fbs and containers in one list
  *   Martin Jobst - add smart pointer for internal FBs
+ *                - use span for create and delete FB
  *******************************************************************************/
-#ifndef _FBCONTAINER_H_
-#define _FBCONTAINER_H_
+
+#pragma once
 
 #include "conn.h"
 #include "stringdict.h"
@@ -147,23 +148,20 @@ namespace forte {
       protected:
         /*!\brief Create a new FB instance of given type and name
          *
-         * @param paNameListIt    iterator to the current position in the name list for the FB to be created (e.g.,
-         * SubApp1.SubApp2.FBName, FBName2)
+         * @param paNameList the name list for the FB to be created (e.g., SubApp1.SubApp2.FBName, FBName2)
          * @param paTypeName      the type name of the FB to be created
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse createFB(NameIterator &paNameListIt,
-                              NameIterator paNameListEnd,
+        EMGMResponse createFB(std::span<const CStringDictionary::TStringId> paNameList,
                               CStringDictionary::TStringId paTypeName,
                               std::string_view paTypeHash);
 
         /*!\brief Delete a FB instance with given name
          *
-         * @param paNameListIt    iterator to the current position in the name list for the FB to be deleted (e.g.,
-         * SubApp1.SubApp2.FBName, FBName2)
+         * @param paNameList the name list for the FB to be deleted (e.g., SubApp1.SubApp2.FBName, FBName2)
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse deleteFB(NameIterator &paNameListIt, NameIterator paNameListEnd);
+        EMGMResponse deleteFB(std::span<const CStringDictionary::TStringId> paNameList);
 
         /*! get fb contained in this fbcontainer
          *
@@ -260,5 +258,3 @@ namespace forte {
     };
   } /* namespace core */
 } /* namespace forte */
-
-#endif /* FBCONTAINER_H_ */

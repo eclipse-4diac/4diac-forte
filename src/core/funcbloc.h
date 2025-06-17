@@ -60,9 +60,6 @@ typedef CStringDictionary::TStringId TEventTypeID;
 /*!\ingroup CORE\brief Base class for all function blocks.
  */
 class CFunctionBlock : public forte::core::CFBContainer {
-  protected:
-    using CFBContainer::NameIterator;
-
   public:
     /*!\brief Possible states of a runable object.
      *

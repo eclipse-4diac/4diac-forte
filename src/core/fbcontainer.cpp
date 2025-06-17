@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2024 fortiss GmbH, 2018 TU Wien/ACIN,
+ * Copyright (c) 2015, 2025 fortiss GmbH, 2018 TU Wien/ACIN,
  *                          Primetals Technologies Austria GmbH
  *                          Martin Erich Jobst
  *
@@ -16,6 +16,7 @@
  *   Fabio Gandolfi - refactored fb and container list to sorted vectors
  *   Alois Zoitl  - merged fbs and containers in one list
  *   Martin Jobst - add smart pointer for internal FBs
+ *                - use span for create and delete FB
  *******************************************************************************/
 #include "fbcontainer.h"
 #include "funcbloc.h"
@@ -91,20 +92,21 @@ void CFBContainer::getFullQualifiedApplicationInstanceName(TNameIdentifier &paRe
   paResult.push_back(getInstanceNameId());
 }
 
-EMGMResponse CFBContainer::createFB(NameIterator &paNameListIt,
-                                    NameIterator paNameListEnd,
+EMGMResponse CFBContainer::createFB(const std::span<const CStringDictionary::TStringId> paNameList,
                                     CStringDictionary::TStringId paTypeName,
                                     std::string_view paTypeHash) {
-  if (paNameListIt + 1 == paNameListEnd) {
-    return createFB(*paNameListIt, paTypeName, paTypeHash);
-  } else if (isDynamicContainer()) {
+  if (paNameList.empty()) {
+    return EMGMResponse::InvalidDst;
+  }
+  if (paNameList.size() == 1) {
+    return createFB(paNameList.front(), paTypeName, paTypeHash);
+  }
+  if (isDynamicContainer()) {
     // we have more than one name in the fb name list. Find or create the container and hand the create command to this
     // container.
-    CFBContainer *childCont = findOrCreateContainer(*paNameListIt);
+    CFBContainer *childCont = findOrCreateContainer(paNameList.front());
     if (childCont != nullptr && childCont->isDynamicContainer()) {
-      // remove the container from the name list
-      ++paNameListIt;
-      return childCont->createFB(paNameListIt, paNameListEnd, paTypeName, paTypeHash);
+      return childCont->createFB(paNameList.subspan(1), paTypeName, paTypeHash);
     }
   }
   return EMGMResponse::InvalidDst;
@@ -133,32 +135,32 @@ EMGMResponse CFBContainer::createFB(CStringDictionary::TStringId paInstanceNameI
   return EMGMResponse::Ready;
 }
 
-EMGMResponse CFBContainer::deleteFB(NameIterator &paNameListIt, NameIterator paNameListEnd) {
-  EMGMResponse retval = EMGMResponse::NoSuchObject;
+EMGMResponse CFBContainer::deleteFB(const std::span<const CStringDictionary::TStringId> paNameList) {
+  if (paNameList.empty()) {
+    return EMGMResponse::NoSuchObject;
+  }
 
-  CStringDictionary::TStringId childName = *paNameListIt;
-  TFBContainerList::iterator childIt = getChildrenIterator(childName);
+  CStringDictionary::TStringId childName = paNameList.front();
+  auto childIt = getChildrenIterator(childName);
   if (isChild(childIt, childName)) {
     CFBContainer *child = *childIt;
-    if (paNameListIt + 1 != paNameListEnd) {
+    if (paNameList.size() > 1) {
       // we have more than one name in the fb name list. Hand the process on to the child if it is a dynamic container
       if (child->isDynamicContainer()) {
         // remove the container from the name list
-        ++paNameListIt;
-        retval = child->deleteFB(paNameListIt, paNameListEnd);
+        return child->deleteFB(paNameList.subspan(1));
       }
     } else if (child->isFB()) {
       CFunctionBlock *fb = static_cast<CFunctionBlock *>(child);
       if (fb->isCurrentlyDeleteable()) {
         forte::core::deleteFB(fb);
         mChildren.erase(childIt);
-        retval = EMGMResponse::Ready;
-      } else {
-        retval = EMGMResponse::InvalidState;
+        return EMGMResponse::Ready;
       }
+      return EMGMResponse::InvalidState;
     }
   }
-  return retval;
+  return EMGMResponse::NoSuchObject;
 }
 
 CFunctionBlock *CFBContainer::getFB(CStringDictionary::TStringId paFBName) {

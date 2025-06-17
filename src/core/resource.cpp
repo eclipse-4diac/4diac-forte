@@ -308,9 +308,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
   if (CStringDictionary::scmInvalidStringId == paCommand.mDestination) {
     switch (paCommand.mCMD) {
       case EMGMCommandType::CreateFBInstance: {
-        auto itRunner = paCommand.mFirstParam.cbegin();
-        retVal = createFB(itRunner, paCommand.mFirstParam.cend(), paCommand.mSecondParam.front(),
-                          paCommand.mAdditionalParams);
+        retVal = createFB(paCommand.mFirstParam, paCommand.mSecondParam.front(), paCommand.mAdditionalParams);
       } break;
       case EMGMCommandType::CreateFBType:
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
@@ -327,8 +325,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
 #endif
         break;
       case EMGMCommandType::DeleteFBInstance: {
-        auto itRunner = paCommand.mFirstParam.cbegin();
-        retVal = deleteFB(itRunner, paCommand.mFirstParam.cend());
+        retVal = deleteFB(paCommand.mFirstParam);
       } break;
       case EMGMCommandType::CreateConnection:
         retVal = createConnection(paCommand.mFirstParam, paCommand.mSecondParam);
