@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 ACIN, fortiss GmbH
+ * Copyright (c) 2025 Monika Wenger
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -7,30 +7,20 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *
- * Contributors:
- *    Alois Zoitl
- *      - initial implementation and rework communication infrastructure
+ * uses CRTP (Curiously Recurring Template Pattern)
  *******************************************************************************/
-#ifndef _EXTEVHAN_H_
-#define _EXTEVHAN_H_
+#ifndef _EXTEVHANCRTP_H_
+#define _EXTEVHANCRTP_H_
 
+#include <cstddef>
+#include <cstdint>
+#include "devlog.h"
 #include "devexec.h"
 #include "iextevhan.h"
 
 class CEventSourceFB;
 class CFunctionBlock;
-
-#define DECLARE_HANDLER(TypeName)                                                                                      \
-public:                                                                                                                \
-  static const size_t mHandlerIdentifier;                                                                              \
-  size_t getIdentifier() const override;                                                                               \
-  explicit TypeName(CDeviceExecution &paDeviceExecution);                                                              \
-  ~TypeName();
-
-#define DEFINE_HANDLER(TypeName)                                                                                       \
-  size_t TypeName::getIdentifier() const {                                                                             \
-    return TypeName::mHandlerIdentifier;                                                                               \
-  }
+class CDeviceExecution;
 
 /**  \defgroup FORTE_HAL FORTE Hardware Abstraction Layer - FORTE-HAL
  * \brief The FORTE-HAL is the abstraction of HW dependent features important
@@ -50,17 +40,45 @@ public:                                                                         
  *   - unregisterFB(CFunctionBlock *paESFB) the ES-FB doesn't want to receive any external events any more (e.g. INIT-).
  */
 
-class CExternalEventHandler : public IExternalEventHandler{
+template<typename Derived>
+class CExternalEventHandlerCRTP : public IExternalEventHandler {
   public:
-    explicit CExternalEventHandler(CDeviceExecution &paDeviceExecution);
+    explicit CExternalEventHandlerCRTP(CDeviceExecution &paDeviceExecution) :
+        mDeviceExecution(paDeviceExecution) {
+    }
 
-    virtual ~CExternalEventHandler() = default;
+    virtual ~CExternalEventHandlerCRTP() = default;
+    /*!\brief Enables this event source
+     *
+     */
+    virtual void enableHandler() = 0;
+    /*!\brief Disable this event source
+     */
+    virtual void disableHandler() = 0;
+    /*!\brief Sets the priority of the event source
+     *
+     * \param paPriority new priority of the event source
+     */
+    virtual void setPriority(int paPriority) = 0;
+    /*!\brief Get the current priority of the event source
+     *
+     * \return current priority
+     */
+    virtual int getPriority() const = 0;
+
+    size_t getIdentifier() const {
+      return Derived::mHandlerIdentifier;
+    }
 
   protected:
+    CDeviceExecution &mDeviceExecution;
+
     /*! \brief Check if the external event handler is allowed to start event chains
      *
      */
-    bool isAllowed();
+    bool isAllowed() {
+      return mDeviceExecution.extEvHandlerIsAllowed(getIdentifier());
+    }
 
     /*!\brief register event source at device execution for starting a new event chain
      *
@@ -69,18 +87,24 @@ class CExternalEventHandler : public IExternalEventHandler{
      *
      * @param paECStartFB the event source function block which starts the new event chain
      */
-    void startNewEventChain(CEventSourceFB *paECStartFB);
-
-    template<typename T>
-    T &getExtEvHandler() {
-      return mDeviceExecution.getExtEvHandler<T>();
+    void startNewEventChain(CEventSourceFB *paECStartFB) {
+      if (isAllowed()) {
+        FORTE_TRACE("Starting EC\n");
+        mDeviceExecution.startNewEventChain(paECStartFB);
+      } else {
+        // TODO: handle this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        DEVLOG_DEBUG("Starting EC NOT ALLOWED !!!!!!!!!!!!!!!1\n");
+      }
     }
 
-    CDeviceExecution &mDeviceExecution;
+    template<typename T>
+    T& getExtEvHandler() {
+      return mDeviceExecution.getExtEvHandler<T>();
+    }
 
   private:
 };
 
 /*@}*/
 /*@}*/
-#endif /*EXTEVHAN_H_*/
+#endif /*EXTEVHANCRTP_H_*/

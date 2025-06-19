@@ -11,7 +11,7 @@
 #ifndef XQUERY_XQUERYHANDLER_H_
 #define XQUERY_XQUERYHANDLER_H_
 
-#include "extevhan.h"
+#include "extevhancrtp.h"
 #include "forte_thread.h"
 #include "singlet.h"
 #include "forte_sem.h"
@@ -19,8 +19,7 @@
 #include <vector>
 
 // cppcheck-suppress noConstructor
-class CXqueryHandler : public CExternalEventHandler, private CThread {
-  DECLARE_HANDLER(CXqueryHandler)
+class CXqueryHandler : public CExternalEventHandlerCRTP<CXqueryHandler>, private CThread {
 
   private:
     using TXqueryFBContainer = std::vector<CXqueryClientLayer *>;
@@ -33,6 +32,10 @@ class CXqueryHandler : public CExternalEventHandler, private CThread {
     char *info;
 
   public:
+    CXqueryHandler(CDeviceExecution &paDeviceExecution);
+    ~CXqueryHandler();
+
+    static const size_t mHandlerIdentifier;
     void enableHandler() override;
     void disableHandler() override;
     void setPriority(int) override;

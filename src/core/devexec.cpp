@@ -13,7 +13,7 @@
 #include "devexec.h"
 #include "esfb.h"
 #include "ecet.h"
-#include "extevhan.h"
+#include "iextevhan.h"
 #include "../arch/timerha.h"
 #include "../arch/devlog.h"
 #include "device.h"
@@ -38,7 +38,7 @@ void CDeviceExecution::startNewEventChain(CEventSourceFB *paECStartFB) const {
   }
 }
 
-CExternalEventHandler *CDeviceExecution::getExtEvHandler(size_t paIdentifer) const {
+IExternalEventHandler *CDeviceExecution::getExtEvHandler(size_t paIdentifer) const {
   return mRegisteredEventHandlers[paIdentifer].mHandler.get();
 }
 

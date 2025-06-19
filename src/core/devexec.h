@@ -15,7 +15,7 @@
 
 class CFunctionBlock;
 class CEventSourceFB;
-class CExternalEventHandler;
+class IExternalEventHandler;
 class CTimerHandler;
 class CDevice;
 
@@ -81,10 +81,10 @@ class CDeviceExecution {
      */
     struct SEventHandlerElement {
         bool mOccured; //!< flag indicating that the external event has occurred between the last invocation.
-        std::unique_ptr<CExternalEventHandler> mHandler; //!< pointer to the external event handler instance.
+        std::unique_ptr<IExternalEventHandler> mHandler; //!< pointer to the external event handler instance.
     };
 
-    CExternalEventHandler *getExtEvHandler(size_t paIdentifer) const;
+    IExternalEventHandler *getExtEvHandler(size_t paIdentifer) const;
 
     CDevice &mDevice;
 
