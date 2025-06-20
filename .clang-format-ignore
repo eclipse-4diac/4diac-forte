@@ -1,0 +1,4 @@
+rc/core/trace/classic/generated/*
+src/core/trace/replay_debugging/*
+src/modules/*
+src/stdfblib/*
