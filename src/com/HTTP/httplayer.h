@@ -80,8 +80,6 @@ namespace forte {
 
         void sendDataAsClient(void *paData);
 
-        const CIEC_ANY &getSDx(void *paData, int paSdNum);
-
         EComResponse openClientConnection(char *paLayerParameter);
 
         bool checkSDsAndRDsType() const;

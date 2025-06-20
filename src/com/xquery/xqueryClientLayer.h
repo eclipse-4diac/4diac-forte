@@ -38,7 +38,6 @@ class CXqueryClientLayer : public forte::com_infra::CComLayer {
     EComResponse openConnection(char *paLayerParameter) override;
     bool parseParameters(char *paLayerParameter);
     void openDB();
-    const CIEC_ANY& getSDx(void *paData, int paSdNum);
 
     int mSfd;
     char *mHost;

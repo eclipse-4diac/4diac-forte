@@ -36,3 +36,8 @@ CComLayer::~CComLayer() {
 EComResponse CComLayer::processInterrupt() {
   return e_Nothing;
 }
+
+const CIEC_ANY& CComLayer::getSDx(void *paData, int paSdNum) {
+  const CIEC_ANY **sds = static_cast<const CIEC_ANY**>(paData);
+  return sds[paSdNum]->unwrap();
+}

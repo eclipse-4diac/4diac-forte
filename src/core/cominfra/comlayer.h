@@ -96,6 +96,8 @@ namespace forte {
           return ::getExtEvHandler<T>(*mFb);
         }
 
+        const CIEC_ANY& getSDx(void *paData, int paSdNum);
+
         EComConnectionState mConnectionState;
 
         CComLayer *mTopLayer;

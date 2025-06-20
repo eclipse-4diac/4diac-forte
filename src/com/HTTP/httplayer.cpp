@@ -163,11 +163,6 @@ bool CHttpComLayer::handleAddress(const char *paAddress) {
   return everythingOK;
 }
 
-const CIEC_ANY &CHttpComLayer::getSDx(void *paData, int paSdNum) {
-  const CIEC_ANY **sds = static_cast<const CIEC_ANY **>(paData);
-  return sds[paSdNum]->unwrap();
-}
-
 EComResponse CHttpComLayer::sendData(void *paData, unsigned int) {
   mInterruptResp = e_Nothing;
   if (mCorrectlyInitialized) {

@@ -110,11 +110,6 @@ forte::com_infra::EComResponse CXqueryClientLayer::sendData(void *paData, unsign
   return retVal;
 }
 
-const CIEC_ANY& CXqueryClientLayer::getSDx(void *paData, int paSdNum) {
-  const CIEC_ANY **sds = static_cast<const CIEC_ANY**>(paData);
-  return sds[paSdNum]->unwrap();
-}
-
 forte::com_infra::EComResponse CXqueryClientLayer::recvData(const void *paData, unsigned int paSize) {
   EComResponse retVal = e_Nothing;
   if (paSize > 0) {
