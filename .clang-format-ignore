@@ -1,5 +1,11 @@
 src/core/trace/classic/generated/*
-src/core/trace/replay_debugging/*
-src/modules/*
+src/core/trace/replay_debugging/generated/*
 src/stdfblib/*
+src/stdfblib/*/*
 src/com/opc_ua/FBs/*
+src/com/opc_ua/FBs/*/*
+src/modules/*/*
+src/modules/*/*/*
+src/modules/*/*/*/*
+src/modules/*/*/*/*/*
+src/modules/*/*/*/*/*/*
