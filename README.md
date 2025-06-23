@@ -4,7 +4,7 @@
 
 [![Eclipse Foundation](https://img.shields.io/badge/Project-Eclipse%204diac-orange.svg?style=flat-square)](https://eclipse.dev/4diac/4diac)
 
-![Build Status](https://img.shields.io/github/actions/workflow/status/eclipse-4diac/4diac-forte/cmake-multi-platform.yml?branch=develop&style=flat-square&label=Build%20Status)
+[![Build Status](https://img.shields.io/github/actions/workflow/status/eclipse-4diac/4diac-forte/cmake-multi-platform.yml?branch=develop&style=flat-square&label=Build%20Status)](https://github.com/eclipse-4diac/4diac-forte/actions/workflows/cmake-multi-platform.yml)
 
 
 
