@@ -83,7 +83,7 @@ bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
   pcPos++;
   // we have an underscore and it is the first underscore after AND
   unsigned int numDIs = static_cast<unsigned int>(forte::core::util::strtoul(pcPos, nullptr, 10));
-  DEVLOG_DEBUG("DIs: %d;\n", paInterfaceSpec.getNumDIs());
+  DEVLOG_DEBUG("DIs: %d;\n", numDIs);
 
   if (numDIs < 2) {
     return false;
