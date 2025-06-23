@@ -68,7 +68,6 @@ class FORTE_TRIGGER_SERVICE_SERVER : public CEventSourceFB {
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventINDID = 1;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     bool triggerCallback(std_srvs::Trigger::Request &pa_req,

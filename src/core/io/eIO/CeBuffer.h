@@ -36,7 +36,7 @@ namespace forte::core::io {
       }
 
       T getCurrentData() {
-        return this->mData[(mPushIndex-1) & cmIndexMask];
+        return this->mData[(mPushIndex - 1) & cmIndexMask];
       }
 
       void makeSnapshot() {

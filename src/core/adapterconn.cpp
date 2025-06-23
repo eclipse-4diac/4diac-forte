@@ -62,7 +62,8 @@ EMGMResponse CAdapterConnection::connect(CFunctionBlock &paDstFB,
   return EMGMResponse::Ready;
 }
 
-EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock &, std::span<const CStringDictionary::TStringId>) {
+EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock &,
+                                                       std::span<const CStringDictionary::TStringId>) {
   return EMGMResponse::InvalidOperation; // currently we are not supporting adapter connections accross interface
                                          // boundaries
 }

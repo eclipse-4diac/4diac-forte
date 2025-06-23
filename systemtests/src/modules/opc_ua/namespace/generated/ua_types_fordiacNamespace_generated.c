@@ -6,39 +6,39 @@
 
 /* DatatypeTest */
 static UA_DataTypeMember DatatypeTest_members[3] = {
-{
-    UA_TYPENAME("Name") /* .memberName */
-    &UA_TYPES[UA_TYPES_STRING], /* .memberType */
-    0, /* .padding */
-    false, /* .isArray */
-    false  /* .isOptional */
-},
-{
-    UA_TYPENAME("Age") /* .memberName */
-    &UA_TYPES[UA_TYPES_SBYTE], /* .memberType */
-    offsetof(UA_DatatypeTest, age) - offsetof(UA_DatatypeTest, name) - sizeof(UA_String), /* .padding */
-    false, /* .isArray */
-    false  /* .isOptional */
-},
-{
-    UA_TYPENAME("IsRegistered") /* .memberName */
-    &UA_TYPES[UA_TYPES_BOOLEAN], /* .memberType */
-    offsetof(UA_DatatypeTest, isRegistered) - offsetof(UA_DatatypeTest, age) - sizeof(UA_SByte), /* .padding */
-    false, /* .isArray */
-    false  /* .isOptional */
-},};
-const UA_DataType UA_UA_TYPES_FORDIACNAMESPACE[UA_UA_TYPES_FORDIACNAMESPACE_COUNT] = {
-/* DatatypeTest */
-{
-    UA_TYPENAME("DatatypeTest") /* .typeName */
-    {2, UA_NODEIDTYPE_NUMERIC, {13LU}}, /* .typeId */
-    {2, UA_NODEIDTYPE_NUMERIC, {14LU}}, /* .binaryEncodingId */
-    sizeof(UA_DatatypeTest), /* .memSize */
-    UA_DATATYPEKIND_STRUCTURE, /* .typeKind */
-    false, /* .pointerFree */
-    false, /* .overlayable */
-    3, /* .membersSize */
-    DatatypeTest_members  /* .members */
-},
+    {
+        UA_TYPENAME("Name") /* .memberName */
+            & UA_TYPES[UA_TYPES_STRING], /* .memberType */
+        0, /* .padding */
+        false, /* .isArray */
+        false /* .isOptional */
+    },
+    {
+        UA_TYPENAME("Age") /* .memberName */
+            & UA_TYPES[UA_TYPES_SBYTE], /* .memberType */
+        offsetof(UA_DatatypeTest, age) - offsetof(UA_DatatypeTest, name) - sizeof(UA_String), /* .padding */
+        false, /* .isArray */
+        false /* .isOptional */
+    },
+    {
+        UA_TYPENAME("IsRegistered") /* .memberName */
+            & UA_TYPES[UA_TYPES_BOOLEAN], /* .memberType */
+        offsetof(UA_DatatypeTest, isRegistered) - offsetof(UA_DatatypeTest, age) - sizeof(UA_SByte), /* .padding */
+        false, /* .isArray */
+        false /* .isOptional */
+    },
 };
-
+const UA_DataType UA_UA_TYPES_FORDIACNAMESPACE[UA_UA_TYPES_FORDIACNAMESPACE_COUNT] = {
+    /* DatatypeTest */
+    {
+        UA_TYPENAME("DatatypeTest") /* .typeName */
+        {2, UA_NODEIDTYPE_NUMERIC, {13LU}}, /* .typeId */
+        {2, UA_NODEIDTYPE_NUMERIC, {14LU}}, /* .binaryEncodingId */
+        sizeof(UA_DatatypeTest), /* .memSize */
+        UA_DATATYPEKIND_STRUCTURE, /* .typeKind */
+        false, /* .pointerFree */
+        false, /* .overlayable */
+        3, /* .membersSize */
+        DatatypeTest_members /* .members */
+    },
+};

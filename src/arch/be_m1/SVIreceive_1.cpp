@@ -15,17 +15,15 @@ DEFINE_FIRMWARE_FB(FORTE_SVIreceive_1, STRID(SVIreceive_1))
 
 namespace {
   const auto cDataInputNames = std::array{STRID(QI), STRID(ID)};
-  
-  
+
   const auto cDataOutputNames = std::array{STRID(QO), STRID(RD_1)};
-  
-  
+
   const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
   const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  
+
   const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
   const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -37,8 +35,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 void FORTE_SVIreceive_1::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {

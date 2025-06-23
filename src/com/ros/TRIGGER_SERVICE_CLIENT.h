@@ -66,7 +66,6 @@ class FORTE_TRIGGER_SERVICE_CLIENT : public CEventSourceFB {
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventCNFID = 1;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:

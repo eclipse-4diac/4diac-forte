@@ -365,8 +365,8 @@ CConnection *CFunctionBlock::getInputConnection(const std::span<const CStringDic
   return CFBContainer::getInputConnection(paDstNameList);
 }
 
-CConnection::Wrapper CFunctionBlock::getOutputConnection(
-    const std::span<const CStringDictionary::TStringId> paSrcNameList) {
+CConnection::Wrapper
+CFunctionBlock::getOutputConnection(const std::span<const CStringDictionary::TStringId> paSrcNameList) {
   if (paSrcNameList.empty()) {
     return {};
   }

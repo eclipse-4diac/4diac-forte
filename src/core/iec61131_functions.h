@@ -1071,7 +1071,7 @@ CIEC_UDINT func_REAL_TRUNC_UDINT(const CIEC_REAL &paIN);
 CIEC_ULINT func_REAL_TRUNC_ULINT(const CIEC_REAL &paIN);
 
 //[[deprecated ("Not desired anymore and possible target of removal in the future")]] - attribute cannot be added, so
-//its a comment for now
+// its a comment for now
 template<typename T, typename U>
 auto func_TRUNC(const U &paIN) ->
     typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_INT, T> && std::is_base_of_v<CIEC_ANY_REAL, U>, T> {
@@ -1858,14 +1858,14 @@ template<typename T, typename U>
 T func_LOWER_BOUND(const CIEC_ARRAY &paArray, const U &paDimension) {
   static_assert(std::is_base_of_v<CIEC_ANY_INT, T>, "T not of ANY_INT");
   static_assert(std::is_base_of_v<CIEC_ANY_INT, U>, "U not of ANY_INT");
-  return T(static_cast<typename T::TValueType>(paArray.getLowerBound(
-    static_cast<typename U::TValueType>(paDimension))));
+  return T(
+      static_cast<typename T::TValueType>(paArray.getLowerBound(static_cast<typename U::TValueType>(paDimension))));
 }
 
 template<typename T, typename U>
 T func_UPPER_BOUND(const CIEC_ARRAY &paArray, const U &paDimension) {
   static_assert(std::is_base_of_v<CIEC_ANY_INT, T>, "T not of ANY_INT");
   static_assert(std::is_base_of_v<CIEC_ANY_INT, U>, "U not of ANY_INT");
-  return T(static_cast<typename T::TValueType>(paArray.getUpperBound(
-    static_cast<typename U::TValueType>(paDimension))));
+  return T(
+      static_cast<typename T::TValueType>(paArray.getUpperBound(static_cast<typename U::TValueType>(paDimension))));
 }

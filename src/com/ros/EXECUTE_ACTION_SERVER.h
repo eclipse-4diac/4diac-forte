@@ -97,7 +97,6 @@ class FORTE_EXECUTE_ACTION_SERVER : public CEventSourceFB {
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventINDID = 1;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void ActionExecuteCB(const ExecuteGoalConstPtr &pa_goal, CEventChainExecutionThread *const paECET);

@@ -97,11 +97,10 @@ class CDataConnection : public CConnection {
     establishDataConnection(CFunctionBlock &paDstFB, TPortId paDstPortId, const CIEC_ANY &paDstDataPoint);
 
   private:
-    EMGMResponse
-    establishGatheringConnection(CFunctionBlock &paDstFB,
-                                 TPortId paDstPortId,
-                                 CIEC_ANY &paDstDataPoint,
-                                 std::span<const CStringDictionary::TStringId> paDstPortNameId);
+    EMGMResponse establishGatheringConnection(CFunctionBlock &paDstFB,
+                                              TPortId paDstPortId,
+                                              CIEC_ANY &paDstDataPoint,
+                                              std::span<const CStringDictionary::TStringId> paDstPortNameId);
 };
 
 template<typename T>

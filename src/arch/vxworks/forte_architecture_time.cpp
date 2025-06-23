@@ -20,8 +20,9 @@
 uint_fast64_t getNanoSecondsMonotonicArch() {
   return (forte::core::constants::cNanosecondsPerSecond > timerFreq())
              ? sysTimestamp() / (timerFreq() / forte::core::constants::cNanosecondsPerSecond)
-             : (sysTimestamp() / timerFreq()) * forte::core::constants::cNanosecondsPerSecond; /// forte::core::constants::cNanosecondsPerSecond)
-                                                                                               /// * sysClkRateGet();
+             : (sysTimestamp() / timerFreq()) *
+                   forte::core::constants::cNanosecondsPerSecond; /// forte::core::constants::cNanosecondsPerSecond)
+                                                                  /// * sysClkRateGet();
 }
 
 uint_fast64_t getNanoSecondsRealtimeArch() {

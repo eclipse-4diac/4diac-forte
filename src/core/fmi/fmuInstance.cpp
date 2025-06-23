@@ -268,7 +268,8 @@ void fmuInstance::fillInterfaceElementsArray(CFunctionBlock *paFB, bool isInput,
                                              << " ADDED SUCCESSFULLY\n")
     }
   } else {
-    unsigned int noOfElements = isInput ? paFB->getFBInterfaceSpec().getNumDIs() : paFB->getFBInterfaceSpec().getNumDOs();
+    unsigned int noOfElements =
+        isInput ? paFB->getFBInterfaceSpec().getNumDIs() : paFB->getFBInterfaceSpec().getNumDOs();
     for (unsigned int i = 0; i < noOfElements; i++) {
       FMU_DEBUG_LOG(this,
                     "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "."

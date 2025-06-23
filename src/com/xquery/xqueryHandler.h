@@ -20,7 +20,7 @@
 
 // cppcheck-suppress noConstructor
 class CXqueryHandler : public CExternalEventHandler, private CThread {
-  DECLARE_HANDLER(CXqueryHandler)
+    DECLARE_HANDLER(CXqueryHandler)
 
   private:
     using TXqueryFBContainer = std::vector<CXqueryClientLayer *>;

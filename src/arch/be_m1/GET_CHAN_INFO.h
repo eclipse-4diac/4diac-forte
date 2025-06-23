@@ -41,7 +41,6 @@ class FORTE_GET_CHAN_INFO : public CFunctionBlock {
 
     static const TEventID scmEventINITOID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     bool init();
@@ -50,7 +49,7 @@ class FORTE_GET_CHAN_INFO : public CFunctionBlock {
   public:
     FORTE_GET_CHAN_INFO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_GET_CHAN_INFO() override = default;
+        ~FORTE_GET_CHAN_INFO() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

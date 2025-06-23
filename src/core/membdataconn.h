@@ -21,11 +21,11 @@ namespace forte::core::internal {
 
     public:
       CMemberDataConnection(CFunctionBlock &paSrcFB,
-                                  const TPortId paSrcPortId,
-                                  CIEC_ANY &paMember,
-                                  const std::span<const CStringDictionary::TStringId> paMemberName) :
-        CDelegatingDataConnection(paSrcFB, paSrcPortId, paMember),
-        cmMemberName(paMemberName.begin(), paMemberName.end()) {
+                            const TPortId paSrcPortId,
+                            CIEC_ANY &paMember,
+                            const std::span<const CStringDictionary::TStringId> paMemberName) :
+          CDelegatingDataConnection(paSrcFB, paSrcPortId, paMember),
+          cmMemberName(paMemberName.begin(), paMemberName.end()) {
       }
 
       void readData(CIEC_ANY &paValue) const override {

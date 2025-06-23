@@ -37,8 +37,9 @@ EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB,
   return retVal;
 }
 
-EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
-                                                     const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
+EMGMResponse
+CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
+                                        const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
   if (paDstPortNameId.size() != 1) {
     return EMGMResponse::NoSuchObject;
   }

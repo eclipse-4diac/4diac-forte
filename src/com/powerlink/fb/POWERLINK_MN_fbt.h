@@ -31,7 +31,6 @@ class FORTE_POWERLINK_MN final : public CFunctionBlock {
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventINITOID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;

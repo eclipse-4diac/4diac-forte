@@ -35,7 +35,6 @@ class FORTE_X20AT4222 final : public PowerlinkFunctionBlockAT {
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventCNFID = 1;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;

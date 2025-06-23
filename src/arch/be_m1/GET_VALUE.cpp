@@ -20,17 +20,15 @@ DEFINE_FIRMWARE_FB(FORTE_GET_VALUE, STRID(GET_VALUE))
 
 namespace {
   const auto cDataInputNames = std::array{STRID(MOD_NB), STRID(CHAN_NB)};
-  
-  
+
   const auto cDataOutputNames = std::array{STRID(RET_CODE), STRID(VALUE)};
-  
-  
+
   const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
   const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  
+
   const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
   const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -42,8 +40,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 void FORTE_GET_VALUE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {

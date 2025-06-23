@@ -57,7 +57,6 @@ class MultiDevice : public CDevice {
 
     std::string mMGRID;
 
-
     static const inline std::string scmDefaultDeviceToCreate{"RMT_DEV"};
 
     // resetinng the controlled device must be done asynchronously

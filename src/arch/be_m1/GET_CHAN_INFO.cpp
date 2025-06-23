@@ -19,18 +19,15 @@ DEFINE_FIRMWARE_FB(FORTE_GET_CHAN_INFO, STRID(GET_CHAN_INFO))
 
 namespace {
   const auto cDataInputNames = std::array{STRID(SYMB_NAME)};
-  
-  
-  const auto cDataOutputNames = std::array{STRID(RET_CODE), STRID(MOD_NB),
-                                                                                  STRID(CHAN_NB)};
-  
-  
+
+  const auto cDataOutputNames = std::array{STRID(RET_CODE), STRID(MOD_NB), STRID(CHAN_NB)};
+
   const auto cEventInputNames = std::array{STRID(INIT)};
   const auto cEventInputTypeIds = std::array{STRID(EInit)};
-  
+
   const auto cEventOutputNames = std::array{STRID(INITO)};
   const auto cEventOutputTypeIds = std::array{STRID(Event)};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -42,8 +39,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 void FORTE_GET_CHAN_INFO::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {

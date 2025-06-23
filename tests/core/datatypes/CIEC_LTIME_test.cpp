@@ -144,7 +144,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test) {
 
   BOOST_CHECK_EQUAL(nTest.fromString("LTIME#3s_22ms"), 13);
   BOOST_CHECK_EQUAL(static_cast<CIEC_LTIME::TValueType>(nTest),
-                    (CIEC_LTIME::TValueType)(3022LL * (CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / 1000LL)));
+                    (CIEC_LTIME::TValueType) (3022LL * (CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / 1000LL)));
   nTest.toString(buffer);
   BOOST_CHECK_EQUAL(buffer, "LT#3s22ms");
   buffer.clear();
@@ -176,15 +176,16 @@ BOOST_AUTO_TEST_CASE(Conversion_test) {
 
   BOOST_CHECK_EQUAL(nTest.fromString("LT#76s"), 6);
   BOOST_CHECK_EQUAL(static_cast<CIEC_LTIME::TValueType>(nTest),
-                    (CIEC_LTIME::TValueType)(76000LL * (CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / 1000LL)));
+                    (CIEC_LTIME::TValueType) (76000LL * (CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / 1000LL)));
   nTest.toString(buffer);
   BOOST_CHECK_EQUAL(buffer, "LT#1m16s");
   buffer.clear();
   nTest = CIEC_LTIME(static_cast<CIEC_LTIME::TValueType>(0));
 
   BOOST_CHECK_EQUAL(nTest.fromString("LT#76m76s"), 9);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_LTIME::TValueType>(nTest),
-                    (CIEC_LTIME::TValueType)(4636000LL * (CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / 1000LL)));
+  BOOST_CHECK_EQUAL(
+      static_cast<CIEC_LTIME::TValueType>(nTest),
+      (CIEC_LTIME::TValueType) (4636000LL * (CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / 1000LL)));
   nTest.toString(buffer);
   BOOST_CHECK_EQUAL(buffer, "LT#1h17m16s");
   buffer.clear();
@@ -193,7 +194,7 @@ BOOST_AUTO_TEST_CASE(Conversion_test) {
   BOOST_CHECK_EQUAL(nTest.fromString("LT#1d05h76m76s"), 14);
   BOOST_CHECK_EQUAL(
       static_cast<CIEC_LTIME::TValueType>(nTest),
-      (CIEC_LTIME::TValueType)(109036000LL * (CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / 1000LL)));
+      (CIEC_LTIME::TValueType) (109036000LL * (CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / 1000LL)));
   nTest.toString(buffer);
   BOOST_CHECK_EQUAL(buffer, "LT#1d6h17m16s");
   buffer.clear();
@@ -202,14 +203,14 @@ BOOST_AUTO_TEST_CASE(Conversion_test) {
   BOOST_CHECK_EQUAL(nTest.fromString("LT#1d76h76m76s"), 14);
   BOOST_CHECK_EQUAL(
       static_cast<CIEC_LTIME::TValueType>(nTest),
-      (CIEC_LTIME::TValueType)(364636000LL * (CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / 1000LL)));
+      (CIEC_LTIME::TValueType) (364636000LL * (CIEC_ANY_DURATION::csmForteTimeBaseUnitsPerSecond / 1000LL)));
   nTest.toString(buffer);
   BOOST_CHECK_EQUAL(buffer, "LT#4d5h17m16s");
   buffer.clear();
   nTest = CIEC_LTIME(static_cast<CIEC_LTIME::TValueType>(0));
 
   BOOST_CHECK_EQUAL(nTest.fromString("LT#1d76h76m76s200ms568us100ns"), 29);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_LTIME::TValueType>(nTest), (CIEC_LTIME::TValueType)(364636200568100LL));
+  BOOST_CHECK_EQUAL(static_cast<CIEC_LTIME::TValueType>(nTest), (CIEC_LTIME::TValueType) (364636200568100LL));
   nTest.toString(buffer);
   BOOST_CHECK_EQUAL(buffer, "LT#4d5h17m16s200ms568us100ns");
   nTest = CIEC_LTIME(static_cast<CIEC_LTIME::TValueType>(0));

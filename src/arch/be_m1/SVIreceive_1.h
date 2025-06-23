@@ -43,12 +43,11 @@ class FORTE_SVIreceive_1 : public BE_SVIFB {
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventCNFID = 1;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
     FORTE_SVIreceive_1(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    ~FORTE_SVIreceive_1() override = default;
+        ~FORTE_SVIreceive_1() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

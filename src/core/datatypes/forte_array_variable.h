@@ -41,11 +41,7 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
     /**
      * @brief Construct an empty array
      */
-    CIEC_ARRAY_VARIABLE() :
-        mLowerBound(0),
-        mUpperBound(-1),
-        mSize(0),
-        data() {
+    CIEC_ARRAY_VARIABLE() : mLowerBound(0), mUpperBound(-1), mSize(0), data() {
     }
 
     /**

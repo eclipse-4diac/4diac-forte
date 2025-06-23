@@ -45,7 +45,6 @@ class FORTE_SET_VALUE : public CFunctionBlock {
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventCNFID = 1;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void *driverId;
@@ -56,7 +55,7 @@ class FORTE_SET_VALUE : public CFunctionBlock {
   public:
     FORTE_SET_VALUE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_SET_VALUE() override = default;
+        ~FORTE_SET_VALUE() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

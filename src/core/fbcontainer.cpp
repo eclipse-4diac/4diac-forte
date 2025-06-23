@@ -243,8 +243,8 @@ CConnection *CFBContainer::getInputConnection(const std::span<const CStringDicti
   return nullptr;
 }
 
-CConnection::Wrapper CFBContainer::getOutputConnection(
-    const std::span<const CStringDictionary::TStringId> paSrcNameList) {
+CConnection::Wrapper
+CFBContainer::getOutputConnection(const std::span<const CStringDictionary::TStringId> paSrcNameList) {
   if (paSrcNameList.empty()) {
     return CConnection::Wrapper();
   }

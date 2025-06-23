@@ -18,14 +18,17 @@
 
 class CeConfigFB : public CFunctionBlock, public CeConfig {
   public:
-    CeConfigFB(const CStringDictionary::TStringId paInstanceNameId,const SFBInterfaceSpec& paInterfaceSpec, forte::core::CFBContainer &paContainer)
-    : CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId) {}
+    CeConfigFB(const CStringDictionary::TStringId paInstanceNameId,
+               const SFBInterfaceSpec &paInterfaceSpec,
+               forte::core::CFBContainer &paContainer) :
+        CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId) {
+    }
 
     bool checkEventTriggersConf(CIEC_ANY *paValue) {
       bool result = false;
 
       // iterating through all event-triggered assigned from this FB
-      for (CeSpecBase* eventSpec : mEventGenList) {
+      for (CeSpecBase *eventSpec : mEventGenList) {
         // fill the eventSpec buffer with inputs
         eventSpec->readToBuffer(paValue);
         if (eventSpec->checkCondition()) {

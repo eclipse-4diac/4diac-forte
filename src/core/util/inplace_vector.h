@@ -46,15 +46,13 @@ namespace forte::core::util {
       inplace_vector() : mNumElements(0) {
       }
 
-      constexpr inplace_vector(std::initializer_list<value_type> il) :
-        mNumElements(il.size()) {
+      constexpr inplace_vector(std::initializer_list<value_type> il) : mNumElements(il.size()) {
         assert(size() <= capacity());
         std::copy(il.begin(), il.end(), mDataStorage.begin());
       }
 
       template<typename U>
-      constexpr inplace_vector(U first, U last) :
-        mNumElements(std::distance(first, last)) {
+      constexpr inplace_vector(U first, U last) : mNumElements(std::distance(first, last)) {
         assert(size() <= capacity());
         std::copy(first, last, mDataStorage.begin());
       }

@@ -20,22 +20,23 @@ namespace forte::core::internal {
 
   class CGatheringDataConnection final : public CDelegatingDataConnection<CIEC_STRUCT> {
     public:
-      CGatheringDataConnection(CFunctionBlock &paSrcFB,
-                                  const TPortId paSrcPortId,
-                                  CIEC_STRUCT &paValue) :
-        CDelegatingDataConnection(paSrcFB, paSrcPortId, paValue) {
+      CGatheringDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_STRUCT &paValue) :
+          CDelegatingDataConnection(paSrcFB, paSrcPortId, paValue) {
       }
 
-      EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
+      EMGMResponse connect(CFunctionBlock &paDstFB,
+                           std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
 
-      EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB, std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
+      EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
+                                         std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
 
-      EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
+      EMGMResponse disconnect(CFunctionBlock &paDstFB,
+                              std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
 
       void readData(CIEC_ANY &paValue) const override;
 
       EMGMResponse addMemberConnection(std::span<const CStringDictionary::TStringId> paMemberName,
-                                 CDataConnection &paConnection);
+                                       CDataConnection &paConnection);
 
       EMGMResponse removeMemberConnection(std::span<const CStringDictionary::TStringId> paMemberName);
 
@@ -50,16 +51,18 @@ namespace forte::core::internal {
       }
 
     private:
-      EMGMResponse addMemberConnection(CIEC_ANY *paMember, CDataConnection *paConnection, std::span<const CStringDictionary::TStringId> paMemberName);
+      EMGMResponse addMemberConnection(CIEC_ANY *paMember,
+                                       CDataConnection *paConnection,
+                                       std::span<const CStringDictionary::TStringId> paMemberName);
 
       EMGMResponse removeMemberConnection(const CIEC_ANY *paMember);
 
       CDataConnection *getMemberConnection(const CIEC_ANY *paMember);
 
       struct SGatheringData {
-        CIEC_ANY *mMember{};
-        CDataConnection *mConnection{};
-        TNameIdentifier mMemberName;
+          CIEC_ANY *mMember{};
+          CDataConnection *mConnection{};
+          TNameIdentifier mMemberName;
       };
 
       std::vector<SGatheringData> mGatheringData;

@@ -305,8 +305,7 @@ BOOST_AUTO_TEST_CASE(CopyFromStaticToVariableArray) {
 }
 
 BOOST_AUTO_TEST_CASE(CopyFromVariableToStaticArray) {
-  CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArraySource = {true_BOOL, false_BOOL, false_BOOL,
-                                                    true_BOOL};
+  CIEC_ARRAY_VARIABLE<CIEC_BOOL> boolArraySource = {true_BOOL, false_BOOL, false_BOOL, true_BOOL};
   CIEC_ARRAY_FIXED<CIEC_BOOL, 0, 3> boolArray(boolArraySource);
 
   BOOST_CHECK_EQUAL(boolArray[0], true_BOOL);

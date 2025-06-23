@@ -19,10 +19,10 @@
 using namespace std::literals::string_literals;
 
 void CIEC_ANY_REAL::normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos) {
-  if (std::isalpha(paTargetBuf[paStartPos])
-      || ((paTargetBuf[paStartPos] == '-' || paTargetBuf[paStartPos] == '+')
-          && std::isalpha(paTargetBuf[paStartPos + 1]))) {
-    // if first or (signed) second char is an alphabetic char we have nan or infinity and we should not perform corrections
+  if (std::isalpha(paTargetBuf[paStartPos]) || ((paTargetBuf[paStartPos] == '-' || paTargetBuf[paStartPos] == '+') &&
+                                                std::isalpha(paTargetBuf[paStartPos + 1]))) {
+    // if first or (signed) second char is an alphabetic char we have nan or infinity and we should not perform
+    // corrections
     return;
   }
 

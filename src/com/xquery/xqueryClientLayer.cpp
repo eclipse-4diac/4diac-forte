@@ -49,7 +49,8 @@ bool CXqueryClientLayer::parseParameters(char *paLayerParameter) {
 
 forte::com_infra::EComResponse CXqueryClientLayer::openConnection(char *paLayerParameter) {
   EComResponse retVal = e_InitTerminated;
-  if (e_Client == mFb->getComServiceType() && mFb->getNumRD() == 1 && mFb->getNumSD() == 1 && parseParameters(paLayerParameter)) {
+  if (e_Client == mFb->getComServiceType() && mFb->getNumRD() == 1 && mFb->getNumSD() == 1 &&
+      parseParameters(paLayerParameter)) {
     mSfd = basex_connect(mHost, mPort);
     if (mSfd == -1) {
       DEVLOG_ERROR("Can not connect to BaseX server at '%s:%s'\n", mHost, mPort);
@@ -101,7 +102,7 @@ forte::com_infra::EComResponse CXqueryClientLayer::sendData(void *paData, unsign
   } else {
     const CIEC_ANY &SDs0 = getSDx(paData, 0);
     if (CIEC_ANY::e_STRING == SDs0.getDataTypeID()) {
-      mCommand = static_cast<const CIEC_STRING&>(SDs0).getStorage();
+      mCommand = static_cast<const CIEC_STRING &>(SDs0).getStorage();
       getExtEvHandler<CXqueryHandler>().registerLayer(this);
     } else {
       retVal = e_ProcessDataInvalidObject;
@@ -113,7 +114,7 @@ forte::com_infra::EComResponse CXqueryClientLayer::sendData(void *paData, unsign
 forte::com_infra::EComResponse CXqueryClientLayer::recvData(const void *paData, unsigned int paSize) {
   EComResponse retVal = e_Nothing;
   if (paSize > 0) {
-    mFb->getRDs()[0]->setValue(CIEC_STRING(static_cast<const char*>(paData)));
+    mFb->getRDs()[0]->setValue(CIEC_STRING(static_cast<const char *>(paData)));
     mFb->interruptCommFB(this);
     retVal = e_ProcessDataOk;
   }

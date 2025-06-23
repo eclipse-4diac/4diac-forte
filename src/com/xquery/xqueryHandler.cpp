@@ -24,8 +24,7 @@ DEFINE_HANDLER(CXqueryHandler);
 CSyncObject CXqueryHandler::smXqueryMutex = CSyncObject();
 forte::arch::CSemaphore CXqueryHandler::mStateSemaphore = forte::arch::CSemaphore();
 
-CXqueryHandler::CXqueryHandler(CDeviceExecution &paDeviceExecution) :
-    CExternalEventHandler(paDeviceExecution) {
+CXqueryHandler::CXqueryHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
   result = nullptr;
   info = nullptr;
 }
@@ -73,7 +72,7 @@ int CXqueryHandler::registerLayer(CXqueryClientLayer *paLayer) {
 }
 
 void CXqueryHandler::run() {
-  while(isAlive()) {
+  while (isAlive()) {
     if (mXqueryFBList.empty()) {
       selfSuspend();
     } else {

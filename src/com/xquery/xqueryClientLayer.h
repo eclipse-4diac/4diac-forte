@@ -26,7 +26,7 @@ class CXqueryClientLayer : public forte::com_infra::CComLayer {
     EComResponse recvData(const void *paData, unsigned int paSize) override;
     EComResponse processInterrupt() override;
 
-    const char* getCommand() {
+    const char *getCommand() {
       return mCommand.c_str();
     }
     int getSfd() {

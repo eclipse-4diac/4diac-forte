@@ -98,7 +98,6 @@ class FORTE_EXECUTE_ACTION_CLIENT : public CEventSourceFB {
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventCNFID = 1;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void doneCallback(const actionlib::SimpleClientGoalState &state, const ExecuteResultConstPtr &result);

@@ -77,7 +77,6 @@ public:                                                                         
                                                                                                                        \
 private:
 
-
 #define DEFINE_GENERIC_FIRMWARE_FB(fbclass, fbTypeNameId)                                                              \
   const forte::core::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass((fbTypeNameId), std::string_view{},            \
                                                                         fbclass::createFB);                            \

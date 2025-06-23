@@ -40,8 +40,8 @@ EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB,
 
   CIEC_ANY *dstDataPoint = paDstFB.getDIFromPortId(dstPortId);
   const EMGMResponse retVal = paDstPortNameId.size() == 1
-                                ? CDataConnection::establishDataConnection(paDstFB, dstPortId, *dstDataPoint)
-                                : establishGatheringConnection(paDstFB, dstPortId, *dstDataPoint, paDstPortNameId);
+                                  ? CDataConnection::establishDataConnection(paDstFB, dstPortId, *dstDataPoint)
+                                  : establishGatheringConnection(paDstFB, dstPortId, *dstDataPoint, paDstPortNameId);
   if (retVal != EMGMResponse::Ready) {
     return retVal;
   }
@@ -50,8 +50,9 @@ EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB,
   return EMGMResponse::Ready;
 }
 
-EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
-                                                    const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
+EMGMResponse
+CDataConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
+                                       const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
   if (paDstPortNameId.empty()) {
     return EMGMResponse::NoSuchObject;
   }
@@ -63,9 +64,9 @@ EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
 
   CIEC_ANY *dstDataPoint = paDstFB.getDataOutput(paDstPortNameId.front());
   return paDstPortNameId.size() == 1
-           ? establishDataConnection(paDstFB, dstPortId | cgInternal2InterfaceMarker, *dstDataPoint)
-           : establishGatheringConnection(paDstFB, dstPortId | cgInternal2InterfaceMarker, *dstDataPoint,
-                                          paDstPortNameId);
+             ? establishDataConnection(paDstFB, dstPortId | cgInternal2InterfaceMarker, *dstDataPoint)
+             : establishGatheringConnection(paDstFB, dstPortId | cgInternal2InterfaceMarker, *dstDataPoint,
+                                            paDstPortNameId);
 }
 
 void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint) {
@@ -146,10 +147,11 @@ EMGMResponse CDataConnection::establishDataConnection(CFunctionBlock &paDstFB,
   return EMGMResponse::Ready;
 }
 
-EMGMResponse CDataConnection::establishGatheringConnection(CFunctionBlock &paDstFB,
-                                                      const TPortId paDstPortId,
-                                                      CIEC_ANY &paDstDataPoint,
-                                                      const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
+EMGMResponse
+CDataConnection::establishGatheringConnection(CFunctionBlock &paDstFB,
+                                              const TPortId paDstPortId,
+                                              CIEC_ANY &paDstDataPoint,
+                                              const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
   if (paDstDataPoint.getDataTypeID() != CIEC_ANY::e_STRUCT) {
     return EMGMResponse::NoSuchObject;
   }
@@ -181,8 +183,8 @@ EMGMResponse CDataConnection::establishGatheringConnection(CFunctionBlock &paDst
   return dstGatheringConnection->addMemberConnection(paDstPortNameId.subspan(1), *this);
 }
 
-CConnection::Wrapper CDataConnection::getDelegatingConnection(
-    const std::span<const CStringDictionary::TStringId> paSrcNameList) {
+CConnection::Wrapper
+CDataConnection::getDelegatingConnection(const std::span<const CStringDictionary::TStringId> paSrcNameList) {
   switch (getValue().getDataTypeID()) {
     case CIEC_ANY::e_BOOL:
       if (paSrcNameList.size() == 1 && paSrcNameList.front() == STRID(NOT)) {
@@ -193,7 +195,7 @@ CConnection::Wrapper CDataConnection::getDelegatingConnection(
     case CIEC_ANY::e_STRUCT:
       if (CIEC_ANY *member = static_cast<CIEC_STRUCT &>(getValue()).getMemberNamed(paSrcNameList); member) {
         return make_delegating<forte::core::internal::CMemberDataConnection>(
-          getSourceId().getFB(), getSourceId().getPortId(), *member, paSrcNameList);
+            getSourceId().getFB(), getSourceId().getPortId(), *member, paSrcNameList);
       }
       break;
     default: break;

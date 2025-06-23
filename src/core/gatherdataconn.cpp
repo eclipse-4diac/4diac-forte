@@ -60,34 +60,38 @@ void CGatheringDataConnection::readData(CIEC_ANY &) const {
   }
 }
 
-EMGMResponse CGatheringDataConnection::addMemberConnection(const std::span<const CStringDictionary::TStringId> paMemberName,
-                                                     CDataConnection &paConnection) {
+EMGMResponse
+CGatheringDataConnection::addMemberConnection(const std::span<const CStringDictionary::TStringId> paMemberName,
+                                              CDataConnection &paConnection) {
   if (CIEC_ANY *member = getValue().getMemberNamed(paMemberName)) {
     return addMemberConnection(member, &paConnection, paMemberName);
   }
   return EMGMResponse::NoSuchObject;
 }
 
-EMGMResponse CGatheringDataConnection::removeMemberConnection(const std::span<const CStringDictionary::TStringId> paMemberName) {
+EMGMResponse
+CGatheringDataConnection::removeMemberConnection(const std::span<const CStringDictionary::TStringId> paMemberName) {
   if (const CIEC_ANY *member = getValue().getMemberNamed(paMemberName)) {
     return removeMemberConnection(member);
   }
   return EMGMResponse::NoSuchObject;
 }
 
-CDataConnection *CGatheringDataConnection::getMemberConnection(const std::span<const CStringDictionary::TStringId> paMemberName) {
+CDataConnection *
+CGatheringDataConnection::getMemberConnection(const std::span<const CStringDictionary::TStringId> paMemberName) {
   if (const CIEC_ANY *member = getValue().getMemberNamed(paMemberName)) {
     return getMemberConnection(member);
   }
   return CDataConnection::getMemberConnection(paMemberName);
 }
 
-EMGMResponse CGatheringDataConnection::addMemberConnection(CIEC_ANY *paMember,
-                                                     CDataConnection *paConnection,
-                                                     const std::span<const CStringDictionary::TStringId> paMemberName) {
+EMGMResponse
+CGatheringDataConnection::addMemberConnection(CIEC_ANY *paMember,
+                                              CDataConnection *paConnection,
+                                              const std::span<const CStringDictionary::TStringId> paMemberName) {
   if (std::ranges::find_if(mGatheringData, [paMember](const SGatheringData &paData) {
-    return paData.mMember == paMember;
-  }) != mGatheringData.end()) {
+        return paData.mMember == paMember;
+      }) != mGatheringData.end()) {
     return EMGMResponse::InvalidState;
   }
 
@@ -96,9 +100,7 @@ EMGMResponse CGatheringDataConnection::addMemberConnection(CIEC_ANY *paMember,
 }
 
 EMGMResponse CGatheringDataConnection::removeMemberConnection(const CIEC_ANY *paMember) {
-  if (std::erase_if(mGatheringData, [paMember](const SGatheringData &paData) {
-    return paData.mMember == paMember;
-  })) {
+  if (std::erase_if(mGatheringData, [paMember](const SGatheringData &paData) { return paData.mMember == paMember; })) {
     return EMGMResponse::Ready;
   };
   return EMGMResponse::NoSuchObject;

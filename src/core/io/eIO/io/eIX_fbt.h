@@ -21,7 +21,7 @@ USE_STRING_ID(eIX);
  *
  */
 class FORTE_eIX final : public forte::core::io::CeInputFB<CIEC_BOOL> {
-  DECLARE_FIRMWARE_FB(FORTE_eIX)
+    DECLARE_FIRMWARE_FB(FORTE_eIX)
 
   public:
     FORTE_eIX(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

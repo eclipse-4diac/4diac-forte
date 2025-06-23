@@ -40,18 +40,18 @@ class COutputGuard;
 
 template<typename T>
 class COutputParameter {
-  friend COutputGuard<COutputParameter>;
-  static_assert(std::negation_v<std::is_base_of<CIEC_ANY_BIT, T>>, "COutputReference not for ANY_BIT");
+    friend COutputGuard<COutputParameter>;
+    static_assert(std::negation_v<std::is_base_of<CIEC_ANY_BIT, T>>, "COutputReference not for ANY_BIT");
 
   public:
-    COutputParameter() :
-      mOutput(nullptr) {
+    COutputParameter() : mOutput(nullptr) {
     }
 
-    template<typename U, std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>>
-                                          && std::is_assignable_v<std::remove_reference_t<U>, T>, bool>  = true>
-    COutputParameter(U &&paOutput) :
-      mOutput(&paOutput) {
+    template<typename U,
+             std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>> &&
+                                  std::is_assignable_v<std::remove_reference_t<U>, T>,
+                              bool> = true>
+    COutputParameter(U &&paOutput) : mOutput(&paOutput) {
     }
 
     T *get() noexcept {
@@ -79,25 +79,25 @@ class COutputParameter {
 
 template<typename T>
 class CAnyBitOutputParameter {
-  friend COutputGuard<CAnyBitOutputParameter>;
-  static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>, "CAnyBitOutputReference only for ANY_BIT");
+    friend COutputGuard<CAnyBitOutputParameter>;
+    static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>, "CAnyBitOutputReference only for ANY_BIT");
 
   public:
-    CAnyBitOutputParameter() :
-      mOutput(nullptr), mNegate(false) {
+    CAnyBitOutputParameter() : mOutput(nullptr), mNegate(false) {
     }
 
-    template<typename U, std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>>
-                                          && std::is_assignable_v<std::remove_reference_t<U>, T>, bool>  = true>
-    CAnyBitOutputParameter(U &&paOutput) :
-      mOutput(&paOutput), mNegate(false) {
+    template<typename U,
+             std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>> &&
+                                  std::is_assignable_v<std::remove_reference_t<U>, T>,
+                              bool> = true>
+    CAnyBitOutputParameter(U &&paOutput) : mOutput(&paOutput), mNegate(false) {
     }
 
-    template<typename U, std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>>
-                                          && std::is_assignable_v<std::remove_reference_t<U>, T>, bool>  = true>
-    CAnyBitOutputParameter(U &&paOutput,
-                           const bool paNegate) :
-      mOutput(&paOutput), mNegate(paNegate) {
+    template<typename U,
+             std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>> &&
+                                  std::is_assignable_v<std::remove_reference_t<U>, T>,
+                              bool> = true>
+    CAnyBitOutputParameter(U &&paOutput, const bool paNegate) : mOutput(&paOutput), mNegate(paNegate) {
     }
 
     T *get() noexcept {
@@ -131,8 +131,7 @@ class CAnyBitOutputParameter {
 template<typename T>
 class COutputGuard {
   public:
-    explicit COutputGuard(T &paParameter) :
-      mParameter(paParameter) {
+    explicit COutputGuard(T &paParameter) : mParameter(paParameter) {
     }
 
     ~COutputGuard() {
