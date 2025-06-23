@@ -52,7 +52,7 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
     pcPos++;
     // we have an underscore and it is the first underscore after AND
     numDIs = static_cast<TPortId>(forte::core::util::strtoul(pcPos, nullptr, 10));
-    DEVLOG_DEBUG("DIs: %d;\n", paInterfaceSpec.mNumDIs);
+    DEVLOG_DEBUG("DIs: %d;\n", paInterfaceSpec.getNumDIs());
   } else {
     return false;
   }
