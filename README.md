@@ -1,54 +1,77 @@
-#Eclipse 4diac's 4diac FORTE
+# Eclipse 4diac FORTE
 
-[4diac FORTE](https://eclipse.dev/4diac/4diac_forte) is a run-time environment for executing IEC 61499 control applications developed with 4diac IDE. 4diac FORTE is written in C++ and highly portable. It can be compiled for many different operating systems and especially targets embedded systems like PLCs.
+[![License](https://img.shields.io/badge/License-EPL%202.0-blue.svg?style=flat-square)](LICENSE.md)
+
+[![Eclipse Foundation](https://img.shields.io/badge/Project-Eclipse%204diac-orange.svg?style=flat-square)](https://eclipse.dev/4diac/4diac)
+
+[![Build Status](https://img.shields.io/github/actions/workflow/status/eclipse-4diac/4diac-forte/cmake-multi-platform.yml?branch=develop&style=flat-square&label=Build%20Status)](https://github.com/eclipse-4diac/4diac-forte/actions/workflows/cmake-multi-platform.yml)
+
+
+
+Eclipse 4diac™ FORTE is a **portable, C++ run-time environment** for executing IEC 61499 control applications developed with the 4diac IDE.  
+It targets a wide range of operating systems with a focus on **embedded systems** such as PLCs.
+
+---
+
+## Features
+
+- Written in C++ for high performance and portability  
+- Supports multiple hardware platforms and OSes  
+- Designed for embedded control automation applications  
+- Seamless integration with the 4diac IDE
+- Implements the IEC 61499 standard for distributed control systems
+- Extensible architecture for custom function blocks and protocols
+
+---
 
 ## License
 
-Eclipse 4diac IDE is licensed under an [EPL 2.0](LICENSE.md).
+Eclipse 4diac FORTE is licensed under the [Eclipse Public License 2.0 (EPL 2.0)](LICENSE.md).
+
+---
 
 ## Contributing
 
-We use [contribution policy](CONTRIBUTING.md), which means we can only accept contributions under
-the terms of [Eclipse Contributor Agreement](http://www.eclipse.org/legal/ECA.php).
+We welcome contributions! Please follow our [Contribution Policy](CONTRIBUTING.md).  
+All contributions must comply with the [Eclipse Contributor Agreement (ECA)](http://www.eclipse.org/legal/ECA.php).
 
+---
 
 ## Building 4diac FORTE
+This project uses CMake for building across multiple platforms including Linux, Windows, macOS, and embedded systems using RTOS like FreeRTOS, Zephyr, ThreadX, and others.
 
-### Standard POSIX build
+### Standard POSIX Build
 
-    ./setup_posix.sh
-    cd bin/posix
-    make
+```bash
+./setup_posix.sh
+cd bin/posix
+make
+```
 
-### Resetting CMake files
+### Resetting CMake Cache
+```bash
+rm -rf CMakeCache.txt CMakeFiles/
+```
 
-In case you ran CMake with invalid options it might help
-to reset the CMake state by deleting CMake intermediate
-files:
+### Building a Local RPM
+Use tito to build local RPM packages:
+```bash
+tito build --test --rpm
+```
 
-    rm -Rf CMakeCache.txt CMakeFiles/
+### Building for Other Systems
 
-### Building a local RPM
+See our Installation Documentation for detailed instructions on supported OS and hardware platforms.
 
-For building local RPMs you can use (tito)[https://github.com/dgoodwin/tito]
+# Useful Links
 
-    tito build --test --rpm
-    
-    
-### Building 4diac FORTE for Other systems
+🌐 [Project Home](https://eclipse.dev/4diac/4diac)
 
-Detailed information on how to build 4diac FORTE for the different supported operating systems and hardware platforms can be found in our [Installation Documentation](https://github.com/eclipse-4diac/4diac-documentation/blob/main/src/installation/index.adoc)
+🐍 [Bug Tracker](https://github.com/eclipse-4diac/4diac-forte/issues)
 
+📚 [Documentation](https://github.com/eclipse-4diac/4diac-documentation/blob/main/src/doc_overview.adoc)  
 
-## Links
+📧 [Mailing list](https://dev.eclipse.org/mailman/listinfo/4diac-dev)
 
-* [Home page](https://eclipse.dev/4diac)
-* [Documentation](https://github.com/eclipse-4diac/4diac-documentation/blob/main/src/index.adoc) 
-* [Mailing list](https://dev.eclipse.org/mailman/listinfo/4diac-dev)
-* [Wiki](https://wiki.eclipse.org/Eclipse_4diac_Wiki)
-* [Examples](http://git.eclipse.org/c/4diac/org.eclipse.4diac.examples.git)
-
-## Issue/bug trackers
-
-* [Eclipse.org Bugzilla](https://bugs.eclipse.org/bugs/buglist.cgi?product=4diac)
+🔧 [Examples Repository](https://github.com/eclipse-4diac/4diac-examples)
 
