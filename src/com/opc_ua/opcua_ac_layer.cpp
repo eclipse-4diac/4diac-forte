@@ -32,6 +32,12 @@ char COPC_UA_AC_Layer::smTime[] = "Time";
 char COPC_UA_AC_Layer::smRetain[] = "Retain";
 char COPC_UA_AC_Layer::smSeverity[] = "Severity";
 
+const std::unordered_map<std::string, std::string> COPC_UA_AC_Layer::sm1499ToUAMap = {
+  {"Area", "ClientUserId"},
+  {"Origin", "ConditionName"},
+  {"Source", "SourceName"}
+};
+
 UA_UInt16 COPC_UA_AC_Layer::smSeverityValue = 500;
 
 COPC_UA_AC_Layer::COPC_UA_AC_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
@@ -162,7 +168,10 @@ EComResponse COPC_UA_AC_Layer::createOPCUAObject(UA_Server *paServer, const std:
   if(addOPCUACondition(paServer, objectBrowsePath, conditionBrowsePath) != UA_STATUSCODE_GOOD) {
     return e_InitTerminated;
   }
-  if(initializeMemberActions(conditionBrowsePath) != e_InitOk) {
+  if(initializeMapping() != UA_STATUSCODE_GOOD) {
+    return e_InitTerminated;
+  }
+  if (initializeMemberActions(conditionBrowsePath) != e_InitOk) {
     return e_InitTerminated;
   }
   return setConditionCallbacks(paServer);
@@ -246,6 +255,36 @@ UA_StatusCode COPC_UA_AC_Layer::addOPCUACondition(UA_Server *paServer, const std
   return status;
 }
 
+UA_StatusCode COPC_UA_AC_Layer::initializeMapping() {
+  COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(mHandler);
+  UA_BrowseDescription nodesToBrowse;
+  nodesToBrowse.nodeId = mConditionInstanceId;
+  nodesToBrowse.browseDirection = UA_BROWSEDIRECTION_FORWARD;
+  nodesToBrowse.nodeClassMask = UA_NODECLASS_VARIABLE;
+  nodesToBrowse.resultMask = UA_BROWSERESULTMASK_BROWSENAME;
+  UA_BrowseResult result = localHandler->browseServer(nodesToBrowse);
+
+  size_t foundProperties = 0;  
+  for(size_t i = 0; i < result.referencesSize; i++) {
+    UA_ReferenceDescription *ref = &result.references[i];
+
+    // TODO: Find alternative to reinterpret_cast
+    std::string browseName(reinterpret_cast<const char*>(ref->browseName.name.data), ref->browseName.name.length);
+
+    if(mUAPropertyMap.find(browseName) != mUAPropertyMap.end()) {
+      mUAPropertyMap[browseName] = ref->nodeId.nodeId;
+      foundProperties++;
+    }
+  }
+  UA_BrowseResult_clear(&result);
+  if(foundProperties != mUAPropertyMap.size()) {
+    DEVLOG_ERROR("[OPC UA A&C LAYER]: Number of found properties does not match number of properties to be mapped. Expected: %d, Actual: %d",
+                mUAPropertyMap.size(), foundProperties);
+    return UA_STATUSCODE_BADNODEIDUNKNOWN;
+  }
+  return UA_STATUSCODE_GOOD;
+}
+
 EComResponse COPC_UA_AC_Layer::setConditionCallbacks(UA_Server *paServer) {
   EComResponse eRetVal = e_InitOk;
   UA_TwoStateVariableChangeCallback callback = enabledStateCallback;
@@ -272,11 +311,18 @@ EComResponse COPC_UA_AC_Layer::initializeMemberActions(const std::string &paPare
   size_t numPorts = getCommFB()->getNumSD();
   const SFBInterfaceSpec &interfaceSpec = getCommFB()->getFBInterfaceSpec();
   const CStringDictionary::TStringId *dataPortNameIds = interfaceSpec.mDINames;
-  for(size_t i = 0; i < numPorts; i++) {
-    std::string dataPortName = getPortNameFromConnection(dataPortNameIds[i+2], true);
-    std::string memberBrowsePath(COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(paParentBrowsePath, dataPortName));
-    UA_NodeId *nodeId = COPC_UA_ObjectStruct_Helper::createStringNodeIdFromBrowsepath(memberBrowsePath);
-    mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, memberBrowsePath);
+  for (size_t i = 0; i < numPorts; i++) {
+    std::string dataPortName = getPortNameFromConnection(dataPortNameIds[i + 2], true);
+    auto propertyKeyIt = sm1499ToUAMap.find(dataPortName);
+    if(propertyKeyIt != sm1499ToUAMap.end()) {
+      UA_NodeId *nodeId = UA_NodeId_new();
+      UA_NodeId_copy(&mUAPropertyMap[propertyKeyIt->second], nodeId);
+      mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, std::string());
+    } else { 
+      std::string memberBrowsePath(COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(paParentBrowsePath, dataPortName));
+      UA_NodeId *nodeId = COPC_UA_ObjectStruct_Helper::createStringNodeIdFromBrowsepath(memberBrowsePath);
+      mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, memberBrowsePath);
+    }
   }
   if(mHandler->initializeAction(*mMemberActionInfo) != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Error occured in FB %s while initializing members\n", getCommFB()->getInstanceName());
@@ -312,9 +358,9 @@ EComResponse COPC_UA_AC_Layer::addOPCUATypeProperties(UA_Server *paServer, const
   size_t numDataPorts = paIsPublisher ? getCommFB()->getNumSD() : getCommFB()->getNumRD();
   const SFBInterfaceSpec &interfaceSpec = getCommFB()->getFBInterfaceSpec();
   const CStringDictionary::TStringId *dataPortNameIds = paIsPublisher ? interfaceSpec.mDINames : interfaceSpec.mDONames;
-  for(size_t i = 0; i < numDataPorts; i++) {
-    std::string dataPortName = getPortNameFromConnection(dataPortNameIds[i+2], paIsPublisher);
-    char* propertyName = getNameFromString(dataPortName);
+  for (size_t i = 0; i < numDataPorts; i++) {
+    std::string dataPortName = getPortNameFromConnection(dataPortNameIds[i + 2], paIsPublisher);
+    char *propertyName = getNameFromString(dataPortName);
     UA_StatusCode status = addVariableNode(paServer, paTypeName, propertyName, apoDataPorts[i]->unwrap());
     if(status != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Failed to add OPCUA AlarmType Property for FB %s, Port: %s, Status: %s\n", getCommFB()->getInstanceName(), dataPortName, UA_StatusCode_name(status));

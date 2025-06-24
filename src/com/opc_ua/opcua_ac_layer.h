@@ -80,6 +80,15 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
     std::vector<UA_NodeId> mTypePropertyNodes;
     std::unique_ptr<CActionInfo> mMemberActionInfo;
 
+    static const std::unordered_map<std::string, std::string> sm1499ToUAMap;
+
+    std::unordered_map<std::string, UA_NodeId> mUAPropertyMap = 
+    {
+      {"ClientUserId", UA_NODEID_NULL},
+      {"ConditionName", UA_NODEID_NULL},
+      {"SourceName", UA_NODEID_NULL}
+    };
+
     /**
      * Called when INIT is triggered in the FB and QI is set to true
      * @param paLayerParameter String conatained between the square brackets in the ID data input (opc_ua[...])
@@ -101,6 +110,8 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
     UA_StatusCode createOPCUAObjectNode(UA_Server *paServer, const std::string &paPathToInstance, std::string &paBrowsePath, bool paIsPublisher);
 
     UA_StatusCode addOPCUACondition(UA_Server *paServer, const std::string &paPathToInstance, std::string &paBrowsePath);
+
+    UA_StatusCode initializeMapping();
 
     forte::com_infra::EComResponse setConditionCallbacks(UA_Server *paServer);
 

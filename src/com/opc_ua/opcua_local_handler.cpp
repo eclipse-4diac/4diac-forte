@@ -1168,6 +1168,10 @@ void COPC_UA_Local_Handler::initializeCreateInfo(std::string &paNodeName, const 
   paResult.mParentNodeId = paParentNodeId;
 }
 
+UA_BrowseResult COPC_UA_Local_Handler::browseServer(UA_BrowseDescription &paBrowseDescription) {
+  return UA_Server_browse(mUaServer, 500, &paBrowseDescription);
+}
+
 UA_StatusCode COPC_UA_Local_Handler::getNode(CActionInfo::CNodePairInfo &paNodePairInfo, CSinglyLinkedList<UA_NodeId*> &paFoundNodeIds, bool *paIsPresent) {
   UA_StatusCode retVal = UA_STATUSCODE_GOOD;
   *paIsPresent = false;
