@@ -12,7 +12,19 @@
 # *   Martin Melik-Merkumians  - adds subdirectory for arch tests
 # *******************************************************************************/
 
-SET(SOURCE_GROUP ${SOURCE_GROUP}\\tests)
+option(FORTE_TESTS "Build Tests" OFF)
+if (NOT FORTE_TESTS)
+  return()
+endif()
+
+enable_testing()
+
+if (FORTE_ARCHITECTURE STREQUAL "Posix")
+  option(FORTE_TEST_CODE_COVERAGE_ANALYSIS "Perform code coverage analyis with GCOV and presentation with LCOV" OFF)
+  mark_as_advanced(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
+  option(FORTE_TEST_SANITIZE "Perform address sanitizer analysis" OFF)
+endif()
+
 
 #######################################################################################
 # functions for test generation
@@ -76,17 +88,8 @@ forte_test_add_subdirectory(stdfblib)
 # set library path
 #######################################################################################
 forte_test_add_link_directories(${FORTE_TESTS_LINK_DIRS})
-forte_test_add_link_directories(${CMAKE_BINARY_DIR}/src)
 
-get_property(LINK_DIRECTORIES GLOBAL PROPERTY FORTE_LINK_DIRECTORIES)
-GET_PROPERTY(FORTE_TEST_LINK_DIR GLOBAL PROPERTY FORTE_TEST_LINK_DIRECTORIES)
-
-LIST(APPEND LINK_DIRECTORIES ${FORTE_TEST_LINK_DIR})
-
-LIST(LENGTH LINK_DIRECTORIES len)
-IF(len GREATER 0)
-  LIST(REMOVE_DUPLICATES LINK_DIRECTORIES)
-ENDIF(len GREATER 0)
+GET_PROPERTY(LINK_DIRECTORIES GLOBAL PROPERTY FORTE_TEST_LINK_DIRECTORIES)
 LINK_DIRECTORIES(${LINK_DIRECTORIES})
 
 #######################################################################################
@@ -105,30 +108,24 @@ SET(WRITE_FILE "")
 FOREACH(FILE ${SOURCE_CPP} ${SOURCE_H})
   SET(WRITE_FILE "${WRITE_FILE}${FILE}\n")
 ENDFOREACH(FILE)
-FILE(WRITE ${CMAKE_BINARY_DIR}/file_test_list.txt "${WRITE_FILE}")
+FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/file_test_list.txt "${WRITE_FILE}")
   
 #######################################################################################
 # Create Exe File
 #######################################################################################
 
 ADD_EXECUTABLE(forte_test ${SOURCE_H} ${SOURCE_CPP})
-target_link_libraries(forte_test FORTE_LITE)
+get_property(forte_libs TARGET forte PROPERTY LINK_LIBRARIES)
+target_link_libraries(forte_test ${forte_libs})
 target_compile_features(forte_test PUBLIC cxx_std_20)
+
+forte_generate_stringlist(forte_test "${CMAKE_CURRENT_BINARY_DIR}/generated")
+target_include_directories(forte_test PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+target_sources(forte_test PRIVATE ../src/core/stringdict.cpp)
 
 #######################################################################################
 # Add definitions
 #######################################################################################
-
-GET_PROPERTY(DEFINITION GLOBAL PROPERTY FORTE_DEFINITION)
-add_definitions(${DEFINITION}) #using target_compile_definitions put the definitions at the beginning giving problems sometimes because cmake adds -O3.
-
-if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
- if(FORTE_LINK_STATIC)
-  set_target_properties(forte_test PROPERTIES LINK_SEARCH_START_STATIC ON)
-  set_target_properties(forte_test PROPERTIES LINK_SEARCH_END_STATIC ON)
-  target_link_options(forte_test PRIVATE -static-libgcc -static-libstdc++ -static)
- endif()
-endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
  ADD_DEFINITIONS (-DBOOST_TEST_NO_LIB)
@@ -137,8 +134,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
   TARGET_LINK_OPTIONS(forte_test PRIVATE -static-libgcc -static-libstdc++)
  endif()
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
-
-add_dependencies(forte_test forte_stringlist_generator)
 
 SET_TARGET_PROPERTIES(forte_test PROPERTIES LINKER_LANGUAGE CXX)
 
@@ -149,7 +144,7 @@ set_tests_properties(forte_test PROPERTIES TIMEOUT 300)
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   if(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
-      INCLUDE(${FORTE_BUILDSUPPORT_DIRECTORY}/GCov.cmake)    
+      INCLUDE(GCov.cmake)    
       SETUP_GCOV(TestCoverage ctest coverage)
   endif() 
 endif()
@@ -181,55 +176,4 @@ INCLUDE_DIRECTORIES(SYSTEM ${INCLUDE_TEST_SYSTEM_DIRECTORIES})
 
 #Link flags
 get_property(LINK_TEST_LIBRARY GLOBAL PROPERTY FORTE_TEST_LIBRARIES)
-TARGET_LINK_LIBRARIES(forte_test ${LINK_TEST_LIBRARY})
-
-#######################################################################################
-# Create a test to check if the C library is working (shared / static)
-#######################################################################################
-FUNCTION(create_c_library_test TEST_NAME LIBRARY_NAME)
-  ADD_EXECUTABLE(${TEST_NAME} ${CMAKE_CURRENT_SOURCE_DIR}/arch/forte_c_test.cpp)
-  SET_TARGET_PROPERTIES(${TEST_NAME} PROPERTIES LINKER_LANGUAGE CXX)
-  TARGET_LINK_LIBRARIES(${TEST_NAME} ${LIBRARY_NAME} ${LINK_TEST_LIBRARY})
-  ADD_TEST(${TEST_NAME} ${EXECUTABLE_OUTPUT_PATH}/${TEST_NAME})
-  set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT 60)
-ENDFUNCTION()
-
-
-if(FORTE_BUILD_STATIC_LIBRARY)
-  if(FORTE_C_INTERFACE)
-    #######################################################################################
-    # Link test to C static library
-    #######################################################################################
-    create_c_library_test("forte_c_static_test" ${FORTE_STATIC_LIBRARY_NAME})
-  else()
-    #######################################################################################
-    # Test if main can link to forte-static
-    #######################################################################################
-    SET(FORTE_STATIC_TEST_NAME "forte_test_static")
-    GET_PROPERTY(SOURCE_EXECUTABLE_CPP GLOBAL PROPERTY FORTE_EXECUTABLE_CPP)
-    add_executable(${FORTE_STATIC_TEST_NAME} ${SOURCE_EXECUTABLE_CPP})
-    add_dependencies(${FORTE_STATIC_TEST_NAME} ${FORTE_STATIC_LIBRARY_NAME})
-    TARGET_LINK_LIBRARIES(${FORTE_STATIC_TEST_NAME} ${FORTE_STATIC_LIBRARY_NAME})
-    target_include_directories(${FORTE_STATIC_TEST_NAME} PRIVATE ${FORTE_TEST_INC})
-  endif(FORTE_C_INTERFACE)
-endif(FORTE_BUILD_STATIC_LIBRARY)
-
-# Currently not working in windows
-if(FORTE_BUILD_SHARED_LIBRARY AND NOT WIN32)
-  if(FORTE_C_INTERFACE)
-    #######################################################################################
-    # Link test to C shared library
-    #######################################################################################
-    create_c_library_test("forte_c_shared_test" ${FORTE_SHARED_LIBRARY_NAME})
-  else()
-    #######################################################################################
-    # Test if main can link to forte-shared
-    #######################################################################################
-    SET(FORTE_SHARED_TEST_NAME "forte_test_shared")
-    GET_PROPERTY(SOURCE_EXECUTABLE_CPP GLOBAL PROPERTY FORTE_EXECUTABLE_CPP)
-    add_executable(${FORTE_SHARED_TEST_NAME} ${SOURCE_EXECUTABLE_CPP})
-    target_include_directories(${FORTE_SHARED_TEST_NAME} PRIVATE ${INCLUDE_DIRECTORIES})
-    target_link_libraries(${FORTE_SHARED_TEST_NAME} ${FORTE_SHARED_LIBRARY_NAME})
-    add_dependencies(${FORTE_SHARED_TEST_NAME} ${FORTE_SHARED_LIBRARY_NAME})
-  endif(FORTE_C_INTERFACE)
-endif(FORTE_BUILD_SHARED_LIBRARY AND NOT WIN32)
+target_link_libraries(forte_test ${LINK_TEST_LIBRARY})

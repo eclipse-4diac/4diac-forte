@@ -11,87 +11,77 @@
 #   Christoph Binder - add possibility to configure simulated time
 # *******************************************************************************/
 
-SET(SOURCE_GROUP ${SOURCE_GROUP}\\win32)
+forte_register_architecture(Win32)
 
-forte_add_architecture(Win32)
+forte_register_timerhandler(CPCTimerHandler pctimeha.h)
+forte_set_default_timerhandler(CPCTimerHandler)
 
-if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
+add_subdirectory(serlayer)
 
-  add_subdirectory(serlayer)
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})  
+target_sources(forte PRIVATE ../main.cpp)
+
+option(FORTE_EXTERNAL_TIMEHA "Use External Time Handler" OFF)
+if (FORTE_EXTERNAL_TIMEHA)
+    # TODO: this has not been ported to new cmake yet
+    set(EXTERNAL_TIMER_HANDLER_NAME "externalTimer")
+    forte_add_timerhandler(CExternTimerHandler externtimeha ${EXTERNAL_TIMER_HANDLER_NAME})
+    forte_set_default_timerhandler(${EXTERNAL_TIMER_HANDLER_NAME})
+endif(FORTE_EXTERNAL_TIMEHA)
   
-  forte_add_sourcefile_h(fortealloc.h ../forte_architecture_time.h)
-  forte_add_sourcefile_hcpp(forte_thread forte_sem)
-  forte_add_sourcefile_h(forte_sync.h)
-  if(FORTE_WINDOWS_XP_COMPAT)
-    forte_add_sourcefile_cpp(forte_sync_xp.cpp)
-  else()
-    forte_add_sourcefile_cpp(forte_sync.cpp)
-  endif()
-  forte_add_sourcefile_cpp(forte_specific_architecture.cpp winforte_printer.cpp forte_architecture_time.cpp ../forte_standard_time.cpp)
-  forte_add_sourcefile_cpp(../genforte_fileio.cpp)
 
-  forte_add_to_executable_cpp(../main)
+add_library(forte-arch-win32 OBJECT
+    fortealloc.h
+    forte_thread.cpp forte_thread.h
+    forte_sem.cpp forte_sem.h
+    forte_sync.h
+    $<$<NOT:$<BOOL:${FORTE_WINDOWS_XP_COMPAT}>>:forte_sync.cpp>
+    $<$<BOOL:${FORTE_WINDOWS_XP_COMPAT}>:forte_sync_xp.cpp>
+    $<$<BOOL:${FORTE_EXTERNAL_TIMEHA}>:externtimeha.cpp>
+    $<$<BOOL:${FORTE_EXTERNAL_TIMEHA}>:externtimeha.h>
+    pctimeha.cpp pctimeha.h
+    forte_specific_architecture.cpp
+    ../forte_architecture_time.h
+    winforte_printer.cpp
+    forte_architecture_time.cpp
+    ../forte_standard_time.cpp
+    ../genforte_fileio.cpp
+   $<$<BOOL:${FORTE_COM_ETH}>:win32socketinterf.cpp>
+   $<$<BOOL:${FORTE_COM_ETH}>:win32socketinterf.h>
+   $<$<BOOL:${FORTE_COM_ETH}>:../fdselecthand.cpp>
+   $<$<BOOL:${FORTE_COM_ETH}>:../fdselecthand.h>
+   $<$<BOOL:${FORTE_COM_ETH}>:../gensockhand.h>
+   $<$<BOOL:${FORTE_COM_ETH}>:sockhand.h>
+)
 
-  if(FORTE_BUILD_SHARED_LIBRARY)
-    set(FORTE_EXTERNAL_TIMEHA OFF CACHE BOOL "Use External Time Handler")
-   
-    if(FORTE_EXTERNAL_TIMEHA)
-      SET(EXTERNAL_TIMER_HANDLER_NAME "externalTimer")
-      forte_add_timerhandler(CExternTimerHandler externtimeha ${EXTERNAL_TIMER_HANDLER_NAME})
-      forte_add_sourcefile_hcpp(externtimeha)
-      forte_set_default_timerhandler(${EXTERNAL_TIMER_HANDLER_NAME})
-    endif(FORTE_EXTERNAL_TIMEHA)
+target_link_libraries(forte PRIVATE forte-arch-win32)
+
+if(FORTE_COM_ETH)
+   forte_register_handler(CFDSelectHandler sockhand.h)
+endif(FORTE_COM_ETH)
+
+target_link_libraries(forte-arch-win32 PUBLIC comctl32 rpcrt4 winmm ws2_32
+version)
   
-  else(FORTE_BUILD_SHARED_LIBRARY)
-      unset(FORTE_EXTERNAL_TIMEHA CACHE)
-  endif(FORTE_BUILD_SHARED_LIBRARY)
-
-  forte_add_timerhandler(CPCTimerHandler pctimeha)
-  forte_add_sourcefile_hcpp(pctimeha)
-
-  if(FORTE_COM_ETH)
-   forte_add_handler(CFDSelectHandler sockhand)
-   forte_add_sourcefile_hcpp(  win32socketinterf ../fdselecthand)
-   forte_add_sourcefile_h(../gensockhand.h)
-   forte_add_sourcefile_h(sockhand.h)
-  endif(FORTE_COM_ETH)
-
-  forte_add_definition("-DFORTE_LITTLE_ENDIAN")
-
-# TODO this flag was originally wrongly added to the definitions. May be necessary to be added as link flag. However currently working fine.
-# forte_add_link_flags("/NODEFAULTLIB:MSVCRT.lib")
-
-  forte_add_link_library(comctl32)
-  forte_add_link_library(rpcrt4)
-  forte_add_link_library(winmm)
-  forte_add_link_library(ws2_32)
-  forte_add_link_library(version)
-  
-  if(MINGW)
+if (MINGW)
     #force MINGW to statically link libc and lib stdc++ so that no mingw dlls are needed for forte.exe
-    forte_add_link_flags("-static-libgcc" "-static-libstdc++")
-    forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -Wshadow")
-  elseif(MSVC)
-    forte_add_definition("-wd4595")  #warning 4595: 'operator delete/delete[]': non-member operator new or delete functions may not be declared inline
-    forte_add_definition("-wd4290")  #warning 4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow). A function is declared using exception specification, which Visual C++ accepts but does not implement. (from new/delete warning)
-    forte_add_definition("-D_SILENCE_CXX20_CODECVT_FACETS_DEPRECATION_WARNING") # silence C++20 codecvt facets deprecation warnings until a viable replacement is found to prevent repeated warnings during builds
-    forte_add_definition("-DNOMINMAX")  #needed that windows.h is not adding macros for MIN and MAX
-    forte_add_definition("/Zc:preprocessor")  # needed for __VA_OPT__
-  endif()
+    target_link_options(forte-global INTERFACE -static-libgcc -static-libstdc++)
+elseif(MSVC)
+    target_compile_options(forte-global INTERFACE -wd4595)  #warning 4595: 'operator delete/delete[]': non-member operator new or delete functions may not be declared inline
+    target_compile_options(forte-global INTERFACE -wd4290)  #warning 4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow). A function is declared using exception specification, which Visual C++ accepts but does not implement. (from new/delete warning)
+    target_compile_definitions(forte-global INTERFACE _SILENCE_CXX20_CODECVT_FACETS_DEPRECATION_WARNING) # silence C++20 codecvt facets deprecation warnings until a viable replacement is found to prevent repeated warnings during builds
+    target_compile_definitions(forte-global INTERFACE NOMINMAX)  #needed that windows.h is not adding macros for MIN and MAX
+    target_compile_options(forte-global INTERFACE /Zc:preprocessor)  # needed for __VA_OPT__
+endif()
   
-  forte_add_definition("-DWIN32_LEAN_AND_MEAN")  # needed for windows.h
-  forte_add_definition("-D_CRT_SECURE_NO_DEPRECATE")
-  forte_add_definition("-D_CRT_NONSTDC_NO_DEPRECATE")
-  forte_add_definition("-D_SCL_SECURE_NO_WARNINGS")
-  forte_add_definition("-D_CRT_SECURE_NO_WARNINGS")
-  forte_add_definition("-D_NO_W32_PSEUDO_MODIFIERS")   #takes care of IN, OUT and OPTIONAL in mingw
-  forte_add_definition("-DFORTE_USE_DEFAULT_NEW_AND_DELETE")
+target_compile_definitions(forte-global INTERFACE WIN32_LEAN_AND_MEAN)  # needed for windows.h
+target_compile_definitions(forte-global INTERFACE _CRT_SECURE_NO_DEPRECATE)
+target_compile_definitions(forte-global INTERFACE _CRT_NONSTDC_NO_DEPRECATE)
+target_compile_definitions(forte-global INTERFACE _SCL_SECURE_NO_WARNINGS)
+target_compile_definitions(forte-global INTERFACE _CRT_SECURE_NO_WARNINGS)
+target_compile_definitions(forte-global INTERFACE _NO_W32_PSEUDO_MODIFIERS)   #takes care of IN, OUT and OPTIONAL in mingw
+target_compile_definitions(forte-global INTERFACE FORTE_USE_DEFAULT_NEW_AND_DELETE)
 
   
-  if(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
-    forte_add_definition("-DBOOST_TEST_NO_LIB")
-  endif(FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
-  
- 
-endif()
+if (FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
+    target_compile_definitions(forte-global INTERFACE BOOST_TEST_NO_LIB)
+endif (FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)

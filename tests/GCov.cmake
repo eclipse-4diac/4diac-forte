@@ -50,7 +50,7 @@ FUNCTION(SETUP_GCOV targetName testRunner outputName)
                 COMMAND ${GENHTML_PATH} -o ${outputName} ${outputName}.info.cleaned --demangle-cpp --rc lcov_branch_coverage=1
                 COMMAND ${CMAKE_COMMAND} -E remove ${outputName}.info ${outputName}.info.cleaned
                 
-                WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+                WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
         )
         
 ENDFUNCTION()

@@ -11,56 +11,57 @@
 # *    - initial API and implementation and/or initial documentation
 # *    - added utils directory
 # *******************************************************************************/
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-SET(SOURCE_GROUP ${SOURCE_GROUP}\\arch)
 
-add_subdirectory(be_m1)
-add_subdirectory(ecos)
-add_subdirectory(freeRTOS)
-add_subdirectory(macos)
-add_subdirectory(netos)
-add_subdirectory(pikeos_posix)
-add_subdirectory(plcnext)
+add_library(forte-arch OBJECT
+    timerha.cpp
+    devlog.cpp
+    forte_architecture.cpp
+    $<IF:$<BOOL:${FORTE_LOGGER_READABLE_TIME}>,readableTimeString.cpp,plainTimeString.cpp>
+    ${FORTE_GENERATED_FILES_DIR}/timerHandlerFactory.cpp
+)
+
+target_link_libraries(forte PRIVATE forte-arch)
+
+###############################################################################
+# Architectures
+
+macro(forte_register_architecture arch)
+    set_property(TARGET forte-arch APPEND PROPERTY forte_architectures ${arch})
+    if (NOT FORTE_ARCHITECTURE STREQUAL "${arch}")
+        return()
+    endif()
+endmacro()
+
+# add_subdirectory(be_m1)
+# add_subdirectory(ecos)
+# add_subdirectory(freeRTOS)
+# add_subdirectory(macos)
+# add_subdirectory(netos)
+# add_subdirectory(pikeos_posix)
+# add_subdirectory(plcnext)
 add_subdirectory(posix)
-add_subdirectory(vxworks)
-add_subdirectory(fake_time)
+# add_subdirectory(rcX)
+# add_subdirectory(vxworks)
+# add_subdirectory(fake_time)
 add_subdirectory(win32)
-add_subdirectory(zephyr)
+# add_subdirectory(zephyr)
+
 add_subdirectory(utils)
 
-forte_add_sourcefile_hcpp(timerha devlog forte_architecture)
+###############################################################################
+# Configuration Options
 
-SET(FORTE_LOGGER_BUFFER_SIZE "300" CACHE STRING "Buffer's length of the logger")
-mark_as_advanced(FORTE_LOGGER_BUFFER_SIZE)
-forte_add_custom_configuration("#define FORTE_LOGGER_BUFFER_SIZE ${FORTE_LOGGER_BUFFER_SIZE}")
+set(FORTE_ARCHITECTURE "None" CACHE STRING "Architecture for which to build 4diac FORTE")
+get_property(architectures TARGET forte-arch PROPERTY forte_architectures)
+list(SORT architectures)
+set_property(CACHE FORTE_ARCHITECTURE PROPERTY STRINGS None ${architectures})
 
-SET(FORTE_LOGGER_READABLE_TIME OFF CACHE BOOL "Logger time in IEC 61131-3 date time literal")
-if(FORTE_LOGGER_READABLE_TIME)
-    forte_add_sourcefile_cpp(readableTimeString.cpp)
-else()
-    forte_add_sourcefile_cpp(plainTimeString.cpp)
+if (FORTE_ARCHITECTURE STREQUAL "None")
+    message(FATAL_ERROR "No FORTE_ARCHITECTURE selected. Use one of ${architectures}")
 endif()
 
-if (FORTE_STACKTRACE)
-    if (FORTE_STACKTRACE_IMPL MATCHES "boost")
-        find_package(Boost REQUIRED)
-        forte_add_link_library(backtrace)
-        forte_add_custom_configuration("#define BOOST_STACKTRACE_USE_BACKTRACE")
+set(FORTE_LOGGER_BUFFER_SIZE "300" CACHE STRING "Buffer length of the logger")
+mark_as_advanced(FORTE_LOGGER_BUFFER_SIZE)
+target_compile_definitions(forte-arch PRIVATE FORTE_LOGGER_BUFFER_SIZE=${FORTE_LOGGER_BUFFER_SIZE})
 
-        if (WIN32 OR MINGW)
-            forte_add_link_flags(-no-pie)
-        elseif (UNIX)
-            forte_add_link_flags(-rdynamic)
-            forte_add_link_library(dl)
-        endif ()
-    endif ()
-
-    if (FORTE_STACKTRACE_IMPL MATCHES "cxx23")
-        if (CMAKE_COMPILER_IS_GNUCXX)
-            forte_add_link_library(-lstdc++_libbacktrace)
-        endif ()
-    endif ()
-endif ()
-
-forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/src_gen/startuphook.cpp)
-forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/arch/timerHandlerFactory.cpp) # created file
+option(FORTE_LOGGER_READABLE_TIME "Logger time in IEC 61131-3 date time literal" OFF)

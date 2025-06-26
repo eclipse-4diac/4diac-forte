@@ -11,7 +11,8 @@
 # *      - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-SET(SOURCE_GROUP ${SOURCE_GROUP}\\utils)
+add_library(forte-arch-utils OBJECT
+	mainparam_utils.cpp
+)
 
-# currently do add anything per default
-forte_add_sourcefile_hcpp(mainparam_utils)
+target_link_libraries(forte PRIVATE forte-arch-utils)

@@ -26,12 +26,12 @@ if(FORTE_TRACE_CTF_TEST)
     forte_test_add_sourcefile_cpp(ctfTracerTest.cpp) 
   endif()
 
-  SET(CTF_OUTPUT_DIR ${CMAKE_BINARY_DIR}/ctfOutput)
-  SET(METADATA_FILE ${CMAKE_BINARY_DIR}/src/core/trace/metadata)
+  SET(CTF_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/ctfOutput)
+  SET(METADATA_FILE ${CMAKE_CURRENT_BINARY_DIR}/src/core/trace/metadata)
   SET(REFERENCE_SYSTEMS_FILE ${CMAKE_CURRENT_SOURCE_DIR}/referenceSystem.fboot)
 
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.cpp.in ${CMAKE_BINARY_DIR}/tests/core/trace/config.cpp)
-  forte_test_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/tests/core/trace/config.cpp) # created file
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/tests/core/trace/config.cpp)
+  forte_test_add_sourcefile_with_path_cpp(${CMAKE_CURRENT_BINARY_DIR}/tests/core/trace/config.cpp) # created file
 
   # reference systems tests requires the extra function blocks to be compiled
   set(FORTE_REPLAY_ALGORITHM_REFERENCE_TESTS FALSE CACHE BOOL "Compile the replay algorithm tests that uses the reference systems")

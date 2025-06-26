@@ -32,7 +32,7 @@ forte_add_sourcefile_hcpp(dataconn inoutdataconn eventconn)
 forte_add_sourcefile_h(esfb.h event.h fortenode.h fortelist.h genfb.h)
 forte_add_sourcefile_hcpp(interfacespec basefb basicfb cfb simplefb device devexec forteinstance mgmcmd)
 forte_add_sourcefile_hcpp(extevhan funcbloc fbcontainer)
-forte_add_sourcefile_hcpp(resource stringdict typelib ecet)
+forte_add_sourcefile_hcpp(resource typelib ecet)
 forte_add_sourcefile_h(typelib_internal.h)
 forte_add_sourcefile_hcpp(adapterconn adapter anyadapter iec61131_functions)
 forte_add_sourcefile_h(forte_st_iterator.h)
@@ -44,24 +44,18 @@ forte_add_sourcefile_hcpp(gatherdataconn)
 
 forte_add_ecet(CEventChainExecutionThread ecet "standard")
 
-forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/core/ecetFactory.cpp) # created file
-
-forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/core/deviceExecutionHandlers.cpp) # created file
-
-set(FORTE_USE_FAKE_ECET FALSE CACHE BOOL "Compile the fake ecet used for testing")
+option(FORTE_USE_FAKE_ECET "Compile the fake ecet used for testing" FALSE)
 mark_as_advanced(FORTE_USE_FAKE_ECET)
 if(FORTE_USE_FAKE_ECET)
   forte_add_sourcefile_hcpp(ecetFake)
-  forte_add_ecet(CFakeEventExecutionThread "core/ecetFake" "fake")
+  forte_add_ecet(CFakeEventExecutionThread core/ecetFake "fake")
 endif(FORTE_USE_FAKE_ECET)
 
 if(FORTE_DYNAMIC_TYPE_LOAD)
   forte_add_subdirectory(lua)
 endif(FORTE_DYNAMIC_TYPE_LOAD)
 
-if(FORTE_SUPPORT_MONITORING)
-  forte_add_sourcefile_hcpp(monitoring)
-endif(FORTE_SUPPORT_MONITORING)
+forte_add_sourcefile_hcpp(monitoring)
 
 forte_add_subdirectory(trace)
 

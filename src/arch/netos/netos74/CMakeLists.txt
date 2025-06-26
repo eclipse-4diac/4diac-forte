@@ -45,7 +45,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
                                COMMAND ${NETOS_ROOT_PATH_WIN}/bin/compress.exe ARGS src/forte.uncompressed src/forte.compressed
                                COMMAND ${NETOS_ROOT_PATH_WIN}/bin/boothdr.exe ARGS ${NETOS_ROOT_PATH_WIN}/src/bsp/platforms/${FORTE_NETOS74_BSP}/bootldr.dat src/forte.compressed src/forte.bin connectme_rfid
                                COMMAND cp src/forte.bin image.bin
-                               WORKING_DIRECTORY ${CMAKE_BINARY_DIR}
+                               WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
                                COMMENT "Create target image (image.bin)...")
 
 #######################################################################################

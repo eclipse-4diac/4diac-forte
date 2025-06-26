@@ -41,8 +41,12 @@ if(FORTE_ENABLE_FMU)
 
   forte_add_sourcefile_cpp(fmiInterface.cpp)
   forte_add_sourcefile_hcpp(fmuValueContainer fmuInstance processinterface fmuEcet fmiTimerHandler)
-  forte_set_process_interface("FORTE FMU" IX QX IW QW)
+  message(STATUS "Process Interface: FORTE FMU")
   forte_add_sourcefile_hcpp(../../arch/utils/timespec_utils)
-   
+  forte_add_sourcefile_hcpp(../../stdfblib/io/IX_fbt)
+  forte_add_sourcefile_hcpp(../../stdfblib/io/QX_fbt)
+  forte_add_sourcefile_hcpp(../../stdfblib/io/IW_fbt)
+  forte_add_sourcefile_hcpp(../../stdfblib/io/QW_fbt)
+
 endif(FORTE_ENABLE_FMU)
 
