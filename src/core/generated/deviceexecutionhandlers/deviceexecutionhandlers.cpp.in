@@ -1,0 +1,43 @@
+/*******************************************************************************
+ * Copyright (c) 2017 fortiss GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Jose Cabral - initial implementation and rework handler infrastructure
+ *******************************************************************************/
+
+#include "arch/timerha.h"
+#include "core/devexec.h"
+#include "generated/timerhandlerfactory.h"
+
+${includes}
+
+enum class classindex {
+  CTimerHandler,
+#define ENTRY(name) \
+  name,
+  ${entries}
+#undef ENTRY
+  len
+};
+
+const size_t CTimerHandler::mHandlerIdentifier = size_t(classindex::CTimerHandler);
+#define ENTRY(name) \
+const size_t name::mHandlerIdentifier = size_t(classindex::name);
+${entries}
+#undef ENTRY
+
+CDeviceExecution::CDeviceExecution(CDevice& paDevice) :
+  mDevice(paDevice), mRegisteredEventHandlers(size_t(classindex::len)) {
+  mRegisteredEventHandlers[0].mHandler = std::unique_ptr<CTimerHandler>(TimerHandlerFactory::createTimerHandler(*this));
+#define ENTRY(name) \
+  mRegisteredEventHandlers[size_t(classindex::name)].mHandler = std::make_unique<name>(*this);
+  ${entries}
+#undef ENTRY
+  getTimer().enableHandler();
+}

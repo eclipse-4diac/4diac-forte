@@ -24,7 +24,7 @@ USE_STRING_ID(WSTRING);
 #include "../../core/stringdict.h"
 #include "../../arch/fake_time/faketimerha.h"
 
-#include "arch/timerHandlerFactory.h"
+#include "generated/timerhandlerfactory.h"
 
 namespace {
   const auto cDataInputNames = std::array{STRID(MGR_ID), STRID(FakeTime)};

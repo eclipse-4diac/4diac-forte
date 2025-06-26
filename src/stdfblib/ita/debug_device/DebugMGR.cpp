@@ -13,7 +13,7 @@
 
 #include "DebugMGR.h"
 
-#include "core/ecetFactory.h"
+#include "generated/ecetfactory.h"
 #include "core/ecetFake.h"
 
 DebugMGR::DebugMGR(CDevice &paDevice, OPCUA_MGR &paOpcuaMgr) : mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {

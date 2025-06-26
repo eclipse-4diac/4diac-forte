@@ -1,0 +1,24 @@
+/*******************************************************************************
+  * Copyright (c) 2019 fortiss GmbH
+  * All rights reserved. This program and the accompanying materials
+  * are made available under the terms of the Eclipse Public License v1.0
+  * which accompanies this distribution, and is available at
+  * http://www.eclipse.org/legal/epl-v10.html
+  *
+  * Contributors:
+  *    Jose Cabral - initial implementation and rework communication infrastructure
+  *******************************************************************************/
+
+#include "com/opc_ua/opcua_local_handler.h"
+
+extern "C" {
+${includes}
+}
+
+bool COPC_UA_Local_Handler::initializeNodesets(UA_Server &paUaServer [[maybe_unused]]){
+#define ENTRY(ua_nodeset) \
+  if (UA_STATUSCODE_GOOD != ua_namespace_${ua_nodeset}(&paUaServer)) return false;
+  ${entries}
+#undef ENTRY
+  return true;
+}

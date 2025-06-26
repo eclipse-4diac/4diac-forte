@@ -15,7 +15,7 @@
 #include "forte_architecture_time.h"
 #include "forte_constants.h"
 
-#include "arch/timerHandlerFactory.h"
+#include "generated/timerhandlerfactory.h"
 
 uint_fast64_t fakeForteTime = 0;
 

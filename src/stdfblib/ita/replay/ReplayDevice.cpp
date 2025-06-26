@@ -13,8 +13,8 @@
 
 #include "ReplayDevice.h"
 
-#include "arch/timerHandlerFactory.h"
-#include "core/ecetFactory.h"
+#include "generated/timerhandlerfactory.h"
+#include "generated/ecetfactory.h"
 #include "core/trace/internal/flexibleTracer.h"
 
 ReplayDevice::ReplayDevice(const std::string &paMGRID) :

@@ -15,6 +15,7 @@
 #include "forte_architecture_time.h"
 #include "opcua_client_information.h"
 #include <basecommfb.h>
+#include "generated/opcua_defaults.h"
 #include "opcua_handler_abstract.h" //for logger
 #include "opcua_client_config_parser.h"
 

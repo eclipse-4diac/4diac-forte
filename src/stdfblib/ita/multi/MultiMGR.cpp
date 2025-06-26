@@ -15,7 +15,7 @@
 
 #include "stdfblib/ita/multi/MultiDevice.h"
 #include "stdfblib/ita/OPCUA_MGR.h"
-#include "deviceFactory.h"
+#include "generated/devicefactory.h"
 
 MultiMGR::MultiMGR(MultiDevice &paDevice, OPCUA_MGR &paOpcuaMgr) : mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {
 }

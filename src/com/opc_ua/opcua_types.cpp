@@ -9,13 +9,8 @@
   *    Jose Cabral - initial implementation and rework communication infrastructure
   *******************************************************************************/
 
-#include <opcua_helper.h>
-
-${FORTE_OPCUA_EXTERNAL_TYPES_INCLUDE}
-
-const COPC_UA_Helper::UA_TypeConvert_external COPC_UA_Helper::scmExternalMapForteTypeIdToOpcUa[] = {
- ${FORTE_OPCUA_EXTERNAL_TYPES_MAP_INSERT}
-};
+#include "com/opc_ua/opcua_helper.h"
+#include "generated/opcua_types.h"
 
 const UA_DataType *COPC_UA_Helper::getExternalOPCUATypeFromAny(const CIEC_ANY &paAnyType) {
   CIEC_ANY::EDataTypeID typeId = paAnyType.getDataTypeID();

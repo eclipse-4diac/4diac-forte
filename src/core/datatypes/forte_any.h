@@ -27,6 +27,7 @@
 #include <limits>
 #include "../typelib.h"
 #include "iec61131_cast_helper.h"
+#include "generated/config/endian.h"
 
 #if (!defined FORTE_LITTLE_ENDIAN) && (!defined FORTE_BIG_ENDIAN)
 #error "Endianess is not defined!"

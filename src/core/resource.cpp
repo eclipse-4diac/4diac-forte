@@ -26,7 +26,7 @@
 #include "funcbloc.h"
 #include "mgmcmd.h"
 #include "adapterconn.h"
-#include "core/ecetFactory.h"
+#include "generated/ecetfactory.h"
 #include "string_utils.h"
 #include "typelib_internal.h"
 

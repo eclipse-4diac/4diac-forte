@@ -20,19 +20,34 @@
 
 #include "stringdict.h"
 #include <cstring>
-#include <stringlist.cpp>
+#include "generated/stringdict_generated.h"
 
 using TStringId = CStringDictionary::TStringId;
 
 #ifdef FORTE_STRING_DICT_FIXED_MEMORY
 #include "core/util/inplace_vector.h"
-static forte::core::util::inplace_vector<TStringId, FORTE_STRINGDICT_MAXNROFSTRINGS> sIdList = INDEX_LIST;
-static forte::core::util::inplace_vector<char, FORTE_STRINGDICT_BUFFERSIZE> sStringBuf = STRING_BUF;
+
+#define ENTRY(name, len) , len
+static forte::core::util::inplace_vector<TStringId, FORTE_STRINGDICT_MAXNROFSTRINGS> sIdList = { 0 ENTRY_LIST };
+#undef ENTRY
+
+#define ENTRY(name, len) #name "\0"
+static constexpr const auto initbuf{ "\0" ENTRY_LIST};
+static_assert(sizeof( "\0" ENTRY_LIST) < FORTE_STRINGDICT_BUFFERSIZE);
+static forte::core::util::inplace_vector<char, FORTE_STRINGDICT_BUFFERSIZE> sStringBuf{initbuf, initbuf+sizeof( "\0" ENTRY_LIST)};
+#undef ENTRY
 
 #else
 #include <vector>
-static std::vector<CStringDictionary::TStringId> sIdList = INDEX_LIST;
-static std::vector<char> sStringBuf = STRING_BUF;
+
+#define ENTRY(name, len) , len
+static std::vector<TStringId> sIdList = { 0 ENTRY_LIST };
+#undef ENTRY
+
+#define ENTRY(name, len) #name "\0"
+static constexpr const auto initbuf{ "\0" ENTRY_LIST};
+static std::vector<char> sStringBuf{initbuf, initbuf+sizeof( "\0" ENTRY_LIST)};
+#undef ENTRY
 
 #endif
 

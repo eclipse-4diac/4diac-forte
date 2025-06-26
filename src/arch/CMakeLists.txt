@@ -5,7 +5,7 @@
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
+#
 # Contributors:
 #    Alois Zoitl, Patrick Smejkal, Martin Melik-Merkumians
 # *    - initial API and implementation and/or initial documentation
@@ -17,7 +17,6 @@ add_library(forte-arch OBJECT
     devlog.cpp
     forte_architecture.cpp
     $<IF:$<BOOL:${FORTE_LOGGER_READABLE_TIME}>,readableTimeString.cpp,plainTimeString.cpp>
-    ${FORTE_GENERATED_FILES_DIR}/timerHandlerFactory.cpp
 )
 
 target_link_libraries(forte PRIVATE forte-arch)

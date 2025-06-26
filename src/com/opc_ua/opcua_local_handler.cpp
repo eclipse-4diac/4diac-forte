@@ -21,6 +21,7 @@
  *      - Add support for Object Structs
  *******************************************************************************/
 
+#include "generated/opcua_defaults.h"
 #include "core/devexec.h"
 #include "core/iec61131_functions.h"
 #include "core/cominfra/basecommfb.h"

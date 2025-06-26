@@ -18,6 +18,7 @@
 
 #include "forte_thread.h"
 #include "forte_config.h"
+#include "generated/opcua_defaults.h"
 #include "opcua_handler_abstract.h"
 #include "opcua_client_information.h"
 #include "fortelist.h"

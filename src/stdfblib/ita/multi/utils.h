@@ -13,8 +13,8 @@
 
 #pragma once
 
-#include "core/ecetFactory.h"
-#include "arch/timerHandlerFactory.h"
+#include "generated/ecetfactory.h"
+#include "generated/timerhandlerfactory.h"
 
 class OPCUA_MGR;
 class CDevice;

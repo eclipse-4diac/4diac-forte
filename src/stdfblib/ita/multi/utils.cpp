@@ -12,7 +12,7 @@
  *******************************************************************************/
 
 #include "stdfblib/ita/multi/utils.h"
-#include "deviceFactory.h"
+#include "generated/devicefactory.h"
 #include "device.h"
 
 #ifdef FORTE_DEBUG_DEVICE

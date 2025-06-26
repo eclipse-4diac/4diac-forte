@@ -57,6 +57,13 @@ namespace forte::core::util {
         std::copy(first, last, mDataStorage.begin());
       }
 
+      inplace_vector(const T* begin, const T* end) {
+        // TODO: improve this to eliminate all static initialization code in stringdict.cpp
+        for (; begin < end; begin++) {
+          mDataStorage[mNumElements++] = *begin;
+        }
+      }
+
       void clear() {
         mNumElements = 0;
       }

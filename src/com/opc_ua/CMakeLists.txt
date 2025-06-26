@@ -23,13 +23,11 @@
 # option to enable OPC UA with cmake
 forte_add_network_layer(OPC_UA OFF "opc_ua" COPC_UA_Layer opcua_layer "Enable OPC UA communication layer")
 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+add_subdirectory(generated)
 
 if (FORTE_COM_OPC_UA)
 
-    forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/com/opc_ua/opcua_nodesets.cpp) # created file
-    
-    forte_add_sourcefile_with_path_cpp(${CMAKE_BINARY_DIR}/com/opc_ua/opcua_types.cpp) # created file
+    forte_add_sourcefile_with_path_cpp(opcua_types.cpp)
 
     SET(FORTE_COM_OPC_UA_PORT 4840 CACHE STRING "Port where the OPC_UA server will listen")
     SET(FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL 100.0 CACHE STRING "OPC UA Server publishing interval in ms")

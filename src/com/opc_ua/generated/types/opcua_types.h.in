@@ -9,13 +9,12 @@
   *    Jose Cabral - initial implementation and rework communication infrastructure
   *******************************************************************************/
 
-#include <opcua_local_handler.h>
+${includes}
 
-extern "C" {
-${FORTE_OPCUA_NODESETS_INCLUDE}
-}
+const COPC_UA_Helper::UA_TypeConvert_external COPC_UA_Helper::scmExternalMapForteTypeIdToOpcUa[] = {
+#define ENTRY(ua_typearray,ua_typename,forte_typename) \
+  UA_TypeConvert_external(&ua_typearray[ua_typearray##_##ua_typename], STRID(forte_typename)),
+  ${entries}
+#undef ENTRY
 
-bool COPC_UA_Local_Handler::initializeNodesets(UA_Server &paUaServer){
-${FORTE_OPCUA_NODESETS_CODE}
-  return true;
-}
+};
