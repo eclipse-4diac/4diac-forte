@@ -28,7 +28,7 @@ void CIEC_ANY_CHARS::dollarEscapeChar(std::string &paTargetBuf, char paSymbol, c
     case '\"': paTargetBuf += (paTypeID == CIEC_ANY::e_WSTRING) ? "$\"" : "\""s; break;
     default:
       if (!isprint(static_cast<unsigned char>(paSymbol)) && paTypeID == CIEC_ANY::e_STRING) {
-        std::format_to(std::back_inserter(paTargetBuf), "${:02X}", paSymbol);
+        std::format_to(std::back_inserter(paTargetBuf), "${:02X}", static_cast<unsigned char>(paSymbol));
       } else {
         paTargetBuf += paSymbol;
       }
