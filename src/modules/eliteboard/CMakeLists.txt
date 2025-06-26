@@ -17,7 +17,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
   if(FORTE_IO_ELITEBOARD)
     forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-    forte_add_definition("-ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions -Wl,--gc-sections")
+    # This should be part of architecture code
+    #forte_add_definition("-ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions -Wl,--gc-sections")
 
     add_subdirectory(handle)
     add_subdirectory(handler)

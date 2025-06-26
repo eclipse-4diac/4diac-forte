@@ -13,6 +13,9 @@
 #############################################################################
 # Arrowhead specific functional blocks for OpcUa for the orchestrator
 #############################################################################
+if (NOT FORTE_COM_OPC_UA)
+	return()
+endif()
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

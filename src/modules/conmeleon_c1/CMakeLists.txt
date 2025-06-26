@@ -13,17 +13,13 @@
 if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 forte_add_module(CONMELEON_C1 OFF "Interacting with the CONMELEON C1 IO board")
 
-if(FORTE_MODULE_CONMELEON_C1)
-  message(CHECK_START "Module Conmeleon C1 is deprected and may be removed in future releases")
-endif()
+message(CHECK_START "Module Conmeleon C1 is deprecated and may be removed in future releases")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
 #######################################################
 # CONMELEON C1 IO board driver
 #######################################################
-
-forte_add_definition(-std=c++11)
 
 forte_add_sourcefile_hcpp(gpio/gpiopin)
 forte_add_sourcefile_hcpp(spi/spidevice)

@@ -13,6 +13,9 @@
 #############################################################################
 # Arrowhead specific functional blocks for OPC UA for event handler
 #############################################################################
+if (NOT FORTE_COM_OPC_UA)
+	return()
+endif()
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

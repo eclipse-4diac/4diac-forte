@@ -10,7 +10,7 @@
 #    Thomas Strasser, Alois Zoitl, Matthias Plasch, Ben Schneider
 # *   - initial API and implementation and/or initial documentation
 # *******************************************************************************/
-forte_add_module(UTILS OFF "FORTE UTILITY FBs")
+forte_add_module(UTILS OFF "FORTE UTILITY FBs" FORTE_MODULE_IEC61131)
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

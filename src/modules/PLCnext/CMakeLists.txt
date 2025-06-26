@@ -21,7 +21,13 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################
 # PLCnext
 #############################################################################
-list(INSERT CMAKE_MODULE_PATH 0 "${ARP_TOOLCHAIN_CMAKE_MODULE_PATH}")
+
+# FIXME: This is undocumented, where does this settings come from?
+#list(INSERT CMAKE_MODULE_PATH 0 "${ARP_TOOLCHAIN_CMAKE_MODULE_PATH}")
+
+find_package(ArpDevice REQUIRED)
+find_package(ArpProgramming REQUIRED)
+
 forte_add_include_directories(${ArpProgramming_INCLUDE_DIR})
 
 forte_add_sourcefile_hcpp(types/PLCnextBusAdapter)
@@ -33,21 +39,14 @@ forte_add_sourcefile_hcpp(types/PLCnextMaster)
 forte_add_sourcefile_hcpp(deviceController slaveHandler slaveHandle/slaveHandle slaveHandle/bitSlaveHandle)
 forte_add_sourcefile_hcpp(plcNextDeviceInterface plcNextDeviceStatus)
 
-find_package(ArpDevice REQUIRED)
-find_package(ArpProgramming REQUIRED)
-
 forte_add_link_library_beginning(ArpDevice)
 forte_add_link_library_beginning(ArpProgramming)
 forte_add_link_library_beginning(Arp.System.ModuleLib)
 forte_add_link_library_beginning(Arp.System.Module)
 forte_add_link_library_beginning(Arp.Plc.AnsiC)
 
-forte_add_link_flags("-Wno-undef")
-
 forte_add_startup_hook(DeviceStatus::startup)
 
-else("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-  MESSAGE(FATAL_ERROR "PLCnext IO system is only supported for FORTE on Linux (Posix) platforms!")
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 
 endif(FORTE_IO_PLCNEXT)

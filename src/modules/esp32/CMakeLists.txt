@@ -19,15 +19,9 @@ forte_add_module(ESP32 OFF "Interacting with GPIOs of esp32 devices via gpio")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
-if (FORTE_MODULE_ESP32)
-  forte_add_custom_configuration("#cmakedefine FORTE_MODULE_ESP32")
+set(ESP32_SDK_CONFIG_DIR "" CACHE PATH "Path to the sdkconfig file to be used for this FORTE build")
 
-  set(ESP32_SDK_CONFIG_DIR "" CACHE PATH "Path to the sdkconfig file to be used for this FORTE build")
-
-  if(NOT IS_DIRECTORY ${ESP32_SDK_CONFIG_DIR})
-    message(FATAL_ERROR "The ESP32_SDK_CONFIG_DIR (" ${ESP32_SDK_CONFIG_DIR} ") does not exist or is not set")
-  endif()
-  forte_add_include_directories(${ESP32_SDK_CONFIG_DIR})
-
-
-endif (FORTE_MODULE_ESP32)
+if(NOT IS_DIRECTORY ${ESP32_SDK_CONFIG_DIR})
+  message(FATAL_ERROR "The ESP32_SDK_CONFIG_DIR (" ${ESP32_SDK_CONFIG_DIR} ") does not exist or is not set")
+endif()
+forte_add_include_directories(${ESP32_SDK_CONFIG_DIR})

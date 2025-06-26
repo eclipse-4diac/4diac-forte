@@ -7,7 +7,7 @@
 # SPDX-License-Identifier: EPL-2.0
 # 
 # Contributors:
-#    Franz Höpfinger - initial API and implementation and/or initial documentation
+#    Franz HÃ¶pfinger - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 #############################################################################

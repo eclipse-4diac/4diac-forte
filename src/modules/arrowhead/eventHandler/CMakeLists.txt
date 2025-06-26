@@ -20,10 +20,5 @@ forte_add_sourcefile_hcpp(forte_arrowheadevent forte_publishevent forte_eventfil
 forte_add_sourcefile_hcpp(FieldsToArrowheadEvent FieldsToPublishEvent FieldsToEventFilter)
 forte_add_sourcefile_hcpp(ArrowheadPublish ArrowheadPublishAdp_adp SubscribeEvent SubscribeEventAdp_adp)
 
-if(FORTE_COM_HTTP)
-  add_subdirectory(HTTP)
-endif(FORTE_COM_HTTP)
-
-if(FORTE_COM_OPC_UA)
-  add_subdirectory(OpcUa)
-endif(FORTE_COM_OPC_UA)
+add_subdirectory(HTTP)
+add_subdirectory(OpcUa)

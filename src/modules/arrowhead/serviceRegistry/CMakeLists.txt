@@ -22,10 +22,5 @@ forte_add_sourcefile_hcpp(forte_serviceregistryentry forte_servicequeryform)
 #Service Registry 
 forte_add_sourcefile_hcpp(FieldsToServiceQueryForm FieldsToServiceRegistryEntry QueryService QueryServicesAdp_adp RegisterService RegisterServiceAdp_adp ServiceRegistryEntry2ServiceRegistryEntry_fbt)
                 
-if(FORTE_COM_HTTP)
-  add_subdirectory(HTTP)
-endif(FORTE_COM_HTTP)
-
-if(FORTE_COM_OPC_UA)
-  add_subdirectory(OpcUa)
-endif(FORTE_COM_OPC_UA)
+add_subdirectory(HTTP)
+add_subdirectory(OpcUa)

@@ -22,10 +22,5 @@ forte_add_sourcefile_hcpp(forte_orchestrationform forte_preferredprovider forte_
 #Orchestrator
 forte_add_sourcefile_hcpp(FieldsToPreferredProvider FieldsToServiceRequestForm OrchestratorRequestAdp_adp RequestOrchestrationForm OrchestrationForm2OrchestrationForm_fbt)
 
-if(FORTE_COM_HTTP)
-  add_subdirectory(HTTP)
-endif(FORTE_COM_HTTP)
-
-if(FORTE_COM_OPC_UA)
-  add_subdirectory(OpcUa)
-endif(FORTE_COM_OPC_UA)
+add_subdirectory(HTTP)
+add_subdirectory(OpcUa)

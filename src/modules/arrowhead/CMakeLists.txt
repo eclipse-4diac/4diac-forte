@@ -16,13 +16,8 @@
 
 forte_add_module(Arrowhead OFF "Arrowhead Function Blocks")
 
-IF(FORTE_MODULE_Arrowhead)
-  add_subdirectory(common)
-  add_subdirectory(orchestrator)
-  add_subdirectory(serviceRegistry)
-  add_subdirectory(eventHandler)
-ENDIF(FORTE_MODULE_Arrowhead)
-
-
-
+add_subdirectory(common)
+add_subdirectory(orchestrator)
+add_subdirectory(serviceRegistry)
+add_subdirectory(eventHandler)
   

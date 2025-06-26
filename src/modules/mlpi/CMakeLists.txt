@@ -16,16 +16,14 @@
 if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 forte_add_module(MLPI OFF "Process interface using the MLPI functions for Bosch Rexroth PLCs")
 
-if(FORTE_MODULE_MLPI)
-  SET(FORTE_COM_MLPI_DIR "" CACHE PATH "Path to MLPI src directory")
+SET(FORTE_COM_MLPI_DIR "" CACHE PATH "Path to MLPI src directory")
 
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-  forte_add_sourcefile_hcpp(processinterface)
-  forte_set_process_interface("MLPI" IX QX)
-  
-  forte_add_handler(CMLPIFaceProcessInterface::CIOHandler processinterface)
-  
-  forte_add_include_system_directories( ${FORTE_COM_MLPI_DIR}/mlpiCore/include )
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+forte_add_sourcefile_hcpp(processinterface)
+forte_set_process_interface("MLPI" IX QX)
+
+forte_add_handler(CMLPIFaceProcessInterface::CIOHandler processinterface)
+
+forte_add_include_system_directories( ${FORTE_COM_MLPI_DIR}/mlpiCore/include )
           
-endif()
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

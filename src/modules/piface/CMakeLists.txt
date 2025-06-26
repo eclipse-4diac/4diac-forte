@@ -16,13 +16,11 @@
 if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
 forte_add_module(PiFace OFF "PiFace and PiFace like Raspberry PI expansion boards")
 
-if(FORTE_MODULE_PiFace)
+forte_add_handler(CPiFaceProcessInterface::CPiFaceIOHandler processinterface)
 
-  forte_add_handler(CPiFaceProcessInterface::CPiFaceIOHandler processinterface)
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+forte_add_sourcefile_hcpp(processinterface)
+forte_set_process_interface("PiFace" IX QX)
+forte_add_sourcefile_hcpp(../conmeleon_c1/spi/spidevice)
 
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-  forte_add_sourcefile_hcpp(processinterface)
-  forte_set_process_interface("PiFace" IX QX)
-  forte_add_sourcefile_hcpp(../conmeleon_c1/spi/spidevice)
-endif()
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
