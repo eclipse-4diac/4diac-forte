@@ -11,10 +11,5 @@
 #     Jose Cabral - initial implementation
 # ******************************************************************************/
 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-forte_add_sourcefile_hcpp(forte_localizedtext)
-
-  
-
+forte_opcua_add_type(forte_localizedtext LocalizedText "UA")
 

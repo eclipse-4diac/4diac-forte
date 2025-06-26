@@ -46,24 +46,13 @@ if (FORTE_MODULE_ROS)
   find_package(catkin QUIET COMPONENTS actionlib reapp_msgs roscpp std_msgs std_srvs topic_tools)
   if (catkin_FOUND)
       forte_add_include_directories(${catkin_INCLUDE_DIRS})
+      forte_add_link_library(${catkin_LIBRARIES})
   else()
       forte_add_link_directories(/opt/ros/indigo/lib)
       forte_add_include_system_directories(/opt/ros/indigo/include)
-
-      set(catkin_LIBRARIES
-          -lroscpp
-          -lrosconsole
-          -lroscpp_serialization
-          -ltopic_tools
-          -lactionlib
-
-          -lrostime
-          -lboost_system
-          -lboost_thread
-      )
+      forte_add_link_library(roscpp rosconsole roscpp_serialization topic_tools actionlib rostime boost_system boost_thread)
   endif(catkin_FOUND)
 
-  forte_add_link_library(${catkin_LIBRARIES})
 
 endif(FORTE_MODULE_ROS)
 endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")

@@ -15,6 +15,8 @@
 #include "EplXmlReader.h"
 #include <forte_thread.h>
 
+#define CONFIG_POWERLINK_USERSTACK
+
 #if (TARGET_SYSTEM == _WIN32_)
 #define _WINSOCKAPI_ // prevent windows.h from including winsock.h
 #endif // (TARGET_SYSTEM == _WIN32_)

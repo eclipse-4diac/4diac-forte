@@ -11,7 +11,9 @@
 #     - Initial implementation
 ################################################################################
 
-if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+if (NOT FORTE_ARCHITECTURE STREQUAL "Posix")
+    return()
+endif ()
 
 forte_add_network_layer(TSN OFF "tsn" CTSNLayer tsn_layer "Enable Forte Com Ethernet Time-Sensitive Networking for Pub-Sub")
 
@@ -20,5 +22,3 @@ if(FORTE_COM_TSN)
    forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
    forte_add_sourcefile_hcpp(tsn_layer)
 endif(FORTE_COM_TSN)
-
-endif()
