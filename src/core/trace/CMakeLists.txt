@@ -12,61 +12,44 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
+option(FORTE_TRACE_CTF "FORTE Common Trace Format (CTF) tracing" FALSE)
 
-if(FORTE_TRACE_CTF)
-  forte_add_custom_configuration("#define FORTE_TRACE_CTF")
-  forte_add_custom_configuration("#define FORTE_TRACE_CTF_BUFFER_SIZE ${FORTE_TRACE_CTF_BUFFER_SIZE}")
+if (NOT FORTE_TRACE_CTF)
+    return()
+endif()
 
-  if(FORTE_TRACE_CTF_REPLAY_DEBUGGING)
+SET(FORTE_TRACE_CTF_BUFFER_SIZE 4096 CACHE STRING "FORTE Common Trace Format (CTF) trace buffer size")
+option(FORTE_TRACE_CTF_REPLAY_DEBUGGING "FORTE Common Trace Format (CTF) tracing for replay debugging." OFF)
+
+forte_add_definition("-DFORTE_TRACE_CTF")
+forte_add_definition("-DFORTE_TRACE_CTF_BUFFER_SIZE=${FORTE_TRACE_CTF_BUFFER_SIZE}")
+
+if (FORTE_TRACE_CTF_REPLAY_DEBUGGING)
     forte_add_definition("-DFORTE_TRACE_CTF_REPLAY_DEBUGGING")
     set(FORTE_TRACE_CONFIG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/replay_debugging/config.yaml)
     set(FORTE_TRACE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR}/replay_debugging/generated)
     forte_add_sourcefile_cpp(replay_debugging/trace_event_output.cpp)
-  else()
+else()
     set(FORTE_TRACE_CONFIG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/classic/config.yaml)
     set(FORTE_TRACE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR}/classic/generated)
     forte_add_sourcefile_cpp(classic/trace_event_output.cpp)
-  endif()
-
-
-  SET(FORTE_GENERATE_TRACE_FILES FALSE CACHE BOOL "Generate the barectf trace files again for the selected trace configuration")
-  mark_as_advanced(FORTE_GENERATE_TRACE_FILES)
-
-  if(FORTE_GENERATE_TRACE_FILES)
-
-    find_package(barectf REQUIRED)
-
-    add_custom_command(
-        OUTPUT ${FORTE_TRACE_FOLDER}/barectf.h ${FORTE_TRACE_FOLDER}/barectf.c ${FORTE_TRACE_FOLDER}/barectf-bitfield.h ${FORTE_TRACE_FOLDER}/metadata
-        COMMAND barectf -c ${FORTE_TRACE_FOLDER} -H ${FORTE_TRACE_FOLDER} -m ${FORTE_TRACE_FOLDER} ${FORTE_TRACE_CONFIG_FILE}
-        MAIN_DEPENDENCY ${FORTE_TRACE_CONFIG_FILE}
-        DEPENDS barectf
-        COMMENT "Generating tracer for Common Trace Format (CTF) with barectf"
-    )
-
-  endif()
-
-  add_library(forte_trace STATIC
-          ${FORTE_TRACE_FOLDER}/barectf.h
-          ${FORTE_TRACE_FOLDER}/barectf.c
-          ${FORTE_TRACE_FOLDER}/barectf-bitfield.h
-  )
-  target_include_directories(forte_trace
-      PUBLIC
-          $<BUILD_INTERFACE:${FORTE_TRACE_FOLDER}>
-  )
-
-  forte_add_link_library(forte_trace)
-  forte_add_include_directories(${FORTE_TRACE_FOLDER})
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-  forte_add_sourcefile_hcpp(barectf_platform_forte)
-
-  set(FORTE_TRACER_INCLUDE barectf_platform_forte.h)
-  set(FORTE_TRACER BarectfPlatformFORTE)
-
-  add_subdirectory(reader)
-  add_subdirectory(internal)
-
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/tracerConfig.h.in ${CMAKE_BINARY_DIR}/tracerConfig.h)
 endif()
+target_include_directories(forte-global INTERFACE ${FORTE_TRACE_FOLDER})
+
+find_package(barectf)
+
+add_custom_target(regenerate-barectf COMMAND barectf -c ${FORTE_TRACE_FOLDER} -H ${FORTE_TRACE_FOLDER} -m ${FORTE_TRACE_FOLDER} ${FORTE_TRACE_CONFIG_FILE})
+
+forte_add_sourcefile_hc(${FORTE_TRACE_FOLDER}/barectf)
+forte_add_sourcefile_h(${FORTE_TRACE_FOLDER}/barectf-bitfield.h)
+
+forte_add_include_directories(${FORTE_TRACE_FOLDER})
+forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+
+if (FORTE_TRACE_CTF_TEST OR FORTE_REPLAY_DEVICE)
+  add_subdirectory(internal)
+  add_subdirectory(reader)
+  forte_add_definition("-DFORTE_TRACER_INTERNAL")
+endif()
+
+forte_add_sourcefile_hcpp(barectf_platform_forte)

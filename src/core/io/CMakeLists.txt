@@ -15,11 +15,11 @@
 # IO
 #############################################################################
 
-set(FORTE_IO OFF CACHE BOOL "Enable IO Modules")
+option(FORTE_IO "Enable IO Modules" OFF)
 
 if(NOT FORTE_IO)
   return()
-endif(NOT FORTE_IO)
+endif()
 
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\io)
 

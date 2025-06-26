@@ -31,7 +31,7 @@ class fmuInstance : public CDevice {
                 const fmi2CallbackFunctions *callbackFunctions);
     ~fmuInstance() override;
 
-#ifdef FMU_DEBUG
+#ifdef LOGDEBUG
     std::fstream debugFile;
     void printToFile(const char *message);
 #endif

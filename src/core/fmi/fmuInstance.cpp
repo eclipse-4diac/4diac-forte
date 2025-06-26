@@ -34,8 +34,8 @@ fmuInstance *fmuInstance::sFmuInstance = 0;
 
 CSyncObject fmuInstance::sFmuInstanceMutex;
 
-#ifdef FMU_DEBUG
-#include "criticalregion.h"
+#ifdef LOGDEBUG
+#include "core/util/criticalregion.h"
 #include <ctime>
 #include <sstream>
 void fmuInstance::printToFile(const char *message) {
@@ -72,7 +72,7 @@ fmuInstance::fmuInstance(fmi2String instanceName,
   this->mCallbackFunctions = callbackFunctions;
   this->mState = STATE_ERROR;
 
-#ifdef FMU_DEBUG
+#ifdef LOGDEBUG
   std::stringstream fileName;
   fileName << "fmu4diacDebug1" << ((long) time(0)) << GUID << "_" << this << ".txt";
   fmuInstance::debugFile.open(fileName.str().c_str(), std::fstream::out);

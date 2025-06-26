@@ -11,9 +11,7 @@
 # *    - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-if(FORTE_TRACE_CTF_TEST OR FORTE_REPLAY_DEVICE)
-  forte_add_sourcefile_hcpp(bt2MessageFactory)
-  forte_add_sourcefile_hcpp(TraceReaderSink)
-  forte_add_sourcefile_hcpp(utils)
-  forte_add_link_library(babeltrace2)
-endif()
+forte_add_sourcefile_hcpp(bt2MessageFactory)
+forte_add_sourcefile_hcpp(TraceReaderSink)
+forte_add_sourcefile_hcpp(utils)
+forte_add_link_library(babeltrace2)

@@ -18,15 +18,7 @@ set(FORTE_ENABLE_FMU OFF CACHE BOOL "Enable FORTE FMU Export. It generates a sha
 
 if(FORTE_ENABLE_FMU)
 
-  set(FORTE_BUILD_SHARED_LIBRARY ON CACHE BOOL "" FORCE)
-  set(FORTE_BUILD_STATIC_LIBRARY OFF CACHE BOOL "" FORCE)
-  set(FORTE_BUILD_EXECUTABLE OFF CACHE BOOL "" FORCE)
-  
   forte_add_definition("-DFORTE_FMU") 
-  IF(NOT FORTE_LOG_LEVEL STREQUAL "NOLOG")
-    forte_add_definition("-DFMU_DEBUG") 
-    message("Adding logging FMU")
-  ENDIF()
 
   set(FORTE_FMU_INCLUDE "" CACHE STRING "Folder to include in the compilation. Specify here the location of the fmi headers")
 

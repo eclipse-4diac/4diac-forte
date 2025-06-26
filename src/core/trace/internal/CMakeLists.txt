@@ -12,12 +12,6 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-
-if(FORTE_TRACE_CTF_TEST OR FORTE_REPLAY_DEVICE)
-  forte_add_sourcefile_hcpp(EventMessage)
-  forte_add_sourcefile_hcpp(internalTracer)
-  forte_add_sourcefile_hcpp(flexibleTracer)
-
-  set(FORTE_TRACER_INCLUDE internal/flexibleTracer.h PARENT_SCOPE)
-  set(FORTE_TRACER CFlexibleTracer PARENT_SCOPE)
-endif()
+forte_add_sourcefile_hcpp(EventMessage)
+forte_add_sourcefile_hcpp(internalTracer)
+forte_add_sourcefile_hcpp(flexibleTracer)

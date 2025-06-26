@@ -1,4 +1,0 @@
-#include "${FORTE_TRACER_INCLUDE}"
-
-using CForteTracer = ${FORTE_TRACER};
-

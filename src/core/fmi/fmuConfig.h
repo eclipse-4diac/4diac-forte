@@ -16,6 +16,7 @@
 #include <fmi2Functions.h>
 #include <fmi2FunctionTypes.h>
 #include <fmi2TypesPlatform.h>
+#include "arch/devlog.h"
 
 #define MODEL_GUID "FORTE_FMU" // Should be defined in the boot file
 
@@ -170,7 +171,7 @@ const unsigned int allowedStatesInFunction[] = {
 
 #define NOT_USED(var) (void) var;
 
-#ifdef FMU_DEBUG
+#ifdef LOGDEBUG
 #include <forte_sync.h>
 #include <sstream>
 #include "fmuInstance.h"
