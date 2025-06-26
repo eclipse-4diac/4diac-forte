@@ -11,14 +11,13 @@
 # *    - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
+if (NOT FORTE_COM_OPC_UA)
+    return()
+endif()
 
-if (FORTE_COM_OPC_UA)
+set(FORTE_MULTI_DEVICE FALSE CACHE BOOL "Compile the multi Device")
 
-  set(FORTE_MULTI_DEVICE FALSE CACHE BOOL "Compile the multi Device")
-
-  if (FORTE_MULTI_DEVICE)
+if (FORTE_MULTI_DEVICE)
     forte_add_device(MultiDevice "stdfblib/ita/multi/MultiDevice" "MultiDevice")
     forte_add_sourcefile_hcpp(MultiMGR MultiDevice utils)
-  endif()
-
 endif()
