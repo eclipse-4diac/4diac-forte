@@ -22,6 +22,8 @@ extern "C" {
 #include <MQTTAsync.h>
 }
 
+extern std::string gMqttClientConfigFile;
+
 class CMQTTClient {
   public:
     enum MQTTStates {

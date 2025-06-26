@@ -79,10 +79,6 @@ if (FORTE_COM_OPC_UA)
     
     forte_add_custom_configuration("#define FORTE_COM_OPC_UA_PORT ${FORTE_COM_OPC_UA_PORT}")
     forte_add_custom_configuration("#define FORTE_COM_OPC_UA_SERVER_MAX_ITERATION_INTERVAL ${FORTE_COM_OPC_UA_SERVER_MAX_ITERATION_INTERVAL}")
-    forte_add_custom_configuration("extern TForteUInt16 gOpcuaServerMaxIterationInterval\;")
-    forte_add_custom_configuration("extern TForteUInt16 gOpcuaServerPort\;")
-    forte_add_custom_configuration("#include <string>")
-    forte_add_custom_configuration("extern std::string gOpcuaClientConfigFile\;")
     forte_add_custom_configuration("#define FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL ${FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL}")
     forte_add_custom_configuration("#define FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL ${FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL}")
     

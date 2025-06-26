@@ -24,6 +24,8 @@
 
 class CIEC_STRING;
 
+extern char *gCommandLineBootFile;
+
 enum LoadBootResult {
   LOAD_RESULT_OK,
   MISSING_COLON,

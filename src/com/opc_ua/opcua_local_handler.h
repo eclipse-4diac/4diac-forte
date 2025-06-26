@@ -34,6 +34,10 @@
 #include <string>
 #include <vector>
 
+extern TForteUInt16 gOpcuaServerMaxIterationInterval;
+extern TForteUInt16 gOpcuaServerPort;
+extern std::string gOpcuaClientConfigFile;
+
 /**
  * Class to handle all action that are executed on a local OPC UA server
  */
