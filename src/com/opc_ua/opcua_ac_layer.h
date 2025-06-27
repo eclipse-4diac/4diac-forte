@@ -60,6 +60,7 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
 
     static char smEmptyString[];
     static char smEnabledState[];
+    static char smEnableStateProperty[]; // This is needed to avoid potential delete-subscription error with HMI tools
     static char smActiveState[];
     static char smId[];
     static char smTime[];
@@ -118,6 +119,8 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
     forte::com_infra::EComResponse createAlarmType(UA_Server *paServer, const std::string &paTypeName);
     
     forte::com_infra::EComResponse addOPCUATypeProperties(UA_Server *paServer, const std::string &paTypeName, bool paIsPublisher);
+
+    forte::com_infra::EComResponse addOPCUATypeEnableStateProperty(UA_Server *paServer);
 
     UA_StatusCode addVariableNode(UA_Server *paServer, const std::string &paParentTypeName, char *paVariableName, CIEC_ANY &paVariableType);
 

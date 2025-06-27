@@ -26,6 +26,7 @@ const std::string COPC_UA_AC_Layer::scmAlarmConditionName = "AlarmCondition";
 
 char COPC_UA_AC_Layer::smEmptyString[] = "";
 char COPC_UA_AC_Layer::smEnabledState[] = "EnabledState";
+char COPC_UA_AC_Layer::smEnableStateProperty[] = "EnableState"; // This is needed to avoid potential delete-subscription error with HMI tools
 char COPC_UA_AC_Layer::smActiveState[] = "ActiveState";
 char COPC_UA_AC_Layer::smId[] = "Id";
 char COPC_UA_AC_Layer::smTime[] = "Time";
@@ -366,6 +367,26 @@ EComResponse COPC_UA_AC_Layer::addOPCUATypeProperties(UA_Server *paServer, const
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Failed to add OPCUA AlarmType Property for FB %s, Port: %s, Status: %s\n", getCommFB()->getInstanceName(), dataPortName, UA_StatusCode_name(status));
       return e_InitTerminated;
     }
+  }
+  return addOPCUATypeEnableStateProperty(paServer);
+}
+
+forte::com_infra::EComResponse COPC_UA_AC_Layer::addOPCUATypeEnableStateProperty(UA_Server *paServer) {
+  UA_VariableAttributes vAttr = UA_VariableAttributes_default;
+    vAttr.displayName = UA_LOCALIZEDTEXT(smEmptyString, smEnableStateProperty);
+    vAttr.valueRank = UA_VALUERANK_ANY;
+    vAttr.accessLevel = UA_ACCESSLEVELMASK_READ | UA_ACCESSLEVELMASK_WRITE;
+    vAttr.dataType = UA_TYPES[UA_TYPES_LOCALIZEDTEXT].typeId;
+
+  UA_NodeId memberNodeId;
+  UA_StatusCode status = UA_Server_addVariableNode(paServer, UA_NODEID_NULL, mTypeNodeId,
+                          UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
+                          UA_QUALIFIEDNAME(0, smEnableStateProperty),    // TODO Change 1 to namespaceIndex
+                          UA_NODEID_NUMERIC(0, UA_NS0ID_TWOSTATEVARIABLETYPE), vAttr, nullptr, &memberNodeId);
+  mTypePropertyNodes.emplace_back(memberNodeId);
+  if(status != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA A&C LAYER]: Failed to add OPCUA EnableState Property for FB %s, Status: %s\n", getCommFB()->getInstanceName(), UA_StatusCode_name(status));
+    return e_InitTerminated;
   }
   return e_InitOk;
 }
