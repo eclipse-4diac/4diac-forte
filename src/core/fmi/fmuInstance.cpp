@@ -256,7 +256,7 @@ CIEC_ANY::EDataTypeID fmuInstance::getConnectedDataType(unsigned int portIndex, 
 void fmuInstance::fillInterfaceElementsArray(CFunctionBlock *paFB, bool isInput, bool isEvent) {
 
   if (isEvent) {
-    TEventID noOfElements = isInput ? paFB->getFBInterfaceSpec().mNumEIs : paFB->getFBInterfaceSpec().mNumEOs;
+    TEventID noOfElements = isInput ? paFB->getFBInterfaceSpec().getNumEIs() : paFB->getFBInterfaceSpec().getNumEOs();
     for (TEventID i = 0; i < noOfElements; i++) {
       fmuValueContainer *newValue = new fmuValueContainer(fmuValueContainer::valueType::INTEGER, true);
       newValue->setEventCounterPointer(isInput ? &(paFB->getEIMonitorData(i)) : &(paFB->getEOMonitorData(i)));

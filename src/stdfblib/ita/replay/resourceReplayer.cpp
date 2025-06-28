@@ -45,7 +45,7 @@ CResourceReplayer::CResourceReplayer(CResource &paResource, std::vector<EventMes
       return;
     }
 
-    if (paEvent.getPortId() >= paEvent.getFB().getFBInterfaceSpec().mNumEIs) {
+    if (paEvent.getPortId() >= paEvent.getFB().getFBInterfaceSpec().getNumEIs()) {
       return;
     }
 

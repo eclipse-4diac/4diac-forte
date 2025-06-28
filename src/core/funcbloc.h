@@ -220,7 +220,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     void receiveInputEvent(TEventID paEIID, CEventChainExecutionThread *paExecEnv) {
       FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n",
-                  CStringDictionary::get(getInstanceNameId()), paEIID, getFBInterfaceSpec().mNumEIs - 1);
+                  CStringDictionary::get(getInstanceNameId()), paEIID, getFBInterfaceSpec().getNumEIs() - 1);
 
 #ifdef FORTE_TRACE_CTF
       traceInputEvent(paEIID);
@@ -407,7 +407,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     void sendOutputEvent(TEventID paEO, CEventChainExecutionThread *const paECET) {
       FORTE_TRACE("OutputEvent: Function Block sending event: %d (maxid: %d)\n", paEO,
-                  getFBInterfaceSpec().mNumEOs - 1);
+                  getFBInterfaceSpec().getNumEOs() - 1);
 
 #ifdef FORTE_TRACE_CTF
       traceOutputEvent(paEO, paECET);
