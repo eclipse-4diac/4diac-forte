@@ -216,6 +216,27 @@ class OPCUA_MGR {
     static char smQueryResourcesOutArgName[];
     static char smQueryResourcesOutArgDescription[];
 
+    /* Query FB Type */
+    static char smQueryFBTypeMethodName[];
+    static char smQueryFBTypeOutArgName[];
+    static char smQueryFBTypeOutArgDescription[];
+    static char smQueryFBTypeDisplayName[];
+    static char smQueryFBTypeDescription[];
+
+    /* Query Data Type */
+    static char smQueryDataTypeMethodName[];
+    static char smQueryDataTypeOutArgName[];
+    static char smQueryDataTypeOutArgDescription[];
+    static char smQueryDataTypeDisplayName[];
+    static char smQueryDataTypeDescription[];
+
+    /* Query Global Const  */
+    static char smQueryGlobalConstTypeMethodName[];
+    static char smQueryGlobalConstTypeOutArgName[];
+    static char smQueryGlobalConstTypeOutArgDescription[];
+    static char smQueryGlobalConstTypeDisplayName[];
+    static char smQueryGlobalConstTypeDescription[];
+
 /* FORTE Monitoring */
 #ifdef FORTE_SUPPORT_MONITORING
 
@@ -589,6 +610,45 @@ class OPCUA_MGR {
                                           const UA_Variant *input,
                                           size_t outputSize,
                                           UA_Variant *output);
+
+    EMGMResponse addQueryFBTypeMethod(UA_Server *paServer);
+    static UA_StatusCode onQueryFBType(UA_Server *server,
+                                       const UA_NodeId *sessionId,
+                                       void *sessionHandle,
+                                       const UA_NodeId *methodId,
+                                       void *methodContext,
+                                       const UA_NodeId *objectId,
+                                       void *objectContext,
+                                       size_t inputSize,
+                                       const UA_Variant *input,
+                                       size_t outputSize,
+                                       UA_Variant *output);
+
+    EMGMResponse addQueryDataTypeMethod(UA_Server *paServer);
+    static UA_StatusCode onQueryDataType(UA_Server *server,
+                                         const UA_NodeId *sessionId,
+                                         void *sessionHandle,
+                                         const UA_NodeId *methodId,
+                                         void *methodContext,
+                                         const UA_NodeId *objectId,
+                                         void *objectContext,
+                                         size_t inputSize,
+                                         const UA_Variant *input,
+                                         size_t outputSize,
+                                         UA_Variant *output);
+
+    EMGMResponse addQueryGlobalConstTypeMethod(UA_Server *paServer);
+    static UA_StatusCode onQueryGlobalConstType(UA_Server *server,
+                                                const UA_NodeId *sessionId,
+                                                void *sessionHandle,
+                                                const UA_NodeId *methodId,
+                                                void *methodContext,
+                                                const UA_NodeId *objectId,
+                                                void *objectContext,
+                                                size_t inputSize,
+                                                const UA_Variant *input,
+                                                size_t outputSize,
+                                                UA_Variant *output);
 
     /* FORTE Monitoring */
 

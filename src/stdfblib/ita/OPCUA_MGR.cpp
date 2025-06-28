@@ -182,6 +182,27 @@ char OPCUA_MGR::smQueryResourcesOutArgDescription[] = "Read Response";
 char OPCUA_MGR::smQueryResourcesDisplayName[] = "Query Resources";
 char OPCUA_MGR::smQueryResourcesDescription[] = "Query Resources";
 
+/* Query FB Type */
+char OPCUA_MGR::smQueryFBTypeMethodName[] = "queryFBType";
+char OPCUA_MGR::smQueryFBTypeOutArgName[] = "Response";
+char OPCUA_MGR::smQueryFBTypeOutArgDescription[] = "Query FBType Response";
+char OPCUA_MGR::smQueryFBTypeDisplayName[] = "Query FBType";
+char OPCUA_MGR::smQueryFBTypeDescription[] = "Query FBType";
+
+/* Query Data Type */
+char OPCUA_MGR::smQueryDataTypeMethodName[] = "queryDataType";
+char OPCUA_MGR::smQueryDataTypeOutArgName[] = "Response";
+char OPCUA_MGR::smQueryDataTypeOutArgDescription[] = "Query DataType Response";
+char OPCUA_MGR::smQueryDataTypeDisplayName[] = "Query DataType";
+char OPCUA_MGR::smQueryDataTypeDescription[] = "Query DataType";
+
+/* Query Global Const  */
+char OPCUA_MGR::smQueryGlobalConstTypeMethodName[] = "queryGlobalConstType";
+char OPCUA_MGR::smQueryGlobalConstTypeOutArgName[] = "Response";
+char OPCUA_MGR::smQueryGlobalConstTypeOutArgDescription[] = "Query GlobalConstType Response";
+char OPCUA_MGR::smQueryGlobalConstTypeDisplayName[] = "Query GlobalConstType";
+char OPCUA_MGR::smQueryGlobalConstTypeDescription[] = "Query GlobalConstType";
+
 #ifdef FORTE_SUPPORT_MONITORING
 
 /* Add Watch */
@@ -304,6 +325,12 @@ EMGMResponse OPCUA_MGR::createIEC61499MgmtObject(UA_Server *paServer) {
   if (addDeleteResourceMethod(paServer) != EMGMResponse::Ready)
     return eRetVal;
   if (addQueryResourcesMethod(paServer) != EMGMResponse::Ready)
+    return eRetVal;
+  if (addQueryFBTypeMethod(paServer) != EMGMResponse::Ready)
+    return eRetVal;
+  if (addQueryDataTypeMethod(paServer) != EMGMResponse::Ready)
+    return eRetVal;
+  if (addQueryGlobalConstTypeMethod(paServer) != EMGMResponse::Ready)
     return eRetVal;
 #ifdef FORTE_SUPPORT_MONITORING
   if (addReadWatchesMethod(paServer) != EMGMResponse::Ready)
@@ -1185,6 +1212,117 @@ UA_StatusCode OPCUA_MGR::onQueryResources(UA_Server *,
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
   uaMGR->setMGMCommand(EMGMCommandType::QueryFB, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  int status = scResponseMap.find(eRetVal)->second;
+  if (status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+  UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mAdditionalParams.c_str());
+  status = UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
+  UA_String_clear(&uaResp);
+  return status;
+}
+
+EMGMResponse OPCUA_MGR::addQueryFBTypeMethod(UA_Server *paServer) {
+  UA_Argument outputArgument;
+  initArgument(outputArgument, UA_TYPES_STRING, smQueryFBTypeOutArgName, smQueryFBTypeOutArgDescription);
+  UA_MethodAttributes queryFBTypeAttr = createAttribute(smQueryFBTypeDisplayName, smQueryFBTypeDescription);
+  return addMethodNode(paServer, smQueryFBTypeMethodName, mMgmtTypeId, queryFBTypeAttr, nullptr, 0, &outputArgument, 1,
+                       &onQueryFBType);
+}
+
+UA_StatusCode OPCUA_MGR::onQueryFBType(UA_Server *,
+                                       const UA_NodeId *,
+                                       void *,
+                                       const UA_NodeId *,
+                                       void *methodContext,
+                                       const UA_NodeId *,
+                                       void *,
+                                       size_t,
+                                       const UA_Variant *,
+                                       size_t,
+                                       UA_Variant *output) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::QueryFBTypes, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  int status = scResponseMap.find(eRetVal)->second;
+  if (status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+  UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mAdditionalParams.c_str());
+  status = UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
+  UA_String_clear(&uaResp);
+  return status;
+}
+
+EMGMResponse OPCUA_MGR::addQueryDataTypeMethod(UA_Server *paServer) {
+  UA_Argument outputArgument;
+  initArgument(outputArgument, UA_TYPES_STRING, smQueryDataTypeOutArgName, smQueryDataTypeOutArgDescription);
+  UA_MethodAttributes queryDataTypeAttr = createAttribute(smQueryDataTypeDisplayName, smQueryDataTypeDescription);
+  return addMethodNode(paServer, smQueryDataTypeMethodName, mMgmtTypeId, queryDataTypeAttr, nullptr, 0, &outputArgument,
+                       1, &onQueryDataType);
+}
+
+UA_StatusCode OPCUA_MGR::onQueryDataType(UA_Server *,
+                                         const UA_NodeId *,
+                                         void *,
+                                         const UA_NodeId *,
+                                         void *methodContext,
+                                         const UA_NodeId *,
+                                         void *,
+                                         size_t,
+                                         const UA_Variant *,
+                                         size_t,
+                                         UA_Variant *output) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::QueryDTTypes, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
+  int status = scResponseMap.find(eRetVal)->second;
+  if (status != UA_STATUSCODE_GOOD) {
+    return status;
+  }
+  UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mAdditionalParams.c_str());
+  status = UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
+  UA_String_clear(&uaResp);
+  return status;
+}
+
+EMGMResponse OPCUA_MGR::addQueryGlobalConstTypeMethod(UA_Server *paServer) {
+  UA_Argument outputArgument;
+  initArgument(outputArgument, UA_TYPES_STRING, smQueryGlobalConstTypeOutArgName,
+               smQueryGlobalConstTypeOutArgDescription);
+  UA_MethodAttributes queryGlobalConstTypeAttr =
+      createAttribute(smQueryGlobalConstTypeDisplayName, smQueryGlobalConstTypeDescription);
+  return addMethodNode(paServer, smQueryGlobalConstTypeMethodName, mMgmtTypeId, queryGlobalConstTypeAttr, nullptr, 0,
+                       &outputArgument, 1, &onQueryGlobalConstType);
+}
+
+UA_StatusCode OPCUA_MGR::onQueryGlobalConstType(UA_Server *,
+                                                const UA_NodeId *,
+                                                void *,
+                                                const UA_NodeId *,
+                                                void *methodContext,
+                                                const UA_NodeId *,
+                                                void *,
+                                                size_t,
+                                                const UA_Variant *,
+                                                size_t,
+                                                UA_Variant *output) {
+  if (!methodContext) {
+    return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+  }
+  EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
+  uaMGR->setMGMCommand(EMGMCommandType::QueryGlobalConstType, CStringDictionary::scmInvalidStringId, nullptr, nullptr,
+                       nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   int status = scResponseMap.find(eRetVal)->second;
   if (status != UA_STATUSCODE_GOOD) {
