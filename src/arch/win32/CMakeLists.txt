@@ -13,6 +13,9 @@
 
 forte_register_architecture(Win32)
 
+# TODO: should be replaced by better arch-independent mechanism
+target_include_directories(forte-global INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/)
+
 forte_register_timerhandler(CPCTimerHandler pctimeha.h)
 forte_set_default_timerhandler(CPCTimerHandler)
 

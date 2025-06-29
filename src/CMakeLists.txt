@@ -12,7 +12,6 @@
 # *******************************************************************************/
 
 target_include_directories(forte-global INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(forte-global INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/arch/posix)
 target_include_directories(forte-global INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/stdfblib/events)
 
 
