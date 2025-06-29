@@ -15,8 +15,8 @@
 # WAGO KBUS SIFBs
 #############################################################################
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-# FIXME: shouldn't this be io, not module?
-forte_add_module(WagoKbus OFF "Wago Kbus interface" FORTE_IO)
+
+forte_register_io(WagoKbus OFF "Wago Kbus interface")
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})  
 forte_add_sourcefile_hcpp(WagoHandle WagoDeviceController)
