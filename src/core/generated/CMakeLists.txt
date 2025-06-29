@@ -15,6 +15,41 @@ set(FORTE_GENERATED_FILES_DIR "${FORTE_GENERATED_FILES_DIR}" PARENT_SCOPE)
 cmake_language(DEFER DIRECTORY .. CALL set FORTE_GENERATED_FILES_DIR "${FORTE_GENERATED_FILES_DIR}" PARENT_SCOPE)
 target_include_directories(forte-global INTERFACE ${FORTE_GENERATED_FILES_DIR}/..)
 
+function(forte_generate_config_flag_include variable)
+    if (${variable})
+        file(GENERATE
+            OUTPUT "${FORTE_GENERATED_FILES_DIR}/config/${variable}.h"
+            CONTENT "#define ${variable}\n"
+        )
+    else()
+        file(GENERATE
+            OUTPUT "${FORTE_GENERATED_FILES_DIR}/config/${variable}.h"
+            CONTENT "//#undef ${variable}\n"
+        )
+    endif()
+endfunction()
+
+# optional second arg specifies c-syntax value to use instead of the symbol's value
+function(forte_generate_config_value_include symbol)
+    if (ARGN)
+        set(value "${ARGN}")
+    else()
+        set(value "${${symbol}}")
+    endif()
+
+    file(GENERATE
+        OUTPUT "${FORTE_GENERATED_FILES_DIR}/config/${symbol}.h"
+        CONTENT "#define ${symbol} ${value}\n"
+    )
+endfunction()
+
+# This doesn't properly escape string contents. configure_file doesn't do that either, so it's propably fine for our use case.
+function(forte_generate_config_string_include symbol)
+    file(GENERATE
+        OUTPUT "${FORTE_GENERATED_FILES_DIR}/config/${symbol}.h"
+        CONTENT "#define ${symbol} \"${${symbol}}\"\n"
+    )
+endfunction()
 
 file(GENERATE
   OUTPUT "${FORTE_GENERATED_FILES_DIR}/config/endian.h"

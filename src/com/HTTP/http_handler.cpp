@@ -25,6 +25,7 @@
 #include "comlayer.h"
 #include <forte_config.h>
 #include <string>
+#include "generated/config/FORTE_COM_HTTP_LISTENING_PORT.h"
 
 using namespace forte::com_infra;
 using namespace std::string_literals;

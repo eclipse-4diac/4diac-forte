@@ -21,10 +21,13 @@
 #include "stringdict.h"
 #include <cstring>
 #include "generated/stringdict_generated.h"
+#include "generated/config/FORTE_STRINGDICT_FIXEDMEMORY.h"
 
 using TStringId = CStringDictionary::TStringId;
 
-#ifdef FORTE_STRING_DICT_FIXED_MEMORY
+#ifdef FORTE_STRINGDICT_FIXEDMEMORY
+#include "generated/config/FORTE_STRINGDICT_MAXNROFSTRINGS.h"
+#include "generated/config/FORTE_STRINGDICT_BUFFERSIZE.h"
 #include "core/util/inplace_vector.h"
 
 #define ENTRY(name, len) , len

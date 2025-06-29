@@ -20,6 +20,7 @@
 #include "mgmcmd.h"
 #include "mgmcmdstruct.h"
 #include "../../core/device.h"
+#include "generated/config/FORTE_BOOT_FILE_LOCATION.h"
 
 char *gCommandLineBootFile = nullptr;
 

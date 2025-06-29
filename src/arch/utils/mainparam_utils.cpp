@@ -11,7 +11,6 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include <forte_config.h>
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -20,9 +19,8 @@
 #include <string>
 #endif
 
-#ifdef FORTE_SUPPORT_BOOT_FILE
 #include "stdfblib/ita/ForteBootFileLoader.h"
-#endif
+
 #ifdef FORTE_COM_HTTP
 #include "com/HTTP/http_handler.h"
 #endif

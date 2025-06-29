@@ -37,6 +37,14 @@ endif()
 
 forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 
+option(FORTE_SUPPORT_BOOT_FILE "Enable 4diac FORTE boot file" ON)
+mark_as_advanced(FORTE_SUPPORT_BOOT_FILE)
+forte_generate_config_flag_include(FORTE_SUPPORT_BOOT_FILE)
+
+set(FORTE_BOOT_FILE_LOCATION "forte.fboot" CACHE STRING "Path to boot file")
+mark_as_advanced(FORTE_BOOT_FILE_LOCATION)
+forte_generate_config_string_include(FORTE_BOOT_FILE_LOCATION)
+
 if(FORTE_SUPPORT_BOOT_FILE)
   forte_add_sourcefile_hcpp(ForteBootFileLoader)
 endif(FORTE_SUPPORT_BOOT_FILE)

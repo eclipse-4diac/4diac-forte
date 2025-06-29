@@ -46,6 +46,10 @@ forte_add_sourcefile_hcpp(gatherdataconn)
 
 forte_add_ecet(CEventChainExecutionThread ecet "standard")
 
+set(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY "30" CACHE STRING "Max supported hierarchy that can be provided in a management commands")
+mark_as_advanced(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY)
+forte_generate_config_value_include(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY)
+
 option(FORTE_USE_FAKE_ECET "Compile the fake ecet used for testing" FALSE)
 mark_as_advanced(FORTE_USE_FAKE_ECET)
 if(FORTE_USE_FAKE_ECET)
@@ -61,4 +65,12 @@ forte_add_sourcefile_hcpp(monitoring)
 
 forte_add_subdirectory(trace)
 
+option(FORTE_STRINGDICT_FIXEDMEMORY "Use a fixed-size version of the string dictionary" OFF)
+forte_generate_config_flag_include(FORTE_STRINGDICT_FIXEDMEMORY)
+if (FORTE_STRINGDICT_FIXEDMEMORY)
+    set(FORTE_STRINGDICT_MAXNROFSTRINGS 1024 CACHE STRING "Maximum number of strings in the fixed-size version of the string dictionary")
+    set(FORTE_STRINGDICT_BUFFERSIZE 8192 CACHE STRING "Maximum total size of the fixed-size version of the string dictionary")
+    forte_generate_config_value_include(FORTE_STRINGDICT_MAXNROFSTRINGS)
+    forte_generate_config_value_include(FORTE_STRINGDICT_BUFFERSIZE)
+endif ()
 

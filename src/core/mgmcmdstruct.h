@@ -10,9 +10,9 @@
  *    Ingo Hegny, Alois Zoitl
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#ifndef MGMCMDSTRUCT_H_
-#define MGMCMDSTRUCT_H_
+#pragma once
 
+#include "generated/config/FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY.h"
 #include "mgmcmd.h"
 #include "core/util/inplace_vector.h"
 #include "stringdict.h"
@@ -83,5 +83,3 @@ namespace forte {
 
   } // namespace core
 } // namespace forte
-
-#endif /* MGMCMDSTRUCT_H_ */

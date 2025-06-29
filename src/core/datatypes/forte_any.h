@@ -28,6 +28,7 @@
 #include "../typelib.h"
 #include "iec61131_cast_helper.h"
 #include "generated/config/endian.h"
+#include "generated/config/FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES.h"
 
 #if (!defined FORTE_LITTLE_ENDIAN) && (!defined FORTE_BIG_ENDIAN)
 #error "Endianess is not defined!"

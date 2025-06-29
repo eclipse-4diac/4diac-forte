@@ -11,8 +11,10 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_STDFBLIB_ITA_FORTEBOOTFILELOADER_H_
-#define SRC_STDFBLIB_ITA_FORTEBOOTFILELOADER_H_
+#pragma once
+
+#include "generated/config/FORTE_SUPPORT_BOOT_FILE.h"
+#ifdef FORTE_SUPPORT_BOOT_FILE
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -65,4 +67,4 @@ class ForteBootFileLoader {
     bool hasCommandEnded(const std::string &line) const;
 };
 
-#endif /* SRC_STDFBLIB_ITA_FORTEBOOTFILELOADER_H_ */
+#endif

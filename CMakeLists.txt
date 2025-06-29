@@ -40,12 +40,6 @@ mark_as_advanced(FORTE_BUILD_EXECUTABLE)
 option(FORTE_RTTI_AND_EXCEPTIONS "Enable RTTI and Exceptions" OFF)
 mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
 
-option(FORTE_SUPPORT_BOOT_FILE "Enable 4diac FORTE boot file" ON)
-mark_as_advanced(FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES)
-
-set(FORTE_BOOT_FILE_LOCATION "forte.fboot" CACHE STRING "Path to boot file")
-mark_as_advanced(FORTE_BOOT_FILE_LOCATION)
-
 add_library(forte-global INTERFACE)
 link_libraries(forte-global)
 
