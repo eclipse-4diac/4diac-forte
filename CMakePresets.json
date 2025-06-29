@@ -55,7 +55,6 @@
       "inherits": "base-tests",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": "Debug",
-        "FORTE_MODULE_POWERLINK": "ON",
         "FORTE_SYSTEM_TESTS": "ON"
       }
     },
