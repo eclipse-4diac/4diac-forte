@@ -19,6 +19,8 @@ endif()
 
 enable_testing()
 
+set(FORTE_RTTI_AND_EXCEPTIONS ON CACHE BOOL "This value is forced ON because of FORTE_TESTS enabled" FORCE)
+
 if (FORTE_ARCHITECTURE STREQUAL "Posix")
   option(FORTE_TEST_CODE_COVERAGE_ANALYSIS "Perform code coverage analyis with GCOV and presentation with LCOV" OFF)
   mark_as_advanced(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
