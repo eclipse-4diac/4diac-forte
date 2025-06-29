@@ -31,25 +31,26 @@ using TStringId = CStringDictionary::TStringId;
 #include "core/util/inplace_vector.h"
 
 #define ENTRY(name, len) , len
-static forte::core::util::inplace_vector<TStringId, FORTE_STRINGDICT_MAXNROFSTRINGS> sIdList = { 0 ENTRY_LIST };
+static forte::core::util::inplace_vector<TStringId, FORTE_STRINGDICT_MAXNROFSTRINGS> sIdList = {0 ENTRY_LIST};
 #undef ENTRY
 
 #define ENTRY(name, len) #name "\0"
-static constexpr const auto initbuf{ "\0" ENTRY_LIST};
-static_assert(sizeof( "\0" ENTRY_LIST) < FORTE_STRINGDICT_BUFFERSIZE);
-static forte::core::util::inplace_vector<char, FORTE_STRINGDICT_BUFFERSIZE> sStringBuf{initbuf, initbuf+sizeof( "\0" ENTRY_LIST)};
+static constexpr const auto initbuf{"\0" ENTRY_LIST};
+static_assert(sizeof("\0" ENTRY_LIST) < FORTE_STRINGDICT_BUFFERSIZE);
+static forte::core::util::inplace_vector<char, FORTE_STRINGDICT_BUFFERSIZE> sStringBuf{
+    initbuf, initbuf + sizeof("\0" ENTRY_LIST)};
 #undef ENTRY
 
 #else
 #include <vector>
 
 #define ENTRY(name, len) , len
-static std::vector<TStringId> sIdList = { 0 ENTRY_LIST };
+static std::vector<TStringId> sIdList = {0 ENTRY_LIST};
 #undef ENTRY
 
 #define ENTRY(name, len) #name "\0"
-static constexpr const auto initbuf{ "\0" ENTRY_LIST};
-static std::vector<char> sStringBuf{initbuf, initbuf+sizeof( "\0" ENTRY_LIST)};
+static constexpr const auto initbuf{"\0" ENTRY_LIST};
+static std::vector<char> sStringBuf{initbuf, initbuf + sizeof("\0" ENTRY_LIST)};
 #undef ENTRY
 
 #endif
