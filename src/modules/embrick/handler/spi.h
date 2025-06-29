@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,19 +12,10 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#ifndef SRC_MODULES_EMBRICK_HANDLER_SPI_H_
-#define SRC_MODULES_EMBRICK_HANDLER_SPI_H_
+#pragma once
 
-#include <stdio.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <devlog.h>
-#include <forte_wstring.h>
-#include <sys/ioctl.h>
-
-extern "C" { // missing in some versions of spidev.h
-#include <linux/spi/spidev.h>
-}
 
 class EmbrickSPIHandler {
     friend class EmbrickBusHandler;
@@ -40,7 +32,7 @@ class EmbrickSPIHandler {
     bool config(unsigned int paConfig, unsigned int paConfigVerify, T paValue);
 
     bool hasError() {
-      return mError != 0;
+      return mError != nullptr;
     }
     const char *mError;
 
@@ -64,5 +56,3 @@ class EmbrickSPIHandler {
     static const char *const scmFailedToTestBus;
     static const char *const scmFailedToTransferBuffer;
 };
-
-#endif /* SRC_MODULES_EMBRICK_HANDLER_SPI_H_ */

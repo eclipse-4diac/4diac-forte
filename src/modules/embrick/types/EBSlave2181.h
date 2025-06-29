@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,19 +14,10 @@
 
 #pragma once
 
-#include "adapter.h"
-#include "anyadapter.h"
-#include "funcbloc.h"
-#include "forte_bool.h"
-#include "forte_wstring.h"
-#include "forte_uint.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
-#include "EBBusAdapter.h"
 #include "Slave.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_wstring.h"
+#include "core/datatypes/forte_uint.h"
 
 class FORTE_EBSlave2181 final : public EmbrickSlave {
     DECLARE_FIRMWARE_FB(FORTE_EBSlave2181)
@@ -37,7 +29,6 @@ class FORTE_EBSlave2181 final : public EmbrickSlave {
     static const int scmBusAdapterInAdpNum = 0;
     static const int scmBusAdapterOutAdpNum = 1;
 
-
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
@@ -45,7 +36,7 @@ class FORTE_EBSlave2181 final : public EmbrickSlave {
     static const TForteUInt8 scmSlaveConfigurationIO[];
     static const TForteUInt8 scmSlaveConfigurationIONum;
 
-    virtual void initHandles();
+    void initHandles() override;
 
   public:
     FORTE_EBSlave2181(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

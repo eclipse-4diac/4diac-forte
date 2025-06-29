@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,7 +13,8 @@
  *******************************************************************************/
 
 #include "analog10.h"
-#include "criticalregion.h"
+#include "core/datatypes/forte_dword.h"
+#include "core/util/criticalregion.h"
 
 EmbrickAnalog10SlaveHandle::EmbrickAnalog10SlaveHandle(forte::core::io::IODeviceController *paController,
                                                        forte::core::io::IOMapper::Direction paDirection,

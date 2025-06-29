@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,8 +12,7 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#ifndef SRC_MODULES_EMBRICK_SLAVE_SLAVE_H_
-#define SRC_MODULES_EMBRICK_SLAVE_SLAVE_H_
+#pragma once
 
 #include <cstddef>
 #include <stdint.h>
@@ -21,10 +21,7 @@
 #include "handle.h"
 #include <stdint.h>
 #include <forte_sync.h>
-#include <forte_wstring.h>
-#include <devlog.h>
-
-#include <io/mapper/io_mapper.h>
+#include "core/io/mapper/io_mapper.h"
 
 class EmbrickBusHandler;
 
@@ -122,5 +119,3 @@ class EmbrickSlaveHandler {
     //! declared but undefined copy constructor as we don't want Slaves to be directly copied.
     EmbrickSlaveHandler(const EmbrickSlaveHandler &);
 };
-
-#endif /* SRC_MODULES_EMBRICK_SLAVE_SLAVE_H_ */

@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,6 +13,7 @@
  *******************************************************************************/
 
 #include "EBSlave2301.h"
+#include "../handler/bus.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(BusAdapterIn);
@@ -33,8 +35,6 @@ USE_STRING_ID(STATUS);
 USE_STRING_ID(UINT);
 USE_STRING_ID(UpdateInterval);
 USE_STRING_ID(WSTRING);
-
-#include "../handler/bus.h"
 
 DEFINE_FIRMWARE_FB(FORTE_EBSlave2301, STRID(EBSlave2301))
 

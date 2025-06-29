@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,15 +13,13 @@
  *******************************************************************************/
 
 #include "bus.h"
-
 #include <algorithm>
 #include <cstddef>
-#include <slave/slave.h>
-#include <slave/packages.h>
-
-#include <slave/handles/bit.h>
-#include <slave/handles/analog.h>
-#include <slave/handles/analog10.h>
+#include "../slave/slave.h"
+#include "../slave/packages.h"
+#include "../slave/handles/bit.h"
+#include "../slave/handles/analog.h"
+#include "../slave/handles/analog10.h"
 #include "arch/utils/timespec_utils.h"
 #include <fortealloc.h>
 
@@ -29,10 +28,10 @@ const char *const EmbrickBusHandler::scmNoSlavesFound = "No slave modules found.
 
 EmbrickBusHandler::EmbrickBusHandler(CDeviceExecution &paDeviceExecution) :
     forte::core::io::IODeviceMultiController(paDeviceExecution),
-    mSpi(0),
-    mSlaveSelect(0),
+    mSpi(nullptr),
+    mSlaveSelect(nullptr),
     mLoopActive(false),
-    mSList(0) {
+    mSList(nullptr) {
   // Set init time
   struct timespec ts;
   // TODO Check compile error. Had to to add rt libary to c++ make flags
@@ -90,7 +89,7 @@ const char *EmbrickBusHandler::init() {
   do {
     EmbrickSlaveHandler *slave = EmbrickSlaveHandler::sendInit(this, slaveCounter);
 
-    if (slave != 0) {
+    if (slave != nullptr) {
       mDevices.push_back(slave);
 
       // Activate next slave by sending the 'SelectNextSlave' command to the current slave

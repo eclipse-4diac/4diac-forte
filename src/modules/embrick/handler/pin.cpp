@@ -1,5 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2023 Johannes Messmer (admin@jomess.com), fortiss GmbH, OFFIS e.V.
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH,
+ *                          OFFIS e.V.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -16,6 +18,7 @@
 #include <devlog.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <string>
 
 const char *const EmbrickPinHandler::scmFailedToExportPin = "Failed to export GPIO pin.";
 const char *const EmbrickPinHandler::scmFailedToSetDirection = "Failed to set GPIO direction.";
@@ -23,7 +26,7 @@ const char *const EmbrickPinHandler::scmFailedToOpenFile = "Failed to open sysfs
 const char *const EmbrickPinHandler::scmFailedToWriteFile = "Failed to write sysfs file.";
 const char *const EmbrickPinHandler::scmNotInitialised = "Failed to write to not initialised sysfs stream.";
 
-EmbrickPinHandler::EmbrickPinHandler(unsigned int paPin) : mError(0), mPinNumber(paPin) {
+EmbrickPinHandler::EmbrickPinHandler(unsigned int paPin) : mError(nullptr), mPinNumber(paPin) {
 
   // Init pin
   init();

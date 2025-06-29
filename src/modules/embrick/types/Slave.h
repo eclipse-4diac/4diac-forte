@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -16,11 +17,9 @@
 
 #include "EBBusAdapter.h"
 #include <forte_sync.h>
-
-#include <handler/bus.h>
-#include <slave/slave.h>
-#include <slave/handle.h>
-#include "../../../core/io/configFB/io_slave_multi.h"
+#include "../slave/slave.h"
+#include "../slave/handle.h"
+#include "core/io/configFB/io_slave_multi.h"
 
 class EmbrickSlave : public forte::core::io::IOConfigFBMultiSlave, public EmbrickSlaveHandler::Delegate {
   public:

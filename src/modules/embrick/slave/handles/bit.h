@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,11 +12,10 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#ifndef SRC_MODULES_EMBRICK_SLAVE_HANDLES_BIT_H_
-#define SRC_MODULES_EMBRICK_SLAVE_HANDLES_BIT_H_
+#pragma once
 
-#include <slave/slave.h>
-#include <slave/handle.h>
+#include "../slave.h"
+#include "../handle.h"
 
 class EmbrickBitSlaveHandle : public EmbrickSlaveHandle {
   public:
@@ -25,17 +25,15 @@ class EmbrickBitSlaveHandle : public EmbrickSlaveHandle {
                           uint8_t paPosition,
                           EmbrickSlaveHandler *paSlave);
 
-    virtual void set(const CIEC_ANY &);
-    void get(CIEC_ANY &);
+    void set(const CIEC_ANY &) override;
+    void get(CIEC_ANY &) override;
 
-    bool equal(unsigned char *mOldBuffer);
+    bool equal(unsigned char *mOldBuffer) override;
 
   protected:
-    virtual void reset() {
+    void reset() override {
       set(false_BOOL);
     }
 
     const uint8_t mMask;
 };
-
-#endif /* SRC_MODULES_EMBRICK_SLAVE_HANDLES_BIT_H_ */

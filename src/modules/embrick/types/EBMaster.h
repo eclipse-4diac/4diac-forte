@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,20 +14,12 @@
 
 #pragma once
 
-#include "adapter.h"
-#include "funcbloc.h"
-#include "forte_bool.h"
-#include "forte_uint.h"
-#include "forte_udint.h"
-#include "forte_wstring.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/io/configFB/io_master_multi.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_uint.h"
+#include "core/datatypes/forte_udint.h"
+#include "core/datatypes/forte_wstring.h"
 #include "EBBusAdapter.h"
-#include <handler/bus.h>
-#include "../../../core/io/configFB/io_master_multi.h"
 
 class FORTE_EBMaster final : public forte::core::io::IOConfigFBMultiMaster {
     DECLARE_FIRMWARE_FB(FORTE_EBMaster)
@@ -37,7 +30,6 @@ class FORTE_EBMaster final : public forte::core::io::IOConfigFBMultiMaster {
     static const TEventID scmEventINDID = 1;
     static const int scmBusAdapterOutAdpNum = 0;
 
-
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
@@ -47,7 +39,7 @@ class FORTE_EBMaster final : public forte::core::io::IOConfigFBMultiMaster {
 
     void setConfig() override;
 
-    virtual void onStartup(CEventChainExecutionThread *const paECET) override;
+    void onStartup(CEventChainExecutionThread *const paECET) override;
 
   public:
     FORTE_EBMaster(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);

@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +15,12 @@
 #include "spi.h"
 #include <sstream>
 #include <string>
+#include "arch/devlog.h"
+#include <sys/ioctl.h>
+
+extern "C" { // missing in some versions of spidev.h
+#include <linux/spi/spidev.h>
+}
 
 unsigned long const EmbrickSPIHandler::scmDefaultSpiSpeed = 300000;
 unsigned long const EmbrickSPIHandler::scmMaxSpiSpeed = 700000;
@@ -27,7 +34,7 @@ const char *const EmbrickSPIHandler::scmFailedToConfigSpeed = "Failed to config 
 const char *const EmbrickSPIHandler::scmFailedToTestBus = "Failed to send test byte to spi.";
 const char *const EmbrickSPIHandler::scmFailedToTransferBuffer = "Failed to transfer buffer via spi.";
 
-EmbrickSPIHandler::EmbrickSPIHandler(unsigned int paInterface) : mError(0) {
+EmbrickSPIHandler::EmbrickSPIHandler(unsigned int paInterface) : mError(nullptr) {
   // Convert int to string
   std::ostringstream interfaceStream;
   interfaceStream << paInterface;

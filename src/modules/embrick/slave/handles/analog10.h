@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,11 +12,9 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#ifndef SRC_MODULES_EMBRICK_SLAVE_HANDLES_ANALOG10_H_
-#define SRC_MODULES_EMBRICK_SLAVE_HANDLES_ANALOG10_H_
-
-#include <slave/slave.h>
-#include <slave/handle.h>
+#pragma once
+#include "../slave.h"
+#include "../handle.h"
 
 class EmbrickAnalog10SlaveHandle : public EmbrickSlaveHandle {
   public:
@@ -32,5 +31,3 @@ class EmbrickAnalog10SlaveHandle : public EmbrickSlaveHandle {
   protected:
     const CIEC_DWORD getValue(const unsigned char *paBuffer);
 };
-
-#endif /* SRC_MODULES_EMBRICK_SLAVE_HANDLES_ANALOG10_H_ */

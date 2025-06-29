@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,12 +11,9 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
-
 #include "handle.h"
 #include "slave.h"
-#include <handler/bus.h>
-#include <io/mapper/io_mapper.h>
-#include <devlog.h>
+#include "core/io/mapper/io_mapper.h"
 
 EmbrickSlaveHandle::EmbrickSlaveHandle(forte::core::io::IODeviceController *paController,
                                        forte::core::io::IOMapper::Direction paDirection,
@@ -31,9 +29,6 @@ EmbrickSlaveHandle::EmbrickSlaveHandle(forte::core::io::IODeviceController *paCo
   } else if (paDirection == forte::core::io::IOMapper::Out) {
     mBuffer = mSlave->mUpdateSendImage;
   }
-}
-
-EmbrickSlaveHandle::~EmbrickSlaveHandle() {
 }
 
 void EmbrickSlaveHandle::set(const CIEC_ANY &) {
