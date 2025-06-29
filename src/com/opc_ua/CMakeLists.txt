@@ -56,7 +56,7 @@ forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
         ELSE()
           forte_add_definition("-DUA_ARCHITECTURE_POSIX")
     ENDIF ()
-    forte_add_include_system_directories(${FORTE_COM_OPC_UA_INCLUDE_DIR})
+    target_include_directories(forte-global INTERFACE ${FORTE_COM_OPC_UA_INCLUDE_DIR})
     forte_add_link_directories(${FORTE_COM_OPC_UA_LIB_DIR})
     forte_add_link_library_beginning(${FORTE_COM_OPC_UA_LIB})
 

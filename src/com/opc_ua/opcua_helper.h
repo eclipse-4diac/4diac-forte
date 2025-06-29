@@ -16,7 +16,7 @@
 #ifndef FORTE_OPCUA_HELPER_H
 #define FORTE_OPCUA_HELPER_H
 
-#include "open62541.h"
+#include <open62541.h>
 #include "forte_any.h"
 
 #include <string>

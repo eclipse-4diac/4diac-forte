@@ -9,9 +9,8 @@
 # *   Jose Cabral  - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-forte_opcua_add_nodeset(fordiacNamespace ${CMAKE_CURRENT_SOURCE_DIR}/generated)
+forte_opcua_register_nodeset(fordiacNamespace ${CMAKE_CURRENT_SOURCE_DIR}/generated)
 
-forte_opcua_add_type(forte_datatypetest DataTypeTest "fordiacNamespace") # file name; StructureName; Namespace
+forte_opcua_register_type(forte_datatypetest DataTypeTest "fordiacNamespace") # file name; StructureName; Namespace
 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 

@@ -1,6 +1,6 @@
 function(forte_opcua_register_type source forte_typename ua_namespace)
-    file(REAL_PATH ${source} source BASE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-    set_property(TARGET forte APPEND PROPERTY forte_opcua_type "${source}://:${forte_typename}://:${ua_namespace}")
+    file(REAL_PATH ${source}.h source_h BASE_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+    set_property(TARGET forte APPEND PROPERTY forte_opcua_type "${source_h}://:${forte_typename}://:${ua_namespace}")
 endfunction()
 
 function(_forte_generate_opcua_types)
@@ -10,15 +10,17 @@ function(_forte_generate_opcua_types)
     set(includes "")
     set(entries "")
     foreach (handler IN LISTS handlers)
-        string(REGEX REPLACE "(.*)://:(.*)://:(.*)" "\\1" source "${handler}")
+        string(REGEX REPLACE "(.*)://:(.*)://:(.*)" "\\1" source_h "${handler}")
         string(REGEX REPLACE "(.*)://:(.*)://:(.*)" "\\2" forte_typename "${handler}")
         string(REGEX REPLACE "(.*)://:(.*)://:(.*)" "\\3" ua_namespace "${handler}")
 
         string(APPEND status " ${forte_typename}")
 
         string(APPEND includes "USE_STRING_ID(${forte_typename})\n")
-        string(APPEND includes "#include \"${source}.h\"\n")
-        target_sources(forte-com-opc_ua PRIVATE "${source}.cpp")
+        string(APPEND includes "#include \"${source_h}\"\n")
+
+        string(REGEX REPLACE "\\.h$" ".cpp" source_cpp "${source_h}")
+        target_sources(forte-com-opc_ua PRIVATE "${source_cpp}")
 
         string(TOUPPER "${forte_typename}" ua_typename)
         string(TOUPPER "${ua_namespace}" ua_namespace)
