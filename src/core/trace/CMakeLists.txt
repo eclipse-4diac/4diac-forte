@@ -36,9 +36,13 @@ else()
 endif()
 target_include_directories(forte-global INTERFACE ${FORTE_TRACE_FOLDER})
 
-find_package(barectf)
+find_program(barectf_PROGRAM barectf)
+add_custom_target(regenerate-barectf COMMAND ${barectf_PROGRAM} -c ${FORTE_TRACE_FOLDER} -H ${FORTE_TRACE_FOLDER} -m ${FORTE_TRACE_FOLDER} ${FORTE_TRACE_CONFIG_FILE})
 
-add_custom_target(regenerate-barectf COMMAND barectf -c ${FORTE_TRACE_FOLDER} -H ${FORTE_TRACE_FOLDER} -m ${FORTE_TRACE_FOLDER} ${FORTE_TRACE_CONFIG_FILE})
+option(FORTE_TRACE_CTF_ALWAYS_REGENERATE "Always regenerate CTF trace source and header files" OFF)
+if (FORTE_TRACE_CTF_ALWAYS_REGENERATE)
+    add_dependencies(forte-global regenerate-barectf)
+endif()
 
 forte_add_sourcefile_hc(${FORTE_TRACE_FOLDER}/barectf)
 forte_add_sourcefile_h(${FORTE_TRACE_FOLDER}/barectf-bitfield.h)
