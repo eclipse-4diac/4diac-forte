@@ -35,7 +35,7 @@ char COPC_UA_AC_Layer::smSeverity[] = "Severity";
 
 const std::unordered_map<std::string, std::string> COPC_UA_AC_Layer::sm1499ToUAMap = {
   {"Area", "ClientUserId"},
-  {"Origin", "ConditionName"},
+  {"Device", "ConditionName"},
   {"Source", "SourceName"}
 };
 
@@ -364,7 +364,7 @@ EComResponse COPC_UA_AC_Layer::addOPCUATypeProperties(UA_Server *paServer, const
     char *propertyName = getNameFromString(dataPortName);
     UA_StatusCode status = addVariableNode(paServer, paTypeName, propertyName, apoDataPorts[i]->unwrap());
     if(status != UA_STATUSCODE_GOOD) {
-      DEVLOG_ERROR("[OPC UA A&C LAYER]: Failed to add OPCUA AlarmType Property for FB %s, Port: %s, Status: %s\n", getCommFB()->getInstanceName(), dataPortName, UA_StatusCode_name(status));
+      DEVLOG_ERROR("[OPC UA A&C LAYER]: Failed to add OPCUA AlarmType Property for FB %s, Port: %s, Status: %s\n", getCommFB()->getInstanceName(), dataPortName.c_str(), UA_StatusCode_name(status));
       return e_InitTerminated;
     }
   }
