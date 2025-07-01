@@ -268,10 +268,7 @@ UA_StatusCode COPC_UA_AC_Layer::initializeMapping() {
   size_t foundProperties = 0;  
   for(size_t i = 0; i < result.referencesSize; i++) {
     UA_ReferenceDescription *ref = &result.references[i];
-
-    // TODO: Find alternative to reinterpret_cast
-    std::string browseName(reinterpret_cast<const char*>(ref->browseName.name.data), ref->browseName.name.length);
-
+    std::string browseName((const char*)ref->browseName.name.data, ref->browseName.name.length);
     if(mUAPropertyMap.find(browseName) != mUAPropertyMap.end()) {
       mUAPropertyMap[browseName] = ref->nodeId.nodeId;
       foundProperties++;
