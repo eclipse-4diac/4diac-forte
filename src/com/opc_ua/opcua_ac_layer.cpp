@@ -21,25 +21,29 @@
 
 using namespace forte::com_infra;
 
-const std::string COPC_UA_AC_Layer::scmAlarmTypeBrowsePath = "/Types/0:EventTypes/0:BaseEventType/0:ConditionType/0:AcknowledgeableConditionType/0:AlarmConditionType/%d:";
-const std::string COPC_UA_AC_Layer::scmAlarmConditionName = "AlarmCondition";
+namespace {
+  const std::string scmAlarmTypeBrowsePath = "/Types/0:EventTypes/0:BaseEventType/0:ConditionType/0:AcknowledgeableConditionType/0:AlarmConditionType/%d:";
+  const std::string scmAlarmConditionName = "AlarmCondition";
 
-char COPC_UA_AC_Layer::smEmptyString[] = "";
-char COPC_UA_AC_Layer::smEnabledState[] = "EnabledState";
-char COPC_UA_AC_Layer::smEnableStateProperty[] = "EnableState"; // This is needed to avoid potential delete-subscription error with HMI tools
-char COPC_UA_AC_Layer::smActiveState[] = "ActiveState";
-char COPC_UA_AC_Layer::smId[] = "Id";
-char COPC_UA_AC_Layer::smTime[] = "Time";
-char COPC_UA_AC_Layer::smRetain[] = "Retain";
-char COPC_UA_AC_Layer::smSeverity[] = "Severity";
+  char smEmptyString[] = "";
+  char smEnabledState[] = "EnabledState";
+  char smEnableStateProperty[] = "EnableState"; // This is needed to avoid potential delete-subscription error with HMI tools
+  char smActiveState[] = "ActiveState";
+  char smId[] = "Id";
+  char smTime[] = "Time";
+  char smRetain[] = "Retain";
+  char smSeverity[] = "Severity";
 
-const std::unordered_map<std::string, std::string> COPC_UA_AC_Layer::sm1499ToUAMap = {
-  {"Area", "ClientUserId"},
-  {"Device", "ConditionName"},
-  {"Source", "SourceName"}
-};
+  UA_UInt16 smSeverityValue = 500;
 
-UA_UInt16 COPC_UA_AC_Layer::smSeverityValue = 500;
+  const size_t scmNumberOfAlarmParameters = 2;
+
+  const std::unordered_map<std::string, std::string> sm1499ToUAMap = {
+    {"Area", "ClientUserId"},
+    {"Device", "ConditionName"},
+    {"Source", "SourceName"}
+  };
+}
 
 COPC_UA_AC_Layer::COPC_UA_AC_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
   COPC_UA_Layer(paUpperLayer, paComFB), mHandler(nullptr), mMemberActionInfo(nullptr) {

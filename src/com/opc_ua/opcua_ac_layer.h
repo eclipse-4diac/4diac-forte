@@ -55,22 +55,6 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
       PathToInstance
     };
 
-    static const std::string scmAlarmTypeBrowsePath;
-    static const std::string scmAlarmConditionName;
-
-    static char smEmptyString[];
-    static char smEnabledState[];
-    static char smEnableStateProperty[]; // This is needed to avoid potential delete-subscription error with HMI tools
-    static char smActiveState[];
-    static char smId[];
-    static char smTime[];
-    static char smRetain[];
-    static char smSeverity[];
-
-    static UA_UInt16 smSeverityValue;
-
-    static const size_t scmNumberOfAlarmParameters = 2;
-
     COPC_UA_HandlerAbstract *mHandler;
 
     UA_NodeId mTypeNodeId;
@@ -80,8 +64,6 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
     std::vector<char*> mNames;
     std::vector<UA_NodeId> mTypePropertyNodes;
     std::unique_ptr<CActionInfo> mMemberActionInfo;
-
-    static const std::unordered_map<std::string, std::string> sm1499ToUAMap;
 
     std::unordered_map<std::string, UA_NodeId> mUAPropertyMap = 
     {
