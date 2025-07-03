@@ -65,11 +65,13 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
     std::vector<UA_NodeId> mTypePropertyNodes;
     std::unique_ptr<CActionInfo> mMemberActionInfo;
 
+    bool mHasSeverityProperty = false;
     std::unordered_map<std::string, UA_NodeId> mUAPropertyMap = 
     {
       {"ClientUserId", UA_NODEID_NULL},
       {"ConditionName", UA_NODEID_NULL},
-      {"SourceName", UA_NODEID_NULL}
+      {"SourceName", UA_NODEID_NULL},
+      {"Severity", UA_NODEID_NULL},
     };
 
     /**
@@ -107,6 +109,8 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
     UA_StatusCode addVariableNode(UA_Server *paServer, const std::string &paParentTypeName, char *paVariableName, CIEC_ANY &paVariableType);
 
     forte::com_infra::EComResponse initializeMemberActions(const std::string &paParentBrowsePath);
+
+    bool addSeverityMemberInfo(std::string &paDataPortName);
 
     bool isOPCUAObjectPresent(std::string &paBrowsePath);
 

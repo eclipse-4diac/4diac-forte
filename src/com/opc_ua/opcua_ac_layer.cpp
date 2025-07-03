@@ -34,9 +34,8 @@ namespace {
   char smRetain[] = "Retain";
   char smSeverity[] = "Severity";
 
-  UA_UInt16 smSeverityValue = 500;
-
   const size_t scmNumberOfAlarmParameters = 2;
+  UA_UInt16 smSeverityValue = 500;
 
   const std::unordered_map<std::string, std::string> sm1499ToUAMap = {
     {"Area", "ClientUserId"},
@@ -129,14 +128,17 @@ UA_StatusCode COPC_UA_AC_Layer::triggerAlarm() {
   UA_QualifiedName activeStateField = UA_QUALIFIEDNAME(0,smActiveState);
   UA_QualifiedName activeStateIdField = UA_QUALIFIEDNAME(0,smId);
   UA_QualifiedName retainField = UA_QUALIFIEDNAME(0,smRetain);
-  UA_QualifiedName severityField = UA_QUALIFIEDNAME(0,smSeverity);
   UA_QualifiedName timeField = UA_QUALIFIEDNAME(0,smTime);
 
   UA_Variant value;
-  UA_UInt16 *severityValue = &smSeverityValue;
-  UA_Variant_setScalar(&value, severityValue, &UA_TYPES[UA_TYPES_UINT16]);
-  UA_StatusCode  status = UA_Server_setConditionField(server, mConditionInstanceId,
+  UA_StatusCode status = UA_STATUSCODE_GOOD;
+  if(!mHasSeverityProperty) {
+    UA_QualifiedName severityField = UA_QUALIFIEDNAME(0,smSeverity);
+    UA_UInt16 *severityValue = &smSeverityValue;
+    UA_Variant_setScalar(&value, severityValue, &UA_TYPES[UA_TYPES_UINT16]);
+    status |= UA_Server_setConditionField(server, mConditionInstanceId,
                                       &value, severityField);
+  }
 
   UA_Boolean retainValue = true;
   UA_Variant_setScalar(&value, &retainValue, &UA_TYPES[UA_TYPES_BOOLEAN]);
@@ -321,16 +323,32 @@ EComResponse COPC_UA_AC_Layer::initializeMemberActions(const std::string &paPare
       UA_NodeId_copy(&mUAPropertyMap[propertyKeyIt->second], nodeId);
       mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, std::string());
     } else { 
-      std::string memberBrowsePath(COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(paParentBrowsePath, dataPortName));
-      UA_NodeId *nodeId = COPC_UA_ObjectStruct_Helper::createStringNodeIdFromBrowsepath(memberBrowsePath);
-      mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, memberBrowsePath);
+      if(!addSeverityMemberInfo(dataPortName)) {
+        std::string memberBrowsePath(COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(paParentBrowsePath, dataPortName));
+        UA_NodeId *nodeId = COPC_UA_ObjectStruct_Helper::createStringNodeIdFromBrowsepath(memberBrowsePath);
+        mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, memberBrowsePath);
+      }
     }
+  }
+  if(!mHasSeverityProperty) {
+    DEVLOG_INFO("[OPC UA A&C LAYER]: No Data Port \"Severity\" defined for FB %s. Using default value instead.", getCommFB()->getInstanceName());
   }
   if(mHandler->initializeAction(*mMemberActionInfo) != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Error occured in FB %s while initializing members\n", getCommFB()->getInstanceName());
       return e_InitTerminated;
     }
   return e_InitOk;
+}
+
+bool COPC_UA_AC_Layer::addSeverityMemberInfo(std::string &paDataPortName) {
+  if(paDataPortName == smSeverity) {
+    UA_NodeId *nodeId = UA_NodeId_new();
+    UA_NodeId_copy(&mUAPropertyMap[smSeverity], nodeId);
+    mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, std::string());
+    mHasSeverityProperty = true;
+    return true;
+  }
+  return false;
 }
 
 EComResponse COPC_UA_AC_Layer::createAlarmType(UA_Server *paServer, const std::string &paTypeName) {
