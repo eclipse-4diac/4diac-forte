@@ -13,11 +13,12 @@
 
 #pragma once
 
-#include "../../core/src/fortelist.h"
 #include "forte/extevhan.h"
 #include "forte/arch/forte_thread.h"
 #include "forte/arch/forte_sync.h"
 #include "forte/arch/sockhand.h"
+
+#include <forward_list>
 
 namespace forte {
   namespace com_infra {
@@ -62,11 +63,9 @@ namespace forte {
             com_infra::CComCallback *mCallee;
         };
 
-        typedef CSinglyLinkedList<TConnContType> TConnectionContainer;
-
         TFileDescriptor createFDSet(fd_set *mFDSet);
 
-        TConnectionContainer mConnectionsList;
+        std::forward_list<TConnContType> mConnectionsList;
         CSyncObject mSync;
         bool mConnectionListChanged;
     };

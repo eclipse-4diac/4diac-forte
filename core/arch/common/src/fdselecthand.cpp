@@ -63,8 +63,7 @@ namespace forte::arch {
 
       if (retval > 0) {
         mSync.lock();
-        TConnectionContainer::Iterator itEnd(mConnectionsList.end());
-        for (TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd;) {
+        for (auto itRunner = mConnectionsList.begin(); itRunner != mConnectionsList.end();) {
           // need to retrieve the callee as the iterator may get invalid in the recvDat function below in case of
           // connection closing
           com_infra::CComCallback *callee = itRunner->mCallee;
@@ -96,7 +95,7 @@ namespace forte::arch {
     {
       util::CCriticalRegion criticalRegion(mSync);
       TConnContType stNewNode = {paFD, paComCallback};
-      mConnectionsList.pushBack(stNewNode);
+      mConnectionsList.push_front(stNewNode);
       mConnectionListChanged = true;
     }
     if (!isAlive()) {
@@ -107,23 +106,7 @@ namespace forte::arch {
   void CFDSelectHandler::removeComCallback(TFileDescriptor paFD) {
     util::CCriticalRegion criticalRegion(mSync);
 
-    TConnectionContainer::Iterator itRunner(mConnectionsList.begin());
-    TConnectionContainer::Iterator itRefNode(mConnectionsList.end());
-    TConnectionContainer::Iterator itEnd(mConnectionsList.end());
-
-    while (itRunner != itEnd) {
-      if (itRunner->mSockDes == paFD) {
-        if (itRefNode == itEnd) {
-          mConnectionsList.popFront();
-        } else {
-          mConnectionsList.eraseAfter(itRefNode);
-        }
-        break;
-      }
-
-      itRefNode = itRunner;
-      ++itRunner;
-    }
+    std::erase_if(mConnectionsList, [&paFD](TConnContType x) { return (x.mSockDes == paFD); });
 
     mConnectionListChanged = true;
   }
@@ -131,11 +114,10 @@ namespace forte::arch {
   CFDSelectHandler::TFileDescriptor CFDSelectHandler::createFDSet(fd_set *mFDSet) {
     TFileDescriptor nRetVal = scmInvalidFileDescriptor;
     FD_ZERO(mFDSet);
-    TConnectionContainer::Iterator itEnd(mConnectionsList.end());
-    for (TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd; ++itRunner) {
-      FD_SET(itRunner->mSockDes, mFDSet);
-      if (itRunner->mSockDes > nRetVal || scmInvalidFileDescriptor == nRetVal) {
-        nRetVal = itRunner->mSockDes;
+    for (auto itRunner : mConnectionsList) {
+      FD_SET(itRunner.mSockDes, mFDSet);
+      if (itRunner.mSockDes > nRetVal || scmInvalidFileDescriptor == nRetVal) {
+        nRetVal = itRunner.mSockDes;
       }
     }
     mConnectionListChanged = false;
