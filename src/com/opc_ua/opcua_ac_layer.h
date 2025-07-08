@@ -88,6 +88,10 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
 
     UA_StatusCode triggerAlarm();
 
+    UA_StatusCode setConditionField(UA_Server *paServer, UA_QualifiedName paQualifiedName, void *dataValue, UA_DataType *paDataType);
+    UA_StatusCode setConditionVariableFieldProperty(UA_Server *paServer, UA_QualifiedName paQualifiedName, void *dataValue, UA_DataType *paDataType);
+    UA_StatusCode writeObjectProperty_scalar(UA_Server *paServer, UA_QualifiedName paQualifiedName, void *dataValue, UA_DataType *paDataType);
+
     forte::com_infra::EComResponse initOPCUAType(UA_Server *paServer, const std::string &paTypeName, bool paIsPublisher);
 
     forte::com_infra::EComResponse createOPCUAObject(UA_Server *paServer, const std::string &paPathToInstance, bool paIsPublisher);
@@ -110,7 +114,7 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
 
     forte::com_infra::EComResponse initializeMemberActions(const std::string &paParentBrowsePath);
 
-    bool addSeverityMemberInfo(std::string &paDataPortName);
+    void addNewNodeId(UA_NodeId *paNodeIdToAdd);
 
     bool isOPCUAObjectPresent(std::string &paBrowsePath);
 
