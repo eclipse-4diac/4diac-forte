@@ -32,7 +32,9 @@ namespace {
   char smId[] = "Id";
   char smTime[] = "Time";
   char smRetain[] = "Retain";
+  char smMessage[] = "Message";
   char smSeverity[] = "Severity";
+  char smMessageText[] = "MsgText";
 
   const size_t scmNumberOfAlarmParameters = 2;
   UA_UInt16 smSeverityValue = 500;
@@ -131,6 +133,13 @@ UA_StatusCode COPC_UA_AC_Layer::triggerAlarm() {
     UA_UInt16 *severityValue = &smSeverityValue;
     status |= setConditionField(server, UA_QUALIFIEDNAME(0,smSeverity), severityValue, &UA_TYPES[UA_TYPES_UINT16]);
   }
+  if(mMessageTextPortIndex >= 0) {
+    CIEC_STRING& messagePort = static_cast<CIEC_STRING&>(getCommFB()->getDI(mMessageTextPortIndex)->unwrap());
+    UA_LocalizedText messageValue =
+        UA_LOCALIZEDTEXT(smEmptyString, getNameFromString(messagePort.c_str()));
+    status |= setConditionField(server, UA_QUALIFIEDNAME(0, smMessage), &messageValue, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
+  }
+
   UA_Boolean retainValue = true;
   status |= setConditionField(server, UA_QUALIFIEDNAME(0,smRetain), &retainValue, &UA_TYPES[UA_TYPES_BOOLEAN]);
 
@@ -333,10 +342,16 @@ EComResponse COPC_UA_AC_Layer::initializeMemberActions(const std::string &paPare
       std::string memberBrowsePath(COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(paParentBrowsePath, dataPortName));
       UA_NodeId *nodeId = COPC_UA_ObjectStruct_Helper::createStringNodeIdFromBrowsepath(memberBrowsePath);
       mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, memberBrowsePath);
+      if (dataPortName == smMessageText) {
+          mMessageTextPortIndex = static_cast<int>(i + 2);
+      }
     }
   }
   if(!mHasSeverityProperty) {
-    DEVLOG_INFO("[OPC UA A&C LAYER]: No Data Port \"Severity\" defined for FB %s. Using default value instead.", getCommFB()->getInstanceName());
+    DEVLOG_INFO("[OPC UA A&C LAYER]: No Data Port \"%s\" defined for FB %s. Using default value instead.", smSeverity, getCommFB()->getInstanceName());
+  }
+  if(mMessageTextPortIndex == -1) {
+    DEVLOG_INFO("[OPC UA A&C LAYER]: No Data Port \"%s\" defined for FB %s. Using default value instead.", smMessageText, getCommFB()->getInstanceName());
   }
   if(mHandler->initializeAction(*mMemberActionInfo) != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Error occured in FB %s while initializing members\n", getCommFB()->getInstanceName());
