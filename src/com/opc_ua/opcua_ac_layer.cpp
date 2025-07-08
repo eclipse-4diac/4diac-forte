@@ -127,38 +127,47 @@ EComResponse COPC_UA_AC_Layer::processInterrupt() {
 UA_StatusCode COPC_UA_AC_Layer::triggerAlarm() {
   COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(mHandler);
   UA_Server *server = localHandler->getUAServer();
-  UA_QualifiedName activeStateField = UA_QUALIFIEDNAME(0,smActiveState);
-  UA_QualifiedName activeStateIdField = UA_QUALIFIEDNAME(0,smId);
-  UA_QualifiedName retainField = UA_QUALIFIEDNAME(0,smRetain);
-  UA_QualifiedName timeField = UA_QUALIFIEDNAME(0,smTime);
-
-  UA_Variant value;
   UA_StatusCode status = UA_STATUSCODE_GOOD;
-  if(!mHasSeverityProperty) {
-    UA_QualifiedName severityField = UA_QUALIFIEDNAME(0,smSeverity);
-    UA_UInt16 *severityValue = &smSeverityValue;
-    UA_Variant_setScalar(&value, severityValue, &UA_TYPES[UA_TYPES_UINT16]);
-    status |= UA_Server_setConditionField(server, mConditionInstanceId,
-                                      &value, severityField);
-  }
 
+  if (!mHasSeverityProperty) {
+    UA_UInt16 *severityValue = &smSeverityValue;
+    status |= setConditionField(server, UA_QUALIFIEDNAME(0, smSeverity), severityValue, &UA_TYPES[UA_TYPES_UINT16]);
+  }
   UA_Boolean retainValue = true;
-  UA_Variant_setScalar(&value, &retainValue, &UA_TYPES[UA_TYPES_BOOLEAN]);
-  status |= UA_Server_setConditionField(server, mConditionInstanceId, &value, retainField);
+  status |= setConditionField(server, UA_QUALIFIEDNAME(0, smRetain), &retainValue, &UA_TYPES[UA_TYPES_BOOLEAN]);
 
   UA_Boolean activeState = true;
-  UA_Variant_setScalar(&value, &activeState, &UA_TYPES[UA_TYPES_BOOLEAN]);
-  status |= UA_Server_setConditionVariableFieldProperty(server, mConditionInstanceId, &value, activeStateField,
-                                                        activeStateIdField);
+  status |= setConditionVariableFieldProperty(server, UA_QUALIFIEDNAME(0, smActiveState), &activeState,
+                                              &UA_TYPES[UA_TYPES_BOOLEAN]);
 
   UA_DateTime alarmTime = UA_DateTime_now();
-  status |= UA_Server_writeObjectProperty_scalar(server, mConditionInstanceId, timeField, &alarmTime,
+  status |= UA_Server_writeObjectProperty_scalar(server, mConditionInstanceId, UA_QUALIFIEDNAME(0, smTime), &alarmTime,
                                                  &UA_TYPES[UA_TYPES_DATETIME]);
+
   if (status != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA A&C LAYER]: Triggering Alarm failed for FB %s, StatusCode: %s\n",
                  getCommFB()->getInstanceName(), UA_StatusCode_name(status));
   }
   return status;
+}
+
+UA_StatusCode COPC_UA_AC_Layer::setConditionField(UA_Server *paServer,
+                                                  UA_QualifiedName paQualifiedName,
+                                                  void *dataValue,
+                                                  UA_DataType *paDataType) {
+  UA_Variant value;
+  UA_Variant_setScalar(&value, dataValue, paDataType);
+  return UA_Server_setConditionField(paServer, mConditionInstanceId, &value, paQualifiedName);
+}
+
+UA_StatusCode COPC_UA_AC_Layer::setConditionVariableFieldProperty(UA_Server *paServer,
+                                                                  UA_QualifiedName paQualifiedName,
+                                                                  void *dataValue,
+                                                                  UA_DataType *paDataType) {
+  UA_Variant value;
+  UA_Variant_setScalar(&value, dataValue, paDataType);
+  return UA_Server_setConditionVariableFieldProperty(paServer, mConditionInstanceId, &value, paQualifiedName,
+                                                     UA_QUALIFIEDNAME(0, smId));
 }
 
 EComResponse COPC_UA_AC_Layer::initOPCUAType(UA_Server *paServer, const std::string &paTypeName, bool paIsPublisher) {
@@ -321,40 +330,37 @@ EComResponse COPC_UA_AC_Layer::initializeMemberActions(const std::string &paPare
   size_t numPorts = getCommFB()->getNumSD();
   const SFBInterfaceSpec &interfaceSpec = getCommFB()->getFBInterfaceSpec();
   const std::span<const CStringDictionary::TStringId> dataPortNameIds = interfaceSpec.mDINames;
+
   for (size_t i = 0; i < numPorts; i++) {
     std::string dataPortName = getPortNameFromConnection(dataPortNameIds[i + 2], true);
     auto propertyKeyIt = sm1499ToUAMap.find(dataPortName);
     if (propertyKeyIt != sm1499ToUAMap.end()) {
-      UA_NodeId *nodeId = UA_NodeId_new();
-      UA_NodeId_copy(&mUAPropertyMap[propertyKeyIt->second], nodeId);
-      mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, std::string());
-    } else { 
-      if(!addSeverityMemberInfo(dataPortName)) {
-        std::string memberBrowsePath(COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(paParentBrowsePath, dataPortName));
-        UA_NodeId *nodeId = COPC_UA_ObjectStruct_Helper::createStringNodeIdFromBrowsepath(memberBrowsePath);
-        mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, memberBrowsePath);
-      }
+      addNewNodeId(&mUAPropertyMap[propertyKeyIt->second]);
+    } else if (dataPortName == smSeverity) {
+      addNewNodeId(&mUAPropertyMap[smSeverity]);
+      mHasSeverityProperty = true;
+    } else {
+      std::string memberBrowsePath(COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(paParentBrowsePath, dataPortName));
+      UA_NodeId *nodeId = COPC_UA_ObjectStruct_Helper::createStringNodeIdFromBrowsepath(memberBrowsePath);
+      mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, memberBrowsePath);
     }
   }
-  if(!mHasSeverityProperty) {
-    DEVLOG_INFO("[OPC UA A&C LAYER]: No Data Port \"Severity\" defined for FB %s. Using default value instead.", getCommFB()->getInstanceName());
+  if (!mHasSeverityProperty) {
+    DEVLOG_INFO("[OPC UA A&C LAYER]: No Data Port \"Severity\" defined for FB %s. Using default value instead.",
+                getCommFB()->getInstanceName());
   }
-  if(mHandler->initializeAction(*mMemberActionInfo) != UA_STATUSCODE_GOOD) {
-      DEVLOG_ERROR("[OPC UA A&C LAYER]: Error occured in FB %s while initializing members\n", getCommFB()->getInstanceName());
-      return e_InitTerminated;
-    }
+  if (mHandler->initializeAction(*mMemberActionInfo) != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA A&C LAYER]: Error occured in FB %s while initializing members\n",
+                 getCommFB()->getInstanceName());
+    return e_InitTerminated;
+  }
   return e_InitOk;
 }
 
-bool COPC_UA_AC_Layer::addSeverityMemberInfo(std::string &paDataPortName) {
-  if(paDataPortName == smSeverity) {
-    UA_NodeId *nodeId = UA_NodeId_new();
-    UA_NodeId_copy(&mUAPropertyMap[smSeverity], nodeId);
-    mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, std::string());
-    mHasSeverityProperty = true;
-    return true;
-  }
-  return false;
+void COPC_UA_AC_Layer::addNewNodeId(UA_NodeId *paNodeIdToAdd) {
+  UA_NodeId *nodeId = UA_NodeId_new();
+  UA_NodeId_copy(paNodeIdToAdd, nodeId);
+  mMemberActionInfo->getNodePairInfo().emplace_back(nodeId, std::string());
 }
 
 EComResponse COPC_UA_AC_Layer::createAlarmType(UA_Server *paServer, const std::string &paTypeName) {
