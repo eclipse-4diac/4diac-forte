@@ -61,6 +61,7 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
     std::unique_ptr<CActionInfo> mMemberActionInfo;
 
     bool mHasSeverityProperty = false;
+    int mMessageTextPortIndex = -1;
     std::unordered_map<std::string, UA_NodeId> mUAPropertyMap = {
         {"ClientUserId", UA_NODEID_NULL},
         {"ConditionName", UA_NODEID_NULL},
