@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2023 Florian Froschermeier <florian.froschermeier@tum.de>,
+ * Copyright (c) 2015, 2025 Florian Froschermeier <florian.froschermeier@tum.de>,
  *                          fortiss GmbH, Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
