@@ -17,7 +17,6 @@
 #include "core/datatypes/forte_array.h"
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
-package fb.test;
 
 using namespace std::literals;
 
@@ -56,15 +55,14 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
+} // namespace
 
 DEFINE_ADAPTER_TYPE(FORTE_PortAdapter, STRID(PortAdapter))
 
-
 FORTE_PortAdapter::FORTE_PortAdapter(forte::core::CFBContainer &paContainer,
-                             const SFBInterfaceSpec &paInterfaceSpec,
-                             const CStringDictionary::TStringId paInstanceNameId,
-                             TForteUInt8 paParentAdapterlistID) :
+                                     const SFBInterfaceSpec &paInterfaceSpec,
+                                     const CStringDictionary::TStringId paInstanceNameId,
+                                     TForteUInt8 paParentAdapterlistID) :
     CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     var_GPIO_Port_Addr(0_DWORD) {
 }
@@ -74,26 +72,24 @@ void FORTE_PortAdapter::setInitialValues() {
   var_GPIO_Port_Addr = 0_DWORD;
 }
 
-
 FORTE_PortAdapter_Plug::FORTE_PortAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
-                                         forte::core::CFBContainer &paContainer,
-                                         TForteUInt8 paParentAdapterlistID) :
+                                               forte::core::CFBContainer &paContainer,
+                                               TForteUInt8 paParentAdapterlistID) :
     FORTE_PortAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_MAPO(*this, 0),
     conn_GPIO_Port_Addr(nullptr) {
 }
 
 void FORTE_PortAdapter_Plug::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventMAPID: {
       readData(0, var_GPIO_Port_Addr, conn_GPIO_Port_Addr);
-      if(auto peer = static_cast<FORTE_PortAdapter_Socket *>(getPeer()); peer) {
+      if (auto peer = static_cast<FORTE_PortAdapter_Socket *>(getPeer()); peer) {
         peer->var_GPIO_Port_Addr = var_GPIO_Port_Addr;
       }
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
@@ -101,7 +97,7 @@ void FORTE_PortAdapter_Plug::writeOutputData(TEventID) {
   // nothing to do
 }
 CIEC_ANY *FORTE_PortAdapter_Plug::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_GPIO_Port_Addr;
   }
   return nullptr;
@@ -112,14 +108,14 @@ CIEC_ANY *FORTE_PortAdapter_Plug::getDO(size_t) {
 }
 
 CEventConnection *FORTE_PortAdapter_Plug::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_MAPO;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_PortAdapter_Plug::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_GPIO_Port_Addr;
   }
   return nullptr;
@@ -129,10 +125,9 @@ CDataConnection *FORTE_PortAdapter_Plug::getDOConUnchecked(TPortId) {
   return nullptr;
 }
 
-
 FORTE_PortAdapter_Socket::FORTE_PortAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
-                                         forte::core::CFBContainer &paContainer,
-                                         TForteUInt8 paParentAdapterlistID) :
+                                                   forte::core::CFBContainer &paContainer,
+                                                   TForteUInt8 paParentAdapterlistID) :
     FORTE_PortAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_MAP(*this, 0),
     conn_GPIO_Port_Addr(*this, 0, var_GPIO_Port_Addr) {
@@ -143,13 +138,12 @@ void FORTE_PortAdapter_Socket::readInputData(TEventID) {
 }
 
 void FORTE_PortAdapter_Socket::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventMAPID: {
       writeData(0, var_GPIO_Port_Addr, conn_GPIO_Port_Addr);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 CIEC_ANY *FORTE_PortAdapter_Socket::getDI(size_t) {
@@ -157,14 +151,14 @@ CIEC_ANY *FORTE_PortAdapter_Socket::getDI(size_t) {
 }
 
 CIEC_ANY *FORTE_PortAdapter_Socket::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_GPIO_Port_Addr;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_PortAdapter_Socket::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_MAP;
   }
   return nullptr;
@@ -175,7 +169,7 @@ CDataConnection **FORTE_PortAdapter_Socket::getDIConUnchecked(TPortId) {
 }
 
 CDataConnection *FORTE_PortAdapter_Socket::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_GPIO_Port_Addr;
   }
   return nullptr;

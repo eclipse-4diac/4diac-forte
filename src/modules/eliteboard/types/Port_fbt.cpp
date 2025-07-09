@@ -104,16 +104,6 @@ FORTE_Port::FORTE_Port(const CStringDictionary::TStringId paInstanceNameId, fort
     conn_Pin14(nullptr),
     conn_Pin15(nullptr) {};
 
-bool FORTE_Port::initialize() {
-  if (!var_PortInAdapter.initialize()) {
-    return false;
-  }
-  var_PortInAdapter.setParentFB(this, 0);
-  for (int i = 0; i < pin_cnt; i++)
-    mRegistered[i] = nullptr;
-  return CFunctionBlock::initialize();
-}
-
 void FORTE_Port::setInitialValues() {
   var_Pin0 = ""_STRING;
   var_Pin1 = ""_STRING;
@@ -134,11 +124,11 @@ void FORTE_Port::setInitialValues() {
 }
 
 void FORTE_Port::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if (paEIID == var_PortInAdapter.evt_MAP()) {
+  if (paEIID == var_PortInAdapter->evt_MAP()) {
     deregister_handles();
     register_handles();
 
-    sendAdapterEvent(0, FORTE_PortAdapter::scmEventMAPOID, paECET);
+    sendAdapterEvent(*var_PortInAdapter, FORTE_PortAdapter::scmEventMAPOID, paECET);
   }
 }
 
@@ -222,7 +212,7 @@ void FORTE_Port::deregister_handles() {
 }
 
 void FORTE_Port::register_handles() {
-  uint32_t base = var_PortInAdapter.var_GPIO_Port_Addr();
+  uint32_t base = var_PortInAdapter->var_GPIO_Port_Addr;
   auto port = reinterpret_cast<GPIO_TypeDef *>(base);
 
   for (int i = 0; i < pin_cnt; i++) {

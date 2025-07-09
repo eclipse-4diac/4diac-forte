@@ -79,52 +79,7 @@ FORTE_EliteBoard::FORTE_EliteBoard(const CStringDictionary::TStringId paInstance
     var_PortK(STRID(PortK), *this, 10),
     conn_MAPO(*this, 0) {};
 
-bool FORTE_EliteBoard::initialize() {
-  if (!var_PortA.initialize()) {
-    return false;
-  }
-  if (!var_PortB.initialize()) {
-    return false;
-  }
-  if (!var_PortC.initialize()) {
-    return false;
-  }
-  if (!var_PortD.initialize()) {
-    return false;
-  }
-  if (!var_PortE.initialize()) {
-    return false;
-  }
-  if (!var_PortF.initialize()) {
-    return false;
-  }
-  if (!var_PortG.initialize()) {
-    return false;
-  }
-  if (!var_PortH.initialize()) {
-    return false;
-  }
-  if (!var_PortI.initialize()) {
-    return false;
-  }
-  if (!var_PortJ.initialize()) {
-    return false;
-  }
-  if (!var_PortK.initialize()) {
-    return false;
-  }
-  var_PortA.setParentFB(this, 0);
-  var_PortB.setParentFB(this, 1);
-  var_PortC.setParentFB(this, 2);
-  var_PortD.setParentFB(this, 3);
-  var_PortE.setParentFB(this, 4);
-  var_PortF.setParentFB(this, 5);
-  var_PortG.setParentFB(this, 6);
-  var_PortH.setParentFB(this, 7);
-  var_PortI.setParentFB(this, 8);
-  var_PortJ.setParentFB(this, 9);
-  var_PortK.setParentFB(this, 10);
-  return CFunctionBlock::initialize();
+void FORTE_EliteBoard::setInitialValues() {
 }
 
 void FORTE_EliteBoard::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
@@ -199,17 +154,17 @@ constexpr uint32_t port_addresses[] = {
 
 FORTE_PortAdapter &FORTE_EliteBoard::getPortAdapterByIndex(int index) {
   switch (index) {
-    case scmPortAAdpNum: return var_PortA;
-    case scmPortBAdpNum: return var_PortB;
-    case scmPortCAdpNum: return var_PortC;
-    case scmPortDAdpNum: return var_PortD;
-    case scmPortEAdpNum: return var_PortE;
-    case scmPortFAdpNum: return var_PortF;
-    case scmPortGAdpNum: return var_PortG;
-    case scmPortHAdpNum: return var_PortH;
-    case scmPortIAdpNum: return var_PortI;
-    case scmPortJAdpNum: return var_PortJ;
-    case scmPortKAdpNum: return var_PortK;
+    case scmPortAAdpNum: return *var_PortA;
+    case scmPortBAdpNum: return *var_PortB;
+    case scmPortCAdpNum: return *var_PortC;
+    case scmPortDAdpNum: return *var_PortD;
+    case scmPortEAdpNum: return *var_PortE;
+    case scmPortFAdpNum: return *var_PortF;
+    case scmPortGAdpNum: return *var_PortG;
+    case scmPortHAdpNum: return *var_PortH;
+    case scmPortIAdpNum: return *var_PortI;
+    case scmPortJAdpNum: return *var_PortJ;
+    case scmPortKAdpNum: return *var_PortK;
   }
 }
 
@@ -230,9 +185,9 @@ bool FORTE_EliteBoard::configurePortFB(int index, CEventChainExecutionThread *co
     return false;
   }
 
-  adapter.var_GPIO_Port_Addr() = static_cast<CIEC_DWORD>(port_addresses[index]);
+  adapter.var_GPIO_Port_Addr = CIEC_DWORD(port_addresses[index]);
 
-  sendAdapterEvent(index, FORTE_PortAdapter::scmEventMAPID, paECET);
+  sendAdapterEvent(adapter, FORTE_PortAdapter::scmEventMAPID, paECET);
   return true;
 }
 

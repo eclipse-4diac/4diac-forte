@@ -48,6 +48,7 @@ class FORTE_EliteBoard final : public IOConfigFBController {
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
+    void setInitialValues() override;
 
     int mCurrentAdapterIndex = 0;
     static const int mAdapterCount = scmPortKAdpNum + 1;
@@ -64,7 +65,6 @@ class FORTE_EliteBoard final : public IOConfigFBController {
 
   public:
     FORTE_EliteBoard(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    bool initialize() override;
 
     forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortA;
     forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortB;

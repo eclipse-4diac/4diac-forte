@@ -42,7 +42,6 @@ class FORTE_Port final : public CFunctionBlock {
 
   public:
     FORTE_Port(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    bool initialize() override;
 
     CIEC_STRING var_Pin0;
     CIEC_STRING var_Pin1;
