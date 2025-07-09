@@ -17,6 +17,7 @@
 # ############################################################################
 add_subdirectory(generated)
 
+add_subdirectory(com)
 add_subdirectory(cominfra)
 add_subdirectory(datatypes)
 add_subdirectory(util)
