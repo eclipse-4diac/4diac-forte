@@ -5,6 +5,10 @@
 
 /src_gen/
 
+# CMake user-defined files
+
+/CMakeUserPresets.json
+
 # CMake intermediate files
 
 CMakeCache.txt
