@@ -58,3 +58,5 @@ endif()
 if (NOT APPLE)
     forte_register_com_layer(SER OFF "ser" CPosixSerCommLayer posixsercommlayer.h "Enable Forte serial line communication")
 endif()
+
+add_subdirectory(com)
