@@ -73,6 +73,12 @@ namespace {
 
   void addGlobalConstType(forte::core::CGlobalConstEntry *paGlobalConstTypeEntry);
 
+  template<typename T>
+  T *findTypeEntry(std::vector<T *> &vec, CStringDictionary::TStringId paTypeNameId);
+
+  template<typename T>
+  T *findGenericTypeEntry(std::vector<T *> &vec, CStringDictionary::TStringId paTypeNameId);
+
 }; // namespace
 
 constexpr forte::core::CTypeEntry::CTypeEntry(CStringDictionary::TStringId paTypeNameId, std::string_view paTypeHash) :
@@ -146,7 +152,7 @@ CFunctionBlock *forte::core::createFB(CStringDictionary::TStringId paInstanceNam
                                       forte::core::CFBContainer &paContainer,
                                       EMGMResponse &paErrorMSG) {
   CFunctionBlock *newFB = nullptr;
-  CFBTypeEntry *typeEntry = getFBTypeEntry(paFBTypeId);
+  CFBTypeEntry *typeEntry = findTypeEntry(getFBTypeLib(), paFBTypeId);
   // TODO: Avoid that the user can create generic blocks.
   if (typeEntry != nullptr) {
     if (!paTypeHash.empty() && paTypeHash != typeEntry->getTypeHash()) {
@@ -233,32 +239,53 @@ CIEC_ANY *forte::core::createDataTypeInstance(CStringDictionary::TStringId paDTN
 namespace {
 
   template<typename T>
-  T *findTypeEntry(std::vector<T *> &vec, CStringDictionary::TStringId paTypeNameId) {
-    auto it = std::lower_bound(vec.begin(), vec.end(), paTypeNameId,
-                               [](T *paTypeEnry, CStringDictionary::TStringId paTypeNameId) {
-                                 return paTypeEnry->getTypeNameId() < paTypeNameId;
-                               });
+  T *findTypeEntry(std::vector<T *> &vec, const CStringDictionary::TStringId paTypeNameId) {
+    auto it = std::lower_bound(
+        vec.begin(), vec.end(), paTypeNameId,
+        [](T *paTypeEnry, const CStringDictionary::TStringId paId) { return paTypeEnry->getTypeNameId() < paId; });
     if (it != vec.end() && (*it)->getTypeNameId() == paTypeNameId) {
       return *it;
     }
     return nullptr;
   }
 
+  template<typename T>
+  T *findGenericTypeEntry(std::vector<T *> &vec, const CStringDictionary::TStringId paTypeNameId) {
+    const char *const typeBuf = CStringDictionary::get(paTypeNameId);
+    const char *const underScore = getFirstNonTypeNameUnderscorePos(typeBuf);
+
+    if (underScore == nullptr) {
+      // We found no underscore in the type name, so it can't be a generic type
+      return nullptr;
+    }
+
+    const ptrdiff_t typeNameLen = underScore - typeBuf;
+    std::string genFBName;
+    genFBName.reserve(4 + typeNameLen);
+    genFBName += "GEN_"s;
+    genFBName.append(typeBuf, typeNameLen);
+
+    return findTypeEntry(vec, CStringDictionary::getId(genFBName.c_str()));
+  }
+
 } // namespace
 
-forte::core::CFBTypeEntry *forte::core::getFBTypeEntry(CStringDictionary::TStringId paTypeNameId) {
-  return findTypeEntry(getFBTypeLib(), paTypeNameId);
+forte::core::CFBTypeEntry *forte::core::getFBTypeEntry(const CStringDictionary::TStringId paTypeNameId) {
+  if (const auto entry = findTypeEntry(getFBTypeLib(), paTypeNameId); entry != nullptr) {
+    return entry;
+  }
+  return findGenericTypeEntry(getFBTypeLib(), paTypeNameId);
 }
 
-forte::core::CAdapterTypeEntry *forte::core::getAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId) {
+forte::core::CAdapterTypeEntry *forte::core::getAdapterTypeEntry(const CStringDictionary::TStringId paTypeNameId) {
   return findTypeEntry(getAdapterTypeLib(), paTypeNameId);
 }
 
-forte::core::CDataTypeEntry *forte::core::getDataTypeEntry(CStringDictionary::TStringId paTypeNameId) {
+forte::core::CDataTypeEntry *forte::core::getDataTypeEntry(const CStringDictionary::TStringId paTypeNameId) {
   return findTypeEntry(getDataTypeLib(), paTypeNameId);
 }
 
-forte::core::CGlobalConstEntry *forte::core::getGlobalConstTypeEntry(CStringDictionary::TStringId paTypeNameId) {
+forte::core::CGlobalConstEntry *forte::core::getGlobalConstTypeEntry(const CStringDictionary::TStringId paTypeNameId) {
   return findTypeEntry(getGlobalConstTypeLib(), paTypeNameId);
 }
 
@@ -280,27 +307,11 @@ const std::vector<forte::core::CGlobalConstEntry *> &forte::core::getGlobalConst
 
 namespace {
 
-  CFunctionBlock *createGenericFB(CStringDictionary::TStringId paInstanceNameId,
-                                  CStringDictionary::TStringId paFBTypeId,
+  CFunctionBlock *createGenericFB(const CStringDictionary::TStringId paInstanceNameId,
+                                  const CStringDictionary::TStringId paFBTypeId,
                                   forte::core::CFBContainer &paContainer,
                                   EMGMResponse &paErrorMSG) {
-    const char *const typeBuf = CStringDictionary::get(paFBTypeId);
-    const char *const underScore = getFirstNonTypeNameUnderscorePos(typeBuf);
-
-    if (underScore == nullptr) {
-      // We found no underscore in the type name therefore it can not be a generic type
-      paErrorMSG = EMGMResponse::UnsupportedType;
-      return nullptr;
-    }
-
-    ptrdiff_t typeNameLen = underScore - typeBuf;
-    std::string genFBName;
-    genFBName.reserve(4 + typeNameLen);
-    genFBName += "GEN_"s;
-    genFBName.append(typeBuf, typeNameLen);
-
-    forte::core::CFBTypeEntry *typeEntry = forte::core::getFBTypeEntry(CStringDictionary::getId(genFBName.c_str()));
-
+    forte::core::CFBTypeEntry *typeEntry = findGenericTypeEntry(getFBTypeLib(), paFBTypeId);
     if (typeEntry == nullptr) {
       paErrorMSG = EMGMResponse::UnsupportedType;
       return nullptr;
@@ -309,7 +320,7 @@ namespace {
     CFunctionBlock *newFB = typeEntry->createFBInstance(paInstanceNameId, paContainer);
     if (newFB == nullptr) { // we could not create the requested object
       paErrorMSG = EMGMResponse::Overflow;
-    } else if (!newFB->configureFB(typeBuf)) { // we got a configurable block
+    } else if (!newFB->configureFB(CStringDictionary::get(paFBTypeId))) { // we got a configurable block
       delete newFB;
       paErrorMSG = EMGMResponse::Overflow;
       return nullptr;
