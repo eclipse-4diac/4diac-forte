@@ -31,6 +31,8 @@ if (FORTE_EXTERNAL_TIMEHA)
     forte_set_default_timerhandler(${EXTERNAL_TIMER_HANDLER_NAME})
 endif(FORTE_EXTERNAL_TIMEHA)
   
+option(FORTE_WINDOWS_XP_COMPAT "Use only APIs that still work on Windows XP" OFF)
+forte_generate_config_flag_include(FORTE_WINDOWS_XP_COMPAT)
 
 add_library(forte-arch-win32 OBJECT
     fortealloc.h

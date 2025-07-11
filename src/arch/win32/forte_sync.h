@@ -10,9 +10,9 @@
  *  Alois Zoitl, Gerhard Ebenhofer, Martin Melik-Merkumians - initial API and implementation and/or initial
  *documentation Jörg Walter - Windows XP compatibility
  *******************************************************************************/
-#ifndef _FORTE_SYNC_H_
-#define _FORTE_SYNC_H_
+#pragma once
 
+#include "generated/config/FORTE_WINDOWS_XP_COMPAT.h"
 #include <windows.h>
 
 #define CSyncObject CPCSyncObject // allows that doxygen can generate better documenation
@@ -42,11 +42,9 @@ class CPCSyncObject {
     CPCSyncObject &operator=(const CPCSyncObject &) = delete;
 
   private:
-#ifdef WINDOWS_XP_COMPAT
+#ifdef FORTE_WINDOWS_XP_COMPAT
     CRITICAL_SECTION mLock;
 #else
     SRWLOCK mLock;
 #endif
 };
-
-#endif /*FORTE_SYNC_H_*/
