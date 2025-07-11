@@ -3,8 +3,6 @@ if (NOT FORTE_SYSTEM_TESTS)
   return()
 endif()
 
-enable_testing()
-
 ## forte_add_systemtest_hard (test_name bootfile_name timeout)
 ## Fails if any error has been logged
 function(forte_add_systemtest_hard arg1 arg2 arg3)

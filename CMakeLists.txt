@@ -96,6 +96,8 @@ target_compile_definitions(forte-global INTERFACE ${FORTE_LOGLEVEL})
 # Main build
 #######################################################################################
 add_subdirectory(src)
+
+enable_testing()
 add_subdirectory(systemtests)
 add_subdirectory(tests)
 

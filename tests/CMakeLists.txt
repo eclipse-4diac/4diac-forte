@@ -17,8 +17,6 @@ if (NOT FORTE_TESTS)
   return()
 endif()
 
-enable_testing()
-
 set(FORTE_RTTI_AND_EXCEPTIONS ON CACHE BOOL "This value is forced ON because of FORTE_TESTS enabled" FORCE)
 
 if (FORTE_ARCHITECTURE STREQUAL "Posix")
