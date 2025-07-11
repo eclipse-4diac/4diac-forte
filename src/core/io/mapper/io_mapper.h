@@ -17,7 +17,7 @@
 #define SRC_CORE_IO_MAPPER_MAPPER_H_
 
 #include "core/util/singlet.h"
-#include <forte_wstring.h>
+#include "core/datatypes/forte_wstring.h"
 #include <map>
 #include <string>
 #include <forte_sync.h>

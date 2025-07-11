@@ -10,7 +10,7 @@
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "EventMessage.h"
+#include "core/trace/internal/EventMessage.h"
 
 #include <array>
 #include <iomanip>

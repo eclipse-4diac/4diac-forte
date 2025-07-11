@@ -19,7 +19,7 @@
 
 #pragma once
 
-#include "funcbloc.h"
+#include "core/funcbloc.h"
 
 class CBaseFB : public CFunctionBlock {
   public:

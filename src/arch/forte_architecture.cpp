@@ -12,12 +12,12 @@
  *                it for generic use
  *******************************************************************************/
 
-#include "forte_architecture.h"
+#include "arch/forte_architecture.h"
 
-#include "forte_specific_architecture.h"
+#include "arch/forte_specific_architecture.h"
 
-#include "generated/typeinit.h"
-#include "generated/startuphook.h"
+#include "core/typeinit.h"
+#include "core/startuphook.h"
 
 bool CForteGeneralArchitecture::mInitialized = false;
 

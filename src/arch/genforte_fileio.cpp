@@ -10,7 +10,7 @@
   Dirk O. Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
 
-#include "forte_fileio.h"
+#include "arch/forte_fileio.h"
 #include <cstdio>
 #include <cstdlib>
 #include <string.h>

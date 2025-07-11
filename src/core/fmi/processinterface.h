@@ -13,7 +13,7 @@
 #define _PROCESSINTERFACE_H_
 
 #include <../stdfblib/io/processinterfacebase.h>
-#include "fmuValueContainer.h"
+#include "core/fmi/fmuValueContainer.h"
 #include <vector>
 #include <string>
 #include <fstream>

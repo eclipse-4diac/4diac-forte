@@ -9,7 +9,7 @@
  * Contributors:
  *   Alois Zoitl, Waldemar Eisenmenger - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "QX_fbt.h"
+#include "core/io/QX_fbt.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);

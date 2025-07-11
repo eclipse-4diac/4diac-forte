@@ -14,8 +14,8 @@
 #ifndef _EVENT_H_
 #define _EVENT_H_
 
-#include "../arch/datatype.h"
-#include "conn.h"
+#include "arch/datatype.h"
+#include "core/conn.h"
 
 /*! \ingroup CORE\brief Datatype for holding the IDs of event inputs.
  *

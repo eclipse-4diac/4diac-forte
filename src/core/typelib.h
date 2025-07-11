@@ -20,7 +20,7 @@
 #pragma once
 
 #include "core/stringdict.h"
-#include "mgmcmd.h"
+#include "core/mgmcmd.h"
 #include <string_view>
 
 // forward declaration of a few classes to reduce include file dependencies

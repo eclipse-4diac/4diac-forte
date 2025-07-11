@@ -14,8 +14,8 @@
 #ifndef SRC_CORE_IO_CONFIGFB_CONTROLLER_H_
 #define SRC_CORE_IO_CONFIGFB_CONTROLLER_H_
 
-#include <io/device/io_controller.h>
-#include "io_base.h"
+#include "core/io/device/io_controller.h"
+#include "core/io/configFB/io_base.h"
 
 namespace forte {
   namespace core {

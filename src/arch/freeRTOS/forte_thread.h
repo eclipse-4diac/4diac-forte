@@ -17,10 +17,10 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
-#include "../datatype.h"
-#include "../devlog.h"
-#include "../../core/datatypes/forte_time.h"
-#include "../threadbase.h"
+#include "arch/datatype.h"
+#include "arch/devlog.h"
+#include "core/datatypes/forte_time.h"
+#include "arch/threadbase.h"
 #include "forte_sync.h"
 
 // Allow to set a special stack size for forte threads

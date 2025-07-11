@@ -14,7 +14,7 @@
  *               - initial implementation and rework communication infrastructure
  *   Alois Zoitl - migrated data type toString to std::string
  *******************************************************************************/
-#include "forte_bool.h"
+#include "core/datatypes/forte_bool.h"
 
 USE_STRING_ID(BOOL);
 

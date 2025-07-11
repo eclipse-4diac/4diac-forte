@@ -12,7 +12,7 @@
  *    Alois Zoitl, Martin Jobst - initial implementation and rework communication infrastructure
  *******************************************************************************/
 
-#include "device.h"
+#include "core/device.h"
 
 class C4diacFORTEInstance {
   public:

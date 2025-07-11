@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include "outputfb.h"
-#include "forte_bool.h"
+#include "core/io/outputfb.h"
+#include "core/datatypes/forte_bool.h"
 
 /*! /brief generic class for QX function blocks providing access to one boolean physical output
  *

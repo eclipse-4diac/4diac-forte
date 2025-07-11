@@ -14,8 +14,8 @@
 #ifndef _DEVICE_H
 #define _DEVICE_H
 
-#include "resource.h"
-#include "devexec.h"
+#include "core/resource.h"
+#include "core/devexec.h"
 
 /*!\ingroup CORE CDevice represents a device according to IEC 61499. CDevice contains
  - one or more IEC 61499 compliant resources (CResource),

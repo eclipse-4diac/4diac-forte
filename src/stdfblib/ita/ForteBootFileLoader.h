@@ -18,7 +18,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "../../arch/forte_fileio.h"
+#include "arch/forte_fileio.h"
 
 #include <string>
 #include <functional>

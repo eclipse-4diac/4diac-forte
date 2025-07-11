@@ -21,14 +21,14 @@
 
 #pragma once
 
-#include "basicfb.h"
-#include "forte_real.h"
-#include "forte_uint.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/basicfb.h"
+#include "core/datatypes/forte_real.h"
+#include "core/datatypes/forte_uint.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 #include <random>
 
 class FORTE_FB_RANDOM final : public CBasicFB {

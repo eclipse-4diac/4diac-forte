@@ -12,9 +12,9 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik-Merkumians - fixes connect, prepares for working AnyAdapter
  *******************************************************************************/
-#include "adapter.h"
-#include "funcbloc.h"
-#include "ecet.h"
+#include "core/adapter.h"
+#include "core/funcbloc.h"
+#include "core/ecet.h"
 
 namespace forte {
 

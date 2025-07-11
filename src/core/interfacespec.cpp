@@ -19,8 +19,8 @@
  *   Alois Zoitl  - extracted from funclboc.h / funcllboc.cpp
  *******************************************************************************/
 
-#include "interfacespec.h"
-#include "datatype.h"
+#include "core/interfacespec.h"
+#include "arch/datatype.h"
 
 USE_STRING_ID(Event);
 

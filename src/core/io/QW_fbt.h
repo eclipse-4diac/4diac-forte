@@ -15,8 +15,8 @@
 
 #pragma once
 
-#include "outputfb.h"
-#include "forte_word.h"
+#include "core/io/outputfb.h"
+#include "core/datatypes/forte_word.h"
 
 /*! /brief generic class for QW function blocks providing access to one word physical output
  *

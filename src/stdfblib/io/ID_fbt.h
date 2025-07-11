@@ -13,17 +13,17 @@
 
 #pragma once
 
-#include "funcbloc.h"
-#include "forte_bool.h"
-#include "forte_dword.h"
-#include "forte_string.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/funcbloc.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_dword.h"
+#include "core/datatypes/forte_string.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
-#include "processinterface.h"
+#include "core/fmi/processinterface.h"
 
 /*! /brief generic class for IW function blocks providing access to one word physical input
  *

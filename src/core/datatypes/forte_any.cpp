@@ -15,13 +15,13 @@
  *    Martin Jobst
  *      - add support for data types with different size
  *******************************************************************************/
-#include "forte_any.h"
+#include "core/datatypes/forte_any.h"
 
 USE_STRING_ID(ANY);
 
-#include "forte_real.h"
-#include "forte_lreal.h"
-#include <devlog.h>
+#include "core/datatypes/forte_real.h"
+#include "core/datatypes/forte_lreal.h"
+#include "arch/devlog.h"
 
 int CIEC_ANY::dummyInit() {
   return 0;

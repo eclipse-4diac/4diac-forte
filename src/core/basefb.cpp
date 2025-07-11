@@ -17,9 +17,9 @@
  *                - migrated data type toString to std::string
  *******************************************************************************/
 
-#include "basefb.h"
-#include "resource.h"
-#include "string_utils.h"
+#include "core/basefb.h"
+#include "core/resource.h"
+#include "core/util/string_utils.h"
 
 CBaseFB::CBaseFB(forte::core::CFBContainer &paContainer,
                  const SFBInterfaceSpec &paInterfaceSpec,

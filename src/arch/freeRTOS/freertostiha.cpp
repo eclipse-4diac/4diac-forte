@@ -9,8 +9,8 @@
  * Contributors:
  * Milan Vathoopan, Guru Chandrasekhara - initial API and implementation and/or initial documentation
  ************************************************************************************/
-#include "../../core/devexec.h"
-#include "fortenew.h"
+#include "core/devexec.h"
+#include "arch/fortenew.h"
 #include "freertostiha.h"
 
 CFreeRTOSTimerHandler::CFreeRTOSTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {

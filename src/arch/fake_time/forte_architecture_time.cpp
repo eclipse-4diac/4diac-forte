@@ -12,8 +12,8 @@
  *    Martin Jobst - add high-resolution realtime clock
  *******************************************************************************/
 
-#include "forte_architecture_time.h"
-#include "forte_constants.h"
+#include "arch/forte_architecture_time.h"
+#include "core/util/forte_constants.h"
 
 #include "generated/timerhandlerfactory.h"
 

@@ -20,12 +20,12 @@ USE_STRING_ID(E_PERMIT);
 USE_STRING_ID(Event);
 USE_STRING_ID(PERMIT);
 
-#include "forte_bool.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_PERMIT, STRID(E_PERMIT))
 

@@ -10,7 +10,7 @@
  *    Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure,
  *******************************************************************************/
-#include "forte_state.h"
+#include "core/datatypes/forte_state.h"
 
 USE_STRING_ID(STATE);
 

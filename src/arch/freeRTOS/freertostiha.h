@@ -16,7 +16,7 @@
 #include <FreeRTOS.h>
 #include <timers.h>
 
-#include "../timerha.h"
+#include "arch/timerha.h"
 
 /*! \brief External event handler for the FreeRTOS Timer.
  * \ingroup FreeRTOS-HAL

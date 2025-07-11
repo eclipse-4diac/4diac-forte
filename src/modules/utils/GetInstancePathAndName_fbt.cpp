@@ -23,12 +23,12 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(Sep);
 USE_STRING_ID(STRING);
 
-#include "forte_char.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_char.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_GetInstancePathAndName, STRID(GetInstancePathAndName))
 

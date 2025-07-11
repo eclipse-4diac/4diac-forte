@@ -13,9 +13,9 @@
 #ifndef FORDIAC_RTE_MODULES_ARROWHEAD_COMMON_HTTP_ARROWHEADJSONHELPER_H_
 #define FORDIAC_RTE_MODULES_ARROWHEAD_COMMON_HTTP_ARROWHEADJSONHELPER_H_
 
-#include <forte_struct.h>
-#include <forte_string.h>
-#include <forte_array.h>
+#include "core/datatypes/forte_struct.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_array.h"
 #include "../forte_arrowheadservice.h"
 #include "../../orchestrator/forte_servicerequestform.h"
 #include <forte_arrowheadevent.h>

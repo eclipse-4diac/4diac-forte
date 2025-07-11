@@ -13,7 +13,7 @@
 #ifndef SRC_CORE_COMINFRA_COMCALLBACK_H_
 #define SRC_CORE_COMINFRA_COMCALLBACK_H_
 
-#include "comtypes.h"
+#include "core/cominfra/comtypes.h"
 
 namespace forte {
   namespace com_infra {

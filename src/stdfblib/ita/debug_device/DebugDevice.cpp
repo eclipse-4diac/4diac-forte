@@ -11,7 +11,7 @@
  *    Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "DebugDevice.h"
+#include "stdfblib/ita/debug_device/DebugDevice.h"
 
 namespace {
   const SFBInterfaceSpec cFBInterfaceSpec = {

@@ -13,7 +13,7 @@
  *******************************************************************************/
 #include "forte_thread.h"
 #include <unistd.h>
-#include <../devlog.h>
+#include "arch/devlog.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

@@ -34,16 +34,16 @@ USE_STRING_ID(PortInAdapter);
 USE_STRING_ID(WSTRING);
 
 #include "PortAdapter_adp.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 #include "core/io/mapper/io_mapper.h"
 #include <handler/EliteBoardDeviceController.h>
 #include <handle/PinHandle.h>
-#include <extevhandlerhelper.h>
+#include "core/util/extevhandlerhelper.h"
 
 using namespace forte::core::io;
 

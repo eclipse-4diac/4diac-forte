@@ -11,7 +11,7 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#include "io_controller_poll.h"
+#include "core/io/device/io_controller_poll.h"
 
 using namespace forte::core::io;
 

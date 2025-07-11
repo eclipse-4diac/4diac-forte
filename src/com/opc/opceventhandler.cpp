@@ -15,8 +15,8 @@
  *                  - Fix disconnection issue on exit
  *******************************************************************************/
 #include "opceventhandler.h"
-#include "../core/devexec.h"
-#include <commfb.h>
+#include "core/devexec.h"
+#include "core/cominfra/commfb.h"
 
 #include <ObjBase.h>
 

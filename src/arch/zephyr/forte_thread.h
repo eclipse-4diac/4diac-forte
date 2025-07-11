@@ -13,10 +13,10 @@
 #ifndef SRC_ARCH_ZEPHYR_THREAD_H_
 #define SRC_ARCH_ZEPHYR_THREAD_H_
 
-#include "../datatype.h"
-#include "../devlog.h"
-#include "../../core/datatypes/forte_time.h"
-#include "../threadbase.h"
+#include "arch/datatype.h"
+#include "arch/devlog.h"
+#include "core/datatypes/forte_time.h"
+#include "arch/threadbase.h"
 #include "forte_sync.h"
 
 #include <zephyr/kernel.h>

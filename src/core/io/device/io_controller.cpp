@@ -12,11 +12,11 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#include "io_controller.h"
+#include "core/io/device/io_controller.h"
 
-#include "../processinterfacefb.h"
-#include "../configFB/io_configFB_controller.h"
-#include "criticalregion.h"
+#include "core/io/processinterfacefb.h"
+#include "core/io/configFB/io_configFB_controller.h"
+#include "core/util/criticalregion.h"
 
 using namespace forte::core::io;
 

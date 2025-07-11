@@ -16,7 +16,7 @@
 #define SRC_MODULES_OPC_UA_OPCUA_ACTION_INFO_H_
 
 #include "forte_sem.h"
-#include "opcua_layer.h"
+#include "com/opc_ua/opcua_layer.h"
 #include <string>
 
 /**

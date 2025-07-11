@@ -14,7 +14,7 @@
 #ifndef _COMTYPES_H_
 #define _COMTYPES_H_
 
-#include <datatype.h>
+#include "arch/datatype.h"
 
 namespace forte {
   // TODO maybe add core namespace depending on namespace support of older c++ compilers

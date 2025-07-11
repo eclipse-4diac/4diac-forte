@@ -18,7 +18,7 @@
  *....Franz Höpfinger - Update it to represent latest Generation Format from 4diac IDE. no Functional Changes.
  *******************************************************************************/
 #include "GEN_E_MUX_fbt.h"
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(EO);
 USE_STRING_ID(Event);

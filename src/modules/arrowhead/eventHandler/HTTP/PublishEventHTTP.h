@@ -13,8 +13,8 @@
 #ifndef _PUBLISHEVENTHTTP_H_
 #define _PUBLISHEVENTHTTP_H_
 
-#include <cfb.h>
-#include <typelib.h>
+#include "core/cfb.h"
+#include "core/typelib.h"
 #include "ArrowheadPublishAdp_adp.h"
 
 class FORTE_PublishEventHTTP : public CCompositeFB {

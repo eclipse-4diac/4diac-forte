@@ -15,7 +15,7 @@
 #include <threadx/tx_api.h>
 #include "appconf_api.h"
 #include "../../forte.h"
-#include "../../stdfblib/ita/RMT_DEV.h"
+#include "stdfblib/ita/RMT_DEV.h"
 #include <reg_def.h>
 #include <fservapi.h>
 

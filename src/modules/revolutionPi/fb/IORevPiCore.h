@@ -13,10 +13,10 @@
 
 #pragma once
 
-#include <io/configFB/io_master_multi.h>
+#include "core/io/configFB/io_master_multi.h"
 
 #include "IORevPiBusAdapter.h"
-#include "adapter.h"
+#include "core/adapter.h"
 
 class FORTE_IORevPiCore : public forte::core::io::IOConfigFBMultiMaster {
     DECLARE_FIRMWARE_FB(FORTE_IORevPiCore)

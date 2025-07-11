@@ -14,8 +14,8 @@
 
 #include <timer.h>
 
-#include "forte_architecture_time.h"
-#include "forte_constants.h"
+#include "arch/forte_architecture_time.h"
+#include "core/util/forte_constants.h"
 
 uint_fast64_t getNanoSecondsMonotonicArch() {
   return (forte::core::constants::cNanosecondsPerSecond > timerFreq())

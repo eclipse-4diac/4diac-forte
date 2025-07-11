@@ -15,8 +15,8 @@
 #ifndef LOCALCOMLAYER_H_
 #define LOCALCOMLAYER_H_
 
-#include "comlayer.h"
-#include "../stringdict.h"
+#include "core/cominfra/comlayer.h"
+#include "core/stringdict.h"
 #include <forte_sync.h>
 #include <vector>
 

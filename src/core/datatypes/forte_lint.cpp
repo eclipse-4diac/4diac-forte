@@ -11,7 +11,7 @@
  *    Monika Wenger, Alois Zoitl,
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include "forte_lint.h"
+#include "core/datatypes/forte_lint.h"
 
 USE_STRING_ID(LINT);
 

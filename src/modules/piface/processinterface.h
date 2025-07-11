@@ -15,7 +15,7 @@
 #define PROCESSINTERFACE_H_
 
 #include <../../stdfblib/io/processinterfacebase.h>
-#include <extevhan.h>
+#include "core/extevhan.h"
 #include <forte_thread.h>
 #include <vector>
 #include "../conmeleon_c1/spi/spidevice.h"

@@ -14,7 +14,7 @@
 #ifndef _ESFB_H_
 #define _ESFB_H_
 
-#include "funcbloc.h"
+#include "core/funcbloc.h"
 
 /*!\ingroup CORE\brief Base-Class for all event sources.
  */

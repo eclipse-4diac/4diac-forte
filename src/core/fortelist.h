@@ -16,9 +16,9 @@
  *     Martin Melik Merkumians - fixes naming, adds missing back functions for
  *       list specializations
  *******************************************************************************/
-#include <fortenew.h>
-#include "fortenode.h"
-#include "forteiterator.h"
+#include "arch/fortenew.h"
+#include "core/fortenode.h"
+#include "core/forteiterator.h"
 
 #ifndef _FORTELIST_H_
 #define _FORTELIST_H_

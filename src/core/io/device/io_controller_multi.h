@@ -14,8 +14,8 @@
 #ifndef SRC_CORE_IO_DEVICE_IO_CONTROLLER_MULTI_H_
 #define SRC_CORE_IO_DEVICE_IO_CONTROLLER_MULTI_H_
 
-#include "io_controller.h"
-#include <io/mapper/io_handle.h>
+#include "core/io/device/io_controller.h"
+#include "core/io/mapper/io_handle.h"
 
 namespace forte {
   namespace core {

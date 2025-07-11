@@ -13,13 +13,13 @@
 #ifndef _FIELDSTOEVENTFILTER_H_
 #define _FIELDSTOEVENTFILTER_H_
 
-#include <basicfb.h>
-#include <forte_date_and_time.h>
-#include <forte_bool.h>
+#include "core/basicfb.h"
+#include "core/datatypes/forte_date_and_time.h"
+#include "core/datatypes/forte_bool.h"
 #include <forte_arrowheadsystem.h>
 #include <forte_eventfilter.h>
-#include <forte_wstring.h>
-#include <forte_array.h>
+#include "core/datatypes/forte_wstring.h"
+#include "core/datatypes/forte_array.h"
 
 class FORTE_FieldsToEventFilter : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToEventFilter)

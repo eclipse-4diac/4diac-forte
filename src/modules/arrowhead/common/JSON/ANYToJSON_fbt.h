@@ -13,9 +13,9 @@
 #ifndef _ANYTOJSON_H_
 #define _ANYTOJSON_H_
 
-#include <funcbloc.h>
-#include <forte_string.h>
-#include <forte_any.h>
+#include "core/funcbloc.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_any.h"
 
 class FORTE_ANYToJSON : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_ANYToJSON)

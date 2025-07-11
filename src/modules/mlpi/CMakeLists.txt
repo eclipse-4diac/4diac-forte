@@ -1,29 +1,38 @@
-#*******************************************************************************
-# Copyright (c) 2016 fortiss GmbH 
-# This program and the accompanying materials are made available under the
-# terms of the Eclipse Public License 2.0 which is available at
-# http://www.eclipse.org/legal/epl-2.0.
+# *******************************************************************************
+# Copyright (c) 2016 fortiss GmbH This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0 which
+# is available at http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
-# Contributors:
-#    Alois Zoitl - initial API and implementation and/or initial documentation
+#
+# Contributors: Alois Zoitl - initial API and implementation and/or initial
+# documentation
 # *******************************************************************************/
 
-###############################################################
+# ############################################################################
 # PiFace Raspberry Pi expansion board
-###############################################################
-if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-forte_add_module(MLPI OFF "Process interface using the MLPI functions for Bosch Rexroth PLCs")
+# ############################################################################
+if (NOT FORTE_ARCHITECTURE STREQUAL "Posix")
+    return()
+endif ()
 
-SET(FORTE_COM_MLPI_DIR "" CACHE PATH "Path to MLPI src directory")
+forte_register_module(MLPI
+                      OFF
+                      "Process interface using the MLPI functions for Bosch Rexroth PLCs"
+)
 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-forte_add_sourcefile_hcpp(processinterface)
+set(FORTE_COM_MLPI_DIR
+    ""
+    CACHE PATH "Path to MLPI src directory"
+)
 forte_set_process_interface("MLPI" IX QX)
 
-forte_add_handler(CMLPIFaceProcessInterface::CIOHandler processinterface)
+forte_register_handler(CMLPIFaceProcessInterface::CIOHandler
+                       processinterface.h
+)
 
-forte_add_include_system_directories( ${FORTE_COM_MLPI_DIR}/mlpiCore/include )
-          
-endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+add_library(forte-modules-mlpi OBJECT processinterface.h processinterface.cpp)
+target_link_libraries(forte PRIVATE forte-modules-mlpi)
+target_include_directories(forte-modules-mlpi
+                           PUBLIC ${FORTE_COM_MLPI_DIR}/mlpiCore/include
+)

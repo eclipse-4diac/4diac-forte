@@ -13,8 +13,8 @@
 #ifndef RAWDATACOMLAYER_H_
 #define RAWDATACOMLAYER_H_
 
-#include "comlayer.h"
-#include <commfb.h>
+#include "core/cominfra/comlayer.h"
+#include "core/cominfra/commfb.h"
 
 namespace forte {
   namespace com_infra {

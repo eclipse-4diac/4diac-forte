@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "iec61131_functions.h"
+#include "core/iec61131_functions.h"
 
 template<typename T>
 T &ST_IGNORE_OUT_PARAM(T &&value) {

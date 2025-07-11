@@ -11,10 +11,10 @@
  *    Markus Meingast - initial implementation
  *******************************************************************************/
 
-#include "opcua_event_layer.h"
+#include "com/opc_ua/opcua_event_layer.h"
 #include "core/util/parameterParser.h"
 #include "core/cominfra/basecommfb.h"
-#include "opcua_local_handler.h"
+#include "com/opc_ua/opcua_local_handler.h"
 
 using namespace forte::com_infra;
 

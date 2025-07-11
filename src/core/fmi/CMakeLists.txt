@@ -1,44 +1,62 @@
-#*******************************************************************************
-# Copyright (c) 2016,2017 fortiss GmbH
-# This program and the accompanying materials are made available under the
-# terms of the Eclipse Public License 2.0 which is available at
-# http://www.eclipse.org/legal/epl-2.0.
+# *******************************************************************************
+# Copyright (c) 2016,2017 fortiss GmbH This program and the accompanying
+# materials are made available under the terms of the Eclipse Public License
+# 2.0 which is available at http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
-# Contributors:
-#    Jose Cabral
-# *    - initial API and implementation and/or initial documentation
+#
+# Contributors: Jose Cabral *    - initial API and implementation and/or
+# initial documentation
 # *******************************************************************************/
-#############################################################################
+# ############################################################################
 # core/fmi
-#############################################################################
+# ############################################################################
 
-set(FORTE_ENABLE_FMU OFF CACHE BOOL "Enable FORTE FMU Export. It generates a shared library")
+option(FORTE_ENABLE_FMU
+       "Enable FORTE FMU Export. It generates a shared library" OFF
+)
 
-if(FORTE_ENABLE_FMU)
+if (NOT FORTE_ENABLE_FMU)
+    return()
+endif ()
+target_compile_definitions(forte-global INTERFACE FORTE_FMU)
 
-  forte_add_definition("-DFORTE_FMU") 
+set(FORTE_FMU_INCLUDE
+    ""
+    CACHE STRING
+          "Folder to include in the compilation. Specify here the location of the fmi headers"
+)
 
-  set(FORTE_FMU_INCLUDE "" CACHE STRING "Folder to include in the compilation. Specify here the location of the fmi headers")
+add_subdirectory(comm)
 
-  forte_add_include_system_directories(${FORTE_FMU_INCLUDE})
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR}) #for <processinterface.h>
+forte_register_timerhandler(fmiTimerHandler fmiTimerHandler.h)
 
-  forte_add_subdirectory(comm)
+forte_register_ecet(CFMUEventChainExecutionThread fmuEcet.h)
 
-  forte_add_timerhandler(fmiTimerHandler fmiTimerHandler "fmi")
+message(STATUS "Process Interface: FORTE FMU")
 
-  forte_add_ecet(CFMUEventChainExecutionThread fmuEcet "fmi")
-
-  forte_add_sourcefile_cpp(fmiInterface.cpp)
-  forte_add_sourcefile_hcpp(fmuValueContainer fmuInstance processinterface fmuEcet fmiTimerHandler)
-  message(STATUS "Process Interface: FORTE FMU")
-  forte_add_sourcefile_hcpp(../../arch/utils/timespec_utils)
-  forte_add_sourcefile_hcpp(../../stdfblib/io/IX_fbt)
-  forte_add_sourcefile_hcpp(../../stdfblib/io/QX_fbt)
-  forte_add_sourcefile_hcpp(../../stdfblib/io/IW_fbt)
-  forte_add_sourcefile_hcpp(../../stdfblib/io/QW_fbt)
-
-endif(FORTE_ENABLE_FMU)
-
+add_library(forte-core-fmi OBJECT
+            fmiInterface.cpp
+            fmuValueContainer.h
+            fmuValueContainer.cpp
+            fmuInstance.h
+            fmuInstance.cpp
+            processinterface.h
+            processinterface.cpp
+            fmuEcet.h
+            fmuEcet.cpp
+            fmiTimerHandler.h
+            fmiTimerHandler.cpp
+            ../../arch/utils/timespec_utils.h
+            ../../arch/utils/timespec_utils.cpp
+            ../../stdfblib/io/IX_fbt.h
+            ../../stdfblib/io/IX_fbt.cpp
+            ../../stdfblib/io/QX_fbt.h
+            ../../stdfblib/io/QX_fbt.cpp
+            ../../stdfblib/io/IW_fbt.h
+            ../../stdfblib/io/IW_fbt.cpp
+            ../../stdfblib/io/QW_fbt.h
+            ../../stdfblib/io/QW_fbt.cpp
+)
+target_link_libraries(forte PRIVATE forte-core-fmi)
+target_include_directories(forte-core-fmi PUBLIC ${FORTE_FMU_INCLUDE})

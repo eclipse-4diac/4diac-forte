@@ -15,7 +15,7 @@
 #ifndef CMDADDCONNECTION_H_
 #define CMDADDCONNECTION_H_
 #include "ICmd.h"
-#include "comlayer.h"
+#include "core/cominfra/comlayer.h"
 #include <vector>
 #include <string>
 

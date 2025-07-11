@@ -27,12 +27,12 @@
 #include "core/cominfra/basecommfb.h"
 #include "core/util/parameterParser.h"
 #include "core/util/string_utils.h"
-#include "forte_printer.h"
+#include "arch/forte_printer.h"
 #include "arch/utils/mainparam_utils.h"
-#include "opcua_local_handler.h"
-#include "struct_action_info.h"
+#include "com/opc_ua/opcua_local_handler.h"
+#include "com/opc_ua/struct_action_info.h"
 #ifdef FORTE_COM_OPC_UA_MULTICAST
-#include "detail/lds_me_handler.h"
+#include "com/opc_ua/detail/lds_me_handler.h"
 #endif // FORTE_COM_OPC_UA_MULTICAST
 #include <string>
 

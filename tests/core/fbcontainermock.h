@@ -12,7 +12,7 @@
  *******************************************************************************/
 #pragma once
 
-#include "fbcontainer.h"
+#include "core/fbcontainer.h"
 #include <functional>
 
 class CFBContainerMock : public forte::core::CFBContainer {

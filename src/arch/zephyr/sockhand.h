@@ -15,7 +15,7 @@
 
 #include <string.h>
 
-#include "devlog.h"
+#include "arch/devlog.h"
 
 #include <zephyr/net/net_if.h>
 #include <zephyr/posix/arpa/inet.h>
@@ -40,9 +40,9 @@ inline in_addr_t inet_addr(const char *cp) {
 void setupMulticastGroup(char *paIPAddr, const char *paMCInterface);
 
 // these include needs to be last
-#include "../gensockhand.h"
-#include "../fdselecthand.h"
-#include "../bsdsocketinterf.h"
+#include "arch/gensockhand.h"
+#include "arch/fdselecthand.h"
+#include "arch/bsdsocketinterf.h"
 
 typedef CGenericIPComSocketHandler<CFDSelectHandler, CBSDSocketInterface> CIPComSocketHandler;
 

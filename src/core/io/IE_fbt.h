@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "processinterfacefb.h"
+#include "core/io/processinterfacefb.h"
 
 class FORTE_IE final : public forte::core::io::CProcessInterfaceFB {
     DECLARE_FIRMWARE_FB(FORTE_IE)

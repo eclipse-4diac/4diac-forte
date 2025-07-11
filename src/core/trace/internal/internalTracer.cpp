@@ -12,9 +12,9 @@
  *      - initial implementation
  *******************************************************************************/
 
-#include "internalTracer.h"
+#include "core/trace/internal/internalTracer.h"
 
-#include "forte_architecture_time.h"
+#include "arch/forte_architecture_time.h"
 
 CInternalTracer::CInternalTracer(CStringDictionary::TStringId, size_t) {
 }

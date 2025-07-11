@@ -11,7 +11,7 @@
  *    Martin Melik Merkiumians, Alois Zoitl, Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include "forte_lword.h"
+#include "core/datatypes/forte_lword.h"
 
 USE_STRING_ID(LWORD);
 

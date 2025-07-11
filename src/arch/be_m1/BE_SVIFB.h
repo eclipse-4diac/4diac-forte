@@ -13,7 +13,7 @@
 #define BE_SVIFB_H_
 
 #include <arch/be_m1/fortemodule.h>
-#include "funcbloc.h"
+#include "core/funcbloc.h"
 
 class BE_SVIFB : public CFunctionBlock {
   public:

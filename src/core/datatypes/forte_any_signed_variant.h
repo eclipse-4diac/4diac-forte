@@ -16,12 +16,12 @@
 
 #include <variant>
 
-#include "forte_any.h"
-#include "forte_any_signed.h"
-#include "forte_dint.h"
-#include "forte_int.h"
-#include "forte_lint.h"
-#include "forte_sint.h"
+#include "core/datatypes/forte_any.h"
+#include "core/datatypes/forte_any_signed.h"
+#include "core/datatypes/forte_dint.h"
+#include "core/datatypes/forte_int.h"
+#include "core/datatypes/forte_lint.h"
+#include "core/datatypes/forte_sint.h"
 
 using TIecAnySignedVariantType = std::variant<
     // ANY_ELEMENTARY

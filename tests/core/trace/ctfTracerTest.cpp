@@ -21,9 +21,9 @@
 #include "config.h"
 #include "core/trace/internal/EventMessage.h"
 #include "core/trace/reader/utils.h"
-#include "device.h"
-#include "ecet.h"
-#include "trace/barectf_platform_forte.h"
+#include "core/device.h"
+#include "core/ecet.h"
+#include "core/trace/barectf_platform_forte.h"
 
 USE_STRING_ID(COLD)
 USE_STRING_ID(Counter)

@@ -13,7 +13,7 @@
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
-#include "../../../src/core/datatypes/forte_any_variant.h"
+#include "core/datatypes/forte_any_variant.h"
 
 USE_STRING_ID(AnyTestStruct);
 USE_STRING_ID(Var1);

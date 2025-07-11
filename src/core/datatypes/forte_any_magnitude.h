@@ -15,7 +15,7 @@
 #ifndef _ANY_MAG_H_
 #define _ANY_MAG_H_
 
-#include "forte_any_elementary.h"
+#include "core/datatypes/forte_any_elementary.h"
 
 /*!\ingroup COREDTS CIEC_ANY_MAGNITUDE represents the magnitude data types according to
  *  IEC 61131.

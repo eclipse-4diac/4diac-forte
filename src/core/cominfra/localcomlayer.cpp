@@ -14,10 +14,10 @@
  *    Martin Jobst - account for new FB layout and varying data type size
  *    Mario Kastner - bug fixes
  *******************************************************************************/
-#include "localcomlayer.h"
-#include "commfb.h"
-#include "../resource.h"
-#include "../device.h"
+#include "core/cominfra/localcomlayer.h"
+#include "core/cominfra/commfb.h"
+#include "core/resource.h"
+#include "core/device.h"
 #include "core/util/criticalregion.h"
 
 using namespace forte::com_infra;

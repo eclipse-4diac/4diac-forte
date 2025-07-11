@@ -10,10 +10,10 @@
  * Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "../../cominfra/commfb.h"
-#include "fmuComLayer.h"
-#include "fmuHandler.h"
-#include "../fmuInstance.h" //just for logging?
+#include "core/cominfra/commfb.h"
+#include "core/fmi/comm/fmuComLayer.h"
+#include "core/fmi/comm/fmuHandler.h"
+#include "core/fmi/fmuInstance.h" //just for logging?
 
 using namespace forte::com_infra;
 

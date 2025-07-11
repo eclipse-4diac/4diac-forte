@@ -14,8 +14,8 @@
 #ifndef SRC_CORE_LUAADAPTERTYPEENTRY_H_
 #define SRC_CORE_LUAADAPTERTYPEENTRY_H_
 
-#include "typelib.h"
-#include "../funcbloc.h"
+#include "core/typelib.h"
+#include "core/funcbloc.h"
 #include <string>
 
 class CResource;

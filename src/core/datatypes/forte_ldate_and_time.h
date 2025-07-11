@@ -20,8 +20,8 @@
 #ifndef _FORTE_LDATE_AND_TIME_H_
 #define _FORTE_LDATE_AND_TIME_H_
 
-#include "forte_any_date.h"
-#include "forte_date_and_time.h"
+#include "core/datatypes/forte_any_date.h"
+#include "core/datatypes/forte_date_and_time.h"
 
 /*!\ingroup COREDTS CIEC_DATE_AND_TIME represents the time data types according to IEC 61131.
  */

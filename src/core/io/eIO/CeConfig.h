@@ -12,10 +12,10 @@
 
 #pragma once
 
-#include "CeSpec.h"
+#include "core/io/eIO/CeSpec.h"
 
-#include "devlog.h"
-#include "adapter.h"
+#include "arch/devlog.h"
+#include "core/adapter.h"
 
 class FORTE_eGenAdapter;
 /**

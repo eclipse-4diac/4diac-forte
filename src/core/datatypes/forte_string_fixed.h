@@ -13,8 +13,8 @@
 
 #pragma once
 
-#include "forte_string.h"
-#include "forte_char.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_char.h"
 #include <string>
 #include <algorithm>
 

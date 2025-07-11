@@ -11,7 +11,7 @@
  *******************************************************************************/
 
 #include "CAdsConnection.h"
-#include "devlog.h"
+#include "arch/devlog.h"
 
 namespace forte {
   namespace ads {

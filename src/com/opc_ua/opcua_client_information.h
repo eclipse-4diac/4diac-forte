@@ -15,7 +15,7 @@
 #ifndef SRC_MODULES_OPC_UA_OPCUA_CLIENT_INFORMATION_H_
 #define SRC_MODULES_OPC_UA_OPCUA_CLIENT_INFORMATION_H_
 
-#include "opcua_action_info.h"
+#include "com/opc_ua/opcua_action_info.h"
 
 #include "forte_sync.h"
 

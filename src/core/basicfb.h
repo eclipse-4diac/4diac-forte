@@ -17,8 +17,8 @@
 
 #pragma once
 
-#include "basefb.h"
-#include "forte_state.h"
+#include "core/basefb.h"
+#include "core/datatypes/forte_state.h"
 
 /*!\ingroup CORE
  *

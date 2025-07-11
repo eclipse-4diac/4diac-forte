@@ -16,7 +16,7 @@
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include "GEN_E_DEMUX_fbt.h"
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(EI);
 USE_STRING_ID(Event);

@@ -10,7 +10,7 @@
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
-#include "../../src/core/mgmcmdstruct.h"
+#include "core/mgmcmdstruct.h"
 
 /*!Tests for the TNameIdentifier class used to store name identifier lists
  *

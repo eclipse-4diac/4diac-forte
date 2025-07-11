@@ -15,7 +15,7 @@
  *   Alois Zoitl  - exracted internal variable handling to new CBaseFB
  *******************************************************************************/
 #include <string.h>
-#include "basicfb.h"
+#include "core/basicfb.h"
 
 CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,

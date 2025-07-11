@@ -19,8 +19,8 @@
 #define _DATACONN_H_
 
 #include <memory>
-#include "./datatypes/forte_any.h"
-#include "conn.h"
+#include "core/datatypes/forte_any.h"
+#include "core/conn.h"
 
 /*! \ingroup CORE \brief Class for handling a data connection.
  */

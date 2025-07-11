@@ -43,13 +43,13 @@ USE_STRING_ID(Event);
 USE_STRING_ID(REQ);
 USE_STRING_ID(WORD);
 
-#include "forte_bool.h"
-#include "forte_word.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_word.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 #include "ASSEMBLE_WORD_FROM_BOOLS_fct.h"
 
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_WORD_FROM_BOOLS, STRID(ASSEMBLE_WORD_FROM_BOOLS))

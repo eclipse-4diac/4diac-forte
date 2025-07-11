@@ -13,7 +13,7 @@
  *                 interface needs
  *************************************************************************/
 
-#include "IB_fbt.h"
+#include "core/io/IB_fbt.h"
 
 USE_STRING_ID(IB);
 

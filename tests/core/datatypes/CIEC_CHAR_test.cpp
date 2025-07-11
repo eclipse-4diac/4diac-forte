@@ -14,7 +14,7 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "../../../src/core/datatypes/forte_char.h"
+#include "core/datatypes/forte_char.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_CHAR_function_test)
 

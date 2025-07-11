@@ -18,15 +18,15 @@
 
 #pragma once
 
-#include "cfb.h"
-#include "typelib.h"
-#include "forte_time.h"
-#include "forte_uint.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/cfb.h"
+#include "core/typelib.h"
+#include "core/datatypes/forte_time.h"
+#include "core/datatypes/forte_uint.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 #include "E_DELAY_fbt.h"
 #include "E_TABLE_CTRL_fbt.h"
 

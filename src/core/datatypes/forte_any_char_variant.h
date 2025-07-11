@@ -16,9 +16,9 @@
 
 #include <variant>
 
-#include "forte_any.h"
-#include "forte_char.h"
-#include "forte_wchar.h"
+#include "core/datatypes/forte_any.h"
+#include "core/datatypes/forte_char.h"
+#include "core/datatypes/forte_wchar.h"
 
 using TIecAnyCharVariantType = std::variant<
     // ANY_ELEMENTARY

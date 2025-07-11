@@ -19,12 +19,12 @@
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
-#include "forte_lreal.h"
-#include "forte_real.h"
-#include "forte_lint.h"
-#include "forte_ulint.h"
-#include "forte_string.h"
-#include "forte_wstring.h"
+#include "core/datatypes/forte_lreal.h"
+#include "core/datatypes/forte_real.h"
+#include "core/datatypes/forte_lint.h"
+#include "core/datatypes/forte_ulint.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_wstring.h"
 
 USE_STRING_ID(LREAL);
 

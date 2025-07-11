@@ -17,9 +17,9 @@
 #ifndef SRC_CORE_LUABFB_H_
 #define SRC_CORE_LUABFB_H_
 
-#include "genfb.h"
-#include "basicfb.h"
-#include "luabfbtypeentry.h"
+#include "core/genfb.h"
+#include "core/basicfb.h"
+#include "core/lua/luabfbtypeentry.h"
 
 class CIEC_ANY;
 

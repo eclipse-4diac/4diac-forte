@@ -1,52 +1,62 @@
-#*******************************************************************************
+# *******************************************************************************
 # * Copyright (c) 2022, 2024 Peirlberger Juergen, Jose Cabral
 # * This program and the accompanying materials are made available under the
 # * terms of the Eclipse Public License 2.0 which is available at
-# * http://www.eclipse.org/legal/epl-2.0.
-# *
-# * SPDX-License-Identifier: EPL-2.0
-# *
+# * http://www.eclipse.org/legal/epl-2.0. *
+# * SPDX-License-Identifier: EPL-2.0 *
 # * Contributors:
-# *   Peirlberger Juergen - initial API and implementation and/or initial documentation
+# * Peirlberger Juergen - initial API and implementation and/or initial
+#   documentation
 # *******************************************************************************/
 
-forte_add_io(PLCNEXT "Support for PLCnext system")
+forte_register_io(PLCNEXT OFF "Support for PLCnext system")
+if (NOT FORTE_ARCHITECTURE STREQUAL "Posix")
+    return()
+endif ()
 
-if(FORTE_IO_PLCNEXT)
-
-if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-#############################################################################
+# ############################################################################
 # PLCnext
-#############################################################################
+# ############################################################################
 
-# FIXME: This is undocumented, where does this settings come from?
-#list(INSERT CMAKE_MODULE_PATH 0 "${ARP_TOOLCHAIN_CMAKE_MODULE_PATH}")
+# FIXME: This is undocumented, where does this settings come from? list(INSERT
+# CMAKE_MODULE_PATH 0 "${ARP_TOOLCHAIN_CMAKE_MODULE_PATH}")
 
 find_package(ArpDevice REQUIRED)
 find_package(ArpProgramming REQUIRED)
 
-forte_add_include_directories(${ArpProgramming_INCLUDE_DIR})
+target_link_libraries(forte PUBLIC ArpDevice)
+target_link_libraries(forte PUBLIC ArpProgramming)
+target_link_libraries(forte PUBLIC Arp.System.ModuleLib)
+target_link_libraries(forte PUBLIC Arp.System.Module)
+target_link_libraries(forte PUBLIC Arp.Plc.AnsiC)
 
-forte_add_sourcefile_hcpp(types/PLCnextBusAdapter)
-forte_add_sourcefile_hcpp(types/PLCnextAXLSEDI16)
-forte_add_sourcefile_hcpp(types/PLCnextAXLSEDO16)
-forte_add_sourcefile_hcpp(types/PLCnextAXLSESC)
-forte_add_sourcefile_hcpp(types/PLCnextMaster)
+forte_register_startup_hook(DeviceStatus::startup)
 
-forte_add_sourcefile_hcpp(deviceController slaveHandler slaveHandle/slaveHandle slaveHandle/bitSlaveHandle)
-forte_add_sourcefile_hcpp(plcNextDeviceInterface plcNextDeviceStatus)
-
-forte_add_link_library_beginning(ArpDevice)
-forte_add_link_library_beginning(ArpProgramming)
-forte_add_link_library_beginning(Arp.System.ModuleLib)
-forte_add_link_library_beginning(Arp.System.Module)
-forte_add_link_library_beginning(Arp.Plc.AnsiC)
-
-forte_add_startup_hook(DeviceStatus::startup)
-
-endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-
-endif(FORTE_IO_PLCNEXT)
+add_library(forte-modules-PLCnext OBJECT
+            types/PLCnextBusAdapter.h
+            types/PLCnextBusAdapter.cpp
+            types/PLCnextAXLSEDI16.h
+            types/PLCnextAXLSEDI16.cpp
+            types/PLCnextAXLSEDO16.h
+            types/PLCnextAXLSEDO16.cpp
+            types/PLCnextAXLSESC.h
+            types/PLCnextAXLSESC.cpp
+            types/PLCnextMaster.h
+            types/PLCnextMaster.cpp
+            deviceController.h
+            deviceController.cpp
+            slaveHandler.h
+            slaveHandler.cpp
+            slaveHandle/slaveHandle.h
+            slaveHandle/slaveHandle.cpp
+            slaveHandle/bitSlaveHandle.h
+            slaveHandle/bitSlaveHandle.cpp
+            plcNextDeviceInterface.h
+            plcNextDeviceInterface.cpp
+            plcNextDeviceStatus.h
+            plcNextDeviceStatus.cpp
+)
+target_link_libraries(forte PRIVATE forte-modules-PLCnext)
+target_include_directories(forte-modules-PLCnext
+                           PUBLIC ${ArpProgramming_INCLUDE_DIR}
+)

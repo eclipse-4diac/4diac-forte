@@ -17,7 +17,7 @@
 
 #include <babeltrace2/babeltrace.h>
 
-#include "trace/internal/EventMessage.h"
+#include "core/trace/internal/EventMessage.h"
 
 namespace forte::trace::reader {
   /**

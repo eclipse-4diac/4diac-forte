@@ -13,7 +13,7 @@
  *    Robert Promok - added functions
  *******************************************************************************/
 
-#include "processinterface.h"
+#include "core/fmi/processinterface.h"
 #include <sstream>
 #include <linux/input.h>
 #include <fcntl.h>

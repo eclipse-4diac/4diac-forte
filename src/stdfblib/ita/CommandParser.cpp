@@ -11,7 +11,7 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "CommandParser.h"
+#include "stdfblib/ita/CommandParser.h"
 
 #include <cstring>
 #include <string_view>

@@ -16,7 +16,7 @@
 #define _PROCESSINTERFACE_H_
 
 #include "../i2c_dev/i2cprocessinterface.h"
-#include <funcbloc.h>
+#include "core/funcbloc.h"
 
 class CProcessInterface : public CI2CProcessInterface {
 

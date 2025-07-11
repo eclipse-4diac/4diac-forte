@@ -13,8 +13,8 @@
  *     - improve multicast support
  *******************************************************************************/
 #include <sockhand.h> //needs to be first pulls in the platform specific includes
-#include "bsdsocketinterf.h"
-#include "devlog.h"
+#include "arch/bsdsocketinterf.h"
+#include "arch/devlog.h"
 #include <string.h>
 
 void CBSDSocketInterface::closeSocket(TSocketDescriptor paSockD) {

@@ -1,38 +1,39 @@
-#*******************************************************************************
-# Copyright (c) 2011 - 2013 ACIN, Profacor GmbH
-# This program and the accompanying materials are made available under the
-# terms of the Eclipse Public License 2.0 which is available at
+# *******************************************************************************
+# Copyright (c) 2011 - 2013 ACIN, Profacor GmbH This program and the
+# accompanying materials are made available under the terms of the Eclipse
+# Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
-# Contributors:
-#    Monika Wenger, Matthias Plasch
-# *   - initial API and implementation and/or initial documentation
+#
+# Contributors: Monika Wenger, Matthias Plasch *   - initial API and
+# implementation and/or initial documentation
 # *******************************************************************************/
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-#############################################################################
-# Conversion
-#############################################################################
-forte_add_subdirectory(BOOL)
-forte_add_subdirectory(BYTE)
-forte_add_subdirectory(DINT)
-forte_add_subdirectory(DWORD)
-forte_add_subdirectory(INT)
-forte_add_subdirectory(SINT)
-forte_add_subdirectory(STRING)
-forte_add_subdirectory(TIME)
-forte_add_subdirectory(UDINT)
-forte_add_subdirectory(UINT)
-forte_add_subdirectory(USINT)
-forte_add_subdirectory(WORD)
-forte_add_subdirectory(BCD)
-forte_add_subdirectory(WSTRING)
-forte_add_subdirectory(REAL)
-forte_add_subdirectory(LREAL)
-forte_add_subdirectory(ULINT)
-forte_add_subdirectory(LWORD)
-forte_add_subdirectory(LINT)
-forte_add_subdirectory(DT)
 
-forte_add_sourcefile_hcpp(F_ANY_AS_STRING_fbt)
+# ############################################################################
+# Conversion
+# ############################################################################
+add_subdirectory(BOOL)
+add_subdirectory(BYTE)
+add_subdirectory(DINT)
+add_subdirectory(DWORD)
+add_subdirectory(INT)
+add_subdirectory(SINT)
+add_subdirectory(STRING)
+add_subdirectory(TIME)
+add_subdirectory(UDINT)
+add_subdirectory(UINT)
+add_subdirectory(USINT)
+add_subdirectory(WORD)
+add_subdirectory(BCD)
+add_subdirectory(WSTRING)
+add_subdirectory(REAL)
+add_subdirectory(LREAL)
+add_subdirectory(ULINT)
+add_subdirectory(LWORD)
+add_subdirectory(LINT)
+add_subdirectory(DT)
+add_library(forte-modules-IEC61131-3-Conversion OBJECT
+            F_ANY_AS_STRING_fbt.h F_ANY_AS_STRING_fbt.cpp
+)
+target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Conversion)

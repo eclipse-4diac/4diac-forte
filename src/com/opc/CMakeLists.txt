@@ -1,40 +1,66 @@
-#*******************************************************************************
-# Copyright (c) 2012, 2024 AIT, ACIN, fortiss GmbH, Hit robot group, Samator Indo Gas
-# This program and the accompanying materials are made available under the
-# terms of the Eclipse Public License 2.0 which is available at
+# *******************************************************************************
+# Copyright (c) 2012, 2024 AIT, ACIN, fortiss GmbH, Hit robot group, Samator
+# Indo Gas This program and the accompanying materials are made available
+# under the terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
-# Contributors:
-#    Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
-#    Tibalt Zhao - Ease the workload to compile OPC DA
-#    Ketut Kumajaya - switch to OPCClientToolKit with 64bit support
+#
+# Contributors: Filip Andren, Alois Zoitl - initial API and implementation
+# and/or initial documentation Tibalt Zhao - Ease the workload to compile OPC
+# DA Ketut Kumajaya - switch to OPCClientToolKit with 64bit support
 # *******************************************************************************/
-#############################################################################
+# ############################################################################
 # OPC Com Layer
-#############################################################################
+# ############################################################################
 
-if("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
-forte_add_network_layer(OPC OFF "opc" COpcComLayer opccomlayer "Enable OPC communication")
+if (NOT FORTE_ARCHITECTURE STREQUAL "Win32")
+    return()
+endif ()
 
-if(FORTE_COM_OPC)  
-  SET(FORTE_COM_OPC_LIB_ROOT "" CACHE PATH "Path to OPC library root directory")
-  SET(FORTE_COM_OPC_BOOST_ROOT "" CACHE PATH "Path to Boost library root directory")
+forte_register_com_layer(OPC OFF "opc" COpcComLayer opccomlayer.h
+                         "Enable OPC communication"
+)
 
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-  
-  forte_add_handler(COpcEventHandler opceventhandler)
+if (NOT FORTE_COM_OPC)
+    return()
+endif ()
 
-  forte_add_sourcefile_hcpp( opcconnection opcconnectionhandler opceventhandler
-                 opcconnectionimpl opcprocessvar Cmd_AddConnection
-                 Cmd_RemoveConnection Cmd_SetProcessVarValue )
+set(FORTE_COM_OPC_LIB_ROOT
+    ""
+    CACHE PATH "Path to OPC library root directory"
+)
+set(FORTE_COM_OPC_BOOST_ROOT
+    ""
+    CACHE PATH "Path to Boost library root directory"
+)
 
-  forte_add_include_directories( ${FORTE_COM_OPC_BOOST_ROOT} )
+forte_register_handler(COpcEventHandler opceventhandler.h)
 
-  forte_add_include_directories( ${FORTE_COM_OPC_LIB_ROOT}/include/OPCClientToolKit )
-  forte_add_link_directories( ${FORTE_COM_OPC_LIB_ROOT}/lib )
-
-  forte_add_link_library( OPCClientToolKit )
-endif(FORTE_COM_OPC)
-endif("${FORTE_ARCHITECTURE}" STREQUAL "Win32")
+target_link_libraries(forte PUBLIC OPCClientToolKit)
+add_library(forte-com-opc OBJECT
+            $<$<BOOL:${FORTE_COM_OPC}>:opccomlayer.cpp>
+            $<$<BOOL:${FORTE_COM_OPC}>:opccomlayer.h>
+            opcconnection.h
+            opcconnection.cpp
+            opcconnectionhandler.h
+            opcconnectionhandler.cpp
+            opceventhandler.h
+            opceventhandler.cpp
+            opcconnectionimpl.h
+            opcconnectionimpl.cpp
+            opcprocessvar.h
+            opcprocessvar.cpp
+            Cmd_AddConnection.h
+            Cmd_AddConnection.cpp
+            Cmd_RemoveConnection.h
+            Cmd_RemoveConnection.cpp
+            Cmd_SetProcessVarValue.h
+            Cmd_SetProcessVarValue.cpp
+)
+target_link_libraries(forte PRIVATE forte-com-opc)
+target_include_directories(forte-com-opc PUBLIC ${FORTE_COM_OPC_BOOST_ROOT})
+target_include_directories(forte-com-opc
+                           PUBLIC ${FORTE_COM_OPC_LIB_ROOT}/include/OPCClientToolKit
+)
+target_link_directories(forte-com-opc PUBLIC ${FORTE_COM_OPC_LIB_ROOT}/lib)

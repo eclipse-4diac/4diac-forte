@@ -11,7 +11,7 @@
  *    Stanislav Meduna, Ingo Hegny, Alois Zoitl
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include "unicode_utils.h"
+#include "core/datatypes/unicode_utils.h"
 #include <string.h>
 
 const TForteUInt32 CUnicodeUtilities::scmBOMMarker = 0xfeff;

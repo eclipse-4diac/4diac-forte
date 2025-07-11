@@ -13,11 +13,11 @@
 #ifndef _FIELDSTOARROWHEADEVENT_H_
 #define _FIELDSTOARROWHEADEVENT_H_
 
-#include <basicfb.h>
-#include <forte_date_and_time.h>
+#include "core/basicfb.h"
+#include "core/datatypes/forte_date_and_time.h"
 #include <forte_arrowheadevent.h>
-#include <forte_wstring.h>
-#include <forte_array.h>
+#include "core/datatypes/forte_wstring.h"
+#include "core/datatypes/forte_array.h"
 
 class FORTE_FieldsToArrowheadEvent : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToArrowheadEvent)

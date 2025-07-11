@@ -11,13 +11,13 @@
  *   Alois Zoitl, Gerhard Ebenhofer, Rene Smodic, Ingo Hegny
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "RMT_DEV.h"
+#include "stdfblib/ita/RMT_DEV.h"
 
 USE_STRING_ID(MGR);
 USE_STRING_ID(MGR_ID);
 USE_STRING_ID(WSTRING);
 
-#include <stringdict.h>
+#include "core/stringdict.h"
 
 namespace {
   const auto cDataInputNames = std::array{STRID(MGR_ID)};

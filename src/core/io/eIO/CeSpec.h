@@ -20,11 +20,11 @@
 #define BUFFER_SIZE_BOUNDED_AREA 8
 #define BUFFER_SIZE_GRADIENT 8
 
-#include "CeBuffer.h"
-#include "forte_word.h"
+#include "core/io/eIO/CeBuffer.h"
+#include "core/datatypes/forte_word.h"
 
-#include <core/io/mapper/io_handle.h>
-#include <core/io/processinterfacefb.h>
+#include "core/io/mapper/io_handle.h"
+#include "core/io/processinterfacefb.h"
 
 using namespace forte::core::io;
 

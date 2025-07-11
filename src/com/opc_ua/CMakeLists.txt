@@ -1,98 +1,173 @@
-#*******************************************************************************************
+# *******************************************************************************************
 
-# Copyright (c) 2015-2016 Florian Froschermeier <florian.froschermeier@tum.de>, fortiss GmbH
-# This program and the accompanying materials are made available under the
-# terms of the Eclipse Public License 2.0 which is available at
+# Copyright (c) 2015-2016 Florian Froschermeier
+# <florian.froschermeier@tum.de>, fortiss GmbH This program and the
+# accompanying materials are made available under the terms of the Eclipse
+# Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
-# Contributors:
-#     Florian Froschermeier
-#       - initial integration of OPC Unified Architecture into FORTE
-#     Stefan Profanter
-#       - refactoring and adaption to new concept
+#
+# Contributors: Florian Froschermeier - initial integration of OPC Unified
+# Architecture into FORTE Stefan Profanter - refactoring and adaption to new
+# concept
 # ******************************************************************************************
 
-#############################################################################
-# OPC Unified Architecture (UA) integration.
-# For integration the open-source OPC-UA communication stack/library
-# from (open62541 - http://open62541.org/) was used.
-#############################################################################
+# ############################################################################
+# OPC Unified Architecture (UA) integration. For integration the open-source
+# OPC-UA communication stack/library from (open62541 - http://open62541.org/)
+# was used.
+# ############################################################################
 
 # option to enable OPC UA with cmake
-forte_add_network_layer(OPC_UA OFF "opc_ua" COPC_UA_Layer opcua_layer "Enable OPC UA communication layer")
+forte_register_com_layer(OPC_UA OFF "opc_ua" COPC_UA_Layer opcua_layer.h
+                         "Enable OPC UA communication layer"
+)
 if (NOT FORTE_COM_OPC_UA)
-  return()
+    return()
 endif ()
 
 add_subdirectory(generated)
 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+set(FORTE_COM_OPC_UA_PORT
+    4840
+    CACHE STRING "Port where the OPC_UA server will listen"
+)
+set(FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL
+    100.0
+    CACHE STRING "OPC UA Server publishing interval in ms"
+)
+set(FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL
+    100.0
+    CACHE STRING
+          "OPC UA Client requested publishing interval via OPC UA data subscription in ms"
+)
+set(FORTE_COM_OPC_UA_SERVER_MAX_ITERATION_INTERVAL
+    10
+    CACHE STRING
+          "The maximum time in OPC UA server will wait to iterate again"
+)
 
-    forte_add_sourcefile_with_path_cpp(opcua_types.cpp)
+option(FORTE_COM_OPC_UA_MULTICAST
+       "Enable multicast support for OPC UA and registering with LDS" OFF
+)
+set(FORTE_COM_OPC_UA_INCLUDE_DIR
+    ""
+    CACHE PATH "ABSOLUTE path to open62541.h file in the OPC UA project"
+)
+set(FORTE_COM_OPC_UA_LIB_DIR
+    ""
+    CACHE PATH
+          "ABSOLUTE path to OPC UA folder with object library FORTE_COM_OPC_UA_LIB"
+)
+set(FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
+    CACHE STRING
+          "Custom hostname which is used for the OPC UA app name and app uri"
+)
+option(FORTE_COM_OPC_UA_ENCRYPTION
+       "The open62541 lilbrary was compiled using encryption" ON
+)
 
-    SET(FORTE_COM_OPC_UA_PORT 4840 CACHE STRING "Port where the OPC_UA server will listen")
-    SET(FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL 100.0 CACHE STRING "OPC UA Server publishing interval in ms")
-    SET(FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL 100.0 CACHE STRING "OPC UA Client requested publishing interval via OPC UA data subscription in ms")
-    SET(FORTE_COM_OPC_UA_SERVER_MAX_ITERATION_INTERVAL 10 CACHE STRING "The maximum time in OPC UA server will wait to iterate again")
+set(FORTE_COM_OPC_UA_LIB
+    "open62541"
+    CACHE STRING
+          "OPC_UA Library file in FORTE_COM_OPC_UA_DIR to be linked to forte (normally with name libopen62541 and a extension according to the type and OS)"
+)
+if (FORTE_ARCHITECTURE STREQUAL "Win32")
+    target_link_libraries(forte PUBLIC iphlpapi)
+    target_compile_definitions(forte-global INTERFACE UA_ARCHITECTURE_WIN32)
+elseif (FORTE_ARCHITECTURE STREQUAL "VxWorks")
+    target_compile_definitions(forte-global INTERFACE UA_ARCHITECTURE_VXWORKS)
+elseif (FORTE_ARCHITECTURE STREQUAL "Nios2")
+    target_compile_definitions(forte-global INTERFACE UA_ARCHITECTURE_ECOS)
+elseif (FORTE_ARCHITECTURE STREQUAL "FreeRTOSLwIP")
+    target_compile_definitions(forte-global
+                               INTERFACE UA_ARCHITECTURE_FREERTOSLWIP
+    )
+else ()
+    target_compile_definitions(forte-global INTERFACE UA_ARCHITECTURE_POSIX)
+endif ()
+target_include_directories(forte-global
+                           INTERFACE ${FORTE_COM_OPC_UA_INCLUDE_DIR}
+)
+target_link_libraries(forte PUBLIC ${FORTE_COM_OPC_UA_LIB})
 
-    option(FORTE_COM_OPC_UA_MULTICAST "Enable multicast support for OPC UA and registering with LDS" OFF)
-    SET(FORTE_COM_OPC_UA_INCLUDE_DIR "" CACHE PATH "ABSOLUTE path to open62541.h file in the OPC UA project")
-    SET(FORTE_COM_OPC_UA_LIB_DIR "" CACHE PATH "ABSOLUTE path to OPC UA folder with object library FORTE_COM_OPC_UA_LIB")
-    SET(FORTE_COM_OPC_UA_CUSTOM_HOSTNAME CACHE STRING "Custom hostname which is used for the OPC UA app name and app uri")
-    option(FORTE_COM_OPC_UA_ENCRYPTION "The open62541 lilbrary was compiled using encryption" ON)
+forte_register_handler(COPC_UA_Local_Handler opcua_local_handler.h)
+forte_register_handler(COPC_UA_Remote_Handler opcua_remote_handler.h)
+# OPC UA Event Layer
+forte_register_com_layer(OPC_UA_Events OFF "ua_ev" COPC_UA_Event_Layer
+                         opcua_event_layer.h "Enable OPC UA Event Support"
+)
+forte_register_com_layer(OPC_UA_AC OFF "ua_ac" COPC_UA_AC_Layer
+                         opcua_ac_layer.h "Enable OPC UA A&C Support"
+)
 
-    SET(FORTE_COM_OPC_UA_LIB "open62541" CACHE STRING "OPC_UA Library file in FORTE_COM_OPC_UA_DIR to be linked to forte (normally with name libopen62541 and a extension according to the type and OS)")
-    IF (FORTE_ARCHITECTURE STREQUAL "Win32")
-        forte_add_link_library(iphlpapi)
-        forte_add_definition("-DUA_ARCHITECTURE_WIN32")
-    ELSEIF (FORTE_ARCHITECTURE STREQUAL "VxWorks")
-          forte_add_definition("-DUA_ARCHITECTURE_VXWORKS")
-        ELSEIF (FORTE_ARCHITECTURE STREQUAL "Nios2")
-          forte_add_definition("-DUA_ARCHITECTURE_ECOS")
-        ELSEIF (FORTE_ARCHITECTURE STREQUAL "FreeRTOSLwIP")
-          forte_add_definition("-DUA_ARCHITECTURE_FREERTOSLWIP")
-        ELSE()
-          forte_add_definition("-DUA_ARCHITECTURE_POSIX")
-    ENDIF ()
-    target_include_directories(forte-global INTERFACE ${FORTE_COM_OPC_UA_INCLUDE_DIR})
-    forte_add_link_directories(${FORTE_COM_OPC_UA_LIB_DIR})
-    forte_add_link_library_beginning(${FORTE_COM_OPC_UA_LIB})
+configure_file(opcua_defaults.h.in
+               ${FORTE_GENERATED_FILES_DIR}/opcua_defaults.h
+)
 
-    forte_add_handler(COPC_UA_Local_Handler opcua_local_handler)
-    forte_add_handler(COPC_UA_Remote_Handler opcua_remote_handler)
-    # OPC UA Event Layer
-    forte_add_network_layer(OPC_UA_Events OFF "ua_ev" COPC_UA_Event_Layer opcua_event_layer "Enable OPC UA Event Support")
-    forte_add_network_layer(OPC_UA_AC OFF "ua_ac" COPC_UA_AC_Layer opcua_ac_layer "Enable OPC UA A&C Support")
-    forte_add_sourcefile_hcpp(opcua_local_handler opcua_helper opcua_remote_handler opcua_handler_abstract opcua_client_information opcua_action_info opcua_objectstruct_helper 
-        opcua_client_config_parser)
+add_subdirectory(FBs)
+add_subdirectory(types)
+add_subdirectory(detail)
 
-    configure_file(opcua_defaults.h.in ${FORTE_GENERATED_FILES_DIR}/opcua_defaults.h)
-    
-    add_subdirectory(FBs)    
-    add_subdirectory(types)
-    add_subdirectory(detail)
+if (FORTE_COM_OPC_UA_ENCRYPTION)
+    set(FORTE_COM_OPC_UA_ENCRYPTION_INCLUDE_DIR
+        ""
+        CACHE STRING "ABSOLUTE path to encryption headers"
+    )
+    set(FORTE_COM_OPC_UA_ENCRYPTION_LIB_DIR
+        ""
+        CACHE STRING "ABSOLUTE path to encryption libraries"
+    )
 
-    
-    if (FORTE_COM_OPC_UA_ENCRYPTION)
-      SET(FORTE_COM_OPC_UA_ENCRYPTION_INCLUDE_DIR "" CACHE STRING "ABSOLUTE path to encryption headers")
-      SET(FORTE_COM_OPC_UA_ENCRYPTION_LIB_DIR "" CACHE STRING "ABSOLUTE path to encryption libraries")
-      
-      forte_add_include_system_directories(${FORTE_COM_OPC_UA_ENCRYPTION_INCLUDE_DIR})
-      forte_add_link_directories(${FORTE_COM_OPC_UA_ENCRYPTION_LIB_DIR})
+    option(FORTE_COM_OPC_UA_ENCRYPTION_MBEDTLS
+           "Was open62541 built against mbedtls instead of openssl/libressl?"
+           TRUE
+    )
 
-      option(FORTE_COM_OPC_UA_ENCRYPTION_MBEDTLS "Was open62541 built against mbedtls instead of openssl/libressl?" TRUE)
-
-      if (FORTE_COM_OPC_UA_ENCRYPTION_MBEDTLS)
-        forte_add_link_library(mbedcrypto)
-        forte_add_link_library(mbedtls)
-        forte_add_link_library(mbedx509)
+    if (FORTE_COM_OPC_UA_ENCRYPTION_MBEDTLS)
+        target_link_libraries(forte PUBLIC mbedcrypto)
+        target_link_libraries(forte PUBLIC mbedtls)
+        target_link_libraries(forte PUBLIC mbedx509)
         if (FORTE_ARCHITECTURE STREQUAL "Win32")
-          forte_add_link_library(bcrypt)
+            target_link_libraries(forte PUBLIC bcrypt)
         endif ()
-      else()
-        forte_add_link_library(ssl)
-        forte_add_link_library(crypto)
-      endif ()
-    endif ()  
+    else ()
+        target_link_libraries(forte PUBLIC ssl)
+        target_link_libraries(forte PUBLIC crypto)
+    endif ()
+endif ()
+
+add_library(forte-com-opc_ua OBJECT
+            $<$<BOOL:${FORTE_COM_OPC_UA}>:opcua_layer.cpp>
+            $<$<BOOL:${FORTE_COM_OPC_UA}>:opcua_layer.h>
+            opcua_types.cpp
+            $<$<BOOL:${FORTE_COM_OPC_UA_Events}>:opcua_event_layer.cpp>
+            $<$<BOOL:${FORTE_COM_OPC_UA_Events}>:opcua_event_layer.h>
+            $<$<BOOL:${FORTE_COM_OPC_UA_AC}>:opcua_ac_layer.cpp>
+            $<$<BOOL:${FORTE_COM_OPC_UA_AC}>:opcua_ac_layer.h>
+            opcua_local_handler.h
+            opcua_local_handler.cpp
+            opcua_helper.h
+            opcua_helper.cpp
+            opcua_remote_handler.h
+            opcua_remote_handler.cpp
+            opcua_handler_abstract.h
+            opcua_handler_abstract.cpp
+            opcua_client_information.h
+            opcua_client_information.cpp
+            opcua_action_info.h
+            opcua_action_info.cpp
+            opcua_objectstruct_helper.h
+            opcua_objectstruct_helper.cpp
+            opcua_client_config_parser.h
+            opcua_client_config_parser.cpp
+)
+target_link_libraries(forte PRIVATE forte-com-opc_ua)
+target_include_directories(forte-com-opc_ua
+                           PUBLIC ${FORTE_COM_OPC_UA_ENCRYPTION_INCLUDE_DIR}
+)
+target_link_directories(forte-com-opc_ua PUBLIC ${FORTE_COM_OPC_UA_LIB_DIR})
+target_link_directories(forte-com-opc_ua PUBLIC
+                        ${FORTE_COM_OPC_UA_ENCRYPTION_LIB_DIR}
+)

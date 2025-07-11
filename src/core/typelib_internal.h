@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "typelib.h"
+#include "core/typelib.h"
 #include "core/stringdict.h"
 #include <vector>
 

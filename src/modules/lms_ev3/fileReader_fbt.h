@@ -13,7 +13,7 @@
 #ifndef _FILEREADER_H_
 #define _FILEREADER_H_
 
-#include <funcbloc.h>
+#include "core/funcbloc.h"
 #include <fstream>
 
 class fileReader : public CFunctionBlock {

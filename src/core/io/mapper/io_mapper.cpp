@@ -13,11 +13,11 @@
  *   Jonathan Lainer - Add method for deregistering Handles by ID.
  *******************************************************************************/
 
-#include "io_mapper.h"
-#include "io_handle.h"
-#include "io_observer.h"
-#include <devlog.h>
-#include "criticalregion.h"
+#include "core/io/mapper/io_mapper.h"
+#include "core/io/mapper/io_handle.h"
+#include "core/io/mapper/io_observer.h"
+#include "arch/devlog.h"
+#include "core/util/criticalregion.h"
 
 using namespace forte::core::io;
 

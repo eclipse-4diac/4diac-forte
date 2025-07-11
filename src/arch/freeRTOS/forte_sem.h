@@ -15,7 +15,7 @@
 
 #include <FreeRTOS.h>
 #include <semphr.h>
-#include "../datatype.h"
+#include "arch/datatype.h"
 
 namespace forte {
   namespace arch {

@@ -13,7 +13,7 @@
 #ifndef TSN_LAYER_H_
 #define TSN_LAYER_H_
 
-#include "ipcomlayer.h"
+#include "core/cominfra/ipcomlayer.h"
 
 namespace forte {
 

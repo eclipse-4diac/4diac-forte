@@ -12,7 +12,7 @@
  *******************************************************************************/
 
 #include "RevPiHandle.h"
-#include <forte_word.h>
+#include "core/datatypes/forte_word.h"
 
 using namespace forte::core::io;
 

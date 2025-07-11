@@ -13,7 +13,7 @@
 #ifndef POWERLINKFUNCTIONBLOCKAI_H
 #define POWERLINKFUNCTIONBLOCKAI_H
 
-#include "funcbloc.h"
+#include "core/funcbloc.h"
 #include "forte_sync.h"
 
 #include "EplCNCallback.h"

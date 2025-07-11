@@ -13,8 +13,8 @@
 #ifndef _SUBSCRIBEEVENTHTTP_H_
 #define _SUBSCRIBEEVENTHTTP_H_
 
-#include <cfb.h>
-#include <typelib.h>
+#include "core/cfb.h"
+#include "core/typelib.h"
 #include "SubscribeEventAdp_adp.h"
 
 class FORTE_SubscribeEventHTTP : public CCompositeFB {

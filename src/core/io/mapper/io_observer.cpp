@@ -13,8 +13,8 @@
  *   Jonathan Lainer - Adding getter for mDirection.
  *******************************************************************************/
 
-#include "io_observer.h"
-#include <devlog.h>
+#include "core/io/mapper/io_observer.h"
+#include "arch/devlog.h"
 
 using namespace forte::core::io;
 

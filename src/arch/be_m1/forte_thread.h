@@ -18,8 +18,8 @@
 #include <BeTypes.h>
 #include <mtypes.h>
 #include <BETask.hpp>
-#include "../datatype.h"
-#include "../threadbase.h"
+#include "arch/datatype.h"
+#include "arch/threadbase.h"
 
 /**  \ingroup FORTE-HAL
  * \defgroup bem1_hal Bachmann electronic M1 FORTE Hardware Abstraction Layer

@@ -16,7 +16,7 @@
 #include "core/util/parameterParser.h"
 #include "MQTTHandler.h"
 #include "MQTTClient.h"
-#include "commfb.h"
+#include "core/cominfra/commfb.h"
 #include <string>
 
 using namespace forte::com_infra;

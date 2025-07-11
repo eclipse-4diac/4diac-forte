@@ -11,7 +11,7 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny,  Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include "forte_usint.h"
+#include "core/datatypes/forte_usint.h"
 
 USE_STRING_ID(USINT);
 

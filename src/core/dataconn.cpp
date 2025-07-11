@@ -14,12 +14,12 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Jobst - move allocation of data value to FB
  *******************************************************************************/
-#include "dataconn.h"
-#include "funcbloc.h"
-#include "gatherdataconn.h"
-#include "membdataconn.h"
-#include "mgmcmd.h"
-#include "negdataconn.h"
+#include "core/dataconn.h"
+#include "core/funcbloc.h"
+#include "core/gatherdataconn.h"
+#include "core/membdataconn.h"
+#include "core/mgmcmd.h"
+#include "core/negdataconn.h"
 
 USE_STRING_ID(NOT)
 

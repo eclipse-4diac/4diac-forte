@@ -12,9 +12,9 @@
  *******************************************************************************/
 #include <algorithm>
 #include "modbuslayer.h"
-#include "commfb.h"
+#include "core/cominfra/commfb.h"
 #include "modbusclientconnection.h"
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 using namespace forte::com_infra;
 

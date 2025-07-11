@@ -10,8 +10,8 @@
  *   Maximilian Scharf - Initial implementation.
  *******************************************************************************/
 
-#include "eIXconfig_fbt.h"
-#include "eIX_fbt.h"
+#include "core/io/eIO/io/eIXconfig_fbt.h"
+#include "core/io/eIO/io/eIX_fbt.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);

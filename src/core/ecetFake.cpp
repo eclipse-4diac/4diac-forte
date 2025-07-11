@@ -11,8 +11,8 @@
  *    Jose Cabral - initial implementation and rework communication infrastructure
  *******************************************************************************/
 
-#include "ecetFake.h"
-#include "funcbloc.h"
+#include "core/ecetFake.h"
+#include "core/funcbloc.h"
 
 CFakeEventExecutionThread::CFakeEventExecutionThread() : CEventChainExecutionThread() {
   mProcessEventCallback = [this](TEventEntry paEvent) { paEvent.getFB().receiveInputEvent(paEvent.getPortId(), this); };

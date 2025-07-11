@@ -19,14 +19,14 @@
 
 #pragma once
 
-#include "basicfb.h"
-#include "forte_udint.h"
-#include "forte_bool.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/basicfb.h"
+#include "core/datatypes/forte_udint.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 class FORTE_E_CTUD_UDINT final : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_E_CTUD_UDINT)

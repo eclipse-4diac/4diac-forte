@@ -18,7 +18,7 @@
  *******************************************************************************/
 #include "GEN_ARRAY2VALUES_fbt.h"
 #include <memory>
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(ARRAY);
 USE_STRING_ID(CNF);

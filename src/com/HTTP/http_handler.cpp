@@ -16,14 +16,14 @@
 
 #include "http_handler.h"
 
-#include "../../core/devexec.h"
-#include "../../core/iec61131_functions.h"
-#include "../../core/cominfra/basecommfb.h"
-#include <criticalregion.h>
+#include "core/devexec.h"
+#include "core/iec61131_functions.h"
+#include "core/cominfra/basecommfb.h"
+#include "core/util/criticalregion.h"
 #include "httpparser.h"
-#include <forte_printer.h>
-#include "comlayer.h"
-#include <forte_config.h>
+#include "arch/forte_printer.h"
+#include "core/cominfra/comlayer.h"
+#include "generated/forte_config.h"
 #include <string>
 #include "generated/config/FORTE_COM_HTTP_LISTENING_PORT.h"
 

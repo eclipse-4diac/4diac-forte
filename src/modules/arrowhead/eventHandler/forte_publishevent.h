@@ -13,8 +13,8 @@
 #ifndef _FORTE_PUBLISHEVENT_H_
 #define _FORTE_PUBLISHEVENT_H_
 
-#include "forte_struct.h"
-#include "forte_wstring.h"
+#include "core/datatypes/forte_struct.h"
+#include "core/datatypes/forte_wstring.h"
 #include "forte_arrowheadsystem.h"
 #include "forte_arrowheadevent.h"
 

@@ -19,7 +19,7 @@
  *******************************************************************************/
 #pragma once
 
-#include "forte_array_common.h"
+#include "core/datatypes/forte_array_common.h"
 #include <vector>
 
 template<typename T>

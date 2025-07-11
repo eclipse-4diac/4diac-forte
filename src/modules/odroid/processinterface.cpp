@@ -10,7 +10,7 @@
  *    Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "processinterface.h"
+#include "core/fmi/processinterface.h"
 
 COdroidProcessInterface::COdroidProcessInterface(forte::core::CFBContainer &paContainer,
                                                  const SFBInterfaceSpec &paInterfaceSpec,

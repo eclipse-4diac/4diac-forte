@@ -14,7 +14,7 @@
 #include "../../core/fbtests/fbtestfixture.h"
 #include <cstdio>
 #include <fstream>
-#include "forte_array_fixed.h"
+#include "core/datatypes/forte_array_fixed.h"
 
 USE_STRING_ID(CSV_WRITER_2);
 

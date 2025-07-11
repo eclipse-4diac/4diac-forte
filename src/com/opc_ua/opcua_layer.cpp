@@ -18,17 +18,17 @@
  *      - add support for Object Structs
  *******************************************************************************/
 
-#include "opcua_layer.h"
-#include "opcua_helper.h"
-#include "opcua_local_handler.h"
-#include "../../core/cominfra/basecommfb.h"
-#include "../../arch/devlog.h"
+#include "com/opc_ua/opcua_layer.h"
+#include "com/opc_ua/opcua_helper.h"
+#include "com/opc_ua/opcua_local_handler.h"
+#include "core/cominfra/basecommfb.h"
+#include "arch/devlog.h"
 #include <cstddef>
-#include <forte_string.h>
-#include <criticalregion.h>
-#include "opcua_action_info.h"
-#include "opcua_remote_handler.h"
-#include "opcua_objectstruct_helper.h"
+#include "core/datatypes/forte_string.h"
+#include "core/util/criticalregion.h"
+#include "com/opc_ua/opcua_action_info.h"
+#include "com/opc_ua/opcua_remote_handler.h"
+#include "com/opc_ua/opcua_objectstruct_helper.h"
 
 using namespace forte::com_infra;
 

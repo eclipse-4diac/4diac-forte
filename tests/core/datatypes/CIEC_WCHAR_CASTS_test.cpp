@@ -12,14 +12,14 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "iec61131_functions.h"
+#include "core/iec61131_functions.h"
 
-#include "../../../src/core/datatypes/forte_wchar.h"
-#include "../../../src/core/datatypes/forte_char.h"
-#include "../../../src/core/datatypes/forte_word.h"
-#include "../../../src/core/datatypes/forte_dword.h"
-#include "../../../src/core/datatypes/forte_lword.h"
-#include "../../../src/core/datatypes/forte_wstring.h"
+#include "core/datatypes/forte_wchar.h"
+#include "core/datatypes/forte_char.h"
+#include "core/datatypes/forte_word.h"
+#include "core/datatypes/forte_dword.h"
+#include "core/datatypes/forte_lword.h"
+#include "core/datatypes/forte_wstring.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_WCHAR_CASTS_test)
 

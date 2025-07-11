@@ -11,9 +11,9 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#include "../../resource.h"
-#include "../../device.h"
-#include "io_configFB_controller.h"
+#include "core/resource.h"
+#include "core/device.h"
+#include "core/io/configFB/io_configFB_controller.h"
 
 using namespace forte::core::io;
 

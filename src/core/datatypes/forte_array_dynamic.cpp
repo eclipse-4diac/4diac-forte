@@ -15,11 +15,11 @@
  *      - refactored array type structure
  *      - added lower and upper bound with dimension
  *******************************************************************************/
-#include "forte_array_dynamic.h"
+#include "core/datatypes/forte_array_dynamic.h"
 
 USE_STRING_ID(ARRAY);
 
-#include "forte_ulint.h"
+#include "core/datatypes/forte_ulint.h"
 
 DEFINE_FIRMWARE_DATATYPE(ARRAY_DYNAMIC, STRID(ARRAY))
 

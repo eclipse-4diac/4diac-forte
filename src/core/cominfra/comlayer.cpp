@@ -11,8 +11,8 @@
  *    Alois Zoitl - initial implementation and rework communication infrastructure
  *    Michael Hofmann - rework communication infrastructure
  *******************************************************************************/
-#include "comlayer.h"
-#include "commfb.h"
+#include "core/cominfra/comlayer.h"
+#include "core/cominfra/commfb.h"
 
 using namespace forte::com_infra;
 

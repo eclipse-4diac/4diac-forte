@@ -11,7 +11,7 @@
  *******************************************************************************/
 
 #include "ATimeOut_adp.h"
-#include "eventconn.h"
+#include "core/eventconn.h"
 
 USE_STRING_ID(ATimeOut);
 USE_STRING_ID(DT);

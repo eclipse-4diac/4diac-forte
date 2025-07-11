@@ -26,10 +26,10 @@
 #ifndef _FORTE_STRING_H_
 #define _FORTE_STRING_H_
 
-#include "forte_any_string.h"
-#include "forte_any_int.h"
-#include "forte_char.h"
-#include "devlog.h"
+#include "core/datatypes/forte_any_string.h"
+#include "core/datatypes/forte_any_int.h"
+#include "core/datatypes/forte_char.h"
+#include "arch/devlog.h"
 #include <string>
 #include <stdlib.h>
 

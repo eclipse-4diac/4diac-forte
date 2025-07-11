@@ -19,10 +19,10 @@
 
 #pragma once
 
-#include "typelib.h"
-#include "forte_bool.h"
-#include "forte_uint.h"
-#include "../../../core/io/configFB/io_adapter_multi.h"
+#include "core/typelib.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_uint.h"
+#include "core/io/configFB/io_adapter_multi.h"
 
 class FORTE_PLCnextBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_PLCnextBusAdapter)

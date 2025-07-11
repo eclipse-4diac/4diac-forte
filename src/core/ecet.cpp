@@ -14,10 +14,10 @@
  *    zhaoxin
  *      -  fix that external event queue becomes event locker after it is full
  *******************************************************************************/
-#include <forte_config.h>
-#include <fortenew.h>
-#include "ecet.h"
-#include "esfb.h"
+#include "generated/forte_config.h"
+#include "arch/fortenew.h"
+#include "core/ecet.h"
+#include "core/esfb.h"
 #include "core/util/criticalregion.h"
 #include "arch/devlog.h"
 

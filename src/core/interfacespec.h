@@ -20,8 +20,8 @@
  *******************************************************************************/
 #pragma once
 
-#include "event.h"
-#include "stringdict.h"
+#include "core/event.h"
+#include "core/stringdict.h"
 #include <span>
 
 using TDataIOID = TPortId; //!< \ingroup CORE Type for holding an data In- or output ID

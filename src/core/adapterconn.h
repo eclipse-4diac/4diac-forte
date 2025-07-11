@@ -13,7 +13,7 @@
  *******************************************************************************/
 #pragma once
 
-#include "conn.h"
+#include "core/conn.h"
 
 namespace forte {
 

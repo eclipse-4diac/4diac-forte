@@ -12,7 +12,7 @@
  *   Alois Zoitl - migrated data type toString to std::string
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
-#include "../../../src/core/util/string_utils.h"
+#include "core/util/string_utils.h"
 #include <errno.h>
 #include <stdlib.h>
 #include <array>

@@ -13,10 +13,10 @@
 #ifndef _ARROWHEADPUBLISHADP_H_
 #define _ARROWHEADPUBLISHADP_H_
 
-#include <adapter.h>
-#include <typelib.h>
+#include "core/adapter.h"
+#include "core/typelib.h"
 #include <forte_publishevent.h>
-#include <forte_wstring.h>
+#include "core/datatypes/forte_wstring.h"
 
 class FORTE_ArrowheadPublishAdp : public CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_ArrowheadPublishAdp)

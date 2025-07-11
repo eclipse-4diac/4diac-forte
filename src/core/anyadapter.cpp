@@ -13,10 +13,10 @@
  *   Alois Zoitl - introduced new CGenFB class for better handling generic FBs
                  - re-implementation for new communication infrastructure
  *******************************************************************************/
-#include "anyadapter.h"
-#include "adapter.h"
-#include "funcbloc.h"
-#include "typelib_internal.h"
+#include "core/anyadapter.h"
+#include "core/adapter.h"
+#include "core/funcbloc.h"
+#include "core/typelib_internal.h"
 
 USE_STRING_ID(ANY_ADAPTER);
 

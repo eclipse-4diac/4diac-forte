@@ -11,7 +11,7 @@
  *   Martin Melik Merkumians, Ingo Hegny
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "RMT_RES.h"
+#include "stdfblib/ita/RMT_RES.h"
 
 USE_STRING_ID(COLD);
 USE_STRING_ID(EO);
@@ -30,7 +30,7 @@ USE_STRING_ID(STOP);
 USE_STRING_ID(WARM);
 USE_STRING_ID(WSTRING);
 
-#include "../../core/ecet.h"
+#include "core/ecet.h"
 
 DEFINE_FIRMWARE_FB(RMT_RES, STRID(RMT_RES));
 

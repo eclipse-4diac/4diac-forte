@@ -16,7 +16,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "E_CTUD_fbt.h"
-#include "basicfb.h"
+#include "core/basicfb.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CV);

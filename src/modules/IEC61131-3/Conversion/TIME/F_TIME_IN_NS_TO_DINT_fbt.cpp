@@ -26,15 +26,15 @@ USE_STRING_ID(OUT);
 USE_STRING_ID(REQ);
 USE_STRING_ID(TIME);
 
-#include "forte_dint.h"
-#include "forte_lint.h"
-#include "forte_any_duration_variant.h"
-#include "forte_time.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_dint.h"
+#include "core/datatypes/forte_lint.h"
+#include "core/datatypes/forte_any_duration_variant.h"
+#include "core/datatypes/forte_time.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_F_TIME_IN_NS_TO_DINT, STRID(F_TIME_IN_NS_TO_DINT))
 

@@ -16,9 +16,9 @@
 
 #include <variant>
 
-#include "forte_any.h"
-#include "forte_lreal.h"
-#include "forte_real.h"
+#include "core/datatypes/forte_any.h"
+#include "core/datatypes/forte_lreal.h"
+#include "core/datatypes/forte_real.h"
 
 using TIecAnyRealVariantType = std::variant<
     // ANY_ELEMENTARY

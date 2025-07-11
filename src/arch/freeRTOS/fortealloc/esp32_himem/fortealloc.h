@@ -12,7 +12,7 @@
 #ifndef ESP32_HIMEM_FORTEALLOC_H_
 #define ESP32_HIMEM_FORTEALLOC_H_
 
-#include "datatype.h"
+#include "arch/datatype.h"
 #include <stdlib.h>
 
 #error FORTE_ALLOC_HIMEM not available yet

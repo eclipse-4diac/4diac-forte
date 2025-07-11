@@ -16,11 +16,11 @@
 
 #include <variant>
 
-#include "forte_any.h"
-#include "forte_char.h"
-#include "forte_string.h"
-#include "forte_wchar.h"
-#include "forte_wstring.h"
+#include "core/datatypes/forte_any.h"
+#include "core/datatypes/forte_char.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_wchar.h"
+#include "core/datatypes/forte_wstring.h"
 
 using TIecAnyCharsVariantType = std::variant<
     // ANY_ELEMENTARY

@@ -25,8 +25,8 @@
 
 #include <cstring>
 #include <limits>
-#include "../typelib.h"
-#include "iec61131_cast_helper.h"
+#include "core/typelib.h"
+#include "core/iec61131_cast_helper.h"
 #include "generated/config/endian.h"
 #include "generated/config/FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES.h"
 

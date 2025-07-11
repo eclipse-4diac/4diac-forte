@@ -24,8 +24,8 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(WSTRING);
 
-#include "device.h"
-#include "mgmcmdstruct.h"
+#include "core/device.h"
+#include "core/mgmcmdstruct.h"
 
 DEFINE_FIRMWARE_FB(FORTE_EC_SET_EVT, STRID(EC_SET_EVT))
 

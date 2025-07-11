@@ -16,11 +16,11 @@
 #ifndef OPCEVENTHANDLER_H_
 #define OPCEVENTHANDLER_H_
 
-#include "extevhan.h"
+#include "core/extevhan.h"
 #include "forte_thread.h"
 #include <vector>
 #include "forte_sync.h"
-#include "comlayer.h"
+#include "core/cominfra/comlayer.h"
 
 #include "ICmd.h"
 

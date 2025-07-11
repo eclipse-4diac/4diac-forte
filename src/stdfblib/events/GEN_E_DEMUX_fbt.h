@@ -18,7 +18,7 @@
 #ifndef _GEN_E_DEMUX_H_
 #define _GEN_E_DEMUX_H_
 
-#include <genfb.h>
+#include "core/genfb.h"
 
 #include <memory>
 

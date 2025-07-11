@@ -19,9 +19,9 @@
 #include <span>
 #include <type_traits>
 
-#include "mgmcmd.h"
-#include "mgmcmdstruct.h"
-#include "stringdict.h"
+#include "core/mgmcmd.h"
+#include "core/mgmcmdstruct.h"
+#include "core/stringdict.h"
 
 // forward declaration of a few classes to reduce include file dependencies
 class CFunctionBlock;

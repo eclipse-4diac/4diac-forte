@@ -16,8 +16,8 @@
  *******************************************************************************/
 #pragma once
 
-#include "./datatypes/forte_any.h"
-#include "dataconn.h"
+#include "core/datatypes/forte_any.h"
+#include "core/dataconn.h"
 
 class CInOutDataConnection : public CDataConnection {
   public:

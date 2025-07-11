@@ -12,7 +12,7 @@
  *    Ingo Hegny, Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include "forte_sint.h"
+#include "core/datatypes/forte_sint.h"
 
 USE_STRING_ID(SINT);
 

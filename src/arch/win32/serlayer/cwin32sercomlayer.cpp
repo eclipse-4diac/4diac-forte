@@ -11,7 +11,7 @@
  *******************************************************************************/
 #include "cwin32sercomlayer.h"
 #include "cwin32sercomhandler.h"
-#include "../../../core/cominfra/commfb.h"
+#include "core/cominfra/commfb.h"
 
 CWin32SerComLayer::CWin32SerComLayer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB) :
     CSerialComLayerBase(paUpperLayer, paFB) {

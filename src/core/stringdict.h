@@ -20,7 +20,7 @@
 
 #pragma once
 
-#include "forte_config.h"
+#include "generated/forte_config.h"
 #include "arch/datatype.h"
 
 #include <limits>

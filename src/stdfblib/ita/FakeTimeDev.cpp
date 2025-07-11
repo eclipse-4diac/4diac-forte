@@ -13,7 +13,7 @@
  *               - initial API and implementation and/or initial documentation
  *   Alois Zoitl - Copied and modified from CFakeTimeDev.h
  *******************************************************************************/
-#include "FakeTimeDev.h"
+#include "stdfblib/ita/FakeTimeDev.h"
 
 USE_STRING_ID(FakeTime);
 USE_STRING_ID(MGR);
@@ -21,7 +21,7 @@ USE_STRING_ID(MGR_ID);
 USE_STRING_ID(TIME);
 USE_STRING_ID(WSTRING);
 
-#include "../../core/stringdict.h"
+#include "core/stringdict.h"
 #include "../../arch/fake_time/faketimerha.h"
 
 #include "generated/timerhandlerfactory.h"

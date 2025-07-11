@@ -12,7 +12,7 @@
 
 #include "WagoHandle.h"
 
-#include "iec61131_functions.h"
+#include "core/iec61131_functions.h"
 
 WagoHandle::WagoHandle(WagoDeviceController *paController,
                        CIEC_ANY::EDataTypeID paType,

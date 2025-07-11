@@ -29,13 +29,13 @@ USE_STRING_ID(PortJ);
 USE_STRING_ID(PortK);
 
 #include "PortAdapter_adp.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
-#include <extevhandlerhelper.h>
+#include "core/util/extevhandlerhelper.h"
 #include "../handle/PinHandle.h"
 #include "stm32h743xx.h"
 #include "stm32h7xx_hal_gpio.h"

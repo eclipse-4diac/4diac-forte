@@ -8,9 +8,9 @@
  * SPDX-License-Identifier: EPL-2.0
  **********************************************************************/
 
-#include "extevhan.h"
-#include "commfb.h"
-#include "../../arch/devlog.h"
+#include "core/extevhan.h"
+#include "core/cominfra/commfb.h"
+#include "arch/devlog.h"
 #include "xqueryClientLayer.h"
 #include "xqueryHandler.h"
 extern "C" {

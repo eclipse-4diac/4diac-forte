@@ -22,12 +22,12 @@
 #ifndef _FORTE_REAL_H_
 #define _FORTE_REAL_H_
 
-#include "forte_any_real.h"
+#include "core/datatypes/forte_any_real.h"
 
-#include "forte_int.h"
-#include "forte_sint.h"
-#include "forte_uint.h"
-#include "forte_usint.h"
+#include "core/datatypes/forte_int.h"
+#include "core/datatypes/forte_sint.h"
+#include "core/datatypes/forte_uint.h"
+#include "core/datatypes/forte_usint.h"
 
 /*!\ingroup COREDTS CIEC_REAL represents the real data type according to IEC 61131.
  */

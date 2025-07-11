@@ -13,8 +13,8 @@
 #ifndef _REQUESTORCHESTRATIONOPCUA_H_
 #define _REQUESTORCHESTRATIONOPCUA_H_
 
-#include <cfb.h>
-#include <typelib.h>
+#include "core/cfb.h"
+#include "core/typelib.h"
 #include "OrchestratorRequestAdp_adp.h"
 
 class FORTE_RequestOrchestrationOpcUa : public CCompositeFB {

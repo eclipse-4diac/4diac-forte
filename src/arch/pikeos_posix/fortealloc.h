@@ -14,6 +14,6 @@
 #define PIKEOS_FORTEALLOC_H_
 
 // on posix environments we are typically happy with the generic alloc implementation based on malloc and free
-#include "../genfortealloc.h"
+#include "arch/genfortealloc.h"
 
 #endif /* PIKEOS_FORTEALLOC_H_ */

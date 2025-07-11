@@ -11,7 +11,7 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#include "io_handle_bit.h"
+#include "core/io/mapper/io_handle_bit.h"
 
 using namespace forte::core::io;
 

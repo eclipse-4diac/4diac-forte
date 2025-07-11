@@ -12,7 +12,7 @@
 
 #include "generated/timerhandlerfactory.h"
 
-#include "timerha.h"
+#include "arch/timerha.h"
 
 ${includes}
 

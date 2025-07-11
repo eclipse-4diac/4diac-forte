@@ -27,12 +27,12 @@ USE_STRING_ID(Q);
 USE_STRING_ID(R);
 USE_STRING_ID(S);
 
-#include "forte_bool.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_T_FF_SR, STRID(E_T_FF_SR))
 

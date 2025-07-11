@@ -16,14 +16,14 @@
 
 #pragma once
 
-#include "funcbloc.h"
-#include "forte_date_and_time.h"
-#include "forte_ulint.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/funcbloc.h"
+#include "core/datatypes/forte_date_and_time.h"
+#include "core/datatypes/forte_ulint.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 class FORTE_TIMESTAMP_NS final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_TIMESTAMP_NS)

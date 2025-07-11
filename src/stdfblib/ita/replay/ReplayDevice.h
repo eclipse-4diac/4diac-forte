@@ -13,8 +13,8 @@
 
 #pragma once
 
-#include "RMT_DEV.h"
-#include "ReplayMGR.h"
+#include "stdfblib/ita/RMT_DEV.h"
+#include "stdfblib/ita/replay/ReplayMGR.h"
 
 /**
  * @brief Device that adds replay commands to the device. The commands are defined in ReplayMGR

@@ -14,10 +14,10 @@
  *******************************************************************************/
 #include "opcconnectionhandler.h"
 #include "opcconnection.h"
-#include <extevhandlerhelper.h>
+#include "core/util/extevhandlerhelper.h"
 
 #include "opceventhandler.h"
-#include "commfb.h"
+#include "core/cominfra/commfb.h"
 using namespace forte::com_infra;
 
 DEFINE_SINGLETON(COpcConnectionHandler);

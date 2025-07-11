@@ -12,7 +12,7 @@
  *    Ingo Hegny, Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include "forte_dword.h"
+#include "core/datatypes/forte_dword.h"
 
 USE_STRING_ID(DWORD);
 

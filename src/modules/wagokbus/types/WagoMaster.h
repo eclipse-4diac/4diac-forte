@@ -10,7 +10,7 @@
 #pragma once
 
 #include "WagoBusAdapter.h"
-#include "../../../core/io/configFB/io_master_multi.h"
+#include "core/io/configFB/io_master_multi.h"
 
 class FORTE_WagoMaster : public forte::core::io::IOConfigFBMultiMaster {
     DECLARE_FIRMWARE_FB(FORTE_WagoMaster)

@@ -17,9 +17,9 @@
 #ifndef SRC_CORE_LUACFB_H_
 #define SRC_CORE_LUACFB_H_
 
-#include "genfb.h"
-#include "cfb.h"
-#include "luacfbtypeentry.h"
+#include "core/genfb.h"
+#include "core/cfb.h"
+#include "core/lua/luacfbtypeentry.h"
 
 class CLuaCFB : public CGenFunctionBlock<CCompositeFB> {
   public:

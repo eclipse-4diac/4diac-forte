@@ -17,7 +17,7 @@
 #ifndef _GEN_SUBSCRIBE_H_
 #define _GEN_SUBSCRIBE_H_
 
-#include "../../core/cominfra/commfb.h"
+#include "core/cominfra/commfb.h"
 
 /*! \brief Implementation of the SUBSCRIBER SIFB.
  */

@@ -19,7 +19,7 @@ USE_STRING_ID(Event);
 USE_STRING_ID(STOP);
 USE_STRING_ID(WARM);
 
-#include "../../core/device.h"
+#include "core/device.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_RESTART, STRID(E_RESTART))
 

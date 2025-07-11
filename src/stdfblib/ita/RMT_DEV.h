@@ -14,8 +14,8 @@
 #ifndef _RMT_DEV_H_
 #define _RMT_DEV_H_
 
-#include "../../core/device.h"
-#include "RMT_RES.h"
+#include "core/device.h"
+#include "stdfblib/ita/RMT_RES.h"
 
 /*! \brief Implementation of the RMT_DEV.
  */

@@ -13,8 +13,8 @@
 
 #pragma once
 
-#include "device.h"
-#include "DebugMGR.h"
+#include "core/device.h"
+#include "stdfblib/ita/debug_device/DebugMGR.h"
 
 // std includes
 #include <future>

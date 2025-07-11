@@ -13,13 +13,13 @@
  *      - initial implementation
  *******************************************************************************/
 
-#include "barectf_platform_forte.h"
+#include "core/trace/barectf_platform_forte.h"
 
 #include <iomanip>
 #include <chrono>
 
-#include "forte_architecture_time.h"
-#include "devlog.h"
+#include "arch/forte_architecture_time.h"
+#include "arch/devlog.h"
 
 std::filesystem::path BarectfPlatformFORTE::traceDirectory = std::filesystem::path();
 bool BarectfPlatformFORTE::enabled = false;

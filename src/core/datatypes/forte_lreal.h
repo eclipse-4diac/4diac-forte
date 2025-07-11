@@ -23,14 +23,14 @@
 #ifndef _FORTE_LREAL_H_
 #define _FORTE_LREAL_H_
 
-#include "forte_any_real.h"
-#include "forte_real.h"
-#include "forte_dint.h"
-#include "forte_int.h"
-#include "forte_sint.h"
-#include "forte_udint.h"
-#include "forte_uint.h"
-#include "forte_usint.h"
+#include "core/datatypes/forte_any_real.h"
+#include "core/datatypes/forte_real.h"
+#include "core/datatypes/forte_dint.h"
+#include "core/datatypes/forte_int.h"
+#include "core/datatypes/forte_sint.h"
+#include "core/datatypes/forte_udint.h"
+#include "core/datatypes/forte_uint.h"
+#include "core/datatypes/forte_usint.h"
 
 #include <limits>
 

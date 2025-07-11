@@ -13,10 +13,10 @@
 #ifndef _FIELDSTOARROWHEADSERVICE_H_
 #define _FIELDSTOARROWHEADSERVICE_H_
 
-#include <basicfb.h>
+#include "core/basicfb.h"
 #include <forte_arrowheadservice.h>
-#include <forte_wstring.h>
-#include <forte_array.h>
+#include "core/datatypes/forte_wstring.h"
+#include "core/datatypes/forte_array.h"
 
 class FORTE_FieldsToArrowheadService : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToArrowheadService)

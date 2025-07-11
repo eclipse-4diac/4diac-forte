@@ -11,7 +11,7 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "forte_localizedtext.h"
+#include "com/opc_ua/types/forte_localizedtext.h"
 
 USE_STRING_ID(locale);
 USE_STRING_ID(LocalizedText);

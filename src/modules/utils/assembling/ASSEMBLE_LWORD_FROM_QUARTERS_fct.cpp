@@ -59,15 +59,15 @@ USE_STRING_ID(QUARTER_BYTE_30);
 USE_STRING_ID(QUARTER_BYTE_31);
 USE_STRING_ID(REQ);
 
-#include "forte_byte.h"
-#include "forte_any_int_variant.h"
-#include "forte_any_bit_variant.h"
-#include "forte_lword.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_byte.h"
+#include "core/datatypes/forte_any_int_variant.h"
+#include "core/datatypes/forte_any_bit_variant.h"
+#include "core/datatypes/forte_lword.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 #include "quarterconst_gcf.h"
 #include "ASSEMBLE_LWORD_FROM_QUARTERS_fct.h"
 

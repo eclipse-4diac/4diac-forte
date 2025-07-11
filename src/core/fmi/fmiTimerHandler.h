@@ -12,9 +12,9 @@
 #ifndef _FMITIMERHANDLER_H_
 #define _FMITIMERHANDLER_H_
 
-#include "../../arch/timerha.h"
-#include "../fmuEcet.h"
-#include "../datatypes/forte_lreal.h"
+#include "arch/timerha.h"
+#include "core/fmi/fmuEcet.h"
+#include "core/datatypes/forte_lreal.h"
 #include <vector>
 
 /*!\brief Timer handler for FMI/FMU

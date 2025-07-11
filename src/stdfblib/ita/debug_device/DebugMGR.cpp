@@ -11,7 +11,7 @@
  *    Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "DebugMGR.h"
+#include "stdfblib/ita/debug_device/DebugMGR.h"
 
 #include "generated/ecetfactory.h"
 #include "core/ecetFake.h"

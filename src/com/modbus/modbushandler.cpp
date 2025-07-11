@@ -13,9 +13,9 @@
 #include <algorithm>
 #include "modbushandler.h"
 #include "modbuslayer.h"
-#include "devlog.h"
-#include "../core/devexec.h"
-#include <commfb.h>
+#include "arch/devlog.h"
+#include "core/devexec.h"
+#include "core/cominfra/commfb.h"
 
 DEFINE_HANDLER(CModbusHandler);
 

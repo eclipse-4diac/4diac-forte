@@ -15,7 +15,7 @@
  *******************************************************************************/
 
 #include "F_SUB_TOD_TOD_fbt.h"
-#include "forte_time_of_day.h"
+#include "core/datatypes/forte_time_of_day.h"
 
 USE_STRING_ID(CNF);
 USE_STRING_ID(Event);

@@ -16,9 +16,9 @@
 
 #include <variant>
 
-#include "forte_any.h"
-#include "forte_ltime.h"
-#include "forte_time.h"
+#include "core/datatypes/forte_any.h"
+#include "core/datatypes/forte_ltime.h"
+#include "core/datatypes/forte_time.h"
 
 using TIecAnyDurationVariantType = std::variant<
     // ANY_ELEMENTARY

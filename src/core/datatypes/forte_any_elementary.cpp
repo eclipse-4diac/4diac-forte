@@ -14,19 +14,19 @@
  *          - initial implementation and rework communication infrastructure
  *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#include "forte_any_elementary.h"
-#include "string_utils.h"
+#include "core/datatypes/forte_any_elementary.h"
+#include "core/util/string_utils.h"
 #include <stdlib.h>
 #include <errno.h>
-#include "forte_sint.h"
-#include "forte_int.h"
-#include "forte_dint.h"
-#include "forte_usint.h"
-#include "forte_uint.h"
-#include "forte_udint.h"
-#include "forte_lint.h"
-#include "forte_ulint.h"
-#include <devlog.h>
+#include "core/datatypes/forte_sint.h"
+#include "core/datatypes/forte_int.h"
+#include "core/datatypes/forte_dint.h"
+#include "core/datatypes/forte_usint.h"
+#include "core/datatypes/forte_uint.h"
+#include "core/datatypes/forte_udint.h"
+#include "core/datatypes/forte_lint.h"
+#include "core/datatypes/forte_ulint.h"
+#include "arch/devlog.h"
 #include <map>
 
 USE_STRING_ID(ANY);

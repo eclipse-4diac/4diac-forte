@@ -14,7 +14,7 @@
 #ifndef _FORTE_THREAD_H_
 #define _FORTE_THREAD_H_
 
-#include "./threadbase.h"
+#include "arch/threadbase.h"
 #include <windows.h>
 
 /**  \ingroup FORTE-HAL

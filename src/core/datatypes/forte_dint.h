@@ -23,11 +23,11 @@
 #ifndef _FORTE_DINT_H_
 #define _FORTE_DINT_H_
 
-#include "forte_any_signed.h"
-#include "forte_sint.h"
-#include "forte_int.h"
-#include "forte_usint.h"
-#include "forte_uint.h"
+#include "core/datatypes/forte_any_signed.h"
+#include "core/datatypes/forte_sint.h"
+#include "core/datatypes/forte_int.h"
+#include "core/datatypes/forte_usint.h"
+#include "core/datatypes/forte_uint.h"
 #include <limits>
 
 /*!\ingroup COREDTS CIEC_DINT represents the dint data type according to IEC 61131.

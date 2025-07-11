@@ -11,7 +11,7 @@
  *    Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "MultiMGR.h"
+#include "stdfblib/ita/multi/MultiMGR.h"
 
 #include "stdfblib/ita/multi/MultiDevice.h"
 #include "stdfblib/ita/OPCUA_MGR.h"

@@ -13,18 +13,18 @@
 
 #pragma once
 
-#include "funcbloc.h"
-#include "forte_bool.h"
-#include "forte_time.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/funcbloc.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_time.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
-#include "esfb.h"
-#include "ecet.h"
-#include "../arch/timerha.h"
+#include "core/esfb.h"
+#include "core/ecet.h"
+#include "arch/timerha.h"
 
 class FORTE_RT_E_DELAY final : public CEventSourceFB {
     DECLARE_FIRMWARE_FB(FORTE_RT_E_DELAY)

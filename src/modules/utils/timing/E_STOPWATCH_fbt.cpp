@@ -33,13 +33,13 @@ USE_STRING_ID(STOP);
 USE_STRING_ID(TD);
 USE_STRING_ID(TIME);
 
-#include "forte_bool.h"
-#include "forte_time.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_time.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_STOPWATCH, STRID(E_STOPWATCH))
 

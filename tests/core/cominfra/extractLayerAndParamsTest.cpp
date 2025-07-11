@@ -12,7 +12,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "../../../src/core/cominfra/basecommfb.h"
+#include "core/cominfra/basecommfb.h"
 
 class CExtractLayerAndParamsCommFB : public forte::com_infra::CBaseCommFB {
   public:

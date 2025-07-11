@@ -13,9 +13,9 @@
 
 #pragma once
 
-#include "opcua_layer.h"
+#include "com/opc_ua/opcua_layer.h"
 #include <memory>
-#include "opcua_action_info.h"
+#include "com/opc_ua/opcua_action_info.h"
 
 class COPC_UA_HandlerAbstract;
 

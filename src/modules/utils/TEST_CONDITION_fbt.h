@@ -15,8 +15,8 @@
 
 #pragma once
 
-#include "funcbloc.h"
-#include "forte_bool.h"
+#include "core/funcbloc.h"
+#include "core/datatypes/forte_bool.h"
 #include "forte_sync.h"
 
 class FORTE_TEST_CONDITION final : public CFunctionBlock {

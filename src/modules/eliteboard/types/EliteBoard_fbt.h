@@ -12,14 +12,14 @@
 
 #pragma once
 
-#include "funcbloc.h"
+#include "core/funcbloc.h"
 #include "PortAdapter_adp.h"
-#include "forte_dword.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_dword.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 #include "../handler/EliteBoardDeviceController.h"
 #include "core/io/configFB/io_configFB_controller.h"

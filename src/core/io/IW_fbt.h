@@ -15,8 +15,8 @@
 
 #pragma once
 
-#include "inputfb.h"
-#include "forte_word.h"
+#include "core/io/inputfb.h"
+#include "core/datatypes/forte_word.h"
 
 /*! /brief generic class for IW function blocks providing access to one word physical input
  *

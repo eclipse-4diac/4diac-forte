@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "processinterfacefb.h"
+#include "core/io/processinterfacefb.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(BYTE);

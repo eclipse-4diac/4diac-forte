@@ -10,8 +10,8 @@
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "fmuConfig.h"
-#include "fmuInstance.h"
+#include "core/fmi/fmuConfig.h"
+#include "core/fmi/fmuInstance.h"
 
 fmi2String loggingNames[] = {"logAll", "logCalls", "logError"};
 

@@ -10,14 +10,14 @@
  *   Jose Cabral- initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "TraceReaderSink.h"
+#include "core/trace/reader/TraceReaderSink.h"
 
 #include <inttypes.h> // for printing
 #include <sstream>
 #include <iostream>
 #include <cstring>
 
-#include "bt2MessageFactory.h"
+#include "core/trace/reader/bt2MessageFactory.h"
 
 namespace forte::trace::reader {
 

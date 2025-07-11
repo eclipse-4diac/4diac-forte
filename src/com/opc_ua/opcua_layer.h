@@ -21,8 +21,8 @@
 #ifndef SRC_MODULES_OPC_UA_OPCUA_LAYER_H_
 #define SRC_MODULES_OPC_UA_OPCUA_LAYER_H_
 
-#include "../../core/cominfra/comlayer.h"
-#include "opcua_helper.h"
+#include "core/cominfra/comlayer.h"
+#include "com/opc_ua/opcua_helper.h"
 #include <cstddef>
 #include <memory>
 

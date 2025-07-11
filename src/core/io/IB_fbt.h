@@ -15,8 +15,8 @@
 
 #pragma once
 
-#include "inputfb.h"
-#include "../datatypes/forte_byte.h"
+#include "core/io/inputfb.h"
+#include "core/datatypes/forte_byte.h"
 
 class FORTE_IB final : public forte::core::io::CInputFB<CIEC_BYTE> {
     DECLARE_FIRMWARE_FB(FORTE_IB)

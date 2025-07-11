@@ -13,9 +13,9 @@
 
 #pragma once
 
-#include <io/configFB/io_slave_multi.h>
-#include "forte_bool.h"
-#include "forte_wstring.h"
+#include "core/io/configFB/io_slave_multi.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_wstring.h"
 #include "IORevPiBusAdapter.h"
 
 class FORTE_IORevPiAIO : public forte::core::io::IOConfigFBMultiSlave {

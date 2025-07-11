@@ -15,8 +15,8 @@
  *******************************************************************************/
 
 #include "F_ADD_fbt.h"
-#include "forte_any_magnitude.h"
-#include "forte_any_magnitude_variant.h"
+#include "core/datatypes/forte_any_magnitude.h"
+#include "core/datatypes/forte_any_magnitude_variant.h"
 
 USE_STRING_ID(ANY_MAGNITUDE);
 USE_STRING_ID(CNF);

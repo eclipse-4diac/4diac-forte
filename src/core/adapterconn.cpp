@@ -11,9 +11,9 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Melik-Merkumians - adds typifyAnyAdapter
  *******************************************************************************/
-#include "adapterconn.h"
-#include "funcbloc.h"
-#include "adapter.h"
+#include "core/adapterconn.h"
+#include "core/funcbloc.h"
+#include "core/adapter.h"
 
 using namespace forte;
 

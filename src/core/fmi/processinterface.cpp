@@ -10,9 +10,9 @@
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "processinterface.h"
+#include "core/fmi/processinterface.h"
 #include <iostream>
-#include "fmuInstance.h"
+#include "core/fmi/fmuInstance.h"
 
 const char *const CFMUProcessInterface::scmOK = "OK";
 const char *const CFMUProcessInterface::scmNOTINITIALIZED = "Not initialized";

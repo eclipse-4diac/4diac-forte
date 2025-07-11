@@ -11,10 +11,10 @@
  *******************************************************************************/
 
 #include <string.h>
-#include <criticalregion.h>
-#include <commfb.h>
-#include "fmuHandler.h"
-#include "../fmuInstance.h"
+#include "core/util/criticalregion.h"
+#include "core/cominfra/commfb.h"
+#include "core/fmi/comm/fmuHandler.h"
+#include "core/fmi/fmuInstance.h"
 
 DEFINE_HANDLER(fmuHandler);
 

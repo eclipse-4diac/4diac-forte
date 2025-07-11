@@ -10,8 +10,8 @@
  *   Alois Zoitl, Thomas Strasser, Gerhard Ebenhofer,
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <stringdict.h>
-#include "EMB_RES.h"
+#include "core/stringdict.h"
+#include "stdfblib/ita/EMB_RES.h"
 
 USE_STRING_ID(EMB_RES);
 USE_STRING_ID(START);

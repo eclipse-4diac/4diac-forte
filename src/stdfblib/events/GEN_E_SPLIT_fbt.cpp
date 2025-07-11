@@ -13,7 +13,7 @@
  *******************************************************************************/
 
 #include "GEN_E_SPLIT_fbt.h"
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(EI);
 USE_STRING_ID(GEN_E_SPLIT);

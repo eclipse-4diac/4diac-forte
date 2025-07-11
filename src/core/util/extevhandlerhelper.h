@@ -13,10 +13,10 @@
 #ifndef _EXTEVHANDLERHELPER_H_
 #define _EXTEVHANDLERHELPER_H_
 
-#include "../funcbloc.h"
-#include "../device.h"
-#include "../devexec.h"
-#include "../extevhan.h"
+#include "core/funcbloc.h"
+#include "core/device.h"
+#include "core/devexec.h"
+#include "core/extevhan.h"
 
 /*!\brief Get an external event handler by finding the device a FB is contained in
  *

@@ -13,13 +13,13 @@
 #ifndef _FIELDSTOSERVICEREGISTRYENTRY_H_
 #define _FIELDSTOSERVICEREGISTRYENTRY_H_
 
-#include <basicfb.h>
+#include "core/basicfb.h"
 #include <forte_arrowheadservice.h>
-#include <forte_bool.h>
+#include "core/datatypes/forte_bool.h"
 #include <forte_arrowheadsystem.h>
-#include <forte_dint.h>
+#include "core/datatypes/forte_dint.h"
 #include <forte_serviceregistryentry.h>
-#include <forte_wstring.h>
+#include "core/datatypes/forte_wstring.h"
 
 class FORTE_FieldsToServiceRegistryEntry : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToServiceRegistryEntry)

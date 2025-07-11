@@ -16,13 +16,13 @@
 
 #include <variant>
 
-#include "forte_any.h"
-#include "forte_date.h"
-#include "forte_date_and_time.h"
-#include "forte_ldate.h"
-#include "forte_ldate_and_time.h"
-#include "forte_ltime_of_day.h"
-#include "forte_time_of_day.h"
+#include "core/datatypes/forte_any.h"
+#include "core/datatypes/forte_date.h"
+#include "core/datatypes/forte_date_and_time.h"
+#include "core/datatypes/forte_ldate.h"
+#include "core/datatypes/forte_ldate_and_time.h"
+#include "core/datatypes/forte_ltime_of_day.h"
+#include "core/datatypes/forte_time_of_day.h"
 
 using TIecAnyDateVariantType = std::variant<
     // ANY_ELEMENTARY

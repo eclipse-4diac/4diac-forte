@@ -9,9 +9,9 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <fortenew.h>
+#include "arch/fortenew.h"
 #include "ecostiha.h"
-#include "../../core/devexec.h"
+#include "core/devexec.h"
 
 cyg_sem_t CECOSTimerHandler::mSemaphore;
 

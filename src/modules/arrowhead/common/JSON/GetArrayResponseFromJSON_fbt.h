@@ -13,9 +13,9 @@
 #ifndef _GETARRAYRESPONSEFROMJSON_H_
 #define _GETARRAYRESPONSEFROMJSON_H_
 
-#include <funcbloc.h>
-#include <forte_string.h>
-#include <forte_any.h>
+#include "core/funcbloc.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_any.h"
 
 class FORTE_GetArrayResponseFromJSON : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_GetArrayResponseFromJSON)

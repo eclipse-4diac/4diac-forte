@@ -13,9 +13,9 @@
 #ifndef FMUCOMLAYER_H_
 #define FMUCOMLAYER_H_
 
-#include "../../cominfra/comlayer.h"
-#include "../../fortelist.h"
-#include "../processinterface.h"
+#include "core/cominfra/comlayer.h"
+#include "core/fortelist.h"
+#include "core/fmi/processinterface.h"
 #include <vector>
 
 using namespace forte::com_infra;

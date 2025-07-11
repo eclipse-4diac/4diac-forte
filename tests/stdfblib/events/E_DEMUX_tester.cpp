@@ -12,7 +12,7 @@
  *******************************************************************************/
 
 #include "../../core/fbtests/fbtester.h"
-#include <forte_bool.h>
+#include "core/datatypes/forte_bool.h"
 #include <E_DEMUX.h>
 
 USE_STRING_ID(E_DEMUX);

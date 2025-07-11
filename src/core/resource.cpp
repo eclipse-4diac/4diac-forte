@@ -18,25 +18,25 @@
  *    Martin Jobst - add CTF tracing integration
  *    Fabio Gandolfi - send also subapps on requested resources
  *******************************************************************************/
-#include "resource.h"
+#include "core/resource.h"
 #include <string_view>
-#include "conn.h"
-#include "forte_any_string.h"
-#include "fortenew.h"
-#include "funcbloc.h"
-#include "mgmcmd.h"
-#include "adapterconn.h"
+#include "core/conn.h"
+#include "core/datatypes/forte_any_string.h"
+#include "arch/fortenew.h"
+#include "core/funcbloc.h"
+#include "core/mgmcmd.h"
+#include "core/adapterconn.h"
 #include "generated/ecetfactory.h"
-#include "string_utils.h"
-#include "typelib_internal.h"
+#include "core/util/string_utils.h"
+#include "core/typelib_internal.h"
 
 USE_STRING_ID(START);
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-#include "lua/luaadaptertypeentry.h"
-#include "lua/luabfbtypeentry.h"
-#include "lua/luacfbtypeentry.h"
-#include "lua/luaengine.h"
+#include "core/lua/luaadaptertypeentry.h"
+#include "core/lua/luabfbtypeentry.h"
+#include "core/lua/luacfbtypeentry.h"
+#include "core/lua/luaengine.h"
 #endif
 
 #include <string>

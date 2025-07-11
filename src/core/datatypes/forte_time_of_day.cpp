@@ -18,9 +18,9 @@
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
-#include "forte_time_of_day.h"
-#include "forte_architecture_time.h"
-#include "string_utils.h"
+#include "core/datatypes/forte_time_of_day.h"
+#include "arch/forte_architecture_time.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(TIME_OF_DAY);
 

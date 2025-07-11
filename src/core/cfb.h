@@ -19,7 +19,7 @@
 #ifndef _CFB_H_
 #define _CFB_H_
 
-#include "funcbloc.h"
+#include "core/funcbloc.h"
 
 struct SCFB_FBConnectionData {
     CStringDictionary::TStringId mSrcFBNameId;

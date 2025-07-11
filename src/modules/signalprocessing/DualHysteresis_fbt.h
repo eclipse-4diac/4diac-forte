@@ -17,14 +17,14 @@
 
 #pragma once
 
-#include "basicfb.h"
-#include "forte_bool.h"
-#include "forte_real.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/basicfb.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_real.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 class FORTE_signalprocessing__DualHysteresis final : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_signalprocessing__DualHysteresis)

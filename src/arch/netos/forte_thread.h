@@ -14,8 +14,8 @@
 #ifndef _FORTE_THREAD_H_
 #define _FORTE_THREAD_H_
 
-#include "../datatype.h"
-#include "../threadbase.h"
+#include "arch/datatype.h"
+#include "arch/threadbase.h"
 #include <threadx/tx_api.h>
 
 /**  \ingroup FORTE-HAL

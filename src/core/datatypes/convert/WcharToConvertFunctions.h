@@ -14,13 +14,13 @@
 #ifndef SRC_CORE_DATATYPES_CONVERT_WCHARTOCONVERTFUNCTIONS_H_
 #define SRC_CORE_DATATYPES_CONVERT_WCHARTOCONVERTFUNCTIONS_H_
 
-#include "forte_any.h"
-#include "forte_word.h"
-#include "forte_dword.h"
-#include "forte_lword.h"
-#include "forte_char.h"
-#include "forte_wchar.h"
-#include "forte_wstring.h"
+#include "core/datatypes/forte_any.h"
+#include "core/datatypes/forte_word.h"
+#include "core/datatypes/forte_dword.h"
+#include "core/datatypes/forte_lword.h"
+#include "core/datatypes/forte_char.h"
+#include "core/datatypes/forte_wchar.h"
+#include "core/datatypes/forte_wstring.h"
 
 inline const CIEC_CHAR func_WCHAR_TO_CHAR(const CIEC_WCHAR &paVal) {
   return CIEC_ANY::cast<CIEC_CHAR>(paVal);

@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include <genfb.h>
+#include "core/genfb.h"
 
 class GEN_FORTE_F_MOVE final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE)

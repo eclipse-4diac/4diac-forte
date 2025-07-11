@@ -13,7 +13,7 @@
 #ifndef _FORTE_PREFEREDPROVIDER_H_
 #define _FORTE_PREFEREDPROVIDER_H_
 
-#include "forte_struct.h"
+#include "core/datatypes/forte_struct.h"
 #include "forte_arrowheadsystem.h"
 #include "forte_arrowheadcloud.h"
 

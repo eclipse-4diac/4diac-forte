@@ -1,58 +1,80 @@
-#############################################################################
-#  Copyright (c) 2018 fortiss GmbH
-# This program and the accompanying materials are made available under the
-# terms of the Eclipse Public License 2.0 which is available at
-# http://www.eclipse.org/legal/epl-2.0.
+# ############################################################################
+# Copyright (c) 2018 fortiss GmbH This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0 which
+# is available at http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
 #
-#  Contributors:
-#    Ben Schneider - initial API and implementation and/or initial documentation
-#############################################################################
+# Contributors: Ben Schneider - initial API and implementation and/or initial
+# documentation
+# ############################################################################
 
-#############################################################################
+# ############################################################################
 # ROS Example Publish and Subscribe FBs
-#############################################################################
+# ############################################################################
 
-if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-forte_add_module(ROS OFF "Function Blocks to communicate with ROS (publish/subscribe)")
+if (NOT FORTE_ARCHITECTURE STREQUAL "Posix")
+    return()
+endif ()
 
-if (FORTE_MODULE_ROS)
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+forte_register_module(ROS
+                      OFF
+                      "Function Blocks to communicate with ROS (publish/subscribe)"
+)
 
-  forte_add_definition("-DFORTE_ROS")
+target_compile_definitions(forte-global INTERFACE FORTE_ROS)
 
-  #############################################################################
-  # Communication Layer for ROS (publish, subscribe)
-  #############################################################################
+# ############################################################################
+# Communication Layer for ROS (publish, subscribe)
+# ############################################################################
 
-  forte_add_handler(CROSManager ROSManager)
-  forte_add_handler(CServiceCallManager ServiceCallManager)
+forte_register_handler(CROSManager ROSManager.h)
+forte_register_handler(CServiceCallManager ServiceCallManager.h)
+forte_register_com_layer(ROS
+                         ON
+                         "ros"
+                         CROSLayer
+                         ROSLayer.h
+                         "Layer for providing and receiving data to/from ROS via publish/subscribe"
+)
 
+forte_register_startup_hook(rosStartupHook)
+find_package(catkin QUIET COMPONENTS actionlib reapp_msgs roscpp std_msgs
+                                     std_srvs topic_tools
+)
+if (catkin_FOUND)
+    target_link_libraries(forte PUBLIC ${catkin_LIBRARIES})
+else ()
+    target_link_libraries(forte
+                          PUBLIC roscpp
+                                 rosconsole
+                                 roscpp_serialization
+                                 topic_tools
+                                 actionlib
+                                 rostime
+                                 boost_system
+                                 boost_thread
+    )
+endif (catkin_FOUND)
 
-  forte_add_network_layer(ROS ON "ros" CROSLayer ROSLayer "Layer for providing and receiving data to/from ROS via publish/subscribe")
-
-  forte_add_sourcefile_hcpp(ROSManager)
-  forte_add_sourcefile_hcpp(ServiceCallManager)
-  forte_add_sourcefile_hcpp(TRIGGER_SERVICE_CLIENT)
-  forte_add_sourcefile_hcpp(TRIGGER_SERVICE_SERVER)
-  forte_add_sourcefile_hcpp(EXECUTE_ACTION_CLIENT)
-  forte_add_sourcefile_hcpp(EXECUTE_ACTION_SERVER)
-  
-  forte_add_startup_hook(rosStartupHook)
-  forte_add_sourcefile_cpp(startup.cpp)
-
-
-  find_package(catkin QUIET COMPONENTS actionlib reapp_msgs roscpp std_msgs std_srvs topic_tools)
-  if (catkin_FOUND)
-      forte_add_include_directories(${catkin_INCLUDE_DIRS})
-      forte_add_link_library(${catkin_LIBRARIES})
-  else()
-      forte_add_link_directories(/opt/ros/indigo/lib)
-      forte_add_include_system_directories(/opt/ros/indigo/include)
-      forte_add_link_library(roscpp rosconsole roscpp_serialization topic_tools actionlib rostime boost_system boost_thread)
-  endif(catkin_FOUND)
-
-
-endif(FORTE_MODULE_ROS)
-endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+add_library(forte-com-ros OBJECT
+            $<$<BOOL:${FORTE_COM_ROS}>:ROSLayer.cpp>
+            $<$<BOOL:${FORTE_COM_ROS}>:ROSLayer.h>
+            ROSManager.h
+            ROSManager.cpp
+            ServiceCallManager.h
+            ServiceCallManager.cpp
+            TRIGGER_SERVICE_CLIENT.h
+            TRIGGER_SERVICE_CLIENT.cpp
+            TRIGGER_SERVICE_SERVER.h
+            TRIGGER_SERVICE_SERVER.cpp
+            EXECUTE_ACTION_CLIENT.h
+            EXECUTE_ACTION_CLIENT.cpp
+            EXECUTE_ACTION_SERVER.h
+            EXECUTE_ACTION_SERVER.cpp
+            startup.cpp
+)
+target_link_libraries(forte PRIVATE forte-com-ros)
+target_include_directories(forte-com-ros PUBLIC ${catkin_INCLUDE_DIRS})
+target_include_directories(forte-com-ros PUBLIC /opt/ros/indigo/include)
+target_link_directories(forte-com-ros PUBLIC /opt/ros/indigo/lib)

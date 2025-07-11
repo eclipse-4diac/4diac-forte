@@ -13,7 +13,7 @@
  *******************************************************************************/
 
 #include "forte_sem.h"
-#include "../devlog.h"
+#include "arch/devlog.h"
 #include <errno.h>
 #include <string.h>
 

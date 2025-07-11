@@ -17,11 +17,11 @@
 #ifndef _HTTPCOMLAYER_H_
 #define _HTTPCOMLAYER_H_
 
-#include <forte_config.h>
+#include "generated/forte_config.h"
 #include <forte_sem.h>
-#include "comlayer.h"
-#include <forte_string.h>
-#include "ipcomlayer.h"
+#include "core/cominfra/comlayer.h"
+#include "core/datatypes/forte_string.h"
+#include "core/cominfra/ipcomlayer.h"
 #include "core/util/parameterParser.h"
 
 #include <vector>

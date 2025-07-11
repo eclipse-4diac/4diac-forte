@@ -20,8 +20,8 @@
 
 #pragma once
 
-#include "genfb.h"
-#include "forte_uint.h"
+#include "core/genfb.h"
+#include "core/datatypes/forte_uint.h"
 
 class GEN_E_MUX final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_E_MUX)

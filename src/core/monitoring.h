@@ -16,10 +16,10 @@
 #define MONITORING_H_
 
 #include <functional>
-#include "funcbloc.h"
-#include "mgmcmdstruct.h"
-#include "conn.h"
-#include "stringdict.h"
+#include "core/funcbloc.h"
+#include "core/mgmcmdstruct.h"
+#include "core/conn.h"
+#include "core/stringdict.h"
 
 class CFunctionBlock;
 class CResource;

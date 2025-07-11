@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "opcua_layer.h"
+#include "com/opc_ua/opcua_layer.h"
 #include "open62541.h"
 
 class COPC_UA_HandlerAbstract;

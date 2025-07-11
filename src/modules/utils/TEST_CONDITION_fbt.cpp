@@ -22,8 +22,8 @@ USE_STRING_ID(Event);
 USE_STRING_ID(REQ);
 USE_STRING_ID(TEST_CONDITION);
 
-#include "devlog.h"
-#include "resource.h"
+#include "arch/devlog.h"
+#include "core/resource.h"
 
 unsigned int FORTE_TEST_CONDITION::smExecutedTests = 0;
 unsigned int FORTE_TEST_CONDITION::smFailedTests = 0;

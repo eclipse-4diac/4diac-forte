@@ -13,11 +13,11 @@
 #ifndef _FIELDSTOARROWHEADCLOUD_H_
 #define _FIELDSTOARROWHEADCLOUD_H_
 
-#include <basicfb.h>
-#include <forte_bool.h>
+#include "core/basicfb.h"
+#include "core/datatypes/forte_bool.h"
 #include <forte_arrowheadcloud.h>
-#include <forte_dint.h>
-#include <forte_wstring.h>
+#include "core/datatypes/forte_dint.h"
+#include "core/datatypes/forte_wstring.h"
 
 class FORTE_FieldsToArrowheadCloud : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToArrowheadCloud)

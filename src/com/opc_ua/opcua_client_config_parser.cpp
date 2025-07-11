@@ -11,7 +11,7 @@
  *    Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "opcua_client_config_parser.h"
+#include "com/opc_ua/opcua_client_config_parser.h"
 #include "arch/devlog.h"
 
 const char *const CUA_ClientConfigFileParser::mKeyNames[] = {"endpoint",      "username",   "password",

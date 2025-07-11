@@ -10,7 +10,7 @@
  *   Jose Cabral- initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "deviceReplayer.h"
+#include "stdfblib/ita/replay/deviceReplayer.h"
 
 #include "core/device.h"
 #include "core/ecetFake.h"

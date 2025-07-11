@@ -15,11 +15,11 @@
 
 #include "core/io/device/io_controller_poll.h"
 #include "core/io/mapper/io_handle.h"
-#include "extevhan.h"
+#include "core/extevhan.h"
 
 #include "stm32h743xx.h"
 #include <string>
-#include "CeSpec.h"
+#include "core/io/eIO/CeSpec.h"
 
 #include "stm32h7xx_hal_gpio.h"
 

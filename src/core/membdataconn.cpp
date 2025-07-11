@@ -11,7 +11,7 @@
  *    Martin Jobst - initial implementation
  *******************************************************************************/
 
-#include "membdataconn.h"
+#include "core/membdataconn.h"
 
 using namespace forte::core::internal;
 

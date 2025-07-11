@@ -10,9 +10,9 @@
  * Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "configFileParser.h"
-#include "../../arch/devlog.h"
-#include "parameterParser.h"
+#include "core/util/configFileParser.h"
+#include "arch/devlog.h"
+#include "core/util/parameterParser.h"
 #include <string.h>
 
 CConfigFileParser::CConfigFileParser(const std::string &paFileLocation) {

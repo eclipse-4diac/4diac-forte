@@ -12,7 +12,7 @@
  *                  changed from i2c-dev to simple read writes
  *******************************************************************************/
 
-#include "processinterface.h"
+#include "core/fmi/processinterface.h"
 #include <unistd.h>
 
 CProcessInterface::CProcessInterface(forte::core::CFBContainer &paContainer,

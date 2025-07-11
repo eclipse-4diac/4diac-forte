@@ -16,14 +16,14 @@
 #include <boost/test/unit_test.hpp>
 
 // BOOLEAN
-#include "../../../src/core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_bool.h"
 // BIT-Datatypes
-#include "../../../src/core/datatypes/forte_byte.h"
-#include "../../../src/core/datatypes/forte_word.h"
-#include "../../../src/core/datatypes/forte_dword.h"
-#include "../../../src/core/datatypes/forte_lword.h"
+#include "core/datatypes/forte_byte.h"
+#include "core/datatypes/forte_word.h"
+#include "core/datatypes/forte_dword.h"
+#include "core/datatypes/forte_lword.h"
 
-#include "../../../src/core/datatypes/forte_sint.h"
+#include "core/datatypes/forte_sint.h"
 
 #include "CIEC_PARTIAL_test.h"
 

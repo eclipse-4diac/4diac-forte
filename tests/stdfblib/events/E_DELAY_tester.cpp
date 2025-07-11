@@ -11,7 +11,7 @@
  *******************************************************************************/
 
 #include "../../core/fbtests/fbtester.h"
-#include <forte_time.h>
+#include "core/datatypes/forte_time.h"
 #include <E_DELAY.h>
 
 USE_STRING_ID(E_DELAY);

@@ -14,8 +14,8 @@
 #ifndef SRC_CORE_IO_CONFIGFB_MASTER_MULTI_H_
 #define SRC_CORE_IO_CONFIGFB_MASTER_MULTI_H_
 
-#include "io_configFB_controller.h"
-#include "io_adapter_multi.h"
+#include "core/io/configFB/io_configFB_controller.h"
+#include "core/io/configFB/io_adapter_multi.h"
 
 namespace forte {
   namespace core {

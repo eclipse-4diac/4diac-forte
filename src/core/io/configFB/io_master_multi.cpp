@@ -11,7 +11,7 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#include "io_master_multi.h"
+#include "core/io/configFB/io_master_multi.h"
 
 using namespace forte::core::io;
 

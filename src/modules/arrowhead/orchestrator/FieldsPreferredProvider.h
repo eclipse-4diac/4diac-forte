@@ -13,7 +13,7 @@
 #ifndef _FIELDSPREFERREDPROVIDER_H_
 #define _FIELDSPREFERREDPROVIDER_H_
 
-#include <basicfb.h>
+#include "core/basicfb.h"
 #include <forte_preferredprovider.h>
 #include <forte_arrowheadcloud.h>
 #include <forte_arrowheadsystem.h>

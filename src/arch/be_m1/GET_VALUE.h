@@ -13,10 +13,10 @@
 #define _GET_VALUE_H_
 
 #include <mtypes.h>
-#include <funcbloc.h>
-#include <forte_int.h>
-#include <forte_sint.h>
-#include <forte_array.h>
+#include "core/funcbloc.h"
+#include "core/datatypes/forte_int.h"
+#include "core/datatypes/forte_sint.h"
+#include "core/datatypes/forte_array.h"
 
 // cppcheck-suppress noConstructor
 class FORTE_GET_VALUE : public CFunctionBlock {

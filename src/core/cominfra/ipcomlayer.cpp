@@ -14,11 +14,11 @@
  *WIN32 Michael Hofmann - fix for fragmented packets Patrik Smejkal - rename interrupt in interruptCCommFB Jörg Walter -
  *improve UDP multicast support
  *******************************************************************************/
-#include "ipcomlayer.h"
-#include "../../arch/devlog.h"
-#include "basecommfb.h"
+#include "core/cominfra/ipcomlayer.h"
+#include "arch/devlog.h"
+#include "core/cominfra/basecommfb.h"
 #include <forte_thread.h>
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 using namespace forte::com_infra;
 

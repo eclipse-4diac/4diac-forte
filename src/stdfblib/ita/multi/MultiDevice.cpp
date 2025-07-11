@@ -11,12 +11,12 @@
  *    Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "MultiDevice.h"
+#include "stdfblib/ita/multi/MultiDevice.h"
 
 #include "stdfblib/ita/OPCUA_MGR.h"
 #include "stdfblib/ita/multi/utils.h"
 #include "generated/devicefactory.h"
-#include "devlog.h"
+#include "arch/devlog.h"
 
 namespace {
   const SFBInterfaceSpec cFBInterfaceSpec = {

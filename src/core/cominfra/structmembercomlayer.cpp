@@ -11,13 +11,13 @@
  *    Mario Kastner, Alois Zoitl - initial implementation
  *******************************************************************************/
 
-#include "basecommfb.h"
-#include "parameterParser.h"
-#include "structmembercomlayer.h"
-#include "typelib.h"
+#include "core/cominfra/basecommfb.h"
+#include "core/util/parameterParser.h"
+#include "core/cominfra/structmembercomlayer.h"
+#include "core/typelib.h"
 #include <string>
 #include <errno.h>
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 using namespace forte::com_infra;
 

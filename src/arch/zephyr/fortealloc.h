@@ -14,9 +14,9 @@
 #define FORTEALLOC_H_
 
 // If generic malloc and free are to be used, uncomment the next line, and comment the following
-// #include "../genfortealloc.h"
+// #include "arch/genfortealloc.h"
 
-#include "datatype.h"
+#include "arch/datatype.h"
 #include <stdlib.h>
 
 #include <zephyr/kernel.h>

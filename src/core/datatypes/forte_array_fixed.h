@@ -19,10 +19,10 @@
  *******************************************************************************/
 #pragma once
 
-#include "forte_array_common.h"
+#include "core/datatypes/forte_array_common.h"
 #include <array>
 #include <algorithm>
-#include "forte_ulint.h"
+#include "core/datatypes/forte_ulint.h"
 
 template<typename T>
 class CIEC_ARRAY_VARIABLE;

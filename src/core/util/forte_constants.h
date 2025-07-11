@@ -14,7 +14,7 @@
 #ifndef SRC_CORE_UTILS_FORTE_CONSTANTS_H_
 #define SRC_CORE_UTILS_FORTE_CONSTANTS_H_
 
-#include "forte_time.h"
+#include "core/datatypes/forte_time.h"
 
 namespace forte {
   namespace core {

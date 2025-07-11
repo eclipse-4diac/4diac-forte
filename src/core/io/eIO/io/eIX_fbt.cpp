@@ -10,7 +10,7 @@
  *   Maximilian Scharf - Initial implementation.
  *******************************************************************************/
 
-#include "eIX_fbt.h"
+#include "core/io/eIO/io/eIX_fbt.h"
 
 USE_STRING_ID(eIX);
 USE_STRING_ID(eGenAdapter);

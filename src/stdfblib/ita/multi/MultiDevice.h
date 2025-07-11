@@ -13,8 +13,8 @@
 
 #pragma once
 
-#include "device.h"
-#include "MultiMGR.h"
+#include "core/device.h"
+#include "stdfblib/ita/multi/MultiMGR.h"
 
 #include <vector>
 #include <memory>

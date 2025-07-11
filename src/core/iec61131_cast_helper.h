@@ -19,7 +19,7 @@
  *      - replaced custom templates with std templates, removed unused ones
  *******************************************************************************/
 
-#include "datatype.h"
+#include "arch/datatype.h"
 
 #include <type_traits>
 #include <functional>

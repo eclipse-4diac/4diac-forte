@@ -10,7 +10,7 @@
  *   Martin Melik-Merkumians - adds intial implememtation
  *************************************************************************/
 
-#include "QL_fbt.h"
+#include "core/io/QL_fbt.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);
@@ -28,11 +28,11 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_QL, STRID(QL))
 

@@ -15,8 +15,8 @@
 #ifndef TESTS_CORE_FBTESTS_FBTESTERGLOBALFIXTURE_H_
 #define TESTS_CORE_FBTESTS_FBTESTERGLOBALFIXTURE_H_
 
-#include "device.h"
-#include "EMB_RES.h"
+#include "core/device.h"
+#include "stdfblib/ita/EMB_RES.h"
 
 #include <memory>
 

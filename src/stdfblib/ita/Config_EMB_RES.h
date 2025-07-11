@@ -12,7 +12,7 @@
  *******************************************************************************/
 #pragma once
 
-#include "../../core/resource.h"
+#include "core/resource.h"
 #include "E_RESTART_fbt.h"
 
 class Config_EMB_RES final : public CResource {

@@ -12,10 +12,10 @@
 
 #pragma once
 
-#include "adapterconn.h"
+#include "core/adapterconn.h"
 #include "core/io/inputfb.h"
-#include "eGenAdapter_adp.h"
-#include "eConfigFB.h"
+#include "core/io/eIO/io/eGenAdapter_adp.h"
+#include "core/io/eIO/io/eConfigFB.h"
 
 USE_STRING_ID(eCONF);
 USE_STRING_ID(eGenAdapter);

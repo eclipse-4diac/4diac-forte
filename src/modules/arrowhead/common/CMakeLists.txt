@@ -1,26 +1,33 @@
 # *******************************************************************************
-# Copyright (c) 2018, fortiss GmbH
-# This program and the accompanying materials are made available under the
-# terms of the Eclipse Public License 2.0 which is available at
-# http://www.eclipse.org/legal/epl-2.0.
+# Copyright (c) 2018, fortiss GmbH This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0 which
+# is available at http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
-# Contributors:
-#    Jose Cabral - initial implementation
+#
+# Contributors: Jose Cabral - initial implementation
 # *******************************************************************************
 
-#############################################################################
-# Common Arrowhead specific functional blocks 
-#############################################################################
-
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-#datatype
-forte_add_sourcefile_hcpp(forte_arrowheadservice forte_arrowheadsystem forte_arrowheadcloud)
-
-#helper FBs
-forte_add_sourcefile_hcpp(FieldsToArrowheadService FieldsToArrowheadSystem FieldsToArrowheadCloud)
+# ############################################################################
+# Common Arrowhead specific functional blocks
+# ############################################################################
 
 add_subdirectory(JSON)
-  
+
+add_library(forte-modules-arrowhead-common OBJECT
+            # datatype
+            forte_arrowheadservice.h
+            forte_arrowheadservice.cpp
+            forte_arrowheadsystem.h
+            forte_arrowheadsystem.cpp
+            forte_arrowheadcloud.h
+            forte_arrowheadcloud.cpp
+            # helper FBs
+            FieldsToArrowheadService.h
+            FieldsToArrowheadService.cpp
+            FieldsToArrowheadSystem.h
+            FieldsToArrowheadSystem.cpp
+            FieldsToArrowheadCloud.h
+            FieldsToArrowheadCloud.cpp
+)
+target_link_libraries(forte PRIVATE forte-modules-arrowhead-common)

@@ -11,8 +11,8 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <sockhand.h> //needs to be first pulls in the platform specific includes
-#include "fdselecthand.h"
-#include "devlog.h"
+#include "arch/fdselecthand.h"
+#include "arch/devlog.h"
 #include "core/devexec.h"
 #include "core/cominfra/commfb.h"
 #include "core/cominfra/comCallback.h"

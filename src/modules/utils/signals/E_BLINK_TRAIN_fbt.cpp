@@ -43,11 +43,11 @@ USE_STRING_ID(TIMEHIGH);
 USE_STRING_ID(TIMELOW);
 USE_STRING_ID(UINT);
 
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_BLINK_TRAIN, STRID(E_BLINK_TRAIN))
 

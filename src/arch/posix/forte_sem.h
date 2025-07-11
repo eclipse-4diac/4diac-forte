@@ -20,7 +20,7 @@
 #define SRC_ARCH_POSIX_SEMAPHORE_H_
 
 #include <pthread.h>
-#include "datatype.h"
+#include "arch/datatype.h"
 #include "forte_sync.h"
 
 namespace forte {

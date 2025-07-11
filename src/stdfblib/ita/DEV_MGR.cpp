@@ -18,7 +18,7 @@
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
 #include <string.h>
-#include "DEV_MGR.h"
+#include "stdfblib/ita/DEV_MGR.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);
@@ -41,7 +41,7 @@ USE_STRING_ID(WSTRING);
 #include "core/device.h"
 #include <stdio.h>
 #include <stdlib.h>
-#include "ForteBootFileLoader.h"
+#include "stdfblib/ita/ForteBootFileLoader.h"
 #include "core/util/string_utils.h"
 
 DEFINE_FIRMWARE_FB(DEV_MGR, STRID(DEV_MGR))

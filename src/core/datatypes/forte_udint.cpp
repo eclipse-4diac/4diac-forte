@@ -12,7 +12,7 @@
  *    Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include "forte_udint.h"
+#include "core/datatypes/forte_udint.h"
 
 USE_STRING_ID(UDINT);
 

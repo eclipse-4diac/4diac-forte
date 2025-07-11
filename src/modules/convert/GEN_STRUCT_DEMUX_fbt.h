@@ -16,7 +16,7 @@
 #ifndef _GEN_STRUCT_DEMUX_H_
 #define _GEN_STRUCT_DEMUX_H_
 
-#include <genfb.h>
+#include "core/genfb.h"
 #include <stdio.h>
 
 #include <memory>

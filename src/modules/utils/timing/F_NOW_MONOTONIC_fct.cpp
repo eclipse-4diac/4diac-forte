@@ -24,12 +24,12 @@ USE_STRING_ID(REQ);
 USE_STRING_ID(TIME);
 USE_STRING_ID(utils__timing__F_NOW_MONOTONIC);
 
-#include "forte_time.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_time.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 #include "F_NOW_MONOTONIC_fct.h"
 
 DEFINE_FIRMWARE_FB(FORTE_utils__timing__F_NOW_MONOTONIC, STRID(utils__timing__F_NOW_MONOTONIC))

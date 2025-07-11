@@ -15,8 +15,8 @@
 
 #pragma once
 
-#include "outputfb.h"
-#include "forte_lword.h"
+#include "core/io/outputfb.h"
+#include "core/datatypes/forte_lword.h"
 
 class FORTE_QL final : public forte::core::io::COutputFB<CIEC_LWORD> {
     DECLARE_FIRMWARE_FB(FORTE_QL)

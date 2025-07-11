@@ -13,8 +13,8 @@
 #ifndef _QUERYSERVICEHTTP_H_
 #define _QUERYSERVICEHTTP_H_
 
-#include <cfb.h>
-#include <typelib.h>
+#include "core/cfb.h"
+#include "core/typelib.h"
 #include "QueryServicesAdp_adp.h"
 
 class FORTE_QueryServiceHTTP : public CCompositeFB {

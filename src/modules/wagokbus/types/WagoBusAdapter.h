@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "io/configFB/io_adapter_multi.h"
+#include "core/io/configFB/io_adapter_multi.h"
 #include "core/datatypes/forte_bool.h"
 #include "core/datatypes/forte_uint.h"
 

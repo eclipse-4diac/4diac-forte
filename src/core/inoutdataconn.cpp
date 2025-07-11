@@ -12,9 +12,9 @@
  *      - initial implementation
  *******************************************************************************/
 
-#include "inoutdataconn.h"
+#include "core/inoutdataconn.h"
 
-#include "funcbloc.h"
+#include "core/funcbloc.h"
 
 EMGMResponse CInOutDataConnection::connect(CFunctionBlock &paDstFB,
                                            const std::span<const CStringDictionary::TStringId> paDstPortNameId) {

@@ -11,7 +11,7 @@
  *    Monika Wenger, Alois Zoitl
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include "forte_ulint.h"
+#include "core/datatypes/forte_ulint.h"
 
 USE_STRING_ID(ULINT);
 

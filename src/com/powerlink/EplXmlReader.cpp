@@ -12,13 +12,13 @@
  *******************************************************************************/
 #include "EplXmlReader.h"
 
-#include <string_utils.h>
+#include "core/util/string_utils.h"
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <string.h>
-#include "devlog.h"
-#include "string_utils.h"
+#include "arch/devlog.h"
+#include "core/util/string_utils.h"
 #include <tinyxml.h>
 
 using namespace std;

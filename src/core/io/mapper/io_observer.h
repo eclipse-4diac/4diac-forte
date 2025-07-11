@@ -15,8 +15,8 @@
 
 #pragma once
 
-#include "io_handle.h"
-#include "io_mapper.h"
+#include "core/io/mapper/io_handle.h"
+#include "core/io/mapper/io_mapper.h"
 
 namespace forte::core::io {
 

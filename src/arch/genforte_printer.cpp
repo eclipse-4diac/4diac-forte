@@ -10,7 +10,7 @@
  *  Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "forte_printer.h"
+#include "arch/forte_printer.h"
 #include <stdio.h>
 
 int forte_snprintf(char *pa_stream, size_t pa_size, const char *pa_format, ...) {

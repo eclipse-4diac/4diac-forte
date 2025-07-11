@@ -18,7 +18,7 @@
  *      - rework to use std::vector/inplace_vecctor
  *******************************************************************************/
 
-#include "stringdict.h"
+#include "core/stringdict.h"
 #include <cstring>
 #include "generated/stringdict_generated.h"
 #include "generated/config/FORTE_STRINGDICT_FIXEDMEMORY.h"

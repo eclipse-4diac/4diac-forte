@@ -11,9 +11,9 @@
  *******************************************************************************/
 
 #include "sysfsprocint.h"
-#include "../../arch/devlog.h"
-#include <extevhandlerhelper.h>
-#include <criticalregion.h>
+#include "arch/devlog.h"
+#include "core/util/extevhandlerhelper.h"
+#include "core/util/criticalregion.h"
 #include <string>
 
 using namespace std::literals::string_literals;

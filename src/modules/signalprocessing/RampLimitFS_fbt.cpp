@@ -35,14 +35,14 @@ USE_STRING_ID(VAL_FULL);
 USE_STRING_ID(VAL_ZERO);
 USE_STRING_ID(ZERO);
 
-#include "forte_any_elementary_variant.h"
-#include "forte_any_num_variant.h"
-#include "forte_dint.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_any_elementary_variant.h"
+#include "core/datatypes/forte_any_num_variant.h"
+#include "core/datatypes/forte_dint.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS, STRID(signalprocessing__RampLimitFS))
 

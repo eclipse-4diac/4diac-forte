@@ -12,7 +12,7 @@
 #ifndef _MODULELIST_H_
 #define _MODULELIST_H_
 
-#include <fortelist.h>
+#include "core/fortelist.h"
 
 class CModuleList {
   public:

@@ -13,7 +13,7 @@
  *                 interface needs
  *******************************************************************************/
 
-#include "QL_fbt.h"
+#include "core/io/QL_fbt.h"
 USE_STRING_ID(QL);
 
 using namespace forte::core::io;

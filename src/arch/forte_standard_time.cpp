@@ -14,7 +14,7 @@
 
 using namespace std::chrono;
 
-#include "forte_architecture_time.h"
+#include "arch/forte_architecture_time.h"
 
 uint_fast64_t getNanoSecondsMonotonicArch() {
   return static_cast<uint_fast64_t>(duration_cast<nanoseconds>(steady_clock::now().time_since_epoch()).count());

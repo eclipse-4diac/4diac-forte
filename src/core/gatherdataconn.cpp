@@ -11,11 +11,11 @@
  *    Martin Jobst - initial implementation
  *******************************************************************************/
 
-#include "gatherdataconn.h"
+#include "core/gatherdataconn.h"
 
 #include <algorithm>
 
-#include "funcbloc.h"
+#include "core/funcbloc.h"
 
 using namespace forte::core::internal;
 

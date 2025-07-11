@@ -18,9 +18,9 @@
  *   Martin Jobst - add smart pointer for internal FBs
  *                - use span for create and delete FB
  *******************************************************************************/
-#include "fbcontainer.h"
-#include "funcbloc.h"
-#include "typelib_internal.h"
+#include "core/fbcontainer.h"
+#include "core/funcbloc.h"
+#include "core/typelib_internal.h"
 
 using namespace forte::core;
 

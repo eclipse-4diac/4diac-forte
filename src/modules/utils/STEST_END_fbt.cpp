@@ -12,7 +12,7 @@
  *******************************************************************************/
 
 #include "STEST_END_fbt.h"
-#include "device.h"
+#include "core/device.h"
 
 USE_STRING_ID(Event);
 USE_STRING_ID(REQ);

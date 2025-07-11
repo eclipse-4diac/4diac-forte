@@ -15,9 +15,9 @@
 #pragma once
 
 #include "Slave.h"
-#include "forte_bool.h"
-#include "forte_wstring.h"
-#include "forte_uint.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_wstring.h"
+#include "core/datatypes/forte_uint.h"
 
 class FORTE_EBSlave2301 final : public EmbrickSlave {
     DECLARE_FIRMWARE_FB(FORTE_EBSlave2301)

@@ -14,7 +14,7 @@
  *******************************************************************************/
 
 #include <boost/test/unit_test.hpp>
-#include <basicfb.h>
+#include "core/basicfb.h"
 #include "fbcontainermock.h"
 
 USE_STRING_ID(CV);

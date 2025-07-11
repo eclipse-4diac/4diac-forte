@@ -12,7 +12,7 @@
 #ifndef BE_RMT_DEV_H_
 #define BE_RMT_DEV_H_
 
-#include "../../../stdfblib/ita/RMT_DEV.h"
+#include "stdfblib/ita/RMT_DEV.h"
 #include <arch/be_m1/fortemodule.h>
 
 class BE_RMT_DEV : public RMT_DEV {

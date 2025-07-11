@@ -27,9 +27,9 @@
 
 #pragma once
 
-#include "forte_array.h"
+#include "core/datatypes/forte_array.h"
 #include <stdexcept>
-#include <devlog.h>
+#include "arch/devlog.h"
 #include <utility>
 #include <memory>
 

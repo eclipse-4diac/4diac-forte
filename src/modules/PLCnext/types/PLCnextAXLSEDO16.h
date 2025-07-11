@@ -20,9 +20,9 @@
 #pragma once
 
 #include "../slaveHandler.h"
-#include "forte_bool.h"
-#include "forte_string.h"
-#include "forte_wstring.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_wstring.h"
 #include "../deviceController.h"
 
 class FORTE_PLCnextAXLSEDO16 final : public PLCnextSlaveHandler {

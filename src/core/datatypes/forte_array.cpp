@@ -24,8 +24,8 @@
  *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 
-#include "forte_array.h"
-#include "forte_ulint.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_ulint.h"
 
 USE_STRING_ID(ARRAY);
 

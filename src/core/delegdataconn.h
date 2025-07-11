@@ -12,7 +12,7 @@
  *******************************************************************************/
 #pragma once
 
-#include "dataconn.h"
+#include "core/dataconn.h"
 
 namespace forte::core::internal {
 

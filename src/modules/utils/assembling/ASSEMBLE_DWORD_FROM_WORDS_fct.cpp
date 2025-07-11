@@ -29,13 +29,13 @@ USE_STRING_ID(WORD);
 USE_STRING_ID(WORD_00);
 USE_STRING_ID(WORD_01);
 
-#include "forte_dword.h"
-#include "forte_word.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_dword.h"
+#include "core/datatypes/forte_word.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 #include "ASSEMBLE_DWORD_FROM_WORDS_fct.h"
 
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_WORDS, STRID(ASSEMBLE_DWORD_FROM_WORDS))

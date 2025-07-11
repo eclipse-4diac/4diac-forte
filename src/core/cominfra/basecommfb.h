@@ -19,10 +19,10 @@
 #ifndef _SRC_CORE_COMINFRA_BASECOMMFB_H_
 #define _SRC_CORE_COMINFRA_BASECOMMFB_H_
 
-#include <forte_config.h>
-#include "comtypes.h"
-#include "../genfb.h"
-#include "../esfb.h"
+#include "generated/forte_config.h"
+#include "core/cominfra/comtypes.h"
+#include "core/genfb.h"
+#include "core/esfb.h"
 #include "forte_sync.h"
 
 namespace forte {

@@ -15,13 +15,13 @@
  *******************************************************************************/
 #include "opccomlayer.h"
 #include "arch/devlog.h"
-#include "commfb.h"
+#include "core/cominfra/commfb.h"
 #include "core/util/parameterParser.h"
 
 #include "opcconnection.h"
 #include "opcconnectionhandler.h"
 #include "Variant.h"
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 #include <boost/lexical_cast.hpp>
 
 using namespace forte::com_infra;

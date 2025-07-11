@@ -11,9 +11,9 @@
  *    Jose Cabral - initial implementation and rework communication infrastructure
  *******************************************************************************/
 
-#include "fmuEcet.h"
-#include "fmi/fmiTimerHandler.h"
-#include "fmuInstance.h"
+#include "core/fmi/fmuEcet.h"
+#include "core/fmi/fmiTimerHandler.h"
+#include "core/fmi/fmuInstance.h"
 #include <assert.h>
 
 CFMUEventChainExecutionThread::CFMUEventChainExecutionThread() :

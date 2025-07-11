@@ -28,9 +28,9 @@
 #define FD_ZERO(p) memset((char *) (p), 0, sizeof(*(p)))
 
 // these include needs to be last
-#include "../gensockhand.h"
-#include "../fdselecthand.h"
-#include "../bsdsocketinterf.h"
+#include "arch/gensockhand.h"
+#include "arch/fdselecthand.h"
+#include "arch/bsdsocketinterf.h"
 
 typedef CGenericIPComSocketHandler<CFDSelectHandler, CBSDSocketInterface> CIPComSocketHandler;
 

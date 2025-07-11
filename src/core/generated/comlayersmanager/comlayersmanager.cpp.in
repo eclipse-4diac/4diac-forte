@@ -14,8 +14,8 @@
  *******************************************************************************/
 
 #include <string.h>
-#include "comlayersmanager.h"
-#include "fortenew.h"
+#include "core/cominfra/comlayersmanager.h"
+#include "arch/fortenew.h"
 
 ${includes}
 

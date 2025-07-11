@@ -25,14 +25,14 @@
 
 #pragma once
 
-#include "../arch/devlog.h"
-#include "convert_functions.h"
-#include "iec61131_cast_helper.h"
-#include "./datatypes/forte_struct.h"
-#include "./datatypes/forte_array_common.h"
-#include "./datatypes/forte_array_fixed.h"
-#include "./datatypes/forte_array_variable.h"
-#include "./datatypes/forte_array_dynamic.h"
+#include "arch/devlog.h"
+#include "core/datatypes/convert/convert_functions.h"
+#include "core/iec61131_cast_helper.h"
+#include "core/datatypes/forte_struct.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
+#include "core/datatypes/forte_array_dynamic.h"
 
 #include <algorithm>
 #include <cmath>

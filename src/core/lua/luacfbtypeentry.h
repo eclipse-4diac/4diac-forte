@@ -14,8 +14,8 @@
 #ifndef SRC_CORE_LUACFBTYPEENTRY_H_
 #define SRC_CORE_LUACFBTYPEENTRY_H_
 
-#include "typelib.h"
-#include "cfb.h"
+#include "core/typelib.h"
+#include "core/cfb.h"
 #include <string>
 
 class CResource;

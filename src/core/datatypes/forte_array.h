@@ -22,9 +22,9 @@
 #include <stddef.h>
 #include <inttypes.h>
 
-#include "forte_any_derived.h"
-#include "forte_any_int.h"
-#include "stringdict.h"
+#include "core/datatypes/forte_any_derived.h"
+#include "core/datatypes/forte_any_int.h"
+#include "core/stringdict.h"
 
 /** \brief A common supertype for all CIEC_ARRAY variants, providing the minimal interface an array must provide
  */

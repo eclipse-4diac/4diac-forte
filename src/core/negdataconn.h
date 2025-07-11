@@ -12,9 +12,9 @@
  *******************************************************************************/
 #pragma once
 
-#include "delegdataconn.h"
-#include "forte_bool.h"
-#include "iec61131_functions.h"
+#include "core/delegdataconn.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/iec61131_functions.h"
 
 namespace forte::core::internal {
 

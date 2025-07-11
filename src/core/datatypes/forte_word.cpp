@@ -11,7 +11,7 @@
  *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Ingo Hegny, Monika Wenger,
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include "forte_word.h"
+#include "core/datatypes/forte_word.h"
 
 USE_STRING_ID(WORD);
 

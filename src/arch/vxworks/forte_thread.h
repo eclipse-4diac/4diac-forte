@@ -14,7 +14,7 @@
 
 #include "vxWorks.h"
 #include "taskLib.h"
-#include "../threadbase.h"
+#include "arch/threadbase.h"
 
 class CVxWorksThread : public forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR> {
   public:

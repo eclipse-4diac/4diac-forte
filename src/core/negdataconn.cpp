@@ -11,7 +11,7 @@
  *    Martin Jobst - initial implementation
  *******************************************************************************/
 
-#include "negdataconn.h"
+#include "core/negdataconn.h"
 
 USE_STRING_ID(NOT)
 

@@ -19,9 +19,9 @@ USE_STRING_ID(EventFilter);
 USE_STRING_ID(PublishEvent);
 USE_STRING_ID(ServiceRequestForm);
 
-#include <forte_bool.h>
-#include <parameterParser.h>
-#include <devlog.h>
+#include "core/datatypes/forte_bool.h"
+#include "core/util/parameterParser.h"
+#include "arch/devlog.h"
 
 void ArrowheadJSONHelper::transformANYToJSON(const CIEC_ANY &paSource, CIEC_STRING &paResult) {
   switch (paSource.getDataTypeID()) {

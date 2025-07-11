@@ -16,10 +16,10 @@
 #ifndef _STRING_UTILS_H_
 #define _STRING_UTILS_H_
 
-#include <datatype.h>
+#include "arch/datatype.h"
 #include <string>
-#include "../stringdict.h"
-#include "../datatypes/forte_any.h"
+#include "core/stringdict.h"
+#include "core/datatypes/forte_any.h"
 
 namespace forte {
   namespace core {

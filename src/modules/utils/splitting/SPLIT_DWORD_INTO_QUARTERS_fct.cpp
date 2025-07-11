@@ -43,15 +43,15 @@ USE_STRING_ID(QUARTER_BYTE_15);
 USE_STRING_ID(REQ);
 USE_STRING_ID(SPLIT_DWORD_INTO_QUARTERS);
 
-#include "forte_byte.h"
-#include "forte_any_int_variant.h"
-#include "forte_any_bit_variant.h"
-#include "forte_dword.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_byte.h"
+#include "core/datatypes/forte_any_int_variant.h"
+#include "core/datatypes/forte_any_bit_variant.h"
+#include "core/datatypes/forte_dword.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 #include "quarterconst_gcf.h"
 
 DEFINE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_QUARTERS, STRID(SPLIT_DWORD_INTO_QUARTERS))

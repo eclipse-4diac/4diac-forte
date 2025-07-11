@@ -10,8 +10,8 @@
  * Contributors:
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "fmuInstance.h"
-#include "device.h"
+#include "core/fmi/fmuInstance.h"
+#include "core/device.h"
 
 USE_STRING_ID(DEV_MGR);
 USE_STRING_ID(EMB_RES);
@@ -23,10 +23,10 @@ USE_STRING_ID(QI);
 USE_STRING_ID(QW);
 USE_STRING_ID(QX);
 
-#include "device.h"
-#include "./comm/fmuHandler.h"
-#include "../basicfb.h"
-#include "../cfb.h"
+#include "core/device.h"
+#include "core/fmi/comm/fmuHandler.h"
+#include "core/basicfb.h"
+#include "core/cfb.h"
 #include <stdlib.h>
 #include "core/util/criticalregion.h"
 

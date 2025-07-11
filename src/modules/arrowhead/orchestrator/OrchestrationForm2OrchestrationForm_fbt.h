@@ -13,7 +13,7 @@
 #ifndef _ORCHESTRATIONFORM2ORCHESTRATIONFORM_H_
 #define _ORCHESTRATIONFORM2ORCHESTRATIONFORM_H_
 
-#include <funcbloc.h>
+#include "core/funcbloc.h"
 #include <forte_orchestrationform.h>
 
 class FORTE_OrchestrationForm2OrchestrationForm : public CFunctionBlock {

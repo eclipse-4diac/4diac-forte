@@ -26,14 +26,14 @@ USE_STRING_ID(RI);
 USE_STRING_ID(signalprocessing__FIELDBUS_PERCENT_TO_WORD);
 USE_STRING_ID(WORD);
 
-#include "forte_real.h"
-#include "forte_udint.h"
-#include "forte_word.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_real.h"
+#include "core/datatypes/forte_udint.h"
+#include "core/datatypes/forte_word.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 #include "FIELDBUS_PERCENT_TO_WORD_fct.h"
 #include "FIELDBUS_SIGNAL_gcf.h"
 

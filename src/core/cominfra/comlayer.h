@@ -16,8 +16,8 @@
 #ifndef _COMLAYER_H_
 #define _COMLAYER_H_
 
-#include "comtypes.h"
-#include "comCallback.h"
+#include "core/cominfra/comtypes.h"
+#include "core/cominfra/comCallback.h"
 #include "core/util/extevhandlerhelper.h"
 
 namespace forte {

@@ -12,8 +12,8 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 
-#include "device.h"
-#include "ecet.h"
+#include "core/device.h"
+#include "core/ecet.h"
 #include <string.h>
 
 EMGMResponse CDevice::executeMGMCommand(forte::core::SManagementCMD &paCommand) {

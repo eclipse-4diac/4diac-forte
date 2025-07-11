@@ -11,9 +11,9 @@
  *    Ernst Blecha - add jumping to a point in time that has already passed
  *******************************************************************************/
 #include "faketimerha.h"
-#include "../../core/devexec.h"
-#include "ecet.h"
-#include "device.h"
+#include "core/devexec.h"
+#include "core/ecet.h"
+#include "core/device.h"
 
 uint_fast64_t trackFakeForteTime();
 uint_fast64_t jumpFakeForteTime(uint_fast64_t destination);

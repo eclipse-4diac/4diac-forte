@@ -17,17 +17,17 @@
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include <cstddef>
-#include <fortenew.h>
+#include "arch/fortenew.h"
 #include <memory>
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "forte_any_variant.h"
-#include "commfb.h"
-#include "comlayer.h"
-#include "comlayersmanager.h"
-#include "criticalregion.h"
-#include "string_utils.h"
+#include "core/datatypes/forte_any_variant.h"
+#include "core/cominfra/commfb.h"
+#include "core/cominfra/comlayer.h"
+#include "core/cominfra/comlayersmanager.h"
+#include "core/util/criticalregion.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);

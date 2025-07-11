@@ -13,7 +13,7 @@
  *   Alois Zoitl - copied to core/io and adjusted to core/io process
  *                 interface needs
  *******************************************************************************/
-#include "IX_fbt.h"
+#include "core/io/IX_fbt.h"
 
 USE_STRING_ID(IX);
 

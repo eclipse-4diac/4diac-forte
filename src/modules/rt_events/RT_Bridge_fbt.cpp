@@ -13,8 +13,8 @@
 
 #include "RT_Bridge_fbt.h"
 #include <memory>
-#include "criticalregion.h"
-#include "string_utils.h"
+#include "core/util/criticalregion.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(ANY);
 USE_STRING_ID(Event);

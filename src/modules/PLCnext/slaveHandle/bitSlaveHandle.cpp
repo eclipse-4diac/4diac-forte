@@ -11,7 +11,7 @@
  *******************************************************************************/
 
 #include "bitSlaveHandle.h"
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 #include "../slaveHandler.h"
 
 PLCnextBitSlaveHandle::PLCnextBitSlaveHandle(forte::core::io::IODeviceController *paController,

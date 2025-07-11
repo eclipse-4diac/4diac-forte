@@ -10,8 +10,8 @@
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "posixsercommlayer.h"
-#include "../devlog.h"
-#include "../../core/cominfra/commfb.h"
+#include "arch/devlog.h"
+#include "core/cominfra/commfb.h"
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
@@ -19,7 +19,7 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sockhand.h>
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 
 CPosixSerCommLayer::CPosixSerCommLayer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB) :
     CSerialComLayerBase(paUpperLayer, paFB) {

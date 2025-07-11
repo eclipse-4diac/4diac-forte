@@ -13,7 +13,7 @@
 #ifndef _FMUECET_H_
 #define _FMUECET_H_
 
-#include "../ecet.h"
+#include "core/ecet.h"
 
 class CFMUEventChainExecutionThread : public CEventChainExecutionThread {
   public:

@@ -11,7 +11,7 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "LocalizedText2LocalizedText.h"
+#include "com/opc_ua/FBs/LocalizedText2LocalizedText.h"
 
 USE_STRING_ID(CNF);
 USE_STRING_ID(Event);

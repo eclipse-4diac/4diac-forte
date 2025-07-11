@@ -13,8 +13,8 @@
 #ifndef _REGISTERSERVICEHTTP_H_
 #define _REGISTERSERVICEHTTP_H_
 
-#include <cfb.h>
-#include <typelib.h>
+#include "core/cfb.h"
+#include "core/typelib.h"
 #include "RegisterServiceAdp_adp.h"
 
 class FORTE_RegisterServiceHTTP : public CCompositeFB {

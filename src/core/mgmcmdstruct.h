@@ -13,9 +13,9 @@
 #pragma once
 
 #include "generated/config/FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY.h"
-#include "mgmcmd.h"
+#include "core/mgmcmd.h"
 #include "core/util/inplace_vector.h"
-#include "stringdict.h"
+#include "core/stringdict.h"
 #include <string>
 
 namespace forte {

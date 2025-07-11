@@ -13,10 +13,10 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "forte_st_iterator.h"
+#include "core/forte_st_iterator.h"
 
-#include "forte_uint.h"
-#include "forte_int.h"
+#include "core/datatypes/forte_uint.h"
+#include "core/datatypes/forte_int.h"
 
 BOOST_AUTO_TEST_SUITE(ST_FOR_Iterator)
 

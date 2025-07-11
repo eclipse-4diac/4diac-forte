@@ -11,7 +11,7 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#include "io_base.h"
+#include "core/io/configFB/io_base.h"
 
 using namespace forte::core::io;
 

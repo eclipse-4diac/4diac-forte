@@ -13,11 +13,11 @@
  *   Martin Melik Merkumians - adds functionality for W/CHAR
  *******************************************************************************/
 #include <algorithm>
-#include <forte_config.h>
-#include "monitoring.h"
-#include "funcbloc.h"
-#include "resource.h"
-#include "ecet.h"
+#include "generated/forte_config.h"
+#include "core/monitoring.h"
+#include "core/funcbloc.h"
+#include "core/resource.h"
+#include "core/ecet.h"
 #include "core/util/string_utils.h"
 #include <format>
 

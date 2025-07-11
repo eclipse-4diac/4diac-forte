@@ -14,14 +14,14 @@
 
 #pragma once
 
-#include "simplefb.h"
-#include "forte_time.h"
-#include "forte_udint.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/simplefb.h"
+#include "core/datatypes/forte_time.h"
+#include "core/datatypes/forte_udint.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 class FORTE_F_TIME_IN_US_TO_UDINT final : public CSimpleFB {
     DECLARE_FIRMWARE_FB(FORTE_F_TIME_IN_US_TO_UDINT)

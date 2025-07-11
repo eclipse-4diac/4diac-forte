@@ -21,10 +21,10 @@
 #ifndef _FORTE_LTOD_H_
 #define _FORTE_LTOD_H_
 
-#include "forte_any_date.h"
-#include "forte_architecture_time.h"
+#include "core/datatypes/forte_any_date.h"
+#include "arch/forte_architecture_time.h"
 
-#include "forte_time_of_day.h"
+#include "core/datatypes/forte_time_of_day.h"
 
 /*!\ingroup COREDTS CIEC_LTIME_OF_DAY represents the time data types according to IEC 61131.
  */

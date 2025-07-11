@@ -10,7 +10,7 @@
  *  Alois Zoitl, Gerhard Ebenhofer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "pctimeha.h"
-#include "../../core/devexec.h"
+#include "core/devexec.h"
 #include <windows.h>
 
 const TForteInt32 CPCTimerHandler::csmTicksPerSecond = 1000;

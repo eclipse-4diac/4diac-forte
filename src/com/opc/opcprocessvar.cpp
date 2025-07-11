@@ -15,8 +15,8 @@
 #include "opcprocessvar.h"
 #include "OPCGroup.h"
 #include "OPCItem.h"
-#include "../../arch/devlog.h"
-#include <criticalregion.h>
+#include "arch/devlog.h"
+#include "core/util/criticalregion.h"
 
 COpcProcessVar::COpcProcessVar(const std::string &paItemGroupName,
                                const std::string &paItemName,

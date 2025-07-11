@@ -9,9 +9,9 @@
  * Contributors:
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "fmiTimerHandler.h"
-#include "devexec.h"
-#include "fmuInstance.h"
+#include "core/fmi/fmiTimerHandler.h"
+#include "core/devexec.h"
+#include "core/fmi/fmuInstance.h"
 #include "arch/utils/timespec_utils.h"
 #include <time.h>
 

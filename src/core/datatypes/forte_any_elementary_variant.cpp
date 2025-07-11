@@ -12,7 +12,7 @@
  *   Martin Erich Jobst - initial implementation
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#include "forte_any_elementary_variant.h"
+#include "core/datatypes/forte_any_elementary_variant.h"
 
 USE_STRING_ID(ANY_ELEMENTARY);
 

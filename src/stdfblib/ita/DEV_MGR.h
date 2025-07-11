@@ -14,11 +14,11 @@
 #ifndef _DEV_MGR_H_
 #define _DEV_MGR_H_
 
-#include <funcbloc.h>
-#include <mgmcmdstruct.h>
-#include <commfb.h>
-#include "CommandParser.h"
-#include "forte_string.h"
+#include "core/funcbloc.h"
+#include "core/mgmcmdstruct.h"
+#include "core/cominfra/commfb.h"
+#include "stdfblib/ita/CommandParser.h"
+#include "core/datatypes/forte_string.h"
 
 class CDevice;
 

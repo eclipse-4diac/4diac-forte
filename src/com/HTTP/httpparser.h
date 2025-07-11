@@ -17,7 +17,7 @@
 #ifndef _HTTPIPPARSER_H_
 #define _HTTPIPPARSER_H_
 
-#include <forte_string.h>
+#include "core/datatypes/forte_string.h"
 #include "httplayer.h"
 
 #include <vector>

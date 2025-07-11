@@ -17,9 +17,9 @@
 
 #pragma once
 
-#include "conn.h"
-#include "stringdict.h"
-#include "mgmcmdstruct.h"
+#include "core/conn.h"
+#include "core/stringdict.h"
+#include "core/mgmcmdstruct.h"
 #include <vector>
 #include <memory>
 

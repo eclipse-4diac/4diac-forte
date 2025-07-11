@@ -19,22 +19,22 @@
 #define _FORTE_BOOST_OUTPUT_SUPPORT_H_
 
 #include <iostream>
-#include "forte_lreal.h"
-#include "forte_char.h"
-#include "forte_wchar.h"
-#include "forte_string.h"
-#include "forte_string_fixed.h"
-#include "forte_wstring.h"
-#include "forte_time.h"
-#include "forte_time_of_day.h"
-#include "forte_date.h"
-#include "forte_date_and_time.h"
-#include "forte_ltime.h"
-#include "forte_ltime_of_day.h"
-#include "forte_ldate.h"
-#include "forte_ldate_and_time.h"
-#include "funcbloc.h"
-#include "mgmcmd.h"
+#include "core/datatypes/forte_lreal.h"
+#include "core/datatypes/forte_char.h"
+#include "core/datatypes/forte_wchar.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_string_fixed.h"
+#include "core/datatypes/forte_wstring.h"
+#include "core/datatypes/forte_time.h"
+#include "core/datatypes/forte_time_of_day.h"
+#include "core/datatypes/forte_date.h"
+#include "core/datatypes/forte_date_and_time.h"
+#include "core/datatypes/forte_ltime.h"
+#include "core/datatypes/forte_ltime_of_day.h"
+#include "core/datatypes/forte_ldate.h"
+#include "core/datatypes/forte_ldate_and_time.h"
+#include "core/funcbloc.h"
+#include "core/mgmcmd.h"
 
 inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_LREAL &variable) {
   std::string outputString;

@@ -16,9 +16,9 @@
  *                - add path member access
  *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#include "forte_struct.h"
+#include "core/datatypes/forte_struct.h"
 #include <cstring>
-#include "../util/string_utils.h"
+#include "core/util/string_utils.h"
 
 using namespace std::string_literals;
 

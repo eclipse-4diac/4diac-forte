@@ -11,7 +11,7 @@
  *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
 #include "modbusclientconnection.h"
-#include "devlog.h"
+#include "arch/devlog.h"
 #include "modbuspoll.h"
 #include <forte_thread.h>
 #include <sys/types.h>

@@ -10,9 +10,9 @@
  *   Alois Zoitl, Thomas Strasser, Rene Smodic, Ingo Hegny
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <fortenew.h>
+#include "arch/fortenew.h"
 #include "txtimeha.h"
-#include "../../core/devexec.h"
+#include "core/devexec.h"
 
 CTXTimerHandler::CTXTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
   // setup the handler for recieving the timer calls

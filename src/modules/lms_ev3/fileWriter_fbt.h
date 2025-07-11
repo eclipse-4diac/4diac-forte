@@ -13,7 +13,7 @@
 #ifndef _FILEWRITER_H_
 #define _FILEWRITER_H_
 
-#include <funcbloc.h>
+#include "core/funcbloc.h"
 #include <fstream>
 
 class fileWriter : public CFunctionBlock {

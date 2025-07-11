@@ -11,8 +11,8 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#include "io_adapter_multi.h"
-#include "forte_bool.h"
+#include "core/io/configFB/io_adapter_multi.h"
+#include "core/datatypes/forte_bool.h"
 
 using namespace forte::core::io;
 

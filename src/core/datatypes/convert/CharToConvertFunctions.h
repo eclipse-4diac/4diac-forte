@@ -14,15 +14,15 @@
 #ifndef SRC_CORE_DATATYPES_CONVERT_CHARTOCONVERTFUNCTIONS_H_
 #define SRC_CORE_DATATYPES_CONVERT_CHARTOCONVERTFUNCTIONS_H_
 
-#include "forte_any.h"
-#include "forte_sint.h"
-#include "forte_byte.h"
-#include "forte_word.h"
-#include "forte_dword.h"
-#include "forte_lword.h"
-#include "forte_char.h"
-#include "forte_wchar.h"
-#include "forte_string.h"
+#include "core/datatypes/forte_any.h"
+#include "core/datatypes/forte_sint.h"
+#include "core/datatypes/forte_byte.h"
+#include "core/datatypes/forte_word.h"
+#include "core/datatypes/forte_dword.h"
+#include "core/datatypes/forte_lword.h"
+#include "core/datatypes/forte_char.h"
+#include "core/datatypes/forte_wchar.h"
+#include "core/datatypes/forte_string.h"
 
 inline const CIEC_USINT func_CHAR_TO_USINT(const CIEC_CHAR &paVal) {
   return CIEC_ANY::cast<CIEC_USINT>(paVal);

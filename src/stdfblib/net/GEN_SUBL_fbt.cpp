@@ -12,7 +12,7 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "GEN_SUBL_fbt.h"
-#include "comlayersmanager.h"
+#include "core/cominfra/comlayersmanager.h"
 
 USE_STRING_ID(GEN_SUBL)
 

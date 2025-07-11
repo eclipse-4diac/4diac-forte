@@ -16,11 +16,11 @@
  *   Hesam Rezaee - developing new format for time variables including different time element
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#include "forte_time.h"
+#include "core/datatypes/forte_time.h"
 #include <string_view>
-#include "../../arch/timerha.h"
-#include "forte_constants.h"
-#include "string_utils.h"
+#include "arch/timerha.h"
+#include "core/util/forte_constants.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(TIME);
 

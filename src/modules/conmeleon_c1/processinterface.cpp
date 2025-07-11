@@ -10,7 +10,7 @@
  *    Alois Zoitl and Herwig Eichler
  *******************************************************************************/
 
-#include "processinterface.h"
+#include "core/fmi/processinterface.h"
 
 const char *const CConmeleonC1ProcessInterface::scmUnknownChannel = "Channel number not existing";
 const char *const CConmeleonC1ProcessInterface::scmChannelNotSupported = "Channel type not supported by hardware";

@@ -11,8 +11,8 @@
  *    Alois Zoitl
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include "extevhan.h"
-#include <devlog.h>
+#include "core/extevhan.h"
+#include "arch/devlog.h"
 
 CExternalEventHandler::CExternalEventHandler(CDeviceExecution &paDeviceExecution) :
     mDeviceExecution(paDeviceExecution) {

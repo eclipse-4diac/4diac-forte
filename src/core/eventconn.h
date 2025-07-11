@@ -15,7 +15,7 @@
 #define _EVENCONN_H_
 
 #include <vector>
-#include "conn.h"
+#include "core/conn.h"
 
 class CEventChainExecutionThread;
 

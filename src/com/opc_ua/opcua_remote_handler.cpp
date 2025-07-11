@@ -13,12 +13,12 @@
  *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
-#include "opcua_remote_handler.h"
-#include "../../core/devexec.h"
-#include "../../core/iec61131_functions.h"
-#include "../../core/cominfra/basecommfb.h"
-#include <criticalregion.h>
-#include <forte_printer.h>
+#include "com/opc_ua/opcua_remote_handler.h"
+#include "core/devexec.h"
+#include "core/iec61131_functions.h"
+#include "core/cominfra/basecommfb.h"
+#include "core/util/criticalregion.h"
+#include "arch/forte_printer.h"
 
 using namespace forte::com_infra;
 

@@ -15,8 +15,8 @@
  *******************************************************************************/
 
 #include "F_CONCAT_DATE_TOD_fbt.h"
-#include "forte_date_and_time.h"
-#include "forte_time_of_day.h"
+#include "core/datatypes/forte_date_and_time.h"
+#include "core/datatypes/forte_time_of_day.h"
 
 USE_STRING_ID(CNF);
 USE_STRING_ID(DATE);

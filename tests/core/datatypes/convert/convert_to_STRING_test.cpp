@@ -12,32 +12,32 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "convert_functions.h"
-#include "../../../src/core/datatypes/forte_string.h"
+#include "core/datatypes/convert/convert_functions.h"
+#include "core/datatypes/forte_string.h"
 
 // BOOLEAN
-#include "../../../src/core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_bool.h"
 // BIT-Datatypes
-#include "../../../src/core/datatypes/forte_byte.h"
-#include "../../../src/core/datatypes/forte_word.h"
-#include "../../../src/core/datatypes/forte_dword.h"
+#include "core/datatypes/forte_byte.h"
+#include "core/datatypes/forte_word.h"
+#include "core/datatypes/forte_dword.h"
 // INT-Datatypes
-#include "../../../src/core/datatypes/forte_sint.h"
-#include "../../../src/core/datatypes/forte_usint.h"
-#include "../../../src/core/datatypes/forte_int.h"
-#include "../../../src/core/datatypes/forte_uint.h"
-#include "../../../src/core/datatypes/forte_dint.h"
-#include "../../../src/core/datatypes/forte_udint.h"
+#include "core/datatypes/forte_sint.h"
+#include "core/datatypes/forte_usint.h"
+#include "core/datatypes/forte_int.h"
+#include "core/datatypes/forte_uint.h"
+#include "core/datatypes/forte_dint.h"
+#include "core/datatypes/forte_udint.h"
 // Time
-#include "../../../src/core/datatypes/forte_time.h"
+#include "core/datatypes/forte_time.h"
 
-#include "../../../src/core/datatypes/forte_lword.h"
-#include "../../../src/core/datatypes/forte_lint.h"
-#include "../../../src/core/datatypes/forte_ulint.h"
+#include "core/datatypes/forte_lword.h"
+#include "core/datatypes/forte_lint.h"
+#include "core/datatypes/forte_ulint.h"
 
 #include <boost/test/tools/floating_point_comparison.hpp>
-#include "../../../src/core/datatypes/forte_real.h"
-#include "../../../src/core/datatypes/forte_lreal.h"
+#include "core/datatypes/forte_real.h"
+#include "core/datatypes/forte_lreal.h"
 
 BOOST_AUTO_TEST_SUITE(Datatypes_to_STRING_conversion_test)
 

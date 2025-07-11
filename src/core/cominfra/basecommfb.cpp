@@ -16,15 +16,15 @@
  *    Martin Melik Merkumians - removes usage of unsecure function
  *******************************************************************************/
 
-#include "basecommfb.h"
-#include "comlayer.h"
-#include "comlayersmanager.h"
-#include "../resource.h"
-#include "../../arch/fortenew.h"
+#include "core/cominfra/basecommfb.h"
+#include "core/cominfra/comlayer.h"
+#include "core/cominfra/comlayersmanager.h"
+#include "core/resource.h"
+#include "arch/fortenew.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <devlog.h>
+#include "arch/devlog.h"
 #include "core/util/string_utils.h"
 
 using namespace forte::com_infra;

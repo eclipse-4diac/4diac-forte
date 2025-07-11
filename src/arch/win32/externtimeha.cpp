@@ -10,7 +10,7 @@
  *   Gerhard Ebenhofer, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "externtimeha.h"
-#include "../../core/devexec.h"
+#include "core/devexec.h"
 #include <windows.h>
 
 CExternTimerHandler *CExternTimerHandler::smFORTEExtTimer = nullptr;

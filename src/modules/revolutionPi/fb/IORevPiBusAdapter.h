@@ -13,10 +13,10 @@
 
 #pragma once
 
-#include <io/configFB/io_adapter_multi.h>
-#include "typelib.h"
-#include "forte_bool.h"
-#include "forte_uint.h"
+#include "core/io/configFB/io_adapter_multi.h"
+#include "core/typelib.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_uint.h"
 
 class FORTE_IORevPiBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_IORevPiBusAdapter)

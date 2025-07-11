@@ -13,14 +13,14 @@
 #ifndef _FIELDSTOSERVICEREQUESTFORM_H_
 #define _FIELDSTOSERVICEREQUESTFORM_H_
 
-#include <basicfb.h>
+#include "core/basicfb.h"
 #include <forte_preferredprovider.h>
 #include <forte_arrowheadservice.h>
 #include <forte_arrowheadcloud.h>
 #include <forte_arrowheadsystem.h>
 #include <forte_servicerequestform.h>
-#include <forte_wstring.h>
-#include <forte_array.h>
+#include "core/datatypes/forte_wstring.h"
+#include "core/datatypes/forte_array.h"
 
 class FORTE_FieldsToServiceRequestForm : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToServiceRequestForm)

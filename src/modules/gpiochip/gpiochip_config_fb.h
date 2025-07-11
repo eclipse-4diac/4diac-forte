@@ -12,11 +12,11 @@
 
 #pragma once
 
-#include <funcbloc.h>
-#include <forte_bool.h>
-#include <forte_uint.h>
-#include <forte_wstring.h>
-#include <io/configFB/io_configFB_controller.h>
+#include "core/funcbloc.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_uint.h"
+#include "core/datatypes/forte_wstring.h"
+#include "core/io/configFB/io_configFB_controller.h"
 
 class GPIOChipConfigFB : public forte::core::io::IOConfigFBController {
     DECLARE_FIRMWARE_FB(GPIOChipConfigFB)

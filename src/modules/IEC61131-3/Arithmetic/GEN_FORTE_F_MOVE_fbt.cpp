@@ -13,10 +13,10 @@
 
 #include "GEN_FORTE_F_MOVE_fbt.h"
 #include <memory>
-#include "eventconn.h"
-#include "forte_any.h"
-#include "forte_any_variant.h"
-#include "stringdict.h"
+#include "core/eventconn.h"
+#include "core/datatypes/forte_any.h"
+#include "core/datatypes/forte_any_variant.h"
+#include "core/stringdict.h"
 
 USE_STRING_ID(CNF);
 USE_STRING_ID(Event);

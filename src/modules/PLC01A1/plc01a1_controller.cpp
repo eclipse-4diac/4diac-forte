@@ -10,9 +10,9 @@
  *   Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include <io/mapper/io_handle_bit.h>
+#include "core/io/mapper/io_handle_bit.h"
 #include "plc01a1_controller.h"
-#include <devlog.h>
+#include "arch/devlog.h"
 #include <sys/ioctl.h>
 #include <linux/ioctl.h>
 #include <fcntl.h>

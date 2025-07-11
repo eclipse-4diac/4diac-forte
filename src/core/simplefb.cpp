@@ -11,7 +11,7 @@
  *   Alois Zoitl - initial implementation and rework communication infrastructure
  *******************************************************************************/
 
-#include "simplefb.h"
+#include "core/simplefb.h"
 
 void CSimpleFB::setInitialValues() {
   CBaseFB::setInitialValues();

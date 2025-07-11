@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "localcomlayer.h"
+#include "core/cominfra/localcomlayer.h"
 #include <vector>
 
 namespace forte {

@@ -14,12 +14,12 @@
 #ifndef SRC_CORE_IO_DEVICE_CONTROLLER_H_
 #define SRC_CORE_IO_DEVICE_CONTROLLER_H_
 
-#include <extevhan.h>
+#include "core/extevhan.h"
 #include <forte_sync.h>
 #include <forte_thread.h>
-#include <devlog.h>
+#include "arch/devlog.h"
 
-#include <io/mapper/io_handle.h>
+#include "core/io/mapper/io_handle.h"
 
 #include <string>
 

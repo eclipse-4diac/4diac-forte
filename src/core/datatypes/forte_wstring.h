@@ -25,8 +25,8 @@
 #ifndef _FORTE_WSTRING_H_
 #define _FORTE_WSTRING_H_
 
-#include "forte_any_string.h"
-#include "forte_wchar.h"
+#include "core/datatypes/forte_any_string.h"
+#include "core/datatypes/forte_wchar.h"
 
 #include <codecvt>
 

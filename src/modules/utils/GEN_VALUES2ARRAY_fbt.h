@@ -16,10 +16,10 @@
 #ifndef _GEN_VALUES2ARRAY_H_
 #define _GEN_VALUES2ARRAY_H_
 
-#include <genfb.h>
+#include "core/genfb.h"
 
 #include <memory>
-#include "forte_any_variant.h"
+#include "core/datatypes/forte_any_variant.h"
 
 class GEN_VALUES2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY)

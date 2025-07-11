@@ -16,7 +16,7 @@
 
 USE_STRING_ID(E_DELAY);
 
-#include "../../arch/timerha.h"
+#include "arch/timerha.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_DELAY, STRID(E_DELAY))
 

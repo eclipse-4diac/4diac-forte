@@ -21,7 +21,7 @@
 
 #include <span>
 
-#include "forte_any_derived.h"
+#include "core/datatypes/forte_any_derived.h"
 
 class CIEC_STRUCT : public CIEC_ANY_DERIVED {
     template<typename T, std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, int> = 0>

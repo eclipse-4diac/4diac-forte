@@ -14,7 +14,7 @@
 
 #include "core/trace/internal/EventMessage.h"
 #include "core/stringdict.h"
-#include "resourceReplayer.h"
+#include "stdfblib/ita/replay/resourceReplayer.h"
 
 #include <memory>
 #include <set>

@@ -17,7 +17,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "config.h"
-#include "trace/barectf_platform_forte.h"
+#include "core/trace/barectf_platform_forte.h"
 
 namespace forte::tests::traces {
 

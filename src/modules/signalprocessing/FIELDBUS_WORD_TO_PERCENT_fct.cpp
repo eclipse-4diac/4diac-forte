@@ -27,14 +27,14 @@ USE_STRING_ID(WI);
 USE_STRING_ID(WO);
 USE_STRING_ID(WORD);
 
-#include "forte_real.h"
-#include "forte_udint.h"
-#include "forte_word.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_real.h"
+#include "core/datatypes/forte_udint.h"
+#include "core/datatypes/forte_word.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 #include "FIELDBUS_SIGNAL_gcf.h"
 #include "FIELDBUS_WORD_TO_PERCENT_fct.h"
 

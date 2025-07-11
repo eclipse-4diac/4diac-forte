@@ -21,9 +21,9 @@
 #include <inttypes.h>
 #include <initializer_list>
 
-#include "forte_array.h"
-#include "forte_any_int.h"
-#include "iec61131_cast_helper.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_any_int.h"
+#include "core/iec61131_cast_helper.h"
 
 /** \brief A common supertype for all typed CIEC_ARRAY variants, providing the minimal interface an array must provide
  */

@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "delegdataconn.h"
+#include "core/delegdataconn.h"
 
 namespace forte::core::internal {
 

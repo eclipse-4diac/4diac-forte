@@ -20,8 +20,8 @@
 #ifndef _GEN_ADD_H_
 #define _GEN_ADD_H_
 
-#include <genfb.h>
-#include <forte_any_magnitude_variant.h>
+#include "core/genfb.h"
+#include "core/datatypes/forte_any_magnitude_variant.h"
 
 class GEN_ADD final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_ADD)

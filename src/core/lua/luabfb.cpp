@@ -14,9 +14,9 @@
  *   Martin Jobst - add dynamic internal variable setup from CBasicFB
  *******************************************************************************/
 
-#include "luabfb.h"
-#include "luaengine.h"
-#include "../adapter.h"
+#include "core/lua/luabfb.h"
+#include "core/lua/luaengine.h"
+#include "core/adapter.h"
 
 extern "C" {
 #include <lualib.h>

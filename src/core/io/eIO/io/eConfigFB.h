@@ -13,8 +13,8 @@
 #pragma once
 
 #include "core/funcbloc.h"
-#include "CeConfig.h"
-#include "CeSpec.h"
+#include "core/io/eIO/CeConfig.h"
+#include "core/io/eIO/CeSpec.h"
 
 class CeConfigFB : public CFunctionBlock, public CeConfig {
   public:

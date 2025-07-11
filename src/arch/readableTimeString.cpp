@@ -10,7 +10,7 @@
  *  Ketut Kumajaya - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "../core/iec61131_functions.h"
+#include "core/iec61131_functions.h"
 
 std::string getRealtimeString() {
   std::string str;

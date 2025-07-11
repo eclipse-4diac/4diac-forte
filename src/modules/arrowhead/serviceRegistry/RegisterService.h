@@ -13,10 +13,10 @@
 #ifndef _REGISTERSERVICE_H_
 #define _REGISTERSERVICE_H_
 
-#include <cfb.h>
-#include <typelib.h>
+#include "core/cfb.h"
+#include "core/typelib.h"
 #include <forte_serviceregistryentry.h>
-#include <forte_wstring.h>
+#include "core/datatypes/forte_wstring.h"
 #include "RegisterServiceAdp_adp.h"
 
 class FORTE_RegisterService : public CCompositeFB {

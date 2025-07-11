@@ -25,14 +25,14 @@ USE_STRING_ID(startDate);
 USE_STRING_ID(TIMESTAMP_NS);
 USE_STRING_ID(ULINT);
 
-#include "forte_any_duration_variant.h"
-#include "forte_date_and_time.h"
-#include "forte_ulint.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_any_duration_variant.h"
+#include "core/datatypes/forte_date_and_time.h"
+#include "core/datatypes/forte_ulint.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 #include "TIMESTAMP_NS_fct.h"
 
 DEFINE_FIRMWARE_FB(FORTE_TIMESTAMP_NS, STRID(TIMESTAMP_NS))

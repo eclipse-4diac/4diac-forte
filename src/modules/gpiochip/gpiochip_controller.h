@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include <io/device/io_controller.h>
+#include "core/io/device/io_controller.h"
 
 class GPIOChipController : public forte::core::io::IODeviceController {
   public:

@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include <funcbloc.h>
-#include <forte_localizedtext.h>
+#include "core/funcbloc.h"
+#include "com/opc_ua/types/forte_localizedtext.h"
 
 class FORTE_LocalizedText2LocalizedText : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_LocalizedText2LocalizedText)

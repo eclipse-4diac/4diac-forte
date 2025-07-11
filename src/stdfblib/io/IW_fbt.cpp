@@ -10,7 +10,7 @@
  *   Gerd Kainz - initial API and implementation and/or initial documentation
  *************************************************************************/
 
-#include "IW_fbt.h"
+#include "core/io/IW_fbt.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);
@@ -29,11 +29,11 @@ USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 USE_STRING_ID(WORD);
 
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_IW, STRID(IW))
 

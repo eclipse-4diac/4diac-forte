@@ -17,13 +17,13 @@
 
 #pragma once
 
-#include "simplefb.h"
-#include "forte_dint.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/simplefb.h"
+#include "core/datatypes/forte_dint.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
     DECLARE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS)

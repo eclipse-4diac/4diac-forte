@@ -39,7 +39,7 @@
 #include <termios.h>
 #include <pthread.h>
 #include <sys/syscall.h>
-#include <sys/resource.h>
+#include "core/resource.h"
 #include <errno.h>
 
 #include <sys/stat.h>

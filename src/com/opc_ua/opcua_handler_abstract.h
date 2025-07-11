@@ -13,9 +13,9 @@
 #ifndef SRC_MODULES_OPC_UA_OPCUA_HANDLER_ABSTRACT_H_
 #define SRC_MODULES_OPC_UA_OPCUA_HANDLER_ABSTRACT_H_
 
-#include <extevhan.h>
-#include <esfb.h>
-#include <opcua_action_info.h>
+#include "core/extevhan.h"
+#include "core/esfb.h"
+#include "com/opc_ua/opcua_action_info.h"
 
 /**
  * Base class for the local and remote handler. It defines the three major function to be executed in an action

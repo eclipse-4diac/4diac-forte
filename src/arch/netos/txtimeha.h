@@ -14,8 +14,8 @@
 #define _TXTIMEHA_H_
 
 #include <threadx/tx_api.h>
-#include "../timerha.h"
-#include "../devlog.h"
+#include "arch/timerha.h"
+#include "arch/devlog.h"
 
 /*! \ingroup netos_hal
  * \ingroup EXTEVHAND

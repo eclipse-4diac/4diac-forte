@@ -19,15 +19,15 @@
  *   Alois Zoitl - migrated data type toString to std::string
  *   Martin Jobst - fix line feed and newline escape sequences
  *******************************************************************************/
-#include "forte_string.h"
+#include "core/datatypes/forte_string.h"
 #include <cstddef>
-#include "datatype.h"
-#include <devlog.h>
-#include "unicode_utils.h"
+#include "arch/datatype.h"
+#include "arch/devlog.h"
+#include "core/datatypes/unicode_utils.h"
 #include <string_view>
 #include <charconv>
-#include "../../arch/forte_fileio.h"
-#include "string_utils.h"
+#include "arch/forte_fileio.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(STRING);
 

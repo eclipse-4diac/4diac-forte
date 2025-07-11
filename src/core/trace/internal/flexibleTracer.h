@@ -20,9 +20,9 @@
 #include <variant>
 #include <string>
 
-#include "stringdict.h"
-#include "barectf_platform_forte.h"
-#include "internalTracer.h"
+#include "core/stringdict.h"
+#include "core/trace/barectf_platform_forte.h"
+#include "core/trace/internal/internalTracer.h"
 
 /**
  * @brief A tracer that can be changed to use the existing tracers: BarectfPlatformFORTE and CInternalTracer

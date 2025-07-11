@@ -14,7 +14,7 @@
  *   Martin Jobst  - added dynamic internal FB creation from CCompositeFB
  *******************************************************************************/
 
-#include "luacfb.h"
+#include "core/lua/luacfb.h"
 
 CLuaCFB::CLuaCFB(CStringDictionary::TStringId paInstanceNameId,
                  const CLuaCFBTypeEntry *paTypeEntry,

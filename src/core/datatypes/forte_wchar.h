@@ -17,7 +17,7 @@
 #ifndef _FORTE_WCHAR_H_
 #define _FORTE_WCHAR_H_
 
-#include "forte_any_char.h"
+#include "core/datatypes/forte_any_char.h"
 
 /*!\ingroup COREDTS CIEC_BYTE represents the byte data type according to IEC 61131.
  */

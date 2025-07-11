@@ -13,9 +13,9 @@
 
 #pragma once
 
-#include "opcua_action_info.h"
-#include "opcua_layer.h"
-#include "opcua_objectstruct_helper.h"
+#include "com/opc_ua/opcua_action_info.h"
+#include "com/opc_ua/opcua_layer.h"
+#include "com/opc_ua/opcua_objectstruct_helper.h"
 
 class CStructMemberActionInfo : public CActionInfo {
   public:

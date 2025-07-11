@@ -12,7 +12,7 @@
  *      - initial implementation
  *******************************************************************************/
 
-#include "flexibleTracer.h"
+#include "core/trace/internal/flexibleTracer.h"
 
 void CFlexibleTracer::setTracer(AvailableTracers paTracerType) {
   CFlexibleTracer::mCurrentTracer = paTracerType;

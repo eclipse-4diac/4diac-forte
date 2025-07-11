@@ -19,10 +19,10 @@
 
 #pragma once
 
-#include "forte_bool.h"
-#include "forte_uint.h"
-#include "forte_wstring.h"
-#include "../../../core/io/configFB/io_master_multi.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_uint.h"
+#include "core/datatypes/forte_wstring.h"
+#include "core/io/configFB/io_master_multi.h"
 #include "PLCnextBusAdapter.h"
 
 class FORTE_PLCnextMaster final : public forte::core::io::IOConfigFBMultiMaster {

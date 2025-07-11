@@ -31,12 +31,12 @@ USE_STRING_ID(TIME);
 USE_STRING_ID(UpdateInterval);
 USE_STRING_ID(ZephyrIO);
 
-#include "forte_time.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/datatypes/forte_time.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 #pragma region includes
 #include <handler/IOHandleGPIODescriptor.h>
 #include <handler/IOHandleADCDescriptor.h>

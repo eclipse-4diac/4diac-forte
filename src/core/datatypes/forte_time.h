@@ -22,7 +22,7 @@
 #ifndef _FORTE_TIME_H_
 #define _FORTE_TIME_H_
 
-#include "forte_any_duration.h"
+#include "core/datatypes/forte_any_duration.h"
 
 /*!\ingroup COREDTS CIEC_TIME represents the time data types according to IEC 61131.
  */

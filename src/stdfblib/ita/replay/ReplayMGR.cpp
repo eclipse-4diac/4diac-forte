@@ -11,7 +11,7 @@
  *    Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "ReplayMGR.h"
+#include "stdfblib/ita/replay/ReplayMGR.h"
 
 #include "core/ecetFake.h"
 #include "trace/reader/utils.h"

@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include "einputfb.h"
-#include "forte_word.h"
+#include "core/io/eIO/io/einputfb.h"
+#include "core/datatypes/forte_word.h"
 
 USE_STRING_ID(eIW);
 

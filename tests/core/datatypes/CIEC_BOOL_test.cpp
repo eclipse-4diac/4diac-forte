@@ -17,7 +17,7 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "../../../src/core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_bool.h"
 
 using namespace boost::unit_test;
 

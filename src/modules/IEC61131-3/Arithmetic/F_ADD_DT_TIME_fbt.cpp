@@ -15,8 +15,8 @@
  *******************************************************************************/
 
 #include "F_ADD_DT_TIME_fbt.h"
-#include "forte_date_and_time.h"
-#include "forte_time.h"
+#include "core/datatypes/forte_date_and_time.h"
+#include "core/datatypes/forte_time.h"
 
 USE_STRING_ID(CNF);
 USE_STRING_ID(DATE_AND_TIME);

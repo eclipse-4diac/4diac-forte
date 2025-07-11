@@ -12,7 +12,7 @@
  *******************************************************************************/
 
 #include "MQTTClient.h"
-#include "basecommfb.h"
+#include "core/cominfra/basecommfb.h"
 #include <algorithm>
 #include "MQTTClientConfigParser.h"
 

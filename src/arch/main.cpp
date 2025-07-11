@@ -15,8 +15,8 @@
 
 #include <stdio.h>
 #include <signal.h>
-#include "../core/forteinstance.h"
-#include "forte_architecture.h"
+#include "core/forteinstance.h"
+#include "arch/forte_architecture.h"
 
 #include "arch/utils/mainparam_utils.h"
 

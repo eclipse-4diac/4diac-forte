@@ -10,15 +10,15 @@
  *   Rene Smodic, Alois Zoitl, Ingo Hegny
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "devlog.h"
+#include "arch/devlog.h"
 
 #ifndef NOLOG
 
-#include <forte_config.h>
-#include "timerha.h"
-#include "forte_printer.h"
+#include "generated/forte_config.h"
+#include "arch/timerha.h"
+#include "arch/forte_printer.h"
 #include "core/util/criticalregion.h"
-#include "forte_architecture_time.h"
+#include "arch/forte_architecture_time.h"
 #include <cstdlib>
 #include <cstdarg>
 

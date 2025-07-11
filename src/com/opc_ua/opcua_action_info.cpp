@@ -12,10 +12,10 @@
  *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
-#include "opcua_action_info.h"
+#include "com/opc_ua/opcua_action_info.h"
 #include "core/util/parameterParser.h"
 #include "core/cominfra/basecommfb.h"
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 const char *const CActionInfo::mActionNames[] = {"READ",           "WRITE",         "CREATE_METHOD",   "CALL_METHOD",
                                                  "SUBSCRIBE",      "CREATE_OBJECT", "CREATE_VARIABLE", "DELETE_OBJECT",

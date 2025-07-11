@@ -24,11 +24,11 @@
 #ifndef _FORTE_BYTE_H_
 #define _FORTE_BYTE_H_
 
-#include "forte_any_bit.h"
-#include "forte_bool.h"
+#include "core/datatypes/forte_any_bit.h"
+#include "core/datatypes/forte_bool.h"
 
-#include "forte_any_int.h"
-#include "forte_any_bit_partial.h"
+#include "core/datatypes/forte_any_int.h"
+#include "core/datatypes/forte_any_bit_partial.h"
 
 #include <limits>
 

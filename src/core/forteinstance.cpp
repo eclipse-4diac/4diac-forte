@@ -13,7 +13,7 @@
  *                                infrastructure
  *******************************************************************************/
 
-#include "forteinstance.h"
+#include "core/forteinstance.h"
 #include "generated/devicefactory.h"
 
 C4diacFORTEInstance::~C4diacFORTEInstance() {

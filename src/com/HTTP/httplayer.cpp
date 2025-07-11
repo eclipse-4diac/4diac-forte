@@ -18,12 +18,12 @@
 
 #include "httplayer.h"
 #include "httpparser.h"
-#include "../../arch/devlog.h"
+#include "arch/devlog.h"
 #include <string.h>
-#include "basecommfb.h"
+#include "core/cominfra/basecommfb.h"
 #include "http_handler.h"
-#include "comtypes.h"
-#include "string_utils.h"
+#include "core/cominfra/comtypes.h"
+#include "core/util/string_utils.h"
 
 using namespace forte::com_infra;
 using namespace std::string_literals;

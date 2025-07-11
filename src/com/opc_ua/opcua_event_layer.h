@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "../../core/cominfra/comlayer.h"
+#include "core/cominfra/comlayer.h"
 #include "open62541.h"
 
 // class COPC_UA_Local_Handler;

@@ -11,7 +11,7 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 
-#include "mgmcmd.h"
+#include "core/mgmcmd.h"
 
 #include <type_traits>
 

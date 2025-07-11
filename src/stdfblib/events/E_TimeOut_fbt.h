@@ -12,17 +12,17 @@
 
 #pragma once
 
-#include "adapterconn.h"
-#include "esfb.h"
-#include "typelib.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/adapterconn.h"
+#include "core/esfb.h"
+#include "core/typelib.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 #include "ATimeOut_adp.h"
 
-#include "../arch/timerha.h"
+#include "arch/timerha.h"
 
 class FORTE_E_TimeOut final : public CEventSourceFB {
     DECLARE_FIRMWARE_FB(FORTE_E_TimeOut)

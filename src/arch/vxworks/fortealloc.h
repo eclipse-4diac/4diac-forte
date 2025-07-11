@@ -12,6 +12,6 @@
 #ifndef FORTEALLOC_H_
 #define FORTEALLOC_H_
 
-#include "../genfortealloc.h"
+#include "arch/genfortealloc.h"
 
 #endif /* FORTEALLOC_H_ */

@@ -10,13 +10,13 @@
  *    Alois Zoitl, Thomas Strasser, Ingo Hegny
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include "devexec.h"
-#include "esfb.h"
-#include "ecet.h"
-#include "extevhan.h"
-#include "../arch/timerha.h"
-#include "../arch/devlog.h"
-#include "device.h"
+#include "core/devexec.h"
+#include "core/esfb.h"
+#include "core/ecet.h"
+#include "core/extevhan.h"
+#include "arch/timerha.h"
+#include "arch/devlog.h"
+#include "core/device.h"
 
 CDeviceExecution::~CDeviceExecution() {
   // FIXME: deleting a handler should disable it automatically

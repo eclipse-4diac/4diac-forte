@@ -13,11 +13,11 @@
 #ifndef SRC_MODULES_PLCNEXT_PLCNEXTDEVICECONTROLLER_H_
 #define SRC_MODULES_PLCNEXT_PLCNEXTDEVICECONTROLLER_H_
 
-#include "../../../core/io/device/io_controller_multi.h"
+#include "core/io/device/io_controller_multi.h"
 #include <syslog.h>
 #include <unistd.h>
 #include <libgen.h>
-#include "forte_wstring.h"
+#include "core/datatypes/forte_wstring.h"
 
 class PLCnextSlaveHandler;
 

@@ -15,8 +15,8 @@
 #define IPCOMLAYER_H_
 
 #include <sockhand.h>
-#include <forte_config.h>
-#include "comlayer.h"
+#include "generated/forte_config.h"
+#include "core/cominfra/comlayer.h"
 
 namespace forte {
 

@@ -14,13 +14,13 @@
  *   Martin Melik Merkumians - fixes behavior for getToStringBufferSize
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#include "forte_wstring.h"
+#include "core/datatypes/forte_wstring.h"
 
 USE_STRING_ID(WSTRING);
 
-#include <devlog.h>
+#include "arch/devlog.h"
 
-#include "unicode_utils.h"
+#include "core/datatypes/unicode_utils.h"
 
 DEFINE_FIRMWARE_DATATYPE(WSTRING, STRID(WSTRING))
 

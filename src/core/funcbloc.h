@@ -22,24 +22,24 @@
 #define _FUNCBLOC_H_
 
 #include <cstddef>
-#include <forte_config.h>
-#include "fbcontainer.h"
-#include "interfacespec.h"
-#include "mgmcmd.h"
-#include "dataconn.h"
-#include "inoutdataconn.h"
-#include "eventconn.h"
-#include "../arch/devlog.h"
+#include "generated/forte_config.h"
+#include "core/fbcontainer.h"
+#include "core/interfacespec.h"
+#include "core/mgmcmd.h"
+#include "core/dataconn.h"
+#include "core/inoutdataconn.h"
+#include "core/eventconn.h"
+#include "arch/devlog.h"
 #include "core/stringdict.h"
-#include "forte_st_iterator.h"
-#include "forte_st_util.h"
+#include "core/forte_st_iterator.h"
+#include "core/forte_st_util.h"
 
 class CEventChainExecutionThread;
 class CTimerHandler;
 class CDevice;
 
 #ifdef FORTE_SUPPORT_MONITORING
-#include "mgmcmdstruct.h"
+#include "core/mgmcmdstruct.h"
 namespace forte {
   class IPlugPin;
   class ISocketPin;

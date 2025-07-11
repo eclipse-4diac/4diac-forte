@@ -16,7 +16,7 @@
 
 #include <errno.h>
 #include <string.h>
-#include "devlog.h"
+#include "arch/devlog.h"
 
 #ifdef FORTE_FREERTOS_PLUS_TCP
 #include "sockhand_plustcp.h"
@@ -25,9 +25,9 @@
 #endif
 
 // these include needs to be last
-#include "../gensockhand.h"
-#include "../fdselecthand.h"
-#include "../bsdsocketinterf.h"
+#include "arch/gensockhand.h"
+#include "arch/fdselecthand.h"
+#include "arch/bsdsocketinterf.h"
 
 typedef CGenericIPComSocketHandler<CFDSelectHandler, CBSDSocketInterface> CIPComSocketHandler;
 

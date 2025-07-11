@@ -13,10 +13,10 @@
 #ifndef _SUBSCRIBEEVENTADP_H_
 #define _SUBSCRIBEEVENTADP_H_
 
-#include <adapter.h>
-#include <typelib.h>
+#include "core/adapter.h"
+#include "core/typelib.h"
 #include <forte_eventfilter.h>
-#include <forte_wstring.h>
+#include "core/datatypes/forte_wstring.h"
 
 class FORTE_SubscribeEventAdp : public CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_SubscribeEventAdp)

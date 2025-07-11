@@ -15,7 +15,7 @@
  *******************************************************************************/
 #pragma once
 
-#include "adapterconn.h"
+#include "core/adapterconn.h"
 
 namespace forte {
 

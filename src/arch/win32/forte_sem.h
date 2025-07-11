@@ -17,7 +17,7 @@
 
 #include <windows.h>
 
-#include "datatype.h"
+#include "arch/datatype.h"
 
 namespace forte {
   namespace arch {

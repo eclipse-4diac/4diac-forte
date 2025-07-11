@@ -11,7 +11,7 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include <datatype.h>
+#include "arch/datatype.h"
 #include <time.h>
 
 static const TForteInt64 SecondInNanoSeconds = 1000000000LL;

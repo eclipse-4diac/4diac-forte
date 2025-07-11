@@ -12,10 +12,10 @@
 
 #pragma once
 
-#include "eConfigFB.h"
+#include "core/io/eIO/io/eConfigFB.h"
 #include "core/datatypes/forte_word.h"
 #include "core/datatypes/forte_wstring.h"
-#include "eGenAdapter_adp.h"
+#include "core/io/eIO/io/eGenAdapter_adp.h"
 
 class FORTE_eIWconfig final : public CeConfigFB {
     DECLARE_FIRMWARE_FB(FORTE_eIWconfig)

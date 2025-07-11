@@ -13,7 +13,7 @@
 #define _PROCIMAGEMATRIX_H_
 
 // #include <vector>
-#include <fortelist.h>
+#include "core/fortelist.h"
 
 class CProcessImageMatrix {
   public:

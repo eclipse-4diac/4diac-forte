@@ -13,7 +13,7 @@
 #ifndef FORTEARRAY_H_
 #define FORTEARRAY_H_
 
-#include <datatype.h>
+#include "arch/datatype.h"
 #include <assert.h>
 
 namespace forte {

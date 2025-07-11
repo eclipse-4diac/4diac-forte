@@ -13,8 +13,8 @@
 
 #pragma once
 
-#include "forte_any_variant.h"
-#include "genfb.h"
+#include "core/datatypes/forte_any_variant.h"
+#include "core/genfb.h"
 #include "forte_sync.h"
 
 class FORTE_GEN_RT_Bridge final : public CGenFunctionBlock<CFunctionBlock> {

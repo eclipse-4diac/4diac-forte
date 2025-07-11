@@ -13,10 +13,10 @@
 #ifndef _FIELDSTOARROWHEADSYSTEM_H_
 #define _FIELDSTOARROWHEADSYSTEM_H_
 
-#include <basicfb.h>
+#include "core/basicfb.h"
 #include <forte_arrowheadsystem.h>
-#include <forte_dint.h>
-#include <forte_wstring.h>
+#include "core/datatypes/forte_dint.h"
+#include "core/datatypes/forte_wstring.h"
 
 class FORTE_FieldsToArrowheadSystem : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToArrowheadSystem)

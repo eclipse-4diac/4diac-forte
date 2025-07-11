@@ -19,10 +19,10 @@
 #ifndef _FBDKASN1LAYER_H_
 #define _FBDKASN1LAYER_H_
 
-#include "comlayer.h"
+#include "core/cominfra/comlayer.h"
 
 // serialize includes
-#include "../datatypes/forte_any.h"
+#include "core/datatypes/forte_any.h"
 
 #include <set>
 

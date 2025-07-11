@@ -15,8 +15,8 @@
  *******************************************************************************/
 
 #include "F_TRUNC_fbt.h"
-#include "forte_any_int_variant.h"
-#include "forte_any_real_variant.h"
+#include "core/datatypes/forte_any_int_variant.h"
+#include "core/datatypes/forte_any_real_variant.h"
 
 USE_STRING_ID(ANY_INT);
 USE_STRING_ID(ANY_REAL);

@@ -14,8 +14,8 @@
 #ifndef SRC_CORE_LUAADAPTER_H_
 #define SRC_CORE_LUAADAPTER_H_
 
-#include "adapter.h"
-#include "luaadaptertypeentry.h"
+#include "core/adapter.h"
+#include "core/lua/luaadaptertypeentry.h"
 
 class CLuaAdapter : public CAdapter {
   public:

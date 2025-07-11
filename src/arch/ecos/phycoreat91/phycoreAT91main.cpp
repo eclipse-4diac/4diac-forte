@@ -9,8 +9,8 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include <fortenew.h>
-#include "forteinstance.h"
+#include "arch/fortenew.h"
+#include "core/forteinstance.h"
 #include <cyg/kernel/kapi.h>
 #include <network.h>
 #include <cyg/hal/hal_io.h> // IO macros

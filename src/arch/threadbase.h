@@ -13,9 +13,9 @@
 
 #pragma once
 
-#include <criticalregion.h>
-#include "../devlog.h"
-#include "../core/datatypes/forte_time.h"
+#include "core/util/criticalregion.h"
+#include "arch/devlog.h"
+#include "core/datatypes/forte_time.h"
 #include <forte_sem.h>
 #include <forte_sync.h>
 

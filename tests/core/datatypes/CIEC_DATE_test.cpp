@@ -17,7 +17,7 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "../../../src/core/datatypes/forte_date.h"
+#include "core/datatypes/forte_date.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_DATE_function_test)
 BOOST_AUTO_TEST_CASE(Type_test) {

@@ -16,12 +16,12 @@
 
 #include <variant>
 
-#include "forte_any.h"
-#include "forte_bool.h"
-#include "forte_byte.h"
-#include "forte_dword.h"
-#include "forte_lword.h"
-#include "forte_word.h"
+#include "core/datatypes/forte_any.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_byte.h"
+#include "core/datatypes/forte_dword.h"
+#include "core/datatypes/forte_lword.h"
+#include "core/datatypes/forte_word.h"
 
 using TIecAnyBitVariantType = std::variant<
     // ANY_ELEMENTARY

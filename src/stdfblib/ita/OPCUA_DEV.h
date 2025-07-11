@@ -13,8 +13,8 @@
 
 #pragma once
 
-#include "RMT_DEV.h"
-#include "OPCUA_MGR.h"
+#include "stdfblib/ita/RMT_DEV.h"
+#include "stdfblib/ita/OPCUA_MGR.h"
 
 class OPCUA_DEV : public RMT_DEV {
   public:

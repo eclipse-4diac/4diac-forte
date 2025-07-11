@@ -10,7 +10,7 @@
  *   Jose Cabral- initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "resourceReplayer.h"
+#include "stdfblib/ita/replay/resourceReplayer.h"
 
 #include "core/resource.h"
 #include "core/trace/reader/utils.h"

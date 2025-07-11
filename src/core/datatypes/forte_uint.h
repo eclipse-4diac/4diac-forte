@@ -21,8 +21,8 @@
 #ifndef _FORTE_UINT_H_
 #define _FORTE_UINT_H_
 
-#include "forte_any_unsigned.h"
-#include "forte_usint.h"
+#include "core/datatypes/forte_any_unsigned.h"
+#include "core/datatypes/forte_usint.h"
 #include <limits>
 
 /*!\ingroup COREDTS CIEC_UINT represents the uint data type according to IEC 61131.

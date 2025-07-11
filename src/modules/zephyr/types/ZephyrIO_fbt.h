@@ -19,15 +19,15 @@
 
 #pragma once
 
-#include "funcbloc.h"
-#include "forte_bool.h"
-#include "forte_string.h"
-#include "forte_time.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/funcbloc.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_time.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 #pragma region includes
 #include <types/ZephyrIOBase.h>
 #pragma endregion includes

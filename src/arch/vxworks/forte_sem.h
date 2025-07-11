@@ -18,7 +18,7 @@
 
 #include "vxWorks.h"
 #include "semLib.h"
-#include "datatype.h"
+#include "arch/datatype.h"
 
 namespace forte {
   namespace arch {

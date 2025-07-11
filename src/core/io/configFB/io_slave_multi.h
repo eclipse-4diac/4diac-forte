@@ -14,10 +14,10 @@
 #ifndef SRC_CORE_IO_CONFIGFB_SLAVE_MULTI_H_
 #define SRC_CORE_IO_CONFIGFB_SLAVE_MULTI_H_
 
-#include "io_base.h"
-#include <io/device/io_controller_multi.h>
-#include "io_adapter_multi.h"
-#include "io_master_multi.h"
+#include "core/io/configFB/io_base.h"
+#include "core/io/device/io_controller_multi.h"
+#include "core/io/configFB/io_adapter_multi.h"
+#include "core/io/configFB/io_master_multi.h"
 
 namespace forte {
   namespace core {

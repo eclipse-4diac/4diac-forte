@@ -12,8 +12,8 @@
 
 #pragma once
 
-#include "einputfb.h"
-#include "forte_bool.h"
+#include "core/io/eIO/io/einputfb.h"
+#include "core/datatypes/forte_bool.h"
 
 USE_STRING_ID(eIX);
 

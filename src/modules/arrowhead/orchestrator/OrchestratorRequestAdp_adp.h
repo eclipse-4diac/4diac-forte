@@ -13,12 +13,12 @@
 #ifndef _ORCHESTRATORREQUESTADP_H_
 #define _ORCHESTRATORREQUESTADP_H_
 
-#include <adapter.h>
-#include <typelib.h>
+#include "core/adapter.h"
+#include "core/typelib.h"
 #include <forte_orchestrationform.h>
 #include <forte_servicerequestform.h>
-#include <forte_wstring.h>
-#include <forte_array.h>
+#include "core/datatypes/forte_wstring.h"
+#include "core/datatypes/forte_array.h"
 
 class FORTE_OrchestratorRequestAdp : public CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_OrchestratorRequestAdp)

@@ -11,8 +11,8 @@
  *******************************************************************************/
 
 #include "PinHandle.h"
-#include <forte_bool.h>
-#include "extevhandlerhelper.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/util/extevhandlerhelper.h"
 
 IOHandleGPIO::IOHandleGPIO(EliteBoardDeviceController *paDeviceCtrl,
   EliteBoardDeviceController::GPIODescriptor desc)

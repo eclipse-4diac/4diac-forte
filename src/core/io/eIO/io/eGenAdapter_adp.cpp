@@ -10,8 +10,8 @@
  *   Maximilian Scharf - Initial implementation.
  *******************************************************************************/
 
-#include "eGenAdapter_adp.h"
-#include "adapter.h"
+#include "core/io/eIO/io/eGenAdapter_adp.h"
+#include "core/adapter.h"
 
 USE_STRING_ID(eGenAdapter);
 

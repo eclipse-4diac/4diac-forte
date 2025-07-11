@@ -15,13 +15,13 @@
  *      - fixes behavior for getToStringBufferSize
  *    Martin Jobst - fix line feed and newline escape sequences
  *******************************************************************************/
-#include <fortenew.h>
-#include "forte_any_string.h"
-#include "unicode_utils.h"
-#include "string_utils.h"
+#include "arch/fortenew.h"
+#include "core/datatypes/forte_any_string.h"
+#include "core/datatypes/unicode_utils.h"
+#include "core/util/string_utils.h"
 #include <string.h>
 #include <stdlib.h>
-#include <devlog.h>
+#include "arch/devlog.h"
 #include <cstdio>
 
 char CIEC_ANY_STRING::smNullString[1] = {'\0'};

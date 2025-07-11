@@ -14,10 +14,10 @@
 #ifndef SRC_CORE_IO_MAPPER_HANDLE_H_
 #define SRC_CORE_IO_MAPPER_HANDLE_H_
 
-#include <forte_any.h>
-#include <forte_bool.h>
+#include "core/datatypes/forte_any.h"
+#include "core/datatypes/forte_bool.h"
 
-#include "io_mapper.h"
+#include "core/io/mapper/io_mapper.h"
 
 namespace forte {
   namespace core {

@@ -11,11 +11,11 @@
  *   Alois Zoitl   - upgraded to new FB memory layout
  *******************************************************************************/
 
-#include "luaadaptertypeentry.h"
-#include "luaengine.h"
-#include "luatype.h"
-#include "luaadapter.h"
-#include "adapter.h"
+#include "core/lua/luaadaptertypeentry.h"
+#include "core/lua/luaengine.h"
+#include "core/lua/luatype.h"
+#include "core/lua/luaadapter.h"
+#include "core/adapter.h"
 
 CLuaAdapterTypeEntry::CLuaAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId,
                                            const std::string &paLuaScriptAsString,

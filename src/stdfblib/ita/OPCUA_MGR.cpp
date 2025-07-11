@@ -11,10 +11,10 @@
  *    Markus Meingast - initial implementation
  *******************************************************************************/
 
-#include "OPCUA_MGR.h"
+#include "stdfblib/ita/OPCUA_MGR.h"
 
-#include "device.h"
-#include "stringdict.h"
+#include "core/device.h"
+#include "core/stringdict.h"
 
 /* Management and Resource Type */
 char OPCUA_MGR::smEmptyLocale[] = "";

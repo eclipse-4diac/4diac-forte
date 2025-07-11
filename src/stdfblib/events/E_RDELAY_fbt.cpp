@@ -13,7 +13,7 @@
 
 USE_STRING_ID(E_RDELAY);
 
-#include "../../arch/timerha.h"
+#include "arch/timerha.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_RDELAY, STRID(E_RDELAY))
 

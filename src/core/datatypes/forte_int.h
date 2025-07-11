@@ -23,10 +23,10 @@
 #ifndef _FORTE_INT_H_
 #define _FORTE_INT_H_
 
-#include "iec61131_cast_helper.h"
-#include "forte_any_signed.h"
-#include "forte_sint.h"
-#include "forte_usint.h"
+#include "core/iec61131_cast_helper.h"
+#include "core/datatypes/forte_any_signed.h"
+#include "core/datatypes/forte_sint.h"
+#include "core/datatypes/forte_usint.h"
 #include <limits>
 
 /*!\ingroup COREDTS CIEC_INT represents the int data type according to IEC 61131.

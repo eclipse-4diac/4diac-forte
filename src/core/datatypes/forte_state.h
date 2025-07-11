@@ -15,7 +15,7 @@
 #ifndef _FORTE_STATE_H_
 #define _FORTE_STATE_H_
 
-#include "forte_any_int.h"
+#include "core/datatypes/forte_any_int.h"
 #include <limits>
 
 /*!\ingroup COREDTS CIEC_EVENT represents the STATE data type according to IEC 61131.

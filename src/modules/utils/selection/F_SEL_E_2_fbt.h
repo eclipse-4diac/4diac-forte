@@ -17,13 +17,13 @@
 
 #pragma once
 
-#include "funcbloc.h"
-#include "forte_any_variant.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/funcbloc.h"
+#include "core/datatypes/forte_any_variant.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 class FORTE_F_SEL_E_2 final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_F_SEL_E_2)

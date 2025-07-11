@@ -14,7 +14,7 @@
 #ifndef _ANY_DURATION_H_
 #define _ANY_DURATION_H_
 
-#include "forte_any_magnitude.h"
+#include "core/datatypes/forte_any_magnitude.h"
 
 /*!\ingroup COREDTS CIEC_ANY_DURATION represents the user defined data types according to
  *  IEC 61131.

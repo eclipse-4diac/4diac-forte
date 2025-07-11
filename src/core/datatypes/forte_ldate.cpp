@@ -18,11 +18,11 @@
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
-#include "forte_ldate.h"
+#include "core/datatypes/forte_ldate.h"
 
 USE_STRING_ID(LDATE);
 
-#include "forte_architecture_time.h"
+#include "arch/forte_architecture_time.h"
 
 DEFINE_FIRMWARE_DATATYPE(LDATE, STRID(LDATE))
 

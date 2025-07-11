@@ -15,7 +15,7 @@
  *******************************************************************************/
 
 #include "F_SUB_DATE_DATE_fbt.h"
-#include "forte_date.h"
+#include "core/datatypes/forte_date.h"
 
 USE_STRING_ID(CNF);
 USE_STRING_ID(DATE);

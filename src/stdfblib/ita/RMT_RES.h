@@ -13,8 +13,8 @@
 #ifndef _RMT_RES_H_
 #define _RMT_RES_H_
 
-#include "../../core/resource.h"
-#include "DEV_MGR.h"
+#include "core/resource.h"
+#include "stdfblib/ita/DEV_MGR.h"
 #include "../events/E_RESTART_fbt.h"
 #include "../events/E_SR_fbt.h"
 

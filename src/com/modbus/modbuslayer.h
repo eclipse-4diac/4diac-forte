@@ -14,10 +14,10 @@
 #define MODBUSCOMLAYER_H_
 
 #include <vector>
-#include <forte_config.h>
+#include "generated/forte_config.h"
 #include "modbusioblock.h"
 #include "modbusenums.h"
-#include "comlayer.h"
+#include "core/cominfra/comlayer.h"
 #include <stdint.h>
 
 class CModbusConnection;

@@ -13,10 +13,10 @@
 #ifndef _FORTE_ARROWHEADSEVENT_H_
 #define _FORTE_ARROWHEADSEVENT_H_
 
-#include "forte_struct.h"
-#include "forte_wstring.h"
-#include "forte_array.h"
-#include "forte_date_and_time.h"
+#include "core/datatypes/forte_struct.h"
+#include "core/datatypes/forte_wstring.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_date_and_time.h"
 
 class CIEC_ArrowheadEvent : public CIEC_STRUCT {
     DECLARE_FIRMWARE_DATATYPE(ArrowheadEvent)

@@ -18,7 +18,7 @@
  *******************************************************************************/
 #include "GEN_CSV_WRITER_fbt.h"
 #include <memory>
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);
@@ -35,7 +35,7 @@ USE_STRING_ID(STATUS);
 USE_STRING_ID(STRING);
 
 #include <errno.h>
-#include "devlog.h"
+#include "arch/devlog.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER, STRID(GEN_CSV_WRITER));
 

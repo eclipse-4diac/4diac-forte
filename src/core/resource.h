@@ -17,12 +17,12 @@
 
 #include <utility>
 
-#include "ecet.h"
-#include "fbcontainer.h"
-#include "funcbloc.h"
+#include "core/ecet.h"
+#include "core/fbcontainer.h"
+#include "core/funcbloc.h"
 
 #ifdef FORTE_SUPPORT_MONITORING
-#include "monitoring.h"
+#include "core/monitoring.h"
 #endif
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
@@ -30,7 +30,7 @@ class CLuaEngine;
 #endif
 
 #ifdef FORTE_TRACE_CTF
-#include "tracerConfig.h"
+#include "core/trace/tracerConfig.h"
 #endif
 
 /*! \ingroup CORE\brief Base class for all resources handling the reconfiguration management within this

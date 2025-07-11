@@ -11,10 +11,10 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#include "io_handle.h"
-#include "io_observer.h"
+#include "core/io/mapper/io_handle.h"
+#include "core/io/mapper/io_observer.h"
 
-#include <io/device/io_controller.h>
+#include "core/io/device/io_controller.h"
 
 using namespace forte::core::io;
 

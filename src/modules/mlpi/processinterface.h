@@ -16,9 +16,9 @@
 #include <../../stdfblib/io/processinterfacebase.h>
 #include <mlpiApiLib.h>
 
-#include <extevhan.h>
+#include "core/extevhan.h"
 #include <forte_thread.h>
-#include <singlet.h>
+#include "core/util/singlet.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>

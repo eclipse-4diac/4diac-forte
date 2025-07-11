@@ -11,7 +11,7 @@
  *    Jose Cabral - initial implementation
  *******************************************************************************/
 
-#include "ReplayDevice.h"
+#include "stdfblib/ita/replay/ReplayDevice.h"
 
 #include "generated/timerhandlerfactory.h"
 #include "generated/ecetfactory.h"

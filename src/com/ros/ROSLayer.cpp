@@ -19,7 +19,7 @@
 #include <std_msgs/String.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/Empty.h>
-#include <commfb.h>
+#include "core/cominfra/commfb.h"
 
 using namespace forte::com_infra;
 using namespace std::string_literals;

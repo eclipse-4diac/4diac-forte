@@ -14,8 +14,8 @@
  *   Alois Zoitl - migrated data type toString to std::string
  *   Martin Jobst - fix line feed and newline escape sequences
  *******************************************************************************/
-#include "forte_char.h"
-#include "string_utils.h"
+#include "core/datatypes/forte_char.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(CHAR);
 

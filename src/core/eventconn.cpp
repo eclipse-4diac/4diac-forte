@@ -11,9 +11,9 @@
  *    Thomas Strasser, Alois Zoitl,
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include "eventconn.h"
-#include "ecet.h"
-#include "funcbloc.h"
+#include "core/eventconn.h"
+#include "core/ecet.h"
+#include "core/funcbloc.h"
 
 CEventConnection::CEventConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId) :
     CConnection(paSrcFB, paSrcPortId) {

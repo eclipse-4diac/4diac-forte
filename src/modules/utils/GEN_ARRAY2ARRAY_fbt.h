@@ -18,7 +18,7 @@
 #ifndef _GEN_ARRAY2ARRAY_H_
 #define _GEN_ARRAY2ARRAY_H_
 
-#include <genfb.h>
+#include "core/genfb.h"
 
 class GEN_ARRAY2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY)

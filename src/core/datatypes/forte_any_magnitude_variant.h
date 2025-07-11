@@ -16,19 +16,19 @@
 
 #include <variant>
 
-#include "forte_any.h"
-#include "forte_dint.h"
-#include "forte_int.h"
-#include "forte_lint.h"
-#include "forte_lreal.h"
-#include "forte_ltime.h"
-#include "forte_real.h"
-#include "forte_sint.h"
-#include "forte_time.h"
-#include "forte_udint.h"
-#include "forte_uint.h"
-#include "forte_ulint.h"
-#include "forte_usint.h"
+#include "core/datatypes/forte_any.h"
+#include "core/datatypes/forte_dint.h"
+#include "core/datatypes/forte_int.h"
+#include "core/datatypes/forte_lint.h"
+#include "core/datatypes/forte_lreal.h"
+#include "core/datatypes/forte_ltime.h"
+#include "core/datatypes/forte_real.h"
+#include "core/datatypes/forte_sint.h"
+#include "core/datatypes/forte_time.h"
+#include "core/datatypes/forte_udint.h"
+#include "core/datatypes/forte_uint.h"
+#include "core/datatypes/forte_ulint.h"
+#include "core/datatypes/forte_usint.h"
 
 using TIecAnyMagnitudeVariantType = std::variant<
     // ANY_ELEMENTARY

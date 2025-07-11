@@ -15,13 +15,13 @@
  *    Martin Jobst
  *      - add support for data types with different size
  *******************************************************************************/
-#include "./datatypes/forte_any.h"
-#include "typelib_internal.h"
-#include "adapter.h"
-#include "stringdict.h"
+#include "core/datatypes/forte_any.h"
+#include "core/typelib_internal.h"
+#include "core/adapter.h"
+#include "core/stringdict.h"
 #include <stddef.h>
 #include <string_view>
-#include "string_utils.h"
+#include "core/util/string_utils.h"
 
 USE_STRING_ID(ARRAY);
 

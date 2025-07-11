@@ -16,7 +16,7 @@
  *                      interface needs
  *******************************************************************************/
 
-#include "IE_fbt.h"
+#include "core/io/IE_fbt.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(CNF);

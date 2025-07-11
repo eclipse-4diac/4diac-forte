@@ -10,9 +10,9 @@
  *   Martin Jobst, Monika Wenger
  *   - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "luatype.h"
-#include "funcbloc.h"
-#include "luaengine.h"
+#include "core/lua/luatype.h"
+#include "core/funcbloc.h"
+#include "core/lua/luaengine.h"
 
 namespace luatype {
   bool getAdapterInstanceDefinition(SAdapterInstanceDef &def, CLuaEngine *luaEngine, int index) {

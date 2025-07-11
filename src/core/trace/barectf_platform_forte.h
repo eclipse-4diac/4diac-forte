@@ -20,7 +20,7 @@
 #include <memory>
 #include <filesystem>
 
-#include "stringdict.h"
+#include "core/stringdict.h"
 
 #include "barectf.h"
 

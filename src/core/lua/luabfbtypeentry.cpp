@@ -11,11 +11,11 @@
  *   Alois Zoitl  - upgraded to new FB memory layout
  *******************************************************************************/
 
-#include "luabfbtypeentry.h"
+#include "core/lua/luabfbtypeentry.h"
 
-#include "luaengine.h"
-#include "luabfb.h"
-#include "luatype.h"
+#include "core/lua/luaengine.h"
+#include "core/lua/luabfb.h"
+#include "core/lua/luatype.h"
 
 CLuaBFBTypeEntry::CLuaBFBTypeEntry(CStringDictionary::TStringId paTypeNameId,
                                    const std::string &paLuaScriptAsString,

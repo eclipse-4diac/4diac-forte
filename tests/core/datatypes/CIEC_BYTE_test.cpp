@@ -17,7 +17,7 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "../../../src/core/datatypes/forte_byte.h"
+#include "core/datatypes/forte_byte.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_BYTE_function_test)
 

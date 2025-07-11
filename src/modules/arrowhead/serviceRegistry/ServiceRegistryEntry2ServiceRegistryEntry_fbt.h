@@ -13,7 +13,7 @@
 #ifndef _SERVICEREGISTRYENTRY2SERVICEREGISTRYENTRY_H_
 #define _SERVICEREGISTRYENTRY2SERVICEREGISTRYENTRY_H_
 
-#include <funcbloc.h>
+#include "core/funcbloc.h"
 #include <forte_serviceregistryentry.h>
 
 class FORTE_ServiceRegistryEntry2ServiceRegistryEntry : public CFunctionBlock {

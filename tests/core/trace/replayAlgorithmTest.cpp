@@ -17,15 +17,15 @@
 
 #include "config.h"
 #include "common.h"
-#include "device.h"
-#include "ecet.h"
+#include "core/device.h"
+#include "core/ecet.h"
 #include "core/trace/internal/EventMessage.h"
-#include "trace/barectf_platform_forte.h"
+#include "core/trace/barectf_platform_forte.h"
 #include "../fbtests/fbtesterglobalfixture.h"
 #include "stdfblib/ita/replay/deviceReplayer.h"
 #include "core/trace/reader/utils.h"
-#include "ForteBootFileLoader.h"
-#include "CommandParser.h"
+#include "stdfblib/ita/ForteBootFileLoader.h"
+#include "stdfblib/ita/CommandParser.h"
 
 USE_STRING_ID(ADD);
 USE_STRING_ID(CNF);

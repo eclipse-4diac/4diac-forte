@@ -16,7 +16,7 @@
  *******************************************************************************/
 
 #include "OUT_ANY_CONSOLE_fbt.h"
-#include "forte_bool.h"
+#include "core/datatypes/forte_bool.h"
 
 USE_STRING_ID(ANY);
 USE_STRING_ID(BOOL);

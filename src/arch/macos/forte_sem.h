@@ -16,7 +16,7 @@
 #define SRC_ARCH_MACOS_SEMAPHORE_H_
 
 #include <dispatch/dispatch.h>
-#include "datatype.h"
+#include "arch/datatype.h"
 
 namespace forte {
   namespace arch {

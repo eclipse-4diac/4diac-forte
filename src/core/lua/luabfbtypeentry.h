@@ -14,8 +14,8 @@
 #ifndef SRC_CORE_LUAFBTYPEENTRY_H_
 #define SRC_CORE_LUAFBTYPEENTRY_H_
 
-#include "typelib.h"
-#include "basicfb.h"
+#include "core/typelib.h"
+#include "core/basicfb.h"
 
 class CLuaEngine;
 

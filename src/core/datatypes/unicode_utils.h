@@ -14,7 +14,7 @@
 #ifndef _UNICODE_UTILS_H_
 #define _UNICODE_UTILS_H_
 
-#include "../../arch/datatype.h"
+#include "arch/datatype.h"
 
 /*!\ingroup COREDTS  CUnicodeUtilities is a collection of utility methods managing Unicode processing.
  */

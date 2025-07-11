@@ -16,14 +16,14 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "../../../src/core/datatypes/forte_struct.h"
-#include "../../../src/core/datatypes/forte_bool.h"
-#include "../../../src/core/datatypes/forte_int.h"
-#include "../../../src/core/datatypes/forte_real.h"
-#include "../../../src/core/datatypes/forte_string.h"
-#include "../../../src/core/datatypes/forte_array.h"
+#include "core/datatypes/forte_struct.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_int.h"
+#include "core/datatypes/forte_real.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_array.h"
 
-#include "../../../src/core/typelib.h"
+#include "core/typelib.h"
 
 USE_STRING_ID(TestStruct1);
 USE_STRING_ID(TestStruct2);

@@ -14,8 +14,8 @@
 #pragma once
 
 #include <limits>
-#include "iec61131_cast_helper.h"
-#include "devlog.h"
+#include "core/iec61131_cast_helper.h"
+#include "arch/devlog.h"
 
 template<typename PartialType, typename SourceType>
 class CIEC_ANY_BIT_PARTIAL final : public PartialType {

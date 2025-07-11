@@ -12,9 +12,9 @@
 
 #include "utils.h"
 #include "core/fbcontainer.h"
-#include "cfb.h"
-#include "basicfb.h"
-#include "util/parameterParser.h"
+#include "core/cfb.h"
+#include "core/basicfb.h"
+#include "core/util/parameterParser.h"
 #include "core/device.h"
 #include "arch/devlog.h"
 

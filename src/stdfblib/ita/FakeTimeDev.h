@@ -14,9 +14,9 @@
  *******************************************************************************/
 #pragma once
 
-#include "../../core/device.h"
-#include "../../core/dataconn.h"
-#include "RMT_RES.h"
+#include "core/device.h"
+#include "core/dataconn.h"
+#include "stdfblib/ita/RMT_RES.h"
 
 class FakeTimeDev : public CDevice {
   public:

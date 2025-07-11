@@ -15,11 +15,11 @@
 #ifndef _GEN_STRUCT_MUX_H_
 #define _GEN_STRUCT_MUX_H_
 
-#include <genfb.h>
+#include "core/genfb.h"
 #include <stdio.h>
 
 #include <memory>
-#include "dataconn.h"
+#include "core/dataconn.h"
 
 class GEN_STRUCT_MUX final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX)

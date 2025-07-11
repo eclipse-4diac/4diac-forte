@@ -14,7 +14,7 @@
 #ifndef SRC_CORE_IO_CONFIGFB_ADAPTER_MULTI_H_
 #define SRC_CORE_IO_CONFIGFB_ADAPTER_MULTI_H_
 
-#include <adapter.h>
+#include "core/adapter.h"
 
 namespace forte {
   namespace core {

@@ -10,10 +10,10 @@
  * Contributors:
  *    Jose Cabral - initial implementation
  *******************************************************************************/
-#include "opcua_handler_abstract.h"
-#include <forte_printer.h>
-#include <devlog.h>
-#include <parameterParser.h>
+#include "com/opc_ua/opcua_handler_abstract.h"
+#include "arch/forte_printer.h"
+#include "arch/devlog.h"
+#include "core/util/parameterParser.h"
 #include <unordered_map>
 
 // we tried to use the logLevelNames and logCategoryNames as extern from open62541 but it failed when using with shared

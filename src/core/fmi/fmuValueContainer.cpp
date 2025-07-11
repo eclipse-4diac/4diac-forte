@@ -10,9 +10,9 @@
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "fmuValueContainer.h"
-#include "fmuInstance.h"
-#include "../../arch/devlog.h"
+#include "core/fmi/fmuValueContainer.h"
+#include "core/fmi/fmuInstance.h"
+#include "arch/devlog.h"
 
 fmuValueContainer::fmuValueContainer(fmuValueContainer::valueType pa_valueType, bool pa_needPointerToValue) :
     mErrorOcurred(false),

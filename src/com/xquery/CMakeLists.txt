@@ -1,40 +1,58 @@
 # *********************************************************************
-# Copyright (c) 2017 fortiss GmbH
-# *
-# * This program and the accompanying materials are made
-# * available under the terms of the Eclipse Public License 2.0
-# * which is available at https://www.eclipse.org/legal/epl-2.0/
-# *
-# * SPDX-License-Identifier: EPL-2.0
+# Copyright (c) 2017 fortiss GmbH * * This program and the accompanying
+# materials are made * available under the terms of the Eclipse Public License
+# 2.0 * which is available at https://www.eclipse.org/legal/epl-2.0/ * *
+# SPDX-License-Identifier: EPL-2.0
 # **********************************************************************
 
-#############################################################################
+# ############################################################################
 # Xquery SIFBs
-#############################################################################
-forte_add_network_layer(XqueryClient OFF "xquery" CXqueryClientLayer xqueryClientLayer "client to send xqueries")
+# ############################################################################
+forte_register_com_layer(XqueryClient OFF "xquery" CXqueryClientLayer
+                         xqueryClientLayer.h "client to send xqueries"
+)
 
-if(FORTE_COM_XqueryClient)
+if (NOT FORTE_COM_XQUERYCLIENT)
+    return()
+endif ()
+set(OPENSSL_INCLUDE_DIR
+    ""
+    CACHE PATH "OpenSSL Include Directory"
+)
+set(OPENSSL_LIBRARY_DIR
+    ""
+    CACHE PATH "OpenSSL Library Directory"
+)
+set(FORTE_BASEX_SRC_DIR
+    ""
+    CACHE PATH "Path to BaseX library directory"
+)
 
-set(OPENSSL_INCLUDE_DIR "" CACHE PATH "OpenSSL Include Directory")
-set(OPENSSL_LIBRARY_DIR "" CACHE PATH "OpenSSL Library Directory")
-set(FORTE_BASEX_SRC_DIR "" CACHE PATH "Path to BaseX library directory")
+# ifdef WIN32
+target_link_libraries(forte PUBLIC libssl.a)
+target_link_libraries(forte PUBLIC libcrypto.a)
+# else
+target_link_libraries(forte PUBLIC libssl.a -lpthread -ldl)
+target_link_libraries(forte PUBLIC libcrypto.a -lpthread -ldl)
+forte_register_handler(CXqueryHandler xqueryHandler.h)
+# forte_add_subdirectory(testFBs)
 
-forte_add_include_directories(${OPENSSL_INCLUDE_DIR})
-forte_add_link_directories(${OPENSSL_LIBRARY_DIR})
-#ifdef WIN32
-forte_add_link_library(libssl.a)
-forte_add_link_library(libcrypto.a)
-#else
-forte_add_link_library(libssl.a -lpthread -ldl)
-forte_add_link_library(libcrypto.a -lpthread -ldl)
-#endif
-forte_add_include_directories(${FORTE_BASEX_SRC_DIR})
-forte_add_sourcefile_with_path_hc(${FORTE_BASEX_SRC_DIR}/readstring ${FORTE_BASEX_SRC_DIR}/md5 ${FORTE_BASEX_SRC_DIR}/basexdbc)
-
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-forte_add_sourcefile_hcpp(xqueryHandler xqueryClientLayer)
-forte_add_handler(CXqueryHandler xqueryHandler)
-
-endif(FORTE_COM_XqueryClient)
-
-#forte_add_subdirectory(testFBs)
+add_library(forte-com-xquery OBJECT
+            $<$<BOOL:${FORTE_COM_XqueryClient}>:xqueryClientLayer.cpp>
+            $<$<BOOL:${FORTE_COM_XqueryClient}>:xqueryClientLayer.h>
+            # endif
+            ${FORTE_BASEX_SRC_DIR}/readstring.h
+            ${FORTE_BASEX_SRC_DIR}/readstring.c
+            ${FORTE_BASEX_SRC_DIR}/md5.h
+            ${FORTE_BASEX_SRC_DIR}/md5.c
+            ${FORTE_BASEX_SRC_DIR}/basexdbc.h
+            ${FORTE_BASEX_SRC_DIR}/basexdbc.c
+            xqueryHandler.h
+            xqueryHandler.cpp
+            xqueryClientLayer.h
+            xqueryClientLayer.cpp
+)
+target_link_libraries(forte PRIVATE forte-com-xquery)
+target_include_directories(forte-com-xquery PUBLIC ${OPENSSL_INCLUDE_DIR})
+target_include_directories(forte-com-xquery PUBLIC ${FORTE_BASEX_SRC_DIR})
+target_link_directories(forte-com-xquery PUBLIC ${OPENSSL_LIBRARY_DIR})

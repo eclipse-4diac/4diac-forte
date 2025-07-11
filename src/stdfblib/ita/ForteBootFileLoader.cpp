@@ -14,12 +14,12 @@
  *      primitve types
  *******************************************************************************/
 
-#include "ForteBootFileLoader.h"
-#include "../../arch/devlog.h"
-#include "../../../src/core/datatypes/forte_string.h"
-#include "mgmcmd.h"
-#include "mgmcmdstruct.h"
-#include "../../core/device.h"
+#include "stdfblib/ita/ForteBootFileLoader.h"
+#include "arch/devlog.h"
+#include "core/datatypes/forte_string.h"
+#include "core/mgmcmd.h"
+#include "core/mgmcmdstruct.h"
+#include "core/device.h"
 #include "generated/config/FORTE_BOOT_FILE_LOCATION.h"
 
 char *gCommandLineBootFile = nullptr;

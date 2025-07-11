@@ -11,11 +11,11 @@
  *   Alois Zoitl  - upgraded to new FB memory layout
  *******************************************************************************/
 
-#include "luacfbtypeentry.h"
+#include "core/lua/luacfbtypeentry.h"
 
-#include "luaengine.h"
-#include "luacfb.h"
-#include "luatype.h"
+#include "core/lua/luaengine.h"
+#include "core/lua/luacfb.h"
+#include "core/lua/luatype.h"
 
 namespace luatype {
   bool getFBInstanceData(SCFB_FBInstanceData &paDef, CLuaEngine *paLuaEngine, int paIndex) {

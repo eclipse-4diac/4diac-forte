@@ -13,11 +13,11 @@
 #ifndef _FIELDSTOSERVICEQUERYFORM_H_
 #define _FIELDSTOSERVICEQUERYFORM_H_
 
-#include <basicfb.h>
+#include "core/basicfb.h"
 #include <forte_servicequeryform.h>
 #include <forte_arrowheadservice.h>
-#include <forte_bool.h>
-#include <forte_dint.h>
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_dint.h"
 
 class FORTE_FieldsToServiceQueryForm : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToServiceQueryForm)

@@ -13,9 +13,9 @@
  *     - initial implementation
  *    Martin Jobst - account for new FB layout and varying data type size
  *******************************************************************************/
-#include "rawdatacomlayer.h"
-#include <forte_any.h>
-#include <forte_string.h>
+#include "core/cominfra/rawdatacomlayer.h"
+#include "core/datatypes/forte_any.h"
+#include "core/datatypes/forte_string.h"
 
 namespace forte {
   namespace com_infra {

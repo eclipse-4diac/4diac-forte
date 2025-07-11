@@ -11,7 +11,7 @@
  * Jose Cabral - Move to a new file and make the amount of parameter a variable
  *******************************************************************************/
 
-#include "parameterParser.h"
+#include "core/util/parameterParser.h"
 #include <string.h>
 #include <cctype>
 

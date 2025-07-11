@@ -18,14 +18,14 @@
 #define SRC_MODULES_HTTP_OPCUAHANDLER_H_
 
 #include <forte_thread.h>
-#include <extevhan.h>
-#include <conn.h>
+#include "core/extevhan.h"
+#include "core/conn.h"
 #include <stdio.h>
 #include <sockhand.h>
-#include "forte_string.h"
+#include "core/datatypes/forte_string.h"
 #include "httplayer.h"
-#include "comCallback.h"
-#include "forte_date_and_time.h"
+#include "core/cominfra/comCallback.h"
+#include "core/datatypes/forte_date_and_time.h"
 
 #include <vector>
 

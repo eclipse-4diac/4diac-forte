@@ -14,11 +14,11 @@
  *      - initial implementation, rework communication infrastructure, bug fixes
  *    Martin Jobst - account for new FB layout and varying data type size
  *******************************************************************************/
-#include "fbdkasn1layer.h"
-#include "basecommfb.h"
-#include "../../arch/timerha.h"
-#include "../../arch/devlog.h"
-#include <fortenew.h>
+#include "core/cominfra/fbdkasn1layer.h"
+#include "core/cominfra/basecommfb.h"
+#include "arch/timerha.h"
+#include "arch/devlog.h"
+#include "arch/fortenew.h"
 
 using namespace forte::com_infra;
 

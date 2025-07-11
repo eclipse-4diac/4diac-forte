@@ -10,7 +10,7 @@
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
-#include "../../src/core/stringdict.h"
+#include "core/stringdict.h"
 
 USE_STRING_ID(BOOL);
 USE_STRING_ID(lowercasetest);

@@ -1,33 +1,43 @@
-#*******************************************************************************
-# Copyright (c) 2016 fortiss GmbH and Herwig Eichler, www.conmeleon.org
-# This program and the accompanying materials are made available under the
-# terms of the Eclipse Public License 2.0 which is available at
+# *******************************************************************************
+# Copyright (c) 2016 fortiss GmbH and Herwig Eichler, www.conmeleon.org This
+# program and the accompanying materials are made available under the terms of
+# the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
-# Contributors:
-#     Alois Zoitl and Herwig Eichler
-# *******************************************************************************/ 
- 
-if ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-forte_add_module(CONMELEON_C1 OFF "Interacting with the CONMELEON C1 IO board")
+#
+# Contributors: Alois Zoitl and Herwig Eichler
+# *******************************************************************************/
 
-message(CHECK_START "Module Conmeleon C1 is deprecated and may be removed in future releases")
+if (NOT FORTE_ARCHITECTURE STREQUAL "Posix")
+    return()
+endif ()
 
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
+forte_register_module(CONMELEON_C1 OFF
+                      "Interacting with the CONMELEON C1 IO board"
+)
 
-#######################################################
+message(CHECK_START
+        "Module Conmeleon C1 is deprecated and may be removed in future releases"
+)
+
+# ############################################################################
 # CONMELEON C1 IO board driver
-#######################################################
+# ############################################################################
 
-forte_add_sourcefile_hcpp(gpio/gpiopin)
-forte_add_sourcefile_hcpp(spi/spidevice)
-forte_add_sourcefile_hcpp(spi/ads1018)
-forte_add_sourcefile_hcpp(util/fileres)
-forte_add_sourcefile_h(util/uncopyable.h)
-forte_add_sourcefile_hcpp(processinterface)
 forte_set_process_interface("Conmeleon C1" IX QX IW)
 
-endif ("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
-
+add_library(forte-modules-conmeleon_c1 OBJECT
+            gpio/gpiopin.h
+            gpio/gpiopin.cpp
+            spi/spidevice.h
+            spi/spidevice.cpp
+            spi/ads1018.h
+            spi/ads1018.cpp
+            util/fileres.h
+            util/fileres.cpp
+            util/uncopyable.h
+            processinterface.h
+            processinterface.cpp
+)
+target_link_libraries(forte PRIVATE forte-modules-conmeleon_c1)

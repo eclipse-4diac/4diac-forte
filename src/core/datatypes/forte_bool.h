@@ -21,7 +21,7 @@
 #ifndef _FORTE_BOOL_H_
 #define _FORTE_BOOL_H_
 
-#include "forte_any_bit.h"
+#include "core/datatypes/forte_any_bit.h"
 
 /*!\ingroup COREDTS CIEC_BOOL represents the bool data type according to IEC 61131.
  */

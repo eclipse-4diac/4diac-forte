@@ -17,10 +17,10 @@
 #ifndef _TIMERHA_H_
 #define _TIMERHA_H_
 
-#include <forte_config.h>
-#include "../core/extevhan.h"
+#include "generated/forte_config.h"
+#include "core/extevhan.h"
 #include <forte_sync.h>
-#include "forte_time.h"
+#include "core/datatypes/forte_time.h"
 #include <vector>
 
 class CEventSourceFB;

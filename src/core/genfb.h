@@ -17,9 +17,9 @@
 
 #include <cstddef>
 #include <memory>
-#include "basicfb.h"
-#include "eventconn.h"
-#include "funcbloc.h"
+#include "core/basicfb.h"
+#include "core/eventconn.h"
+#include "core/funcbloc.h"
 
 USE_STRING_ID(ANY);
 

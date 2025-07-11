@@ -14,10 +14,10 @@
 #ifndef CROSMANAGER_H_
 #define CROSMANAGER_H_
 
-#include <extevhan.h>
+#include "core/extevhan.h"
 #include <forte_thread.h>
 
-#include <forte_string.h>
+#include "core/datatypes/forte_string.h"
 #include <string>
 
 class CROSManager : public CExternalEventHandler, private CThread {

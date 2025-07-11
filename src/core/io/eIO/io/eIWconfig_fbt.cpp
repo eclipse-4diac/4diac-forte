@@ -10,8 +10,8 @@
  *   Maximilian Scharf - Initial implementation.
  *******************************************************************************/
 
-#include "eIWconfig_fbt.h"
-#include "eIW_fbt.h"
+#include "core/io/eIO/io/eIWconfig_fbt.h"
+#include "core/io/eIO/io/eIW_fbt.h"
 
 USE_STRING_ID(BT);
 USE_STRING_ID(CNF);

@@ -174,7 +174,7 @@ const unsigned int allowedStatesInFunction[] = {
 #ifdef LOGDEBUG
 #include <forte_sync.h>
 #include <sstream>
-#include "fmuInstance.h"
+#include "core/fmi/fmuInstance.h"
 #define FMU_DEBUG_LOG(instance, message)                                                                               \
   {                                                                                                                    \
     std::stringstream ss;                                                                                              \

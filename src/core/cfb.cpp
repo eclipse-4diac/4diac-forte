@@ -17,9 +17,9 @@
  *    Martin Jobst - add smart pointer for internal FBs
  *******************************************************************************/
 #include <string.h>
-#include "cfb.h"
-#include "adapter.h"
-#include "stringdict.h"
+#include "core/cfb.h"
+#include "core/adapter.h"
+#include "core/stringdict.h"
 
 namespace {
   bool forwardGenericDI(CFunctionBlock &dstFB, const CStringDictionary::TStringId dstId, const CIEC_ANY &paRefValue) {

@@ -12,15 +12,15 @@
 #ifndef _FMUINSTANCE_H_
 #define _FMUINSTANCE_H_
 
-#include "fmuConfig.h"
-#include "fmuValueContainer.h"
-#include "fmiTimerHandler.h"
-#include "../device.h"
+#include "core/fmi/fmuConfig.h"
+#include "core/fmi/fmuValueContainer.h"
+#include "core/fmi/fmiTimerHandler.h"
+#include "core/device.h"
 #include <vector>
 #include <map>
 #include <fstream>
-#include "../device.h"
-#include "../../stdfblib/ita/EMB_RES.h"
+#include "core/device.h"
+#include "stdfblib/ita/EMB_RES.h"
 
 class fmuInstance : public CDevice {
 

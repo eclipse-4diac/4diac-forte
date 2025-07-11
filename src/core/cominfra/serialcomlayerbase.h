@@ -12,10 +12,10 @@
 
 #pragma once
 
-#include "comlayer.h"
-#include "../datatypes/forte_string.h"
+#include "core/cominfra/comlayer.h"
+#include "core/datatypes/forte_string.h"
 #include "core/util/parameterParser.h"
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 
 template<typename TSerialHandle, TSerialHandle nullHandle = static_cast<TSerialHandle>(0)>
 class CSerialComLayerBase : public forte::com_infra::CComLayer {

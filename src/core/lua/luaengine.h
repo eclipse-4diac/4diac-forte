@@ -31,9 +31,9 @@ extern "C" {
 #define lua_len(L, i) (lua_objlen(L, (i)))
 #endif
 
-#include "../datatypes/forte_any.h"
+#include "core/datatypes/forte_any.h"
 
-#include <forte_array.h>
+#include "core/datatypes/forte_array.h"
 
 // class CIEC_ARRAY;
 

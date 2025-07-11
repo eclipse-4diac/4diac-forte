@@ -11,7 +11,7 @@
  *    Markus Meingast - initial implementation
  *******************************************************************************/
 
-#include "OPCUA_DEV.h"
+#include "stdfblib/ita/OPCUA_DEV.h"
 
 OPCUA_DEV::OPCUA_DEV(const std::string &paMGRID) : RMT_DEV(paMGRID), mOPCUAMgr(*this) {
   changeExecutionState(EMGMCommandType::Reset);

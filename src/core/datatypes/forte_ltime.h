@@ -21,9 +21,9 @@
 #ifndef _FORTE_LTIME_H_
 #define _FORTE_LTIME_H_
 
-#include "forte_any_duration.h"
+#include "core/datatypes/forte_any_duration.h"
 
-#include "forte_time.h"
+#include "core/datatypes/forte_time.h"
 
 /*!\ingroup COREDTS CIEC_TIME represents the time data types according to IEC 61131.
  */

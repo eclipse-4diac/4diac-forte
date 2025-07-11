@@ -9,7 +9,7 @@
  * Contributors:
  *   Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "../../../src/arch/datatype.h"
+#include "arch/datatype.h"
 
 // Testdata
 // BOOL

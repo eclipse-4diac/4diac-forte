@@ -14,8 +14,8 @@
 #ifndef MQTTCOMLAYER_H_
 #define MQTTCOMLAYER_H_
 
-#include "comlayer.h"
-#include "../../core/datatypes/forte_string.h"
+#include "core/cominfra/comlayer.h"
+#include "core/datatypes/forte_string.h"
 
 #include <memory>
 

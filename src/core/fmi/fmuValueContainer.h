@@ -13,11 +13,11 @@
 #ifndef SRC_CORE_FMI_FMUVALUECONTAINER_H_
 #define SRC_CORE_FMI_FMUVALUECONTAINER_H_
 
-#include "../datatypes/forte_any.h"
-#include "../datatypes/forte_bool.h"
-#include "../datatypes/forte_lint.h"
-#include "../datatypes/forte_lreal.h"
-#include "../datatypes/forte_string.h"
+#include "core/datatypes/forte_any.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_lint.h"
+#include "core/datatypes/forte_lreal.h"
+#include "core/datatypes/forte_string.h"
 
 class fmuValueContainer {
 

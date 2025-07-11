@@ -23,7 +23,7 @@ USE_STRING_ID(STATUS);
 USE_STRING_ID(ST_DEL_FB);
 USE_STRING_ID(WSTRING);
 
-#include "device.h"
+#include "core/device.h"
 
 DEFINE_FIRMWARE_FB(FORTE_ST_DEL_FB, STRID(ST_DEL_FB))
 

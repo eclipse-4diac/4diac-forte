@@ -10,7 +10,7 @@
  *   Maximilian Scharf - Initial implementation.
  *******************************************************************************/
 
-#include "eIW_fbt.h"
+#include "core/io/eIO/io/eIW_fbt.h"
 
 USE_STRING_ID(eIW);
 USE_STRING_ID(eGenAdapter);

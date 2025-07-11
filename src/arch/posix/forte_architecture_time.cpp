@@ -14,8 +14,8 @@
  *  Ketut Kumajaya - Use the standard C++ time implementation
  *******************************************************************************/
 
-#include "forte_architecture_time.h"
-#include "forte_constants.h"
+#include "arch/forte_architecture_time.h"
+#include "core/util/forte_constants.h"
 
 time_t forte_timegm(struct tm *pa_tm) {
   return timegm(pa_tm);

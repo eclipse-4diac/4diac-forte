@@ -16,7 +16,7 @@
 #ifndef _ANY_STR_H_
 #define _ANY_STR_H_
 
-#include "forte_any_chars.h"
+#include "core/datatypes/forte_any_chars.h"
 
 /*!\ingroup COREDTS IIEC_ANY_STRING represents any bit data types according to IEC 61131.
  */

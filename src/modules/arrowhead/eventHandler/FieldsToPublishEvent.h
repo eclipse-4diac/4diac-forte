@@ -13,11 +13,11 @@
 #ifndef _FIELDSTOPUBLISHEVENT_H_
 #define _FIELDSTOPUBLISHEVENT_H_
 
-#include <basicfb.h>
+#include "core/basicfb.h"
 #include <forte_publishevent.h>
 #include <forte_arrowheadsystem.h>
 #include <forte_arrowheadevent.h>
-#include <forte_wstring.h>
+#include "core/datatypes/forte_wstring.h"
 
 class FORTE_FieldsToPublishEvent : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToPublishEvent)

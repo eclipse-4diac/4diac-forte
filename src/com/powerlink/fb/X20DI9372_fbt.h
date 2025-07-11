@@ -14,16 +14,16 @@
 #pragma once
 
 #include "PowerlinkFunctionBlockDI.h"
-#include "funcbloc.h"
-#include "forte_bool.h"
-#include "forte_usint.h"
-#include "forte_uint.h"
-#include "forte_string.h"
-#include "iec61131_functions.h"
-#include "forte_array_common.h"
-#include "forte_array.h"
-#include "forte_array_fixed.h"
-#include "forte_array_variable.h"
+#include "core/funcbloc.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_usint.h"
+#include "core/datatypes/forte_uint.h"
+#include "core/datatypes/forte_string.h"
+#include "core/iec61131_functions.h"
+#include "core/datatypes/forte_array_common.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_array_variable.h"
 
 class FORTE_X20DI9372 final : public PowerlinkFunctionBlockDI {
     DECLARE_FIRMWARE_FB(FORTE_X20DI9372)

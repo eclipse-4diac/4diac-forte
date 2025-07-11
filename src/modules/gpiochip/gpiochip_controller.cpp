@@ -14,11 +14,11 @@
 #include <linux/gpio.h>
 #include <sys/ioctl.h>
 #include <poll.h>
-#include <devlog.h>
+#include "arch/devlog.h"
 #include <fcntl.h>
 #include <unistd.h>
 
-#include <io/mapper/io_handle_bit.h>
+#include "core/io/mapper/io_handle_bit.h"
 #include "gpiochip_controller.h"
 
 const char *const GPIOChipController::scmFailedToAccessChip = "Failed to open GPIO chip device";

@@ -13,10 +13,10 @@
 
 #pragma once
 
-#include "struct_member_action_info.h"
-#include "opcua_layer.h"
-#include "opcua_objectstruct_helper.h"
-#include "opcua_local_handler.h"
+#include "com/opc_ua/struct_member_action_info.h"
+#include "com/opc_ua/opcua_layer.h"
+#include "com/opc_ua/opcua_objectstruct_helper.h"
+#include "com/opc_ua/opcua_local_handler.h"
 
 class CStructActionInfo : public CStructMemberActionInfo {
   public:

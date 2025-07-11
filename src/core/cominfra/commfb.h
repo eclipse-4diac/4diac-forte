@@ -19,9 +19,9 @@
 #ifndef _COMMFB_H_
 #define _COMMFB_H_
 
-#include <forte_config.h>
-#include "basecommfb.h"
-#include "comtypes.h"
+#include "generated/forte_config.h"
+#include "core/cominfra/basecommfb.h"
+#include "core/cominfra/comtypes.h"
 
 namespace forte {
   namespace com_infra {

@@ -13,12 +13,12 @@
 #ifndef FMUHANDLER_H_
 #define FMUHANDLER_H_
 
-#include <singlet.h>
-#include <extevhan.h>
-#include <fortelist.h>
-#include "fmuComLayer.h"
+#include "core/util/singlet.h"
+#include "core/extevhan.h"
+#include "core/fortelist.h"
+#include "core/fmi/comm/fmuComLayer.h"
 #include <forte_sync.h>
-#include <forte_string.h>
+#include "core/datatypes/forte_string.h"
 #include <map>
 #include <vector>
 

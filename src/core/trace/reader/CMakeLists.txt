@@ -1,17 +1,18 @@
-#*******************************************************************************
-# Copyright (c) 2025 Jose Cabral
-# This program and the accompanying materials are made available under the
-# terms of the Eclipse Public License 2.0 which is available at
-# http://www.eclipse.org/legal/epl-2.0.
+# *******************************************************************************
+# Copyright (c) 2025 Jose Cabral This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License 2.0 which
+# is available at http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
-# Contributors:
-#    Jose Cabral
-# *    - initial API and implementation and/or initial documentation
+#
+# Contributors: Jose Cabral *    - initial API and implementation and/or
+# initial documentation
 # *******************************************************************************/
 
-forte_add_sourcefile_hcpp(bt2MessageFactory)
-forte_add_sourcefile_hcpp(TraceReaderSink)
-forte_add_sourcefile_hcpp(utils)
-forte_add_link_library(babeltrace2)
+target_link_libraries(forte PUBLIC babeltrace2)
+
+add_library(forte-core-trace-reader OBJECT
+            bt2MessageFactory.h bt2MessageFactory.cpp TraceReaderSink.h
+            TraceReaderSink.cpp utils.h utils.cpp
+)
+target_link_libraries(forte PRIVATE forte-core-trace-reader)

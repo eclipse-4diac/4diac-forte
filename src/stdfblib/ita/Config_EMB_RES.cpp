@@ -10,8 +10,8 @@
  *   Markus Meingast
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "../../core/stringdict.h"
-#include "Config_EMB_RES.h"
+#include "core/stringdict.h"
+#include "stdfblib/ita/Config_EMB_RES.h"
 
 USE_STRING_ID(Config_EMB_RES);
 USE_STRING_ID(OPCUA_Namespace);

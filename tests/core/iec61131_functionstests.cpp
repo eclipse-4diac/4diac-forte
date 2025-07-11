@@ -27,14 +27,14 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "iec61131_functions.h"
+#include "core/iec61131_functions.h"
 
-#include "forte_char.h"
-#include "forte_string.h"
-#include "forte_string_fixed.h"
-#include "forte_uint.h"
-#include "forte_lword.h"
-#include "../../src/core/typelib.h"
+#include "core/datatypes/forte_char.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_string_fixed.h"
+#include "core/datatypes/forte_uint.h"
+#include "core/datatypes/forte_lword.h"
+#include "core/typelib.h"
 
 using namespace std::string_literals;
 

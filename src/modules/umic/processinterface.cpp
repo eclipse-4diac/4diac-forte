@@ -10,11 +10,11 @@
  *    Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "processinterface.h"
+#include "core/fmi/processinterface.h"
 #include <string>
 #include <sstream>
 #include <vector>
-#include <criticalregion.h>
+#include "core/util/criticalregion.h"
 
 #include <umic_dio.h>
 #include <umic_relay.h>

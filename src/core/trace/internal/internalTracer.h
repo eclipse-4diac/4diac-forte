@@ -17,8 +17,8 @@
 
 #include <vector>
 
-#include "EventMessage.h"
-#include "stringdict.h"
+#include "core/trace/internal/EventMessage.h"
+#include "core/stringdict.h"
 
 /**
  * @brief Internal tracer

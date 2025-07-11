@@ -21,17 +21,17 @@
  *                - handle in-out connections with variable arrays
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#include "funcbloc.h"
-#include "dataconn.h"
-#include "datatype.h"
-#include "eventconn.h"
-#include "adapter.h"
+#include "core/funcbloc.h"
+#include "core/dataconn.h"
+#include "arch/datatype.h"
+#include "core/eventconn.h"
+#include "core/adapter.h"
 
 #include <stdlib.h>
 #include <string.h>
-#include "../arch/timerha.h"
-#include "device.h"
-#include "string_utils.h"
+#include "arch/timerha.h"
+#include "core/device.h"
+#include "core/util/string_utils.h"
 
 using namespace std::string_literals;
 

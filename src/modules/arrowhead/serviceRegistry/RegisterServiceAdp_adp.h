@@ -13,10 +13,10 @@
 #ifndef _REGISTERSERVICEADP_H_
 #define _REGISTERSERVICEADP_H_
 
-#include <adapter.h>
-#include <typelib.h>
+#include "core/adapter.h"
+#include "core/typelib.h"
 #include <forte_serviceregistryentry.h>
-#include <forte_wstring.h>
+#include "core/datatypes/forte_wstring.h"
 
 class FORTE_RegisterServiceAdp : public CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_RegisterServiceAdp)

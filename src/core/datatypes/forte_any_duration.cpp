@@ -11,7 +11,7 @@
  *    Hesam Rezaee
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#include "forte_any_duration.h"
+#include "core/datatypes/forte_any_duration.h"
 #include <format>
 
 // change time elements to string

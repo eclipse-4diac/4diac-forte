@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include "inputfb.h"
-#include "forte_bool.h"
+#include "core/io/inputfb.h"
+#include "core/datatypes/forte_bool.h"
 
 /*! /brief generic class for IX function blocks providing access to one boolean physical input
  *
