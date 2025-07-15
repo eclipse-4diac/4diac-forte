@@ -90,3 +90,5 @@ target_compile_definitions(forte-global INTERFACE FORTE_USE_DEFAULT_NEW_AND_DELE
 if (FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
     target_compile_definitions(forte-global INTERFACE BOOST_TEST_NO_LIB)
 endif (FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
+
+add_subdirectory(com)
