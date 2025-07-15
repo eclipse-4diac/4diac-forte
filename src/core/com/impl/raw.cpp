@@ -16,6 +16,7 @@
 #include "core/com/factory.h"
 
 #include <array>
+#include <charconv>
 
 USE_STRING_ID(raw)
 
@@ -24,10 +25,19 @@ using namespace forte::com::impl;
 
 namespace {
   [[maybe_unused]] ComChannelEntryImpl<std::span<CIEC_ANY_VARIANT>, RawChannel> entry(STRID(raw));
-}
+
+  std::size_t parseSize(const std::string_view paConfigString) {
+    std::size_t result{};
+    if (auto [ptr, ec] = std::from_chars(paConfigString.data(), paConfigString.data() + paConfigString.size(), result);
+        ptr != paConfigString.data() + paConfigString.size() || ec != std::errc()) {
+      return std::string_view::npos;
+    }
+    return result;
+  }
+} // namespace
 
 ComResult RawChannel::open(const std::string_view paConfigString, const std::span<ComChannelDescriptor> paDescriptors) {
-  if (!paConfigString.empty() || paDescriptors.empty()) {
+  if (paDescriptors.empty()) {
     return ComResult::InvalidId;
   }
   mChannel = ComFactory<ComBuffer>::createChannel(paDescriptors.front().mChannel, *this);
@@ -35,9 +45,22 @@ ComResult RawChannel::open(const std::string_view paConfigString, const std::spa
     return ComResult::InvalidId;
   }
 
-  if (const ComResult result = mChannel->setMaxReceiveSize(CIEC_ANY_STRING::scmMaxStringLen); result != ComResult::Ok) {
-    close();
-    return result;
+  if (paConfigString.empty()) {
+    if (const ComResult result = mChannel->setMaxReceiveSize(CIEC_ANY_STRING::scmMaxStringLen);
+        result != ComResult::Ok) {
+      return result;
+    }
+  } else {
+    const std::size_t size = parseSize(paConfigString);
+    if (size == std::string_view::npos) {
+      return ComResult::InvalidId;
+    }
+    if (const ComResult result = mChannel->setMaxReceiveSize(size); result != ComResult::Ok) {
+      return result;
+    }
+    if (const ComResult result = mChannel->setMinReceiveSize(size); result != ComResult::Ok) {
+      return result;
+    }
   }
 
   return mChannel->open(paDescriptors.front().mConfigString, paDescriptors.subspan(1));
