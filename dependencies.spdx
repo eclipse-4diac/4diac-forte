@@ -28,12 +28,12 @@ PackageCopyrightText: NOASSERTION
 PackageName: open62541
 SPDXID: SPDXRef-open62541
 PackageComment: <text>OPC-UA support library</text>
-ExternalRef: PACKAGE-MANAGER purl pkg:github/open62541/open62541@1.4.7
-PackageVersion: 1.4.7
+ExternalRef: PACKAGE-MANAGER purl pkg:github/open62541/open62541@1.4.12
+PackageVersion: 1.4.12
 PackageSupplier: Organization: open62541
 Relationship: SPDXRef-open62541 OPTIONAL_DEPENDENCY_OF SPDXRef-4diac-FORTE
-PackageDownloadLocation: https://github.com/open62541/open62541/archive/refs/tags/v1.4.7.zip
-PackageChecksum: SHA256: 598889ae4bdc468d39c5c961ba76c648747b64337a9d0c0ef07b032c4819dea8
+PackageDownloadLocation: https://github.com/open62541/open62541/archive/refs/tags/v1.4.12.zip
+PackageChecksum: SHA256: 4a551ca504d49fd4c87ebe64c82bcd51307d53c982ab5a9f23dbd902b18e9521
 FilesAnalyzed: false
 PackageLicenseConcluded: NOASSERTION
 PackageLicenseDeclared: NOASSERTION
