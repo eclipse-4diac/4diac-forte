@@ -17,10 +17,8 @@
 FUNCTION(ADD_CSVWRITE_TEST test_name bootFile csvFileName csvFileShouldExist expectedContent isHard timeout)
 
   FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/csvWritertTest.cmake" scriptFile)
-  STRING(REPLACE "\\" "\\\\" scriptFile ${scriptFile})
-  
+
   FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${bootFile}" file_str)
-  STRING(REPLACE "\\" "\\\\" file_str ${file_str})
 
   ADD_TEST(NAME ${test_name} COMMAND ${CMAKE_COMMAND}
          -DCMD=$<TARGET_FILE:forte>

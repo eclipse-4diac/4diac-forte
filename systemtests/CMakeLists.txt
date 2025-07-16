@@ -7,8 +7,7 @@ endif()
 ## Fails if any error has been logged
 function(forte_add_systemtest_hard arg1 arg2 arg3)
   file(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${arg2}" file_str)
-  string(REPLACE "\\" "\\\\" file_str ${file_str})
-  add_test(NAME ${arg1} COMMAND $<TARGET_FILE:forte> -f ${file_str})
+  add_test(NAME ${arg1} COMMAND $<TARGET_FILE:forte> -f "${file_str}")
   set_tests_properties (${arg1} PROPERTIES TIMEOUT ${arg3})
   set_tests_properties(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR") #==ERROR is the output when memore leak happens
 endfunction()
@@ -18,8 +17,7 @@ endfunction()
 ## its cases, and some of the cases produce logging error
 function(forte_add_systemtest_soft arg1 arg2 arg3)
   file(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${arg2}" file_str)
-  string(REPLACE "\\" "\\\\" file_str ${file_str})
-  add_test(NAME ${arg1} COMMAND $<TARGET_FILE:forte> -f ${file_str})
+  add_test(NAME ${arg1} COMMAND $<TARGET_FILE:forte> -f "${file_str}")
   set_tests_properties(${arg1} PROPERTIES TIMEOUT ${arg3})
   set_tests_properties(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR") #==ERROR is the output when memore leak happens
 endfunction()
@@ -27,7 +25,6 @@ endfunction()
 # forte_add_multi_systemtests (TEST_NAME TIMEOUT IS_HARD FILE_NAME EXTRA_ARGS [FILE_NAME EXTRA_ARGS] ...)
 function(forte_add_multi_systemtests)
   file(TO_NATIVE_PATH "${CMAKE_CURRENT_FUNCTION_LIST_DIR}/multi_test.cmake" scriptFile)
-  string(REPLACE "\\" "\\\\" scriptFile ${scriptFile})
 
   list(GET ARGV 0 TEST_NAME)
   list(GET ARGV 1 TEST_TIMEOUT)
@@ -42,7 +39,6 @@ function(forte_add_multi_systemtests)
 
       if (NEXT_IS_FILE)
         file(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${ARG}" file_str1)
-        string(REPLACE "\\" "\\\\" file_str1 ${file_str1})
         list(APPEND TEST_SYS_FILES "${file_str1}")
         set(NEXT_IS_FILE 0)
       else()
@@ -61,14 +57,11 @@ function(forte_add_multi_systemtests)
     math(EXPR COUNTER "${COUNTER}+1")
   endforeach()
 
-  string(REPLACE ";" "<->" TEST_SYS_FILES "${TEST_SYS_FILES}")
-  string(REPLACE ";" "<->" TEST_EXTRA_ARGS "${TEST_EXTRA_ARGS}")
-
   add_test(NAME ${TEST_NAME} COMMAND ${CMAKE_COMMAND}
     -DCMD=$<TARGET_FILE:forte>
-    -DSYS_FILES=${TEST_SYS_FILES}
-    -DEXTRA_ARGS=${TEST_EXTRA_ARGS}
-    -P ${scriptFile})
+    "-DSYS_FILES=${TEST_SYS_FILES}"
+    "-DEXTRA_ARGS=${TEST_EXTRA_ARGS}"
+    -P "${scriptFile}")
 
   set_tests_properties(${TEST_NAME} PROPERTIES TIMEOUT ${TEST_TIMEOUT})
 
@@ -81,7 +74,6 @@ endfunction()
 
 function(forte_add_env_file test file)
   file(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${file}" file_str)
-  string(REPLACE "\\" "\\\\" file_str ${file_str})
   set_tests_properties(${test} PROPERTIES ENVIRONMENT "FORTE_BOOT_FILE=${file_str}")
 endfunction()
 
@@ -117,7 +109,6 @@ SET_TESTS_PROPERTIES(Test_Hard_Pass_ENV PROPERTIES FAIL_REGULAR_EXPRESSION "ERRO
 #Test using local bootfile
 ##############################################
 FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/hard_pass_example.fboot" file_str)
-STRING(REPLACE "\\" "\\\\" file_str ${file_str})
 configure_file(${file_str} ${CMAKE_CURRENT_BINARY_DIR}/forte.fboot COPYONLY)
 ADD_TEST(NAME Test_Hard_Pass_LOCAL COMMAND $<TARGET_FILE:forte>)
 set_tests_properties (Test_Hard_Pass_LOCAL PROPERTIES TIMEOUT 5)
@@ -145,9 +136,9 @@ SET_TESTS_PROPERTIES(Test_missing_unknown_FB PROPERTIES PASS_REGULAR_EXPRESSION 
 ADD_TEST(NAME Test_wrong_bootfile_w_FAIL COMMAND $<TARGET_FILE:forte>)
 set_tests_properties (Test_wrong_bootfile_w_FAIL PROPERTIES TIMEOUT 5)
 FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/non_existing.fboot" file_str)
-STRING(REPLACE "\\" "\\\\" file_str ${file_str})
+STRING(REPLACE "\\" "\\\\" file_str_escaped ${file_str})
 set_tests_properties(Test_wrong_bootfile_w_FAIL PROPERTIES ENVIRONMENT "FORTE_BOOT_FILE=${file_str};FORTE_BOOT_FILE_FAIL_MISSING=1")
-SET_TESTS_PROPERTIES(Test_wrong_bootfile_w_FAIL PROPERTIES PASS_REGULAR_EXPRESSION "Boot file ${file_str} could not be opened and FORTE_BOOT_FILE_FAIL_MISSING is set")
+SET_TESTS_PROPERTIES(Test_wrong_bootfile_w_FAIL PROPERTIES PASS_REGULAR_EXPRESSION "Boot file ${file_str_escaped} could not be opened and FORTE_BOOT_FILE_FAIL_MISSING is set")
 ##############################################
 
 #Test help parameter (-h)
