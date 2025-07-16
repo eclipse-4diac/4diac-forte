@@ -74,7 +74,7 @@ jobs:
         -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
         -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
         -S ${{ github.workspace }}
-        --preset ${{ matrix.architecture }}-tests
+        --preset ${{ matrix.architecture }}-systemtests
         ${{ matrix.os == 'windows-latest' && format('-DFORTE_TESTS_INC_DIRS={0}/boost.1.84.0/lib/native/include', github.workspace) || '' }}
 
     - name: Build
