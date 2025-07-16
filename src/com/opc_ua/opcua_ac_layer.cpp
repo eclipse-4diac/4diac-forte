@@ -180,6 +180,11 @@ UA_StatusCode COPC_UA_AC_Layer::setConditionVariableFieldProperty(UA_Server *paS
 }
 
 EComResponse COPC_UA_AC_Layer::initOPCUAType(UA_Server *paServer, const std::string &paTypeName, bool paIsPublisher) {
+  std::string browsePath(COPC_UA_ObjectStruct_Helper::getBrowsePath(scmAlarmTypeBrowsePath, paTypeName,
+                                                                    1)); // TODO Change 1 to namespaceIndex
+  if (isOPCUAObjectPresent(browsePath)) {
+    return e_InitOk;
+  }
   EComResponse eRetVal = createAlarmType(paServer, paTypeName);
   return eRetVal == e_InitOk ? addOPCUATypeProperties(paServer, paTypeName, paIsPublisher) : eRetVal;
 }
@@ -375,11 +380,6 @@ void COPC_UA_AC_Layer::addNewNodeId(UA_NodeId *paNodeIdToAdd) {
 }
 
 EComResponse COPC_UA_AC_Layer::createAlarmType(UA_Server *paServer, const std::string &paTypeName) {
-  std::string browsePath(COPC_UA_ObjectStruct_Helper::getBrowsePath(scmAlarmTypeBrowsePath, paTypeName,
-                                                                    1)); // TODO Change 1 to namespaceIndex
-  if (isOPCUAObjectPresent(browsePath)) {
-    return e_InitOk;
-  }
   char *typeName = getNameFromString(paTypeName);
   mTypeNodeId = UA_NODEID_STRING(1, typeName); // TODO Change 1 to namespaceIndex
   UA_ObjectTypeAttributes oAttr = UA_ObjectTypeAttributes_default;
