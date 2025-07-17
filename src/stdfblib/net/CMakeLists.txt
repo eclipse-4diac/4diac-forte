@@ -17,6 +17,8 @@ add_library(forte-stdfblib-net OBJECT
             GEN_CLIENT_fbt.cpp
             GEN_PUBLISH_fbt.h
             GEN_PUBLISH_fbt.cpp
+            GEN_SEND_RECV_fbt.h
+            GEN_SEND_RECV_fbt.cpp
             GEN_SERVER_fbt.h
             GEN_SERVER_fbt.cpp
             GEN_SUBSCRIBE_fbt.h
