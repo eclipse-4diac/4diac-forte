@@ -4,9 +4,9 @@
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
  *** Name: E_TRIG
- *** Description: Service Interface Function Block Type
+ *** Description: Trigger unconnected input events of the specified type inside a resource
  *** Version:
- ***     1.0: 2025-01-08/mario -  -
+ ***     1.0: 2025-01-08/Mario Kastner -  -
  *************************************************************************/
 
 #include "E_TRIG_fbt.h"
@@ -47,12 +47,12 @@ namespace {
 FORTE_E_TRIG::FORTE_E_TRIG(const CStringDictionary::TStringId paInstanceNameId,
                            forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
-    var_EVENTTYPE(""_STRING),
+    var_EVENTTYPE("EInit"_STRING),
     conn_CNF(*this, 0),
     conn_EVENTTYPE(nullptr) {};
 
 void FORTE_E_TRIG::setInitialValues() {
-  var_EVENTTYPE = ""_STRING;
+  var_EVENTTYPE = "EInit"_STRING;
 }
 
 void FORTE_E_TRIG::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {

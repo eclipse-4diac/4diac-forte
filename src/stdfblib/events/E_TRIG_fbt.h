@@ -4,9 +4,9 @@
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
  *** Name: E_TRIG
- *** Description: Service Interface Function Block Type
+ *** Description: Trigger unconnected input events of the specified type inside a resource
  *** Version:
- ***     1.0: 2025-01-08/mario -  -
+ ***     1.0: 2025-01-08/Mario Kastner -  -
  *************************************************************************/
 
 #pragma once
