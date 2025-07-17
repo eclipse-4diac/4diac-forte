@@ -170,6 +170,9 @@ SET_TESTS_PROPERTIES(Test_valid_invalid_parameter PROPERTIES PASS_REGULAR_EXPRES
 ##############################################
 
 # Simple test with multi devices
-forte_add_multi_systemtests(SimpleMultiTest 10 1 multiDevice1.fboot "-c localhost:61500" multiDevice2.fboot " " multiDevice3.fboot "-c localhost:61501")
+# disabled when compiling with MSVC until https://github.com/eclipse-4diac/4diac-forte/issues/544 is fixed
+if (NOT MSVC)
+  forte_add_multi_systemtests(SimpleMultiTest 10 1 multiDevice1.fboot "-c localhost:61500" multiDevice2.fboot " " multiDevice3.fboot "-c localhost:61501")
+endif ()
 
 #after compilation, run "make CTEST_OUTPUT_ON_FAILURE=1 test" on the binary folder
