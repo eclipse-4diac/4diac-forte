@@ -64,7 +64,7 @@ namespace forte::core::io {
 
       void evt_REQ(const CIEC_BOOL &paQI,
                    const CIEC_STRING &paPARAMS,
-                   const CIEC_BYTE &paOUT,
+                   const T &paOUT,
                    CIEC_BOOL &paQO,
                    CIEC_STRING &paSTATUS) {
         var_QI = paQI;
