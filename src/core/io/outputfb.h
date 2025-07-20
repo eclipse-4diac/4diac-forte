@@ -62,11 +62,8 @@ namespace forte::core::io {
         return IOMapper::Out;
       }
 
-      void evt_REQ(const CIEC_BOOL &paQI,
-                   const CIEC_STRING &paPARAMS,
-                   const T &paOUT,
-                   CIEC_BOOL &paQO,
-                   CIEC_STRING &paSTATUS) {
+      void evt_REQ(
+          const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, const T &paOUT, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
         var_QI = paQI;
         var_PARAMS = paPARAMS;
         var_OUT = paOUT;
