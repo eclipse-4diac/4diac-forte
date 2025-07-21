@@ -78,6 +78,10 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
   return false;
 }
 
+CIEC_ANY *CGenBitBase::getDI(size_t paDINum) {
+  return &mGenDIs[paDINum];
+}
+
 CIEC_ANY *CGenBitBase::getDO(size_t paDONum) {
   return (paDONum == 0) ? &var_OUT : nullptr;
 }

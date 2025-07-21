@@ -40,6 +40,7 @@ class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
       return 1;
     }
 
+    CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId paDONum) override;
