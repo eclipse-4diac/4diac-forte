@@ -66,7 +66,7 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
   if (numDIs < CFunctionBlock::scmMaxInterfaceEvents) {
 
     // create the data inputs
-    generateGenericInterfacePointNameArray("IN_", mDataInputNames, numDIs);
+    generateGenericInterfacePointNameArray("IN", mDataInputNames, numDIs);
 
     // setup the interface Specification
     paInterfaceSpec.mEINames = cEventInputNames;
