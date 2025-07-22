@@ -38,8 +38,8 @@ class CEventChainExecutionThread;
 class CTimerHandler;
 class CDevice;
 
-#ifdef FORTE_SUPPORT_MONITORING
 #include "core/mgmcmdstruct.h"
+
 namespace forte {
   class IPlugPin;
   class ISocketPin;
@@ -48,7 +48,6 @@ namespace forte {
     class CMonitoringHandler;
   }
 } // namespace forte
-#endif // FORTE_SUPPORT_MONITORING
 
 //! Datatype for indicating an absolut port num
 using TAbsDataPortNum = size_t;
@@ -228,10 +227,8 @@ class CFunctionBlock : public forte::core::CFBContainer {
       if (E_FBStates::Running == getState()) {
         if (paEIID < getFBInterfaceSpec().getNumEIs()) {
           readInputData(paEIID);
-#ifdef FORTE_SUPPORT_MONITORING
           // Count Event for monitoring
           mEventMonitorCount[paEIID]++;
-#endif // FORTE_SUPPORT_MONITORING
         }
         executeEvent(paEIID, paExecEnv);
       }
@@ -336,7 +333,6 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     CConnection::Wrapper getOutputConnection(std::span<const CStringDictionary::TStringId> paSrcNameList) override;
 
-#ifdef FORTE_SUPPORT_MONITORING
     TForteUInt32 &getEIMonitorData(TEventID paEIID);
 
     TForteUInt32 &getEOMonitorData(TEventID paEOID);
@@ -348,8 +344,6 @@ class CFunctionBlock : public forte::core::CFBContainer {
     bool getForce(TAbsDataPortNum paAbsDataPortNum) const {
       return mForces[paAbsDataPortNum];
     }
-
-#endif // FORTE_SUPPORT_MONITORING
 
     virtual void toString(std::string &paTargetBuf) const;
 
@@ -417,11 +411,9 @@ class CFunctionBlock : public forte::core::CFBContainer {
         writeOutputData(paEO);
         getEOConUnchecked(static_cast<TPortId>(paEO))->triggerEvent(paECET);
 
-#ifdef FORTE_SUPPORT_MONITORING
         // Count Event for monitoring, use size and number of EOs for performance reason so that only one value has to
         // be gathered from the interface spec
         mEventMonitorCount[mEventMonitorCount.size() - numEOs + paEO]++;
-#endif // FORTE_SUPPORT_MONITORING
       }
     }
 
@@ -435,13 +427,9 @@ class CFunctionBlock : public forte::core::CFBContainer {
       if (!paConn) {
         return;
       }
-#ifdef FORTE_SUPPORT_MONITORING
       if (!mForces[paAbsDataPortNum]) {
-#endif // FORTE_SUPPORT_MONITORING
         paConn->readData(paValue);
-#ifdef FORTE_SUPPORT_MONITORING
       }
-#endif // FORTE_SUPPORT_MONITORING
 #ifdef FORTE_TRACE_CTF
       traceReadData(paAbsDataPortNum, paValue);
 #endif // FORTE_TRACE_CTF
@@ -455,16 +443,12 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     template<typename T, typename U>
     void writeData(TAbsDataPortNum paAbsDataPortNum, T &paValue, U &paConn) {
-#ifdef FORTE_SUPPORT_MONITORING
       if (!mForces[paAbsDataPortNum]) {
-#endif // FORTE_SUPPORT_MONITORING
         paConn.writeData(paValue);
-#ifdef FORTE_SUPPORT_MONITORING
       } else {
         // when forcing we write back the value from the connection to keep the forced value on the output
         paConn.readData(paValue);
       }
-#endif // FORTE_SUPPORT_MONITORING
 #ifdef FORTE_TRACE_CTF
       traceWriteData(paAbsDataPortNum - mInterfaceSpec.getNumDIs(), paValue);
 #endif // FORTE_TRACE_CTF
@@ -539,10 +523,9 @@ class CFunctionBlock : public forte::core::CFBContainer {
       }
     }
 
-#ifdef FORTE_SUPPORT_MONITORING
     void setupEventMonitoringData();
     void freeEventMonitoringData();
-#endif
+
   private:
     bool isFB() override {
       return true;
@@ -581,12 +564,10 @@ class CFunctionBlock : public forte::core::CFBContainer {
     constexpr static char csmToStringSeparator[] = ", ";
 
   private:
-#ifdef FORTE_SUPPORT_MONITORING
     //! vector for storing the event counts for input and output events together, first inputs then outputs
     std::vector<TForteUInt32> mEventMonitorCount;
     //! vector of bools for determining force state of data inputs, data outputs, and var in outs in that order
     std::vector<bool> mForces;
-#endif
 
 #ifdef FORTE_TRACE_CTF
     void traceInputEvent(TEventID paEIID);
@@ -615,9 +596,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     bool mDeletable;
 
-#ifdef FORTE_SUPPORT_MONITORING
     friend class forte::core::CMonitoringHandler;
-#endif // FORTE_SUPPORT_MONITORING
 
 #ifdef FORTE_FMU
     friend class fmuInstance;

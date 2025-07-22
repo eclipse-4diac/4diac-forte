@@ -21,9 +21,7 @@
 #include "core/fbcontainer.h"
 #include "core/funcbloc.h"
 
-#ifdef FORTE_SUPPORT_MONITORING
 #include "core/monitoring.h"
-#endif
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 class CLuaEngine;
@@ -108,11 +106,9 @@ class CResource : public CFunctionBlock {
     virtual EMGMResponse
     writeValue(forte::core::TNameIdentifier &paNameList, const std::string &paValue, bool paForce = false);
 
-#ifdef FORTE_SUPPORT_MONITORING
     forte::core::CMonitoringHandler &getMonitoringHandler() {
       return mMonitoringHandler;
     }
-#endif
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
     CLuaEngine *getLuaEngine() {
@@ -247,9 +243,7 @@ class CResource : public CFunctionBlock {
      */
     CEventChainExecutionThread *mResourceEventExecution;
 
-#ifdef FORTE_SUPPORT_MONITORING
     forte::core::CMonitoringHandler mMonitoringHandler;
-#endif // #ifdef FORTE_SUPPORT_MONITORING
 
 #ifdef FORTE_TRACE_CTF
     CForteTracer mTracer;

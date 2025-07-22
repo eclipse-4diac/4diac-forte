@@ -43,9 +43,6 @@ mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
 add_library(forte-global INTERFACE)
 link_libraries(forte-global)
 
-# TODO: this might be removed in the near future
-target_compile_definitions(forte-global INTERFACE FORTE_SUPPORT_MONITORING)
-
 #######################################################################################
 # Determine log level
 #######################################################################################

@@ -244,7 +244,6 @@ enum class EMGMCommandType : uint8_t {
    */
   Reset = 0x08,
 
-#ifdef FORTE_SUPPORT_MONITORING
   MonitoringGroup = 0x0A,
   MonitoringAddWatch = 0x1A,
   MonitoringRemoveWatch = 0x2A,
@@ -253,7 +252,6 @@ enum class EMGMCommandType : uint8_t {
   MonitoringClearForce = 0x6A,
   MonitoringTriggerEvent = 0x7A,
   MonitoringResetEventCount = 0x8A,
-#endif // FORTE_SUPPORT_MONITORING
 
   /*! \brief invalid command: some of the data could not be parsed
    */

@@ -49,17 +49,13 @@ bool CFunctionBlock::initialize() {
   if (!CFBContainer::initialize()) {
     return false;
   }
-#ifdef FORTE_SUPPORT_MONITORING
   setupEventMonitoringData();
-#endif // FORTE_SUPPORT_MONITORING
   setupInputConnectionTrackingData();
   return true;
 }
 
 CFunctionBlock::~CFunctionBlock() {
-#ifdef FORTE_SUPPORT_MONITORING
   freeEventMonitoringData();
-#endif // FORTE_SUPPORT_MONITORING
 }
 
 void CFunctionBlock::deinitialize() {
@@ -388,7 +384,6 @@ CFunctionBlock::getOutputConnection(const std::span<const CStringDictionary::TSt
 
 //********************************** below here are monitoring specific functions
 //**********************************************************
-#ifdef FORTE_SUPPORT_MONITORING
 void CFunctionBlock::setupEventMonitoringData() {
   freeEventMonitoringData();
   mEventMonitorCount.resize(getFBInterfaceSpec().getNumEIs() + getFBInterfaceSpec().getNumEOs());
@@ -444,8 +439,6 @@ void CFunctionBlock::setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValu
     }
   }
 }
-
-#endif // FORTE_SUPPORT_MONITORING
 
 void CFunctionBlock::toString(std::string &paTargetBuf) const {
   paTargetBuf += '(';

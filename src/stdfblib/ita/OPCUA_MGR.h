@@ -237,9 +237,6 @@ class OPCUA_MGR {
     static char smQueryGlobalConstTypeDisplayName[];
     static char smQueryGlobalConstTypeDescription[];
 
-/* FORTE Monitoring */
-#ifdef FORTE_SUPPORT_MONITORING
-
     /* Add Watch */
     static char smAddWatchMethodName[];
     static char smAddWatchArgName[];
@@ -284,8 +281,6 @@ class OPCUA_MGR {
     static char smClearForceArgDescription[];
     static char smClearForceAttrDisplayName[];
     static char smClearForceAttrDescription[];
-
-#endif // FORTE_SUPPORT_MONITORING
 
     static const std::map<EMGMResponse, UA_StatusCode> scResponseMap;
 
@@ -652,8 +647,6 @@ class OPCUA_MGR {
 
     /* FORTE Monitoring */
 
-#ifdef FORTE_SUPPORT_MONITORING
-
     EMGMResponse addAddWatchMethod(UA_Server *paServer);
     static UA_StatusCode onAddWatch(UA_Server *server,
                                     const UA_NodeId *sessionId,
@@ -732,10 +725,7 @@ class OPCUA_MGR {
                                       size_t outputSize,
                                       UA_Variant *output);
 
-#endif // FORTE_SUPPORT_MONITORING
-
     /* Helpers */
-
     EMGMResponse addMethodNode(UA_Server *paServer,
                                char *paMethodName,
                                UA_NodeId paParentNodeId,

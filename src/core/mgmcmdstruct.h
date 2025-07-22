@@ -75,10 +75,8 @@ namespace forte {
         /*\brief pointer to the ID to generate the correct response */
         char *mID;
 
-#ifdef FORTE_SUPPORT_MONITORING
         /*\brief pointer to the response to generate the correct response */
         std::string mMonitorResponse;
-#endif
     };
 
   } // namespace core

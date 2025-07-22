@@ -353,15 +353,10 @@ void CGenFunctionBlock<T>::setupFBInterface() {
 
   T::setupInputConnectionTrackingData();
 
-#ifdef FORTE_SUPPORT_MONITORING
   T::setupEventMonitoringData();
-#endif
 }
 
 template<class T>
 void CGenFunctionBlock<T>::freeFBInterfaceData() {
-
-#ifdef FORTE_SUPPORT_MONITORING
   T::freeEventMonitoringData();
-#endif // FORTE_SUPPORT_MONITORING
 }

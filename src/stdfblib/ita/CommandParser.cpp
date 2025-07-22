@@ -33,9 +33,7 @@ namespace forte::ita {
       mCommand.mAdditionalParams.clear();
       mCommand.mFirstParam.clear();
       mCommand.mSecondParam.clear();
-#ifdef FORTE_SUPPORT_MONITORING
       mCommand.mMonitorResponse.clear();
-#endif // FORTE_SUPPORT_MONITORING
 
       mCommand.mDestination =
           (strlen(paDest) != 0) ? CStringDictionary::insert(paDest) : CStringDictionary::scmInvalidStringId;
@@ -82,12 +80,10 @@ namespace forte::ita {
 
   void CommandParser::generateResponse(CIEC_STRING &paResponse) {
     paResponse.clear();
-#ifdef FORTE_SUPPORT_MONITORING
     if (!mCommand.mMonitorResponse.empty()) {
       generateMonitorResponse(paResponse);
       return;
     }
-#endif // FORTE_SUPPORT_MONITORING
 
     if (!mCommand.mAdditionalParams.empty()) {
       generateLongResponse(paResponse);
@@ -347,13 +343,11 @@ namespace forte::ita {
             mCommand.mCMD = EMGMCommandType::CreateConnection;
           }
           break;
-#ifdef FORTE_SUPPORT_MONITORING
         case 'W': // we have an Watch to Add
           if (parseMonitoringData(paRequestPartLeft)) {
             mCommand.mCMD = EMGMCommandType::MonitoringAddWatch;
           }
           break;
-#endif // FORTE_SUPPORT_MONITORING
         default: break;
       }
     }
@@ -373,13 +367,11 @@ namespace forte::ita {
             mCommand.mCMD = EMGMCommandType::DeleteConnection;
           }
           break;
-#ifdef FORTE_SUPPORT_MONITORING
         case 'W': // we have an Watch to remove
           if (parseMonitoringData(paRequestPartLeft)) {
             mCommand.mCMD = EMGMCommandType::MonitoringRemoveWatch;
           }
           break;
-#endif // FORTE_SUPPORT_MONITORING
         default: break;
       }
     }
@@ -396,14 +388,11 @@ namespace forte::ita {
   void CommandParser::parseReadData(char *paRequestPartLeft) {
     mCommand.mCMD = EMGMCommandType::INVALID;
     if (nullptr != paRequestPartLeft) {
-#ifdef FORTE_SUPPORT_MONITORING
       if ('W' == paRequestPartLeft[0]) {
         mCommand.mCMD = EMGMCommandType::MonitoringReadWatches;
-      } else
-#endif // FORTE_SUPPORT_MONITORING
-        if (parseConnectionData(paRequestPartLeft)) {
-          mCommand.mCMD = EMGMCommandType::Read;
-        }
+      } else if (parseConnectionData(paRequestPartLeft)) {
+        mCommand.mCMD = EMGMCommandType::Read;
+      }
     }
   }
 
@@ -411,7 +400,6 @@ namespace forte::ita {
     // We need an additional xml connection token parse if it is an connection definition
     mCommand.mCMD = EMGMCommandType::INVALID;
     if (nullptr != paRequestPartLeft && parseWriteConnectionData(paRequestPartLeft)) {
-#ifdef FORTE_SUPPORT_MONITORING
       char *pch = strstr(paRequestPartLeft, "force=\"");
       if (nullptr != pch) {
         if (!strncmp(&pch[7], "true", sizeof("true") - 1)) {
@@ -429,7 +417,6 @@ namespace forte::ita {
                   (('r' == mCommand.mAdditionalParams[2]) || ('R' == mCommand.mAdditionalParams[2])))) {
         mCommand.mCMD = EMGMCommandType::MonitoringResetEventCount;
       } else
-#endif // FORTE_SUPPORT_MONITORING
         mCommand.mCMD = EMGMCommandType::Write;
     }
   }
@@ -558,8 +545,6 @@ namespace forte::ita {
     }
   }
 
-#ifdef FORTE_SUPPORT_MONITORING
-
   bool CommandParser::parseMonitoringData(char *paRequestPartLeft) {
     bool bRetVal = false;
     if (!strncmp("Watch Source=\"", paRequestPartLeft, sizeof("Watch Source=\"") - 1)) {
@@ -592,7 +577,5 @@ namespace forte::ita {
       paResponse.append("\n</Response>");
     }
   }
-
-#endif // FORTE_SUPPORT_MONITORING
 
 } // namespace forte::ita

@@ -123,10 +123,8 @@ namespace forte::ita {
                         forte::core::TNameIdentifier &paIdentifier,
                         std::string &paTypeHash);
 
-#ifdef FORTE_SUPPORT_MONITORING
       bool parseMonitoringData(char *paRequestPartLeft);
       void generateMonitorResponse(CIEC_STRING &paResponse);
-#endif // FORTE_SUPPORT_MONITORING
 
       /*! \brief Generate a short response string according to the previous executed command
        *

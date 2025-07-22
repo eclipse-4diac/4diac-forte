@@ -259,11 +259,8 @@ CResource::CResource(forte::core::CFBContainer &paDevice,
                      const SFBInterfaceSpec &paInterfaceSpec,
                      const CStringDictionary::TStringId paInstanceNameId) :
     CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId),
-    mResourceEventExecution(EcetFactory::createEcet())
-#ifdef FORTE_SUPPORT_MONITORING
-    ,
+    mResourceEventExecution(EcetFactory::createEcet()),
     mMonitoringHandler(*this)
-#endif
 #ifdef FORTE_TRACE_CTF
     ,
     mTracer(paInstanceNameId, FORTE_TRACE_CTF_BUFFER_SIZE)
@@ -273,11 +270,8 @@ CResource::CResource(forte::core::CFBContainer &paDevice,
 
 CResource::CResource(const SFBInterfaceSpec &paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
     CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId),
-    mResourceEventExecution(nullptr)
-#ifdef FORTE_SUPPORT_MONITORING
-    ,
+    mResourceEventExecution(nullptr),
     mMonitoringHandler(*this)
-#endif
 #ifdef FORTE_TRACE_CTF
     ,
     mTracer(paInstanceNameId, FORTE_TRACE_CTF_BUFFER_SIZE)
@@ -362,13 +356,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
                                                       paCommand.mAdditionalParams);
         break;
       case EMGMCommandType::QueryConnection: retVal = queryConnections(paCommand.mAdditionalParams, *this); break;
-      default:
-#ifdef FORTE_SUPPORT_MONITORING
-        retVal = mMonitoringHandler.executeMonitoringCommand(paCommand);
-#else
-        retVal = EMGMResponse::UnsupportedCmd;
-#endif
-        break;
+      default: retVal = mMonitoringHandler.executeMonitoringCommand(paCommand); break;
     }
   }
   return retVal;

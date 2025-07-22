@@ -203,8 +203,6 @@ char OPCUA_MGR::smQueryGlobalConstTypeOutArgDescription[] = "Query GlobalConstTy
 char OPCUA_MGR::smQueryGlobalConstTypeDisplayName[] = "Query GlobalConstType";
 char OPCUA_MGR::smQueryGlobalConstTypeDescription[] = "Query GlobalConstType";
 
-#ifdef FORTE_SUPPORT_MONITORING
-
 /* Add Watch */
 char OPCUA_MGR::smAddWatchMethodName[] = "addWatch";
 char OPCUA_MGR::smAddWatchArgName[] = "FB Port";
@@ -249,8 +247,6 @@ char OPCUA_MGR::smClearForceArgName[] = "FB Port";
 char OPCUA_MGR::smClearForceArgDescription[] = "Fully qualified name of FB Port";
 char OPCUA_MGR::smClearForceAttrDisplayName[] = "Clear Force";
 char OPCUA_MGR::smClearForceAttrDescription[] = "Clear Force";
-
-#endif // FORTE_SUPPORT_MONITORING
 
 /* Initialize UA Status Codes */
 const std::map<EMGMResponse, UA_StatusCode> OPCUA_MGR::scResponseMap = {
@@ -332,10 +328,8 @@ EMGMResponse OPCUA_MGR::createIEC61499MgmtObject(UA_Server *paServer) {
     return eRetVal;
   if (addQueryGlobalConstTypeMethod(paServer) != EMGMResponse::Ready)
     return eRetVal;
-#ifdef FORTE_SUPPORT_MONITORING
   if (addReadWatchesMethod(paServer) != EMGMResponse::Ready)
     return eRetVal;
-#endif // FORTE_SUPPORT_MONITORING
   if (addExtraMethods(paServer, mMgmtTypeId, mExtraMgmMethods) != EMGMResponse::Ready)
     return eRetVal;
   return addMgmtObjectInstance();
@@ -395,7 +389,6 @@ EMGMResponse OPCUA_MGR::createIEC61499ResourceObjectType(UA_Server *paServer) {
     return eRetVal;
   if (addDeleteConnectionMethod(paServer) != EMGMResponse::Ready)
     return eRetVal;
-#ifdef FORTE_SUPPORT_MONITORING
   if (addAddWatchMethod(paServer) != EMGMResponse::Ready)
     return eRetVal;
   if (addRemoveWatchMethod(paServer) != EMGMResponse::Ready)
@@ -406,7 +399,6 @@ EMGMResponse OPCUA_MGR::createIEC61499ResourceObjectType(UA_Server *paServer) {
     return eRetVal;
   if (addClearForceMethod(paServer) != EMGMResponse::Ready)
     return eRetVal;
-#endif // FORTE_SUPPORT_MONITORING
   if (addExtraMethods(paServer, mResourceTypeId, mExtraResourceMethods) != EMGMResponse::Ready)
     return eRetVal;
   return EMGMResponse::Ready;
@@ -1334,9 +1326,6 @@ UA_StatusCode OPCUA_MGR::onQueryGlobalConstType(UA_Server *,
   return status;
 }
 
-/* FORTE Monitoring */
-#ifdef FORTE_SUPPORT_MONITORING
-
 EMGMResponse OPCUA_MGR::addAddWatchMethod(UA_Server *paServer) {
   UA_Argument inputArgument;
   initArgument(inputArgument, UA_TYPES_STRING, smAddWatchArgName, smAddWatchArgDescription);
@@ -1556,8 +1545,6 @@ UA_StatusCode OPCUA_MGR::onClearForce(UA_Server *,
   return scResponseMap.find(eRetVal)->second;
 }
 
-#endif // FORTE_SUPPORT_MONITORING
-
 /* Helpers */
 
 EMGMResponse OPCUA_MGR::addMethodNode(UA_Server *paServer,
@@ -1614,9 +1601,7 @@ void OPCUA_MGR::clearMGMCommand() {
   mCommand.mFirstParam.clear();
   mCommand.mSecondParam.clear();
   mCommand.mAdditionalParams.clear();
-#ifdef FORTE_SUPPORT_MONITORING
   mCommand.mMonitorResponse.clear();
-#endif // FORTE_SUPPORT_MONITORING
 }
 
 void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD,
