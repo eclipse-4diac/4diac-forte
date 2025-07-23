@@ -161,8 +161,6 @@ void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort, U
   paServerStrings.mHostname = std::string("opc.tcp://");
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
   paServerStrings.mHostname.append(FORTE_COM_OPC_UA_CUSTOM_HOSTNAME);
-  paServerStrings.mHostname.append("-"s);
-  paServerStrings.mHostname.append(helperBuffer);
   paServerStrings.mAppURI.append(paServerStrings.mHostname);
 #else
   paServerStrings.mAppURI.append(helperBuffer);
