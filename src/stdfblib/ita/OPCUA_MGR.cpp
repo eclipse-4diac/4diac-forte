@@ -184,6 +184,8 @@ char OPCUA_MGR::smQueryResourcesDescription[] = "Query Resources";
 
 /* Query FB Type */
 char OPCUA_MGR::smQueryFBTypeMethodName[] = "queryFBType";
+char OPCUA_MGR::smQueryFBTypeArgName[] = "FB Type Name";
+char OPCUA_MGR::smQueryFBTypeArgDescription[] = "Hashed Type Name of FB";
 char OPCUA_MGR::smQueryFBTypeOutArgName[] = "Response";
 char OPCUA_MGR::smQueryFBTypeOutArgDescription[] = "Query FBType Response";
 char OPCUA_MGR::smQueryFBTypeDisplayName[] = "Query FBType";
@@ -191,6 +193,8 @@ char OPCUA_MGR::smQueryFBTypeDescription[] = "Query FBType";
 
 /* Query Data Type */
 char OPCUA_MGR::smQueryDataTypeMethodName[] = "queryDataType";
+char OPCUA_MGR::smQueryDataTypeArgName[] = "DataType Name";
+char OPCUA_MGR::smQueryDataTypeArgDescription[] = "Hashed DataType Name";
 char OPCUA_MGR::smQueryDataTypeOutArgName[] = "Response";
 char OPCUA_MGR::smQueryDataTypeOutArgDescription[] = "Query DataType Response";
 char OPCUA_MGR::smQueryDataTypeDisplayName[] = "Query DataType";
@@ -198,6 +202,8 @@ char OPCUA_MGR::smQueryDataTypeDescription[] = "Query DataType";
 
 /* Query Global Const  */
 char OPCUA_MGR::smQueryGlobalConstTypeMethodName[] = "queryGlobalConstType";
+char OPCUA_MGR::smQueryGlobalConstTypeArgName[] = "GlobalConstType Name";
+char OPCUA_MGR::smQueryGlobalConstTypeArgDescription[] = "Hashed GlobalConstType Name";
 char OPCUA_MGR::smQueryGlobalConstTypeOutArgName[] = "Response";
 char OPCUA_MGR::smQueryGlobalConstTypeOutArgDescription[] = "Query GlobalConstType Response";
 char OPCUA_MGR::smQueryGlobalConstTypeDisplayName[] = "Query GlobalConstType";
@@ -1216,11 +1222,13 @@ UA_StatusCode OPCUA_MGR::onQueryResources(UA_Server *,
 }
 
 EMGMResponse OPCUA_MGR::addQueryFBTypeMethod(UA_Server *paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smQueryFBTypeArgName, smQueryFBTypeArgDescription);
   UA_Argument outputArgument;
   initArgument(outputArgument, UA_TYPES_STRING, smQueryFBTypeOutArgName, smQueryFBTypeOutArgDescription);
   UA_MethodAttributes queryFBTypeAttr = createAttribute(smQueryFBTypeDisplayName, smQueryFBTypeDescription);
-  return addMethodNode(paServer, smQueryFBTypeMethodName, mMgmtTypeId, queryFBTypeAttr, nullptr, 0, &outputArgument, 1,
-                       &onQueryFBType);
+  return addMethodNode(paServer, smQueryFBTypeMethodName, mMgmtTypeId, queryFBTypeAttr, &inputArgument, 1,
+                       &outputArgument, 1, &onQueryFBType);
 }
 
 UA_StatusCode OPCUA_MGR::onQueryFBType(UA_Server *,
@@ -1231,15 +1239,21 @@ UA_StatusCode OPCUA_MGR::onQueryFBType(UA_Server *,
                                        const UA_NodeId *,
                                        void *,
                                        size_t,
-                                       const UA_Variant *,
+                                       const UA_Variant *input,
                                        size_t,
                                        UA_Variant *output) {
   if (!methodContext) {
     return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string_view hashedFBTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)));
+  std::string fbTypeName;
+  std::string fbTypeHash;
+  parseHashedTypeName(hashedFBTypeName, fbTypeName, fbTypeHash);
+
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::QueryFBTypes, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::QueryFBType, CStringDictionary::scmInvalidStringId, fbTypeHash.c_str(),
+                       fbTypeName.c_str(), nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   int status = scResponseMap.find(eRetVal)->second;
   if (status != UA_STATUSCODE_GOOD) {
@@ -1252,11 +1266,13 @@ UA_StatusCode OPCUA_MGR::onQueryFBType(UA_Server *,
 }
 
 EMGMResponse OPCUA_MGR::addQueryDataTypeMethod(UA_Server *paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smQueryDataTypeArgName, smQueryDataTypeArgDescription);
   UA_Argument outputArgument;
   initArgument(outputArgument, UA_TYPES_STRING, smQueryDataTypeOutArgName, smQueryDataTypeOutArgDescription);
   UA_MethodAttributes queryDataTypeAttr = createAttribute(smQueryDataTypeDisplayName, smQueryDataTypeDescription);
-  return addMethodNode(paServer, smQueryDataTypeMethodName, mMgmtTypeId, queryDataTypeAttr, nullptr, 0, &outputArgument,
-                       1, &onQueryDataType);
+  return addMethodNode(paServer, smQueryDataTypeMethodName, mMgmtTypeId, queryDataTypeAttr, &inputArgument, 1,
+                       &outputArgument, 1, &onQueryDataType);
 }
 
 UA_StatusCode OPCUA_MGR::onQueryDataType(UA_Server *,
@@ -1267,15 +1283,21 @@ UA_StatusCode OPCUA_MGR::onQueryDataType(UA_Server *,
                                          const UA_NodeId *,
                                          void *,
                                          size_t,
-                                         const UA_Variant *,
+                                         const UA_Variant *input,
                                          size_t,
                                          UA_Variant *output) {
   if (!methodContext) {
     return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string_view hashedDataTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)));
+  std::string dataTypeName;
+  std::string dataTypeHash;
+  parseHashedTypeName(hashedDataTypeName, dataTypeName, dataTypeHash);
+
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::QueryDTTypes, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::QueryDTType, CStringDictionary::scmInvalidStringId, dataTypeHash.c_str(),
+                       dataTypeName.c_str(), nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   int status = scResponseMap.find(eRetVal)->second;
   if (status != UA_STATUSCODE_GOOD) {
@@ -1288,13 +1310,15 @@ UA_StatusCode OPCUA_MGR::onQueryDataType(UA_Server *,
 }
 
 EMGMResponse OPCUA_MGR::addQueryGlobalConstTypeMethod(UA_Server *paServer) {
+  UA_Argument inputArgument;
+  initArgument(inputArgument, UA_TYPES_STRING, smQueryGlobalConstTypeArgName, smQueryGlobalConstTypeArgDescription);
   UA_Argument outputArgument;
   initArgument(outputArgument, UA_TYPES_STRING, smQueryGlobalConstTypeOutArgName,
                smQueryGlobalConstTypeOutArgDescription);
   UA_MethodAttributes queryGlobalConstTypeAttr =
       createAttribute(smQueryGlobalConstTypeDisplayName, smQueryGlobalConstTypeDescription);
-  return addMethodNode(paServer, smQueryGlobalConstTypeMethodName, mMgmtTypeId, queryGlobalConstTypeAttr, nullptr, 0,
-                       &outputArgument, 1, &onQueryGlobalConstType);
+  return addMethodNode(paServer, smQueryGlobalConstTypeMethodName, mMgmtTypeId, queryGlobalConstTypeAttr,
+                       &inputArgument, 1, &outputArgument, 1, &onQueryGlobalConstType);
 }
 
 UA_StatusCode OPCUA_MGR::onQueryGlobalConstType(UA_Server *,
@@ -1305,16 +1329,21 @@ UA_StatusCode OPCUA_MGR::onQueryGlobalConstType(UA_Server *,
                                                 const UA_NodeId *,
                                                 void *,
                                                 size_t,
-                                                const UA_Variant *,
+                                                const UA_Variant *input,
                                                 size_t,
                                                 UA_Variant *output) {
   if (!methodContext) {
     return UA_STATUSCODE_BADUNKNOWNRESPONSE;
   }
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+  const std::string_view hashedGlobalConstTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)));
+  std::string globalConstTypeName;
+  std::string globalConstTypeHash;
+  parseHashedTypeName(hashedGlobalConstTypeName, globalConstTypeName, globalConstTypeHash);
+
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::QueryGlobalConstType, CStringDictionary::scmInvalidStringId, nullptr, nullptr,
-                       nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::QueryGlobalConstType, CStringDictionary::scmInvalidStringId,
+                       globalConstTypeHash.c_str(), globalConstTypeName.c_str(), nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   int status = scResponseMap.find(eRetVal)->second;
   if (status != UA_STATUSCODE_GOOD) {
@@ -1663,6 +1692,18 @@ void OPCUA_MGR::parseDestinationName(const std::string &paDestination, std::vect
     index = dst.find_first_of(".");
   }
   paFbName.push_back(dst.substr(0, index));
+}
+
+void OPCUA_MGR::parseHashedTypeName(const std::string_view paHashedTypeName,
+                                    std::string &paTypeName,
+                                    std::string &paTypeHash) {
+  size_t hashSeparator = paHashedTypeName.find('#');
+  if (hashSeparator != std::string::npos) {
+    paTypeName = paHashedTypeName.substr(0, hashSeparator);
+    paTypeHash = paHashedTypeName.substr(hashSeparator + 1);
+  } else {
+    paTypeName = paHashedTypeName;
+  }
 }
 
 void OPCUA_MGR::addExtraMgmMethod(const MethodInformation &paMethod) {

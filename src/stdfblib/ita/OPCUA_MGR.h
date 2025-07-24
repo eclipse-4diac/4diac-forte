@@ -759,6 +759,9 @@ class OPCUA_MGR {
 
     static void parseDestinationName(const std::string &paDestination, std::vector<std::string> &paTarget);
 
+    static void
+    parseHashedTypeName(const std::string_view paHashedTypeName, std::string &paTypeName, std::string &paTypeHash);
+
     EMGMResponse
     addExtraMethods(UA_Server *paServer, UA_NodeId paParentNodeId, std::vector<MethodInformation> &paMethods);
 };
