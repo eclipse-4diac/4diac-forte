@@ -46,11 +46,11 @@ void CGenBitBase::writeOutputData(TEventID) {
 }
 
 bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
-  const char *pcPos = strrchr(paConfigString, '_');
+  const char *pcPos = strchr(paConfigString, '_');
   size_t numDIs = 0;
   if (nullptr != pcPos) {
-    pcPos++;
-    // we have an underscore and it is the first underscore after AND
+    pcPos++; // move after underscore
+    //we have an underscore and it is the first underscore after AND/OR/XOR
     numDIs = static_cast<TPortId>(forte::core::util::strtoul(pcPos, nullptr, 10));
     DEVLOG_DEBUG("DIs: %d;\n", numDIs);
   } else {
