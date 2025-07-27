@@ -41,7 +41,7 @@ endmacro()
 add_subdirectory(posix)
 # add_subdirectory(rcX)
 # add_subdirectory(vxworks)
-# add_subdirectory(fake_time)
+add_subdirectory(fake_time)
 add_subdirectory(win32)
 # add_subdirectory(zephyr)
 

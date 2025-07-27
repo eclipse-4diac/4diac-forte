@@ -31,8 +31,8 @@ namespace forte::ita::multi::utils {
   OPCUA_MGR *getOpcuaMgr(CDevice &paDevice);
 
   struct FactoriesSettings {
-      EcetFactory::AvailableEcets mEcet{EcetFactory::AvailableEcets::standard};
-      TimerHandlerFactory::AvailableTimers mTimer{TimerHandlerFactory::AvailableTimers::standard};
+      EcetFactory::AvailableEcets mEcet{EcetFactory::AvailableEcets::CEventChainExecutionThread};
+      TimerHandlerFactory::AvailableTimers mTimer{TimerHandlerFactory::AvailableTimers::CPCTimerHandler};
   };
 
   /**

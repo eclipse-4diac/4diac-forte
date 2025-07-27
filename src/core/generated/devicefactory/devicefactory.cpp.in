@@ -12,56 +12,69 @@
 
 #include "generated/devicefactory.h"
 
+// clang-format off
 ${includes}
+ //clang-format on
 
 #ifdef FORTE_MULTIPLE_DEVICES
 
 namespace DeviceFactory {
 
-enum class AvailableDevices {
+  enum class AvailableDevices {
 #define ENTRY(name) \
-  name,
-  ${entries}
-#undef ENTRY
-  len
-};
-
-AvailableDevices deviceToCreate{AvailableDevices::${default}};
-
-bool setDeviceToCreate(std::string paDevice){
-#define ENTRY(name) \
-  if (paDevice == #name) deviceToCreate = AvailableDevices::name;
-  ${entries}
-#undef ENTRY
-  return false;
-}
-
-std::string getAvailableDevices() {
-  return std::string(
-#define ENTRY(name) \
-    " " #name
+    name,
+// clang-format off
     ${entries}
+// clang-format on
 #undef ENTRY
-  );
-}
+    len
+  };
 
-std::string getCurrentDeviceToCreate(){
-#define ENTRY(name) \
-  if (deviceToCreate == AvailableDevices::name) return #name;
-  ${entries}
+  AvailableDevices deviceToCreate{AvailableDevices::${default}};
+
+  bool setDeviceToCreate(std::string paDevice) {
+#define ENTRY(name)                                                                                                    \
+  if (paDevice == #name) {                                                                                             \
+    deviceToCreate = AvailableDevices::name;                                                                           \
+    return true;                                                                                                       \
+  }
+
+    // clang-format off
+    ${entries}
+    // clang-format on
 #undef ENTRY
-  return "";
-}
+    return false;
+  }
 
-
-std::unique_ptr<CDevice> createDevice(const std::string &paMGRID) {
-#define ENTRY(name) \
-  if (deviceToCreate == AvailableDevices::name) return (paMGRID.length() != 0) ? std::make_unique<name>(paMGRID) : std::make_unique<name>();
-  ${entries}
+  std::string getAvailableDevices() {
+    return std::string(
+#define ENTRY(name) " " #name
+        ${entries}
 #undef ENTRY
-  return nullptr;
-}
+    );
+  }
 
-}
+  std::string getCurrentDeviceToCreate() {
+#define ENTRY(name)                                                                                                    \
+  if (deviceToCreate == AvailableDevices::name)                                                                        \
+    return #name;
+    // clang-format off
+    ${entries}
+    // clang-format on
+#undef ENTRY
+    return "";
+  }
+
+  std::unique_ptr<CDevice> createDevice(const std::string &paMGRID) {
+#define ENTRY(name)                                                                                                    \
+  if (deviceToCreate == AvailableDevices::name)                                                                        \
+    return (paMGRID.length() != 0) ? std::make_unique<name>(paMGRID) : std::make_unique<name>();
+    // clang-format off
+    ${entries}
+    // clang-format on
+#undef ENTRY
+    return nullptr;
+  }
+
+} // namespace DeviceFactory
 #endif
-

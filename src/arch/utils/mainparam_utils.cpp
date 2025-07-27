@@ -20,6 +20,7 @@
 #endif
 
 #include "stdfblib/ita/ForteBootFileLoader.h"
+#include "generated/devicefactory.h"
 
 #ifdef FORTE_COM_HTTP
 #include "com/HTTP/http_handler.h"

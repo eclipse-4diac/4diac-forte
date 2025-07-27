@@ -51,8 +51,8 @@ EMGMResponse ReplayDevice::executeMGMCommand(forte::core::SManagementCMD &paComm
 }
 
 const std::string &ReplayDevice::setInitialState(const std::string &paMGRID) {
-  TimerHandlerFactory::setTimeHandlerNameToCreate(TimerHandlerFactory::AvailableTimers::fakeTimer);
-  EcetFactory::setEcetToCreate(EcetFactory::AvailableEcets::fake);
+  TimerHandlerFactory::setTimeHandlerNameToCreate(TimerHandlerFactory::AvailableTimers::CFakeTimerHandler);
+  EcetFactory::setEcetToCreate(EcetFactory::AvailableEcets::CFakeEventExecutionThread);
   CFlexibleTracer::setTracer(CFlexibleTracer::AvailableTracers::Internal);
   return paMGRID;
 }

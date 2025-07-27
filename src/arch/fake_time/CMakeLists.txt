@@ -10,15 +10,19 @@
 #    Christoph Binder - initial implementation
 #******************************************************************************
 
-if(FORTE_FAKE_TIME)
+option(FORTE_FAKE_TIME "Forte configuration for using simulated progression of time" FALSE)
+mark_as_advanced(FORTE_FAKE_TIME)
+if(NOT FORTE_FAKE_TIME)
+  return()
+endif(NOT FORTE_FAKE_TIME)
 
-  forte_add_definition("-DFORTE_FAKE_TIME")
+add_library(forte-fake-time OBJECT
+    forte_architecture_time.cpp
+    faketimerha.cpp
+)
 
-  forte_add_timerhandler(CFakeTimerHandler faketimerha "fakeTimer")
-  forte_add_sourcefile_hcpp(faketimerha)
+forte_register_timerhandler(CFakeTimerHandler faketimerha.h)
 
-  forte_add_sourcefile_cpp(forte_architecture_time.cpp)
+target_compile_definitions(forte-global INTERFACE FORTE_FAKE_TIME)
 
-  forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-endif(FORTE_FAKE_TIME)
+target_link_libraries(forte PRIVATE forte-fake-time)

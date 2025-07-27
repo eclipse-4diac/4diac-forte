@@ -40,6 +40,7 @@ constexpr auto getNanoSecondsRealtime = getNanoSecondsRealtimeFake;
 constexpr auto forte_time = forte_time_arch;
 constexpr auto getNanoSecondsMonotonic = getNanoSecondsMonotonicArch;
 constexpr auto getNanoSecondsRealtime = getNanoSecondsRealtimeArch;
+
 #endif // FORTE_FAKE_TIME
 
 struct tm *forte_localtime(const time_t *paTime, struct tm *const paResult);

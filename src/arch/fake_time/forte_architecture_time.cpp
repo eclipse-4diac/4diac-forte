@@ -30,7 +30,7 @@ uint_fast64_t jumpFakeForteTime(uint_fast64_t destination) {
 }
 
 uint_fast64_t getNanoSecondsMonotonicFake() {
-  if (TimerHandlerFactory::getTImerHandlerName() == TimerHandlerFactory::AvailableTimers::fakeTimer) {
+  if (TimerHandlerFactory::getTImerHandlerName() == TimerHandlerFactory::AvailableTimers::CFakeTimerHandler) {
     return fakeForteTime *
            (forte::core::constants::cNanosecondsPerSecond / forte::core::constants::cMillisecondsPerSecond); // ms to ns
   }
@@ -38,7 +38,7 @@ uint_fast64_t getNanoSecondsMonotonicFake() {
 }
 
 uint_fast64_t getNanoSecondsRealtimeFake() {
-  if (TimerHandlerFactory::getTImerHandlerName() == TimerHandlerFactory::AvailableTimers::fakeTimer) {
+  if (TimerHandlerFactory::getTImerHandlerName() == TimerHandlerFactory::AvailableTimers::CFakeTimerHandler) {
     return static_cast<uint_fast64_t>(time(0)) * forte::core::constants::cNanosecondsPerSecond +
            fakeForteTime *
                (forte::core::constants::cNanosecondsPerSecond / forte::core::constants::cMillisecondsPerSecond);
@@ -47,7 +47,7 @@ uint_fast64_t getNanoSecondsRealtimeFake() {
 }
 
 time_t forte_time_fake() {
-  if (TimerHandlerFactory::getTImerHandlerName() == TimerHandlerFactory::AvailableTimers::fakeTimer) {
+  if (TimerHandlerFactory::getTImerHandlerName() == TimerHandlerFactory::AvailableTimers::CFakeTimerHandler) {
     return time(nullptr) + fakeForteTime / forte::core::constants::cMillisecondsPerSecond; // time() in s
   }
   return forte_time_arch();

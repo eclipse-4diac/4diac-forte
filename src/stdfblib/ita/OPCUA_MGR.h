@@ -222,6 +222,8 @@ class OPCUA_MGR {
     static char smQueryFBTypeOutArgDescription[];
     static char smQueryFBTypeDisplayName[];
     static char smQueryFBTypeDescription[];
+    static char smQueryFBTypeArgName[];
+    static char smQueryFBTypeArgDescription[];
 
     /* Query Data Type */
     static char smQueryDataTypeMethodName[];
@@ -229,6 +231,8 @@ class OPCUA_MGR {
     static char smQueryDataTypeOutArgDescription[];
     static char smQueryDataTypeDisplayName[];
     static char smQueryDataTypeDescription[];
+    static char smQueryDataTypeArgName[];
+    static char smQueryDataTypeArgDescription[];
 
     /* Query Global Const  */
     static char smQueryGlobalConstTypeMethodName[];
@@ -236,6 +240,8 @@ class OPCUA_MGR {
     static char smQueryGlobalConstTypeOutArgDescription[];
     static char smQueryGlobalConstTypeDisplayName[];
     static char smQueryGlobalConstTypeDescription[];
+    static char smQueryGlobalConstTypeArgName[];
+    static char smQueryGlobalConstTypeArgDescription[];
 
     /* Add Watch */
     static char smAddWatchMethodName[];

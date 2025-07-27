@@ -113,6 +113,6 @@ FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, const std::str
 }
 
 CStringDictionary::TStringId FakeTimeDev::initializeTimer() {
-  TimerHandlerFactory::setTimeHandlerNameToCreate(TimerHandlerFactory::AvailableTimers::fakeTimer);
+  TimerHandlerFactory::setTimeHandlerNameToCreate(TimerHandlerFactory::AvailableTimers::CFakeTimerHandler);
   return CStringDictionary::scmInvalidStringId;
 }

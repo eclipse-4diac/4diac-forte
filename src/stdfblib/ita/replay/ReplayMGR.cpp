@@ -14,7 +14,7 @@
 #include "stdfblib/ita/replay/ReplayMGR.h"
 
 #include "core/ecetFake.h"
-#include "trace/reader/utils.h"
+#include "core/trace/reader/utils.h"
 #include "stdfblib/ita/replay/ReplayDevice.h"
 
 ReplayMGR::ReplayMGR(ReplayDevice &paDevice, OPCUA_MGR &paOpcuaMgr) : mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {

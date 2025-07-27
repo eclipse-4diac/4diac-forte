@@ -1296,7 +1296,7 @@ UA_StatusCode OPCUA_MGR::onQueryDataType(UA_Server *,
   parseHashedTypeName(hashedDataTypeName, dataTypeName, dataTypeHash);
 
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::QueryDTType, CStringDictionary::scmInvalidStringId, dataTypeHash.c_str(),
+  uaMGR->setMGMCommand(EMGMCommandType::QueryDTTypes, CStringDictionary::scmInvalidStringId, dataTypeHash.c_str(),
                        dataTypeName.c_str(), nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   int status = scResponseMap.find(eRetVal)->second;

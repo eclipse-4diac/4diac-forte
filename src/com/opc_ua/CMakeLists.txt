@@ -65,7 +65,7 @@ set(FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
           "Custom hostname which is used for the OPC UA app name and app uri"
 )
 option(FORTE_COM_OPC_UA_ENCRYPTION
-       "The open62541 lilbrary was compiled using encryption" ON
+       "The open62541 lilbrary was compiled using encryption" OFF
 )
 
 set(FORTE_COM_OPC_UA_LIB

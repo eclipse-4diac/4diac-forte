@@ -18,7 +18,7 @@
 
 DebugMGR::DebugMGR(CDevice &paDevice, OPCUA_MGR &paOpcuaMgr) : mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {
   // we need the fake ecet to debug control the device remotely
-  EcetFactory::setEcetToCreate(EcetFactory::AvailableEcets::fake);
+  EcetFactory::setEcetToCreate(EcetFactory::AvailableEcets::CFakeEventExecutionThread);
 }
 
 bool DebugMGR::initialize() {
