@@ -33,7 +33,7 @@ SOCKET forte::com::impl::net::open(const std::string_view paConfigString, const 
     return -1;
   }
 
-  for (const ADDRINFOEXA *rp = result; rp != nullptr; rp = rp->ai_next) {
+  for (const ADDRINFOEXA *rp = result; rp != nullptr; rp = reinterpret_cast<ADDRINFOEXA *>(rp->ai_next)) {
     const SOCKET sock = WSASocketA(rp->ai_family, rp->ai_socktype, rp->ai_protocol, nullptr, 0, WSA_FLAG_OVERLAPPED);
     if (sock == INVALID_SOCKET) {
       continue;
