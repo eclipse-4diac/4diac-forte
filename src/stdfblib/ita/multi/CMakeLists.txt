@@ -19,8 +19,6 @@ if (NOT FORTE_MULTI_DEVICE)
     return()
 endif ()
 
-forte_register_device(MultiDevice)
-
 add_library(forte-stdfblib-ita-multi OBJECT
             MultiMGR.h MultiMGR.cpp MultiDevice.h MultiDevice.cpp utils.h
             utils.cpp

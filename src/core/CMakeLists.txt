@@ -88,6 +88,7 @@ add_library(forte-core OBJECT
             simplefb.cpp
             device.h
             device.cpp
+            devicefactory.h
             devexec.h
             devexec.cpp
             forteinstance.h

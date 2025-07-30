@@ -37,3 +37,19 @@ mark_as_advanced(FORTE_IPLayerRecvBufferSize)
 configure_file(forte_config.h.in
                "${FORTE_GENERATED_FILES_DIR}/forte_config.h"
 )
+
+set(FORTE_DEVICE_FIXED_IMPL
+        "util::factory::DynamicImpl"
+        CACHE STRING "FORTE fixed device implementation"
+)
+mark_as_advanced(FORTE_DEVICE_FIXED_IMPL)
+
+set(FORTE_DEVICE_FIXED_INCLUDE
+        "core/util/factory.h"
+        CACHE STRING "FORTE fixed device include directive"
+)
+mark_as_advanced(FORTE_DEVICE_FIXED_INCLUDE)
+
+configure_file(devicefactory_config.h.in
+        "${FORTE_GENERATED_FILES_DIR}/devicefactory_config.h"
+)

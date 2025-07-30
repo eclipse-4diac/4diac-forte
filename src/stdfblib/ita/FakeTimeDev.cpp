@@ -15,12 +15,14 @@
  *******************************************************************************/
 #include "stdfblib/ita/FakeTimeDev.h"
 
-using namespace forte::core::literals;
 
 #include "core/stringid.h"
+#include "core/devicefactory.h"
 #include "../../arch/fake_time/faketimerha.h"
 
 #include "generated/timerhandlerfactory.h"
+
+using namespace forte::core::literals;
 
 namespace {
   const auto cDataInputNames = std::array{"MGR_ID"_STRID, "FakeTime"_STRID};
@@ -36,14 +38,16 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
+
+  [[maybe_unused]] const forte::core::DeviceFactory::EntryImpl<FakeTimeDev> entry("FakeTime"_STRID);
 } // namespace
 
-FakeTimeDev::FakeTimeDev(const std::string &paMGR_ID) :
+FakeTimeDev::FakeTimeDev(const std::string_view paMGR_ID) :
     CDevice(cFBInterfaceSpec, initializeTimer()),
     conn_MGR_ID(*this, 0, u""_WSTRING),
     conn_FakeTime(*this, 0, 0_TIME),
     MGR("MGR"_STRID, *this) {
-  conn_MGR_ID.getValue().fromString(paMGR_ID.c_str());
+  conn_MGR_ID.getValue().fromString(paMGR_ID.data());
 }
 
 bool FakeTimeDev::initialize() {

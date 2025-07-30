@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2024 Markus Meingast, Johannes Kepler University Linz
+ * Copyright (c) 2025 Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,20 +8,17 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Markus Meingast - initial implementation
+ *    Martin Erich Jobst - initial implementation
  *******************************************************************************/
 
 #pragma once
 
-#include "stdfblib/ita/RMT_DEV.h"
-#include "stdfblib/ita/OPCUA_MGR.h"
+#include "core/device.h"
+#include "core/util/factory.h"
+#include "generated/devicefactory_config.h"
 
-class OPCUA_DEV : public RMT_DEV {
-  public:
-    OPCUA_MGR mOPCUAMgr;
+#include <string_view>
 
-    explicit OPCUA_DEV(std::string_view paMGRID = "localhost:61499");
-    ~OPCUA_DEV() override = default;
-
-    int startDevice() override;
-};
+namespace forte::core {
+  using DeviceFactory = util::factory::Factory<FixedDeviceImpl, CDevice, std::string_view>;
+} // namespace forte::core

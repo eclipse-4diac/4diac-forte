@@ -13,11 +13,18 @@
 
 #include "stdfblib/ita/replay/ReplayDevice.h"
 
+#include "core/devicefactory.h"
 #include "generated/timerhandlerfactory.h"
 #include "generated/ecetfactory.h"
 #include "core/trace/internal/flexibleTracer.h"
 
-ReplayDevice::ReplayDevice(const std::string &paMGRID) :
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::core::DeviceFactory::EntryImpl<ReplayDevice> entry("Replay"_STRID);
+}
+
+ReplayDevice::ReplayDevice(const std::string_view paMGRID) :
     RMT_DEV(setInitialState(paMGRID)),
     mOpcuaMgr(*this),
     mReplayMgr(*this, mOpcuaMgr) {
@@ -50,7 +57,7 @@ EMGMResponse ReplayDevice::executeMGMCommand(forte::core::SManagementCMD &paComm
   return CDevice::executeMGMCommand(paCommand);
 }
 
-const std::string &ReplayDevice::setInitialState(const std::string &paMGRID) {
+const std::string &ReplayDevice::setInitialState(const std::string_view paMGRID) {
   TimerHandlerFactory::setTimeHandlerNameToCreate(TimerHandlerFactory::AvailableTimers::CFakeTimerHandler);
   EcetFactory::setEcetToCreate(EcetFactory::AvailableEcets::CFakeEventExecutionThread);
   CFlexibleTracer::setTracer(CFlexibleTracer::AvailableTracers::Internal);

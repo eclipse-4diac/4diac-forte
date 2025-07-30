@@ -24,7 +24,6 @@ if (NOT FORTE_REPLAY_DEVICE)
 endif ()
 
 target_compile_definitions(forte-global INTERFACE FORTE_REPLAY_DEVICE)
-forte_register_device(ReplayDevice)
 target_link_libraries(forte PUBLIC ${FORTE_TRACE_READER_LIB})
 
 add_library(forte-stdfblib-ita-replay OBJECT

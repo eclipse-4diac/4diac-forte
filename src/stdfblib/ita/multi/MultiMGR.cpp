@@ -15,7 +15,9 @@
 
 #include "stdfblib/ita/multi/MultiDevice.h"
 #include "stdfblib/ita/OPCUA_MGR.h"
-#include "generated/devicefactory.h"
+#include "core/devicefactory.h"
+
+using namespace forte::core::literals;
 
 MultiMGR::MultiMGR(MultiDevice &paDevice, OPCUA_MGR &paOpcuaMgr) : mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {
 }
@@ -54,14 +56,15 @@ void MultiMGR::addSetDefaultDeviceMethod() {
 
   newMethod.mInArguments.push_back(UA_Argument());
 
-  // remove MultiDevice from list of possible devices
-  std::string listOfDevices = DeviceFactory::getAvailableDevices();
-
-  auto startPositionToRemove = listOfDevices.find(MultiDevice::scmMultiDeviceName);
-  listOfDevices.erase(startPositionToRemove, MultiDevice::scmMultiDeviceName.length());
-  startPositionToRemove = listOfDevices.find(";;"); // in case MultiMGR was in the middle of the list
-  if (startPositionToRemove != std::string::npos) {
-    listOfDevices.erase(startPositionToRemove, 1);
+  std::string listOfDevices;
+  for (const auto name : forte::core::DeviceFactory::getNames()) {
+    if (name == "Multi"_STRID) {
+      continue;
+    }
+    if (!listOfDevices.empty()) {
+      listOfDevices += ", ";
+    }
+    listOfDevices += name;
   }
 
   OPCUA_MGR::initArgument(newMethod.mInArguments[0], UA_TYPES_STRING, getArgumentString("Device Name").data(),
@@ -102,11 +105,12 @@ UA_StatusCode MultiMGR::onSetDefaultDevice(UA_Server *,
                                            UA_Variant *) {
 
   auto uaStringInput = static_cast<UA_String *>(input[0].data);
-  const auto newDefaultDevice = std::string((const char *) uaStringInput->data, uaStringInput->length);
-  if (newDefaultDevice == MultiDevice::scmMultiDeviceName) {
+  const auto newDefaultDevice =
+      forte::core::StringId::lookup({reinterpret_cast<const char *>(uaStringInput->data), uaStringInput->length});
+  if (newDefaultDevice == "Multi"_STRID) {
     return UA_STATUSCODE_BADNOTSUPPORTED;
   }
-  if (!DeviceFactory::setDeviceToCreate(newDefaultDevice)) {
+  if (!forte::core::DeviceFactory::setDefaultImpl(newDefaultDevice)) {
     return UA_STATUSCODE_BADINVALIDARGUMENT;
   }
   return UA_STATUSCODE_GOOD;

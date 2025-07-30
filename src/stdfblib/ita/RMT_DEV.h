@@ -22,7 +22,7 @@
 
 class RMT_DEV : public CDevice {
   public:
-    RMT_DEV(const std::string &paMGR_ID = "localhost:61499");
+    explicit RMT_DEV(std::string_view paMGR_ID = "localhost:61499");
     ~RMT_DEV() override;
 
     bool initialize() override;
@@ -37,7 +37,7 @@ class RMT_DEV : public CDevice {
 
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
-    void setMGR_ID(const std::string &paVal);
+    void setMGR_ID(std::string_view paVal);
 
   private:
 

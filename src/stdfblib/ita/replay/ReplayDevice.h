@@ -22,7 +22,7 @@
  */
 class ReplayDevice : public RMT_DEV {
   public:
-    ReplayDevice(const std::string &paMGRID = "localhost:61499");
+    explicit ReplayDevice(std::string_view paMGRID = "localhost:61499");
     ~ReplayDevice() override = default;
 
     int startDevice() override;
@@ -43,5 +43,5 @@ class ReplayDevice : public RMT_DEV {
     // a member of the CDevice, so in the constructor of this class it's already too late.
     // this method then is executed before calling the parent, giving the chance to set
     // the timer to the fake one.
-    const std::string &setInitialState(const std::string &paMGRID);
+    const std::string &setInitialState(std::string_view paMGRID);
 };

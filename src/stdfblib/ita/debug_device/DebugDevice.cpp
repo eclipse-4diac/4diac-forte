@@ -13,6 +13,10 @@
 
 #include "stdfblib/ita/debug_device/DebugDevice.h"
 
+#include "core/devicefactory.h"
+
+using namespace forte::core::literals;
+
 namespace {
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = {},
@@ -26,9 +30,10 @@ namespace {
       .mPlugNames = {},
   };
 
-}
+  [[maybe_unused]] const forte::core::DeviceFactory::EntryImpl<DebugDevice> entry("Debug"_STRID);
+} // namespace
 
-DebugDevice::DebugDevice(const std::string &) :
+DebugDevice::DebugDevice(const std::string_view) :
     CDevice(cFBInterfaceSpec, {}),
     mOpcuaMgr(*this),
     mDebugMgr(*this, mOpcuaMgr) {

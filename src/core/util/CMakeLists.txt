@@ -14,6 +14,7 @@
 # ############################################################################
 
 add_library(forte-core-util OBJECT
+            factory.h
             singlet.h
             criticalregion.h
             fixed_string.h

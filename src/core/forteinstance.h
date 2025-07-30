@@ -27,16 +27,5 @@ class C4diacFORTEInstance {
     void awaitDeviceShutdown();
 
   private:
-    /*  \brief Create an instance of the device that is configured for this 4diac FORTE instance
-     *
-     * This method is to be implemented by the code providing the device to be used for this 4diac FORTE instance.
-     *
-     * \param paMGRID  string for configuring the mgr id of this device (e.g., port address for a TCP port)
-     *                 if an empty string is given the device default mgr id will be used.
-     * \return pointer to the newly created device, nullptr if it could not be created.
-     *
-     */
-    static std::unique_ptr<CDevice> createDev(const std::string &paMGRID);
-
     std::unique_ptr<CDevice> mActiveDevice;
 };

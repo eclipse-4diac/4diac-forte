@@ -25,7 +25,7 @@
  */
 class DebugDevice : public CDevice {
   public:
-    DebugDevice(const std::string &paMGRID = "localhost:61499");
+    explicit DebugDevice(std::string_view paMGRID = "localhost:61499");
     ~DebugDevice() override = default;
 
     int startDevice() override;

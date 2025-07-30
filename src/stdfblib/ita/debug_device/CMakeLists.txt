@@ -18,7 +18,6 @@ if (NOT FORTE_DEBUG_DEVICE)
 endif ()
 
 target_compile_definitions(forte-global INTERFACE FORTE_DEBUG_DEVICE)
-forte_register_device(DebugDevice)
 
 add_library(forte-stdfblib-ita-debug_device OBJECT
             DebugMGR.h DebugMGR.cpp DebugDevice.h DebugDevice.cpp

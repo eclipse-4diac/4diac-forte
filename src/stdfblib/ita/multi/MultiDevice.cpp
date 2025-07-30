@@ -15,8 +15,10 @@
 
 #include "stdfblib/ita/OPCUA_MGR.h"
 #include "stdfblib/ita/multi/utils.h"
-#include "generated/devicefactory.h"
+#include "core/devicefactory.h"
 #include "arch/devlog.h"
+
+using namespace forte::core::literals;
 
 namespace {
   const SFBInterfaceSpec cFBInterfaceSpec = {
@@ -30,18 +32,20 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
 
-MultiDevice::MultiDevice(const std::string &paMGRID) :
+  [[maybe_unused]] const forte::core::DeviceFactory::EntryImpl<MultiDevice> entry("Multi"_STRID);
+} // namespace
+
+MultiDevice::MultiDevice(const std::string_view paMGRID) :
     CDevice(cFBInterfaceSpec, {}),
     mMGRID(paMGRID) {
 
   // avoid creating another MultiDevice in case it was set to it in cmake
-  if (DeviceFactory::getCurrentDeviceToCreate() == scmMultiDeviceName) {
-    DeviceFactory::setDeviceToCreate(scmDefaultDeviceToCreate);
+  if (forte::core::DeviceFactory::getDefaultImpl() == "Multi"_STRID) {
+    forte::core::DeviceFactory::setDefaultImpl("RMT_DEV"_STRID);
   }
 
-  DEVLOG_INFO("Starting a %s device\n", scmMultiDeviceName.c_str());
+  DEVLOG_INFO("Starting a Multi device\n");
 }
 
 void MultiDevice::awaitShutdown() {
@@ -83,9 +87,9 @@ int MultiDevice::resetControlledDevice() {
   // since each device should set them accordingly
   forte::ita::multi::utils::setFactoriesSettings(forte::ita::multi::utils::FactoriesSettings());
 
-  DEVLOG_INFO("The controlled device is a %s\n", DeviceFactory::getCurrentDeviceToCreate().c_str());
+  DEVLOG_INFO("The controlled device is a %s\n", forte::core::DeviceFactory::getDefaultImpl().data());
 
-  mControlledDevice = DeviceFactory::createDevice(mMGRID);
+  mControlledDevice = forte::core::DeviceFactory::create(mMGRID);
 
   // destroy before creating a new one
   mOpcuaMgr = nullptr;

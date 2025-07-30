@@ -13,9 +13,10 @@
  *******************************************************************************/
 #include "stdfblib/ita/RMT_DEV.h"
 
-using namespace forte::core::literals;
-
 #include "core/stringid.h"
+#include "core/devicefactory.h"
+
+using namespace forte::core::literals;
 
 namespace {
   const auto cDataInputNames = std::array{"MGR_ID"_STRID};
@@ -31,9 +32,11 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
+
+  [[maybe_unused]] const forte::core::DeviceFactory::EntryImpl<RMT_DEV> entry("RMT_DEV"_STRID);
 } // namespace
 
-RMT_DEV::RMT_DEV(const std::string &paMGR_ID) :
+RMT_DEV::RMT_DEV(const std::string_view paMGR_ID) :
     CDevice(cFBInterfaceSpec, {}),
     conn_MGR_ID_int(*this, 0, u""_WSTRING),
     conn_MGR_ID(nullptr),
@@ -75,8 +78,8 @@ EMGMResponse RMT_DEV::changeExecutionState(EMGMCommandType paCommand) {
   return eRetVal;
 }
 
-void RMT_DEV::setMGR_ID(const std::string &paVal) {
-  conn_MGR_ID_int.getValue().fromString(paVal.c_str());
+void RMT_DEV::setMGR_ID(const std::string_view paVal) {
+  conn_MGR_ID_int.getValue().fromString(paVal.data());
 }
 
 CIEC_ANY *RMT_DEV::getDI(const size_t paIndex) {

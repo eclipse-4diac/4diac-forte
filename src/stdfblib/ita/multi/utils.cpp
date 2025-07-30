@@ -12,7 +12,7 @@
  *******************************************************************************/
 
 #include "stdfblib/ita/multi/utils.h"
-#include "generated/devicefactory.h"
+#include "core/devicefactory.h"
 #include "core/device.h"
 
 #ifdef FORTE_DEBUG_DEVICE
@@ -27,23 +27,25 @@
 #include "stdfblib/ita/replay/ReplayDevice.h"
 #endif // FORTE_REPLAY_DEVICE
 
+using namespace forte::core::literals;
+
 namespace forte::ita::multi::utils {
 
   OPCUA_MGR *getOpcuaMgr(CDevice &paDevice) {
-    auto currentDevice = DeviceFactory::getCurrentDeviceToCreate();
+    auto currentDevice = core::DeviceFactory::getDefaultImpl();
 #ifdef FORTE_DEBUG_DEVICE
-    if (currentDevice == "DebugDevice") {
+    if (currentDevice == "Debug"_STRID) {
       return &static_cast<DebugDevice *>(&paDevice)->mOpcuaMgr;
     }
 #endif // FORTE_DEBUG_DEVICE
 #ifdef FORTE_OPCUA_DEVICE
-    if (currentDevice == "OPCUA_DEV") {
+    if (currentDevice == "OPCUA_DEV"_STRID) {
       return &static_cast<OPCUA_DEV *>(&paDevice)->mOPCUAMgr;
     }
 #endif // FORTE_OPCUA_DEVICE
 
 #ifdef FORTE_REPLAY_DEVICE
-    if (currentDevice == "ReplayDevice") {
+    if (currentDevice == "Replay"_STRID) {
       return &static_cast<ReplayDevice *>(&paDevice)->mOpcuaMgr;
     }
 #endif

@@ -13,7 +13,6 @@
 # ############################################################################
 # Ita FB
 # ############################################################################
-forte_register_device(RMT_DEV)
 
 if (FORTE_COM_OPC_UA)
     option(FORTE_ENABLE_OPCUA_DEV "Compile the OPCUA Device" TRUE)
@@ -21,11 +20,6 @@ endif ()
 
 if (FORTE_ENABLE_OPCUA_DEV)
     target_compile_definitions(forte-global INTERFACE FORTE_OPCUA_DEVICE)
-    forte_register_device(OPCUA_DEV)
-endif ()
-
-if (FORTE_FAKE_TIME)
-    forte_register_device(FakeTimeDev)
 endif ()
 
 option(FORTE_SUPPORT_BOOT_FILE "Enable 4diac FORTE boot file" ON)

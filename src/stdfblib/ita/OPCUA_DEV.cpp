@@ -13,14 +13,19 @@
 
 #include "stdfblib/ita/OPCUA_DEV.h"
 
-OPCUA_DEV::OPCUA_DEV(const std::string &paMGRID) : RMT_DEV(paMGRID), mOPCUAMgr(*this) {
-  changeExecutionState(EMGMCommandType::Reset);
+#include "core/devicefactory.h"
+
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::core::DeviceFactory::EntryImpl<OPCUA_DEV> entry("OPCUA_DEV"_STRID);
+} // namespace
+
+OPCUA_DEV::OPCUA_DEV(const std::string_view paMGRID) : RMT_DEV(paMGRID), mOPCUAMgr(*this) {
+  RMT_DEV::changeExecutionState(EMGMCommandType::Reset);
 }
 
-OPCUA_DEV::~OPCUA_DEV() {
-}
-
-int OPCUA_DEV::startDevice(void) {
+int OPCUA_DEV::startDevice() {
   RMT_DEV::startDevice();
   if (mOPCUAMgr.initialize() != EMGMResponse::Ready) {
     return -1;

@@ -28,7 +28,7 @@
  */
 class MultiDevice : public CDevice {
   public:
-    MultiDevice(const std::string &paMGRID = "localhost:61499");
+    explicit MultiDevice(std::string_view paMGRID = "localhost:61499");
     ~MultiDevice() override = default;
 
     int startDevice() override;
@@ -38,8 +38,6 @@ class MultiDevice : public CDevice {
      * and resetting occurs asynchronoysly
      */
     void requestResetControlledDevice();
-
-    static inline const std::string scmMultiDeviceName{"MultiDevice"};
 
   private:
     int resetControlledDevice();
@@ -56,8 +54,6 @@ class MultiDevice : public CDevice {
     std::promise<void> mKillSignal;
 
     std::string mMGRID;
-
-    static const inline std::string scmDefaultDeviceToCreate{"RMT_DEV"};
 
     // resetinng the controlled device must be done asynchronously
     // since otherwise the opc ua handler will block for request coming from it,

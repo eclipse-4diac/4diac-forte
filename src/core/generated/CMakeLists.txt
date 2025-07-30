@@ -103,7 +103,6 @@ endfunction()
 
 add_subdirectory(comlayersmanager)
 add_subdirectory(deviceexecutionhandlers)
-add_subdirectory(devicefactory)
 add_subdirectory(ecetfactory)
 add_subdirectory(startuphook)
 add_subdirectory(timerhandlerfactory)

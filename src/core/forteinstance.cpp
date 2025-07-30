@@ -14,18 +14,12 @@
  *******************************************************************************/
 
 #include "core/forteinstance.h"
-#include "generated/devicefactory.h"
+#include "core/devicefactory.h"
 
 C4diacFORTEInstance::~C4diacFORTEInstance() {
   if (mActiveDevice) {
     mActiveDevice->deinitialize();
   }
-}
-
-std::unique_ptr<CDevice> C4diacFORTEInstance::createDev(const std::string &paMGRID) {
-  auto dev = DeviceFactory::createDevice(paMGRID);
-  dev->initialize();
-  return dev;
 }
 
 bool C4diacFORTEInstance::startupNewDevice(const std::string &paMGRID) {
@@ -35,8 +29,9 @@ bool C4diacFORTEInstance::startupNewDevice(const std::string &paMGRID) {
     awaitDeviceShutdown();
     mActiveDevice->deinitialize();
   }
-  mActiveDevice = createDev(paMGRID);
+  mActiveDevice = forte::core::DeviceFactory::create(paMGRID);
   if (mActiveDevice) {
+    mActiveDevice->initialize();
     mActiveDevice->startDevice();
   }
   return mActiveDevice.operator bool();

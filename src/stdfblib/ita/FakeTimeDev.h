@@ -20,7 +20,7 @@
 
 class FakeTimeDev : public CDevice {
   public:
-    FakeTimeDev(const std::string &paMGR_ID = "localhost:61499");
+    explicit FakeTimeDev(std::string_view paMGR_ID = "localhost:61499");
     ~FakeTimeDev() override;
 
     bool initialize() override;
