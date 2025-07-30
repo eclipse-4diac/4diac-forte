@@ -13,8 +13,11 @@
 
 #pragma once
 
+#include "core/stringid.h"
 #include "generated/ecetfactory.h"
 #include "generated/timerhandlerfactory.h"
+
+using namespace forte::core::literals;
 
 class OPCUA_MGR;
 class CDevice;
@@ -32,7 +35,7 @@ namespace forte::ita::multi::utils {
 
   struct FactoriesSettings {
       EcetFactory::AvailableEcets mEcet{EcetFactory::AvailableEcets::CEventChainExecutionThread};
-      TimerHandlerFactory::AvailableTimers mTimer{TimerHandlerFactory::AvailableTimers::CPCTimerHandler};
+      core::StringId mTimer{"default"_STRID};
   };
 
   /**

@@ -17,9 +17,6 @@ forte_register_architecture(Posix)
 # TODO: should be replaced by better arch-independent mechanism
 target_include_directories(forte-global INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/)
 
-forte_register_timerhandler(CPCTimerHandler pctimeha.h)
-forte_set_default_timerhandler(CPCTimerHandler)
-
 target_sources(forte PRIVATE ../main.cpp)
 add_library(forte-arch-posix OBJECT
     forte_architecture_time.cpp

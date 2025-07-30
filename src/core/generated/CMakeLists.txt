@@ -105,7 +105,6 @@ add_subdirectory(comlayersmanager)
 add_subdirectory(deviceexecutionhandlers)
 add_subdirectory(ecetfactory)
 add_subdirectory(startuphook)
-add_subdirectory(timerhandlerfactory)
 
 add_subdirectory(config)
 add_subdirectory(typeinit)

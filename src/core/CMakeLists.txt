@@ -105,6 +105,7 @@ add_library(forte-core OBJECT
             resource.cpp
             stringid.h
             stringid.cpp
+            timerhandlerfactory.h
             typelib.h
             typelib.cpp
             ecet.h

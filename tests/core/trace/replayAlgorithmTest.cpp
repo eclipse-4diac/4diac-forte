@@ -467,9 +467,8 @@ namespace {
 
     auto allTracedEvents = forte::trace::reader::utils::getEventMessages(CTF_OUTPUT_DIR).value();
 
-    forte::trace::reader::utils::setFactoriesSettings({EcetFactory::AvailableEcets::fake,
-                                                       TimerHandlerFactory::AvailableTimers::fakeTimer,
-                                                       CFlexibleTracer::AvailableTracers::Internal});
+    forte::trace::reader::utils::setFactoriesSettings(
+        {EcetFactory::AvailableEcets::fake, "FakeTime"_STRID, CFlexibleTracer::AvailableTracers::Internal});
 
     // test with reproduce all
     {

@@ -21,6 +21,7 @@
 
 #include "stdfblib/ita/ForteBootFileLoader.h"
 #include "core/devicefactory.h"
+#include "core/timerhandlerfactory.h"
 
 #ifdef FORTE_COM_HTTP
 #include "com/HTTP/http_handler.h"
@@ -40,7 +41,7 @@ void listHelp() {
   printf("Options:\n");
   printf("%-20s Display this information\n", "  -h");
   printf("%-20s Set the listening IP and port for the incoming connections\n", "  -c <IP>:<port>");
-  printf("%-20s Set the device to be used\n", "  -d DEVICE_NAME");
+  printf("%-20s Set the device to be used\n", "  -d <device>");
 #ifdef FORTE_SUPPORT_BOOT_FILE
   printf("%-20s Set the boot-file where to read from to load the applications\n", "  -f <file>");
 #endif
@@ -57,6 +58,7 @@ void listHelp() {
 #ifdef FORTE_TRACE_CTF
   printf("%-20s Set the output directory for TRACE_CTF\n", "  -t <directory>");
 #endif // FORTE_TRACE_CTF
+  printf("%-20s Set the timer to be used\n", "  -T <timer>");
 }
 
 /*!\brief Parses the command line arguments passed to the main function
@@ -117,6 +119,14 @@ const char *parseCommandLineArguments(int argc, char *arg[]) {
             barectfSetup((i + 1) < static_cast<size_t>(argc) ? arg[i + 1] : "");
             break;
 #endif // FORTE_TRACE_CTF
+          case 'T': //! sets the timer to be used
+            if (!forte::core::TimerHandlerFactory::setDefaultImpl(forte::core::StringId::lookup(arg[i + 1]))) {
+              printf("The selected timer '%s' is not valid. Select one of the following:\n", arg[i + 1]);
+              for (const auto name : forte::core::TimerHandlerFactory::getNames()) {
+                printf("  %s\n", name.data());
+              }
+            }
+            break;
           default: //! Unknown parameter or -h -> Lists the help for FORTE
             return "";
         }

@@ -11,9 +11,17 @@
  *******************************************************************************/
 #include "pctimeha.h"
 #include "core/devexec.h"
+#include "core/timerhandlerfactory.h"
+
 #include <windows.h>
 
-const TForteInt32 CPCTimerHandler::csmTicksPerSecond = 1000;
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::core::TimerHandlerFactory::EntryImpl<CPCTimerHandler> entry("default"_STRID);
+}
+
+constexpr TForteInt32 CPCTimerHandler::csmTicksPerSecond = 1000;
 
 CPCTimerHandler::CPCTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
 }

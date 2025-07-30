@@ -21,8 +21,6 @@ add_library(forte-fake-time OBJECT
     faketimerha.cpp
 )
 
-forte_register_timerhandler(CFakeTimerHandler faketimerha.h)
-
 target_compile_definitions(forte-global INTERFACE FORTE_FAKE_TIME)
 
 target_link_libraries(forte PRIVATE forte-fake-time)

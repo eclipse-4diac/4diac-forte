@@ -14,13 +14,20 @@
 #include "core/devexec.h"
 #include "core/ecet.h"
 #include "core/device.h"
+#include "core/timerhandlerfactory.h"
+
+using namespace forte::core::literals;
 
 uint_fast64_t trackFakeForteTime();
 uint_fast64_t jumpFakeForteTime(uint_fast64_t destination);
 
-const CIEC_TIME::TValueType cNanosecondsToMilliseconds =
-    forte::core::constants::cNanosecondsPerSecond / forte::core::constants::cMillisecondsPerSecond;
-const CIEC_TIME::TValueType cHourInMilliseconds = 60 * 60 * forte::core::constants::cMillisecondsPerSecond;
+namespace {
+  constexpr CIEC_TIME::TValueType cNanosecondsToMilliseconds =
+      forte::core::constants::cNanosecondsPerSecond / forte::core::constants::cMillisecondsPerSecond;
+  constexpr CIEC_TIME::TValueType cHourInMilliseconds = 60 * 60 * forte::core::constants::cMillisecondsPerSecond;
+
+  [[maybe_unused]] const forte::core::TimerHandlerFactory::EntryImpl<CFakeTimerHandler> entry("FakeTime"_STRID);
+} // namespace
 
 CFakeTimerHandler::CFakeTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
 }

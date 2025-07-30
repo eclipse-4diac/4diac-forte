@@ -26,6 +26,8 @@
 #include <functional>
 #include <optional>
 
+using namespace forte::core::literals;
+
 class CFunctionBlock;
 class CDevice;
 class bt_port_output;
@@ -59,7 +61,7 @@ namespace forte::trace::reader::utils {
 
   struct FactoriesSettings {
       EcetFactory::AvailableEcets mEcet{EcetFactory::AvailableEcets::CEventChainExecutionThread};
-      TimerHandlerFactory::AvailableTimers mTimer{TimerHandlerFactory::AvailableTimers::CPCTimerHandler};
+      core::StringId mTimer{"default"_STRID};
       CFlexibleTracer::AvailableTracers mTracer{CFlexibleTracer::AvailableTracers::BareCtf};
   };
 

@@ -29,8 +29,6 @@ set(FORTE_FMU_INCLUDE
 
 add_subdirectory(comm)
 
-forte_register_timerhandler(fmiTimerHandler fmiTimerHandler.h)
-
 forte_register_ecet(CFMUEventChainExecutionThread fmuEcet.h)
 
 message(STATUS "Process Interface: FORTE FMU")

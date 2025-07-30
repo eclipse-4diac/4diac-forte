@@ -13,7 +13,7 @@
 
 #include "arch/timerha.h"
 #include "core/devexec.h"
-#include "generated/timerhandlerfactory.h"
+#include "core/timerhandlerfactory.h"
 
 ${includes}
 
@@ -34,7 +34,7 @@ ${entries}
 
 CDeviceExecution::CDeviceExecution(CDevice& paDevice) :
   mDevice(paDevice), mRegisteredEventHandlers(size_t(classindex::len)) {
-  mRegisteredEventHandlers[0].mHandler = std::unique_ptr<CTimerHandler>(TimerHandlerFactory::createTimerHandler(*this));
+  mRegisteredEventHandlers[0].mHandler = forte::core::TimerHandlerFactory::create(*this);
 #define ENTRY(name) \
   mRegisteredEventHandlers[size_t(classindex::name)].mHandler = std::make_unique<name>(*this);
   ${entries}

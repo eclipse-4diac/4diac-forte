@@ -16,21 +16,10 @@ forte_register_architecture(Win32)
 # TODO: should be replaced by better arch-independent mechanism
 target_include_directories(forte-global INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/)
 
-forte_register_timerhandler(CPCTimerHandler pctimeha.h)
-forte_set_default_timerhandler(CPCTimerHandler)
-
 add_subdirectory(serlayer)
 
 target_sources(forte PRIVATE ../main.cpp)
 
-option(FORTE_EXTERNAL_TIMEHA "Use External Time Handler" OFF)
-if (FORTE_EXTERNAL_TIMEHA)
-    # TODO: this has not been ported to new cmake yet
-    set(EXTERNAL_TIMER_HANDLER_NAME "externalTimer")
-    forte_add_timerhandler(CExternTimerHandler externtimeha ${EXTERNAL_TIMER_HANDLER_NAME})
-    forte_set_default_timerhandler(${EXTERNAL_TIMER_HANDLER_NAME})
-endif(FORTE_EXTERNAL_TIMEHA)
-  
 option(FORTE_WINDOWS_XP_COMPAT "Use only APIs that still work on Windows XP" OFF)
 forte_generate_config_flag_include(FORTE_WINDOWS_XP_COMPAT)
 

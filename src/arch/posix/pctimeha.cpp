@@ -16,6 +16,13 @@
 #include <time.h>
 #include <sys/time.h>
 #include "arch/utils/timespec_utils.h"
+#include "core/timerhandlerfactory.h"
+
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::core::TimerHandlerFactory::EntryImpl<CPCTimerHandler> entry("default"_STRID);
+}
 
 CPCTimerHandler::CPCTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
 }

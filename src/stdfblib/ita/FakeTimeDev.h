@@ -39,14 +39,14 @@ class FakeTimeDev : public CDevice {
     writeValue(forte::core::TNameIdentifier &paNameList, const std::string &paValue, bool paForce = false) override;
 
   private:
-    COutDataConnection<CIEC_WSTRING> conn_MGR_ID;
-    COutDataConnection<CIEC_TIME> conn_FakeTime;
+    CDataConnection *conn_MGR_ID;
+    CDataConnection *conn_FakeTime;
+
+    COutDataConnection<CIEC_WSTRING> conn_MGR_ID_int;
+    COutDataConnection<CIEC_TIME> conn_FakeTime_int;
 
     CIEC_ANY *getDI(size_t) override;
-    CDataConnection **getDIConUnchecked(TPortId) override {
-      return nullptr;
-    }
-
+    CDataConnection **getDIConUnchecked(TPortId) override;
     CConnection *getResIf2InConnectionUnchecked(TPortId) override;
 
     RMT_RES MGR;

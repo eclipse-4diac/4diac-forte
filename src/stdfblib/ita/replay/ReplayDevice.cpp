@@ -14,6 +14,7 @@
 #include "stdfblib/ita/replay/ReplayDevice.h"
 
 #include "core/devicefactory.h"
+#include "core/timerhandlerfactory.h"
 #include "generated/timerhandlerfactory.h"
 #include "generated/ecetfactory.h"
 #include "core/trace/internal/flexibleTracer.h"
@@ -58,7 +59,7 @@ EMGMResponse ReplayDevice::executeMGMCommand(forte::core::SManagementCMD &paComm
 }
 
 const std::string &ReplayDevice::setInitialState(const std::string_view paMGRID) {
-  TimerHandlerFactory::setTimeHandlerNameToCreate(TimerHandlerFactory::AvailableTimers::CFakeTimerHandler);
+  forte::core::TimerHandlerFactory::setDefaultImpl("FakeTime"_STRID);
   EcetFactory::setEcetToCreate(EcetFactory::AvailableEcets::CFakeEventExecutionThread);
   CFlexibleTracer::setTracer(CFlexibleTracer::AvailableTracers::Internal);
   return paMGRID;

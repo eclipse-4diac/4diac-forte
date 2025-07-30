@@ -20,7 +20,7 @@
 #include "core/devicefactory.h"
 #include "../../arch/fake_time/faketimerha.h"
 
-#include "generated/timerhandlerfactory.h"
+#include "core/timerhandlerfactory.h"
 
 using namespace forte::core::literals;
 
@@ -44,10 +44,12 @@ namespace {
 
 FakeTimeDev::FakeTimeDev(const std::string_view paMGR_ID) :
     CDevice(cFBInterfaceSpec, initializeTimer()),
-    conn_MGR_ID(*this, 0, u""_WSTRING),
-    conn_FakeTime(*this, 0, 0_TIME),
+    conn_MGR_ID(nullptr),
+    conn_FakeTime(nullptr),
+    conn_MGR_ID_int(*this, 0, u""_WSTRING),
+    conn_FakeTime_int(*this, 1, 0_TIME),
     MGR("MGR"_STRID, *this) {
-  conn_MGR_ID.getValue().fromString(paMGR_ID.data());
+  conn_MGR_ID_int.getValue().fromString(paMGR_ID.data());
 }
 
 bool FakeTimeDev::initialize() {
@@ -60,7 +62,7 @@ bool FakeTimeDev::initialize() {
   }
 
   // we need to manually crate this connection as the MGR is not managed by device
-  conn_MGR_ID.connect(MGR, std::array{"MGR_ID"_STRID});
+  conn_MGR_ID_int.connect(MGR, std::array{"MGR_ID"_STRID});
   return true;
 }
 
@@ -86,16 +88,24 @@ EMGMResponse FakeTimeDev::changeExecutionState(EMGMCommandType paCommand) {
 
 CIEC_ANY *FakeTimeDev::getDI(const size_t paIndex) {
   switch (paIndex) {
-    case 0: return &conn_MGR_ID.getValue();
-    case 1: return &conn_FakeTime.getValue();
+    case 0: return &conn_MGR_ID_int.getValue();
+    case 1: return &conn_FakeTime_int.getValue();
+  }
+  return nullptr;
+}
+
+CDataConnection **FakeTimeDev::getDIConUnchecked(const TPortId paIndex) {
+  switch (paIndex) {
+    case 0: return &conn_MGR_ID;
+    case 1: return &conn_FakeTime;
   }
   return nullptr;
 }
 
 CConnection *FakeTimeDev::getResIf2InConnectionUnchecked(const TPortId paIndex) {
   switch (paIndex) {
-    case 0: return &conn_MGR_ID;
-    case 1: return &conn_FakeTime;
+    case 0: return &conn_MGR_ID_int;
+    case 1: return &conn_FakeTime_int;
   }
   return nullptr;
 }
@@ -107,12 +117,12 @@ FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, const std::str
   EMGMResponse eRetVal = CDevice::writeValue(paNameList, paValue, paForce);
   if ((EMGMResponse::Ready == eRetVal) && ("FakeTime"_STRID == portName)) {
     // fake time was written, update CFakeTimerHandler
-    static_cast<CFakeTimerHandler &>(getTimer()).sleepToTime(conn_FakeTime.getValue());
+    static_cast<CFakeTimerHandler &>(getTimer()).sleepToTime(conn_FakeTime_int.getValue());
   }
   return eRetVal;
 }
 
 forte::core::StringId FakeTimeDev::initializeTimer() {
-  TimerHandlerFactory::setTimeHandlerNameToCreate(TimerHandlerFactory::AvailableTimers::CFakeTimerHandler);
+  forte::core::TimerHandlerFactory::setDefaultImpl("FakeTime"_STRID);
   return {};
 }
