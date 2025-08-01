@@ -65,7 +65,10 @@ void CFunctionBlock::deinitialize() {
   for (TPortId eoId = 0; eoId < getFBInterfaceSpec().getNumEOs(); eoId++) {
     CEventConnection *eoConn = getEOConUnchecked(eoId);
     for (auto connPoint : eoConn->getDestinationList()) {
-      eoConn->disconnect(connPoint.getFB(), std::array{connPoint.getPortId()});
+      if ((connPoint.getPortId() & cgInternal2InterfaceMarker) == 0) {
+        auto &dstFb = connPoint.getFB();
+        eoConn->disconnect(dstFb, std::array{dstFb.getFBInterfaceSpec().mEINames[connPoint.getPortId()]});
+      }
     }
   }
 

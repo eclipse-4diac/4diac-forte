@@ -89,19 +89,19 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
   };
 
   // device resource has no events
-  expectedMessages[CStringDictionary::get(deviceName)] = {};
+  expectedMessages[std::string(deviceName)] = {};
 
   // default resource in the test device
-  expectedMessages[CStringDictionary::get(STRID(EMB_RES))] = {};
+  expectedMessages["EMB_RES"] = {};
 
-  auto &embResMessages = expectedMessages[CStringDictionary::get(STRID(EMB_RES))];
+  auto &embResMessages = expectedMessages["EMB_RES"];
   addInitiaOrFinalEvent(embResMessages, true);
   addInitiaOrFinalEvent(embResMessages, false);
 
   // resource with example FBs
-  expectedMessages[CStringDictionary::get(resourceName)] = {};
+  expectedMessages[std::string(resourceName)] = {};
 
-  auto &resourceMessages = expectedMessages[CStringDictionary::get(resourceName)];
+  auto &resourceMessages = expectedMessages[std::string(resourceName)];
 
   // timestamp cannot properly be tested, so setting everythin to zero
   addInitiaOrFinalEvent(resourceMessages, true);

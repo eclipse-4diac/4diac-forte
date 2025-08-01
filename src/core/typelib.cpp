@@ -57,7 +57,7 @@ namespace {
 
   //! find the position of the first underscore that marks the end of the type name and the beginning of the generic
   //! part
-  const char *getFirstNonTypeNameUnderscorePos(const char *paTypeName);
+  std::size_t getFirstNonTypeNameUnderscorePos(std::string_view paTypeName);
 
   /*!\brief add a Firmware FB type to the type lib (is mainly used by the corresponding entry class).
    */
@@ -183,30 +183,6 @@ CFunctionBlock *forte::core::createFB(forte::core::StringId paInstanceNameId,
   return forte::core::createFB(paInstanceNameId, paFBTypeId, std::string_view{}, paContainer, errorMSG);
 }
 
-namespace {
-  void nextDataPoint(const forte::core::StringId *&paDataTypeIds) {
-    while (*(paDataTypeIds++) == "ARRAY"_STRID) {
-      paDataTypeIds += 2;
-    }
-  }
-} // namespace
-
-CIEC_ANY *forte::core::createDataPoint(const CStringDictionary::TStringId *&paDataTypeIds, TForteByte *&paDataBuf) {
-  CStringDictionary::TStringId dataTypeId = *paDataTypeIds;
-  EMGMResponse errorMSG;
-  CIEC_ANY *poRetVal = createDataTypeInstance(dataTypeId, paDataBuf, errorMSG);
-  if (nullptr != poRetVal) {
-    if (STRID(ARRAY) == dataTypeId) {
-      static_cast<CIEC_ARRAY_DYNAMIC *>(poRetVal)->setup(paDataTypeIds + 1);
-    }
-    if (paDataBuf != nullptr) {
-      paDataBuf += poRetVal->getSizeof();
-    }
-  }
-  nextDataPoint(paDataTypeIds);
-  return poRetVal;
-}
-
 bool forte::core::deleteFB(CFunctionBlock *paFBToDelete) {
   paFBToDelete->deinitialize();
   delete paFBToDelete;
@@ -250,19 +226,17 @@ namespace {
 
   template<typename T>
   T *findGenericTypeEntry(std::vector<T *> &vec, const forte::core::StringId paTypeNameId) {
-    const char *const typeBuf = CStringDictionary::get(paTypeNameId);
-    const char *const underScore = getFirstNonTypeNameUnderscorePos(typeBuf);
+    const std::size_t underScore = getFirstNonTypeNameUnderscorePos(paTypeNameId);
 
-    if (underScore == nullptr) {
+    if (underScore == std::string_view::npos) {
       // We found no underscore in the type name, so it can't be a generic type
       return nullptr;
     }
 
-    const ptrdiff_t typeNameLen = underScore - typeBuf;
     std::string genFBName;
-    genFBName.reserve(4 + typeNameLen);
+    genFBName.reserve(4 + underScore);
     genFBName += "GEN_"s;
-    genFBName.append(typeBuf, typeNameLen);
+    genFBName.append(paTypeNameId, 0, underScore);
 
     return findTypeEntry(vec, forte::core::StringId::lookup(genFBName));
   }
@@ -330,21 +304,18 @@ namespace {
 
   //! find the position of the first underscore that marks the end of the type name and the beginning of the generic
   //! part
-  const char *getFirstNonTypeNameUnderscorePos(const char *paTypeName) {
-    const char *acRetVal = paTypeName;
+  std::size_t getFirstNonTypeNameUnderscorePos(const std::string_view paTypeName) {
+    std::size_t result = 0;
 
     do {
-      acRetVal = strchr(acRetVal, '_');
-      if (nullptr != acRetVal) {
-        if (forte::core::util::isDigit(*(acRetVal + 1))) {
-          // only when the element after the underscore is a digit it is a correct type name
-          break;
-        }
-        acRetVal++;
+      result = paTypeName.find('_', result + 1);
+      if (result != std::string_view::npos && forte::core::util::isDigit(paTypeName[result + 1])) {
+        // only when the element after the underscore is a digit it is a correct type name
+        break;
       }
-    } while (nullptr != acRetVal);
+    } while (result < paTypeName.size());
 
-    return acRetVal;
+    return result;
   }
 
   template<typename T>

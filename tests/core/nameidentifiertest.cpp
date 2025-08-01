@@ -31,22 +31,22 @@ BOOST_AUTO_TEST_CASE(newEmptyNameList) {
 }
 
 BOOST_AUTO_TEST_CASE(newListInitializedNameList) {
-  forte::core::TNameIdentifier identifier{17, 4, 21};
+  forte::core::TNameIdentifier identifier{"17"_STRID, "4"_STRID, "21"_STRID};
 
   BOOST_TEST(identifier.size() == 3);
-  BOOST_TEST(identifier[0] == 17);
-  BOOST_TEST(identifier[1] == 4);
-  BOOST_TEST(identifier[2] == 21);
+  BOOST_TEST(identifier[0] == "17"_STRID);
+  BOOST_TEST(identifier[1] == "4"_STRID);
+  BOOST_TEST(identifier[2] == "21"_STRID);
 }
 
 BOOST_AUTO_TEST_CASE(newIteratorInitializedNameList) {
-  auto values = std::array{17, 4, 21};
+  auto values = std::array{"17"_STRID, "4"_STRID, "21"_STRID};
   forte::core::TNameIdentifier identifier(values.begin(), values.end());
 
   BOOST_TEST(identifier.size() == 3);
-  BOOST_TEST(identifier[0] == 17);
-  BOOST_TEST(identifier[1] == 4);
-  BOOST_TEST(identifier[2] == 21);
+  BOOST_TEST(identifier[0] == "17"_STRID);
+  BOOST_TEST(identifier[1] == "4"_STRID);
+  BOOST_TEST(identifier[2] == "21"_STRID);
 }
 
 BOOST_AUTO_TEST_CASE(capacity) {
@@ -54,11 +54,11 @@ BOOST_AUTO_TEST_CASE(capacity) {
   forte::core::TNameIdentifier identifier;
 
   for (size_t i = 0; i < FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY; i++) {
-    BOOST_CHECK(identifier.push_back(static_cast<CStringDictionary::TStringId>(i)));
+    BOOST_CHECK(identifier.push_back(forte::core::StringId::insert(std::to_string(i))));
     BOOST_CHECK_EQUAL(false, identifier.empty());
   }
 
-  BOOST_CHECK_EQUAL(nullptr, identifier.try_push_back(10));
+  BOOST_CHECK_EQUAL(nullptr, identifier.try_push_back("10"_STRID));
 
   identifier.clear();
   BOOST_CHECK(identifier.empty());
@@ -67,49 +67,49 @@ BOOST_AUTO_TEST_CASE(capacity) {
 BOOST_AUTO_TEST_CASE(push_back) {
   forte::core::TNameIdentifier identifier;
 
-  identifier.push_back(5);
+  identifier.push_back("5"_STRID);
   BOOST_CHECK_EQUAL(1, identifier.size());
-  BOOST_CHECK_EQUAL(5, identifier[0]);
-  BOOST_CHECK_EQUAL(5, identifier.back());
-  BOOST_CHECK_EQUAL(5, identifier.front());
+  BOOST_CHECK_EQUAL("5"_STRID, identifier[0]);
+  BOOST_CHECK_EQUAL("5"_STRID, identifier.back());
+  BOOST_CHECK_EQUAL("5"_STRID, identifier.front());
 
-  identifier.push_back(10);
+  identifier.push_back("10"_STRID);
   BOOST_CHECK_EQUAL(2, identifier.size());
-  BOOST_CHECK_EQUAL(5, identifier[0]);
-  BOOST_CHECK_EQUAL(10, identifier[1]);
-  BOOST_CHECK_EQUAL(10, identifier.back());
-  BOOST_CHECK_EQUAL(5, identifier.front());
+  BOOST_CHECK_EQUAL("5"_STRID, identifier[0]);
+  BOOST_CHECK_EQUAL("10"_STRID, identifier[1]);
+  BOOST_CHECK_EQUAL("10"_STRID, identifier.back());
+  BOOST_CHECK_EQUAL("5"_STRID, identifier.front());
 
-  identifier.push_back(215);
+  identifier.push_back("215"_STRID);
   BOOST_CHECK_EQUAL(3, identifier.size());
-  BOOST_CHECK_EQUAL(5, identifier[0]);
-  BOOST_CHECK_EQUAL(10, identifier[1]);
-  BOOST_CHECK_EQUAL(215, identifier[2]);
-  BOOST_CHECK_EQUAL(215, identifier.back());
-  BOOST_CHECK_EQUAL(5, identifier.front());
+  BOOST_CHECK_EQUAL("5"_STRID, identifier[0]);
+  BOOST_CHECK_EQUAL("10"_STRID, identifier[1]);
+  BOOST_CHECK_EQUAL("215"_STRID, identifier[2]);
+  BOOST_CHECK_EQUAL("215"_STRID, identifier.back());
+  BOOST_CHECK_EQUAL("5"_STRID, identifier.front());
 
-  identifier.push_back(3564);
+  identifier.push_back("3564"_STRID);
   BOOST_CHECK_EQUAL(4, identifier.size());
-  BOOST_CHECK_EQUAL(5, identifier[0]);
-  BOOST_CHECK_EQUAL(10, identifier[1]);
-  BOOST_CHECK_EQUAL(215, identifier[2]);
-  BOOST_CHECK_EQUAL(3564, identifier[3]);
-  BOOST_CHECK_EQUAL(3564, identifier.back());
-  BOOST_CHECK_EQUAL(5, identifier.front());
+  BOOST_CHECK_EQUAL("5"_STRID, identifier[0]);
+  BOOST_CHECK_EQUAL("10"_STRID, identifier[1]);
+  BOOST_CHECK_EQUAL("215"_STRID, identifier[2]);
+  BOOST_CHECK_EQUAL("3564"_STRID, identifier[3]);
+  BOOST_CHECK_EQUAL("3564"_STRID, identifier.back());
+  BOOST_CHECK_EQUAL("5"_STRID, identifier.front());
 }
 
 BOOST_AUTO_TEST_CASE(pop_back) {
   forte::core::TNameIdentifier identifier;
   // fill with testdata
   for (size_t i = 0; i < FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY; i++) {
-    identifier.push_back(static_cast<CStringDictionary::TStringId>(i));
+    identifier.push_back(forte::core::StringId::insert(std::to_string(i)));
   }
 
   for (size_t i = 0; i < FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY; i++) {
-    BOOST_CHECK_EQUAL((FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY - 1 - i), identifier.back());
-    BOOST_CHECK_EQUAL((FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY - i), identifier.size());
+    BOOST_TEST(std::to_string(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY - 1 - i) == identifier.back().get());
+    BOOST_TEST(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY - i == identifier.size());
     identifier.pop_back();
-    BOOST_CHECK_EQUAL((FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY - 1 - i), identifier.size());
+    BOOST_TEST(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY - 1 - i == identifier.size());
   }
   BOOST_CHECK(identifier.empty());
 }
@@ -118,12 +118,12 @@ BOOST_AUTO_TEST_CASE(iterator) {
   forte::core::TNameIdentifier identifier;
   // fill with testdata
   for (size_t i = 0; i < FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY; i++) {
-    identifier.push_back(static_cast<CStringDictionary::TStringId>(i));
+    identifier.push_back(forte::core::StringId::insert(std::to_string(i)));
   }
 
   int i = 0;
   for (const auto &it : identifier) {
-    BOOST_CHECK_EQUAL(i++, it);
+    BOOST_CHECK_EQUAL(forte::core::StringId::insert(std::to_string(i++)), it);
   }
   BOOST_CHECK_EQUAL(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY,
                     i); // we should have exactly visited each element once but started at zero

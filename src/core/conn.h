@@ -19,6 +19,7 @@
 #include <span>
 #include <type_traits>
 
+#include "arch/datatype.h"
 #include "core/mgmcmd.h"
 #include "core/mgmcmdstruct.h"
 #include "core/stringid.h"

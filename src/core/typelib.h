@@ -19,6 +19,7 @@
  *******************************************************************************/
 #pragma once
 
+#include "arch/datatype.h"
 #include "core/stringid.h"
 #include "core/mgmcmd.h"
 #include <string_view>

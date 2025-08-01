@@ -74,17 +74,5 @@ namespace forte {
     const std::vector<CAdapterTypeEntry *> &getAdapterTypeEntries();
     const std::vector<CDataTypeEntry *> &getDataTypeEntries();
     const std::vector<CGlobalConstEntry *> &getGlobalConstEntries();
-
-    /*!\brief Function to create an data type instance of given type
-     *
-     * @param paDataTypeIds pointer to the data type ids. If the datatype
-     *        is an Array to more values are taken from the array. If the given
-     *        type is Any 0 is returned as necessary for maintaining the FB's interface.
-     *        The functions puts the pointer in the datatype array to the next data point's id.
-     * @param paDataBuf pointer to the data buffer which should be used by the data type to create
-     * @return on success... pointer to the datatype instance
-     *         on error... 0
-     */
-    CIEC_ANY *createDataPoint(const CStringDictionary::TStringId *&paDataTypeIds, TForteByte *&paDataBuf);
   } // namespace core
 } // namespace forte

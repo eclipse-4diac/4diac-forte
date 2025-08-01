@@ -472,9 +472,6 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
     //! Function to configure the array if it is created via the typelib
     void setup(intmax_t paLowerBound, intmax_t paUpperBound, forte::core::StringId paArrayType);
 
-    //! Function to configure the array if it is created via the typelib
-    void setup(const forte::core::StringId *paParameters);
-
     [[nodiscard]] size_t size() const override {
       return mSize;
     }
