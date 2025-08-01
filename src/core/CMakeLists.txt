@@ -102,6 +102,8 @@ add_library(forte-core OBJECT
             fbcontainer.cpp
             resource.h
             resource.cpp
+            stringid.h
+            stringid.cpp
             typelib.h
             typelib.cpp
             ecet.h

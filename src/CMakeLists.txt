@@ -19,11 +19,11 @@ target_include_directories(forte-global INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/st
 # Core infrastructure
 
 if (FORTE_BUILD_EXECUTABLE)
-    add_executable(forte core/stringdict.cpp core/stringdict.h)
+    add_executable(forte)
     install(TARGETS forte RUNTIME DESTINATION bin)
     message(STATUS "Building executable")
 else()
-    add_library(forte core/stringdict.cpp core/stringdict.h)
+    add_library(forte)
     install(TARGETS forte RUNTIME DESTINATION lib)
     message(STATUS "Building library")
 endif()

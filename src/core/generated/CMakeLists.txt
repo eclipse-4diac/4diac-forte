@@ -109,5 +109,4 @@ add_subdirectory(startuphook)
 add_subdirectory(timerhandlerfactory)
 
 add_subdirectory(config)
-add_subdirectory(stringdict)
 add_subdirectory(typeinit)

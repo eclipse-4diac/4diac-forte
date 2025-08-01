@@ -119,9 +119,7 @@ get_property(forte_libs TARGET forte PROPERTY LINK_LIBRARIES)
 target_link_libraries(forte_test ${forte_libs})
 target_compile_features(forte_test PUBLIC cxx_std_20)
 
-forte_generate_stringlist(forte_test "${CMAKE_CURRENT_BINARY_DIR}/generated")
 target_include_directories(forte_test PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
-target_sources(forte_test PRIVATE ../src/core/stringdict.cpp)
 
 #######################################################################################
 # Add definitions

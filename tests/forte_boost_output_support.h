@@ -35,6 +35,14 @@
 #include "core/datatypes/forte_ldate_and_time.h"
 #include "core/funcbloc.h"
 #include "core/mgmcmd.h"
+#include "core/stringid.h"
+
+namespace forte::core {
+  inline std::ostream &boost_test_print_type(std::ostream &out, const StringId &variable) {
+    out << static_cast<std::string_view>(variable);
+    return out;
+  }
+} // namespace forte::core
 
 inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_LREAL &variable) {
   std::string outputString;
