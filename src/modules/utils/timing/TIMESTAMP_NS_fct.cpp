@@ -16,14 +16,7 @@
 
 #include "TIMESTAMP_NS_fct.h"
 
-USE_STRING_ID();
-USE_STRING_ID(CNF);
-USE_STRING_ID(DATE_AND_TIME);
-USE_STRING_ID(Event);
-USE_STRING_ID(REQ);
-USE_STRING_ID(startDate);
-USE_STRING_ID(TIMESTAMP_NS);
-USE_STRING_ID(ULINT);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_any_duration_variant.h"
 #include "core/datatypes/forte_date_and_time.h"
@@ -35,15 +28,15 @@ USE_STRING_ID(ULINT);
 #include "core/datatypes/forte_array_variable.h"
 #include "TIMESTAMP_NS_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_TIMESTAMP_NS, STRID(TIMESTAMP_NS))
+DEFINE_FIRMWARE_FB(FORTE_TIMESTAMP_NS, "TIMESTAMP_NS"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(startDate)};
-  const auto cDataOutputNames = std::array{STRID()};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"startDate"_STRID};
+  const auto cDataOutputNames = std::array{""_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -58,7 +51,7 @@ namespace {
 }
 
 
-FORTE_TIMESTAMP_NS::FORTE_TIMESTAMP_NS(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_TIMESTAMP_NS::FORTE_TIMESTAMP_NS(const forte::core::StringId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_startDate(0_DATE_AND_TIME),

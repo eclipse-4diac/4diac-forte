@@ -13,13 +13,7 @@
 
 #include "E_SR_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(EO);
-USE_STRING_ID(E_SR);
-USE_STRING_ID(Event);
-USE_STRING_ID(Q);
-USE_STRING_ID(R);
-USE_STRING_ID(S);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_bool.h"
 #include "core/iec61131_functions.h"
@@ -28,14 +22,14 @@ USE_STRING_ID(S);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_SR, STRID(E_SR))
+DEFINE_FIRMWARE_FB(FORTE_E_SR, "E_SR"_STRID)
 
 namespace {
-  const auto cDataOutputNames = std::array{STRID(Q)};
-  const auto cEventInputNames = std::array{STRID(S), STRID(R)};
-  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(EO)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataOutputNames = std::array{"Q"_STRID};
+  const auto cEventInputNames = std::array{"S"_STRID, "R"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"EO"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -49,7 +43,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_SR::FORTE_E_SR(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_SR::FORTE_E_SR(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO(*this, 0),
     conn_Q(*this, 0, var_Q) {

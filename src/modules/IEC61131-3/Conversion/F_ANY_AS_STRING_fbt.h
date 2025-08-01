@@ -41,7 +41,7 @@ class FORTE_F_ANY_AS_STRING final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_ANY_AS_STRING(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_ANY_AS_STRING(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY_VARIANT var_IN;
 

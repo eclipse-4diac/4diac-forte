@@ -12,38 +12,26 @@
 
 #include "forte_servicerequestform.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(ArrowheadCloud);
-USE_STRING_ID(ArrowheadService);
-USE_STRING_ID(ArrowheadSystem);
-USE_STRING_ID(orchestrationFlags);
-USE_STRING_ID(PreferredProvider);
-USE_STRING_ID(preferredProviders);
-USE_STRING_ID(requestedQoS);
-USE_STRING_ID(requestedService);
-USE_STRING_ID(requesterCloud);
-USE_STRING_ID(requesterSystem);
-USE_STRING_ID(ServiceRequestForm);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(ServiceRequestForm, STRID(ServiceRequestForm));
+DEFINE_FIRMWARE_DATATYPE(ServiceRequestForm, "ServiceRequestForm"_STRID);
 
 CIEC_ServiceRequestForm::CIEC_ServiceRequestForm() :
-    CIEC_STRUCT(STRID(ServiceRequestForm), 6, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT("ServiceRequestForm"_STRID, 6, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ServiceRequestForm::scmElementTypes[] = {STRID(ArrowheadSystem),
-                                                                                 STRID(ArrowheadCloud),
-                                                                                 STRID(ArrowheadService),
-                                                                                 STRID(ARRAY),
+const forte::core::StringId CIEC_ServiceRequestForm::scmElementTypes[] = {"ArrowheadSystem"_STRID,
+                                                                                 "ArrowheadCloud"_STRID,
+                                                                                 "ArrowheadService"_STRID,
+                                                                                 "ARRAY"_STRID,
                                                                                  10,
-                                                                                 STRID(WSTRING),
-                                                                                 STRID(ARRAY),
+                                                                                 "WSTRING"_STRID,
+                                                                                 "ARRAY"_STRID,
                                                                                  10,
-                                                                                 STRID(PreferredProvider),
-                                                                                 STRID(ARRAY),
+                                                                                 "PreferredProvider"_STRID,
+                                                                                 "ARRAY"_STRID,
                                                                                  10,
-                                                                                 STRID(WSTRING)};
-const CStringDictionary::TStringId CIEC_ServiceRequestForm::scmElementNames[] = {
-    STRID(requesterSystem),    STRID(requesterCloud),     STRID(requestedService),
-    STRID(orchestrationFlags), STRID(preferredProviders), STRID(requestedQoS)};
+                                                                                 "WSTRING"_STRID};
+const forte::core::StringId CIEC_ServiceRequestForm::scmElementNames[] = {
+    "requesterSystem"_STRID,    "requesterCloud"_STRID,     "requestedService"_STRID,
+    "orchestrationFlags"_STRID, "preferredProviders"_STRID, "requestedQoS"_STRID};

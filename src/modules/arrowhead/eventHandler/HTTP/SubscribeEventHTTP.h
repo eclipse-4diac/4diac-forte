@@ -27,7 +27,7 @@ class FORTE_SubscribeEventHTTP : public CCompositeFB {
     static const int scmSubscribeEventAdpAdpNum = 0;
 
   public:
-    FORTE_SubscribeEventHTTP(const CStringDictionary::TStringId paInstanceNameId,
+    FORTE_SubscribeEventHTTP(const forte::core::StringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
 
         ~FORTE_SubscribeEventHTTP() override = default;

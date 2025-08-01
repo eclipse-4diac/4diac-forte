@@ -18,7 +18,7 @@
 #pragma once
 
 #include "core/conn.h"
-#include "core/stringdict.h"
+#include "core/stringid.h"
 #include "core/mgmcmdstruct.h"
 #include <vector>
 #include <memory>
@@ -44,19 +44,19 @@ namespace forte {
         using NameIterator = forte::core::TNameIdentifier::const_iterator;
 
       public:
-        CFBContainer(CStringDictionary::TStringId paContInstanceName, CFBContainer &paParent);
+        CFBContainer(forte::core::StringId paContInstanceName, CFBContainer &paParent);
 
         virtual bool initialize();
         virtual void deinitialize();
 
         virtual ~CFBContainer();
 
-        CStringDictionary::TStringId getInstanceNameId() const {
+        forte::core::StringId getInstanceNameId() const {
           return mContInstanceName;
         }
 
         const char *getInstanceName() const {
-          return CStringDictionary::get(mContInstanceName);
+          return mContInstanceName.data();
         }
 
         /*!\brief Create a new FB instance of given type and name
@@ -65,9 +65,8 @@ namespace forte {
          * @param paTypeName      the type name of the FB to be created
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse createFB(CStringDictionary::TStringId paInstanceNameId,
-                              CStringDictionary::TStringId paTypeName,
-                              std::string_view paTypeHash);
+        EMGMResponse
+        createFB(forte::core::StringId paInstanceNameId, forte::core::StringId paTypeName, std::string_view paTypeHash);
 
         /*!\brief Gets a function block from the container or recursively from its subcontainers
          *
@@ -136,14 +135,14 @@ namespace forte {
          * @param paDstNameList array of the name hierarchy the requested connection destination
          * @return pointer to the requested connection, returns nullptr if there is no such destination
          */
-        virtual CConnection *getInputConnection(std::span<const CStringDictionary::TStringId> paDstNameList);
+        virtual CConnection *getInputConnection(std::span<const forte::core::StringId> paDstNameList);
 
         /*!\brief get the connection object for the given source identifier
          *
          * @param paSrcNameList array of the name hierarchy the requested connection source
          * @return pointer to the requested connection, returns nullptr if there is no such source
          */
-        virtual CConnection::Wrapper getOutputConnection(std::span<const CStringDictionary::TStringId> paSrcNameList);
+        virtual CConnection::Wrapper getOutputConnection(std::span<const forte::core::StringId> paSrcNameList);
 
       protected:
         /*!\brief Create a new FB instance of given type and name
@@ -152,8 +151,8 @@ namespace forte {
          * @param paTypeName      the type name of the FB to be created
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse createFB(std::span<const CStringDictionary::TStringId> paNameList,
-                              CStringDictionary::TStringId paTypeName,
+        EMGMResponse createFB(std::span<const forte::core::StringId> paNameList,
+                              forte::core::StringId paTypeName,
                               std::string_view paTypeHash);
 
         /*!\brief Delete a FB instance with given name
@@ -161,16 +160,16 @@ namespace forte {
          * @param paNameList the name list for the FB to be deleted (e.g., SubApp1.SubApp2.FBName, FBName2)
          * @return response of the command execution as defined in IEC 61499
          */
-        EMGMResponse deleteFB(std::span<const CStringDictionary::TStringId> paNameList);
+        EMGMResponse deleteFB(std::span<const forte::core::StringId> paNameList);
 
         /*! get fb contained in this fbcontainer
          *
          */
-        CFunctionBlock *getFB(CStringDictionary::TStringId paFBName);
+        CFunctionBlock *getFB(forte::core::StringId paFBName);
 
-        CFBContainer *getChild(CStringDictionary::TStringId paName);
+        CFBContainer *getChild(forte::core::StringId paName);
 
-        TFBContainerList::iterator getChildrenIterator(CStringDictionary::TStringId paName);
+        TFBContainerList::iterator getChildrenIterator(forte::core::StringId paName);
 
       private:
         /*!\brief Adds a function block created via the typelib to the FB-List
@@ -188,7 +187,7 @@ namespace forte {
         /*!\brief Check if the given iterator points to a valid child with the provide name
          *
          */
-        bool isChild(TFBContainerList::iterator childIt, CStringDictionary::TStringId paName) {
+        bool isChild(TFBContainerList::iterator childIt, forte::core::StringId paName) {
           return (childIt != mChildren.end() && (*childIt)->getInstanceNameId() == paName);
         }
 
@@ -197,9 +196,9 @@ namespace forte {
          * @param paContainerName name of the container
          * @return pointer to the container or 0 if an FB with the same name exists in this container
          */
-        CFBContainer *findOrCreateContainer(CStringDictionary::TStringId paContainerName);
+        CFBContainer *findOrCreateContainer(forte::core::StringId paContainerName);
 
-        const CStringDictionary::TStringId mContInstanceName; //!< Instance name of the container
+        const forte::core::StringId mContInstanceName; //!< Instance name of the container
         CFBContainer &mParent; //!< the parent FBContainer this FBContainer is contained in. The parent of a device is
                                //!< the device itself!
 
@@ -211,21 +210,19 @@ namespace forte {
         static_assert(std::is_base_of_v<CFunctionBlock, T>, "T must be a CFunctionBlock");
 
       public:
-        CInternalFB(CStringDictionary::TStringId paInstanceNameId, CFBContainer &paContainer) :
+        CInternalFB(forte::core::StringId paInstanceNameId, CFBContainer &paContainer) :
             mFB(std::make_unique<T>(paInstanceNameId, paContainer)) {
           paContainer.addFB(*mFB);
         }
 
-        CInternalFB(CStringDictionary::TStringId paInstanceNameId,
-                    const char *paConfigString,
-                    CFBContainer &paContainer) :
+        CInternalFB(forte::core::StringId paInstanceNameId, const char *paConfigString, CFBContainer &paContainer) :
             mFB(std::make_unique<T>(paInstanceNameId, paContainer)) {
           mFB->configureFB(paConfigString);
           paContainer.addFB(*mFB);
         }
 
         template<typename U = T, typename = typename std::enable_if<std::is_base_of<forte::CAdapter, U>::value>::type>
-        CInternalFB(CStringDictionary::TStringId paInstanceNameId,
+        CInternalFB(forte::core::StringId paInstanceNameId,
                     forte::core::CFBContainer &paContainer,
                     TForteUInt8 paParentAdapterlistID) :
             mFB(std::make_unique<T>(paInstanceNameId, paContainer, paParentAdapterlistID)) {

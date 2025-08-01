@@ -17,11 +17,11 @@
 #include "core/datatypes/forte_char.h"
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(CHAR);
+using namespace forte::core::literals;
 
 using namespace std::literals::string_literals;
 
-DEFINE_FIRMWARE_DATATYPE(CHAR, STRID(CHAR))
+DEFINE_FIRMWARE_DATATYPE(CHAR, "CHAR"_STRID)
 
 void CIEC_CHAR::toString(std::string &paTargetBuf) const {
   paTargetBuf += "CHAR#'"s;
@@ -87,4 +87,4 @@ int CIEC_CHAR::fromString(const char *paValue) {
   return -1; // no match so something must be wrong
 }
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_CHAR>::scmDataTypeName = STRID(CHAR);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_CHAR>::scmDataTypeName = "CHAR"_STRID;

@@ -37,7 +37,7 @@ class FORTE_ST_CREATE_FB final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_ST_CREATE_FB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_ST_CREATE_FB(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_WSTRING var_FB_NAME;

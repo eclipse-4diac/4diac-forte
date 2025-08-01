@@ -18,27 +18,17 @@
 #include "OUT_ANY_CONSOLE_fbt.h"
 #include "core/datatypes/forte_bool.h"
 
-USE_STRING_ID(ANY);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(IN);
-USE_STRING_ID(LABEL);
-USE_STRING_ID(OUT_ANY_CONSOLE);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(REQ);
-USE_STRING_ID(STRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE, STRID(OUT_ANY_CONSOLE))
+DEFINE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE, "OUT_ANY_CONSOLE"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(LABEL), STRID(IN)};
-  const auto cDataOutputNames = std::array{STRID(QO)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "LABEL"_STRID, "IN"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -53,7 +43,7 @@ namespace {
   };
 } // namespace
 
-FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const forte::core::StringId paInstanceNameId,
                                              forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(false_BOOL),

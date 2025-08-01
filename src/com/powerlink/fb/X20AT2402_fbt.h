@@ -42,7 +42,7 @@ class FORTE_X20AT2402 final : public PowerlinkFunctionBlockAT {
     void setInitialValues() override;
 
   public:
-    FORTE_X20AT2402(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_X20AT2402(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_USINT var_CNID;

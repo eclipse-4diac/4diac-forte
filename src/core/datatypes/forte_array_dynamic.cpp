@@ -17,14 +17,14 @@
  *******************************************************************************/
 #include "core/datatypes/forte_array_dynamic.h"
 
-USE_STRING_ID(ARRAY);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_ulint.h"
 
-DEFINE_FIRMWARE_DATATYPE(ARRAY_DYNAMIC, STRID(ARRAY))
+DEFINE_FIRMWARE_DATATYPE(ARRAY_DYNAMIC, "ARRAY"_STRID)
 
 //! Function to configure the array if it is created via the typelib
-void CIEC_ARRAY_DYNAMIC::setup(TForteUInt16 paLength, CStringDictionary::TStringId paArrayType) {
+void CIEC_ARRAY_DYNAMIC::setup(TForteUInt16 paLength, forte::core::StringId paArrayType) {
   clear();
   if (paLength) {
     mLowerBound = 0;
@@ -44,7 +44,7 @@ void CIEC_ARRAY_DYNAMIC::setup(TForteUInt16 paLength, CStringDictionary::TString
 }
 
 //! Function to configure the array if it is created via the typelib
-void CIEC_ARRAY_DYNAMIC::setup(intmax_t paLowerBound, intmax_t paUpperBound, CStringDictionary::TStringId paArrayType) {
+void CIEC_ARRAY_DYNAMIC::setup(intmax_t paLowerBound, intmax_t paUpperBound, forte::core::StringId paArrayType) {
   clear();
   mLowerBound = paLowerBound;
   mUpperBound = paUpperBound;

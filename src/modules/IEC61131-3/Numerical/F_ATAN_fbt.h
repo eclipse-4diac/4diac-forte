@@ -43,7 +43,7 @@ class FORTE_F_ATAN : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_F_ATAN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_ATAN(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY_REAL_VARIANT var_IN;
     CIEC_ANY_REAL_VARIANT var_OUT;

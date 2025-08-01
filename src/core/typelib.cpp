@@ -18,12 +18,12 @@
 #include "core/datatypes/forte_any.h"
 #include "core/typelib_internal.h"
 #include "core/adapter.h"
-#include "core/stringdict.h"
+#include "core/stringid.h"
 #include <stddef.h>
 #include <string_view>
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(ARRAY);
+using namespace forte::core::literals;
 
 using namespace std::string_literals;
 
@@ -50,8 +50,8 @@ namespace {
     return *globalConstTypeLib;
   }
 
-  CFunctionBlock *createGenericFB(CStringDictionary::TStringId paInstanceNameId,
-                                  CStringDictionary::TStringId paFBTypeId,
+  CFunctionBlock *createGenericFB(forte::core::StringId paInstanceNameId,
+                                  forte::core::StringId paFBTypeId,
                                   forte::core::CFBContainer &paContainer,
                                   EMGMResponse &paErrorMSG);
 
@@ -74,19 +74,19 @@ namespace {
   void addGlobalConstType(forte::core::CGlobalConstEntry *paGlobalConstTypeEntry);
 
   template<typename T>
-  T *findTypeEntry(std::vector<T *> &vec, CStringDictionary::TStringId paTypeNameId);
+  T *findTypeEntry(std::vector<T *> &vec, forte::core::StringId paTypeNameId);
 
   template<typename T>
-  T *findGenericTypeEntry(std::vector<T *> &vec, CStringDictionary::TStringId paTypeNameId);
+  T *findGenericTypeEntry(std::vector<T *> &vec, forte::core::StringId paTypeNameId);
 
 }; // namespace
 
-constexpr forte::core::CTypeEntry::CTypeEntry(CStringDictionary::TStringId paTypeNameId, std::string_view paTypeHash) :
+constexpr forte::core::CTypeEntry::CTypeEntry(forte::core::StringId paTypeNameId, std::string_view paTypeHash) :
     mTypeNameId(paTypeNameId),
     mTypeHash(paTypeHash) {
 }
 
-forte::core::CFBTypeEntry::CFBTypeEntry(CStringDictionary::TStringId paTypeNameId,
+forte::core::CFBTypeEntry::CFBTypeEntry(forte::core::StringId paTypeNameId,
                                         std::string_view paTypeHash,
                                         TFunctionBlockCreateFunc paCreateFB) :
     CTypeEntry(paTypeNameId, paTypeHash),
@@ -94,7 +94,7 @@ forte::core::CFBTypeEntry::CFBTypeEntry(CStringDictionary::TStringId paTypeNameI
   addFBType(this);
 }
 
-forte::core::CAdapterTypeEntry::CAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId,
+forte::core::CAdapterTypeEntry::CAdapterTypeEntry(forte::core::StringId paTypeNameId,
                                                   std::string_view paTypeHash,
                                                   TAdapterCreateFunc paCreateAdapter) :
     CTypeEntry(paTypeNameId, paTypeHash),
@@ -102,7 +102,7 @@ forte::core::CAdapterTypeEntry::CAdapterTypeEntry(CStringDictionary::TStringId p
   addAdapterType(this);
 }
 
-forte::core::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId paTypeNameId,
+forte::core::CDataTypeEntry::CDataTypeEntry(forte::core::StringId paTypeNameId,
                                             std::string_view paTypeHash,
                                             TDataTypeCreateFunc paCreateDT,
                                             size_t paSize) :
@@ -112,14 +112,13 @@ forte::core::CDataTypeEntry::CDataTypeEntry(CStringDictionary::TStringId paTypeN
   addDataType(this);
 }
 
-forte::core::CGlobalConstEntry::CGlobalConstEntry(CStringDictionary::TStringId paTypeNameId,
-                                                  std::string_view paTypeHash) :
+forte::core::CGlobalConstEntry::CGlobalConstEntry(forte::core::StringId paTypeNameId, std::string_view paTypeHash) :
     CTypeEntry(paTypeNameId, paTypeHash) {
   addGlobalConstType(this);
 }
 
-forte::CAdapter *forte::core::createAdapter(CStringDictionary::TStringId paInstanceNameId,
-                                            CStringDictionary::TStringId paAdapterTypeId,
+forte::CAdapter *forte::core::createAdapter(forte::core::StringId paInstanceNameId,
+                                            forte::core::StringId paAdapterTypeId,
                                             forte::core::CFBContainer &paContainer,
                                             bool paIsPlug,
                                             TForteUInt8 paParentAdapterlistID,
@@ -146,8 +145,8 @@ forte::CAdapter *forte::core::createAdapter(CStringDictionary::TStringId paInsta
   return newAdapter;
 }
 
-CFunctionBlock *forte::core::createFB(CStringDictionary::TStringId paInstanceNameId,
-                                      CStringDictionary::TStringId paFBTypeId,
+CFunctionBlock *forte::core::createFB(forte::core::StringId paInstanceNameId,
+                                      forte::core::StringId paFBTypeId,
                                       std::string_view paTypeHash,
                                       forte::core::CFBContainer &paContainer,
                                       EMGMResponse &paErrorMSG) {
@@ -177,16 +176,16 @@ CFunctionBlock *forte::core::createFB(CStringDictionary::TStringId paInstanceNam
   return newFB;
 }
 
-CFunctionBlock *forte::core::createFB(CStringDictionary::TStringId paInstanceNameId,
-                                      CStringDictionary::TStringId paFBTypeId,
+CFunctionBlock *forte::core::createFB(forte::core::StringId paInstanceNameId,
+                                      forte::core::StringId paFBTypeId,
                                       forte::core::CFBContainer &paContainer) {
   EMGMResponse errorMSG;
   return forte::core::createFB(paInstanceNameId, paFBTypeId, std::string_view{}, paContainer, errorMSG);
 }
 
 namespace {
-  void nextDataPoint(const CStringDictionary::TStringId *&paDataTypeIds) {
-    while (*(paDataTypeIds++) == STRID(ARRAY)) {
+  void nextDataPoint(const forte::core::StringId *&paDataTypeIds) {
+    while (*(paDataTypeIds++) == "ARRAY"_STRID) {
       paDataTypeIds += 2;
     }
   }
@@ -214,9 +213,8 @@ bool forte::core::deleteFB(CFunctionBlock *paFBToDelete) {
   return true;
 }
 
-CIEC_ANY *forte::core::createDataTypeInstance(CStringDictionary::TStringId paDTNameId,
-                                              TForteByte *paDataBuf,
-                                              EMGMResponse &paErrorMSG) {
+CIEC_ANY *
+forte::core::createDataTypeInstance(forte::core::StringId paDTNameId, TForteByte *paDataBuf, EMGMResponse &paErrorMSG) {
   CIEC_ANY *poNewDT = nullptr;
   CDataTypeEntry *poToCreate = getDataTypeEntry(paDTNameId);
   if (nullptr != poToCreate) {
@@ -231,7 +229,7 @@ CIEC_ANY *forte::core::createDataTypeInstance(CStringDictionary::TStringId paDTN
   return poNewDT;
 }
 
-CIEC_ANY *forte::core::createDataTypeInstance(CStringDictionary::TStringId paDTNameId, TForteByte *paDataBuf) {
+CIEC_ANY *forte::core::createDataTypeInstance(forte::core::StringId paDTNameId, TForteByte *paDataBuf) {
   EMGMResponse errorMSG;
   return createDataTypeInstance(paDTNameId, paDataBuf, errorMSG);
 }
@@ -239,10 +237,11 @@ CIEC_ANY *forte::core::createDataTypeInstance(CStringDictionary::TStringId paDTN
 namespace {
 
   template<typename T>
-  T *findTypeEntry(std::vector<T *> &vec, const CStringDictionary::TStringId paTypeNameId) {
-    auto it = std::lower_bound(
-        vec.begin(), vec.end(), paTypeNameId,
-        [](T *paTypeEnry, const CStringDictionary::TStringId paId) { return paTypeEnry->getTypeNameId() < paId; });
+  T *findTypeEntry(std::vector<T *> &vec, const forte::core::StringId paTypeNameId) {
+    auto it =
+        std::lower_bound(vec.begin(), vec.end(), paTypeNameId, [](T *paTypeEnry, const forte::core::StringId paId) {
+          return paTypeEnry->getTypeNameId() < paId;
+        });
     if (it != vec.end() && (*it)->getTypeNameId() == paTypeNameId) {
       return *it;
     }
@@ -250,7 +249,7 @@ namespace {
   }
 
   template<typename T>
-  T *findGenericTypeEntry(std::vector<T *> &vec, const CStringDictionary::TStringId paTypeNameId) {
+  T *findGenericTypeEntry(std::vector<T *> &vec, const forte::core::StringId paTypeNameId) {
     const char *const typeBuf = CStringDictionary::get(paTypeNameId);
     const char *const underScore = getFirstNonTypeNameUnderscorePos(typeBuf);
 
@@ -265,27 +264,27 @@ namespace {
     genFBName += "GEN_"s;
     genFBName.append(typeBuf, typeNameLen);
 
-    return findTypeEntry(vec, CStringDictionary::getId(genFBName.c_str()));
+    return findTypeEntry(vec, forte::core::StringId::lookup(genFBName));
   }
 
 } // namespace
 
-forte::core::CFBTypeEntry *forte::core::getFBTypeEntry(const CStringDictionary::TStringId paTypeNameId) {
+forte::core::CFBTypeEntry *forte::core::getFBTypeEntry(const forte::core::StringId paTypeNameId) {
   if (const auto entry = findTypeEntry(getFBTypeLib(), paTypeNameId); entry != nullptr) {
     return entry;
   }
   return findGenericTypeEntry(getFBTypeLib(), paTypeNameId);
 }
 
-forte::core::CAdapterTypeEntry *forte::core::getAdapterTypeEntry(const CStringDictionary::TStringId paTypeNameId) {
+forte::core::CAdapterTypeEntry *forte::core::getAdapterTypeEntry(const forte::core::StringId paTypeNameId) {
   return findTypeEntry(getAdapterTypeLib(), paTypeNameId);
 }
 
-forte::core::CDataTypeEntry *forte::core::getDataTypeEntry(const CStringDictionary::TStringId paTypeNameId) {
+forte::core::CDataTypeEntry *forte::core::getDataTypeEntry(const forte::core::StringId paTypeNameId) {
   return findTypeEntry(getDataTypeLib(), paTypeNameId);
 }
 
-forte::core::CGlobalConstEntry *forte::core::getGlobalConstTypeEntry(const CStringDictionary::TStringId paTypeNameId) {
+forte::core::CGlobalConstEntry *forte::core::getGlobalConstTypeEntry(const forte::core::StringId paTypeNameId) {
   return findTypeEntry(getGlobalConstTypeLib(), paTypeNameId);
 }
 
@@ -307,8 +306,8 @@ const std::vector<forte::core::CGlobalConstEntry *> &forte::core::getGlobalConst
 
 namespace {
 
-  CFunctionBlock *createGenericFB(const CStringDictionary::TStringId paInstanceNameId,
-                                  const CStringDictionary::TStringId paFBTypeId,
+  CFunctionBlock *createGenericFB(const forte::core::StringId paInstanceNameId,
+                                  const forte::core::StringId paFBTypeId,
                                   forte::core::CFBContainer &paContainer,
                                   EMGMResponse &paErrorMSG) {
     forte::core::CFBTypeEntry *typeEntry = findGenericTypeEntry(getFBTypeLib(), paFBTypeId);
@@ -320,7 +319,7 @@ namespace {
     CFunctionBlock *newFB = typeEntry->createFBInstance(paInstanceNameId, paContainer);
     if (newFB == nullptr) { // we could not create the requested object
       paErrorMSG = EMGMResponse::Overflow;
-    } else if (!newFB->configureFB(CStringDictionary::get(paFBTypeId))) { // we got a configurable block
+    } else if (!newFB->configureFB(paFBTypeId.data())) { // we got a configurable block
       delete newFB;
       paErrorMSG = EMGMResponse::Overflow;
       return nullptr;

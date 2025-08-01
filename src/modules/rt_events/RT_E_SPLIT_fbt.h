@@ -45,7 +45,7 @@ class FORTE_RT_E_SPLIT final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_RT_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_RT_E_SPLIT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_TIME var_Tmin;

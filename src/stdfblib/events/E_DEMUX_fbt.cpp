@@ -13,15 +13,7 @@
 
 #include "E_DEMUX_fbt.h"
 
-USE_STRING_ID(E_DEMUX);
-USE_STRING_ID(EI);
-USE_STRING_ID(EO0);
-USE_STRING_ID(EO1);
-USE_STRING_ID(EO2);
-USE_STRING_ID(EO3);
-USE_STRING_ID(Event);
-USE_STRING_ID(K);
-USE_STRING_ID(UINT);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_bool.h"
 #include "core/datatypes/forte_uint.h"
@@ -31,14 +23,14 @@ USE_STRING_ID(UINT);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_DEMUX, STRID(E_DEMUX))
+DEFINE_FIRMWARE_FB(FORTE_E_DEMUX, "E_DEMUX"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(K)};
-  const auto cEventInputNames = std::array{STRID(EI)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(EO0), STRID(EO1), STRID(EO2), STRID(EO3)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
+  const auto cDataInputNames = std::array{"K"_STRID};
+  const auto cEventInputNames = std::array{"EI"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"EO0"_STRID, "EO1"_STRID, "EO2"_STRID, "EO3"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -52,7 +44,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_DEMUX::FORTE_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_DEMUX::FORTE_E_DEMUX(const forte::core::StringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO0(*this, 0),

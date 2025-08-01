@@ -13,34 +13,20 @@
 
 #include "IORevPiCore.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(BusAdapterOut);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(IORevPiBusAdapter);
-USE_STRING_ID(IORevPiCore);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(UINT);
-USE_STRING_ID(UpdateInterval);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "../RevPiController.h"
 
-DEFINE_FIRMWARE_FB(FORTE_IORevPiCore, STRID(IORevPiCore))
+DEFINE_FIRMWARE_FB(FORTE_IORevPiCore, "IORevPiCore"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(UpdateInterval)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(INIT)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
-  const auto cEventOutputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "UpdateInterval"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "IND"_STRID};
+  const auto cEventOutputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cPlugNameIds = std::array{"BusAdapterOut"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -54,7 +40,7 @@ namespace {
   };
 } // namespace
 
-FORTE_IORevPiCore::FORTE_IORevPiCore(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_IORevPiCore::FORTE_IORevPiCore(const forte::core::StringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
     forte::core::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_UpdateInterval(25_UINT),
@@ -64,7 +50,7 @@ FORTE_IORevPiCore::FORTE_IORevPiCore(const CStringDictionary::TStringId paInstan
     conn_UpdateInterval(nullptr),
     conn_QO(*this, 0, var_QO),
     conn_STATUS(*this, 1, var_STATUS),
-    var_BusAdapterOut(STRID(BusAdapterOut), *this, 0) {
+    var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0) {
 }
 
 void FORTE_IORevPiCore::setInitialValues() {

@@ -25,7 +25,7 @@ class CBaseFB : public CFunctionBlock {
   public:
     ~CBaseFB() override = default;
 
-    CIEC_ANY *getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) override;
+    CIEC_ANY *getVar(forte::core::StringId *paNameList, unsigned int paNameListSize) override;
 
     void toString(std::string &paTargetBuf) const override;
 
@@ -36,8 +36,8 @@ class CBaseFB : public CFunctionBlock {
   protected:
     CBaseFB(forte::core::CFBContainer &paContainer,
             const SFBInterfaceSpec &paInterfaceSpec,
-            CStringDictionary::TStringId paInstanceNameId,
-            std::span<const CStringDictionary::TStringId> paVarInternalNames);
+            forte::core::StringId paInstanceNameId,
+            std::span<const forte::core::StringId> paVarInternalNames);
 
     /*! \brief Get the internal variable with given number
      *
@@ -59,7 +59,7 @@ class CBaseFB : public CFunctionBlock {
      * \param paInternalName StringId of the internal variable name.
      * \return Pointer to the internal variable or 0.
      */
-    CIEC_ANY *getInternalVar(CStringDictionary::TStringId paInternalName);
+    CIEC_ANY *getInternalVar(forte::core::StringId paInternalName);
 
-    const std::span<const CStringDictionary::TStringId> cmVarInternalNames;
+    const std::span<const forte::core::StringId> cmVarInternalNames;
 };

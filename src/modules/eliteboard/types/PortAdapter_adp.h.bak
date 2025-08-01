@@ -45,7 +45,7 @@ class FORTE_PortAdapter final : public CAdapter {
       return mParentAdapterListEventID + scmEventMAPID;
     }
 
-    FORTE_PortAdapter(CStringDictionary::TStringId paAdapterInstanceName,
+    FORTE_PortAdapter(forte::core::StringId paAdapterInstanceName,
                       forte::core::CFBContainer &paContainer,
                       bool paIsPlug) :
 

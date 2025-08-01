@@ -13,28 +13,16 @@
 
 #include "E_F_TRIG_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CLK);
-USE_STRING_ID(D);
-USE_STRING_ID(E_D_FF);
-USE_STRING_ID(E_F_TRIG);
-USE_STRING_ID(EI);
-USE_STRING_ID(EO);
-USE_STRING_ID(EO0);
-USE_STRING_ID(E_SWITCH);
-USE_STRING_ID(Event);
-USE_STRING_ID(G);
-USE_STRING_ID(Q);
-USE_STRING_ID(QI);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_E_F_TRIG, STRID(E_F_TRIG))
+DEFINE_FIRMWARE_FB(FORTE_E_F_TRIG, "E_F_TRIG"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI)};
-  const auto cEventInputNames = std::array{STRID(EI)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(EO)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"QI"_STRID};
+  const auto cEventInputNames = std::array{"EI"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"EO"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -48,14 +36,14 @@ namespace {
   };
 
   const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
-      {CStringDictionary::scmInvalidStringId, STRID(EI), STRID(E_D_FF), STRID(CLK)},
-      {STRID(E_D_FF), STRID(EO), STRID(E_SWITCH), STRID(EI)},
-      {STRID(E_SWITCH), STRID(EO0), CStringDictionary::scmInvalidStringId, STRID(EO)},
+      {{}, "EI"_STRID, "E_D_FF"_STRID, "CLK"_STRID},
+      {"E_D_FF"_STRID, "EO"_STRID, "E_SWITCH"_STRID, "EI"_STRID},
+      {"E_SWITCH"_STRID, "EO0"_STRID, {}, "EO"_STRID},
   });
 
   const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
-      {CStringDictionary::scmInvalidStringId, STRID(QI), STRID(E_D_FF), STRID(D)},
-      {STRID(E_D_FF), STRID(Q), STRID(E_SWITCH), STRID(G)},
+      {{}, "QI"_STRID, "E_D_FF"_STRID, "D"_STRID},
+      {"E_D_FF"_STRID, "Q"_STRID, "E_SWITCH"_STRID, "G"_STRID},
   });
 
   const SCFB_FBNData cFBNData = {
@@ -65,11 +53,11 @@ namespace {
   };
 } // namespace
 
-FORTE_E_F_TRIG::FORTE_E_F_TRIG(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_F_TRIG::FORTE_E_F_TRIG(const forte::core::StringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
-    fb_E_D_FF(STRID(E_D_FF), *this),
-    fb_E_SWITCH(STRID(E_SWITCH), *this),
+    fb_E_D_FF("E_D_FF"_STRID, *this),
+    fb_E_SWITCH("E_SWITCH"_STRID, *this),
     conn_EO(*this, 0),
     conn_QI(nullptr),
     conn_if2in_QI(*this, 0, 0_BOOL) {};

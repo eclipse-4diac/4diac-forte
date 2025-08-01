@@ -16,23 +16,15 @@
 
 #include "F_LIMIT_fbt.h"
 
-USE_STRING_ID(ANY_ELEMENTARY);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(F_LIMIT);
-USE_STRING_ID(IN);
-USE_STRING_ID(MN);
-USE_STRING_ID(MX);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_F_LIMIT, STRID(F_LIMIT))
+DEFINE_FIRMWARE_FB(FORTE_F_LIMIT, "F_LIMIT"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(MN), STRID(IN), STRID(MX)};
-  const auto cDataOutputNames = std::array{STRID(OUT)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataInputNames = std::array{"MN"_STRID, "IN"_STRID, "MX"_STRID};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -47,7 +39,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_LIMIT::FORTE_F_LIMIT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_LIMIT::FORTE_F_LIMIT(const forte::core::StringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_MN(CIEC_ANY_ELEMENTARY_VARIANT()),

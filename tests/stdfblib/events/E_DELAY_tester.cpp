@@ -14,7 +14,7 @@
 #include "core/datatypes/forte_time.h"
 #include <E_DELAY.h>
 
-USE_STRING_ID(E_DELAY);
+using namespace forte::core::literals;
 
 #ifdef WIN32
 #include <windows.h>
@@ -93,4 +93,4 @@ class E_DELAY_tester : public CFBTester {
 /***********************************************************************************/
 /***********************************************************************************/
 
-DEFINE_FB_TESTER(E_DELAY_tester, STRID(E_DELAY))
+DEFINE_FB_TESTER(E_DELAY_tester, "E_DELAY"_STRID)

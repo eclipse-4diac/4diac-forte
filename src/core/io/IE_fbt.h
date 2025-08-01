@@ -31,7 +31,7 @@ class FORTE_IE final : public forte::core::io::CProcessInterfaceFB {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_IE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IE(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CEventConnection conn_IND;
 

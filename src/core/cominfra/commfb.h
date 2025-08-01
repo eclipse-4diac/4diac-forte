@@ -56,7 +56,7 @@ namespace forte {
         }
 
       protected:
-        CCommFB(const CStringDictionary::TStringId paInstanceNameId,
+        CCommFB(const forte::core::StringId paInstanceNameId,
                 forte::core::CFBContainer &paContainer,
                 forte::com_infra::EComServiceType paCommServiceType);
 
@@ -105,8 +105,8 @@ namespace forte {
         std::unique_ptr<CIEC_ANY *[]> mGenDOs;
 
       private:
-        std::vector<CStringDictionary::TStringId> mDiNames;
-        std::vector<CStringDictionary::TStringId> mDoNames;
+        std::vector<forte::core::StringId> mDiNames;
+        std::vector<forte::core::StringId> mDoNames;
 
         bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 

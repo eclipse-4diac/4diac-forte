@@ -20,7 +20,7 @@
 #include <variant>
 #include <string>
 
-#include "core/stringdict.h"
+#include "core/stringid.h"
 #include "core/trace/barectf_platform_forte.h"
 #include "core/trace/internal/internalTracer.h"
 
@@ -34,7 +34,7 @@ class CFlexibleTracer final {
 
     using TracerVariant = std::variant<std::monostate, BarectfPlatformFORTE, CInternalTracer>;
 
-    CFlexibleTracer(CStringDictionary::TStringId instanceName, size_t bufferSize);
+    CFlexibleTracer(forte::core::StringId instanceName, size_t bufferSize);
 
     ~CFlexibleTracer() = default;
 

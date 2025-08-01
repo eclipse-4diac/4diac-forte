@@ -16,29 +16,22 @@
 
 #include "F_LEN_fbt.h"
 
-USE_STRING_ID(ANY_INT);
-USE_STRING_ID(ANY_STRING);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(F_LEN);
-USE_STRING_ID(IN);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_F_LEN, STRID(F_LEN))
+DEFINE_FIRMWARE_FB(FORTE_F_LEN, "F_LEN"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cDataInputNames = std::array{"IN"_STRID};
   
   
-  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -54,7 +47,7 @@ namespace {
 }
 
 
-FORTE_F_LEN::FORTE_F_LEN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_LEN::FORTE_F_LEN(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_STRING_VARIANT()),
     var_OUT(CIEC_ANY_INT_VARIANT()),

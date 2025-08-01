@@ -35,8 +35,7 @@ namespace forte::ita {
       mCommand.mSecondParam.clear();
       mCommand.mMonitorResponse.clear();
 
-      mCommand.mDestination =
-          (strlen(paDest) != 0) ? CStringDictionary::insert(paDest) : CStringDictionary::scmInvalidStringId;
+      mCommand.mDestination = (strlen(paDest) != 0) ? forte::core::StringId::insert(paDest) : forte::core::StringId{};
       if (255 <= mCommand.mAdditionalParams.capacity()) {
         mCommand.mAdditionalParams.reserve(255);
       }
@@ -240,14 +239,14 @@ namespace forte::ita {
     for (char *runner = paIdentifierStart, *start = paIdentifierStart; '\0' != *runner; ++runner) {
       if ('.' == *runner) {
         *runner = '\0';
-        if (!paIdentifier.push_back(CStringDictionary::insert(start))) {
+        if (!paIdentifier.push_back(forte::core::StringId::insert(start))) {
           return -1;
         }
         *runner = '.';
         start = runner + 1;
       } else if ('"' == *runner) {
         *runner = '\0';
-        if (!paIdentifier.push_back(CStringDictionary::insert(start))) {
+        if (!paIdentifier.push_back(forte::core::StringId::insert(start))) {
           return -1;
         }
         *runner = '"';
@@ -272,7 +271,7 @@ namespace forte::ita {
       fbTypeName = fbTypeName.substr(0, typeHashSeparator);
     }
 
-    if (!paIdentifier.push_back(CStringDictionary::insert(fbTypeName.data(), fbTypeName.length()))) {
+    if (!paIdentifier.push_back(forte::core::StringId::insert(fbTypeName))) {
       return -1;
     }
     return static_cast<int>(endIndex + 1);
@@ -538,10 +537,10 @@ namespace forte::ita {
   void CommandParser::appendIdentifierName(CIEC_STRING &paDest, forte::core::TNameIdentifier &paIdentifier) {
     if (!paIdentifier.empty()) {
       for (const auto &runner : paIdentifier) {
-        paDest.append(CStringDictionary::get(runner));
+        paDest.append(runner.data());
         paDest.append(".");
       }
-      paDest.append(CStringDictionary::get(paIdentifier.back()));
+      paDest.append(paIdentifier.back().data());
     }
   }
 

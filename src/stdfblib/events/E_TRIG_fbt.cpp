@@ -11,11 +11,7 @@
 
 #include "E_TRIG_fbt.h"
 
-USE_STRING_ID(CNF);
-USE_STRING_ID(E_TRIG);
-USE_STRING_ID(EVENTTYPE);
-USE_STRING_ID(REQ);
-USE_STRING_ID(STRING);
+using namespace forte::core::literals;
 
 #include "core/iec61131_functions.h"
 #include "core/datatypes/forte_array_common.h"
@@ -25,12 +21,12 @@ USE_STRING_ID(STRING);
 
 #include "core/resource.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_TRIG, STRID(E_TRIG))
+DEFINE_FIRMWARE_FB(FORTE_E_TRIG, "E_TRIG"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(EVENTTYPE)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataInputNames = std::array{"EVENTTYPE"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -44,7 +40,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TRIG::FORTE_E_TRIG(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_TRIG::FORTE_E_TRIG(const forte::core::StringId paInstanceNameId,
                            forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_EVENTTYPE("EInit"_STRING),
@@ -58,8 +54,8 @@ void FORTE_E_TRIG::setInitialValues() {
 void FORTE_E_TRIG::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventREQID:
-      const TEventTypeID eventTypeId = CStringDictionary::getId(var_EVENTTYPE.c_str());
-      if (eventTypeId != CStringDictionary::scmInvalidStringId) {
+      const TEventTypeID eventTypeId = forte::core::StringId::lookup(var_EVENTTYPE.c_str());
+      if (eventTypeId) {
         triggerEventsInResource(getResource(), eventTypeId, paECET);
         sendOutputEvent(scmEventCNFID, paECET);
       }

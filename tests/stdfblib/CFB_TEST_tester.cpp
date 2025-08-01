@@ -13,11 +13,11 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-USE_STRING_ID(CFB_TEST);
+using namespace forte::core::literals;
 
 struct CFB_TEST_TestFixture : public CFBTestFixtureBase {
 
-    CFB_TEST_TestFixture() : CFBTestFixtureBase(STRID(CFB_TEST)) {
+    CFB_TEST_TestFixture() : CFBTestFixtureBase("CFB_TEST"_STRID) {
       setInputData({&mInQI});
       setOutputData({&mOutSR});
       CFBTestFixtureBase::setup();

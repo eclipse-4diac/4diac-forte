@@ -17,7 +17,7 @@
 class CFunctionBlockMock : public CFunctionBlock {
 
   public:
-    CFunctionBlockMock() : CFunctionBlock(CFBContainerMock::smDefaultFBContMock, scmFunctionBlockMockInterface, 0) {
+    CFunctionBlockMock() : CFunctionBlock(CFBContainerMock::smDefaultFBContMock, scmFunctionBlockMockInterface, {}) {
     }
 
     bool initialize() override {
@@ -29,8 +29,8 @@ class CFunctionBlockMock : public CFunctionBlock {
       return true;
     }
 
-    CStringDictionary::TStringId getFBTypeId() const override {
-      return CStringDictionary::scmInvalidStringId;
+    forte::core::StringId getFBTypeId() const override {
+      return {};
     }
 
   protected:

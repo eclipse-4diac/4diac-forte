@@ -33,11 +33,11 @@ class CIEC_Struct_Muxer_Test_Struct_1 : public CIEC_STRUCT {
       return 3;
     }
 
-    const CStringDictionary::TStringId *elementNames() const override {
+    const forte::core::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    CStringDictionary::TStringId getStructTypeNameID() const override;
+    forte::core::StringId getStructTypeNameID() const override;
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
       switch (paMemberIndex) {
@@ -58,7 +58,7 @@ class CIEC_Struct_Muxer_Test_Struct_1 : public CIEC_STRUCT {
     }
 
   private:
-    static const CStringDictionary::TStringId scmElementNames[];
+    static const forte::core::StringId scmElementNames[];
 };
 
 class CIEC_Struct_Muxer_Test_Struct_2 : public CIEC_STRUCT {
@@ -75,11 +75,11 @@ class CIEC_Struct_Muxer_Test_Struct_2 : public CIEC_STRUCT {
       return 3;
     }
 
-    const CStringDictionary::TStringId *elementNames() const override {
+    const forte::core::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    CStringDictionary::TStringId getStructTypeNameID() const override;
+    forte::core::StringId getStructTypeNameID() const override;
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
       switch (paMemberIndex) {
@@ -100,7 +100,7 @@ class CIEC_Struct_Muxer_Test_Struct_2 : public CIEC_STRUCT {
     }
 
   private:
-    static const CStringDictionary::TStringId scmElementNames[];
+    static const forte::core::StringId scmElementNames[];
 };
 
 class CIEC_Struct_Muxer_Test_Struct_3 : public CIEC_STRUCT {
@@ -113,11 +113,11 @@ class CIEC_Struct_Muxer_Test_Struct_3 : public CIEC_STRUCT {
       return 0;
     }
 
-    const CStringDictionary::TStringId *elementNames() const override {
+    const forte::core::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    CStringDictionary::TStringId getStructTypeNameID() const override;
+    forte::core::StringId getStructTypeNameID() const override;
 
     CIEC_ANY *getMember(size_t) override {
       return nullptr;
@@ -128,7 +128,7 @@ class CIEC_Struct_Muxer_Test_Struct_3 : public CIEC_STRUCT {
     }
 
   private:
-    static const CStringDictionary::TStringId scmElementNames[];
+    static const forte::core::StringId scmElementNames[];
 };
 
 class CIEC_Struct_Muxer_Test_Struct_4 : public CIEC_STRUCT {
@@ -143,11 +143,11 @@ class CIEC_Struct_Muxer_Test_Struct_4 : public CIEC_STRUCT {
       return 256;
     }
 
-    const CStringDictionary::TStringId *elementNames() const override {
+    const forte::core::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    CStringDictionary::TStringId getStructTypeNameID() const override;
+    forte::core::StringId getStructTypeNameID() const override;
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
       if (paMemberIndex < 256) {
@@ -164,7 +164,7 @@ class CIEC_Struct_Muxer_Test_Struct_4 : public CIEC_STRUCT {
     }
 
   private:
-    static const CStringDictionary::TStringId scmElementNames[];
+    static const forte::core::StringId scmElementNames[];
 };
 
 class CIEC_Struct_Muxer_Test_Struct_5 : public CIEC_STRUCT {
@@ -181,11 +181,11 @@ class CIEC_Struct_Muxer_Test_Struct_5 : public CIEC_STRUCT {
       return 3;
     }
 
-    const CStringDictionary::TStringId *elementNames() const override {
+    const forte::core::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    CStringDictionary::TStringId getStructTypeNameID() const override;
+    forte::core::StringId getStructTypeNameID() const override;
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
       switch (paMemberIndex) {
@@ -206,7 +206,7 @@ class CIEC_Struct_Muxer_Test_Struct_5 : public CIEC_STRUCT {
     }
 
   private:
-    static const CStringDictionary::TStringId scmElementNames[];
+    static const forte::core::StringId scmElementNames[];
 };
 
 #endif /* TESTS_MODULES_CONVERT_STRUCT_MUX_DEMUX_DATA_H_ */

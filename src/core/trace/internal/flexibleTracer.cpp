@@ -22,7 +22,7 @@ const CFlexibleTracer::TracerVariant &CFlexibleTracer::getTracerVariant() const 
   return mTracer;
 }
 
-CFlexibleTracer::CFlexibleTracer(CStringDictionary::TStringId instanceName, size_t bufferSize) {
+CFlexibleTracer::CFlexibleTracer(forte::core::StringId instanceName, size_t bufferSize) {
   if (mCurrentTracer == AvailableTracers::BareCtf) {
     mTracer.emplace<BarectfPlatformFORTE>(instanceName, bufferSize);
   } else if (mCurrentTracer == AvailableTracers::Internal) {

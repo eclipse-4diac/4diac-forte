@@ -51,7 +51,7 @@ class FORTE_E_BLINK final : public CCompositeFB {
     CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
   public:
-    FORTE_E_BLINK(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_BLINK(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CEventConnection conn_CNF;
 

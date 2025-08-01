@@ -20,7 +20,7 @@ class EMB_RES : public CResource {
     DECLARE_FIRMWARE_FB(EMB_RES);
 
   public:
-    EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice);
+    EMB_RES(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paDevice);
     ~EMB_RES() override;
 
     CIEC_ANY *getDI(size_t) override;

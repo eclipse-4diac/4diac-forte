@@ -17,23 +17,7 @@
 
 #include "RampLimitFS_fbt.h"
 
-USE_STRING_ID(CNF);
-USE_STRING_ID(DINT);
-USE_STRING_ID(DOWN_FAST);
-USE_STRING_ID(DOWN_SLOW);
-USE_STRING_ID(Event);
-USE_STRING_ID(FAST);
-USE_STRING_ID(FULL);
-USE_STRING_ID(LOAD);
-USE_STRING_ID(OUT);
-USE_STRING_ID(PV);
-USE_STRING_ID(signalprocessing__RampLimitFS);
-USE_STRING_ID(SLOW);
-USE_STRING_ID(UP_FAST);
-USE_STRING_ID(UP_SLOW);
-USE_STRING_ID(VAL_FULL);
-USE_STRING_ID(VAL_ZERO);
-USE_STRING_ID(ZERO);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_any_elementary_variant.h"
 #include "core/datatypes/forte_any_num_variant.h"
@@ -44,17 +28,17 @@ USE_STRING_ID(ZERO);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS, STRID(signalprocessing__RampLimitFS))
+DEFINE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS, "signalprocessing__RampLimitFS"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(PV), STRID(VAL_ZERO), STRID(SLOW), STRID(FAST), STRID(VAL_FULL)};
-  const auto cDataOutputNames = std::array{STRID(OUT)};
-  const auto cEventInputNames = std::array{STRID(ZERO),      STRID(UP_SLOW), STRID(UP_FAST), STRID(DOWN_SLOW),
-                                           STRID(DOWN_FAST), STRID(FULL),    STRID(LOAD)};
+  const auto cDataInputNames = std::array{"PV"_STRID, "VAL_ZERO"_STRID, "SLOW"_STRID, "FAST"_STRID, "VAL_FULL"_STRID};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
+  const auto cEventInputNames = std::array{"ZERO"_STRID,      "UP_SLOW"_STRID, "UP_FAST"_STRID, "DOWN_SLOW"_STRID,
+                                           "DOWN_FAST"_STRID, "FULL"_STRID,    "LOAD"_STRID};
   const auto cEventInputTypeIds =
-      std::array{STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+      std::array{"Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -69,7 +53,7 @@ namespace {
 } // namespace
 
 FORTE_signalprocessing__RampLimitFS::FORTE_signalprocessing__RampLimitFS(
-    const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CNF(*this, 0),
     conn_PV(nullptr),

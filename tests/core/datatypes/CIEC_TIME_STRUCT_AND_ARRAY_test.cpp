@@ -23,13 +23,7 @@
 #include "core/datatypes/forte_array.h"
 #include "core/typelib.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(INT);
-USE_STRING_ID(TestStruct);
-USE_STRING_ID(TIME);
-USE_STRING_ID(Val1);
-USE_STRING_ID(Val2);
-USE_STRING_ID(Val3);
+using namespace forte::core::literals;
 
 class CIEC_TestStruct : public CIEC_STRUCT {
     DECLARE_FIRMWARE_DATATYPE(TestStruct);
@@ -50,12 +44,12 @@ class CIEC_TestStruct : public CIEC_STRUCT {
       return 3;
     }
 
-    const CStringDictionary::TStringId *elementNames() const override {
+    const forte::core::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    CStringDictionary::TStringId getStructTypeNameID() const override {
-      return STRID(TestStruct);
+    forte::core::StringId getStructTypeNameID() const override {
+      return "TestStruct"_STRID;
     }
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
@@ -77,22 +71,22 @@ class CIEC_TestStruct : public CIEC_STRUCT {
     }
 
   private:
-    static const CStringDictionary::TStringId scmElementTypes[];
-    static const CStringDictionary::TStringId scmElementNames[];
+    static const forte::core::StringId scmElementTypes[];
+    static const forte::core::StringId scmElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_TestStruct::scmElementTypes[] = {STRID(BOOL), STRID(INT), STRID(TIME)};
-const CStringDictionary::TStringId CIEC_TestStruct::scmElementNames[] = {STRID(Val1), STRID(Val2), STRID(Val3)};
+const forte::core::StringId CIEC_TestStruct::scmElementTypes[] = {"BOOL"_STRID, "INT"_STRID, "TIME"_STRID};
+const forte::core::StringId CIEC_TestStruct::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID};
 
-DEFINE_FIRMWARE_DATATYPE(TestStruct, STRID(TestStruct))
+DEFINE_FIRMWARE_DATATYPE(TestStruct, "TestStruct"_STRID)
 
 BOOST_AUTO_TEST_SUITE(CIEC_TIME_STRUCT_AND_ARRAY_function_test)
 
 // STRUCT TESTS
 void setDataTestStruct(CIEC_TestStruct &paStruct, bool paVal1, int paVal2, CIEC_TIME::TValueType paVal3) {
-  (*static_cast<CIEC_BOOL *>(paStruct.getMemberNamed(STRID(Val1)))) = CIEC_BOOL(paVal1);
-  (*static_cast<CIEC_INT *>(paStruct.getMemberNamed(STRID(Val2)))) = CIEC_INT(static_cast<TForteInt16>(paVal2));
-  (*static_cast<CIEC_TIME *>(paStruct.getMemberNamed(STRID(Val3)))) = CIEC_TIME(paVal3);
+  (*static_cast<CIEC_BOOL *>(paStruct.getMemberNamed("Val1"_STRID))) = CIEC_BOOL(paVal1);
+  (*static_cast<CIEC_INT *>(paStruct.getMemberNamed("Val2"_STRID))) = CIEC_INT(static_cast<TForteInt16>(paVal2));
+  (*static_cast<CIEC_TIME *>(paStruct.getMemberNamed("Val3"_STRID))) = CIEC_TIME(paVal3);
 }
 
 void setupTestStruct_TestDataSet1(CIEC_TestStruct &paStruct) {
@@ -100,26 +94,26 @@ void setupTestStruct_TestDataSet1(CIEC_TestStruct &paStruct) {
 }
 
 void checkTestStruct_InitialValues(CIEC_TestStruct &paStruct) {
-  BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(paStruct.getMemberNamed(STRID(Val1)))));
+  BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(paStruct.getMemberNamed("Val1"_STRID))));
   BOOST_CHECK_EQUAL(0,
-                    static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(paStruct.getMemberNamed(STRID(Val2)))));
+                    static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(paStruct.getMemberNamed("Val2"_STRID))));
   BOOST_CHECK_EQUAL(
-      0, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(paStruct.getMemberNamed(STRID(Val3)))));
+      0, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(paStruct.getMemberNamed("Val3"_STRID))));
 }
 
 void checkTestStruct_TestDataSet1(CIEC_TestStruct &paStruct) {
-  BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(paStruct.getMemberNamed(STRID(Val1)))));
+  BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(paStruct.getMemberNamed("Val1"_STRID))));
   BOOST_CHECK_EQUAL(44,
-                    static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(paStruct.getMemberNamed(STRID(Val2)))));
+                    static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(paStruct.getMemberNamed("Val2"_STRID))));
   BOOST_CHECK_EQUAL(
-      10, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(paStruct.getMemberNamed(STRID(Val3)))));
+      10, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(paStruct.getMemberNamed("Val3"_STRID))));
 }
 
 BOOST_AUTO_TEST_CASE(TimeStruct_element_access_test) {
   CIEC_TestStruct stStruct;
-  BOOST_CHECK_EQUAL(stStruct.getMemberNamed(STRID(Val1))->getDataTypeID(), CIEC_ANY::e_BOOL);
-  BOOST_CHECK_EQUAL(stStruct.getMemberNamed(STRID(Val2))->getDataTypeID(), CIEC_ANY::e_INT);
-  BOOST_CHECK_EQUAL(stStruct.getMemberNamed(STRID(Val3))->getDataTypeID(), CIEC_ANY::e_TIME);
+  BOOST_CHECK_EQUAL(stStruct.getMemberNamed("Val1"_STRID)->getDataTypeID(), CIEC_ANY::e_BOOL);
+  BOOST_CHECK_EQUAL(stStruct.getMemberNamed("Val2"_STRID)->getDataTypeID(), CIEC_ANY::e_INT);
+  BOOST_CHECK_EQUAL(stStruct.getMemberNamed("Val3"_STRID)->getDataTypeID(), CIEC_ANY::e_TIME);
 
   BOOST_CHECK_EQUAL(stStruct.Var1.getDataTypeID(), CIEC_ANY::e_BOOL);
   BOOST_CHECK_EQUAL(stStruct.Var2.getDataTypeID(), CIEC_ANY::e_INT);
@@ -127,14 +121,15 @@ BOOST_AUTO_TEST_CASE(TimeStruct_element_access_test) {
 
   checkTestStruct_InitialValues(stStruct);
 
-  (*static_cast<CIEC_BOOL *>(stStruct.getMemberNamed(STRID(Val1)))) = true_BOOL;
-  (*static_cast<CIEC_INT *>(stStruct.getMemberNamed(STRID(Val2)))) = CIEC_INT(55);
-  (*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(STRID(Val3)))) = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(12));
-  BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(stStruct.getMemberNamed(STRID(Val1)))));
+  (*static_cast<CIEC_BOOL *>(stStruct.getMemberNamed("Val1"_STRID))) = true_BOOL;
+  (*static_cast<CIEC_INT *>(stStruct.getMemberNamed("Val2"_STRID))) = CIEC_INT(55);
+  (*static_cast<CIEC_TIME *>(stStruct.getMemberNamed("Val3"_STRID))) =
+      CIEC_TIME(static_cast<CIEC_TIME::TValueType>(12));
+  BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(stStruct.getMemberNamed("Val1"_STRID))));
   BOOST_CHECK_EQUAL(55,
-                    static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct.getMemberNamed(STRID(Val2)))));
+                    static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct.getMemberNamed("Val2"_STRID))));
   BOOST_CHECK_EQUAL(
-      12, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(STRID(Val3)))));
+      12, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(stStruct.getMemberNamed("Val3"_STRID))));
 }
 
 BOOST_AUTO_TEST_CASE(TimeStruct_TIME_parser_test) {
@@ -143,20 +138,20 @@ BOOST_AUTO_TEST_CASE(TimeStruct_TIME_parser_test) {
   CIEC_TIME timeVar = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
 
   timeVar.fromString("T#33ms");
-  (*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(STRID(Val3)))) = timeVar;
-  BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(stStruct.getMemberNamed(STRID(Val1)))));
+  (*static_cast<CIEC_TIME *>(stStruct.getMemberNamed("Val3"_STRID))) = timeVar;
+  BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(stStruct.getMemberNamed("Val1"_STRID))));
   BOOST_CHECK_EQUAL(0,
-                    static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct.getMemberNamed(STRID(Val2)))));
+                    static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct.getMemberNamed("Val2"_STRID))));
   BOOST_CHECK_EQUAL(
-      33000000, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(STRID(Val3)))));
+      33000000, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(stStruct.getMemberNamed("Val3"_STRID))));
 
   timeVar.fromString("TIME#44h36m");
-  (*static_cast<CIEC_TIME *>(stStruct.getMemberNamed(STRID(Val3)))) = timeVar;
-  BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(stStruct.getMemberNamed(STRID(Val1)))));
+  (*static_cast<CIEC_TIME *>(stStruct.getMemberNamed("Val3"_STRID))) = timeVar;
+  BOOST_CHECK_EQUAL(false, (*static_cast<CIEC_BOOL *>(stStruct.getMemberNamed("Val1"_STRID))));
   BOOST_CHECK_EQUAL(0,
-                    static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct.getMemberNamed(STRID(Val2)))));
+                    static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(stStruct.getMemberNamed("Val2"_STRID))));
   BOOST_CHECK_EQUAL(160560000000000, static_cast<CIEC_TIME::TValueType>(
-                                         *static_cast<CIEC_TIME *>(stStruct.getMemberNamed(STRID(Val3)))));
+                                         *static_cast<CIEC_TIME *>(stStruct.getMemberNamed("Val3"_STRID))));
 
   const char cTestString_1[] = {"(Val1:=TRUE,Val2:=11,Val3:=T#33ms)"};
   const char cTestString_2[] = {"(Val1:=TRUE,Val2:=11,Val3:=TIME#44h36m)"};
@@ -177,15 +172,15 @@ void setupArrayOfStructTest_TestDataSet1(CIEC_TestStruct &paStruct) {
 }
 
 void checkArrayOfStructTest_TestDataSet1(CIEC_TestStruct &paStruct) {
-  BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(paStruct.getMemberNamed(STRID(Val1)))));
+  BOOST_CHECK_EQUAL(true, (*static_cast<CIEC_BOOL *>(paStruct.getMemberNamed("Val1"_STRID))));
   BOOST_CHECK_EQUAL(33,
-                    static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(paStruct.getMemberNamed(STRID(Val2)))));
+                    static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(paStruct.getMemberNamed("Val2"_STRID))));
   BOOST_CHECK_EQUAL(
-      22, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(paStruct.getMemberNamed(STRID(Val3)))));
+      22, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(paStruct.getMemberNamed("Val3"_STRID))));
 }
 
 BOOST_AUTO_TEST_CASE(arrayOfStructs_access_test) {
-  CIEC_ARRAY_DYNAMIC nTest(3, STRID(TestStruct));
+  CIEC_ARRAY_DYNAMIC nTest(3, "TestStruct"_STRID);
 
   BOOST_CHECK_EQUAL(nTest.size(), 3);
   BOOST_CHECK_EQUAL(nTest.getElementDataTypeID(), CIEC_ANY::e_STRUCT);
@@ -194,10 +189,11 @@ BOOST_AUTO_TEST_CASE(arrayOfStructs_access_test) {
   BOOST_CHECK_EQUAL(nTest[1].getDataTypeID(), CIEC_ANY::e_STRUCT);
   BOOST_CHECK_EQUAL(nTest[2].getDataTypeID(), CIEC_ANY::e_STRUCT);
 
-  BOOST_CHECK_EQUAL(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed(STRID(Val1))->getDataTypeID(),
+  BOOST_CHECK_EQUAL(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed("Val1"_STRID)->getDataTypeID(),
                     CIEC_ANY::e_BOOL);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed(STRID(Val2))->getDataTypeID(), CIEC_ANY::e_INT);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed(STRID(Val3))->getDataTypeID(),
+  BOOST_CHECK_EQUAL(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed("Val2"_STRID)->getDataTypeID(),
+                    CIEC_ANY::e_INT);
+  BOOST_CHECK_EQUAL(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed("Val3"_STRID)->getDataTypeID(),
                     CIEC_ANY::e_TIME);
 
   std::string buffer;
@@ -216,22 +212,22 @@ BOOST_AUTO_TEST_CASE(arrayOfStructs_access_test) {
 }
 
 BOOST_AUTO_TEST_CASE(arrayOfStructs_TIME_parser_test) {
-  CIEC_ARRAY_DYNAMIC nTest(3, STRID(TestStruct));
+  CIEC_ARRAY_DYNAMIC nTest(3, "TestStruct"_STRID);
 
   CIEC_TIME timeVar = CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0));
 
   timeVar.fromString("T#33ms");
   for (size_t i = 0; i < 3; i++) {
-    (*static_cast<CIEC_TIME *>(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed(STRID(Val3)))) = timeVar;
+    (*static_cast<CIEC_TIME *>(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed("Val3"_STRID))) = timeVar;
     BOOST_CHECK_EQUAL(33000000, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(
-                                    static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed(STRID(Val3)))));
+                                    static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed("Val3"_STRID))));
   }
 
   timeVar.fromString("TIME#44h36m");
   for (size_t i = 0; i < 3; i++) {
-    (*static_cast<CIEC_TIME *>(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed(STRID(Val3)))) = timeVar;
+    (*static_cast<CIEC_TIME *>(static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed("Val3"_STRID))) = timeVar;
     BOOST_CHECK_EQUAL(160560000000000, static_cast<CIEC_TIME::TValueType>(*static_cast<CIEC_TIME *>(
-                                           static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed(STRID(Val3)))));
+                                           static_cast<CIEC_STRUCT &>(nTest[0]).getMemberNamed("Val3"_STRID))));
   }
 
   const char cTestString_1[] = {

@@ -22,7 +22,7 @@ class FORTE_E_RDELAY : public CTimedFB {
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_E_RDELAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_RDELAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~FORTE_E_RDELAY() override = default;
 };
 

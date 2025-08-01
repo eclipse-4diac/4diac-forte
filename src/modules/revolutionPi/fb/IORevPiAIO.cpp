@@ -13,44 +13,23 @@
 
 #include "IORevPiAIO.h"
 
-USE_STRING_ID(AnalogInput_1);
-USE_STRING_ID(AnalogInput_2);
-USE_STRING_ID(AnalogInput_3);
-USE_STRING_ID(AnalogInput_4);
-USE_STRING_ID(AnalogOutput_1);
-USE_STRING_ID(AnalogOutput_2);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(BusAdapterIn);
-USE_STRING_ID(BusAdapterOut);
-USE_STRING_ID(Event);
-USE_STRING_ID(IND);
-USE_STRING_ID(IORevPiAIO);
-USE_STRING_ID(IORevPiBusAdapter);
-USE_STRING_ID(MAP);
-USE_STRING_ID(MAPO);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(RTD_1);
-USE_STRING_ID(RTD_2);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "../RevPiController.h"
 
 using namespace forte::core::io;
 
-DEFINE_FIRMWARE_FB(FORTE_IORevPiAIO, STRID(IORevPiAIO))
+DEFINE_FIRMWARE_FB(FORTE_IORevPiAIO, "IORevPiAIO"_STRID)
 
 namespace {
   const auto cDataInputNames =
-      std::array{STRID(QI),    STRID(AnalogInput_1), STRID(AnalogInput_2),  STRID(AnalogInput_3), STRID(AnalogInput_4),
-                 STRID(RTD_1), STRID(RTD_2),         STRID(AnalogOutput_1), STRID(AnalogOutput_2)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(MAP)};
-  const auto cEventOutputNames = std::array{STRID(MAPO), STRID(IND)};
-  const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
-  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+      std::array{"QI"_STRID,    "AnalogInput_1"_STRID, "AnalogInput_2"_STRID,  "AnalogInput_3"_STRID, "AnalogInput_4"_STRID,
+                 "RTD_1"_STRID, "RTD_2"_STRID,         "AnalogOutput_1"_STRID, "AnalogOutput_2"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"MAP"_STRID};
+  const auto cEventOutputNames = std::array{"MAPO"_STRID, "IND"_STRID};
+  const auto cSocketNameIds = std::array{"BusAdapterIn"_STRID};
+  const auto cPlugNameIds = std::array{"BusAdapterOut"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -68,7 +47,7 @@ namespace {
 const TForteUInt8 FORTE_IORevPiAIO::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 FORTE_IORevPiAIO::scmSlaveConfigurationIONum = 0;
 
-FORTE_IORevPiAIO::FORTE_IORevPiAIO(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_IORevPiAIO::FORTE_IORevPiAIO(const forte::core::StringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     IOConfigFBMultiSlave(
         scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 103, paContainer, cFBInterfaceSpec, paInstanceNameId),
@@ -85,8 +64,8 @@ FORTE_IORevPiAIO::FORTE_IORevPiAIO(const CStringDictionary::TStringId paInstance
     conn_AnalogOutput_2(nullptr),
     conn_QO(*this, 0, var_QO),
     conn_STATUS(*this, 1, var_STATUS),
-    var_BusAdapterOut(STRID(BusAdapterOut), *this, 0),
-    var_BusAdapterIn(STRID(BusAdapterIn), *this, 0) {};
+    var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0),
+    var_BusAdapterIn("BusAdapterIn"_STRID, *this, 0) {};
 
 void FORTE_IORevPiAIO::initHandles() {
   uint8_t inputOffset = 0;

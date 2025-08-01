@@ -22,7 +22,7 @@ class FORTE_SUBSCRIBE_1 : public GEN_SUBSCRIBE {
     static const TEventID scmEventRSPID = scmSendNotificationEventID;
 
   public:
-    FORTE_SUBSCRIBE_1(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_SUBSCRIBE_1(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~FORTE_SUBSCRIBE_1() override = default;
 
     void evt_INIT(const CIEC_BOOL &pa_QI,

@@ -18,29 +18,7 @@
 
 #include "E_N_TABLE_fbt.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(CNF);
-USE_STRING_ID(CV);
-USE_STRING_ID(DT);
-USE_STRING_ID(E_DEMUX);
-USE_STRING_ID(EI);
-USE_STRING_ID(E_N_TABLE);
-USE_STRING_ID(EO);
-USE_STRING_ID(EO0);
-USE_STRING_ID(EO1);
-USE_STRING_ID(EO2);
-USE_STRING_ID(EO3);
-USE_STRING_ID(E_TABLE);
-USE_STRING_ID(F_SUB);
-USE_STRING_ID(IN1);
-USE_STRING_ID(K);
-USE_STRING_ID(N);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
-USE_STRING_ID(START);
-USE_STRING_ID(STOP);
-USE_STRING_ID(TIME);
-USE_STRING_ID(UINT);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_uint.h"
 #include "core/iec61131_functions.h"
@@ -49,12 +27,12 @@ USE_STRING_ID(UINT);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_N_TABLE, STRID(E_N_TABLE))
+DEFINE_FIRMWARE_FB(FORTE_E_N_TABLE, "E_N_TABLE"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(DT), STRID(N)};
-  const auto cEventInputNames = std::array{STRID(START), STRID(STOP)};
-  const auto cEventOutputNames = std::array{STRID(EO0), STRID(EO1), STRID(EO2), STRID(EO3)};
+  const auto cDataInputNames = std::array{"DT"_STRID, "N"_STRID};
+  const auto cEventInputNames = std::array{"START"_STRID, "STOP"_STRID};
+  const auto cEventOutputNames = std::array{"EO0"_STRID, "EO1"_STRID, "EO2"_STRID, "EO3"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -68,21 +46,21 @@ namespace {
   };
 
   const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
-      {CStringDictionary::scmInvalidStringId, STRID(START), STRID(E_TABLE), STRID(START)},
-      {CStringDictionary::scmInvalidStringId, STRID(STOP), STRID(E_TABLE), STRID(STOP)},
-      {STRID(E_TABLE), STRID(EO), STRID(F_SUB), STRID(REQ)},
-      {STRID(F_SUB), STRID(CNF), STRID(E_DEMUX), STRID(EI)},
-      {STRID(E_DEMUX), STRID(EO0), CStringDictionary::scmInvalidStringId, STRID(EO0)},
-      {STRID(E_DEMUX), STRID(EO1), CStringDictionary::scmInvalidStringId, STRID(EO1)},
-      {STRID(E_DEMUX), STRID(EO2), CStringDictionary::scmInvalidStringId, STRID(EO2)},
-      {STRID(E_DEMUX), STRID(EO3), CStringDictionary::scmInvalidStringId, STRID(EO3)},
+      {{}, "START"_STRID, "E_TABLE"_STRID, "START"_STRID},
+      {{}, "STOP"_STRID, "E_TABLE"_STRID, "STOP"_STRID},
+      {"E_TABLE"_STRID, "EO"_STRID, "F_SUB"_STRID, "REQ"_STRID},
+      {"F_SUB"_STRID, "CNF"_STRID, "E_DEMUX"_STRID, "EI"_STRID},
+      {"E_DEMUX"_STRID, "EO0"_STRID, {}, "EO0"_STRID},
+      {"E_DEMUX"_STRID, "EO1"_STRID, {}, "EO1"_STRID},
+      {"E_DEMUX"_STRID, "EO2"_STRID, {}, "EO2"_STRID},
+      {"E_DEMUX"_STRID, "EO3"_STRID, {}, "EO3"_STRID},
   });
 
   const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
-      {CStringDictionary::scmInvalidStringId, STRID(DT), STRID(E_TABLE), STRID(DT)},
-      {CStringDictionary::scmInvalidStringId, STRID(N), STRID(E_TABLE), STRID(N)},
-      {STRID(E_TABLE), STRID(CV), STRID(F_SUB), STRID(IN1)},
-      {STRID(F_SUB), STRID(OUT), STRID(E_DEMUX), STRID(K)},
+      {{}, "DT"_STRID, "E_TABLE"_STRID, "DT"_STRID},
+      {{}, "N"_STRID, "E_TABLE"_STRID, "N"_STRID},
+      {"E_TABLE"_STRID, "CV"_STRID, "F_SUB"_STRID, "IN1"_STRID},
+      {"F_SUB"_STRID, "OUT"_STRID, "E_DEMUX"_STRID, "K"_STRID},
   });
 
   const SCFB_FBNData cFBNData = {
@@ -92,12 +70,12 @@ namespace {
   };
 } // namespace
 
-FORTE_E_N_TABLE::FORTE_E_N_TABLE(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_N_TABLE::FORTE_E_N_TABLE(const forte::core::StringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
-    fb_E_TABLE(STRID(E_TABLE), *this),
-    fb_E_DEMUX(STRID(E_DEMUX), *this),
-    fb_F_SUB(STRID(F_SUB), *this),
+    fb_E_TABLE("E_TABLE"_STRID, *this),
+    fb_E_DEMUX("E_DEMUX"_STRID, *this),
+    fb_F_SUB("F_SUB"_STRID, *this),
     conn_EO0(*this, 0),
     conn_EO1(*this, 1),
     conn_EO2(*this, 2),

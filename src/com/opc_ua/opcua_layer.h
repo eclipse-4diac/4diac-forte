@@ -143,7 +143,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * @param paIsSD True if the port to get is an SD, false othewise
      * @return The pointer to the local port connection
      */
-    CStringDictionary::TStringId getLocalPortNameId(size_t paPortIndex, bool paIsSD) const;
+    forte::core::StringId getLocalPortNameId(size_t paPortIndex, bool paIsSD) const;
 
     /**
      * List of ANY pointers used as buffer to store the received data

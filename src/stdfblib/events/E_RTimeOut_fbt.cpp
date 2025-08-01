@@ -21,21 +21,12 @@
 
 using namespace std::literals;
 
-USE_STRING_ID(ARTimeOut);
-USE_STRING_ID(DLY);
-USE_STRING_ID(DT);
-USE_STRING_ID(EO);
-USE_STRING_ID(E_RDELAY);
-USE_STRING_ID(E_RTimeOut);
-USE_STRING_ID(START);
-USE_STRING_ID(STOP);
-USE_STRING_ID(TimeOut);
-USE_STRING_ID(TimeOutSocket);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_E_RTimeOut, STRID(E_RTimeOut))
+DEFINE_FIRMWARE_FB(FORTE_E_RTimeOut, "E_RTimeOut"_STRID)
 
 namespace {
-  const auto cSocketNameIds = std::array{STRID(TimeOutSocket)};
+  const auto cSocketNameIds = std::array{"TimeOutSocket"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = {},
@@ -50,13 +41,13 @@ namespace {
   };
 
   const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
-      {STRID(TimeOutSocket), STRID(START), STRID(DLY), STRID(START)},
-      {STRID(TimeOutSocket), STRID(STOP), STRID(DLY), STRID(STOP)},
-      {STRID(DLY), STRID(EO), STRID(TimeOutSocket), STRID(TimeOut)},
+      {"TimeOutSocket"_STRID, "START"_STRID, "DLY"_STRID, "START"_STRID},
+      {"TimeOutSocket"_STRID, "STOP"_STRID, "DLY"_STRID, "STOP"_STRID},
+      {"DLY"_STRID, "EO"_STRID, "TimeOutSocket"_STRID, "TimeOut"_STRID},
   });
 
   const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
-      {STRID(TimeOutSocket), STRID(DT), STRID(DLY), STRID(DT)},
+      {"TimeOutSocket"_STRID, "DT"_STRID, "DLY"_STRID, "DT"_STRID},
   });
 
   const SCFB_FBNData cFBNData = {
@@ -66,11 +57,11 @@ namespace {
   };
 } // namespace
 
-FORTE_E_RTimeOut::FORTE_E_RTimeOut(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_RTimeOut::FORTE_E_RTimeOut(const forte::core::StringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
-    fb_DLY(STRID(DLY), *this),
-    var_TimeOutSocket(STRID(TimeOutSocket), *this, forte::cgCFBParentAdapterlistIDMarker) {};
+    fb_DLY("DLY"_STRID, *this),
+    var_TimeOutSocket("TimeOutSocket"_STRID, *this, forte::cgCFBParentAdapterlistIDMarker) {};
 
 void FORTE_E_RTimeOut::setInitialValues() {
   CCompositeFB::setInitialValues();

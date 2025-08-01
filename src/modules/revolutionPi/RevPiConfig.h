@@ -24,8 +24,8 @@ class RevPiConfig : public forte::core::io::IOConfigFBController {
     DECLARE_FIRMWARE_FB(RevPiConfig)
 
   private:
-    static const CStringDictionary::TStringId scm_anDataInputNames[];
-    static const CStringDictionary::TStringId scm_anDataInputTypeIds[];
+    static const forte::core::StringId scm_anDataInputNames[];
+    static const forte::core::StringId scm_anDataInputTypeIds[];
     CIEC_BOOL &QI() {
       return *static_cast<CIEC_BOOL *>(getDI(0));
     };
@@ -146,8 +146,8 @@ class RevPiConfig : public forte::core::io::IOConfigFBController {
       return *static_cast<CIEC_UINT *>(getDI(29));
     };
 
-    static const CStringDictionary::TStringId scm_anDataOutputNames[];
-    static const CStringDictionary::TStringId scm_anDataOutputTypeIds[];
+    static const forte::core::StringId scm_anDataOutputNames[];
+    static const forte::core::StringId scm_anDataOutputTypeIds[];
     CIEC_BOOL &QO() {
       return *static_cast<CIEC_BOOL *>(getDO(0));
     };
@@ -159,13 +159,13 @@ class RevPiConfig : public forte::core::io::IOConfigFBController {
     static const TEventID scm_nEventINITID = 0;
     static const TForteInt16 scm_anEIWithIndexes[];
     static const TDataIOID scm_anEIWith[];
-    static const CStringDictionary::TStringId scm_anEventInputNames[];
+    static const forte::core::StringId scm_anEventInputNames[];
 
     static const TEventID scm_nEventINITOID = 0;
     static const TEventID scm_nEventINDID = 1;
     static const TForteInt16 scm_anEOWithIndexes[];
     static const TDataIOID scm_anEOWith[];
-    static const CStringDictionary::TStringId scm_anEventOutputNames[];
+    static const forte::core::StringId scm_anEventOutputNames[];
 
     static const SFBInterfaceSpec scm_stFBInterfaceSpec;
 
@@ -174,7 +174,7 @@ class RevPiConfig : public forte::core::io::IOConfigFBController {
     virtual void setInitialValues();
 
   public:
-    RevPiConfig(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    RevPiConfig(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
         forte::core::io::IOConfigFBController(paContainer, scm_stFBInterfaceSpec, paInstanceNameId) {};
 
     virtual ~RevPiConfig() {};

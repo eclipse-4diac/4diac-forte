@@ -65,7 +65,7 @@ class GEN_ARRAY2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
     COutDataConnection<CIEC_ARRAY_DYNAMIC> conn_OUT;
 
   public:
-    GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_ARRAY2ARRAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_ARRAY2ARRAY() override = default;
 };
 

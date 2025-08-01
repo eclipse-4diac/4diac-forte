@@ -44,7 +44,7 @@ class FORTE_F_SHR : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_F_SHR(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_SHR(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY_BIT_VARIANT var_IN;
     CIEC_ANY_INT_VARIANT var_N;

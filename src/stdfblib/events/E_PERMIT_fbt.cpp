@@ -13,12 +13,7 @@
 
 #include "E_PERMIT_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(EI);
-USE_STRING_ID(EO);
-USE_STRING_ID(E_PERMIT);
-USE_STRING_ID(Event);
-USE_STRING_ID(PERMIT);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_bool.h"
 #include "core/iec61131_functions.h"
@@ -27,14 +22,14 @@ USE_STRING_ID(PERMIT);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_PERMIT, STRID(E_PERMIT))
+DEFINE_FIRMWARE_FB(FORTE_E_PERMIT, "E_PERMIT"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(PERMIT)};
-  const auto cEventInputNames = std::array{STRID(EI)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(EO)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"PERMIT"_STRID};
+  const auto cEventInputNames = std::array{"EI"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"EO"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -48,7 +43,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_PERMIT::FORTE_E_PERMIT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_PERMIT::FORTE_E_PERMIT(const forte::core::StringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO(*this, 0),

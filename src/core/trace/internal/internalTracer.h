@@ -18,7 +18,7 @@
 #include <vector>
 
 #include "core/trace/internal/EventMessage.h"
-#include "core/stringdict.h"
+#include "core/stringid.h"
 
 /**
  * @brief Internal tracer
@@ -29,7 +29,7 @@
  */
 class CInternalTracer final {
   public:
-    CInternalTracer(CStringDictionary::TStringId, size_t);
+    CInternalTracer(forte::core::StringId, size_t);
 
     virtual ~CInternalTracer() = default;
 

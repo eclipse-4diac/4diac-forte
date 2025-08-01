@@ -52,8 +52,8 @@ class CDevice : public CResource {
      */
     virtual void awaitShutdown() = 0;
 
-    CStringDictionary::TStringId getFBTypeId() const override {
-      return CStringDictionary::scmInvalidStringId;
+    forte::core::StringId getFBTypeId() const override {
+      return {};
     }
 
     /*!\brief Execute the given management command
@@ -88,7 +88,7 @@ class CDevice : public CResource {
     /*! \brief Sets up all the necessary data and classes necessary for execution.
      *
      */
-    CDevice(const SFBInterfaceSpec &paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+    CDevice(const SFBInterfaceSpec &paInterfaceSpec, const forte::core::StringId paInstanceNameId) :
         CResource(paInterfaceSpec, paInstanceNameId),
         mDeviceExecution(*this) {
     }

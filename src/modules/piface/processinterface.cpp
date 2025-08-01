@@ -14,7 +14,7 @@
 
 CPiFaceProcessInterface::CPiFaceProcessInterface(forte::core::CFBContainer &paContainer,
                                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                                 const CStringDictionary::TStringId paInstanceNameId) :
+                                                 const forte::core::StringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mPin(0) {
 }

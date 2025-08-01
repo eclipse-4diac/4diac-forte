@@ -21,7 +21,7 @@
 #include <functional>
 
 #include "core/trace/internal/EventMessage.h"
-#include "core/stringdict.h"
+#include "core/stringid.h"
 #include "core/event.h"
 
 class CResource;

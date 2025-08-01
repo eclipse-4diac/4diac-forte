@@ -12,30 +12,18 @@
 
 #include "RequestOrchestrationForm.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(endpoint);
-USE_STRING_ID(Event);
-USE_STRING_ID(OrchestrationForm);
-USE_STRING_ID(orchestrationResponse);
-USE_STRING_ID(OrchestratorRequestAdp);
-USE_STRING_ID(requestOrchestator);
-USE_STRING_ID(requestOrchestration);
-USE_STRING_ID(RequestOrchestrationForm);
-USE_STRING_ID(responseReceived);
-USE_STRING_ID(serviceRequestForm);
-USE_STRING_ID(ServiceRequestForm);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_RequestOrchestrationForm, STRID(RequestOrchestrationForm))
+DEFINE_FIRMWARE_FB(FORTE_RequestOrchestrationForm, "RequestOrchestrationForm"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(serviceRequestForm), STRID(endpoint)};
-  const auto cDataOutputNames = std::array{STRID(orchestrationResponse)};
-  const auto cEventInputNames = std::array{STRID(requestOrchestator)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(responseReceived)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
-  const auto cPlugNameIds = std::array{STRID(requestOrchestration)};
+  const auto cDataInputNames = std::array{"serviceRequestForm"_STRID, "endpoint"_STRID};
+  const auto cDataOutputNames = std::array{"orchestrationResponse"_STRID};
+  const auto cEventInputNames = std::array{"requestOrchestator"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"responseReceived"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+  const auto cPlugNameIds = std::array{"requestOrchestration"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -51,21 +39,21 @@ namespace {
 } // namespace
 
 const SCFB_FBConnectionData FORTE_RequestOrchestrationForm::auto cEventConnections = std::to_array<SCFB_FBConnectionData>{
-    {CStringDictionary::scmInvalidStringId, STRID(requestOrchestator), -1,
-     STRID(requestOrchestration), STRID(requestOrchestator)),
+    {{}, "requestOrchestator"_STRID, -1,
+     "requestOrchestration"_STRID, "requestOrchestator"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
-    {STRID(requestOrchestration), STRID(responseReceived)),
-     CCompositeFB::scmAdapterMarker | 0, CStringDictionary::scmInvalidStringId, STRID(responseReceived), -1},
+    {"requestOrchestration"_STRID, "responseReceived"_STRID),
+     CCompositeFB::scmAdapterMarker | 0, {}, "responseReceived"_STRID, -1},
 };
 
 const SCFB_FBConnectionData FORTE_RequestOrchestrationFormauto cDataConnections = std::to_array<SCFB_FBConnectionData>{
-    {CStringDictionary::scmInvalidStringId, STRID(serviceRequestForm), -1,
-     STRID(requestOrchestration), STRID(serviceRequestForm)),
+    {{}, "serviceRequestForm"_STRID, -1,
+     "requestOrchestration"_STRID, "serviceRequestForm"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
-    {STRID(requestOrchestration), STRID(orchestrationResponse)),
-     CCompositeFB::scmAdapterMarker | 0, CStringDictionary::scmInvalidStringId, STRID(orchestrationResponse), -1},
-    {CStringDictionary::scmInvalidStringId, STRID(endpoint), -1,
-     STRID(requestOrchestration), STRID(endpoint)),
+    {"requestOrchestration"_STRID, "orchestrationResponse"_STRID),
+     CCompositeFB::scmAdapterMarker | 0, {}, "orchestrationResponse"_STRID, -1},
+    {{}, "endpoint"_STRID, -1,
+     "requestOrchestration"_STRID, "endpoint"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
 };
 

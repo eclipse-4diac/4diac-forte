@@ -13,21 +13,13 @@
 
 #include "GEN_SEND_RECV_fbt.h"
 
-USE_STRING_ID(CNF);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(REQ);
-USE_STRING_ID(RSP);
-USE_STRING_ID(GEN_SEND_RECV);
+using namespace forte::core::literals;
 
 namespace {
-  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ), STRID(RSP)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF), STRID(IND)};
-  const auto cEventOutputTypeIds = std::array{STRID(EInit), STRID(Event), STRID(Event)};
+  const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID, "RSP"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID, "IND"_STRID};
+  const auto cEventOutputTypeIds = std::array{"EInit"_STRID, "Event"_STRID, "Event"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -42,9 +34,9 @@ namespace {
   };
 } // namespace
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_SEND_RECV, STRID(GEN_SEND_RECV))
+DEFINE_GENERIC_FIRMWARE_FB(GEN_SEND_RECV, "GEN_SEND_RECV"_STRID)
 
-GEN_SEND_RECV::GEN_SEND_RECV(const CStringDictionary::TStringId paInstanceNameId,
+GEN_SEND_RECV::GEN_SEND_RECV(const forte::core::StringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
     CommunicationFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 1),

@@ -12,22 +12,15 @@
 
 #include "forte_servicequeryform.h"
 
-USE_STRING_ID(ArrowheadService);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(DINT);
-USE_STRING_ID(metadataSearch);
-USE_STRING_ID(pingProviders);
-USE_STRING_ID(service);
-USE_STRING_ID(ServiceQueryForm);
-USE_STRING_ID(version);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(ServiceQueryForm, STRID(ServiceQueryForm));
+DEFINE_FIRMWARE_DATATYPE(ServiceQueryForm, "ServiceQueryForm"_STRID);
 
 CIEC_ServiceQueryForm::CIEC_ServiceQueryForm() :
-    CIEC_STRUCT(STRID(ServiceQueryForm), 4, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT("ServiceQueryForm"_STRID, 4, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ServiceQueryForm::scmElementTypes[] = {STRID(ArrowheadService), STRID(BOOL),
-                                                                               STRID(BOOL), STRID(DINT)};
-const CStringDictionary::TStringId CIEC_ServiceQueryForm::scmElementNames[] = {STRID(service), STRID(metadataSearch),
-                                                                               STRID(pingProviders), STRID(version)};
+const forte::core::StringId CIEC_ServiceQueryForm::scmElementTypes[] = {"ArrowheadService"_STRID, "BOOL"_STRID,
+                                                                               "BOOL"_STRID, "DINT"_STRID};
+const forte::core::StringId CIEC_ServiceQueryForm::scmElementNames[] = {"service"_STRID, "metadataSearch"_STRID,
+                                                                               "pingProviders"_STRID, "version"_STRID};

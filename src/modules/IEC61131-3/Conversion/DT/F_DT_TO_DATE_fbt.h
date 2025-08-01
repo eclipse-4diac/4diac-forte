@@ -44,7 +44,7 @@ class FORTE_F_DT_TO_DATE final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_DT_TO_DATE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_DT_TO_DATE(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_DATE_AND_TIME var_IN;
 

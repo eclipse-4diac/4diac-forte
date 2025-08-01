@@ -23,20 +23,13 @@
 
 using namespace std::literals;
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CLK);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(FB_F_TRIG);
-USE_STRING_ID(MEM);
-USE_STRING_ID(Q);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
 namespace {
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cDataInputNames = std::array{STRID(CLK)};
-  const auto cDataOutputNames = std::array{STRID(Q)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cDataInputNames = std::array{"CLK"_STRID};
+  const auto cDataOutputNames = std::array{"Q"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -49,13 +42,13 @@ namespace {
       .mPlugNames = {},
   };
 
-  const auto cInternalsNames = std::array{STRID(MEM)};
+  const auto cInternalsNames = std::array{"MEM"_STRID};
 
 } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_FB_F_TRIG, STRID(FB_F_TRIG))
+DEFINE_FIRMWARE_FB(FORTE_FB_F_TRIG, "FB_F_TRIG"_STRID)
 
-FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(const forte::core::StringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
     var_MEM(true_BOOL),

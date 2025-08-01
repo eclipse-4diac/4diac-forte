@@ -27,7 +27,7 @@ MLPIHANDLE CMLPIFaceProcessInterface::smConnection = MLPI_INVALIDHANDLE;
 
 CMLPIFaceProcessInterface::CMLPIFaceProcessInterface(forte::core::CFBContainer &paContainer,
                                                      const SFBInterfaceSpec &paInterfaceSpec,
-                                                     const CStringDictionary::TStringId paInstanceNameId) :
+                                                     const forte::core::StringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mVariableName(0) {
 }

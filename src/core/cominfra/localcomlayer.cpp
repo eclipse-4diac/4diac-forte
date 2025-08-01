@@ -60,7 +60,7 @@ void CLocalComLayer::setRDs(forte::com_infra::CBaseCommFB &paSubl, CIEC_ANY **pa
 }
 
 EComResponse CLocalComLayer::openConnection(char *const paLayerParameter) {
-  mGroupID = CStringDictionary::insert(paLayerParameter);
+  mGroupID = forte::core::StringId::insert(paLayerParameter);
 
   switch (mFb->getComServiceType()) {
     case e_Server:
@@ -88,14 +88,14 @@ void CLocalComLayer::closeConnection() {
 }
 
 /********************** CLocalCommGroupsManager *************************************/
-bool CLocalComLayer::CLocalCommGroupsManager::registerPubl(const CStringDictionary::TStringId paGroupID,
+bool CLocalComLayer::CLocalCommGroupsManager::registerPubl(const forte::core::StringId paGroupID,
                                                            CLocalComLayer *paLayer) {
   forte::com_infra::CBaseCommFB *commFb = paLayer->getCommFB();
   return registerPubl(paGroupID, paLayer, commFb->getSDs(), commFb->getNumSD());
 }
 
 CLocalComLayer::CLocalCommGroup *
-CLocalComLayer::CLocalCommGroupsManager::getComGroup(const CStringDictionary::TStringId paGroupID) {
+CLocalComLayer::CLocalCommGroupsManager::getComGroup(const forte::core::StringId paGroupID) {
   auto iterator = getLocalCommGroupIterator(paGroupID);
   if (isGroupIteratorForGroup(iterator, paGroupID)) {
     return &(*iterator);
@@ -103,7 +103,7 @@ CLocalComLayer::CLocalCommGroupsManager::getComGroup(const CStringDictionary::TS
   return nullptr;
 }
 
-bool CLocalComLayer::CLocalCommGroupsManager::registerPubl(const CStringDictionary::TStringId paGroupID,
+bool CLocalComLayer::CLocalCommGroupsManager::registerPubl(const forte::core::StringId paGroupID,
                                                            CLocalComLayer *paLayer,
                                                            CIEC_ANY **paDataPins,
                                                            TPortId paNumDataPins) {
@@ -116,7 +116,7 @@ bool CLocalComLayer::CLocalCommGroupsManager::registerPubl(const CStringDictiona
   return true;
 }
 
-void CLocalComLayer::CLocalCommGroupsManager::unregisterPubl(const CStringDictionary::TStringId paGroupID,
+void CLocalComLayer::CLocalCommGroupsManager::unregisterPubl(const forte::core::StringId paGroupID,
                                                              CLocalComLayer *paLayer) {
   CCriticalRegion criticalRegion(mSync);
   auto comGroupIt = getLocalCommGroupIterator(paGroupID);
@@ -126,7 +126,7 @@ void CLocalComLayer::CLocalCommGroupsManager::unregisterPubl(const CStringDictio
   }
 }
 
-bool CLocalComLayer::CLocalCommGroupsManager::registerSubl(const CStringDictionary::TStringId paGroupID,
+bool CLocalComLayer::CLocalCommGroupsManager::registerSubl(const forte::core::StringId paGroupID,
                                                            CLocalComLayer *paLayer) {
   CCriticalRegion criticalRegion(mSync);
   forte::com_infra::CBaseCommFB *commFb = paLayer->getCommFB();
@@ -138,7 +138,7 @@ bool CLocalComLayer::CLocalCommGroupsManager::registerSubl(const CStringDictiona
   return true;
 }
 
-void CLocalComLayer::CLocalCommGroupsManager::unregisterSubl(const CStringDictionary::TStringId paGroupID,
+void CLocalComLayer::CLocalCommGroupsManager::unregisterSubl(const forte::core::StringId paGroupID,
                                                              CLocalComLayer *paLayer) {
   CCriticalRegion criticalRegion(mSync);
   auto comGroupIt = getLocalCommGroupIterator(paGroupID);
@@ -149,15 +149,14 @@ void CLocalComLayer::CLocalCommGroupsManager::unregisterSubl(const CStringDictio
 }
 
 CLocalComLayer::CLocalCommGroupsManager::TLocalCommGroupList::iterator
-CLocalComLayer::CLocalCommGroupsManager::getLocalCommGroupIterator(CStringDictionary::TStringId paID) {
-  return lower_bound(mLocalCommGroups.begin(), mLocalCommGroups.end(), paID,
-                     [](const CLocalCommGroup &locGroup, CStringDictionary::TStringId groupId) {
-                       return locGroup.mGroupName < groupId;
-                     });
+CLocalComLayer::CLocalCommGroupsManager::getLocalCommGroupIterator(forte::core::StringId paID) {
+  return lower_bound(
+      mLocalCommGroups.begin(), mLocalCommGroups.end(), paID,
+      [](const CLocalCommGroup &locGroup, forte::core::StringId groupId) { return locGroup.mGroupName < groupId; });
 }
 
 CLocalComLayer::CLocalCommGroup *CLocalComLayer::CLocalCommGroupsManager::findOrCreateLocalCommGroup(
-    CStringDictionary::TStringId paID, CIEC_ANY **paDataPins, TPortId paNumDataPins) {
+    forte::core::StringId paID, CIEC_ANY **paDataPins, TPortId paNumDataPins) {
   auto iter = getLocalCommGroupIterator(paID);
   if (isGroupIteratorForGroup(iter, paID)) {
     if (checkDataTypes(*iter, paDataPins, paNumDataPins)) {

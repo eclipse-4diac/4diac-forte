@@ -19,29 +19,7 @@
 
 #include "ASSEMBLE_WORD_FROM_BOOLS_fct.h"
 
-USE_STRING_ID();
-USE_STRING_ID(ASSEMBLE_WORD_FROM_BOOLS);
-USE_STRING_ID(BIT_00);
-USE_STRING_ID(BIT_01);
-USE_STRING_ID(BIT_02);
-USE_STRING_ID(BIT_03);
-USE_STRING_ID(BIT_04);
-USE_STRING_ID(BIT_05);
-USE_STRING_ID(BIT_06);
-USE_STRING_ID(BIT_07);
-USE_STRING_ID(BIT_08);
-USE_STRING_ID(BIT_09);
-USE_STRING_ID(BIT_10);
-USE_STRING_ID(BIT_11);
-USE_STRING_ID(BIT_12);
-USE_STRING_ID(BIT_13);
-USE_STRING_ID(BIT_14);
-USE_STRING_ID(BIT_15);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(REQ);
-USE_STRING_ID(WORD);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_bool.h"
 #include "core/datatypes/forte_word.h"
@@ -52,18 +30,18 @@ USE_STRING_ID(WORD);
 #include "core/datatypes/forte_array_variable.h"
 #include "ASSEMBLE_WORD_FROM_BOOLS_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_WORD_FROM_BOOLS, STRID(ASSEMBLE_WORD_FROM_BOOLS))
+DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_WORD_FROM_BOOLS, "ASSEMBLE_WORD_FROM_BOOLS"_STRID)
 
 namespace {
   const auto cDataInputNames =
-      std::array{STRID(BIT_00), STRID(BIT_01), STRID(BIT_02), STRID(BIT_03), STRID(BIT_04), STRID(BIT_05),
-                 STRID(BIT_06), STRID(BIT_07), STRID(BIT_08), STRID(BIT_09), STRID(BIT_10), STRID(BIT_11),
-                 STRID(BIT_12), STRID(BIT_13), STRID(BIT_14), STRID(BIT_15)};
-  const auto cDataOutputNames = std::array{STRID()};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+      std::array{"BIT_00"_STRID, "BIT_01"_STRID, "BIT_02"_STRID, "BIT_03"_STRID, "BIT_04"_STRID, "BIT_05"_STRID,
+                 "BIT_06"_STRID, "BIT_07"_STRID, "BIT_08"_STRID, "BIT_09"_STRID, "BIT_10"_STRID, "BIT_11"_STRID,
+                 "BIT_12"_STRID, "BIT_13"_STRID, "BIT_14"_STRID, "BIT_15"_STRID};
+  const auto cDataOutputNames = std::array{""_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -77,7 +55,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ASSEMBLE_WORD_FROM_BOOLS::FORTE_ASSEMBLE_WORD_FROM_BOOLS(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_ASSEMBLE_WORD_FROM_BOOLS::FORTE_ASSEMBLE_WORD_FROM_BOOLS(const forte::core::StringId paInstanceNameId,
                                                                forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

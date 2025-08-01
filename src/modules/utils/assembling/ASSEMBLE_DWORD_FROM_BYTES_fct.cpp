@@ -19,17 +19,7 @@
 
 #include "ASSEMBLE_DWORD_FROM_BYTES_fct.h"
 
-USE_STRING_ID();
-USE_STRING_ID(ASSEMBLE_DWORD_FROM_BYTES);
-USE_STRING_ID(BYTE);
-USE_STRING_ID(BYTE_00);
-USE_STRING_ID(BYTE_01);
-USE_STRING_ID(BYTE_02);
-USE_STRING_ID(BYTE_03);
-USE_STRING_ID(CNF);
-USE_STRING_ID(DWORD);
-USE_STRING_ID(Event);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_dword.h"
 #include "core/datatypes/forte_byte.h"
@@ -40,15 +30,15 @@ USE_STRING_ID(REQ);
 #include "core/datatypes/forte_array_variable.h"
 #include "ASSEMBLE_DWORD_FROM_BYTES_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_BYTES, STRID(ASSEMBLE_DWORD_FROM_BYTES))
+DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_BYTES, "ASSEMBLE_DWORD_FROM_BYTES"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(BYTE_00), STRID(BYTE_01), STRID(BYTE_02), STRID(BYTE_03)};
-  const auto cDataOutputNames = std::array{STRID()};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"BYTE_00"_STRID, "BYTE_01"_STRID, "BYTE_02"_STRID, "BYTE_03"_STRID};
+  const auto cDataOutputNames = std::array{""_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -62,7 +52,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ASSEMBLE_DWORD_FROM_BYTES::FORTE_ASSEMBLE_DWORD_FROM_BYTES(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_ASSEMBLE_DWORD_FROM_BYTES::FORTE_ASSEMBLE_DWORD_FROM_BYTES(const forte::core::StringId paInstanceNameId,
                                                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

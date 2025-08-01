@@ -14,16 +14,16 @@
 #include "tcp_listen.h"
 #include "net.h"
 
-#include "core/stringdict.h"
+#include "core/stringid.h"
 #include "core/com/factory.h"
 
-USE_STRING_ID(tcp_listen)
+using namespace forte::core::literals;
 
 using namespace forte::com;
 using namespace forte::com::impl;
 
 namespace {
-  [[maybe_unused]] ComChannelEntryImpl<ComBuffer, TCPListenChannel> entry(STRID(tcp_listen));
+  [[maybe_unused]] ComChannelEntryImpl<ComBuffer, TCPListenChannel> entry("tcp_listen"_STRID);
 }
 
 SOCKET TCPListenChannel::socket(const std::string_view paConfigString) {

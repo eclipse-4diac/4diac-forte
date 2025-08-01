@@ -55,7 +55,7 @@ class FORTE_E_DEMUX final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_DEMUX(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_DEMUX(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_UINT var_K;
 

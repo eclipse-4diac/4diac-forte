@@ -181,7 +181,7 @@ class CIEC_ANY {
       return CIEC_ANY::e_ANY;
     }
 
-    virtual CStringDictionary::TStringId getTypeNameID() const;
+    virtual forte::core::StringId getTypeNameID() const;
 
     /*! \brief Get the pointer to the union char array
      *
@@ -479,7 +479,7 @@ class CIEC_ANY {
       mAnyData.mGenData = paGenData;
     }
 
-    static CStringDictionary::TStringId parseTypeName(const char *paValue, const char *paHashPos);
+    static forte::core::StringId parseTypeName(const char *paValue, const char *paHashPos);
 
   public:
     CIEC_ANY(const CIEC_ANY &) = delete;
@@ -604,7 +604,7 @@ namespace forte {
   template<typename T, typename = typename std::enable_if_t<std::is_base_of_v<CIEC_ANY, T>>>
   struct CDataTypeTrait {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_Max;
-      static constexpr CStringDictionary::TStringId scmDataTypeName = CStringDictionary::scmInvalidStringId;
+      static constexpr forte::core::StringId scmDataTypeName{};
   };
 
 } // namespace forte

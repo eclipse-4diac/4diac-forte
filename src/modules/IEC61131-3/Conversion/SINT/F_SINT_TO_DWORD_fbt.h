@@ -44,7 +44,7 @@ class FORTE_F_SINT_TO_DWORD final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_SINT_TO_DWORD(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_SINT_TO_DWORD(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_SINT var_IN;
 

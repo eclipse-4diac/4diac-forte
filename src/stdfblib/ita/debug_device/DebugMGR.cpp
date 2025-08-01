@@ -51,11 +51,11 @@ std::optional<TEventEntry> DebugMGR::getEventEntry(CResource *paResource, std::s
   size_t index = paDestination.find_first_of(".");
   while (index != std::string::npos) {
     auto currentPart = paDestination.substr(0, index);
-    fullName.push_back(CStringDictionary::insert(currentPart.c_str()));
+    fullName.push_back(forte::core::StringId::insert(currentPart));
     paDestination = paDestination.substr(currentPart.length() + 1);
     index = paDestination.find_first_of(".");
   }
-  fullName.push_back(CStringDictionary::insert(paDestination.substr(0, index).c_str()));
+  fullName.push_back(forte::core::StringId::insert(paDestination.substr(0, index)));
 
   if (fullName.size() < 2) { // at least the FB and the event port must be present
     return std::nullopt;

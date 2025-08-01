@@ -13,25 +13,14 @@
 #include "core/io/eIO/io/eIWconfig_fbt.h"
 #include "core/io/eIO/io/eIW_fbt.h"
 
-USE_STRING_ID(BT);
-USE_STRING_ID(CNF);
-USE_STRING_ID(CONF);
-USE_STRING_ID(Event);
-USE_STRING_ID(GRAD);
-USE_STRING_ID(ST);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(WORD);
-USE_STRING_ID(WSTRING);
-USE_STRING_ID(eGenAdapter);
-USE_STRING_ID(eIW);
-USE_STRING_ID(eIWconfig);
+using namespace forte::core::literals;
 
 namespace {
-  const auto cEventInputNames = std::array{STRID(CONF)};
-  const auto cDataInputNames = std::array{STRID(ST), STRID(BT), STRID(GRAD)};
-  const auto cDataOutputNames = std::array{STRID(STATUS)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cPlugNames = std::array{STRID(eIW)};
+  const auto cEventInputNames = std::array{"CONF"_STRID};
+  const auto cDataInputNames = std::array{"ST"_STRID, "BT"_STRID, "GRAD"_STRID};
+  const auto cDataOutputNames = std::array{"STATUS"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cPlugNames = std::array{"eIW"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -46,16 +35,15 @@ namespace {
   };
 } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_eIWconfig, STRID(eIWconfig))
+DEFINE_FIRMWARE_FB(FORTE_eIWconfig, "eIWconfig"_STRID)
 
-FORTE_eIWconfig::FORTE_eIWconfig(const CStringDictionary::TStringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) :
+FORTE_eIWconfig::FORTE_eIWconfig(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CeConfigFB(paInstanceNameId, cFBInterfaceSpec, paContainer),
     var_ST(0_WORD),
     var_BT(0_WORD),
     var_GRAD(0_WORD),
     var_STATUS(u""_WSTRING),
-    var_eIW(STRID(eIW), *this, 0),
+    var_eIW("eIW"_STRID, *this, 0),
     conn_CNF(*this, 0),
     conn_ST(nullptr),
     conn_BT(nullptr),

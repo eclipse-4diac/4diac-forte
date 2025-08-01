@@ -22,22 +22,15 @@
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(F_BOOL_TO_ULINT);
-USE_STRING_ID(IN);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
-USE_STRING_ID(ULINT);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_F_BOOL_TO_ULINT, STRID(F_BOOL_TO_ULINT))
+DEFINE_FIRMWARE_FB(FORTE_F_BOOL_TO_ULINT, "F_BOOL_TO_ULINT"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN)};
-  const auto cDataOutputNames = std::array{STRID(OUT)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataInputNames = std::array{"IN"_STRID};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -51,7 +44,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_BOOL_TO_ULINT::FORTE_F_BOOL_TO_ULINT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_BOOL_TO_ULINT::FORTE_F_BOOL_TO_ULINT(const forte::core::StringId paInstanceNameId,
                                              forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(false_BOOL),

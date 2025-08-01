@@ -13,14 +13,12 @@
  *******************************************************************************/
 #include "stdfblib/ita/RMT_DEV.h"
 
-USE_STRING_ID(MGR);
-USE_STRING_ID(MGR_ID);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-#include "core/stringdict.h"
+#include "core/stringid.h"
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(MGR_ID)};
+  const auto cDataInputNames = std::array{"MGR_ID"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = {},
@@ -36,10 +34,10 @@ namespace {
 } // namespace
 
 RMT_DEV::RMT_DEV(const std::string &paMGR_ID) :
-    CDevice(cFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
+    CDevice(cFBInterfaceSpec, {}),
     conn_MGR_ID_int(*this, 0, u""_WSTRING),
     conn_MGR_ID(nullptr),
-    MGR(STRID(MGR), *this) {
+    MGR("MGR"_STRID, *this) {
   setMGR_ID(paMGR_ID);
 }
 
@@ -53,7 +51,7 @@ bool RMT_DEV::initialize() {
   }
 
   // we need to manually create this connection as the MGR is not managed by device
-  conn_MGR_ID_int.connect(MGR, std::array{STRID(MGR_ID)});
+  conn_MGR_ID_int.connect(MGR, std::array{"MGR_ID"_STRID});
   return true;
 }
 

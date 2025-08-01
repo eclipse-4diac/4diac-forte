@@ -14,9 +14,9 @@
  *******************************************************************************/
 #include "core/datatypes/forte_any_date_variant.h"
 
-USE_STRING_ID(ANY_DATE);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(ANY_DATE_VARIANT, STRID(ANY_DATE))
+DEFINE_FIRMWARE_DATATYPE(ANY_DATE_VARIANT, "ANY_DATE"_STRID)
 
 void CIEC_ANY_DATE_VARIANT::setValue(const CIEC_ANY &paValue) {
   switch (paValue.getDataTypeID()) {
@@ -74,7 +74,7 @@ int CIEC_ANY_DATE_VARIANT::fromString(const char *paValue) {
   int nRetVal = -1;
   const char *hashPos = strchr(paValue, '#');
   if (nullptr != hashPos) {
-    CStringDictionary::TStringId typeNameId = parseTypeName(paValue, hashPos);
+    forte::core::StringId typeNameId = parseTypeName(paValue, hashPos);
     CIEC_ANY::EDataTypeID dataTypeId = CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(typeNameId);
     if (setDefaultValue(dataTypeId)) {
       CIEC_ANY &value = unwrap();

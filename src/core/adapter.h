@@ -44,7 +44,7 @@ namespace forte {
     protected:
       CAdapter(forte::core::CFBContainer &paContainer,
                const SFBInterfaceSpec &paInterfaceSpec,
-               const CStringDictionary::TStringId paInstanceNameId,
+               const forte::core::StringId paInstanceNameId,
                TForteUInt8 paParentAdapterlistID);
 
       TForteUInt16 getParentAdapterListEventID() const {
@@ -64,9 +64,7 @@ namespace forte {
       static_assert(std::is_base_of_v<CAdapter, T>, "T must be a CAdapter");
 
     public:
-      CPlugPin(CStringDictionary::TStringId paInstanceNameId,
-               CFunctionBlock &paParentFB,
-               TForteUInt8 paParentAdapterlistID) :
+      CPlugPin(forte::core::StringId paInstanceNameId, CFunctionBlock &paParentFB, TForteUInt8 paParentAdapterlistID) :
           core::CInternalFB<T>(paInstanceNameId, paParentFB, paParentAdapterlistID),
           mAdapterCon(paParentFB, paParentAdapterlistID, *this) {
       }
@@ -79,7 +77,7 @@ namespace forte {
         return const_cast<CPlugPin<T> *>(this)->getAdapterBlock();
       }
 
-      CStringDictionary::TStringId getAdapterTypeId() const override {
+      forte::core::StringId getAdapterTypeId() const override {
         return getAdapterBlock()->getFBTypeId();
       }
 
@@ -104,7 +102,7 @@ namespace forte {
       static_assert(std::is_base_of_v<CAdapter, T>, "T must be a CAdapter");
 
     public:
-      CSocketPin(CStringDictionary::TStringId paInstanceNameId,
+      CSocketPin(forte::core::StringId paInstanceNameId,
                  CFunctionBlock &paParentFB,
                  TForteUInt8 paParentAdapterlistID) :
           core::CInternalFB<T>(paInstanceNameId, paParentFB, paParentAdapterlistID),
@@ -119,7 +117,7 @@ namespace forte {
         return const_cast<CSocketPin<T> *>(this)->getAdapterBlock();
       }
 
-      CStringDictionary::TStringId getAdapterTypeId() const override {
+      forte::core::StringId getAdapterTypeId() const override {
         return getAdapterBlock()->getFBTypeId();
       }
 

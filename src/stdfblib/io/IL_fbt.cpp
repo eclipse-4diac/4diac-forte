@@ -12,22 +12,7 @@
 
 #include "core/io/IL_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(IL);
-USE_STRING_ID(IN);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(LWORD);
-USE_STRING_ID(PARAMS);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(REQ);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
+using namespace forte::core::literals;
 
 #include "core/iec61131_functions.h"
 #include "core/datatypes/forte_array_common.h"
@@ -35,15 +20,15 @@ USE_STRING_ID(STRING);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_IL, STRID(IL))
+DEFINE_FIRMWARE_FB(FORTE_IL, "IL"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(PARAMS)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS), STRID(IN)};
-  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF), STRID(IND)};
-  const auto cEventOutputTypeIds = std::array{STRID(EInit), STRID(Event), STRID(Event)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "PARAMS"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID, "IN"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID, "IND"_STRID};
+  const auto cEventOutputTypeIds = std::array{"EInit"_STRID, "Event"_STRID, "Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -57,7 +42,7 @@ namespace {
   };
 } // namespace
 
-FORTE_IL::FORTE_IL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_IL::FORTE_IL(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CProcessInterface(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_PARAMS(""_STRING),

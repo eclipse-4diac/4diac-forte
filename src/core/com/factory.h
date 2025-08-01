@@ -19,7 +19,7 @@
 
 #include "channel.h"
 
-#include "core/stringdict.h"
+#include "core/stringid.h"
 
 namespace forte::com {
 
@@ -31,8 +31,7 @@ namespace forte::com {
       friend ComChannelEntry<T>;
 
     public:
-      static std::unique_ptr<ComChannel<T>> createChannel(CStringDictionary::TStringId paChannel,
-                                                          ComObserver<T> &paObserver) {
+      static std::unique_ptr<ComChannel<T>> createChannel(forte::core::StringId paChannel, ComObserver<T> &paObserver) {
         if (auto entry = getEntries().find(paChannel); entry != getEntries().end()) {
           return entry->second->createChannel(paObserver);
         }
@@ -42,12 +41,12 @@ namespace forte::com {
       ComFactory() = delete;
 
     private:
-      static void registerChannel(CStringDictionary::TStringId paName, ComChannelEntry<T> *paEntry) {
+      static void registerChannel(forte::core::StringId paName, ComChannelEntry<T> *paEntry) {
         getEntries()[paName] = paEntry;
       }
 
-      static std::unordered_map<CStringDictionary::TStringId, ComChannelEntry<T> *> &getEntries() {
-        static std::unordered_map<CStringDictionary::TStringId, ComChannelEntry<T> *> entries;
+      static std::unordered_map<forte::core::StringId, ComChannelEntry<T> *> &getEntries() {
+        static std::unordered_map<forte::core::StringId, ComChannelEntry<T> *> entries;
         return entries;
       }
   };
@@ -60,7 +59,7 @@ namespace forte::com {
       virtual ~ComChannelEntry() = default;
 
     protected:
-      explicit ComChannelEntry(CStringDictionary::TStringId paName) {
+      explicit ComChannelEntry(forte::core::StringId paName) {
         ComFactory<T>::registerChannel(paName, this);
       }
 
@@ -71,7 +70,7 @@ namespace forte::com {
   template<typename T, ComChannelImpl<T> U>
   class ComChannelEntryImpl final : public ComChannelEntry<T> {
     public:
-      explicit ComChannelEntryImpl(CStringDictionary::TStringId paName) : ComChannelEntry<T>(paName) {
+      explicit ComChannelEntryImpl(forte::core::StringId paName) : ComChannelEntry<T>(paName) {
       }
 
       std::unique_ptr<ComChannel<T>> createChannel(ComObserver<T> &paObserver) override {

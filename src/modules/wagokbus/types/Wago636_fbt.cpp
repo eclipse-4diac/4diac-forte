@@ -9,67 +9,38 @@
 
 #include "Wago636_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(BusAdapterIn);
-USE_STRING_ID(BusAdapterOut);
-USE_STRING_ID(Busy);
-USE_STRING_ID(CurrentPosition);
-USE_STRING_ID(Event);
-USE_STRING_ID(OnTarget);
-USE_STRING_ID(IND);
-USE_STRING_ID(LimitSwitchN);
-USE_STRING_ID(LimitSwitchP);
-USE_STRING_ID(MAP);
-USE_STRING_ID(MAPO);
-USE_STRING_ID(MotorN);
-USE_STRING_ID(MotorP);
-USE_STRING_ID(OptimizeOnZInput);
-USE_STRING_ID(OptimizeOn);
-USE_STRING_ID(Positioning);
-USE_STRING_ID(Preset);
-USE_STRING_ID(PresetInput);
-USE_STRING_ID(PresetInputEnable);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(QuitErrors);
-USE_STRING_ID(ReferenceOk);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
-USE_STRING_ID(TargetPosition);
-USE_STRING_ID(Wago636);
-USE_STRING_ID(WagoBusAdapter);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "WagoSlaveBase.h"
 #include "../WagoDeviceController.h"
 
 using namespace forte::core::io;
 
-DEFINE_FIRMWARE_FB(FORTE_Wago636, STRID(Wago636))
+DEFINE_FIRMWARE_FB(FORTE_Wago636, "Wago636"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI),
-                                          STRID(Busy),
-                                          STRID(LimitSwitchN),
-                                          STRID(LimitSwitchP),
-                                          STRID(PresetInput),
-                                          STRID(OptimizeOnZInput),
-                                          STRID(OnTarget),
-                                          STRID(ReferenceOk),
-                                          STRID(CurrentPosition),
-                                          STRID(TargetPosition),
-                                          STRID(MotorN),
-                                          STRID(MotorP),
-                                          STRID(Positioning),
-                                          STRID(OptimizeOn),
-                                          STRID(Preset),
-                                          STRID(PresetInputEnable),
-                                          STRID(QuitErrors)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(MAP)};
-  const auto cEventOutputNames = std::array{STRID(MAPO), STRID(IND)};
-  const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
-  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+  const auto cDataInputNames = std::array{"QI"_STRID,
+                                          "Busy"_STRID,
+                                          "LimitSwitchN"_STRID,
+                                          "LimitSwitchP"_STRID,
+                                          "PresetInput"_STRID,
+                                          "OptimizeOnZInput"_STRID,
+                                          "OnTarget"_STRID,
+                                          "ReferenceOk"_STRID,
+                                          "CurrentPosition"_STRID,
+                                          "TargetPosition"_STRID,
+                                          "MotorN"_STRID,
+                                          "MotorP"_STRID,
+                                          "Positioning"_STRID,
+                                          "OptimizeOn"_STRID,
+                                          "Preset"_STRID,
+                                          "PresetInputEnable"_STRID,
+                                          "QuitErrors"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"MAP"_STRID};
+  const auto cEventOutputNames = std::array{"MAPO"_STRID, "IND"_STRID};
+  const auto cSocketNameIds = std::array{"BusAdapterIn"_STRID};
+  const auto cPlugNameIds = std::array{"BusAdapterOut"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -84,7 +55,7 @@ namespace {
   };
 } // namespace
 
-FORTE_Wago636::FORTE_Wago636(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_Wago636::FORTE_Wago636(const forte::core::StringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
     WagoSlaveBase(636, paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),

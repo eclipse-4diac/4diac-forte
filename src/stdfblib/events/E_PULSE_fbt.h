@@ -47,7 +47,7 @@ class FORTE_E_PULSE final : public CCompositeFB {
     CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
   public:
-    FORTE_E_PULSE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_PULSE(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CEventConnection conn_CNF;
 

@@ -12,11 +12,11 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-USE_STRING_ID(F_MUX_2);
+using namespace forte::core::literals;
 
 struct F_MUX_2_TestFixture : public CFBTestFixtureBase {
 
-    F_MUX_2_TestFixture() : CFBTestFixtureBase(STRID(F_MUX_2)) {
+    F_MUX_2_TestFixture() : CFBTestFixtureBase("F_MUX_2"_STRID) {
       setInputData({&mK_MUX_2, &mIn0_MUX_2, &mIn1_MUX_2});
       setOutputData({&mOut_MUX_2});
       CFBTestFixtureBase::setup();

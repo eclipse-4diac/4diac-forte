@@ -13,29 +13,14 @@
  *******************************************************************************/
 #include "stdfblib/ita/RMT_RES.h"
 
-USE_STRING_ID(COLD);
-USE_STRING_ID(EO);
-USE_STRING_ID(ID);
-USE_STRING_ID(INIT);
-USE_STRING_ID(MGR);
-USE_STRING_ID(MGR_FF);
-USE_STRING_ID(MGR_ID);
-USE_STRING_ID(Q);
-USE_STRING_ID(QI);
-USE_STRING_ID(R);
-USE_STRING_ID(RMT_RES);
-USE_STRING_ID(S);
-USE_STRING_ID(START);
-USE_STRING_ID(STOP);
-USE_STRING_ID(WARM);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "core/ecet.h"
 
-DEFINE_FIRMWARE_FB(RMT_RES, STRID(RMT_RES));
+DEFINE_FIRMWARE_FB(RMT_RES, "RMT_RES"_STRID);
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(MGR_ID)};
+  const auto cDataInputNames = std::array{"MGR_ID"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = {},
@@ -50,13 +35,13 @@ namespace {
   };
 } // namespace
 
-RMT_RES::RMT_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
+RMT_RES::RMT_RES(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
     CResource(paDevice, cFBInterfaceSpec, paInstanceNameId),
     conn_MGR_ID(nullptr),
     conn_MGR_ID_int(*this, 0, u""_WSTRING),
-    fb_START(STRID(START), *this),
-    fb_MGR_FF(STRID(MGR_FF), *this),
-    fb_MGR(STRID(MGR), *this) {
+    fb_START("START"_STRID, *this),
+    fb_MGR_FF("MGR_FF"_STRID, *this),
+    fb_MGR("MGR"_STRID, *this) {
 }
 
 bool RMT_RES::initialize() {
@@ -66,49 +51,49 @@ bool RMT_RES::initialize() {
 
   forte::core::SManagementCMD command;
 
-  command.mFirstParam.push_back(STRID(START));
-  command.mFirstParam.push_back(STRID(COLD));
-  command.mSecondParam.push_back(STRID(MGR_FF));
-  command.mSecondParam.push_back(STRID(S));
+  command.mFirstParam.push_back("START"_STRID);
+  command.mFirstParam.push_back("COLD"_STRID);
+  command.mSecondParam.push_back("MGR_FF"_STRID);
+  command.mSecondParam.push_back("S"_STRID);
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.push_back(STRID(START));
-  command.mFirstParam.push_back(STRID(WARM));
+  command.mFirstParam.push_back("START"_STRID);
+  command.mFirstParam.push_back("WARM"_STRID);
   command.mSecondParam.clear();
-  command.mSecondParam.push_back(STRID(MGR_FF));
-  command.mSecondParam.push_back(STRID(S));
+  command.mSecondParam.push_back("MGR_FF"_STRID);
+  command.mSecondParam.push_back("S"_STRID);
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.push_back(STRID(START));
-  command.mFirstParam.push_back(STRID(STOP));
+  command.mFirstParam.push_back("START"_STRID);
+  command.mFirstParam.push_back("STOP"_STRID);
   command.mSecondParam.clear();
-  command.mSecondParam.push_back(STRID(MGR_FF));
-  command.mSecondParam.push_back(STRID(R));
+  command.mSecondParam.push_back("MGR_FF"_STRID);
+  command.mSecondParam.push_back("R"_STRID);
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.push_back(STRID(MGR_FF));
-  command.mFirstParam.push_back(STRID(EO));
+  command.mFirstParam.push_back("MGR_FF"_STRID);
+  command.mFirstParam.push_back("EO"_STRID);
   command.mSecondParam.clear();
-  command.mSecondParam.push_back(STRID(MGR));
-  command.mSecondParam.push_back(STRID(INIT));
+  command.mSecondParam.push_back("MGR"_STRID);
+  command.mSecondParam.push_back("INIT"_STRID);
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.push_back(STRID(MGR_FF));
-  command.mFirstParam.push_back(STRID(Q));
+  command.mFirstParam.push_back("MGR_FF"_STRID);
+  command.mFirstParam.push_back("Q"_STRID);
   command.mSecondParam.clear();
-  command.mSecondParam.push_back(STRID(MGR));
-  command.mSecondParam.push_back(STRID(QI));
+  command.mSecondParam.push_back("MGR"_STRID);
+  command.mSecondParam.push_back("QI"_STRID);
   createConnection(command);
 
   command.mFirstParam.clear();
-  command.mFirstParam.push_back(STRID(MGR_ID));
+  command.mFirstParam.push_back("MGR_ID"_STRID);
   command.mSecondParam.clear();
-  command.mSecondParam.push_back(STRID(MGR));
-  command.mSecondParam.push_back(STRID(ID));
+  command.mSecondParam.push_back("MGR"_STRID);
+  command.mSecondParam.push_back("ID"_STRID);
   createConnection(command);
   return true;
 }

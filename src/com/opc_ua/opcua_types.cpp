@@ -15,7 +15,7 @@
 const UA_DataType *COPC_UA_Helper::getExternalOPCUATypeFromAny(const CIEC_ANY &paAnyType) {
   CIEC_ANY::EDataTypeID typeId = paAnyType.getDataTypeID();
   if (CIEC_ANY::e_STRUCT == typeId) {
-    CStringDictionary::TStringId typeOfStructure = static_cast<const CIEC_STRUCT &>(paAnyType).getStructTypeNameID();
+    forte::core::StringId typeOfStructure = static_cast<const CIEC_STRUCT &>(paAnyType).getStructTypeNameID();
     for (size_t i = 0; i < sizeof(scmExternalMapForteTypeIdToOpcUa) / sizeof(UA_TypeConvert_external); i++) {
       if (scmExternalMapForteTypeIdToOpcUa[i].mStringId == typeOfStructure) {
         return scmExternalMapForteTypeIdToOpcUa[i].mType;

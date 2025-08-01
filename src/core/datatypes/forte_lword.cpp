@@ -13,8 +13,8 @@
  *******************************************************************************/
 #include "core/datatypes/forte_lword.h"
 
-USE_STRING_ID(LWORD);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(LWORD, STRID(LWORD))
+DEFINE_FIRMWARE_DATATYPE(LWORD, "LWORD"_STRID)
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_LWORD>::scmDataTypeName = STRID(LWORD);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_LWORD>::scmDataTypeName = "LWORD"_STRID;

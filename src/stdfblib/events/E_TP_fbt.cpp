@@ -17,36 +17,17 @@
 
 #include "E_TP_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(DT);
-USE_STRING_ID(E_DELAY);
-USE_STRING_ID(EI);
-USE_STRING_ID(EO);
-USE_STRING_ID(E_PERMIT);
-USE_STRING_ID(E_RS);
-USE_STRING_ID(E_TP);
-USE_STRING_ID(Event);
-USE_STRING_ID(IN);
-USE_STRING_ID(PERMIT);
-USE_STRING_ID(PT);
-USE_STRING_ID(Q);
-USE_STRING_ID(R);
-USE_STRING_ID(REQ);
-USE_STRING_ID(S);
-USE_STRING_ID(START);
-USE_STRING_ID(STOP);
-USE_STRING_ID(TIME);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_E_TP, STRID(E_TP))
+DEFINE_FIRMWARE_FB(FORTE_E_TP, "E_TP"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN), STRID(PT)};
-  const auto cDataOutputNames = std::array{STRID(Q)};
-  const auto cEventInputNames = std::array{STRID(REQ), STRID(R)};
-  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"IN"_STRID, "PT"_STRID};
+  const auto cDataOutputNames = std::array{"Q"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID, "R"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -60,19 +41,19 @@ namespace {
   };
 
   const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
-      {STRID(E_RS), STRID(EO), CStringDictionary::scmInvalidStringId, STRID(CNF)},
-      {CStringDictionary::scmInvalidStringId, STRID(R), STRID(E_DELAY), STRID(STOP)},
-      {CStringDictionary::scmInvalidStringId, STRID(R), STRID(E_RS), STRID(R)},
-      {STRID(E_DELAY), STRID(EO), STRID(E_RS), STRID(R)},
-      {CStringDictionary::scmInvalidStringId, STRID(REQ), STRID(E_PERMIT), STRID(EI)},
-      {STRID(E_PERMIT), STRID(EO), STRID(E_RS), STRID(S)},
-      {STRID(E_PERMIT), STRID(EO), STRID(E_DELAY), STRID(START)},
+      {"E_RS"_STRID, "EO"_STRID, {}, "CNF"_STRID},
+      {{}, "R"_STRID, "E_DELAY"_STRID, "STOP"_STRID},
+      {{}, "R"_STRID, "E_RS"_STRID, "R"_STRID},
+      {"E_DELAY"_STRID, "EO"_STRID, "E_RS"_STRID, "R"_STRID},
+      {{}, "REQ"_STRID, "E_PERMIT"_STRID, "EI"_STRID},
+      {"E_PERMIT"_STRID, "EO"_STRID, "E_RS"_STRID, "S"_STRID},
+      {"E_PERMIT"_STRID, "EO"_STRID, "E_DELAY"_STRID, "START"_STRID},
   });
 
   const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
-      {CStringDictionary::scmInvalidStringId, STRID(PT), STRID(E_DELAY), STRID(DT)},
-      {STRID(E_RS), STRID(Q), CStringDictionary::scmInvalidStringId, STRID(Q)},
-      {CStringDictionary::scmInvalidStringId, STRID(IN), STRID(E_PERMIT), STRID(PERMIT)},
+      {{}, "PT"_STRID, "E_DELAY"_STRID, "DT"_STRID},
+      {"E_RS"_STRID, "Q"_STRID, {}, "Q"_STRID},
+      {{}, "IN"_STRID, "E_PERMIT"_STRID, "PERMIT"_STRID},
   });
 
   const SCFB_FBNData cFBNData = {
@@ -82,11 +63,11 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TP::FORTE_E_TP(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_TP::FORTE_E_TP(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
-    fb_E_DELAY(STRID(E_DELAY), *this),
-    fb_E_RS(STRID(E_RS), *this),
-    fb_E_PERMIT(STRID(E_PERMIT), *this),
+    fb_E_DELAY("E_DELAY"_STRID, *this),
+    fb_E_RS("E_RS"_STRID, *this),
+    fb_E_PERMIT("E_PERMIT"_STRID, *this),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
     conn_PT(nullptr),

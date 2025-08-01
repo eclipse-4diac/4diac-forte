@@ -49,7 +49,7 @@ class FORTE_FieldsToPreferredProvider : public CBasicFB {
     virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_FieldsToPreferredProvider(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_FieldsToPreferredProvider(forte::core::StringId paInstanceNameId,
                                     forte::core::CFBContainer &paContainer) :
 
     ~FORTE_FieldsToPreferredProvider() override = default;

@@ -343,7 +343,7 @@ EComResponse COPC_UA_AC_Layer::initializeMemberActions(const std::string &paPare
   mMemberActionInfo.reset(new CActionInfo(*this, CActionInfo::UA_ActionType::eWrite, std::string()));
   size_t numPorts = getCommFB()->getNumSD();
   const SFBInterfaceSpec &interfaceSpec = getCommFB()->getFBInterfaceSpec();
-  const std::span<const CStringDictionary::TStringId> dataPortNameIds = interfaceSpec.mDINames;
+  const std::span<const forte::core::StringId> dataPortNameIds = interfaceSpec.mDINames;
 
   for (size_t i = 0; i < numPorts; i++) {
     std::string dataPortName = getPortNameFromConnection(dataPortNameIds[i + 2], true);
@@ -403,7 +403,7 @@ COPC_UA_AC_Layer::addOPCUATypeProperties(UA_Server *paServer, const std::string 
   CIEC_ANY **apoDataPorts = paIsPublisher ? getCommFB()->getSDs() : getCommFB()->getRDs();
   size_t numDataPorts = paIsPublisher ? getCommFB()->getNumSD() : getCommFB()->getNumRD();
   const SFBInterfaceSpec &interfaceSpec = getCommFB()->getFBInterfaceSpec();
-  const std::span<const CStringDictionary::TStringId> dataPortNameIds =
+  const std::span<const forte::core::StringId> dataPortNameIds =
       paIsPublisher ? interfaceSpec.mDINames : interfaceSpec.mDONames;
   for (size_t i = 0; i < numDataPorts; i++) {
     std::string dataPortName = getPortNameFromConnection(dataPortNameIds[i + 2], paIsPublisher);
@@ -480,16 +480,16 @@ bool COPC_UA_AC_Layer::isOPCUAObjectPresent(std::string &paBrowsePath) {
   return false;
 }
 
-std::string COPC_UA_AC_Layer::getPortNameFromConnection(CStringDictionary::TStringId paPortNameId, bool paIsPublisher) {
+std::string COPC_UA_AC_Layer::getPortNameFromConnection(forte::core::StringId paPortNameId, bool paIsPublisher) {
   const CDataConnection *portConnection =
       paIsPublisher ? getCommFB()->getDIConnection(paPortNameId) : getCommFB()->getDOConnection(paPortNameId);
   const CConnectionPoint connectionPoint = portConnection->getSourceId();
   TPortId portId = connectionPoint.getPortId();
-  return std::string(CStringDictionary::get(connectionPoint.getFB().getFBInterfaceSpec().mDINames[portId]));
+  return std::string(connectionPoint.getFB().getFBInterfaceSpec().mDINames[portId]);
 }
 
 std::string COPC_UA_AC_Layer::getFBNameFromConnection(bool paIsPublisher) {
-  const std::span<const CStringDictionary::TStringId> dataPortNameIds =
+  const std::span<const forte::core::StringId> dataPortNameIds =
       paIsPublisher ? getCommFB()->getFBInterfaceSpec().mDINames : getCommFB()->getFBInterfaceSpec().mDONames;
   const CDataConnection *portConnection = paIsPublisher ? getCommFB()->getDIConnection(dataPortNameIds[2])
                                                         : getCommFB()->getDOConnection(dataPortNameIds[2]);

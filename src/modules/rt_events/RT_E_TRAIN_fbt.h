@@ -45,7 +45,7 @@ class FORTE_RT_E_TRAIN final : public CCompositeFB {
     CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
   public:
-    FORTE_RT_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_RT_E_TRAIN(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CEventConnection conn_EO;
     CDataConnection *conn_DT;

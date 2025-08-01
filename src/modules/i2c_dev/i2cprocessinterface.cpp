@@ -25,7 +25,7 @@ const char *const CI2CProcessInterface::scmCouldNotWrite = "Could not write valu
 
 CI2CProcessInterface::CI2CProcessInterface(forte::core::CFBContainer &paContainer,
                                            const SFBInterfaceSpec &paInterfaceSpec,
-                                           const CStringDictionary::TStringId paInstanceNameId) :
+                                           const forte::core::StringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mFd(-1),
     mValueAddress(-1) {

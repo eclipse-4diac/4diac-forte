@@ -13,12 +13,12 @@
 
 #include "core/negdataconn.h"
 
-USE_STRING_ID(NOT)
+using namespace forte::core::literals;
 
 using namespace forte::core::internal;
 using namespace std::string_literals;
 
 void CNegatingDataConnection::getSourcePortName(TNameIdentifier &paResult) const {
   CDataConnection::getSourcePortName(paResult);
-  paResult.push_back(STRID(NOT));
+  paResult.push_back("NOT"_STRID);
 }

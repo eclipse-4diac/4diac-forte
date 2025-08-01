@@ -22,7 +22,7 @@ class RMT_RES final : public CResource {
     DECLARE_FIRMWARE_FB(RMT_RES)
 
   public:
-    RMT_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice);
+    RMT_RES(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paDevice);
     ~RMT_RES() override;
 
     bool initialize() override;
@@ -43,8 +43,8 @@ class RMT_RES final : public CResource {
     forte::core::CInternalFB<DEV_MGR> fb_MGR;
 
 
-    static const CStringDictionary::TStringId scmVarInputNameIds[];
-    static const CStringDictionary::TStringId scmDIDataTypeIds[];
+    static const forte::core::StringId scmVarInputNameIds[];
+    static const forte::core::StringId scmDIDataTypeIds[];
 };
 
 #endif // close the ifdef sequence from the beginning of the file

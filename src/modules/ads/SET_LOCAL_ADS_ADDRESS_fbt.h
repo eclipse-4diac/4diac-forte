@@ -64,11 +64,11 @@ class FORTE_SET_LOCAL_ADS_ADDRESS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_SET_LOCAL_ADS_ADDRESS(const CStringDictionary::TStringId paInstanceNameId,
+    FORTE_SET_LOCAL_ADS_ADDRESS(const forte::core::StringId paInstanceNameId,
                                 forte::core::CFBContainer &paContainer) :
     ~FORTE_SET_LOCAL_ADS_ADDRESS() override = default;
 
-    FORTE_SET_LOCAL_ADS_ADDRESS(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_SET_LOCAL_ADS_ADDRESS(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_STRING var_PARAMS;

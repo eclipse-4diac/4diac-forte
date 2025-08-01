@@ -44,7 +44,7 @@ class FORTE_E_SPLIT final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_SPLIT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_SPLIT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CEventConnection conn_EO1;
     CEventConnection conn_EO2;

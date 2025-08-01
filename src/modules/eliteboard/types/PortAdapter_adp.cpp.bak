@@ -12,12 +12,7 @@
 
 #include "PortAdapter_adp.h"
 
-USE_STRING_ID(DWORD);
-USE_STRING_ID(Event);
-USE_STRING_ID(GPIO_Port_Addr);
-USE_STRING_ID(MAP);
-USE_STRING_ID(MAPO);
-USE_STRING_ID(PortAdapter);
+using namespace forte::core::literals;
 
 #include "core/iec61131_functions.h"
 #include "core/datatypes/forte_array_common.h"
@@ -25,14 +20,14 @@ USE_STRING_ID(PortAdapter);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_ADAPTER_TYPE(FORTE_PortAdapter, STRID(PortAdapter))
+DEFINE_ADAPTER_TYPE(FORTE_PortAdapter, "PortAdapter"_STRID)
 
-const auto cDataOutputNames = std::array{STRID(GPIO_Port_Addr)};
-const auto cEventInputNames = std::array{STRID(MAPO)};
-const auto cEventOutputNames = std::array{STRID(MAP)};
+const auto cDataOutputNames = std::array{"GPIO_Port_Addr"_STRID};
+const auto cEventInputNames = std::array{"MAPO"_STRID};
+const auto cEventOutputNames = std::array{"MAP"_STRID};
 
-const auto cEventInputTypeIds = std::array{STRID(Event)};
-const auto cEventOutputTypeIds = std::array{STRID(Event)};
+const auto cEventInputTypeIds = std::array{"Event"_STRID};
+const auto cEventOutputTypeIds = std::array{"Event"_STRID};
 
 const SFBInterfaceSpec FORTE_PortAdapter::scmFBInterfaceSpecSocket = {1,
                                                                       scmEventInputNames,

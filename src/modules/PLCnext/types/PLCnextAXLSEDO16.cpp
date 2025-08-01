@@ -19,37 +19,7 @@
 
 #include "PLCnextAXLSEDO16.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(BusAdapterIn);
-USE_STRING_ID(BusAdapterOut);
-USE_STRING_ID(DO_1);
-USE_STRING_ID(DO_10);
-USE_STRING_ID(DO_11);
-USE_STRING_ID(DO_12);
-USE_STRING_ID(DO_13);
-USE_STRING_ID(DO_14);
-USE_STRING_ID(DO_15);
-USE_STRING_ID(DO_16);
-USE_STRING_ID(DO_2);
-USE_STRING_ID(DO_3);
-USE_STRING_ID(DO_4);
-USE_STRING_ID(DO_5);
-USE_STRING_ID(DO_6);
-USE_STRING_ID(DO_7);
-USE_STRING_ID(DO_8);
-USE_STRING_ID(DO_9);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(PLCnextAXLSEDO16);
-USE_STRING_ID(PLCnextBusAdapter);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "PLCnextBusAdapter.h"
 #include "core/datatypes/forte_string.h"
@@ -59,20 +29,20 @@ USE_STRING_ID(WSTRING);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_PLCnextAXLSEDO16, STRID(PLCnextAXLSEDO16))
+DEFINE_FIRMWARE_FB(FORTE_PLCnextAXLSEDO16, "PLCnextAXLSEDO16"_STRID)
 
 namespace {
   const auto cDataInputNames =
-      std::array{STRID(QI),    STRID(DO_1),  STRID(DO_2),  STRID(DO_3),  STRID(DO_4),  STRID(DO_5),
-                 STRID(DO_6),  STRID(DO_7),  STRID(DO_8),  STRID(DO_9),  STRID(DO_10), STRID(DO_11),
-                 STRID(DO_12), STRID(DO_13), STRID(DO_14), STRID(DO_15), STRID(DO_16)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(INIT)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
-  const auto cEventOutputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
-  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+      std::array{"QI"_STRID,    "DO_1"_STRID,  "DO_2"_STRID,  "DO_3"_STRID,  "DO_4"_STRID,  "DO_5"_STRID,
+                 "DO_6"_STRID,  "DO_7"_STRID,  "DO_8"_STRID,  "DO_9"_STRID,  "DO_10"_STRID, "DO_11"_STRID,
+                 "DO_12"_STRID, "DO_13"_STRID, "DO_14"_STRID, "DO_15"_STRID, "DO_16"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "IND"_STRID};
+  const auto cEventOutputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cSocketNameIds = std::array{"BusAdapterIn"_STRID};
+  const auto cPlugNameIds = std::array{"BusAdapterOut"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -87,7 +57,7 @@ namespace {
   };
 } // namespace
 
-FORTE_PLCnextAXLSEDO16::FORTE_PLCnextAXLSEDO16(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_PLCnextAXLSEDO16::FORTE_PLCnextAXLSEDO16(const forte::core::StringId paInstanceNameId,
                                                forte::core::CFBContainer &paContainer) :
     PLCnextSlaveHandler(PLCnextSlaveHandler::Output, paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),

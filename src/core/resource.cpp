@@ -30,7 +30,7 @@
 #include "core/util/string_utils.h"
 #include "core/typelib_internal.h"
 
-USE_STRING_ID(START);
+using namespace forte::core::literals;
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
 #include "core/lua/luaadaptertypeentry.h"
@@ -73,20 +73,20 @@ namespace {
 
   void createConnectionResponseMessage(const CConnection &paConn,
                                        const CFunctionBlock &paDstFb,
-                                       const CStringDictionary::TStringId paDstId,
+                                       const forte::core::StringId paDstId,
                                        std::string &paReqResult) {
     paReqResult += "<Connection Source=\""s;
 
     forte::core::TNameIdentifier srcNameList;
     paConn.getSourceId().getFB().getFullQualifiedApplicationInstanceName(srcNameList);
     paConn.getSourcePortName(srcNameList);
-    forte::core::util::join(srcNameList.cbegin(), srcNameList.cend(), CStringDictionary::get, '.', paReqResult);
+    forte::core::util::join(srcNameList.cbegin(), srcNameList.cend(), {}, '.', paReqResult);
 
     paReqResult.append("\" Destination=\""s);
 
     paReqResult += paDstFb.getFullQualifiedApplicationInstanceName('.');
     paReqResult += "."s;
-    paReqResult += CStringDictionary::get(paDstId);
+    paReqResult += paDstId;
 
     paReqResult.append("\"/>\n"s);
   }
@@ -188,27 +188,27 @@ namespace {
     return EMGMResponse::Ready;
   }
 
-  EMGMResponse createFBTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+  EMGMResponse createFBTypeResponseMessage(const forte::core::StringId paTypeNameId,
                                            std::string_view paTypeHash,
                                            std::string &paReqResult) {
     return createQueryTypeResponseMessage(forte::core::getFBTypeEntry(paTypeNameId), paTypeHash, paReqResult, "FBType");
   }
 
-  EMGMResponse createDataTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+  EMGMResponse createDataTypeResponseMessage(const forte::core::StringId paTypeNameId,
                                              std::string_view paTypeHash,
                                              std::string &paReqResult) {
     return createQueryTypeResponseMessage(forte::core::getDataTypeEntry(paTypeNameId), paTypeHash, paReqResult,
                                           "DataType");
   }
 
-  EMGMResponse createAdapterTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+  EMGMResponse createAdapterTypeResponseMessage(const forte::core::StringId paTypeNameId,
                                                 std::string_view paTypeHash,
                                                 std::string &paReqResult) {
     return createQueryTypeResponseMessage(forte::core::getAdapterTypeEntry(paTypeNameId), paTypeHash, paReqResult,
                                           "AdapterType");
   }
 
-  EMGMResponse createGlobalConstTypeResponseMessage(const CStringDictionary::TStringId paTypeNameId,
+  EMGMResponse createGlobalConstTypeResponseMessage(const forte::core::StringId paTypeNameId,
                                                     std::string_view paTypeHash,
                                                     std::string &paReqResult) {
     return createQueryTypeResponseMessage(forte::core::getGlobalConstTypeEntry(paTypeNameId), paTypeHash, paReqResult,
@@ -221,7 +221,7 @@ namespace {
 
 namespace {
 
-  EMGMResponse createFBTypeFromLua(CStringDictionary::TStringId typeNameId, const std::string &paLuaScriptAsString) {
+  EMGMResponse createFBTypeFromLua(forte::core::StringId typeNameId, const std::string &paLuaScriptAsString) {
     EMGMResponse retVal = EMGMResponse::UnsupportedType;
 
     if (paLuaScriptAsString.find("internalFBs") != std::string::npos) { // CFBType
@@ -240,8 +240,7 @@ namespace {
     return retVal;
   }
 
-  EMGMResponse createAdapterTypeFromLua(CStringDictionary::TStringId typeNameId,
-                                        const std::string &paLuaScriptAsString) {
+  EMGMResponse createAdapterTypeFromLua(forte::core::StringId typeNameId, const std::string &paLuaScriptAsString) {
     EMGMResponse retVal = EMGMResponse::UnsupportedType;
     if (CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(typeNameId, paLuaScriptAsString) != nullptr) {
       retVal = EMGMResponse::Ready;
@@ -257,7 +256,7 @@ namespace {
 
 CResource::CResource(forte::core::CFBContainer &paDevice,
                      const SFBInterfaceSpec &paInterfaceSpec,
-                     const CStringDictionary::TStringId paInstanceNameId) :
+                     const forte::core::StringId paInstanceNameId) :
     CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId),
     mResourceEventExecution(EcetFactory::createEcet()),
     mMonitoringHandler(*this)
@@ -268,7 +267,7 @@ CResource::CResource(forte::core::CFBContainer &paDevice,
 {
 }
 
-CResource::CResource(const SFBInterfaceSpec &paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+CResource::CResource(const SFBInterfaceSpec &paInterfaceSpec, const forte::core::StringId paInstanceNameId) :
     CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId),
     mResourceEventExecution(nullptr),
     mMonitoringHandler(*this)
@@ -299,7 +298,7 @@ CResource::~CResource() {
 EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand) {
   EMGMResponse retVal = EMGMResponse::InvalidDst;
 
-  if (CStringDictionary::scmInvalidStringId == paCommand.mDestination) {
+  if (!paCommand.mDestination) {
     switch (paCommand.mCMD) {
       case EMGMCommandType::CreateFBInstance: {
         retVal = createFB(paCommand.mFirstParam, paCommand.mSecondParam.front(), paCommand.mAdditionalParams);
@@ -465,7 +464,7 @@ EMGMResponse CResource::deleteConnection(forte::core::TNameIdentifier &paSrcName
 EMGMResponse CResource::writeValue(forte::core::TNameIdentifier &paNameList, const std::string &paValue, bool paForce) {
   EMGMResponse retVal = EMGMResponse::NoSuchObject;
 
-  CStringDictionary::TStringId portName = paNameList.back();
+  forte::core::StringId portName = paNameList.back();
   paNameList.pop_back();
   auto runner = paNameList.cbegin();
 
@@ -538,7 +537,7 @@ EMGMResponse CResource::readValue(forte::core::TNameIdentifier &paNameList, std:
 }
 
 CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList) {
-  CStringDictionary::TStringId portName = paNameList.back();
+  forte::core::StringId portName = paNameList.back();
   paNameList.pop_back();
   auto runner = paNameList.cbegin();
 
@@ -555,18 +554,18 @@ CIEC_ANY *CResource::getVariable(forte::core::TNameIdentifier &paNameList) {
   return var;
 }
 
-CConnection::Wrapper CResource::getOutputConnection(const std::span<const CStringDictionary::TStringId> paSrcNameList) {
+CConnection::Wrapper CResource::getOutputConnection(const std::span<const forte::core::StringId> paSrcNameList) {
   if (paSrcNameList.empty()) {
     return CConnection::Wrapper();
   }
-  CStringDictionary::TStringId name = paSrcNameList.front();
+  forte::core::StringId name = paSrcNameList.front();
   if (const auto conn = getResIf2InConnection(name); conn) {
     return conn->getDelegatingConnection(paSrcNameList.subspan(1));
   }
   return CFunctionBlock::getOutputConnection(paSrcNameList);
 }
 
-CConnection *CResource::getResIf2InConnection(CStringDictionary::TStringId paResInput) {
+CConnection *CResource::getResIf2InConnection(forte::core::StringId paResInput) {
   TPortId inPortId = getFBInterfaceSpec().getDIID(paResInput);
   return (inPortId != cgInvalidPortId) ? getResIf2InConnectionUnchecked(inPortId) : nullptr;
 }

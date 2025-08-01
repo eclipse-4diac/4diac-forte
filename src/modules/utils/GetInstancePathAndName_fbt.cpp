@@ -13,15 +13,7 @@
 
 #include "GetInstancePathAndName_fbt.h"
 
-USE_STRING_ID(CHAR);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(GetInstancePathAndName);
-USE_STRING_ID(Name);
-USE_STRING_ID(Path);
-USE_STRING_ID(REQ);
-USE_STRING_ID(Sep);
-USE_STRING_ID(STRING);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_char.h"
 #include "core/iec61131_functions.h"
@@ -30,15 +22,15 @@ USE_STRING_ID(STRING);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_GetInstancePathAndName, STRID(GetInstancePathAndName))
+DEFINE_FIRMWARE_FB(FORTE_GetInstancePathAndName, "GetInstancePathAndName"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(Sep)};
-  const auto cDataOutputNames = std::array{STRID(Path), STRID(Name)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"Sep"_STRID};
+  const auto cDataOutputNames = std::array{"Path"_STRID, "Name"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -52,7 +44,7 @@ namespace {
   };
 } // namespace
 
-FORTE_GetInstancePathAndName::FORTE_GetInstancePathAndName(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_GetInstancePathAndName::FORTE_GetInstancePathAndName(const forte::core::StringId paInstanceNameId,
                                                            forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_Sep(0x2f_CHAR),

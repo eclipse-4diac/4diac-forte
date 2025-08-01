@@ -49,7 +49,7 @@ class FORTE_E_REND final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_REND(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_REND(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CEventConnection conn_EO;
 

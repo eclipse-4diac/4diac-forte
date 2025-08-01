@@ -12,8 +12,8 @@
  *******************************************************************************/
 #include "core/datatypes/forte_state.h"
 
-USE_STRING_ID(STATE);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(STATE, STRID(STATE))
+DEFINE_FIRMWARE_DATATYPE(STATE, "STATE"_STRID)
 
 const CIEC_STATE::TValueType CIEC_STATE::scmMaxVal = std::numeric_limits<CIEC_STATE::TValueType>::max();

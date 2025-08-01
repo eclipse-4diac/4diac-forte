@@ -27,7 +27,7 @@ class FORTE_RequestOrchestrationOpcUa : public CCompositeFB {
     static const int scm_nrequestOrchestrationAdpNum = 0;
 
   public:
-    FORTE_RequestOrchestrationOpcUa(const CStringDictionary::TStringId paInstanceNameId,
+    FORTE_RequestOrchestrationOpcUa(const forte::core::StringId paInstanceNameId,
                                     forte::core::CFBContainer &paContainer) :
 
         ~FORTE_RequestOrchestrationOpcUa() override = default;

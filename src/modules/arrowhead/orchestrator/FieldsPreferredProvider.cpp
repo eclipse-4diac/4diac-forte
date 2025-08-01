@@ -12,33 +12,24 @@
 
 #include "FieldsPreferredProvider.h"
 
-USE_STRING_ID(ArrowheadCloud);
-USE_STRING_ID(ArrowheadSystem);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(FieldsPreferredProvider);
-USE_STRING_ID(preferredProvider);
-USE_STRING_ID(PreferredProvider);
-USE_STRING_ID(providerCloud);
-USE_STRING_ID(providerSystem);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsPreferredProvider, STRID(FieldsPreferredProvider))
+DEFINE_FIRMWARE_FB(FORTE_FieldsPreferredProvider, "FieldsPreferredProvider"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(providerSystem),
-                                                                                           STRID(providerCloud)};
+  const auto cDataInputNames = std::array{"providerSystem"_STRID,
+                                                                                           "providerCloud"_STRID};
   
-                                                                                             STRID(ArrowheadCloud)};
+                                                                                             "ArrowheadCloud"_STRID};
   
-  const auto cDataOutputNames = std::array{STRID(preferredProvider)};
+  const auto cDataOutputNames = std::array{"preferredProvider"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

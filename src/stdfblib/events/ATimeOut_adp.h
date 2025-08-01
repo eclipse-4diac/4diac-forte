@@ -45,7 +45,7 @@ class FORTE_ATimeOut : public forte::CAdapter {
   protected:
     FORTE_ATimeOut(forte::core::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
-                   const CStringDictionary::TStringId paInstanceNameId,
+                   const forte::core::StringId paInstanceNameId,
                    TForteUInt8 paParentAdapterlistID);
 
     ~FORTE_ATimeOut() override = default;
@@ -55,7 +55,7 @@ class FORTE_ATimeOut_Socket;
 
 class FORTE_ATimeOut_Plug final : public FORTE_ATimeOut {
   public:
-    FORTE_ATimeOut_Plug(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_ATimeOut_Plug(forte::core::StringId paInstanceNameId,
                         forte::core::CFBContainer &paContainer,
                         TForteUInt8 paParentAdapterlistID);
     ~FORTE_ATimeOut_Plug() override = default;
@@ -80,7 +80,7 @@ class FORTE_ATimeOut_Plug final : public FORTE_ATimeOut {
 
 class FORTE_ATimeOut_Socket final : public FORTE_ATimeOut {
   public:
-    FORTE_ATimeOut_Socket(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_ATimeOut_Socket(forte::core::StringId paInstanceNameId,
                           forte::core::CFBContainer &paContainer,
                           TForteUInt8 paParentAdapterlistID);
     ~FORTE_ATimeOut_Socket() override = default;

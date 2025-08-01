@@ -20,7 +20,7 @@
 #include <memory>
 #include <filesystem>
 
-#include "core/stringdict.h"
+#include "core/stringid.h"
 
 #include "barectf.h"
 
@@ -32,7 +32,7 @@
 class BarectfPlatformFORTE final {
   public:
     BarectfPlatformFORTE(std::filesystem::path filename, size_t bufferSize);
-    BarectfPlatformFORTE(CStringDictionary::TStringId instanceName, size_t bufferSize);
+    BarectfPlatformFORTE(forte::core::StringId instanceName, size_t bufferSize);
     ~BarectfPlatformFORTE();
 
     BarectfPlatformFORTE(const BarectfPlatformFORTE &) = delete;

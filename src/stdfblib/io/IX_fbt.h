@@ -62,7 +62,7 @@ class FORTE_IX final : public CProcessInterface {
     void setInitialValues() override;
 
   public:
-    FORTE_IX(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IX(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_STRING var_PARAMS;

@@ -17,30 +17,22 @@
 #include "F_SUB_TOD_TIME_fbt.h"
 #include "core/datatypes/forte_time_of_day.h"
 
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(F_SUB_TOD_TIME);
-USE_STRING_ID(IN1);
-USE_STRING_ID(IN2);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
-USE_STRING_ID(TIME);
-USE_STRING_ID(TIME_OF_DAY);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_F_SUB_TOD_TIME, STRID(F_SUB_TOD_TIME))
+DEFINE_FIRMWARE_FB(FORTE_F_SUB_TOD_TIME, "F_SUB_TOD_TIME"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN1), STRID(IN2)};
+  const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};
   
   
-  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -56,7 +48,7 @@ namespace {
 }
 
 
-FORTE_F_SUB_TOD_TIME::FORTE_F_SUB_TOD_TIME(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_SUB_TOD_TIME::FORTE_F_SUB_TOD_TIME(const forte::core::StringId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_TIME_OF_DAY(0)),

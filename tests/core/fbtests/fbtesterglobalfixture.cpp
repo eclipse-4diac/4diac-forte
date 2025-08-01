@@ -15,15 +15,15 @@
 
 #include "fbtesterglobalfixture.h"
 
-USE_STRING_ID(EMB_RES);
+using namespace forte::core::literals;
 
 #include <boost/test/unit_test.hpp>
 
 std::unique_ptr<CTesterDevice> CFBTestDataGlobalFixture::smTestDev;
 
-CTesterDevice::CTesterDevice(const CStringDictionary::TStringId paInstanceNameId) :
+CTesterDevice::CTesterDevice(const forte::core::StringId paInstanceNameId) :
     CDevice(scTestDevSpec, paInstanceNameId),
-    mResource(STRID(EMB_RES), *this) {
+    mResource("EMB_RES"_STRID, *this) {
 }
 
 CFBTestDataGlobalFixture::CFBTestDataGlobalFixture() {

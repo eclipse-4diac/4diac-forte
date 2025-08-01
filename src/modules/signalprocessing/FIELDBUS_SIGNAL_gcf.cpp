@@ -24,13 +24,13 @@
 
 using namespace std::literals;
 
-USE_STRING_ID(signalprocessing__FIELDBUS_SIGNAL);
+using namespace forte::core::literals;
 
 namespace {
     constexpr std::string_view TypeHash ="v1:SHA3-512:721f067bab158051f9496f4a7a754a0892c1de3ff18b2e95192ea2f5b791b092aa5a50e00fc78d7e3bc70e73fb3b56ac0397051c71f79545a0571418a3a18a2a"sv;
 }
 
-DEFINE_FIRMWARE_GLOBAL_CONST(FORTE_signalprocessing__FIELDBUS_SIGNAL, STRID(signalprocessing__FIELDBUS_SIGNAL), TypeHash)
+DEFINE_FIRMWARE_GLOBAL_CONST(FORTE_signalprocessing__FIELDBUS_SIGNAL, "signalprocessing__FIELDBUS_SIGNAL"_STRID, TypeHash)
 
 
 const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_REVERSE = 0_BYTE;

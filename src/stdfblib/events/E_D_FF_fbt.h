@@ -48,7 +48,7 @@ class FORTE_E_D_FF final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_D_FF(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_D_FF(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_D;
 

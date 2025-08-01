@@ -51,7 +51,7 @@ class PLCnextSlaveHandler : public forte::core::io::IOConfigFBMultiSlave {
     PLCnextSlaveHandler(int paType,
                         forte::core::CFBContainer &paContainer,
                         const SFBInterfaceSpec *paInterfaceSpec,
-                        const CStringDictionary::TStringId paInstanceNameId);
+                        const forte::core::StringId paInstanceNameId);
 
     ~PLCnextSlaveHandler() override;
 

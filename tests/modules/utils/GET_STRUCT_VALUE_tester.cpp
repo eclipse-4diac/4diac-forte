@@ -13,11 +13,7 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-USE_STRING_ID(GET_STRUCT_VALUE);
-USE_STRING_ID(GET_STRUCT_VALUE_Struct_test1);
-USE_STRING_ID(GET_STRUCT_VALUE_Struct_test2);
-USE_STRING_ID(Val1);
-USE_STRING_ID(Val2);
+using namespace forte::core::literals;
 
 class CIEC_GET_STRUCT_VALUE_Struct_test1 : public CIEC_STRUCT {
     DECLARE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test1)
@@ -38,12 +34,12 @@ class CIEC_GET_STRUCT_VALUE_Struct_test1 : public CIEC_STRUCT {
       return 2;
     }
 
-    const CStringDictionary::TStringId *elementNames() const override {
+    const forte::core::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    CStringDictionary::TStringId getStructTypeNameID() const override {
-      return STRID(GET_STRUCT_VALUE_Struct_test1);
+    forte::core::StringId getStructTypeNameID() const override {
+      return "GET_STRUCT_VALUE_Struct_test1"_STRID;
     }
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
@@ -65,12 +61,12 @@ class CIEC_GET_STRUCT_VALUE_Struct_test1 : public CIEC_STRUCT {
     static const unsigned int sizeOfFirstArray = 2;
 
   private:
-    static const CStringDictionary::TStringId scmElementNames[];
+    static const forte::core::StringId scmElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_GET_STRUCT_VALUE_Struct_test1::scmElementNames[] = {STRID(Val1), STRID(Val2)};
+const forte::core::StringId CIEC_GET_STRUCT_VALUE_Struct_test1::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID};
 
-DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test1, STRID(GET_STRUCT_VALUE_Struct_test1))
+DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test1, "GET_STRUCT_VALUE_Struct_test1"_STRID)
 
 class CIEC_GET_STRUCT_VALUE_Struct_test2 : public CIEC_STRUCT {
     DECLARE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test2)
@@ -90,12 +86,12 @@ class CIEC_GET_STRUCT_VALUE_Struct_test2 : public CIEC_STRUCT {
       return 2;
     }
 
-    const CStringDictionary::TStringId *elementNames() const override {
+    const forte::core::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    CStringDictionary::TStringId getStructTypeNameID() const override {
-      return STRID(GET_STRUCT_VALUE_Struct_test2);
+    forte::core::StringId getStructTypeNameID() const override {
+      return "GET_STRUCT_VALUE_Struct_test2"_STRID;
     }
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
@@ -115,17 +111,17 @@ class CIEC_GET_STRUCT_VALUE_Struct_test2 : public CIEC_STRUCT {
     }
 
   private:
-    static const CStringDictionary::TStringId scmElementNames[];
+    static const forte::core::StringId scmElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_GET_STRUCT_VALUE_Struct_test2::scmElementNames[] = {STRID(Val1), STRID(Val2)};
+const forte::core::StringId CIEC_GET_STRUCT_VALUE_Struct_test2::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID};
 
-DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test2, STRID(GET_STRUCT_VALUE_Struct_test2))
+DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test2, "GET_STRUCT_VALUE_Struct_test2"_STRID)
 
 struct GET_STRUCT_VALUE_GenericTestFixture : public CFBTestFixtureBase {
 
     GET_STRUCT_VALUE_GenericTestFixture(CIEC_ANY *paIN_STRUCT, CIEC_ANY *paOUT) :
-        CFBTestFixtureBase(STRID(GET_STRUCT_VALUE)) {
+        CFBTestFixtureBase("GET_STRUCT_VALUE"_STRID) {
       setInputData({paIN_STRUCT, &mMember});
       setOutputData({&mQO, paOUT});
     }

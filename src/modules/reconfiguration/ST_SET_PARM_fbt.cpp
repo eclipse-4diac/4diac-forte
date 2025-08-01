@@ -11,32 +11,20 @@
  *******************************************************************************/
 #include "ST_SET_PARM_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(DST);
-USE_STRING_ID(ELEM_DATA_IN);
-USE_STRING_ID(ELEM_NAME);
-USE_STRING_ID(Event);
-USE_STRING_ID(PARM_VAL);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(REQ);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(ST_SET_PARM);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "core/device.h"
 
-DEFINE_FIRMWARE_FB(FORTE_ST_SET_PARM, STRID(ST_SET_PARM))
+DEFINE_FIRMWARE_FB(FORTE_ST_SET_PARM, "ST_SET_PARM"_STRID)
 
 namespace {
   const auto cDataInputNames =
-      std::array{STRID(QI), STRID(ELEM_NAME), STRID(ELEM_DATA_IN), STRID(PARM_VAL), STRID(DST)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+      std::array{"QI"_STRID, "ELEM_NAME"_STRID, "ELEM_DATA_IN"_STRID, "PARM_VAL"_STRID, "DST"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -50,7 +38,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ST_SET_PARM::FORTE_ST_SET_PARM(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_ST_SET_PARM::FORTE_ST_SET_PARM(const forte::core::StringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
@@ -88,9 +76,9 @@ void FORTE_ST_SET_PARM::executeEvent(TEventID paEIID, CEventChainExecutionThread
 
 void FORTE_ST_SET_PARM::executeRQST() {
   forte::core::SManagementCMD theCommand;
-  theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
-  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_ELEM_NAME.getValue()));
-  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_ELEM_DATA_IN.getValue()));
+  theCommand.mDestination = forte::core::StringId::lookup(var_DST.getValue());
+  theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_ELEM_NAME.getValue()));
+  theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_ELEM_DATA_IN.getValue()));
   theCommand.mAdditionalParams = func_WSTRING_TO_STRING(var_PARM_VAL).getStorage();
   theCommand.mCMD = EMGMCommandType::Write;
 

@@ -46,10 +46,10 @@ class GEN_E_MUX final : public CGenFunctionBlock<CFunctionBlock> {
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    std::vector<CStringDictionary::TStringId> mEventInputNames;
+    std::vector<forte::core::StringId> mEventInputNames;
 
   public:
-    GEN_E_MUX(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_E_MUX(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_UINT var_K;
 

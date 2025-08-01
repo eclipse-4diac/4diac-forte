@@ -36,7 +36,7 @@ class FORTE_IORevPiCore : public forte::core::io::IOConfigFBMultiMaster {
     void setConfig() override;
 
   public:
-    FORTE_IORevPiCore(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IORevPiCore(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     ~FORTE_IORevPiCore() override = default;
 

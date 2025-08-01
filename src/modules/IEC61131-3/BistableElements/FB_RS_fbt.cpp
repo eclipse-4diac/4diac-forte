@@ -23,20 +23,13 @@
 
 using namespace std::literals;
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(FB_RS);
-USE_STRING_ID(Q1);
-USE_STRING_ID(R1);
-USE_STRING_ID(REQ);
-USE_STRING_ID(S);
+using namespace forte::core::literals;
 
 namespace {
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cDataInputNames = std::array{STRID(S), STRID(R1)};
-  const auto cDataOutputNames = std::array{STRID(Q1)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cDataInputNames = std::array{"S"_STRID, "R1"_STRID};
+  const auto cDataOutputNames = std::array{"Q1"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {.mEINames = cEventInputNames,
                                              .mEITypeNames = {},
                                              .mEONames = cEventOutputNames,
@@ -48,9 +41,9 @@ namespace {
                                              .mPlugNames = {}};
 } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_FB_RS, STRID(FB_RS))
+DEFINE_FIRMWARE_FB(FORTE_FB_RS, "FB_RS"_STRID)
 
-FORTE_FB_RS::FORTE_FB_RS(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_FB_RS::FORTE_FB_RS(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_S(0_BOOL),
     var_R1(0_BOOL),

@@ -44,7 +44,7 @@ class FORTE_F_WORD_TO_UINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_WORD_TO_UINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_WORD_TO_UINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_WORD var_IN;
 

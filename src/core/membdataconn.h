@@ -23,7 +23,7 @@ namespace forte::core::internal {
       CMemberDataConnection(CFunctionBlock &paSrcFB,
                             const TPortId paSrcPortId,
                             CIEC_ANY &paMember,
-                            const std::span<const CStringDictionary::TStringId> paMemberName) :
+                            const std::span<const forte::core::StringId> paMemberName) :
           CDelegatingDataConnection(paSrcFB, paSrcPortId, paMember),
           cmMemberName(paMemberName.begin(), paMemberName.end()) {
       }

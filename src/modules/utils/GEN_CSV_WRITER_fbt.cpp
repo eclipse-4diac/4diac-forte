@@ -20,31 +20,19 @@
 #include <memory>
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(FILE_NAME);
-USE_STRING_ID(GEN_CSV_WRITER);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(REQ);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
+using namespace forte::core::literals;
 
 #include <errno.h>
 #include "arch/devlog.h"
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER, STRID(GEN_CSV_WRITER));
+DEFINE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER, "GEN_CSV_WRITER"_STRID);
 
 namespace {
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
 } // namespace
 
 const CIEC_STRING GEN_CSV_WRITER::scmOK = "OK"_STRING;
@@ -68,7 +56,7 @@ void GEN_CSV_WRITER::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
   }
 }
 
-GEN_CSV_WRITER::GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId,
+GEN_CSV_WRITER::GEN_CSV_WRITER(const forte::core::StringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_INITO(*this, 0),
@@ -114,8 +102,8 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
     acPos++;
     size_t numGenDIs = static_cast<TPortId>(forte::core::util::strtoul(acPos, nullptr, 10));
     mDataInputNames.reserve(numGenDIs + 2);
-    mDataInputNames.emplace_back(STRID(QI));
-    mDataInputNames.emplace_back(STRID(FILE_NAME));
+    mDataInputNames.emplace_back("QI"_STRID);
+    mDataInputNames.emplace_back("FILE_NAME"_STRID);
     generateGenericInterfacePointNameArray("SD_", mDataInputNames, numGenDIs);
 
     // create the interface Specification

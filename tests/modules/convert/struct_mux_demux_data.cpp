@@ -11,339 +11,79 @@
  *******************************************************************************/
 #include "struct_mux_demux_data.h"
 
-USE_STRING_ID(Struct_Muxer_Test_Struct_1);
-USE_STRING_ID(Struct_Muxer_Test_Struct_2);
-USE_STRING_ID(Struct_Muxer_Test_Struct_3);
-USE_STRING_ID(Struct_Muxer_Test_Struct_4);
-USE_STRING_ID(Struct_Muxer_Test_Struct_5);
-USE_STRING_ID(Var0);
-USE_STRING_ID(Var1);
-USE_STRING_ID(Var10);
-USE_STRING_ID(Var100);
-USE_STRING_ID(Var101);
-USE_STRING_ID(Var102);
-USE_STRING_ID(Var103);
-USE_STRING_ID(Var104);
-USE_STRING_ID(Var105);
-USE_STRING_ID(Var106);
-USE_STRING_ID(Var107);
-USE_STRING_ID(Var108);
-USE_STRING_ID(Var109);
-USE_STRING_ID(Var11);
-USE_STRING_ID(Var110);
-USE_STRING_ID(Var111);
-USE_STRING_ID(Var112);
-USE_STRING_ID(Var113);
-USE_STRING_ID(Var114);
-USE_STRING_ID(Var115);
-USE_STRING_ID(Var116);
-USE_STRING_ID(Var117);
-USE_STRING_ID(Var118);
-USE_STRING_ID(Var119);
-USE_STRING_ID(Var12);
-USE_STRING_ID(Var120);
-USE_STRING_ID(Var121);
-USE_STRING_ID(Var122);
-USE_STRING_ID(Var123);
-USE_STRING_ID(Var124);
-USE_STRING_ID(Var125);
-USE_STRING_ID(Var126);
-USE_STRING_ID(Var127);
-USE_STRING_ID(Var128);
-USE_STRING_ID(Var129);
-USE_STRING_ID(Var13);
-USE_STRING_ID(Var130);
-USE_STRING_ID(Var131);
-USE_STRING_ID(Var132);
-USE_STRING_ID(Var133);
-USE_STRING_ID(Var134);
-USE_STRING_ID(Var135);
-USE_STRING_ID(Var136);
-USE_STRING_ID(Var137);
-USE_STRING_ID(Var138);
-USE_STRING_ID(Var139);
-USE_STRING_ID(Var14);
-USE_STRING_ID(Var140);
-USE_STRING_ID(Var141);
-USE_STRING_ID(Var142);
-USE_STRING_ID(Var143);
-USE_STRING_ID(Var144);
-USE_STRING_ID(Var145);
-USE_STRING_ID(Var146);
-USE_STRING_ID(Var147);
-USE_STRING_ID(Var148);
-USE_STRING_ID(Var149);
-USE_STRING_ID(Var15);
-USE_STRING_ID(Var150);
-USE_STRING_ID(Var151);
-USE_STRING_ID(Var152);
-USE_STRING_ID(Var153);
-USE_STRING_ID(Var154);
-USE_STRING_ID(Var155);
-USE_STRING_ID(Var156);
-USE_STRING_ID(Var157);
-USE_STRING_ID(Var158);
-USE_STRING_ID(Var159);
-USE_STRING_ID(Var16);
-USE_STRING_ID(Var160);
-USE_STRING_ID(Var161);
-USE_STRING_ID(Var162);
-USE_STRING_ID(Var163);
-USE_STRING_ID(Var164);
-USE_STRING_ID(Var165);
-USE_STRING_ID(Var166);
-USE_STRING_ID(Var167);
-USE_STRING_ID(Var168);
-USE_STRING_ID(Var169);
-USE_STRING_ID(Var17);
-USE_STRING_ID(Var170);
-USE_STRING_ID(Var171);
-USE_STRING_ID(Var172);
-USE_STRING_ID(Var173);
-USE_STRING_ID(Var174);
-USE_STRING_ID(Var175);
-USE_STRING_ID(Var176);
-USE_STRING_ID(Var177);
-USE_STRING_ID(Var178);
-USE_STRING_ID(Var179);
-USE_STRING_ID(Var18);
-USE_STRING_ID(Var180);
-USE_STRING_ID(Var181);
-USE_STRING_ID(Var182);
-USE_STRING_ID(Var183);
-USE_STRING_ID(Var184);
-USE_STRING_ID(Var185);
-USE_STRING_ID(Var186);
-USE_STRING_ID(Var187);
-USE_STRING_ID(Var188);
-USE_STRING_ID(Var189);
-USE_STRING_ID(Var19);
-USE_STRING_ID(Var190);
-USE_STRING_ID(Var191);
-USE_STRING_ID(Var192);
-USE_STRING_ID(Var193);
-USE_STRING_ID(Var194);
-USE_STRING_ID(Var195);
-USE_STRING_ID(Var196);
-USE_STRING_ID(Var197);
-USE_STRING_ID(Var198);
-USE_STRING_ID(Var199);
-USE_STRING_ID(Var2);
-USE_STRING_ID(Var20);
-USE_STRING_ID(Var200);
-USE_STRING_ID(Var201);
-USE_STRING_ID(Var202);
-USE_STRING_ID(Var203);
-USE_STRING_ID(Var204);
-USE_STRING_ID(Var205);
-USE_STRING_ID(Var206);
-USE_STRING_ID(Var207);
-USE_STRING_ID(Var208);
-USE_STRING_ID(Var209);
-USE_STRING_ID(Var21);
-USE_STRING_ID(Var210);
-USE_STRING_ID(Var211);
-USE_STRING_ID(Var212);
-USE_STRING_ID(Var213);
-USE_STRING_ID(Var214);
-USE_STRING_ID(Var215);
-USE_STRING_ID(Var216);
-USE_STRING_ID(Var217);
-USE_STRING_ID(Var218);
-USE_STRING_ID(Var219);
-USE_STRING_ID(Var22);
-USE_STRING_ID(Var220);
-USE_STRING_ID(Var221);
-USE_STRING_ID(Var222);
-USE_STRING_ID(Var223);
-USE_STRING_ID(Var224);
-USE_STRING_ID(Var225);
-USE_STRING_ID(Var226);
-USE_STRING_ID(Var227);
-USE_STRING_ID(Var228);
-USE_STRING_ID(Var229);
-USE_STRING_ID(Var23);
-USE_STRING_ID(Var230);
-USE_STRING_ID(Var231);
-USE_STRING_ID(Var232);
-USE_STRING_ID(Var233);
-USE_STRING_ID(Var234);
-USE_STRING_ID(Var235);
-USE_STRING_ID(Var236);
-USE_STRING_ID(Var237);
-USE_STRING_ID(Var238);
-USE_STRING_ID(Var239);
-USE_STRING_ID(Var24);
-USE_STRING_ID(Var240);
-USE_STRING_ID(Var241);
-USE_STRING_ID(Var242);
-USE_STRING_ID(Var243);
-USE_STRING_ID(Var244);
-USE_STRING_ID(Var245);
-USE_STRING_ID(Var246);
-USE_STRING_ID(Var247);
-USE_STRING_ID(Var248);
-USE_STRING_ID(Var249);
-USE_STRING_ID(Var25);
-USE_STRING_ID(Var250);
-USE_STRING_ID(Var251);
-USE_STRING_ID(Var252);
-USE_STRING_ID(Var253);
-USE_STRING_ID(Var254);
-USE_STRING_ID(Var255);
-USE_STRING_ID(Var26);
-USE_STRING_ID(Var27);
-USE_STRING_ID(Var28);
-USE_STRING_ID(Var29);
-USE_STRING_ID(Var3);
-USE_STRING_ID(Var30);
-USE_STRING_ID(Var31);
-USE_STRING_ID(Var32);
-USE_STRING_ID(Var33);
-USE_STRING_ID(Var34);
-USE_STRING_ID(Var35);
-USE_STRING_ID(Var36);
-USE_STRING_ID(Var37);
-USE_STRING_ID(Var38);
-USE_STRING_ID(Var39);
-USE_STRING_ID(Var4);
-USE_STRING_ID(Var40);
-USE_STRING_ID(Var41);
-USE_STRING_ID(Var42);
-USE_STRING_ID(Var43);
-USE_STRING_ID(Var44);
-USE_STRING_ID(Var45);
-USE_STRING_ID(Var46);
-USE_STRING_ID(Var47);
-USE_STRING_ID(Var48);
-USE_STRING_ID(Var49);
-USE_STRING_ID(Var5);
-USE_STRING_ID(Var50);
-USE_STRING_ID(Var51);
-USE_STRING_ID(Var52);
-USE_STRING_ID(Var53);
-USE_STRING_ID(Var54);
-USE_STRING_ID(Var55);
-USE_STRING_ID(Var56);
-USE_STRING_ID(Var57);
-USE_STRING_ID(Var58);
-USE_STRING_ID(Var59);
-USE_STRING_ID(Var6);
-USE_STRING_ID(Var60);
-USE_STRING_ID(Var61);
-USE_STRING_ID(Var62);
-USE_STRING_ID(Var63);
-USE_STRING_ID(Var64);
-USE_STRING_ID(Var65);
-USE_STRING_ID(Var66);
-USE_STRING_ID(Var67);
-USE_STRING_ID(Var68);
-USE_STRING_ID(Var69);
-USE_STRING_ID(Var7);
-USE_STRING_ID(Var70);
-USE_STRING_ID(Var71);
-USE_STRING_ID(Var72);
-USE_STRING_ID(Var73);
-USE_STRING_ID(Var74);
-USE_STRING_ID(Var75);
-USE_STRING_ID(Var76);
-USE_STRING_ID(Var77);
-USE_STRING_ID(Var78);
-USE_STRING_ID(Var79);
-USE_STRING_ID(Var8);
-USE_STRING_ID(Var80);
-USE_STRING_ID(Var81);
-USE_STRING_ID(Var82);
-USE_STRING_ID(Var83);
-USE_STRING_ID(Var84);
-USE_STRING_ID(Var85);
-USE_STRING_ID(Var86);
-USE_STRING_ID(Var87);
-USE_STRING_ID(Var88);
-USE_STRING_ID(Var89);
-USE_STRING_ID(Var9);
-USE_STRING_ID(Var90);
-USE_STRING_ID(Var91);
-USE_STRING_ID(Var92);
-USE_STRING_ID(Var93);
-USE_STRING_ID(Var94);
-USE_STRING_ID(Var95);
-USE_STRING_ID(Var96);
-USE_STRING_ID(Var97);
-USE_STRING_ID(Var98);
-USE_STRING_ID(Var99);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_1, STRID(Struct_Muxer_Test_Struct_1))
-const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_1::scmElementNames[] = {STRID(Var1), STRID(Var2),
-                                                                                         STRID(Var3)};
+DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_1, "Struct_Muxer_Test_Struct_1"_STRID)
+const forte::core::StringId CIEC_Struct_Muxer_Test_Struct_1::scmElementNames[] = {"Var1"_STRID, "Var2"_STRID,
+                                                                                  "Var3"_STRID};
 
-CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_1::getStructTypeNameID() const {
-  return STRID(Struct_Muxer_Test_Struct_1);
+forte::core::StringId CIEC_Struct_Muxer_Test_Struct_1::getStructTypeNameID() const {
+  return "Struct_Muxer_Test_Struct_1"_STRID;
 };
 
-DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_2, STRID(Struct_Muxer_Test_Struct_2))
-const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_2::scmElementNames[] = {STRID(Var1), STRID(Var2),
-                                                                                         STRID(Var3)};
+DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_2, "Struct_Muxer_Test_Struct_2"_STRID)
+const forte::core::StringId CIEC_Struct_Muxer_Test_Struct_2::scmElementNames[] = {"Var1"_STRID, "Var2"_STRID,
+                                                                                  "Var3"_STRID};
 
-CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_2::getStructTypeNameID() const {
-  return STRID(Struct_Muxer_Test_Struct_2);
+forte::core::StringId CIEC_Struct_Muxer_Test_Struct_2::getStructTypeNameID() const {
+  return "Struct_Muxer_Test_Struct_2"_STRID;
 };
 
-DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_3, STRID(Struct_Muxer_Test_Struct_3))
-const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_3::scmElementNames[] = {0};
+DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_3, "Struct_Muxer_Test_Struct_3"_STRID)
+const forte::core::StringId CIEC_Struct_Muxer_Test_Struct_3::scmElementNames[] = {{}};
 
-CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_3::getStructTypeNameID() const {
-  return STRID(Struct_Muxer_Test_Struct_3);
+forte::core::StringId CIEC_Struct_Muxer_Test_Struct_3::getStructTypeNameID() const {
+  return "Struct_Muxer_Test_Struct_3"_STRID;
 };
 
-DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_4, STRID(Struct_Muxer_Test_Struct_4))
-const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_4::scmElementNames[] = {
-    STRID(Var0),   STRID(Var1),   STRID(Var2),   STRID(Var3),   STRID(Var4),   STRID(Var5),   STRID(Var6),
-    STRID(Var7),   STRID(Var8),   STRID(Var9),   STRID(Var10),  STRID(Var11),  STRID(Var12),  STRID(Var13),
-    STRID(Var14),  STRID(Var15),  STRID(Var16),  STRID(Var17),  STRID(Var18),  STRID(Var19),  STRID(Var20),
-    STRID(Var21),  STRID(Var22),  STRID(Var23),  STRID(Var24),  STRID(Var25),  STRID(Var26),  STRID(Var27),
-    STRID(Var28),  STRID(Var29),  STRID(Var30),  STRID(Var31),  STRID(Var32),  STRID(Var33),  STRID(Var34),
-    STRID(Var35),  STRID(Var36),  STRID(Var37),  STRID(Var38),  STRID(Var39),  STRID(Var40),  STRID(Var41),
-    STRID(Var42),  STRID(Var43),  STRID(Var44),  STRID(Var45),  STRID(Var46),  STRID(Var47),  STRID(Var48),
-    STRID(Var49),  STRID(Var50),  STRID(Var51),  STRID(Var52),  STRID(Var53),  STRID(Var54),  STRID(Var55),
-    STRID(Var56),  STRID(Var57),  STRID(Var58),  STRID(Var59),  STRID(Var60),  STRID(Var61),  STRID(Var62),
-    STRID(Var63),  STRID(Var64),  STRID(Var65),  STRID(Var66),  STRID(Var67),  STRID(Var68),  STRID(Var69),
-    STRID(Var70),  STRID(Var71),  STRID(Var72),  STRID(Var73),  STRID(Var74),  STRID(Var75),  STRID(Var76),
-    STRID(Var77),  STRID(Var78),  STRID(Var79),  STRID(Var80),  STRID(Var81),  STRID(Var82),  STRID(Var83),
-    STRID(Var84),  STRID(Var85),  STRID(Var86),  STRID(Var87),  STRID(Var88),  STRID(Var89),  STRID(Var90),
-    STRID(Var91),  STRID(Var92),  STRID(Var93),  STRID(Var94),  STRID(Var95),  STRID(Var96),  STRID(Var97),
-    STRID(Var98),  STRID(Var99),  STRID(Var100), STRID(Var101), STRID(Var102), STRID(Var103), STRID(Var104),
-    STRID(Var105), STRID(Var106), STRID(Var107), STRID(Var108), STRID(Var109), STRID(Var110), STRID(Var111),
-    STRID(Var112), STRID(Var113), STRID(Var114), STRID(Var115), STRID(Var116), STRID(Var117), STRID(Var118),
-    STRID(Var119), STRID(Var120), STRID(Var121), STRID(Var122), STRID(Var123), STRID(Var124), STRID(Var125),
-    STRID(Var126), STRID(Var127), STRID(Var128), STRID(Var129), STRID(Var130), STRID(Var131), STRID(Var132),
-    STRID(Var133), STRID(Var134), STRID(Var135), STRID(Var136), STRID(Var137), STRID(Var138), STRID(Var139),
-    STRID(Var140), STRID(Var141), STRID(Var142), STRID(Var143), STRID(Var144), STRID(Var145), STRID(Var146),
-    STRID(Var147), STRID(Var148), STRID(Var149), STRID(Var150), STRID(Var151), STRID(Var152), STRID(Var153),
-    STRID(Var154), STRID(Var155), STRID(Var156), STRID(Var157), STRID(Var158), STRID(Var159), STRID(Var160),
-    STRID(Var161), STRID(Var162), STRID(Var163), STRID(Var164), STRID(Var165), STRID(Var166), STRID(Var167),
-    STRID(Var168), STRID(Var169), STRID(Var170), STRID(Var171), STRID(Var172), STRID(Var173), STRID(Var174),
-    STRID(Var175), STRID(Var176), STRID(Var177), STRID(Var178), STRID(Var179), STRID(Var180), STRID(Var181),
-    STRID(Var182), STRID(Var183), STRID(Var184), STRID(Var185), STRID(Var186), STRID(Var187), STRID(Var188),
-    STRID(Var189), STRID(Var190), STRID(Var191), STRID(Var192), STRID(Var193), STRID(Var194), STRID(Var195),
-    STRID(Var196), STRID(Var197), STRID(Var198), STRID(Var199), STRID(Var200), STRID(Var201), STRID(Var202),
-    STRID(Var203), STRID(Var204), STRID(Var205), STRID(Var206), STRID(Var207), STRID(Var208), STRID(Var209),
-    STRID(Var210), STRID(Var211), STRID(Var212), STRID(Var213), STRID(Var214), STRID(Var215), STRID(Var216),
-    STRID(Var217), STRID(Var218), STRID(Var219), STRID(Var220), STRID(Var221), STRID(Var222), STRID(Var223),
-    STRID(Var224), STRID(Var225), STRID(Var226), STRID(Var227), STRID(Var228), STRID(Var229), STRID(Var230),
-    STRID(Var231), STRID(Var232), STRID(Var233), STRID(Var234), STRID(Var235), STRID(Var236), STRID(Var237),
-    STRID(Var238), STRID(Var239), STRID(Var240), STRID(Var241), STRID(Var242), STRID(Var243), STRID(Var244),
-    STRID(Var245), STRID(Var246), STRID(Var247), STRID(Var248), STRID(Var249), STRID(Var250), STRID(Var251),
-    STRID(Var252), STRID(Var253), STRID(Var254), STRID(Var255)};
+DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_4, "Struct_Muxer_Test_Struct_4"_STRID)
+const forte::core::StringId CIEC_Struct_Muxer_Test_Struct_4::scmElementNames[] = {
+    "Var0"_STRID,   "Var1"_STRID,   "Var2"_STRID,   "Var3"_STRID,   "Var4"_STRID,   "Var5"_STRID,   "Var6"_STRID,
+    "Var7"_STRID,   "Var8"_STRID,   "Var9"_STRID,   "Var10"_STRID,  "Var11"_STRID,  "Var12"_STRID,  "Var13"_STRID,
+    "Var14"_STRID,  "Var15"_STRID,  "Var16"_STRID,  "Var17"_STRID,  "Var18"_STRID,  "Var19"_STRID,  "Var20"_STRID,
+    "Var21"_STRID,  "Var22"_STRID,  "Var23"_STRID,  "Var24"_STRID,  "Var25"_STRID,  "Var26"_STRID,  "Var27"_STRID,
+    "Var28"_STRID,  "Var29"_STRID,  "Var30"_STRID,  "Var31"_STRID,  "Var32"_STRID,  "Var33"_STRID,  "Var34"_STRID,
+    "Var35"_STRID,  "Var36"_STRID,  "Var37"_STRID,  "Var38"_STRID,  "Var39"_STRID,  "Var40"_STRID,  "Var41"_STRID,
+    "Var42"_STRID,  "Var43"_STRID,  "Var44"_STRID,  "Var45"_STRID,  "Var46"_STRID,  "Var47"_STRID,  "Var48"_STRID,
+    "Var49"_STRID,  "Var50"_STRID,  "Var51"_STRID,  "Var52"_STRID,  "Var53"_STRID,  "Var54"_STRID,  "Var55"_STRID,
+    "Var56"_STRID,  "Var57"_STRID,  "Var58"_STRID,  "Var59"_STRID,  "Var60"_STRID,  "Var61"_STRID,  "Var62"_STRID,
+    "Var63"_STRID,  "Var64"_STRID,  "Var65"_STRID,  "Var66"_STRID,  "Var67"_STRID,  "Var68"_STRID,  "Var69"_STRID,
+    "Var70"_STRID,  "Var71"_STRID,  "Var72"_STRID,  "Var73"_STRID,  "Var74"_STRID,  "Var75"_STRID,  "Var76"_STRID,
+    "Var77"_STRID,  "Var78"_STRID,  "Var79"_STRID,  "Var80"_STRID,  "Var81"_STRID,  "Var82"_STRID,  "Var83"_STRID,
+    "Var84"_STRID,  "Var85"_STRID,  "Var86"_STRID,  "Var87"_STRID,  "Var88"_STRID,  "Var89"_STRID,  "Var90"_STRID,
+    "Var91"_STRID,  "Var92"_STRID,  "Var93"_STRID,  "Var94"_STRID,  "Var95"_STRID,  "Var96"_STRID,  "Var97"_STRID,
+    "Var98"_STRID,  "Var99"_STRID,  "Var100"_STRID, "Var101"_STRID, "Var102"_STRID, "Var103"_STRID, "Var104"_STRID,
+    "Var105"_STRID, "Var106"_STRID, "Var107"_STRID, "Var108"_STRID, "Var109"_STRID, "Var110"_STRID, "Var111"_STRID,
+    "Var112"_STRID, "Var113"_STRID, "Var114"_STRID, "Var115"_STRID, "Var116"_STRID, "Var117"_STRID, "Var118"_STRID,
+    "Var119"_STRID, "Var120"_STRID, "Var121"_STRID, "Var122"_STRID, "Var123"_STRID, "Var124"_STRID, "Var125"_STRID,
+    "Var126"_STRID, "Var127"_STRID, "Var128"_STRID, "Var129"_STRID, "Var130"_STRID, "Var131"_STRID, "Var132"_STRID,
+    "Var133"_STRID, "Var134"_STRID, "Var135"_STRID, "Var136"_STRID, "Var137"_STRID, "Var138"_STRID, "Var139"_STRID,
+    "Var140"_STRID, "Var141"_STRID, "Var142"_STRID, "Var143"_STRID, "Var144"_STRID, "Var145"_STRID, "Var146"_STRID,
+    "Var147"_STRID, "Var148"_STRID, "Var149"_STRID, "Var150"_STRID, "Var151"_STRID, "Var152"_STRID, "Var153"_STRID,
+    "Var154"_STRID, "Var155"_STRID, "Var156"_STRID, "Var157"_STRID, "Var158"_STRID, "Var159"_STRID, "Var160"_STRID,
+    "Var161"_STRID, "Var162"_STRID, "Var163"_STRID, "Var164"_STRID, "Var165"_STRID, "Var166"_STRID, "Var167"_STRID,
+    "Var168"_STRID, "Var169"_STRID, "Var170"_STRID, "Var171"_STRID, "Var172"_STRID, "Var173"_STRID, "Var174"_STRID,
+    "Var175"_STRID, "Var176"_STRID, "Var177"_STRID, "Var178"_STRID, "Var179"_STRID, "Var180"_STRID, "Var181"_STRID,
+    "Var182"_STRID, "Var183"_STRID, "Var184"_STRID, "Var185"_STRID, "Var186"_STRID, "Var187"_STRID, "Var188"_STRID,
+    "Var189"_STRID, "Var190"_STRID, "Var191"_STRID, "Var192"_STRID, "Var193"_STRID, "Var194"_STRID, "Var195"_STRID,
+    "Var196"_STRID, "Var197"_STRID, "Var198"_STRID, "Var199"_STRID, "Var200"_STRID, "Var201"_STRID, "Var202"_STRID,
+    "Var203"_STRID, "Var204"_STRID, "Var205"_STRID, "Var206"_STRID, "Var207"_STRID, "Var208"_STRID, "Var209"_STRID,
+    "Var210"_STRID, "Var211"_STRID, "Var212"_STRID, "Var213"_STRID, "Var214"_STRID, "Var215"_STRID, "Var216"_STRID,
+    "Var217"_STRID, "Var218"_STRID, "Var219"_STRID, "Var220"_STRID, "Var221"_STRID, "Var222"_STRID, "Var223"_STRID,
+    "Var224"_STRID, "Var225"_STRID, "Var226"_STRID, "Var227"_STRID, "Var228"_STRID, "Var229"_STRID, "Var230"_STRID,
+    "Var231"_STRID, "Var232"_STRID, "Var233"_STRID, "Var234"_STRID, "Var235"_STRID, "Var236"_STRID, "Var237"_STRID,
+    "Var238"_STRID, "Var239"_STRID, "Var240"_STRID, "Var241"_STRID, "Var242"_STRID, "Var243"_STRID, "Var244"_STRID,
+    "Var245"_STRID, "Var246"_STRID, "Var247"_STRID, "Var248"_STRID, "Var249"_STRID, "Var250"_STRID, "Var251"_STRID,
+    "Var252"_STRID, "Var253"_STRID, "Var254"_STRID, "Var255"_STRID};
 
-CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_4::getStructTypeNameID() const {
-  return STRID(Struct_Muxer_Test_Struct_4);
+forte::core::StringId CIEC_Struct_Muxer_Test_Struct_4::getStructTypeNameID() const {
+  return "Struct_Muxer_Test_Struct_4"_STRID;
 };
 
-DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_5, STRID(Struct_Muxer_Test_Struct_5))
-const CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_5::scmElementNames[] = {STRID(Var1), STRID(Var2),
-                                                                                         STRID(Var3)};
+DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_5, "Struct_Muxer_Test_Struct_5"_STRID)
+const forte::core::StringId CIEC_Struct_Muxer_Test_Struct_5::scmElementNames[] = {"Var1"_STRID, "Var2"_STRID,
+                                                                                  "Var3"_STRID};
 
-CStringDictionary::TStringId CIEC_Struct_Muxer_Test_Struct_5::getStructTypeNameID() const {
-  return STRID(Struct_Muxer_Test_Struct_5);
+forte::core::StringId CIEC_Struct_Muxer_Test_Struct_5::getStructTypeNameID() const {
+  return "Struct_Muxer_Test_Struct_5"_STRID;
 };

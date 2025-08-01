@@ -19,10 +19,10 @@
 #include <string.h>
 #include "core/cfb.h"
 #include "core/adapter.h"
-#include "core/stringdict.h"
+#include "core/stringid.h"
 
 namespace {
-  bool forwardGenericDI(CFunctionBlock &dstFB, const CStringDictionary::TStringId dstId, const CIEC_ANY &paRefValue) {
+  bool forwardGenericDI(CFunctionBlock &dstFB, const forte::core::StringId dstId, const CIEC_ANY &paRefValue) {
     const TPortId dstDIPortId = dstFB.getFBInterfaceSpec().getDIID(dstId);
     if (dstDIPortId == cgInvalidPortId) {
       return false;
@@ -31,7 +31,7 @@ namespace {
     return true;
   }
 
-  bool forwardGenericDIO(CFunctionBlock &dstFB, const CStringDictionary::TStringId dstId, const CIEC_ANY &paRefValue) {
+  bool forwardGenericDIO(CFunctionBlock &dstFB, const forte::core::StringId dstId, const CIEC_ANY &paRefValue) {
     const TPortId dstDIOPortId = dstFB.getFBInterfaceSpec().getDIOID(dstId);
     if (dstDIOPortId == cgInvalidPortId) {
       return false;
@@ -40,7 +40,7 @@ namespace {
     return true;
   }
 
-  bool forwardGenericDO(CFunctionBlock &srcFB, const CStringDictionary::TStringId srcId, const CIEC_ANY &paRefValue) {
+  bool forwardGenericDO(CFunctionBlock &srcFB, const forte::core::StringId srcId, const CIEC_ANY &paRefValue) {
     const TPortId dstDOPortId = srcFB.getFBInterfaceSpec().getDOID(srcId);
     if (dstDOPortId == cgInvalidPortId) {
       return false;
@@ -52,7 +52,7 @@ namespace {
 
 CCompositeFB::CCompositeFB(forte::core::CFBContainer &paContainer,
                            const SFBInterfaceSpec &paInterfaceSpec,
-                           CStringDictionary::TStringId paInstanceNameId,
+                           forte::core::StringId paInstanceNameId,
                            const SCFB_FBNData &paFBNData) :
     CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
     cmFBNData(paFBNData) {
@@ -84,9 +84,9 @@ bool CCompositeFB::connectDI(TPortId paDIPortId, CDataConnection *paDataCon) {
 }
 
 bool CCompositeFB::configureGenericDI(const TPortId paDIPortId, const CIEC_ANY &paRefValue) {
-  const CStringDictionary::TStringId ifSrcId = getFBInterfaceSpec().mDINames[paDIPortId];
+  const forte::core::StringId ifSrcId = getFBInterfaceSpec().mDINames[paDIPortId];
   for (auto &currentConn : cmFBNData.mDataConnections) {
-    if (currentConn.mSrcFBNameId == CStringDictionary::scmInvalidStringId && currentConn.mSrcId == ifSrcId) {
+    if (!currentConn.mSrcFBNameId && currentConn.mSrcId == ifSrcId) {
       CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNameId);
       if (!dstFB || !forwardGenericDI(*dstFB, currentConn.mDstId, paRefValue)) {
         return false;
@@ -97,9 +97,9 @@ bool CCompositeFB::configureGenericDI(const TPortId paDIPortId, const CIEC_ANY &
 }
 
 bool CCompositeFB::configureGenericDIO(const TPortId paDIOPortId, const CIEC_ANY &paRefValue) {
-  const CStringDictionary::TStringId ifSrcId = getFBInterfaceSpec().mDIONames[paDIOPortId];
+  const forte::core::StringId ifSrcId = getFBInterfaceSpec().mDIONames[paDIOPortId];
   for (auto &currentConn : cmFBNData.mDataConnections) {
-    if (currentConn.mSrcFBNameId == CStringDictionary::scmInvalidStringId && currentConn.mSrcId == ifSrcId) {
+    if (!currentConn.mSrcFBNameId && currentConn.mSrcId == ifSrcId) {
       CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNameId);
       if (!dstFB || (!forwardGenericDI(*dstFB, currentConn.mDstId, paRefValue) &&
                      !forwardGenericDIO(*dstFB, currentConn.mDstId, paRefValue))) {
@@ -111,9 +111,9 @@ bool CCompositeFB::configureGenericDIO(const TPortId paDIOPortId, const CIEC_ANY
 }
 
 bool CCompositeFB::configureGenericDO(const TPortId paDOPortId, const CIEC_ANY &paRefValue) {
-  const CStringDictionary::TStringId ifDstId = getFBInterfaceSpec().mDONames[paDOPortId];
+  const forte::core::StringId ifDstId = getFBInterfaceSpec().mDONames[paDOPortId];
   for (auto &currentConn : cmFBNData.mDataConnections) {
-    if (currentConn.mDstFBNameId == CStringDictionary::scmInvalidStringId && currentConn.mDstId == ifDstId) {
+    if (!currentConn.mDstFBNameId && currentConn.mDstId == ifDstId) {
       CFunctionBlock *srcFB = getFunctionBlock(currentConn.mSrcFBNameId);
       if (!srcFB || !forwardGenericDO(*srcFB, currentConn.mSrcId, paRefValue)) {
         return false;
@@ -138,7 +138,7 @@ void CCompositeFB::setInitialValues() {
   // currently nothing to do
 }
 
-CIEC_ANY *CCompositeFB::getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) {
+CIEC_ANY *CCompositeFB::getVar(forte::core::StringId *paNameList, unsigned int paNameListSize) {
   CIEC_ANY *retVal = nullptr;
 
   if (1 > paNameListSize) {
@@ -195,7 +195,7 @@ void CCompositeFB::prepareIf2InEventCons() {
 
 void CCompositeFB::establishConnection(CConnection *paCon,
                                        CFunctionBlock &paDstFb,
-                                       const std::span<const CStringDictionary::TStringId> paDstNameId) {
+                                       const std::span<const forte::core::StringId> paDstNameId) {
   if (this == &paDstFb) {
     paCon->connectToCFBInterface(paDstFb, paDstNameId);
   } else {
@@ -222,7 +222,7 @@ void CCompositeFB::createDataConnections() {
   }
 }
 
-CDataConnection *CCompositeFB::getDataConn(CFunctionBlock *paSrcFB, CStringDictionary::TStringId paSrcNameId) {
+CDataConnection *CCompositeFB::getDataConn(CFunctionBlock *paSrcFB, forte::core::StringId paSrcNameId) {
   if (this == paSrcFB) {
     TPortId diId = getFBInterfaceSpec().getDIID(paSrcNameId);
     if (diId != cgInvalidPortId) {
@@ -262,8 +262,8 @@ void CCompositeFB::setFBNetworkInitialValues() {
   // per default we do not have initial values of internal blocks
 }
 
-CFunctionBlock *CCompositeFB::getFunctionBlock(CStringDictionary::TStringId paFBNameId) {
-  if (paFBNameId == CStringDictionary::scmInvalidStringId) {
+CFunctionBlock *CCompositeFB::getFunctionBlock(forte::core::StringId paFBNameId) {
+  if (!paFBNameId) {
     return this;
   }
   return forte::core::CFBContainer::getFB(paFBNameId);

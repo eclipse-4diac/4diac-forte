@@ -16,30 +16,22 @@
 
 #include "F_LEFT_fbt.h"
 
-USE_STRING_ID(ANY_INT);
-USE_STRING_ID(ANY_STRING);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(F_LEFT);
-USE_STRING_ID(IN);
-USE_STRING_ID(L);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_F_LEFT, STRID(F_LEFT))
+DEFINE_FIRMWARE_FB(FORTE_F_LEFT, "F_LEFT"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN), STRID(L)};
+  const auto cDataInputNames = std::array{"IN"_STRID, "L"_STRID};
   
   
-  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -55,7 +47,7 @@ namespace {
 }
 
 
-FORTE_F_LEFT::FORTE_F_LEFT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_LEFT::FORTE_F_LEFT(const forte::core::StringId paInstanceNameId,
                            forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_STRING_VARIANT()),

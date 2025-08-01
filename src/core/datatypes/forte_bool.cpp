@@ -16,13 +16,13 @@
  *******************************************************************************/
 #include "core/datatypes/forte_bool.h"
 
-USE_STRING_ID(BOOL);
+using namespace forte::core::literals;
 
 #include <stdlib.h>
 
 using namespace std::literals::string_literals;
 
-DEFINE_FIRMWARE_DATATYPE(BOOL, STRID(BOOL))
+DEFINE_FIRMWARE_DATATYPE(BOOL, "BOOL"_STRID)
 
 int CIEC_BOOL::fromString(const char *paValue) {
   int nRetVal = 0;
@@ -63,4 +63,4 @@ void CIEC_BOOL::toString(std::string &paTargetBuf) const {
   paTargetBuf += getTBOOL8() ? "TRUE"s : "FALSE"s;
 }
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_BOOL>::scmDataTypeName = STRID(BOOL);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_BOOL>::scmDataTypeName = "BOOL"_STRID;

@@ -53,7 +53,7 @@ class GEN_FORTE_F_MOVE final : public CGenFunctionBlock<CFunctionBlock> {
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
 
-    static CStringDictionary::TStringId getDataTypeNameId(const char *paConfigString);
+    static forte::core::StringId getDataTypeNameId(const char *paConfigString);
 
     CEventConnection conn_CNF;
 
@@ -63,6 +63,6 @@ class GEN_FORTE_F_MOVE final : public CGenFunctionBlock<CFunctionBlock> {
     std::unique_ptr<CGenDataConnection> conn_OUT;
 
   public:
-    GEN_FORTE_F_MOVE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_FORTE_F_MOVE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_FORTE_F_MOVE() override = default;
 };

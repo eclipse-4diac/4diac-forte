@@ -9,62 +9,33 @@
 
 #include "Wago1405_6.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(BusAdapterIn);
-USE_STRING_ID(BusAdapterOut);
-USE_STRING_ID(DigitalInput_1);
-USE_STRING_ID(DigitalInput_10);
-USE_STRING_ID(DigitalInput_11);
-USE_STRING_ID(DigitalInput_12);
-USE_STRING_ID(DigitalInput_13);
-USE_STRING_ID(DigitalInput_14);
-USE_STRING_ID(DigitalInput_15);
-USE_STRING_ID(DigitalInput_16);
-USE_STRING_ID(DigitalInput_2);
-USE_STRING_ID(DigitalInput_3);
-USE_STRING_ID(DigitalInput_4);
-USE_STRING_ID(DigitalInput_5);
-USE_STRING_ID(DigitalInput_6);
-USE_STRING_ID(DigitalInput_7);
-USE_STRING_ID(DigitalInput_8);
-USE_STRING_ID(DigitalInput_9);
-USE_STRING_ID(Event);
-USE_STRING_ID(IND);
-USE_STRING_ID(MAP);
-USE_STRING_ID(MAPO);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
-USE_STRING_ID(Wago1405_6);
-USE_STRING_ID(WagoBusAdapter);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_Wago1405_6, STRID(Wago1405_6))
+DEFINE_FIRMWARE_FB(FORTE_Wago1405_6, "Wago1405_6"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI),
-                                          STRID(DigitalInput_1),
-                                          STRID(DigitalInput_2),
-                                          STRID(DigitalInput_3),
-                                          STRID(DigitalInput_4),
-                                          STRID(DigitalInput_5),
-                                          STRID(DigitalInput_6),
-                                          STRID(DigitalInput_7),
-                                          STRID(DigitalInput_8),
-                                          STRID(DigitalInput_9),
-                                          STRID(DigitalInput_10),
-                                          STRID(DigitalInput_11),
-                                          STRID(DigitalInput_12),
-                                          STRID(DigitalInput_13),
-                                          STRID(DigitalInput_14),
-                                          STRID(DigitalInput_15),
-                                          STRID(DigitalInput_16)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(MAP)};
-  const auto cEventOutputNames = std::array{STRID(MAPO), STRID(IND)};
-  const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
-  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+  const auto cDataInputNames = std::array{"QI"_STRID,
+                                          "DigitalInput_1"_STRID,
+                                          "DigitalInput_2"_STRID,
+                                          "DigitalInput_3"_STRID,
+                                          "DigitalInput_4"_STRID,
+                                          "DigitalInput_5"_STRID,
+                                          "DigitalInput_6"_STRID,
+                                          "DigitalInput_7"_STRID,
+                                          "DigitalInput_8"_STRID,
+                                          "DigitalInput_9"_STRID,
+                                          "DigitalInput_10"_STRID,
+                                          "DigitalInput_11"_STRID,
+                                          "DigitalInput_12"_STRID,
+                                          "DigitalInput_13"_STRID,
+                                          "DigitalInput_14"_STRID,
+                                          "DigitalInput_15"_STRID,
+                                          "DigitalInput_16"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"MAP"_STRID};
+  const auto cEventOutputNames = std::array{"MAPO"_STRID, "IND"_STRID};
+  const auto cSocketNameIds = std::array{"BusAdapterIn"_STRID};
+  const auto cPlugNameIds = std::array{"BusAdapterOut"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -79,7 +50,7 @@ namespace {
   };
 } // namespace
 
-FORTE_Wago1405_6::FORTE_Wago1405_6(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_Wago1405_6::FORTE_Wago1405_6(const forte::core::StringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     WagoSlaveBase(36865, paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),

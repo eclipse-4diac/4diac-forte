@@ -43,7 +43,7 @@ class FORTE_F_SEL_E_4 final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_F_SEL_E_4(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_SEL_E_4(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY_VARIANT var_IN0;
     CIEC_ANY_VARIANT var_IN1;

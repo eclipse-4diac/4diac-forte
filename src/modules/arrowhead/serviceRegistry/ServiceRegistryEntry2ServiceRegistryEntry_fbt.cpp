@@ -12,33 +12,27 @@
 
 #include "ServiceRegistryEntry2ServiceRegistryEntry_fbt.h"
 
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(IN);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
-USE_STRING_ID(ServiceRegistryEntry);
-USE_STRING_ID(ServiceRegistryEntry2ServiceRegistryEntry);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_ServiceRegistryEntry2ServiceRegistryEntry, STRID(ServiceRegistryEntry2ServiceRegistryEntry))
+DEFINE_FIRMWARE_FB(FORTE_ServiceRegistryEntry2ServiceRegistryEntry, "ServiceRegistryEntry2ServiceRegistryEntry"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cDataInputNames = std::array{"IN"_STRID};
   
-      STRID(ServiceRegistryEntry)};
+      "ServiceRegistryEntry"_STRID};
   
-  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
   
-      STRID(ServiceRegistryEntry)};
+      "ServiceRegistryEntry"_STRID};
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
   const auto cEventInputTypeIds = std::array{
-      STRID(Event)};
+      "Event"_STRID};
   
   const auto cEventOutputNames = std::array{
-      STRID(CNF)};
+      "CNF"_STRID};
   const auto cEventOutputTypeIds = std::array{
-      STRID(Event)};
+      "Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

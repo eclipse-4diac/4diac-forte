@@ -14,9 +14,9 @@
  *******************************************************************************/
 #include "core/datatypes/forte_any_bit_variant.h"
 
-USE_STRING_ID(ANY_BIT);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(ANY_BIT_VARIANT, STRID(ANY_BIT))
+DEFINE_FIRMWARE_DATATYPE(ANY_BIT_VARIANT, "ANY_BIT"_STRID)
 
 void CIEC_ANY_BIT_VARIANT::setValue(const CIEC_ANY &paValue) {
   switch (paValue.getDataTypeID()) {
@@ -72,7 +72,7 @@ int CIEC_ANY_BIT_VARIANT::fromString(const char *paValue) {
   int nRetVal = -1;
   const char *hashPos = strchr(paValue, '#');
   if (nullptr != hashPos) {
-    CStringDictionary::TStringId typeNameId = parseTypeName(paValue, hashPos);
+    forte::core::StringId typeNameId = parseTypeName(paValue, hashPos);
     CIEC_ANY::EDataTypeID dataTypeId = CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(typeNameId);
     if (setDefaultValue(dataTypeId)) {
       CIEC_ANY &value = unwrap();
@@ -84,7 +84,7 @@ int CIEC_ANY_BIT_VARIANT::fromString(const char *paValue) {
 
 void CIEC_ANY_BIT_VARIANT::toString(std::string &paTargetBuf) const {
   const CIEC_ANY &value = unwrap();
-  paTargetBuf += CStringDictionary::get(value.getTypeNameID());
+  paTargetBuf += value.getTypeNameID();
   paTargetBuf += '#';
   value.toString(paTargetBuf);
 }

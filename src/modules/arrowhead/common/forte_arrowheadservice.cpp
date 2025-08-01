@@ -12,20 +12,15 @@
 
 #include "forte_arrowheadservice.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(ArrowheadService);
-USE_STRING_ID(interfaces);
-USE_STRING_ID(serviceDefinition);
-USE_STRING_ID(serviceMetadata);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(ArrowheadService, STRID(ArrowheadService));
+DEFINE_FIRMWARE_DATATYPE(ArrowheadService, "ArrowheadService"_STRID);
 
 CIEC_ArrowheadService::CIEC_ArrowheadService() :
-    CIEC_STRUCT(STRID(ArrowheadService), 3, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT("ArrowheadService"_STRID, 3, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ArrowheadService::scmElementTypes[] = {
-    STRID(WSTRING), STRID(ARRAY), 10, STRID(WSTRING), STRID(ARRAY), 10, STRID(WSTRING)};
-const CStringDictionary::TStringId CIEC_ArrowheadService::scmElementNames[] = {
-    STRID(serviceDefinition), STRID(interfaces), STRID(serviceMetadata)};
+const forte::core::StringId CIEC_ArrowheadService::scmElementTypes[] = {
+    "WSTRING"_STRID, "ARRAY"_STRID, 10, "WSTRING"_STRID, "ARRAY"_STRID, 10, "WSTRING"_STRID};
+const forte::core::StringId CIEC_ArrowheadService::scmElementNames[] = {
+    "serviceDefinition"_STRID, "interfaces"_STRID, "serviceMetadata"_STRID};

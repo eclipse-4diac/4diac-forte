@@ -12,12 +12,7 @@
 
 #include "ArrowheadJSONHelper.h"
 
-USE_STRING_ID(ArrowheadEvent);
-USE_STRING_ID(ArrowheadService);
-USE_STRING_ID(ArrowheadSystem);
-USE_STRING_ID(EventFilter);
-USE_STRING_ID(PublishEvent);
-USE_STRING_ID(ServiceRequestForm);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_bool.h"
 #include "core/util/parameterParser.h"
@@ -26,22 +21,22 @@ USE_STRING_ID(ServiceRequestForm);
 void ArrowheadJSONHelper::transformANYToJSON(const CIEC_ANY &paSource, CIEC_STRING &paResult) {
   switch (paSource.getDataTypeID()) {
     case CIEC_ANY::e_STRUCT:
-      if (STRID(ArrowheadSystem) == static_cast<const CIEC_STRUCT &>(paSource).getStructTypeNameID()) {
+      if ("ArrowheadSystem"_STRID == static_cast<const CIEC_STRUCT &>(paSource).getStructTypeNameID()) {
         transformSystemToJSON(const_cast<CIEC_ArrowheadSystem &>(static_cast<const CIEC_ArrowheadSystem &>(paSource)),
                               paResult);
-      } else if (STRID(ArrowheadService) == static_cast<const CIEC_STRUCT &>(paSource).getStructTypeNameID()) {
+      } else if ("ArrowheadService"_STRID == static_cast<const CIEC_STRUCT &>(paSource).getStructTypeNameID()) {
         transformServiceToJSON(
             const_cast<CIEC_ArrowheadService &>(static_cast<const CIEC_ArrowheadService &>(paSource)), paResult);
-      } else if (STRID(ServiceRequestForm) == static_cast<const CIEC_STRUCT &>(paSource).getStructTypeNameID()) {
+      } else if ("ServiceRequestForm"_STRID == static_cast<const CIEC_STRUCT &>(paSource).getStructTypeNameID()) {
         transformOrchServciceRequestFormToJSON(
             const_cast<CIEC_ServiceRequestForm &>(static_cast<const CIEC_ServiceRequestForm &>(paSource)), paResult);
-      } else if (STRID(ArrowheadEvent) == static_cast<const CIEC_STRUCT &>(paSource).getStructTypeNameID()) {
+      } else if ("ArrowheadEvent"_STRID == static_cast<const CIEC_STRUCT &>(paSource).getStructTypeNameID()) {
         transformArrowheadEventToJSON(
             const_cast<CIEC_ArrowheadEvent &>(static_cast<const CIEC_ArrowheadEvent &>(paSource)), paResult);
-      } else if (STRID(PublishEvent) == static_cast<const CIEC_STRUCT &>(paSource).getStructTypeNameID()) {
+      } else if ("PublishEvent"_STRID == static_cast<const CIEC_STRUCT &>(paSource).getStructTypeNameID()) {
         transformPublishEventToJSON(const_cast<CIEC_PublishEvent &>(static_cast<const CIEC_PublishEvent &>(paSource)),
                                     paResult);
-      } else if (STRID(EventFilter) == static_cast<const CIEC_STRUCT &>(paSource).getStructTypeNameID()) {
+      } else if ("EventFilter"_STRID == static_cast<const CIEC_STRUCT &>(paSource).getStructTypeNameID()) {
         transformEventFilterToJSON(const_cast<CIEC_EventFilter &>(static_cast<const CIEC_EventFilter &>(paSource)),
                                    paResult);
       } else {
@@ -104,16 +99,14 @@ void ArrowheadJSONHelper::transformJSONToStruct(char *paToChange) {
 void ArrowheadJSONHelper::transformStructToJSON(const CIEC_STRUCT &paSource, CIEC_STRING &paResult) {
 
   TForteUInt16 unSize = paSource.getStructSize();
-  const CStringDictionary::TStringId *punMemberNameIds = paSource.elementNames();
+  const forte::core::StringId *punMemberNameIds = paSource.elementNames();
   const CIEC_ANY *poMembers = paSource.getMembers();
 
   paResult.append("{");
 
   for (unsigned int i = 0; i < unSize; ++i) {
-    const char *acMemberName = CStringDictionary::get(punMemberNameIds[i]);
-
     paResult.append("\"");
-    paResult.append(acMemberName);
+    paResult.append(punMemberNameIds[i]);
     paResult.append("\":");
 
     transformANYToJSON(poMembers[i], paResult);

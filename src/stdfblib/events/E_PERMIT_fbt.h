@@ -44,7 +44,7 @@ class FORTE_E_PERMIT final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_PERMIT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_PERMIT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_PERMIT;
 

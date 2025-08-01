@@ -23,8 +23,8 @@
 
 CBaseFB::CBaseFB(forte::core::CFBContainer &paContainer,
                  const SFBInterfaceSpec &paInterfaceSpec,
-                 const CStringDictionary::TStringId paInstanceNameId,
-                 std::span<const CStringDictionary::TStringId> paVarInternalNames) :
+                 const forte::core::StringId paInstanceNameId,
+                 std::span<const forte::core::StringId> paVarInternalNames) :
     CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
     cmVarInternalNames(paVarInternalNames) {
 }
@@ -33,7 +33,7 @@ void CBaseFB::setInitialValues() {
   CFunctionBlock::setInitialValues();
 }
 
-CIEC_ANY *CBaseFB::getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) {
+CIEC_ANY *CBaseFB::getVar(forte::core::StringId *paNameList, unsigned int paNameListSize) {
   CIEC_ANY *poRetVal = CFunctionBlock::getVar(paNameList, paNameListSize);
   if ((nullptr == poRetVal) && (1 == paNameListSize)) {
     poRetVal = getInternalVar(*paNameList);
@@ -41,7 +41,7 @@ CIEC_ANY *CBaseFB::getVar(CStringDictionary::TStringId *paNameList, unsigned int
   return poRetVal;
 }
 
-CIEC_ANY *CBaseFB::getInternalVar(CStringDictionary::TStringId paInternalName) {
+CIEC_ANY *CBaseFB::getInternalVar(forte::core::StringId paInternalName) {
   TPortId unVarId = forte::getPortId(paInternalName, cmVarInternalNames);
 
   if (unVarId != cgInvalidPortId) {

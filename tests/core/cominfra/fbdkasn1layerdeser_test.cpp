@@ -61,37 +61,19 @@
 
 #include "core/typelib_internal.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(BYTE);
-USE_STRING_ID(DINT);
-USE_STRING_ID(DWORD);
-USE_STRING_ID(INT);
-USE_STRING_ID(LINT);
-USE_STRING_ID(LREAL);
-USE_STRING_ID(LWORD);
-USE_STRING_ID(REAL);
-USE_STRING_ID(SINT);
-USE_STRING_ID(STRING);
-USE_STRING_ID(TIME);
-USE_STRING_ID(UDINT);
-USE_STRING_ID(UINT);
-USE_STRING_ID(ULINT);
-USE_STRING_ID(USINT);
-USE_STRING_ID(WORD);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 using namespace std::string_literals;
 
 namespace {
-  static const auto scmInputTypes = std::array{STRID(BOOL), STRID(BOOL)};
-}
+  const auto scmInputTypes = std::array{"BOOL"_STRID, "BOOL"_STRID};
+} // namespace
 
 class CDeserTestMockCommFB : public forte::com_infra::CCommFB {
 
   public:
-    CDeserTestMockCommFB(TForteUInt8 paNumRD, const CStringDictionary::TStringId *const paDODataTypeNames) :
-        forte::com_infra::CCommFB(CStringDictionary::scmInvalidStringId, mResource, forte::com_infra::e_Publisher),
+    CDeserTestMockCommFB(TForteUInt8 paNumRD, const forte::core::StringId *const paDODataTypeNames) :
+        forte::com_infra::CCommFB({}, mResource, forte::com_infra::e_Publisher),
         mDODataTypeNames(paDODataTypeNames) {
 
       mDoTypes.reserve(2 + paNumRD);

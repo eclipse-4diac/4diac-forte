@@ -16,24 +16,15 @@
 
 #include "F_INSERT_fbt.h"
 
-USE_STRING_ID(ANY_INT);
-USE_STRING_ID(ANY_STRING);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(F_INSERT);
-USE_STRING_ID(IN1);
-USE_STRING_ID(IN2);
-USE_STRING_ID(OUT);
-USE_STRING_ID(P);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_F_INSERT, STRID(F_INSERT))
+DEFINE_FIRMWARE_FB(FORTE_F_INSERT, "F_INSERT"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN1), STRID(IN2), STRID(P)};
-  const auto cDataOutputNames = std::array{STRID(OUT)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID, "P"_STRID};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -47,7 +38,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_INSERT::FORTE_F_INSERT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_INSERT::FORTE_F_INSERT(const forte::core::StringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_STRING_VARIANT()),
@@ -70,8 +61,8 @@ void FORTE_F_INSERT::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
             if constexpr (std::is_same_v<T, U>) {
               return func_INSERT(paIN1, paIN2, paP);
             }
-            DEVLOG_ERROR("Inserting incompatible types %s and %s\n", CStringDictionary::get(paIN1.getTypeNameID()),
-                         CStringDictionary::get(paIN2.getTypeNameID()));
+            DEVLOG_ERROR("Inserting incompatible types %s and %s\n", paIN1.getTypeNameID().data(),
+                         paIN2.getTypeNameID().data());
             return CIEC_ANY_STRING_VARIANT();
           },
           static_cast<CIEC_ANY_STRING_VARIANT::variant &>(var_IN1),

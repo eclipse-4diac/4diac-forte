@@ -11,9 +11,11 @@
 
 ${includes}
 
+using namespace forte::core::literals;
+
 const COPC_UA_Helper::UA_TypeConvert_external COPC_UA_Helper::scmExternalMapForteTypeIdToOpcUa[] = {
 #define ENTRY(ua_typearray,ua_typename,forte_typename) \
-  UA_TypeConvert_external(&ua_typearray[ua_typearray##_##ua_typename], STRID(forte_typename)),
+  UA_TypeConvert_external(&ua_typearray[ua_typearray##_##ua_typename], "forte_typename"_STRID),
   ${entries}
 #undef ENTRY
 

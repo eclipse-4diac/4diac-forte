@@ -18,11 +18,11 @@
 #include "core/funcbloc.h"
 #include "core/typelib_internal.h"
 
-USE_STRING_ID(ANY_ADAPTER);
+using namespace forte::core::literals;
 
 using namespace forte;
 
-CAnyAdapterPin::CAnyAdapterPin(CStringDictionary::TStringId paInstanceNameId) : mInstanceNameId(paInstanceNameId) {
+CAnyAdapterPin::CAnyAdapterPin(forte::core::StringId paInstanceNameId) : mInstanceNameId(paInstanceNameId) {
 }
 
 CAnyAdapterPin::~CAnyAdapterPin() {
@@ -50,7 +50,7 @@ void CAnyAdapterPin::removeConfiguredAdapter() {
   }
 }
 
-CAnyPlugPin::CAnyPlugPin(CStringDictionary::TStringId paInstanceNameId,
+CAnyPlugPin::CAnyPlugPin(forte::core::StringId paInstanceNameId,
                          CFunctionBlock &paParentFB,
                          TForteUInt8 paParentAdapterlistID) :
     CAnyAdapterPin(paInstanceNameId),
@@ -61,12 +61,12 @@ forte::CAdapter *CAnyPlugPin::getAdapterBlock() {
   return mConfiguredAdapter.get();
 }
 
-CStringDictionary::TStringId CAnyPlugPin::getAdapterTypeId() const {
-  return (mConfiguredAdapter) ? mConfiguredAdapter->getFBTypeId() : STRID(ANY_ADAPTER);
+forte::core::StringId CAnyPlugPin::getAdapterTypeId() const {
+  return (mConfiguredAdapter) ? mConfiguredAdapter->getFBTypeId() : "ANY_ADAPTER"_STRID;
 }
 
 bool CAnyPlugPin::isCompatible(IAdapterPin &paPeer) {
-  return paPeer.getAdapterTypeId() != STRID(ANY_ADAPTER);
+  return paPeer.getAdapterTypeId() != "ANY_ADAPTER"_STRID;
 }
 
 CAdapterConnection &CAnyPlugPin::getAdapterCon() {
@@ -80,7 +80,7 @@ void CAnyPlugPin::setPeer(CAdapter *paPeer) {
   }
 }
 
-CAnySocketPin::CAnySocketPin(CStringDictionary::TStringId paInstanceNameId,
+CAnySocketPin::CAnySocketPin(forte::core::StringId paInstanceNameId,
                              CFunctionBlock &paParentFB,
                              TForteUInt8 paParentAdapterlistID) :
     CAnyAdapterPin(paInstanceNameId),
@@ -92,12 +92,12 @@ forte::CAdapter *CAnySocketPin::getAdapterBlock() {
   return mConfiguredAdapter.get();
 }
 
-CStringDictionary::TStringId CAnySocketPin::getAdapterTypeId() const {
-  return (mConfiguredAdapter) ? mConfiguredAdapter->getFBTypeId() : STRID(ANY_ADAPTER);
+forte::core::StringId CAnySocketPin::getAdapterTypeId() const {
+  return (mConfiguredAdapter) ? mConfiguredAdapter->getFBTypeId() : "ANY_ADAPTER"_STRID;
 }
 
 bool CAnySocketPin::isCompatible(IAdapterPin &paPeer) {
-  return paPeer.getAdapterTypeId() != STRID(ANY_ADAPTER);
+  return paPeer.getAdapterTypeId() != "ANY_ADAPTER"_STRID;
 }
 
 bool CAnySocketPin::connect(CAdapterConnection &paConn) {

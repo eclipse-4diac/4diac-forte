@@ -18,11 +18,11 @@
 
 #include "GEN_OR_fbt.h"
 
-USE_STRING_ID(GEN_OR);
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_OR, STRID(GEN_OR))
+DEFINE_GENERIC_FIRMWARE_FB(GEN_OR, "GEN_OR"_STRID)
 
-GEN_OR::GEN_OR(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_OR::GEN_OR(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenBitBase(paInstanceNameId, paContainer) {
 }
 

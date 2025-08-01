@@ -21,7 +21,7 @@
 
 #include "core/mgmcmd.h"
 #include "core/mgmcmdstruct.h"
-#include "core/stringdict.h"
+#include "core/stringid.h"
 
 // forward declaration of a few classes to reduce include file dependencies
 class CFunctionBlock;
@@ -95,14 +95,13 @@ class CConnection {
      *     - NoSuchObject... The destination is not a valid input.
      *     - InvalidState... The specified connection already exists.
      */
-    virtual EMGMResponse connect(CFunctionBlock &paDstFB,
-                                 std::span<const CStringDictionary::TStringId> paDstPortNameId) = 0;
+    virtual EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::core::StringId> paDstPortNameId) = 0;
 
     /*!\brief establish an event connection of a CFB to an event output of the CFB.
      *
      */
     virtual EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
-                                               std::span<const CStringDictionary::TStringId> paDstPortNameId) = 0;
+                                               std::span<const forte::core::StringId> paDstPortNameId) = 0;
 
     /*! \brief Disconnects the connection.
      *
@@ -120,7 +119,7 @@ class CConnection {
      *     - InvalidState... this connection is not connected to the destination
      */
     virtual EMGMResponse disconnect(CFunctionBlock &paDstFB,
-                                    std::span<const CStringDictionary::TStringId> paDstPortNameId) = 0;
+                                    std::span<const forte::core::StringId> paDstPortNameId) = 0;
 
     /*!
      * \brief Get a delegating connection for the given name
@@ -128,7 +127,7 @@ class CConnection {
      * @return a delegating connection for the name, an empty wrapper if there is no such delegating connection,
      *          or this if the name list was empty
      */
-    virtual Wrapper getDelegatingConnection(const std::span<const CStringDictionary::TStringId> paSrcNameList) {
+    virtual Wrapper getDelegatingConnection(const std::span<const forte::core::StringId> paSrcNameList) {
       if (paSrcNameList.empty()) {
         return Wrapper(this);
       }

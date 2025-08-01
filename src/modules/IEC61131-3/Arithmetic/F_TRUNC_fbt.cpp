@@ -18,29 +18,22 @@
 #include "core/datatypes/forte_any_int_variant.h"
 #include "core/datatypes/forte_any_real_variant.h"
 
-USE_STRING_ID(ANY_INT);
-USE_STRING_ID(ANY_REAL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(F_TRUNC);
-USE_STRING_ID(IN);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_F_TRUNC, STRID(F_TRUNC))
+DEFINE_FIRMWARE_FB(FORTE_F_TRUNC, "F_TRUNC"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cDataInputNames = std::array{"IN"_STRID};
   
   
-  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -56,7 +49,7 @@ namespace {
 }
 
 
-FORTE_F_TRUNC::FORTE_F_TRUNC(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_TRUNC::FORTE_F_TRUNC(const forte::core::StringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_REAL_VARIANT()),

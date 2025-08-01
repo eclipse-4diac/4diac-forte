@@ -51,9 +51,7 @@
 #include "core/datatypes/forte_ulint.h"
 #include "core/datatypes/forte_lreal.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(SINT);
-USE_STRING_ID(STRING);
+using namespace forte::core::literals;
 
 class CFBDKASN1ComLayerTestMock : public forte::com_infra::CFBDKASN1ComLayer {
   public:
@@ -978,7 +976,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_MultiDatas) {
 
 BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ARRAY) {
   CFBDKASN1ComLayerTestMock nTestee;
-  CIEC_ARRAY_DYNAMIC nVal(5, STRID(BOOL));
+  CIEC_ARRAY_DYNAMIC nVal(5, "BOOL"_STRID);
   CIEC_ANY *poArray[1];
   poArray[0] = &nVal;
 
@@ -1012,7 +1010,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ARRAY) {
   BOOST_CHECK(
       std::equal(cgArrayBool01010, cgArrayBool01010 + cgBOOL5SerSize, ((TForteByte *) nTestee.getSendDataPtr())));
 
-  CIEC_ARRAY_DYNAMIC nSIntArray(4, STRID(SINT));
+  CIEC_ARRAY_DYNAMIC nSIntArray(4, "SINT"_STRID);
   poArray[0] = &nSIntArray;
 
   static_cast<CIEC_SINT &>(nSIntArray[0]) = CIEC_SINT(-128);
@@ -1035,7 +1033,7 @@ BOOST_AUTO_TEST_CASE(Single_Serialize_Test_ARRAY) {
   BOOST_CHECK(std::equal(cgArraySINTm90_90_127_0, cgArraySINTm90_90_127_0 + cgSINT4SerSize,
                          ((TForteByte *) nTestee.getSendDataPtr())));
 
-  CIEC_ARRAY_DYNAMIC nStringArray(2, STRID(STRING));
+  CIEC_ARRAY_DYNAMIC nStringArray(2, "STRING"_STRID);
   poArray[0] = &nStringArray;
 
   static_cast<CIEC_STRING &>(nStringArray[1]) = "HalloWorld"_STRING;

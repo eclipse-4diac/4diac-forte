@@ -12,26 +12,18 @@
 
 #include "ArrowheadPublish.h"
 
-USE_STRING_ID(ArrowheadPublish);
-USE_STRING_ID(ArrowheadPublishAdp);
-USE_STRING_ID(endpoint);
-USE_STRING_ID(Event);
-USE_STRING_ID(publish);
-USE_STRING_ID(published);
-USE_STRING_ID(publishEvent);
-USE_STRING_ID(PublishEvent);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_ArrowheadPublish, STRID(ArrowheadPublish))
+DEFINE_FIRMWARE_FB(FORTE_ArrowheadPublish, "ArrowheadPublish"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(publishEvent), STRID(endpoint)};
-  const auto cEventInputNames = std::array{STRID(publish)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(published)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"publishEvent"_STRID, "endpoint"_STRID};
+  const auto cEventInputNames = std::array{"publish"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"published"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
 
-  const auto cPlugNameIds = std::array{STRID(ArrowheadPublishAdp)};
+  const auto cPlugNameIds = std::array{"ArrowheadPublishAdp"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -47,18 +39,18 @@ namespace {
 } // namespace
 
 const SCFB_FBConnectionData FORTE_ArrowheadPublish::auto cEventConnections = std::to_array<SCFB_FBConnectionData>{
-    {CStringDictionary::scmInvalidStringId, STRID(publish), -1,
-     STRID(ArrowheadPublishAdp), STRID(publish)), CCompositeFB::scmAdapterMarker | 0},
-    {STRID(ArrowheadPublishAdp), STRID(published)),
-     CCompositeFB::scmAdapterMarker | 0, CStringDictionary::scmInvalidStringId, STRID(published), -1},
+    {{}, "publish"_STRID, -1,
+     "ArrowheadPublishAdp"_STRID, "publish"_STRID), CCompositeFB::scmAdapterMarker | 0},
+    {"ArrowheadPublishAdp"_STRID, "published"_STRID),
+     CCompositeFB::scmAdapterMarker | 0, {}, "published"_STRID, -1},
 };
 
 const SCFB_FBConnectionData FORTE_ArrowheadPublishauto cDataConnections = std::to_array<SCFB_FBConnectionData>{
-    {CStringDictionary::scmInvalidStringId, STRID(publishEvent), -1,
-     STRID(ArrowheadPublishAdp), STRID(publishEvent)),
+    {{}, "publishEvent"_STRID, -1,
+     "ArrowheadPublishAdp"_STRID, "publishEvent"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
-    {CStringDictionary::scmInvalidStringId, STRID(endpoint), -1,
-     STRID(ArrowheadPublishAdp), STRID(endpoint)),
+    {{}, "endpoint"_STRID, -1,
+     "ArrowheadPublishAdp"_STRID, "endpoint"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
 };
 

@@ -42,7 +42,7 @@ class FORTE_ASSEMBLE_BYTE_FROM_QUARTERS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_ASSEMBLE_BYTE_FROM_QUARTERS(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_ASSEMBLE_BYTE_FROM_QUARTERS(forte::core::StringId paInstanceNameId,
                                       forte::core::CFBContainer &paContainer);
 
     CIEC_BYTE var_QUARTER_BYTE_00;

@@ -12,26 +12,16 @@
 
 #include "forte_arrowheadcloud.h"
 
-USE_STRING_ID(address);
-USE_STRING_ID(ArrowheadCloud);
-USE_STRING_ID(authenticationInfo);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(cloudName);
-USE_STRING_ID(DINT);
-USE_STRING_ID(gatekeeperServiceURI);
-USE_STRING_ID(operator);
-USE_STRING_ID(port);
-USE_STRING_ID(secure);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(ArrowheadCloud, STRID(ArrowheadCloud));
+DEFINE_FIRMWARE_DATATYPE(ArrowheadCloud, "ArrowheadCloud"_STRID);
 
 CIEC_ArrowheadCloud::CIEC_ArrowheadCloud() :
-    CIEC_STRUCT(STRID(ArrowheadCloud), 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT("ArrowheadCloud"_STRID, 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ArrowheadCloud::scmElementTypes[] = {
-    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(DINT), STRID(WSTRING), STRID(WSTRING), STRID(BOOL)};
-const CStringDictionary::TStringId CIEC_ArrowheadCloud::scmElementNames[] = {
-    STRID(operator),           STRID(cloudName), STRID(address), STRID(port), STRID(gatekeeperServiceURI),
-    STRID(authenticationInfo), STRID(secure)};
+const forte::core::StringId CIEC_ArrowheadCloud::scmElementTypes[] = {
+    "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "DINT"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "BOOL"_STRID};
+const forte::core::StringId CIEC_ArrowheadCloud::scmElementNames[] = {
+    "operator"_STRID,           "cloudName"_STRID, "address"_STRID, "port"_STRID, "gatekeeperServiceURI"_STRID,
+    "authenticationInfo"_STRID, "secure"_STRID};

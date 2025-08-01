@@ -30,7 +30,7 @@
 #include "core/inoutdataconn.h"
 #include "core/eventconn.h"
 #include "arch/devlog.h"
-#include "core/stringdict.h"
+#include "core/stringid.h"
 #include "core/forte_st_iterator.h"
 #include "core/forte_st_util.h"
 
@@ -54,7 +54,7 @@ using TAbsDataPortNum = size_t;
 
 constexpr TAbsDataPortNum INVALID_ABS_DATA_PORT_ID = static_cast<TAbsDataPortNum>(-1);
 
-typedef CStringDictionary::TStringId TEventTypeID;
+typedef forte::core::StringId TEventTypeID;
 
 /*!\ingroup CORE\brief Base class for all function blocks.
  */
@@ -90,20 +90,20 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     /*!\brief Returns the stringId for type name of this FB instance
      */
-    virtual CStringDictionary::TStringId getFBTypeId() const = 0;
+    virtual forte::core::StringId getFBTypeId() const = 0;
 
     /*!\brief Returns the type name of this FB instance
      */
     const char *getFBTypeName() const {
-      if (auto type = CStringDictionary::get(getFBTypeId()); type != nullptr) {
-        return type;
+      if (const auto type = getFBTypeId()) {
+        return type.data();
       }
       return "";
     }
 
-    CEventConnection *getEOConnection(CStringDictionary::TStringId paEONameId);
+    CEventConnection *getEOConnection(forte::core::StringId paEONameId);
 
-    const CEventConnection *getEOConnection(CStringDictionary::TStringId paEONameId) const {
+    const CEventConnection *getEOConnection(forte::core::StringId paEONameId) const {
       return const_cast<CFunctionBlock *>(this)->getEOConnection(paEONameId);
     }
 
@@ -127,7 +127,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paDINameId ID of the data input name.
      * \return Pointer to the data input or 0. If 0 is returned DataInput is ANY
      */
-    CIEC_ANY *getDataInput(CStringDictionary::TStringId paDINameId);
+    CIEC_ANY *getDataInput(forte::core::StringId paDINameId);
 
     /*!\brief get the pointer to a data input using the portId as identifier
      */
@@ -139,27 +139,27 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     CIEC_ANY *getDIOFromPortId(TPortId paDIPortId);
 
-    CDataConnection *getDIConnection(CStringDictionary::TStringId paDINameId);
+    CDataConnection *getDIConnection(forte::core::StringId paDINameId);
 
-    const CDataConnection *getDIConnection(CStringDictionary::TStringId paDINameId) const {
+    const CDataConnection *getDIConnection(forte::core::StringId paDINameId) const {
       return const_cast<CFunctionBlock *>(this)->getDIConnection(paDINameId);
     }
 
-    CDataConnection *getDOConnection(CStringDictionary::TStringId paDONameId);
+    CDataConnection *getDOConnection(forte::core::StringId paDONameId);
 
-    const CDataConnection *getDOConnection(CStringDictionary::TStringId paDONameId) const {
+    const CDataConnection *getDOConnection(forte::core::StringId paDONameId) const {
       return const_cast<CFunctionBlock *>(this)->getDOConnection(paDONameId);
     }
 
-    CInOutDataConnection *getDIOInConnection(CStringDictionary::TStringId paDIONameId);
+    CInOutDataConnection *getDIOInConnection(forte::core::StringId paDIONameId);
 
-    const CInOutDataConnection *getDIOInConnection(CStringDictionary::TStringId paDIONameId) const {
+    const CInOutDataConnection *getDIOInConnection(forte::core::StringId paDIONameId) const {
       return const_cast<CFunctionBlock *>(this)->getDIOInConnection(paDIONameId);
     }
 
-    CInOutDataConnection *getDIOOutConnection(CStringDictionary::TStringId paDIONameId);
+    CInOutDataConnection *getDIOOutConnection(forte::core::StringId paDIONameId);
 
-    const CInOutDataConnection *getDIOOutConnection(CStringDictionary::TStringId paDIONameId) const {
+    const CInOutDataConnection *getDIOOutConnection(forte::core::StringId paDIONameId) const {
       return const_cast<CFunctionBlock *>(this)->getDIOOutConnection(paDIONameId);
     }
 
@@ -183,7 +183,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paDONameId StringID of the data output name.
      * \return Pointer to the data output or 0. If 0 is returned DataOutput is ANY
      */
-    CIEC_ANY *getDataOutput(CStringDictionary::TStringId paDONameId);
+    CIEC_ANY *getDataOutput(forte::core::StringId paDONameId);
 
     /*!\brief Get the pointer to a variable of the FB.
      *
@@ -192,23 +192,23 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \return Pointer to the variable or 0.
      *  The variable may be input, output or in the case of a BFB an internal var.
      */
-    virtual CIEC_ANY *getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize);
+    virtual CIEC_ANY *getVar(forte::core::StringId *paNameList, unsigned int paNameListSize);
 
     /*!\brief Get the pointer to the plub pin of the FB.
      *
      * \param pasocketNameId  StringId of the socket name.
      * \return Pointer to the socket or nullptr.
      */
-    forte::IPlugPin *getPlugPin(CStringDictionary::TStringId paPlugNameId);
+    forte::IPlugPin *getPlugPin(forte::core::StringId paPlugNameId);
 
     /*!\brief Get the pointer to the socket pin of the FB.
      *
      * \param paSocketNameId  StringId of the socket name.
      * \return Pointer to the socket or nullptr.
      */
-    forte::ISocketPin *getSocketPin(CStringDictionary::TStringId paSocketNameId);
+    forte::ISocketPin *getSocketPin(forte::core::StringId paSocketNameId);
 
-    const forte::ISocketPin *getSocketPin(CStringDictionary::TStringId paSocketNameId) const {
+    const forte::ISocketPin *getSocketPin(forte::core::StringId paSocketNameId) const {
       return const_cast<CFunctionBlock *>(this)->getSocketPin(paSocketNameId);
     }
 
@@ -218,8 +218,8 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
      */
     void receiveInputEvent(TEventID paEIID, CEventChainExecutionThread *paExecEnv) {
-      FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n",
-                  CStringDictionary::get(getInstanceNameId()), paEIID, getFBInterfaceSpec().getNumEIs() - 1);
+      FORTE_TRACE("InputEvent: Function Block (%s) got event: %d (maxid: %d)\n", getInstanceNameId().data(), paEIID,
+                  getFBInterfaceSpec().getNumEIs() - 1);
 
 #ifdef FORTE_TRACE_CTF
       traceInputEvent(paEIID);
@@ -324,20 +324,20 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * @param paDstNameList array of the name hierarchy the requested connection destination
      * @return pointer to the requested connection, returns nullptr if there is no such destination
      */
-    CConnection *getInputConnection(std::span<const CStringDictionary::TStringId> paDstNameList) override;
+    CConnection *getInputConnection(std::span<const forte::core::StringId> paDstNameList) override;
 
     /*!\brief get the connection object for the given source identifier
      *
      * @param paSrcNameList array of the name hierarchy the requested connection source
      * @return pointer to the requested connection, returns nullptr if there is no such source
      */
-    CConnection::Wrapper getOutputConnection(std::span<const CStringDictionary::TStringId> paSrcNameList) override;
+    CConnection::Wrapper getOutputConnection(std::span<const forte::core::StringId> paSrcNameList) override;
 
     TForteUInt32 &getEIMonitorData(TEventID paEIID);
 
     TForteUInt32 &getEOMonitorData(TEventID paEOID);
 
-    TAbsDataPortNum getAbsDataPortNum(CStringDictionary::TStringId paPortNameId) const;
+    TAbsDataPortNum getAbsDataPortNum(forte::core::StringId paPortNameId) const;
 
     void setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue);
 
@@ -391,7 +391,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     CFunctionBlock(forte::core::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
-                   CStringDictionary::TStringId paInstanceNameId);
+                   forte::core::StringId paInstanceNameId);
 
     /*!\brief Function to send an output event of the FB.
      *

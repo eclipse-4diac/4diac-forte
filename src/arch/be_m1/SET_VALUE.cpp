@@ -15,18 +15,18 @@
 #include <mio.h>
 #include <mio_e.h>
 
-DEFINE_FIRMWARE_FB(FORTE_SET_VALUE, STRID(SET_VALUE))
+DEFINE_FIRMWARE_FB(FORTE_SET_VALUE, "SET_VALUE"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(MOD_NB), STRID(CHAN_NB), STRID(VALUE)};
+  const auto cDataInputNames = std::array{"MOD_NB"_STRID, "CHAN_NB"_STRID, "VALUE"_STRID};
 
-  const auto cDataOutputNames = std::array{STRID(RET_CODE)};
+  const auto cDataOutputNames = std::array{"RET_CODE"_STRID};
 
-  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
 
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

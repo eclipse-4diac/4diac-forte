@@ -19,20 +19,7 @@
 
 #include "ADS_SERVER_CONFIG_fbt.h"
 
-USE_STRING_ID(ADS_PORT);
-USE_STRING_ID(ADS_SERVER_CONFIG);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(EInit);
-USE_STRING_ID(FRIENDLY_NAME);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(SERVER_ADS_ADDRESS);
-USE_STRING_ID(SERVER_IPV4_OR_HOSTNAME);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(UINT);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "core/iec61131_functions.h"
 #include "core/datatypes/forte_array_common.h"
@@ -41,16 +28,16 @@ USE_STRING_ID(WSTRING);
 #include "core/datatypes/forte_array_variable.h"
 #include "CAdsConnectionManager.h"
 
-DEFINE_FIRMWARE_FB(FORTE_ADS_SERVER_CONFIG, STRID(ADS_SERVER_CONFIG))
+DEFINE_FIRMWARE_FB(FORTE_ADS_SERVER_CONFIG, "ADS_SERVER_CONFIG"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(FRIENDLY_NAME), STRID(SERVER_ADS_ADDRESS), STRID(ADS_PORT),
-                                          STRID(SERVER_IPV4_OR_HOSTNAME)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(INIT)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit)};
-  const auto cEventOutputNames = std::array{STRID(INITO)};
-  const auto cEventOutputTypeIds = std::array{STRID(EInit)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "FRIENDLY_NAME"_STRID, "SERVER_ADS_ADDRESS"_STRID, "ADS_PORT"_STRID,
+                                          "SERVER_IPV4_OR_HOSTNAME"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID};
+  const auto cEventOutputTypeIds = std::array{"EInit"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -64,7 +51,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ADS_SERVER_CONFIG::FORTE_ADS_SERVER_CONFIG(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_ADS_SERVER_CONFIG::FORTE_ADS_SERVER_CONFIG(const forte::core::StringId paInstanceNameId,
                                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),

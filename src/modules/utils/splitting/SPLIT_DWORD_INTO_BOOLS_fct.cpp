@@ -19,45 +19,7 @@
 
 #include "SPLIT_DWORD_INTO_BOOLS_fct.h"
 
-USE_STRING_ID(BIT_00);
-USE_STRING_ID(BIT_01);
-USE_STRING_ID(BIT_02);
-USE_STRING_ID(BIT_03);
-USE_STRING_ID(BIT_04);
-USE_STRING_ID(BIT_05);
-USE_STRING_ID(BIT_06);
-USE_STRING_ID(BIT_07);
-USE_STRING_ID(BIT_08);
-USE_STRING_ID(BIT_09);
-USE_STRING_ID(BIT_10);
-USE_STRING_ID(BIT_11);
-USE_STRING_ID(BIT_12);
-USE_STRING_ID(BIT_13);
-USE_STRING_ID(BIT_14);
-USE_STRING_ID(BIT_15);
-USE_STRING_ID(BIT_16);
-USE_STRING_ID(BIT_17);
-USE_STRING_ID(BIT_18);
-USE_STRING_ID(BIT_19);
-USE_STRING_ID(BIT_20);
-USE_STRING_ID(BIT_21);
-USE_STRING_ID(BIT_22);
-USE_STRING_ID(BIT_23);
-USE_STRING_ID(BIT_24);
-USE_STRING_ID(BIT_25);
-USE_STRING_ID(BIT_26);
-USE_STRING_ID(BIT_27);
-USE_STRING_ID(BIT_28);
-USE_STRING_ID(BIT_29);
-USE_STRING_ID(BIT_30);
-USE_STRING_ID(BIT_31);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(DWORD);
-USE_STRING_ID(Event);
-USE_STRING_ID(IN);
-USE_STRING_ID(REQ);
-USE_STRING_ID(SPLIT_DWORD_INTO_BOOLS);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_dword.h"
 #include "core/datatypes/forte_bool.h"
@@ -67,20 +29,20 @@ USE_STRING_ID(SPLIT_DWORD_INTO_BOOLS);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_BOOLS, STRID(SPLIT_DWORD_INTO_BOOLS))
+DEFINE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_BOOLS, "SPLIT_DWORD_INTO_BOOLS"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cDataInputNames = std::array{"IN"_STRID};
   const auto cDataOutputNames = std::array{
-      STRID(BIT_00), STRID(BIT_01), STRID(BIT_02), STRID(BIT_03), STRID(BIT_04), STRID(BIT_05), STRID(BIT_06),
-      STRID(BIT_07), STRID(BIT_08), STRID(BIT_09), STRID(BIT_10), STRID(BIT_11), STRID(BIT_12), STRID(BIT_13),
-      STRID(BIT_14), STRID(BIT_15), STRID(BIT_16), STRID(BIT_17), STRID(BIT_18), STRID(BIT_19), STRID(BIT_20),
-      STRID(BIT_21), STRID(BIT_22), STRID(BIT_23), STRID(BIT_24), STRID(BIT_25), STRID(BIT_26), STRID(BIT_27),
-      STRID(BIT_28), STRID(BIT_29), STRID(BIT_30), STRID(BIT_31)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+      "BIT_00"_STRID, "BIT_01"_STRID, "BIT_02"_STRID, "BIT_03"_STRID, "BIT_04"_STRID, "BIT_05"_STRID, "BIT_06"_STRID,
+      "BIT_07"_STRID, "BIT_08"_STRID, "BIT_09"_STRID, "BIT_10"_STRID, "BIT_11"_STRID, "BIT_12"_STRID, "BIT_13"_STRID,
+      "BIT_14"_STRID, "BIT_15"_STRID, "BIT_16"_STRID, "BIT_17"_STRID, "BIT_18"_STRID, "BIT_19"_STRID, "BIT_20"_STRID,
+      "BIT_21"_STRID, "BIT_22"_STRID, "BIT_23"_STRID, "BIT_24"_STRID, "BIT_25"_STRID, "BIT_26"_STRID, "BIT_27"_STRID,
+      "BIT_28"_STRID, "BIT_29"_STRID, "BIT_30"_STRID, "BIT_31"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -94,7 +56,7 @@ namespace {
   };
 } // namespace
 
-FORTE_SPLIT_DWORD_INTO_BOOLS::FORTE_SPLIT_DWORD_INTO_BOOLS(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_SPLIT_DWORD_INTO_BOOLS::FORTE_SPLIT_DWORD_INTO_BOOLS(const forte::core::StringId paInstanceNameId,
                                                            forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

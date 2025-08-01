@@ -15,18 +15,18 @@
 #include <mio.h>
 #include <mio_e.h>
 
-DEFINE_FIRMWARE_FB(FORTE_GET_CHAN_INFO, STRID(GET_CHAN_INFO))
+DEFINE_FIRMWARE_FB(FORTE_GET_CHAN_INFO, "GET_CHAN_INFO"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(SYMB_NAME)};
+  const auto cDataInputNames = std::array{"SYMB_NAME"_STRID};
 
-  const auto cDataOutputNames = std::array{STRID(RET_CODE), STRID(MOD_NB), STRID(CHAN_NB)};
+  const auto cDataOutputNames = std::array{"RET_CODE"_STRID, "MOD_NB"_STRID, "CHAN_NB"_STRID};
 
-  const auto cEventInputNames = std::array{STRID(INIT)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit)};
+  const auto cEventInputNames = std::array{"INIT"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID};
 
-  const auto cEventOutputNames = std::array{STRID(INITO)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"INITO"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

@@ -15,16 +15,15 @@
 #include "GEN_E_SPLIT_fbt.h"
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(EI);
-USE_STRING_ID(GEN_E_SPLIT);
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT, STRID(GEN_E_SPLIT))
+DEFINE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT, "GEN_E_SPLIT"_STRID)
 
 namespace {
-  const auto cEventInputNames = std::array{STRID(EI)};
+  const auto cEventInputNames = std::array{"EI"_STRID};
 }
 
-GEN_E_SPLIT::GEN_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_E_SPLIT::GEN_E_SPLIT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {};
 
 void GEN_E_SPLIT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {

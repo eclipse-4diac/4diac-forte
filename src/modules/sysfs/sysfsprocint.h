@@ -23,7 +23,7 @@ class CSysFsProcessInterface : public CProcessInterfaceBase {
   public:
     CSysFsProcessInterface(forte::core::CFBContainer &paContainer,
                            const SFBInterfaceSpec &paInterfaceSpec,
-                           const CStringDictionary::TStringId paInstanceNameId);
+                           const forte::core::StringId paInstanceNameId);
     ~CSysFsProcessInterface() override;
 
     class CIOHandler : public CExternalEventHandler, public CThread {

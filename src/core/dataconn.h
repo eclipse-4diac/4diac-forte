@@ -28,16 +28,14 @@ class CDataConnection : public CConnection {
   public:
     CDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId);
 
-    EMGMResponse connect(CFunctionBlock &paDstFB,
-                         std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
+    EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::core::StringId> paDstPortNameId) override;
 
     EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
-                                       std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
+                                       std::span<const forte::core::StringId> paDstPortNameId) override;
 
-    EMGMResponse disconnect(CFunctionBlock &paDstFB,
-                            std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
+    EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::core::StringId> paDstPortNameId) override;
 
-    Wrapper getDelegatingConnection(std::span<const CStringDictionary::TStringId> paSrcNameList) override;
+    Wrapper getDelegatingConnection(std::span<const forte::core::StringId> paSrcNameList) override;
 
     void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
 
@@ -77,7 +75,7 @@ class CDataConnection : public CConnection {
      * @return a member connection for the name, nullptr if there is no such member connection,
      *          or this if the name list was empty
      */
-    virtual CDataConnection *getMemberConnection(const std::span<const CStringDictionary::TStringId> paMemberName) {
+    virtual CDataConnection *getMemberConnection(const std::span<const forte::core::StringId> paMemberName) {
       if (paMemberName.empty()) {
         return this;
       }
@@ -100,7 +98,7 @@ class CDataConnection : public CConnection {
     EMGMResponse establishGatheringConnection(CFunctionBlock &paDstFB,
                                               TPortId paDstPortId,
                                               CIEC_ANY &paDstDataPoint,
-                                              std::span<const CStringDictionary::TStringId> paDstPortNameId);
+                                              std::span<const forte::core::StringId> paDstPortNameId);
 };
 
 template<typename T>

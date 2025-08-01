@@ -57,8 +57,8 @@ class CIEC_OrchestrationForm : public CIEC_STRUCT {
     }
 
   private:
-    static const CStringDictionary::TStringId scmElementTypes[];
-    static const CStringDictionary::TStringId scmElementNames[];
+    static const forte::core::StringId scmElementTypes[];
+    static const forte::core::StringId scmElementNames[];
 };
 
 #endif //_FORTE_ORCHESTRATIONFORM_H_

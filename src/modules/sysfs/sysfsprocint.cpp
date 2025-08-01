@@ -27,7 +27,7 @@ const CIEC_STRING CSysFsProcessInterface::scmCouldNotWrite("Could not write"_STR
 
 CSysFsProcessInterface::CSysFsProcessInterface(forte::core::CFBContainer &paContainer,
                                                const SFBInterfaceSpec &paInterfaceSpec,
-                                               const CStringDictionary::TStringId paInstanceNameId) :
+                                               const forte::core::StringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId) {
   mFile.rdbuf()->pubsetbuf(nullptr, 0); // disable buffer to avoid latency
   STATUS() = scmNotInitialised;

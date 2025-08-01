@@ -12,70 +12,12 @@
 
 #include "RegisterServiceOpcUa.h"
 
-USE_STRING_ID(ANYToJSON);
-USE_STRING_ID(APPEND_STRING_3);
-USE_STRING_ID(CLIENT_1_0);
-USE_STRING_ID(CNF);
-USE_STRING_ID(CreateRegisterID);
-USE_STRING_ID(CreateUnRegisterID);
-USE_STRING_ID(CU);
-USE_STRING_ID(CUO);
-USE_STRING_ID(doneRegister);
-USE_STRING_ID(doneUnregister);
-USE_STRING_ID(DT);
-USE_STRING_ID(E_CTU);
-USE_STRING_ID(E_CTU_1);
-USE_STRING_ID(E_DELAY);
-USE_STRING_ID(E_DELAY_1);
-USE_STRING_ID(EI);
-USE_STRING_ID(endpoint);
-USE_STRING_ID(EO);
-USE_STRING_ID(EO0);
-USE_STRING_ID(EO1);
-USE_STRING_ID(E_PERMIT);
-USE_STRING_ID(E_PERMIT_1);
-USE_STRING_ID(E_SR);
-USE_STRING_ID(E_SWITCH);
-USE_STRING_ID(E_SWITCH_1);
-USE_STRING_ID(E_SWITCH_1_1);
-USE_STRING_ID(E_SWITCH_2);
-USE_STRING_ID(F_STRING_TO_WSTRING);
-USE_STRING_ID(F_STRING_TO_WSTRING_1);
-USE_STRING_ID(G);
-USE_STRING_ID(ID);
-USE_STRING_ID(IN);
-USE_STRING_ID(IN_1);
-USE_STRING_ID(IN_2);
-USE_STRING_ID(IN_3);
-USE_STRING_ID(INIT);
-USE_STRING_ID(InitFlagReg);
-USE_STRING_ID(InitFlagUnReg);
-USE_STRING_ID(INITO);
-USE_STRING_ID(input);
-USE_STRING_ID(OUT);
-USE_STRING_ID(output);
-USE_STRING_ID(PERMIT);
-USE_STRING_ID(PV);
-USE_STRING_ID(Q);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(R);
-USE_STRING_ID(Register);
-USE_STRING_ID(registerService);
-USE_STRING_ID(RegisterServiceAdp);
-USE_STRING_ID(RegisterServiceOpcUa);
-USE_STRING_ID(REQ);
-USE_STRING_ID(S);
-USE_STRING_ID(SD_1);
-USE_STRING_ID(serviceRegistryEntry);
-USE_STRING_ID(START);
-USE_STRING_ID(Unregister);
-USE_STRING_ID(unregisterService);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_RegisterServiceOpcUa, STRID(RegisterServiceOpcUa))
+DEFINE_FIRMWARE_FB(FORTE_RegisterServiceOpcUa, "RegisterServiceOpcUa"_STRID)
 
 namespace {
-  const auto cSocketNameIds = std::array{STRID(registerService)};
+  const auto cSocketNameIds = std::array{"registerService"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = {},
@@ -91,144 +33,144 @@ namespace {
 } // namespace
 
 const SCFB_FBInstanceData FORTE_RegisterServiceOpcUa::scmInternalFBs[] = {
-    {STRID(InitFlagReg), STRID(E_SR)},
-    {STRID(E_PERMIT), STRID(E_PERMIT)},
-    {STRID(CreateRegisterID), STRID(APPEND_STRING_3)},
-    {STRID(F_STRING_TO_WSTRING), STRID(F_STRING_TO_WSTRING)},
-    {STRID(E_PERMIT_1), STRID(E_PERMIT)},
-    {STRID(InitFlagUnReg), STRID(E_SR)},
-    {STRID(CreateUnRegisterID), STRID(APPEND_STRING_3)},
-    {STRID(F_STRING_TO_WSTRING_1), STRID(F_STRING_TO_WSTRING)},
-    {STRID(ANYToJSON), STRID(ANYToJSON)},
-    {STRID(Register), STRID(CLIENT_1_0)},
-    {STRID(Unregister), STRID(CLIENT_1_0)},
-    {STRID(E_SWITCH), STRID(E_SWITCH)},
-    {STRID(E_SWITCH_1), STRID(E_SWITCH)},
-    {STRID(E_DELAY), STRID(E_DELAY)},
-    {STRID(E_CTU), STRID(E_CTU)},
-    {STRID(E_SWITCH_1_1), STRID(E_SWITCH)},
-    {STRID(E_SWITCH_2), STRID(E_SWITCH)},
-    {STRID(E_DELAY_1), STRID(E_DELAY)},
-    {STRID(E_CTU_1), STRID(E_CTU)},
+    {"InitFlagReg"_STRID, "E_SR"_STRID},
+    {"E_PERMIT"_STRID, "E_PERMIT"_STRID},
+    {"CreateRegisterID"_STRID, "APPEND_STRING_3"_STRID},
+    {"F_STRING_TO_WSTRING"_STRID, "F_STRING_TO_WSTRING"_STRID},
+    {"E_PERMIT_1"_STRID, "E_PERMIT"_STRID},
+    {"InitFlagUnReg"_STRID, "E_SR"_STRID},
+    {"CreateUnRegisterID"_STRID, "APPEND_STRING_3"_STRID},
+    {"F_STRING_TO_WSTRING_1"_STRID, "F_STRING_TO_WSTRING"_STRID},
+    {"ANYToJSON"_STRID, "ANYToJSON"_STRID},
+    {"Register"_STRID, "CLIENT_1_0"_STRID},
+    {"Unregister"_STRID, "CLIENT_1_0"_STRID},
+    {"E_SWITCH"_STRID, "E_SWITCH"_STRID},
+    {"E_SWITCH_1"_STRID, "E_SWITCH"_STRID},
+    {"E_DELAY"_STRID, "E_DELAY"_STRID},
+    {"E_CTU"_STRID, "E_CTU"_STRID},
+    {"E_SWITCH_1_1"_STRID, "E_SWITCH"_STRID},
+    {"E_SWITCH_2"_STRID, "E_SWITCH"_STRID},
+    {"E_DELAY_1"_STRID, "E_DELAY"_STRID},
+    {"E_CTU_1"_STRID, "E_CTU"_STRID},
 };
 
 const SCFB_FBParameter FORTE_RegisterServiceOpcUa::scmParamters[] = {
-    {2, STRID(IN_1), "STRING#opc_ua[CALL_METHOD; "},
-    {2, STRID(IN_3), "STRING##; /Objects/2:ServiceRegistry/2:register]"},
-    {6, STRID(IN_1), "STRING#opc_ua[CALL_METHOD; "},
-    {6, STRID(IN_3), "STRING##; /Objects/2:ServiceRegistry/2:remove]"},
-    {13, STRID(DT), "T#250ms"},
-    {14, STRID(PV), "UINT#3"},
-    {17, STRID(DT), "T#250ms"},
-    {18, STRID(PV), "UINT#3"},
+    {2, "IN_1"_STRID, "STRING#opc_ua[CALL_METHOD; "},
+    {2, "IN_3"_STRID, "STRING##; /Objects/2:ServiceRegistry/2:register]"},
+    {6, "IN_1"_STRID, "STRING#opc_ua[CALL_METHOD; "},
+    {6, "IN_3"_STRID, "STRING##; /Objects/2:ServiceRegistry/2:remove]"},
+    {13, "DT"_STRID, "T#250ms"},
+    {14, "PV"_STRID, "UINT#3"},
+    {17, "DT"_STRID, "T#250ms"},
+    {18, "PV"_STRID, "UINT#3"},
 };
 
 const SCFB_FBConnectionData FORTE_RegisterServiceOpcUa::auto cEventConnections = std::to_array<SCFB_FBConnectionData>{
-    {STRID(CreateRegisterID), STRID(CNF)), 2,
-     STRID(F_STRING_TO_WSTRING), STRID(REQ)), 3},
-    {STRID(F_STRING_TO_WSTRING), STRID(CNF)), 3,
-     STRID(InitFlagReg), STRID(S)), 0},
-    {STRID(CreateUnRegisterID), STRID(CNF)), 6,
-     STRID(F_STRING_TO_WSTRING_1), STRID(REQ)), 7},
-    {STRID(F_STRING_TO_WSTRING_1), STRID(CNF)), 7,
-     STRID(InitFlagUnReg), STRID(S)), 5},
-    {STRID(registerService), STRID(registerService)),
-     CCompositeFB::scmAdapterMarker | 0, STRID(CreateRegisterID), STRID(REQ)), 2},
-    {STRID(registerService), STRID(unregisterService)),
-     CCompositeFB::scmAdapterMarker | 0, STRID(CreateUnRegisterID), STRID(REQ)), 6},
-    {STRID(InitFlagReg), STRID(EO)), 0,
-     STRID(Register), STRID(INIT)), 9},
-    {STRID(E_PERMIT), STRID(EO)), 1,
-     STRID(Register), STRID(REQ)), 9},
-    {STRID(Register), STRID(INITO)), 9,
-     STRID(E_PERMIT), STRID(EI)), 1},
-    {STRID(InitFlagUnReg), STRID(EO)), 5,
-     STRID(Unregister), STRID(INIT)), 10},
-    {STRID(E_PERMIT_1), STRID(EO)), 4,
-     STRID(Unregister), STRID(REQ)), 10},
-    {STRID(Unregister), STRID(INITO)), 10,
-     STRID(E_PERMIT_1), STRID(EI)), 4},
-    {STRID(E_CTU), STRID(CUO)), 14,
-     STRID(E_SWITCH_1), STRID(EI)), 12},
-    {STRID(E_SWITCH_1), STRID(EO0)), 12,
-     STRID(E_DELAY), STRID(START)), 13},
-    {STRID(E_SWITCH), STRID(EO0)), 11,
-     STRID(E_CTU), STRID(CU)), 14},
-    {STRID(E_SWITCH), STRID(EO1)), 11,
-     STRID(InitFlagReg), STRID(R)), 0},
-    {STRID(Register), STRID(CNF)), 9,
-     STRID(E_SWITCH), STRID(EI)), 11},
-    {STRID(E_DELAY), STRID(EO)), 13,
-     STRID(Register), STRID(REQ)), 9},
-    {STRID(E_SWITCH_1_1), STRID(EO0)), 15,
-     STRID(E_DELAY_1), STRID(START)), 17},
-    {STRID(E_CTU_1), STRID(CUO)), 18,
-     STRID(E_SWITCH_1_1), STRID(EI)), 15},
-    {STRID(E_SWITCH_2), STRID(EO0)), 16,
-     STRID(E_CTU_1), STRID(CU)), 18},
-    {STRID(E_SWITCH_2), STRID(EO1)), 16,
-     STRID(InitFlagUnReg), STRID(R)), 5},
-    {STRID(Unregister), STRID(CNF)), 10,
-     STRID(E_SWITCH_2), STRID(EI)), 16},
-    {STRID(E_DELAY_1), STRID(EO)), 17,
-     STRID(Unregister), STRID(REQ)), 10},
-    {STRID(E_SWITCH_1_1), STRID(EO1)), 15,
-     STRID(InitFlagUnReg), STRID(R)), 5},
-    {STRID(E_SWITCH_1), STRID(EO1)), 12,
-     STRID(InitFlagReg), STRID(R)), 0},
+    {"CreateRegisterID"_STRID, "CNF"_STRID), 2,
+     "F_STRING_TO_WSTRING"_STRID, "REQ"_STRID), 3},
+    {"F_STRING_TO_WSTRING"_STRID, "CNF"_STRID), 3,
+     "InitFlagReg"_STRID, "S"_STRID), 0},
+    {"CreateUnRegisterID"_STRID, "CNF"_STRID), 6,
+     "F_STRING_TO_WSTRING_1"_STRID, "REQ"_STRID), 7},
+    {"F_STRING_TO_WSTRING_1"_STRID, "CNF"_STRID), 7,
+     "InitFlagUnReg"_STRID, "S"_STRID), 5},
+    {"registerService"_STRID, "registerService"_STRID),
+     CCompositeFB::scmAdapterMarker | 0, "CreateRegisterID"_STRID, "REQ"_STRID), 2},
+    {"registerService"_STRID, "unregisterService"_STRID),
+     CCompositeFB::scmAdapterMarker | 0, "CreateUnRegisterID"_STRID, "REQ"_STRID), 6},
+    {"InitFlagReg"_STRID, "EO"_STRID), 0,
+     "Register"_STRID, "INIT"_STRID), 9},
+    {"E_PERMIT"_STRID, "EO"_STRID), 1,
+     "Register"_STRID, "REQ"_STRID), 9},
+    {"Register"_STRID, "INITO"_STRID), 9,
+     "E_PERMIT"_STRID, "EI"_STRID), 1},
+    {"InitFlagUnReg"_STRID, "EO"_STRID), 5,
+     "Unregister"_STRID, "INIT"_STRID), 10},
+    {"E_PERMIT_1"_STRID, "EO"_STRID), 4,
+     "Unregister"_STRID, "REQ"_STRID), 10},
+    {"Unregister"_STRID, "INITO"_STRID), 10,
+     "E_PERMIT_1"_STRID, "EI"_STRID), 4},
+    {"E_CTU"_STRID, "CUO"_STRID), 14,
+     "E_SWITCH_1"_STRID, "EI"_STRID), 12},
+    {"E_SWITCH_1"_STRID, "EO0"_STRID), 12,
+     "E_DELAY"_STRID, "START"_STRID), 13},
+    {"E_SWITCH"_STRID, "EO0"_STRID), 11,
+     "E_CTU"_STRID, "CU"_STRID), 14},
+    {"E_SWITCH"_STRID, "EO1"_STRID), 11,
+     "InitFlagReg"_STRID, "R"_STRID), 0},
+    {"Register"_STRID, "CNF"_STRID), 9,
+     "E_SWITCH"_STRID, "EI"_STRID), 11},
+    {"E_DELAY"_STRID, "EO"_STRID), 13,
+     "Register"_STRID, "REQ"_STRID), 9},
+    {"E_SWITCH_1_1"_STRID, "EO0"_STRID), 15,
+     "E_DELAY_1"_STRID, "START"_STRID), 17},
+    {"E_CTU_1"_STRID, "CUO"_STRID), 18,
+     "E_SWITCH_1_1"_STRID, "EI"_STRID), 15},
+    {"E_SWITCH_2"_STRID, "EO0"_STRID), 16,
+     "E_CTU_1"_STRID, "CU"_STRID), 18},
+    {"E_SWITCH_2"_STRID, "EO1"_STRID), 16,
+     "InitFlagUnReg"_STRID, "R"_STRID), 5},
+    {"Unregister"_STRID, "CNF"_STRID), 10,
+     "E_SWITCH_2"_STRID, "EI"_STRID), 16},
+    {"E_DELAY_1"_STRID, "EO"_STRID), 17,
+     "Unregister"_STRID, "REQ"_STRID), 10},
+    {"E_SWITCH_1_1"_STRID, "EO1"_STRID), 15,
+     "InitFlagUnReg"_STRID, "R"_STRID), 5},
+    {"E_SWITCH_1"_STRID, "EO1"_STRID), 12,
+     "InitFlagReg"_STRID, "R"_STRID), 0},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_RegisterServiceOpcUa::scmFannedOutEventConnections[] = {
-    {1, STRID(ANYToJSON), STRID(REQ)), 8},
-    {3, STRID(ANYToJSON), STRID(REQ)), 8},
-    {15, STRID(registerService), STRID(doneRegister)),
+    {1, "ANYToJSON"_STRID, "REQ"_STRID), 8},
+    {3, "ANYToJSON"_STRID, "REQ"_STRID), 8},
+    {15, "registerService"_STRID, "doneRegister"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
-    {15, STRID(E_CTU), STRID(R)), 14},
-    {21, STRID(registerService), STRID(doneUnregister)),
+    {15, "E_CTU"_STRID, "R"_STRID), 14},
+    {21, "registerService"_STRID, "doneUnregister"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
-    {21, STRID(E_CTU_1), STRID(R)), 18},
-    {24, STRID(registerService), STRID(doneUnregister)),
+    {21, "E_CTU_1"_STRID, "R"_STRID), 18},
+    {24, "registerService"_STRID, "doneUnregister"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
-    {24, STRID(E_CTU_1), STRID(R)), 18},
-    {25, STRID(registerService), STRID(doneRegister)),
+    {24, "E_CTU_1"_STRID, "R"_STRID), 18},
+    {25, "registerService"_STRID, "doneRegister"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
-    {25, STRID(E_CTU), STRID(R)), 14},
+    {25, "E_CTU"_STRID, "R"_STRID), 14},
 };
 
 const SCFB_FBConnectionData FORTE_RegisterServiceOpcUaauto cDataConnections = std::to_array<SCFB_FBConnectionData>{
-    {STRID(InitFlagReg), STRID(Q)), 0,
-     STRID(E_PERMIT), STRID(PERMIT)), 1},
-    {STRID(CreateRegisterID), STRID(OUT)), 2,
-     STRID(F_STRING_TO_WSTRING), STRID(IN)), 3},
-    {STRID(CreateUnRegisterID), STRID(OUT)), 6,
-     STRID(F_STRING_TO_WSTRING_1), STRID(IN)), 7},
-    {STRID(InitFlagUnReg), STRID(Q)), 5,
-     STRID(E_PERMIT_1), STRID(PERMIT)), 4},
-    {STRID(registerService), STRID(serviceRegistryEntry)),
-     CCompositeFB::scmAdapterMarker | 0, STRID(ANYToJSON), STRID(input)), 8},
-    {STRID(registerService), STRID(endpoint)), CCompositeFB::scmAdapterMarker | 0,
-     STRID(CreateRegisterID), STRID(IN_2)), 2},
-    {STRID(F_STRING_TO_WSTRING), STRID(OUT)), 3,
-     STRID(Register), STRID(ID)), 9},
-    {STRID(ANYToJSON), STRID(output)), 8,
-     STRID(Register), STRID(SD_1)), 9},
-    {STRID(F_STRING_TO_WSTRING_1), STRID(OUT)), 7,
-     STRID(Unregister), STRID(ID)), 10},
-    {STRID(E_CTU), STRID(Q)), 14,
-     STRID(E_SWITCH_1), STRID(G)), 12},
-    {STRID(Register), STRID(QO)), 9,
-     STRID(E_SWITCH), STRID(G)), 11},
-    {STRID(E_CTU_1), STRID(Q)), 18,
-     STRID(E_SWITCH_1_1), STRID(G)), 15},
-    {STRID(Unregister), STRID(QO)), 10,
-     STRID(E_SWITCH_2), STRID(G)), 16},
+    {"InitFlagReg"_STRID, "Q"_STRID), 0,
+     "E_PERMIT"_STRID, "PERMIT"_STRID), 1},
+    {"CreateRegisterID"_STRID, "OUT"_STRID), 2,
+     "F_STRING_TO_WSTRING"_STRID, "IN"_STRID), 3},
+    {"CreateUnRegisterID"_STRID, "OUT"_STRID), 6,
+     "F_STRING_TO_WSTRING_1"_STRID, "IN"_STRID), 7},
+    {"InitFlagUnReg"_STRID, "Q"_STRID), 5,
+     "E_PERMIT_1"_STRID, "PERMIT"_STRID), 4},
+    {"registerService"_STRID, "serviceRegistryEntry"_STRID),
+     CCompositeFB::scmAdapterMarker | 0, "ANYToJSON"_STRID, "input"_STRID), 8},
+    {"registerService"_STRID, "endpoint"_STRID), CCompositeFB::scmAdapterMarker | 0,
+     "CreateRegisterID"_STRID, "IN_2"_STRID), 2},
+    {"F_STRING_TO_WSTRING"_STRID, "OUT"_STRID), 3,
+     "Register"_STRID, "ID"_STRID), 9},
+    {"ANYToJSON"_STRID, "output"_STRID), 8,
+     "Register"_STRID, "SD_1"_STRID), 9},
+    {"F_STRING_TO_WSTRING_1"_STRID, "OUT"_STRID), 7,
+     "Unregister"_STRID, "ID"_STRID), 10},
+    {"E_CTU"_STRID, "Q"_STRID), 14,
+     "E_SWITCH_1"_STRID, "G"_STRID), 12},
+    {"Register"_STRID, "QO"_STRID), 9,
+     "E_SWITCH"_STRID, "G"_STRID), 11},
+    {"E_CTU_1"_STRID, "Q"_STRID), 18,
+     "E_SWITCH_1_1"_STRID, "G"_STRID), 15},
+    {"Unregister"_STRID, "QO"_STRID), 10,
+     "E_SWITCH_2"_STRID, "G"_STRID), 16},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_RegisterServiceOpcUa::scmFannedOutDataConnections[] = {
-    {0, STRID(Register), STRID(QI)), 9},
-    {3, STRID(Unregister), STRID(QI)), 10},
-    {5, STRID(CreateUnRegisterID), STRID(IN_2)), 6},
-    {7, STRID(Unregister), STRID(SD_1)), 10},
+    {0, "Register"_STRID, "QI"_STRID), 9},
+    {3, "Unregister"_STRID, "QI"_STRID), 10},
+    {5, "CreateUnRegisterID"_STRID, "IN_2"_STRID), 6},
+    {7, "Unregister"_STRID, "SD_1"_STRID), 10},
 };
 
 const SCFB_FBNData FORTE_RegisterServiceOpcUa::scmFBNData = {

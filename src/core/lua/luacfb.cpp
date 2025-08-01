@@ -16,7 +16,7 @@
 
 #include "core/lua/luacfb.h"
 
-CLuaCFB::CLuaCFB(CStringDictionary::TStringId paInstanceNameId,
+CLuaCFB::CLuaCFB(forte::core::StringId paInstanceNameId,
                  const CLuaCFBTypeEntry *paTypeEntry,
                  SCFB_FBNData &paFbnData,
                  forte::core::CFBContainer &paContainer) :
@@ -33,8 +33,7 @@ bool CLuaCFB::createInternalFBs() {
       const SCFB_FBInstanceData &cfbInstanceData(fbnData.mFBInstances[i]);
       if (createFB(cfbInstanceData.mFBInstanceNameId, cfbInstanceData.mFBTypeNameId) != EMGMResponse::Ready) {
         DEVLOG_ERROR("Cannot create internal FB (name: %s, type: %s) in CFB (type: %s)!\n",
-                     CStringDictionary::get(cfbInstanceData.mFBInstanceNameId),
-                     CStringDictionary::get(cfbInstanceData.mFBTypeNameId), getFBTypeName());
+                     cfbInstanceData.mFBInstanceNameId.data(), cfbInstanceData.mFBTypeNameId.data(), getFBTypeName());
         return false;
       }
     }

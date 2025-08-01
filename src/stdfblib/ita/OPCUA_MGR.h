@@ -750,13 +750,13 @@ class OPCUA_MGR {
     void clearMGMCommand();
 
     void setMGMCommand(EMGMCommandType paCMD,
-                       CStringDictionary::TStringId paDestination,
+                       forte::core::StringId paDestination,
                        const char *paAdditionalParams,
                        const char *paFirstParam,
                        const char *paSecondParam);
 
     void setMGMCommand(EMGMCommandType paCMD,
-                       CStringDictionary::TStringId paDestination,
+                       forte::core::StringId paDestination,
                        const char *paAdditionalParams,
                        std::vector<std::string> &paFirstParam,
                        std::vector<std::string> paSecondParam = std::vector<std::string>());

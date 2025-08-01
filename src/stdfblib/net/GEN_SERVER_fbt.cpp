@@ -13,10 +13,10 @@
  *******************************************************************************/
 #include "GEN_SERVER_fbt.h"
 
-USE_STRING_ID(GEN_SERVER)
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_SERVER, STRID(GEN_SERVER))
+DEFINE_GENERIC_FIRMWARE_FB(GEN_SERVER, "GEN_SERVER"_STRID)
 
-GEN_SERVER::GEN_SERVER(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_SERVER::GEN_SERVER(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     forte::com_infra::CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Server) {
 }

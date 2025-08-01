@@ -12,40 +12,26 @@
 
 #include "fileReader_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(FILE_NAME);
-USE_STRING_ID(fileReader);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(REQ);
-USE_STRING_ID(S1);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include <sstream>
 #include <ostream>
 #include <iostream>
 
-DEFINE_FIRMWARE_FB(fileReader, STRID(fileReader))
+DEFINE_FIRMWARE_FB(fileReader, "fileReader"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(FILE_NAME)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "FILE_NAME"_STRID};
   
   
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS), STRID(S1)};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID, "S1"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -89,7 +75,7 @@ void fileReader::executeEvent(TEventID paEIID,
   }
 }
 
-fileReader::fileReader(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+fileReader::fileReader(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId) {
   mFile.rdbuf()->pubsetbuf(nullptr, 0); // disable buffer to avoid latency
 }

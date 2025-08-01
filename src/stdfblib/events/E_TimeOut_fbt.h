@@ -39,7 +39,7 @@ class FORTE_E_TimeOut final : public CEventSourceFB {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_E_TimeOut(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_TimeOut(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     bool initialize() override;
 
     forte::CSocketPin<FORTE_ATimeOut_Socket> var_TimeOutSocket;

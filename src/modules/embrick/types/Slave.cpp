@@ -15,8 +15,7 @@
 #include "Slave.h"
 #include "../handler/bus.h"
 
-USE_STRING_ID(BusAdapterIn);
-USE_STRING_ID(BusAdapterOut);
+using namespace forte::core::literals;
 
 const CIEC_WSTRING EmbrickSlave::scmSlow("Slow");
 const CIEC_WSTRING EmbrickSlave::scmInterrupted("Interrupted");
@@ -28,11 +27,11 @@ EmbrickSlave::EmbrickSlave(const TForteUInt8 *const paSlaveConfigurationIO,
                            int paType,
                            forte::core::CFBContainer &paContainer,
                            const SFBInterfaceSpec &paInterfaceSpec,
-                           const CStringDictionary::TStringId paInstanceNameId) :
+                           const forte::core::StringId paInstanceNameId) :
     forte::core::io::IOConfigFBMultiSlave(
         paSlaveConfigurationIO, paSlaveConfigurationIO_num, paType, paContainer, paInterfaceSpec, paInstanceNameId),
-    var_BusAdapterIn(STRID(BusAdapterIn), *this, 0),
-    var_BusAdapterOut(STRID(BusAdapterOut), *this, 0),
+    var_BusAdapterIn("BusAdapterIn"_STRID, *this, 0),
+    var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0),
     mSlave(nullptr) {
 }
 

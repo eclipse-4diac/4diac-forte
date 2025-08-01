@@ -43,7 +43,7 @@ class FORTE_UINT2UINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_UINT2UINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_UINT2UINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_UINT var_IN;
 

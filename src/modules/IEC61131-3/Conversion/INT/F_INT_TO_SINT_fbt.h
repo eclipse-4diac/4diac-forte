@@ -44,7 +44,7 @@ class FORTE_F_INT_TO_SINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_INT_TO_SINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_INT_TO_SINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_INT var_IN;
 

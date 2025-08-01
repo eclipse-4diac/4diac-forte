@@ -14,13 +14,13 @@
  *******************************************************************************/
 #include "E_DELAY_fbt.h"
 
-USE_STRING_ID(E_DELAY);
+using namespace forte::core::literals;
 
 #include "arch/timerha.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_DELAY, STRID(E_DELAY))
+DEFINE_FIRMWARE_FB(FORTE_E_DELAY, "E_DELAY"_STRID)
 
-FORTE_E_DELAY::FORTE_E_DELAY(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_DELAY::FORTE_E_DELAY(const forte::core::StringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
     CTimedFB(paInstanceNameId, paContainer) {
 }

@@ -19,21 +19,7 @@
 
 #include "Esp32EthernetKitIO_fbt.h"
 
-USE_STRING_ID(ADC_CH_0);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Esp32EthernetKitIO);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(LED0);
-USE_STRING_ID(PWM);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
-USE_STRING_ID(SW0);
-USE_STRING_ID(TIME);
-USE_STRING_ID(UpdateInterval);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_time.h"
 #include "core/iec61131_functions.h"
@@ -48,16 +34,16 @@ USE_STRING_ID(UpdateInterval);
 #include "handler/IODeviceController.h"
 #pragma endregion includes
 
-DEFINE_FIRMWARE_FB(FORTE_Esp32EthernetKitIO, STRID(Esp32EthernetKitIO))
+DEFINE_FIRMWARE_FB(FORTE_Esp32EthernetKitIO, "Esp32EthernetKitIO"_STRID)
 
 namespace {
   const auto cDataInputNames =
-      std::array{STRID(QI), STRID(LED0), STRID(SW0), STRID(ADC_CH_0), STRID(PWM), STRID(UpdateInterval)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(INIT)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit)};
-  const auto cEventOutputNames = std::array{STRID(INITO)};
-  const auto cEventOutputTypeIds = std::array{STRID(EInit)};
+      std::array{"QI"_STRID, "LED0"_STRID, "SW0"_STRID, "ADC_CH_0"_STRID, "PWM"_STRID, "UpdateInterval"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID};
+  const auto cEventOutputTypeIds = std::array{"EInit"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -71,7 +57,7 @@ namespace {
   };
 } // namespace
 
-FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const forte::core::StringId paInstanceNameId,
                                                    forte::core::CFBContainer &paContainer) :
 #pragma region base class spec
     FORTE_ZephyrIOBase(paContainer, cFBInterfaceSpec, paInstanceNameId),

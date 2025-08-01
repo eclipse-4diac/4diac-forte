@@ -32,7 +32,7 @@ namespace forte::core::io {
     public:
       CProcessInterfaceFB(forte::core::CFBContainer &paContainer,
                           const SFBInterfaceSpec &paInterfaceSpec,
-                          const CStringDictionary::TStringId paInstanceNameId);
+                          const forte::core::StringId paInstanceNameId);
       ~CProcessInterfaceFB() override;
 
       bool onChange() override;

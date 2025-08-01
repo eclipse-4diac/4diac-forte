@@ -45,7 +45,7 @@ class FORTE_PLCnextAXLSESC final : public PLCnextSlaveHandler {
     void initHandles() override;
 
   public:
-    FORTE_PLCnextAXLSESC(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_PLCnextAXLSESC(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
 

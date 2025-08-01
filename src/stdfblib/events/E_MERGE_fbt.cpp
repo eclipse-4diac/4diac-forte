@@ -13,11 +13,7 @@
 
 #include "E_MERGE_fbt.h"
 
-USE_STRING_ID(EI1);
-USE_STRING_ID(EI2);
-USE_STRING_ID(E_MERGE);
-USE_STRING_ID(EO);
-USE_STRING_ID(Event);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_bool.h"
 #include "core/iec61131_functions.h"
@@ -26,13 +22,13 @@ USE_STRING_ID(Event);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_MERGE, STRID(E_MERGE))
+DEFINE_FIRMWARE_FB(FORTE_E_MERGE, "E_MERGE"_STRID)
 
 namespace {
-  const auto cEventInputNames = std::array{STRID(EI1), STRID(EI2)};
-  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(EO)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"EI1"_STRID, "EI2"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"EO"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -45,7 +41,7 @@ namespace {
       .mPlugNames = {},
   };
 } // namespace
-FORTE_E_MERGE::FORTE_E_MERGE(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_MERGE::FORTE_E_MERGE(const forte::core::StringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO(*this, 0) {

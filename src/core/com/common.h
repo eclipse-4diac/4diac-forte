@@ -15,7 +15,7 @@
 
 #include <string_view>
 
-#include "core/stringdict.h"
+#include "core/stringid.h"
 
 #include <vector>
 
@@ -102,7 +102,7 @@ namespace forte::com {
   };
 
   struct ComChannelDescriptor {
-      CStringDictionary::TStringId mChannel{CStringDictionary::scmInvalidStringId};
+      forte::core::StringId mChannel{};
       std::string_view mConfigString;
   };
 

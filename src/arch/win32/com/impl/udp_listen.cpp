@@ -14,18 +14,18 @@
 #include "udp_listen.h"
 #include "net.h"
 
-#include "core/stringdict.h"
+#include "core/stringid.h"
 #include "core/com/factory.h"
 
 #include <ws2tcpip.h>
 
-USE_STRING_ID(udp_listen)
+using namespace forte::core::literals;
 
 using namespace forte::com;
 using namespace forte::com::impl;
 
 namespace {
-  [[maybe_unused]] ComChannelEntryImpl<ComBuffer, UDPListenChannel> entry(STRID(udp_listen));
+  [[maybe_unused]] ComChannelEntryImpl<ComBuffer, UDPListenChannel> entry("udp_listen"_STRID);
 }
 
 SOCKET UDPListenChannel::socket(const std::string_view paConfigString) {

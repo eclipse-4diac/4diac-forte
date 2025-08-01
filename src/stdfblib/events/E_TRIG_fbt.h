@@ -51,7 +51,7 @@ class FORTE_E_TRIG final : public CFunctionBlock {
     triggerEventsOfType(TEventTypeID paEventTypeId, CFunctionBlock *paFb, CEventChainExecutionThread *const paECET);
 
   public:
-    FORTE_E_TRIG(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_TRIG(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_STRING var_EVENTTYPE;
 

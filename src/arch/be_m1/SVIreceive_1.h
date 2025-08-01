@@ -46,7 +46,7 @@ class FORTE_SVIreceive_1 : public BE_SVIFB {
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_SVIreceive_1(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_SVIreceive_1(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
         ~FORTE_SVIreceive_1() override = default;
 };
 

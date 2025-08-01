@@ -48,7 +48,7 @@ class FORTE_RT_E_DELAY final : public CEventSourceFB {
     void setInitialValues() override;
 
   public:
-    FORTE_RT_E_DELAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_RT_E_DELAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 

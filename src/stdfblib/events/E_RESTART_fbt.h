@@ -37,7 +37,7 @@ class FORTE_E_RESTART final : public CEventSourceFB {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_E_RESTART(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_RESTART(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CEventConnection conn_COLD;
     CEventConnection conn_WARM;

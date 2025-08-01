@@ -63,7 +63,7 @@ class FORTE_IW final : public CProcessInterface {
     void setInitialValues() override;
 
   public:
-    FORTE_IW(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IW(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_STRING var_PARAMS;

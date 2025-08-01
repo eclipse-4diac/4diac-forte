@@ -11,44 +11,15 @@
  *******************************************************************************/
 #include "CFB_TEST.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CFB_TEST);
-USE_STRING_ID(CHANGED);
-USE_STRING_ID(CNF);
-USE_STRING_ID(E_DEMUX_2);
-USE_STRING_ID(EI);
-USE_STRING_ID(EI1);
-USE_STRING_ID(EI2);
-USE_STRING_ID(E_MUX_2);
-USE_STRING_ID(EO);
-USE_STRING_ID(EO0);
-USE_STRING_ID(EO1);
-USE_STRING_ID(EO2);
-USE_STRING_ID(E_PERMIT);
-USE_STRING_ID(E_SR);
-USE_STRING_ID(E_SWITCH);
-USE_STRING_ID(Event);
-USE_STRING_ID(G);
-USE_STRING_ID(K);
-USE_STRING_ID(PERMIT);
-USE_STRING_ID(PERMIT_OP);
-USE_STRING_ID(Q);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(R);
-USE_STRING_ID(RESET);
-USE_STRING_ID(RESET_CHANGED);
-USE_STRING_ID(S);
-USE_STRING_ID(SET);
-USE_STRING_ID(SET_CHANGED);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_CFB_TEST, STRID(CFB_TEST))
+DEFINE_FIRMWARE_FB(FORTE_CFB_TEST, "CFB_TEST"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI)};
-  const auto cDataOutputNames = std::array{STRID(QO)};
-  const auto cEventInputNames = std::array{STRID(SET), STRID(RESET)};
-  const auto cEventOutputNames = std::array{STRID(CNF), STRID(CHANGED)};
+  const auto cDataInputNames = std::array{"QI"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID};
+  const auto cEventInputNames = std::array{"SET"_STRID, "RESET"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID, "CHANGED"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -62,26 +33,26 @@ namespace {
   };
 
   const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
-      {CStringDictionary::scmInvalidStringId, STRID(SET), STRID(E_MUX_2), STRID(EI1)},
-      {CStringDictionary::scmInvalidStringId, STRID(RESET), STRID(E_MUX_2), STRID(EI2)},
-      {STRID(E_MUX_2), STRID(EO), STRID(PERMIT_OP), STRID(EI)},
-      {STRID(SET_CHANGED), STRID(EO1), CStringDictionary::scmInvalidStringId, STRID(CNF)},
-      {STRID(SET_CHANGED), STRID(EO0), STRID(E_SR), STRID(S)},
-      {STRID(RESET_CHANGED), STRID(EO0), CStringDictionary::scmInvalidStringId, STRID(CNF)},
-      {STRID(RESET_CHANGED), STRID(EO1), STRID(E_SR), STRID(R)},
-      {STRID(PERMIT_OP), STRID(EO), STRID(E_DEMUX_2), STRID(EI)},
-      {STRID(E_DEMUX_2), STRID(EO1), STRID(SET_CHANGED), STRID(EI)},
-      {STRID(E_DEMUX_2), STRID(EO2), STRID(RESET_CHANGED), STRID(EI)},
-      {STRID(E_SR), STRID(EO), CStringDictionary::scmInvalidStringId, STRID(CNF)},
-      {STRID(E_SR), STRID(EO), CStringDictionary::scmInvalidStringId, STRID(CHANGED)},
+      {{}, "SET"_STRID, "E_MUX_2"_STRID, "EI1"_STRID},
+      {{}, "RESET"_STRID, "E_MUX_2"_STRID, "EI2"_STRID},
+      {"E_MUX_2"_STRID, "EO"_STRID, "PERMIT_OP"_STRID, "EI"_STRID},
+      {"SET_CHANGED"_STRID, "EO1"_STRID, {}, "CNF"_STRID},
+      {"SET_CHANGED"_STRID, "EO0"_STRID, "E_SR"_STRID, "S"_STRID},
+      {"RESET_CHANGED"_STRID, "EO0"_STRID, {}, "CNF"_STRID},
+      {"RESET_CHANGED"_STRID, "EO1"_STRID, "E_SR"_STRID, "R"_STRID},
+      {"PERMIT_OP"_STRID, "EO"_STRID, "E_DEMUX_2"_STRID, "EI"_STRID},
+      {"E_DEMUX_2"_STRID, "EO1"_STRID, "SET_CHANGED"_STRID, "EI"_STRID},
+      {"E_DEMUX_2"_STRID, "EO2"_STRID, "RESET_CHANGED"_STRID, "EI"_STRID},
+      {"E_SR"_STRID, "EO"_STRID, {}, "CNF"_STRID},
+      {"E_SR"_STRID, "EO"_STRID, {}, "CHANGED"_STRID},
   });
 
   const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
-      {CStringDictionary::scmInvalidStringId, STRID(QI), STRID(PERMIT_OP), STRID(PERMIT)},
-      {STRID(E_SR), STRID(Q), CStringDictionary::scmInvalidStringId, STRID(QO)},
-      {STRID(E_SR), STRID(Q), STRID(SET_CHANGED), STRID(G)},
-      {STRID(E_SR), STRID(Q), STRID(RESET_CHANGED), STRID(G)},
-      {STRID(E_MUX_2), STRID(K), STRID(E_DEMUX_2), STRID(K)},
+      {{}, "QI"_STRID, "PERMIT_OP"_STRID, "PERMIT"_STRID},
+      {"E_SR"_STRID, "Q"_STRID, {}, "QO"_STRID},
+      {"E_SR"_STRID, "Q"_STRID, "SET_CHANGED"_STRID, "G"_STRID},
+      {"E_SR"_STRID, "Q"_STRID, "RESET_CHANGED"_STRID, "G"_STRID},
+      {"E_MUX_2"_STRID, "K"_STRID, "E_DEMUX_2"_STRID, "K"_STRID},
   });
 
   const SCFB_FBNData cFBNData = {
@@ -91,15 +62,14 @@ namespace {
   };
 } // namespace
 
-FORTE_CFB_TEST::FORTE_CFB_TEST(const CStringDictionary::TStringId paInstanceNameId,
-                               forte::core::CFBContainer &paContainer) :
+FORTE_CFB_TEST::FORTE_CFB_TEST(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
-    fb_PERMIT_OP(STRID(PERMIT_OP), *this),
-    fb_E_SR(STRID(E_SR), *this),
-    fb_SET_CHANGED(STRID(SET_CHANGED), *this),
-    fb_E_DEMUX_2(STRID(E_DEMUX_2), "E_DEMUX_2", *this),
-    fb_E_MUX_2(STRID(E_MUX_2), "E_MUX_2", *this),
-    fb_RESET_CHANGED(STRID(RESET_CHANGED), *this),
+    fb_PERMIT_OP("PERMIT_OP"_STRID, *this),
+    fb_E_SR("E_SR"_STRID, *this),
+    fb_SET_CHANGED("SET_CHANGED"_STRID, *this),
+    fb_E_DEMUX_2("E_DEMUX_2"_STRID, "E_DEMUX_2", *this),
+    fb_E_MUX_2("E_MUX_2"_STRID, "E_MUX_2", *this),
+    fb_RESET_CHANGED("RESET_CHANGED"_STRID, *this),
     conn_CNF(*this, 0),
     conn_CHANGED(*this, 1),
     conn_QI(nullptr),

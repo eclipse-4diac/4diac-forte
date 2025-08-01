@@ -25,23 +25,7 @@
 #include "core/ecet.h"
 #include "core/trace/barectf_platform_forte.h"
 
-USE_STRING_ID(COLD)
-USE_STRING_ID(Counter)
-USE_STRING_ID(CU)
-USE_STRING_ID(CUO)
-USE_STRING_ID(E_CTU)
-USE_STRING_ID(E_SWITCH)
-USE_STRING_ID(EI)
-USE_STRING_ID(EMB_RES)
-USE_STRING_ID(EO1)
-USE_STRING_ID(G)
-USE_STRING_ID(MyDevice)
-USE_STRING_ID(MyResource)
-USE_STRING_ID(PV)
-USE_STRING_ID(Q)
-USE_STRING_ID(R)
-USE_STRING_ID(START)
-USE_STRING_ID(Switch)
+using namespace forte::core::literals;
 
 // ******************************* //
 // * Helper Methods Declarations * //
@@ -57,8 +41,8 @@ namespace {
    *
    * @return the created device wuth the network of FB in it
    */
-  std::unique_ptr<CDevice> createExampleDevice(CStringDictionary::TStringId paResourceName,
-                                               CStringDictionary::TStringId paDeviceName = STRID(MyDevice));
+  std::unique_ptr<CDevice> createExampleDevice(forte::core::StringId paResourceName,
+                                               forte::core::StringId paDeviceName = "MyDevice"_STRID);
 } // namespace
 
 BOOST_AUTO_TEST_SUITE(tracer_test)
@@ -66,8 +50,8 @@ BOOST_AUTO_TEST_SUITE(tracer_test)
 BOOST_AUTO_TEST_CASE(sequential_events_test) {
   forte::tests::traces::prepareTraceTest("metadata");
 
-  auto resourceName = STRID(MyResource);
-  auto deviceName = STRID(MyDevice);
+  auto resourceName = "MyResource"_STRID;
+  auto deviceName = "MyDevice"_STRID;
 
   // The inner scope is to make sure the destructors of the resources are
   // called which flushes the output
@@ -198,71 +182,71 @@ BOOST_AUTO_TEST_SUITE_END()
 
 namespace {
 
-  std::unique_ptr<CDevice> createExampleDevice(CStringDictionary::TStringId paResourceName,
-                                               CStringDictionary::TStringId paDeviceName) {
+  std::unique_ptr<CDevice> createExampleDevice(forte::core::StringId paResourceName,
+                                               forte::core::StringId paDeviceName) {
     auto device = std::make_unique<CTesterDevice>(paDeviceName);
 
     BOOST_TEST_INFO("Create Resource");
-    BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName, STRID(EMB_RES)));
+    BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName, "EMB_RES"_STRID));
 
     BOOST_TEST_INFO("Start Device");
     BOOST_CHECK(device->initialize());
 
     auto resource = dynamic_cast<CResource *>(forte::trace::reader::utils::getFB(device.get(), paResourceName));
 
-    auto startInstanceName = STRID(START);
-    auto counterInstanceName = STRID(Counter);
-    auto switchInstanceName = STRID(Switch);
+    auto startInstanceName = "START"_STRID;
+    auto counterInstanceName = "Counter"_STRID;
+    auto switchInstanceName = "Switch"_STRID;
 
     BOOST_TEST_INFO("Create E_CTU");
-    BOOST_CHECK(EMGMResponse::Ready == resource->createFB(counterInstanceName, STRID(E_CTU)));
+    BOOST_CHECK(EMGMResponse::Ready == resource->createFB(counterInstanceName, "E_CTU"_STRID));
 
     BOOST_TEST_INFO("Create E_SWITCH");
-    BOOST_CHECK(EMGMResponse::Ready == resource->createFB(switchInstanceName, STRID(E_SWITCH)));
+    BOOST_CHECK(EMGMResponse::Ready == resource->createFB(switchInstanceName, "E_SWITCH"_STRID));
 
     forte::core::SManagementCMD command;
     command.mCMD = EMGMCommandType::CreateConnection;
-    command.mDestination = CStringDictionary::scmInvalidStringId;
+    command.mDestination = {};
 
     BOOST_TEST_INFO("Event connection: Start.COLD -> Counter.CU");
     command.mFirstParam.push_back(startInstanceName);
-    command.mFirstParam.push_back(STRID(COLD));
+    command.mFirstParam.push_back("COLD"_STRID);
     command.mSecondParam.push_back(counterInstanceName);
-    command.mSecondParam.push_back(STRID(CU));
+    command.mSecondParam.push_back("CU"_STRID);
 
     BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
 
     BOOST_TEST_INFO("Event connection: Counter.CUO -> Switch.EI");
     command.mFirstParam.clear();
     command.mFirstParam.push_back(counterInstanceName);
-    command.mFirstParam.push_back(STRID(CUO));
+    command.mFirstParam.push_back("CUO"_STRID);
     command.mSecondParam.clear();
     command.mSecondParam.push_back(switchInstanceName);
-    command.mSecondParam.push_back(STRID(EI));
+    command.mSecondParam.push_back("EI"_STRID);
     BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
 
     BOOST_TEST_INFO("Data connection: Counter.Q -> Switch.G ");
     command.mFirstParam.clear();
     command.mFirstParam.push_back(counterInstanceName);
-    command.mFirstParam.push_back(STRID(Q));
+    command.mFirstParam.push_back("Q"_STRID);
     command.mSecondParam.clear();
     command.mSecondParam.push_back(switchInstanceName);
-    command.mSecondParam.push_back(STRID(G));
+    command.mSecondParam.push_back("G"_STRID);
     BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
 
     BOOST_TEST_INFO(" Data constant value: Counter.PV = 1");
     command.mFirstParam.clear();
     command.mFirstParam.push_back(counterInstanceName);
-    command.mFirstParam.push_back(STRID(PV));
+    command.mFirstParam.push_back("PV"_STRID);
     BOOST_CHECK(EMGMResponse::Ready == resource->writeValue(command.mFirstParam, std::string("1"), false));
 
     BOOST_TEST_INFO("Event connection: Switch.EO1 -> Counter.R ");
     command.mFirstParam.clear();
     command.mFirstParam.push_back(switchInstanceName);
-    command.mFirstParam.push_back(STRID(EO1));
+    command.mFirstParam.push_back("EO1"_STRID);
     command.mSecondParam.clear();
     command.mSecondParam.push_back(counterInstanceName);
-    command.mSecondParam.push_back(STRID(R));
+    command.mSecondParam.push_back("R"_STRID);
     BOOST_CHECK(EMGMResponse::Ready == resource->executeMGMCommand(command));
 
     return device;

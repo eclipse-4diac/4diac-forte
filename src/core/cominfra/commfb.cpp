@@ -29,36 +29,22 @@
 #include "core/util/criticalregion.h"
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(ID);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(REQ);
-USE_STRING_ID(RSP);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 using namespace forte::com_infra;
 
 namespace {
-  const auto cRequesterEventInputNameIds = std::array{STRID(INIT), STRID(REQ)};
-  const auto cRequesterEventOutputNameIds = std::array{STRID(INITO), STRID(CNF)};
+  const auto cRequesterEventInputNameIds = std::array{"INIT"_STRID, "REQ"_STRID};
+  const auto cRequesterEventOutputNameIds = std::array{"INITO"_STRID, "CNF"_STRID};
 
-  const auto cResponderEventInputNameIds = std::array{STRID(INIT), STRID(RSP)};
-  const auto cResponderEventOutputNameIds = std::array{STRID(INITO), STRID(IND)};
+  const auto cResponderEventInputNameIds = std::array{"INIT"_STRID, "RSP"_STRID};
+  const auto cResponderEventOutputNameIds = std::array{"INITO"_STRID, "IND"_STRID};
 
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
 } // namespace
 
-CCommFB::CCommFB(const CStringDictionary::TStringId paInstanceNameId,
+CCommFB::CCommFB(const forte::core::StringId paInstanceNameId,
                  forte::core::CFBContainer &paContainer,
                  forte::com_infra::EComServiceType paCommServiceType) :
     CBaseCommFB(paInstanceNameId, paContainer, paCommServiceType),
@@ -241,8 +227,8 @@ bool CCommFB::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
 }
 
 void CCommFB::configureDIs(const char *paDIConfigString, SFBInterfaceSpec &paInterfaceSpec) {
-  mDiNames.emplace_back(STRID(QI));
-  mDiNames.emplace_back(STRID(ID));
+  mDiNames.emplace_back("QI"_STRID);
+  mDiNames.emplace_back("ID"_STRID);
   if (e_DataInputs == (+e_DataInputs & mCommServiceType)) {
     // TODO: Check range of sParamA
     size_t numGenDIs = static_cast<TPortId>(forte::core::util::strtol(paDIConfigString, nullptr, 10));
@@ -252,8 +238,8 @@ void CCommFB::configureDIs(const char *paDIConfigString, SFBInterfaceSpec &paInt
 }
 
 void CCommFB::configureDOs(const char *paDOConfigString, SFBInterfaceSpec &paInterfaceSpec) {
-  mDoNames.emplace_back(STRID(QO));
-  mDoNames.emplace_back(STRID(STATUS));
+  mDoNames.emplace_back("QO"_STRID);
+  mDoNames.emplace_back("STATUS"_STRID);
 
   if (+e_DataOutputs == (+e_DataOutputs & mCommServiceType)) {
     // TODO: Check range of sParamA

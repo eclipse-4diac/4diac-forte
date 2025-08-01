@@ -14,18 +14,14 @@
  *******************************************************************************/
 #include "GEN_STRUCT_MUX_fbt.h"
 
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(GEN_STRUCT_MUX);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX, STRID(GEN_STRUCT_MUX));
+DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX, "GEN_STRUCT_MUX"_STRID);
 
 namespace {
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
 } // namespace
 
 void GEN_STRUCT_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
@@ -35,8 +31,7 @@ void GEN_STRUCT_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
   }
 }
 
-GEN_STRUCT_MUX::GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceNameId,
-                               forte::core::CFBContainer &paContainer) :
+GEN_STRUCT_MUX::GEN_STRUCT_MUX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0) {
 }
@@ -54,7 +49,7 @@ void GEN_STRUCT_MUX::writeOutputData(TEventID) {
 bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
 
   const auto structTypeNameId = getStructNameId(paConfigString);
-  if (structTypeNameId == CStringDictionary::scmInvalidStringId) {
+  if (!structTypeNameId) {
     DEVLOG_ERROR("[GEN_STRUCT_MUX]: Structure name for %s does not exist\n", paConfigString);
     return false;
   }
@@ -62,12 +57,12 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
   std::unique_ptr<CIEC_ANY> data(forte::core::createDataTypeInstance(structTypeNameId, nullptr));
 
   if (nullptr == data) {
-    DEVLOG_ERROR("[GEN_STRUCT_MUX]: Couldn't create structure of type: %s\n", CStringDictionary::get(structTypeNameId));
+    DEVLOG_ERROR("[GEN_STRUCT_MUX]: Couldn't create structure of type: %s\n", structTypeNameId.data());
     return false;
   }
 
   if (data->getDataTypeID() != CIEC_ANY::e_STRUCT) {
-    DEVLOG_ERROR("[GEN_STRUCT_MUX]: data type is not a structure: %s\n", CStringDictionary::get(structTypeNameId));
+    DEVLOG_ERROR("[GEN_STRUCT_MUX]: data type is not a structure: %s\n", structTypeNameId.data());
     return false;
   }
 
@@ -78,7 +73,7 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
   if (structSize == 0 || structSize >= cgInvalidPortId) { // the structure size must be non zero and less than
                                                           // cgInvalidPortId (maximum number of data input)
     DEVLOG_ERROR("[GEN_STRUCT_MUX]: The structure %s has a size that is not within range > 0 and < %u\n",
-                 CStringDictionary::get(structTypeNameId), cgInvalidPortId);
+                 structTypeNameId.data(), cgInvalidPortId);
     return false;
   }
 
@@ -91,17 +86,17 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
   return true;
 }
 
-CStringDictionary::TStringId GEN_STRUCT_MUX::getStructNameId(std::string_view paConfigString) {
+forte::core::StringId GEN_STRUCT_MUX::getStructNameId(std::string_view paConfigString) {
   size_t index = paConfigString.find('_');
   if (index != std::string::npos) {
     std::string_view nameId = paConfigString.substr(index + 1);
     index = nameId.find('_');
     if (index != std::string::npos) {
       nameId = nameId.substr(index + 2); // put the position one after the separating number
-      return CStringDictionary::getId(nameId.data(), nameId.length());
+      return forte::core::StringId::lookup(nameId);
     }
   }
-  return CStringDictionary::scmInvalidStringId;
+  return {};
 }
 
 CEventConnection *GEN_STRUCT_MUX::getEOConUnchecked(TPortId paEONum) {

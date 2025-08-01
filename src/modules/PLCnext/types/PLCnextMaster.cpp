@@ -20,32 +20,18 @@
 #include "PLCnextMaster.h"
 #include "../deviceController.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(BusAdapterOut);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(PLCnextBusAdapter);
-USE_STRING_ID(PLCnextMaster);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(SlaveUpdateInterval);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(UINT);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_PLCnextMaster, STRID(PLCnextMaster))
+DEFINE_FIRMWARE_FB(FORTE_PLCnextMaster, "PLCnextMaster"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(SlaveUpdateInterval)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(INIT)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
-  const auto cEventOutputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "SlaveUpdateInterval"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "IND"_STRID};
+  const auto cEventOutputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cPlugNameIds = std::array{"BusAdapterOut"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -59,14 +45,14 @@ namespace {
   };
 } // namespace
 
-FORTE_PLCnextMaster::FORTE_PLCnextMaster(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_PLCnextMaster::FORTE_PLCnextMaster(const forte::core::StringId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer) :
     forte::core::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_SlaveUpdateInterval(25_UINT),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),
-    var_BusAdapterOut(STRID(BusAdapterOut), *this, true),
+    var_BusAdapterOut("BusAdapterOut"_STRID, *this, true),
     conn_INITO(*this, 0),
     conn_IND(*this, 1),
     conn_QI(nullptr),

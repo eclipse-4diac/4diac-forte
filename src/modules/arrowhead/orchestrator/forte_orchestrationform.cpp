@@ -12,29 +12,18 @@
 
 #include "forte_orchestrationform.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(ArrowheadService);
-USE_STRING_ID(ArrowheadSystem);
-USE_STRING_ID(authorizationToken);
-USE_STRING_ID(instruction);
-USE_STRING_ID(OrchestrationForm);
-USE_STRING_ID(provider);
-USE_STRING_ID(service);
-USE_STRING_ID(serviceURI);
-USE_STRING_ID(signature);
-USE_STRING_ID(warnings);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(OrchestrationForm, STRID(OrchestrationForm));
+DEFINE_FIRMWARE_DATATYPE(OrchestrationForm, "OrchestrationForm"_STRID);
 
 CIEC_OrchestrationForm::CIEC_OrchestrationForm() :
-    CIEC_STRUCT(STRID(OrchestrationForm), 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT("OrchestrationForm"_STRID, 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_OrchestrationForm::scmElementTypes[] = {
-    STRID(ArrowheadService), STRID(ArrowheadSystem), STRID(WSTRING), STRID(WSTRING),
-    STRID(WSTRING),          STRID(WSTRING),         STRID(ARRAY),   10,
-    STRID(WSTRING)};
-const CStringDictionary::TStringId CIEC_OrchestrationForm::scmElementNames[] = {
-    STRID(service),   STRID(provider), STRID(serviceURI), STRID(instruction), STRID(authorizationToken),
-    STRID(signature), STRID(warnings)};
+const forte::core::StringId CIEC_OrchestrationForm::scmElementTypes[] = {
+    "ArrowheadService"_STRID, "ArrowheadSystem"_STRID, "WSTRING"_STRID, "WSTRING"_STRID,
+    "WSTRING"_STRID,          "WSTRING"_STRID,         "ARRAY"_STRID,   10,
+    "WSTRING"_STRID};
+const forte::core::StringId CIEC_OrchestrationForm::scmElementNames[] = {
+    "service"_STRID,   "provider"_STRID, "serviceURI"_STRID, "instruction"_STRID, "authorizationToken"_STRID,
+    "signature"_STRID, "warnings"_STRID};

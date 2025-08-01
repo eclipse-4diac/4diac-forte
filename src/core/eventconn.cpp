@@ -22,7 +22,7 @@ CEventConnection::CEventConnection(CFunctionBlock &paSrcFB, const TPortId paSrcP
 CEventConnection::~CEventConnection() = default;
 
 EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB,
-                                       const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
+                                       const std::span<const forte::core::StringId> paDstPortNameId) {
   if (paDstPortNameId.size() != 1) {
     return EMGMResponse::NoSuchObject;
   }
@@ -37,9 +37,8 @@ EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB,
   return retVal;
 }
 
-EMGMResponse
-CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
-                                        const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
+EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
+                                                     const std::span<const forte::core::StringId> paDstPortNameId) {
   if (paDstPortNameId.size() != 1) {
     return EMGMResponse::NoSuchObject;
   }
@@ -53,7 +52,7 @@ CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
 }
 
 EMGMResponse CEventConnection::disconnect(CFunctionBlock &paDstFB,
-                                          const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
+                                          const std::span<const forte::core::StringId> paDstPortNameId) {
   if (paDstPortNameId.size() != 1) {
     return EMGMResponse::NoSuchObject;
   }

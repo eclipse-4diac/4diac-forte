@@ -13,29 +13,17 @@
 
 #include "POWERLINK_MN_fbt.h"
 
-USE_STRING_ID(APP_CFG);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CDC_CFG);
-USE_STRING_ID(DEV_NAME);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(POWERLINK_MN);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_POWERLINK_MN, STRID(POWERLINK_MN))
+DEFINE_FIRMWARE_FB(FORTE_POWERLINK_MN, "POWERLINK_MN"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(CDC_CFG), STRID(APP_CFG), STRID(DEV_NAME)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(INIT)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit)};
-  const auto cEventOutputNames = std::array{STRID(INITO)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "CDC_CFG"_STRID, "APP_CFG"_STRID, "DEV_NAME"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -49,7 +37,7 @@ namespace {
   };
 } // namespace
 
-FORTE_POWERLINK_MN::FORTE_POWERLINK_MN(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_POWERLINK_MN::FORTE_POWERLINK_MN(const forte::core::StringId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),

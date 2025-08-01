@@ -113,7 +113,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_INT> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_INT;
-      static const CStringDictionary::TStringId scmDataTypeName;
+      static const forte::core::StringId scmDataTypeName;
   };
 } // namespace forte
 

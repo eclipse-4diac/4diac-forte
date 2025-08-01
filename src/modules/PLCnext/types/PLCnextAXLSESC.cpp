@@ -19,20 +19,7 @@
 
 #include "PLCnextAXLSESC.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(BusAdapterIn);
-USE_STRING_ID(BusAdapterOut);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(PLCnextAXLSESC);
-USE_STRING_ID(PLCnextBusAdapter);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "PLCnextBusAdapter.h"
 #include "core/iec61131_functions.h"
@@ -41,17 +28,17 @@ USE_STRING_ID(WSTRING);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_PLCnextAXLSESC, STRID(PLCnextAXLSESC))
+DEFINE_FIRMWARE_FB(FORTE_PLCnextAXLSESC, "PLCnextAXLSESC"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(INIT)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
-  const auto cEventOutputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
-  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+  const auto cDataInputNames = std::array{"QI"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "IND"_STRID};
+  const auto cEventOutputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cSocketNameIds = std::array{"BusAdapterIn"_STRID};
+  const auto cPlugNameIds = std::array{"BusAdapterOut"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -66,7 +53,7 @@ namespace {
   };
 } // namespace
 
-FORTE_PLCnextAXLSESC::FORTE_PLCnextAXLSESC(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_PLCnextAXLSESC::FORTE_PLCnextAXLSESC(const forte::core::StringId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer) :
     PLCnextSlaveHandler(PLCnextSlaveHandler::NoUsage, paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),

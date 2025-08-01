@@ -27,9 +27,9 @@
 #include "core/datatypes/forte_string.h"
 #include "core/datatypes/forte_wstring.h"
 
-USE_STRING_ID(REAL);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(REAL, STRID(REAL))
+DEFINE_FIRMWARE_DATATYPE(REAL, "REAL"_STRID)
 
 int CIEC_REAL::fromString(const char *paValue) {
   char *pcEnd;
@@ -107,4 +107,4 @@ void CIEC_REAL::castRealData(const CIEC_REAL &paSrcValue, CIEC_ANY &paDestValue)
   }
 }
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_REAL>::scmDataTypeName = STRID(REAL);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_REAL>::scmDataTypeName = "REAL"_STRID;

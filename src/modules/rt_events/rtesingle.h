@@ -62,7 +62,7 @@ class CRTEventSingle : public CFunctionBlock {
   public:
     CRTEventSingle(forte::core::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
-                   const CStringDictionary::TStringId paInstanceNameId) :
+                   const forte::core::StringId paInstanceNameId) :
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId) {};
 
     CIEC_BOOL var_QI;

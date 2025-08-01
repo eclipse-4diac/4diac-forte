@@ -29,81 +29,46 @@
 #include "arch/devlog.h"
 #include <map>
 
-USE_STRING_ID(ANY);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(BYTE);
-USE_STRING_ID(CHAR);
-USE_STRING_ID(D);
-USE_STRING_ID(DATE);
-USE_STRING_ID(DATE_AND_TIME);
-USE_STRING_ID(DINT);
-USE_STRING_ID(DT);
-USE_STRING_ID(DWORD);
-USE_STRING_ID(INT);
-USE_STRING_ID(LD);
-USE_STRING_ID(LDATE);
-USE_STRING_ID(LDATE_AND_TIME);
-USE_STRING_ID(LDT);
-USE_STRING_ID(LINT);
-USE_STRING_ID(LREAL);
-USE_STRING_ID(LT);
-USE_STRING_ID(LTIME);
-USE_STRING_ID(LTIME_OF_DAY);
-USE_STRING_ID(LTOD);
-USE_STRING_ID(LWORD);
-USE_STRING_ID(REAL);
-USE_STRING_ID(SINT);
-USE_STRING_ID(STRING);
-USE_STRING_ID(T);
-USE_STRING_ID(TIME);
-USE_STRING_ID(TIME_OF_DAY);
-USE_STRING_ID(TOD);
-USE_STRING_ID(UDINT);
-USE_STRING_ID(UINT);
-USE_STRING_ID(ULINT);
-USE_STRING_ID(USINT);
-USE_STRING_ID(WCHAR);
-USE_STRING_ID(WORD);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 namespace {
-  const std::map<CStringDictionary::TStringId, CIEC_ANY::EDataTypeID> scm_StringToTypeId = {
-      {STRID(ANY), CIEC_ANY::e_ANY},
-      {STRID(BOOL), CIEC_ANY::e_BOOL},
-      {STRID(SINT), CIEC_ANY::e_SINT},
-      {STRID(INT), CIEC_ANY::e_INT},
-      {STRID(DINT), CIEC_ANY::e_DINT},
-      {STRID(LINT), CIEC_ANY::e_LINT},
-      {STRID(USINT), CIEC_ANY::e_USINT},
-      {STRID(UINT), CIEC_ANY::e_UINT},
-      {STRID(UDINT), CIEC_ANY::e_UDINT},
-      {STRID(ULINT), CIEC_ANY::e_ULINT},
-      {STRID(BYTE), CIEC_ANY::e_BYTE},
-      {STRID(WORD), CIEC_ANY::e_WORD},
-      {STRID(DWORD), CIEC_ANY::e_DWORD},
-      {STRID(LWORD), CIEC_ANY::e_LWORD},
-      {STRID(T), CIEC_ANY::e_TIME},
-      {STRID(TIME), CIEC_ANY::e_TIME},
-      {STRID(D), CIEC_ANY::e_DATE},
-      {STRID(DATE), CIEC_ANY::e_DATE},
-      {STRID(TOD), CIEC_ANY::e_TIME_OF_DAY},
-      {STRID(TIME_OF_DAY), CIEC_ANY::e_TIME_OF_DAY},
-      {STRID(DT), CIEC_ANY::e_DATE_AND_TIME},
-      {STRID(DATE_AND_TIME), CIEC_ANY::e_DATE_AND_TIME},
-      {STRID(LT), CIEC_ANY::e_LTIME},
-      {STRID(LTIME), CIEC_ANY::e_LTIME},
-      {STRID(LD), CIEC_ANY::e_LDATE},
-      {STRID(LDATE), CIEC_ANY::e_LDATE},
-      {STRID(LTOD), CIEC_ANY::e_LTIME_OF_DAY},
-      {STRID(LTIME_OF_DAY), CIEC_ANY::e_LTIME_OF_DAY},
-      {STRID(LDT), CIEC_ANY::e_LDATE_AND_TIME},
-      {STRID(LDATE_AND_TIME), CIEC_ANY::e_LDATE_AND_TIME},
-      {STRID(CHAR), CIEC_ANY::e_CHAR},
-      {STRID(WCHAR), CIEC_ANY::e_WCHAR},
-      {STRID(REAL), CIEC_ANY::e_REAL},
-      {STRID(LREAL), CIEC_ANY::e_LREAL},
-      {STRID(STRING), CIEC_ANY::e_STRING},
-      {STRID(WSTRING), CIEC_ANY::e_WSTRING}};
+  const std::map<forte::core::StringId, CIEC_ANY::EDataTypeID> scm_StringToTypeId = {
+      {"ANY"_STRID, CIEC_ANY::e_ANY},
+      {"BOOL"_STRID, CIEC_ANY::e_BOOL},
+      {"SINT"_STRID, CIEC_ANY::e_SINT},
+      {"INT"_STRID, CIEC_ANY::e_INT},
+      {"DINT"_STRID, CIEC_ANY::e_DINT},
+      {"LINT"_STRID, CIEC_ANY::e_LINT},
+      {"USINT"_STRID, CIEC_ANY::e_USINT},
+      {"UINT"_STRID, CIEC_ANY::e_UINT},
+      {"UDINT"_STRID, CIEC_ANY::e_UDINT},
+      {"ULINT"_STRID, CIEC_ANY::e_ULINT},
+      {"BYTE"_STRID, CIEC_ANY::e_BYTE},
+      {"WORD"_STRID, CIEC_ANY::e_WORD},
+      {"DWORD"_STRID, CIEC_ANY::e_DWORD},
+      {"LWORD"_STRID, CIEC_ANY::e_LWORD},
+      {"T"_STRID, CIEC_ANY::e_TIME},
+      {"TIME"_STRID, CIEC_ANY::e_TIME},
+      {"D"_STRID, CIEC_ANY::e_DATE},
+      {"DATE"_STRID, CIEC_ANY::e_DATE},
+      {"TOD"_STRID, CIEC_ANY::e_TIME_OF_DAY},
+      {"TIME_OF_DAY"_STRID, CIEC_ANY::e_TIME_OF_DAY},
+      {"DT"_STRID, CIEC_ANY::e_DATE_AND_TIME},
+      {"DATE_AND_TIME"_STRID, CIEC_ANY::e_DATE_AND_TIME},
+      {"LT"_STRID, CIEC_ANY::e_LTIME},
+      {"LTIME"_STRID, CIEC_ANY::e_LTIME},
+      {"LD"_STRID, CIEC_ANY::e_LDATE},
+      {"LDATE"_STRID, CIEC_ANY::e_LDATE},
+      {"LTOD"_STRID, CIEC_ANY::e_LTIME_OF_DAY},
+      {"LTIME_OF_DAY"_STRID, CIEC_ANY::e_LTIME_OF_DAY},
+      {"LDT"_STRID, CIEC_ANY::e_LDATE_AND_TIME},
+      {"LDATE_AND_TIME"_STRID, CIEC_ANY::e_LDATE_AND_TIME},
+      {"CHAR"_STRID, CIEC_ANY::e_CHAR},
+      {"WCHAR"_STRID, CIEC_ANY::e_WCHAR},
+      {"REAL"_STRID, CIEC_ANY::e_REAL},
+      {"LREAL"_STRID, CIEC_ANY::e_LREAL},
+      {"STRING"_STRID, CIEC_ANY::e_STRING},
+      {"WSTRING"_STRID, CIEC_ANY::e_WSTRING}};
 }
 
 void CIEC_ANY_ELEMENTARY::toString(std::string &paTargetBuf) const {
@@ -307,23 +272,23 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue) {
 }
 
 bool CIEC_ANY_ELEMENTARY::isTypeSpecifier(const char *paValue, const char *paHashPosition) const {
-  CStringDictionary::TStringId nTypeNameId = parseTypeName(paValue, paHashPosition);
+  forte::core::StringId nTypeNameId = parseTypeName(paValue, paHashPosition);
 
-  if ((CStringDictionary::scmInvalidStringId != nTypeNameId) &&
+  if (nTypeNameId &&
       ((scm_StringToTypeId.find(nTypeNameId) != scm_StringToTypeId.end()) || (isCastable(nTypeNameId)))) {
     return true;
   }
   return false;
 }
 
-bool CIEC_ANY_ELEMENTARY::isCastable(CStringDictionary::TStringId paTypeNameId) const {
+bool CIEC_ANY_ELEMENTARY::isCastable(forte::core::StringId paTypeNameId) const {
   EDataTypeID literalID = getElementaryDataTypeId(paTypeNameId);
   bool upCast;
   bool downCast;
   return CIEC_ANY::isCastable(literalID, getDataTypeID(), upCast, downCast) && upCast;
 }
 
-CIEC_ANY::EDataTypeID CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(const CStringDictionary::TStringId paTypeNameId) {
+CIEC_ANY::EDataTypeID CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(const forte::core::StringId paTypeNameId) {
   if (scm_StringToTypeId.find(paTypeNameId) != scm_StringToTypeId.end()) {
     return scm_StringToTypeId.at(paTypeNameId);
   }

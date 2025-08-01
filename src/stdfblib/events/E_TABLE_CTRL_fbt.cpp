@@ -18,17 +18,7 @@
 
 #include "E_TABLE_CTRL_fbt.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(CLK);
-USE_STRING_ID(CLKO);
-USE_STRING_ID(CV);
-USE_STRING_ID(DT);
-USE_STRING_ID(DTO);
-USE_STRING_ID(E_TABLE_CTRL);
-USE_STRING_ID(N);
-USE_STRING_ID(START);
-USE_STRING_ID(TIME);
-USE_STRING_ID(UINT);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_any_elementary_variant.h"
 #include "core/datatypes/forte_bool.h"
@@ -41,13 +31,13 @@ USE_STRING_ID(UINT);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_TABLE_CTRL, STRID(E_TABLE_CTRL))
+DEFINE_FIRMWARE_FB(FORTE_E_TABLE_CTRL, "E_TABLE_CTRL"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(DT), STRID(N)};
-  const auto cDataOutputNames = std::array{STRID(DTO), STRID(CV)};
-  const auto cEventInputNames = std::array{STRID(START), STRID(CLK)};
-  const auto cEventOutputNames = std::array{STRID(CLKO)};
+  const auto cDataInputNames = std::array{"DT"_STRID, "N"_STRID};
+  const auto cDataOutputNames = std::array{"DTO"_STRID, "CV"_STRID};
+  const auto cEventInputNames = std::array{"START"_STRID, "CLK"_STRID};
+  const auto cEventOutputNames = std::array{"CLKO"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -61,7 +51,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TABLE_CTRL::FORTE_E_TABLE_CTRL(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_TABLE_CTRL::FORTE_E_TABLE_CTRL(const forte::core::StringId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_DT(CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),

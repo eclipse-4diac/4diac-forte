@@ -16,13 +16,13 @@
  *******************************************************************************/
 #include "core/datatypes/forte_wstring.h"
 
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "arch/devlog.h"
 
 #include "core/datatypes/unicode_utils.h"
 
-DEFINE_FIRMWARE_DATATYPE(WSTRING, STRID(WSTRING))
+DEFINE_FIRMWARE_DATATYPE(WSTRING, "WSTRING"_STRID)
 
 bool CIEC_WSTRING::fromUTF16(const TForteWChar *paBuffer, unsigned int paBufferLen) {
   return fromUTF16(reinterpret_cast<const TForteByte *>(paBuffer), 2 * paBufferLen);
@@ -289,4 +289,4 @@ void CIEC_WSTRING::fromCharString(const char *const paValue) {
   }
 }
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_WSTRING>::scmDataTypeName = STRID(WSTRING);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_WSTRING>::scmDataTypeName = "WSTRING"_STRID;

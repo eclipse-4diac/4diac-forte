@@ -15,63 +15,34 @@
 #include "EBSlave2181.h"
 #include "../handler/bus.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(BusAdapterIn);
-USE_STRING_ID(BusAdapterOut);
-USE_STRING_ID(DigitalInput_1);
-USE_STRING_ID(DigitalInput_2);
-USE_STRING_ID(DigitalInput_3);
-USE_STRING_ID(DigitalInput_4);
-USE_STRING_ID(DigitalInput_5);
-USE_STRING_ID(DigitalInput_6);
-USE_STRING_ID(DigitalInput_7);
-USE_STRING_ID(DigitalInput_8);
-USE_STRING_ID(DigitalOutput_1);
-USE_STRING_ID(DigitalOutput_2);
-USE_STRING_ID(DigitalOutput_3);
-USE_STRING_ID(DigitalOutput_4);
-USE_STRING_ID(DigitalOutput_5);
-USE_STRING_ID(DigitalOutput_6);
-USE_STRING_ID(DigitalOutput_7);
-USE_STRING_ID(DigitalOutput_8);
-USE_STRING_ID(EBBusAdapter);
-USE_STRING_ID(EBSlave2181);
-USE_STRING_ID(IND);
-USE_STRING_ID(MAP);
-USE_STRING_ID(MAPO);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(UINT);
-USE_STRING_ID(UpdateInterval);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_EBSlave2181, STRID(EBSlave2181))
+DEFINE_FIRMWARE_FB(FORTE_EBSlave2181, "EBSlave2181"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI),
-                                          STRID(DigitalInput_1),
-                                          STRID(DigitalInput_2),
-                                          STRID(DigitalInput_3),
-                                          STRID(DigitalInput_4),
-                                          STRID(DigitalInput_5),
-                                          STRID(DigitalInput_6),
-                                          STRID(DigitalInput_7),
-                                          STRID(DigitalInput_8),
-                                          STRID(DigitalOutput_1),
-                                          STRID(DigitalOutput_2),
-                                          STRID(DigitalOutput_3),
-                                          STRID(DigitalOutput_4),
-                                          STRID(DigitalOutput_5),
-                                          STRID(DigitalOutput_6),
-                                          STRID(DigitalOutput_7),
-                                          STRID(DigitalOutput_8),
-                                          STRID(UpdateInterval)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(MAP)};
-  const auto cEventOutputNames = std::array{STRID(MAPO), STRID(IND)};
-  const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
-  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+  const auto cDataInputNames = std::array{"QI"_STRID,
+                                          "DigitalInput_1"_STRID,
+                                          "DigitalInput_2"_STRID,
+                                          "DigitalInput_3"_STRID,
+                                          "DigitalInput_4"_STRID,
+                                          "DigitalInput_5"_STRID,
+                                          "DigitalInput_6"_STRID,
+                                          "DigitalInput_7"_STRID,
+                                          "DigitalInput_8"_STRID,
+                                          "DigitalOutput_1"_STRID,
+                                          "DigitalOutput_2"_STRID,
+                                          "DigitalOutput_3"_STRID,
+                                          "DigitalOutput_4"_STRID,
+                                          "DigitalOutput_5"_STRID,
+                                          "DigitalOutput_6"_STRID,
+                                          "DigitalOutput_7"_STRID,
+                                          "DigitalOutput_8"_STRID,
+                                          "UpdateInterval"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"MAP"_STRID};
+  const auto cEventOutputNames = std::array{"MAPO"_STRID, "IND"_STRID};
+  const auto cSocketNameIds = std::array{"BusAdapterIn"_STRID};
+  const auto cPlugNameIds = std::array{"BusAdapterOut"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -86,7 +57,7 @@ namespace {
   };
 } // namespace
 
-FORTE_EBSlave2181::FORTE_EBSlave2181(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_EBSlave2181::FORTE_EBSlave2181(const forte::core::StringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
     EmbrickSlave(scmSlaveConfigurationIO,
                  scmSlaveConfigurationIONum,

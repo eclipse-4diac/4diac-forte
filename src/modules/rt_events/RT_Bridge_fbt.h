@@ -21,7 +21,7 @@ class FORTE_GEN_RT_Bridge final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge)
 
   public:
-    FORTE_GEN_RT_Bridge(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_GEN_RT_Bridge(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~FORTE_GEN_RT_Bridge() override = default;
 
     CEventConnection conn_RDO;
@@ -57,6 +57,6 @@ class FORTE_GEN_RT_Bridge final : public CGenFunctionBlock<CFunctionBlock> {
     std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDIs;
     std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDOs;
 
-    std::vector<CStringDictionary::TStringId> mDINames;
-    std::vector<CStringDictionary::TStringId> mDONames;
+    std::vector<forte::core::StringId> mDINames;
+    std::vector<forte::core::StringId> mDONames;
 };

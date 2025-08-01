@@ -12,28 +12,18 @@
  *******************************************************************************/
 #include "RT_E_CYCLE_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(Deadline);
-USE_STRING_ID(DT);
-USE_STRING_ID(EO);
-USE_STRING_ID(Event);
-USE_STRING_ID(QO);
-USE_STRING_ID(RT_E_CYCLE);
-USE_STRING_ID(START);
-USE_STRING_ID(STOP);
-USE_STRING_ID(TIME);
-USE_STRING_ID(WCET);
+using namespace forte::core::literals;
 
 
-DEFINE_FIRMWARE_FB(FORTE_RT_E_CYCLE, STRID(RT_E_CYCLE))
+DEFINE_FIRMWARE_FB(FORTE_RT_E_CYCLE, "RT_E_CYCLE"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(DT), STRID(Deadline), STRID(WCET)};
-  const auto cDataOutputNames = std::array{STRID(QO)};
-  const auto cEventInputNames = std::array{STRID(START), STRID(STOP)};
-  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(EO)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"DT"_STRID, "Deadline"_STRID, "WCET"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID};
+  const auto cEventInputNames = std::array{"START"_STRID, "STOP"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"EO"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -48,7 +38,7 @@ namespace {
 }
 
 
-FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const forte::core::StringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_EO(*this, 0),

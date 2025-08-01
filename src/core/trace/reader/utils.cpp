@@ -36,17 +36,17 @@ namespace forte::trace::reader::utils {
     std::string fbNamePart(paFunctionBlockName);
     size_t index = fbNamePart.find_first_of(".");
     while (index != std::string::npos) {
-      id.push_back(CStringDictionary::insert(fbNamePart.substr(0, index).c_str()));
+      id.push_back(forte::core::StringId::insert(fbNamePart.substr(0, index)));
       fbNamePart = fbNamePart.substr(index + 1);
       index = fbNamePart.find_first_of(".");
     }
-    id.push_back(CStringDictionary::insert(fbNamePart.substr(0, index).c_str()));
+    id.push_back(forte::core::StringId::insert(fbNamePart.substr(0, index))));
 
     auto it = id.cbegin();
     return paContainer->getFB(it, id.cend());
   }
 
-  CFunctionBlock *getFB(forte::core::CFBContainer *paContainer, CStringDictionary::TStringId paFunctionBlockName) {
+  CFunctionBlock *getFB(forte::core::CFBContainer *paContainer, forte::core::StringId paFunctionBlockName) {
     if (paContainer == nullptr) {
       return nullptr;
     }
@@ -62,9 +62,9 @@ namespace forte::trace::reader::utils {
     CFlexibleTracer::setTracer(paFactoriesSettings.mTracer);
   }
 
-  std::set<CStringDictionary::TStringId> getServiceFunctionBlockTypes(forte::core::CFBContainer &paContainer) {
+  std::set<forte::core::StringId> getServiceFunctionBlockTypes(forte::core::CFBContainer &paContainer) {
 
-    std::set<CStringDictionary::TStringId> result;
+    std::set<forte::core::StringId> result;
 
     // Get a list of all types that are not service FB (either Composite or Basic)
     std::function<void(forte::core::CFBContainer *)> iterateContainers;
@@ -225,7 +225,7 @@ namespace forte::trace::reader::utils {
       if (paMessage.getEventType() != "sendOutputEvent") {
         return false;
       }
-      auto type = CStringDictionary::getId(paMessage.getPayload<AbstractPayload>()->getTypeName().c_str());
+      auto type = forte::core::StringId::lookup(paMessage.getPayload<AbstractPayload>()->getTypeName());
       return validTypes.find(type) != validTypes.end();
     };
 

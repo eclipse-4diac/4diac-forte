@@ -39,7 +39,7 @@ class FORTE_signalprocessing__SCALE_LIM final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_signalprocessing__SCALE_LIM(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_signalprocessing__SCALE_LIM(forte::core::StringId paInstanceNameId,
                                       forte::core::CFBContainer &paContainer);
 
     CIEC_REAL var_IN;

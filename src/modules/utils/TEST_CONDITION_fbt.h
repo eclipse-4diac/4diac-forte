@@ -41,7 +41,7 @@ class FORTE_TEST_CONDITION final : public CFunctionBlock {
     CSyncObject mFinalReportMutex;
 
   public:
-    FORTE_TEST_CONDITION(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_TEST_CONDITION(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~FORTE_TEST_CONDITION() override;
 
     CIEC_BOOL var_check;

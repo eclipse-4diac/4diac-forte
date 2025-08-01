@@ -13,10 +13,10 @@
  *******************************************************************************/
 #include "core/datatypes/forte_uint.h"
 
-USE_STRING_ID(UINT);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(UINT, STRID(UINT))
+DEFINE_FIRMWARE_DATATYPE(UINT, "UINT"_STRID)
 
 template CIEC_UINT &CIEC_UINT::operator= <>(const CIEC_USINT &paValue);
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_UINT>::scmDataTypeName = STRID(UINT);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_UINT>::scmDataTypeName = "UINT"_STRID;

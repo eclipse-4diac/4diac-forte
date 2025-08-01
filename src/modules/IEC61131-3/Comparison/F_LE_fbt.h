@@ -44,7 +44,7 @@ class FORTE_F_LE : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_F_LE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_LE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY_ELEMENTARY_VARIANT var_IN1;
     CIEC_ANY_ELEMENTARY_VARIANT var_IN2;

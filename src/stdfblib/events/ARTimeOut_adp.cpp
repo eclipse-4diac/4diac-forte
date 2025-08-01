@@ -20,20 +20,14 @@
 
 using namespace std::literals;
 
-USE_STRING_ID(ARTimeOut);
-USE_STRING_ID(DT);
-USE_STRING_ID(Event);
-USE_STRING_ID(START);
-USE_STRING_ID(STOP);
-USE_STRING_ID(TIME);
-USE_STRING_ID(TimeOut);
+using namespace forte::core::literals;
 
-DEFINE_ADAPTER_TYPE(FORTE_ARTimeOut, STRID(ARTimeOut))
+DEFINE_ADAPTER_TYPE(FORTE_ARTimeOut, "ARTimeOut"_STRID)
 
 namespace {
-  const auto cDataOutputNames = std::array{STRID(DT)};
-  const auto cEventInputNames = std::array{STRID(TimeOut)};
-  const auto cEventOutputNames = std::array{STRID(START), STRID(STOP)};
+  const auto cDataOutputNames = std::array{"DT"_STRID};
+  const auto cEventInputNames = std::array{"TimeOut"_STRID};
+  const auto cEventOutputNames = std::array{"START"_STRID, "STOP"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpecSocket = {
       .mEINames = cEventInputNames,
@@ -63,7 +57,7 @@ namespace {
 
 FORTE_ARTimeOut::FORTE_ARTimeOut(forte::core::CFBContainer &paContainer,
                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                 const CStringDictionary::TStringId paInstanceNameId,
+                                 const forte::core::StringId paInstanceNameId,
                                  TForteUInt8 paParentAdapterlistID) :
     CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     var_DT(0_TIME) {
@@ -74,7 +68,7 @@ void FORTE_ARTimeOut::setInitialValues() {
   var_DT = 0_TIME;
 }
 
-FORTE_ARTimeOut_Plug::FORTE_ARTimeOut_Plug(CStringDictionary::TStringId paInstanceNameId,
+FORTE_ARTimeOut_Plug::FORTE_ARTimeOut_Plug(forte::core::StringId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer,
                                            TForteUInt8 paParentAdapterlistID) :
     FORTE_ARTimeOut(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
@@ -127,7 +121,7 @@ CDataConnection *FORTE_ARTimeOut_Plug::getDOConUnchecked(TPortId) {
   return nullptr;
 }
 
-FORTE_ARTimeOut_Socket::FORTE_ARTimeOut_Socket(CStringDictionary::TStringId paInstanceNameId,
+FORTE_ARTimeOut_Socket::FORTE_ARTimeOut_Socket(forte::core::StringId paInstanceNameId,
                                                forte::core::CFBContainer &paContainer,
                                                TForteUInt8 paParentAdapterlistID) :
     FORTE_ARTimeOut(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),

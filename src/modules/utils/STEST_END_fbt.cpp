@@ -14,14 +14,12 @@
 #include "STEST_END_fbt.h"
 #include "core/device.h"
 
-USE_STRING_ID(Event);
-USE_STRING_ID(REQ);
-USE_STRING_ID(STEST_END);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_STEST_END, STRID(STEST_END))
+DEFINE_FIRMWARE_FB(FORTE_STEST_END, "STEST_END"_STRID)
 
 namespace {
-  const auto cEventInputNames = std::array{STRID(REQ)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -35,7 +33,7 @@ namespace {
   };
 } // namespace
 
-FORTE_STEST_END::FORTE_STEST_END(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_STEST_END::FORTE_STEST_END(const forte::core::StringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId) {};
 

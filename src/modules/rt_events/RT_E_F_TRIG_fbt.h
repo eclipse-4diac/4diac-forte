@@ -43,7 +43,7 @@ class FORTE_RT_E_F_TRIG final : public CRTEventSingle {
     void setInitialValues() override;
 
   public:
-    FORTE_RT_E_F_TRIG(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_RT_E_F_TRIG(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_TIME var_Tmin;
     CIEC_TIME var_WCET;

@@ -56,7 +56,7 @@ class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_signalprocessing__RampLimitFS(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_signalprocessing__RampLimitFS(forte::core::StringId paInstanceNameId,
                                         forte::core::CFBContainer &paContainer);
 
     CIEC_DINT var_PV;

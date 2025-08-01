@@ -18,21 +18,7 @@
 
 #include "E_TABLE_fbt.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(CLK);
-USE_STRING_ID(CLKO);
-USE_STRING_ID(CV);
-USE_STRING_ID(DT);
-USE_STRING_ID(DTO);
-USE_STRING_ID(E_DELAY);
-USE_STRING_ID(EO);
-USE_STRING_ID(E_TABLE);
-USE_STRING_ID(E_TABLE_CTRL);
-USE_STRING_ID(N);
-USE_STRING_ID(START);
-USE_STRING_ID(STOP);
-USE_STRING_ID(TIME);
-USE_STRING_ID(UINT);
+using namespace forte::core::literals;
 
 #include "core/iec61131_functions.h"
 #include "core/datatypes/forte_array_common.h"
@@ -40,13 +26,13 @@ USE_STRING_ID(UINT);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_TABLE, STRID(E_TABLE))
+DEFINE_FIRMWARE_FB(FORTE_E_TABLE, "E_TABLE"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(DT), STRID(N)};
-  const auto cDataOutputNames = std::array{STRID(CV)};
-  const auto cEventInputNames = std::array{STRID(START), STRID(STOP)};
-  const auto cEventOutputNames = std::array{STRID(EO)};
+  const auto cDataInputNames = std::array{"DT"_STRID, "N"_STRID};
+  const auto cDataOutputNames = std::array{"CV"_STRID};
+  const auto cEventInputNames = std::array{"START"_STRID, "STOP"_STRID};
+  const auto cEventOutputNames = std::array{"EO"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -60,18 +46,18 @@ namespace {
   };
 
   const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
-      {STRID(E_TABLE_CTRL), STRID(CLKO), STRID(E_DELAY), STRID(START)},
-      {STRID(E_DELAY), STRID(EO), CStringDictionary::scmInvalidStringId, STRID(EO)},
-      {STRID(E_DELAY), STRID(EO), STRID(E_TABLE_CTRL), STRID(CLK)},
-      {CStringDictionary::scmInvalidStringId, STRID(START), STRID(E_TABLE_CTRL), STRID(START)},
-      {CStringDictionary::scmInvalidStringId, STRID(STOP), STRID(E_DELAY), STRID(STOP)},
+      {"E_TABLE_CTRL"_STRID, "CLKO"_STRID, "E_DELAY"_STRID, "START"_STRID},
+      {"E_DELAY"_STRID, "EO"_STRID, {}, "EO"_STRID},
+      {"E_DELAY"_STRID, "EO"_STRID, "E_TABLE_CTRL"_STRID, "CLK"_STRID},
+      {{}, "START"_STRID, "E_TABLE_CTRL"_STRID, "START"_STRID},
+      {{}, "STOP"_STRID, "E_DELAY"_STRID, "STOP"_STRID},
   });
 
   const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
-      {STRID(E_TABLE_CTRL), STRID(DTO), STRID(E_DELAY), STRID(DT)},
-      {STRID(E_TABLE_CTRL), STRID(CV), CStringDictionary::scmInvalidStringId, STRID(CV)},
-      {CStringDictionary::scmInvalidStringId, STRID(DT), STRID(E_TABLE_CTRL), STRID(DT)},
-      {CStringDictionary::scmInvalidStringId, STRID(N), STRID(E_TABLE_CTRL), STRID(N)},
+      {"E_TABLE_CTRL"_STRID, "DTO"_STRID, "E_DELAY"_STRID, "DT"_STRID},
+      {"E_TABLE_CTRL"_STRID, "CV"_STRID, {}, "CV"_STRID},
+      {{}, "DT"_STRID, "E_TABLE_CTRL"_STRID, "DT"_STRID},
+      {{}, "N"_STRID, "E_TABLE_CTRL"_STRID, "N"_STRID},
   });
 
   const SCFB_FBNData cFBNData = {
@@ -81,11 +67,11 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TABLE::FORTE_E_TABLE(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_TABLE::FORTE_E_TABLE(const forte::core::StringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
-    fb_E_TABLE_CTRL(STRID(E_TABLE_CTRL), *this),
-    fb_E_DELAY(STRID(E_DELAY), *this),
+    fb_E_TABLE_CTRL("E_TABLE_CTRL"_STRID, *this),
+    fb_E_DELAY("E_DELAY"_STRID, *this),
     conn_EO(*this, 0),
     conn_DT(nullptr),
     conn_N(nullptr),

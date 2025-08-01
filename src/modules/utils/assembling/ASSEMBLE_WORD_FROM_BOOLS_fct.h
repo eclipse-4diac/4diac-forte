@@ -43,7 +43,7 @@ class FORTE_ASSEMBLE_WORD_FROM_BOOLS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_ASSEMBLE_WORD_FROM_BOOLS(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_ASSEMBLE_WORD_FROM_BOOLS(forte::core::StringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_BIT_00;

@@ -22,5 +22,5 @@ class FORTE_IB final : public forte::core::io::CInputFB<CIEC_BYTE> {
     DECLARE_FIRMWARE_FB(FORTE_IB)
 
   public:
-    FORTE_IB(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IB(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 };

@@ -46,7 +46,7 @@ class FORTE_GET_STRUCT_VALUE : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_GET_STRUCT_VALUE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_GET_STRUCT_VALUE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY_VARIANT var_in_struct;
     CIEC_STRING var_member;

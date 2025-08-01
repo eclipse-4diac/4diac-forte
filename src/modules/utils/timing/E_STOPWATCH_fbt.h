@@ -67,7 +67,7 @@ class FORTE_E_STOPWATCH final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_STOPWATCH(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_STOPWATCH(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_TIME var_TD;
 

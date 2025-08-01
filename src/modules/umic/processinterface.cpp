@@ -40,7 +40,7 @@ const char *const CUMICProcessInterface::scmCouldNotWrite = "Could not write";
 
 CUMICProcessInterface::CUMICProcessInterface(forte::core::CFBContainer &paContainer,
                                              const SFBInterfaceSpec &paInterfaceSpec,
-                                             const CStringDictionary::TStringId paInstanceNameId) :
+                                             const forte::core::StringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mIOType(UNDEFINED),
     mNumber(0) {

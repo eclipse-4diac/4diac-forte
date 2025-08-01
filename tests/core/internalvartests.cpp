@@ -17,21 +17,15 @@
 #include "core/basicfb.h"
 #include "fbcontainermock.h"
 
-USE_STRING_ID(CV);
-USE_STRING_ID(DT);
-USE_STRING_ID(QD);
-USE_STRING_ID(QU);
+using namespace forte::core::literals;
 
 const SFBInterfaceSpec gcEmptyInterface = {};
 
 class CInternalVarTestFB : public CBasicFB {
 
   public:
-    CInternalVarTestFB(std::span<const CStringDictionary::TStringId> paVarInternalNames) :
-        CBasicFB(CFBContainerMock::smDefaultFBContMock,
-                 gcEmptyInterface,
-                 CStringDictionary::scmInvalidStringId,
-                 paVarInternalNames),
+    CInternalVarTestFB(std::span<const forte::core::StringId> paVarInternalNames) :
+        CBasicFB(CFBContainerMock::smDefaultFBContMock, gcEmptyInterface, {}, paVarInternalNames),
         var_QU(false_BOOL),
         var_QD(false_BOOL),
         var_CV(0_UINT) {
@@ -46,8 +40,8 @@ class CInternalVarTestFB : public CBasicFB {
       return nullptr;
     }
 
-    CStringDictionary::TStringId getFBTypeId() const override {
-      return CStringDictionary::scmInvalidStringId;
+    forte::core::StringId getFBTypeId() const override {
+      return {};
     }
 
     void executeEvent(TEventID, CEventChainExecutionThread *const) override {
@@ -94,17 +88,17 @@ BOOST_AUTO_TEST_SUITE(internal_vars)
 
 BOOST_AUTO_TEST_CASE(checkEmptyInternalVarsAreAllowed) {
   // check that we can create an FB where we have a var internal struct which has all parts set to zero
-  CStringDictionary::TStringId namelist[1] = {STRID(DT)};
+  forte::core::StringId namelist[1] = {"DT"_STRID};
 
   CInternalVarTestFB testFB({});
   BOOST_CHECK(nullptr == testFB.getVar(namelist, 1));
   // check that we should at least get the ECC variable
-  namelist[0] = CStringDictionary::insert("!ECC");
+  namelist[0] = forte::core::StringId::insert("!ECC");
   BOOST_CHECK(nullptr != testFB.getVar(namelist, 1));
 }
 
 BOOST_AUTO_TEST_CASE(sampleInteralVarList) {
-  auto varInternalNames = std::array{STRID(QU), STRID(QD), STRID(CV)};
+  auto varInternalNames = std::array{"QU"_STRID, "QD"_STRID, "CV"_STRID};
 
   CInternalVarTestFB testFB(varInternalNames);
   BOOST_REQUIRE(testFB.initialize());
@@ -121,7 +115,7 @@ BOOST_AUTO_TEST_CASE(sampleInteralVarList) {
 }
 
 BOOST_AUTO_TEST_CASE(testToStringWithInternalVariables) {
-  auto varInternalNames = std::array{STRID(QU), STRID(QD), STRID(CV)};
+  auto varInternalNames = std::array{"QU"_STRID, "QD"_STRID, "CV"_STRID};
 
   CInternalVarTestFB testFB(varInternalNames);
   BOOST_REQUIRE(testFB.initialize());

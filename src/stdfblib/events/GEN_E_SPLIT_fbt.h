@@ -16,7 +16,7 @@
 
 #include <vector>
 #include "core/genfb.h"
-#include "core/stringdict.h"
+#include "core/stringid.h"
 
 class GEN_E_SPLIT final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT)
@@ -31,10 +31,10 @@ class GEN_E_SPLIT final : public CGenFunctionBlock<CFunctionBlock> {
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    std::vector<CStringDictionary::TStringId> mEventOutputNames;
+    std::vector<forte::core::StringId> mEventOutputNames;
 
   public:
-    GEN_E_SPLIT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_E_SPLIT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

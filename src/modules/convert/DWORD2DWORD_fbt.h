@@ -43,7 +43,7 @@ class FORTE_DWORD2DWORD final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_DWORD2DWORD(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_DWORD2DWORD(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_DWORD var_IN;
 

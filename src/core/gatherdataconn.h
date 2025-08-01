@@ -24,23 +24,21 @@ namespace forte::core::internal {
           CDelegatingDataConnection(paSrcFB, paSrcPortId, paValue) {
       }
 
-      EMGMResponse connect(CFunctionBlock &paDstFB,
-                           std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
+      EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::core::StringId> paDstPortNameId) override;
 
       EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
-                                         std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
+                                         std::span<const forte::core::StringId> paDstPortNameId) override;
 
-      EMGMResponse disconnect(CFunctionBlock &paDstFB,
-                              std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
+      EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::core::StringId> paDstPortNameId) override;
 
       void readData(CIEC_ANY &paValue) const override;
 
-      EMGMResponse addMemberConnection(std::span<const CStringDictionary::TStringId> paMemberName,
+      EMGMResponse addMemberConnection(std::span<const forte::core::StringId> paMemberName,
                                        CDataConnection &paConnection);
 
-      EMGMResponse removeMemberConnection(std::span<const CStringDictionary::TStringId> paMemberName);
+      EMGMResponse removeMemberConnection(std::span<const forte::core::StringId> paMemberName);
 
-      CDataConnection *getMemberConnection(std::span<const CStringDictionary::TStringId> paMemberName) override;
+      CDataConnection *getMemberConnection(std::span<const forte::core::StringId> paMemberName) override;
 
       [[nodiscard]] bool isGathering() const override {
         return true;
@@ -53,7 +51,7 @@ namespace forte::core::internal {
     private:
       EMGMResponse addMemberConnection(CIEC_ANY *paMember,
                                        CDataConnection *paConnection,
-                                       std::span<const CStringDictionary::TStringId> paMemberName);
+                                       std::span<const forte::core::StringId> paMemberName);
 
       EMGMResponse removeMemberConnection(const CIEC_ANY *paMember);
 

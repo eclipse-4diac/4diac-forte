@@ -15,12 +15,12 @@
 
 #include "core/io/QW_fbt.h"
 
-USE_STRING_ID(QW);
+using namespace forte::core::literals;
 
 using namespace forte::core::io;
 
-DEFINE_FIRMWARE_FB(FORTE_QW, STRID(QW))
+DEFINE_FIRMWARE_FB(FORTE_QW, "QW"_STRID)
 
-FORTE_QW::FORTE_QW(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_QW::FORTE_QW(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     COutputFB<CIEC_WORD>(paContainer, paInstanceNameId) {
 }

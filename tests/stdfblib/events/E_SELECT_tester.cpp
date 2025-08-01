@@ -14,11 +14,11 @@
 #include "../../core/fbtests/fbtestfixture.h"
 #include "core/datatypes/forte_bool.h"
 
-USE_STRING_ID(E_SELECT);
+using namespace forte::core::literals;
 
 struct E_SELECT_TestFixture : public CFBTestFixtureBase {
 
-    E_SELECT_TestFixture() : CFBTestFixtureBase(STRID(E_SELECT)) {
+    E_SELECT_TestFixture() : CFBTestFixtureBase("E_SELECT"_STRID) {
       setInputData({&mInG});
       CFBTestFixtureBase::setup();
     }

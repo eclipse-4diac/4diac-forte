@@ -17,14 +17,7 @@
 
 #include "FIELDBUS_PERCENT_TO_WORD_fct.h"
 
-USE_STRING_ID();
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(REAL);
-USE_STRING_ID(REQ);
-USE_STRING_ID(RI);
-USE_STRING_ID(signalprocessing__FIELDBUS_PERCENT_TO_WORD);
-USE_STRING_ID(WORD);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_real.h"
 #include "core/datatypes/forte_udint.h"
@@ -37,15 +30,15 @@ USE_STRING_ID(WORD);
 #include "FIELDBUS_PERCENT_TO_WORD_fct.h"
 #include "FIELDBUS_SIGNAL_gcf.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD, STRID(signalprocessing__FIELDBUS_PERCENT_TO_WORD))
+DEFINE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD, "signalprocessing__FIELDBUS_PERCENT_TO_WORD"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(RI)};
-  const auto cDataOutputNames = std::array{STRID()};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"RI"_STRID};
+  const auto cDataOutputNames = std::array{""_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -60,7 +53,7 @@ namespace {
 } // namespace
 
 FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD::FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD(
-    const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_RI(nullptr),

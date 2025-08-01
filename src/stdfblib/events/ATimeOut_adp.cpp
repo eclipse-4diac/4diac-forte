@@ -13,18 +13,12 @@
 #include "ATimeOut_adp.h"
 #include "core/eventconn.h"
 
-USE_STRING_ID(ATimeOut);
-USE_STRING_ID(DT);
-USE_STRING_ID(Event);
-USE_STRING_ID(START);
-USE_STRING_ID(STOP);
-USE_STRING_ID(TIME);
-USE_STRING_ID(TimeOut);
+using namespace forte::core::literals;
 
 namespace {
-  const auto cDataOutputNames = std::array{STRID(DT)};
-  const auto cEventInputNames = std::array{STRID(TimeOut)};
-  const auto cEventOutputNames = std::array{STRID(START), STRID(STOP)};
+  const auto cDataOutputNames = std::array{"DT"_STRID};
+  const auto cEventInputNames = std::array{"TimeOut"_STRID};
+  const auto cEventOutputNames = std::array{"START"_STRID, "STOP"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpecSocket = {
       .mEINames = cEventInputNames,
@@ -51,7 +45,7 @@ namespace {
   };
 } // namespace
 
-DEFINE_ADAPTER_TYPE(FORTE_ATimeOut, STRID(ATimeOut))
+DEFINE_ADAPTER_TYPE(FORTE_ATimeOut, "ATimeOut"_STRID)
 
 void FORTE_ATimeOut::setInitialValues() {
   var_DT = 0_TIME;
@@ -59,12 +53,12 @@ void FORTE_ATimeOut::setInitialValues() {
 
 FORTE_ATimeOut::FORTE_ATimeOut(forte::core::CFBContainer &paContainer,
                                const SFBInterfaceSpec &paInterfaceSpec,
-                               const CStringDictionary::TStringId paInstanceNameId,
+                               const forte::core::StringId paInstanceNameId,
                                TForteUInt8 paParentAdapterlistID) :
     CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID) {
 }
 
-FORTE_ATimeOut_Plug::FORTE_ATimeOut_Plug(CStringDictionary::TStringId paInstanceNameId,
+FORTE_ATimeOut_Plug::FORTE_ATimeOut_Plug(forte::core::StringId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer,
                                          TForteUInt8 paParentAdapterlistID) :
     FORTE_ATimeOut(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
@@ -107,7 +101,7 @@ FORTE_ATimeOut_Socket *FORTE_ATimeOut_Plug::getSocket() {
   return static_cast<FORTE_ATimeOut_Socket *>(getPeer());
 }
 
-FORTE_ATimeOut_Socket::FORTE_ATimeOut_Socket(CStringDictionary::TStringId paInstanceNameId,
+FORTE_ATimeOut_Socket::FORTE_ATimeOut_Socket(forte::core::StringId paInstanceNameId,
                                              forte::core::CFBContainer &paContainer,
                                              TForteUInt8 paParentAdapterlistID) :
     FORTE_ATimeOut(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),

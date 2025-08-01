@@ -42,7 +42,7 @@ class FORTE_SPLIT_BYTE_INTO_QUARTERS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_SPLIT_BYTE_INTO_QUARTERS(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_SPLIT_BYTE_INTO_QUARTERS(forte::core::StringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer);
 
     CIEC_BYTE var_IN;

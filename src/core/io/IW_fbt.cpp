@@ -15,12 +15,12 @@
 
 #include "core/io/IW_fbt.h"
 
-USE_STRING_ID(IW);
+using namespace forte::core::literals;
 
 using namespace forte::core::io;
 
-DEFINE_FIRMWARE_FB(FORTE_IW, STRID(IW))
+DEFINE_FIRMWARE_FB(FORTE_IW, "IW"_STRID)
 
-FORTE_IW::FORTE_IW(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_IW::FORTE_IW(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CInputFB<CIEC_WORD>(paContainer, paInstanceNameId) {
 }

@@ -14,14 +14,14 @@
 #ifndef SRC_CORE_LUA_LUATYPE_H_
 #define SRC_CORE_LUA_LUATYPE_H_
 
-#include "core/stringdict.h"
+#include "core/stringid.h"
 
 class SAdapterInstanceDef;
 class CLuaEngine;
 
 namespace luatype {
   bool getAdapterInstanceDefinition(SAdapterInstanceDef &def, CLuaEngine *luaEngine, int index);
-  bool getTypeNameId(CStringDictionary::TStringId &id, CLuaEngine *luaEngine, int index);
+  bool getTypeNameId(forte::core::StringId &id, CLuaEngine *luaEngine, int index);
 } // namespace luatype
 
 #endif /* SRC_CORE_LUA_LUATYPE_H_ */

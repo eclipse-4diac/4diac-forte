@@ -17,15 +17,7 @@
 
 #include "FIELDBUS_WORD_TO_PERCENT_fct.h"
 
-USE_STRING_ID();
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(REAL);
-USE_STRING_ID(REQ);
-USE_STRING_ID(signalprocessing__FIELDBUS_WORD_TO_PERCENT);
-USE_STRING_ID(WI);
-USE_STRING_ID(WO);
-USE_STRING_ID(WORD);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_real.h"
 #include "core/datatypes/forte_udint.h"
@@ -38,15 +30,15 @@ USE_STRING_ID(WORD);
 #include "FIELDBUS_SIGNAL_gcf.h"
 #include "FIELDBUS_WORD_TO_PERCENT_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT, STRID(signalprocessing__FIELDBUS_WORD_TO_PERCENT))
+DEFINE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT, "signalprocessing__FIELDBUS_WORD_TO_PERCENT"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(WI)};
-  const auto cDataOutputNames = std::array{STRID(), STRID(WO)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"WI"_STRID};
+  const auto cDataOutputNames = std::array{""_STRID, "WO"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -61,7 +53,7 @@ namespace {
 } // namespace
 
 FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT(
-    const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_WI(nullptr),

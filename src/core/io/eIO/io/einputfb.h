@@ -17,8 +17,7 @@
 #include "core/io/eIO/io/eGenAdapter_adp.h"
 #include "core/io/eIO/io/eConfigFB.h"
 
-USE_STRING_ID(eCONF);
-USE_STRING_ID(eGenAdapter);
+using namespace forte::core::literals;
 
 namespace forte::core::io {
 
@@ -33,15 +32,15 @@ namespace forte::core::io {
 
       using CInputFB<T>::scmDataInputNames;
       using CInputFB<T>::scmDataOutputNames;
-      static const std::array<const CStringDictionary::TStringId, 1> scmPlugs;
+      static const std::array<const forte::core::StringId, 1> scmPlugs;
 
     protected:
       using CInputFB<T>::var_IN;
 
     public:
-      CeInputFB(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId) :
+      CeInputFB(forte::core::CFBContainer &paContainer, const forte::core::StringId paInstanceNameId) :
           CInputFB<T>(paContainer, scmFBInterfaceSpec, paInstanceNameId),
-          var_eCONF(STRID(eCONF), *this, 0) {};
+          var_eCONF("eCONF"_STRID, *this, 0) {};
 
       forte::CPlugPin<FORTE_eGenAdapter_Plug> var_eCONF;
 
@@ -107,7 +106,7 @@ namespace forte::core::io {
   };
 
   template<class T>
-  const std::array<const CStringDictionary::TStringId, 1> CeInputFB<T>::scmPlugs = {STRID(eCONF)};
+  const std::array<const forte::core::StringId, 1> CeInputFB<T>::scmPlugs = {"eCONF"_STRID};
 
   template<class T>
   const SFBInterfaceSpec CeInputFB<T>::scmFBInterfaceSpec = {

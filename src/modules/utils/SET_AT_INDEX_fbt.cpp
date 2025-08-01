@@ -16,34 +16,23 @@
 
 #include "SET_AT_INDEX_fbt.h"
 
-USE_STRING_ID(ANY);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(IN_ARRAY);
-USE_STRING_ID(INDEX);
-USE_STRING_ID(OUT_ARRAY);
-USE_STRING_ID(QO);
-USE_STRING_ID(REQ);
-USE_STRING_ID(SET_AT_INDEX);
-USE_STRING_ID(UINT);
-USE_STRING_ID(VALUE);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_SET_AT_INDEX, STRID(SET_AT_INDEX))
+DEFINE_FIRMWARE_FB(FORTE_SET_AT_INDEX, "SET_AT_INDEX"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN_ARRAY), STRID(INDEX),
-                                                                                STRID(VALUE)};
+  const auto cDataInputNames = std::array{"IN_ARRAY"_STRID, "INDEX"_STRID,
+                                                                                "VALUE"_STRID};
   
   
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(OUT_ARRAY)};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "OUT_ARRAY"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -59,7 +48,7 @@ namespace {
 }
 
 
-FORTE_SET_AT_INDEX::FORTE_SET_AT_INDEX(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_SET_AT_INDEX::FORTE_SET_AT_INDEX(const forte::core::StringId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN_ARRAY(CIEC_ANY_VARIANT()),

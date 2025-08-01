@@ -12,21 +12,15 @@
 
 #include "forte_arrowheadsystem.h"
 
-USE_STRING_ID(address);
-USE_STRING_ID(ArrowheadSystem);
-USE_STRING_ID(authenticationInfo);
-USE_STRING_ID(DINT);
-USE_STRING_ID(port);
-USE_STRING_ID(systemName);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(ArrowheadSystem, STRID(ArrowheadSystem));
+DEFINE_FIRMWARE_DATATYPE(ArrowheadSystem, "ArrowheadSystem"_STRID);
 
 CIEC_ArrowheadSystem::CIEC_ArrowheadSystem() :
-    CIEC_STRUCT(STRID(ArrowheadSystem), 4, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT("ArrowheadSystem"_STRID, 4, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_ArrowheadSystem::scmElementTypes[] = {STRID(WSTRING), STRID(WSTRING),
-                                                                              STRID(DINT), STRID(WSTRING)};
-const CStringDictionary::TStringId CIEC_ArrowheadSystem::scmElementNames[] = {STRID(systemName), STRID(address),
-                                                                              STRID(port), STRID(authenticationInfo)};
+const forte::core::StringId CIEC_ArrowheadSystem::scmElementTypes[] = {"WSTRING"_STRID, "WSTRING"_STRID,
+                                                                              "DINT"_STRID, "WSTRING"_STRID};
+const forte::core::StringId CIEC_ArrowheadSystem::scmElementNames[] = {"systemName"_STRID, "address"_STRID,
+                                                                              "port"_STRID, "authenticationInfo"_STRID};

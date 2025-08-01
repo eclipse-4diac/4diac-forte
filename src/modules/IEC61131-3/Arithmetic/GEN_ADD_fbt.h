@@ -55,12 +55,12 @@ class GEN_ADD final : public CGenFunctionBlock<CFunctionBlock> {
 
     CEventConnection conn_CNF;
     std::unique_ptr<CIEC_ANY_MAGNITUDE_VARIANT[]> mGenDIs;
-    std::vector<CStringDictionary::TStringId> mDINames;
+    std::vector<forte::core::StringId> mDINames;
     CIEC_ANY_MAGNITUDE_VARIANT var_OUT;
     COutDataConnection<CIEC_ANY_MAGNITUDE_VARIANT> conn_OUT;
 
   public:
-    GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_ADD(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_ADD() override = default;
 };
 

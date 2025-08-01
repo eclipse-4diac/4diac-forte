@@ -13,24 +13,14 @@
 #include "core/io/eIO/io/eIXconfig_fbt.h"
 #include "core/io/eIO/io/eIX_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(CONF);
-USE_STRING_ID(Event);
-USE_STRING_ID(FE);
-USE_STRING_ID(RE);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(WSTRING);
-USE_STRING_ID(eGenAdapter);
-USE_STRING_ID(eIX);
-USE_STRING_ID(eIXconfig);
+using namespace forte::core::literals;
 
 namespace {
-  const auto cEventInputNames = std::array{STRID(CONF)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cDataInputNames = std::array{STRID(FE), STRID(RE)};
-  const auto cDataOutputNames = std::array{STRID(STATUS)};
-  const auto cSocketNames = std::array{STRID(eIX)};
+  const auto cEventInputNames = std::array{"CONF"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cDataInputNames = std::array{"FE"_STRID, "RE"_STRID};
+  const auto cDataOutputNames = std::array{"STATUS"_STRID};
+  const auto cSocketNames = std::array{"eIX"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -45,15 +35,14 @@ namespace {
   };
 } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_eIXconfig, STRID(eIXconfig))
+DEFINE_FIRMWARE_FB(FORTE_eIXconfig, "eIXconfig"_STRID)
 
-FORTE_eIXconfig::FORTE_eIXconfig(const CStringDictionary::TStringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) :
+FORTE_eIXconfig::FORTE_eIXconfig(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CeConfigFB(paInstanceNameId, cFBInterfaceSpec, paContainer),
     var_FE(0_BOOL),
     var_RE(0_BOOL),
     var_STATUS(u""_WSTRING),
-    var_eIX(STRID(eIX), *this, false),
+    var_eIX("eIX"_STRID, *this, false),
     conn_CNF(*this, 0),
     conn_FE(nullptr),
     conn_RE(nullptr),

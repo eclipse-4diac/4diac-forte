@@ -53,5 +53,5 @@ class FakeTimeDev : public CDevice {
 
     // allows to set the fake timer before calling the parent CDevice which
     // will create the timer already at construction
-    CStringDictionary::TStringId initializeTimer();
+    forte::core::StringId initializeTimer();
 };

@@ -33,12 +33,12 @@ class CFBTestFixtureBase : public CGenFunctionBlock<CFunctionBlock> {
 
     bool initialize() override;
 
-    CStringDictionary::TStringId getFBTypeId() const override {
+    forte::core::StringId getFBTypeId() const override {
       return mTypeId;
     }
 
   protected:
-    explicit CFBTestFixtureBase(CStringDictionary::TStringId paTypeId);
+    explicit CFBTestFixtureBase(forte::core::StringId paTypeId);
 
     void setup();
 
@@ -96,7 +96,7 @@ class CFBTestFixtureBase : public CGenFunctionBlock<CFunctionBlock> {
     void createDataInputConnections();
     void createDataOutputConnections();
 
-    CStringDictionary::TStringId mTypeId;
+    forte::core::StringId mTypeId;
     std::string mConfigString;
     CFunctionBlock *mFBUnderTest;
     std::vector<std::unique_ptr<CDataConnection>> mDIConnections;

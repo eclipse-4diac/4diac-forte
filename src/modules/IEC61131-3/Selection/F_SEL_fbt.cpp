@@ -16,31 +16,22 @@
 
 #include "F_SEL_fbt.h"
 
-USE_STRING_ID(ANY);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(F_SEL);
-USE_STRING_ID(G);
-USE_STRING_ID(IN0);
-USE_STRING_ID(IN1);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_F_SEL, STRID(F_SEL))
+DEFINE_FIRMWARE_FB(FORTE_F_SEL, "F_SEL"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(G), STRID(IN0), STRID(IN1)};
+  const auto cDataInputNames = std::array{"G"_STRID, "IN0"_STRID, "IN1"_STRID};
   
   
-  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -56,7 +47,7 @@ namespace {
 }
 
 
-FORTE_F_SEL::FORTE_F_SEL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_SEL::FORTE_F_SEL(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_G(false_BOOL),
     var_IN0(CIEC_ANY_VARIANT()),

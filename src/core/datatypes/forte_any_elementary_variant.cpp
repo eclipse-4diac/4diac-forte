@@ -14,9 +14,9 @@
  *******************************************************************************/
 #include "core/datatypes/forte_any_elementary_variant.h"
 
-USE_STRING_ID(ANY_ELEMENTARY);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(ANY_ELEMENTARY_VARIANT, STRID(ANY_ELEMENTARY))
+DEFINE_FIRMWARE_DATATYPE(ANY_ELEMENTARY_VARIANT, "ANY_ELEMENTARY"_STRID)
 
 void CIEC_ANY_ELEMENTARY_VARIANT::setValue(const CIEC_ANY &paValue) {
   switch (paValue.getDataTypeID()) {
@@ -116,7 +116,7 @@ int CIEC_ANY_ELEMENTARY_VARIANT::fromString(const char *paValue) {
   int nRetVal = -1;
   const char *hashPos = strchr(paValue, '#');
   if (nullptr != hashPos) {
-    CStringDictionary::TStringId typeNameId = parseTypeName(paValue, hashPos);
+    forte::core::StringId typeNameId = parseTypeName(paValue, hashPos);
     CIEC_ANY::EDataTypeID dataTypeId = CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(typeNameId);
     if (setDefaultValue(dataTypeId)) {
       CIEC_ANY &value = unwrap();
@@ -142,7 +142,7 @@ void CIEC_ANY_ELEMENTARY_VARIANT::toString(std::string &paTargetBuf) const {
       value.toString(paTargetBuf);
       break;
     default:
-      paTargetBuf += CStringDictionary::get(value.getTypeNameID());
+      paTargetBuf += value.getTypeNameID();
       paTargetBuf += '#';
       value.toString(paTargetBuf);
       break;
@@ -163,8 +163,8 @@ int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paVa
           } else if constexpr (std::is_same_v<T, U> && std::is_same_v<T, CIEC_WSTRING>) {
             return strcmp(static_cast<commonType>(value).getValue(), static_cast<commonType>(other).getValue());
           } else {
-            DEVLOG_ERROR("Comparing incompatible types %s and %s\n", CStringDictionary::get(value.getTypeNameID()),
-                         CStringDictionary::get(other.getTypeNameID()));
+            DEVLOG_ERROR("Comparing incompatible types %s and %s\n", value.getTypeNameID().data(),
+                         other.getTypeNameID().data());
             return -1;
           }
         } else if constexpr (!std::is_same_v<commonType, forte::core::mpl::NullType>) {
@@ -172,8 +172,8 @@ int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paVa
           auto primitiveOther = static_cast<typename commonType::TValueType>(static_cast<commonType>(other));
           return (primitiveValue > primitiveOther) - (primitiveValue < primitiveOther);
         } else {
-          DEVLOG_ERROR("Comparing incompatible types %s and %s\n", CStringDictionary::get(value.getTypeNameID()),
-                       CStringDictionary::get(other.getTypeNameID()));
+          DEVLOG_ERROR("Comparing incompatible types %s and %s\n", value.getTypeNameID().data(),
+                       other.getTypeNameID().data());
           return -1;
         }
       },

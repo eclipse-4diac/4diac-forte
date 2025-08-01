@@ -27,7 +27,7 @@ class FORTE_PublishEventOpcUa : public CCompositeFB {
     static const int scm_npublishEventAdpNum = 0;
 
   public:
-    FORTE_PublishEventOpcUa(const CStringDictionary::TStringId paInstanceNameId,
+    FORTE_PublishEventOpcUa(const forte::core::StringId paInstanceNameId,
                             forte::core::CFBContainer &paContainer) :
 
         ~FORTE_PublishEventOpcUa() override = default;

@@ -19,18 +19,7 @@
 
 #include "SET_LOCAL_ADS_ADDRESS_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(EInit);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(LOCAL_ADS_ADDRESS);
-USE_STRING_ID(PARAMS);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(SET_LOCAL_ADS_ADDRESS);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "core/iec61131_functions.h"
 #include "core/datatypes/forte_array_common.h"
@@ -40,15 +29,15 @@ USE_STRING_ID(WSTRING);
 #include "sstream"
 #include "AdsLib.h"
 
-DEFINE_FIRMWARE_FB(FORTE_SET_LOCAL_ADS_ADDRESS, STRID(SET_LOCAL_ADS_ADDRESS))
+DEFINE_FIRMWARE_FB(FORTE_SET_LOCAL_ADS_ADDRESS, "SET_LOCAL_ADS_ADDRESS"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(PARAMS)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS), STRID(LOCAL_ADS_ADDRESS)};
-  const auto cEventInputNames = std::array{STRID(INIT)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit)};
-  const auto cEventOutputNames = std::array{STRID(INITO)};
-  const auto cEventOutputTypeIds = std::array{STRID(EInit)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "PARAMS"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID, "LOCAL_ADS_ADDRESS"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID};
+  const auto cEventOutputTypeIds = std::array{"EInit"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -62,7 +51,7 @@ namespace {
   };
 } // namespace
 
-FORTE_SET_LOCAL_ADS_ADDRESS::FORTE_SET_LOCAL_ADS_ADDRESS(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_SET_LOCAL_ADS_ADDRESS::FORTE_SET_LOCAL_ADS_ADDRESS(const forte::core::StringId paInstanceNameId,
                                                          forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),

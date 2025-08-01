@@ -44,7 +44,7 @@ class FORTE_F_SUB_TOD_TOD : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_F_SUB_TOD_TOD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_SUB_TOD_TOD(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_TIME_OF_DAY var_IN1;
     CIEC_TIME_OF_DAY var_IN2;

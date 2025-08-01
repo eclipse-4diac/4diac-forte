@@ -25,5 +25,5 @@ class FORTE_QW final : public forte::core::io::COutputFB<CIEC_WORD> {
     DECLARE_FIRMWARE_FB(FORTE_QW)
 
   public:
-    FORTE_QW(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_QW(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 };

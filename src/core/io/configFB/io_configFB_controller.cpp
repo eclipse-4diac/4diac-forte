@@ -26,7 +26,7 @@ const CIEC_WSTRING IOConfigFBController::scmStopped("Stopped");
 
 IOConfigFBController::IOConfigFBController(forte::core::CFBContainer &paContainer,
                                            const SFBInterfaceSpec &paInterfaceSpec,
-                                           const CStringDictionary::TStringId paInstanceNameId) :
+                                           const forte::core::StringId paInstanceNameId) :
     IOConfigFBBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mStarting(false),
     mErrorCounter(0),

@@ -44,7 +44,7 @@ class FORTE_F_SUB_DATE_DATE : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_F_SUB_DATE_DATE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_SUB_DATE_DATE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_DATE var_IN1;
     CIEC_DATE var_IN2;

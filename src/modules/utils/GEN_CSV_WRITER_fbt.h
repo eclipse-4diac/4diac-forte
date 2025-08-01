@@ -78,7 +78,7 @@ class GEN_CSV_WRITER final : public CGenFunctionBlock<CFunctionBlock> {
     CDataConnection *getDOConUnchecked(TPortId paDONum) override;
 
   public:
-    GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_CSV_WRITER(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_CSV_WRITER() override;
 
   private:
@@ -89,7 +89,7 @@ class GEN_CSV_WRITER final : public CGenFunctionBlock<CFunctionBlock> {
 
     decltype(forte_fopen(nullptr, nullptr)) mCSVFile;
 
-    std::vector<CStringDictionary::TStringId> mDataInputNames;
+    std::vector<forte::core::StringId> mDataInputNames;
 
     std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDIs;
 

@@ -12,45 +12,28 @@
 
 #include "FieldsToServiceRegistryEntry.h"
 
-USE_STRING_ID(ArrowheadService);
-USE_STRING_ID(ArrowheadSystem);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(DINT);
-USE_STRING_ID(Event);
-USE_STRING_ID(FieldsToServiceRegistryEntry);
-USE_STRING_ID(metadata);
-USE_STRING_ID(providedService);
-USE_STRING_ID(provider);
-USE_STRING_ID(REQ);
-USE_STRING_ID(serviceRegistryEntry);
-USE_STRING_ID(ServiceRegistryEntry);
-USE_STRING_ID(serviceURI);
-USE_STRING_ID(ttl);
-USE_STRING_ID(udp);
-USE_STRING_ID(version);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceRegistryEntry, STRID(FieldsToServiceRegistryEntry))
+DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceRegistryEntry, "FieldsToServiceRegistryEntry"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{
-      STRID(providedService), STRID(provider), STRID(serviceURI), STRID(version), STRID(udp), STRID(ttl),
-      STRID(metadata)};
+      "providedService"_STRID, "provider"_STRID, "serviceURI"_STRID, "version"_STRID, "udp"_STRID, "ttl"_STRID,
+      "metadata"_STRID};
   
-      STRID(ArrowheadService), STRID(ArrowheadSystem), STRID(WSTRING), STRID(DINT), STRID(BOOL), STRID(DINT),
-      STRID(WSTRING)};
+      "ArrowheadService"_STRID, "ArrowheadSystem"_STRID, "WSTRING"_STRID, "DINT"_STRID, "BOOL"_STRID, "DINT"_STRID,
+      "WSTRING"_STRID};
   
   const auto cDataOutputNames = std::array{
-      STRID(serviceRegistryEntry)};
+      "serviceRegistryEntry"_STRID};
   
-      STRID(ServiceRegistryEntry)};
+      "ServiceRegistryEntry"_STRID};
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

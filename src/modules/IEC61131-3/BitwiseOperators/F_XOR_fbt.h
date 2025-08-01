@@ -43,7 +43,7 @@ class FORTE_F_XOR : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_F_XOR(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_XOR(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY_BIT_VARIANT var_IN1;
     CIEC_ANY_BIT_VARIANT var_IN2;

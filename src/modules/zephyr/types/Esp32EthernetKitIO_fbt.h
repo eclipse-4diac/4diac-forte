@@ -62,7 +62,7 @@ class FORTE_Esp32EthernetKitIO final : public FORTE_ZephyrIOBase {
 #pragma endregion define IOs
 
   public:
-    FORTE_Esp32EthernetKitIO(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_Esp32EthernetKitIO(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_STRING var_LED0;

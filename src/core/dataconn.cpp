@@ -21,14 +21,14 @@
 #include "core/mgmcmd.h"
 #include "core/negdataconn.h"
 
-USE_STRING_ID(NOT)
+using namespace forte::core::literals;
 
 CDataConnection::CDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId) :
     CConnection(paSrcFB, paSrcPortId) {
 }
 
 EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB,
-                                      const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
+                                      const std::span<const forte::core::StringId> paDstPortNameId) {
   if (paDstPortNameId.empty()) {
     return EMGMResponse::NoSuchObject;
   }
@@ -50,9 +50,8 @@ EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB,
   return EMGMResponse::Ready;
 }
 
-EMGMResponse
-CDataConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
-                                       const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
+EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
+                                                    const std::span<const forte::core::StringId> paDstPortNameId) {
   if (paDstPortNameId.empty()) {
     return EMGMResponse::NoSuchObject;
   }
@@ -77,7 +76,7 @@ void CDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint)
 }
 
 EMGMResponse CDataConnection::disconnect(CFunctionBlock &paDstFB,
-                                         const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
+                                         const std::span<const forte::core::StringId> paDstPortNameId) {
   if (paDstPortNameId.empty()) {
     return EMGMResponse::NoSuchObject;
   }
@@ -151,7 +150,7 @@ EMGMResponse
 CDataConnection::establishGatheringConnection(CFunctionBlock &paDstFB,
                                               const TPortId paDstPortId,
                                               CIEC_ANY &paDstDataPoint,
-                                              const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
+                                              const std::span<const forte::core::StringId> paDstPortNameId) {
   if (paDstDataPoint.getDataTypeID() != CIEC_ANY::e_STRUCT) {
     return EMGMResponse::NoSuchObject;
   }
@@ -184,10 +183,10 @@ CDataConnection::establishGatheringConnection(CFunctionBlock &paDstFB,
 }
 
 CConnection::Wrapper
-CDataConnection::getDelegatingConnection(const std::span<const CStringDictionary::TStringId> paSrcNameList) {
+CDataConnection::getDelegatingConnection(const std::span<const forte::core::StringId> paSrcNameList) {
   switch (getValue().getDataTypeID()) {
     case CIEC_ANY::e_BOOL:
-      if (paSrcNameList.size() == 1 && paSrcNameList.front() == STRID(NOT)) {
+      if (paSrcNameList.size() == 1 && paSrcNameList.front() == "NOT"_STRID) {
         return make_delegating<forte::core::internal::CNegatingDataConnection>(
             getSourceId().getFB(), getSourceId().getPortId(), static_cast<CIEC_BOOL &>(getValue()));
       }

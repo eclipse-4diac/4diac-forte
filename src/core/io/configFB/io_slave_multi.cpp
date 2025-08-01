@@ -26,7 +26,7 @@ IOConfigFBMultiSlave::IOConfigFBMultiSlave(const TForteUInt8 *const paSlaveConfi
                                            int paType,
                                            forte::core::CFBContainer &paContainer,
                                            const SFBInterfaceSpec &paInterfaceSpec,
-                                           const CStringDictionary::TStringId paInstanceNameId) :
+                                           const forte::core::StringId paInstanceNameId) :
     IOConfigFBBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mIndex(static_cast<size_t>(-1)),
     mSlaveConfigurationIO(paSlaveConfigurationIO),

@@ -12,36 +12,24 @@
 
 #include "FieldsToServiceQueryForm.h"
 
-USE_STRING_ID(ArrowheadService);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(DINT);
-USE_STRING_ID(Event);
-USE_STRING_ID(FieldsToServiceQueryForm);
-USE_STRING_ID(metadataSearch);
-USE_STRING_ID(pingProviders);
-USE_STRING_ID(REQ);
-USE_STRING_ID(service);
-USE_STRING_ID(serviceQueryForm);
-USE_STRING_ID(ServiceQueryForm);
-USE_STRING_ID(version);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceQueryForm, STRID(FieldsToServiceQueryForm))
+DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceQueryForm, "FieldsToServiceQueryForm"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{
-      STRID(service), STRID(metadataSearch), STRID(pingProviders), STRID(version)};
+      "service"_STRID, "metadataSearch"_STRID, "pingProviders"_STRID, "version"_STRID};
   
-      STRID(ArrowheadService), STRID(BOOL), STRID(BOOL), STRID(DINT)};
+      "ArrowheadService"_STRID, "BOOL"_STRID, "BOOL"_STRID, "DINT"_STRID};
   
-  const auto cDataOutputNames = std::array{STRID(serviceQueryForm)};
+  const auto cDataOutputNames = std::array{"serviceQueryForm"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

@@ -44,7 +44,7 @@ class FORTE_F_TRUNC : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_F_TRUNC(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_TRUNC(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY_REAL_VARIANT var_IN;
     CIEC_ANY_INT_VARIANT var_OUT;

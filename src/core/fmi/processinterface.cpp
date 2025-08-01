@@ -20,13 +20,13 @@ const char *const CFMUProcessInterface::scmINTERNALERROR = "Internal Error";
 
 CFMUProcessInterface::CFMUProcessInterface(forte::core::CFBContainer &paContainer,
                                            const SFBInterfaceSpec &paInterfaceSpec,
-                                           const CStringDictionary::TStringId paInstanceNameId) :
+                                           const forte::core::StringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mInitialized(false),
     mValue(0) {
 }
 
-CFMUProcessInterface::CFMUProcessInterface(const CStringDictionary::TStringId paInstanceNameId,
+CFMUProcessInterface::CFMUProcessInterface(const forte::core::StringId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer) :
     CProcessInterfaceBase(paContainer, 0, paInstanceNameId, 0, 0),
     mInitialized(false),

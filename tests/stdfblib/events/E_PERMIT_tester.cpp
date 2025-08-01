@@ -13,11 +13,11 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-USE_STRING_ID(E_PERMIT);
+using namespace forte::core::literals;
 
 struct E_PERMIT_TestFixture : public CFBTestFixtureBase {
 
-    E_PERMIT_TestFixture() : CFBTestFixtureBase(STRID(E_PERMIT)) {
+    E_PERMIT_TestFixture() : CFBTestFixtureBase("E_PERMIT"_STRID) {
       setInputData({&mInPERMIT});
       CFBTestFixtureBase::setup();
     }

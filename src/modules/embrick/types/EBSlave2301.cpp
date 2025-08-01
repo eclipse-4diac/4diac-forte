@@ -15,37 +15,18 @@
 #include "EBSlave2301.h"
 #include "../handler/bus.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(BusAdapterIn);
-USE_STRING_ID(BusAdapterOut);
-USE_STRING_ID(EBBusAdapter);
-USE_STRING_ID(EBSlave2301);
-USE_STRING_ID(IND);
-USE_STRING_ID(MAP);
-USE_STRING_ID(MAPO);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(Relay_1);
-USE_STRING_ID(Relay_2);
-USE_STRING_ID(Relay_3);
-USE_STRING_ID(Relay_4);
-USE_STRING_ID(Relay_5);
-USE_STRING_ID(Relay_6);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(UINT);
-USE_STRING_ID(UpdateInterval);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_EBSlave2301, STRID(EBSlave2301))
+DEFINE_FIRMWARE_FB(FORTE_EBSlave2301, "EBSlave2301"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI),      STRID(Relay_1), STRID(Relay_2), STRID(Relay_3),
-                                          STRID(Relay_4), STRID(Relay_5), STRID(Relay_6), STRID(UpdateInterval)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(MAP)};
-  const auto cEventOutputNames = std::array{STRID(MAPO), STRID(IND)};
-  const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
-  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+  const auto cDataInputNames = std::array{"QI"_STRID,      "Relay_1"_STRID, "Relay_2"_STRID, "Relay_3"_STRID,
+                                          "Relay_4"_STRID, "Relay_5"_STRID, "Relay_6"_STRID, "UpdateInterval"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"MAP"_STRID};
+  const auto cEventOutputNames = std::array{"MAPO"_STRID, "IND"_STRID};
+  const auto cSocketNameIds = std::array{"BusAdapterIn"_STRID};
+  const auto cPlugNameIds = std::array{"BusAdapterOut"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -60,7 +41,7 @@ namespace {
   };
 } // namespace
 
-FORTE_EBSlave2301::FORTE_EBSlave2301(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_EBSlave2301::FORTE_EBSlave2301(const forte::core::StringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
     EmbrickSlave(scmSlaveConfigurationIO,
                  scmSlaveConfigurationIONum,

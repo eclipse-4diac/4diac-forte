@@ -16,25 +16,15 @@
 
 #include "F_REPLACE_fbt.h"
 
-USE_STRING_ID(ANY_INT);
-USE_STRING_ID(ANY_STRING);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(F_REPLACE);
-USE_STRING_ID(IN1);
-USE_STRING_ID(IN2);
-USE_STRING_ID(L);
-USE_STRING_ID(OUT);
-USE_STRING_ID(P);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_F_REPLACE, STRID(F_REPLACE))
+DEFINE_FIRMWARE_FB(FORTE_F_REPLACE, "F_REPLACE"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN1), STRID(IN2), STRID(L), STRID(P)};
-  const auto cDataOutputNames = std::array{STRID(OUT)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID, "L"_STRID, "P"_STRID};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -48,7 +38,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_REPLACE::FORTE_F_REPLACE(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_REPLACE::FORTE_F_REPLACE(const forte::core::StringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_STRING_VARIANT()),
@@ -73,8 +63,8 @@ void FORTE_F_REPLACE::executeEvent(TEventID paEIID, CEventChainExecutionThread *
             if constexpr (std::is_same_v<T, U>) {
               return func_REPLACE(paIN1, paIN2, paP, paL);
             }
-            DEVLOG_ERROR("Replacing incompatible types %s and %s\n", CStringDictionary::get(paIN1.getTypeNameID()),
-                         CStringDictionary::get(paIN2.getTypeNameID()));
+            DEVLOG_ERROR("Replacing incompatible types %s and %s\n", paIN1.getTypeNameID().data(),
+                         paIN2.getTypeNameID().data());
             return CIEC_ANY_STRING_VARIANT();
           },
           static_cast<CIEC_ANY_STRING_VARIANT::variant &>(var_IN1),

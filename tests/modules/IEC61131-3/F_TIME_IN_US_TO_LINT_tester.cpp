@@ -11,11 +11,11 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-USE_STRING_ID(F_TIME_IN_US_TO_LINT);
+using namespace forte::core::literals;
 
 struct F_TIME_IN_US_TO_LINT_TestFixture : public CFBTestFixtureBase {
 
-    F_TIME_IN_US_TO_LINT_TestFixture() : CFBTestFixtureBase(STRID(F_TIME_IN_US_TO_LINT)) {
+    F_TIME_IN_US_TO_LINT_TestFixture() : CFBTestFixtureBase("F_TIME_IN_US_TO_LINT"_STRID) {
       setInputData({&mIn_F_TIME_IN_US_TO_LINT});
       setOutputData({&mOut_F_TIME_IN_US_TO_LINT});
       CFBTestFixtureBase::setup();

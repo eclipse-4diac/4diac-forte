@@ -17,23 +17,7 @@
 
 #include "DualHysteresis_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(DEAD);
-USE_STRING_ID(DO_DOWN);
-USE_STRING_ID(DO_UP);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(HYSTERESIS);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(INPUT);
-USE_STRING_ID(MI);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(REAL);
-USE_STRING_ID(REQ);
-USE_STRING_ID(signalprocessing__DualHysteresis);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_bool.h"
 #include "core/datatypes/forte_real.h"
@@ -43,15 +27,15 @@ USE_STRING_ID(signalprocessing__DualHysteresis);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__DualHysteresis, STRID(signalprocessing__DualHysteresis))
+DEFINE_FIRMWARE_FB(FORTE_signalprocessing__DualHysteresis, "signalprocessing__DualHysteresis"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(MI), STRID(DEAD), STRID(HYSTERESIS), STRID(INPUT)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(DO_UP), STRID(DO_DOWN)};
-  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "MI"_STRID, "DEAD"_STRID, "HYSTERESIS"_STRID, "INPUT"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "DO_UP"_STRID, "DO_DOWN"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -66,7 +50,7 @@ namespace {
 } // namespace
 
 FORTE_signalprocessing__DualHysteresis::FORTE_signalprocessing__DualHysteresis(
-    const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_QI(0_BOOL),
     var_MI(0.5_REAL),

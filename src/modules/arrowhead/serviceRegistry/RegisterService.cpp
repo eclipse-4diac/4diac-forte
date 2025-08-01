@@ -12,31 +12,19 @@
 
 #include "RegisterService.h"
 
-USE_STRING_ID(doneRegister);
-USE_STRING_ID(doneUnregister);
-USE_STRING_ID(endpoint);
-USE_STRING_ID(Event);
-USE_STRING_ID(register);
-USE_STRING_ID(registerService);
-USE_STRING_ID(RegisterService);
-USE_STRING_ID(RegisterServiceAdp);
-USE_STRING_ID(serviceRegistryEntry);
-USE_STRING_ID(ServiceRegistryEntry);
-USE_STRING_ID(unregister);
-USE_STRING_ID(unregisterService);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_RegisterService, STRID(RegisterService))
+DEFINE_FIRMWARE_FB(FORTE_RegisterService, "RegisterService"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(serviceRegistryEntry), STRID(endpoint)};
+  const auto cDataInputNames = std::array{"serviceRegistryEntry"_STRID, "endpoint"_STRID};
 
-  const auto cEventInputNames = std::array{STRID(register), STRID(unregister)};
-  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(doneRegister), STRID(doneUnregister)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cEventInputNames = std::array{"register"_STRID, "unregister"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"doneRegister"_STRID, "doneUnregister"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
 
-  const auto cPlugNameIds = std::array{STRID(registerService)};
+  const auto cPlugNameIds = std::array{"registerService"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -51,16 +39,16 @@ namespace {
   };
 
   const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
-      {CStringDictionary::scmInvalidStringId, STRID(register), STRID(registerService), STRID(registerService)},
-      {CStringDictionary::scmInvalidStringId, STRID(unregister), STRID(registerService), STRID(unregisterService)},
-      {STRID(registerService), STRID(doneRegister), CStringDictionary::scmInvalidStringId, STRID(doneRegister)},
-      {STRID(registerService), STRID(doneUnregister), CStringDictionary::scmInvalidStringId, STRID(doneUnregister)},
+      {{}, "register"_STRID, "registerService"_STRID, "registerService"_STRID},
+      {{}, "unregister"_STRID, "registerService"_STRID, "unregisterService"_STRID},
+      {"registerService"_STRID, "doneRegister"_STRID, {}, "doneRegister"_STRID},
+      {"registerService"_STRID, "doneUnregister"_STRID, {}, "doneUnregister"_STRID},
   });
 
   const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
-      {CStringDictionary::scmInvalidStringId, STRID(serviceRegistryEntry), STRID(registerService),
-       STRID(serviceRegistryEntry)},
-      {CStringDictionary::scmInvalidStringId, STRID(endpoint), STRID(registerService), STRID(endpoint)},
+      {{}, "serviceRegistryEntry"_STRID, "registerService"_STRID,
+       "serviceRegistryEntry"_STRID},
+      {{}, "endpoint"_STRID, "registerService"_STRID, "endpoint"_STRID},
   });
 } // namespace
 

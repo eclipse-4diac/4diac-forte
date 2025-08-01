@@ -22,9 +22,9 @@
 #include "arch/forte_architecture_time.h"
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(LDATE_AND_TIME);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(LDATE_AND_TIME, STRID(LDATE_AND_TIME))
+DEFINE_FIRMWARE_DATATYPE(LDATE_AND_TIME, "LDATE_AND_TIME"_STRID)
 
 int CIEC_LDATE_AND_TIME::fromString(const char *paValue) {
   // 2007-12-21-15:00:00.000
@@ -118,4 +118,4 @@ void CIEC_LDATE_AND_TIME::toGMTString(std::string &paTargetBuf) const {
   toString(paTargetBuf);
 }
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_LDATE_AND_TIME>::scmDataTypeName = STRID(LDATE_AND_TIME);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_LDATE_AND_TIME>::scmDataTypeName = "LDATE_AND_TIME"_STRID;

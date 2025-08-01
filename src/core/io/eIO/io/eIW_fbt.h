@@ -15,7 +15,7 @@
 #include "core/io/eIO/io/einputfb.h"
 #include "core/datatypes/forte_word.h"
 
-USE_STRING_ID(eIW);
+using namespace forte::core::literals;
 
 /*! /brief generic class for eIW function blocks providing (event-triggerd) access to a physical input
  *
@@ -24,5 +24,5 @@ class FORTE_eIW final : public forte::core::io::CeInputFB<CIEC_WORD> {
     DECLARE_FIRMWARE_FB(FORTE_eIW)
 
   public:
-    FORTE_eIW(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_eIW(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 };

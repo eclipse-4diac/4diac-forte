@@ -59,13 +59,13 @@ class FORTE_PLCnextBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
   protected:
     FORTE_PLCnextBusAdapter(forte::core::CFBContainer &paContainer,
                             const SFBInterfaceSpec &paInterfaceSpec,
-                            const CStringDictionary::TStringId paInstanceNameId,
+                            const forte::core::StringId paInstanceNameId,
                             TForteUInt8 paParentAdapterlistID);
 };
 
 class FORTE_PLCnextBusAdapter_Plug final : public FORTE_PLCnextBusAdapter {
   public:
-    FORTE_PLCnextBusAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_PLCnextBusAdapter_Plug(forte::core::StringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer,
                                  TForteUInt8 paParentAdapterlistID);
     ~FORTE_PLCnextBusAdapter_Plug() override = default;
@@ -91,7 +91,7 @@ class FORTE_PLCnextBusAdapter_Plug final : public FORTE_PLCnextBusAdapter {
 
 class FORTE_PLCnextBusAdapter_Socket final : public FORTE_PLCnextBusAdapter {
   public:
-    FORTE_PLCnextBusAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_PLCnextBusAdapter_Socket(forte::core::StringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer,
                                    TForteUInt8 paParentAdapterlistID);
     ~FORTE_PLCnextBusAdapter_Socket() override = default;

@@ -14,11 +14,11 @@
 #include "../../core/fbtests/fbtestfixture.h"
 #include "core/datatypes/forte_bool.h"
 
-USE_STRING_ID(E_SR);
+using namespace forte::core::literals;
 
 struct E_SR_TestFixture : public CFBTestFixtureBase {
 
-    E_SR_TestFixture() : CFBTestFixtureBase(STRID(E_SR)) {
+    E_SR_TestFixture() : CFBTestFixtureBase("E_SR"_STRID) {
       setOutputData({&mOutQ});
       CFBTestFixtureBase::setup();
     }

@@ -54,7 +54,7 @@ class FORTE_QueryService : public CCompositeFB {
     static const SCFB_FBNData scmFBNData;
 
   public:
-    FORTE_QueryService(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_QueryService(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
         ~FORTE_QueryService() override = default;
 };

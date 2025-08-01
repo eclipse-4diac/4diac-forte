@@ -44,7 +44,7 @@ class FORTE_F_LREAL_TO_LWORD final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_LREAL_TO_LWORD(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_LREAL_TO_LWORD(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_LREAL var_IN;
 

@@ -15,19 +15,15 @@
  *******************************************************************************/
 #include "stdfblib/ita/FakeTimeDev.h"
 
-USE_STRING_ID(FakeTime);
-USE_STRING_ID(MGR);
-USE_STRING_ID(MGR_ID);
-USE_STRING_ID(TIME);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-#include "core/stringdict.h"
+#include "core/stringid.h"
 #include "../../arch/fake_time/faketimerha.h"
 
 #include "generated/timerhandlerfactory.h"
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(MGR_ID), STRID(FakeTime)};
+  const auto cDataInputNames = std::array{"MGR_ID"_STRID, "FakeTime"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = {},
@@ -46,7 +42,7 @@ FakeTimeDev::FakeTimeDev(const std::string &paMGR_ID) :
     CDevice(cFBInterfaceSpec, initializeTimer()),
     conn_MGR_ID(*this, 0, u""_WSTRING),
     conn_FakeTime(*this, 0, 0_TIME),
-    MGR(STRID(MGR), *this) {
+    MGR("MGR"_STRID, *this) {
   conn_MGR_ID.getValue().fromString(paMGR_ID.c_str());
 }
 
@@ -60,7 +56,7 @@ bool FakeTimeDev::initialize() {
   }
 
   // we need to manually crate this connection as the MGR is not managed by device
-  conn_MGR_ID.connect(MGR, std::array{STRID(MGR_ID)});
+  conn_MGR_ID.connect(MGR, std::array{"MGR_ID"_STRID});
   return true;
 }
 
@@ -103,16 +99,16 @@ CConnection *FakeTimeDev::getResIf2InConnectionUnchecked(const TPortId paIndex) 
 EMGMResponse
 FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, const std::string &paValue, bool paForce) {
   // parent writeValue is modifying the name list so we need to get the name as backup here
-  CStringDictionary::TStringId portName = paNameList.back();
+  forte::core::StringId portName = paNameList.back();
   EMGMResponse eRetVal = CDevice::writeValue(paNameList, paValue, paForce);
-  if ((EMGMResponse::Ready == eRetVal) && (STRID(FakeTime) == portName)) {
+  if ((EMGMResponse::Ready == eRetVal) && ("FakeTime"_STRID == portName)) {
     // fake time was written, update CFakeTimerHandler
     static_cast<CFakeTimerHandler &>(getTimer()).sleepToTime(conn_FakeTime.getValue());
   }
   return eRetVal;
 }
 
-CStringDictionary::TStringId FakeTimeDev::initializeTimer() {
+forte::core::StringId FakeTimeDev::initializeTimer() {
   TimerHandlerFactory::setTimeHandlerNameToCreate(TimerHandlerFactory::AvailableTimers::CFakeTimerHandler);
-  return CStringDictionary::scmInvalidStringId;
+  return {};
 }

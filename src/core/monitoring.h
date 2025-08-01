@@ -19,7 +19,7 @@
 #include "core/funcbloc.h"
 #include "core/mgmcmdstruct.h"
 #include "core/conn.h"
-#include "core/stringdict.h"
+#include "core/stringid.h"
 
 class CFunctionBlock;
 class CResource;
@@ -29,7 +29,7 @@ namespace forte::core {
 
     class CWatchEntry {
       public:
-        CStringDictionary::TStringId getPortId() const {
+        forte::core::StringId getPortId() const {
           return mPortId;
         }
 
@@ -37,19 +37,19 @@ namespace forte::core {
         CWatchEntry &operator=(const CWatchEntry &) = delete;
 
       protected:
-        CWatchEntry(CStringDictionary::TStringId paPortId) : mPortId(paPortId) {
+        CWatchEntry(forte::core::StringId paPortId) : mPortId(paPortId) {
         }
 
         CWatchEntry(CWatchEntry &&) = default;
         CWatchEntry &operator=(CWatchEntry &&) = default;
 
       private:
-        CStringDictionary::TStringId mPortId;
+        forte::core::StringId mPortId;
     };
 
     class CDataWatchEntry : public CWatchEntry {
       public:
-        CDataWatchEntry(CStringDictionary::TStringId paPortId, CIEC_ANY &paDataValue, TAbsDataPortNum paForceIndex) :
+        CDataWatchEntry(forte::core::StringId paPortId, CIEC_ANY &paDataValue, TAbsDataPortNum paForceIndex) :
             CWatchEntry(paPortId),
             mDataBuffer(paDataValue.clone(nullptr)),
             mForceIndex(paForceIndex),
@@ -73,7 +73,7 @@ namespace forte::core {
 
     class CEventWatchEntry : public CWatchEntry {
       public:
-        CEventWatchEntry(CStringDictionary::TStringId paPortId, TForteUInt32 &paEventData) :
+        CEventWatchEntry(forte::core::StringId paPortId, TForteUInt32 &paEventData) :
             CWatchEntry(paPortId),
             mEventDataRef(paEventData) {
         }

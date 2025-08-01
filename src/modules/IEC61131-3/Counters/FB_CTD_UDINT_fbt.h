@@ -43,7 +43,7 @@ class FORTE_FB_CTD_UDINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_FB_CTD_UDINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_FB_CTD_UDINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_CD;
     CIEC_BOOL var_LD;

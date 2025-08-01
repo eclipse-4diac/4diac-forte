@@ -44,7 +44,7 @@ class FORTE_F_BYTE_TO_INT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_BYTE_TO_INT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_BYTE_TO_INT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BYTE var_IN;
 

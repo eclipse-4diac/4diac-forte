@@ -51,7 +51,7 @@ class FORTE_E_CTD final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_CTD(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_CTD(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_UINT var_PV;
 

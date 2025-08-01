@@ -333,9 +333,9 @@ void forte::core::util::removeEscapedSigns(char **paString, char paEscapingChar)
 }
 
 void forte::core::util::writeToStringNameValuePair(std::string &paTargetBuf,
-                                                   const CStringDictionary::TStringId variableNameId,
+                                                   const forte::core::StringId variableNameId,
                                                    const CIEC_ANY *const variable) {
-  paTargetBuf += CStringDictionary::get(variableNameId);
+  paTargetBuf += variableNameId;
   paTargetBuf += ":="s;
   variable->toString(paTargetBuf);
 }

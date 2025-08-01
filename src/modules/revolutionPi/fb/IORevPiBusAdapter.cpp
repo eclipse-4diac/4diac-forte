@@ -13,27 +13,18 @@
 
 #include "IORevPiBusAdapter.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(Event);
-USE_STRING_ID(Index);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(IORevPiBusAdapter);
-USE_STRING_ID(MasterId);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(UINT);
+using namespace forte::core::literals;
 
-DEFINE_ADAPTER_TYPE(FORTE_IORevPiBusAdapter, STRID(IORevPiBusAdapter))
+DEFINE_ADAPTER_TYPE(FORTE_IORevPiBusAdapter, "IORevPiBusAdapter"_STRID)
 
 namespace {
 
-  const auto cDataInputNames = std::array{STRID(QO)};
-  const auto cDataOutputNames = std::array{STRID(QI), STRID(MasterId), STRID(Index)};
-  const auto cEventInputNames = std::array{STRID(INITO)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(INIT)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cDataInputNames = std::array{"QO"_STRID};
+  const auto cDataOutputNames = std::array{"QI"_STRID, "MasterId"_STRID, "Index"_STRID};
+  const auto cEventInputNames = std::array{"INITO"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"INIT"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpecSocket = {
       .mEINames = cEventInputNames,
@@ -63,7 +54,7 @@ namespace {
 
 FORTE_IORevPiBusAdapter::FORTE_IORevPiBusAdapter(forte::core::CFBContainer &paContainer,
                                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                                 const CStringDictionary::TStringId paInstanceNameId,
+                                                 const forte::core::StringId paInstanceNameId,
                                                  TForteUInt8 paParentAdapterlistID) :
     IOConfigFBMultiAdapter({}, paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     var_QO(0_BOOL),
@@ -80,7 +71,7 @@ void FORTE_IORevPiBusAdapter::setInitialValues() {
   var_Index = 0_UINT;
 }
 
-FORTE_IORevPiBusAdapter_Plug::FORTE_IORevPiBusAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+FORTE_IORevPiBusAdapter_Plug::FORTE_IORevPiBusAdapter_Plug(forte::core::StringId paInstanceNameId,
                                                            forte::core::CFBContainer &paContainer,
                                                            TForteUInt8 paParentAdapterlistID) :
     FORTE_IORevPiBusAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
@@ -156,7 +147,7 @@ CDataConnection *FORTE_IORevPiBusAdapter_Plug::getDOConUnchecked(const TPortId p
   return nullptr;
 }
 
-FORTE_IORevPiBusAdapter_Socket::FORTE_IORevPiBusAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+FORTE_IORevPiBusAdapter_Socket::FORTE_IORevPiBusAdapter_Socket(forte::core::StringId paInstanceNameId,
                                                                forte::core::CFBContainer &paContainer,
                                                                TForteUInt8 paParentAdapterlistID) :
     FORTE_IORevPiBusAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),

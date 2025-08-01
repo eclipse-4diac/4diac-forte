@@ -17,14 +17,7 @@
 
 #include "F_TIME_IN_NS_TO_DINT_fbt.h"
 
-USE_STRING_ID(CNF);
-USE_STRING_ID(DINT);
-USE_STRING_ID(Event);
-USE_STRING_ID(F_TIME_IN_NS_TO_DINT);
-USE_STRING_ID(IN);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
-USE_STRING_ID(TIME);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_dint.h"
 #include "core/datatypes/forte_lint.h"
@@ -36,15 +29,15 @@ USE_STRING_ID(TIME);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_F_TIME_IN_NS_TO_DINT, STRID(F_TIME_IN_NS_TO_DINT))
+DEFINE_FIRMWARE_FB(FORTE_F_TIME_IN_NS_TO_DINT, "F_TIME_IN_NS_TO_DINT"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN)};
-  const auto cDataOutputNames = std::array{STRID(OUT)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"IN"_STRID};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -59,7 +52,7 @@ namespace {
 }
 
 
-FORTE_F_TIME_IN_NS_TO_DINT::FORTE_F_TIME_IN_NS_TO_DINT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_TIME_IN_NS_TO_DINT::FORTE_F_TIME_IN_NS_TO_DINT(const forte::core::StringId paInstanceNameId,
                                                        forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CNF(*this, 0),

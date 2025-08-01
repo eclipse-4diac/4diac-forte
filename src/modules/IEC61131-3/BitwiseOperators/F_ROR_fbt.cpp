@@ -16,30 +16,22 @@
 
 #include "F_ROR_fbt.h"
 
-USE_STRING_ID(ANY_BIT);
-USE_STRING_ID(ANY_INT);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(F_ROR);
-USE_STRING_ID(IN);
-USE_STRING_ID(N);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_F_ROR, STRID(F_ROR))
+DEFINE_FIRMWARE_FB(FORTE_F_ROR, "F_ROR"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN), STRID(N)};
+  const auto cDataInputNames = std::array{"IN"_STRID, "N"_STRID};
   
   
-  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -55,7 +47,7 @@ namespace {
 }
 
 
-FORTE_F_ROR::FORTE_F_ROR(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_ROR::FORTE_F_ROR(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_BIT_VARIANT()),
     var_N(CIEC_ANY_INT_VARIANT()),
@@ -74,8 +66,8 @@ void FORTE_F_ROR::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
             if constexpr (!std::is_same<T, CIEC_BOOL>::value) {
               return func_ROR(paIN, paN);
             }
-            DEVLOG_ERROR("Rotating right incompatible types %s and %s\n", CStringDictionary::get(paIN.getTypeNameID()),
-                         CStringDictionary::get(paN.getTypeNameID()));
+            DEVLOG_ERROR("Rotating right incompatible types %s and %s\n", paIN.getTypeNameID().data(),
+                         paN.getTypeNameID().data());
             return CIEC_ANY_BIT_VARIANT();
           },
           static_cast<CIEC_ANY_BIT_VARIANT::variant &>(var_IN), static_cast<CIEC_ANY_INT_VARIANT::variant &>(var_N));

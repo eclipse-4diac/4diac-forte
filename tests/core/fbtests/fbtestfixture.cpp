@@ -40,9 +40,7 @@ class CFBTestConn final : public CDataConnection {
 
 class CFBTestInputDataConn final : public CDataConnection {
   public:
-    CFBTestInputDataConn(CFunctionBlock &paSrcFB, CIEC_ANY &paValue) :
-        CDataConnection(paSrcFB, CStringDictionary::scmInvalidStringId),
-        mValue(paValue) {
+    CFBTestInputDataConn(CFunctionBlock &paSrcFB, CIEC_ANY &paValue) : CDataConnection(paSrcFB, {}), mValue(paValue) {
     }
 
     void writeData(const CIEC_ANY &paValue) override {
@@ -61,8 +59,8 @@ class CFBTestInputDataConn final : public CDataConnection {
     CIEC_ANY &mValue;
 };
 
-CFBTestFixtureBase::CFBTestFixtureBase(CStringDictionary::TStringId paTypeId) :
-    CGenFunctionBlock<CFunctionBlock>(CFBTestDataGlobalFixture::getResource(), 0),
+CFBTestFixtureBase::CFBTestFixtureBase(forte::core::StringId paTypeId) :
+    CGenFunctionBlock<CFunctionBlock>(CFBTestDataGlobalFixture::getResource(), {}),
     mTypeId(paTypeId) {
   mFBUnderTest = forte::core::createFB(paTypeId, paTypeId, CFBTestDataGlobalFixture::getResource());
 }
@@ -253,8 +251,8 @@ void CFBTestFixtureBase::performDataInterfaceTests() {
 
   BOOST_REQUIRE_EQUAL(interfaceSpec.getNumDIs(), mInputDataBuffers.size());
 
-  BOOST_CHECK(nullptr == mFBUnderTest->getDataInput(CStringDictionary::scmInvalidStringId));
-  BOOST_CHECK_EQUAL(cgInvalidPortId, interfaceSpec.getDIID(CStringDictionary::scmInvalidStringId));
+  BOOST_CHECK(nullptr == mFBUnderTest->getDataInput({}));
+  BOOST_CHECK_EQUAL(cgInvalidPortId, interfaceSpec.getDIID({}));
 
   for (TPortId i = 0; i < interfaceSpec.getNumDIs(); ++i) {
     CIEC_ANY *val = mFBUnderTest->getDataInput(interfaceSpec.mDINames[i]);
@@ -264,7 +262,7 @@ void CFBTestFixtureBase::performDataInterfaceTests() {
                   (CIEC_ANY::e_ANY == val->getDataTypeID()));
 
     BOOST_CHECK_EQUAL(val, mFBUnderTest->getDIFromPortId(i));
-    CStringDictionary::TStringId stringIdBuf = interfaceSpec.mDINames[i];
+    forte::core::StringId stringIdBuf = interfaceSpec.mDINames[i];
     BOOST_CHECK_EQUAL(val, mFBUnderTest->getVar(&stringIdBuf, 1));
 
     BOOST_CHECK_EQUAL(i, interfaceSpec.getDIID(interfaceSpec.mDINames[i]));
@@ -280,8 +278,8 @@ void CFBTestFixtureBase::performDataInterfaceTests() {
 
   BOOST_CHECK_EQUAL(interfaceSpec.getNumDOs(), mOutputDataBuffers.size());
 
-  BOOST_CHECK(nullptr == mFBUnderTest->getDataOutput(CStringDictionary::scmInvalidStringId));
-  BOOST_CHECK_EQUAL(cgInvalidPortId, interfaceSpec.getDOID(CStringDictionary::scmInvalidStringId));
+  BOOST_CHECK(nullptr == mFBUnderTest->getDataOutput({}));
+  BOOST_CHECK_EQUAL(cgInvalidPortId, interfaceSpec.getDOID({}));
 
   for (TPortId i = 0; i < interfaceSpec.getNumDOs(); ++i) {
     CIEC_ANY *val = mFBUnderTest->getDataOutput(interfaceSpec.mDONames[i]);
@@ -290,7 +288,7 @@ void CFBTestFixtureBase::performDataInterfaceTests() {
     BOOST_REQUIRE((mOutputDataBuffers[i]->getDataTypeID() == val->getDataTypeID()) ||
                   (CIEC_ANY::e_ANY == val->getDataTypeID()));
 
-    CStringDictionary::TStringId stringIdBuf = interfaceSpec.mDONames[i];
+    forte::core::StringId stringIdBuf = interfaceSpec.mDONames[i];
     BOOST_CHECK_EQUAL(val, mFBUnderTest->getVar(&stringIdBuf, 1));
 
     BOOST_CHECK_EQUAL(i, interfaceSpec.getDOID(interfaceSpec.mDONames[i]));

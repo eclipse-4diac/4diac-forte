@@ -77,16 +77,16 @@ CStructMemberLocalComLayer::buildIndexList(CIEC_ANY *paRoot, const char *paNeste
   TTargetStructIndexList resultList;
 
   for (size_t i = 0; i < numNestedStructs; i++) {
-    CStringDictionary::TStringId id;
+    forte::core::StringId id;
     CIEC_INT arrayIndex;
     bool containsIndex = CStructMemberLocalComLayer::parseArrayIndexFromString(parser[i], arrayIndex);
 
     if (!containsIndex) {
-      id = CStringDictionary::insert(parser[i]);
+      id = forte::core::StringId::insert(parser[i]);
     } else {
       std::string sub = parser[i];
       sub.erase(sub.find('['), std::string::npos);
-      id = CStringDictionary::insert(sub.data());
+      id = forte::core::StringId::insert(sub.data());
     }
 
     size_t memberIndex = static_cast<CIEC_STRUCT *>(paRoot)->getMemberIndex(id);
@@ -134,9 +134,9 @@ EComResponse CStructMemberLocalComLayer::openConnection(char *paLayerParameter) 
     return e_InitInvalidId;
   }
 
-  CStringDictionary::TStringId groupNameID = mGroupID =
-      CStringDictionary::insert(parser[EComStringIndex::e_LOCALGROUPNAME]);
-  CStringDictionary::TStringId dataTypeNameID = CStringDictionary::insert(parser[EComStringIndex::e_STRUCTTYPE]);
+  forte::core::StringId groupNameID = mGroupID =
+      forte::core::StringId::insert(parser[EComStringIndex::e_LOCALGROUPNAME]);
+  forte::core::StringId dataTypeNameID = forte::core::StringId::insert(parser[EComStringIndex::e_STRUCTTYPE]);
 
   CIEC_STRUCT *const dummy = static_cast<CIEC_STRUCT *>(forte::core::createDataTypeInstance(dataTypeNameID, nullptr));
 

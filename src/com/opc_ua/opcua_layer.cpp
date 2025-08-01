@@ -203,8 +203,8 @@ bool COPC_UA_Layer::checkPortType(size_t paPortIndex, bool paIsSD) const {
 
   if (!COPC_UA_Helper::getOPCUATypeFromAny(pin)) {
     if (!COPC_UA_ObjectStruct_Helper::isStructType(*this, paIsSD)) {
-      DEVLOG_ERROR("[OPC UA LAYER]: Invalid  type %s in FB %s at pin %s\n", CStringDictionary::get(pin.getTypeNameID()),
-                   getCommFB()->getInstanceName(), CStringDictionary::get(getLocalPortNameId(paPortIndex, paIsSD)));
+      DEVLOG_ERROR("[OPC UA LAYER]: Invalid  type %s in FB %s at pin %s\n", pin.getTypeNameID().data(),
+                   getCommFB()->getInstanceName(), getLocalPortNameId(paPortIndex, paIsSD).data());
     }
     return false;
   }
@@ -220,7 +220,7 @@ void COPC_UA_Layer::setDataAlreadyPresentRead(bool paDataRead) {
   mDataAlreadyPresent = paDataRead;
 }
 
-CStringDictionary::TStringId COPC_UA_Layer::getLocalPortNameId(size_t paPortIndex, bool paIsSD) const {
+forte::core::StringId COPC_UA_Layer::getLocalPortNameId(size_t paPortIndex, bool paIsSD) const {
   const SFBInterfaceSpec &localInterfaceSpec(getCommFB()->getFBInterfaceSpec());
   return paIsSD ? localInterfaceSpec.mDINames[paPortIndex] : localInterfaceSpec.mDONames[paPortIndex];
 }

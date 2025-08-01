@@ -13,9 +13,9 @@
  *******************************************************************************/
 #include "core/datatypes/forte_dint.h"
 
-USE_STRING_ID(DINT);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(DINT, STRID(DINT))
+DEFINE_FIRMWARE_DATATYPE(DINT, "DINT"_STRID)
 
 template CIEC_DINT &CIEC_DINT::operator= <>(const CIEC_SINT &paValue);
 
@@ -25,4 +25,4 @@ template CIEC_DINT &CIEC_DINT::operator= <>(const CIEC_USINT &paValue);
 
 template CIEC_DINT &CIEC_DINT::operator= <>(const CIEC_UINT &paValue);
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_DINT>::scmDataTypeName = STRID(DINT);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_DINT>::scmDataTypeName = "DINT"_STRID;

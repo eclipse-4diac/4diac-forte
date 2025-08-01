@@ -14,8 +14,8 @@
  *******************************************************************************/
 #include "core/datatypes/forte_sint.h"
 
-USE_STRING_ID(SINT);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(SINT, STRID(SINT))
+DEFINE_FIRMWARE_DATATYPE(SINT, "SINT"_STRID)
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_SINT>::scmDataTypeName = STRID(SINT);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_SINT>::scmDataTypeName = "SINT"_STRID;

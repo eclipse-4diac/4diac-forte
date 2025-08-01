@@ -57,17 +57,17 @@ class GEN_STRUCT_DEMUX final : public CGenFunctionBlock<CFunctionBlock> {
     void fillInterfaceSpec();
 
     std::vector<std::string_view> getConfiguredMemberNames(std::string_view paMemberNameString);
-    CIEC_ANY *getNestedMember(const CStringDictionary::TStringId paNameId, CIEC_STRUCT *paStructType);
+    CIEC_ANY *getNestedMember(const forte::core::StringId paNameId, CIEC_STRUCT *paStructType);
 
     CEventConnection conn_CNF;
     std::unique_ptr<CIEC_STRUCT> var_IN;
     CDataConnection *conn_IN;
-    std::vector<CStringDictionary::TStringId> mDoNames;
+    std::vector<forte::core::StringId> mDoNames;
     std::vector<CIEC_ANY *> mConfiguredDOPorts;
 
   public:
     GEN_STRUCT_DEMUX(const GEN_STRUCT_DEMUX &paOther) = delete;
-    GEN_STRUCT_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_STRUCT_DEMUX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_STRUCT_DEMUX() override = default;
 };
 

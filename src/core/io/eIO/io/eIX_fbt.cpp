@@ -12,13 +12,12 @@
 
 #include "core/io/eIO/io/eIX_fbt.h"
 
-USE_STRING_ID(eIX);
-USE_STRING_ID(eGenAdapter);
+using namespace forte::core::literals;
 
 using namespace forte::core::io;
 
-DEFINE_FIRMWARE_FB(FORTE_eIX, STRID(eIX))
+DEFINE_FIRMWARE_FB(FORTE_eIX, "eIX"_STRID)
 
-FORTE_eIX::FORTE_eIX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_eIX::FORTE_eIX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CeInputFB<CIEC_BOOL>(paContainer, paInstanceNameId) {
 }

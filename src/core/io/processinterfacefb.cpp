@@ -34,7 +34,7 @@ const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDataType("Mapped invalid da
 
 CProcessInterfaceFB::CProcessInterfaceFB(forte::core::CFBContainer &paContainer,
                                          const SFBInterfaceSpec &paInterfaceSpec,
-                                         const CStringDictionary::TStringId paInstanceNameId) :
+                                         const forte::core::StringId paInstanceNameId) :
     CEventSourceFB(paContainer, paInterfaceSpec, paInstanceNameId),
     IOObserver(),
     var_QI(0_BOOL),

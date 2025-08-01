@@ -12,53 +12,36 @@
 
 #include "FieldsToServiceRequestForm.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(ArrowheadCloud);
-USE_STRING_ID(ArrowheadService);
-USE_STRING_ID(ArrowheadSystem);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(FieldsToServiceRequestForm);
-USE_STRING_ID(orchestrationFlags);
-USE_STRING_ID(PreferredProvider);
-USE_STRING_ID(preferredProviders);
-USE_STRING_ID(REQ);
-USE_STRING_ID(requestedQoS);
-USE_STRING_ID(requestedService);
-USE_STRING_ID(requesterCloud);
-USE_STRING_ID(requesterSystem);
-USE_STRING_ID(serviceRequestForm);
-USE_STRING_ID(ServiceRequestForm);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceRequestForm, STRID(FieldsToServiceRequestForm))
+DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceRequestForm, "FieldsToServiceRequestForm"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{
-      STRID(requesterSystem),    STRID(requesterCloud),     STRID(requestedService),
-      STRID(orchestrationFlags), STRID(preferredProviders), STRID(requestedQoS)};
+      "requesterSystem"_STRID,    "requesterCloud"_STRID,     "requestedService"_STRID,
+      "orchestrationFlags"_STRID, "preferredProviders"_STRID, "requestedQoS"_STRID};
   
-                                                                                                STRID(ArrowheadCloud),
-                                                                                                STRID(ArrowheadService),
-                                                                                                STRID(ARRAY),
+                                                                                                "ArrowheadCloud"_STRID,
+                                                                                                "ArrowheadService"_STRID,
+                                                                                                "ARRAY"_STRID,
                                                                                                 10,
-                                                                                                STRID(WSTRING),
-                                                                                                STRID(ARRAY),
+                                                                                                "WSTRING"_STRID,
+                                                                                                "ARRAY"_STRID,
                                                                                                 10,
-                                                                                                STRID(PreferredProvider),
-                                                                                                STRID(ARRAY),
+                                                                                                "PreferredProvider"_STRID,
+                                                                                                "ARRAY"_STRID,
                                                                                                 10,
-                                                                                                STRID(WSTRING)};
+                                                                                                "WSTRING"_STRID};
   
-  const auto cDataOutputNames = std::array{STRID(serviceRequestForm)};
+  const auto cDataOutputNames = std::array{"serviceRequestForm"_STRID};
   
-      STRID(ServiceRequestForm)};
+      "ServiceRequestForm"_STRID};
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

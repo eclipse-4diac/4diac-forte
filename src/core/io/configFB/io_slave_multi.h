@@ -30,7 +30,7 @@ namespace forte {
                                int paType,
                                forte::core::CFBContainer &paContainer,
                                const SFBInterfaceSpec &paInterfaceSpec,
-                               const CStringDictionary::TStringId paInstanceNameId);
+                               const forte::core::StringId paInstanceNameId);
           ~IOConfigFBMultiSlave() override;
 
         protected:

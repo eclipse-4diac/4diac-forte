@@ -24,7 +24,7 @@
 
 #include "core/datatypes/forte_any_derived.h"
 #include "core/datatypes/forte_any_int.h"
-#include "core/stringdict.h"
+#include "core/stringid.h"
 
 /** \brief A common supertype for all CIEC_ARRAY variants, providing the minimal interface an array must provide
  */
@@ -65,7 +65,7 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED {
 
     [[nodiscard]] virtual CIEC_ANY::EDataTypeID getElementDataTypeID() const = 0;
 
-    [[nodiscard]] virtual CStringDictionary::TStringId getElementTypeNameID() const = 0;
+    [[nodiscard]] virtual forte::core::StringId getElementTypeNameID() const = 0;
 
     [[nodiscard]] virtual reference at(intmax_t index) = 0;
 
@@ -112,7 +112,7 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED {
       return CIEC_ANY::e_ARRAY;
     }
 
-    CStringDictionary::TStringId getTypeNameID() const override;
+    forte::core::StringId getTypeNameID() const override;
 
     void setValue(const CIEC_ANY &paValue) override;
 
@@ -170,6 +170,6 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_ARRAY> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_ARRAY;
-      static constexpr CStringDictionary::TStringId scmDataTypeName = CStringDictionary::scmInvalidStringId;
+      static constexpr forte::core::StringId scmDataTypeName{};
   };
 } // namespace forte

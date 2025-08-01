@@ -18,13 +18,13 @@
 #include <array>
 #include <charconv>
 
-USE_STRING_ID(raw)
+using namespace forte::core::literals;
 
 using namespace forte::com;
 using namespace forte::com::impl;
 
 namespace {
-  [[maybe_unused]] ComChannelEntryImpl<std::span<CIEC_ANY_VARIANT>, RawChannel> entry(STRID(raw));
+  [[maybe_unused]] ComChannelEntryImpl<std::span<CIEC_ANY_VARIANT>, RawChannel> entry("raw"_STRID);
 
   std::size_t parseSize(const std::string_view paConfigString) {
     std::size_t result{};

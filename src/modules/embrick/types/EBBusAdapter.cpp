@@ -16,26 +16,16 @@
 
 #include "EBBusAdapter.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(EBBusAdapter);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Index);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(MasterId);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(UINT);
-USE_STRING_ID(UpdateInterval);
+using namespace forte::core::literals;
 
 namespace {
-  const CStringDictionary::TStringId cDataInputNames[] = {STRID(QO)};
-  const CStringDictionary::TStringId cDataOutputNames[] = {STRID(QI), STRID(MasterId), STRID(Index),
-                                                           STRID(UpdateInterval)};
-  const CStringDictionary::TStringId cEventInputNames[] = {STRID(INITO)};
-  const CStringDictionary::TStringId cEventInputTypeIds[] = {STRID(EInit)};
-  const CStringDictionary::TStringId cEventOutputNames[] = {STRID(INIT)};
-  const CStringDictionary::TStringId cEventOutputTypeIds[] = {STRID(EInit)};
+  const forte::core::StringId cDataInputNames[] = {"QO"_STRID};
+  const forte::core::StringId cDataOutputNames[] = {"QI"_STRID, "MasterId"_STRID, "Index"_STRID,
+                                                           "UpdateInterval"_STRID};
+  const forte::core::StringId cEventInputNames[] = {"INITO"_STRID};
+  const forte::core::StringId cEventInputTypeIds[] = {"EInit"_STRID};
+  const forte::core::StringId cEventOutputNames[] = {"INIT"_STRID};
+  const forte::core::StringId cEventOutputTypeIds[] = {"EInit"_STRID};
 
   const SFBInterfaceSpec scmFBInterfaceSpecSocket = {
       .mEINames = cEventInputNames,
@@ -65,11 +55,11 @@ namespace {
 
 } // namespace
 
-DEFINE_ADAPTER_TYPE(FORTE_EBBusAdapter, STRID(EBBusAdapter))
+DEFINE_ADAPTER_TYPE(FORTE_EBBusAdapter, "EBBusAdapter"_STRID)
 
 FORTE_EBBusAdapter::FORTE_EBBusAdapter(forte::core::CFBContainer &paContainer,
                                        const SFBInterfaceSpec &paInterfaceSpec,
-                                       const CStringDictionary::TStringId paInstanceNameId,
+                                       const forte::core::StringId paInstanceNameId,
                                        TForteUInt8 paParentAdapterlistID) :
     IOConfigFBMultiAdapter(
         scmSlaveConfigurationIO, paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID) {
@@ -79,7 +69,7 @@ void FORTE_EBBusAdapter::setInitialValues() {
   var_UpdateInterval = 0_UINT;
 }
 
-FORTE_EBBusAdapter_Plug::FORTE_EBBusAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+FORTE_EBBusAdapter_Plug::FORTE_EBBusAdapter_Plug(forte::core::StringId paInstanceNameId,
                                                  forte::core::CFBContainer &paContainer,
                                                  TForteUInt8 paParentAdapterlistID) :
     FORTE_EBBusAdapter(paContainer, scmFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
@@ -148,7 +138,7 @@ FORTE_EBBusAdapter_Socket *FORTE_EBBusAdapter_Plug::getSocket() {
   return static_cast<FORTE_EBBusAdapter_Socket *>(getPeer());
 }
 
-FORTE_EBBusAdapter_Socket::FORTE_EBBusAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+FORTE_EBBusAdapter_Socket::FORTE_EBBusAdapter_Socket(forte::core::StringId paInstanceNameId,
                                                      forte::core::CFBContainer &paContainer,
                                                      TForteUInt8 paParentAdapterlistID) :
     FORTE_EBBusAdapter(paContainer, scmFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),

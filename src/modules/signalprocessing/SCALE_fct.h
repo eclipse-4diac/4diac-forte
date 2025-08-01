@@ -39,7 +39,7 @@ class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_signalprocessing__SCALE(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_signalprocessing__SCALE(forte::core::StringId paInstanceNameId,
                                   forte::core::CFBContainer &paContainer);
 
     CIEC_REAL var_IN;

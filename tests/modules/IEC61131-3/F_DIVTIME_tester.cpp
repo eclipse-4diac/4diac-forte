@@ -12,11 +12,11 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-USE_STRING_ID(F_DIVTIME);
+using namespace forte::core::literals;
 
 struct F_DIVTIME_TestFixture : public CFBTestFixtureBase {
 
-    F_DIVTIME_TestFixture() : CFBTestFixtureBase(STRID(F_DIVTIME)) {
+    F_DIVTIME_TestFixture() : CFBTestFixtureBase("F_DIVTIME"_STRID) {
       setInputData({&mIn_TIME_DIVTIME, &mIn_REAL_DIVTIME});
       setOutputData({&mOut_TIME_DIVTIME});
       CFBTestFixtureBase::setup();

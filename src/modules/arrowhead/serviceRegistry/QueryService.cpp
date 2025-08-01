@@ -12,31 +12,18 @@
 
 #include "QueryService.h"
 
-USE_STRING_ID(address);
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(endpoint);
-USE_STRING_ID(Event);
-USE_STRING_ID(queried);
-USE_STRING_ID(query);
-USE_STRING_ID(QueryService);
-USE_STRING_ID(queryServices);
-USE_STRING_ID(QueryServicesAdp);
-USE_STRING_ID(serviceEntries);
-USE_STRING_ID(serviceQueryForm);
-USE_STRING_ID(ServiceQueryForm);
-USE_STRING_ID(ServiceRegistryEntry);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_QueryService, STRID(QueryService))
+DEFINE_FIRMWARE_FB(FORTE_QueryService, "QueryService"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(serviceQueryForm), STRID(address)};
-  const auto cDataOutputNames = std::array{STRID(serviceEntries)};
-  const auto cEventInputNames = std::array{STRID(query)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(queried)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
-  const auto cPlugNameIds = std::array{STRID(queryServices)};
+  const auto cDataInputNames = std::array{"serviceQueryForm"_STRID, "address"_STRID};
+  const auto cDataOutputNames = std::array{"serviceEntries"_STRID};
+  const auto cEventInputNames = std::array{"query"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"queried"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+  const auto cPlugNameIds = std::array{"queryServices"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -51,14 +38,14 @@ namespace {
   };
 
   const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
-      {CStringDictionary::scmInvalidStringId, STRID(query), STRID(queryServices), STRID(query)},
-      {STRID(queryServices), STRID(queried), CStringDictionary::scmInvalidStringId, STRID(queried)},
+      {{}, "query"_STRID, "queryServices"_STRID, "query"_STRID},
+      {"queryServices"_STRID, "queried"_STRID, {}, "queried"_STRID},
   });
 
   const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
-      {CStringDictionary::scmInvalidStringId, STRID(serviceQueryForm), STRID(queryServices), STRID(serviceQueryForm)},
-      {STRID(queryServices), STRID(serviceEntries), CStringDictionary::scmInvalidStringId, STRID(serviceEntries)},
-      {CStringDictionary::scmInvalidStringId, STRID(address), STRID(queryServices), STRID(endpoint)},
+      {{}, "serviceQueryForm"_STRID, "queryServices"_STRID, "serviceQueryForm"_STRID},
+      {"queryServices"_STRID, "serviceEntries"_STRID, {}, "serviceEntries"_STRID},
+      {{}, "address"_STRID, "queryServices"_STRID, "endpoint"_STRID},
   });
 } // namespace
 

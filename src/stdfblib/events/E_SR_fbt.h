@@ -51,7 +51,7 @@ class FORTE_E_SR final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_SR(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_SR(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_Q;
 

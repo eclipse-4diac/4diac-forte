@@ -19,23 +19,18 @@
 #include "GEN_ADD_fbt.h"
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(ANY_MAGNITUDE);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(GEN_ADD);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
 namespace {
-  static const CStringDictionary::TStringId eventInputNames[] = {STRID(REQ)};
-  static const CStringDictionary::TStringId eventOutputNames[] = {STRID(CNF)};
-  static const CStringDictionary::TStringId dataOutputNames[] = {STRID(OUT)};
+  static const forte::core::StringId eventInputNames[] = {"REQ"_STRID};
+  static const forte::core::StringId eventOutputNames[] = {"CNF"_STRID};
+  static const forte::core::StringId dataOutputNames[] = {"OUT"_STRID};
 
 } // namespace
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_ADD, STRID(GEN_ADD))
+DEFINE_GENERIC_FIRMWARE_FB(GEN_ADD, "GEN_ADD"_STRID)
 
-GEN_ADD::GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_ADD::GEN_ADD(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_OUT(*this, 0, var_OUT) {
@@ -53,8 +48,8 @@ void GEN_ADD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const pa
             if constexpr (!std::is_same<deductedType, forte::core::mpl::NullType>::value) {
               return func_ADD(paOUT, paIN);
             }
-            DEVLOG_ERROR("Adding incompatible types %s and %s\n", CStringDictionary::get(paOUT.getTypeNameID()),
-                         CStringDictionary::get(paIN.getTypeNameID()));
+            DEVLOG_ERROR("Adding incompatible types %s and %s\n", paOUT.getTypeNameID().data(),
+                         paIN.getTypeNameID().data());
             return paOUT;
           },
           static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant &>(var_OUT),

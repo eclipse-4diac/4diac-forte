@@ -13,17 +13,13 @@
  *******************************************************************************/
 #include "E_RESTART_fbt.h"
 
-USE_STRING_ID(COLD);
-USE_STRING_ID(E_RESTART);
-USE_STRING_ID(Event);
-USE_STRING_ID(STOP);
-USE_STRING_ID(WARM);
+using namespace forte::core::literals;
 
 #include "core/device.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_RESTART, STRID(E_RESTART))
+DEFINE_FIRMWARE_FB(FORTE_E_RESTART, "E_RESTART"_STRID)
 
-const auto cEventOutputNames = std::array{STRID(COLD), STRID(WARM), STRID(STOP)};
+const auto cEventOutputNames = std::array{"COLD"_STRID, "WARM"_STRID, "STOP"_STRID};
 const SFBInterfaceSpec cFBInterfaceSpec = {
     .mEINames = {},
     .mEITypeNames = {},
@@ -36,7 +32,7 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
     .mPlugNames = {},
 };
 
-FORTE_E_RESTART::FORTE_E_RESTART(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_RESTART::FORTE_E_RESTART(const forte::core::StringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     mEventToSend(cgInvalidEventID),

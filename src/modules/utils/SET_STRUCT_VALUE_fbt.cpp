@@ -16,26 +16,17 @@
 
 #include "SET_STRUCT_VALUE_fbt.h"
 
-USE_STRING_ID(ANY);
-USE_STRING_ID(CNF);
-USE_STRING_ID(element_value);
-USE_STRING_ID(Event);
-USE_STRING_ID(in_struct);
-USE_STRING_ID(member);
-USE_STRING_ID(out_struct);
-USE_STRING_ID(REQ);
-USE_STRING_ID(SET_STRUCT_VALUE);
-USE_STRING_ID(STRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_SET_STRUCT_VALUE, STRID(SET_STRUCT_VALUE))
+DEFINE_FIRMWARE_FB(FORTE_SET_STRUCT_VALUE, "SET_STRUCT_VALUE"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(in_struct), STRID(member), STRID(element_value)};
-  const auto cDataOutputNames = std::array{STRID(out_struct)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"in_struct"_STRID, "member"_STRID, "element_value"_STRID};
+  const auto cDataOutputNames = std::array{"out_struct"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -50,7 +41,7 @@ namespace {
   };
 } // namespace
 
-FORTE_SET_STRUCT_VALUE::FORTE_SET_STRUCT_VALUE(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_SET_STRUCT_VALUE::FORTE_SET_STRUCT_VALUE(const forte::core::StringId paInstanceNameId,
                                                forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_in_struct(CIEC_ANY_VARIANT()),

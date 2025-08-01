@@ -17,17 +17,7 @@
 
 #include "RangeBasedPulse_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(DIST_HIGH);
-USE_STRING_ID(DIST_IN);
-USE_STRING_ID(DIST_LOW);
-USE_STRING_ID(DIST_OFF);
-USE_STRING_ID(DIST_REMAINDER);
-USE_STRING_ID(Q);
-USE_STRING_ID(REQ);
-USE_STRING_ID(signalprocessing__distance__RangeBasedPulse);
-USE_STRING_ID(UDINT);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_bool.h"
 #include "core/datatypes/forte_udint.h"
@@ -38,13 +28,13 @@ USE_STRING_ID(UDINT);
 #include "core/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__distance__RangeBasedPulse,
-                   STRID(signalprocessing__distance__RangeBasedPulse))
+                   "signalprocessing__distance__RangeBasedPulse"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(DIST_IN), STRID(DIST_OFF), STRID(DIST_HIGH), STRID(DIST_LOW)};
-  const auto cDataOutputNames = std::array{STRID(Q)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataInputNames = std::array{"DIST_IN"_STRID, "DIST_OFF"_STRID, "DIST_HIGH"_STRID, "DIST_LOW"_STRID};
+  const auto cDataOutputNames = std::array{"Q"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -57,11 +47,11 @@ namespace {
       .mPlugNames = {},
   };
 
-  const auto cInternalsNames = std::array{STRID(DIST_REMAINDER)};
+  const auto cInternalsNames = std::array{"DIST_REMAINDER"_STRID};
 } // namespace
 
 FORTE_signalprocessing__distance__RangeBasedPulse::FORTE_signalprocessing__distance__RangeBasedPulse(
-    const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
     conn_CNF(*this, 0),
     conn_DIST_IN(nullptr),

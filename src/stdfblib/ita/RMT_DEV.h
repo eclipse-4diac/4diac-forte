@@ -41,8 +41,8 @@ class RMT_DEV : public CDevice {
 
   private:
 
-    static const CStringDictionary::TStringId scmDINameIds[];
-    static const CStringDictionary::TStringId scmDIDataTypeIds[];
+    static const forte::core::StringId scmDINameIds[];
+    static const forte::core::StringId scmDIDataTypeIds[];
 
     CIEC_ANY *getDI(size_t) override;
     CDataConnection **getDIConUnchecked(TPortId) override;

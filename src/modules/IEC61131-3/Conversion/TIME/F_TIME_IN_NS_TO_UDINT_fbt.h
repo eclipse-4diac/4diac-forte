@@ -42,7 +42,7 @@ class FORTE_F_TIME_IN_NS_TO_UDINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_TIME_IN_NS_TO_UDINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_TIME_IN_NS_TO_UDINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_TIME var_IN;
     CIEC_UDINT var_OUT;

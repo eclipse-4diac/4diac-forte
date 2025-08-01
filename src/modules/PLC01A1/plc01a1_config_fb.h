@@ -126,7 +126,7 @@ class PLC01A1ConfigFB : public forte::core::io::IOConfigFBController {
     void setInitialValues() override;
 
   public:
-    PLC01A1ConfigFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    PLC01A1ConfigFB(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     }
 
     CIEC_BOOL var_QI;

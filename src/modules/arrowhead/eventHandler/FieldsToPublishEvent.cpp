@@ -12,35 +12,24 @@
 
 #include "FieldsToPublishEvent.h"
 
-USE_STRING_ID(ArrowheadEvent);
-USE_STRING_ID(ArrowheadSystem);
-USE_STRING_ID(CNF);
-USE_STRING_ID(deliveryCompleteUri);
-USE_STRING_ID(event);
-USE_STRING_ID(Event);
-USE_STRING_ID(FieldsToPublishEvent);
-USE_STRING_ID(publishEvent);
-USE_STRING_ID(PublishEvent);
-USE_STRING_ID(REQ);
-USE_STRING_ID(source);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToPublishEvent, STRID(FieldsToPublishEvent))
+DEFINE_FIRMWARE_FB(FORTE_FieldsToPublishEvent, "FieldsToPublishEvent"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(source), STRID(event),
-                                                                                        STRID(deliveryCompleteUri)};
+  const auto cDataInputNames = std::array{"source"_STRID, "event"_STRID,
+                                                                                        "deliveryCompleteUri"_STRID};
   
-      STRID(ArrowheadSystem), STRID(ArrowheadEvent), STRID(WSTRING)};
+      "ArrowheadSystem"_STRID, "ArrowheadEvent"_STRID, "WSTRING"_STRID};
   
-  const auto cDataOutputNames = std::array{STRID(publishEvent)};
+  const auto cDataOutputNames = std::array{"publishEvent"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

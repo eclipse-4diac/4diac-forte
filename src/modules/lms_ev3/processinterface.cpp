@@ -49,7 +49,7 @@ const char *const CLMSEV3ProcessInterface::scmCouldNotWrite = "Could not write";
 
 CLMSEV3ProcessInterface::CLMSEV3ProcessInterface(forte::core::CFBContainer &paContainer,
                                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                                 const CStringDictionary::TStringId paInstanceNameId) :
+                                                 const forte::core::StringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId) {
   mFile.rdbuf()->pubsetbuf(0, 0); // disable buffer to avoid latency
   mnTypeOfIO = UNDEFINED;

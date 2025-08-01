@@ -24,8 +24,8 @@ class CSimpleFB : public CBaseFB {
   protected:
     CSimpleFB(forte::core::CFBContainer &paContainer,
               const SFBInterfaceSpec &paInterfaceSpec,
-              CStringDictionary::TStringId paInstanceNameId,
-              std::span<const CStringDictionary::TStringId> paVarInternalNames) :
+              forte::core::StringId paInstanceNameId,
+              std::span<const forte::core::StringId> paVarInternalNames) :
         CBaseFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternalNames) {
     }
 

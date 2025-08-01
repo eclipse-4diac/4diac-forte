@@ -15,12 +15,12 @@
 
 #include "core/io/IB_fbt.h"
 
-USE_STRING_ID(IB);
+using namespace forte::core::literals;
 
 using namespace forte::core::io;
 
-DEFINE_FIRMWARE_FB(FORTE_IB, STRID(IB))
+DEFINE_FIRMWARE_FB(FORTE_IB, "IB"_STRID)
 
-FORTE_IB::FORTE_IB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_IB::FORTE_IB(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CInputFB<CIEC_BYTE>(paContainer, paInstanceNameId) {
 }

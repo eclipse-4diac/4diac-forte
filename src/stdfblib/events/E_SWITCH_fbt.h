@@ -47,7 +47,7 @@ class FORTE_E_SWITCH final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_SWITCH(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_SWITCH(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_G;
 

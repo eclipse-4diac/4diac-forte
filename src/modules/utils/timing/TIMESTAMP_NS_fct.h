@@ -40,7 +40,7 @@ class FORTE_TIMESTAMP_NS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_TIMESTAMP_NS(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_TIMESTAMP_NS(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_DATE_AND_TIME var_startDate;
 

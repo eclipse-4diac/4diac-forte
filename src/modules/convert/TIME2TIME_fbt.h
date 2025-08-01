@@ -43,7 +43,7 @@ class FORTE_TIME2TIME final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_TIME2TIME(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_TIME2TIME(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_TIME var_IN;
 

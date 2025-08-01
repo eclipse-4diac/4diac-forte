@@ -14,11 +14,11 @@
 #include "core/datatypes/forte_uint.h"
 #include "core/datatypes/forte_bool.h"
 
-USE_STRING_ID(E_CTD);
+using namespace forte::core::literals;
 
 struct E_CTD_TestFixture : public CFBTestFixtureBase {
 
-    E_CTD_TestFixture() : CFBTestFixtureBase(STRID(E_CTD)) {
+    E_CTD_TestFixture() : CFBTestFixtureBase("E_CTD"_STRID) {
       setInputData({&mInPV});
       setOutputData({&mOutQ, &mOutCV});
       CFBTestFixtureBase::setup();

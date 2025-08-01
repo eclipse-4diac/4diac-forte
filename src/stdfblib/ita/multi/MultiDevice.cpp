@@ -33,7 +33,7 @@ namespace {
 }
 
 MultiDevice::MultiDevice(const std::string &paMGRID) :
-    CDevice(cFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
+    CDevice(cFBInterfaceSpec, {}),
     mMGRID(paMGRID) {
 
   // avoid creating another MultiDevice in case it was set to it in cmake

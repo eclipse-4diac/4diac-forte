@@ -22,11 +22,11 @@
 #include "core/util/forte_constants.h"
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(TIME);
+using namespace forte::core::literals;
 
 using namespace std::literals::string_literals;
 
-DEFINE_FIRMWARE_DATATYPE(TIME, STRID(TIME))
+DEFINE_FIRMWARE_DATATYPE(TIME, "TIME"_STRID)
 
 int CIEC_TIME::fromString(const char *paValue) {
   int nRetVal = -1;
@@ -225,4 +225,4 @@ void CIEC_TIME::setFromNanoSeconds(TValueType paValue) {
                     : paValue / (forte::core::constants::cNanosecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
 }
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_TIME>::scmDataTypeName = STRID(TIME);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_TIME>::scmDataTypeName = "TIME"_STRID;

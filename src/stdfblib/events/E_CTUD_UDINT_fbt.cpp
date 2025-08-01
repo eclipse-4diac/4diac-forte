@@ -19,21 +19,7 @@
 
 #include "E_CTUD_UDINT_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CD);
-USE_STRING_ID(CO);
-USE_STRING_ID(CU);
-USE_STRING_ID(CV);
-USE_STRING_ID(E_CTUD_UDINT);
-USE_STRING_ID(Event);
-USE_STRING_ID(LD);
-USE_STRING_ID(LDO);
-USE_STRING_ID(PV);
-USE_STRING_ID(QD);
-USE_STRING_ID(QU);
-USE_STRING_ID(R);
-USE_STRING_ID(RO);
-USE_STRING_ID(UDINT);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_udint.h"
 #include "core/datatypes/forte_bool.h"
@@ -43,15 +29,15 @@ USE_STRING_ID(UDINT);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_CTUD_UDINT, STRID(E_CTUD_UDINT))
+DEFINE_FIRMWARE_FB(FORTE_E_CTUD_UDINT, "E_CTUD_UDINT"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(PV)};
-  const auto cDataOutputNames = std::array{STRID(QU), STRID(QD), STRID(CV)};
-  const auto cEventInputNames = std::array{STRID(CU), STRID(CD), STRID(R), STRID(LD)};
-  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CO), STRID(RO), STRID(LDO)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event), STRID(Event)};
+  const auto cDataInputNames = std::array{"PV"_STRID};
+  const auto cDataOutputNames = std::array{"QU"_STRID, "QD"_STRID, "CV"_STRID};
+  const auto cEventInputNames = std::array{"CU"_STRID, "CD"_STRID, "R"_STRID, "LD"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"CO"_STRID, "RO"_STRID, "LDO"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID, "Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -65,7 +51,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_CTUD_UDINT::FORTE_E_CTUD_UDINT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_CTUD_UDINT::FORTE_E_CTUD_UDINT(const forte::core::StringId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CO(*this, 0),

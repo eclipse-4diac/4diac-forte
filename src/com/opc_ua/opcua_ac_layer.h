@@ -126,7 +126,7 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
 
     bool isOPCUAObjectPresent(std::string &paBrowsePath);
 
-    std::string getPortNameFromConnection(CStringDictionary::TStringId paPortNameId, bool paIsPublisher);
+    std::string getPortNameFromConnection(forte::core::StringId paPortNameId, bool paIsPublisher);
 
     std::string getFBNameFromConnection(bool paIsPublisher);
 

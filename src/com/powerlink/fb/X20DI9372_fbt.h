@@ -41,7 +41,7 @@ class FORTE_X20DI9372 final : public PowerlinkFunctionBlockDI {
     void setInitialValues() override;
 
   public:
-    FORTE_X20DI9372(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_X20DI9372(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_USINT var_CNID;

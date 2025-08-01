@@ -48,7 +48,7 @@ class FORTE_signalprocessing__distance__RangeBasedPulse final : public CSimpleFB
     void setInitialValues() override;
 
   public:
-    FORTE_signalprocessing__distance__RangeBasedPulse(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_signalprocessing__distance__RangeBasedPulse(forte::core::StringId paInstanceNameId,
                                                       forte::core::CFBContainer &paContainer);
 
     CIEC_UDINT var_DIST_IN;

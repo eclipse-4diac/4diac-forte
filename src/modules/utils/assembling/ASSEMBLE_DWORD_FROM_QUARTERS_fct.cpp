@@ -19,29 +19,7 @@
 
 #include "ASSEMBLE_DWORD_FROM_QUARTERS_fct.h"
 
-USE_STRING_ID();
-USE_STRING_ID(ASSEMBLE_DWORD_FROM_QUARTERS);
-USE_STRING_ID(BYTE);
-USE_STRING_ID(CNF);
-USE_STRING_ID(DWORD);
-USE_STRING_ID(Event);
-USE_STRING_ID(QUARTER_BYTE_00);
-USE_STRING_ID(QUARTER_BYTE_01);
-USE_STRING_ID(QUARTER_BYTE_02);
-USE_STRING_ID(QUARTER_BYTE_03);
-USE_STRING_ID(QUARTER_BYTE_04);
-USE_STRING_ID(QUARTER_BYTE_05);
-USE_STRING_ID(QUARTER_BYTE_06);
-USE_STRING_ID(QUARTER_BYTE_07);
-USE_STRING_ID(QUARTER_BYTE_08);
-USE_STRING_ID(QUARTER_BYTE_09);
-USE_STRING_ID(QUARTER_BYTE_10);
-USE_STRING_ID(QUARTER_BYTE_11);
-USE_STRING_ID(QUARTER_BYTE_12);
-USE_STRING_ID(QUARTER_BYTE_13);
-USE_STRING_ID(QUARTER_BYTE_14);
-USE_STRING_ID(QUARTER_BYTE_15);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_dword.h"
 #include "core/datatypes/forte_byte.h"
@@ -55,19 +33,19 @@ USE_STRING_ID(REQ);
 #include "quarterconst_gcf.h"
 #include "ASSEMBLE_DWORD_FROM_QUARTERS_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_QUARTERS, STRID(ASSEMBLE_DWORD_FROM_QUARTERS))
+DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_QUARTERS, "ASSEMBLE_DWORD_FROM_QUARTERS"_STRID)
 
 namespace {
   const auto cDataInputNames =
-      std::array{STRID(QUARTER_BYTE_00), STRID(QUARTER_BYTE_01), STRID(QUARTER_BYTE_02), STRID(QUARTER_BYTE_03),
-                 STRID(QUARTER_BYTE_04), STRID(QUARTER_BYTE_05), STRID(QUARTER_BYTE_06), STRID(QUARTER_BYTE_07),
-                 STRID(QUARTER_BYTE_08), STRID(QUARTER_BYTE_09), STRID(QUARTER_BYTE_10), STRID(QUARTER_BYTE_11),
-                 STRID(QUARTER_BYTE_12), STRID(QUARTER_BYTE_13), STRID(QUARTER_BYTE_14), STRID(QUARTER_BYTE_15)};
-  const auto cDataOutputNames = std::array{STRID()};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+      std::array{"QUARTER_BYTE_00"_STRID, "QUARTER_BYTE_01"_STRID, "QUARTER_BYTE_02"_STRID, "QUARTER_BYTE_03"_STRID,
+                 "QUARTER_BYTE_04"_STRID, "QUARTER_BYTE_05"_STRID, "QUARTER_BYTE_06"_STRID, "QUARTER_BYTE_07"_STRID,
+                 "QUARTER_BYTE_08"_STRID, "QUARTER_BYTE_09"_STRID, "QUARTER_BYTE_10"_STRID, "QUARTER_BYTE_11"_STRID,
+                 "QUARTER_BYTE_12"_STRID, "QUARTER_BYTE_13"_STRID, "QUARTER_BYTE_14"_STRID, "QUARTER_BYTE_15"_STRID};
+  const auto cDataOutputNames = std::array{""_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -82,7 +60,7 @@ namespace {
 } // namespace
 
 FORTE_ASSEMBLE_DWORD_FROM_QUARTERS::FORTE_ASSEMBLE_DWORD_FROM_QUARTERS(
-    const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_QUARTER_BYTE_00(nullptr),

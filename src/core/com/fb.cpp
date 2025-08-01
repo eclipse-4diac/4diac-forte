@@ -18,10 +18,7 @@
 
 #include <charconv>
 
-USE_STRING_ID(ID);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(STATUS);
+using namespace forte::core::literals;
 
 using namespace forte::com;
 
@@ -38,7 +35,7 @@ namespace {
 
 CommunicationFB::CommunicationFB(CFBContainer &paContainer,
                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                 CStringDictionary::TStringId paInstanceNameId) :
+                                 forte::core::StringId paInstanceNameId) :
     CGenFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_QI(nullptr),
@@ -156,15 +153,15 @@ std::array<TPortId, 2> CommunicationFB::parseConfigString(const std::string_view
 }
 
 void CommunicationFB::configureDIs(const TPortId paGenDINum, SFBInterfaceSpec &paInterfaceSpec) {
-  mDINames.emplace_back(STRID(QI));
-  mDINames.emplace_back(STRID(ID));
+  mDINames.emplace_back("QI"_STRID);
+  mDINames.emplace_back("ID"_STRID);
   generateGenericInterfacePointNameArray("SD_", mDINames, paGenDINum);
   paInterfaceSpec.mDINames = mDINames;
 }
 
 void CommunicationFB::configureDOs(const TPortId paGenDONum, SFBInterfaceSpec &paInterfaceSpec) {
-  mDONames.emplace_back(STRID(QO));
-  mDONames.emplace_back(STRID(STATUS));
+  mDONames.emplace_back("QO"_STRID);
+  mDONames.emplace_back("STATUS"_STRID);
   generateGenericInterfacePointNameArray("RD_", mDONames, paGenDONum);
   paInterfaceSpec.mDONames = mDONames;
 }

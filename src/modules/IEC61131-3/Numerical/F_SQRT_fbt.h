@@ -43,7 +43,7 @@ class FORTE_F_SQRT : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_F_SQRT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_SQRT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY_REAL_VARIANT var_IN;
     CIEC_ANY_REAL_VARIANT var_OUT;

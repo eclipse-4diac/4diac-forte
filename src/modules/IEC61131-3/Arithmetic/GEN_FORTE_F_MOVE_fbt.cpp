@@ -16,25 +16,20 @@
 #include "core/eventconn.h"
 #include "core/datatypes/forte_any.h"
 #include "core/datatypes/forte_any_variant.h"
-#include "core/stringdict.h"
+#include "core/stringid.h"
 
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(GEN_F_MOVE);
-USE_STRING_ID(IN);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE, STRID(GEN_F_MOVE))
+DEFINE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE, "GEN_F_MOVE"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN)};
-  const auto cDataOutputNames = std::array{STRID(OUT)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataInputNames = std::array{"IN"_STRID};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
 } // namespace
 
-GEN_FORTE_F_MOVE::GEN_FORTE_F_MOVE(const CStringDictionary::TStringId paInstanceNameId,
+GEN_FORTE_F_MOVE::GEN_FORTE_F_MOVE(const forte::core::StringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
@@ -64,7 +59,7 @@ bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterf
   if (strcmp(paConfigString, "F_MOVE") == 0) {
     mIn = std::make_unique<CIEC_ANY_VARIANT>();
   } else {
-    CStringDictionary::TStringId dataTypeID = getDataTypeNameId(paConfigString);
+    forte::core::StringId dataTypeID = getDataTypeNameId(paConfigString);
     mIn = std::unique_ptr<CIEC_ANY>(forte::core::createDataTypeInstance(dataTypeID, nullptr));
     if (!mIn) {
       return false;
@@ -81,17 +76,17 @@ bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterf
   return true;
 }
 
-CStringDictionary::TStringId GEN_FORTE_F_MOVE::getDataTypeNameId(const char *paConfigString) {
+forte::core::StringId GEN_FORTE_F_MOVE::getDataTypeNameId(const char *paConfigString) {
   const char *acPos = strchr(paConfigString, '_');
   if (nullptr != acPos) {
     acPos++;
     acPos = strchr(acPos, '_');
     if (nullptr != acPos) {
       acPos += 2; // put the position one after the separating number
-      return CStringDictionary::getId(acPos);
+      return forte::core::StringId::lookup(acPos);
     }
   }
-  return CStringDictionary::scmInvalidStringId;
+  return {};
 }
 
 CEventConnection *GEN_FORTE_F_MOVE::getEOConUnchecked(TPortId paEONum) {

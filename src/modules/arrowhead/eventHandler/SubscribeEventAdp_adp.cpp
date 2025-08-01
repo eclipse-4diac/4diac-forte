@@ -12,28 +12,20 @@
 
 #include "SubscribeEventAdp_adp.h"
 
-USE_STRING_ID(endpoint);
-USE_STRING_ID(eventFilter);
-USE_STRING_ID(EventFilter);
-USE_STRING_ID(Subscribe);
-USE_STRING_ID(Subscribed);
-USE_STRING_ID(SubscribeEventAdp);
-USE_STRING_ID(Unsubscribe);
-USE_STRING_ID(Unsubscribed);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_ADAPTER_TYPE(FORTE_SubscribeEventAdp, STRID(SubscribeEventAdp))
+DEFINE_ADAPTER_TYPE(FORTE_SubscribeEventAdp, "SubscribeEventAdp"_STRID)
 
-const auto cDataOutputNames = std::array{STRID(eventFilter),
-                                                                                    STRID(endpoint)};
+const auto cDataOutputNames = std::array{"eventFilter"_STRID,
+                                                                                    "endpoint"_STRID};
 
-                                                                                      STRID(WSTRING)};
+                                                                                      "WSTRING"_STRID};
 
-const auto cEventInputNames = std::array{STRID(Subscribed),
-                                                                                    STRID(Unsubscribed)};
+const auto cEventInputNames = std::array{"Subscribed"_STRID,
+                                                                                    "Unsubscribed"_STRID};
 
-const auto cEventOutputNames = std::array{STRID(Subscribe),
-                                                                                     STRID(Unsubscribe)};
+const auto cEventOutputNames = std::array{"Subscribe"_STRID,
+                                                                                     "Unsubscribe"_STRID};
 
 const SFBInterfaceSpec FORTE_SubscribeEventAdp::scmFBInterfaceSpecSocket = {2,
                                                                             scmEventInputNames,

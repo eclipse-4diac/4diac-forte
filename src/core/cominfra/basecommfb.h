@@ -75,7 +75,7 @@ namespace forte {
         }
 
       protected:
-        CBaseCommFB(const CStringDictionary::TStringId paInstanceNameId,
+        CBaseCommFB(const forte::core::StringId paInstanceNameId,
                     forte::core::CFBContainer &paContainer,
                     forte::com_infra::EComServiceType paCommServiceType);
 

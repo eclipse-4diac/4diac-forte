@@ -37,14 +37,14 @@ class CIEC_ANY_ELEMENTARY : public CIEC_ANY {
     void toString(std::string &paTargetBuf) const override;
     int fromString(const char *paValue) override;
 
-    static EDataTypeID getElementaryDataTypeId(CStringDictionary::TStringId paTypeNameId);
+    static EDataTypeID getElementaryDataTypeId(forte::core::StringId paTypeNameId);
 
   protected:
     CIEC_ANY_ELEMENTARY() = default;
 
   private:
     bool isTypeSpecifier(const char *paValue, const char *paHashPosition) const;
-    bool isCastable(CStringDictionary::TStringId paTypeNameId) const;
+    bool isCastable(forte::core::StringId paTypeNameId) const;
 };
 
 #endif /*_MANY_ELE_H_*/

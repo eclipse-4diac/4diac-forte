@@ -13,47 +13,19 @@
 
 #include "X20DI9371_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(CNID);
-USE_STRING_ID(CNIDO);
-USE_STRING_ID(DI01);
-USE_STRING_ID(DI02);
-USE_STRING_ID(DI03);
-USE_STRING_ID(DI04);
-USE_STRING_ID(DI05);
-USE_STRING_ID(DI06);
-USE_STRING_ID(DI07);
-USE_STRING_ID(DI08);
-USE_STRING_ID(DI09);
-USE_STRING_ID(DI10);
-USE_STRING_ID(DI11);
-USE_STRING_ID(DI12);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(MODID);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(REQ);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
-USE_STRING_ID(UINT);
-USE_STRING_ID(USINT);
-USE_STRING_ID(X20DI9371);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_X20DI9371, STRID(X20DI9371))
+DEFINE_FIRMWARE_FB(FORTE_X20DI9371, "X20DI9371"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(CNID), STRID(MODID)};
-  const auto cDataOutputNames = std::array{STRID(QO),   STRID(CNIDO), STRID(STATUS), STRID(DI01), STRID(DI02),
-                                           STRID(DI03), STRID(DI04),  STRID(DI05),   STRID(DI06), STRID(DI07),
-                                           STRID(DI08), STRID(DI09),  STRID(DI10),   STRID(DI11), STRID(DI12)};
-  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "CNID"_STRID, "MODID"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID,   "CNIDO"_STRID, "STATUS"_STRID, "DI01"_STRID, "DI02"_STRID,
+                                           "DI03"_STRID, "DI04"_STRID,  "DI05"_STRID,   "DI06"_STRID, "DI07"_STRID,
+                                           "DI08"_STRID, "DI09"_STRID,  "DI10"_STRID,   "DI11"_STRID, "DI12"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -67,8 +39,7 @@ namespace {
   };
 } // namespace
 
-FORTE_X20DI9371::FORTE_X20DI9371(const CStringDictionary::TStringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) :
+FORTE_X20DI9371::FORTE_X20DI9371(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     PowerlinkFunctionBlockDI(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_CNF(*this, 1),

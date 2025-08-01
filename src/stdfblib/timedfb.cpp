@@ -15,17 +15,12 @@
  *******************************************************************************/
 #include "timedfb.h"
 
-USE_STRING_ID(DT);
-USE_STRING_ID(EO);
-USE_STRING_ID(Event);
-USE_STRING_ID(START);
-USE_STRING_ID(STOP);
-USE_STRING_ID(TIME);
+using namespace forte::core::literals;
 
 namespace {
-  const auto cEINameIds = std::array{STRID(START), STRID(STOP)};
-  const auto cEONameIds = std::array{STRID(EO)};
-  const auto cDINameIds = std::array{STRID(DT)};
+  const auto cEINameIds = std::array{"START"_STRID, "STOP"_STRID};
+  const auto cEONameIds = std::array{"EO"_STRID};
+  const auto cDINameIds = std::array{"DT"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEINameIds,
@@ -40,7 +35,7 @@ namespace {
   };
 } // namespace
 
-CTimedFB::CTimedFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+CTimedFB::CTimedFB(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_DT(0_TIME),
     conn_DT(nullptr),

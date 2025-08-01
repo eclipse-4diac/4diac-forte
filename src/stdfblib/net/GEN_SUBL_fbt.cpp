@@ -14,14 +14,14 @@
 #include "GEN_SUBL_fbt.h"
 #include "core/cominfra/comlayersmanager.h"
 
-USE_STRING_ID(GEN_SUBL)
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBL, STRID(GEN_SUBL))
+DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBL, "GEN_SUBL"_STRID)
 
 const char *const GEN_SUBL::scmLocalIDPrefix = "loc[";
 const char *const GEN_SUBL::scmLocalIDSuffix = "]";
 
-GEN_SUBL::GEN_SUBL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_SUBL::GEN_SUBL(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     GEN_SUBSCRIBE(paInstanceNameId, paContainer) {
 }
 

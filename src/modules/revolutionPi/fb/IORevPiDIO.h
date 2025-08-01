@@ -38,7 +38,7 @@ class FORTE_IORevPiDIO : public forte::core::io::IOConfigFBMultiSlave {
     static const TForteUInt8 scmSlaveConfigurationIONum;
 
   public:
-    FORTE_IORevPiDIO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IORevPiDIO(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     virtual ~FORTE_IORevPiDIO() {};
 

@@ -12,11 +12,11 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-USE_STRING_ID(F_MULTIME);
+using namespace forte::core::literals;
 
 struct F_MULTIME_TestFixture : public CFBTestFixtureBase {
 
-    F_MULTIME_TestFixture() : CFBTestFixtureBase(STRID(F_MULTIME)) {
+    F_MULTIME_TestFixture() : CFBTestFixtureBase("F_MULTIME"_STRID) {
       setInputData({&mIn_TIME_MULTIME, &mIn_REAL_MULTIME});
       setOutputData({&mOut_TIME_MULTIME});
       CFBTestFixtureBase::setup();

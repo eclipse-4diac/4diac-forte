@@ -13,11 +13,7 @@
 
 #include "E_SPLIT_fbt.h"
 
-USE_STRING_ID(EI);
-USE_STRING_ID(EO1);
-USE_STRING_ID(EO2);
-USE_STRING_ID(E_SPLIT);
-USE_STRING_ID(Event);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_bool.h"
 #include "core/iec61131_functions.h"
@@ -26,10 +22,10 @@ USE_STRING_ID(Event);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_SPLIT, STRID(E_SPLIT))
+DEFINE_FIRMWARE_FB(FORTE_E_SPLIT, "E_SPLIT"_STRID)
 
-const auto cEventInputNames = std::array{STRID(EI)};
-const auto cEventOutputNames = std::array{STRID(EO1), STRID(EO2)};
+const auto cEventInputNames = std::array{"EI"_STRID};
+const auto cEventOutputNames = std::array{"EO1"_STRID, "EO2"_STRID};
 const SFBInterfaceSpec cFBInterfaceSpec = {
     .mEINames = cEventInputNames,
     .mEITypeNames = {},
@@ -42,7 +38,7 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
     .mPlugNames = {},
 };
 
-FORTE_E_SPLIT::FORTE_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_SPLIT::FORTE_E_SPLIT(const forte::core::StringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO1(*this, 0),

@@ -12,21 +12,17 @@
  *******************************************************************************/
 #include <F_EQ_TIME_tester.h>
 
-USE_STRING_ID(CNF);
-USE_STRING_ID(F_GT);
-USE_STRING_ID(IN1);
-USE_STRING_ID(IN2);
-USE_STRING_ID(OUT);
+using namespace forte::core::literals;
 
-DEFINE_FB_TESTER(F_EQ_TIME_tester, STRID(F_GT))
+DEFINE_FB_TESTER(F_EQ_TIME_tester, "F_GT"_STRID)
 
 F_EQ_TIME_tester::F_EQ_TIME_tester(CResource *mTestResource) :
     CFBTester(mTestee, mTestResource),
     mTestee(0, mTestResource),
-    mOut_EO_Conn(mTestee, STRID(CNF)),
-    mIn_IN1_Conn(mTestee, STRID(IN1), &mIN1),
-    mIn_IN2_Conn(mTestee, STRID(IN2), &mIN2),
-    mOut_OUT_Conn(mTestee, STRID(OUT), &mOut_OUT) {
+    mOut_EO_Conn(mTestee, "CNF"_STRID),
+    mIn_IN1_Conn(mTestee, "IN1"_STRID, &mIN1),
+    mIn_IN2_Conn(mTestee, "IN2"_STRID, &mIN2),
+    mOut_OUT_Conn(mTestee, "OUT"_STRID, &mOut_OUT) {
   mTestee.changeExecutionState(EMGMCommandType::Start);
 }
 

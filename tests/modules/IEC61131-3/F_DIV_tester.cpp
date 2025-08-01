@@ -13,11 +13,11 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-USE_STRING_ID(F_DIV);
+using namespace forte::core::literals;
 
 struct F_DIV_TestFixture : public CFBTestFixtureBase {
 
-    F_DIV_TestFixture() : CFBTestFixtureBase(STRID(F_DIV)) {
+    F_DIV_TestFixture() : CFBTestFixtureBase("F_DIV"_STRID) {
       setInputData({&mIn1_DIV, &mIn2_DIV});
       setOutputData({&mOut_DIV});
       CFBTestFixtureBase::setup();

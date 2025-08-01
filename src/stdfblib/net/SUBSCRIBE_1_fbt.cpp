@@ -13,11 +13,11 @@
 
 #include "SUBSCRIBE_1_fbt.h"
 
-USE_STRING_ID(SUBSCRIBE_1);
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(FORTE_SUBSCRIBE_1, STRID(SUBSCRIBE_1))
+DEFINE_GENERIC_FIRMWARE_FB(FORTE_SUBSCRIBE_1, "SUBSCRIBE_1"_STRID)
 
-FORTE_SUBSCRIBE_1::FORTE_SUBSCRIBE_1(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_SUBSCRIBE_1::FORTE_SUBSCRIBE_1(const forte::core::StringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
     GEN_SUBSCRIBE(paInstanceNameId, paContainer) {
   configureFB("SUBSCRIBE_1");

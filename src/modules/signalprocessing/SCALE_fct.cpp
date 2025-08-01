@@ -16,17 +16,7 @@
 
 #include "SCALE_fct.h"
 
-USE_STRING_ID();
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(IN);
-USE_STRING_ID(MAX_IN);
-USE_STRING_ID(MAX_OUT);
-USE_STRING_ID(MIN_IN);
-USE_STRING_ID(MIN_OUT);
-USE_STRING_ID(REAL);
-USE_STRING_ID(REQ);
-USE_STRING_ID(signalprocessing__SCALE);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_real.h"
 #include "core/iec61131_functions.h"
@@ -36,15 +26,15 @@ USE_STRING_ID(signalprocessing__SCALE);
 #include "core/datatypes/forte_array_variable.h"
 #include "SCALE_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE, STRID(signalprocessing__SCALE))
+DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE, "signalprocessing__SCALE"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN), STRID(MAX_IN), STRID(MIN_IN), STRID(MAX_OUT), STRID(MIN_OUT)};
-  const auto cDataOutputNames = std::array{STRID()};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"IN"_STRID, "MAX_IN"_STRID, "MIN_IN"_STRID, "MAX_OUT"_STRID, "MIN_OUT"_STRID};
+  const auto cDataOutputNames = std::array{""_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -58,7 +48,7 @@ namespace {
   };
 } // namespace
 
-FORTE_signalprocessing__SCALE::FORTE_signalprocessing__SCALE(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_signalprocessing__SCALE::FORTE_signalprocessing__SCALE(const forte::core::StringId paInstanceNameId,
                                                              forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

@@ -13,11 +13,11 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-USE_STRING_ID(E_F_TRIG);
+using namespace forte::core::literals;
 
 struct E_F_TRIG_TestFixture : public CFBTestFixtureBase {
 
-    E_F_TRIG_TestFixture() : CFBTestFixtureBase(STRID(E_F_TRIG)) {
+    E_F_TRIG_TestFixture() : CFBTestFixtureBase("E_F_TRIG"_STRID) {
       setInputData({&mInQI});
       CFBTestFixtureBase::setup();
     }

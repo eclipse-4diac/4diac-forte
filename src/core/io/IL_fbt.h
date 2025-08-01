@@ -22,5 +22,5 @@ class FORTE_IL final : public forte::core::io::CInputFB<CIEC_LWORD> {
     DECLARE_FIRMWARE_FB(FORTE_IL)
 
   public:
-    FORTE_IL(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IL(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 };

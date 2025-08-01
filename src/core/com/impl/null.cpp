@@ -13,16 +13,16 @@
 
 #include "null.h"
 
-#include "core/stringdict.h"
+#include "core/stringid.h"
 #include "core/com/factory.h"
 
-USE_STRING_ID(null)
+using namespace forte::core::literals;
 
 using namespace forte::com;
 using namespace forte::com::impl;
 
 namespace {
-  [[maybe_unused]] ComChannelEntryImpl<ComBuffer, NullChannel> entry(STRID(null));
+  [[maybe_unused]] ComChannelEntryImpl<ComBuffer, NullChannel> entry("null"_STRID);
 }
 
 ComResult NullChannel::open(const std::string_view paConfigString,

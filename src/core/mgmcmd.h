@@ -118,7 +118,7 @@ enum class EMGMCommandType : uint8_t {
    *    - mDestination = "" for creating within the device or "resname" for creating within a resource
    *    - mFistParam = Source qualifier for reading an FB's variable ("fbname.var") variable identifier may be input,
    * output, or internal var
-   *    - mSecondParam = CStringDictionary::scmInvalidStringId
+   *    - mSecondParam = {}
    *    - mAdditionalParams the read value is stored here
    */
   Read = 0x04,
@@ -129,7 +129,7 @@ enum class EMGMCommandType : uint8_t {
    *    - mDestination = "" for creating within the device or "resname" for creating within a resource
    *    - mFistParam = Destination qualifier for writing on an FB's variable ("fbname.var") variable identifier may be
    * input, output, or internal var
-   *    - mSecondParam = CStringDictionary::scmInvalidStringId
+   *    - mSecondParam = {}
    *    - mAdditionalParams = the string converted value to be set
    */
   Write = 0x05,
@@ -151,8 +151,8 @@ enum class EMGMCommandType : uint8_t {
    *
    * The parameters of the SManagementCMD are defined as:
    *    - mDestination = "" to query within the device or "resname" for fetching within a resource
-   *    - mFirstParam = CStringDictionary::scmInvalidStringId for all FBs or instance name
-   *    - mSecondParam = CStringDictionary::scmInvalidStringId for all FB types or type name
+   *    - mFirstParam = {} for all FBs or instance name
+   *    - mSecondParam = {} for all FB types or type name
    *    - mAdditionalParams  the response value of the query
    */
   QueryFB = 0x17,
@@ -161,8 +161,8 @@ enum class EMGMCommandType : uint8_t {
    *
    * The parameters of the SManagementCMD are defined as:
    *    - mDestination = "" to query within the device or "resname" for fetching within a resource
-   *    - mFirstParam = CStringDictionary::scmInvalidStringId
-   *    - mSecondParam = CStringDictionary::scmInvalidStringId
+   *    - mFirstParam = {}
+   *    - mSecondParam = {}
    *    - mAdditionalParams  the response value of the query - a list of event and data connections (comma separated
    * list of end points to end points)
    */

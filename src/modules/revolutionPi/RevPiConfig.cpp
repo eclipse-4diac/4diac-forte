@@ -13,106 +13,66 @@
 
 #include "RevPiConfig.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(DigitalInput_1);
-USE_STRING_ID(DigitalInput_10);
-USE_STRING_ID(DigitalInput_11);
-USE_STRING_ID(DigitalInput_12);
-USE_STRING_ID(DigitalInput_13);
-USE_STRING_ID(DigitalInput_14);
-USE_STRING_ID(DigitalInput_2);
-USE_STRING_ID(DigitalInput_3);
-USE_STRING_ID(DigitalInput_4);
-USE_STRING_ID(DigitalInput_5);
-USE_STRING_ID(DigitalInput_6);
-USE_STRING_ID(DigitalInput_7);
-USE_STRING_ID(DigitalInput_8);
-USE_STRING_ID(DigitalInput_9);
-USE_STRING_ID(DigitalOutput_1);
-USE_STRING_ID(DigitalOutput_10);
-USE_STRING_ID(DigitalOutput_11);
-USE_STRING_ID(DigitalOutput_12);
-USE_STRING_ID(DigitalOutput_13);
-USE_STRING_ID(DigitalOutput_14);
-USE_STRING_ID(DigitalOutput_2);
-USE_STRING_ID(DigitalOutput_3);
-USE_STRING_ID(DigitalOutput_4);
-USE_STRING_ID(DigitalOutput_5);
-USE_STRING_ID(DigitalOutput_6);
-USE_STRING_ID(DigitalOutput_7);
-USE_STRING_ID(DigitalOutput_8);
-USE_STRING_ID(DigitalOutput_9);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(IORevPi);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(UINT);
-USE_STRING_ID(UpdateInterval);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "RevPiController.h"
 
 using namespace forte::core::io;
 
-DEFINE_FIRMWARE_FB(RevPiConfig, STRID(IORevPi))
+DEFINE_FIRMWARE_FB(RevPiConfig, "IORevPi"_STRID)
 
-const CStringDictionary::TStringId RevPiConfig::scm_anDataInputNames[] = {STRID(QI),
-                                                                          STRID(DigitalInput_1),
-                                                                          STRID(DigitalInput_2),
-                                                                          STRID(DigitalInput_3),
-                                                                          STRID(DigitalInput_4),
-                                                                          STRID(DigitalInput_5),
-                                                                          STRID(DigitalInput_6),
-                                                                          STRID(DigitalInput_7),
-                                                                          STRID(DigitalInput_8),
-                                                                          STRID(DigitalInput_9),
-                                                                          STRID(DigitalInput_10),
-                                                                          STRID(DigitalInput_11),
-                                                                          STRID(DigitalInput_12),
-                                                                          STRID(DigitalInput_13),
-                                                                          STRID(DigitalInput_14),
-                                                                          STRID(DigitalOutput_1),
-                                                                          STRID(DigitalOutput_2),
-                                                                          STRID(DigitalOutput_3),
-                                                                          STRID(DigitalOutput_4),
-                                                                          STRID(DigitalOutput_5),
-                                                                          STRID(DigitalOutput_6),
-                                                                          STRID(DigitalOutput_7),
-                                                                          STRID(DigitalOutput_8),
-                                                                          STRID(DigitalOutput_9),
-                                                                          STRID(DigitalOutput_10),
-                                                                          STRID(DigitalOutput_11),
-                                                                          STRID(DigitalOutput_12),
-                                                                          STRID(DigitalOutput_13),
-                                                                          STRID(DigitalOutput_14),
-                                                                          STRID(UpdateInterval)};
+const forte::core::StringId RevPiConfig::scm_anDataInputNames[] = {"QI"_STRID,
+                                                                          "DigitalInput_1"_STRID,
+                                                                          "DigitalInput_2"_STRID,
+                                                                          "DigitalInput_3"_STRID,
+                                                                          "DigitalInput_4"_STRID,
+                                                                          "DigitalInput_5"_STRID,
+                                                                          "DigitalInput_6"_STRID,
+                                                                          "DigitalInput_7"_STRID,
+                                                                          "DigitalInput_8"_STRID,
+                                                                          "DigitalInput_9"_STRID,
+                                                                          "DigitalInput_10"_STRID,
+                                                                          "DigitalInput_11"_STRID,
+                                                                          "DigitalInput_12"_STRID,
+                                                                          "DigitalInput_13"_STRID,
+                                                                          "DigitalInput_14"_STRID,
+                                                                          "DigitalOutput_1"_STRID,
+                                                                          "DigitalOutput_2"_STRID,
+                                                                          "DigitalOutput_3"_STRID,
+                                                                          "DigitalOutput_4"_STRID,
+                                                                          "DigitalOutput_5"_STRID,
+                                                                          "DigitalOutput_6"_STRID,
+                                                                          "DigitalOutput_7"_STRID,
+                                                                          "DigitalOutput_8"_STRID,
+                                                                          "DigitalOutput_9"_STRID,
+                                                                          "DigitalOutput_10"_STRID,
+                                                                          "DigitalOutput_11"_STRID,
+                                                                          "DigitalOutput_12"_STRID,
+                                                                          "DigitalOutput_13"_STRID,
+                                                                          "DigitalOutput_14"_STRID,
+                                                                          "UpdateInterval"_STRID};
 
-const CStringDictionary::TStringId RevPiConfig::scm_anDataInputTypeIds[] = {
-    STRID(BOOL),    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
-    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
-    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
-    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING),
-    STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(UINT)};
+const forte::core::StringId RevPiConfig::scm_anDataInputTypeIds[] = {
+    "BOOL"_STRID,    "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID,
+    "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID,
+    "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID,
+    "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID,
+    "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "UINT"_STRID};
 
-const CStringDictionary::TStringId RevPiConfig::scm_anDataOutputNames[] = {STRID(QO), STRID(STATUS)};
+const forte::core::StringId RevPiConfig::scm_anDataOutputNames[] = {"QO"_STRID, "STATUS"_STRID};
 
-const CStringDictionary::TStringId RevPiConfig::scm_anDataOutputTypeIds[] = {STRID(BOOL), STRID(WSTRING)};
+const forte::core::StringId RevPiConfig::scm_anDataOutputTypeIds[] = {"BOOL"_STRID, "WSTRING"_STRID};
 
 const TForteInt16 RevPiConfig::scm_anEIWithIndexes[] = {0};
 const TDataIOID RevPiConfig::scm_anEIWith[] = {0,  29, 1,  2,  3,  4,  5,  6,  9,  8,  7,  10, 11, 12, 13, 14,
                                                15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 255};
-const CStringDictionary::TStringId RevPiConfig::scm_anEventInputNames[] = {STRID(INIT)};
-const auto cEventInputTypeIds = std::array{STRID(EInit)};
+const forte::core::StringId RevPiConfig::scm_anEventInputNames[] = {"INIT"_STRID};
+const auto cEventInputTypeIds = std::array{"EInit"_STRID};
 
 const TDataIOID RevPiConfig::scm_anEOWith[] = {0, 1, 255, 0, 1, 255};
 const TForteInt16 RevPiConfig::scm_anEOWithIndexes[] = {0, 3, -1};
-const CStringDictionary::TStringId RevPiConfig::scm_anEventOutputNames[] = {STRID(INITO), STRID(IND)};
-const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+const forte::core::StringId RevPiConfig::scm_anEventOutputNames[] = {"INITO"_STRID, "IND"_STRID};
+const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
 
 const SFBInterfaceSpec RevPiConfig::scm_stFBInterfaceSpec = {1,
                                                              scm_anEventInputNames,

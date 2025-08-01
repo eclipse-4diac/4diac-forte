@@ -45,7 +45,7 @@ class FORTE_RT_E_CYCLE final : public CEventSourceFB {
     void setInitialValues() override;
 
   public:
-    FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_RT_E_CYCLE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 

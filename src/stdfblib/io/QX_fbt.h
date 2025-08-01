@@ -61,7 +61,7 @@ class FORTE_QX final : public CProcessInterface {
     void setInitialValues() override;
 
   public:
-    FORTE_QX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_QX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_STRING var_PARAMS;

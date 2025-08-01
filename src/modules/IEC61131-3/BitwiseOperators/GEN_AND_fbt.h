@@ -28,7 +28,7 @@ class GEN_AND : public CGenBitBase {
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    GEN_AND(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_AND(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_AND() override = default;
 };
 

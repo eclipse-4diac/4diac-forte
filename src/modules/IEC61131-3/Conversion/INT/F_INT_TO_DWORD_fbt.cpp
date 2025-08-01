@@ -22,22 +22,15 @@
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-USE_STRING_ID(CNF);
-USE_STRING_ID(DWORD);
-USE_STRING_ID(Event);
-USE_STRING_ID(F_INT_TO_DWORD);
-USE_STRING_ID(IN);
-USE_STRING_ID(INT);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_F_INT_TO_DWORD, STRID(F_INT_TO_DWORD))
+DEFINE_FIRMWARE_FB(FORTE_F_INT_TO_DWORD, "F_INT_TO_DWORD"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN)};
-  const auto cDataOutputNames = std::array{STRID(OUT)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataInputNames = std::array{"IN"_STRID};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -52,7 +45,7 @@ namespace {
 }
 
 
-FORTE_F_INT_TO_DWORD::FORTE_F_INT_TO_DWORD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_INT_TO_DWORD::FORTE_F_INT_TO_DWORD(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_INT),
     var_OUT(0_DWORD),

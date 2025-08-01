@@ -13,39 +13,18 @@
 
 #include "X20AT4222_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(CNID);
-USE_STRING_ID(CNIDO);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(MODID);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(REAL);
-USE_STRING_ID(REQ);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
-USE_STRING_ID(T01);
-USE_STRING_ID(T02);
-USE_STRING_ID(T03);
-USE_STRING_ID(T04);
-USE_STRING_ID(UINT);
-USE_STRING_ID(USINT);
-USE_STRING_ID(X20AT4222);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_X20AT4222, STRID(X20AT4222))
+DEFINE_FIRMWARE_FB(FORTE_X20AT4222, "X20AT4222"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(CNID), STRID(MODID)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "CNID"_STRID, "MODID"_STRID};
   const auto cDataOutputNames =
-      std::array{STRID(QO), STRID(CNIDO), STRID(STATUS), STRID(T01), STRID(T02), STRID(T03), STRID(T04)};
-  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+      std::array{"QO"_STRID, "CNIDO"_STRID, "STATUS"_STRID, "T01"_STRID, "T02"_STRID, "T03"_STRID, "T04"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -59,8 +38,7 @@ namespace {
   };
 } // namespace
 
-FORTE_X20AT4222::FORTE_X20AT4222(const CStringDictionary::TStringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) :
+FORTE_X20AT4222::FORTE_X20AT4222(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     PowerlinkFunctionBlockAT(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_CNF(*this, 1),

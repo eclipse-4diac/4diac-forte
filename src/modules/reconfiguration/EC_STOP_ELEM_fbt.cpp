@@ -11,29 +11,19 @@
  *******************************************************************************/
 #include "EC_STOP_ELEM_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(DST);
-USE_STRING_ID(EC_STOP_ELEM);
-USE_STRING_ID(ELEM_NAME);
-USE_STRING_ID(Event);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(REQ);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "core/device.h"
 
-DEFINE_FIRMWARE_FB(FORTE_EC_STOP_ELEM, STRID(EC_STOP_ELEM))
+DEFINE_FIRMWARE_FB(FORTE_EC_STOP_ELEM, "EC_STOP_ELEM"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(ELEM_NAME), STRID(DST)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "ELEM_NAME"_STRID, "DST"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -47,7 +37,7 @@ namespace {
   };
 } // namespace
 
-FORTE_EC_STOP_ELEM::FORTE_EC_STOP_ELEM(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_EC_STOP_ELEM::FORTE_EC_STOP_ELEM(const forte::core::StringId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
@@ -82,8 +72,8 @@ void FORTE_EC_STOP_ELEM::executeEvent(TEventID paEIID, CEventChainExecutionThrea
 void FORTE_EC_STOP_ELEM::executeRQST() {
   forte::core::SManagementCMD theCommand;
 
-  theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
-  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_ELEM_NAME.getValue()));
+  theCommand.mDestination = forte::core::StringId::lookup(var_DST.getValue());
+  theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_ELEM_NAME.getValue()));
   theCommand.mCMD = EMGMCommandType::Stop;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);

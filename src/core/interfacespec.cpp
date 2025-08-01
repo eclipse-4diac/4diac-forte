@@ -22,10 +22,9 @@
 #include "core/interfacespec.h"
 #include "arch/datatype.h"
 
-USE_STRING_ID(Event);
+using namespace forte::core::literals;
 
-TPortId forte::getPortId(CStringDictionary::TStringId paPortNameId,
-                         std::span<const CStringDictionary::TStringId> paPortNames) {
+TPortId forte::getPortId(forte::core::StringId paPortNameId, std::span<const forte::core::StringId> paPortNames) {
   auto it = std::find(paPortNames.begin(), paPortNames.end(), paPortNameId);
   if (it == paPortNames.end()) {
     return cgInvalidPortId;
@@ -33,44 +32,44 @@ TPortId forte::getPortId(CStringDictionary::TStringId paPortNameId,
   return static_cast<TPortId>(it - paPortNames.begin());
 }
 
-TEventID SFBInterfaceSpec::getEIID(CStringDictionary::TStringId paEINameId) const {
+TEventID SFBInterfaceSpec::getEIID(forte::core::StringId paEINameId) const {
   return static_cast<TEventID>(forte::getPortId(paEINameId, mEINames));
 }
 
-TEventID SFBInterfaceSpec::getEOID(CStringDictionary::TStringId paEONameId) const {
+TEventID SFBInterfaceSpec::getEOID(forte::core::StringId paEONameId) const {
   return static_cast<TEventID>(forte::getPortId(paEONameId, mEONames));
 }
 
-CStringDictionary::TStringId SFBInterfaceSpec::getEIType(TEventID paEIID) const {
+forte::core::StringId SFBInterfaceSpec::getEIType(TEventID paEIID) const {
   if (!mEITypeNames.empty()) {
     return mEITypeNames[paEIID];
   }
-  return STRID(Event);
+  return "Event"_STRID;
 }
 
-CStringDictionary::TStringId SFBInterfaceSpec::getEOType(TEventID paEOID) const {
+forte::core::StringId SFBInterfaceSpec::getEOType(TEventID paEOID) const {
   if (!mEOTypeNames.empty()) {
     return mEOTypeNames[paEOID];
   }
-  return STRID(Event);
+  return "Event"_STRID;
 }
 
-TPortId SFBInterfaceSpec::getDIID(CStringDictionary::TStringId paDINameId) const {
+TPortId SFBInterfaceSpec::getDIID(forte::core::StringId paDINameId) const {
   return forte::getPortId(paDINameId, mDINames);
 }
 
-TPortId SFBInterfaceSpec::getDOID(CStringDictionary::TStringId paDONameId) const {
+TPortId SFBInterfaceSpec::getDOID(forte::core::StringId paDONameId) const {
   return forte::getPortId(paDONameId, mDONames);
 }
 
-TPortId SFBInterfaceSpec::getDIOID(CStringDictionary::TStringId paDIONameId) const {
+TPortId SFBInterfaceSpec::getDIOID(forte::core::StringId paDIONameId) const {
   return forte::getPortId(paDIONameId, mDIONames);
 }
 
-TPortId SFBInterfaceSpec::getPlugID(CStringDictionary::TStringId paPlugNameId) const {
+TPortId SFBInterfaceSpec::getPlugID(forte::core::StringId paPlugNameId) const {
   return forte::getPortId(paPlugNameId, mPlugNames);
 }
 
-TPortId SFBInterfaceSpec::getSocketID(CStringDictionary::TStringId paSocketNameId) const {
+TPortId SFBInterfaceSpec::getSocketID(forte::core::StringId paSocketNameId) const {
   return forte::getPortId(paSocketNameId, mSocketNames);
 }

@@ -12,45 +12,12 @@
 
 #include "PublishEventHTTP.h"
 
-USE_STRING_ID(ANYToJSON);
-USE_STRING_ID(APPEND_STRING_3);
-USE_STRING_ID(ArrowheadPublishAdp);
-USE_STRING_ID(CLIENT_1_2);
-USE_STRING_ID(CNF);
-USE_STRING_ID(EI);
-USE_STRING_ID(endpoint);
-USE_STRING_ID(EO);
-USE_STRING_ID(E_PERMIT);
-USE_STRING_ID(E_SR);
-USE_STRING_ID(F_STRING_TO_WSTRING);
-USE_STRING_ID(ID);
-USE_STRING_ID(IN);
-USE_STRING_ID(IN_1);
-USE_STRING_ID(IN_2);
-USE_STRING_ID(IN_3);
-USE_STRING_ID(INIT);
-USE_STRING_ID(InitFlag);
-USE_STRING_ID(INITO);
-USE_STRING_ID(input);
-USE_STRING_ID(OUT);
-USE_STRING_ID(output);
-USE_STRING_ID(PERMIT);
-USE_STRING_ID(publish);
-USE_STRING_ID(published);
-USE_STRING_ID(publishEvent);
-USE_STRING_ID(PublishEventHTTP);
-USE_STRING_ID(Q);
-USE_STRING_ID(QI);
-USE_STRING_ID(Query);
-USE_STRING_ID(R);
-USE_STRING_ID(REQ);
-USE_STRING_ID(S);
-USE_STRING_ID(SD_1);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_PublishEventHTTP, STRID(PublishEventHTTP))
+DEFINE_FIRMWARE_FB(FORTE_PublishEventHTTP, "PublishEventHTTP"_STRID)
 
 namespace {
-  const auto cSocketNameIds = std::array{STRID(publishEvent)};
+  const auto cSocketNameIds = std::array{"publishEvent"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = {},
@@ -66,59 +33,59 @@ namespace {
 } // namespace
 
 const SCFB_FBInstanceData FORTE_PublishEventHTTP::scmInternalFBs[] = {
-    {STRID(ANYToJSON), STRID(ANYToJSON)},
-    {STRID(InitFlag), STRID(E_SR)},
-    {STRID(APPEND_STRING_3), STRID(APPEND_STRING_3)},
-    {STRID(F_STRING_TO_WSTRING), STRID(F_STRING_TO_WSTRING)},
-    {STRID(Query), STRID(CLIENT_1_2)},
-    {STRID(E_PERMIT), STRID(E_PERMIT)},
+    {"ANYToJSON"_STRID, "ANYToJSON"_STRID},
+    {"InitFlag"_STRID, "E_SR"_STRID},
+    {"APPEND_STRING_3"_STRID, "APPEND_STRING_3"_STRID},
+    {"F_STRING_TO_WSTRING"_STRID, "F_STRING_TO_WSTRING"_STRID},
+    {"Query"_STRID, "CLIENT_1_2"_STRID},
+    {"E_PERMIT"_STRID, "E_PERMIT"_STRID},
 };
 
 const SCFB_FBParameter FORTE_PublishEventHTTP::scmParamters[] = {
-    {2, STRID(IN_1), "STRING#http["},
-    {2, STRID(IN_3), "STRING#/publish; POST; application/json]"},
+    {2, "IN_1"_STRID, "STRING#http["},
+    {2, "IN_3"_STRID, "STRING#/publish; POST; application/json]"},
 };
 
 const SCFB_FBConnectionData FORTE_PublishEventHTTP::auto cEventConnections = std::to_array<SCFB_FBConnectionData>{
-    {STRID(E_PERMIT), STRID(EO)), 5,
-     STRID(Query), STRID(REQ)), 4},
-    {STRID(APPEND_STRING_3), STRID(CNF)), 2,
-     STRID(F_STRING_TO_WSTRING), STRID(REQ)), 3},
-    {STRID(InitFlag), STRID(EO)), 1,
-     STRID(Query), STRID(INIT)), 4},
-    {STRID(ANYToJSON), STRID(CNF)), 0,
-     STRID(APPEND_STRING_3), STRID(REQ)), 2},
-    {STRID(F_STRING_TO_WSTRING), STRID(CNF)), 3,
-     STRID(InitFlag), STRID(S)), 1},
-    {STRID(Query), STRID(INITO)), 4,
-     STRID(E_PERMIT), STRID(EI)), 5},
-    {STRID(Query), STRID(CNF)), 4,
-     STRID(InitFlag), STRID(R)), 1},
-    {STRID(publishEvent), STRID(publish)), CCompositeFB::scmAdapterMarker | 0,
-     STRID(ANYToJSON), STRID(REQ)), 0},
+    {"E_PERMIT"_STRID, "EO"_STRID), 5,
+     "Query"_STRID, "REQ"_STRID), 4},
+    {"APPEND_STRING_3"_STRID, "CNF"_STRID), 2,
+     "F_STRING_TO_WSTRING"_STRID, "REQ"_STRID), 3},
+    {"InitFlag"_STRID, "EO"_STRID), 1,
+     "Query"_STRID, "INIT"_STRID), 4},
+    {"ANYToJSON"_STRID, "CNF"_STRID), 0,
+     "APPEND_STRING_3"_STRID, "REQ"_STRID), 2},
+    {"F_STRING_TO_WSTRING"_STRID, "CNF"_STRID), 3,
+     "InitFlag"_STRID, "S"_STRID), 1},
+    {"Query"_STRID, "INITO"_STRID), 4,
+     "E_PERMIT"_STRID, "EI"_STRID), 5},
+    {"Query"_STRID, "CNF"_STRID), 4,
+     "InitFlag"_STRID, "R"_STRID), 1},
+    {"publishEvent"_STRID, "publish"_STRID), CCompositeFB::scmAdapterMarker | 0,
+     "ANYToJSON"_STRID, "REQ"_STRID), 0},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_PublishEventHTTP::scmFannedOutEventConnections[] = {
-    {6, STRID(publishEvent), STRID(published)), CCompositeFB::scmAdapterMarker | 0},
+    {6, "publishEvent"_STRID, "published"_STRID), CCompositeFB::scmAdapterMarker | 0},
 };
 
 const SCFB_FBConnectionData FORTE_PublishEventHTTPauto cDataConnections = std::to_array<SCFB_FBConnectionData>{
-    {STRID(ANYToJSON), STRID(output)), 0,
-     STRID(Query), STRID(SD_1)), 4},
-    {STRID(InitFlag), STRID(Q)), 1,
-     STRID(Query), STRID(QI)), 4},
-    {STRID(APPEND_STRING_3), STRID(OUT)), 2,
-     STRID(F_STRING_TO_WSTRING), STRID(IN)), 3},
-    {STRID(F_STRING_TO_WSTRING), STRID(OUT)), 3,
-     STRID(Query), STRID(ID)), 4},
-    {STRID(publishEvent), STRID(publishEvent)), CCompositeFB::scmAdapterMarker | 0,
-     STRID(ANYToJSON), STRID(input)), 0},
-    {STRID(publishEvent), STRID(endpoint)), CCompositeFB::scmAdapterMarker | 0,
-     STRID(APPEND_STRING_3), STRID(IN_2)), 2},
+    {"ANYToJSON"_STRID, "output"_STRID), 0,
+     "Query"_STRID, "SD_1"_STRID), 4},
+    {"InitFlag"_STRID, "Q"_STRID), 1,
+     "Query"_STRID, "QI"_STRID), 4},
+    {"APPEND_STRING_3"_STRID, "OUT"_STRID), 2,
+     "F_STRING_TO_WSTRING"_STRID, "IN"_STRID), 3},
+    {"F_STRING_TO_WSTRING"_STRID, "OUT"_STRID), 3,
+     "Query"_STRID, "ID"_STRID), 4},
+    {"publishEvent"_STRID, "publishEvent"_STRID), CCompositeFB::scmAdapterMarker | 0,
+     "ANYToJSON"_STRID, "input"_STRID), 0},
+    {"publishEvent"_STRID, "endpoint"_STRID), CCompositeFB::scmAdapterMarker | 0,
+     "APPEND_STRING_3"_STRID, "IN_2"_STRID), 2},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_PublishEventHTTP::scmFannedOutDataConnections[] = {
-    {1, STRID(E_PERMIT), STRID(PERMIT)), 5},
+    {1, "E_PERMIT"_STRID, "PERMIT"_STRID), 5},
 };
 
 const SCFB_FBNData FORTE_PublishEventHTTP::scmFBNData = {

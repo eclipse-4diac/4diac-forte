@@ -44,7 +44,7 @@ class FORTE_FB_TOF final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_FB_TOF(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_FB_TOF(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_IN;
     CIEC_TIME var_PT;

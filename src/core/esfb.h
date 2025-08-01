@@ -28,7 +28,7 @@ class CEventSourceFB : public CFunctionBlock {
   public:
     CEventSourceFB(forte::core::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
-                   CStringDictionary::TStringId paInstanceNameId) :
+                   forte::core::StringId paInstanceNameId) :
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
         mEventChainExecutor(nullptr),
         mEventSourceEventEntry(*this, cgExternalEventID) {

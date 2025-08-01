@@ -52,14 +52,14 @@ class GEN_VALUES2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    std::vector<CStringDictionary::TStringId> mDataInputNames;
+    std::vector<forte::core::StringId> mDataInputNames;
     CEventConnection conn_CNF;
     CIEC_ARRAY_DYNAMIC var_OUT;
     COutDataConnection<CIEC_ARRAY_DYNAMIC> conn_OUT;
     std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDIs;
 
   public:
-    GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_VALUES2ARRAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_VALUES2ARRAY() override = default;
 };
 

@@ -15,12 +15,7 @@
 
 #include "TEST_CONDITION_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(check);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(REQ);
-USE_STRING_ID(TEST_CONDITION);
+using namespace forte::core::literals;
 
 #include "arch/devlog.h"
 #include "core/resource.h"
@@ -30,12 +25,12 @@ unsigned int FORTE_TEST_CONDITION::smFailedTests = 0;
 
 bool FORTE_TEST_CONDITION::smfinalReportPrinted = false;
 
-DEFINE_FIRMWARE_FB(FORTE_TEST_CONDITION, STRID(TEST_CONDITION))
+DEFINE_FIRMWARE_FB(FORTE_TEST_CONDITION, "TEST_CONDITION"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(check)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataInputNames = std::array{"check"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -49,7 +44,7 @@ namespace {
   };
 } // namespace
 
-FORTE_TEST_CONDITION::FORTE_TEST_CONDITION(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_TEST_CONDITION::FORTE_TEST_CONDITION(const forte::core::StringId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

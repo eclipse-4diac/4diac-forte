@@ -27,7 +27,7 @@ class FORTE_RegisterServiceOpcUa : public CCompositeFB {
     static const int scm_nregisterServiceAdpNum = 0;
 
   public:
-    FORTE_RegisterServiceOpcUa(const CStringDictionary::TStringId paInstanceNameId,
+    FORTE_RegisterServiceOpcUa(const forte::core::StringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
 
         ~FORTE_RegisterServiceOpcUa() override = default;

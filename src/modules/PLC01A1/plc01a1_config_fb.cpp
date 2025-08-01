@@ -12,35 +12,7 @@
 
 #include "plc01a1_config_fb.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(IN1);
-USE_STRING_ID(IN2);
-USE_STRING_ID(IN3);
-USE_STRING_ID(IN4);
-USE_STRING_ID(IN5);
-USE_STRING_ID(IN6);
-USE_STRING_ID(IN7);
-USE_STRING_ID(IN8);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(OUT1);
-USE_STRING_ID(OUT2);
-USE_STRING_ID(OUT3);
-USE_STRING_ID(OUT4);
-USE_STRING_ID(OUT5);
-USE_STRING_ID(OUT6);
-USE_STRING_ID(OUT7);
-USE_STRING_ID(OUT8);
-USE_STRING_ID(PLC01A1);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(UINT);
-USE_STRING_ID(UpdateInterval);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_uint.h"
 #include "core/iec61131_functions.h"
@@ -50,18 +22,18 @@ USE_STRING_ID(WSTRING);
 #include "core/datatypes/forte_array_variable.h"
 #include "plc01a1_controller.h"
 
-DEFINE_FIRMWARE_FB(PLC01A1ConfigFB, STRID(PLC01A1))
+DEFINE_FIRMWARE_FB(PLC01A1ConfigFB, "PLC01A1"_STRID)
 
 namespace {
   const auto cDataInputNames =
-      std::array{STRID(QI),   STRID(IN1),  STRID(IN2),  STRID(IN3),  STRID(IN4),  STRID(IN5),
-                 STRID(IN6),  STRID(IN7),  STRID(IN8),  STRID(OUT1), STRID(OUT2), STRID(OUT3),
-                 STRID(OUT4), STRID(OUT5), STRID(OUT6), STRID(OUT7), STRID(OUT8), STRID(UpdateInterval)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(INIT)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+      std::array{"QI"_STRID,   "IN1"_STRID,  "IN2"_STRID,  "IN3"_STRID,  "IN4"_STRID,  "IN5"_STRID,
+                 "IN6"_STRID,  "IN7"_STRID,  "IN8"_STRID,  "OUT1"_STRID, "OUT2"_STRID, "OUT3"_STRID,
+                 "OUT4"_STRID, "OUT5"_STRID, "OUT6"_STRID, "OUT7"_STRID, "OUT8"_STRID, "UpdateInterval"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "IND"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -75,7 +47,7 @@ namespace {
   };
 } // namespace
 
-PLC01A1ConfigFB::PLC01A1ConfigFB(const CStringDictionary::TStringId paInstanceNameId,
+PLC01A1ConfigFB::PLC01A1ConfigFB(const forte::core::StringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),

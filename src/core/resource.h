@@ -50,7 +50,7 @@ class CResource : public CFunctionBlock {
      */
     CResource(forte::core::CFBContainer &paDevice,
               const SFBInterfaceSpec &paInterfaceSpec,
-              CStringDictionary::TStringId paInstanceNameId);
+              forte::core::StringId paInstanceNameId);
 
     ~CResource() override;
 
@@ -126,10 +126,10 @@ class CResource : public CFunctionBlock {
       return true;
     }
 
-    CConnection::Wrapper getOutputConnection(std::span<const CStringDictionary::TStringId> paSrcNameList) override;
+    CConnection::Wrapper getOutputConnection(std::span<const forte::core::StringId> paSrcNameList) override;
 
   protected:
-    CResource(const SFBInterfaceSpec &paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
+    CResource(const SFBInterfaceSpec &paInterfaceSpec, forte::core::StringId paInstanceNameId);
 
     void executeEvent(TEventID, CEventChainExecutionThread *const) override {
       // nothing to do here for a resource
@@ -233,7 +233,7 @@ class CResource : public CFunctionBlock {
      */
     CIEC_ANY *getVariable(forte::core::TNameIdentifier &paNameList);
 
-    CConnection *getResIf2InConnection(CStringDictionary::TStringId paResInput);
+    CConnection *getResIf2InConnection(forte::core::StringId paResInput);
 
     virtual CConnection *getResIf2InConnectionUnchecked(TPortId) {
       return nullptr;

@@ -39,7 +39,7 @@ class FORTE_EBSlave2301 final : public EmbrickSlave {
     void initHandles() override;
 
   public:
-    FORTE_EBSlave2301(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_EBSlave2301(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_WSTRING var_Relay_1;

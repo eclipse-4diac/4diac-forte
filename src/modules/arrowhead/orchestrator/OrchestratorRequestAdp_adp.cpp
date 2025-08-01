@@ -12,31 +12,22 @@
 
 #include "OrchestratorRequestAdp_adp.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(endpoint);
-USE_STRING_ID(OrchestrationForm);
-USE_STRING_ID(orchestrationResponse);
-USE_STRING_ID(OrchestratorRequestAdp);
-USE_STRING_ID(requestOrchestator);
-USE_STRING_ID(responseReceived);
-USE_STRING_ID(serviceRequestForm);
-USE_STRING_ID(ServiceRequestForm);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_ADAPTER_TYPE(FORTE_OrchestratorRequestAdp, STRID(OrchestratorRequestAdp))
+DEFINE_ADAPTER_TYPE(FORTE_OrchestratorRequestAdp, "OrchestratorRequestAdp"_STRID)
 
-const auto cDataInputNames = std::array{STRID(orchestrationResponse)};
+const auto cDataInputNames = std::array{"orchestrationResponse"_STRID};
 
-                                                                                          STRID(OrchestrationForm)};
+                                                                                          "OrchestrationForm"_STRID};
 
-const auto cDataOutputNames = std::array{STRID(serviceRequestForm),
-                                                                                         STRID(endpoint)};
+const auto cDataOutputNames = std::array{"serviceRequestForm"_STRID,
+                                                                                         "endpoint"_STRID};
 
-                                                                                           STRID(WSTRING)};
+                                                                                           "WSTRING"_STRID};
 
-const auto cEventInputNames = std::array{STRID(responseReceived)};
+const auto cEventInputNames = std::array{"responseReceived"_STRID};
 
-const auto cEventOutputNames = std::array{STRID(requestOrchestator)};
+const auto cEventOutputNames = std::array{"requestOrchestator"_STRID};
 
 const SFBInterfaceSpec FORTE_OrchestratorRequestAdp::scmFBInterfaceSpecSocket = {1,
                                                                                  scmEventInputNames,

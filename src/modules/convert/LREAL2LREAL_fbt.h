@@ -43,7 +43,7 @@ class FORTE_LREAL2LREAL final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_LREAL2LREAL(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_LREAL2LREAL(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_LREAL var_IN;
 

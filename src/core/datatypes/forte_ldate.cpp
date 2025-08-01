@@ -20,11 +20,11 @@
 #include <ctype.h>
 #include "core/datatypes/forte_ldate.h"
 
-USE_STRING_ID(LDATE);
+using namespace forte::core::literals;
 
 #include "arch/forte_architecture_time.h"
 
-DEFINE_FIRMWARE_DATATYPE(LDATE, STRID(LDATE))
+DEFINE_FIRMWARE_DATATYPE(LDATE, "LDATE"_STRID)
 
 int CIEC_LDATE::fromString(const char *paValue) {
   // 2007-12-21
@@ -78,4 +78,4 @@ void CIEC_LDATE::toString(std::string &paTargetBuf) const {
   }
 }
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_LDATE>::scmDataTypeName = STRID(LDATE);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_LDATE>::scmDataTypeName = "LDATE"_STRID;

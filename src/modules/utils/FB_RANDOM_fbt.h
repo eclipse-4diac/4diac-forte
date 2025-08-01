@@ -65,7 +65,7 @@ class FORTE_FB_RANDOM final : public CBasicFB {
     std::uniform_real_distribution<float> mDistribution;
 
   public:
-    FORTE_FB_RANDOM(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_FB_RANDOM(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_UINT var_SEED;
 

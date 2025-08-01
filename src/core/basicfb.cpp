@@ -17,10 +17,12 @@
 #include <string.h>
 #include "core/basicfb.h"
 
+using namespace forte::core::literals;
+
 CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
-                   const CStringDictionary::TStringId paInstanceNameId,
-                   std::span<const CStringDictionary::TStringId> paVarInternalNames) :
+                   const forte::core::StringId paInstanceNameId,
+                   std::span<const forte::core::StringId> paVarInternalNames) :
     CBaseFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternalNames),
     mECCState(0) {
 }
@@ -30,11 +32,9 @@ void CBasicFB::setInitialValues() {
   mECCState = CIEC_STATE(0);
 }
 
-CIEC_ANY *CBasicFB::getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) {
+CIEC_ANY *CBasicFB::getVar(forte::core::StringId *paNameList, unsigned int paNameListSize) {
   CIEC_ANY *poRetVal = CBaseFB::getVar(paNameList, paNameListSize);
-  if ((nullptr == poRetVal) && (1 == paNameListSize) &&
-      !strcmp("!ECC", CStringDictionary::get(
-                          *paNameList))) { // TODO consider if this can also be an string ID in a different way
+  if ((nullptr == poRetVal) && (1 == paNameListSize) && *paNameList == "!ECC"_STRID) {
     poRetVal = &mECCState;
   }
   return poRetVal;

@@ -21,7 +21,7 @@
 #pragma once
 
 #include "core/typelib.h"
-#include "core/stringdict.h"
+#include "core/stringid.h"
 #include <vector>
 
 class CFunctionBlock;
@@ -43,33 +43,32 @@ namespace forte {
      *    - UnsupportedType   The requested FB type is not known to the typelib
      *    - InvalidOperation The requested FB can not be created (e.g. out of memory)
      */
-    CFunctionBlock *createFB(CStringDictionary::TStringId paInstanceNameId,
-                             CStringDictionary::TStringId paFBTypeId,
+    CFunctionBlock *createFB(forte::core::StringId paInstanceNameId,
+                             forte::core::StringId paFBTypeId,
                              std::string_view paTypeHash,
                              forte::core::CFBContainer &paContainer,
                              EMGMResponse &paErrorMSG);
 
-    CFunctionBlock *createFB(CStringDictionary::TStringId paInstanceNameId,
-                             CStringDictionary::TStringId paFBTypeId,
+    CFunctionBlock *createFB(forte::core::StringId paInstanceNameId,
+                             forte::core::StringId paFBTypeId,
                              forte::core::CFBContainer &paContainer);
 
     /*\brief Delete the given FB
      */
     bool deleteFB(CFunctionBlock *paFBToDelete);
 
-    forte::CAdapter *createAdapter(CStringDictionary::TStringId paInstanceNameId,
-                                   CStringDictionary::TStringId paAdapterTypeId,
+    forte::CAdapter *createAdapter(forte::core::StringId paInstanceNameId,
+                                   forte::core::StringId paAdapterTypeId,
                                    forte::core::CFBContainer &paContainer,
                                    bool paIsPlug,
                                    TForteUInt8 paParentAdapterlistID,
                                    EMGMResponse &paErrorMSG);
 
-    CIEC_ANY *
-    createDataTypeInstance(CStringDictionary::TStringId paDTNameId, TForteByte *paDataBuf, EMGMResponse &paErrorMSG);
+    CIEC_ANY *createDataTypeInstance(forte::core::StringId paDTNameId, TForteByte *paDataBuf, EMGMResponse &paErrorMSG);
 
-    CFBTypeEntry *getFBTypeEntry(CStringDictionary::TStringId paTypeNameId);
-    CAdapterTypeEntry *getAdapterTypeEntry(CStringDictionary::TStringId paTypeNameId);
-    CGlobalConstEntry *getGlobalConstTypeEntry(CStringDictionary::TStringId paTypeNameId);
+    CFBTypeEntry *getFBTypeEntry(forte::core::StringId paTypeNameId);
+    CAdapterTypeEntry *getAdapterTypeEntry(forte::core::StringId paTypeNameId);
+    CGlobalConstEntry *getGlobalConstTypeEntry(forte::core::StringId paTypeNameId);
 
     const std::vector<CFBTypeEntry *> &getFBTypeEntries();
     const std::vector<CAdapterTypeEntry *> &getAdapterTypeEntries();

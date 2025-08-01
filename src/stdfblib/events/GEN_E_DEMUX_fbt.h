@@ -36,7 +36,7 @@ class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
   private:
     static const TEventID scmEventEIID = 0;
 
-    std::vector<CStringDictionary::TStringId> mEventOutputNames;
+    std::vector<forte::core::StringId> mEventOutputNames;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -49,7 +49,7 @@ class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
     CDataConnection *conn_K;
 
   public:
-    GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_E_DEMUX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_E_DEMUX() override = default;
 };
 #endif //_GEN_E_DEMUX_H_

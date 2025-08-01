@@ -14,14 +14,14 @@
 #include "GEN_PUBL_fbt.h"
 #include "core/cominfra/comlayersmanager.h"
 
-USE_STRING_ID(GEN_PUBL)
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBL, STRID(GEN_PUBL))
+DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBL, "GEN_PUBL"_STRID)
 
 const char *const GEN_PUBL::scmLocalIDPrefix = "loc[";
 const char *const GEN_PUBL::scmLocalIDSuffix = "]";
 
-GEN_PUBL::GEN_PUBL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_PUBL::GEN_PUBL(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     GEN_PUBLISH(paInstanceNameId, paContainer) {
 }
 

@@ -14,9 +14,9 @@
  *******************************************************************************/
 #include "E_CYCLE_fbt.h"
 
-USE_STRING_ID(E_CYCLE);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_E_CYCLE, STRID(E_CYCLE))
+DEFINE_FIRMWARE_FB(FORTE_E_CYCLE, "E_CYCLE"_STRID)
 
 void FORTE_E_CYCLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if (paEIID == csmEventSTARTID) {

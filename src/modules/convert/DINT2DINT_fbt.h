@@ -43,7 +43,7 @@ class FORTE_DINT2DINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_DINT2DINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_DINT2DINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_DINT var_IN;
 

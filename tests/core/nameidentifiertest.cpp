@@ -12,6 +12,8 @@
 #include <boost/test/unit_test.hpp>
 #include "core/mgmcmdstruct.h"
 
+using namespace forte::core::literals;
+
 /*!Tests for the TNameIdentifier class used to store name identifier lists
  *
  * Although it officially holds CstringDicitionalry::TStringIds we can use for most tests normal strings

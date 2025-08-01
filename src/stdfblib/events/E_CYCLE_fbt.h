@@ -22,7 +22,7 @@
 class FORTE_E_CYCLE : public CTimedFB {
     DECLARE_FIRMWARE_FB(FORTE_E_CYCLE)
   public:
-    FORTE_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_E_CYCLE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
         CTimedFB(paInstanceNameId, paContainer) {
     }
 

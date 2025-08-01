@@ -13,18 +13,15 @@
 
 #include "forte_datatypetest.h"
 
-USE_STRING_ID(Age);
-USE_STRING_ID(DataTypeTest);
-USE_STRING_ID(IsRegistered);
-USE_STRING_ID(Name);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(DataTypeTest, STRID(DataTypeTest));
+DEFINE_FIRMWARE_DATATYPE(DataTypeTest, "DataTypeTest"_STRID);
 
 CIEC_DataTypeTest::CIEC_DataTypeTest() : CIEC_STRUCT(), var_Name(""), var_Age(0), var_IsRegistered(false) {
 }
 
-CStringDictionary::TStringId CIEC_DataTypeTest::getStructTypeNameID() const {
-  return STRID(DataTypeTest);
+forte::core::StringId CIEC_DataTypeTest::getStructTypeNameID() const {
+  return "DataTypeTest"_STRID;
 }
 
 CIEC_ANY *CIEC_DataTypeTest::getMember(size_t paMemberIndex) {
@@ -45,5 +42,4 @@ const CIEC_ANY *CIEC_DataTypeTest::getMember(size_t paMemberIndex) const {
   return nullptr;
 }
 
-const CStringDictionary::TStringId CIEC_DataTypeTest::scmElementNames[] = {STRID(Name), STRID(Age),
-                                                                           STRID(IsRegistered)};
+const forte::core::StringId CIEC_DataTypeTest::scmElementNames[] = {"Name"_STRID, "Age"_STRID, "IsRegistered"_STRID};

@@ -11,38 +11,21 @@
  *******************************************************************************/
 #include "ST_REC_CONN_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(DST);
-USE_STRING_ID(Event);
-USE_STRING_ID(NEW_DST_FB);
-USE_STRING_ID(NEW_DST_FB_IN);
-USE_STRING_ID(NEW_SRC_FB);
-USE_STRING_ID(NEW_SRC_FB_OUT);
-USE_STRING_ID(OLD_DST_FB);
-USE_STRING_ID(OLD_DST_FB_IN);
-USE_STRING_ID(OLD_SRC_FB);
-USE_STRING_ID(OLD_SRC_FB_OUT);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(REQ);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(ST_REC_CONN);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "core/device.h"
 
-DEFINE_FIRMWARE_FB(FORTE_ST_REC_CONN, STRID(ST_REC_CONN))
+DEFINE_FIRMWARE_FB(FORTE_ST_REC_CONN, "ST_REC_CONN"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{
-      STRID(QI),         STRID(OLD_SRC_FB),     STRID(OLD_SRC_FB_OUT), STRID(OLD_DST_FB),    STRID(OLD_DST_FB_IN),
-      STRID(NEW_SRC_FB), STRID(NEW_SRC_FB_OUT), STRID(NEW_DST_FB),     STRID(NEW_DST_FB_IN), STRID(DST)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+      "QI"_STRID,         "OLD_SRC_FB"_STRID,     "OLD_SRC_FB_OUT"_STRID, "OLD_DST_FB"_STRID,    "OLD_DST_FB_IN"_STRID,
+      "NEW_SRC_FB"_STRID, "NEW_SRC_FB_OUT"_STRID, "NEW_DST_FB"_STRID,     "NEW_DST_FB_IN"_STRID, "DST"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -56,7 +39,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ST_REC_CONN::FORTE_ST_REC_CONN(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_ST_REC_CONN::FORTE_ST_REC_CONN(const forte::core::StringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
@@ -105,23 +88,23 @@ void FORTE_ST_REC_CONN::executeEvent(TEventID paEIID, CEventChainExecutionThread
 void FORTE_ST_REC_CONN::executeRQST() {
   forte::core::SManagementCMD theCommand;
   // delete old connection
-  theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
-  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_OLD_SRC_FB.getValue()));
-  theCommand.mFirstParam.push_back(CStringDictionary::getId(var_OLD_SRC_FB_OUT.getValue()));
-  theCommand.mSecondParam.push_back(CStringDictionary::getId(var_OLD_DST_FB.getValue()));
-  theCommand.mSecondParam.push_back(CStringDictionary::getId(var_OLD_DST_FB_IN.getValue()));
+  theCommand.mDestination = forte::core::StringId::lookup(var_DST.getValue());
+  theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_OLD_SRC_FB.getValue()));
+  theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_OLD_SRC_FB_OUT.getValue()));
+  theCommand.mSecondParam.push_back(forte::core::StringId::lookup(var_OLD_DST_FB.getValue()));
+  theCommand.mSecondParam.push_back(forte::core::StringId::lookup(var_OLD_DST_FB_IN.getValue()));
   theCommand.mCMD = EMGMCommandType::DeleteConnection;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   if (resp == EMGMResponse::Ready) {
     // create new connection
-    theCommand.mDestination = CStringDictionary::getId(var_DST.getValue());
+    theCommand.mDestination = forte::core::StringId::lookup(var_DST.getValue());
     theCommand.mFirstParam.clear();
-    theCommand.mFirstParam.push_back(CStringDictionary::getId(var_NEW_SRC_FB.getValue()));
-    theCommand.mFirstParam.push_back(CStringDictionary::getId(var_NEW_SRC_FB_OUT.getValue()));
-    theCommand.mSecondParam.push_back(CStringDictionary::getId(var_NEW_DST_FB.getValue()));
-    theCommand.mSecondParam.push_back(CStringDictionary::getId(var_NEW_DST_FB_IN.getValue()));
+    theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_NEW_SRC_FB.getValue()));
+    theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_NEW_SRC_FB_OUT.getValue()));
+    theCommand.mSecondParam.push_back(forte::core::StringId::lookup(var_NEW_DST_FB.getValue()));
+    theCommand.mSecondParam.push_back(forte::core::StringId::lookup(var_NEW_DST_FB_IN.getValue()));
     theCommand.mCMD = EMGMCommandType::CreateConnection;
     resp = getDevice()->executeMGMCommand(theCommand);
   }

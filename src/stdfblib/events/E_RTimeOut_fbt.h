@@ -34,7 +34,7 @@ class FORTE_E_RTimeOut final : public CCompositeFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_RTimeOut(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_RTimeOut(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     forte::CSocketPin<FORTE_ARTimeOut_Socket> var_TimeOutSocket;
 

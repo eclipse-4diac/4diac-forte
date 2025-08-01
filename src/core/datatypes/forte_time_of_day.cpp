@@ -22,9 +22,9 @@
 #include "arch/forte_architecture_time.h"
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(TIME_OF_DAY);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(TIME_OF_DAY, STRID(TIME_OF_DAY))
+DEFINE_FIRMWARE_DATATYPE(TIME_OF_DAY, "TIME_OF_DAY"_STRID)
 
 int CIEC_TIME_OF_DAY::fromString(const char *paValue) {
   // 15:00:00.000
@@ -101,4 +101,4 @@ void CIEC_TIME_OF_DAY::toString(std::string &paTargetBuf) const {
                  static_cast<int>((ntoStingBuffer / 1000000) % 1000));
 }
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_TIME_OF_DAY>::scmDataTypeName = STRID(TIME_OF_DAY);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_TIME_OF_DAY>::scmDataTypeName = "TIME_OF_DAY"_STRID;

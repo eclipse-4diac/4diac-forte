@@ -38,7 +38,7 @@ class FORTE_EC_KILL_ELEM final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_EC_KILL_ELEM(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_EC_KILL_ELEM(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_WSTRING var_ELEM_NAME;

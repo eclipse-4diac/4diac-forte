@@ -53,7 +53,7 @@ class FORTE_GET_VALUE : public CFunctionBlock {
     SINT32 read();
 
   public:
-    FORTE_GET_VALUE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_GET_VALUE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
         ~FORTE_GET_VALUE() override = default;
 };

@@ -10,8 +10,7 @@
 #include "WagoSlaveBase.h"
 #include "../WagoDeviceController.h"
 
-USE_STRING_ID(BusAdapterIn);
-USE_STRING_ID(BusAdapterOut);
+using namespace forte::core::literals;
 
 using namespace forte::core::io;
 
@@ -21,11 +20,11 @@ const TForteUInt8 WagoSlaveBase::scmSlaveConfigurationIONum = 0;
 WagoSlaveBase::WagoSlaveBase(int paType,
                              forte::core::CFBContainer &paContainer,
                              const SFBInterfaceSpec &paInterfaceSpec,
-                             const CStringDictionary::TStringId paInstanceNameId) :
+                             const forte::core::StringId paInstanceNameId) :
     IOConfigFBMultiSlave(
         scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec, paInstanceNameId),
-    var_BusAdapterOut(STRID(BusAdapterOut), *this, 0),
-    var_BusAdapterIn(STRID(BusAdapterIn), *this, 0) {
+    var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0),
+    var_BusAdapterIn("BusAdapterIn"_STRID, *this, 0) {
 }
 
 void WagoSlaveBase::initWagoHandle(int paDIIndex,

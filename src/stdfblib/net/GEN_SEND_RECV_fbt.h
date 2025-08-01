@@ -31,7 +31,7 @@ class GEN_SEND_RECV : public forte::com::CommunicationFB {
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *paECET) override;
 
-    GEN_SEND_RECV(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_SEND_RECV(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     ~GEN_SEND_RECV() override = default;
 

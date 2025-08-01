@@ -12,51 +12,12 @@
 
 #include "QueryServiceHTTP.h"
 
-USE_STRING_ID(ANYToJSON);
-USE_STRING_ID(APPEND_STRING_3);
-USE_STRING_ID(CLIENT_1_2);
-USE_STRING_ID(CNF);
-USE_STRING_ID(EI);
-USE_STRING_ID(endpoint);
-USE_STRING_ID(EO);
-USE_STRING_ID(E_PERMIT);
-USE_STRING_ID(E_SR);
-USE_STRING_ID(F_STRING_TO_WSTRING);
-USE_STRING_ID(GetArrayResponseFromJSON);
-USE_STRING_ID(GetHTTPResult);
-USE_STRING_ID(ID);
-USE_STRING_ID(IN);
-USE_STRING_ID(IN_1);
-USE_STRING_ID(IN_2);
-USE_STRING_ID(IN_3);
-USE_STRING_ID(INIT);
-USE_STRING_ID(InitFlag);
-USE_STRING_ID(INITO);
-USE_STRING_ID(input);
-USE_STRING_ID(OUT);
-USE_STRING_ID(output);
-USE_STRING_ID(PERMIT);
-USE_STRING_ID(Q);
-USE_STRING_ID(QI);
-USE_STRING_ID(queried);
-USE_STRING_ID(query);
-USE_STRING_ID(Query);
-USE_STRING_ID(QueryServiceHTTP);
-USE_STRING_ID(queryServices);
-USE_STRING_ID(QueryServicesAdp);
-USE_STRING_ID(R);
-USE_STRING_ID(RD_2);
-USE_STRING_ID(REQ);
-USE_STRING_ID(response);
-USE_STRING_ID(S);
-USE_STRING_ID(SD_1);
-USE_STRING_ID(serviceEntries);
-USE_STRING_ID(serviceQueryForm);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_QueryServiceHTTP, STRID(QueryServiceHTTP))
+DEFINE_FIRMWARE_FB(FORTE_QueryServiceHTTP, "QueryServiceHTTP"_STRID)
 
 namespace {
-  const auto cSocketNameIds = std::array{STRID(queryServices)};
+  const auto cSocketNameIds = std::array{"queryServices"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = {},
@@ -73,67 +34,67 @@ namespace {
 } // namespace
 
 const SCFB_FBInstanceData FORTE_QueryServiceHTTP::scmInternalFBs[] = {
-    {STRID(APPEND_STRING_3), STRID(APPEND_STRING_3)},
-    {STRID(Query), STRID(CLIENT_1_2)},
-    {STRID(F_STRING_TO_WSTRING), STRID(F_STRING_TO_WSTRING)},
-    {STRID(InitFlag), STRID(E_SR)},
-    {STRID(E_PERMIT), STRID(E_PERMIT)},
-    {STRID(ANYToJSON), STRID(ANYToJSON)},
-    {STRID(GetHTTPResult), STRID(GetArrayResponseFromJSON)},
+    {"APPEND_STRING_3"_STRID, "APPEND_STRING_3"_STRID},
+    {"Query"_STRID, "CLIENT_1_2"_STRID},
+    {"F_STRING_TO_WSTRING"_STRID, "F_STRING_TO_WSTRING"_STRID},
+    {"InitFlag"_STRID, "E_SR"_STRID},
+    {"E_PERMIT"_STRID, "E_PERMIT"_STRID},
+    {"ANYToJSON"_STRID, "ANYToJSON"_STRID},
+    {"GetHTTPResult"_STRID, "GetArrayResponseFromJSON"_STRID},
 };
 
 const SCFB_FBParameter FORTE_QueryServiceHTTP::scmParamters[] = {
-    {0, STRID(IN_1), "STRING#http["},
-    {0, STRID(IN_3), "STRING#/query; PUT; application/json]"},
+    {0, "IN_1"_STRID, "STRING#http["},
+    {0, "IN_3"_STRID, "STRING#/query; PUT; application/json]"},
 };
 
 const SCFB_FBConnectionData FORTE_QueryServiceHTTP::auto cEventConnections = std::to_array<SCFB_FBConnectionData>{
-    {STRID(APPEND_STRING_3), STRID(CNF)), 0,
-     STRID(F_STRING_TO_WSTRING), STRID(REQ)), 2},
-    {STRID(F_STRING_TO_WSTRING), STRID(CNF)), 2,
-     STRID(InitFlag), STRID(S)), 3},
-    {STRID(InitFlag), STRID(EO)), 3,
-     STRID(Query), STRID(INIT)), 1},
-    {STRID(Query), STRID(INITO)), 1,
-     STRID(E_PERMIT), STRID(EI)), 4},
-    {STRID(E_PERMIT), STRID(EO)), 4,
-     STRID(Query), STRID(REQ)), 1},
-    {STRID(Query), STRID(CNF)), 1,
-     STRID(InitFlag), STRID(R)), 3},
-    {STRID(ANYToJSON), STRID(CNF)), 5,
-     STRID(APPEND_STRING_3), STRID(REQ)), 0},
-    {STRID(queryServices), STRID(query)), CCompositeFB::scmAdapterMarker | 0,
-     STRID(ANYToJSON), STRID(REQ)), 5},
-    {STRID(GetHTTPResult), STRID(CNF)), 6,
-     STRID(queryServices), STRID(queried)), CCompositeFB::scmAdapterMarker | 0},
+    {"APPEND_STRING_3"_STRID, "CNF"_STRID), 0,
+     "F_STRING_TO_WSTRING"_STRID, "REQ"_STRID), 2},
+    {"F_STRING_TO_WSTRING"_STRID, "CNF"_STRID), 2,
+     "InitFlag"_STRID, "S"_STRID), 3},
+    {"InitFlag"_STRID, "EO"_STRID), 3,
+     "Query"_STRID, "INIT"_STRID), 1},
+    {"Query"_STRID, "INITO"_STRID), 1,
+     "E_PERMIT"_STRID, "EI"_STRID), 4},
+    {"E_PERMIT"_STRID, "EO"_STRID), 4,
+     "Query"_STRID, "REQ"_STRID), 1},
+    {"Query"_STRID, "CNF"_STRID), 1,
+     "InitFlag"_STRID, "R"_STRID), 3},
+    {"ANYToJSON"_STRID, "CNF"_STRID), 5,
+     "APPEND_STRING_3"_STRID, "REQ"_STRID), 0},
+    {"queryServices"_STRID, "query"_STRID), CCompositeFB::scmAdapterMarker | 0,
+     "ANYToJSON"_STRID, "REQ"_STRID), 5},
+    {"GetHTTPResult"_STRID, "CNF"_STRID), 6,
+     "queryServices"_STRID, "queried"_STRID), CCompositeFB::scmAdapterMarker | 0},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_QueryServiceHTTP::scmFannedOutEventConnections[] = {
-    {5, STRID(GetHTTPResult), STRID(REQ)), 6},
+    {5, "GetHTTPResult"_STRID, "REQ"_STRID), 6},
 };
 
 const SCFB_FBConnectionData FORTE_QueryServiceHTTPauto cDataConnections = std::to_array<SCFB_FBConnectionData>{
-    {STRID(APPEND_STRING_3), STRID(OUT)), 0,
-     STRID(F_STRING_TO_WSTRING), STRID(IN)), 2},
-    {STRID(F_STRING_TO_WSTRING), STRID(OUT)), 2,
-     STRID(Query), STRID(ID)), 1},
-    {STRID(InitFlag), STRID(Q)), 3,
-     STRID(E_PERMIT), STRID(PERMIT)), 4},
-    {STRID(ANYToJSON), STRID(output)), 5,
-     STRID(Query), STRID(SD_1)), 1},
-    {STRID(queryServices), STRID(serviceQueryForm)),
-     CCompositeFB::scmAdapterMarker | 0, STRID(ANYToJSON), STRID(input)), 5},
-    {STRID(queryServices), STRID(endpoint)), CCompositeFB::scmAdapterMarker | 0,
-     STRID(APPEND_STRING_3), STRID(IN_2)), 0},
-    {STRID(Query), STRID(RD_2)), 1,
-     STRID(GetHTTPResult), STRID(response)), 6},
-    {STRID(GetHTTPResult), STRID(output)), 6,
-     STRID(queryServices), STRID(serviceEntries)),
+    {"APPEND_STRING_3"_STRID, "OUT"_STRID), 0,
+     "F_STRING_TO_WSTRING"_STRID, "IN"_STRID), 2},
+    {"F_STRING_TO_WSTRING"_STRID, "OUT"_STRID), 2,
+     "Query"_STRID, "ID"_STRID), 1},
+    {"InitFlag"_STRID, "Q"_STRID), 3,
+     "E_PERMIT"_STRID, "PERMIT"_STRID), 4},
+    {"ANYToJSON"_STRID, "output"_STRID), 5,
+     "Query"_STRID, "SD_1"_STRID), 1},
+    {"queryServices"_STRID, "serviceQueryForm"_STRID),
+     CCompositeFB::scmAdapterMarker | 0, "ANYToJSON"_STRID, "input"_STRID), 5},
+    {"queryServices"_STRID, "endpoint"_STRID), CCompositeFB::scmAdapterMarker | 0,
+     "APPEND_STRING_3"_STRID, "IN_2"_STRID), 0},
+    {"Query"_STRID, "RD_2"_STRID), 1,
+     "GetHTTPResult"_STRID, "response"_STRID), 6},
+    {"GetHTTPResult"_STRID, "output"_STRID), 6,
+     "queryServices"_STRID, "serviceEntries"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_QueryServiceHTTP::scmFannedOutDataConnections[] = {
-    {2, STRID(Query), STRID(QI)), 1},
+    {2, "Query"_STRID, "QI"_STRID), 1},
 };
 
 const SCFB_FBNData FORTE_QueryServiceHTTP::scmFBNData = {

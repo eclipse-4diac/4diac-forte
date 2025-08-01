@@ -18,20 +18,16 @@
 #include "GEN_E_DEMUX_fbt.h"
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(EI);
-USE_STRING_ID(Event);
-USE_STRING_ID(GEN_E_DEMUX);
-USE_STRING_ID(K);
-USE_STRING_ID(UINT);
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX, STRID(GEN_E_DEMUX))
+DEFINE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX, "GEN_E_DEMUX"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(K)};
-  const auto cEventInputNames = std::array{STRID(EI)};
+  const auto cDataInputNames = std::array{"K"_STRID};
+  const auto cEventInputNames = std::array{"EI"_STRID};
 } // namespace
 
-GEN_E_DEMUX::GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_E_DEMUX::GEN_E_DEMUX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_K(nullptr) {
 }

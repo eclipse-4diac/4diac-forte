@@ -19,15 +19,7 @@
 
 #include "SPLIT_WORD_INTO_BYTES_fct.h"
 
-USE_STRING_ID(BYTE);
-USE_STRING_ID(BYTE_00);
-USE_STRING_ID(BYTE_01);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(IN);
-USE_STRING_ID(REQ);
-USE_STRING_ID(SPLIT_WORD_INTO_BYTES);
-USE_STRING_ID(WORD);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_byte.h"
 #include "core/datatypes/forte_word.h"
@@ -37,15 +29,15 @@ USE_STRING_ID(WORD);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_BYTES, STRID(SPLIT_WORD_INTO_BYTES))
+DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_BYTES, "SPLIT_WORD_INTO_BYTES"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN)};
-  const auto cDataOutputNames = std::array{STRID(BYTE_00), STRID(BYTE_01)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cDataInputNames = std::array{"IN"_STRID};
+  const auto cDataOutputNames = std::array{"BYTE_00"_STRID, "BYTE_01"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -60,7 +52,7 @@ namespace {
 }
 
 
-FORTE_SPLIT_WORD_INTO_BYTES::FORTE_SPLIT_WORD_INTO_BYTES(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_SPLIT_WORD_INTO_BYTES::FORTE_SPLIT_WORD_INTO_BYTES(const forte::core::StringId paInstanceNameId,
                                                          forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

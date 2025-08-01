@@ -28,7 +28,7 @@ CAdapterConnection::~CAdapterConnection() {
 }
 
 EMGMResponse CAdapterConnection::connect(CFunctionBlock &paDstFB,
-                                         std::span<const CStringDictionary::TStringId> paDstPortNameId) {
+                                         std::span<const forte::core::StringId> paDstPortNameId) {
   if (mSocket != nullptr) {
     // we are already connected
     return EMGMResponse::InvalidState;
@@ -62,14 +62,13 @@ EMGMResponse CAdapterConnection::connect(CFunctionBlock &paDstFB,
   return EMGMResponse::Ready;
 }
 
-EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock &,
-                                                       std::span<const CStringDictionary::TStringId>) {
+EMGMResponse CAdapterConnection::connectToCFBInterface(CFunctionBlock &, std::span<const forte::core::StringId>) {
   return EMGMResponse::InvalidOperation; // currently we are not supporting adapter connections accross interface
                                          // boundaries
 }
 
 EMGMResponse CAdapterConnection::disconnect(CFunctionBlock &paDstFB,
-                                            const std::span<const CStringDictionary::TStringId> paDstPortNameId) {
+                                            const std::span<const forte::core::StringId> paDstPortNameId) {
   if (mSocket == nullptr) {
     // we are not connected
     return EMGMResponse::InvalidState;

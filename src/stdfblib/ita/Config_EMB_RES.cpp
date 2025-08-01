@@ -10,18 +10,15 @@
  *   Markus Meingast
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "core/stringdict.h"
+#include "core/stringid.h"
 #include "stdfblib/ita/Config_EMB_RES.h"
 
-USE_STRING_ID(Config_EMB_RES);
-USE_STRING_ID(OPCUA_Namespace);
-USE_STRING_ID(START);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(Config_EMB_RES, STRID(Config_EMB_RES));
+DEFINE_FIRMWARE_FB(Config_EMB_RES, "Config_EMB_RES"_STRID);
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(OPCUA_Namespace)};
+  const auto cDataInputNames = std::array{"OPCUA_Namespace"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = {},
@@ -36,9 +33,9 @@ namespace {
   };
 } // namespace
 
-Config_EMB_RES::Config_EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
+Config_EMB_RES::Config_EMB_RES(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
     CResource(paDevice, cFBInterfaceSpec, paInstanceNameId),
-    fb_START(STRID(START), *this),
+    fb_START("START"_STRID, *this),
     conn_opcua_namespace(nullptr),
     conn_opcua_namespace_int(*this, 0, u""_WSTRING) {
 }

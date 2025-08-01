@@ -18,25 +18,18 @@
 #include "GEN_ARRAY2ARRAY_fbt.h"
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(GEN_ARRAY2ARRAY);
-USE_STRING_ID(IN);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY, STRID(GEN_ARRAY2ARRAY))
+DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY, "GEN_ARRAY2ARRAY"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN)};
-  const auto cDataOutputNames = std::array{STRID(OUT)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataInputNames = std::array{"IN"_STRID};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
 } // namespace
 
-GEN_ARRAY2ARRAY::GEN_ARRAY2ARRAY(const CStringDictionary::TStringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) :
+GEN_ARRAY2ARRAY::GEN_ARRAY2ARRAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
@@ -73,7 +66,7 @@ bool GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfa
 
   // there is a number and a data type of inputs within the typename
   TForteUInt16 arrayLength = static_cast<TForteUInt16>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
-  auto valueTypeID = CStringDictionary::getId(++dTypePos);
+  auto valueTypeID = forte::core::StringId::lookup(++dTypePos);
 
   if (arrayLength == 0) {
     return false;

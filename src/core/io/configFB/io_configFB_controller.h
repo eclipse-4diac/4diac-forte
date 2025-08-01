@@ -36,7 +36,7 @@ namespace forte {
         public:
           IOConfigFBController(forte::core::CFBContainer &paContainer,
                                const SFBInterfaceSpec &paInterfaceSpec,
-                               const CStringDictionary::TStringId paInstanceNameId);
+                               const forte::core::StringId paInstanceNameId);
           ~IOConfigFBController() override;
 
           IODeviceController *getDeviceController() {

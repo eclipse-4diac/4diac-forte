@@ -12,27 +12,17 @@
 
 #include "SubscribeEvent.h"
 
-USE_STRING_ID(endpoint);
-USE_STRING_ID(Event);
-USE_STRING_ID(eventFilter);
-USE_STRING_ID(EventFilter);
-USE_STRING_ID(Subscribe);
-USE_STRING_ID(Subscribed);
-USE_STRING_ID(SubscribeEvent);
-USE_STRING_ID(SubscribeEventAdp);
-USE_STRING_ID(Unsubscribe);
-USE_STRING_ID(Unsubscribed);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_SubscribeEvent, STRID(SubscribeEvent))
+DEFINE_FIRMWARE_FB(FORTE_SubscribeEvent, "SubscribeEvent"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(eventFilter), STRID(endpoint)};
-  const auto cEventInputNames = std::array{STRID(Subscribe), STRID(Unsubscribe)};
-  const auto cEventInputTypeIds = std::array{STRID(Event), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(Subscribed), STRID(Unsubscribed)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
-  const auto cPlugNameIds = std::array{STRID(SubscribeEventAdp)};
+  const auto cDataInputNames = std::array{"eventFilter"_STRID, "endpoint"_STRID};
+  const auto cEventInputNames = std::array{"Subscribe"_STRID, "Unsubscribe"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"Subscribed"_STRID, "Unsubscribed"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
+  const auto cPlugNameIds = std::array{"SubscribeEventAdp"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -48,23 +38,23 @@ namespace {
 } // namespace
 
 const SCFB_FBConnectionData FORTE_SubscribeEvent::auto cEventConnections = std::to_array<SCFB_FBConnectionData>{
-    {CStringDictionary::scmInvalidStringId, STRID(Unsubscribe), -1,
-     STRID(SubscribeEventAdp), STRID(Unsubscribe)),
+    {{}, "Unsubscribe"_STRID, -1,
+     "SubscribeEventAdp"_STRID, "Unsubscribe"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
-    {CStringDictionary::scmInvalidStringId, STRID(Subscribe), -1,
-     STRID(SubscribeEventAdp), STRID(Subscribe)), CCompositeFB::scmAdapterMarker | 0},
-    {STRID(SubscribeEventAdp), STRID(Subscribed)), CCompositeFB::scmAdapterMarker | 0,
-     CStringDictionary::scmInvalidStringId, STRID(Subscribed), -1},
-    {STRID(SubscribeEventAdp), STRID(Unsubscribed)),
-     CCompositeFB::scmAdapterMarker | 0, CStringDictionary::scmInvalidStringId, STRID(Unsubscribed), -1},
+    {{}, "Subscribe"_STRID, -1,
+     "SubscribeEventAdp"_STRID, "Subscribe"_STRID), CCompositeFB::scmAdapterMarker | 0},
+    {"SubscribeEventAdp"_STRID, "Subscribed"_STRID), CCompositeFB::scmAdapterMarker | 0,
+     {}, "Subscribed"_STRID, -1},
+    {"SubscribeEventAdp"_STRID, "Unsubscribed"_STRID),
+     CCompositeFB::scmAdapterMarker | 0, {}, "Unsubscribed"_STRID, -1},
 };
 
 const SCFB_FBConnectionData FORTE_SubscribeEventauto cDataConnections = std::to_array<SCFB_FBConnectionData>{
-    {CStringDictionary::scmInvalidStringId, STRID(eventFilter), -1,
-     STRID(SubscribeEventAdp), STRID(eventFilter)),
+    {{}, "eventFilter"_STRID, -1,
+     "SubscribeEventAdp"_STRID, "eventFilter"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
-    {CStringDictionary::scmInvalidStringId, STRID(endpoint), -1,
-     STRID(SubscribeEventAdp), STRID(endpoint)), CCompositeFB::scmAdapterMarker | 0},
+    {{}, "endpoint"_STRID, -1,
+     "SubscribeEventAdp"_STRID, "endpoint"_STRID), CCompositeFB::scmAdapterMarker | 0},
 };
 
 const SCFB_FBNData FORTE_SubscribeEvent::scmFBNData = {

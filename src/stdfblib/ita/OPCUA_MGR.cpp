@@ -14,7 +14,7 @@
 #include "stdfblib/ita/OPCUA_MGR.h"
 
 #include "core/device.h"
-#include "core/stringdict.h"
+#include "core/stringid.h"
 
 /* Management and Resource Type */
 char OPCUA_MGR::smEmptyLocale[] = "";
@@ -483,8 +483,7 @@ UA_StatusCode OPCUA_MGR::onCreateResource(UA_Server *,
   const std::string resType(getInputValue(*static_cast<UA_String *>(input[1].data)));
 
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::CreateFBInstance, CStringDictionary::scmInvalidStringId, nullptr,
-                       resourceName.c_str(), resType.c_str());
+  uaMGR->setMGMCommand(EMGMCommandType::CreateFBInstance, {}, nullptr, resourceName.c_str(), resType.c_str());
   EMGMResponse eMGMRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
 
   int status = scResponseMap.find(eMGMRetVal)->second;
@@ -541,8 +540,8 @@ UA_StatusCode OPCUA_MGR::onCreateFB(UA_Server *,
 
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::CreateFBInstance, CStringDictionary::insert(resourceName), nullptr, fullFbName,
-                       fbType);
+  uaMGR->setMGMCommand(EMGMCommandType::CreateFBInstance, forte::core::StringId::insert(resourceName), nullptr,
+                       fullFbName, fbType);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -582,7 +581,7 @@ UA_StatusCode OPCUA_MGR::onCreateConnection(UA_Server *,
 
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::CreateConnection, CStringDictionary::insert(resourceName), nullptr,
+  uaMGR->setMGMCommand(EMGMCommandType::CreateConnection, forte::core::StringId::insert(resourceName), nullptr,
                        sourceFullName, destinationFullName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
@@ -615,8 +614,7 @@ UA_StatusCode OPCUA_MGR::onWriteDevice(UA_Server *,
   const std::string writeValue(getInputValue(*static_cast<UA_String *>(input[0].data)));
 
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Write, CStringDictionary::scmInvalidStringId, writeValue.c_str(), nullptr,
-                       nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::Write, {}, writeValue.c_str(), nullptr, nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -650,8 +648,8 @@ UA_StatusCode OPCUA_MGR::onWriteResource(UA_Server *,
   const std::string writeValue(getInputValue(*static_cast<UA_String *>(input[1].data)));
 
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Write, CStringDictionary::insert(resourceName.c_str()), writeValue.c_str(),
-                       nullptr, nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::Write, forte::core::StringId::insert(resourceName), writeValue.c_str(), nullptr,
+                       nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -688,7 +686,7 @@ UA_StatusCode OPCUA_MGR::onWriteFB(UA_Server *,
 
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Write, CStringDictionary::insert(resourceName), writeValue.c_str(),
+  uaMGR->setMGMCommand(EMGMCommandType::Write, forte::core::StringId::insert(resourceName), writeValue.c_str(),
                        writeDestination);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
@@ -716,7 +714,7 @@ UA_StatusCode OPCUA_MGR::onStartDevice(UA_Server *,
   }
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Start, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::Start, {}, nullptr, nullptr, nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -747,8 +745,7 @@ UA_StatusCode OPCUA_MGR::onStartResource(UA_Server *,
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
   const std::string resourceName(getInputValue(*static_cast<UA_String *>(input[0].data)));
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Start, CStringDictionary::insert(resourceName.c_str()), nullptr, nullptr,
-                       nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::Start, forte::core::StringId::insert(resourceName), nullptr, nullptr, nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -783,7 +780,7 @@ UA_StatusCode OPCUA_MGR::onStartFB(UA_Server *,
 
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Start, CStringDictionary::insert(resourceName), nullptr, fullFbName);
+  uaMGR->setMGMCommand(EMGMCommandType::Start, forte::core::StringId::insert(resourceName), nullptr, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -809,7 +806,7 @@ UA_StatusCode OPCUA_MGR::onStopDevice(UA_Server *,
   }
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Stop, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::Stop, {}, nullptr, nullptr, nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -840,8 +837,7 @@ UA_StatusCode OPCUA_MGR::onStopResource(UA_Server *,
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
   const std::string resourceName(getInputValue(*static_cast<UA_String *>(input[0].data)));
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Stop, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(),
-                       nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::Stop, {}, nullptr, resourceName.c_str(), nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -876,7 +872,7 @@ UA_StatusCode OPCUA_MGR::onStopFB(UA_Server *,
 
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Stop, CStringDictionary::insert(resourceName), nullptr, fullFbName);
+  uaMGR->setMGMCommand(EMGMCommandType::Stop, forte::core::StringId::insert(resourceName), nullptr, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -903,7 +899,7 @@ UA_StatusCode OPCUA_MGR::onResetDevice(UA_Server *,
   }
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Reset, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::Reset, {}, nullptr, nullptr, nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -934,8 +930,7 @@ UA_StatusCode OPCUA_MGR::onResetResource(UA_Server *,
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
   const std::string resourceName(getInputValue(*static_cast<UA_String *>(input[0].data)));
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Reset, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(),
-                       nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::Reset, {}, nullptr, resourceName.c_str(), nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -970,7 +965,7 @@ UA_StatusCode OPCUA_MGR::onResetFB(UA_Server *,
 
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Reset, CStringDictionary::insert(resourceName), nullptr, fullFbName);
+  uaMGR->setMGMCommand(EMGMCommandType::Reset, forte::core::StringId::insert(resourceName), nullptr, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -996,7 +991,7 @@ UA_StatusCode OPCUA_MGR::onKillDevice(UA_Server *,
   }
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Kill, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::Kill, {}, nullptr, nullptr, nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -1027,8 +1022,7 @@ UA_StatusCode OPCUA_MGR::onKillResource(UA_Server *,
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
   const std::string resourceName(getInputValue(*static_cast<UA_String *>(input[0].data)));
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Kill, CStringDictionary::scmInvalidStringId, nullptr, resourceName.c_str(),
-                       nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::Kill, {}, nullptr, resourceName.c_str(), nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -1063,7 +1057,7 @@ UA_StatusCode OPCUA_MGR::onKillFB(UA_Server *,
 
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::Kill, CStringDictionary::insert(resourceName), nullptr, fullFbName);
+  uaMGR->setMGMCommand(EMGMCommandType::Kill, forte::core::StringId::insert(resourceName), nullptr, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -1095,8 +1089,7 @@ UA_StatusCode OPCUA_MGR::onDeleteResource(UA_Server *,
   const std::string resourceName(getInputValue(*static_cast<UA_String *>(input[0].data)));
 
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::DeleteFBInstance, CStringDictionary::scmInvalidStringId, nullptr,
-                       resourceName.c_str(), nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::DeleteFBInstance, {}, nullptr, resourceName.c_str(), nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   UA_StatusCode status = scResponseMap.find(eRetVal)->second;
 
@@ -1140,7 +1133,8 @@ UA_StatusCode OPCUA_MGR::onDeleteFB(UA_Server *,
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
 
-  uaMGR->setMGMCommand(EMGMCommandType::DeleteFBInstance, CStringDictionary::insert(resourceName), nullptr, fullFbName);
+  uaMGR->setMGMCommand(EMGMCommandType::DeleteFBInstance, forte::core::StringId::insert(resourceName), nullptr,
+                       fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -1179,7 +1173,7 @@ UA_StatusCode OPCUA_MGR::onDeleteConnection(UA_Server *,
 
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::DeleteConnection, CStringDictionary::insert(resourceName), nullptr,
+  uaMGR->setMGMCommand(EMGMCommandType::DeleteConnection, forte::core::StringId::insert(resourceName), nullptr,
                        sourceFullName, destinationFullName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
@@ -1209,7 +1203,7 @@ UA_StatusCode OPCUA_MGR::onQueryResources(UA_Server *,
   }
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::QueryFB, CStringDictionary::scmInvalidStringId, nullptr, nullptr, nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::QueryFB, {}, nullptr, nullptr, nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   int status = scResponseMap.find(eRetVal)->second;
   if (status != UA_STATUSCODE_GOOD) {
@@ -1252,8 +1246,7 @@ UA_StatusCode OPCUA_MGR::onQueryFBType(UA_Server *,
   parseHashedTypeName(hashedFBTypeName, fbTypeName, fbTypeHash);
 
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::QueryFBType, CStringDictionary::scmInvalidStringId, fbTypeHash.c_str(),
-                       fbTypeName.c_str(), nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::QueryFBType, {}, fbTypeHash.c_str(), fbTypeName.c_str(), nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   int status = scResponseMap.find(eRetVal)->second;
   if (status != UA_STATUSCODE_GOOD) {
@@ -1296,8 +1289,7 @@ UA_StatusCode OPCUA_MGR::onQueryDataType(UA_Server *,
   parseHashedTypeName(hashedDataTypeName, dataTypeName, dataTypeHash);
 
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::QueryDTTypes, CStringDictionary::scmInvalidStringId, dataTypeHash.c_str(),
-                       dataTypeName.c_str(), nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::QueryDTTypes, {}, dataTypeHash.c_str(), dataTypeName.c_str(), nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   int status = scResponseMap.find(eRetVal)->second;
   if (status != UA_STATUSCODE_GOOD) {
@@ -1342,8 +1334,8 @@ UA_StatusCode OPCUA_MGR::onQueryGlobalConstType(UA_Server *,
   parseHashedTypeName(hashedGlobalConstTypeName, globalConstTypeName, globalConstTypeHash);
 
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::QueryGlobalConstType, CStringDictionary::scmInvalidStringId,
-                       globalConstTypeHash.c_str(), globalConstTypeName.c_str(), nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::QueryGlobalConstType, {}, globalConstTypeHash.c_str(),
+                       globalConstTypeName.c_str(), nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   int status = scResponseMap.find(eRetVal)->second;
   if (status != UA_STATUSCODE_GOOD) {
@@ -1385,7 +1377,7 @@ UA_StatusCode OPCUA_MGR::onAddWatch(UA_Server *,
 
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::MonitoringAddWatch, CStringDictionary::insert(resourceName), nullptr,
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringAddWatch, forte::core::StringId::insert(resourceName), nullptr,
                        fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
@@ -1415,8 +1407,7 @@ UA_StatusCode OPCUA_MGR::onReadWatches(UA_Server *,
   }
   EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::MonitoringReadWatches, CStringDictionary::scmInvalidStringId, nullptr, nullptr,
-                       nullptr);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringReadWatches, {}, nullptr, nullptr, nullptr);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   int status = scResponseMap.find(eRetVal)->second;
   if (status != UA_STATUSCODE_GOOD) {
@@ -1458,7 +1449,7 @@ UA_StatusCode OPCUA_MGR::onRemoveWatch(UA_Server *,
 
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::MonitoringRemoveWatch, CStringDictionary::insert(resourceName), nullptr,
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringRemoveWatch, forte::core::StringId::insert(resourceName), nullptr,
                        fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
@@ -1494,7 +1485,7 @@ UA_StatusCode OPCUA_MGR::onTriggerEvent(UA_Server *,
 
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::MonitoringTriggerEvent, CStringDictionary::insert(resourceName),
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringTriggerEvent, forte::core::StringId::insert(resourceName),
                        OPCUA_MGR::scmTriggerEventParam, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
@@ -1532,8 +1523,8 @@ UA_StatusCode OPCUA_MGR::onForceValue(UA_Server *,
 
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::MonitoringForce, CStringDictionary::insert(resourceName), writeValue.c_str(),
-                       writeDestination);
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringForce, forte::core::StringId::insert(resourceName),
+                       writeValue.c_str(), writeDestination);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }
@@ -1568,7 +1559,7 @@ UA_StatusCode OPCUA_MGR::onClearForce(UA_Server *,
 
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-  uaMGR->setMGMCommand(EMGMCommandType::MonitoringClearForce, CStringDictionary::insert(resourceName), nullptr,
+  uaMGR->setMGMCommand(EMGMCommandType::MonitoringClearForce, forte::core::StringId::insert(resourceName), nullptr,
                        fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
@@ -1634,7 +1625,7 @@ void OPCUA_MGR::clearMGMCommand() {
 }
 
 void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD,
-                              CStringDictionary::TStringId paDestination,
+                              forte::core::StringId paDestination,
                               const char *paAdditionalParams,
                               const char *paFirstParam,
                               const char *paSecondParam) {
@@ -1642,10 +1633,10 @@ void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD,
   mCommand.mCMD = paCMD;
   mCommand.mDestination = paDestination;
   if (paFirstParam != nullptr) {
-    mCommand.mFirstParam.push_back(CStringDictionary::insert(paFirstParam));
+    mCommand.mFirstParam.push_back(forte::core::StringId::insert(paFirstParam));
   }
   if (paSecondParam != nullptr) {
-    mCommand.mSecondParam.push_back(CStringDictionary::insert(paSecondParam));
+    mCommand.mSecondParam.push_back(forte::core::StringId::insert(paSecondParam));
   }
   if (paAdditionalParams != nullptr) {
     mCommand.mAdditionalParams = paAdditionalParams;
@@ -1653,7 +1644,7 @@ void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD,
 }
 
 void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD,
-                              CStringDictionary::TStringId paDestination,
+                              forte::core::StringId paDestination,
                               const char *paAdditionalParams,
                               std::vector<std::string> &paFirstParam,
                               std::vector<std::string> paSecondParam) {
@@ -1662,12 +1653,12 @@ void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD,
   mCommand.mDestination = paDestination;
   if (!paFirstParam.empty()) {
     for (std::string param : paFirstParam) {
-      mCommand.mFirstParam.push_back(CStringDictionary::insert(param.c_str()));
+      mCommand.mFirstParam.push_back(forte::core::StringId::insert(param));
     }
   }
   if (!paSecondParam.empty()) {
     for (std::string param : paSecondParam) {
-      mCommand.mSecondParam.push_back(CStringDictionary::insert(param.c_str()));
+      mCommand.mSecondParam.push_back(forte::core::StringId::insert(param));
     }
   }
   if (paAdditionalParams != nullptr) {

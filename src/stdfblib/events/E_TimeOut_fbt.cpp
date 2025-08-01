@@ -12,13 +12,12 @@
 
 #include "E_TimeOut_fbt.h"
 
-USE_STRING_ID(E_TimeOut);
-USE_STRING_ID(TimeOutSocket);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, STRID(E_TimeOut))
+DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, "E_TimeOut"_STRID)
 
 namespace {
-  const auto cSocketNameIds = std::array{STRID(TimeOutSocket)};
+  const auto cSocketNameIds = std::array{"TimeOutSocket"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = {},
@@ -33,11 +32,11 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TimeOut::FORTE_E_TimeOut(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_TimeOut::FORTE_E_TimeOut(const forte::core::StringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     mActive(false),
-    var_TimeOutSocket(STRID(TimeOutSocket), *this, 0) {};
+    var_TimeOutSocket("TimeOutSocket"_STRID, *this, 0) {};
 
 bool FORTE_E_TimeOut::initialize() {
   return CEventSourceFB::initialize();

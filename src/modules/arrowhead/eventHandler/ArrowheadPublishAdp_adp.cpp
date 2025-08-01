@@ -12,24 +12,18 @@
 
 #include "ArrowheadPublishAdp_adp.h"
 
-USE_STRING_ID(ArrowheadPublishAdp);
-USE_STRING_ID(endpoint);
-USE_STRING_ID(publish);
-USE_STRING_ID(published);
-USE_STRING_ID(publishEvent);
-USE_STRING_ID(PublishEvent);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_ADAPTER_TYPE(FORTE_ArrowheadPublishAdp, STRID(ArrowheadPublishAdp))
+DEFINE_ADAPTER_TYPE(FORTE_ArrowheadPublishAdp, "ArrowheadPublishAdp"_STRID)
 
-const auto cDataOutputNames = std::array{STRID(publishEvent),
-                                                                                      STRID(endpoint)};
+const auto cDataOutputNames = std::array{"publishEvent"_STRID,
+                                                                                      "endpoint"_STRID};
 
-                                                                                        STRID(WSTRING)};
+                                                                                        "WSTRING"_STRID};
 
-const auto cEventInputNames = std::array{STRID(published)};
+const auto cEventInputNames = std::array{"published"_STRID};
 
-const auto cEventOutputNames = std::array{STRID(publish)};
+const auto cEventOutputNames = std::array{"publish"_STRID};
 
 const SFBInterfaceSpec FORTE_ArrowheadPublishAdp::scmFBInterfaceSpecSocket = {1,
                                                                               scmEventInputNames,

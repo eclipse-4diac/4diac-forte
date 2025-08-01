@@ -20,17 +20,12 @@
 
 using namespace std::literals;
 
-USE_STRING_ID(DWORD);
-USE_STRING_ID(Event);
-USE_STRING_ID(GPIO_Port_Addr);
-USE_STRING_ID(MAP);
-USE_STRING_ID(MAPO);
-USE_STRING_ID(PortAdapter);
+using namespace forte::core::literals;
 
 namespace {
-  const auto cEventInputNames = std::array{STRID(MAPO)};
-  const auto cEventOutputNames = std::array{STRID(MAP)};
-  const auto cDataOutputNames = std::array{STRID(GPIO_Port_Addr)};
+  const auto cEventInputNames = std::array{"MAPO"_STRID};
+  const auto cEventOutputNames = std::array{"MAP"_STRID};
+  const auto cDataOutputNames = std::array{"GPIO_Port_Addr"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpecSocket = {
       .mEINames = cEventInputNames,
@@ -57,11 +52,11 @@ namespace {
   };
 } // namespace
 
-DEFINE_ADAPTER_TYPE(FORTE_PortAdapter, STRID(PortAdapter))
+DEFINE_ADAPTER_TYPE(FORTE_PortAdapter, "PortAdapter"_STRID)
 
 FORTE_PortAdapter::FORTE_PortAdapter(forte::core::CFBContainer &paContainer,
                                      const SFBInterfaceSpec &paInterfaceSpec,
-                                     const CStringDictionary::TStringId paInstanceNameId,
+                                     const forte::core::StringId paInstanceNameId,
                                      TForteUInt8 paParentAdapterlistID) :
     CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     var_GPIO_Port_Addr(0_DWORD) {
@@ -72,7 +67,7 @@ void FORTE_PortAdapter::setInitialValues() {
   var_GPIO_Port_Addr = 0_DWORD;
 }
 
-FORTE_PortAdapter_Plug::FORTE_PortAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+FORTE_PortAdapter_Plug::FORTE_PortAdapter_Plug(forte::core::StringId paInstanceNameId,
                                                forte::core::CFBContainer &paContainer,
                                                TForteUInt8 paParentAdapterlistID) :
     FORTE_PortAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
@@ -125,7 +120,7 @@ CDataConnection *FORTE_PortAdapter_Plug::getDOConUnchecked(TPortId) {
   return nullptr;
 }
 
-FORTE_PortAdapter_Socket::FORTE_PortAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+FORTE_PortAdapter_Socket::FORTE_PortAdapter_Socket(forte::core::StringId paInstanceNameId,
                                                    forte::core::CFBContainer &paContainer,
                                                    TForteUInt8 paParentAdapterlistID) :
     FORTE_PortAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),

@@ -58,8 +58,8 @@ class CIEC_ServiceRequestForm : public CIEC_STRUCT {
     }
 
   private:
-    static const CStringDictionary::TStringId scmElementTypes[];
-    static const CStringDictionary::TStringId scmElementNames[];
+    static const forte::core::StringId scmElementTypes[];
+    static const forte::core::StringId scmElementNames[];
 };
 
 #endif //_FORTE_SERVICEREQUESTFORM_H_

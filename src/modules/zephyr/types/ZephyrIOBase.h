@@ -34,6 +34,6 @@ class FORTE_ZephyrIOBase : public forte::core::io::IOConfigFBController {
   public:
     FORTE_ZephyrIOBase(forte::core::CFBContainer &paContainer,
                        const SFBInterfaceSpec &paInterfaceSpec,
-                       const CStringDictionary::TStringId paInstanceNameId);
+                       const forte::core::StringId paInstanceNameId);
     ~FORTE_ZephyrIOBase() override;
 };

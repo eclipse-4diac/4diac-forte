@@ -44,7 +44,7 @@ class FORTE_F_SINT_TO_BYTE final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_SINT_TO_BYTE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_SINT_TO_BYTE(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_SINT var_IN;
 

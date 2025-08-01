@@ -16,21 +16,7 @@
 
 #include "SCALE_LIM_fct.h"
 
-USE_STRING_ID();
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(IN);
-USE_STRING_ID(MAX_IN);
-USE_STRING_ID(MAX_IN_LIM);
-USE_STRING_ID(MAX_OUT);
-USE_STRING_ID(MAX_OUT_FIX);
-USE_STRING_ID(MIN_IN);
-USE_STRING_ID(MIN_IN_LIM);
-USE_STRING_ID(MIN_OUT);
-USE_STRING_ID(MIN_OUT_FIX);
-USE_STRING_ID(REAL);
-USE_STRING_ID(REQ);
-USE_STRING_ID(signalprocessing__SCALE_LIM);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_real.h"
 #include "core/iec61131_functions.h"
@@ -40,17 +26,17 @@ USE_STRING_ID(signalprocessing__SCALE_LIM);
 #include "core/datatypes/forte_array_variable.h"
 #include "SCALE_LIM_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE_LIM, STRID(signalprocessing__SCALE_LIM))
+DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE_LIM, "signalprocessing__SCALE_LIM"_STRID)
 
 namespace {
   const auto cDataInputNames =
-      std::array{STRID(IN),      STRID(MAX_IN),  STRID(MIN_IN),      STRID(MAX_IN_LIM), STRID(MIN_IN_LIM),
-                 STRID(MAX_OUT), STRID(MIN_OUT), STRID(MAX_OUT_FIX), STRID(MIN_OUT_FIX)};
-  const auto cDataOutputNames = std::array{STRID()};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+      std::array{"IN"_STRID,      "MAX_IN"_STRID,  "MIN_IN"_STRID,      "MAX_IN_LIM"_STRID, "MIN_IN_LIM"_STRID,
+                 "MAX_OUT"_STRID, "MIN_OUT"_STRID, "MAX_OUT_FIX"_STRID, "MIN_OUT_FIX"_STRID};
+  const auto cDataOutputNames = std::array{""_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -65,7 +51,7 @@ namespace {
 } // namespace
 
 FORTE_signalprocessing__SCALE_LIM::FORTE_signalprocessing__SCALE_LIM(
-    const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),

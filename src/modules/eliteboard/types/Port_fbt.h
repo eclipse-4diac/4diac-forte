@@ -41,7 +41,7 @@ class FORTE_Port final : public CFunctionBlock {
     void register_handles();
 
   public:
-    FORTE_Port(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_Port(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_STRING var_Pin0;
     CIEC_STRING var_Pin1;

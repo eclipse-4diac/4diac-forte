@@ -25,7 +25,7 @@ class CLuaBFBTypeEntry : public CTypeLib::CFBTypeEntry {
     SFBInterfaceSpec m_interfaceSpec;
     SInternalVarsInformation m_internalVarsInformation;
 
-    CLuaBFBTypeEntry(CStringDictionary::TStringId typeNameId,
+    CLuaBFBTypeEntry(forte::core::StringId typeNameId,
                      const std::string &paLuaScriptAsString,
                      SFBInterfaceSpec &interfaceSpec,
                      SInternalVarsInformation &internalVarsInformation);
@@ -39,10 +39,10 @@ class CLuaBFBTypeEntry : public CTypeLib::CFBTypeEntry {
     static void deleteInternalVarsInformation(SInternalVarsInformation &internalVarsInformation);
 
   public:
-    static CLuaBFBTypeEntry *createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId,
+    static CLuaBFBTypeEntry *createLuaFBTypeEntry(forte::core::StringId typeNameId,
                                                   const std::string &paLuaScriptAsString);
 
-    CFunctionBlock *createFBInstance(CStringDictionary::TStringId paInstanceNameId,
+    CFunctionBlock *createFBInstance(forte::core::StringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) override;
 
     const SFBInterfaceSpec &getInterfaceSpec() const {

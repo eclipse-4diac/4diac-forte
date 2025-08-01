@@ -44,7 +44,7 @@ class FORTE_F_UINT_TO_ULINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_UINT_TO_ULINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_UINT_TO_ULINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_UINT var_IN;
 

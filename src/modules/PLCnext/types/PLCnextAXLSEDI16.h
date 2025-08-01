@@ -53,7 +53,7 @@ class FORTE_PLCnextAXLSEDI16 final : public PLCnextSlaveHandler {
     void initHandles() override;
 
   public:
-    FORTE_PLCnextAXLSEDI16(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_PLCnextAXLSEDI16(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_STRING var_DI_1;

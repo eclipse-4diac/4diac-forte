@@ -184,12 +184,12 @@ class COPC_UA_Helper {
     };
     class UA_TypeConvert_external {
       public:
-        UA_TypeConvert_external(const UA_DataType *paType, const CStringDictionary::TStringId paStringId) :
+        UA_TypeConvert_external(const UA_DataType *paType, const forte::core::StringId paStringId) :
             mType(paType),
             mStringId(paStringId) {
         }
         const UA_DataType *mType;
-        const CStringDictionary::TStringId mStringId;
+        const forte::core::StringId mStringId;
     };
 
     /**

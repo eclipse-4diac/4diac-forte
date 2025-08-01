@@ -44,7 +44,7 @@ class FORTE_F_UINT_TO_BCD_WORD final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_UINT_TO_BCD_WORD(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_UINT_TO_BCD_WORD(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_UINT var_IN;
 

@@ -12,64 +12,12 @@
 
 #include "RequestOrchestrationOpcUa.h"
 
-USE_STRING_ID(ANYToJSON);
-USE_STRING_ID(APPEND_STRING_3);
-USE_STRING_ID(CLIENT_1);
-USE_STRING_ID(CNF);
-USE_STRING_ID(CU);
-USE_STRING_ID(CUO);
-USE_STRING_ID(DT);
-USE_STRING_ID(E_CTU);
-USE_STRING_ID(E_DELAY);
-USE_STRING_ID(EI);
-USE_STRING_ID(endpoint);
-USE_STRING_ID(EO);
-USE_STRING_ID(EO0);
-USE_STRING_ID(EO1);
-USE_STRING_ID(E_PERMIT);
-USE_STRING_ID(E_SR);
-USE_STRING_ID(E_SWITCH);
-USE_STRING_ID(E_SWITCH_1);
-USE_STRING_ID(F_STRING_TO_WSTRING);
-USE_STRING_ID(G);
-USE_STRING_ID(GetArrayResponseFromJSON);
-USE_STRING_ID(GetHTTPOrchestrationForm);
-USE_STRING_ID(ID);
-USE_STRING_ID(IN);
-USE_STRING_ID(IN_1);
-USE_STRING_ID(IN_2);
-USE_STRING_ID(IN_3);
-USE_STRING_ID(INIT);
-USE_STRING_ID(InitFlag);
-USE_STRING_ID(INITO);
-USE_STRING_ID(input);
-USE_STRING_ID(orchestrationResponse);
-USE_STRING_ID(OrchestratorRequestAdp);
-USE_STRING_ID(OUT);
-USE_STRING_ID(output);
-USE_STRING_ID(PERMIT);
-USE_STRING_ID(PV);
-USE_STRING_ID(Q);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(R);
-USE_STRING_ID(RD_1);
-USE_STRING_ID(REQ);
-USE_STRING_ID(Request);
-USE_STRING_ID(requestOrchestator);
-USE_STRING_ID(requestOrchestration);
-USE_STRING_ID(RequestOrchestrationOpcUa);
-USE_STRING_ID(response);
-USE_STRING_ID(responseReceived);
-USE_STRING_ID(S);
-USE_STRING_ID(SD_1);
-USE_STRING_ID(serviceRequestForm);
-USE_STRING_ID(START);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_RequestOrchestrationOpcUa, STRID(RequestOrchestrationOpcUa))
+DEFINE_FIRMWARE_FB(FORTE_RequestOrchestrationOpcUa, "RequestOrchestrationOpcUa"_STRID)
 
 namespace {
-  const auto cSocketNameIds = std::array{STRID(requestOrchestration)};
+  const auto cSocketNameIds = std::array{"requestOrchestration"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = {},
@@ -85,93 +33,93 @@ namespace {
 } // namespace
 
 const SCFB_FBInstanceData FORTE_RequestOrchestrationOpcUa::scmInternalFBs[] = {
-    {STRID(APPEND_STRING_3), STRID(APPEND_STRING_3)},
-    {STRID(InitFlag), STRID(E_SR)},
-    {STRID(E_PERMIT), STRID(E_PERMIT)},
-    {STRID(F_STRING_TO_WSTRING), STRID(F_STRING_TO_WSTRING)},
-    {STRID(ANYToJSON), STRID(ANYToJSON)},
-    {STRID(GetHTTPOrchestrationForm), STRID(GetArrayResponseFromJSON)},
-    {STRID(Request), STRID(CLIENT_1)},
-    {STRID(E_SWITCH), STRID(E_SWITCH)},
-    {STRID(E_SWITCH_1), STRID(E_SWITCH)},
-    {STRID(E_CTU), STRID(E_CTU)},
-    {STRID(E_DELAY), STRID(E_DELAY)},
+    {"APPEND_STRING_3"_STRID, "APPEND_STRING_3"_STRID},
+    {"InitFlag"_STRID, "E_SR"_STRID},
+    {"E_PERMIT"_STRID, "E_PERMIT"_STRID},
+    {"F_STRING_TO_WSTRING"_STRID, "F_STRING_TO_WSTRING"_STRID},
+    {"ANYToJSON"_STRID, "ANYToJSON"_STRID},
+    {"GetHTTPOrchestrationForm"_STRID, "GetArrayResponseFromJSON"_STRID},
+    {"Request"_STRID, "CLIENT_1"_STRID},
+    {"E_SWITCH"_STRID, "E_SWITCH"_STRID},
+    {"E_SWITCH_1"_STRID, "E_SWITCH"_STRID},
+    {"E_CTU"_STRID, "E_CTU"_STRID},
+    {"E_DELAY"_STRID, "E_DELAY"_STRID},
 };
 
 const SCFB_FBParameter FORTE_RequestOrchestrationOpcUa::scmParamters[] = {
-    {0, STRID(IN_1), "STRING#opc_ua[CALL_METHOD; "},
-    {0, STRID(IN_3), "STRING##; /Objects/2:Orchestrator/2:orchestration]"},
-    {9, STRID(PV), "UINT#3"},
-    {10, STRID(DT), "T#250ms"},
+    {0, "IN_1"_STRID, "STRING#opc_ua[CALL_METHOD; "},
+    {0, "IN_3"_STRID, "STRING##; /Objects/2:Orchestrator/2:orchestration]"},
+    {9, "PV"_STRID, "UINT#3"},
+    {10, "DT"_STRID, "T#250ms"},
 };
 
 const SCFB_FBConnectionData FORTE_RequestOrchestrationOpcUa::auto cEventConnections = std::to_array<SCFB_FBConnectionData>{
-    {STRID(APPEND_STRING_3), STRID(CNF)), 0,
-     STRID(F_STRING_TO_WSTRING), STRID(REQ)), 3},
-    {STRID(F_STRING_TO_WSTRING), STRID(CNF)), 3,
-     STRID(InitFlag), STRID(S)), 1},
-    {STRID(ANYToJSON), STRID(CNF)), 4,
-     STRID(APPEND_STRING_3), STRID(REQ)), 0},
-    {STRID(requestOrchestration), STRID(requestOrchestator)),
-     CCompositeFB::scmAdapterMarker | 0, STRID(ANYToJSON), STRID(REQ)), 4},
-    {STRID(GetHTTPOrchestrationForm), STRID(CNF)), 5,
-     STRID(requestOrchestration), STRID(responseReceived)),
+    {"APPEND_STRING_3"_STRID, "CNF"_STRID), 0,
+     "F_STRING_TO_WSTRING"_STRID, "REQ"_STRID), 3},
+    {"F_STRING_TO_WSTRING"_STRID, "CNF"_STRID), 3,
+     "InitFlag"_STRID, "S"_STRID), 1},
+    {"ANYToJSON"_STRID, "CNF"_STRID), 4,
+     "APPEND_STRING_3"_STRID, "REQ"_STRID), 0},
+    {"requestOrchestration"_STRID, "requestOrchestator"_STRID),
+     CCompositeFB::scmAdapterMarker | 0, "ANYToJSON"_STRID, "REQ"_STRID), 4},
+    {"GetHTTPOrchestrationForm"_STRID, "CNF"_STRID), 5,
+     "requestOrchestration"_STRID, "responseReceived"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
-    {STRID(InitFlag), STRID(EO)), 1,
-     STRID(Request), STRID(INIT)), 6},
-    {STRID(E_PERMIT), STRID(EO)), 2,
-     STRID(Request), STRID(REQ)), 6},
-    {STRID(Request), STRID(INITO)), 6,
-     STRID(E_PERMIT), STRID(EI)), 2},
-    {STRID(E_SWITCH), STRID(EO1)), 7,
-     STRID(GetHTTPOrchestrationForm), STRID(REQ)), 5},
-    {STRID(Request), STRID(CNF)), 6,
-     STRID(E_SWITCH), STRID(EI)), 7},
-    {STRID(E_SWITCH), STRID(EO0)), 7,
-     STRID(E_CTU), STRID(CU)), 9},
-    {STRID(E_DELAY), STRID(EO)), 10,
-     STRID(Request), STRID(REQ)), 6},
-    {STRID(E_CTU), STRID(CUO)), 9,
-     STRID(E_SWITCH_1), STRID(EI)), 8},
-    {STRID(E_SWITCH_1), STRID(EO0)), 8,
-     STRID(E_DELAY), STRID(START)), 10},
-    {STRID(E_SWITCH_1), STRID(EO1)), 8,
-     STRID(InitFlag), STRID(R)), 1},
+    {"InitFlag"_STRID, "EO"_STRID), 1,
+     "Request"_STRID, "INIT"_STRID), 6},
+    {"E_PERMIT"_STRID, "EO"_STRID), 2,
+     "Request"_STRID, "REQ"_STRID), 6},
+    {"Request"_STRID, "INITO"_STRID), 6,
+     "E_PERMIT"_STRID, "EI"_STRID), 2},
+    {"E_SWITCH"_STRID, "EO1"_STRID), 7,
+     "GetHTTPOrchestrationForm"_STRID, "REQ"_STRID), 5},
+    {"Request"_STRID, "CNF"_STRID), 6,
+     "E_SWITCH"_STRID, "EI"_STRID), 7},
+    {"E_SWITCH"_STRID, "EO0"_STRID), 7,
+     "E_CTU"_STRID, "CU"_STRID), 9},
+    {"E_DELAY"_STRID, "EO"_STRID), 10,
+     "Request"_STRID, "REQ"_STRID), 6},
+    {"E_CTU"_STRID, "CUO"_STRID), 9,
+     "E_SWITCH_1"_STRID, "EI"_STRID), 8},
+    {"E_SWITCH_1"_STRID, "EO0"_STRID), 8,
+     "E_DELAY"_STRID, "START"_STRID), 10},
+    {"E_SWITCH_1"_STRID, "EO1"_STRID), 8,
+     "InitFlag"_STRID, "R"_STRID), 1},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_RequestOrchestrationOpcUa::scmFannedOutEventConnections[] = {
-    {8, STRID(InitFlag), STRID(R)), 1},
-    {8, STRID(E_CTU), STRID(R)), 9},
-    {14, STRID(GetHTTPOrchestrationForm), STRID(REQ)), 5},
-    {14, STRID(E_CTU), STRID(R)), 9},
+    {8, "InitFlag"_STRID, "R"_STRID), 1},
+    {8, "E_CTU"_STRID, "R"_STRID), 9},
+    {14, "GetHTTPOrchestrationForm"_STRID, "REQ"_STRID), 5},
+    {14, "E_CTU"_STRID, "R"_STRID), 9},
 };
 
 const SCFB_FBConnectionData FORTE_RequestOrchestrationOpcUaauto cDataConnections = std::to_array<SCFB_FBConnectionData>{
-    {STRID(APPEND_STRING_3), STRID(OUT)), 0,
-     STRID(F_STRING_TO_WSTRING), STRID(IN)), 3},
-    {STRID(InitFlag), STRID(Q)), 1,
-     STRID(E_PERMIT), STRID(PERMIT)), 2},
-    {STRID(requestOrchestration), STRID(serviceRequestForm)),
-     CCompositeFB::scmAdapterMarker | 0, STRID(ANYToJSON), STRID(input)), 4},
-    {STRID(requestOrchestration), STRID(endpoint)),
-     CCompositeFB::scmAdapterMarker | 0, STRID(APPEND_STRING_3), STRID(IN_2)), 0},
-    {STRID(GetHTTPOrchestrationForm), STRID(output)), 5,
-     STRID(requestOrchestration), STRID(orchestrationResponse)),
+    {"APPEND_STRING_3"_STRID, "OUT"_STRID), 0,
+     "F_STRING_TO_WSTRING"_STRID, "IN"_STRID), 3},
+    {"InitFlag"_STRID, "Q"_STRID), 1,
+     "E_PERMIT"_STRID, "PERMIT"_STRID), 2},
+    {"requestOrchestration"_STRID, "serviceRequestForm"_STRID),
+     CCompositeFB::scmAdapterMarker | 0, "ANYToJSON"_STRID, "input"_STRID), 4},
+    {"requestOrchestration"_STRID, "endpoint"_STRID),
+     CCompositeFB::scmAdapterMarker | 0, "APPEND_STRING_3"_STRID, "IN_2"_STRID), 0},
+    {"GetHTTPOrchestrationForm"_STRID, "output"_STRID), 5,
+     "requestOrchestration"_STRID, "orchestrationResponse"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
-    {STRID(F_STRING_TO_WSTRING), STRID(OUT)), 3,
-     STRID(Request), STRID(ID)), 6},
-    {STRID(ANYToJSON), STRID(output)), 4,
-     STRID(Request), STRID(SD_1)), 6},
-    {STRID(Request), STRID(RD_1)), 6,
-     STRID(GetHTTPOrchestrationForm), STRID(response)), 5},
-    {STRID(Request), STRID(QO)), 6,
-     STRID(E_SWITCH), STRID(G)), 7},
-    {STRID(E_CTU), STRID(Q)), 9,
-     STRID(E_SWITCH_1), STRID(G)), 8},
+    {"F_STRING_TO_WSTRING"_STRID, "OUT"_STRID), 3,
+     "Request"_STRID, "ID"_STRID), 6},
+    {"ANYToJSON"_STRID, "output"_STRID), 4,
+     "Request"_STRID, "SD_1"_STRID), 6},
+    {"Request"_STRID, "RD_1"_STRID), 6,
+     "GetHTTPOrchestrationForm"_STRID, "response"_STRID), 5},
+    {"Request"_STRID, "QO"_STRID), 6,
+     "E_SWITCH"_STRID, "G"_STRID), 7},
+    {"E_CTU"_STRID, "Q"_STRID), 9,
+     "E_SWITCH_1"_STRID, "G"_STRID), 8},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_RequestOrchestrationOpcUa::scmFannedOutDataConnections[] = {
-    {1, STRID(Request), STRID(QI)), 6},
+    {1, "Request"_STRID, "QI"_STRID), 6},
 };
 
 const SCFB_FBNData FORTE_RequestOrchestrationOpcUa::scmFBNData = {

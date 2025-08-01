@@ -38,11 +38,7 @@
 
 using namespace std::string_literals;
 
-USE_STRING_ID(EndianessTestStruct);
-USE_STRING_ID(LWORD);
-USE_STRING_ID(Val1);
-USE_STRING_ID(Val2);
-USE_STRING_ID(Val3);
+using namespace forte::core::literals;
 
 /*** STRUCT for tests *********/
 class CIEC_EndianessTestStruct : public CIEC_STRUCT {
@@ -65,12 +61,12 @@ class CIEC_EndianessTestStruct : public CIEC_STRUCT {
       return 3;
     }
 
-    const CStringDictionary::TStringId *elementNames() const override {
+    const forte::core::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    CStringDictionary::TStringId getStructTypeNameID() const override {
-      return STRID(EndianessTestStruct);
+    forte::core::StringId getStructTypeNameID() const override {
+      return "EndianessTestStruct"_STRID;
     }
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
@@ -92,13 +88,12 @@ class CIEC_EndianessTestStruct : public CIEC_STRUCT {
     }
 
   private:
-    static const CStringDictionary::TStringId scmElementNames[];
+    static const forte::core::StringId scmElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_EndianessTestStruct::scmElementNames[] = {STRID(Val1), STRID(Val2),
-                                                                                  STRID(Val3)};
+const forte::core::StringId CIEC_EndianessTestStruct::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID};
 
-DEFINE_FIRMWARE_DATATYPE(EndianessTestStruct, STRID(EndianessTestStruct))
+DEFINE_FIRMWARE_DATATYPE(EndianessTestStruct, "EndianessTestStruct"_STRID)
 
 void testSTInIsOutIntDummyFunction(CIEC_INT paIn, COutputParameter<CIEC_INT> paOut) {
   COutputGuard paOutGuard(paOut);
@@ -2075,7 +2070,7 @@ BOOST_AUTO_TEST_CASE(func_to_big_endian_array_variable_copy_ctor) {
 }
 
 BOOST_AUTO_TEST_CASE(func_to_big_endian_array_typelib_copy_ctor) {
-  CIEC_ARRAY_DYNAMIC originalArray(3, STRID(LWORD));
+  CIEC_ARRAY_DYNAMIC originalArray(3, "LWORD"_STRID);
   originalArray[0].setValue(CIEC_LWORD(1));
   originalArray[1].setValue(CIEC_LWORD(2));
   originalArray[2].setValue(CIEC_LWORD(3));
@@ -2092,18 +2087,18 @@ BOOST_AUTO_TEST_CASE(func_to_big_endian_array_typelib_copy_ctor) {
 BOOST_AUTO_TEST_CASE(func_to_big_endian_struct) {
   CIEC_EndianessTestStruct original;
 
-  (*static_cast<CIEC_BOOL *>(original.getMemberNamed(STRID(Val1)))) = true_BOOL;
-  (*static_cast<CIEC_DINT *>(original.getMemberNamed(STRID(Val2)))) = CIEC_DINT(55);
-  (*static_cast<CIEC_LWORD *>(original.getMemberNamed(STRID(Val3)))) = CIEC_LWORD(65536UL);
+  (*static_cast<CIEC_BOOL *>(original.getMemberNamed("Val1"_STRID))) = true_BOOL;
+  (*static_cast<CIEC_DINT *>(original.getMemberNamed("Val2"_STRID))) = CIEC_DINT(55);
+  (*static_cast<CIEC_LWORD *>(original.getMemberNamed("Val3"_STRID))) = CIEC_LWORD(65536UL);
 
   CIEC_EndianessTestStruct reversed;
   reversed = func_TO_BIG_ENDIAN(original);
-  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(*reinterpret_cast<CIEC_BOOL *>(reversed.getMemberNamed(STRID(Val1)))) ==
-             true);
-  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(*reinterpret_cast<CIEC_DINT *>(reversed.getMemberNamed(STRID(Val2)))) ==
-             922746880);
+  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(
+                 *reinterpret_cast<CIEC_BOOL *>(reversed.getMemberNamed("Val1"_STRID))) == true);
+  BOOST_TEST(static_cast<CIEC_DINT::TValueType>(
+                 *reinterpret_cast<CIEC_DINT *>(reversed.getMemberNamed("Val2"_STRID))) == 922746880);
   BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(
-                 *reinterpret_cast<CIEC_LWORD *>(reversed.getMemberNamed(STRID(Val3)))) == 1099511627776);
+                 *reinterpret_cast<CIEC_LWORD *>(reversed.getMemberNamed("Val3"_STRID))) == 1099511627776);
 }
 
 BOOST_AUTO_TEST_CASE(output_int_test) {

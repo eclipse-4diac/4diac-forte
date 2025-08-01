@@ -44,7 +44,7 @@ class FORTE_F_ADD_DT_TIME : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_F_ADD_DT_TIME(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_ADD_DT_TIME(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_DATE_AND_TIME var_IN1;
     CIEC_TIME var_IN2;

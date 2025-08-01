@@ -17,40 +17,19 @@
 
 #include "EXECUTE_ACTION_SERVER.h"
 
-USE_STRING_ID(ACTIONMSGNAME);
-USE_STRING_ID(ACTIONNAMESPACE);
-USE_STRING_ID(ACTIONSTATUS);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(COMMAND);
-USE_STRING_ID(DINT);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(EXECUTE_ACTION_SERVER);
-USE_STRING_ID(FBSTATUS);
-USE_STRING_ID(ID);
-USE_STRING_ID(ID1);
-USE_STRING_ID(ID2);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(RESULT);
-USE_STRING_ID(RSP);
-USE_STRING_ID(STATE);
-USE_STRING_ID(STRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_EXECUTE_ACTION_SERVER, STRID(EXECUTE_ACTION_SERVER))
+DEFINE_FIRMWARE_FB(FORTE_EXECUTE_ACTION_SERVER, "EXECUTE_ACTION_SERVER"_STRID)
 
 namespace {
   const auto cDataInputNames =
-      std::array{STRID(QI), STRID(ACTIONNAMESPACE), STRID(ACTIONMSGNAME), STRID(RESULT), STRID(ID), STRID(STATE)};
+      std::array{"QI"_STRID, "ACTIONNAMESPACE"_STRID, "ACTIONMSGNAME"_STRID, "RESULT"_STRID, "ID"_STRID, "STATE"_STRID};
   const auto cDataOutputNames =
-      std::array{STRID(QO), STRID(FBSTATUS), STRID(ACTIONSTATUS), STRID(COMMAND), STRID(ID1), STRID(ID2)};
-  const auto cEventInputNames = std::array{STRID(INIT), STRID(RSP)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+      std::array{"QO"_STRID, "FBSTATUS"_STRID, "ACTIONSTATUS"_STRID, "COMMAND"_STRID, "ID1"_STRID, "ID2"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID, "RSP"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "IND"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

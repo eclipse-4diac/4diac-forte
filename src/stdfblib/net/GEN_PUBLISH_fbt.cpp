@@ -13,10 +13,10 @@
  *******************************************************************************/
 #include "GEN_PUBLISH_fbt.h"
 
-USE_STRING_ID(GEN_PUBLISH)
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBLISH, STRID(GEN_PUBLISH))
+DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBLISH, "GEN_PUBLISH"_STRID)
 
-GEN_PUBLISH::GEN_PUBLISH(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_PUBLISH::GEN_PUBLISH(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     forte::com_infra::CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Publisher) {
 }

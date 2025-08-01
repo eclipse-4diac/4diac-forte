@@ -15,7 +15,7 @@
 #include "core/datatypes/forte_bool.h"
 #include <E_DEMUX.h>
 
-USE_STRING_ID(E_DEMUX);
+using namespace forte::core::literals;
 
 class E_DEMUX_tester : public CFBTester {
     DECLARE_FB_TESTER(E_DEMUX_tester);
@@ -78,4 +78,4 @@ class E_DEMUX_tester : public CFBTester {
 
 /***********************************************************************************/
 
-DEFINE_FB_TESTER(E_DEMUX_tester, STRID(E_DEMUX));
+DEFINE_FB_TESTER(E_DEMUX_tester, "E_DEMUX"_STRID);

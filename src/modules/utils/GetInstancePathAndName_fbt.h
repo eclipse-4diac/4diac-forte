@@ -41,7 +41,7 @@ class FORTE_GetInstancePathAndName final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_GetInstancePathAndName(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_GetInstancePathAndName(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_CHAR var_Sep;
 

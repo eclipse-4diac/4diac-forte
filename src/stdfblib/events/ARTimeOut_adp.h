@@ -58,13 +58,13 @@ class FORTE_ARTimeOut : public forte::CAdapter {
   protected:
     FORTE_ARTimeOut(forte::core::CFBContainer &paContainer,
                   const SFBInterfaceSpec &paInterfaceSpec,
-                  const CStringDictionary::TStringId paInstanceNameId,
+                  const forte::core::StringId paInstanceNameId,
                   TForteUInt8 paParentAdapterlistID);
 };
 
 class FORTE_ARTimeOut_Plug final : public FORTE_ARTimeOut {
   public:
-    FORTE_ARTimeOut_Plug(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_ARTimeOut_Plug(forte::core::StringId paInstanceNameId,
                         forte::core::CFBContainer &paContainer,
                         TForteUInt8 paParentAdapterlistID);
     ~FORTE_ARTimeOut_Plug() override = default;
@@ -85,7 +85,7 @@ class FORTE_ARTimeOut_Plug final : public FORTE_ARTimeOut {
 
 class FORTE_ARTimeOut_Socket final : public FORTE_ARTimeOut {
   public:
-    FORTE_ARTimeOut_Socket(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_ARTimeOut_Socket(forte::core::StringId paInstanceNameId,
                         forte::core::CFBContainer &paContainer,
                         TForteUInt8 paParentAdapterlistID);
     ~FORTE_ARTimeOut_Socket() override = default;

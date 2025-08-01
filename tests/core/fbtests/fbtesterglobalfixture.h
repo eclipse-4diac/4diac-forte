@@ -22,7 +22,7 @@
 
 class CTesterDevice : public CDevice {
   public:
-    CTesterDevice(const CStringDictionary::TStringId paInstanceNameId = CStringDictionary::scmInvalidStringId);
+    CTesterDevice(const forte::core::StringId paInstanceNameId = {});
 
     void awaitShutdown() override {
       // nothing to be done to join

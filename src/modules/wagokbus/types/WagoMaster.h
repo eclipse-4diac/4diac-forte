@@ -16,7 +16,7 @@ class FORTE_WagoMaster : public forte::core::io::IOConfigFBMultiMaster {
     DECLARE_FIRMWARE_FB(FORTE_WagoMaster)
 
   public:
-    FORTE_WagoMaster(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_WagoMaster(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~FORTE_WagoMaster() override = default;
 
     CIEC_BOOL var_QI;

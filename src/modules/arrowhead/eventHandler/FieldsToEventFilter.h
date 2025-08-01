@@ -86,7 +86,7 @@ class FORTE_FieldsToEventFilter : public CBasicFB {
     virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_FieldsToEventFilter(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_FieldsToEventFilter(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
     ~FORTE_FieldsToEventFilter() override = default;
 };

@@ -13,36 +13,17 @@
 
 #include "X20AI2622_fbt.h"
 
-USE_STRING_ID(AI01);
-USE_STRING_ID(AI02);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(CNID);
-USE_STRING_ID(CNIDO);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(INT);
-USE_STRING_ID(MODID);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(REQ);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
-USE_STRING_ID(UINT);
-USE_STRING_ID(USINT);
-USE_STRING_ID(X20AI2622);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_X20AI2622, STRID(X20AI2622))
+DEFINE_FIRMWARE_FB(FORTE_X20AI2622, "X20AI2622"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(CNID), STRID(MODID)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(CNIDO), STRID(STATUS), STRID(AI01), STRID(AI02)};
-  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "CNID"_STRID, "MODID"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "CNIDO"_STRID, "STATUS"_STRID, "AI01"_STRID, "AI02"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -56,8 +37,7 @@ namespace {
   };
 } // namespace
 
-FORTE_X20AI2622::FORTE_X20AI2622(const CStringDictionary::TStringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) :
+FORTE_X20AI2622::FORTE_X20AI2622(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     PowerlinkFunctionBlockAI(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_CNF(*this, 1),

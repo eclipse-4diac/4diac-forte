@@ -75,8 +75,7 @@ class FORTE_TRIGGER_SERVICE_SERVER : public CEventSourceFB {
                          CEventChainExecutionThread *const paECET);
 
   public:
-    FORTE_TRIGGER_SERVICE_SERVER(const CStringDictionary::TStringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) :
+    FORTE_TRIGGER_SERVICE_SERVER(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
         m_Initiated(false),
         m_RosNamespace(""),
         m_RosMsgName(""),

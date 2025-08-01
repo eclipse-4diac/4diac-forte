@@ -12,31 +12,22 @@
 
 #include "QueryServicesAdp_adp.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(endpoint);
-USE_STRING_ID(queried);
-USE_STRING_ID(query);
-USE_STRING_ID(QueryServicesAdp);
-USE_STRING_ID(serviceEntries);
-USE_STRING_ID(serviceQueryForm);
-USE_STRING_ID(ServiceQueryForm);
-USE_STRING_ID(ServiceRegistryEntry);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_ADAPTER_TYPE(FORTE_QueryServicesAdp, STRID(QueryServicesAdp))
+DEFINE_ADAPTER_TYPE(FORTE_QueryServicesAdp, "QueryServicesAdp"_STRID)
 
-const auto cDataInputNames = std::array{STRID(serviceEntries)};
+const auto cDataInputNames = std::array{"serviceEntries"_STRID};
 
-                                                                                    STRID(ServiceRegistryEntry)};
+                                                                                    "ServiceRegistryEntry"_STRID};
 
-const auto cDataOutputNames = std::array{STRID(serviceQueryForm),
-                                                                                   STRID(endpoint)};
+const auto cDataOutputNames = std::array{"serviceQueryForm"_STRID,
+                                                                                   "endpoint"_STRID};
 
-                                                                                     STRID(WSTRING)};
+                                                                                     "WSTRING"_STRID};
 
-const auto cEventInputNames = std::array{STRID(queried)};
+const auto cEventInputNames = std::array{"queried"_STRID};
 
-const auto cEventOutputNames = std::array{STRID(query)};
+const auto cEventOutputNames = std::array{"query"_STRID};
 
 const SFBInterfaceSpec FORTE_QueryServicesAdp::scmFBInterfaceSpecSocket = {1,
                                                                            scmEventInputNames,

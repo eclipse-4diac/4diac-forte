@@ -12,43 +12,19 @@
  *******************************************************************************/
 #include "RT_E_DEMUX_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(Deadline0);
-USE_STRING_ID(Deadline1);
-USE_STRING_ID(Deadline2);
-USE_STRING_ID(Deadline3);
-USE_STRING_ID(EI);
-USE_STRING_ID(EInit);
-USE_STRING_ID(EO0);
-USE_STRING_ID(EO1);
-USE_STRING_ID(EO2);
-USE_STRING_ID(EO3);
-USE_STRING_ID(Event);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(K);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(RT_E_DEMUX);
-USE_STRING_ID(TIME);
-USE_STRING_ID(Tmin);
-USE_STRING_ID(UINT);
-USE_STRING_ID(WCET0);
-USE_STRING_ID(WCET1);
-USE_STRING_ID(WCET2);
-USE_STRING_ID(WCET3);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_RT_E_DEMUX, STRID(RT_E_DEMUX))
+DEFINE_FIRMWARE_FB(FORTE_RT_E_DEMUX, "RT_E_DEMUX"_STRID)
 
 namespace {
   const auto cDataInputNames =
-      std::array{STRID(QI),    STRID(K),         STRID(Tmin),  STRID(Deadline0), STRID(WCET0), STRID(Deadline1),
-                 STRID(WCET1), STRID(Deadline2), STRID(WCET2), STRID(Deadline3), STRID(WCET3)};
-  const auto cDataOutputNames = std::array{STRID(QO)};
-  const auto cEventInputNames = std::array{STRID(INIT), STRID(EI)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(EO0), STRID(EO1), STRID(EO2), STRID(EO3)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event), STRID(Event), STRID(Event), STRID(Event)};
+      std::array{"QI"_STRID,    "K"_STRID,         "Tmin"_STRID,  "Deadline0"_STRID, "WCET0"_STRID, "Deadline1"_STRID,
+                 "WCET1"_STRID, "Deadline2"_STRID, "WCET2"_STRID, "Deadline3"_STRID, "WCET3"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID, "EI"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "EO0"_STRID, "EO1"_STRID, "EO2"_STRID, "EO3"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -62,7 +38,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RT_E_DEMUX::FORTE_RT_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_RT_E_DEMUX::FORTE_RT_E_DEMUX(const forte::core::StringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),

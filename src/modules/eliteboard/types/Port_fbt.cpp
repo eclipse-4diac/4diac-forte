@@ -12,26 +12,7 @@
 
 #include "Port_fbt.h"
 
-USE_STRING_ID(Pin0);
-USE_STRING_ID(Pin1);
-USE_STRING_ID(Pin10);
-USE_STRING_ID(Pin11);
-USE_STRING_ID(Pin12);
-USE_STRING_ID(Pin13);
-USE_STRING_ID(Pin14);
-USE_STRING_ID(Pin15);
-USE_STRING_ID(Pin2);
-USE_STRING_ID(Pin3);
-USE_STRING_ID(Pin4);
-USE_STRING_ID(Pin5);
-USE_STRING_ID(Pin6);
-USE_STRING_ID(Pin7);
-USE_STRING_ID(Pin8);
-USE_STRING_ID(Pin9);
-USE_STRING_ID(Port);
-USE_STRING_ID(PortAdapter);
-USE_STRING_ID(PortInAdapter);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "PortAdapter_adp.h"
 #include "core/iec61131_functions.h"
@@ -47,13 +28,13 @@ USE_STRING_ID(WSTRING);
 
 using namespace forte::core::io;
 
-DEFINE_FIRMWARE_FB(FORTE_Port, STRID(Port))
+DEFINE_FIRMWARE_FB(FORTE_Port, "Port"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{
-      STRID(Pin0), STRID(Pin1), STRID(Pin2),  STRID(Pin3),  STRID(Pin4),  STRID(Pin5),  STRID(Pin6),  STRID(Pin7),
-      STRID(Pin8), STRID(Pin9), STRID(Pin10), STRID(Pin11), STRID(Pin12), STRID(Pin13), STRID(Pin14), STRID(Pin15)};
-  const auto cSocketNameIds = std::array{STRID(PortInAdapter)};
+      "Pin0"_STRID, "Pin1"_STRID, "Pin2"_STRID,  "Pin3"_STRID,  "Pin4"_STRID,  "Pin5"_STRID,  "Pin6"_STRID,  "Pin7"_STRID,
+      "Pin8"_STRID, "Pin9"_STRID, "Pin10"_STRID, "Pin11"_STRID, "Pin12"_STRID, "Pin13"_STRID, "Pin14"_STRID, "Pin15"_STRID};
+  const auto cSocketNameIds = std::array{"PortInAdapter"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = {},
@@ -68,7 +49,7 @@ namespace {
   };
 } // namespace
 
-FORTE_Port::FORTE_Port(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_Port::FORTE_Port(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_Pin0(""_STRING),
     var_Pin1(""_STRING),
@@ -86,7 +67,7 @@ FORTE_Port::FORTE_Port(const CStringDictionary::TStringId paInstanceNameId, fort
     var_Pin13(""_STRING),
     var_Pin14(""_STRING),
     var_Pin15(""_STRING),
-    var_PortInAdapter(STRID(PortInAdapter), *this, false),
+    var_PortInAdapter("PortInAdapter"_STRID, *this, false),
     conn_Pin0(nullptr),
     conn_Pin1(nullptr),
     conn_Pin2(nullptr),

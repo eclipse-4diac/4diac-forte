@@ -16,30 +16,22 @@
 
 #include "F_FIND_fbt.h"
 
-USE_STRING_ID(ANY_INT);
-USE_STRING_ID(ANY_STRING);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(F_FIND);
-USE_STRING_ID(IN1);
-USE_STRING_ID(IN2);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_F_FIND, STRID(F_FIND))
+DEFINE_FIRMWARE_FB(FORTE_F_FIND, "F_FIND"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN1), STRID(IN2)};
+  const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};
   
   
-  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -55,7 +47,7 @@ namespace {
 }
 
 
-FORTE_F_FIND::FORTE_F_FIND(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_FIND::FORTE_F_FIND(const forte::core::StringId paInstanceNameId,
                            forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_STRING_VARIANT()),
@@ -80,8 +72,8 @@ void FORTE_F_FIND::executeEvent(TEventID paEIID, CEventChainExecutionThread *con
               paOUT = func_FIND<std::remove_reference_t<decltype(paOUT)>>(paIN1, paIN2);
             } else {
               DEVLOG_ERROR("Incompatible types IN1:%s and IN2:%s for FIND\n",
-                           CStringDictionary::get(paIN1.getTypeNameID()),
-                           CStringDictionary::get(paIN2.getTypeNameID()));
+                           paIN1.getTypeNameID().data(),
+                           paIN2.getTypeNameID().data());
             }
           },
           static_cast<CIEC_ANY_STRING_VARIANT::variant &>(var_IN1),

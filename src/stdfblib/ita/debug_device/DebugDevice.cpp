@@ -29,7 +29,7 @@ namespace {
 }
 
 DebugDevice::DebugDevice(const std::string &) :
-    CDevice(cFBInterfaceSpec, CStringDictionary::scmInvalidStringId),
+    CDevice(cFBInterfaceSpec, {}),
     mOpcuaMgr(*this),
     mDebugMgr(*this, mOpcuaMgr) {
 }

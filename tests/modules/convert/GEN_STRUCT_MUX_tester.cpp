@@ -11,15 +11,7 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-USE_STRING_ID(InstanceName);
-USE_STRING_ID(STRUCT_MUX_1REAL);
-USE_STRING_ID(STRUCT_MUX_1STRING);
-USE_STRING_ID(STRUCT_MUX_1Struct_Muxer_Test_Struct_1);
-USE_STRING_ID(STRUCT_MUX_1Struct_Muxer_Test_Struct_2);
-USE_STRING_ID(STRUCT_MUX_1Struct_Muxer_Test_Struct_3);
-USE_STRING_ID(STRUCT_MUX_1Struct_Muxer_Test_Struct_4);
-USE_STRING_ID(STRUCT_MUX_1Struct_Muxer_Test_Struct_5);
-USE_STRING_ID(STRUCT_MUX_1UnknownType);
+using namespace forte::core::literals;
 
 #include "struct_mux_demux_data.h"
 #include "fbcontainermock.h"
@@ -27,7 +19,7 @@ USE_STRING_ID(STRUCT_MUX_1UnknownType);
 
 struct STRUCT_MUX_TestFixture_1 : public CFBTestFixtureBase {
 
-    STRUCT_MUX_TestFixture_1() : CFBTestFixtureBase(STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_1)) {
+    STRUCT_MUX_TestFixture_1() : CFBTestFixtureBase("STRUCT_MUX_1Struct_Muxer_Test_Struct_1"_STRID) {
       setInputData({&mVar1, &mVar2, &mVar3});
       setOutputData({&mOut});
       CFBTestFixtureBase::setup();
@@ -97,7 +89,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 struct STRUCT_MUX_TestFixture_2 : public CFBTestFixtureBase {
 
-    STRUCT_MUX_TestFixture_2() : CFBTestFixtureBase(STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_2)) {
+    STRUCT_MUX_TestFixture_2() : CFBTestFixtureBase("STRUCT_MUX_1Struct_Muxer_Test_Struct_2"_STRID) {
       setInputData({&mVar1, &mVar2, &mVar3});
       setOutputData({&mOut});
       CFBTestFixtureBase::setup();
@@ -138,28 +130,28 @@ BOOST_AUTO_TEST_SUITE_END()
 BOOST_AUTO_TEST_SUITE(STRUCT_MUX_FailedCreationTest)
 
 BOOST_AUTO_TEST_CASE(missingDataType) {
-  CFunctionBlock *fb =
-      forte::core::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1UnknownType), CFBContainerMock::smDefaultFBContMock);
+  CFunctionBlock *fb = forte::core::createFB("InstanceName"_STRID, "STRUCT_MUX_1UnknownType"_STRID,
+                                             CFBContainerMock::smDefaultFBContMock);
   BOOST_CHECK(nullptr == fb);
 }
 
 BOOST_AUTO_TEST_CASE(wrongDataType) {
   CFunctionBlock *fb =
-      forte::core::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1STRING), CFBContainerMock::smDefaultFBContMock);
+      forte::core::createFB("InstanceName"_STRID, "STRUCT_MUX_1STRING"_STRID, CFBContainerMock::smDefaultFBContMock);
   BOOST_CHECK(nullptr == fb);
 
-  fb = forte::core::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1REAL), CFBContainerMock::smDefaultFBContMock);
+  fb = forte::core::createFB("InstanceName"_STRID, "STRUCT_MUX_1REAL"_STRID, CFBContainerMock::smDefaultFBContMock);
   BOOST_CHECK(nullptr == fb);
 }
 
 BOOST_AUTO_TEST_CASE(emptyStruct) {
-  CFunctionBlock *fb = forte::core::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_3),
+  CFunctionBlock *fb = forte::core::createFB("InstanceName"_STRID, "STRUCT_MUX_1Struct_Muxer_Test_Struct_3"_STRID,
                                              CFBContainerMock::smDefaultFBContMock);
   BOOST_CHECK(nullptr == fb);
 }
 
 BOOST_AUTO_TEST_CASE(bigStruct) {
-  CFunctionBlock *fb = forte::core::createFB(STRID(InstanceName), STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_4),
+  CFunctionBlock *fb = forte::core::createFB("InstanceName"_STRID, "STRUCT_MUX_1Struct_Muxer_Test_Struct_4"_STRID,
                                              CFBContainerMock::smDefaultFBContMock);
   BOOST_CHECK(nullptr != fb);
   delete fb;
@@ -169,7 +161,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 struct STRUCT_MUX_TestFixture_5 : public CFBTestFixtureBase {
 
-    STRUCT_MUX_TestFixture_5() : CFBTestFixtureBase(STRID(STRUCT_MUX_1Struct_Muxer_Test_Struct_5)) {
+    STRUCT_MUX_TestFixture_5() : CFBTestFixtureBase("STRUCT_MUX_1Struct_Muxer_Test_Struct_5"_STRID) {
       setInputData({&mVar1, &mVar2, &mVar3});
       setOutputData({&mOut});
       CFBTestFixtureBase::setup();

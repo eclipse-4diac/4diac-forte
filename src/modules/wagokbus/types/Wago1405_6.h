@@ -18,7 +18,7 @@ class FORTE_Wago1405_6 : public WagoSlaveBase {
     DECLARE_FIRMWARE_FB(FORTE_Wago1405_6)
 
   public:
-    FORTE_Wago1405_6(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_Wago1405_6(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~FORTE_Wago1405_6() override = default;
 
     CIEC_BOOL var_QI;

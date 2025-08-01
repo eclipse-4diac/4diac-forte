@@ -27,7 +27,7 @@ namespace forte::com {
     protected:
       BaseCommunicationFB(CFBContainer &paContainer,
                           const SFBInterfaceSpec &paInterfaceSpec,
-                          CStringDictionary::TStringId paInstanceNameId) :
+                          forte::core::StringId paInstanceNameId) :
           CEventSourceFB(paContainer, paInterfaceSpec, paInstanceNameId) {
       }
 

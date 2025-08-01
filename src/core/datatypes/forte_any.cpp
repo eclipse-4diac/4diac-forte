@@ -17,7 +17,7 @@
  *******************************************************************************/
 #include "core/datatypes/forte_any.h"
 
-USE_STRING_ID(ANY);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_real.h"
 #include "core/datatypes/forte_lreal.h"
@@ -27,12 +27,12 @@ int CIEC_ANY::dummyInit() {
   return 0;
 }
 
-CStringDictionary::TStringId CIEC_ANY::getTypeNameID() const {
-  return STRID(ANY);
+forte::core::StringId CIEC_ANY::getTypeNameID() const {
+  return "ANY"_STRID;
 }
 
-CStringDictionary::TStringId CIEC_ANY::parseTypeName(const char *paValue, const char *paHashPos) {
-  return CStringDictionary::getId(paValue, static_cast<size_t>(paHashPos - paValue));
+forte::core::StringId CIEC_ANY::parseTypeName(const char *paValue, const char *paHashPos) {
+  return forte::core::StringId::lookup({paValue, static_cast<size_t>(paHashPos - paValue)});
 }
 
 bool CIEC_ANY::isCastable(EDataTypeID paSource, EDataTypeID paDestination, bool &paUpCast, bool &paDownCast) {

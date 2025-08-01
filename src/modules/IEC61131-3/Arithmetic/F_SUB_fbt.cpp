@@ -16,29 +16,22 @@
 
 #include "F_SUB_fbt.h"
 
-USE_STRING_ID(ANY_MAGNITUDE);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(F_SUB);
-USE_STRING_ID(IN1);
-USE_STRING_ID(IN2);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_F_SUB, STRID(F_SUB))
+DEFINE_FIRMWARE_FB(FORTE_F_SUB, "F_SUB"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN1), STRID(IN2)};
+  const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};
   
   
-  const auto cDataOutputNames = std::array{STRID(OUT)};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -54,7 +47,7 @@ namespace {
 }
 
 
-FORTE_F_SUB::FORTE_F_SUB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_SUB::FORTE_F_SUB(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_MAGNITUDE_VARIANT()),
     var_IN2(CIEC_ANY_MAGNITUDE_VARIANT()),
@@ -75,8 +68,8 @@ void FORTE_F_SUB::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
             if constexpr (!std::is_same<deductedType, forte::core::mpl::NullType>::value) {
               return func_SUB(paIN1, paIN2);
             }
-            DEVLOG_ERROR("Subtracting incompatible types %s and %s\n", CStringDictionary::get(paIN1.getTypeNameID()),
-                         CStringDictionary::get(paIN2.getTypeNameID()));
+            DEVLOG_ERROR("Subtracting incompatible types %s and %s\n", paIN1.getTypeNameID().data(),
+                         paIN2.getTypeNameID().data());
             return CIEC_ANY_MAGNITUDE_VARIANT();
           },
           static_cast<CIEC_ANY_MAGNITUDE_VARIANT::variant &>(var_IN1),

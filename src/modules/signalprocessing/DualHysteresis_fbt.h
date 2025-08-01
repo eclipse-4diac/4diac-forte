@@ -65,7 +65,7 @@ class FORTE_signalprocessing__DualHysteresis final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_signalprocessing__DualHysteresis(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_signalprocessing__DualHysteresis(forte::core::StringId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;

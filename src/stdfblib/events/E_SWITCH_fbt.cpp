@@ -13,13 +13,7 @@
 
 #include "E_SWITCH_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(EI);
-USE_STRING_ID(EO0);
-USE_STRING_ID(EO1);
-USE_STRING_ID(E_SWITCH);
-USE_STRING_ID(Event);
-USE_STRING_ID(G);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_bool.h"
 #include "core/iec61131_functions.h"
@@ -28,12 +22,12 @@ USE_STRING_ID(G);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_SWITCH, STRID(E_SWITCH))
+DEFINE_FIRMWARE_FB(FORTE_E_SWITCH, "E_SWITCH"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(G)};
-  const auto cEventInputNames = std::array{STRID(EI)};
-  const auto cEventOutputNames = std::array{STRID(EO0), STRID(EO1)};
+  const auto cDataInputNames = std::array{"G"_STRID};
+  const auto cEventInputNames = std::array{"EI"_STRID};
+  const auto cEventOutputNames = std::array{"EO0"_STRID, "EO1"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -47,7 +41,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_SWITCH::FORTE_E_SWITCH(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_SWITCH::FORTE_E_SWITCH(const forte::core::StringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO0(*this, 0),

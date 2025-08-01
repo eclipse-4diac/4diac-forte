@@ -290,7 +290,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
      * @param paLength The array length
      * @param paArrayType The element type
      */
-    CIEC_ARRAY_DYNAMIC(TForteUInt16 paLength, CStringDictionary::TStringId paArrayType) :
+    CIEC_ARRAY_DYNAMIC(TForteUInt16 paLength, forte::core::StringId paArrayType) :
         mSize(0),
         mElementSize(0),
         mLowerBound(0),
@@ -306,7 +306,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
      * @param paUpperBound The upper bound
      * @param paArrayType The element type
      */
-    CIEC_ARRAY_DYNAMIC(intmax_t paLowerBound, intmax_t paUpperBound, CStringDictionary::TStringId paArrayType) :
+    CIEC_ARRAY_DYNAMIC(intmax_t paLowerBound, intmax_t paUpperBound, forte::core::StringId paArrayType) :
         mSize(0),
         mElementSize(0),
         mLowerBound(paLowerBound),
@@ -467,13 +467,13 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
     }
 
     //! Function to configure the array if it is created via the typelib
-    void setup(TForteUInt16 paLength, CStringDictionary::TStringId paArrayType);
+    void setup(TForteUInt16 paLength, forte::core::StringId paArrayType);
 
     //! Function to configure the array if it is created via the typelib
-    void setup(intmax_t paLowerBound, intmax_t paUpperBound, CStringDictionary::TStringId paArrayType);
+    void setup(intmax_t paLowerBound, intmax_t paUpperBound, forte::core::StringId paArrayType);
 
     //! Function to configure the array if it is created via the typelib
-    void setup(const CStringDictionary::TStringId *paParameters);
+    void setup(const forte::core::StringId *paParameters);
 
     [[nodiscard]] size_t size() const override {
       return mSize;
@@ -565,9 +565,8 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
       return mData != nullptr ? reinterpret_cast<CIEC_ANY *>(mData)->getDataTypeID() : CIEC_ANY::e_ANY;
     }
 
-    [[nodiscard]] CStringDictionary::TStringId getElementTypeNameID() const override {
-      return mElementDataTypeEntry != nullptr ? mElementDataTypeEntry->getTypeNameId()
-                                              : CStringDictionary::scmInvalidStringId;
+    [[nodiscard]] forte::core::StringId getElementTypeNameID() const override {
+      return mElementDataTypeEntry != nullptr ? mElementDataTypeEntry->getTypeNameId() : forte::core::StringId{};
     }
 
     [[nodiscard]] int fromString(const char *paValue) override;

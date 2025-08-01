@@ -37,5 +37,5 @@ class CFBContainerMock : public forte::core::CFBContainer {
     }
 
   private:
-    CFBContainerMock() : forte::core::CFBContainer(CStringDictionary::scmInvalidStringId, *this) {};
+    CFBContainerMock() : forte::core::CFBContainer({}, *this) {};
 };

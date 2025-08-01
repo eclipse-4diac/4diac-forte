@@ -15,38 +15,19 @@
 #include "EBMaster.h"
 #include "../handler/bus.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(BusAdapterOut);
-USE_STRING_ID(BusInitSpeed);
-USE_STRING_ID(BusInterface);
-USE_STRING_ID(BusLoopSpeed);
-USE_STRING_ID(BusSelectPin);
-USE_STRING_ID(EBBusAdapter);
-USE_STRING_ID(EBMaster);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(SlaveUpdateInterval);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(UDINT);
-USE_STRING_ID(UINT);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_EBMaster, STRID(EBMaster))
+DEFINE_FIRMWARE_FB(FORTE_EBMaster, "EBMaster"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI),           STRID(BusInterface), STRID(BusSelectPin),
-                                          STRID(BusInitSpeed), STRID(BusLoopSpeed), STRID(SlaveUpdateInterval)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(INIT)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
-  const auto cEventOutputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+  const auto cDataInputNames = std::array{"QI"_STRID,           "BusInterface"_STRID, "BusSelectPin"_STRID,
+                                          "BusInitSpeed"_STRID, "BusLoopSpeed"_STRID, "SlaveUpdateInterval"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "IND"_STRID};
+  const auto cEventOutputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cPlugNameIds = std::array{"BusAdapterOut"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -61,7 +42,7 @@ namespace {
   };
 } // namespace
 
-FORTE_EBMaster::FORTE_EBMaster(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_EBMaster::FORTE_EBMaster(const forte::core::StringId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     forte::core::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_BusInterface(1_UINT),
@@ -79,7 +60,7 @@ FORTE_EBMaster::FORTE_EBMaster(const CStringDictionary::TStringId paInstanceName
     conn_SlaveUpdateInterval(nullptr),
     conn_QO(*this, 0, var_QO),
     conn_STATUS(*this, 1, var_STATUS),
-    var_BusAdapterOut(STRID(BusAdapterOut), *this, 0) {};
+    var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0) {};
 
 void FORTE_EBMaster::setInitialValues() {
   var_QI = 0_BOOL;

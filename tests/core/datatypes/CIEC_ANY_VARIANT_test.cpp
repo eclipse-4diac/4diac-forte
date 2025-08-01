@@ -15,10 +15,7 @@
 #include "forte_boost_output_support.h"
 #include "core/datatypes/forte_any_variant.h"
 
-USE_STRING_ID(AnyTestStruct);
-USE_STRING_ID(Var1);
-USE_STRING_ID(Var2);
-USE_STRING_ID(Var3);
+using namespace forte::core::literals;
 
 class CIEC_AnyTestStruct : public CIEC_STRUCT {
     DECLARE_FIRMWARE_DATATYPE(AnyTestStruct)
@@ -33,12 +30,12 @@ class CIEC_AnyTestStruct : public CIEC_STRUCT {
       return 3;
     }
 
-    const CStringDictionary::TStringId *elementNames() const override {
+    const forte::core::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    CStringDictionary::TStringId getStructTypeNameID() const override {
-      return STRID(AnyTestStruct);
+    forte::core::StringId getStructTypeNameID() const override {
+      return "AnyTestStruct"_STRID;
     }
 
     CIEC_ANY *getMember(size_t paMemberIndex) override {
@@ -60,12 +57,12 @@ class CIEC_AnyTestStruct : public CIEC_STRUCT {
     }
 
   private:
-    static const CStringDictionary::TStringId scmElementNames[];
+    static const forte::core::StringId scmElementNames[];
 };
 
-const CStringDictionary::TStringId CIEC_AnyTestStruct::scmElementNames[] = {STRID(Var1), STRID(Var2), STRID(Var3)};
+const forte::core::StringId CIEC_AnyTestStruct::scmElementNames[] = {"Var1"_STRID, "Var2"_STRID, "Var3"_STRID};
 
-DEFINE_FIRMWARE_DATATYPE(AnyTestStruct, STRID(AnyTestStruct))
+DEFINE_FIRMWARE_DATATYPE(AnyTestStruct, "AnyTestStruct"_STRID)
 
 BOOST_AUTO_TEST_SUITE(CIEC_ANY_VARIANT_function_test)
 

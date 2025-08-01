@@ -19,21 +19,7 @@
 
 #include "SPLIT_WORD_INTO_QUARTERS_fct.h"
 
-USE_STRING_ID(BYTE);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(IN);
-USE_STRING_ID(QUARTER_BYTE_00);
-USE_STRING_ID(QUARTER_BYTE_01);
-USE_STRING_ID(QUARTER_BYTE_02);
-USE_STRING_ID(QUARTER_BYTE_03);
-USE_STRING_ID(QUARTER_BYTE_04);
-USE_STRING_ID(QUARTER_BYTE_05);
-USE_STRING_ID(QUARTER_BYTE_06);
-USE_STRING_ID(QUARTER_BYTE_07);
-USE_STRING_ID(REQ);
-USE_STRING_ID(SPLIT_WORD_INTO_QUARTERS);
-USE_STRING_ID(WORD);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_byte.h"
 #include "core/datatypes/forte_any_int_variant.h"
@@ -46,17 +32,17 @@ USE_STRING_ID(WORD);
 #include "core/datatypes/forte_array_variable.h"
 #include "quarterconst_gcf.h"
 
-DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_QUARTERS, STRID(SPLIT_WORD_INTO_QUARTERS))
+DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_QUARTERS, "SPLIT_WORD_INTO_QUARTERS"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(IN)};
+  const auto cDataInputNames = std::array{"IN"_STRID};
   const auto cDataOutputNames =
-      std::array{STRID(QUARTER_BYTE_00), STRID(QUARTER_BYTE_01), STRID(QUARTER_BYTE_02), STRID(QUARTER_BYTE_03),
-                 STRID(QUARTER_BYTE_04), STRID(QUARTER_BYTE_05), STRID(QUARTER_BYTE_06), STRID(QUARTER_BYTE_07)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+      std::array{"QUARTER_BYTE_00"_STRID, "QUARTER_BYTE_01"_STRID, "QUARTER_BYTE_02"_STRID, "QUARTER_BYTE_03"_STRID,
+                 "QUARTER_BYTE_04"_STRID, "QUARTER_BYTE_05"_STRID, "QUARTER_BYTE_06"_STRID, "QUARTER_BYTE_07"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -70,7 +56,7 @@ namespace {
   };
 } // namespace
 
-FORTE_SPLIT_WORD_INTO_QUARTERS::FORTE_SPLIT_WORD_INTO_QUARTERS(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_SPLIT_WORD_INTO_QUARTERS::FORTE_SPLIT_WORD_INTO_QUARTERS(const forte::core::StringId paInstanceNameId,
                                                                forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

@@ -92,11 +92,10 @@ BarectfPlatformFORTE::BarectfPlatformFORTE(std::filesystem::path filename, size_
   }
 }
 
-BarectfPlatformFORTE::BarectfPlatformFORTE(CStringDictionary::TStringId instanceName, size_t bufferSize) :
+BarectfPlatformFORTE::BarectfPlatformFORTE(forte::core::StringId instanceName, size_t bufferSize) :
     BarectfPlatformFORTE(traceDirectory /
-                             (std::string("trace_") +
-                              (CStringDictionary::get(instanceName) ? CStringDictionary::get(instanceName) : "null") +
-                              "_" + dateCapture() + ".ctf"),
+                             (std::string("trace_") + (instanceName.data() ? instanceName.data() : "null") + "_" +
+                              dateCapture() + ".ctf"),
                          bufferSize) {
 }
 

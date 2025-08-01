@@ -16,21 +16,16 @@
 #include "core/util/criticalregion.h"
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(ANY);
-USE_STRING_ID(Event);
-USE_STRING_ID(GEN_RT_Bridge);
-USE_STRING_ID(RD);
-USE_STRING_ID(RDO);
-USE_STRING_ID(WR);
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge, STRID(GEN_RT_Bridge))
+DEFINE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge, "GEN_RT_Bridge"_STRID)
 
 namespace {
-  const auto cEventInputNames = std::array{STRID(RD), STRID(WR)};
-  const auto cEventOutputNames = std::array{STRID(RDO)};
+  const auto cEventInputNames = std::array{"RD"_STRID, "WR"_STRID};
+  const auto cEventOutputNames = std::array{"RDO"_STRID};
 } // namespace
 
-FORTE_GEN_RT_Bridge::FORTE_GEN_RT_Bridge(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_GEN_RT_Bridge::FORTE_GEN_RT_Bridge(const forte::core::StringId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_RDO(*this, 0) {};

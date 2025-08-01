@@ -43,7 +43,7 @@ class FORTE_FB_CTU_LINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_FB_CTU_LINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_FB_CTU_LINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_CU;
     CIEC_BOOL var_R;

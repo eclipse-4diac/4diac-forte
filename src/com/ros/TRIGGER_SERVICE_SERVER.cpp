@@ -17,32 +17,18 @@
 
 #include "TRIGGER_SERVICE_SERVER.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(MESSAGE);
-USE_STRING_ID(NAMESPACE);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(RSP);
-USE_STRING_ID(SRVNAME);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
-USE_STRING_ID(SUCCESS);
-USE_STRING_ID(TRIGGER_SERVICE_SERVER);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_TRIGGER_SERVICE_SERVER, STRID(TRIGGER_SERVICE_SERVER))
+DEFINE_FIRMWARE_FB(FORTE_TRIGGER_SERVICE_SERVER, "TRIGGER_SERVICE_SERVER"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(NAMESPACE), STRID(SRVNAME), STRID(SUCCESS), STRID(MESSAGE)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(INIT), STRID(RSP)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cDataInputNames =
+      std::array{"QI"_STRID, "NAMESPACE"_STRID, "SRVNAME"_STRID, "SUCCESS"_STRID, "MESSAGE"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID, "RSP"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "IND"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

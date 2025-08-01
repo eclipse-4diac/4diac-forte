@@ -37,7 +37,7 @@ class FORTE_Wago636 final : public WagoSlaveBase {
     INIT_HANDLES(7, 7, 1, 1)
 
   public:
-    FORTE_Wago636(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_Wago636(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~FORTE_Wago636() override = default;
 
     CIEC_BOOL var_QI;

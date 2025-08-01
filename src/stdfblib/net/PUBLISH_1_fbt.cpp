@@ -13,11 +13,11 @@
 
 #include "PUBLISH_1_fbt.h"
 
-USE_STRING_ID(PUBLISH_1);
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(FORTE_PUBLISH_1, STRID(PUBLISH_1))
+DEFINE_GENERIC_FIRMWARE_FB(FORTE_PUBLISH_1, "PUBLISH_1"_STRID)
 
-FORTE_PUBLISH_1::FORTE_PUBLISH_1(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_PUBLISH_1::FORTE_PUBLISH_1(const forte::core::StringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     GEN_PUBLISH(paInstanceNameId, paContainer) {
   configureFB("PUBLISH_1");

@@ -44,7 +44,7 @@ class FORTE_F_TIME_IN_MS_TO_LINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_TIME_IN_MS_TO_LINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_TIME_IN_MS_TO_LINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_TIME var_IN;
 

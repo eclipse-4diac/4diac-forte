@@ -33,7 +33,7 @@ const char *const CBaseCommFB::scmResponseTexts[] = {
     "OK",        "INVALID_ID", "TERMINATED",  "INVALID_OBJECT", "DATA_TYPE_ERROR",
     "INHIBITED", "NO_SOCKET",  "SEND_FAILED", "RECV_FAILED"};
 
-CBaseCommFB::CBaseCommFB(const CStringDictionary::TStringId paInstanceNameId,
+CBaseCommFB::CBaseCommFB(const forte::core::StringId paInstanceNameId,
                          forte::core::CFBContainer &paContainer,
                          forte::com_infra::EComServiceType paCommServiceType) :
     CGenFunctionBlock<CEventSourceFB>(paContainer, paInstanceNameId),

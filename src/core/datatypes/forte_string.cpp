@@ -29,11 +29,11 @@
 #include "arch/forte_fileio.h"
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(STRING);
+using namespace forte::core::literals;
 
 using namespace std::string_literals;
 
-DEFINE_FIRMWARE_DATATYPE(STRING, STRID(STRING));
+DEFINE_FIRMWARE_DATATYPE(STRING, "STRING"_STRID);
 
 CIEC_STRING::CIEC_STRING(const char *paValue) : mValue(paValue, forte_strnlen_s(paValue, scmMaxStringLen)) {
 }
@@ -177,4 +177,4 @@ void CIEC_STRING::toUTF8(std::string &paBuffer, bool paEscape) const {
   }
 }
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_STRING>::scmDataTypeName = STRID(STRING);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_STRING>::scmDataTypeName = "STRING"_STRID;

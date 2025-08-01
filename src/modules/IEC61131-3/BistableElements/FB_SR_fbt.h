@@ -42,7 +42,7 @@ class FORTE_FB_SR final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_FB_SR(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_FB_SR(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_S1;
     CIEC_BOOL var_R;

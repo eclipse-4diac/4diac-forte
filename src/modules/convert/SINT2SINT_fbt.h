@@ -43,7 +43,7 @@ class FORTE_SINT2SINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_SINT2SINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_SINT2SINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_SINT var_IN;
 

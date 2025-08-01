@@ -12,38 +12,21 @@
 
 #include "gpiochip_config_fb.h"
 
-USE_STRING_ID(ActiveLow);
-USE_STRING_ID(BiasMode);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(ChipNumber);
-USE_STRING_ID(EInit);
-USE_STRING_ID(Event);
-USE_STRING_ID(GPIOChip);
-USE_STRING_ID(IND);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(LineNumber);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(ReadWriteMode);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(UINT);
-USE_STRING_ID(VALUE);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "gpiochip_controller.h"
 
-DEFINE_FIRMWARE_FB(GPIOChipConfigFB, STRID(GPIOChip))
+DEFINE_FIRMWARE_FB(GPIOChipConfigFB, "GPIOChip"_STRID)
 
 namespace {
   const auto cDataInputNames =
-      std::array{STRID(QI),       STRID(VALUE),    STRID(ChipNumber), STRID(LineNumber), STRID(ReadWriteMode),
-                 STRID(BiasMode), STRID(ActiveLow)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(INIT)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(IND)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+      std::array{"QI"_STRID,       "VALUE"_STRID,    "ChipNumber"_STRID, "LineNumber"_STRID, "ReadWriteMode"_STRID,
+                 "BiasMode"_STRID, "ActiveLow"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "IND"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,

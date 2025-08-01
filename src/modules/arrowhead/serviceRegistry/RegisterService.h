@@ -45,7 +45,7 @@ class FORTE_RegisterService : public CCompositeFB {
     static const SCFB_FBNData scmFBNData;
 
   public:
-    FORTE_RegisterService(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_RegisterService(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
         ~FORTE_RegisterService() override = default;
 };

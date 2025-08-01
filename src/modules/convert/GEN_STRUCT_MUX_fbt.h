@@ -57,10 +57,10 @@ class GEN_STRUCT_MUX final : public CGenFunctionBlock<CFunctionBlock> {
 
   public:
     GEN_STRUCT_MUX(const GEN_STRUCT_MUX &paOther) = delete;
-    GEN_STRUCT_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_STRUCT_MUX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_STRUCT_MUX() override = default;
 
-    static CStringDictionary::TStringId getStructNameId(std::string_view paConfigString);
+    static forte::core::StringId getStructNameId(std::string_view paConfigString);
 };
 
 #endif //_GEN_STRUCT_MUX_H_

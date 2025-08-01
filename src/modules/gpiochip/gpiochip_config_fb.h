@@ -76,6 +76,6 @@ class GPIOChipConfigFB : public forte::core::io::IOConfigFBController {
     void onStartup(CEventChainExecutionThread *const paECET) override;
 
   public:
-    GPIOChipConfigFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    GPIOChipConfigFB(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     }
 };

@@ -12,28 +12,20 @@
 
 #include "RegisterServiceAdp_adp.h"
 
-USE_STRING_ID(doneRegister);
-USE_STRING_ID(doneUnregister);
-USE_STRING_ID(endpoint);
-USE_STRING_ID(registerService);
-USE_STRING_ID(RegisterServiceAdp);
-USE_STRING_ID(serviceRegistryEntry);
-USE_STRING_ID(ServiceRegistryEntry);
-USE_STRING_ID(unregisterService);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_ADAPTER_TYPE(FORTE_RegisterServiceAdp, STRID(RegisterServiceAdp))
+DEFINE_ADAPTER_TYPE(FORTE_RegisterServiceAdp, "RegisterServiceAdp"_STRID)
 
-const auto cDataOutputNames = std::array{STRID(serviceRegistryEntry),
-                                                                                     STRID(endpoint)};
+const auto cDataOutputNames = std::array{"serviceRegistryEntry"_STRID,
+                                                                                     "endpoint"_STRID};
 
-                                                                                       STRID(WSTRING)};
+                                                                                       "WSTRING"_STRID};
 
-const auto cEventInputNames = std::array{STRID(doneRegister),
-                                                                                     STRID(doneUnregister)};
+const auto cEventInputNames = std::array{"doneRegister"_STRID,
+                                                                                     "doneUnregister"_STRID};
 
-const auto cEventOutputNames = std::array{STRID(registerService),
-                                                                                      STRID(unregisterService)};
+const auto cEventOutputNames = std::array{"registerService"_STRID,
+                                                                                      "unregisterService"_STRID};
 
 const SFBInterfaceSpec FORTE_RegisterServiceAdp::scmFBInterfaceSpecSocket = {2,
                                                                              scmEventInputNames,

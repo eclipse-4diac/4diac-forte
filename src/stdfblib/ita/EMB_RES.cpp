@@ -10,13 +10,12 @@
  *   Alois Zoitl, Thomas Strasser, Gerhard Ebenhofer,
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "core/stringdict.h"
+#include "core/stringid.h"
 #include "stdfblib/ita/EMB_RES.h"
 
-USE_STRING_ID(EMB_RES);
-USE_STRING_ID(START);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(EMB_RES, STRID(EMB_RES));
+DEFINE_FIRMWARE_FB(EMB_RES, "EMB_RES"_STRID);
 
 const SFBInterfaceSpec cFBInterfaceSpec = {
     .mEINames = {},
@@ -30,9 +29,9 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
     .mPlugNames = {},
 };
 
-EMB_RES::EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
+EMB_RES::EMB_RES(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
     CResource(paDevice, cFBInterfaceSpec, paInstanceNameId),
-    fb_START(STRID(START), *this) {
+    fb_START("START"_STRID, *this) {
 }
 
 EMB_RES::~EMB_RES() = default;

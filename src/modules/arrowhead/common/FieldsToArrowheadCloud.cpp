@@ -12,40 +12,25 @@
 
 #include "FieldsToArrowheadCloud.h"
 
-USE_STRING_ID(address);
-USE_STRING_ID(arrowheadCloud);
-USE_STRING_ID(ArrowheadCloud);
-USE_STRING_ID(authenticationInfo);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(cloudName);
-USE_STRING_ID(CNF);
-USE_STRING_ID(DINT);
-USE_STRING_ID(Event);
-USE_STRING_ID(FieldsToArrowheadCloud);
-USE_STRING_ID(gatekeeperServiceURI);
-USE_STRING_ID(Operator);
-USE_STRING_ID(port);
-USE_STRING_ID(REQ);
-USE_STRING_ID(secure);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToArrowheadCloud, STRID(FieldsToArrowheadCloud))
+DEFINE_FIRMWARE_FB(FORTE_FieldsToArrowheadCloud, "FieldsToArrowheadCloud"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{
-      STRID(Operator),           STRID(cloudName), STRID(address), STRID(port), STRID(gatekeeperServiceURI),
-      STRID(authenticationInfo), STRID(secure)};
+      "Operator"_STRID,           "cloudName"_STRID, "address"_STRID, "port"_STRID, "gatekeeperServiceURI"_STRID,
+      "authenticationInfo"_STRID, "secure"_STRID};
   
-      STRID(WSTRING), STRID(WSTRING), STRID(WSTRING), STRID(DINT), STRID(WSTRING), STRID(WSTRING), STRID(BOOL)};
+      "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "DINT"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "BOOL"_STRID};
   
-  const auto cDataOutputNames = std::array{STRID(arrowheadCloud)};
+  const auto cDataOutputNames = std::array{"arrowheadCloud"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

@@ -19,12 +19,12 @@
 EMGMResponse CDevice::executeMGMCommand(forte::core::SManagementCMD &paCommand) {
   EMGMResponse retval = EMGMResponse::InvalidDst;
 
-  if (CStringDictionary::scmInvalidStringId == paCommand.mDestination) {
+  if (!paCommand.mDestination) {
     retval = CResource::executeMGMCommand(paCommand);
   } else {
     CResource *res = static_cast<CResource *>(CFBContainer::getChild(paCommand.mDestination));
     if (nullptr != res) {
-      paCommand.mDestination = CStringDictionary::scmInvalidStringId;
+      paCommand.mDestination = {};
       retval = res->executeMGMCommand(paCommand);
     }
   }

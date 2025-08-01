@@ -52,7 +52,7 @@ class FORTE_E_CTU final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_CTU(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_CTU(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_UINT var_PV;
 

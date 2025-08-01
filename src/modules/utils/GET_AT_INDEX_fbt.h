@@ -45,7 +45,7 @@ class FORTE_GET_AT_INDEX : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_GET_AT_INDEX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_GET_AT_INDEX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY_VARIANT var_IN_ARRAY;
     CIEC_UINT var_INDEX;

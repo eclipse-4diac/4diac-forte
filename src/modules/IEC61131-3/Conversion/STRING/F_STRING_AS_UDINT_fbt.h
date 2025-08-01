@@ -44,7 +44,7 @@ class FORTE_F_STRING_AS_UDINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_STRING_AS_UDINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_STRING_AS_UDINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_STRING var_IN;
 

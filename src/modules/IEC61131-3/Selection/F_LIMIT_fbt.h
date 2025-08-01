@@ -43,7 +43,7 @@ class FORTE_F_LIMIT : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_F_LIMIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_LIMIT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY_ELEMENTARY_VARIANT var_MN;
     CIEC_ANY_ELEMENTARY_VARIANT var_IN;

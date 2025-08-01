@@ -13,19 +13,17 @@
 
 #include "com/opc_ua/types/forte_localizedtext.h"
 
-USE_STRING_ID(locale);
-USE_STRING_ID(LocalizedText);
-USE_STRING_ID(text);
+using namespace forte::core::literals;
 
 using namespace std::string_literals;
 
-DEFINE_FIRMWARE_DATATYPE(LocalizedText, STRID(LocalizedText));
+DEFINE_FIRMWARE_DATATYPE(LocalizedText, "LocalizedText"_STRID);
 
 CIEC_LocalizedText::CIEC_LocalizedText() : CIEC_STRUCT(), var_locale(""s), var_text(""s) {
 }
 
-CStringDictionary::TStringId CIEC_LocalizedText::getStructTypeNameID() const {
-  return STRID(LocalizedText);
+forte::core::StringId CIEC_LocalizedText::getStructTypeNameID() const {
+  return "LocalizedText"_STRID;
 }
 
 CIEC_ANY *CIEC_LocalizedText::getMember(size_t paMemberIndex) {
@@ -44,4 +42,4 @@ const CIEC_ANY *CIEC_LocalizedText::getMember(size_t paMemberIndex) const {
   return nullptr;
 }
 
-const CStringDictionary::TStringId CIEC_LocalizedText::scmElementNames[] = {STRID(locale), STRID(text)};
+const forte::core::StringId CIEC_LocalizedText::scmElementNames[] = {"locale"_STRID, "text"_STRID};

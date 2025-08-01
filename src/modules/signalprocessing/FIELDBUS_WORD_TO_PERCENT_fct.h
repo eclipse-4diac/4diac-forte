@@ -41,7 +41,7 @@ class FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT final : public CFunctionB
     void setInitialValues() override;
 
   public:
-    FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT(forte::core::StringId paInstanceNameId,
                                                      forte::core::CFBContainer &paContainer);
 
     CIEC_WORD var_WI;

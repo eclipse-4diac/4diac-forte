@@ -12,30 +12,17 @@
  *******************************************************************************/
 #include "RT_E_F_TRIG_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(Deadline);
-USE_STRING_ID(EI);
-USE_STRING_ID(EInit);
-USE_STRING_ID(EO);
-USE_STRING_ID(Event);
-USE_STRING_ID(INIT);
-USE_STRING_ID(INITO);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(RT_E_F_TRIG);
-USE_STRING_ID(TIME);
-USE_STRING_ID(Tmin);
-USE_STRING_ID(WCET);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_RT_E_F_TRIG, STRID(RT_E_F_TRIG))
+DEFINE_FIRMWARE_FB(FORTE_RT_E_F_TRIG, "RT_E_F_TRIG"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(Tmin), STRID(Deadline), STRID(WCET)};
-  const auto cDataOutputNames = std::array{STRID(QO)};
-  const auto cEventInputNames = std::array{STRID(INIT), STRID(EI)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(EO)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "Tmin"_STRID, "Deadline"_STRID, "WCET"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID};
+  const auto cEventInputNames = std::array{"INIT"_STRID, "EI"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "EO"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -49,7 +36,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RT_E_F_TRIG::FORTE_RT_E_F_TRIG(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_RT_E_F_TRIG::FORTE_RT_E_F_TRIG(const forte::core::StringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
     CRTEventSingle(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),

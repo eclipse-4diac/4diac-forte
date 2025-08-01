@@ -28,13 +28,13 @@ class CBasicFB : public CBaseFB {
   public:
     ~CBasicFB() override = default;
 
-    CIEC_ANY *getVar(CStringDictionary::TStringId *paNameList, unsigned int paNameListSize) override;
+    CIEC_ANY *getVar(forte::core::StringId *paNameList, unsigned int paNameListSize) override;
 
   protected:
     CBasicFB(forte::core::CFBContainer &paContainer,
              const SFBInterfaceSpec &paInterfaceSpec,
-             CStringDictionary::TStringId paInstanceNameId,
-             std::span<const CStringDictionary::TStringId> paVarInternalNames);
+             forte::core::StringId paInstanceNameId,
+             std::span<const forte::core::StringId> paVarInternalNames);
 
     void setInitialValues() override = 0;
 

@@ -19,11 +19,11 @@
 #include <format>
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(WCHAR);
+using namespace forte::core::literals;
 
 using namespace std::literals::string_literals;
 
-DEFINE_FIRMWARE_DATATYPE(WCHAR, STRID(WCHAR))
+DEFINE_FIRMWARE_DATATYPE(WCHAR, "WCHAR"_STRID)
 
 void CIEC_WCHAR::toString(std::string &paTargetBuf) const {
   const TForteWChar symbol = this->operator TForteWChar();
@@ -113,4 +113,4 @@ int CIEC_WCHAR::fromString(const char *paValue) {
   return -1; // no match so something must be wrong
 }
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_WCHAR>::scmDataTypeName = STRID(WCHAR);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_WCHAR>::scmDataTypeName = "WCHAR"_STRID;

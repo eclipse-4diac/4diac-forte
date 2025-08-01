@@ -28,14 +28,12 @@ class CEventConnection : public CConnection {
 
     ~CEventConnection() override;
 
-    EMGMResponse connect(CFunctionBlock &paDstFB,
-                         std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
+    EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::core::StringId> paDstPortNameId) override;
 
     EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
-                                       std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
+                                       std::span<const forte::core::StringId> paDstPortNameId) override;
 
-    EMGMResponse disconnect(CFunctionBlock &paDstFB,
-                            std::span<const CStringDictionary::TStringId> paDstPortNameId) override;
+    EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::core::StringId> paDstPortNameId) override;
 
     void getSourcePortName(forte::core::TNameIdentifier &paResult) const override;
 

@@ -15,7 +15,7 @@
 #include "core/io/eIO/io/einputfb.h"
 #include "core/datatypes/forte_bool.h"
 
-USE_STRING_ID(eIX);
+using namespace forte::core::literals;
 
 /*! /brief generic class for eIX function blocks providing (event-triggerd) access to one boolean physical input
  *
@@ -24,5 +24,5 @@ class FORTE_eIX final : public forte::core::io::CeInputFB<CIEC_BOOL> {
     DECLARE_FIRMWARE_FB(FORTE_eIX)
 
   public:
-    FORTE_eIX(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_eIX(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 };

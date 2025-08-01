@@ -44,7 +44,7 @@ class FORTE_F_UDINT_TO_DWORD final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_UDINT_TO_DWORD(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_UDINT_TO_DWORD(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_UDINT var_IN;
 

@@ -18,7 +18,7 @@
 
 #include "arch/datatype.h"
 #include <string>
-#include "core/stringdict.h"
+#include "core/stringid.h"
 #include "core/datatypes/forte_any.h"
 
 namespace forte {
@@ -78,7 +78,7 @@ namespace forte {
       bool isEscaped(char *paChar, char *paBeginLimit, char paEscapingChar);
       void removeEscapedSigns(char **paString, char paEscapingChar);
 
-      template<typename I, typename O>
+      template<typename I, typename O = std::identity>
       void join(I paFirst, I paLast, O paOp, const char paDelimiter, std::string &paResult) {
         if (paFirst == paLast) {
           return;
@@ -91,7 +91,7 @@ namespace forte {
       }
 
       void writeToStringNameValuePair(std::string &paTargetBuf,
-                                      const CStringDictionary::TStringId variableNameId,
+                                      const forte::core::StringId variableNameId,
                                       const CIEC_ANY *const variable);
 
     } // namespace util

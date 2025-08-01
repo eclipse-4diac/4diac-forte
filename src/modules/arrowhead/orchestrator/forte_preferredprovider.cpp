@@ -12,19 +12,15 @@
 
 #include "forte_preferredprovider.h"
 
-USE_STRING_ID(ArrowheadCloud);
-USE_STRING_ID(ArrowheadSystem);
-USE_STRING_ID(PreferredProvider);
-USE_STRING_ID(providerCloud);
-USE_STRING_ID(providerSystem);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(PreferredProvider, STRID(PreferredProvider));
+DEFINE_FIRMWARE_DATATYPE(PreferredProvider, "PreferredProvider"_STRID);
 
 CIEC_PreferredProvider::CIEC_PreferredProvider() :
-    CIEC_STRUCT(STRID(PreferredProvider), 2, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
+    CIEC_STRUCT("PreferredProvider"_STRID, 2, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const CStringDictionary::TStringId CIEC_PreferredProvider::scmElementTypes[] = {STRID(ArrowheadSystem),
-                                                                                STRID(ArrowheadCloud)};
-const CStringDictionary::TStringId CIEC_PreferredProvider::scmElementNames[] = {STRID(providerSystem),
-                                                                                STRID(providerCloud)};
+const forte::core::StringId CIEC_PreferredProvider::scmElementTypes[] = {"ArrowheadSystem"_STRID,
+                                                                                "ArrowheadCloud"_STRID};
+const forte::core::StringId CIEC_PreferredProvider::scmElementNames[] = {"providerSystem"_STRID,
+                                                                                "providerCloud"_STRID};

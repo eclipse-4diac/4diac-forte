@@ -13,90 +13,49 @@
 
 #include "IORevPiDIO.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(BusAdapterIn);
-USE_STRING_ID(BusAdapterOut);
-USE_STRING_ID(DigitalInput_1);
-USE_STRING_ID(DigitalInput_10);
-USE_STRING_ID(DigitalInput_11);
-USE_STRING_ID(DigitalInput_12);
-USE_STRING_ID(DigitalInput_13);
-USE_STRING_ID(DigitalInput_14);
-USE_STRING_ID(DigitalInput_2);
-USE_STRING_ID(DigitalInput_3);
-USE_STRING_ID(DigitalInput_4);
-USE_STRING_ID(DigitalInput_5);
-USE_STRING_ID(DigitalInput_6);
-USE_STRING_ID(DigitalInput_7);
-USE_STRING_ID(DigitalInput_8);
-USE_STRING_ID(DigitalInput_9);
-USE_STRING_ID(DigitalOutput_1);
-USE_STRING_ID(DigitalOutput_10);
-USE_STRING_ID(DigitalOutput_11);
-USE_STRING_ID(DigitalOutput_12);
-USE_STRING_ID(DigitalOutput_13);
-USE_STRING_ID(DigitalOutput_14);
-USE_STRING_ID(DigitalOutput_2);
-USE_STRING_ID(DigitalOutput_3);
-USE_STRING_ID(DigitalOutput_4);
-USE_STRING_ID(DigitalOutput_5);
-USE_STRING_ID(DigitalOutput_6);
-USE_STRING_ID(DigitalOutput_7);
-USE_STRING_ID(DigitalOutput_8);
-USE_STRING_ID(DigitalOutput_9);
-USE_STRING_ID(Event);
-USE_STRING_ID(IND);
-USE_STRING_ID(IORevPiBusAdapter);
-USE_STRING_ID(IORevPiDIO);
-USE_STRING_ID(MAP);
-USE_STRING_ID(MAPO);
-USE_STRING_ID(QI);
-USE_STRING_ID(QO);
-USE_STRING_ID(STATUS);
-USE_STRING_ID(STRING);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
 #include "../RevPiController.h"
 
 using namespace forte::core::io;
 
-DEFINE_FIRMWARE_FB(FORTE_IORevPiDIO, STRID(IORevPiDIO))
+DEFINE_FIRMWARE_FB(FORTE_IORevPiDIO, "IORevPiDIO"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI),
-                                          STRID(DigitalInput_1),
-                                          STRID(DigitalInput_2),
-                                          STRID(DigitalInput_3),
-                                          STRID(DigitalInput_4),
-                                          STRID(DigitalInput_5),
-                                          STRID(DigitalInput_6),
-                                          STRID(DigitalInput_7),
-                                          STRID(DigitalInput_8),
-                                          STRID(DigitalInput_9),
-                                          STRID(DigitalInput_10),
-                                          STRID(DigitalInput_11),
-                                          STRID(DigitalInput_12),
-                                          STRID(DigitalInput_13),
-                                          STRID(DigitalInput_14),
-                                          STRID(DigitalOutput_1),
-                                          STRID(DigitalOutput_2),
-                                          STRID(DigitalOutput_3),
-                                          STRID(DigitalOutput_4),
-                                          STRID(DigitalOutput_5),
-                                          STRID(DigitalOutput_6),
-                                          STRID(DigitalOutput_7),
-                                          STRID(DigitalOutput_8),
-                                          STRID(DigitalOutput_9),
-                                          STRID(DigitalOutput_10),
-                                          STRID(DigitalOutput_11),
-                                          STRID(DigitalOutput_12),
-                                          STRID(DigitalOutput_13),
-                                          STRID(DigitalOutput_14)};
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS)};
-  const auto cEventInputNames = std::array{STRID(MAP)};
-  const auto cEventOutputNames = std::array{STRID(MAPO), STRID(IND)};
-  const auto cSocketNameIds = std::array{STRID(BusAdapterIn)};
-  const auto cPlugNameIds = std::array{STRID(BusAdapterOut)};
+  const auto cDataInputNames = std::array{"QI"_STRID,
+                                          "DigitalInput_1"_STRID,
+                                          "DigitalInput_2"_STRID,
+                                          "DigitalInput_3"_STRID,
+                                          "DigitalInput_4"_STRID,
+                                          "DigitalInput_5"_STRID,
+                                          "DigitalInput_6"_STRID,
+                                          "DigitalInput_7"_STRID,
+                                          "DigitalInput_8"_STRID,
+                                          "DigitalInput_9"_STRID,
+                                          "DigitalInput_10"_STRID,
+                                          "DigitalInput_11"_STRID,
+                                          "DigitalInput_12"_STRID,
+                                          "DigitalInput_13"_STRID,
+                                          "DigitalInput_14"_STRID,
+                                          "DigitalOutput_1"_STRID,
+                                          "DigitalOutput_2"_STRID,
+                                          "DigitalOutput_3"_STRID,
+                                          "DigitalOutput_4"_STRID,
+                                          "DigitalOutput_5"_STRID,
+                                          "DigitalOutput_6"_STRID,
+                                          "DigitalOutput_7"_STRID,
+                                          "DigitalOutput_8"_STRID,
+                                          "DigitalOutput_9"_STRID,
+                                          "DigitalOutput_10"_STRID,
+                                          "DigitalOutput_11"_STRID,
+                                          "DigitalOutput_12"_STRID,
+                                          "DigitalOutput_13"_STRID,
+                                          "DigitalOutput_14"_STRID};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+  const auto cEventInputNames = std::array{"MAP"_STRID};
+  const auto cEventOutputNames = std::array{"MAPO"_STRID, "IND"_STRID};
+  const auto cSocketNameIds = std::array{"BusAdapterIn"_STRID};
+  const auto cPlugNameIds = std::array{"BusAdapterOut"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
@@ -114,7 +73,7 @@ namespace {
 const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIONum = 0;
 
-FORTE_IORevPiDIO::FORTE_IORevPiDIO(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_IORevPiDIO::FORTE_IORevPiDIO(const forte::core::StringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     IOConfigFBMultiSlave(
         scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 96, paContainer, cFBInterfaceSpec, paInstanceNameId),
@@ -151,8 +110,8 @@ FORTE_IORevPiDIO::FORTE_IORevPiDIO(const CStringDictionary::TStringId paInstance
     conn_DigitalOutput_14(nullptr),
     conn_QO(*this, 0, var_QO),
     conn_STATUS(*this, 1, var_STATUS),
-    var_BusAdapterOut(STRID(BusAdapterOut), *this, 0),
-    var_BusAdapterIn(STRID(BusAdapterIn), *this, 0) {};
+    var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0),
+    var_BusAdapterIn("BusAdapterIn"_STRID, *this, 0) {};
 
 void FORTE_IORevPiDIO::setInitialValues() {
   var_QI = 0_BOOL;

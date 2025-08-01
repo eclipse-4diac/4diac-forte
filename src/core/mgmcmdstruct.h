@@ -15,7 +15,7 @@
 #include "generated/config/FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY.h"
 #include "core/mgmcmd.h"
 #include "core/util/inplace_vector.h"
-#include "core/stringdict.h"
+#include "core/stringid.h"
 #include <string>
 
 namespace forte {
@@ -26,7 +26,7 @@ namespace forte {
      */
     /*@{*/
 
-    typedef util::inplace_vector<CStringDictionary::TStringId, FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY> TNameIdentifier;
+    typedef util::inplace_vector<forte::core::StringId, FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY> TNameIdentifier;
 
     /*!\brief All the data necessary for processing a management command.
      *
@@ -52,7 +52,7 @@ namespace forte {
          * should be exectued in is the target.
          * FIXME if more than the resource should be supported (e.g. composite FBs) the type needs to be changed .
          */
-        CStringDictionary::TStringId mDestination;
+        forte::core::StringId mDestination;
 
         /*!\brief The first parameter of the command e.g. the FB name to create or the src of an connection.
          *

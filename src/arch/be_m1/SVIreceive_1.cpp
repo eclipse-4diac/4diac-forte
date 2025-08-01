@@ -11,18 +11,18 @@
  *******************************************************************************/
 #include "SVIreceive_1.h"
 
-DEFINE_FIRMWARE_FB(FORTE_SVIreceive_1, STRID(SVIreceive_1))
+DEFINE_FIRMWARE_FB(FORTE_SVIreceive_1, "SVIreceive_1"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(QI), STRID(ID)};
+  const auto cDataInputNames = std::array{"QI"_STRID, "ID"_STRID};
 
-  const auto cDataOutputNames = std::array{STRID(QO), STRID(RD_1)};
+  const auto cDataOutputNames = std::array{"QO"_STRID, "RD_1"_STRID};
 
-  const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
+  const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
 
-  const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
+  const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

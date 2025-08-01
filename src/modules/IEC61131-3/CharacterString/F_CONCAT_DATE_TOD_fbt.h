@@ -45,7 +45,7 @@ class FORTE_F_CONCAT_DATE_TOD : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_F_CONCAT_DATE_TOD(const CStringDictionary::TStringId paInstanceNameId,
+    FORTE_F_CONCAT_DATE_TOD(const forte::core::StringId paInstanceNameId,
                             forte::core::CFBContainer &paContainer);
 
     CIEC_DATE var_IN1;

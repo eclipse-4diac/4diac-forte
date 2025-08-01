@@ -14,8 +14,7 @@
 #include "deviceController.h"
 #include "core/io/mapper/io_mapper.h"
 
-USE_STRING_ID(BusAdapterIn);
-USE_STRING_ID(BusAdapterOut);
+using namespace forte::core::literals;
 
 const TForteUInt8 PLCnextSlaveHandler::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 PLCnextSlaveHandler::scmSlaveConfigurationIONum = 0;
@@ -23,12 +22,12 @@ const TForteUInt8 PLCnextSlaveHandler::scmSlaveConfigurationIONum = 0;
 PLCnextSlaveHandler::PLCnextSlaveHandler(int paType,
                                          forte::core::CFBContainer &paContainer,
                                          const SFBInterfaceSpec *paInterfaceSpec,
-                                         const CStringDictionary::TStringId paInstanceNameId) :
+                                         const forte::core::StringId paInstanceNameId) :
     IOConfigFBMultiSlave(
         scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec, paInstanceNameId),
     slaveType(SlaveType(paType)),
-    var_BusAdapterOut(STRID(BusAdapterOut), *this, 0),
-    var_BusAdapterIn(STRID(BusAdapterIn), *this, 0) {
+    var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0),
+    var_BusAdapterIn("BusAdapterIn"_STRID, *this, 0) {
 }
 
 PLCnextSlaveHandler::~PLCnextSlaveHandler() {

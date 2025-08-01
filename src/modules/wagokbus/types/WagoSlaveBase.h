@@ -23,7 +23,7 @@ class WagoSlaveBase : public forte::core::io::IOConfigFBMultiSlave {
     WagoSlaveBase(int paType,
                   forte::core::CFBContainer &paContainer,
                   const SFBInterfaceSpec &paInterfaceSpec,
-                  const CStringDictionary::TStringId paInstanceNameId);
+                  const forte::core::StringId paInstanceNameId);
     ~WagoSlaveBase() override = default;
 
     forte::CPlugPin<FORTE_WagoBusAdapter_Plug> var_BusAdapterOut;

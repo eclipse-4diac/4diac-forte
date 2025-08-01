@@ -20,20 +20,16 @@
 #include "GEN_E_MUX_fbt.h"
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(EO);
-USE_STRING_ID(Event);
-USE_STRING_ID(GEN_E_MUX);
-USE_STRING_ID(K);
-USE_STRING_ID(UINT);
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_E_MUX, STRID(GEN_E_MUX));
+DEFINE_GENERIC_FIRMWARE_FB(GEN_E_MUX, "GEN_E_MUX"_STRID);
 
 namespace {
-  const auto cDataOutputNames = std::array{STRID(K)};
-  const auto cEventOutputNames = std::array{STRID(EO)};
+  const auto cDataOutputNames = std::array{"K"_STRID};
+  const auto cEventOutputNames = std::array{"EO"_STRID};
 } // namespace
 
-GEN_E_MUX::GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_E_MUX::GEN_E_MUX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     var_K(0_UINT),
     conn_EO(*this, 0),

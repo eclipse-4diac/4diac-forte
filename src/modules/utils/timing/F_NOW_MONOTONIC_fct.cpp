@@ -17,12 +17,7 @@
 
 #include "F_NOW_MONOTONIC_fct.h"
 
-USE_STRING_ID();
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(REQ);
-USE_STRING_ID(TIME);
-USE_STRING_ID(utils__timing__F_NOW_MONOTONIC);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_time.h"
 #include "core/iec61131_functions.h"
@@ -32,13 +27,13 @@ USE_STRING_ID(utils__timing__F_NOW_MONOTONIC);
 #include "core/datatypes/forte_array_variable.h"
 #include "F_NOW_MONOTONIC_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_utils__timing__F_NOW_MONOTONIC, STRID(utils__timing__F_NOW_MONOTONIC))
+DEFINE_FIRMWARE_FB(FORTE_utils__timing__F_NOW_MONOTONIC, "utils__timing__F_NOW_MONOTONIC"_STRID)
 
-const auto cDataOutputNames = std::array{STRID()};
-const auto cEventInputNames = std::array{STRID(REQ)};
-const auto cEventInputTypeIds = std::array{STRID(Event)};
-const auto cEventOutputNames = std::array{STRID(CNF)};
-const auto cEventOutputTypeIds = std::array{STRID(Event)};
+const auto cDataOutputNames = std::array{""_STRID};
+const auto cEventInputNames = std::array{"REQ"_STRID};
+const auto cEventInputTypeIds = std::array{"Event"_STRID};
+const auto cEventOutputNames = std::array{"CNF"_STRID};
+const auto cEventOutputTypeIds = std::array{"Event"_STRID};
 const SFBInterfaceSpec cFBInterfaceSpec = {
     .mEINames = cEventInputNames,
     .mEITypeNames = cEventInputTypeIds,
@@ -52,7 +47,7 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
 };
 
 FORTE_utils__timing__F_NOW_MONOTONIC::FORTE_utils__timing__F_NOW_MONOTONIC(
-    const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_(*this, 0, var_) {

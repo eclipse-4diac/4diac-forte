@@ -52,7 +52,7 @@ class CLMSEV3ProcessInterface : public CProcessInterfaceBase {
   public:
     CLMSEV3ProcessInterface(forte::core::CFBContainer &paContainer,
                             const SFBInterfaceSpec &paInterfaceSpec,
-                            const CStringDictionary::TStringId paInstanceNameId);
+                            const forte::core::StringId paInstanceNameId);
     ~CLMSEV3ProcessInterface() override;
 
   protected:

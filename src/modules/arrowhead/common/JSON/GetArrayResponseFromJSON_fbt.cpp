@@ -12,31 +12,24 @@
 
 #include "GetArrayResponseFromJSON_fbt.h"
 
-USE_STRING_ID(ANY);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(GetArrayResponseFromJSON);
-USE_STRING_ID(output);
-USE_STRING_ID(REQ);
-USE_STRING_ID(response);
-USE_STRING_ID(STRING);
+using namespace forte::core::literals;
 
 #include "ArrowheadJSONHelper.h"
 
-DEFINE_FIRMWARE_FB(FORTE_GetArrayResponseFromJSON, STRID(GetArrayResponseFromJSON))
+DEFINE_FIRMWARE_FB(FORTE_GetArrayResponseFromJSON, "GetArrayResponseFromJSON"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(response)};
+  const auto cDataInputNames = std::array{"response"_STRID};
   
   
-  const auto cDataOutputNames = std::array{STRID(output)};
+  const auto cDataOutputNames = std::array{"output"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

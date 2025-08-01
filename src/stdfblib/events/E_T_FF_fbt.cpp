@@ -12,12 +12,7 @@
 
 #include "E_T_FF_fbt.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CLK);
-USE_STRING_ID(EO);
-USE_STRING_ID(E_T_FF);
-USE_STRING_ID(Event);
-USE_STRING_ID(Q);
+using namespace forte::core::literals;
 
 #include "core/datatypes/forte_bool.h"
 #include "core/iec61131_functions.h"
@@ -26,11 +21,11 @@ USE_STRING_ID(Q);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_T_FF, STRID(E_T_FF))
+DEFINE_FIRMWARE_FB(FORTE_E_T_FF, "E_T_FF"_STRID)
 
-const auto cDataOutputNames = std::array{STRID(Q)};
-const auto cEventInputNames = std::array{STRID(CLK)};
-const auto cEventOutputNames = std::array{STRID(EO)};
+const auto cDataOutputNames = std::array{"Q"_STRID};
+const auto cEventInputNames = std::array{"CLK"_STRID};
+const auto cEventOutputNames = std::array{"EO"_STRID};
 const SFBInterfaceSpec cFBInterfaceSpec = {
     .mEINames = cEventInputNames,
     .mEITypeNames = {},
@@ -43,7 +38,7 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
     .mPlugNames = {},
 };
 
-FORTE_E_T_FF::FORTE_E_T_FF(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_T_FF::FORTE_E_T_FF(const forte::core::StringId paInstanceNameId,
                            forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO(*this, 0),

@@ -12,53 +12,35 @@
 
 #include "FieldsToEventFilter.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(ArrowheadSystem);
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CNF);
-USE_STRING_ID(consumer);
-USE_STRING_ID(DATE_AND_TIME);
-USE_STRING_ID(endDate);
-USE_STRING_ID(Event);
-USE_STRING_ID(eventFilter);
-USE_STRING_ID(EventFilter);
-USE_STRING_ID(eventType);
-USE_STRING_ID(FieldsToEventFilter);
-USE_STRING_ID(filterMetadata);
-USE_STRING_ID(matchMetadata);
-USE_STRING_ID(notifyUri);
-USE_STRING_ID(REQ);
-USE_STRING_ID(sources);
-USE_STRING_ID(startDate);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToEventFilter, STRID(FieldsToEventFilter))
+DEFINE_FIRMWARE_FB(FORTE_FieldsToEventFilter, "FieldsToEventFilter"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{
-      STRID(eventType), STRID(consumer),       STRID(sources),   STRID(startDate),
-      STRID(endDate),   STRID(filterMetadata), STRID(notifyUri), STRID(matchMetadata)};
+      "eventType"_STRID, "consumer"_STRID,       "sources"_STRID,   "startDate"_STRID,
+      "endDate"_STRID,   "filterMetadata"_STRID, "notifyUri"_STRID, "matchMetadata"_STRID};
   
-                                                                                         STRID(ArrowheadSystem),
-                                                                                         STRID(ARRAY),
+                                                                                         "ArrowheadSystem"_STRID,
+                                                                                         "ARRAY"_STRID,
                                                                                          10,
-                                                                                         STRID(ArrowheadSystem),
-                                                                                         STRID(DATE_AND_TIME),
-                                                                                         STRID(DATE_AND_TIME),
-                                                                                         STRID(ARRAY),
+                                                                                         "ArrowheadSystem"_STRID,
+                                                                                         "DATE_AND_TIME"_STRID,
+                                                                                         "DATE_AND_TIME"_STRID,
+                                                                                         "ARRAY"_STRID,
                                                                                          10,
-                                                                                         STRID(WSTRING),
-                                                                                         STRID(WSTRING),
-                                                                                         STRID(BOOL)};
+                                                                                         "WSTRING"_STRID,
+                                                                                         "WSTRING"_STRID,
+                                                                                         "BOOL"_STRID};
   
-  const auto cDataOutputNames = std::array{STRID(eventFilter)};
+  const auto cDataOutputNames = std::array{"eventFilter"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

@@ -18,11 +18,7 @@
 #include "E_CTUD_fbt.h"
 #include "core/basicfb.h"
 
-USE_STRING_ID(BOOL);
-USE_STRING_ID(CV);
-USE_STRING_ID(QD);
-USE_STRING_ID(QU);
-USE_STRING_ID(UINT);
+using namespace forte::core::literals;
 
 #include "fbcontainermock.h"
 
@@ -30,7 +26,7 @@ BOOST_AUTO_TEST_SUITE(FUNCBLOC)
 
 BOOST_AUTO_TEST_CASE(FB_TO_STRING_TEST) {
   FORTE_E_CTUD testFb(
-      0, CFBContainerMock::smDefaultFBContMock); // Dummy FB, do not use for anything else than testing toString
+      {}, CFBContainerMock::smDefaultFBContMock); // Dummy FB, do not use for anything else than testing toString
   constexpr char result[] = "(PV:=0, QU:=FALSE, QD:=FALSE, CV:=0)";
   std::string buffer;
   testFb.toString(buffer);
@@ -45,11 +41,8 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
       const SFBInterfaceSpec gcEmptyInterface = {};
 
     public:
-      CInternalVarTestFB(std::span<const CStringDictionary::TStringId> paVarInternalNames) :
-          CBasicFB(CFBContainerMock::smDefaultFBContMock,
-                   gcEmptyInterface,
-                   CStringDictionary::scmInvalidStringId,
-                   paVarInternalNames) {
+      CInternalVarTestFB(std::span<const forte::core::StringId> paVarInternalNames) :
+          CBasicFB(CFBContainerMock::smDefaultFBContMock, gcEmptyInterface, {}, paVarInternalNames) {
       }
 
       CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
@@ -61,8 +54,8 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
         return nullptr;
       }
 
-      CStringDictionary::TStringId getFBTypeId() const override {
-        return CStringDictionary::scmInvalidStringId;
+      forte::core::StringId getFBTypeId() const override {
+        return {};
       }
 
       void executeEvent(TEventID, CEventChainExecutionThread *const) override {
@@ -105,7 +98,7 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
       CIEC_UINT var_CV;
   };
 
-  const auto cInternalsNames = std::array{STRID(QU), STRID(QD), STRID(CV)};
+  const auto cInternalsNames = std::array{"QU"_STRID, "QD"_STRID, "CV"_STRID};
   CInternalVarTestFB testFb(cInternalsNames);
   BOOST_REQUIRE(testFb.initialize());
 }

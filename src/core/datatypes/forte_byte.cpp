@@ -14,8 +14,8 @@
  *******************************************************************************/
 #include "core/datatypes/forte_byte.h"
 
-USE_STRING_ID(BYTE);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_DATATYPE(BYTE, STRID(BYTE))
+DEFINE_FIRMWARE_DATATYPE(BYTE, "BYTE"_STRID)
 
-const CStringDictionary::TStringId forte::CDataTypeTrait<CIEC_BYTE>::scmDataTypeName = STRID(BYTE);
+const forte::core::StringId forte::CDataTypeTrait<CIEC_BYTE>::scmDataTypeName = "BYTE"_STRID;

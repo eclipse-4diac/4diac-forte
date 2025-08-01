@@ -52,7 +52,7 @@ class FORTE_RequestOrchestrationForm : public CCompositeFB {
     static const int scm_nrequestOrchestrationAdpNum = 0;
 
   public:
-    FORTE_RequestOrchestrationForm(const CStringDictionary::TStringId paInstanceNameId,
+    FORTE_RequestOrchestrationForm(const forte::core::StringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
 
         ~FORTE_RequestOrchestrationForm() override = default;

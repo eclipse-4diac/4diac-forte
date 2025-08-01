@@ -13,15 +13,7 @@
 #include "core/fmi/fmuInstance.h"
 #include "core/device.h"
 
-USE_STRING_ID(DEV_MGR);
-USE_STRING_ID(EMB_RES);
-USE_STRING_ID(E_RESTART);
-USE_STRING_ID(IW);
-USE_STRING_ID(IX);
-USE_STRING_ID(MGR);
-USE_STRING_ID(QI);
-USE_STRING_ID(QW);
-USE_STRING_ID(QX);
+using namespace forte::core::literals;
 
 #include "core/device.h"
 #include "core/fmi/comm/fmuHandler.h"
@@ -48,7 +40,7 @@ fmuInstance::fmuInstance(fmi2String instanceName,
                          fmi2String GUID,
                          fmi2String bootFileLocation,
                          const fmi2CallbackFunctions *callbackFunctions) :
-    CDevice(0, CStringDictionary::scmInvalidStringId, 0, 0),
+    CDevice(0, {}, 0, 0),
     mState(STATE_START_END),
     mStopTime(-1),
     mNumberOfEcets(0),
@@ -57,7 +49,7 @@ fmuInstance::fmuInstance(fmi2String instanceName,
   CCriticalRegion criticalRegion(sFmuInstanceMutex);
   sFmuInstance = this;
 
-  mResource = new EMB_RES(CStringDictionary::scmInvalidStringId, this);
+  mResource = new EMB_RES({}, this);
 
   getDeviceExecution().getExtEvHandler<fmiTimerHandler>().removeExecutionThread(mResource->getResourceEventExecution());
   mNumberOfEcets--;
@@ -105,8 +97,8 @@ fmuInstance::~fmuInstance() {
 
 bool fmuInstance::loadFBs() {
 
-  CFunctionBlock *devMgr = CTypeLib::createFB(STRID(MGR), STRID(DEV_MGR), mResource);
-  devMgr->getDataInput(STRID(QI))->fromString("1");
+  CFunctionBlock *devMgr = CTypeLib::createFB("MGR"_STRID, "DEV_MGR"_STRID, mResource);
+  devMgr->getDataInput("QI"_STRID)->fromString("1");
   devMgr->changeExecutionState(EMGMCommandType::Reset);
   devMgr->changeExecutionState(EMGMCommandType::Start);
   FMU_DEBUG_LOG(this, MODEL_GUID << " About to load FBs from file " << getBootFileLocation().getValue()
@@ -138,17 +130,17 @@ void fmuInstance::populateInputsOutputs(forte::core::CFBContainer *resource) {
 
 void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock *paFB) {
 
-  CStringDictionary::TStringId functionBlockType = paFB->getFBTypeId();
-  if (STRID(EMB_RES) == functionBlockType) {
+  forte::core::StringId functionBlockType = paFB->getFBTypeId();
+  if ("EMB_RES"_STRID == functionBlockType) {
     populateInputsOutputs(static_cast<CResource *>(paFB));
     return;
-  } else if (STRID(IX) == functionBlockType || STRID(QX) == functionBlockType) {
+  } else if ("IX"_STRID == functionBlockType || "QX"_STRID == functionBlockType) {
     FMU_DEBUG_LOG(this, "VARIABLES: IO: " << paFB->getInstanceName() << " ADDED SUCCESSFULLY\n");
     fmuValueContainer *newValue = new fmuValueContainer(fmuValueContainer::BOOL, false);
     CFMUProcessInterface *ioFB = static_cast<CFMUProcessInterface *>(paFB);
     ioFB->setValueContainer(newValue);
     mOutputsAndInputs.push_back(newValue);
-  } else if (STRID(IW) == functionBlockType || STRID(QW) == functionBlockType) {
+  } else if ("IW"_STRID == functionBlockType || "QW"_STRID == functionBlockType) {
     FMU_DEBUG_LOG(this, "VARIABLES: IO: " << paFB->getInstanceName() << " ADDED SUCCESSFULLY\n");
     fmuValueContainer *newValue = new fmuValueContainer(fmuValueContainer::INTEGER, false);
     CFMUProcessInterface *ioFB = static_cast<CFMUProcessInterface *>(paFB);
@@ -156,7 +148,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock *paFB) {
     mOutputsAndInputs.push_back(newValue);
   } else {
     // check Communication Blocks
-    const char *functionBlockName = CStringDictionary::get(functionBlockType);
+    const char *functionBlockName = functionBlockType.data();
     if (strncmp(functionBlockName, "PUBLISH_", 8) == 0 || strncmp(functionBlockName, "SUBSCRIBE_", 10) == 0 ||
         strncmp(functionBlockName, "CLIENT_", 7) == 0 || strncmp(functionBlockName, "SERVER_", 7) == 0) {
 
@@ -194,7 +186,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock *paFB) {
     }
   }
 
-  if (STRID(E_RESTART) != functionBlockType) {
+  if ("E_RESTART"_STRID != functionBlockType) {
     // Add interface of the FB as local variables to the FMU
     fillInterfaceElementsArray(paFB, true, false); // data inputs
     fillInterfaceElementsArray(paFB, false, false); // data outputs
@@ -207,29 +199,24 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock *paFB) {
       // store internal variables
       if (0 != testBasic->cmVarInternals) {
         for (TPortId i = 0; i < testBasic->cmVarInternals->mNumIntVars; i++) {
-          CStringDictionary::TStringId varId = testBasic->cmVarInternals->mIntVarsNames[i];
+          forte::core::StringId varId = testBasic->cmVarInternals->mIntVarsNames[i];
           CIEC_ANY *var = testBasic->getVar(&varId, 1);
           if (0 != var) {
             fmuValueContainer *newValue =
                 new fmuValueContainer(fmuValueContainer::getValueFromType(var->getDataTypeID()), true);
             newValue->setValuePointer(testBasic->getVar(&varId, 1));
             mOutputsAndInputs.push_back(newValue);
-            FMU_DEBUG_LOG(this, "VARIABLES: INTERNAL: " << testBasic->getInstanceName() << "."
-                                                        << CStringDictionary::get(varId) << " ADDED SUCCESSFULLY\n")
+            FMU_DEBUG_LOG(this, "VARIABLES: INTERNAL: " << testBasic->getInstanceName() << "." << varId
+                                                        << " ADDED SUCCESSFULLY\n")
           } else {
             FMU_DEBUG_LOG(this, "--------ERROR: Unexpected behavior when getting the internal variable "
-                                    << CStringDictionary::get(varId)
-                                    << " of Function Block: " << testBasic->getInstanceName() << ".\n");
+                                    << varId << " of Function Block: " << testBasic->getInstanceName() << ".\n");
           }
         }
       }
       // store state of ECC
       fmuValueContainer *newValue = new fmuValueContainer(fmuValueContainer::INTEGER, true);
-      CStringDictionary::TStringId eccId = CStringDictionary::getId("$ECC");
-      if (CStringDictionary::scmInvalidStringId == eccId) {
-        CStringDictionary::insert("$ECC");
-        eccId = CStringDictionary::getId("$ECC");
-      }
+      forte::core::StringId eccId = "$ECC"_STRID;
       newValue->setValuePointer(testBasic->getVar(&eccId, 1));
       mOutputsAndInputs.push_back(newValue);
       FMU_DEBUG_LOG(this, "VARIABLES: INTERNAL: " << testBasic->getInstanceName() << ".ECC ADDED SUCCESSFULLY\n")
@@ -261,21 +248,17 @@ void fmuInstance::fillInterfaceElementsArray(CFunctionBlock *paFB, bool isInput,
       fmuValueContainer *newValue = new fmuValueContainer(fmuValueContainer::valueType::INTEGER, true);
       newValue->setEventCounterPointer(isInput ? &(paFB->getEIMonitorData(i)) : &(paFB->getEOMonitorData(i)));
       mOutputsAndInputs.push_back(newValue);
-      FMU_DEBUG_LOG(this,
-                    "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "."
-                                             << CStringDictionary::get(isInput ? paFB->getFBInterfaceSpec().mEINames[i]
-                                                                               : paFB->getFBInterfaceSpec().mEONames[i])
-                                             << " ADDED SUCCESSFULLY\n")
+      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "." << isInput
+                              ? paFB->getFBInterfaceSpec().mEINames[i]
+                              : paFB->getFBInterfaceSpec().mEONames[i] << " ADDED SUCCESSFULLY\n")
     }
   } else {
     unsigned int noOfElements =
         isInput ? paFB->getFBInterfaceSpec().getNumDIs() : paFB->getFBInterfaceSpec().getNumDOs();
     for (unsigned int i = 0; i < noOfElements; i++) {
-      FMU_DEBUG_LOG(this,
-                    "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "."
-                                             << CStringDictionary::get(isInput ? paFB->getFBInterfaceSpec().mDINames[i]
-                                                                               : paFB->getFBInterfaceSpec().mDONames[i])
-                                             << ": ");
+      FMU_DEBUG_LOG(this, "VARIABLES: INTERFACE: " << paFB->getInstanceName() << "." << isInput
+                              ? paFB->getFBInterfaceSpec().mDINames[i]
+                              : paFB->getFBInterfaceSpec().mDONames[i] << ": ");
       fmuValueContainer::valueType valueType = fmuValueContainer::getValueFromType(
           isInput ? paFB->getDIFromPortId(static_cast<TPortId>(i))->getDataTypeID()
                   : paFB->getDOFromPortId(static_cast<TPortId>(i))->getDataTypeID());

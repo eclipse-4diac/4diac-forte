@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "core/stringdict.h"
+#include "core/stringid.h"
 
 #include "generated/ecetfactory.h"
 #include "generated/timerhandlerfactory.h"
@@ -55,7 +55,7 @@ namespace forte::trace::reader::utils {
    * @return a pointer to the resource with the provided name, nullptr if a resource with the provided name does not
    * exist
    */
-  CFunctionBlock *getFB(forte::core::CFBContainer *paContainer, CStringDictionary::TStringId paFunctionBlockName);
+  CFunctionBlock *getFB(forte::core::CFBContainer *paContainer, forte::core::StringId paFunctionBlockName);
 
   struct FactoriesSettings {
       EcetFactory::AvailableEcets mEcet{EcetFactory::AvailableEcets::CEventChainExecutionThread};
@@ -76,7 +76,7 @@ namespace forte::trace::reader::utils {
    * @param paContainer container where to look for the types
    * @return list of of service function block types
    */
-  std::set<CStringDictionary::TStringId> getServiceFunctionBlockTypes(forte::core::CFBContainer &paContainer);
+  std::set<forte::core::StringId> getServiceFunctionBlockTypes(forte::core::CFBContainer &paContainer);
 
   /**
    * @brief Get the list of message from a directory containing CTF traces separated by resource

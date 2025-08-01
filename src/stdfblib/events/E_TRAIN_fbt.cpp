@@ -20,30 +20,7 @@
 
 #include "E_TRAIN_fbt.h"
 
-USE_STRING_ID(CTR);
-USE_STRING_ID(CU);
-USE_STRING_ID(CUO);
-USE_STRING_ID(CV);
-USE_STRING_ID(DLY);
-USE_STRING_ID(DT);
-USE_STRING_ID(E_CTU);
-USE_STRING_ID(E_DELAY);
-USE_STRING_ID(EI);
-USE_STRING_ID(EO);
-USE_STRING_ID(EO0);
-USE_STRING_ID(E_SWITCH);
-USE_STRING_ID(E_TRAIN);
-USE_STRING_ID(G);
-USE_STRING_ID(GATE);
-USE_STRING_ID(N);
-USE_STRING_ID(PV);
-USE_STRING_ID(Q);
-USE_STRING_ID(R);
-USE_STRING_ID(RO);
-USE_STRING_ID(START);
-USE_STRING_ID(STOP);
-USE_STRING_ID(TIME);
-USE_STRING_ID(UINT);
+using namespace forte::core::literals;
 
 #include "core/iec61131_functions.h"
 #include "core/datatypes/forte_array_common.h"
@@ -51,13 +28,13 @@ USE_STRING_ID(UINT);
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_TRAIN, STRID(E_TRAIN))
+DEFINE_FIRMWARE_FB(FORTE_E_TRAIN, "E_TRAIN"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(DT), STRID(N)};
-  const auto cDataOutputNames = std::array{STRID(CV)};
-  const auto cEventInputNames = std::array{STRID(START), STRID(STOP)};
-  const auto cEventOutputNames = std::array{STRID(EO)};
+  const auto cDataInputNames = std::array{"DT"_STRID, "N"_STRID};
+  const auto cDataOutputNames = std::array{"CV"_STRID};
+  const auto cEventInputNames = std::array{"START"_STRID, "STOP"_STRID};
+  const auto cEventOutputNames = std::array{"EO"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -71,20 +48,20 @@ namespace {
   };
 
   const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
-      {STRID(CTR), STRID(CUO), STRID(GATE), STRID(EI)},
-      {STRID(CTR), STRID(RO), STRID(GATE), STRID(EI)},
-      {CStringDictionary::scmInvalidStringId, STRID(START), STRID(CTR), STRID(R)},
-      {STRID(GATE), STRID(EO0), STRID(DLY), STRID(START)},
-      {CStringDictionary::scmInvalidStringId, STRID(STOP), STRID(DLY), STRID(STOP)},
-      {STRID(DLY), STRID(EO), CStringDictionary::scmInvalidStringId, STRID(EO)},
-      {STRID(DLY), STRID(EO), STRID(CTR), STRID(CU)},
+      {"CTR"_STRID, "CUO"_STRID, "GATE"_STRID, "EI"_STRID},
+      {"CTR"_STRID, "RO"_STRID, "GATE"_STRID, "EI"_STRID},
+      {{}, "START"_STRID, "CTR"_STRID, "R"_STRID},
+      {"GATE"_STRID, "EO0"_STRID, "DLY"_STRID, "START"_STRID},
+      {{}, "STOP"_STRID, "DLY"_STRID, "STOP"_STRID},
+      {"DLY"_STRID, "EO"_STRID, {}, "EO"_STRID},
+      {"DLY"_STRID, "EO"_STRID, "CTR"_STRID, "CU"_STRID},
   });
 
   const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
-      {CStringDictionary::scmInvalidStringId, STRID(N), STRID(CTR), STRID(PV)},
-      {STRID(CTR), STRID(CV), CStringDictionary::scmInvalidStringId, STRID(CV)},
-      {CStringDictionary::scmInvalidStringId, STRID(DT), STRID(DLY), STRID(DT)},
-      {STRID(CTR), STRID(Q), STRID(GATE), STRID(G)},
+      {{}, "N"_STRID, "CTR"_STRID, "PV"_STRID},
+      {"CTR"_STRID, "CV"_STRID, {}, "CV"_STRID},
+      {{}, "DT"_STRID, "DLY"_STRID, "DT"_STRID},
+      {"CTR"_STRID, "Q"_STRID, "GATE"_STRID, "G"_STRID},
   });
 
   const SCFB_FBNData cFBNData = {
@@ -94,12 +71,12 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TRAIN::FORTE_E_TRAIN(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_TRAIN::FORTE_E_TRAIN(const forte::core::StringId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
-    fb_CTR(STRID(CTR), *this),
-    fb_GATE(STRID(GATE), *this),
-    fb_DLY(STRID(DLY), *this),
+    fb_CTR("CTR"_STRID, *this),
+    fb_GATE("GATE"_STRID, *this),
+    fb_DLY("DLY"_STRID, *this),
     conn_EO(*this, 0),
     conn_DT(nullptr),
     conn_N(nullptr),

@@ -16,7 +16,6 @@ function(_forte_generate_opcua_types)
 
         string(APPEND status " ${forte_typename}")
 
-        string(APPEND includes "USE_STRING_ID(${forte_typename})\n")
         string(APPEND includes "#include \"${source_h}\"\n")
 
         string(REGEX REPLACE "\\.h$" ".cpp" source_cpp "${source_h}")

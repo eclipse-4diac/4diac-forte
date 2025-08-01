@@ -21,22 +21,17 @@
 #include "arch/forte_printer.h"
 #include "core/util/string_utils.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(CNF);
-USE_STRING_ID(Event);
-USE_STRING_ID(GEN_VALUES2ARRAY);
-USE_STRING_ID(OUT);
-USE_STRING_ID(REQ);
+using namespace forte::core::literals;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY, STRID(GEN_VALUES2ARRAY))
+DEFINE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY, "GEN_VALUES2ARRAY"_STRID)
 
 namespace {
-  const auto cDataOutputNames = std::array{STRID(OUT)};
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventOutputNames = std::array{STRID(CNF)};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
 } // namespace
 
-GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstanceNameId,
+GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const forte::core::StringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
@@ -80,7 +75,7 @@ bool GEN_VALUES2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterf
   }
   // there is a number and a data type of inputs within the typename
   unsigned int numDIs = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
-  auto arrayValueTypeId = CStringDictionary::getId(++dTypePos);
+  auto arrayValueTypeId = forte::core::StringId::lookup(++dTypePos);
 
   if (numDIs < 2) {
     return false;

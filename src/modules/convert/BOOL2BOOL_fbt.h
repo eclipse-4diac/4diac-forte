@@ -43,7 +43,7 @@ class FORTE_BOOL2BOOL final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_BOOL2BOOL(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_BOOL2BOOL(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_IN;
 

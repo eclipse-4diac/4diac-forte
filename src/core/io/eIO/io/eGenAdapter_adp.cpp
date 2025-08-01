@@ -13,7 +13,7 @@
 #include "core/io/eIO/io/eGenAdapter_adp.h"
 #include "core/adapter.h"
 
-USE_STRING_ID(eGenAdapter);
+using namespace forte::core::literals;
 
 namespace {
   const SFBInterfaceSpec scmFBInterfaceSpecSocket = {};
@@ -22,13 +22,13 @@ namespace {
 
 } // namespace
 
-DEFINE_ADAPTER_TYPE(FORTE_eGenAdapter, STRID(eGenAdapter))
+DEFINE_ADAPTER_TYPE(FORTE_eGenAdapter, "eGenAdapter"_STRID)
 
 void FORTE_eGenAdapter::setInitialValues() {
   forte::CAdapter::setInitialValues();
 }
 
-FORTE_eGenAdapter_Plug::FORTE_eGenAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+FORTE_eGenAdapter_Plug::FORTE_eGenAdapter_Plug(forte::core::StringId paInstanceNameId,
                                                forte::core::CFBContainer &paContainer,
                                                TForteUInt8 paParentAdapterlistID) :
     FORTE_eGenAdapter(paContainer, scmFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID) {
@@ -66,7 +66,7 @@ FORTE_eGenAdapter_Socket *FORTE_eGenAdapter_Plug::getSocket() {
   return static_cast<FORTE_eGenAdapter_Socket *>(getPeer());
 }
 
-FORTE_eGenAdapter_Socket::FORTE_eGenAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+FORTE_eGenAdapter_Socket::FORTE_eGenAdapter_Socket(forte::core::StringId paInstanceNameId,
                                                    forte::core::CFBContainer &paContainer,
                                                    TForteUInt8 paParentAdapterlistID) :
     FORTE_eGenAdapter(paContainer, scmFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID) {

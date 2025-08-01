@@ -40,7 +40,7 @@ class FORTE_utils__timing__F_NOW_MONOTONIC final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_utils__timing__F_NOW_MONOTONIC(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_utils__timing__F_NOW_MONOTONIC(forte::core::StringId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer);
 
     CIEC_TIME var_;

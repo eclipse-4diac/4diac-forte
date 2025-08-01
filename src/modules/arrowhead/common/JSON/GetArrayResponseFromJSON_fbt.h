@@ -43,7 +43,7 @@ class FORTE_GetArrayResponseFromJSON : public CFunctionBlock {
     bool isResponseEmpty(char *paText);
 
   public:
-    FORTE_GetArrayResponseFromJSON(const CStringDictionary::TStringId paInstanceNameId,
+    FORTE_GetArrayResponseFromJSON(const forte::core::StringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
 
     ~FORTE_GetArrayResponseFromJSON() override = default;

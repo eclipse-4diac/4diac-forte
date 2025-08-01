@@ -109,8 +109,7 @@ class FORTE_EXECUTE_ACTION_CLIENT : public CEventSourceFB {
     void connectToActionServer();
 
   public:
-    FORTE_EXECUTE_ACTION_CLIENT(const CStringDictionary::TStringId paInstanceNameId,
-                                forte::core::CFBContainer &paContainer) :
+    FORTE_EXECUTE_ACTION_CLIENT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
         m_Initiated(false),
         m_GoalActive(false),
         m_ActionClient(0),

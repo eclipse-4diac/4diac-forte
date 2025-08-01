@@ -44,7 +44,7 @@ class FORTE_F_STRING_TO_WSTRING final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_STRING_TO_WSTRING(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_STRING_TO_WSTRING(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_STRING var_IN;
 

@@ -12,36 +12,24 @@
 
 #include "FieldsToArrowheadEvent.h"
 
-USE_STRING_ID(ARRAY);
-USE_STRING_ID(arrowheadEvent);
-USE_STRING_ID(ArrowheadEvent);
-USE_STRING_ID(CNF);
-USE_STRING_ID(DATE_AND_TIME);
-USE_STRING_ID(Event);
-USE_STRING_ID(eventMetadata);
-USE_STRING_ID(FieldsToArrowheadEvent);
-USE_STRING_ID(payload);
-USE_STRING_ID(REQ);
-USE_STRING_ID(timestamp);
-USE_STRING_ID(type);
-USE_STRING_ID(WSTRING);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_FieldsToArrowheadEvent, STRID(FieldsToArrowheadEvent))
+DEFINE_FIRMWARE_FB(FORTE_FieldsToArrowheadEvent, "FieldsToArrowheadEvent"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{
-      STRID(type), STRID(payload), STRID(timestamp), STRID(eventMetadata)};
+      "type"_STRID, "payload"_STRID, "timestamp"_STRID, "eventMetadata"_STRID};
   
-      STRID(WSTRING), STRID(WSTRING), STRID(DATE_AND_TIME), STRID(ARRAY), 10, STRID(WSTRING)};
+      "WSTRING"_STRID, "WSTRING"_STRID, "DATE_AND_TIME"_STRID, "ARRAY"_STRID, 10, "WSTRING"_STRID};
   
-  const auto cDataOutputNames = std::array{STRID(arrowheadEvent)};
+  const auto cDataOutputNames = std::array{"arrowheadEvent"_STRID};
   
   
-  const auto cEventInputNames = std::array{STRID(REQ)};
-  const auto cEventInputTypeIds = std::array{STRID(Event)};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
   
-  const auto cEventOutputNames = std::array{STRID(CNF)};
-  const auto cEventOutputTypeIds = std::array{STRID(Event)};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,

@@ -12,53 +12,12 @@
 
 #include "RegisterServiceHTTP.h"
 
-USE_STRING_ID(ANYToJSON);
-USE_STRING_ID(APPEND_STRING_3);
-USE_STRING_ID(CLIENT_1_2);
-USE_STRING_ID(CNF);
-USE_STRING_ID(CreateRegisterID);
-USE_STRING_ID(CreateUnRegisterID);
-USE_STRING_ID(doneRegister);
-USE_STRING_ID(doneUnregister);
-USE_STRING_ID(EI);
-USE_STRING_ID(endpoint);
-USE_STRING_ID(EO);
-USE_STRING_ID(E_PERMIT);
-USE_STRING_ID(E_PERMIT_1);
-USE_STRING_ID(E_SR);
-USE_STRING_ID(F_STRING_TO_WSTRING);
-USE_STRING_ID(F_STRING_TO_WSTRING_1);
-USE_STRING_ID(ID);
-USE_STRING_ID(IN);
-USE_STRING_ID(IN_1);
-USE_STRING_ID(IN_2);
-USE_STRING_ID(IN_3);
-USE_STRING_ID(INIT);
-USE_STRING_ID(InitFlagReg);
-USE_STRING_ID(InitFlagUnReg);
-USE_STRING_ID(INITO);
-USE_STRING_ID(input);
-USE_STRING_ID(OUT);
-USE_STRING_ID(output);
-USE_STRING_ID(PERMIT);
-USE_STRING_ID(Q);
-USE_STRING_ID(QI);
-USE_STRING_ID(R);
-USE_STRING_ID(Register);
-USE_STRING_ID(registerService);
-USE_STRING_ID(RegisterServiceAdp);
-USE_STRING_ID(RegisterServiceHTTP);
-USE_STRING_ID(REQ);
-USE_STRING_ID(S);
-USE_STRING_ID(SD_1);
-USE_STRING_ID(serviceRegistryEntry);
-USE_STRING_ID(Unregister);
-USE_STRING_ID(unregisterService);
+using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_RegisterServiceHTTP, STRID(RegisterServiceHTTP))
+DEFINE_FIRMWARE_FB(FORTE_RegisterServiceHTTP, "RegisterServiceHTTP"_STRID)
 
 namespace {
-  const auto cSocketNameIds = std::array{STRID(registerService)};
+  const auto cSocketNameIds = std::array{"registerService"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = {},
@@ -75,92 +34,92 @@ namespace {
 } // namespace
 
 const SCFB_FBInstanceData FORTE_RegisterServiceHTTP::scmInternalFBs[] = {
-    {STRID(Register), STRID(CLIENT_1_2)},
-    {STRID(Unregister), STRID(CLIENT_1_2)},
-    {STRID(InitFlagReg), STRID(E_SR)},
-    {STRID(E_PERMIT), STRID(E_PERMIT)},
-    {STRID(CreateRegisterID), STRID(APPEND_STRING_3)},
-    {STRID(F_STRING_TO_WSTRING), STRID(F_STRING_TO_WSTRING)},
-    {STRID(E_PERMIT_1), STRID(E_PERMIT)},
-    {STRID(InitFlagUnReg), STRID(E_SR)},
-    {STRID(CreateUnRegisterID), STRID(APPEND_STRING_3)},
-    {STRID(F_STRING_TO_WSTRING_1), STRID(F_STRING_TO_WSTRING)},
-    {STRID(ANYToJSON), STRID(ANYToJSON)},
+    {"Register"_STRID, "CLIENT_1_2"_STRID},
+    {"Unregister"_STRID, "CLIENT_1_2"_STRID},
+    {"InitFlagReg"_STRID, "E_SR"_STRID},
+    {"E_PERMIT"_STRID, "E_PERMIT"_STRID},
+    {"CreateRegisterID"_STRID, "APPEND_STRING_3"_STRID},
+    {"F_STRING_TO_WSTRING"_STRID, "F_STRING_TO_WSTRING"_STRID},
+    {"E_PERMIT_1"_STRID, "E_PERMIT"_STRID},
+    {"InitFlagUnReg"_STRID, "E_SR"_STRID},
+    {"CreateUnRegisterID"_STRID, "APPEND_STRING_3"_STRID},
+    {"F_STRING_TO_WSTRING_1"_STRID, "F_STRING_TO_WSTRING"_STRID},
+    {"ANYToJSON"_STRID, "ANYToJSON"_STRID},
 };
 
 const SCFB_FBParameter FORTE_RegisterServiceHTTP::scmParamters[] = {
-    {4, STRID(IN_1), "STRING#http["},
-    {4, STRID(IN_3), "STRING#/register; POST; application/json]"},
-    {8, STRID(IN_1), "STRING#http["},
-    {8, STRID(IN_3), "STRING#/remove; PUT; application/json]"},
+    {4, "IN_1"_STRID, "STRING#http["},
+    {4, "IN_3"_STRID, "STRING#/register; POST; application/json]"},
+    {8, "IN_1"_STRID, "STRING#http["},
+    {8, "IN_3"_STRID, "STRING#/remove; PUT; application/json]"},
 };
 
 const SCFB_FBConnectionData FORTE_RegisterServiceHTTP::auto cEventConnections = std::to_array<SCFB_FBConnectionData>{
-    {STRID(CreateRegisterID), STRID(CNF)), 4,
-     STRID(F_STRING_TO_WSTRING), STRID(REQ)), 5},
-    {STRID(F_STRING_TO_WSTRING), STRID(CNF)), 5,
-     STRID(InitFlagReg), STRID(S)), 2},
-    {STRID(CreateUnRegisterID), STRID(CNF)), 8,
-     STRID(F_STRING_TO_WSTRING_1), STRID(REQ)), 9},
-    {STRID(F_STRING_TO_WSTRING_1), STRID(CNF)), 9,
-     STRID(InitFlagUnReg), STRID(S)), 7},
-    {STRID(InitFlagUnReg), STRID(EO)), 7,
-     STRID(Unregister), STRID(INIT)), 1},
-    {STRID(Unregister), STRID(INITO)), 1,
-     STRID(E_PERMIT_1), STRID(EI)), 6},
-    {STRID(E_PERMIT_1), STRID(EO)), 6,
-     STRID(Unregister), STRID(REQ)), 1},
-    {STRID(Unregister), STRID(CNF)), 1,
-     STRID(InitFlagUnReg), STRID(R)), 7},
-    {STRID(InitFlagReg), STRID(EO)), 2,
-     STRID(Register), STRID(INIT)), 0},
-    {STRID(E_PERMIT), STRID(EO)), 3,
-     STRID(Register), STRID(REQ)), 0},
-    {STRID(Register), STRID(INITO)), 0,
-     STRID(E_PERMIT), STRID(EI)), 3},
-    {STRID(Register), STRID(CNF)), 0,
-     STRID(InitFlagReg), STRID(R)), 2},
-    {STRID(registerService), STRID(registerService)),
-     CCompositeFB::scmAdapterMarker | 0, STRID(CreateRegisterID), STRID(REQ)), 4},
-    {STRID(registerService), STRID(unregisterService)),
-     CCompositeFB::scmAdapterMarker | 0, STRID(CreateUnRegisterID), STRID(REQ)), 8},
+    {"CreateRegisterID"_STRID, "CNF"_STRID), 4,
+     "F_STRING_TO_WSTRING"_STRID, "REQ"_STRID), 5},
+    {"F_STRING_TO_WSTRING"_STRID, "CNF"_STRID), 5,
+     "InitFlagReg"_STRID, "S"_STRID), 2},
+    {"CreateUnRegisterID"_STRID, "CNF"_STRID), 8,
+     "F_STRING_TO_WSTRING_1"_STRID, "REQ"_STRID), 9},
+    {"F_STRING_TO_WSTRING_1"_STRID, "CNF"_STRID), 9,
+     "InitFlagUnReg"_STRID, "S"_STRID), 7},
+    {"InitFlagUnReg"_STRID, "EO"_STRID), 7,
+     "Unregister"_STRID, "INIT"_STRID), 1},
+    {"Unregister"_STRID, "INITO"_STRID), 1,
+     "E_PERMIT_1"_STRID, "EI"_STRID), 6},
+    {"E_PERMIT_1"_STRID, "EO"_STRID), 6,
+     "Unregister"_STRID, "REQ"_STRID), 1},
+    {"Unregister"_STRID, "CNF"_STRID), 1,
+     "InitFlagUnReg"_STRID, "R"_STRID), 7},
+    {"InitFlagReg"_STRID, "EO"_STRID), 2,
+     "Register"_STRID, "INIT"_STRID), 0},
+    {"E_PERMIT"_STRID, "EO"_STRID), 3,
+     "Register"_STRID, "REQ"_STRID), 0},
+    {"Register"_STRID, "INITO"_STRID), 0,
+     "E_PERMIT"_STRID, "EI"_STRID), 3},
+    {"Register"_STRID, "CNF"_STRID), 0,
+     "InitFlagReg"_STRID, "R"_STRID), 2},
+    {"registerService"_STRID, "registerService"_STRID),
+     CCompositeFB::scmAdapterMarker | 0, "CreateRegisterID"_STRID, "REQ"_STRID), 4},
+    {"registerService"_STRID, "unregisterService"_STRID),
+     CCompositeFB::scmAdapterMarker | 0, "CreateUnRegisterID"_STRID, "REQ"_STRID), 8},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_RegisterServiceHTTP::scmFannedOutEventConnections[] = {
-    {1, STRID(ANYToJSON), STRID(REQ)), 10},
-    {3, STRID(ANYToJSON), STRID(REQ)), 10},
-    {7, STRID(registerService), STRID(doneUnregister)),
+    {1, "ANYToJSON"_STRID, "REQ"_STRID), 10},
+    {3, "ANYToJSON"_STRID, "REQ"_STRID), 10},
+    {7, "registerService"_STRID, "doneUnregister"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
-    {11, STRID(registerService), STRID(doneRegister)),
+    {11, "registerService"_STRID, "doneRegister"_STRID),
      CCompositeFB::scmAdapterMarker | 0},
 };
 
 const SCFB_FBConnectionData FORTE_RegisterServiceHTTPauto cDataConnections = std::to_array<SCFB_FBConnectionData>{
-    {STRID(InitFlagReg), STRID(Q)), 2,
-     STRID(E_PERMIT), STRID(PERMIT)), 3},
-    {STRID(CreateRegisterID), STRID(OUT)), 4,
-     STRID(F_STRING_TO_WSTRING), STRID(IN)), 5},
-    {STRID(CreateUnRegisterID), STRID(OUT)), 8,
-     STRID(F_STRING_TO_WSTRING_1), STRID(IN)), 9},
-    {STRID(F_STRING_TO_WSTRING_1), STRID(OUT)), 9,
-     STRID(Unregister), STRID(ID)), 1},
-    {STRID(InitFlagUnReg), STRID(Q)), 7,
-     STRID(Unregister), STRID(QI)), 1},
-    {STRID(F_STRING_TO_WSTRING), STRID(OUT)), 5,
-     STRID(Register), STRID(ID)), 0},
-    {STRID(ANYToJSON), STRID(output)), 10,
-     STRID(Register), STRID(SD_1)), 0},
-    {STRID(registerService), STRID(serviceRegistryEntry)),
-     CCompositeFB::scmAdapterMarker | 0, STRID(ANYToJSON), STRID(input)), 10},
-    {STRID(registerService), STRID(endpoint)), CCompositeFB::scmAdapterMarker | 0,
-     STRID(CreateRegisterID), STRID(IN_2)), 4},
+    {"InitFlagReg"_STRID, "Q"_STRID), 2,
+     "E_PERMIT"_STRID, "PERMIT"_STRID), 3},
+    {"CreateRegisterID"_STRID, "OUT"_STRID), 4,
+     "F_STRING_TO_WSTRING"_STRID, "IN"_STRID), 5},
+    {"CreateUnRegisterID"_STRID, "OUT"_STRID), 8,
+     "F_STRING_TO_WSTRING_1"_STRID, "IN"_STRID), 9},
+    {"F_STRING_TO_WSTRING_1"_STRID, "OUT"_STRID), 9,
+     "Unregister"_STRID, "ID"_STRID), 1},
+    {"InitFlagUnReg"_STRID, "Q"_STRID), 7,
+     "Unregister"_STRID, "QI"_STRID), 1},
+    {"F_STRING_TO_WSTRING"_STRID, "OUT"_STRID), 5,
+     "Register"_STRID, "ID"_STRID), 0},
+    {"ANYToJSON"_STRID, "output"_STRID), 10,
+     "Register"_STRID, "SD_1"_STRID), 0},
+    {"registerService"_STRID, "serviceRegistryEntry"_STRID),
+     CCompositeFB::scmAdapterMarker | 0, "ANYToJSON"_STRID, "input"_STRID), 10},
+    {"registerService"_STRID, "endpoint"_STRID), CCompositeFB::scmAdapterMarker | 0,
+     "CreateRegisterID"_STRID, "IN_2"_STRID), 4},
 };
 
 const SCFB_FBFannedOutConnectionData FORTE_RegisterServiceHTTP::scmFannedOutDataConnections[] = {
-    {0, STRID(Register), STRID(QI)), 0},
-    {4, STRID(E_PERMIT_1), STRID(PERMIT)), 6},
-    {6, STRID(Unregister), STRID(SD_1)), 1},
-    {8, STRID(CreateUnRegisterID), STRID(IN_2)), 8},
+    {0, "Register"_STRID, "QI"_STRID), 0},
+    {4, "E_PERMIT_1"_STRID, "PERMIT"_STRID), 6},
+    {6, "Unregister"_STRID, "SD_1"_STRID), 1},
+    {8, "CreateUnRegisterID"_STRID, "IN_2"_STRID), 8},
 };
 
 const SCFB_FBNData FORTE_RegisterServiceHTTP::scmFBNData = {

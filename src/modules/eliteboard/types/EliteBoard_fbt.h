@@ -64,7 +64,7 @@ class FORTE_EliteBoard final : public IOConfigFBController {
     }
 
   public:
-    FORTE_EliteBoard(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_EliteBoard(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortA;
     forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortB;

@@ -42,7 +42,7 @@ class FORTE_FB_TP final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_FB_TP(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_FB_TP(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_IN;
     CIEC_TIME var_PT;

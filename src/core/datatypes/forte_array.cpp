@@ -27,10 +27,10 @@
 #include "core/datatypes/forte_array.h"
 #include "core/datatypes/forte_ulint.h"
 
-USE_STRING_ID(ARRAY);
+using namespace forte::core::literals;
 
-CStringDictionary::TStringId CIEC_ARRAY::getTypeNameID() const {
-  return STRID(ARRAY);
+forte::core::StringId CIEC_ARRAY::getTypeNameID() const {
+  return "ARRAY"_STRID;
 }
 
 void CIEC_ARRAY::setValue(const CIEC_ANY &paValue) {
