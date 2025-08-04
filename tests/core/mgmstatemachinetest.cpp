@@ -76,7 +76,7 @@ BOOST_AUTO_TEST_SUITE(ManagedObjectStateMachine)
 
 BOOST_AUTO_TEST_CASE(idleTest) {
   CFunctionBlockMock testee;
-  BOOST_ASSERT(testee.initialize());
+  BOOST_REQUIRE(testee.initialize());
 
   BOOST_CHECK_EQUAL(CFunctionBlock::E_FBStates::Idle, testee.getState());
 
@@ -101,7 +101,7 @@ void putTesteeIntoRun(CFunctionBlock &paTestee) {
 
 BOOST_AUTO_TEST_CASE(runningTest) {
   CFunctionBlockMock testee;
-  BOOST_ASSERT(testee.initialize());
+  BOOST_REQUIRE(testee.initialize());
   putTesteeIntoRun(testee);
 
   BOOST_CHECK_EQUAL(false, testee.isCurrentlyDeleteable());
@@ -122,7 +122,7 @@ BOOST_AUTO_TEST_CASE(runningTest) {
 
   // we shold be able to kill it, use a new testee to have a clean running state
   CFunctionBlockMock killTestee;
-  BOOST_ASSERT(killTestee.initialize());
+  BOOST_REQUIRE(killTestee.initialize());
   putTesteeIntoRun(killTestee);
 
   BOOST_CHECK_EQUAL(EMGMResponse::Ready, killTestee.changeExecutionState(EMGMCommandType::Kill));
@@ -136,7 +136,7 @@ void putTesteeIntoStopped(CFunctionBlock &paTestee) {
 
 BOOST_AUTO_TEST_CASE(stoppedTest) {
   CFunctionBlockMock testee;
-  BOOST_ASSERT(testee.initialize());
+  BOOST_REQUIRE(testee.initialize());
   putTesteeIntoStopped(testee);
 
   BOOST_CHECK(testee.isCurrentlyDeleteable());
@@ -155,7 +155,7 @@ BOOST_AUTO_TEST_CASE(stoppedTest) {
 
   // we should be able to reset it, use new testeee for a clean stopped state
   CFunctionBlockMock resetTestee;
-  BOOST_ASSERT(resetTestee.initialize());
+  BOOST_REQUIRE(resetTestee.initialize());
   putTesteeIntoStopped(resetTestee);
 
   BOOST_CHECK_EQUAL(EMGMResponse::Ready, resetTestee.changeExecutionState(EMGMCommandType::Reset));
@@ -169,7 +169,7 @@ void putTesteeIntoKilled(CFunctionBlock &paTestee) {
 
 BOOST_AUTO_TEST_CASE(killedTest) {
   CFunctionBlockMock testee;
-  BOOST_ASSERT(testee.initialize());
+  BOOST_REQUIRE(testee.initialize());
   putTesteeIntoKilled(testee);
 
   BOOST_CHECK(testee.isCurrentlyDeleteable());
@@ -204,7 +204,7 @@ void testAllOtherCommands(CFunctionBlock &paTestee, CFunctionBlock::E_FBStates p
 
 BOOST_AUTO_TEST_CASE(testOtherCommands) {
   CFunctionBlockMock testee;
-  BOOST_ASSERT(testee.initialize());
+  BOOST_REQUIRE(testee.initialize());
 
   // test for idle
   testAllOtherCommands(testee, CFunctionBlock::E_FBStates::Idle);

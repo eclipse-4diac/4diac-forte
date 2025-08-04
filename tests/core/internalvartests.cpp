@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(sampleInteralVarList) {
   auto varInternalNames = std::array{STRID(QU), STRID(QD), STRID(CV)};
 
   CInternalVarTestFB testFB(varInternalNames);
-  BOOST_ASSERT(testFB.initialize());
+  BOOST_REQUIRE(testFB.initialize());
 
   for (size_t i = 0; i < varInternalNames.size(); i++) {
     CIEC_ANY *var = testFB.getVar(&(varInternalNames[i]), 1);
@@ -124,7 +124,7 @@ BOOST_AUTO_TEST_CASE(testToStringWithInternalVariables) {
   auto varInternalNames = std::array{STRID(QU), STRID(QD), STRID(CV)};
 
   CInternalVarTestFB testFB(varInternalNames);
-  BOOST_ASSERT(testFB.initialize());
+  BOOST_REQUIRE(testFB.initialize());
   constexpr char result[] = "(QU:=FALSE, QD:=FALSE, CV:=0)";
   std::string buffer;
   testFB.toString(buffer);

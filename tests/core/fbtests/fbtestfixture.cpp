@@ -153,7 +153,7 @@ void CFBTestFixtureBase::performFBDeleteTests() {
 }
 
 void CFBTestFixtureBase::setup() {
-  BOOST_ASSERT(initialize());
+  BOOST_REQUIRE(initialize());
 
   setupTestInterface();
   performDataInterfaceTests();
@@ -192,6 +192,9 @@ void CFBTestFixtureBase::triggerEvent(TPortId paEIId) {
 
 TEventID CFBTestFixtureBase::pullFirstChainEventID() {
   CCriticalRegion criticalRegion(mOutputEventLock);
+  if (mFBOutputEvents.empty()) {
+    return cgInvalidEventID;
+  }
   TEventID retVal = mFBOutputEvents.front();
   mFBOutputEvents.pop_front();
   return retVal;

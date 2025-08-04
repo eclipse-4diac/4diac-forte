@@ -107,7 +107,7 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
 
   const auto cInternalsNames = std::array{STRID(QU), STRID(QD), STRID(CV)};
   CInternalVarTestFB testFb(cInternalsNames);
-  BOOST_ASSERT(testFb.initialize());
+  BOOST_REQUIRE(testFb.initialize());
 }
 
 BOOST_AUTO_TEST_SUITE_END()
