@@ -16,6 +16,7 @@
 add_library(forte-core-util OBJECT
             singlet.h
             criticalregion.h
+            fixed_string.h
             fortearray.h
             inplace_vector.h
             ringbuf.h
