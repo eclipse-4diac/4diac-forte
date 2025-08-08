@@ -44,7 +44,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TRIG::FORTE_E_TRIG(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_TRIG::FORTE_E_TRIG(const forte::core::InstanceNameId paInstanceNameId,
                            forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_EVENTTYPE("EInit"_STRING),

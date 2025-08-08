@@ -52,7 +52,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_DEMUX::FORTE_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_DEMUX::FORTE_E_DEMUX(const forte::core::InstanceNameId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO0(*this, 0),

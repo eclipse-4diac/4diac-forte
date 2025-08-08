@@ -35,7 +35,6 @@ class FORTE_ASSEMBLE_BYTE_FROM_BOOLS final : public CFunctionBlock {
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
@@ -43,7 +42,7 @@ class FORTE_ASSEMBLE_BYTE_FROM_BOOLS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_ASSEMBLE_BYTE_FROM_BOOLS(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_ASSEMBLE_BYTE_FROM_BOOLS(forte::core::InstanceNameId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_BIT_00;

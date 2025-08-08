@@ -57,7 +57,7 @@ namespace {
 }
 
 
-FORTE_QB::FORTE_QB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_QB::FORTE_QB(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CProcessInterface(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_PARAMS(""_STRING),

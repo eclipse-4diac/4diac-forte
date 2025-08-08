@@ -19,7 +19,7 @@
 
 class CLuaAdapter : public CAdapter {
   public:
-    CLuaAdapter(CStringDictionary::TStringId paInstanceNameId,
+    CLuaAdapter(forte::core::InstanceNameId paInstanceNameId,
                 const CLuaAdapterTypeEntry *paTypeEntry,
                 bool paIsPlug,
                 forte::core::CFBContainer &paContainer);

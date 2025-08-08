@@ -60,7 +60,7 @@ class GEN_ADD final : public CGenFunctionBlock<CFunctionBlock> {
     COutDataConnection<CIEC_ANY_MAGNITUDE_VARIANT> conn_OUT;
 
   public:
-    GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_ADD(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_ADD() override = default;
 };
 

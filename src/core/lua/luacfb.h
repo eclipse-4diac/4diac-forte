@@ -23,7 +23,7 @@
 
 class CLuaCFB : public CGenFunctionBlock<CCompositeFB> {
   public:
-    CLuaCFB(CStringDictionary::TStringId paInstanceNameId,
+    CLuaCFB(forte::core::InstanceNameId paInstanceNameId,
             const CLuaCFBTypeEntry *paTypeEntry,
             SCFB_FBNData &paFbnData,
             forte::core::CFBContainer &paContainer);

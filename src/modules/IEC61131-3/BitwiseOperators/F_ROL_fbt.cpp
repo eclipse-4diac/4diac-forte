@@ -55,7 +55,7 @@ namespace {
 }
 
 
-FORTE_F_ROL::FORTE_F_ROL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_ROL::FORTE_F_ROL(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_BIT_VARIANT()),
     var_N(CIEC_ANY_INT_VARIANT()),

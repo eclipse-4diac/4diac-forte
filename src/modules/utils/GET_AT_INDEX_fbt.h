@@ -30,14 +30,9 @@ class FORTE_GET_AT_INDEX : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_GET_AT_INDEX)
 
   private:
-
-
     static const TEventID scmEventREQID = 0;
 
-
     static const TEventID scmEventCNFID = 0;
-
-
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -45,7 +40,7 @@ class FORTE_GET_AT_INDEX : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_GET_AT_INDEX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_GET_AT_INDEX(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY_VARIANT var_IN_ARRAY;
     CIEC_UINT var_INDEX;

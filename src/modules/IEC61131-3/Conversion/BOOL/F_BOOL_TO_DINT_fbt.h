@@ -24,12 +24,11 @@
 #include "core/datatypes/forte_array_variable.h"
 
 class FORTE_F_BOOL_TO_DINT final : public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_F_BOOL_TO_DINT)
+    DECLARE_FIRMWARE_FB(FORTE_F_BOOL_TO_DINT)
 
   private:
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
-
 
     CIEC_ANY *getVarInternal(size_t) override;
 
@@ -44,7 +43,7 @@ class FORTE_F_BOOL_TO_DINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_BOOL_TO_DINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_BOOL_TO_DINT(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_IN;
 
@@ -72,4 +71,3 @@ class FORTE_F_BOOL_TO_DINT final : public CSimpleFB {
       evt_REQ(paIN, paOUT);
     }
 };
-

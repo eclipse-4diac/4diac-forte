@@ -22,7 +22,7 @@ namespace forte::core::io {
     public:
       IOConfigFBBase(forte::core::CFBContainer &paContainer,
                      const SFBInterfaceSpec &paInterfaceSpec,
-                     const CStringDictionary::TStringId paInstanceNameId);
+                     const forte::core::InstanceNameId paInstanceNameId);
       ~IOConfigFBBase() override;
   };
 

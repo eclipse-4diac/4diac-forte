@@ -24,7 +24,7 @@
 #include "core/datatypes/forte_array_variable.h"
 
 class FORTE_FB_CTD final : public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_FB_CTD)
+    DECLARE_FIRMWARE_FB(FORTE_FB_CTD)
 
   private:
     static const TEventID scmEventCNFID = 0;
@@ -43,7 +43,7 @@ class FORTE_FB_CTD final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_FB_CTD(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_FB_CTD(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_CD;
     CIEC_BOOL var_LD;
@@ -76,8 +76,8 @@ class FORTE_FB_CTD final : public CSimpleFB {
       paCV = var_CV;
     }
 
-    void operator()(const CIEC_BOOL &paCD, const CIEC_BOOL &paLD, const CIEC_INT &paPV, CIEC_BOOL &paQ, CIEC_INT &paCV) {
+    void
+    operator()(const CIEC_BOOL &paCD, const CIEC_BOOL &paLD, const CIEC_INT &paPV, CIEC_BOOL &paQ, CIEC_INT &paCV) {
       evt_REQ(paCD, paLD, paPV, paQ, paCV);
     }
 };
-

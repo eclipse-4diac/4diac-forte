@@ -26,7 +26,6 @@ class FORTE_E_TRIG final : public CFunctionBlock {
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
 
-
     CEventChainExecutionThread *mEcet;
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
@@ -51,7 +50,7 @@ class FORTE_E_TRIG final : public CFunctionBlock {
     triggerEventsOfType(TEventTypeID paEventTypeId, CFunctionBlock *paFb, CEventChainExecutionThread *const paECET);
 
   public:
-    FORTE_E_TRIG(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_TRIG(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_STRING var_EVENTTYPE;
 

@@ -52,7 +52,7 @@ namespace {
 }
 
 
-FORTE_F_WSTRING_AS_BOOL::FORTE_F_WSTRING_AS_BOOL(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_WSTRING_AS_BOOL::FORTE_F_WSTRING_AS_BOOL(const forte::core::InstanceNameId paInstanceNameId,
                                                  forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(u""_WSTRING),

@@ -25,7 +25,6 @@ class FORTE_E_RESTART final : public CEventSourceFB {
     static const TEventID scmEventWARMID = 1;
     static const TEventID scmEventSTOPID = 2;
 
-
     // semaphore to ensure proper handling of STOP execution state change
     forte::arch::CSemaphore mSuspendSemaphore;
 
@@ -37,7 +36,7 @@ class FORTE_E_RESTART final : public CEventSourceFB {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_E_RESTART(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_RESTART(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CEventConnection conn_COLD;
     CEventConnection conn_WARM;

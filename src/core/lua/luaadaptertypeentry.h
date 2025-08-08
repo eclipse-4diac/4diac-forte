@@ -42,7 +42,7 @@ class CLuaAdapterTypeEntry : public CTypeLib::CAdapterTypeEntry {
     static CLuaAdapterTypeEntry *createLuaAdapterTypeEntry(CStringDictionary::TStringId typeNameId,
                                                            const std::string &paLuaScriptAsString);
 
-    CAdapter *createAdapterInstance(CStringDictionary::TStringId paInstanceNameId,
+    CAdapter *createAdapterInstance(forte::core::InstanceNameId paInstanceNameId,
                                     forte::core::CFBContainer &paContainer,
                                     bool paIsPlug) override;
 

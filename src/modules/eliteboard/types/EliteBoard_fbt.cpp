@@ -62,7 +62,7 @@ namespace {
   };
 } // namespace
 
-FORTE_EliteBoard::FORTE_EliteBoard(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_EliteBoard::FORTE_EliteBoard(const forte::core::InstanceNameId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     IOConfigFBController(paContainer, cFBInterfaceSpec, paInstanceNameId),
     mEventHandler{getExtEvHandler<EliteBoardDeviceController>(*this)},

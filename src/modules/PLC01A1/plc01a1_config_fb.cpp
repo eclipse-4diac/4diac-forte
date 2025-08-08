@@ -75,7 +75,7 @@ namespace {
   };
 } // namespace
 
-PLC01A1ConfigFB::PLC01A1ConfigFB(const CStringDictionary::TStringId paInstanceNameId,
+PLC01A1ConfigFB::PLC01A1ConfigFB(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),

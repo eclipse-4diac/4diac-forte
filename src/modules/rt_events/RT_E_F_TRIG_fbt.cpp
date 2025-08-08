@@ -49,7 +49,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RT_E_F_TRIG::FORTE_RT_E_F_TRIG(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_RT_E_F_TRIG::FORTE_RT_E_F_TRIG(const forte::core::InstanceNameId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
     CRTEventSingle(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),

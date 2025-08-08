@@ -51,7 +51,7 @@ namespace {
 }
 
 
-FORTE_F_SEL_E_2::FORTE_F_SEL_E_2(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_SEL_E_2::FORTE_F_SEL_E_2(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

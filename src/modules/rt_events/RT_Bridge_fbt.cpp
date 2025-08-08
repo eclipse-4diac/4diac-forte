@@ -30,7 +30,7 @@ namespace {
   const auto cEventOutputNames = std::array{STRID(RDO)};
 } // namespace
 
-FORTE_GEN_RT_Bridge::FORTE_GEN_RT_Bridge(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_GEN_RT_Bridge::FORTE_GEN_RT_Bridge(const forte::core::InstanceNameId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_RDO(*this, 0) {};

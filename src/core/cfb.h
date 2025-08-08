@@ -71,7 +71,7 @@ class CCompositeFB : public CFunctionBlock {
      */
     CCompositeFB(forte::core::CFBContainer &paContainer,
                  const SFBInterfaceSpec &paInterfaceSpec,
-                 CStringDictionary::TStringId paInstanceNameId,
+                 forte::core::InstanceNameId paInstanceNameId,
                  const SCFB_FBNData &paFBNData);
     void setInitialValues() override = 0;
 

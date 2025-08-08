@@ -49,7 +49,7 @@ namespace {
   };
 } // namespace
 
-FORTE_TEST_CONDITION::FORTE_TEST_CONDITION(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_TEST_CONDITION::FORTE_TEST_CONDITION(const forte::core::InstanceNameId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

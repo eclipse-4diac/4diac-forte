@@ -31,7 +31,7 @@ namespace {
   const auto cEventInputNames = std::array{STRID(EI)};
 } // namespace
 
-GEN_E_DEMUX::GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_E_DEMUX::GEN_E_DEMUX(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_K(nullptr) {
 }

@@ -35,7 +35,6 @@ class FORTE_SPLIT_BYTE_INTO_BOOLS final : public CFunctionBlock {
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
@@ -43,7 +42,7 @@ class FORTE_SPLIT_BYTE_INTO_BOOLS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_SPLIT_BYTE_INTO_BOOLS(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_SPLIT_BYTE_INTO_BOOLS(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BYTE var_IN;
 

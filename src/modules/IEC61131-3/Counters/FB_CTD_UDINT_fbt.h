@@ -24,7 +24,7 @@
 #include "core/datatypes/forte_array_variable.h"
 
 class FORTE_FB_CTD_UDINT final : public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_FB_CTD_UDINT)
+    DECLARE_FIRMWARE_FB(FORTE_FB_CTD_UDINT)
 
   private:
     static const TEventID scmEventCNFID = 0;
@@ -43,7 +43,7 @@ class FORTE_FB_CTD_UDINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_FB_CTD_UDINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_FB_CTD_UDINT(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_CD;
     CIEC_BOOL var_LD;
@@ -67,7 +67,8 @@ class FORTE_FB_CTD_UDINT final : public CSimpleFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BOOL &paCD, const CIEC_BOOL &paLD, const CIEC_UDINT &paPV, CIEC_BOOL &paQ, CIEC_UDINT &paCV) {
+    void
+    evt_REQ(const CIEC_BOOL &paCD, const CIEC_BOOL &paLD, const CIEC_UDINT &paPV, CIEC_BOOL &paQ, CIEC_UDINT &paCV) {
       var_CD = paCD;
       var_LD = paLD;
       var_PV = paPV;
@@ -76,8 +77,8 @@ class FORTE_FB_CTD_UDINT final : public CSimpleFB {
       paCV = var_CV;
     }
 
-    void operator()(const CIEC_BOOL &paCD, const CIEC_BOOL &paLD, const CIEC_UDINT &paPV, CIEC_BOOL &paQ, CIEC_UDINT &paCV) {
+    void
+    operator()(const CIEC_BOOL &paCD, const CIEC_BOOL &paLD, const CIEC_UDINT &paPV, CIEC_BOOL &paQ, CIEC_UDINT &paCV) {
       evt_REQ(paCD, paLD, paPV, paQ, paCV);
     }
 };
-

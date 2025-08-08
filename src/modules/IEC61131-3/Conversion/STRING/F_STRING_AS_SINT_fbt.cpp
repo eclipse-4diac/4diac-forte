@@ -49,10 +49,10 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
+} // namespace
 
-
-FORTE_F_STRING_AS_SINT::FORTE_F_STRING_AS_SINT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_STRING_AS_SINT::FORTE_F_STRING_AS_SINT(const forte::core::InstanceNameId paInstanceNameId,
+                                               forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(""_STRING),
     var_OUT(0_SINT),
@@ -67,12 +67,9 @@ void FORTE_F_STRING_AS_SINT::setInitialValues() {
 }
 
 void FORTE_F_STRING_AS_SINT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventREQID:
-      enterStateREQ(paECET);
-      break;
-    default:
-      break;
+  switch (paEIID) {
+    case scmEventREQID: enterStateREQ(paECET); break;
+    default: break;
   }
 }
 
@@ -82,57 +79,55 @@ void FORTE_F_STRING_AS_SINT::enterStateREQ(CEventChainExecutionThread *const paE
 }
 
 void FORTE_F_STRING_AS_SINT::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_F_STRING_AS_SINT::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_F_STRING_AS_SINT::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_F_STRING_AS_SINT::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_F_STRING_AS_SINT::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_F_STRING_AS_SINT::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_F_STRING_AS_SINT::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -144,6 +139,6 @@ CIEC_ANY *FORTE_F_STRING_AS_SINT::getVarInternal(size_t) {
 
 void FORTE_F_STRING_AS_SINT::alg_REQ(void) {
 
-  #line 2 "F_STRING_AS_SINT.fbt"
+#line 2 "F_STRING_AS_SINT.fbt"
   var_OUT = func_STRING_AS_SINT(var_IN);
 }

@@ -69,7 +69,7 @@ DEFINE_ADAPTER_TYPE(FORTE_EBBusAdapter, STRID(EBBusAdapter))
 
 FORTE_EBBusAdapter::FORTE_EBBusAdapter(forte::core::CFBContainer &paContainer,
                                        const SFBInterfaceSpec &paInterfaceSpec,
-                                       const CStringDictionary::TStringId paInstanceNameId,
+                                       const forte::core::InstanceNameId paInstanceNameId,
                                        TForteUInt8 paParentAdapterlistID) :
     IOConfigFBMultiAdapter(
         scmSlaveConfigurationIO, paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID) {
@@ -79,7 +79,7 @@ void FORTE_EBBusAdapter::setInitialValues() {
   var_UpdateInterval = 0_UINT;
 }
 
-FORTE_EBBusAdapter_Plug::FORTE_EBBusAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+FORTE_EBBusAdapter_Plug::FORTE_EBBusAdapter_Plug(forte::core::InstanceNameId paInstanceNameId,
                                                  forte::core::CFBContainer &paContainer,
                                                  TForteUInt8 paParentAdapterlistID) :
     FORTE_EBBusAdapter(paContainer, scmFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
@@ -148,7 +148,7 @@ FORTE_EBBusAdapter_Socket *FORTE_EBBusAdapter_Plug::getSocket() {
   return static_cast<FORTE_EBBusAdapter_Socket *>(getPeer());
 }
 
-FORTE_EBBusAdapter_Socket::FORTE_EBBusAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+FORTE_EBBusAdapter_Socket::FORTE_EBBusAdapter_Socket(forte::core::InstanceNameId paInstanceNameId,
                                                      forte::core::CFBContainer &paContainer,
                                                      TForteUInt8 paParentAdapterlistID) :
     FORTE_EBBusAdapter(paContainer, scmFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),

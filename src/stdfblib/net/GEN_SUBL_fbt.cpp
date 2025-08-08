@@ -21,7 +21,7 @@ DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBL, STRID(GEN_SUBL))
 const char *const GEN_SUBL::scmLocalIDPrefix = "loc[";
 const char *const GEN_SUBL::scmLocalIDSuffix = "]";
 
-GEN_SUBL::GEN_SUBL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_SUBL::GEN_SUBL(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     GEN_SUBSCRIBE(paInstanceNameId, paContainer) {
 }
 

@@ -44,7 +44,7 @@ class FORTE_F_REAL_TO_DINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_REAL_TO_DINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_REAL_TO_DINT(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_REAL var_IN;
 

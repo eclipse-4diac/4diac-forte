@@ -37,7 +37,7 @@ using namespace std::string_literals;
 
 CFunctionBlock::CFunctionBlock(forte::core::CFBContainer &paContainer,
                                const SFBInterfaceSpec &paInterfaceSpec,
-                               CStringDictionary::TStringId paInstanceNameId) :
+                               forte::core::InstanceNameId paInstanceNameId) :
     CFBContainer(paInstanceNameId, paContainer),
     mInterfaceSpec(paInterfaceSpec),
     mFBState(E_FBStates::Idle), // put the FB in the idle state to avoid a useless reset after creation

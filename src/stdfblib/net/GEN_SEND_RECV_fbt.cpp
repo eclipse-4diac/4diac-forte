@@ -44,7 +44,7 @@ namespace {
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_SEND_RECV, STRID(GEN_SEND_RECV))
 
-GEN_SEND_RECV::GEN_SEND_RECV(const CStringDictionary::TStringId paInstanceNameId,
+GEN_SEND_RECV::GEN_SEND_RECV(const forte::core::InstanceNameId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
     CommunicationFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 1),

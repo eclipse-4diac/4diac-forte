@@ -41,7 +41,7 @@ namespace forte::core::io {
       static const TEventID scmEventINDID = 2;
 
     public:
-      CInputFB(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId) :
+      CInputFB(forte::core::CFBContainer &paContainer, const forte::core::InstanceNameId paInstanceNameId) :
           CProcessInterfaceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
           var_IN(),
           conn_IND(*this, 2),
@@ -50,7 +50,7 @@ namespace forte::core::io {
 
       CInputFB(forte::core::CFBContainer &paContainer,
                const SFBInterfaceSpec &paInterfaceSpec,
-               const CStringDictionary::TStringId paInstanceNameId) :
+               const forte::core::InstanceNameId paInstanceNameId) :
           CProcessInterfaceFB(paContainer, paInterfaceSpec, paInstanceNameId),
           var_IN(),
           conn_IND(*this, 2),

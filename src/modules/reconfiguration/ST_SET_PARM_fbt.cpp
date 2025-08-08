@@ -50,7 +50,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ST_SET_PARM::FORTE_ST_SET_PARM(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_ST_SET_PARM::FORTE_ST_SET_PARM(const forte::core::InstanceNameId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

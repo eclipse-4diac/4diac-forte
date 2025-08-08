@@ -78,7 +78,7 @@ class GEN_CSV_WRITER final : public CGenFunctionBlock<CFunctionBlock> {
     CDataConnection *getDOConUnchecked(TPortId paDONum) override;
 
   public:
-    GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_CSV_WRITER(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_CSV_WRITER() override;
 
   private:

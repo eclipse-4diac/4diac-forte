@@ -85,7 +85,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TOF::FORTE_E_TOF(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_TOF::FORTE_E_TOF(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_SWITCH(STRID(E_SWITCH), *this),
     fb_E_DELAY(STRID(E_DELAY), *this),

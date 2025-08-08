@@ -35,7 +35,6 @@ class FORTE_SPLIT_LWORD_INTO_QUARTERS final : public CFunctionBlock {
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
@@ -43,7 +42,7 @@ class FORTE_SPLIT_LWORD_INTO_QUARTERS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_SPLIT_LWORD_INTO_QUARTERS(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_SPLIT_LWORD_INTO_QUARTERS(forte::core::InstanceNameId paInstanceNameId,
                                     forte::core::CFBContainer &paContainer);
 
     CIEC_LWORD var_IN;

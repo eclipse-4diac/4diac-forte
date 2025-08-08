@@ -19,7 +19,7 @@
 
 CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
-                   const CStringDictionary::TStringId paInstanceNameId,
+                   const forte::core::InstanceNameId paInstanceNameId,
                    std::span<const CStringDictionary::TStringId> paVarInternalNames) :
     CBaseFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternalNames),
     mECCState(0) {

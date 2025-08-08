@@ -24,7 +24,7 @@
 #include "core/datatypes/forte_array_variable.h"
 
 class FORTE_FB_CTUD_LINT final : public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_FB_CTUD_LINT)
+    DECLARE_FIRMWARE_FB(FORTE_FB_CTUD_LINT)
 
   private:
     static const TEventID scmEventCNFID = 0;
@@ -43,7 +43,7 @@ class FORTE_FB_CTUD_LINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_FB_CTUD_LINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_FB_CTUD_LINT(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_CU;
     CIEC_BOOL var_CD;
@@ -73,7 +73,14 @@ class FORTE_FB_CTUD_LINT final : public CSimpleFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BOOL &paCU, const CIEC_BOOL &paCD, const CIEC_BOOL &paR, const CIEC_BOOL &paLD, const CIEC_LINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_LINT &paCV) {
+    void evt_REQ(const CIEC_BOOL &paCU,
+                 const CIEC_BOOL &paCD,
+                 const CIEC_BOOL &paR,
+                 const CIEC_BOOL &paLD,
+                 const CIEC_LINT &paPV,
+                 CIEC_BOOL &paQU,
+                 CIEC_BOOL &paQD,
+                 CIEC_LINT &paCV) {
       var_CU = paCU;
       var_CD = paCD;
       var_R = paR;
@@ -85,8 +92,14 @@ class FORTE_FB_CTUD_LINT final : public CSimpleFB {
       paCV = var_CV;
     }
 
-    void operator()(const CIEC_BOOL &paCU, const CIEC_BOOL &paCD, const CIEC_BOOL &paR, const CIEC_BOOL &paLD, const CIEC_LINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_LINT &paCV) {
+    void operator()(const CIEC_BOOL &paCU,
+                    const CIEC_BOOL &paCD,
+                    const CIEC_BOOL &paR,
+                    const CIEC_BOOL &paLD,
+                    const CIEC_LINT &paPV,
+                    CIEC_BOOL &paQU,
+                    CIEC_BOOL &paQD,
+                    CIEC_LINT &paCV) {
       evt_REQ(paCU, paCD, paR, paLD, paPV, paQU, paQD, paCV);
     }
 };
-

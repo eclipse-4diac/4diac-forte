@@ -43,7 +43,7 @@ class CLuaCFBTypeEntry : public CTypeLib::CFBTypeEntry {
     static CLuaCFBTypeEntry *createLuaFBTypeEntry(CStringDictionary::TStringId typeNameId,
                                                   const std::string &paLuaScriptAsString);
 
-    CFunctionBlock *createFBInstance(CStringDictionary::TStringId paInstanceNameId,
+    CFunctionBlock *createFBInstance(forte::core::InstanceNameId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) override;
 
     const SFBInterfaceSpec &getInterfaceSpec() const {

@@ -62,7 +62,7 @@ namespace {
   };
 } // namespace
 
-FORTE_SET_LOCAL_ADS_ADDRESS::FORTE_SET_LOCAL_ADS_ADDRESS(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_SET_LOCAL_ADS_ADDRESS::FORTE_SET_LOCAL_ADS_ADDRESS(const forte::core::InstanceNameId paInstanceNameId,
                                                          forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),

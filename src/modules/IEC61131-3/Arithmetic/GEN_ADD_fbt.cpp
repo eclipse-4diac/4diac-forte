@@ -35,7 +35,7 @@ namespace {
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ADD, STRID(GEN_ADD))
 
-GEN_ADD::GEN_ADD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_ADD::GEN_ADD(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_OUT(*this, 0, var_OUT) {

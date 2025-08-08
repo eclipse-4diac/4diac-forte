@@ -29,7 +29,6 @@ class FORTE_F_ANY_AS_STRING final : public CSimpleFB {
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
 
-
     CIEC_ANY *getVarInternal(size_t) override;
 
     void alg_REQ(void);
@@ -41,7 +40,7 @@ class FORTE_F_ANY_AS_STRING final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_F_ANY_AS_STRING(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_ANY_AS_STRING(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY_VARIANT var_IN;
 

@@ -21,7 +21,7 @@ class FORTE_GEN_RT_Bridge final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge)
 
   public:
-    FORTE_GEN_RT_Bridge(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_GEN_RT_Bridge(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~FORTE_GEN_RT_Bridge() override = default;
 
     CEventConnection conn_RDO;

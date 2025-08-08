@@ -19,7 +19,7 @@ class Config_EMB_RES final : public CResource {
     DECLARE_FIRMWARE_FB(Config_EMB_RES);
 
   public:
-    Config_EMB_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice);
+    Config_EMB_RES(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paDevice);
     ~Config_EMB_RES() override;
 
     bool initialize() override;

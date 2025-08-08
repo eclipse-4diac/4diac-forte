@@ -58,7 +58,7 @@ namespace {
   };
 } // namespace
 
-FORTE_signalprocessing__SCALE::FORTE_signalprocessing__SCALE(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_signalprocessing__SCALE::FORTE_signalprocessing__SCALE(const forte::core::InstanceNameId paInstanceNameId,
                                                              forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

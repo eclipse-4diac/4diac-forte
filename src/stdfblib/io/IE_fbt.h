@@ -34,7 +34,6 @@ class FORTE_IE final : public CProcessInterface {
     static const TEventID scmEventCNFID = 1;
     static const TEventID scmEventINDID = 2;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
@@ -42,7 +41,7 @@ class FORTE_IE final : public CProcessInterface {
     void setInitialValues() override;
 
   public:
-    FORTE_IE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IE(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_STRING var_PARAMS;

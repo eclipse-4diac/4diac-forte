@@ -59,7 +59,7 @@ namespace {
 }
 
 
-FORTE_SET_AT_INDEX::FORTE_SET_AT_INDEX(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_SET_AT_INDEX::FORTE_SET_AT_INDEX(const forte::core::InstanceNameId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN_ARRAY(CIEC_ANY_VARIANT()),

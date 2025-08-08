@@ -51,7 +51,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_BYTE_BCD_TO_USINT::FORTE_F_BYTE_BCD_TO_USINT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_BYTE_BCD_TO_USINT::FORTE_F_BYTE_BCD_TO_USINT(const forte::core::InstanceNameId paInstanceNameId,
                                                      forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_BYTE),

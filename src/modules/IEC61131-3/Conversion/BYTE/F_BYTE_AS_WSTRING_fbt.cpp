@@ -51,7 +51,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_BYTE_AS_WSTRING::FORTE_F_BYTE_AS_WSTRING(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_BYTE_AS_WSTRING::FORTE_F_BYTE_AS_WSTRING(const forte::core::InstanceNameId paInstanceNameId,
                                                  forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_BYTE),

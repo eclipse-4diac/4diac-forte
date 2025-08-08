@@ -70,7 +70,7 @@ namespace {
   };
 } // namespace
 
-FORTE_SPLIT_WORD_INTO_QUARTERS::FORTE_SPLIT_WORD_INTO_QUARTERS(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_SPLIT_WORD_INTO_QUARTERS::FORTE_SPLIT_WORD_INTO_QUARTERS(const forte::core::InstanceNameId paInstanceNameId,
                                                                forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

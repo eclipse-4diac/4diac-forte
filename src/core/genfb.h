@@ -49,7 +49,7 @@ class CGenFunctionBlock : public T {
   protected:
     template<typename... Args>
     CGenFunctionBlock(forte::core::CFBContainer &paContainer,
-                      const CStringDictionary::TStringId paInstanceNameId,
+                      const forte::core::InstanceNameId paInstanceNameId,
                       Args &&...args) :
         T(paContainer, mGenInterfaceSpec, paInstanceNameId, std::forward<Args>(args)...),
         mConfiguredFBTypeNameId(CStringDictionary::scmInvalidStringId),
@@ -59,7 +59,7 @@ class CGenFunctionBlock : public T {
     template<typename... Args>
     CGenFunctionBlock(forte::core::CFBContainer &paContainer,
                       const SFBInterfaceSpec &paInterfaceSpec,
-                      const CStringDictionary::TStringId paInstanceNameId,
+                      const forte::core::InstanceNameId paInstanceNameId,
                       Args &&...args) :
         T(paContainer, mGenInterfaceSpec, paInstanceNameId, std::forward<Args>(args)...),
         mConfiguredFBTypeNameId(CStringDictionary::scmInvalidStringId),

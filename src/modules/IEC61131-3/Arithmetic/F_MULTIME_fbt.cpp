@@ -56,7 +56,7 @@ namespace {
 }
 
 
-FORTE_F_MULTIME::FORTE_F_MULTIME(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_MULTIME::FORTE_F_MULTIME(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_TIME(0)),

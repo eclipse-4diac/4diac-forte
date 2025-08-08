@@ -57,7 +57,7 @@ namespace {
   };
 } // namespace
 
-FORTE_IW::FORTE_IW(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_IW::FORTE_IW(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CProcessInterface(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_PARAMS(""_STRING),

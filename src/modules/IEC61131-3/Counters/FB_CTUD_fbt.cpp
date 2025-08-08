@@ -58,7 +58,7 @@ namespace {
 DEFINE_FIRMWARE_FB(FORTE_FB_CTUD, STRID(FB_CTUD))
 
 
-FORTE_FB_CTUD::FORTE_FB_CTUD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_FB_CTUD::FORTE_FB_CTUD(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_CU(0_BOOL),
     var_CD(0_BOOL),

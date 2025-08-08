@@ -49,7 +49,7 @@ namespace {
   };
 } // namespace
 
-FORTE_TIME2TIME::FORTE_TIME2TIME(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_TIME2TIME::FORTE_TIME2TIME(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_TIME),

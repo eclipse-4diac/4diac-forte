@@ -49,7 +49,7 @@ class GEN_E_MUX final : public CGenFunctionBlock<CFunctionBlock> {
     std::vector<CStringDictionary::TStringId> mEventInputNames;
 
   public:
-    GEN_E_MUX(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_E_MUX(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_UINT var_K;
 

@@ -30,17 +30,15 @@ DEFINE_FIRMWARE_FB(FORTE_F_DIVTIME, STRID(F_DIVTIME))
 
 namespace {
   const auto cDataInputNames = std::array{STRID(IN1), STRID(IN2)};
-  
-  
+
   const auto cDataOutputNames = std::array{STRID(OUT)};
-  
-  
+
   const auto cEventInputNames = std::array{STRID(REQ)};
   const auto cEventInputTypeIds = std::array{STRID(Event)};
-  
+
   const auto cEventOutputNames = std::array{STRID(CNF)};
   const auto cEventOutputTypeIds = std::array{STRID(Event)};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -52,10 +50,9 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
+} // namespace
 
-
-FORTE_F_DIVTIME::FORTE_F_DIVTIME(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_DIVTIME::FORTE_F_DIVTIME(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_TIME(0)),

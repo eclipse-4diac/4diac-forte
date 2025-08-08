@@ -39,7 +39,7 @@ namespace forte::core::io {
       using CInputFB<T>::var_IN;
 
     public:
-      CeInputFB(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId) :
+      CeInputFB(forte::core::CFBContainer &paContainer, const forte::core::InstanceNameId paInstanceNameId) :
           CInputFB<T>(paContainer, scmFBInterfaceSpec, paInstanceNameId),
           var_eCONF(STRID(eCONF), *this, 0) {};
 

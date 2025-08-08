@@ -56,7 +56,7 @@ class CLuaBFB : public CGenFunctionBlock<CBasicFB> {
     static const char LUA_NAME[];
     static const luaL_Reg LUA_FUNCS[];
 
-    CLuaBFB(CStringDictionary::TStringId paInstanceNameId,
+    CLuaBFB(forte::core::InstanceNameId paInstanceNameId,
             const CLuaBFBTypeEntry *paTypeEntry,
             forte::core::CFBContainer &paContainer);
     ~CLuaBFB() override;

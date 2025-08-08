@@ -61,7 +61,7 @@ namespace {
 }
 
 
-FORTE_SPLIT_DWORD_INTO_WORDS::FORTE_SPLIT_DWORD_INTO_WORDS(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_SPLIT_DWORD_INTO_WORDS::FORTE_SPLIT_DWORD_INTO_WORDS(const forte::core::InstanceNameId paInstanceNameId,
                                                            forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

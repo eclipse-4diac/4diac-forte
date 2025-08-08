@@ -51,7 +51,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RT_E_REND::FORTE_RT_E_REND(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_RT_E_REND::FORTE_RT_E_REND(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CRTEventSingle(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),

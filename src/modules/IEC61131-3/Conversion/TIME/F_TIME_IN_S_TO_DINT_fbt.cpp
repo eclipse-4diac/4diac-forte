@@ -59,7 +59,7 @@ namespace {
 }
 
 
-FORTE_F_TIME_IN_S_TO_DINT::FORTE_F_TIME_IN_S_TO_DINT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_TIME_IN_S_TO_DINT::FORTE_F_TIME_IN_S_TO_DINT(const forte::core::InstanceNameId paInstanceNameId,
                                                      forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CNF(*this, 0),

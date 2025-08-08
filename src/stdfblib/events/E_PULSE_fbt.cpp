@@ -77,7 +77,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_PULSE::FORTE_E_PULSE(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_PULSE::FORTE_E_PULSE(const forte::core::InstanceNameId paInstanceNameId,
                              forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_DELAY(STRID(E_DELAY), *this),

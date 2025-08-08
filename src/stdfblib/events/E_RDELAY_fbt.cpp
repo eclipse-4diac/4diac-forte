@@ -17,7 +17,7 @@ USE_STRING_ID(E_RDELAY);
 
 DEFINE_FIRMWARE_FB(FORTE_E_RDELAY, STRID(E_RDELAY))
 
-FORTE_E_RDELAY::FORTE_E_RDELAY(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_RDELAY::FORTE_E_RDELAY(const forte::core::InstanceNameId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     CTimedFB(paInstanceNameId, paContainer) {
 }

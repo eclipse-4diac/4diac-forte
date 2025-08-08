@@ -68,7 +68,7 @@ namespace {
   };
 } // namespace
 
-FORTE_Port::FORTE_Port(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_Port::FORTE_Port(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_Pin0(""_STRING),
     var_Pin1(""_STRING),

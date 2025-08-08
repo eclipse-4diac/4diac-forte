@@ -22,7 +22,7 @@ class RMT_RES final : public CResource {
     DECLARE_FIRMWARE_FB(RMT_RES)
 
   public:
-    RMT_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice);
+    RMT_RES(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paDevice);
     ~RMT_RES() override;
 
     bool initialize() override;

@@ -18,7 +18,7 @@
 
 class CeConfigFB : public CFunctionBlock, public CeConfig {
   public:
-    CeConfigFB(const CStringDictionary::TStringId paInstanceNameId,
+    CeConfigFB(const forte::core::InstanceNameId paInstanceNameId,
                const SFBInterfaceSpec &paInterfaceSpec,
                forte::core::CFBContainer &paContainer) :
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId) {

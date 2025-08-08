@@ -68,7 +68,7 @@ void GEN_CSV_WRITER::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
   }
 }
 
-GEN_CSV_WRITER::GEN_CSV_WRITER(const CStringDictionary::TStringId paInstanceNameId,
+GEN_CSV_WRITER::GEN_CSV_WRITER(const forte::core::InstanceNameId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_INITO(*this, 0),

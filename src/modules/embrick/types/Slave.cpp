@@ -28,7 +28,7 @@ EmbrickSlave::EmbrickSlave(const TForteUInt8 *const paSlaveConfigurationIO,
                            int paType,
                            forte::core::CFBContainer &paContainer,
                            const SFBInterfaceSpec &paInterfaceSpec,
-                           const CStringDictionary::TStringId paInstanceNameId) :
+                           const forte::core::InstanceNameId paInstanceNameId) :
     forte::core::io::IOConfigFBMultiSlave(
         paSlaveConfigurationIO, paSlaveConfigurationIO_num, paType, paContainer, paInterfaceSpec, paInstanceNameId),
     var_BusAdapterIn(STRID(BusAdapterIn), *this, 0),

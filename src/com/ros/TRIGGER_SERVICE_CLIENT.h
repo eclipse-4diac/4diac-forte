@@ -75,7 +75,7 @@ class FORTE_TRIGGER_SERVICE_CLIENT : public CEventSourceFB {
     void callService();
     void waitForServer();
 
-    FORTE_TRIGGER_SERVICE_CLIENT(const CStringDictionary::TStringId paInstanceNameId,
+    FORTE_TRIGGER_SERVICE_CLIENT(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
         m_Initiated(false),
         m_RosNamespace(""),

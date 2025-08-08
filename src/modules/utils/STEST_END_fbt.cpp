@@ -35,7 +35,7 @@ namespace {
   };
 } // namespace
 
-FORTE_STEST_END::FORTE_STEST_END(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_STEST_END::FORTE_STEST_END(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId) {};
 

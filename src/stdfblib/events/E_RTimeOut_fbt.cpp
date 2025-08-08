@@ -66,7 +66,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_RTimeOut::FORTE_E_RTimeOut(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_RTimeOut::FORTE_E_RTimeOut(const forte::core::InstanceNameId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_DLY(STRID(DLY), *this),

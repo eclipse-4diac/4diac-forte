@@ -24,7 +24,7 @@ namespace {
   const auto cEventInputNames = std::array{STRID(EI)};
 }
 
-GEN_E_SPLIT::GEN_E_SPLIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_E_SPLIT::GEN_E_SPLIT(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {};
 
 void GEN_E_SPLIT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {

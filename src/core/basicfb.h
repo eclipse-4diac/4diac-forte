@@ -33,7 +33,7 @@ class CBasicFB : public CBaseFB {
   protected:
     CBasicFB(forte::core::CFBContainer &paContainer,
              const SFBInterfaceSpec &paInterfaceSpec,
-             CStringDictionary::TStringId paInstanceNameId,
+             forte::core::InstanceNameId paInstanceNameId,
              std::span<const CStringDictionary::TStringId> paVarInternalNames);
 
     void setInitialValues() override = 0;

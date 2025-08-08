@@ -38,7 +38,7 @@ namespace {
 
 CommunicationFB::CommunicationFB(CFBContainer &paContainer,
                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                 CStringDictionary::TStringId paInstanceNameId) :
+                                 forte::core::InstanceNameId paInstanceNameId) :
     CGenFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_QI(nullptr),

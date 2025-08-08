@@ -66,7 +66,7 @@ namespace {
 }
 
 
-FORTE_ZephyrIO::FORTE_ZephyrIO(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_ZephyrIO::FORTE_ZephyrIO(const forte::core::InstanceNameId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
 #pragma region base class spec
     FORTE_ZephyrIOBase(paContainer, cFBInterfaceSpec, paInstanceNameId),

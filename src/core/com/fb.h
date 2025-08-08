@@ -34,7 +34,7 @@ namespace forte::com {
     protected:
       CommunicationFB(CFBContainer &paContainer,
                       const SFBInterfaceSpec &paInterfaceSpec,
-                      CStringDictionary::TStringId paInstanceNameId);
+                      forte::core::InstanceNameId paInstanceNameId);
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *paECET) override;
 

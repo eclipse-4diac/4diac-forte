@@ -54,7 +54,7 @@ namespace {
 DEFINE_FIRMWARE_FB(FORTE_FB_TON, STRID(FB_TON))
 
 
-FORTE_FB_TON::FORTE_FB_TON(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_FB_TON::FORTE_FB_TON(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(0_BOOL),
     var_PT(0_TIME),

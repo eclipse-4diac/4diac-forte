@@ -33,17 +33,15 @@ DEFINE_FIRMWARE_FB(FORTE_F_CONCAT_DATE_TOD, STRID(F_CONCAT_DATE_TOD))
 
 namespace {
   const auto cDataInputNames = std::array{STRID(IN1), STRID(IN2)};
-  
-  
+
   const auto cDataOutputNames = std::array{STRID(OUT)};
-  
-  
+
   const auto cEventInputNames = std::array{STRID(REQ)};
   const auto cEventInputTypeIds = std::array{STRID(Event)};
-  
+
   const auto cEventOutputNames = std::array{STRID(CNF)};
   const auto cEventOutputTypeIds = std::array{STRID(Event)};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -55,10 +53,9 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
+} // namespace
 
-
-FORTE_F_CONCAT_DATE_TOD::FORTE_F_CONCAT_DATE_TOD(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_CONCAT_DATE_TOD::FORTE_F_CONCAT_DATE_TOD(const forte::core::InstanceNameId paInstanceNameId,
                                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_DATE(0)),

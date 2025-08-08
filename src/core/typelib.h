@@ -36,11 +36,11 @@ namespace forte {
 } // namespace forte
 
 //!\ingroup CORE Type for a function pointer which allows to create a functionblock instance
-typedef CFunctionBlock *(*TFunctionBlockCreateFunc)(CStringDictionary::TStringId paInstanceNameId,
+typedef CFunctionBlock *(*TFunctionBlockCreateFunc)(forte::core::InstanceNameId paInstanceNameId,
                                                     forte::core::CFBContainer &paContainer);
 
 //!\ingroup CORE Type for a function pointer which allows to create an adapter instance
-typedef forte::CAdapter *(*TAdapterCreateFunc)(CStringDictionary::TStringId paInstanceNameId,
+typedef forte::CAdapter *(*TAdapterCreateFunc)(forte::core::InstanceNameId paInstanceNameId,
                                                forte::core::CFBContainer &paContainer,
                                                bool paIsPlug,
                                                TForteUInt8 paParentAdapterlistID);
@@ -61,7 +61,7 @@ private:                                                                        
   const static forte::core::CFBTypeEntry csmFirmwareFBEntry_##fbclass;                                                 \
                                                                                                                        \
 public:                                                                                                                \
-  static CFunctionBlock *createFB(CStringDictionary::TStringId paInstanceNameId,                                       \
+  static CFunctionBlock *createFB(forte::core::InstanceNameId paInstanceNameId,                                        \
                                   forte::core::CFBContainer &paContainer) {                                            \
     return new fbclass(paInstanceNameId, paContainer);                                                                 \
   };                                                                                                                   \
@@ -101,7 +101,7 @@ private:                                                                        
   const static forte::core::CAdapterTypeEntry csmAdapterTypeEntry_##adapterclass;                                      \
                                                                                                                        \
 public:                                                                                                                \
-  static forte::CAdapter *createAdapter(CStringDictionary::TStringId paInstanceNameId,                                 \
+  static forte::CAdapter *createAdapter(forte::core::InstanceNameId paInstanceNameId,                                  \
                                         forte::core::CFBContainer &paContainer, bool paIsPlug,                         \
                                         TForteUInt8 paParentAdapterlistID);                                            \
   CStringDictionary::TStringId getFBTypeId() const override {                                                          \
@@ -114,7 +114,7 @@ private:
 #define DEFINE_ADAPTER_TYPE(adapterclass, adapterTypeNameId, ...)                                                      \
   const forte::core::CAdapterTypeEntry adapterclass::csmAdapterTypeEntry_##adapterclass(                               \
       (adapterTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}), adapterclass::createAdapter); \
-  forte::CAdapter *adapterclass::createAdapter(CStringDictionary::TStringId paInstanceNameId,                          \
+  forte::CAdapter *adapterclass::createAdapter(forte::core::InstanceNameId paInstanceNameId,                           \
                                                forte::core::CFBContainer &paContainer, bool paIsPlug,                  \
                                                TForteUInt8 paParentAdapterlistID) {                                    \
     if (paIsPlug) {                                                                                                    \
@@ -204,7 +204,7 @@ namespace forte::core {
                    std::string_view paTypeHash,
                    TFunctionBlockCreateFunc paCreateFB);
 
-      CFunctionBlock *createFBInstance(CStringDictionary::TStringId paInstanceNameId,
+      CFunctionBlock *createFBInstance(forte::core::InstanceNameId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) {
         return mFBCreationFunc(paInstanceNameId, paContainer);
       }
@@ -221,7 +221,7 @@ namespace forte::core {
                         std::string_view paTypeHash,
                         TAdapterCreateFunc paCreateAdapter);
 
-      forte::CAdapter *createAdapterInstance(CStringDictionary::TStringId paInstanceNameId,
+      forte::CAdapter *createAdapterInstance(forte::core::InstanceNameId paInstanceNameId,
                                              forte::core::CFBContainer &paContainer,
                                              bool paIsPlug,
                                              TForteUInt8 paParentAdapterlistID) {

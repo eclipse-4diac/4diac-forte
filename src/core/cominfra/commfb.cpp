@@ -58,7 +58,7 @@ namespace {
   const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
 } // namespace
 
-CCommFB::CCommFB(const CStringDictionary::TStringId paInstanceNameId,
+CCommFB::CCommFB(const forte::core::InstanceNameId paInstanceNameId,
                  forte::core::CFBContainer &paContainer,
                  forte::com_infra::EComServiceType paCommServiceType) :
     CBaseCommFB(paInstanceNameId, paContainer, paCommServiceType),

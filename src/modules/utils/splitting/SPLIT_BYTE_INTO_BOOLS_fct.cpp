@@ -66,7 +66,7 @@ namespace {
   };
 } // namespace
 
-FORTE_SPLIT_BYTE_INTO_BOOLS::FORTE_SPLIT_BYTE_INTO_BOOLS(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_SPLIT_BYTE_INTO_BOOLS::FORTE_SPLIT_BYTE_INTO_BOOLS(const forte::core::InstanceNameId paInstanceNameId,
                                                          forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

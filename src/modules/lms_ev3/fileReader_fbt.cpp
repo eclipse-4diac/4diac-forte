@@ -36,17 +36,15 @@ DEFINE_FIRMWARE_FB(fileReader, STRID(fileReader))
 
 namespace {
   const auto cDataInputNames = std::array{STRID(QI), STRID(FILE_NAME)};
-  
-  
+
   const auto cDataOutputNames = std::array{STRID(QO), STRID(STATUS), STRID(S1)};
-  
-  
+
   const auto cEventInputNames = std::array{STRID(INIT), STRID(REQ)};
   const auto cEventInputTypeIds = std::array{STRID(EInit), STRID(Event)};
-  
+
   const auto cEventOutputNames = std::array{STRID(INITO), STRID(CNF)};
   const auto cEventOutputTypeIds = std::array{STRID(Event), STRID(Event)};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -58,8 +56,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 const char *const fileReader::scmOK = "OK";
 const char *const fileReader::scmNotInitialised = "Not initialized";
@@ -89,7 +86,7 @@ void fileReader::executeEvent(TEventID paEIID,
   }
 }
 
-fileReader::fileReader(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+fileReader::fileReader(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId) {
   mFile.rdbuf()->pubsetbuf(nullptr, 0); // disable buffer to avoid latency
 }

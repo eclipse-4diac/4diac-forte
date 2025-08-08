@@ -54,7 +54,7 @@ namespace {
 }
 
 
-FORTE_F_EXPT::FORTE_F_EXPT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_EXPT::FORTE_F_EXPT(const forte::core::InstanceNameId paInstanceNameId,
                            forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_REAL_VARIANT()),

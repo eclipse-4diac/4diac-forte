@@ -22,7 +22,7 @@ USE_STRING_ID(ANY_ADAPTER);
 
 using namespace forte;
 
-CAnyAdapterPin::CAnyAdapterPin(CStringDictionary::TStringId paInstanceNameId) : mInstanceNameId(paInstanceNameId) {
+CAnyAdapterPin::CAnyAdapterPin(forte::core::InstanceNameId paInstanceNameId) : mInstanceNameId(paInstanceNameId) {
 }
 
 CAnyAdapterPin::~CAnyAdapterPin() {
@@ -50,7 +50,7 @@ void CAnyAdapterPin::removeConfiguredAdapter() {
   }
 }
 
-CAnyPlugPin::CAnyPlugPin(CStringDictionary::TStringId paInstanceNameId,
+CAnyPlugPin::CAnyPlugPin(forte::core::InstanceNameId paInstanceNameId,
                          CFunctionBlock &paParentFB,
                          TForteUInt8 paParentAdapterlistID) :
     CAnyAdapterPin(paInstanceNameId),
@@ -80,7 +80,7 @@ void CAnyPlugPin::setPeer(CAdapter *paPeer) {
   }
 }
 
-CAnySocketPin::CAnySocketPin(CStringDictionary::TStringId paInstanceNameId,
+CAnySocketPin::CAnySocketPin(forte::core::InstanceNameId paInstanceNameId,
                              CFunctionBlock &paParentFB,
                              TForteUInt8 paParentAdapterlistID) :
     CAnyAdapterPin(paInstanceNameId),

@@ -49,10 +49,9 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
+} // namespace
 
-
-FORTE_F_STRING_AS_BOOL::FORTE_F_STRING_AS_BOOL(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_STRING_AS_BOOL::FORTE_F_STRING_AS_BOOL(const forte::core::InstanceNameId paInstanceNameId,
                                                forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(""_STRING),

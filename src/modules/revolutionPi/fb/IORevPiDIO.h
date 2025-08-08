@@ -29,7 +29,6 @@ class FORTE_IORevPiDIO : public forte::core::io::IOConfigFBMultiSlave {
     static const int scmBusAdapterInAdpNum = 0;
     static const int scmBusAdapterOutAdpNum = 1;
 
-
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
@@ -38,7 +37,7 @@ class FORTE_IORevPiDIO : public forte::core::io::IOConfigFBMultiSlave {
     static const TForteUInt8 scmSlaveConfigurationIONum;
 
   public:
-    FORTE_IORevPiDIO(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IORevPiDIO(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     virtual ~FORTE_IORevPiDIO() {};
 

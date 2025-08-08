@@ -63,7 +63,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_R_TRIG::FORTE_E_R_TRIG(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_R_TRIG::FORTE_E_R_TRIG(const forte::core::InstanceNameId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_D_FF(STRID(E_D_FF), *this),

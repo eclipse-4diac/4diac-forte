@@ -59,7 +59,7 @@ namespace {
   };
 } // namespace
 
-FORTE_PLCnextMaster::FORTE_PLCnextMaster(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_PLCnextMaster::FORTE_PLCnextMaster(const forte::core::InstanceNameId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer) :
     forte::core::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),

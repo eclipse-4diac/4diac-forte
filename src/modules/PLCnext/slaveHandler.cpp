@@ -23,7 +23,7 @@ const TForteUInt8 PLCnextSlaveHandler::scmSlaveConfigurationIONum = 0;
 PLCnextSlaveHandler::PLCnextSlaveHandler(int paType,
                                          forte::core::CFBContainer &paContainer,
                                          const SFBInterfaceSpec *paInterfaceSpec,
-                                         const CStringDictionary::TStringId paInstanceNameId) :
+                                         const forte::core::InstanceNameId paInstanceNameId) :
     IOConfigFBMultiSlave(
         scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec, paInstanceNameId),
     slaveType(SlaveType(paType)),

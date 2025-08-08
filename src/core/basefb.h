@@ -36,7 +36,7 @@ class CBaseFB : public CFunctionBlock {
   protected:
     CBaseFB(forte::core::CFBContainer &paContainer,
             const SFBInterfaceSpec &paInterfaceSpec,
-            CStringDictionary::TStringId paInstanceNameId,
+            forte::core::InstanceNameId paInstanceNameId,
             std::span<const CStringDictionary::TStringId> paVarInternalNames);
 
     /*! \brief Get the internal variable with given number

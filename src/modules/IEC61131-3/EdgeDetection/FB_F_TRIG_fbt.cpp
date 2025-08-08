@@ -55,7 +55,7 @@ namespace {
 
 DEFINE_FIRMWARE_FB(FORTE_FB_F_TRIG, STRID(FB_F_TRIG))
 
-FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
     var_MEM(true_BOOL),

@@ -37,7 +37,7 @@ class CTimedFB : public CEventSourceFB {
 
     bool mActive; //!> flag to indicate that the timed fb is currently active
 
-    CTimedFB(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    CTimedFB(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     /*!\brief execute the input events of timed FBs as far it is possible
      *

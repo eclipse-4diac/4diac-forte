@@ -114,7 +114,7 @@ namespace {
 const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIONum = 0;
 
-FORTE_IORevPiDIO::FORTE_IORevPiDIO(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_IORevPiDIO::FORTE_IORevPiDIO(const forte::core::InstanceNameId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     IOConfigFBMultiSlave(
         scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 96, paContainer, cFBInterfaceSpec, paInstanceNameId),

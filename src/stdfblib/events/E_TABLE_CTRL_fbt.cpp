@@ -61,7 +61,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TABLE_CTRL::FORTE_E_TABLE_CTRL(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_TABLE_CTRL::FORTE_E_TABLE_CTRL(const forte::core::InstanceNameId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_DT(CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),

@@ -36,7 +36,7 @@ namespace {
   const auto cEventOutputNames = std::array{STRID(CNF)};
 } // namespace
 
-GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstanceNameId,
+GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const forte::core::InstanceNameId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),

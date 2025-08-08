@@ -257,7 +257,7 @@ namespace {
 
 CResource::CResource(forte::core::CFBContainer &paDevice,
                      const SFBInterfaceSpec &paInterfaceSpec,
-                     const CStringDictionary::TStringId paInstanceNameId) :
+                     const forte::core::InstanceNameId paInstanceNameId) :
     CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId),
     mResourceEventExecution(EcetFactory::createEcet()),
     mMonitoringHandler(*this)
@@ -268,7 +268,7 @@ CResource::CResource(forte::core::CFBContainer &paDevice,
 {
 }
 
-CResource::CResource(const SFBInterfaceSpec &paInterfaceSpec, const CStringDictionary::TStringId paInstanceNameId) :
+CResource::CResource(const SFBInterfaceSpec &paInterfaceSpec, const forte::core::InstanceNameId paInstanceNameId) :
     CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId),
     mResourceEventExecution(nullptr),
     mMonitoringHandler(*this)

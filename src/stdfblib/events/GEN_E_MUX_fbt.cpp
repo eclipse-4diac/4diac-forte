@@ -33,7 +33,7 @@ namespace {
   const auto cEventOutputNames = std::array{STRID(EO)};
 } // namespace
 
-GEN_E_MUX::GEN_E_MUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_E_MUX::GEN_E_MUX(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     var_K(0_UINT),
     conn_EO(*this, 0),

@@ -53,7 +53,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_SEL_E_4::FORTE_F_SEL_E_4(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_SEL_E_4::FORTE_F_SEL_E_4(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

@@ -44,7 +44,7 @@ namespace forte {
     protected:
       CAdapter(forte::core::CFBContainer &paContainer,
                const SFBInterfaceSpec &paInterfaceSpec,
-               const CStringDictionary::TStringId paInstanceNameId,
+               const forte::core::InstanceNameId paInstanceNameId,
                TForteUInt8 paParentAdapterlistID);
 
       TForteUInt16 getParentAdapterListEventID() const {
@@ -64,7 +64,7 @@ namespace forte {
       static_assert(std::is_base_of_v<CAdapter, T>, "T must be a CAdapter");
 
     public:
-      CPlugPin(CStringDictionary::TStringId paInstanceNameId,
+      CPlugPin(forte::core::InstanceNameId paInstanceNameId,
                CFunctionBlock &paParentFB,
                TForteUInt8 paParentAdapterlistID) :
           core::CInternalFB<T>(paInstanceNameId, paParentFB, paParentAdapterlistID),
@@ -104,7 +104,7 @@ namespace forte {
       static_assert(std::is_base_of_v<CAdapter, T>, "T must be a CAdapter");
 
     public:
-      CSocketPin(CStringDictionary::TStringId paInstanceNameId,
+      CSocketPin(forte::core::InstanceNameId paInstanceNameId,
                  CFunctionBlock &paParentFB,
                  TForteUInt8 paParentAdapterlistID) :
           core::CInternalFB<T>(paInstanceNameId, paParentFB, paParentAdapterlistID),

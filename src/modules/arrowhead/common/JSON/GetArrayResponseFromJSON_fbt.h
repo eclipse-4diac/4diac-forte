@@ -37,16 +37,15 @@ class FORTE_GetArrayResponseFromJSON : public CFunctionBlock {
 
     static const TEventID scmEventCNFID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     bool isResponseEmpty(char *paText);
 
   public:
-    FORTE_GetArrayResponseFromJSON(const CStringDictionary::TStringId paInstanceNameId,
+    FORTE_GetArrayResponseFromJSON(const forte::core::InstanceNameId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_GetArrayResponseFromJSON() override = default;
+        ~FORTE_GetArrayResponseFromJSON() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

@@ -49,7 +49,7 @@ namespace {
   };
 } // namespace
 
-FORTE_REAL2REAL::FORTE_REAL2REAL(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_REAL2REAL::FORTE_REAL2REAL(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_REAL),

@@ -54,7 +54,6 @@ class fileWriter : public CFunctionBlock {
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventCNFID = 1;
 
-
     static const char *const scmOK;
     static const char *const scmNotInitialised;
     static const char *const scmCouldNotWrite;
@@ -62,7 +61,7 @@ class fileWriter : public CFunctionBlock {
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    fileWriter(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    fileWriter(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~fileWriter() override = default;
 
   private:

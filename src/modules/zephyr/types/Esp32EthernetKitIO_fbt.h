@@ -41,7 +41,6 @@ class FORTE_Esp32EthernetKitIO final : public FORTE_ZephyrIOBase {
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventINITOID = 0;
 
-
 #pragma region remove executeEvent()
     // using FORTE_ZephyrIOBase::executeEvent
 #pragma endregion remove executeEvent()
@@ -62,7 +61,7 @@ class FORTE_Esp32EthernetKitIO final : public FORTE_ZephyrIOBase {
 #pragma endregion define IOs
 
   public:
-    FORTE_Esp32EthernetKitIO(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_Esp32EthernetKitIO(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_STRING var_LED0;

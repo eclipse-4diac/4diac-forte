@@ -28,7 +28,7 @@ class EmbrickSlave : public forte::core::io::IOConfigFBMultiSlave, public Embric
                  int paType,
                  forte::core::CFBContainer &paContainer,
                  const SFBInterfaceSpec &paInterfaceSpec,
-                 const CStringDictionary::TStringId paInstanceNameId);
+                 const forte::core::InstanceNameId paInstanceNameId);
     ~EmbrickSlave() override;
 
     forte::CSocketPin<FORTE_EBBusAdapter_Socket> var_BusAdapterIn;

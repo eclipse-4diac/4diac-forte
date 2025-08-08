@@ -63,7 +63,7 @@ namespace {
 
 FORTE_IORevPiBusAdapter::FORTE_IORevPiBusAdapter(forte::core::CFBContainer &paContainer,
                                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                                 const CStringDictionary::TStringId paInstanceNameId,
+                                                 const forte::core::InstanceNameId paInstanceNameId,
                                                  TForteUInt8 paParentAdapterlistID) :
     IOConfigFBMultiAdapter({}, paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     var_QO(0_BOOL),
@@ -80,7 +80,7 @@ void FORTE_IORevPiBusAdapter::setInitialValues() {
   var_Index = 0_UINT;
 }
 
-FORTE_IORevPiBusAdapter_Plug::FORTE_IORevPiBusAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+FORTE_IORevPiBusAdapter_Plug::FORTE_IORevPiBusAdapter_Plug(forte::core::InstanceNameId paInstanceNameId,
                                                            forte::core::CFBContainer &paContainer,
                                                            TForteUInt8 paParentAdapterlistID) :
     FORTE_IORevPiBusAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
@@ -156,7 +156,7 @@ CDataConnection *FORTE_IORevPiBusAdapter_Plug::getDOConUnchecked(const TPortId p
   return nullptr;
 }
 
-FORTE_IORevPiBusAdapter_Socket::FORTE_IORevPiBusAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+FORTE_IORevPiBusAdapter_Socket::FORTE_IORevPiBusAdapter_Socket(forte::core::InstanceNameId paInstanceNameId,
                                                                forte::core::CFBContainer &paContainer,
                                                                TForteUInt8 paParentAdapterlistID) :
     FORTE_IORevPiBusAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),

@@ -47,7 +47,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ST_DEL_FB::FORTE_ST_DEL_FB(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_ST_DEL_FB::FORTE_ST_DEL_FB(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

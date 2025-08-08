@@ -56,7 +56,7 @@ const char CLuaBFB::LUA_NAME[] = "FORTE_CLuaFB";
 const luaL_Reg CLuaBFB::LUA_FUNCS[] = {
     {"__index", CLuaFB_index}, {"__newindex", CLuaFB_newindex}, {"__call", CLuaFB_call}, {nullptr, nullptr}};
 
-CLuaBFB::CLuaBFB(CStringDictionary::TStringId paInstanceNameId,
+CLuaBFB::CLuaBFB(forte::core::InstanceNameId paInstanceNameId,
                  const CLuaBFBTypeEntry *paTypeEntry,
                  forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CBasicFB>(

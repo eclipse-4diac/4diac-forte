@@ -52,7 +52,7 @@ namespace {
 }
 
 
-FORTE_F_WORD_TO_DINT::FORTE_F_WORD_TO_DINT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_WORD_TO_DINT::FORTE_F_WORD_TO_DINT(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_WORD),
     var_OUT(0_DINT),

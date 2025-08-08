@@ -27,8 +27,7 @@ class FORTE_QueryServiceHTTP : public CCompositeFB {
     static const int scm_nqueryServicesAdpNum = 0;
 
   public:
-    FORTE_QueryServiceHTTP(const CStringDictionary::TStringId paInstanceNameId,
-                           forte::core::CFBContainer &paContainer) :
+    FORTE_QueryServiceHTTP(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
         ~FORTE_QueryServiceHTTP() override = default;
 };

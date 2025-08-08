@@ -48,7 +48,7 @@ namespace {
 }
 
 
-FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const forte::core::InstanceNameId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_EO(*this, 0),

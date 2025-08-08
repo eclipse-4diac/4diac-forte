@@ -73,7 +73,6 @@ class FORTE_FieldsToServiceRequestForm : public CBasicFB {
 
     static const TEventID scmEventCNFID = 0;
 
-
     void alg_REQ();
     static const TForteInt16 scmStateSTART = 0;
     static const TForteInt16 scmStateREQ = 1;
@@ -84,10 +83,10 @@ class FORTE_FieldsToServiceRequestForm : public CBasicFB {
     virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_FieldsToServiceRequestForm(CStringDictionary::TStringId paInstanceNameId,
+    FORTE_FieldsToServiceRequestForm(forte::core::InstanceNameId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_FieldsToServiceRequestForm() override = default;
+        ~FORTE_FieldsToServiceRequestForm() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

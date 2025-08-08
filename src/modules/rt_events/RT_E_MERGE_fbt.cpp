@@ -50,7 +50,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RT_E_MERGE::FORTE_RT_E_MERGE(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_RT_E_MERGE::FORTE_RT_E_MERGE(const forte::core::InstanceNameId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     CRTEventSingle(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),

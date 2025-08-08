@@ -30,7 +30,6 @@ class FORTE_E_TimeOut final : public CEventSourceFB {
   private:
     static const int scmTimeOutSocketAdpNum = 0;
 
-
     bool mActive; //!> flag to indicate that the timed fb is currently active
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
@@ -39,7 +38,7 @@ class FORTE_E_TimeOut final : public CEventSourceFB {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_E_TimeOut(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_TimeOut(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
     bool initialize() override;
 
     forte::CSocketPin<FORTE_ATimeOut_Socket> var_TimeOutSocket;

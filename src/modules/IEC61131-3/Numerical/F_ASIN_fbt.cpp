@@ -53,7 +53,7 @@ namespace {
 }
 
 
-FORTE_F_ASIN::FORTE_F_ASIN(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_ASIN::FORTE_F_ASIN(const forte::core::InstanceNameId paInstanceNameId,
                            forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_REAL_VARIANT()),

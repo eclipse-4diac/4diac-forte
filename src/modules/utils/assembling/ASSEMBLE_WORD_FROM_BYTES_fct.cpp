@@ -41,8 +41,7 @@ USE_STRING_ID(WORD);
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_WORD_FROM_BYTES, STRID(ASSEMBLE_WORD_FROM_BYTES))
 
 namespace {
-  const auto cDataInputNames = std::array{STRID(BYTE_00),
-                                                                                            STRID(BYTE_01)};
+  const auto cDataInputNames = std::array{STRID(BYTE_00), STRID(BYTE_01)};
   const auto cDataOutputNames = std::array{STRID()};
   const auto cEventInputNames = std::array{STRID(REQ)};
   const auto cEventInputTypeIds = std::array{STRID(Event)};
@@ -59,10 +58,9 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
+} // namespace
 
-
-FORTE_ASSEMBLE_WORD_FROM_BYTES::FORTE_ASSEMBLE_WORD_FROM_BYTES(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_ASSEMBLE_WORD_FROM_BYTES::FORTE_ASSEMBLE_WORD_FROM_BYTES(const forte::core::InstanceNameId paInstanceNameId,
                                                                forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

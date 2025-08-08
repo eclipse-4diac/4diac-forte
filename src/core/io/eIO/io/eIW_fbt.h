@@ -24,5 +24,5 @@ class FORTE_eIW final : public forte::core::io::CeInputFB<CIEC_WORD> {
     DECLARE_FIRMWARE_FB(FORTE_eIW)
 
   public:
-    FORTE_eIW(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_eIW(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 };

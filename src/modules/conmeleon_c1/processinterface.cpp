@@ -41,7 +41,7 @@ CConmeleonC1ProcessInterface::EIOState CConmeleonC1ProcessInterface::smDOUsage[4
 
 CConmeleonC1ProcessInterface::CConmeleonC1ProcessInterface(forte::core::CFBContainer &paContainer,
                                                            const SFBInterfaceSpec &paInterfaceSpec,
-                                                           const CStringDictionary::TStringId paInstanceNameId) :
+                                                           const forte::core::InstanceNameId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mChannelNr(-1),
     mCallingFB(enUnsupported) {

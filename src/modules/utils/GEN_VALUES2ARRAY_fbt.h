@@ -59,7 +59,7 @@ class GEN_VALUES2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
     std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDIs;
 
   public:
-    GEN_VALUES2ARRAY(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_VALUES2ARRAY(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_VALUES2ARRAY() override = default;
 };
 

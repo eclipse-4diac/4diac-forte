@@ -52,7 +52,7 @@ namespace {
 }
 
 
-FORTE_F_ULINT_AS_STRING::FORTE_F_ULINT_AS_STRING(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_ULINT_AS_STRING::FORTE_F_ULINT_AS_STRING(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_ULINT),
     var_OUT(""_STRING),

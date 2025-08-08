@@ -30,17 +30,15 @@ DEFINE_FIRMWARE_FB(FORTE_F_NE, STRID(F_NE))
 
 namespace {
   const auto cDataInputNames = std::array{STRID(IN1), STRID(IN2)};
-  
-  
+
   const auto cDataOutputNames = std::array{STRID(OUT)};
-  
-  
+
   const auto cEventInputNames = std::array{STRID(REQ)};
   const auto cEventInputTypeIds = std::array{STRID(Event)};
-  
+
   const auto cEventOutputNames = std::array{STRID(CNF)};
   const auto cEventOutputTypeIds = std::array{STRID(Event)};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -52,10 +50,9 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
+} // namespace
 
-
-FORTE_F_NE::FORTE_F_NE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_NE::FORTE_F_NE(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_ELEMENTARY_VARIANT()),
     var_IN2(CIEC_ANY_ELEMENTARY_VARIANT()),

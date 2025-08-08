@@ -28,7 +28,6 @@ class FORTE_E_D_FF final : public CBasicFB {
     static const TEventID scmEventCLKID = 0;
     static const TEventID scmEventEOID = 0;
 
-
     CIEC_ANY *getVarInternal(size_t) override;
 
     void alg_LATCH(void);
@@ -48,7 +47,7 @@ class FORTE_E_D_FF final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_D_FF(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_D_FF(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_D;
 

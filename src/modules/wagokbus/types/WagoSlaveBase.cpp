@@ -21,7 +21,7 @@ const TForteUInt8 WagoSlaveBase::scmSlaveConfigurationIONum = 0;
 WagoSlaveBase::WagoSlaveBase(int paType,
                              forte::core::CFBContainer &paContainer,
                              const SFBInterfaceSpec &paInterfaceSpec,
-                             const CStringDictionary::TStringId paInstanceNameId) :
+                             const forte::core::InstanceNameId paInstanceNameId) :
     IOConfigFBMultiSlave(
         scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec, paInstanceNameId),
     var_BusAdapterOut(STRID(BusAdapterOut), *this, 0),

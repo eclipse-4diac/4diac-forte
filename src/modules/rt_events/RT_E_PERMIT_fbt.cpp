@@ -50,7 +50,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RT_E_PERMIT::FORTE_RT_E_PERMIT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_RT_E_PERMIT::FORTE_RT_E_PERMIT(const forte::core::InstanceNameId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
     CRTEventSingle(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),

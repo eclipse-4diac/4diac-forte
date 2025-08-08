@@ -25,7 +25,7 @@
 class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
 
   protected:
-    CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    CGenBitBase(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~CGenBitBase() override = default;
 
     CIEC_ANY_BIT_VARIANT &var_IN(size_t paIndex) {

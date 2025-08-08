@@ -64,7 +64,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ADS_SERVER_CONFIG::FORTE_ADS_SERVER_CONFIG(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_ADS_SERVER_CONFIG::FORTE_ADS_SERVER_CONFIG(const forte::core::InstanceNameId paInstanceNameId,
                                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),

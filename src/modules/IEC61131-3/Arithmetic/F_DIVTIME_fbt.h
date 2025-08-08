@@ -29,14 +29,9 @@ class FORTE_F_DIVTIME : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_F_DIVTIME)
 
   private:
-
-
     static const TEventID scmEventREQID = 0;
 
-
     static const TEventID scmEventCNFID = 0;
-
-
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -44,7 +39,7 @@ class FORTE_F_DIVTIME : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_F_DIVTIME(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_DIVTIME(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_TIME var_IN1;
     CIEC_ANY_NUM_VARIANT var_IN2;

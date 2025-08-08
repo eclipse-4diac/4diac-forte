@@ -29,7 +29,7 @@ namespace {
   const auto cEventOutputNames = std::array{STRID(CNF)};
 } // namespace
 
-CGenBitBase::CGenBitBase(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+CGenBitBase::CGenBitBase(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_OUT(*this, 0, var_OUT) {

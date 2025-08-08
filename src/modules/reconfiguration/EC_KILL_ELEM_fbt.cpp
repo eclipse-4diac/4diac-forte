@@ -47,7 +47,7 @@ namespace {
   };
 } // namespace
 
-FORTE_EC_KILL_ELEM::FORTE_EC_KILL_ELEM(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_EC_KILL_ELEM::FORTE_EC_KILL_ELEM(const forte::core::InstanceNameId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

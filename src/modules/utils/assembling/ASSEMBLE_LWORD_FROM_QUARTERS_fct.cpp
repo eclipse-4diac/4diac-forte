@@ -102,7 +102,7 @@ namespace {
 } // namespace
 
 FORTE_ASSEMBLE_LWORD_FROM_QUARTERS::FORTE_ASSEMBLE_LWORD_FROM_QUARTERS(
-    const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_QUARTER_BYTE_00(nullptr),

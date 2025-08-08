@@ -63,6 +63,6 @@ class GEN_FORTE_F_MOVE final : public CGenFunctionBlock<CFunctionBlock> {
     std::unique_ptr<CGenDataConnection> conn_OUT;
 
   public:
-    GEN_FORTE_F_MOVE(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_FORTE_F_MOVE(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_FORTE_F_MOVE() override = default;
 };

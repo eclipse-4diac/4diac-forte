@@ -52,7 +52,7 @@ namespace {
 }
 
 
-FORTE_F_LINT_TO_INT::FORTE_F_LINT_TO_INT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_LINT_TO_INT::FORTE_F_LINT_TO_INT(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_LINT),
     var_OUT(0_INT),

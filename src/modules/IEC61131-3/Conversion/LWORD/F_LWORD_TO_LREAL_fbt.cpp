@@ -52,7 +52,7 @@ namespace {
 }
 
 
-FORTE_F_LWORD_TO_LREAL::FORTE_F_LWORD_TO_LREAL(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_LWORD_TO_LREAL::FORTE_F_LWORD_TO_LREAL(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_LWORD),
     var_OUT(0_LREAL),

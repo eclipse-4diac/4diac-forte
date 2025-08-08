@@ -67,7 +67,7 @@ class GEN_STRUCT_DEMUX final : public CGenFunctionBlock<CFunctionBlock> {
 
   public:
     GEN_STRUCT_DEMUX(const GEN_STRUCT_DEMUX &paOther) = delete;
-    GEN_STRUCT_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_STRUCT_DEMUX(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_STRUCT_DEMUX() override = default;
 };
 

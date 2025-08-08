@@ -47,7 +47,7 @@ namespace {
 
 DEFINE_FIRMWARE_FB(FORTE_eIXconfig, STRID(eIXconfig))
 
-FORTE_eIXconfig::FORTE_eIXconfig(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_eIXconfig::FORTE_eIXconfig(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CeConfigFB(paInstanceNameId, cFBInterfaceSpec, paContainer),
     var_FE(0_BOOL),

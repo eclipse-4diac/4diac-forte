@@ -61,7 +61,7 @@ namespace {
   };
 } // namespace
 
-FORTE_EBMaster::FORTE_EBMaster(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_EBMaster::FORTE_EBMaster(const forte::core::InstanceNameId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     forte::core::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_BusInterface(1_UINT),

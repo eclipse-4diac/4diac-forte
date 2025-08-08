@@ -51,7 +51,7 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
     .mPlugNames = {},
 };
 
-FORTE_utils__timing__F_NOW::FORTE_utils__timing__F_NOW(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_utils__timing__F_NOW::FORTE_utils__timing__F_NOW(const forte::core::InstanceNameId paInstanceNameId,
                                                        forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

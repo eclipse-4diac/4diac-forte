@@ -50,7 +50,7 @@ namespace {
   };
 } // namespace
 
-RMT_RES::RMT_RES(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
+RMT_RES::RMT_RES(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paDevice) :
     CResource(paDevice, cFBInterfaceSpec, paInstanceNameId),
     conn_MGR_ID(nullptr),
     conn_MGR_ID_int(*this, 0, u""_WSTRING),

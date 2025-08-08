@@ -38,7 +38,7 @@ namespace forte::core::io {
       static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>, "T must be a subclass of CIEC_ANY_BIT");
 
     public:
-      COutputFB(forte::core::CFBContainer &paContainer, const CStringDictionary::TStringId paInstanceNameId) :
+      COutputFB(forte::core::CFBContainer &paContainer, const forte::core::InstanceNameId paInstanceNameId) :
           CProcessInterfaceFB(paContainer, scmFBInterfaceSpec, paInstanceNameId),
           var_OUT(),
           conn_OUT(nullptr) {

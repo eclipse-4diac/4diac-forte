@@ -36,7 +36,7 @@ class CUMICProcessInterface : public CProcessInterfaceBase {
   public:
     CUMICProcessInterface(forte::core::CFBContainer &paContainer,
                           const SFBInterfaceSpec &paInterfaceSpec,
-                          const CStringDictionary::TStringId paInstanceNameId);
+                          const forte::core::InstanceNameId paInstanceNameId);
     ~CUMICProcessInterface() override;
 
   protected:

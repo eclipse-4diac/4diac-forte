@@ -33,7 +33,6 @@ class FORTE_E_CTUD final : public CBasicFB {
     static const TEventID scmEventROID = 1;
     static const TEventID scmEventLDOID = 2;
 
-
     CIEC_ANY *getVarInternal(size_t) override;
 
     void alg_CountUp(void);
@@ -61,7 +60,7 @@ class FORTE_E_CTUD final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_CTUD(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_CTUD(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_UINT var_PV;
 

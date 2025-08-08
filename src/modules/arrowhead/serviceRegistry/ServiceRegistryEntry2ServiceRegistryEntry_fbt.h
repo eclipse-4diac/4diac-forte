@@ -36,7 +36,7 @@ class FORTE_ServiceRegistryEntry2ServiceRegistryEntry : public CFunctionBlock {
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_ServiceRegistryEntry2ServiceRegistryEntry(const CStringDictionary::TStringId paInstanceNameId,
+    FORTE_ServiceRegistryEntry2ServiceRegistryEntry(const forte::core::InstanceNameId paInstanceNameId,
                                                     forte::core::CFBContainer &paContainer) :
 
     ~FORTE_ServiceRegistryEntry2ServiceRegistryEntry() override = default;

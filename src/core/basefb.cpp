@@ -23,7 +23,7 @@
 
 CBaseFB::CBaseFB(forte::core::CFBContainer &paContainer,
                  const SFBInterfaceSpec &paInterfaceSpec,
-                 const CStringDictionary::TStringId paInstanceNameId,
+                 const forte::core::InstanceNameId paInstanceNameId,
                  std::span<const CStringDictionary::TStringId> paVarInternalNames) :
     CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
     cmVarInternalNames(paVarInternalNames) {

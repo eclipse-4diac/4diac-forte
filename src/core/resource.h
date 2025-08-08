@@ -50,7 +50,7 @@ class CResource : public CFunctionBlock {
      */
     CResource(forte::core::CFBContainer &paDevice,
               const SFBInterfaceSpec &paInterfaceSpec,
-              CStringDictionary::TStringId paInstanceNameId);
+              forte::core::InstanceNameId paInstanceNameId);
 
     ~CResource() override;
 
@@ -129,7 +129,7 @@ class CResource : public CFunctionBlock {
     CConnection::Wrapper getOutputConnection(std::span<const CStringDictionary::TStringId> paSrcNameList) override;
 
   protected:
-    CResource(const SFBInterfaceSpec &paInterfaceSpec, CStringDictionary::TStringId paInstanceNameId);
+    CResource(const SFBInterfaceSpec &paInterfaceSpec, forte::core::InstanceNameId paInstanceNameId);
 
     void executeEvent(TEventID, CEventChainExecutionThread *const) override {
       // nothing to do here for a resource

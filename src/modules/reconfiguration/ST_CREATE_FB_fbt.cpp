@@ -49,7 +49,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ST_CREATE_FB::FORTE_ST_CREATE_FB(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_ST_CREATE_FB::FORTE_ST_CREATE_FB(const forte::core::InstanceNameId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

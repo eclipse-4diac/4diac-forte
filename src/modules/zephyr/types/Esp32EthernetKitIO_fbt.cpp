@@ -71,7 +71,7 @@ namespace {
   };
 } // namespace
 
-FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const forte::core::InstanceNameId paInstanceNameId,
                                                    forte::core::CFBContainer &paContainer) :
 #pragma region base class spec
     FORTE_ZephyrIOBase(paContainer, cFBInterfaceSpec, paInstanceNameId),

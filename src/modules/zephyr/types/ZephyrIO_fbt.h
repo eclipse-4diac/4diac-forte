@@ -41,7 +41,6 @@ class FORTE_ZephyrIO final : public FORTE_ZephyrIOBase {
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventINITOID = 0;
 
-
 #pragma region remove executeEvent()
     // using FORTE_ZephyrIOBase::executeEvent
 #pragma endregion remove executeEvent()
@@ -60,7 +59,7 @@ class FORTE_ZephyrIO final : public FORTE_ZephyrIOBase {
 #pragma endregion define IOs
 
   public:
-    FORTE_ZephyrIO(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_ZephyrIO(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_TIME var_UpdateInterval;

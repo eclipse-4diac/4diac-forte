@@ -94,7 +94,7 @@ void fileWriter::executeEvent(TEventID paEIID,
   }
 }
 
-fileWriter::fileWriter(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+fileWriter::fileWriter(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId) {
   mFile.rdbuf()->pubsetbuf(nullptr, 0); // disable buffer to avoid latency
 }

@@ -33,7 +33,6 @@ class FORTE_RT_E_PERMIT final : public CRTEventSingle {
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventEOID = 1;
 
-
     bool checkActivation(TEventID) override;
 
     void readInputData(TEventID paEIID) override;
@@ -41,7 +40,7 @@ class FORTE_RT_E_PERMIT final : public CRTEventSingle {
     void setInitialValues() override;
 
   public:
-    FORTE_RT_E_PERMIT(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_RT_E_PERMIT(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_PERMIT;
     CIEC_TIME var_Tmin;

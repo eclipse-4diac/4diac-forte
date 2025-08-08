@@ -49,7 +49,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_SELECT::FORTE_E_SELECT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_SELECT::FORTE_E_SELECT(const forte::core::InstanceNameId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO(*this, 0),

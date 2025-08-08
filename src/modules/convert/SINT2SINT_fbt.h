@@ -23,12 +23,11 @@
 #include "core/datatypes/forte_array_variable.h"
 
 class FORTE_SINT2SINT final : public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_SINT2SINT)
+    DECLARE_FIRMWARE_FB(FORTE_SINT2SINT)
 
   private:
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
-
 
     CIEC_ANY *getVarInternal(size_t) override;
 
@@ -43,7 +42,7 @@ class FORTE_SINT2SINT final : public CSimpleFB {
     void setInitialValues() override;
 
   public:
-    FORTE_SINT2SINT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_SINT2SINT(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_SINT var_IN;
 
@@ -71,4 +70,3 @@ class FORTE_SINT2SINT final : public CSimpleFB {
       evt_REQ(paIN, paOUT);
     }
 };
-

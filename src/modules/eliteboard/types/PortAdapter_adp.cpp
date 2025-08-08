@@ -61,7 +61,7 @@ DEFINE_ADAPTER_TYPE(FORTE_PortAdapter, STRID(PortAdapter))
 
 FORTE_PortAdapter::FORTE_PortAdapter(forte::core::CFBContainer &paContainer,
                                      const SFBInterfaceSpec &paInterfaceSpec,
-                                     const CStringDictionary::TStringId paInstanceNameId,
+                                     const forte::core::InstanceNameId paInstanceNameId,
                                      TForteUInt8 paParentAdapterlistID) :
     CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     var_GPIO_Port_Addr(0_DWORD) {
@@ -72,7 +72,7 @@ void FORTE_PortAdapter::setInitialValues() {
   var_GPIO_Port_Addr = 0_DWORD;
 }
 
-FORTE_PortAdapter_Plug::FORTE_PortAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+FORTE_PortAdapter_Plug::FORTE_PortAdapter_Plug(forte::core::InstanceNameId paInstanceNameId,
                                                forte::core::CFBContainer &paContainer,
                                                TForteUInt8 paParentAdapterlistID) :
     FORTE_PortAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
@@ -125,7 +125,7 @@ CDataConnection *FORTE_PortAdapter_Plug::getDOConUnchecked(TPortId) {
   return nullptr;
 }
 
-FORTE_PortAdapter_Socket::FORTE_PortAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+FORTE_PortAdapter_Socket::FORTE_PortAdapter_Socket(forte::core::InstanceNameId paInstanceNameId,
                                                    forte::core::CFBContainer &paContainer,
                                                    TForteUInt8 paParentAdapterlistID) :
     FORTE_PortAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),

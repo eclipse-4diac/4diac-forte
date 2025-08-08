@@ -34,7 +34,6 @@ class FORTE_PLCnextMaster final : public forte::core::io::IOConfigFBMultiMaster 
     static const TEventID scmEventINDID = 1;
     static const int scmBusAdapterOutAdpNum = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
@@ -45,7 +44,7 @@ class FORTE_PLCnextMaster final : public forte::core::io::IOConfigFBMultiMaster 
     void setConfig() override;
 
   public:
-    FORTE_PLCnextMaster(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_PLCnextMaster(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_UINT var_SlaveUpdateInterval;

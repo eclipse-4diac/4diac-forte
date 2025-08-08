@@ -55,7 +55,7 @@ namespace {
 }
 
 
-FORTE_F_FIND::FORTE_F_FIND(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_FIND::FORTE_F_FIND(const forte::core::InstanceNameId paInstanceNameId,
                            forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_STRING_VARIANT()),

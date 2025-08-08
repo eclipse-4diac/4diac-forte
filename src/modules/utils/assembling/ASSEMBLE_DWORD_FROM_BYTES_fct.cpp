@@ -62,7 +62,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ASSEMBLE_DWORD_FROM_BYTES::FORTE_ASSEMBLE_DWORD_FROM_BYTES(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_ASSEMBLE_DWORD_FROM_BYTES::FORTE_ASSEMBLE_DWORD_FROM_BYTES(const forte::core::InstanceNameId paInstanceNameId,
                                                                  forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

@@ -16,7 +16,7 @@ class FORTE_WagoMaster : public forte::core::io::IOConfigFBMultiMaster {
     DECLARE_FIRMWARE_FB(FORTE_WagoMaster)
 
   public:
-    FORTE_WagoMaster(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_WagoMaster(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~FORTE_WagoMaster() override = default;
 
     CIEC_BOOL var_QI;
@@ -62,7 +62,6 @@ class FORTE_WagoMaster : public forte::core::io::IOConfigFBMultiMaster {
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventINDID = 1;
     static const int scmBusAdapterOutAdpNum = 0;
-
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;

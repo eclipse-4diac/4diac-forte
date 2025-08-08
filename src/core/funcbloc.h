@@ -391,7 +391,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     CFunctionBlock(forte::core::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
-                   CStringDictionary::TStringId paInstanceNameId);
+                   forte::core::InstanceNameId paInstanceNameId);
 
     /*!\brief Function to send an output event of the FB.
      *

@@ -21,7 +21,7 @@ namespace forte {
 
   class CAnyAdapterPin : public IAdapterPin {
     public:
-      CAnyAdapterPin(CStringDictionary::TStringId paInstanceNameId);
+      CAnyAdapterPin(forte::core::InstanceNameId paInstanceNameId);
       ~CAnyAdapterPin();
 
     protected:
@@ -38,7 +38,7 @@ namespace forte {
   class CAnyPlugPin final : public CAnyAdapterPin, public IPlugPin {
 
     public:
-      CAnyPlugPin(CStringDictionary::TStringId paInstanceNameId,
+      CAnyPlugPin(forte::core::InstanceNameId paInstanceNameId,
                   CFunctionBlock &paParentFB,
                   TForteUInt8 paParentAdapterlistID);
 
@@ -61,7 +61,7 @@ namespace forte {
   class CAnySocketPin final : public CAnyAdapterPin, public ISocketPin {
 
     public:
-      CAnySocketPin(CStringDictionary::TStringId paInstanceNameId,
+      CAnySocketPin(forte::core::InstanceNameId paInstanceNameId,
                     CFunctionBlock &paParentFB,
                     TForteUInt8 paParentAdapterlistID);
 

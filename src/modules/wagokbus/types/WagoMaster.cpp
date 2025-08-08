@@ -53,7 +53,7 @@ namespace {
   };
 } // namespace
 
-FORTE_WagoMaster::FORTE_WagoMaster(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_WagoMaster::FORTE_WagoMaster(const forte::core::InstanceNameId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),

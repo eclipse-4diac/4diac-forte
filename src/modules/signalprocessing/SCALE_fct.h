@@ -31,7 +31,6 @@ class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
@@ -39,8 +38,7 @@ class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_signalprocessing__SCALE(CStringDictionary::TStringId paInstanceNameId,
-                                  forte::core::CFBContainer &paContainer);
+    FORTE_signalprocessing__SCALE(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_REAL var_IN;
     CIEC_REAL var_MAX_IN;

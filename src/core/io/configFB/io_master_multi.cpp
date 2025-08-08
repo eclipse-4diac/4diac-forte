@@ -23,7 +23,7 @@ TForteUInt16 IOConfigFBMultiMaster::mInstancesIncrement = 0;
 
 IOConfigFBMultiMaster::IOConfigFBMultiMaster(forte::core::CFBContainer &paContainer,
                                              const SFBInterfaceSpec &paInterfaceSpec,
-                                             const CStringDictionary::TStringId paInstanceNameId) :
+                                             const forte::core::InstanceNameId paInstanceNameId) :
     IOConfigFBController(paContainer, paInterfaceSpec, paInstanceNameId) {
   mId = mInstancesIncrement++;
   mInstances.push_back(this);

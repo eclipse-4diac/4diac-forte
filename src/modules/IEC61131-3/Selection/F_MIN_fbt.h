@@ -28,14 +28,9 @@ class FORTE_F_MIN : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_F_MIN)
 
   private:
-
-
     static const TEventID scmEventREQID = 0;
 
-
     static const TEventID scmEventCNFID = 0;
-
-
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -43,7 +38,7 @@ class FORTE_F_MIN : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_F_MIN(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_F_MIN(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY_ELEMENTARY_VARIANT var_IN1;
     CIEC_ANY_ELEMENTARY_VARIANT var_IN2;

@@ -28,7 +28,6 @@ class FORTE_E_MERGE final : public CBasicFB {
     static const TEventID scmEventEI2ID = 1;
     static const TEventID scmEventEOID = 0;
 
-
     CIEC_ANY *getVarInternal(size_t) override;
 
     static const TForteInt16 scmStateSTART = 0;
@@ -44,7 +43,7 @@ class FORTE_E_MERGE final : public CBasicFB {
     void setInitialValues() override;
 
   public:
-    FORTE_E_MERGE(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_E_MERGE(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CEventConnection conn_EO;
 

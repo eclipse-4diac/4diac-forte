@@ -52,7 +52,7 @@ namespace {
   };
 } // namespace
 
-FORTE_GetInstancePathAndName::FORTE_GetInstancePathAndName(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_GetInstancePathAndName::FORTE_GetInstancePathAndName(const forte::core::InstanceNameId paInstanceNameId,
                                                            forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_Sep(0x2f_CHAR),

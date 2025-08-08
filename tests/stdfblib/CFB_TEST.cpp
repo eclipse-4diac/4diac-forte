@@ -91,7 +91,7 @@ namespace {
   };
 } // namespace
 
-FORTE_CFB_TEST::FORTE_CFB_TEST(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_CFB_TEST::FORTE_CFB_TEST(const forte::core::InstanceNameId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_PERMIT_OP(STRID(PERMIT_OP), *this),

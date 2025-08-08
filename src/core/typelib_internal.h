@@ -43,13 +43,13 @@ namespace forte {
      *    - UnsupportedType   The requested FB type is not known to the typelib
      *    - InvalidOperation The requested FB can not be created (e.g. out of memory)
      */
-    CFunctionBlock *createFB(CStringDictionary::TStringId paInstanceNameId,
+    CFunctionBlock *createFB(forte::core::InstanceNameId paInstanceNameId,
                              CStringDictionary::TStringId paFBTypeId,
                              std::string_view paTypeHash,
                              forte::core::CFBContainer &paContainer,
                              EMGMResponse &paErrorMSG);
 
-    CFunctionBlock *createFB(CStringDictionary::TStringId paInstanceNameId,
+    CFunctionBlock *createFB(forte::core::InstanceNameId paInstanceNameId,
                              CStringDictionary::TStringId paFBTypeId,
                              forte::core::CFBContainer &paContainer);
 
@@ -57,7 +57,7 @@ namespace forte {
      */
     bool deleteFB(CFunctionBlock *paFBToDelete);
 
-    forte::CAdapter *createAdapter(CStringDictionary::TStringId paInstanceNameId,
+    forte::CAdapter *createAdapter(forte::core::InstanceNameId paInstanceNameId,
                                    CStringDictionary::TStringId paAdapterTypeId,
                                    forte::core::CFBContainer &paContainer,
                                    bool paIsPlug,

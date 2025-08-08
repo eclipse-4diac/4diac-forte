@@ -54,7 +54,7 @@ namespace {
   };
 } // namespace
 
-FORTE_IORevPiCore::FORTE_IORevPiCore(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_IORevPiCore::FORTE_IORevPiCore(const forte::core::InstanceNameId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :
     forte::core::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_UpdateInterval(25_UINT),

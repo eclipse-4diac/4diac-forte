@@ -49,7 +49,7 @@ class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
     CDataConnection *conn_K;
 
   public:
-    GEN_E_DEMUX(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_E_DEMUX(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
     ~GEN_E_DEMUX() override = default;
 };
 #endif //_GEN_E_DEMUX_H_

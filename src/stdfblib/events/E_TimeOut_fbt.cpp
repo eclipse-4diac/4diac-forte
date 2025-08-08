@@ -33,7 +33,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TimeOut::FORTE_E_TimeOut(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_TimeOut::FORTE_E_TimeOut(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     mActive(false),

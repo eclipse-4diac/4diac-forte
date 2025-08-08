@@ -19,7 +19,7 @@ class BE_SVIFB : public CFunctionBlock {
   public:
     BE_SVIFB(forte::core::CFBContainer &paContainer,
              const SFBInterfaceSpec &paInterfaceSpec,
-             const CStringDictionary::TStringId paInstanceNameId) :
+             const forte::core::InstanceNameId paInstanceNameId) :
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId) {
     }
 

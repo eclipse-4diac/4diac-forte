@@ -49,7 +49,7 @@ namespace {
   };
 } // namespace
 
-FORTE_POWERLINK_MN::FORTE_POWERLINK_MN(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_POWERLINK_MN::FORTE_POWERLINK_MN(const forte::core::InstanceNameId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),

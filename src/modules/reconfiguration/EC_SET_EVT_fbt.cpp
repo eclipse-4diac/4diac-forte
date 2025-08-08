@@ -49,7 +49,7 @@ namespace {
   };
 } // namespace
 
-FORTE_EC_SET_EVT::FORTE_EC_SET_EVT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_EC_SET_EVT::FORTE_EC_SET_EVT(const forte::core::InstanceNameId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

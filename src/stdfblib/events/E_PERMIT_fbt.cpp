@@ -48,7 +48,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_PERMIT::FORTE_E_PERMIT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_E_PERMIT::FORTE_E_PERMIT(const forte::core::InstanceNameId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO(*this, 0),

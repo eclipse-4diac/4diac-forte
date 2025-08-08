@@ -22,7 +22,7 @@ USE_STRING_ID(GEN_XOR);
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_XOR, STRID(GEN_XOR))
 
-GEN_XOR::GEN_XOR(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_XOR::GEN_XOR(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenBitBase(paInstanceNameId, paContainer) {
 }
 

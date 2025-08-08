@@ -49,7 +49,7 @@ namespace {
   };
 } // namespace
 
-FORTE_BOOL2BOOL::FORTE_BOOL2BOOL(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_BOOL2BOOL::FORTE_BOOL2BOOL(const forte::core::InstanceNameId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(false_BOOL),

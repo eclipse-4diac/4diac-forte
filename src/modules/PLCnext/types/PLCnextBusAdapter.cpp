@@ -68,7 +68,7 @@ namespace {
 
 FORTE_PLCnextBusAdapter::FORTE_PLCnextBusAdapter(forte::core::CFBContainer &paContainer,
                                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                                 const CStringDictionary::TStringId paInstanceNameId,
+                                                 const forte::core::InstanceNameId paInstanceNameId,
                                                  TForteUInt8 paParentAdapterlistID) :
     IOConfigFBMultiAdapter({}, paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     var_QO(0_BOOL),
@@ -87,7 +87,7 @@ void FORTE_PLCnextBusAdapter::setInitialValues() {
   var_UpdateInterval = 0_UINT;
 }
 
-FORTE_PLCnextBusAdapter_Plug::FORTE_PLCnextBusAdapter_Plug(CStringDictionary::TStringId paInstanceNameId,
+FORTE_PLCnextBusAdapter_Plug::FORTE_PLCnextBusAdapter_Plug(forte::core::InstanceNameId paInstanceNameId,
                                                            forte::core::CFBContainer &paContainer,
                                                            TForteUInt8 paParentAdapterlistID) :
     FORTE_PLCnextBusAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
@@ -168,7 +168,7 @@ CDataConnection *FORTE_PLCnextBusAdapter_Plug::getDOConUnchecked(const TPortId p
   return nullptr;
 }
 
-FORTE_PLCnextBusAdapter_Socket::FORTE_PLCnextBusAdapter_Socket(CStringDictionary::TStringId paInstanceNameId,
+FORTE_PLCnextBusAdapter_Socket::FORTE_PLCnextBusAdapter_Socket(forte::core::InstanceNameId paInstanceNameId,
                                                                forte::core::CFBContainer &paContainer,
                                                                TForteUInt8 paParentAdapterlistID) :
     FORTE_PLCnextBusAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),

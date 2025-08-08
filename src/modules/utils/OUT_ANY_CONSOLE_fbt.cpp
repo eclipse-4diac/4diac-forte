@@ -53,7 +53,7 @@ namespace {
   };
 } // namespace
 
-FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const forte::core::InstanceNameId paInstanceNameId,
                                              forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(false_BOOL),

@@ -50,7 +50,7 @@ namespace {
     return *globalConstTypeLib;
   }
 
-  CFunctionBlock *createGenericFB(CStringDictionary::TStringId paInstanceNameId,
+  CFunctionBlock *createGenericFB(forte::core::InstanceNameId paInstanceNameId,
                                   CStringDictionary::TStringId paFBTypeId,
                                   forte::core::CFBContainer &paContainer,
                                   EMGMResponse &paErrorMSG);
@@ -118,7 +118,7 @@ forte::core::CGlobalConstEntry::CGlobalConstEntry(CStringDictionary::TStringId p
   addGlobalConstType(this);
 }
 
-forte::CAdapter *forte::core::createAdapter(CStringDictionary::TStringId paInstanceNameId,
+forte::CAdapter *forte::core::createAdapter(forte::core::InstanceNameId paInstanceNameId,
                                             CStringDictionary::TStringId paAdapterTypeId,
                                             forte::core::CFBContainer &paContainer,
                                             bool paIsPlug,
@@ -146,7 +146,7 @@ forte::CAdapter *forte::core::createAdapter(CStringDictionary::TStringId paInsta
   return newAdapter;
 }
 
-CFunctionBlock *forte::core::createFB(CStringDictionary::TStringId paInstanceNameId,
+CFunctionBlock *forte::core::createFB(forte::core::InstanceNameId paInstanceNameId,
                                       CStringDictionary::TStringId paFBTypeId,
                                       std::string_view paTypeHash,
                                       forte::core::CFBContainer &paContainer,
@@ -177,7 +177,7 @@ CFunctionBlock *forte::core::createFB(CStringDictionary::TStringId paInstanceNam
   return newFB;
 }
 
-CFunctionBlock *forte::core::createFB(CStringDictionary::TStringId paInstanceNameId,
+CFunctionBlock *forte::core::createFB(forte::core::InstanceNameId paInstanceNameId,
                                       CStringDictionary::TStringId paFBTypeId,
                                       forte::core::CFBContainer &paContainer) {
   EMGMResponse errorMSG;
@@ -307,7 +307,7 @@ const std::vector<forte::core::CGlobalConstEntry *> &forte::core::getGlobalConst
 
 namespace {
 
-  CFunctionBlock *createGenericFB(const CStringDictionary::TStringId paInstanceNameId,
+  CFunctionBlock *createGenericFB(const forte::core::InstanceNameId paInstanceNameId,
                                   const CStringDictionary::TStringId paFBTypeId,
                                   forte::core::CFBContainer &paContainer,
                                   EMGMResponse &paErrorMSG) {

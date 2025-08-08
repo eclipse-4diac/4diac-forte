@@ -63,7 +63,7 @@ namespace {
 
 FORTE_ARTimeOut::FORTE_ARTimeOut(forte::core::CFBContainer &paContainer,
                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                 const CStringDictionary::TStringId paInstanceNameId,
+                                 const forte::core::InstanceNameId paInstanceNameId,
                                  TForteUInt8 paParentAdapterlistID) :
     CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     var_DT(0_TIME) {
@@ -74,7 +74,7 @@ void FORTE_ARTimeOut::setInitialValues() {
   var_DT = 0_TIME;
 }
 
-FORTE_ARTimeOut_Plug::FORTE_ARTimeOut_Plug(CStringDictionary::TStringId paInstanceNameId,
+FORTE_ARTimeOut_Plug::FORTE_ARTimeOut_Plug(forte::core::InstanceNameId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer,
                                            TForteUInt8 paParentAdapterlistID) :
     FORTE_ARTimeOut(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
@@ -127,7 +127,7 @@ CDataConnection *FORTE_ARTimeOut_Plug::getDOConUnchecked(TPortId) {
   return nullptr;
 }
 
-FORTE_ARTimeOut_Socket::FORTE_ARTimeOut_Socket(CStringDictionary::TStringId paInstanceNameId,
+FORTE_ARTimeOut_Socket::FORTE_ARTimeOut_Socket(forte::core::InstanceNameId paInstanceNameId,
                                                forte::core::CFBContainer &paContainer,
                                                TForteUInt8 paParentAdapterlistID) :
     FORTE_ARTimeOut(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),

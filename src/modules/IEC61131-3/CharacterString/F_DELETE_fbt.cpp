@@ -47,7 +47,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_DELETE::FORTE_F_DELETE(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_DELETE::FORTE_F_DELETE(const forte::core::InstanceNameId paInstanceNameId,
                                forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_STRING_VARIANT()),

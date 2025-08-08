@@ -49,7 +49,7 @@ namespace {
   };
 } // namespace
 
-FORTE_WSTRING2WSTRING::FORTE_WSTRING2WSTRING(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_WSTRING2WSTRING::FORTE_WSTRING2WSTRING(const forte::core::InstanceNameId paInstanceNameId,
                                              forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(u""_WSTRING),

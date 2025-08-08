@@ -13,7 +13,7 @@
 
 #include "core/lua/luaadapter.h"
 
-CLuaAdapter::CLuaAdapter(CStringDictionary::TStringId paInstanceNameId,
+CLuaAdapter::CLuaAdapter(forte::core::InstanceNameId paInstanceNameId,
                          const CLuaAdapterTypeEntry *paTypeEntry,
                          bool paIsPlug,
                          forte::core::CFBContainer &paContainer) :

@@ -23,7 +23,7 @@ namespace forte {
   namespace ads {
     CAdsProcessInterface::CAdsProcessInterface(forte::core::CFBContainer &paContainer,
                                                const SFBInterfaceSpec &paInterfaceSpec,
-                                               const CStringDictionary::TStringId paInstanceNameId) :
+                                               const forte::core::InstanceNameId paInstanceNameId) :
         CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
         mAdsHandle(0) {
     }

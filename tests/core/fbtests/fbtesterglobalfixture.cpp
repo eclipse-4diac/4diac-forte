@@ -21,7 +21,7 @@ USE_STRING_ID(EMB_RES);
 
 std::unique_ptr<CTesterDevice> CFBTestDataGlobalFixture::smTestDev;
 
-CTesterDevice::CTesterDevice(const CStringDictionary::TStringId paInstanceNameId) :
+CTesterDevice::CTesterDevice(const forte::core::InstanceNameId paInstanceNameId) :
     CDevice(scTestDevSpec, paInstanceNameId),
     mResource(STRID(EMB_RES), *this) {
 }

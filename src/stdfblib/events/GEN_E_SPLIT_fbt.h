@@ -34,7 +34,7 @@ class GEN_E_SPLIT final : public CGenFunctionBlock<CFunctionBlock> {
     std::vector<CStringDictionary::TStringId> mEventOutputNames;
 
   public:
-    GEN_E_SPLIT(CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    GEN_E_SPLIT(forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_ANY *getDI(size_t) override;
     CIEC_ANY *getDO(size_t) override;

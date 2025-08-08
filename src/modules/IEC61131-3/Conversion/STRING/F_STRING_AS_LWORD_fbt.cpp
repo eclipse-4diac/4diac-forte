@@ -52,7 +52,7 @@ namespace {
 }
 
 
-FORTE_F_STRING_AS_LWORD::FORTE_F_STRING_AS_LWORD(const CStringDictionary::TStringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_STRING_AS_LWORD::FORTE_F_STRING_AS_LWORD(const forte::core::InstanceNameId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(""_STRING),
     var_OUT(0_LWORD),

@@ -47,7 +47,7 @@ namespace {
   };
 } // namespace
 
-FORTE_EC_START_ELEM::FORTE_EC_START_ELEM(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_EC_START_ELEM::FORTE_EC_START_ELEM(const forte::core::InstanceNameId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),

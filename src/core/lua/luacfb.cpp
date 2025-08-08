@@ -16,7 +16,7 @@
 
 #include "core/lua/luacfb.h"
 
-CLuaCFB::CLuaCFB(CStringDictionary::TStringId paInstanceNameId,
+CLuaCFB::CLuaCFB(forte::core::InstanceNameId paInstanceNameId,
                  const CLuaCFBTypeEntry *paTypeEntry,
                  SCFB_FBNData &paFbnData,
                  forte::core::CFBContainer &paContainer) :

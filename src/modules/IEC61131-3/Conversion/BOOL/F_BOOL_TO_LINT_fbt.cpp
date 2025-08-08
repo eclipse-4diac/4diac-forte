@@ -51,7 +51,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_BOOL_TO_LINT::FORTE_F_BOOL_TO_LINT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_BOOL_TO_LINT::FORTE_F_BOOL_TO_LINT(const forte::core::InstanceNameId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(false_BOOL),

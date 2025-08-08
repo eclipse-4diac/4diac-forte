@@ -48,7 +48,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_SUB_TOD_TOD::FORTE_F_SUB_TOD_TOD(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_SUB_TOD_TOD::FORTE_F_SUB_TOD_TOD(const forte::core::InstanceNameId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_TIME_OF_DAY(0)),

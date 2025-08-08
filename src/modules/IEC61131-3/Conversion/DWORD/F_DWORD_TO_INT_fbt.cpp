@@ -51,7 +51,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_DWORD_TO_INT::FORTE_F_DWORD_TO_INT(const CStringDictionary::TStringId paInstanceNameId,
+FORTE_F_DWORD_TO_INT::FORTE_F_DWORD_TO_INT(const forte::core::InstanceNameId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_DWORD),
