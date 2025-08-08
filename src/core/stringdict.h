@@ -77,3 +77,7 @@ struct CStringDictionary {
      */
     static TStringId getId(const char *paStr, size_t paStrSize);
 };
+
+namespace forte::core {
+  using InstanceNameId = CStringDictionary::TStringId;
+} // namespace forte::core

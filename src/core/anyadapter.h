@@ -31,7 +31,7 @@ namespace forte {
                                    TForteUInt8 paParentAdapterlistID);
       void removeConfiguredAdapter();
 
-      CStringDictionary::TStringId mInstanceNameId;
+      forte::core::InstanceNameId mInstanceNameId;
       std::unique_ptr<CAdapter> mConfiguredAdapter;
   };
 
