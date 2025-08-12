@@ -18,6 +18,7 @@
 #include "core/device.h"
 #include "arch/devlog.h"
 #include "core/timerhandlerfactory.h"
+#include "core/ecetfactory.h"
 
 #include <babeltrace2/babeltrace.h>
 
@@ -58,7 +59,7 @@ namespace forte::trace::reader::utils {
   }
 
   void setFactoriesSettings(FactoriesSettings paFactoriesSettings) {
-    EcetFactory::setEcetToCreate(paFactoriesSettings.mEcet);
+    core::EcetFactory::setDefaultImpl(paFactoriesSettings.mEcet);
     core::TimerHandlerFactory::setDefaultImpl(paFactoriesSettings.mTimer);
     CFlexibleTracer::setTracer(paFactoriesSettings.mTracer);
   }

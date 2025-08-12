@@ -24,8 +24,6 @@ add_subdirectory(util)
 add_subdirectory(io)
 add_subdirectory(fmi)
 
-forte_register_ecet(CEventChainExecutionThread ecet.h)
-
 set(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY
     "30"
     CACHE STRING
@@ -36,9 +34,6 @@ forte_generate_config_value_include(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY)
 
 option(FORTE_USE_FAKE_ECET "Compile the fake ecet used for testing" FALSE)
 mark_as_advanced(FORTE_USE_FAKE_ECET)
-if (FORTE_USE_FAKE_ECET)
-    forte_register_ecet(CFakeEventExecutionThread ecetFake.h)
-endif (FORTE_USE_FAKE_ECET)
 
 if (FORTE_DYNAMIC_TYPE_LOAD)
     add_subdirectory(lua)

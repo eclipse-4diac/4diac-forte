@@ -60,7 +60,7 @@ namespace forte::trace::reader::utils {
   CFunctionBlock *getFB(forte::core::CFBContainer *paContainer, forte::core::StringId paFunctionBlockName);
 
   struct FactoriesSettings {
-      EcetFactory::AvailableEcets mEcet{EcetFactory::AvailableEcets::CEventChainExecutionThread};
+      core::StringId mEcet{"default"_STRID};
       core::StringId mTimer{"default"_STRID};
       CFlexibleTracer::AvailableTracers mTracer{CFlexibleTracer::AvailableTracers::BareCtf};
   };

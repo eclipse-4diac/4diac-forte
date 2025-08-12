@@ -12,9 +12,17 @@
  *******************************************************************************/
 
 #include "core/fmi/fmuEcet.h"
+
+#include "core/ecetfactory.h"
 #include "core/fmi/fmiTimerHandler.h"
 #include "core/fmi/fmuInstance.h"
 #include <assert.h>
+
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::core::EcetFactory::EntryImpl<CFMUEventChainExecutionThread> entry("fmu"_STRID);
+}
 
 CFMUEventChainExecutionThread::CFMUEventChainExecutionThread() :
     CEventChainExecutionThread(),

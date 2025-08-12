@@ -19,6 +19,7 @@
  *    Fabio Gandolfi - send also subapps on requested resources
  *******************************************************************************/
 #include "core/resource.h"
+
 #include <string_view>
 #include "core/conn.h"
 #include "core/datatypes/forte_any_string.h"
@@ -26,7 +27,7 @@
 #include "core/funcbloc.h"
 #include "core/mgmcmd.h"
 #include "core/adapterconn.h"
-#include "generated/ecetfactory.h"
+#include "core/ecetfactory.h"
 #include "core/util/string_utils.h"
 #include "core/typelib_internal.h"
 
@@ -258,7 +259,7 @@ CResource::CResource(forte::core::CFBContainer &paDevice,
                      const SFBInterfaceSpec &paInterfaceSpec,
                      const forte::core::StringId paInstanceNameId) :
     CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId),
-    mResourceEventExecution(EcetFactory::createEcet()),
+    mResourceEventExecution(forte::core::EcetFactory::create()),
     mMonitoringHandler(*this)
 #ifdef FORTE_TRACE_CTF
     ,
@@ -292,7 +293,6 @@ CResource::~CResource() {
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
   delete luaEngine;
 #endif
-  delete mResourceEventExecution;
 }
 
 EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand) {

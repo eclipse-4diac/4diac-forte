@@ -15,6 +15,7 @@
 #include "core/devicefactory.h"
 #include "core/device.h"
 #include "core/timerhandlerfactory.h"
+#include "core/ecetfactory.h"
 
 #ifdef FORTE_DEBUG_DEVICE
 #include "stdfblib/ita/debug_device/DebugDevice.h"
@@ -54,7 +55,7 @@ namespace forte::ita::multi::utils {
   }
 
   void setFactoriesSettings(FactoriesSettings paFactoriesSettings) {
-    EcetFactory::setEcetToCreate(paFactoriesSettings.mEcet);
+    core::EcetFactory::setDefaultImpl(paFactoriesSettings.mEcet);
     core::TimerHandlerFactory::setDefaultImpl(paFactoriesSettings.mTimer);
   }
 

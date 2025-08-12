@@ -34,7 +34,7 @@ namespace forte::ita::multi::utils {
   OPCUA_MGR *getOpcuaMgr(CDevice &paDevice);
 
   struct FactoriesSettings {
-      EcetFactory::AvailableEcets mEcet{EcetFactory::AvailableEcets::CEventChainExecutionThread};
+      core::StringId mEcet{"default"_STRID};
       core::StringId mTimer{"default"_STRID};
   };
 

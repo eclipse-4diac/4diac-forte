@@ -12,7 +12,15 @@
  *******************************************************************************/
 
 #include "core/ecetFake.h"
+
+#include "ecetfactory.h"
 #include "core/funcbloc.h"
+
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::core::EcetFactory::EntryImpl<CFakeEventExecutionThread> entry("Fake"_STRID);
+}
 
 CFakeEventExecutionThread::CFakeEventExecutionThread() : CEventChainExecutionThread() {
   mProcessEventCallback = [this](TEventEntry paEvent) { paEvent.getFB().receiveInputEvent(paEvent.getPortId(), this); };

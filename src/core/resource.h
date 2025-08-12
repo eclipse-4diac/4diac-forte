@@ -92,7 +92,7 @@ class CResource : public CFunctionBlock {
     }
 
     CEventChainExecutionThread *getResourceEventExecution() const {
-      return mResourceEventExecution;
+      return mResourceEventExecution.get();
     };
 
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
@@ -241,7 +241,7 @@ class CResource : public CFunctionBlock {
 
     /*!\brief The event chain execution of background (low priority) event chains started within this resource
      */
-    CEventChainExecutionThread *mResourceEventExecution;
+    std::unique_ptr<CEventChainExecutionThread> mResourceEventExecution;
 
     forte::core::CMonitoringHandler mMonitoringHandler;
 

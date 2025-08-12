@@ -69,3 +69,19 @@ mark_as_advanced(FORTE_TIMER_HANDLER_FIXED_INCLUDE)
 configure_file(timerhandlerfactory_config.h.in
         "${FORTE_GENERATED_FILES_DIR}/timerhandlerfactory_config.h"
 )
+
+set(FORTE_ECET_FIXED_IMPL
+        "CEventChainExecutionThread"
+        CACHE STRING "FORTE fixed ecet implementation"
+)
+mark_as_advanced(FORTE_ECET_FIXED_IMPL)
+
+set(FORTE_ECET_FIXED_INCLUDE
+        "core/ecet.h"
+        CACHE STRING "FORTE fixed ecet include directive"
+)
+mark_as_advanced(FORTE_ECET_FIXED_INCLUDE)
+
+configure_file(ecetfactory_config.h.in
+        "${FORTE_GENERATED_FILES_DIR}/ecetfactory_config.h"
+)
