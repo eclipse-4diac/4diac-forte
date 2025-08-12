@@ -49,8 +49,6 @@ TForteUInt16 gOpcuaServerMaxIterationInterval = FORTE_COM_OPC_UA_SERVER_MAX_ITER
 using namespace forte::com_infra;
 using namespace std::string_literals;
 
-DEFINE_HANDLER(COPC_UA_Local_Handler);
-
 COPC_UA_Local_Handler::COPC_UA_Local_Handler(CDeviceExecution &paDeviceExecution) :
     COPC_UA_HandlerAbstract(paDeviceExecution),
     mUaServer(nullptr) {

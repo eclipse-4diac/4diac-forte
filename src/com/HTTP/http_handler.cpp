@@ -40,8 +40,6 @@ unsigned int CHTTP_Handler::sBufFillSize = 0;
 const unsigned int CHTTP_Handler::scmSendTimeout = 20;
 const unsigned int CHTTP_Handler::scmAcceptedTimeout = 5;
 
-DEFINE_HANDLER(CHTTP_Handler);
-
 CHTTP_Handler::CHTTP_Handler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
   memset(sRecvBuffer, 0, cgIPLayerRecvBufferSize);
 }

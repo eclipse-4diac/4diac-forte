@@ -17,8 +17,6 @@
 #include "core/devexec.h"
 #include "core/cominfra/commfb.h"
 
-DEFINE_HANDLER(CModbusHandler);
-
 CModbusHandler::CModbusHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
 }
 

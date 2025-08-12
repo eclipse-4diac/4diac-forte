@@ -21,8 +21,6 @@
 
 #include "MQTTClient.h"
 
-DEFINE_HANDLER(MQTTHandler);
-
 CSyncObject MQTTHandler::smMQTTMutex;
 forte::arch::CSemaphore MQTTHandler::mStateSemaphore;
 bool MQTTHandler::mIsSemaphoreEmpty = true;

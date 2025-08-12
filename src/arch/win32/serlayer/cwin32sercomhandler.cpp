@@ -14,8 +14,6 @@
 #include "core/util/criticalregion.h"
 #include "core/cominfra/basecommfb.h"
 
-DEFINE_HANDLER(CWin32SerComHandler)
-
 CWin32SerComHandler::CWin32SerComHandler(CDeviceExecution &paDeviceExecution) :
     CExternalEventHandler(paDeviceExecution) {
 }

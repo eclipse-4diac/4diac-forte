@@ -18,8 +18,6 @@
 
 // TODO add locking for the vector..
 
-DEFINE_HANDLER(CServiceCallManager);
-
 CServiceCallManager::CServiceCallManager(CDeviceExecution &paDeviceExecution) :
     CExternalEventHandler(paDeviceExecution),
     CThread(/* long stacksize , 3500*/) {

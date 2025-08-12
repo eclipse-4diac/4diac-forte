@@ -16,8 +16,6 @@
 #include "core/fmi/comm/fmuHandler.h"
 #include "core/fmi/fmuInstance.h"
 
-DEFINE_HANDLER(fmuHandler);
-
 std::vector<fmuComLayer *> fmuHandler::mlayers;
 
 fmuHandler::fmuHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {

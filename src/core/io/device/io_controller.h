@@ -96,12 +96,6 @@ namespace forte {
 
           virtual void handleChangeEvent(IOHandle *paHandle);
 
-          // TODO: adapt this properly to the new handler model. This mockup is just to avoid the classes below to be
-          // abstract
-          size_t getIdentifier() const override {
-            return 0;
-          }
-
           /*! @brief Updates the current handle in the input or output handle list
            *
            * This method deletes the current handle in the device-specific input and

@@ -19,8 +19,6 @@ extern "C" {
 #include <basexdbc.h>
 }
 
-DEFINE_HANDLER(CXqueryHandler);
-
 CSyncObject CXqueryHandler::smXqueryMutex = CSyncObject();
 forte::arch::CSemaphore CXqueryHandler::mStateSemaphore = forte::arch::CSemaphore();
 

@@ -22,8 +22,6 @@
 
 using namespace forte::com_infra;
 
-DEFINE_HANDLER(COPC_UA_Remote_Handler);
-
 COPC_UA_Client_IterationList::COPC_UA_Client_IterationList() : mNewClientsPresent(false) {
 }
 

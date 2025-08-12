@@ -20,8 +20,6 @@
 
 #include <ObjBase.h>
 
-DEFINE_HANDLER(COpcEventHandler);
-
 CSyncObject COpcEventHandler::mSync;
 forte::arch::CSemaphore COpcEventHandler::mStateSemaphore;
 bool COpcEventHandler::mIsSemaphoreEmpty = true;

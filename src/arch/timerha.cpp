@@ -23,8 +23,6 @@
 #include <algorithm>
 #include <functional>
 
-DEFINE_HANDLER(CTimerHandler)
-
 CTimerHandler::CTimerHandler(CDeviceExecution &paDeviceExecution) :
     CExternalEventHandler(paDeviceExecution),
     mForteTime(0) {

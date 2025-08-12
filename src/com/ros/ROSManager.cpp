@@ -17,8 +17,6 @@
 
 //------------------------- CROSLayer::CROSManager -------------------------
 
-DEFINE_HANDLER(CROSManager);
-
 CROSManager::CROSManager(CDeviceExecution &paDeviceExecution) :
     CExternalEventHandler(paDeviceExecution),
     CThread(/* long stacksize , 3500*/) {

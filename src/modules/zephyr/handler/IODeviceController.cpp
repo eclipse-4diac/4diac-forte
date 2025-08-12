@@ -15,8 +15,6 @@
 #include <handle/IOHandleADC.h>
 #include <handle/IOHandlePWM.h>
 
-DEFINE_HANDLER(IODeviceController);
-
 IODeviceController::IODeviceController(CDeviceExecution &paDeviceExecution) :
     forte::core::io::IODeviceController(paDeviceExecution) {
 }

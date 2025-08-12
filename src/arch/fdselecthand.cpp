@@ -18,7 +18,6 @@
 #include "core/cominfra/comCallback.h"
 #include "core/util/criticalregion.h"
 
-DEFINE_HANDLER(CFDSelectHandler)
 CFDSelectHandler::CFDSelectHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
   mConnectionListChanged = false;
 }
