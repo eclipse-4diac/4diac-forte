@@ -17,4 +17,5 @@
 
 namespace forte::core {
   using FixedEcetImpl = @FORTE_ECET_FIXED_IMPL@;
+  constexpr util::fixed_string DefaultEcetImpl = "@FORTE_ECET_DEFAULT_IMPL@";
 }

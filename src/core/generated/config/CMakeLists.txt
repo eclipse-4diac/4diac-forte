@@ -44,6 +44,12 @@ set(FORTE_DEVICE_FIXED_IMPL
 )
 mark_as_advanced(FORTE_DEVICE_FIXED_IMPL)
 
+set(FORTE_DEVICE_DEFAULT_IMPL
+        "RMT_DEV"
+        CACHE STRING "FORTE default device implementation"
+)
+mark_as_advanced(FORTE_DEVICE_DEFAULT_IMPL)
+
 set(FORTE_DEVICE_FIXED_INCLUDE
         "core/util/factory.h"
         CACHE STRING "FORTE fixed device include directive"
@@ -60,6 +66,12 @@ set(FORTE_TIMER_HANDLER_FIXED_IMPL
 )
 mark_as_advanced(FORTE_TIMER_HANDLER_FIXED_IMPL)
 
+set(FORTE_TIMER_HANDLER_DEFAULT_IMPL
+        "default"
+        CACHE STRING "FORTE default timer handler implementation"
+)
+mark_as_advanced(FORTE_TIMER_HANDLER_DEFAULT_IMPL)
+
 set(FORTE_TIMER_HANDLER_FIXED_INCLUDE
         "core/util/factory.h"
         CACHE STRING "FORTE fixed timer handler include directive"
@@ -73,6 +85,12 @@ configure_file(timerhandlerfactory_config.h.in
 set(FORTE_ECET_FIXED_IMPL
         "CEventChainExecutionThread"
         CACHE STRING "FORTE fixed ecet implementation"
+)
+mark_as_advanced(FORTE_ECET_FIXED_IMPL)
+
+set(FORTE_ECET_DEFAULT_IMPL
+        "default"
+        CACHE STRING "FORTE default ecet implementation"
 )
 mark_as_advanced(FORTE_ECET_FIXED_IMPL)
 

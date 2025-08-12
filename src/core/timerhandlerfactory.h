@@ -20,5 +20,6 @@
 #include <string_view>
 
 namespace forte::core {
-  using TimerHandlerFactory = util::factory::Factory<FixedTimerHandlerImpl, CTimerHandler, CDeviceExecution &>;
+  using TimerHandlerFactory =
+      util::factory::Factory<FixedTimerHandlerImpl, DefaultTimerHandlerImpl, CTimerHandler, CDeviceExecution &>;
 } // namespace forte::core

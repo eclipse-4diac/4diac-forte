@@ -17,4 +17,5 @@
 
 namespace forte::core {
   using FixedTimerHandlerImpl = @FORTE_TIMER_HANDLER_FIXED_IMPL@;
+  constexpr util::fixed_string DefaultTimerHandlerImpl = "@FORTE_TIMER_HANDLER_DEFAULT_IMPL@";
 }

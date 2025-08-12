@@ -20,5 +20,5 @@
 #include <string_view>
 
 namespace forte::core {
-  using DeviceFactory = util::factory::Factory<FixedDeviceImpl, CDevice, std::string_view>;
+  using DeviceFactory = util::factory::Factory<FixedDeviceImpl, DefaultDeviceImpl, CDevice, std::string_view>;
 } // namespace forte::core

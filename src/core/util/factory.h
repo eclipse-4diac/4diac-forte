@@ -32,7 +32,7 @@ namespace forte::core::util::factory {
       DynamicImpl() = delete;
   };
 
-  template<typename FixedImpl, typename T, typename... Args>
+  template<typename FixedImpl, fixed_string, typename T, typename... Args>
     requires Constructible<FixedImpl, T, Args...> || std::same_as<FixedImpl, DynamicImpl>
   class Factory final {
     public:
@@ -82,8 +82,8 @@ namespace forte::core::util::factory {
       }
   };
 
-  template<typename T, typename... Args>
-  class Factory<DynamicImpl, T, Args...> final {
+  template<fixed_string DefaultImpl, typename T, typename... Args>
+  class Factory<DynamicImpl, DefaultImpl, T, Args...> final {
     public:
       class Entry {
         public:
@@ -149,7 +149,7 @@ namespace forte::core::util::factory {
       }
 
       static StringId &defaultImpl() {
-        static StringId defaultImpl = entries().empty() ? StringId{} : entries().begin()->first;
+        static StringId defaultImpl = StringId::fixed<DefaultImpl>();
         return defaultImpl;
       }
   };
