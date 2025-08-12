@@ -24,7 +24,11 @@ namespace forte {
 
 class CModbusHandler : public CExternalEventHandler {
     DECLARE_HANDLER(CModbusHandler)
+
   public:
+    explicit CModbusHandler(CDeviceExecution &paDeviceExecution);
+    ~CModbusHandler() override;
+
     typedef int TCallbackDescriptor;
 
     void enableHandler() override {};

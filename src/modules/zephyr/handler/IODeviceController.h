@@ -25,7 +25,11 @@ class IODeviceController : public forte::core::io::IODeviceController {
     using IOMapper = forte::core::io::IOMapper;
     using IOHandle = forte::core::io::IOHandle;
 
-    DECLARE_HANDLER(IODeviceController);
+    DECLARE_HANDLER(IODeviceController)
+
+  public:
+    explicit IODeviceController(CDeviceExecution &paDeviceExecution);
+    ~IODeviceController() override;
 
     struct Config : forte::core::io::IODeviceController::Config {
         unsigned int updateInterval = 0; // Sets the period for the data update cycle, default 0 means infinite.

@@ -30,9 +30,12 @@ class CIEC_TIME;
  *  \ingroup EXTEVHAND
  */
 class CTimerHandler : public CExternalEventHandler {
-    DECLARE_HANDLER(CTimerHandler);
+    DECLARE_HANDLER(CTimerHandler)
 
   public:
+    explicit CTimerHandler(CDeviceExecution &paDeviceExecution);
+    ~CTimerHandler() override;
+
     /*! \brief Get the time base of the runtime
      *
      * \return internal runtime ticks per second

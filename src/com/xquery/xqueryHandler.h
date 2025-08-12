@@ -22,6 +22,10 @@
 class CXqueryHandler : public CExternalEventHandler, private CThread {
     DECLARE_HANDLER(CXqueryHandler)
 
+  public:
+    explicit CXqueryHandler(CDeviceExecution &paDeviceExecution);
+    ~CXqueryHandler() override;
+
   private:
     using TXqueryFBContainer = std::vector<CXqueryClientLayer *>;
     TXqueryFBContainer mXqueryFBList;

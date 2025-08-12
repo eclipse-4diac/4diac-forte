@@ -26,7 +26,11 @@
 
 class COpcEventHandler : public CExternalEventHandler, private CThread {
     DECLARE_HANDLER(COpcEventHandler)
+
   public:
+    explicit COpcEventHandler(CDeviceExecution &paDeviceExecution);
+    ~COpcEventHandler() override;
+
     typedef int TCallbackDescriptor;
 
     void sendCommand(ICmd *paCmd);

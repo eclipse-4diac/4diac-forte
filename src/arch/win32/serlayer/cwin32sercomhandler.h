@@ -21,7 +21,11 @@ class CWin32SerComLayer;
 
 class CWin32SerComHandler : public CExternalEventHandler, public CThread {
     DECLARE_HANDLER(CWin32SerComHandler)
+
   public:
+    explicit CWin32SerComHandler(CDeviceExecution &paDeviceExecution);
+    ~CWin32SerComHandler() override;
+
     void registerSerComLayer(CWin32SerComLayer *paComLayer);
     void unregisterSerComLayer(CWin32SerComLayer *paComLayer);
 

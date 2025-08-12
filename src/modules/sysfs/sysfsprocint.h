@@ -27,9 +27,12 @@ class CSysFsProcessInterface : public CProcessInterfaceBase {
     ~CSysFsProcessInterface() override;
 
     class CIOHandler : public CExternalEventHandler, public CThread {
-        DECLARE_HANDLER(CIOHandler);
+        DECLARE_HANDLER(CIOHandler)
 
       public:
+        explicit CIOHandler(CDeviceExecution &paDeviceExecution);
+        ~CIOHandler() override;
+
         void run() override;
         void updateReadData();
         void registerIXFB(CSysFsProcessInterface *paFB);

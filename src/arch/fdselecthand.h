@@ -33,7 +33,11 @@ namespace forte {
 
 class CFDSelectHandler : public CExternalEventHandler, private CThread {
     DECLARE_HANDLER(CFDSelectHandler)
+
   public:
+    explicit CFDSelectHandler(CDeviceExecution &paDeviceExecution);
+    ~CFDSelectHandler() override;
+
     typedef FORTE_SOCKET_TYPE
         TFileDescriptor; //!< General type definition for a file descriptor. To be used by the callback classes.
     static const TFileDescriptor scmInvalidFileDescriptor = FORTE_INVALID_SOCKET;

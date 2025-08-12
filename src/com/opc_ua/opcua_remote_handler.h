@@ -174,7 +174,11 @@ class COPC_UA_Client_IterationList : public CThread {
 // cppcheck-suppress noConstructor
 class COPC_UA_Remote_Handler : public COPC_UA_HandlerAbstract, public COPC_UA_Client_IterationList {
     DECLARE_HANDLER(COPC_UA_Remote_Handler)
+
   public:
+    explicit COPC_UA_Remote_Handler(CDeviceExecution &paDeviceExecution);
+    ~COPC_UA_Remote_Handler() override;
+
     /**
      * Starts the threads
      */

@@ -25,6 +25,10 @@ class FORTE_TRIGGER_SERVICE_CLIENT;
 class CServiceCallManager : public CExternalEventHandler, private CThread {
     DECLARE_HANDLER(CServiceCallManager)
 
+  public:
+    explicit CServiceCallManager(CDeviceExecution &paDeviceExecution);
+    ~CServiceCallManager() override;
+
   private:
     std::vector<FORTE_TRIGGER_SERVICE_CLIENT *> m_callerVector;
     std::vector<FORTE_TRIGGER_SERVICE_CLIENT *> m_connectVector;

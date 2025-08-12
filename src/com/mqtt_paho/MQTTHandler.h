@@ -31,7 +31,11 @@ class CMQTTClient;
 
 class MQTTHandler : public CExternalEventHandler, public CThread {
     DECLARE_HANDLER(MQTTHandler)
+
   public:
+    explicit MQTTHandler(CDeviceExecution &paDeviceExecution);
+    ~MQTTHandler() override;
+
     enum RegisterLayerReturnCodes { eRegisterLayerSucceeded, eWrongClientID, eConnectionFailed };
 
     int registerLayer(const std::string &paAddress, const std::string &paClientId, MQTTComLayer *paLayer);

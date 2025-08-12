@@ -21,8 +21,8 @@ class CFunctionBlock;
 #define DECLARE_HANDLER(TypeName)                                                                                      \
 public:                                                                                                                \
   static const size_t mHandlerIdentifier;                                                                              \
-  explicit TypeName(CDeviceExecution &paDeviceExecution);                                                              \
-  ~TypeName();
+                                                                                                                       \
+private:
 
 /**  \defgroup FORTE_HAL FORTE Hardware Abstraction Layer - FORTE-HAL
  * \brief The FORTE-HAL is the abstraction of HW dependent features important

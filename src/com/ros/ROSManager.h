@@ -24,6 +24,9 @@ class CROSManager : public CExternalEventHandler, private CThread {
     DECLARE_HANDLER(CROSManager)
 
   public:
+    explicit CROSManager(CDeviceExecution &paDeviceExecution);
+    ~CROSManager() override;
+
     void enableHandler() override;
     void disableHandler() override;
 

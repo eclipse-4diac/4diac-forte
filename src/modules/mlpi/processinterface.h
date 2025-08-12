@@ -35,6 +35,11 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase {
 
     class CIOHandler : public CExternalEventHandler, public CThread {
         DECLARE_HANDLER(CIOHandler)
+
+      public:
+        explicit CIOHandler(CDeviceExecution &paDeviceExecution);
+        ~CIOHandler() override;
+
       private:
         std::vector<CMLPIFaceProcessInterface *> mReadFBList;
         CSyncObject mReadFBListSync;

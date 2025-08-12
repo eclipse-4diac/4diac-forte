@@ -46,6 +46,9 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase {
         DECLARE_HANDLER(CPiFaceIOHandler)
 
       public:
+        explicit CPiFaceIOHandler(CDeviceExecution &paDeviceExecution);
+        ~CPiFaceIOHandler() override;
+
         void registerIXFB(CPiFaceProcessInterface *paFB);
         void unregisterIXFB(CPiFaceProcessInterface *paFB);
 

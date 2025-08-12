@@ -36,6 +36,9 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
     DECLARE_HANDLER(CHTTP_Handler)
 
   public:
+    explicit CHTTP_Handler(CDeviceExecution &paDeviceExecution);
+    ~CHTTP_Handler() override;
+
     /* functions needed for the external event handler interface */
     void enableHandler() override;
 

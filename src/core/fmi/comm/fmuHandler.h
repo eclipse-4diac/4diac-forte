@@ -24,7 +24,11 @@
 
 class fmuHandler : public CExternalEventHandler {
     DECLARE_HANDLER(fmuHandler)
+
   public:
+    explicit fmuHandler(CDeviceExecution &paDeviceExecution);
+    ~fmuHandler() override;
+
     enum RegisterLayerReturnCodes { eRegisterLayerSucceeded, eWrongLayer };
     int registerLayer(fmuComLayer *paLayer);
 
