@@ -74,11 +74,6 @@ class CExternalEventHandler {
     virtual size_t getIdentifier() const = 0;
 
   protected:
-    /*! \brief Check if the external event handler is allowed to start event chains
-     *
-     */
-    bool isAllowed();
-
     /*!\brief register event source at device execution for starting a new event chain
      *
      * this function checks if the external event handler is allowed to start new event chains and if yes performs the

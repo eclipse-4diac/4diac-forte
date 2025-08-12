@@ -39,18 +39,16 @@ void CDeviceExecution::startNewEventChain(CEventSourceFB *paECStartFB) const {
 }
 
 CExternalEventHandler *CDeviceExecution::getExtEvHandler(size_t paIdentifer) const {
-  return mRegisteredEventHandlers[paIdentifer].mHandler.get();
+  return mRegisteredEventHandlers[paIdentifer].get();
 }
 
 CTimerHandler &CDeviceExecution::getTimer() const {
-  return *static_cast<CTimerHandler *>(mRegisteredEventHandlers[0].mHandler.get());
+  return *static_cast<CTimerHandler *>(mRegisteredEventHandlers[0].get());
 }
 
 void CDeviceExecution::disableHandlers() {
   for (auto &handler : mRegisteredEventHandlers) {
-    if (handler.mHandler) {
-      handler.mHandler->disableHandler();
-    }
+    handler->disableHandler();
   }
 }
 

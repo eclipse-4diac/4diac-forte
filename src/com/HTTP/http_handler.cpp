@@ -413,11 +413,8 @@ void CHTTP_Handler::closeHTTPServer() {
 }
 
 void CHTTP_Handler::removeAndCloseSocket(const CIPComSocketHandler::TSocketDescriptor paSocket) {
-  // normally, when the device is being killed the CIPComSocketHandler is already dead, so calls to it must be avoided.
-  if (mDeviceExecution.isExtEvHandlerValid(CIPComSocketHandler::mHandlerIdentifier)) {
-    getExtEvHandler<CIPComSocketHandler>().removeComCallback(paSocket);
-    getExtEvHandler<CIPComSocketHandler>().closeSocket(paSocket);
-  }
+  getExtEvHandler<CIPComSocketHandler>().removeComCallback(paSocket);
+  getExtEvHandler<CIPComSocketHandler>().closeSocket(paSocket);
 }
 
 void CHTTP_Handler::resumeSelfsuspend() {

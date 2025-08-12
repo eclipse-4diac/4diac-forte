@@ -18,16 +18,7 @@ CExternalEventHandler::CExternalEventHandler(CDeviceExecution &paDeviceExecution
     mDeviceExecution(paDeviceExecution) {
 }
 
-bool CExternalEventHandler::isAllowed() {
-  return mDeviceExecution.extEvHandlerIsAllowed(getIdentifier());
-}
-
 void CExternalEventHandler::startNewEventChain(CEventSourceFB *paECStartFB) {
-  if (isAllowed()) {
-    FORTE_TRACE("Starting EC\n");
-    mDeviceExecution.startNewEventChain(paECStartFB);
-  } else {
-    // TODO: handle this !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    DEVLOG_DEBUG("Starting EC NOT ALLOWED !!!!!!!!!!!!!!!1\n");
-  }
+  FORTE_TRACE("Starting EC\n");
+  mDeviceExecution.startNewEventChain(paECStartFB);
 }

@@ -30,16 +30,9 @@ class CDevice;
  */
 class CDeviceExecution {
   public:
-    CDeviceExecution(CDevice &paDevice);
+    explicit CDeviceExecution(CDevice &paDevice);
 
     ~CDeviceExecution();
-
-    /*!\brief Notifies the CExternalEventHandlerManager that one tick in the time has passed by.
-     *
-     * \param paCurrentTime the current time in ticks since the last start of the runtime.
-     */
-    void notifyTime(uint_fast64_t) {
-    }
 
     /*!\brief an external event occurred at an ES and a new event source is to start.
      *
@@ -48,28 +41,12 @@ class CDeviceExecution {
      * \param paECStartFB The start FB of the event chain
      */
     void startNewEventChain(CEventSourceFB *paECStartFB) const;
-    /*!\brief Check if an occurrence of the given event handler is currently allowed.
-     *
-     * With this function the device execution can disable or enable the notification on external events.
-     * Necessary to hold timing constraints. The notifyTime()-function will be used to determine if different external
-     * event handlers are to be enabled again.
-     * \param paExtEvHandler ID of the external event handler given by the CDeviceExecution on
-     * registerExternalEvnetHandler()
-     * \return true if the external event handler is allowed to start new event chains.
-     */
-    bool extEvHandlerIsAllowed(size_t) const {
-      return true;
-    }
 
-    CTimerHandler &getTimer() const;
+    [[nodiscard]] CTimerHandler &getTimer() const;
 
     template<typename T>
     T &getExtEvHandler() {
       return static_cast<T &>(*getExtEvHandler(T::mHandlerIdentifier));
-    }
-
-    bool isExtEvHandlerValid(size_t paIdentifier) const {
-      return (nullptr != getExtEvHandler(paIdentifier));
     }
 
     void disableHandlers();
@@ -77,14 +54,7 @@ class CDeviceExecution {
     CDevice &getDevice();
 
   private:
-    /*!\brief Structure for holding the information belonging to one external event.
-     */
-    struct SEventHandlerElement {
-        bool mOccured; //!< flag indicating that the external event has occurred between the last invocation.
-        std::unique_ptr<CExternalEventHandler> mHandler; //!< pointer to the external event handler instance.
-    };
-
-    CExternalEventHandler *getExtEvHandler(size_t paIdentifer) const;
+    [[nodiscard]] CExternalEventHandler *getExtEvHandler(size_t paIdentifer) const;
 
     CDevice &mDevice;
 
@@ -92,7 +62,7 @@ class CDeviceExecution {
      *
      * The element 0 is always the timer event source.
      */
-    std::vector<SEventHandlerElement> mRegisteredEventHandlers;
+    std::vector<std::unique_ptr<CExternalEventHandler>> mRegisteredEventHandlers;
 };
 
 #endif
