@@ -34,16 +34,6 @@ class CPCTimerHandler : public CTimerHandler, private CThread {
     /*!\brief Disable this event source
      */
     void disableHandler() override;
-    /*!\brief Sets the priority of the event source
-     *
-     * \param paPriority new priority of the event source
-     */
-    void setPriority(int paPriority) override;
-    /*!\brief Get the current priority of the event source
-     *
-     * \return current priority
-     */
-    int getPriority() const override;
 };
 
 #endif /*PCTIMEHA_H_*/

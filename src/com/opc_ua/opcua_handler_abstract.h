@@ -61,16 +61,6 @@ class COPC_UA_HandlerAbstract : public CExternalEventHandler {
     virtual UA_StatusCode uninitializeAction(CActionInfo &paActionInfo) = 0;
 
     /**
-     * Not used
-     */
-    void setPriority(int paPriority) override;
-
-    /**
-     * Not used
-     */
-    int getPriority() const override;
-
-    /**
      * Get the logger used by the the OPC UA stack
      * @return Logger used by the OPC UA stack
      */

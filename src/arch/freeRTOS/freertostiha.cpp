@@ -31,13 +31,6 @@ void CFreeRTOSTimerHandler::disableHandler() {
   xTimerStop(mTimer, 0);
 }
 
-void CFreeRTOSTimerHandler::setPriority(int) {
-}
-
-int CFreeRTOSTimerHandler::getPriority() const {
-  return 1;
-}
-
 void CFreeRTOSTimerHandler::vCallbackFunction(TimerHandle_t paTimer) {
   static_cast<CFreeRTOSTimerHandler *>(pvTimerGetTimerID(paTimer))->nextTick();
 }

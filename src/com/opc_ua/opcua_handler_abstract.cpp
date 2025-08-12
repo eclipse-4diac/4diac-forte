@@ -37,15 +37,6 @@ void COPC_UA_HandlerAbstract::triggerNewEvent(CEventSourceFB &paLayer) {
   startNewEventChain(&paLayer);
 }
 
-void COPC_UA_HandlerAbstract::setPriority(int) {
-  // currently we are doing nothing here.
-}
-
-int COPC_UA_HandlerAbstract::getPriority() const {
-  // the same as for setPriority
-  return 0;
-}
-
 UA_Logger &COPC_UA_HandlerAbstract::getLogger() {
   return UA_Forte_logger;
 }

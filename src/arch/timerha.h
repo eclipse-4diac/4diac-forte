@@ -33,16 +33,6 @@ class CTimerHandler : public CExternalEventHandler {
     DECLARE_HANDLER(CTimerHandler);
 
   public:
-    /*!\brief Sets the priority of the event source
-     *
-     * \param paPriority new priority of the event source
-     */
-    void setPriority(int paPriority) override = 0;
-    /*!\brief Get the current priority of the event source
-     *
-     * \return current priority
-     */
-    int getPriority() const override = 0;
     /*! \brief Get the time base of the runtime
      *
      * \return internal runtime ticks per second

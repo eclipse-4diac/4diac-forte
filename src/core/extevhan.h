@@ -54,18 +54,6 @@ class CExternalEventHandler {
     /*!\brief Disable this event source
      */
     virtual void disableHandler() = 0;
-    /*!\brief Sets the priority of the event source
-     *
-     * \param paPriority new priority of the event source
-     */
-    virtual void setPriority(int paPriority) = 0;
-    /*!\brief Get the current priority of the event source
-     *
-     * \return current priority
-     */
-    virtual int getPriority() const = 0;
-
-    virtual size_t getIdentifier() const = 0;
 
   protected:
     /*!\brief register event source at device execution for starting a new event chain

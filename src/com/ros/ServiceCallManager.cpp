@@ -35,13 +35,6 @@ void CServiceCallManager::disableHandler() {
   ros::shutdown();
 }
 
-void CServiceCallManager::setPriority(int) {
-}
-
-int CServiceCallManager::getPriority() const {
-  return 0;
-}
-
 void CServiceCallManager::startChain(CEventSourceFB *paECStartF) {
   if (0 != paECStartF) {
     startNewEventChain(paECStartF);

@@ -195,10 +195,3 @@ void CMLPIFaceProcessInterface::CIOHandler::enableHandler() {
 
 void CMLPIFaceProcessInterface::CIOHandler::disableHandler() {
 }
-
-void CMLPIFaceProcessInterface::CIOHandler::setPriority(int) {
-}
-
-int CMLPIFaceProcessInterface::CIOHandler::getPriority() const {
-  return 0;
-}

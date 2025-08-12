@@ -65,11 +65,3 @@ void fmuHandler::enableHandler() {
 void fmuHandler::disableHandler() {
   // TODO: Should also work empty
 }
-
-void fmuHandler::setPriority(int) {
-  // TODO: Should also work empty
-}
-
-int fmuHandler::getPriority() const {
-  return 0;
-}

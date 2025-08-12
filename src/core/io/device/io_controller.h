@@ -251,12 +251,6 @@ namespace forte {
           void disableHandler() override {
             // do nothing
           }
-          void setPriority(int) override {
-            // do nothing
-          }
-          int getPriority() const override {
-            return 0;
-          }
       };
 
     } // namespace io

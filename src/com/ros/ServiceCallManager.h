@@ -32,8 +32,6 @@ class CServiceCallManager : public CExternalEventHandler, private CThread {
   public:
     void enableHandler() override;
     void disableHandler() override;
-    void setPriority(int pa_prio) override;
-    int getPriority() const override;
 
     void startChain(CEventSourceFB *paECStartF);
     void queueServiceCall(FORTE_TRIGGER_SERVICE_CLIENT *pa_serviceClientPtr);

@@ -37,13 +37,6 @@ void CECOSTimerHandler::disableHandler() {
   cyg_alarm_disable(mAlarmHandle);
 }
 
-void CECOSTimerHandler::setPriority(int) {
-}
-
-int CECOSTimerHandler::getPriority() const {
-  return 0;
-}
-
 void CECOSTimerHandler::run() {
   CECOSThread::setPriority(0); // we want to be a very important thread
   while (isAlive()) {

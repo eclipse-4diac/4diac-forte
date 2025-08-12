@@ -35,8 +35,6 @@ class CXqueryHandler : public CExternalEventHandler, private CThread {
   public:
     void enableHandler() override;
     void disableHandler() override;
-    void setPriority(int) override;
-    int getPriority() const override;
     int registerLayer(CXqueryClientLayer *paLayer);
 
   protected:

@@ -31,14 +31,6 @@ void fmiTimerHandler::enableHandler() {
 void fmiTimerHandler::disableHandler() {
 }
 
-void fmiTimerHandler::setPriority(int paPriority) {
-  NOT_USED(paPriority)
-}
-
-int fmiTimerHandler::getPriority() const {
-  return 0;
-}
-
 /*
  * This function is the core of the co-simulation, so this will help understand what's going on here
  * The Ecets can be suspended because of lacking of event, or because it's not currently in a step of the co-simulation

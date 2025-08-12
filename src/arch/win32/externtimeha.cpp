@@ -49,12 +49,3 @@ void CExternTimerHandler::enableHandler() {
 void CExternTimerHandler::disableHandler() {
   // TODO think on hwo to handle this.
 }
-
-void CExternTimerHandler::setPriority(int paPriority) {
-  // TODO think on hwo to handle this.
-}
-
-int CExternTimerHandler::getPriority() const {
-  // TODO think on hwo to handle this.
-  return 1;
-}

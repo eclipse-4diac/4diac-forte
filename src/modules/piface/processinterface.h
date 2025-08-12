@@ -55,8 +55,6 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase {
         /* functions needed for the external event handler interface */
         void enableHandler() override;
         void disableHandler() override;
-        void setPriority(int paPriority) override;
-        int getPriority() const override;
 
       private:
         static const int scmPiFaceWrite = 0x40;

@@ -34,14 +34,6 @@ void CROSManager::disableHandler() {
   ros::shutdown();
 }
 
-void CROSManager::setPriority(int) {
-  // FIXME adjust thread priority correctly
-}
-
-int CROSManager::getPriority() const {
-  return 0;
-}
-
 void CROSManager::startChain(CEventSourceFB *paECStartF) {
   if (0 != paECStartF) {
     startNewEventChain(paECStartF);

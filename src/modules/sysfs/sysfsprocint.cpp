@@ -245,11 +245,3 @@ void CSysFsProcessInterface::CIOHandler::enableHandler() {
 void CSysFsProcessInterface::CIOHandler::disableHandler() {
   end();
 }
-
-void CSysFsProcessInterface::CIOHandler::setPriority(int) {
-  // do nothing
-}
-
-int CSysFsProcessInterface::CIOHandler::getPriority() const {
-  return 0;
-}

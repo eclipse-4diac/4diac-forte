@@ -94,14 +94,6 @@ void MQTTHandler::disableHandler() {
   }
 }
 
-void MQTTHandler::setPriority(int) {
-  // NOTE: Priorities are currently not supported by MQTTHandler, therefore this function remains empty
-}
-
-int MQTTHandler::getPriority() const {
-  return 0;
-}
-
 void MQTTHandler::run() {
   while (isAlive()) {
     bool needSleep = false;

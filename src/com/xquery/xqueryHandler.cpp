@@ -54,14 +54,6 @@ void CXqueryHandler::disableHandler() {
   }
 }
 
-void CXqueryHandler::setPriority(int) {
-  // not used
-}
-
-int CXqueryHandler::getPriority() const {
-  return 0;
-}
-
 int CXqueryHandler::registerLayer(CXqueryClientLayer *paLayer) {
   mXqueryFBList.emplace_back(paLayer);
   enableHandler();

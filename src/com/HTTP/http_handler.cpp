@@ -86,15 +86,6 @@ void CHTTP_Handler::clearAcceptedSockets() {
   mAcceptedSockets.clear();
 }
 
-void CHTTP_Handler::setPriority(int) {
-  // currently we are doing nothing here.
-}
-
-int CHTTP_Handler::getPriority() const {
-  // the same as for setPriority
-  return 0;
-}
-
 forte::com_infra::EComResponse
 CHTTP_Handler::recvData(const void *paData,
                         unsigned int) { // TODO: do something with the size parameter of the received data?

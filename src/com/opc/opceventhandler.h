@@ -65,16 +65,6 @@ class COpcEventHandler : public CExternalEventHandler, private CThread {
       }
     }
 
-    void setPriority(int) override {
-      // currently we are doing nothing here.
-      // TODO We should adjust the thread priority.
-    }
-
-    int getPriority() const override {
-      // the same as for setPriority
-      return 0;
-    }
-
     void resumeSelfSuspend();
 
     void selfSuspend();

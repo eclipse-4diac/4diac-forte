@@ -137,13 +137,6 @@ void CPiFaceProcessInterface::CPiFaceIOHandler::enableHandler() {
 void CPiFaceProcessInterface::CPiFaceIOHandler::disableHandler() {
 }
 
-void CPiFaceProcessInterface::CPiFaceIOHandler::setPriority(int) {
-}
-
-int CPiFaceProcessInterface::CPiFaceIOHandler::getPriority() const {
-  return 0;
-}
-
 void CPiFaceProcessInterface::CPiFaceIOHandler::setupPiFaceIOChip(CONMELEON::CSpiDevice &paDev) {
   writePiFaceRegister(paDev, eIOConfiguration, 8);
   writePiFaceRegister(paDev, eIODirectionPortA, 0); // set all port A pins as outputs

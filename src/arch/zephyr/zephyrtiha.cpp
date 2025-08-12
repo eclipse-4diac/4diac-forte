@@ -59,14 +59,6 @@ void CZephyrTimerHandler::disableHandler() {
   k_timer_stop(&timer);
 }
 
-void CZephyrTimerHandler::setPriority(int paPriority) {
-  (void) paPriority;
-}
-
-int CZephyrTimerHandler::getPriority() const {
-  return 1;
-}
-
 void CZephyrTimerHandler::thread_fn(void *arg1, void *arg2, void *arg3) {
   auto self = static_cast<CZephyrTimerHandler *>(arg1);
   while (true) {

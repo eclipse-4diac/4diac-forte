@@ -41,10 +41,6 @@ class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte
 
     void disableHandler() override;
 
-    void setPriority(int paPriority) override;
-
-    int getPriority() const override;
-
     forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize) override;
 
     bool sendClientData(forte::com_infra::CHttpComLayer *paLayer, const std::string &paToSend);

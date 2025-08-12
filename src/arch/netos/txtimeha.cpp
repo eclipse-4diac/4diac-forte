@@ -45,10 +45,3 @@ void CTXTimerHandler::disableHandler() {
   tx_timer_deactivate(&mTimer);
   // TODO handle retval
 }
-
-void CTXTimerHandler::setPriority(int paPriority) {
-}
-
-int CTXTimerHandler::getPriority() const {
-  return 0;
-}
