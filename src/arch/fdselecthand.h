@@ -31,9 +31,9 @@ namespace forte {
  * data reception. Examples for possible file descriptors are sockets or com re
  */
 
-class CFDSelectHandler : public CExternalEventHandler, private CThread {
-    DECLARE_HANDLER(CFDSelectHandler)
-
+class CFDSelectHandler : public CExternalEventHandler,
+                         public RegisterExternalEventHandler<CFDSelectHandler>,
+                         private CThread {
   public:
     explicit CFDSelectHandler(CDeviceExecution &paDeviceExecution);
     ~CFDSelectHandler() override;

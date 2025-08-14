@@ -29,9 +29,7 @@
 
 class CMQTTClient;
 
-class MQTTHandler : public CExternalEventHandler, public CThread {
-    DECLARE_HANDLER(MQTTHandler)
-
+class MQTTHandler : public CExternalEventHandler, public RegisterExternalEventHandler<MQTTHandler>, public CThread {
   public:
     explicit MQTTHandler(CDeviceExecution &paDeviceExecution);
     ~MQTTHandler() override;

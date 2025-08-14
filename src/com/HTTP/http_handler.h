@@ -32,9 +32,10 @@
 extern TForteUInt16 gHTTPServerPort;
 
 // cppcheck-suppress noConstructor
-class CHTTP_Handler : public CExternalEventHandler, public CThread, public forte::com_infra::CComCallback {
-    DECLARE_HANDLER(CHTTP_Handler)
-
+class CHTTP_Handler : public CExternalEventHandler,
+                      public RegisterExternalEventHandler<CHTTP_Handler>,
+                      public CThread,
+                      public forte::com_infra::CComCallback {
   public:
     explicit CHTTP_Handler(CDeviceExecution &paDeviceExecution);
     ~CHTTP_Handler() override;

@@ -42,9 +42,9 @@ class CPiFaceProcessInterface : public CProcessInterfaceBase {
     bool checkInputData(long paValue);
     bool getValue(long paValue);
 
-    class CPiFaceIOHandler : public CExternalEventHandler, public CThread {
-        DECLARE_HANDLER(CPiFaceIOHandler)
-
+    class CPiFaceIOHandler : public CExternalEventHandler,
+                             public RegisterExternalEventHandler<CPiFaceIOHandler>,
+                             public CThread {
       public:
         explicit CPiFaceIOHandler(CDeviceExecution &paDeviceExecution);
         ~CPiFaceIOHandler() override;

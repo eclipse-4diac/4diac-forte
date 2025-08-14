@@ -20,9 +20,6 @@ forte_register_module(PiFace OFF
                       "PiFace and PiFace like Raspberry PI expansion boards"
 )
 
-forte_register_handler(CPiFaceProcessInterface::CPiFaceIOHandler
-                       processinterface.h
-)
 forte_set_process_interface("PiFace" IX QX)
 add_library(forte-modules-piface OBJECT
             processinterface.h processinterface.cpp

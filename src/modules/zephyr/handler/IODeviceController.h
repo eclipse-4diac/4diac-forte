@@ -19,13 +19,12 @@
 
 #include <handler/IOHandleDescriptor.h>
 
-class IODeviceController : public forte::core::io::IODeviceController {
+class IODeviceController : public forte::core::io::IODeviceController,
+                           public RegisterExternalEventHandler<IODeviceController> {
   public:
     using HandleDescriptor = forte::core::io::IODeviceController::HandleDescriptor;
     using IOMapper = forte::core::io::IOMapper;
     using IOHandle = forte::core::io::IOHandle;
-
-    DECLARE_HANDLER(IODeviceController)
 
   public:
     explicit IODeviceController(CDeviceExecution &paDeviceExecution);

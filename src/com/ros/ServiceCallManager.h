@@ -22,9 +22,9 @@
 
 class FORTE_TRIGGER_SERVICE_CLIENT;
 
-class CServiceCallManager : public CExternalEventHandler, private CThread {
-    DECLARE_HANDLER(CServiceCallManager)
-
+class CServiceCallManager : public CExternalEventHandler,
+                            public RegisterExternalEventHandler<CServiceCallManager>,
+                            private CThread {
   public:
     explicit CServiceCallManager(CDeviceExecution &paDeviceExecution);
     ~CServiceCallManager() override;

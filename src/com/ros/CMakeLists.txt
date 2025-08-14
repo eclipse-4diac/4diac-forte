@@ -28,8 +28,6 @@ target_compile_definitions(forte-global INTERFACE FORTE_ROS)
 # Communication Layer for ROS (publish, subscribe)
 # ############################################################################
 
-forte_register_handler(CROSManager ROSManager.h)
-forte_register_handler(CServiceCallManager ServiceCallManager.h)
 forte_register_com_layer(ROS
                          ON
                          "ros"

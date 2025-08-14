@@ -19,8 +19,6 @@ if (NOT FORTE_COM_PAHOMQTT)
     return()
 endif ()
 
-forte_register_handler(MQTTHandler MQTTHandler.h)
-
 set(FORTE_COM_PAHOMQTT_INCLUDE_DIR
     ""
     CACHE PATH "ABSOLUTE path to Paho MQTT src directory"

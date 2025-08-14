@@ -22,9 +22,7 @@
 #include <map>
 #include <vector>
 
-class fmuHandler : public CExternalEventHandler {
-    DECLARE_HANDLER(fmuHandler)
-
+class fmuHandler : public CExternalEventHandler, public RegisterExternalEventHandler<fmuHandler> {
   public:
     explicit fmuHandler(CDeviceExecution &paDeviceExecution);
     ~fmuHandler() override;

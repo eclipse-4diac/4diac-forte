@@ -20,8 +20,6 @@ if (NOT FORTE_COM_HTTP)
     return()
 endif ()
 
-forte_register_handler(CHTTP_Handler http_handler.h)
-
 set(FORTE_COM_HTTP_LISTENING_PORT
     80
     CACHE STRING "HTTP Listening Port"

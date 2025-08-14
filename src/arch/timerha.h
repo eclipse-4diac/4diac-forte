@@ -30,8 +30,6 @@ class CIEC_TIME;
  *  \ingroup EXTEVHAND
  */
 class CTimerHandler : public CExternalEventHandler {
-    DECLARE_HANDLER(CTimerHandler)
-
   public:
     explicit CTimerHandler(CDeviceExecution &paDeviceExecution);
     ~CTimerHandler() override;

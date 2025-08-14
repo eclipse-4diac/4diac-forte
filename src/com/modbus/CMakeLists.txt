@@ -25,7 +25,6 @@ set(FORTE_COM_MODBUS_LIB_DIR
           "Path to Modbus library directory (leave empty for installed source code)"
 )
 
-forte_register_handler(CModbusHandler modbushandler.h)
 target_link_libraries(forte PUBLIC modbus)
 add_library(forte-com-modbus OBJECT
             $<$<BOOL:${FORTE_COM_MODBUS}>:modbuslayer.cpp>

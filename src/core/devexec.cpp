@@ -11,12 +11,23 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "core/devexec.h"
+
 #include "core/esfb.h"
 #include "core/ecet.h"
 #include "core/extevhan.h"
 #include "arch/timerha.h"
 #include "arch/devlog.h"
 #include "core/device.h"
+#include "core/timerhandlerfactory.h"
+
+CDeviceExecution::CDeviceExecution(CDevice &paDevice) : mDevice(paDevice) {
+  mRegisteredEventHandlers.reserve(CExternalEventHandler::getFactories().size() + 1);
+  mRegisteredEventHandlers.push_back(forte::core::TimerHandlerFactory::create(*this));
+  for (auto &factory : CExternalEventHandler::getFactories()) {
+    mRegisteredEventHandlers.push_back(factory(*this));
+  }
+  getTimer().enableHandler();
+}
 
 CDeviceExecution::~CDeviceExecution() {
   // FIXME: deleting a handler should disable it automatically

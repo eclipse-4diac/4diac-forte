@@ -48,10 +48,6 @@ set(FORTE_POSIX_GENERATE_MAP_FILE FALSE CACHE BOOL "Enable the generation of map
 mark_as_advanced(FORTE_POSIX_GENERATE_MAP_FILE)
 target_link_options(forte-arch-posix PUBLIC $<$<BOOL:${FORTE_POSIX_GENERATE_MAP_FILE}>:-Wl,-M,-Map,forte.map,-cref>)
 
-if (FORTE_COM_ETH)
-   forte_register_handler(CFDSelectHandler sockhand.h)
-endif()
-
 if (NOT APPLE)
     forte_register_com_layer(SER OFF "ser" CPosixSerCommLayer posixsercommlayer.h "Enable Forte serial line communication")
 endif()

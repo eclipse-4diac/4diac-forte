@@ -33,9 +33,7 @@ class CMLPIFaceProcessInterface : public CProcessInterfaceBase {
 
     ~CMLPIFaceProcessInterface() override;
 
-    class CIOHandler : public CExternalEventHandler, public CThread {
-        DECLARE_HANDLER(CIOHandler)
-
+    class CIOHandler : public CExternalEventHandler, public RegisterExternalEventHandler<CIOHandler>, public CThread {
       public:
         explicit CIOHandler(CDeviceExecution &paDeviceExecution);
         ~CIOHandler() override;

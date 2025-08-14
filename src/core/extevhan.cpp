@@ -12,7 +12,11 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "core/extevhan.h"
+#include "core/devexec.h"
 #include "arch/devlog.h"
+
+constinit std::vector<std::function<std::unique_ptr<CExternalEventHandler>(CDeviceExecution &)>>
+    CExternalEventHandler::smEventHandlerFactories;
 
 CExternalEventHandler::CExternalEventHandler(CDeviceExecution &paDeviceExecution) :
     mDeviceExecution(paDeviceExecution) {

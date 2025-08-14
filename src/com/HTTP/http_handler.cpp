@@ -100,7 +100,7 @@ CHTTP_Handler::recvData(const void *paData,
       accepted.mSocket = newConnection;
       accepted.mStartTime = func_NOW_MONOTONIC();
       mAcceptedSockets.emplace_back(std::move(accepted));
-      getExtEvHandler<CIPComSocketHandler>().addComCallback(newConnection, this);
+      mDeviceExecution.getExtEvHandler<CIPComSocketHandler>().addComCallback(newConnection, this);
       resumeSelfsuspend();
     } else {
       DEVLOG_ERROR("[HTTP Handler] Couldn't accept new HTTP connection\n");
@@ -241,7 +241,7 @@ bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer *paLayer, con
       toAdd.mStartTime = func_NOW_MONOTONIC();
       startTimeoutThread();
       mClientLayers.emplace_back(std::move(toAdd));
-      getExtEvHandler<CIPComSocketHandler>().addComCallback(newSocket, this);
+      mDeviceExecution.getExtEvHandler<CIPComSocketHandler>().addComCallback(newSocket, this);
       resumeSelfsuspend();
       return true;
     } else {
@@ -386,7 +386,7 @@ void CHTTP_Handler::openHTTPServer() {
     char address[] = "127.0.0.1";
     smServerListeningSocket = CIPComSocketHandler::openTCPServerConnection(address, gHTTPServerPort);
     if (CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket) {
-      getExtEvHandler<CIPComSocketHandler>().addComCallback(smServerListeningSocket, this);
+      mDeviceExecution.getExtEvHandler<CIPComSocketHandler>().addComCallback(smServerListeningSocket, this);
       DEVLOG_INFO("[HTTP Handler] HTTP server listening on port %u\n", gHTTPServerPort);
     } else {
       DEVLOG_ERROR("[HTTP Handler] Couldn't start HTTP server on port %u\n", gHTTPServerPort);
@@ -402,8 +402,8 @@ void CHTTP_Handler::closeHTTPServer() {
 }
 
 void CHTTP_Handler::removeAndCloseSocket(const CIPComSocketHandler::TSocketDescriptor paSocket) {
-  getExtEvHandler<CIPComSocketHandler>().removeComCallback(paSocket);
-  getExtEvHandler<CIPComSocketHandler>().closeSocket(paSocket);
+  mDeviceExecution.getExtEvHandler<CIPComSocketHandler>().removeComCallback(paSocket);
+  mDeviceExecution.getExtEvHandler<CIPComSocketHandler>().closeSocket(paSocket);
 }
 
 void CHTTP_Handler::resumeSelfsuspend() {

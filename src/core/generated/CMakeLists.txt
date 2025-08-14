@@ -102,7 +102,6 @@ function(forte_find_sources_recursive variable target)
 endfunction()
 
 add_subdirectory(comlayersmanager)
-add_subdirectory(deviceexecutionhandlers)
 add_subdirectory(startuphook)
 
 add_subdirectory(config)

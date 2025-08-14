@@ -20,9 +20,7 @@
 #include "core/datatypes/forte_string.h"
 #include <string>
 
-class CROSManager : public CExternalEventHandler, private CThread {
-    DECLARE_HANDLER(CROSManager)
-
+class CROSManager : public CExternalEventHandler, public RegisterExternalEventHandler<CROSManager>, private CThread {
   public:
     explicit CROSManager(CDeviceExecution &paDeviceExecution);
     ~CROSManager() override;

@@ -11,18 +11,18 @@
  *    Alois Zoitl
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#ifndef _EXTEVHAN_H_
-#define _EXTEVHAN_H_
 
-#include "core/devexec.h"
+#pragma once
+
+#include <cstddef>
+#include <functional>
+#include <memory>
+#include <vector>
+#include <concepts>
+
+class CDeviceExecution;
 class CEventSourceFB;
 class CFunctionBlock;
-
-#define DECLARE_HANDLER(TypeName)                                                                                      \
-public:                                                                                                                \
-  static const size_t mHandlerIdentifier;                                                                              \
-                                                                                                                       \
-private:
 
 /**  \defgroup FORTE_HAL FORTE Hardware Abstraction Layer - FORTE-HAL
  * \brief The FORTE-HAL is the abstraction of HW dependent features important
@@ -34,6 +34,9 @@ private:
  */
 /*@{*/
 
+template<typename T>
+class RegisterExternalEventHandler;
+
 /*! \brief Baseclass for handling incoming interrupts and similar external events.
  *
  * Implementations of such classes should provide the following functions for ES-FBs:
@@ -43,6 +46,9 @@ private:
  */
 
 class CExternalEventHandler {
+    template<typename T>
+    friend class RegisterExternalEventHandler;
+
   public:
     explicit CExternalEventHandler(CDeviceExecution &paDeviceExecution);
 
@@ -55,6 +61,11 @@ class CExternalEventHandler {
      */
     virtual void disableHandler() = 0;
 
+    [[nodiscard]] static const std::vector<std::function<std::unique_ptr<CExternalEventHandler>(CDeviceExecution &)>> &
+    getFactories() {
+      return smEventHandlerFactories;
+    }
+
   protected:
     /*!\brief register event source at device execution for starting a new event chain
      *
@@ -65,16 +76,40 @@ class CExternalEventHandler {
      */
     void startNewEventChain(CEventSourceFB *paECStartFB);
 
-    template<typename T>
-    T &getExtEvHandler() {
-      return mDeviceExecution.getExtEvHandler<T>();
-    }
-
     CDeviceExecution &mDeviceExecution;
 
   private:
+    template<typename T>
+      requires std::derived_from<T, CExternalEventHandler> && std::derived_from<T, RegisterExternalEventHandler<T>>
+    static std::size_t registerExtEvHandler() {
+      smEventHandlerFactories.emplace_back(T::create);
+      // return values start at 1, since index 0 is the timer handler
+      return smEventHandlerFactories.size();
+    }
+
+    constinit static std::vector<std::function<std::unique_ptr<CExternalEventHandler>(CDeviceExecution &)>>
+        smEventHandlerFactories;
 };
+
+template<typename T>
+class RegisterExternalEventHandler {
+    friend CExternalEventHandler;
+
+  public:
+    RegisterExternalEventHandler() {
+      (void) &scmHandlerIdentifier;
+    }
+
+    static const std::size_t scmHandlerIdentifier;
+
+  private:
+    static std::unique_ptr<CExternalEventHandler> create(CDeviceExecution &paDeviceExecution) {
+      return std::make_unique<T>(paDeviceExecution);
+    }
+};
+
+template<typename T>
+const size_t RegisterExternalEventHandler<T>::scmHandlerIdentifier = CExternalEventHandler::registerExtEvHandler<T>();
 
 /*@}*/
 /*@}*/
-#endif /*EXTEVHAN_H_*/

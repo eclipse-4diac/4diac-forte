@@ -34,7 +34,6 @@ target_link_libraries(forte PUBLIC libcrypto.a)
 # else
 target_link_libraries(forte PUBLIC libssl.a -lpthread -ldl)
 target_link_libraries(forte PUBLIC libcrypto.a -lpthread -ldl)
-forte_register_handler(CXqueryHandler xqueryHandler.h)
 # forte_add_subdirectory(testFBs)
 
 add_library(forte-com-xquery OBJECT

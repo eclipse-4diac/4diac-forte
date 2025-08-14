@@ -22,9 +22,7 @@ namespace forte {
   }
 } // namespace forte
 
-class CModbusHandler : public CExternalEventHandler {
-    DECLARE_HANDLER(CModbusHandler)
-
+class CModbusHandler : public CExternalEventHandler, public RegisterExternalEventHandler<CModbusHandler> {
   public:
     explicit CModbusHandler(CDeviceExecution &paDeviceExecution);
     ~CModbusHandler() override;

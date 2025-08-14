@@ -42,9 +42,9 @@ extern std::string gOpcuaClientConfigFile;
  * Class to handle all action that are executed on a local OPC UA server
  */
 // cppcheck-suppress noConstructor
-class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract, public CThread {
-    DECLARE_HANDLER(COPC_UA_Local_Handler)
-
+class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract,
+                              public RegisterExternalEventHandler<COPC_UA_Local_Handler>,
+                              public CThread {
   public:
     explicit COPC_UA_Local_Handler(CDeviceExecution &paDeviceExecution);
     ~COPC_UA_Local_Handler() override;

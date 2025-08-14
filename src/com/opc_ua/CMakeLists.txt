@@ -92,8 +92,6 @@ target_include_directories(forte-global
 )
 target_link_libraries(forte PUBLIC ${FORTE_COM_OPC_UA_LIB})
 
-forte_register_handler(COPC_UA_Local_Handler opcua_local_handler.h)
-forte_register_handler(COPC_UA_Remote_Handler opcua_remote_handler.h)
 # OPC UA Event Layer
 forte_register_com_layer(OPC_UA_Events OFF "ua_ev" COPC_UA_Event_Layer
                          opcua_event_layer.h "Enable OPC UA Event Support"

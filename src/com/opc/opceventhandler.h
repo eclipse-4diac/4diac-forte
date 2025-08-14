@@ -24,9 +24,9 @@
 
 #include "ICmd.h"
 
-class COpcEventHandler : public CExternalEventHandler, private CThread {
-    DECLARE_HANDLER(COpcEventHandler)
-
+class COpcEventHandler : public CExternalEventHandler,
+                         public RegisterExternalEventHandler<COpcEventHandler>,
+                         private CThread {
   public:
     explicit COpcEventHandler(CDeviceExecution &paDeviceExecution);
     ~COpcEventHandler() override;

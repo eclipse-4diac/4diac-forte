@@ -172,9 +172,9 @@ class COPC_UA_Client_IterationList : public CThread {
  * Class to handle all action that are executed remotely. It calls the clients to execute their asynchronous calls
  */
 // cppcheck-suppress noConstructor
-class COPC_UA_Remote_Handler : public COPC_UA_HandlerAbstract, public COPC_UA_Client_IterationList {
-    DECLARE_HANDLER(COPC_UA_Remote_Handler)
-
+class COPC_UA_Remote_Handler : public COPC_UA_HandlerAbstract,
+                               public RegisterExternalEventHandler<COPC_UA_Remote_Handler>,
+                               public COPC_UA_Client_IterationList {
   public:
     explicit COPC_UA_Remote_Handler(CDeviceExecution &paDeviceExecution);
     ~COPC_UA_Remote_Handler() override;

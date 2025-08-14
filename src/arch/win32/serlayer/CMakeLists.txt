@@ -14,8 +14,6 @@ if (NOT FORTE_COM_SER)
     return()
 endif ()
 
-forte_register_handler(CWin32SerComHandler cwin32sercomhandler.h)
-
 add_library(forte-arch-win32-serlayer OBJECT
             cwin32sercomlayer.cpp
             cwin32sercomlayer.h

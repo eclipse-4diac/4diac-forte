@@ -23,9 +23,8 @@
 
 #include "stm32h7xx_hal_gpio.h"
 
-class EliteBoardDeviceController : public IODevicePollController {
-    DECLARE_HANDLER(EliteBoardDeviceController)
-
+class EliteBoardDeviceController : public IODevicePollController,
+                                   public RegisterExternalEventHandler<EliteBoardDeviceController> {
   public:
     explicit EliteBoardDeviceController(CDeviceExecution &paDeviceExecution);
     ~EliteBoardDeviceController() override;

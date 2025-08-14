@@ -7,9 +7,6 @@
 #
 # Contributors: Jonathan Lainer - Initial implementation.
 # *******************************************************************************/
-forte_register_handler(EliteBoardDeviceController
-                       EliteBoardDeviceController.h
-)
 
 add_library(forte-modules-eliteboard-handler OBJECT
             EliteBoardDeviceController.h EliteBoardDeviceController.cpp

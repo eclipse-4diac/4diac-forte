@@ -19,9 +19,9 @@
 #include <vector>
 
 // cppcheck-suppress noConstructor
-class CXqueryHandler : public CExternalEventHandler, private CThread {
-    DECLARE_HANDLER(CXqueryHandler)
-
+class CXqueryHandler : public CExternalEventHandler,
+                       public RegisterExternalEventHandler<CXqueryHandler>,
+                       private CThread {
   public:
     explicit CXqueryHandler(CDeviceExecution &paDeviceExecution);
     ~CXqueryHandler() override;

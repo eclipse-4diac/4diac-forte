@@ -8,7 +8,6 @@
 # Contributors: Dirk Kaar - initial API and implementation and/or initial
 # documentation
 # ############################################################################
-forte_register_handler(IODeviceController IODeviceController.h)
 
 add_library(forte-modules-zephyr-handler OBJECT IODeviceController.h
                                                 IODeviceController.cpp

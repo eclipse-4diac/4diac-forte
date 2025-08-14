@@ -26,9 +26,7 @@ class CSysFsProcessInterface : public CProcessInterfaceBase {
                            const forte::core::StringId paInstanceNameId);
     ~CSysFsProcessInterface() override;
 
-    class CIOHandler : public CExternalEventHandler, public CThread {
-        DECLARE_HANDLER(CIOHandler)
-
+    class CIOHandler : public CExternalEventHandler, public RegisterExternalEventHandler<CIOHandler>, public CThread {
       public:
         explicit CIOHandler(CDeviceExecution &paDeviceExecution);
         ~CIOHandler() override;

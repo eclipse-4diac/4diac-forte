@@ -49,10 +49,6 @@ add_library(forte-arch-win32 OBJECT
 
 target_link_libraries(forte PRIVATE forte-arch-win32)
 
-if(FORTE_COM_ETH)
-   forte_register_handler(CFDSelectHandler sockhand.h)
-endif(FORTE_COM_ETH)
-
 target_link_libraries(forte-arch-win32 PUBLIC comctl32 rpcrt4 winmm ws2_32
 version)
   

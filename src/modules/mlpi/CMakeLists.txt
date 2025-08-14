@@ -27,10 +27,6 @@ set(FORTE_COM_MLPI_DIR
 )
 forte_set_process_interface("MLPI" IX QX)
 
-forte_register_handler(CMLPIFaceProcessInterface::CIOHandler
-                       processinterface.h
-)
-
 add_library(forte-modules-mlpi OBJECT processinterface.h processinterface.cpp)
 target_link_libraries(forte PRIVATE forte-modules-mlpi)
 target_include_directories(forte-modules-mlpi

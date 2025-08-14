@@ -21,7 +21,6 @@ class CDevice;
 
 #include <memory>
 #include <vector>
-#include <cstdint>
 
 /**\ingroup CORE
  Handles all the IEC 61499 execution requests and aspects within one device
@@ -46,7 +45,7 @@ class CDeviceExecution {
 
     template<typename T>
     T &getExtEvHandler() {
-      return static_cast<T &>(*getExtEvHandler(T::mHandlerIdentifier));
+      return static_cast<T &>(*getExtEvHandler(T::scmHandlerIdentifier));
     }
 
     void disableHandlers();

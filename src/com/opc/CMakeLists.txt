@@ -35,8 +35,6 @@ set(FORTE_COM_OPC_BOOST_ROOT
     CACHE PATH "Path to Boost library root directory"
 )
 
-forte_register_handler(COpcEventHandler opceventhandler.h)
-
 target_link_libraries(forte PUBLIC OPCClientToolKit)
 add_library(forte-com-opc OBJECT
             $<$<BOOL:${FORTE_COM_OPC}>:opccomlayer.cpp>
