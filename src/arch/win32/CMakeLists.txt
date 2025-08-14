@@ -60,6 +60,7 @@ elseif(MSVC)
     target_compile_options(forte-global INTERFACE -wd4290)  #warning 4290: C++ exception specification ignored except to indicate a function is not __declspec(nothrow). A function is declared using exception specification, which Visual C++ accepts but does not implement. (from new/delete warning)
     target_compile_definitions(forte-global INTERFACE _SILENCE_CXX20_CODECVT_FACETS_DEPRECATION_WARNING) # silence C++20 codecvt facets deprecation warnings until a viable replacement is found to prevent repeated warnings during builds
     target_compile_definitions(forte-global INTERFACE NOMINMAX)  #needed that windows.h is not adding macros for MIN and MAX
+    target_compile_definitions(forte-global INTERFACE _ITERATOR_DEBUG_LEVEL=0) # needed to keep MSVC from complaining about allocating heap memory in constinit containers
     target_compile_options(forte-global INTERFACE /Zc:preprocessor)  # needed for __VA_OPT__
 endif()
   
