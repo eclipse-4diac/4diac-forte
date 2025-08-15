@@ -16,6 +16,9 @@
 #include "generated/ecetfactory.h"
 #include "core/ecetFake.h"
 #include "core/ecetfactory.h"
+#include "core/stringid.h"
+
+using namespace forte::core::literals;
 
 DebugMGR::DebugMGR(CDevice &paDevice, OPCUA_MGR &paOpcuaMgr) : mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {
   // we need the fake ecet to debug control the device remotely

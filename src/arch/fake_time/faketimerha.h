@@ -36,16 +36,6 @@ class CFakeTimerHandler : public CTimerHandler, public CThread {
     /*!\brief Disable this event source
      */
     virtual void disableHandler(void) override;
-    /*!\brief Sets the priority of the event source
-     *
-     * \param paPriority new priority of the event source
-     */
-    virtual void setPriority(int paPriority) override;
-    /*!\brief Get the current priority of the event source
-     *
-     * \return current priority
-     */
-    virtual int getPriority(void) const override;
 
     void setSleepTime(const CIEC_TIME &, CFunctionBlock *fb);
     void sleepToTime(const CIEC_TIME &);

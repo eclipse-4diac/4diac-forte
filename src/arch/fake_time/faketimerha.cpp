@@ -116,11 +116,3 @@ void CFakeTimerHandler::enableHandler(void) {
 void CFakeTimerHandler::disableHandler(void) {
   end();
 }
-
-void CFakeTimerHandler::setPriority(int) {
-  // empty implementation
-}
-
-int CFakeTimerHandler::getPriority(void) const {
-  return 1;
-}

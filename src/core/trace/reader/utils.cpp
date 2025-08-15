@@ -42,7 +42,7 @@ namespace forte::trace::reader::utils {
       fbNamePart = fbNamePart.substr(index + 1);
       index = fbNamePart.find_first_of(".");
     }
-    id.push_back(forte::core::StringId::insert(fbNamePart.substr(0, index))));
+    id.push_back(forte::core::StringId::insert(fbNamePart.substr(0, index)));
 
     auto it = id.cbegin();
     return paContainer->getFB(it, id.cend());

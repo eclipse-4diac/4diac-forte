@@ -59,7 +59,7 @@ EMGMResponse ReplayDevice::executeMGMCommand(forte::core::SManagementCMD &paComm
   return CDevice::executeMGMCommand(paCommand);
 }
 
-const std::string &ReplayDevice::setInitialState(const std::string_view paMGRID) {
+const std::string_view ReplayDevice::setInitialState(const std::string_view paMGRID) {
   forte::core::TimerHandlerFactory::setDefaultImpl("FakeTime"_STRID);
   forte::core::EcetFactory::setDefaultImpl("Fake"_STRID);
   CFlexibleTracer::setTracer(CFlexibleTracer::AvailableTracers::Internal);
