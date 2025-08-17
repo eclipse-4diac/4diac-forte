@@ -16,7 +16,7 @@
  *                      configuration
  *   Alois ZOitl      - removed old process interface structure, added common
  *                      interface elements
- *   Franz Höpfinger - adding "pin Valid" 
+ *   Franz Höpfinger - adding "pin Valid"
  *******************************************************************************/
 
 #pragma once

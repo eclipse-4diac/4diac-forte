@@ -16,7 +16,7 @@
  *   Thomas Öllinger  - use PARAMS to reference to I/O configuration
  *   Alois ZOitl      - removed old process interface structure, added common
  *                      interface elements
- *   Franz Höpfinger - adding "pin Valid" 
+ *   Franz Höpfinger - adding "pin Valid"
  *******************************************************************************/
 
 #include "core/io/processinterfacefb.h"

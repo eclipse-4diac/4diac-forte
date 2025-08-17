@@ -9,7 +9,7 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
- *   Franz Höpfinger - adding "pin Valid" 
+ *   Franz Höpfinger - adding "pin Valid"
  *******************************************************************************/
 
 #include "core/io/mapper/io_handle.h"
@@ -19,7 +19,10 @@
 
 using namespace forte::core::io;
 
-IOHandle::IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType, bool paPinValid) :
+IOHandle::IOHandle(IODeviceController *paController,
+                   IOMapper::Direction paDirection,
+                   CIEC_ANY::EDataTypeID paType,
+                   bool paPinValid) :
     mController(paController),
     mType(paType),
     mDirection(paDirection),
