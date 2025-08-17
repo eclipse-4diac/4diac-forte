@@ -16,6 +16,7 @@
  *                      configuration
  *   Alois ZOitl      - removed old process interface structure, added common
  *                      interface elements
+ *   Franz Höpfinger - adding "pin Valid" 
  *******************************************************************************/
 
 #pragma once
@@ -101,6 +102,7 @@ namespace forte::core::io {
       static const CIEC_STRING scmMappedWrongDirectionOutput;
       static const CIEC_STRING scmMappedWrongDirectionInput;
       static const CIEC_STRING scmMappedWrongDataType;
+      static const CIEC_STRING scmPinNotValid;
   };
 
 } // namespace forte::core::io

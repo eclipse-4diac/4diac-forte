@@ -16,6 +16,7 @@
  *   Thomas Öllinger  - use PARAMS to reference to I/O configuration
  *   Alois ZOitl      - removed old process interface structure, added common
  *                      interface elements
+ *   Franz Höpfinger - adding "pin Valid" 
  *******************************************************************************/
 
 #include "core/io/processinterfacefb.h"
@@ -31,6 +32,7 @@ const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDirectionOutput(
 const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDirectionInput(
     "Mapped invalid direction. An I block requires an input handle."_STRING);
 const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDataType("Mapped invalid data type."_STRING);
+const CIEC_STRING CProcessInterfaceFB::scmPinNotValid("Pin not Valid"_STRING);
 
 CProcessInterfaceFB::CProcessInterfaceFB(forte::core::CFBContainer &paContainer,
                                          const SFBInterfaceSpec &paInterfaceSpec,
@@ -155,6 +157,11 @@ void CProcessInterfaceFB::onHandle(IOHandle *const paHandle) {
 
   if (paHandle->getIOHandleDataType() != getIOObserverDataType()) {
     var_STATUS = scmMappedWrongDataType;
+    return;
+  }
+
+  if (!paHandle->isPinValid()) {
+    var_STATUS = scmPinNotValid;
     return;
   }
 

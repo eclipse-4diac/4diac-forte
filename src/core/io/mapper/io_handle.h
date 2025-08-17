@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH, HR Agrartechnik GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +9,7 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Franz Höpfinger - adding "pin Valid" 
  *******************************************************************************/
 
 #ifndef SRC_CORE_IO_MAPPER_HANDLE_H_
@@ -29,7 +30,7 @@ namespace forte {
           friend class IOMapper;
 
         public:
-          IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType);
+          IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType, bool paPinValid = true);
           virtual ~IOHandle();
 
           bool hasObserver() const {
@@ -56,6 +57,10 @@ namespace forte {
             return mDirection == IOMapper::Out;
           }
 
+          bool isPinValid() const {
+            return mPinValid;
+          }
+
           virtual void set(const CIEC_ANY &) = 0;
           virtual void get(CIEC_ANY &) = 0;
 
@@ -66,6 +71,8 @@ namespace forte {
           CIEC_ANY::EDataTypeID mType;
 
           IOMapper::Direction mDirection;
+
+          bool mPinValid;
 
           virtual void onObserver(IOObserver *paObserver);
           virtual void dropObserver();

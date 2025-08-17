@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016, 2025 Johannes Messmer (admin@jomess.com), fortiss GmbH, HR Agrartechnik GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +9,7 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Franz Höpfinger - adding "pin Valid" 
  *******************************************************************************/
 
 #include "core/io/mapper/io_handle.h"
@@ -18,11 +19,12 @@
 
 using namespace forte::core::io;
 
-IOHandle::IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType) :
+IOHandle::IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType, bool paPinValid) :
     mController(paController),
     mType(paType),
     mDirection(paDirection),
-    mObserver(nullptr) {
+    mObserver(nullptr),
+    mPinValid(paPinValid) {
 }
 
 IOHandle::~IOHandle() {
