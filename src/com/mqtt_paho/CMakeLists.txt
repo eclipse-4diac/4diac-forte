@@ -11,10 +11,7 @@
 # ############################################################################
 # PAHO MQTT Com Layer
 # ############################################################################
-forte_register_com_layer(PAHOMQTT OFF "mqtt" MQTTComLayer MQTTComLayer.h
-                         "Enable Paho MQTT Com Layer"
-)
-
+option(FORTE_COM_PAHOMQTT "Enable Paho MQTT Com Layer" OFF)
 if (NOT FORTE_COM_PAHOMQTT)
     return()
 endif ()

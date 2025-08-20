@@ -13,13 +13,21 @@
 #include "arch/devlog.h"
 #include "xqueryClientLayer.h"
 #include "xqueryHandler.h"
+#include "core/cominfra/comlayersmanager.h"
 extern "C" {
 #include <basexdbc.h>
 }
 
 using namespace forte::com_infra;
+using namespace forte::core::literals;
+
 using namespace std::literals::string_literals;
+
 const char *CXqueryClientLayer::scmParameterSeperator = " ;:";
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CXqueryClientLayer> entry("xquery"_STRID);
+}
 
 CXqueryClientLayer::CXqueryClientLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
     CComLayer(paUpperLayer, paComFB) {

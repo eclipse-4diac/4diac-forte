@@ -12,6 +12,13 @@
 #include "cwin32sercomlayer.h"
 #include "cwin32sercomhandler.h"
 #include "core/cominfra/commfb.h"
+#include "core/cominfra/comlayersmanager.h"
+
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CWin32SerComLayer> entry("ser"_STRID);
+}
 
 CWin32SerComLayer::CWin32SerComLayer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB) :
     CSerialComLayerBase(paUpperLayer, paFB) {

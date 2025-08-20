@@ -18,10 +18,7 @@ if (NOT FORTE_ARCHITECTURE STREQUAL "Win32")
     return()
 endif ()
 
-forte_register_com_layer(OPC OFF "opc" COpcComLayer opccomlayer.h
-                         "Enable OPC communication"
-)
-
+option(FORTE_COM_OPC "Enable OPC communication" OFF)
 if (NOT FORTE_COM_OPC)
     return()
 endif ()

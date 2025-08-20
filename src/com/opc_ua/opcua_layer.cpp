@@ -29,8 +29,14 @@
 #include "com/opc_ua/opcua_action_info.h"
 #include "com/opc_ua/opcua_remote_handler.h"
 #include "com/opc_ua/opcua_objectstruct_helper.h"
+#include "core/cominfra/comlayersmanager.h"
 
 using namespace forte::com_infra;
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<COPC_UA_Layer> entry("opc_ua"_STRID);
+}
 
 COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
     CComLayer(paUpperLayer, paComFB),

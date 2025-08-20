@@ -21,10 +21,16 @@
 #include "opcconnection.h"
 #include "opcconnectionhandler.h"
 #include "Variant.h"
+#include "core/cominfra/comlayersmanager.h"
 #include "core/util/criticalregion.h"
 #include <boost/lexical_cast.hpp>
 
 using namespace forte::com_infra;
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<COpcComLayer> entry("opc"_STRID);
+}
 
 COpcComLayer::COpcComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
     CComLayer(paUpperLayer, paComFB),

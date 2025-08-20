@@ -12,10 +12,17 @@
 
 #include "core/cominfra/commfb.h"
 #include "core/fmi/comm/fmuComLayer.h"
+
+#include "core/cominfra/comlayersmanager.h"
 #include "core/fmi/comm/fmuHandler.h"
 #include "core/fmi/fmuInstance.h" //just for logging?
 
 using namespace forte::com_infra;
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<fmuComLayer> entry("fmu"_STRID);
+}
 
 fmuComLayer::fmuComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB) :
     CComLayer(paUpperLayer, paFB),

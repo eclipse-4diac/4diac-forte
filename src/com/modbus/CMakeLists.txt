@@ -11,10 +11,7 @@
 # ############################################################################
 # Modbus Com Layer
 # ############################################################################
-forte_register_com_layer(MODBUS OFF "modbus" CModbusComLayer modbuslayer.h
-                         "Enable Modbus Com Layer"
-)
-
+option(FORTE_COM_MODBUS "Enable Modbus Com Layer" OFF)
 if (NOT FORTE_COM_MODBUS)
     return()
 endif ()

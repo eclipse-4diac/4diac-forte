@@ -24,9 +24,16 @@
 #include "http_handler.h"
 #include "core/cominfra/comtypes.h"
 #include "core/util/string_utils.h"
+#include "core/cominfra/comlayersmanager.h"
 
 using namespace forte::com_infra;
+using namespace forte::core::literals;
+
 using namespace std::string_literals;
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CHttpComLayer> entry("http"_STRID);
+}
 
 CHttpComLayer::CHttpComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
     CComLayer(paUpperLayer, paComFB),

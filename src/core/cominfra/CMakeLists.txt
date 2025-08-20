@@ -16,25 +16,11 @@
 # Core
 # ############################################################################
 
-forte_register_com_layer(ETH ON "ip" CIPComLayer ipcomlayer.h
-                         "Enable Forte Com Ethernet"
-)
-forte_register_com_layer(FBDK ON "fbdk" CFBDKASN1ComLayer fbdkasn1layer.h
-                         "Enable Forte Com FBDK"
-)
-forte_register_com_layer(LOCAL ON "loc" CLocalComLayer localcomlayer.h
-                         "Enable Forte local communication"
-)
-forte_register_com_layer(RAW ON "raw" CRawDataComLayer rawdatacomlayer.h
-                         "Enable Forte raw communication"
-)
-forte_register_com_layer(STRUCT_MEMBER
-                         OFF
-                         "structmemb"
-                         CStructMemberLocalComLayer
-                         structmembercomlayer.h
-                         "Local communication layer writing to a single element in a struct"
-)
+option(FORTE_COM_ETH "Enable Forte Com Ethernet" ON)
+option(FORTE_COM_FBDK "Enable Forte Com FBDK" ON)
+option(FORTE_COM_LOCAL "Enable Forte local communication" ON)
+option(FORTE_COM_RAW "Enable Forte raw communication" ON)
+option(FORTE_COM_STRUCT_MEMBER "Local communication layer writing to a single element in a struct" OFF)
 add_library(forte-core-cominfra OBJECT
             comtypes.h
             comlayersmanager.h

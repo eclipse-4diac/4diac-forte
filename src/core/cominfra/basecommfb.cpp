@@ -101,7 +101,7 @@ EComResponse CBaseCommFB::createComstack(char *commID) {
 
     if (nullptr != layerID && '\0' != *layerID) { // If well formated ID, keep going
       // Create the new layer
-      newLayer = CComLayersManager::createCommunicationLayer(layerID, previousLayer, this);
+      newLayer = ComLayerManager::create(forte::core::StringId::lookup(layerID), previousLayer, this).release();
       if (nullptr != newLayer) { // If the layer could be created, keep going
         if (nullptr == mTopOfComStack) {
           mTopOfComStack = newLayer; // Assign the newly created layer to the FB

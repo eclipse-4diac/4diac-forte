@@ -15,8 +15,10 @@
 #include "core/util/parameterParser.h"
 #include "core/cominfra/basecommfb.h"
 #include "com/opc_ua/opcua_local_handler.h"
+#include "core/cominfra/comlayersmanager.h"
 
 using namespace forte::com_infra;
+using namespace forte::core::literals;
 
 char COPC_UA_Event_Layer::smEmptyString[] = "";
 
@@ -24,6 +26,10 @@ char COPC_UA_Event_Layer::smEventTimeProperty[] = "Time";
 char COPC_UA_Event_Layer::smEventSeverityProperty[] = "Severity";
 char COPC_UA_Event_Layer::smEventMessageProperty[] = "Message";
 char COPC_UA_Event_Layer::smEventSourceProperty[] = "SourceName";
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<COPC_UA_Event_Layer> entry("ua_ev"_STRID);
+}
 
 COPC_UA_Event_Layer::COPC_UA_Event_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
     CComLayer(paUpperLayer, paComFB),

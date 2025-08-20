@@ -20,9 +20,7 @@
 # ############################################################################
 
 # option to enable OPC UA with cmake
-forte_register_com_layer(OPC_UA OFF "opc_ua" COPC_UA_Layer opcua_layer.h
-                         "Enable OPC UA communication layer"
-)
+option(FORTE_COM_OPC_UA "Enable OPC UA communication layer" OFF)
 if (NOT FORTE_COM_OPC_UA)
     return()
 endif ()
@@ -93,13 +91,8 @@ target_include_directories(forte-global
 target_link_libraries(forte PUBLIC ${FORTE_COM_OPC_UA_LIB})
 
 # OPC UA Event Layer
-forte_register_com_layer(OPC_UA_Events OFF "ua_ev" COPC_UA_Event_Layer
-                         opcua_event_layer.h "Enable OPC UA Event Support"
-)
-forte_register_com_layer(OPC_UA_AC OFF "ua_ac" COPC_UA_AC_Layer
-                         opcua_ac_layer.h "Enable OPC UA A&C Support"
-)
-
+option(FORTE_COM_OPC_UA_Events "Enable OPC UA Event Support" OFF)
+option(FORTE_COM_OPC_UA_AC "Enable OPC UA A&C Support" OFF)
 configure_file(opcua_defaults.h.in
                ${FORTE_GENERATED_FILES_DIR}/opcua_defaults.h
 )

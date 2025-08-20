@@ -14,12 +14,20 @@
 #include "core/cominfra/basecommfb.h"
 #include "core/util/parameterParser.h"
 #include "core/cominfra/structmembercomlayer.h"
+
+#include "comlayersmanager.h"
 #include "core/typelib.h"
 #include <string>
 #include <errno.h>
 #include "core/util/string_utils.h"
 
 using namespace forte::com_infra;
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CStructMemberLocalComLayer>
+      entry("structmemb"_STRID);
+}
 
 CStructMemberLocalComLayer::CStructMemberLocalComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB) :
     CLocalComLayer(paUpperLayer, paFB) {

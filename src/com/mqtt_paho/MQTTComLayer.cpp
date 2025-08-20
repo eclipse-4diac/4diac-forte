@@ -16,10 +16,16 @@
 #include "core/util/parameterParser.h"
 #include "MQTTHandler.h"
 #include "MQTTClient.h"
+#include "core/cominfra/comlayersmanager.h"
 #include "core/cominfra/commfb.h"
 #include <string>
 
 using namespace forte::com_infra;
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<MQTTComLayer> entry("mqtt"_STRID);
+}
 
 MQTTComLayer::MQTTComLayer(CComLayer *paUpperLayer, CBaseCommFB *pFB) :
     CComLayer(paUpperLayer, pFB),

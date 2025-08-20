@@ -20,6 +20,13 @@
 #include <fcntl.h>
 #include <sockhand.h>
 #include "core/util/criticalregion.h"
+#include "core/cominfra/comlayersmanager.h"
+
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CPosixSerCommLayer> entry("ser"_STRID);
+}
 
 CPosixSerCommLayer::CPosixSerCommLayer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB) :
     CSerialComLayerBase(paUpperLayer, paFB) {

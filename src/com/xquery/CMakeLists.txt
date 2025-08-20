@@ -8,10 +8,7 @@
 # ############################################################################
 # Xquery SIFBs
 # ############################################################################
-forte_register_com_layer(XqueryClient OFF "xquery" CXqueryClientLayer
-                         xqueryClientLayer.h "client to send xqueries"
-)
-
+option(FORTE_COM_XqueryClient "client to send xqueries" OFF)
 if (NOT FORTE_COM_XQUERYCLIENT)
     return()
 endif ()

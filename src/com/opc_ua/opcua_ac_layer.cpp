@@ -17,9 +17,12 @@
 #include "com/opc_ua/opcua_local_handler.h"
 #include "com/opc_ua/opcua_objectstruct_helper.h"
 #include "com/opc_ua/opcua_action_info.h"
+#include "core/cominfra/comlayersmanager.h"
+
 #include <memory>
 
 using namespace forte::com_infra;
+using namespace forte::core::literals;
 
 namespace {
   const std::string scmAlarmTypeBrowsePath =
@@ -46,6 +49,8 @@ namespace {
       {"Device", "ConditionName"},
       {"Source", "SourceName"},
   };
+
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<COPC_UA_AC_Layer> entry("ua_ac"_STRID);
 } // namespace
 
 COPC_UA_AC_Layer::COPC_UA_AC_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :

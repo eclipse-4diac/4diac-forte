@@ -20,9 +20,16 @@
 #include <std_msgs/Bool.h>
 #include <std_msgs/Empty.h>
 #include "core/cominfra/commfb.h"
+#include "core/cominfra/comlayersmanager.h"
 
 using namespace forte::com_infra;
+using namespace forte::core::literals;
+
 using namespace std::string_literals;
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CROSLayer> entry("ros"_STRID);
+}
 
 CROSLayer::CROSLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) : CComLayer(paUpperLayer, paComFB) {
 

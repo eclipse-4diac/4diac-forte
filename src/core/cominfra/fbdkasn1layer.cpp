@@ -15,12 +15,19 @@
  *    Martin Jobst - account for new FB layout and varying data type size
  *******************************************************************************/
 #include "core/cominfra/fbdkasn1layer.h"
+
+#include "comlayersmanager.h"
 #include "core/cominfra/basecommfb.h"
 #include "arch/timerha.h"
 #include "arch/devlog.h"
 #include "arch/fortenew.h"
 
 using namespace forte::com_infra;
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CFBDKASN1ComLayer> entry("fbdk"_STRID);
+}
 
 const std::set<CIEC_ANY::EDataTypeID> CFBDKASN1ComLayer::scmSimpleEncodableDataTypes{
     CIEC_ANY::e_SINT,  CIEC_ANY::e_INT,   CIEC_ANY::e_DINT,  CIEC_ANY::e_LINT,         CIEC_ANY::e_USINT,

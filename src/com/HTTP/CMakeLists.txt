@@ -13,9 +13,7 @@
 # ############################################################################
 # HTTP Com Layer (currently implements an HTTP client)
 # ############################################################################
-forte_register_com_layer(HTTP OFF "http" CHttpComLayer httplayer.h
-                         "Enable an HTTP Com Layer"
-)
+option(FORTE_COM_HTTP "Enable an HTTP Com Layer" OFF)
 if (NOT FORTE_COM_HTTP)
     return()
 endif ()

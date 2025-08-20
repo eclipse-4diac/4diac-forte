@@ -49,7 +49,7 @@ mark_as_advanced(FORTE_POSIX_GENERATE_MAP_FILE)
 target_link_options(forte-arch-posix PUBLIC $<$<BOOL:${FORTE_POSIX_GENERATE_MAP_FILE}>:-Wl,-M,-Map,forte.map,-cref>)
 
 if (NOT APPLE)
-    forte_register_com_layer(SER OFF "ser" CPosixSerCommLayer posixsercommlayer.h "Enable Forte serial line communication")
-endif()
+    option(FORTE_COM_SER "Enable Forte serial line communication" OFF)
+endif ()
 
 add_subdirectory(com)

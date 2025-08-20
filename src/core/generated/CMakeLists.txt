@@ -101,7 +101,5 @@ function(forte_find_sources_recursive variable target)
     set(${variable} ${mysources} PARENT_SCOPE)
 endfunction()
 
-add_subdirectory(comlayersmanager)
-
 add_subdirectory(config)
 add_subdirectory(typeinit)

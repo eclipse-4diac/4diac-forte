@@ -14,9 +14,15 @@
 #include "modbuslayer.h"
 #include "core/cominfra/commfb.h"
 #include "modbusclientconnection.h"
+#include "core/cominfra/comlayersmanager.h"
 #include "core/util/string_utils.h"
 
 using namespace forte::com_infra;
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CModbusComLayer> entry("modbus"_STRID);
+}
 
 std::vector<CModbusComLayer::SConnection> CModbusComLayer::smConnections;
 

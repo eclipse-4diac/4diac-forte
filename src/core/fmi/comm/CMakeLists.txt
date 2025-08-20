@@ -12,10 +12,7 @@
 # core/fmi/comm
 # ############################################################################
 
-forte_register_com_layer(fmu ON "fmu" fmuComLayer fmuComLayer.h
-                         "Enable Forte Com Fmu"
-)
-
+option(FORTE_COM_fmu "Enable Forte Com Fmu" ON)
 add_library(forte-core-fmi-comm OBJECT
             $<$<BOOL:${FORTE_COM_fmu}>:fmuComLayer.cpp>
             $<$<BOOL:${FORTE_COM_fmu}>:fmuComLayer.h> fmuHandler.h

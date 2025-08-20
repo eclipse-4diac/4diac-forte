@@ -28,13 +28,7 @@ target_compile_definitions(forte-global INTERFACE FORTE_ROS)
 # Communication Layer for ROS (publish, subscribe)
 # ############################################################################
 
-forte_register_com_layer(ROS
-                         ON
-                         "ros"
-                         CROSLayer
-                         ROSLayer.h
-                         "Layer for providing and receiving data to/from ROS via publish/subscribe"
-)
+option(FORTE_COM_ROS "Layer for providing and receiving data to/from ROS via publish/subscribe" ON)
 
 find_package(catkin QUIET COMPONENTS actionlib reapp_msgs roscpp std_msgs
                                      std_srvs topic_tools

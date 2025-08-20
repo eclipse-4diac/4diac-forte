@@ -14,8 +14,17 @@
  *    Martin Jobst - account for new FB layout and varying data type size
  *******************************************************************************/
 #include "core/cominfra/rawdatacomlayer.h"
+
+#include "comlayersmanager.h"
 #include "core/datatypes/forte_any.h"
 #include "core/datatypes/forte_string.h"
+
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<forte::com_infra::CRawDataComLayer>
+      entry("raw"_STRID);
+}
 
 namespace forte {
   namespace com_infra {

@@ -15,12 +15,19 @@
  *    Mario Kastner - bug fixes
  *******************************************************************************/
 #include "core/cominfra/localcomlayer.h"
+
+#include "comlayersmanager.h"
 #include "core/cominfra/commfb.h"
 #include "core/resource.h"
 #include "core/device.h"
 #include "core/util/criticalregion.h"
 
 using namespace forte::com_infra;
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CLocalComLayer> entry("loc"_STRID);
+}
 
 CLocalComLayer::CLocalCommGroupsManager CLocalComLayer::smLocalCommGroupsManager;
 

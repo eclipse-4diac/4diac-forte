@@ -8,8 +8,7 @@
 # Contributors: Martin Melik-Merkumians - initial API and implementation
 # and/or initial documentation
 # *******************************************************************************/
-forte_register_com_layer(SER OFF "ser" CWin32SerComLayer cwin32sercomlayer.h
-                         "Enable Forte serial line communication")
+option(FORTE_COM_SER "Enable Forte serial line communication" OFF)
 if (NOT FORTE_COM_SER)
     return()
 endif ()

@@ -12,13 +12,7 @@ if (NOT FORTE_ARCHITECTURE STREQUAL "Posix")
     return()
 endif ()
 
-forte_register_com_layer(TSN
-                         OFF
-                         "tsn"
-                         CTSNLayer
-                         tsn_layer.h
-                         "Enable Forte Com Ethernet Time-Sensitive Networking for Pub-Sub"
-)
+option(FORTE_COM_TSN "Enable Forte Com Ethernet Time-Sensitive Networking for Pub-Sub" OFF)
 if (NOT FORTE_COM_TSN)
     return()
 endif ()

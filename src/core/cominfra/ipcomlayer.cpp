@@ -15,12 +15,19 @@
  *improve UDP multicast support
  *******************************************************************************/
 #include "core/cominfra/ipcomlayer.h"
+
+#include "comlayersmanager.h"
 #include "arch/devlog.h"
 #include "core/cominfra/basecommfb.h"
 #include <forte_thread.h>
 #include "core/util/string_utils.h"
 
 using namespace forte::com_infra;
+using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CIPComLayer> entry("ip"_STRID);
+}
 
 CIPComLayer::CIPComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
     CComLayer(paUpperLayer, paComFB),
