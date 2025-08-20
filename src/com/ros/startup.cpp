@@ -9,15 +9,22 @@
  * Contributors:
  *  Alois Zoitl - migrated from posix main
  *******************************************************************************/
+
 #include <ros/ros.h>
 #include <develog.h>
 
-void rosStartupHook(int argc, char *arg[]) {
-  if (argc <= 1) { //! Default Value (localhost:61499)
-    std::string rosdistro = "indigo";
-    if (rosdistro == (std::string) std::getenv("ROS_DISTRO")) {
-      DEVLOG_INFO("path to forte.exe: %s \n", arg[0]);
-      ros::init(argc, arg, "ros_Functionblocks_in_FORTE");
+#include "core/startuphook.h"
+
+namespace {
+  void rosStartupHook(int argc, char *arg[]) {
+    if (argc <= 1) { //! Default Value (localhost:61499)
+      std::string rosdistro = "indigo";
+      if (rosdistro == (std::string) std::getenv("ROS_DISTRO")) {
+        DEVLOG_INFO("path to forte.exe: %s \n", arg[0]);
+        ros::init(argc, arg, "ros_Functionblocks_in_FORTE");
+      }
     }
   }
-}
+
+  [[maybe_unused]] const forte::core::StartupHookRegistry::EntryImpl<rosStartupHook> entry;
+} // namespace

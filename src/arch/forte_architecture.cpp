@@ -29,7 +29,7 @@ int CForteGeneralArchitecture::initialize(int argc, char *argv[]) {
     return result;
   }
   forte_typeinit();
-  startupHook(argc, argv);
+  forte::core::StartupHookRegistry::invoke(argc, argv);
   CForteGeneralArchitecture::mInitialized = true;
   return 0;
 }

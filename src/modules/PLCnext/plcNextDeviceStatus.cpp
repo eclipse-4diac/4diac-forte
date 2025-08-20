@@ -23,12 +23,18 @@
 #include "arch/devlog.h"
 #include "plcNextDeviceStatus.h"
 
+#include "core/startuphook.h"
+
 #include <unistd.h>
 
 using namespace Arp;
 using namespace Arp::System::Rsc;
 using namespace Arp::Device::Interface::Services;
 using namespace Arp::System::Commons::Diagnostics::Logging;
+
+namespace {
+  [[maybe_unused]] const forte::core::StartupHookRegistry::EntryImpl<DeviceStatus::startup> entry;
+}
 
 volatile bool DeviceStatus::started = false;
 volatile bool DeviceStatus::ready = false;

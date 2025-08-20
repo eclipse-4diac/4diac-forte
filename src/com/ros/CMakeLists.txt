@@ -36,7 +36,6 @@ forte_register_com_layer(ROS
                          "Layer for providing and receiving data to/from ROS via publish/subscribe"
 )
 
-forte_register_startup_hook(rosStartupHook)
 find_package(catkin QUIET COMPONENTS actionlib reapp_msgs roscpp std_msgs
                                      std_srvs topic_tools
 )

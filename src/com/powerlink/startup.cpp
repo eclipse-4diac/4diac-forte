@@ -10,8 +10,14 @@
  *  Alois Zoitl - migrated from posix main
  *******************************************************************************/
 
+#include "core/startuphook.h"
+
 #include <EplWrapper.h>
 
-void powerlinkStartupHook([[maybe_unused]] int paArgc, [[maybe_unused]] char *paArg[]) {
-  CEplStackWrapper::eplMainInit();
-}
+namespace {
+  void powerlinkStartupHook(int, char **) {
+    CEplStackWrapper::eplMainInit();
+  }
+
+  [[maybe_unused]] const forte::core::StartupHookRegistry::EntryImpl<powerlinkStartupHook> entry;
+} // namespace

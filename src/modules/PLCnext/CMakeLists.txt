@@ -30,8 +30,6 @@ target_link_libraries(forte PUBLIC Arp.System.ModuleLib)
 target_link_libraries(forte PUBLIC Arp.System.Module)
 target_link_libraries(forte PUBLIC Arp.Plc.AnsiC)
 
-forte_register_startup_hook(DeviceStatus::startup)
-
 add_library(forte-modules-PLCnext OBJECT
             types/PLCnextBusAdapter.h
             types/PLCnextBusAdapter.cpp

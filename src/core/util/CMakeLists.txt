@@ -15,6 +15,7 @@
 
 add_library(forte-core-util OBJECT
             factory.h
+            hook.h
             singlet.h
             criticalregion.h
             fixed_string.h
