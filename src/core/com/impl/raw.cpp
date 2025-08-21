@@ -24,7 +24,7 @@ using namespace forte::com;
 using namespace forte::com::impl;
 
 namespace {
-  [[maybe_unused]] ComChannelEntryImpl<std::span<CIEC_ANY_VARIANT>, RawChannel> entry("raw"_STRID);
+  [[maybe_unused]] ComChannelFactory<std::span<CIEC_ANY_VARIANT>>::EntryImpl<RawChannel> entry("raw"_STRID);
 
   std::size_t parseSize(const std::string_view paConfigString) {
     std::size_t result{};
@@ -40,7 +40,7 @@ ComResult RawChannel::open(const std::string_view paConfigString, const std::spa
   if (paDescriptors.empty()) {
     return ComResult::InvalidId;
   }
-  mChannel = ComFactory<ComBuffer>::createChannel(paDescriptors.front().mChannel, *this);
+  mChannel = ComChannelFactory<ComBuffer>::create(paDescriptors.front().mChannel, *this);
   if (!mChannel) {
     return ComResult::InvalidId;
   }

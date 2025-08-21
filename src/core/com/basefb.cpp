@@ -24,7 +24,7 @@ ComResult BaseCommunicationFB::open(const std::string_view paID) {
     return ComResult::InvalidId;
   }
 
-  mChannel = ComFactory<std::span<CIEC_ANY_VARIANT>>::createChannel(descriptors.front().mChannel, *this);
+  mChannel = ComChannelFactory<std::span<CIEC_ANY_VARIANT>>::create(descriptors.front().mChannel, *this);
   if (!mChannel) {
     return ComResult::InvalidId;
   }

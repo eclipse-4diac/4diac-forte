@@ -13,69 +13,13 @@
 
 #pragma once
 
-#include <memory>
-#include <span>
-#include <unordered_map>
-
 #include "channel.h"
 
-#include "core/stringid.h"
+#include "core/util/factory.h"
 
 namespace forte::com {
 
   template<typename T>
-  class ComChannelEntry;
-
-  template<typename T>
-  class ComFactory final {
-      friend ComChannelEntry<T>;
-
-    public:
-      static std::unique_ptr<ComChannel<T>> createChannel(forte::core::StringId paChannel, ComObserver<T> &paObserver) {
-        if (auto entry = getEntries().find(paChannel); entry != getEntries().end()) {
-          return entry->second->createChannel(paObserver);
-        }
-        return nullptr;
-      }
-
-      ComFactory() = delete;
-
-    private:
-      static void registerChannel(forte::core::StringId paName, ComChannelEntry<T> *paEntry) {
-        getEntries()[paName] = paEntry;
-      }
-
-      static std::unordered_map<forte::core::StringId, ComChannelEntry<T> *> &getEntries() {
-        static std::unordered_map<forte::core::StringId, ComChannelEntry<T> *> entries;
-        return entries;
-      }
-  };
-
-  template<typename T>
-  class ComChannelEntry {
-      friend ComFactory<T>;
-
-    public:
-      virtual ~ComChannelEntry() = default;
-
-    protected:
-      explicit ComChannelEntry(forte::core::StringId paName) {
-        ComFactory<T>::registerChannel(paName, this);
-      }
-
-    private:
-      virtual std::unique_ptr<ComChannel<T>> createChannel(ComObserver<T> &paObserver) = 0;
-  };
-
-  template<typename T, ComChannelImpl<T> U>
-  class ComChannelEntryImpl final : public ComChannelEntry<T> {
-    public:
-      explicit ComChannelEntryImpl(forte::core::StringId paName) : ComChannelEntry<T>(paName) {
-      }
-
-      std::unique_ptr<ComChannel<T>> createChannel(ComObserver<T> &paObserver) override {
-        return std::make_unique<U>(paObserver);
-      }
-  };
-
+  using ComChannelFactory =
+      core::util::factory::Factory<core::util::factory::DynamicImpl, "", ComChannel<T>, ComObserver<T> &>;
 } // namespace forte::com

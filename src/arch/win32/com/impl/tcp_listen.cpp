@@ -23,7 +23,7 @@ using namespace forte::com;
 using namespace forte::com::impl;
 
 namespace {
-  [[maybe_unused]] ComChannelEntryImpl<ComBuffer, TCPListenChannel> entry("tcp_listen"_STRID);
+  [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<TCPListenChannel> entry("tcp_listen"_STRID);
 }
 
 SOCKET TCPListenChannel::socket(const std::string_view paConfigString) {

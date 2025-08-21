@@ -22,7 +22,7 @@ using namespace forte::com;
 using namespace forte::com::impl;
 
 namespace {
-  [[maybe_unused]] ComChannelEntryImpl<ComBuffer, NullChannel> entry("null"_STRID);
+  [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<NullChannel> entry("null"_STRID);
 }
 
 ComResult NullChannel::open(const std::string_view paConfigString,

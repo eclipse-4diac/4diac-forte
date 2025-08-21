@@ -26,7 +26,7 @@ using namespace forte::com;
 using namespace forte::com::impl;
 
 namespace {
-  [[maybe_unused]] ComChannelEntryImpl<ComBuffer, UDPChannel> entry("udp"_STRID);
+  [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<UDPChannel> entry("udp"_STRID);
 }
 
 int UDPChannel::socket(const std::string_view paConfigString) {

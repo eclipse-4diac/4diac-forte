@@ -26,7 +26,7 @@ using namespace forte::com;
 using namespace forte::com::impl;
 
 namespace {
-  [[maybe_unused]] ComChannelEntryImpl<ComBuffer, TCPChannel> entry("tcp"_STRID);
+  [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<TCPChannel> entry("tcp"_STRID);
 }
 
 int TCPChannel::socket(const std::string_view paConfigString) {
