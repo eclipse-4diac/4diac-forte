@@ -19,7 +19,7 @@
 EMGMResponse CDevice::executeMGMCommand(forte::SManagementCMD &paCommand) {
   EMGMResponse retval = EMGMResponse::InvalidDst;
 
-  if (!paCommand.mDestination) {
+  if (paCommand.mDestination.empty()) {
     retval = CResource::executeMGMCommand(paCommand);
   } else {
     CResource *res = static_cast<CResource *>(getChild(paCommand.mDestination));
