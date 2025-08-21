@@ -104,7 +104,11 @@ namespace forte::core::util {
 
       constexpr const_reference at(size_type pos) const {
         if (pos >= size) {
+#if __cpp_exceptions
           throw std::out_of_range("fixed_string::at");
+#else
+          std::abort();
+#endif
         }
         return data_[pos];
       }
