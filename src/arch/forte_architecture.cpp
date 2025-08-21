@@ -16,7 +16,6 @@
 
 #include "arch/forte_specific_architecture.h"
 
-#include "core/typeinit.h"
 #include "core/startuphook.h"
 
 bool CForteGeneralArchitecture::mInitialized = false;
@@ -28,7 +27,6 @@ int CForteGeneralArchitecture::initialize(int argc, char *argv[]) {
   if (auto result = CForteSpecificArchitecture::initialize(argc, argv); result != 0) {
     return result;
   }
-  forte_typeinit();
   forte::core::StartupHookRegistry::invoke(argc, argv);
   CForteGeneralArchitecture::mInitialized = true;
   return 0;

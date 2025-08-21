@@ -23,10 +23,6 @@ using namespace forte::core::literals;
 #include "core/datatypes/forte_lreal.h"
 #include "core/util/devlog.h"
 
-int CIEC_ANY::dummyInit() {
-  return 0;
-}
-
 forte::core::StringId CIEC_ANY::getTypeNameID() const {
   return "ANY"_STRID;
 }

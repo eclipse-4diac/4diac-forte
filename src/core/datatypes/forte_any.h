@@ -88,8 +88,6 @@ class CIEC_ANY {
     typedef TForteUInt64 TLargestUIntValueType;
     typedef TForteInt64 TLargestIntValueType;
 
-    static int dummyInit();
-
     template<typename U, typename T>
     static auto cast(const T paFromCast) -> typename forte::core::mpl::implicit_or_explicit_cast_t<T, U> {
       U oToCast;

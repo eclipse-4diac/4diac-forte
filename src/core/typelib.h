@@ -49,12 +49,6 @@ typedef forte::CAdapter *(*TAdapterCreateFunc)(forte::core::StringId paInstanceN
 //!\ingroup CORE Type for a function pointer which allows to create a data type instance
 typedef CIEC_ANY *(*TDataTypeCreateFunc)(TForteByte *paDataBuf);
 
-#define FORTE_DUMMY_INIT_DEF(fbclass)                                                                                  \
-  int fbclass::dummyInit() {                                                                                           \
-    return 0;                                                                                                          \
-  }
-#define FORTE_DUMMY_INIT_DEC static int dummyInit();
-
 //!\ingroup CORE This define is used to create the definition necessary for generic FirmwareFunction blocks in order to
 //! get them automatically added to the FirmwareType list.
 #define DECLARE_GENERIC_FIRMWARE_FB(fbclass)                                                                           \
@@ -65,7 +59,7 @@ public:                                                                         
   static CFunctionBlock *createFB(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) {    \
     return new fbclass(paInstanceNameId, paContainer);                                                                 \
   };                                                                                                                   \
-  FORTE_DUMMY_INIT_DEC                                                                                                 \
+                                                                                                                       \
 private:
 
 //!\ingroup CORE This define is used to create the definition necessary for FirmwareFunction blocks in order to get them
@@ -79,8 +73,7 @@ private:
 
 #define DEFINE_GENERIC_FIRMWARE_FB(fbclass, fbTypeNameId)                                                              \
   const forte::core::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass((fbTypeNameId), std::string_view{},            \
-                                                                        fbclass::createFB);                            \
-  FORTE_DUMMY_INIT_DEF(fbclass)
+                                                                        fbclass::createFB);
 
 #define GET_TYPE_HASH(_1, ...) _1
 
@@ -90,7 +83,6 @@ private:
 #define DEFINE_FIRMWARE_FB(fbclass, fbTypeNameId, ...)                                                                 \
   const forte::core::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass(                                               \
       (fbTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}), fbclass::createFB);                \
-  FORTE_DUMMY_INIT_DEF(fbclass)                                                                                        \
   forte::core::StringId fbclass::getFBTypeId() const {                                                                 \
     return (fbTypeNameId);                                                                                             \
   }
@@ -107,7 +99,7 @@ public:                                                                         
   forte::core::StringId getFBTypeId() const override {                                                                 \
     return (csmAdapterTypeEntry_##adapterclass.getTypeNameId());                                                       \
   };                                                                                                                   \
-  FORTE_DUMMY_INIT_DEC                                                                                                 \
+                                                                                                                       \
 private:
 
 //!\ingroup CORE This define is used to create the implementation for the above definition.
@@ -121,13 +113,11 @@ private:
       return new adapterclass##_Plug(paInstanceNameId, paContainer, paParentAdapterlistID);                            \
     }                                                                                                                  \
     return new adapterclass##_Socket(paInstanceNameId, paContainer, paParentAdapterlistID);                            \
-  };                                                                                                                   \
-  FORTE_DUMMY_INIT_DEF(adapterclass)
+  };
 
 #define DEFINE_GENERIC_ADAPTER_TYPE(adapterclass, adapterTypeNameId)                                                   \
   const forte::core::CAdapterTypeEntry adapterclass::csmAdapterTypeEntry_##adapterclass(                               \
-      (adapterTypeNameId), std::string_view{}, adapterclass::createAdapter, 0);                                        \
-  FORTE_DUMMY_INIT_DEF(adapterclass)
+      (adapterTypeNameId), std::string_view{}, adapterclass::createAdapter, 0);
 
 //!\ingroup CORE This define is used to create the definition necessary for Firmware datatype in order to get them
 //! automatically added to the FirmwareType list.
@@ -145,7 +135,7 @@ public:                                                                         
   forte::core::StringId getTypeNameID() const override {                                                               \
     return CIEC_##datatypename::csmFirmwareDataTypeEntry_##datatypename.getTypeNameId();                               \
   }                                                                                                                    \
-  FORTE_DUMMY_INIT_DEC                                                                                                 \
+                                                                                                                       \
 private:                                                                                                               \
   const static forte::core::CDataTypeEntry csmFirmwareDataTypeEntry_##datatypename;
 
@@ -153,21 +143,15 @@ private:                                                                        
 #define DEFINE_FIRMWARE_DATATYPE(datatypename, datatypenameid, ...)                                                    \
   const forte::core::CDataTypeEntry CIEC_##datatypename::csmFirmwareDataTypeEntry_##datatypename(                      \
       (datatypenameid), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}),                                  \
-      CIEC_##datatypename::createDataType, sizeof(CIEC_##datatypename));                                               \
-  FORTE_DUMMY_INIT_DEF(CIEC_##datatypename)
+      CIEC_##datatypename::createDataType, sizeof(CIEC_##datatypename));
 
 #define DECLARE_FIRMWARE_GLOBAL_CONST()                                                                                \
 private:                                                                                                               \
-  const static forte::core::CGlobalConstEntry csmGlobalConstEntry;                                                     \
-                                                                                                                       \
-public:                                                                                                                \
-  FORTE_DUMMY_INIT_DEC                                                                                                 \
-private:
+  const static forte::core::CGlobalConstEntry csmGlobalConstEntry;
 
 #define DEFINE_FIRMWARE_GLOBAL_CONST(gcClass, gcTypeNameId, ...)                                                       \
   const forte::core::CGlobalConstEntry gcClass::csmGlobalConstEntry(                                                   \
-      (gcTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}));                                   \
-  FORTE_DUMMY_INIT_DEF(gcClass)
+      (gcTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}));
 
 struct SFBInterfaceSpec;
 
