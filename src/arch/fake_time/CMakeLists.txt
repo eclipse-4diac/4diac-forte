@@ -16,11 +16,9 @@ if(NOT FORTE_FAKE_TIME)
   return()
 endif(NOT FORTE_FAKE_TIME)
 
-add_library(forte-fake-time OBJECT
+target_sources(forte-arch PRIVATE
     forte_architecture_time.cpp
     faketimerha.cpp
 )
 
 target_compile_definitions(forte-global INTERFACE FORTE_FAKE_TIME)
-
-target_link_libraries(forte PRIVATE forte-fake-time)

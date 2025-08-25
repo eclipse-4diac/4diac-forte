@@ -12,7 +12,4 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-add_library(forte-arch-posix-com OBJECT)
-target_link_libraries(forte PRIVATE forte-arch-posix-com)
-
 add_subdirectory(impl)

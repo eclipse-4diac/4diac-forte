@@ -18,7 +18,7 @@ forte_register_architecture(Posix)
 target_include_directories(forte-global INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/)
 
 target_sources(forte PRIVATE ../main.cpp)
-add_library(forte-arch-posix OBJECT
+target_sources(forte-arch PRIVATE
     forte_architecture_time.cpp
     ../forte_standard_time.cpp
     forte_thread.cpp forte_thread.h
@@ -29,24 +29,22 @@ add_library(forte-arch-posix OBJECT
     ../genforte_fileio.cpp
     ../utils/timespec_utils.cpp
     ../common/forte_specific_architecture.cpp
-    $<$<BOOL:${FORTE_COM_ETH}>:../fdselecthand.cpp>
-    $<$<BOOL:${FORTE_COM_ETH}>:../fdselecthand.h>
-    $<$<BOOL:${FORTE_COM_ETH}>:../bsdsocketinterf.cpp>
-    $<$<BOOL:${FORTE_COM_ETH}>:../bsdsocketinterf.h>
-    $<$<BOOL:${FORTE_COM_SER}>:posixsercommlayer.cpp>
-    $<$<BOOL:${FORTE_COM_SER}>:posixsercommlayer.h>
+    $<$<BOOL:${FORTE_COM_ETH}>:${CMAKE_CURRENT_SOURCE_DIR}/../fdselecthand.cpp>
+    $<$<BOOL:${FORTE_COM_ETH}>:${CMAKE_CURRENT_SOURCE_DIR}/../fdselecthand.h>
+    $<$<BOOL:${FORTE_COM_ETH}>:${CMAKE_CURRENT_SOURCE_DIR}/../bsdsocketinterf.cpp>
+    $<$<BOOL:${FORTE_COM_ETH}>:${CMAKE_CURRENT_SOURCE_DIR}/../bsdsocketinterf.h>
+    $<$<BOOL:${FORTE_COM_SER}>:${CMAKE_CURRENT_SOURCE_DIR}/posixsercommlayer.cpp>
+    $<$<BOOL:${FORTE_COM_SER}>:${CMAKE_CURRENT_SOURCE_DIR}/posixsercommlayer.h>
 )
 
-target_link_libraries(forte PRIVATE forte-arch-posix)
-
-target_link_libraries(forte-arch-posix PUBLIC
+target_link_libraries(forte-arch PUBLIC
     pthread
     $<$<NOT:$<BOOL:${APPLE}>>:rt>
 )
 
 set(FORTE_POSIX_GENERATE_MAP_FILE FALSE CACHE BOOL "Enable the generation of map files")
 mark_as_advanced(FORTE_POSIX_GENERATE_MAP_FILE)
-target_link_options(forte-arch-posix PUBLIC $<$<BOOL:${FORTE_POSIX_GENERATE_MAP_FILE}>:-Wl,-M,-Map,forte.map,-cref>)
+target_link_options(forte-arch PUBLIC $<$<BOOL:${FORTE_POSIX_GENERATE_MAP_FILE}>:-Wl,-M,-Map,forte.map,-cref>)
 
 if (NOT APPLE)
     option(FORTE_COM_SER "Enable Forte serial line communication" OFF)

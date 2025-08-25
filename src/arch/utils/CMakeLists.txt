@@ -11,8 +11,6 @@
 # *      - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-add_library(forte-arch-utils OBJECT
+target_sources(forte-arch PRIVATE
 	mainparam_utils.cpp
 )
-
-target_link_libraries(forte PRIVATE forte-arch-utils)

@@ -13,10 +13,9 @@ if (NOT FORTE_COM_SER)
     return()
 endif ()
 
-add_library(forte-arch-win32-serlayer OBJECT
+target_sources(forte-arch PRIVATE
             cwin32sercomlayer.cpp
             cwin32sercomlayer.h
             cwin32sercomhandler.cpp
             cwin32sercomhandler.h
 )
-target_link_libraries(forte PRIVATE forte-arch-win32-serlayer)

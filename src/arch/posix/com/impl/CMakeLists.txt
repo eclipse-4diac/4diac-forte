@@ -16,7 +16,7 @@ if (NOT FORTE_COM_ETH)
     return()
 endif ()
 
-target_sources(forte-arch-posix-com PRIVATE
+target_sources(forte-arch PRIVATE
         net.cpp
         net.h
         socket.cpp
