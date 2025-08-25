@@ -47,4 +47,5 @@ add_library(forte-modules-embrick OBJECT
             types/EBSlave2301.h
             types/EBSlave2301.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-embrick)
+target_link_libraries(forte-modules-embrick PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-embrick)

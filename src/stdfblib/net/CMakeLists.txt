@@ -32,4 +32,5 @@ add_library(forte-stdfblib-net OBJECT
             $<$<BOOL:${FORTE_COM_LOCAL}>:GEN_SUBL_fbt.h>
             $<$<BOOL:${FORTE_COM_LOCAL}>:GEN_SUBL_fbt.cpp>
 )
-target_link_libraries(forte PRIVATE forte-stdfblib-net)
+target_link_libraries(forte-stdfblib-net PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-stdfblib-net)

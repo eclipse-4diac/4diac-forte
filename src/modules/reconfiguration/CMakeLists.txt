@@ -35,4 +35,5 @@ add_library(forte-modules-reconfiguration OBJECT
             ST_SET_PARM_fbt.h
             ST_SET_PARM_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-reconfiguration)
+target_link_libraries(forte-modules-reconfiguration PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-reconfiguration)

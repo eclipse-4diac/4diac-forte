@@ -32,4 +32,5 @@ add_library(forte-com-HTTP OBJECT
         ${CMAKE_CURRENT_BINARY_DIR}/http_config.h
 )
 target_include_directories(forte-com-HTTP PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_link_libraries(forte-com-HTTP PUBLIC forte-core)
 target_link_libraries(forte PRIVATE forte-com-HTTP)

@@ -48,6 +48,7 @@ add_library(forte-com-xquery OBJECT
             xqueryClientLayer.h
             xqueryClientLayer.cpp
 )
+target_link_libraries(forte-com-xquery PUBLIC forte-core)
 target_link_libraries(forte PRIVATE forte-com-xquery)
 target_include_directories(forte-com-xquery PUBLIC ${OPENSSL_INCLUDE_DIR})
 target_include_directories(forte-com-xquery PUBLIC ${FORTE_BASEX_SRC_DIR})

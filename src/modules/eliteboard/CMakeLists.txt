@@ -18,7 +18,8 @@ forte_register_io(ELITEBOARD OFF
 )
 
 add_library(forte-modules-eliteboard OBJECT)
-target_link_libraries(forte PRIVATE forte-modules-eliteboard)
+target_link_libraries(forte-modules-eliteboard PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-eliteboard)
 
 # This should be part of architecture code
 # forte_add_definition("-ffunction-sections -fdata-sections

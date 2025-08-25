@@ -39,6 +39,7 @@ add_library(forte-com-modbus OBJECT
             modbustimedevent.h
             modbustimedevent.cpp
 )
+target_link_libraries(forte-com-modbus PUBLIC forte-core)
 target_link_libraries(forte PRIVATE forte-com-modbus)
 target_include_directories(forte-com-modbus PUBLIC /usr/include/modbus)
 target_include_directories(forte-com-modbus PUBLIC /usr/local/include/modbus)

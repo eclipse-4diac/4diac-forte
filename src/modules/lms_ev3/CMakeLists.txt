@@ -33,4 +33,5 @@ add_library(forte-modules-lms_ev3 OBJECT
             processinterface.h processinterface.cpp fileWriter_fbt.h
             fileWriter_fbt.cpp fileReader_fbt.h fileReader_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-lms_ev3)
+target_link_libraries(forte-modules-lms_ev3 PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-lms_ev3)

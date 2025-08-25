@@ -45,7 +45,8 @@ add_library(forte-modules-ads OBJECT
             SET_LOCAL_ADS_ADDRESS_fbt.cpp
             processinterface.h
 )
-target_link_libraries(forte PRIVATE forte-modules-ads)
+target_link_libraries(forte-modules-ads PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-ads)
 target_include_directories(forte-modules-ads
                            PUBLIC ${FORTE_MODULE_ADS_PI_ADS_ROOT}/AdsLib
 )

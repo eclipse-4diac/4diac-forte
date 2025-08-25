@@ -11,7 +11,8 @@
 forte_register_module(IEC61131 OFF "IEC61131-3 Function blocks")
 
 add_library(forte-modules-IEC61131-3 OBJECT)
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3)
+target_link_libraries(forte-modules-IEC61131-3 PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-IEC61131-3)
 
 # ############################################################################
 # IEC61131-3 FB

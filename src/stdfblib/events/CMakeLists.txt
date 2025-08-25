@@ -96,4 +96,5 @@ add_library(forte-stdfblib-events OBJECT
             timedfb.h
             timedfb.cpp
 )
-target_link_libraries(forte PRIVATE forte-stdfblib-events)
+target_link_libraries(forte-stdfblib-events PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-stdfblib-events)

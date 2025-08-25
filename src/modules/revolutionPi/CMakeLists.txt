@@ -30,4 +30,5 @@ add_library(forte-modules-revolutionPi OBJECT
             fb/IORevPiAIO.h
             fb/IORevPiAIO.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-revolutionPi)
+target_link_libraries(forte-modules-revolutionPi PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-revolutionPi)

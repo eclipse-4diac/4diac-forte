@@ -53,6 +53,7 @@ add_library(forte-com-opc OBJECT
             Cmd_SetProcessVarValue.h
             Cmd_SetProcessVarValue.cpp
 )
+target_link_libraries(forte-com-opc PUBLIC forte-core)
 target_link_libraries(forte PRIVATE forte-com-opc)
 target_include_directories(forte-com-opc PUBLIC ${FORTE_COM_OPC_BOOST_ROOT})
 target_include_directories(forte-com-opc

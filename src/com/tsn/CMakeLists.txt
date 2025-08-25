@@ -21,4 +21,5 @@ add_library(forte-com-tsn OBJECT
             $<$<BOOL:${FORTE_COM_TSN}>:tsn_layer.cpp>
             $<$<BOOL:${FORTE_COM_TSN}>:tsn_layer.h> tsn_layer.h tsn_layer.cpp
 )
+target_link_libraries(forte-com-tsn PUBLIC forte-core)
 target_link_libraries(forte PRIVATE forte-com-tsn)

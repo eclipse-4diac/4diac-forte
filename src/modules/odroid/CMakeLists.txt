@@ -26,4 +26,5 @@ add_library(forte-modules-odroid OBJECT
             ../sysfs/sysfsprocint.h ../sysfs/sysfsprocint.cpp
             processinterface.h processinterface.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-odroid)
+target_link_libraries(forte-modules-odroid PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-odroid)

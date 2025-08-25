@@ -95,7 +95,7 @@ add_library(forte-core OBJECT
             monitoring.h
             monitoring.cpp
 )
-target_link_libraries(forte PRIVATE forte-core)
+target_link_libraries(forte PUBLIC forte-core)
 
 add_subdirectory(com)
 add_subdirectory(cominfra)

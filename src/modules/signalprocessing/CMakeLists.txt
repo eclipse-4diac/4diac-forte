@@ -31,6 +31,7 @@ add_library(forte-modules-signalprocessing OBJECT
             RampLimitFS_fbt.h
             RampLimitFS_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-signalprocessing)
+target_link_libraries(forte-modules-signalprocessing PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-signalprocessing)
 
 add_subdirectory(distance)

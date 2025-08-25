@@ -25,4 +25,5 @@ add_library(forte-modules-piface OBJECT
             processinterface.h processinterface.cpp
             ../conmeleon_c1/spi/spidevice.h ../conmeleon_c1/spi/spidevice.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-piface)
+target_link_libraries(forte-modules-piface PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-piface)

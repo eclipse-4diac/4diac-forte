@@ -27,4 +27,5 @@ add_library(forte-modules-raspberry_sps OBJECT
             ../i2c_dev/i2cprocessinterface.cpp processinterface.h
             processinterface.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-raspberry_sps)
+target_link_libraries(forte-modules-raspberry_sps PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-raspberry_sps)

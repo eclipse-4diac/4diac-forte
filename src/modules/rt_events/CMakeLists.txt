@@ -45,4 +45,5 @@ add_library(forte-modules-rt_events OBJECT
             RT_Bridge_fbt.h
             RT_Bridge_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-rt_events)
+target_link_libraries(forte-modules-rt_events PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-rt_events)

@@ -37,7 +37,8 @@ add_library(forte-modules-zephyr OBJECT
             types/ZephyrIO_fbt.cpp types/Esp32EthernetKitIO_fbt.h
             types/Esp32EthernetKitIO_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-zephyr)
+target_link_libraries(forte-modules-zephyr PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-zephyr)
 
 add_subdirectory(handler)
 add_subdirectory(handle)

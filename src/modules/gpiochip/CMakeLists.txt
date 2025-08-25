@@ -20,4 +20,5 @@ add_library(forte-modules-gpiochip OBJECT
             gpiochip_controller.h gpiochip_controller.cpp
             gpiochip_config_fb.h gpiochip_config_fb.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-gpiochip)
+target_link_libraries(forte-modules-gpiochip PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-gpiochip)

@@ -57,7 +57,9 @@ add_library(forte-stdfblib-ita OBJECT
         ${CMAKE_CURRENT_BINARY_DIR}/ForteBootFileLoader_config.h
 )
 target_include_directories(forte-stdfblib-ita PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
-target_link_libraries(forte PRIVATE forte-stdfblib-ita)
+target_link_libraries(forte-stdfblib-ita PUBLIC forte-core)
+target_link_libraries(forte-stdfblib-ita PUBLIC forte-stdfblib-events)
+target_link_libraries(forte PUBLIC forte-stdfblib-ita)
 
 add_subdirectory(debug_device)
 add_subdirectory(multi)

@@ -19,4 +19,5 @@ add_library(forte-modules-PLC01A1 OBJECT
             plc01a1_controller.h plc01a1_controller.cpp plc01a1_config_fb.h
             plc01a1_config_fb.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-PLC01A1)
+target_link_libraries(forte-modules-PLC01A1 PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-PLC01A1)

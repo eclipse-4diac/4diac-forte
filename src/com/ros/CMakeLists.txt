@@ -65,6 +65,7 @@ add_library(forte-com-ros OBJECT
             EXECUTE_ACTION_SERVER.cpp
             startup.cpp
 )
+target_link_libraries(forte-com-ros PUBLIC forte-core)
 target_link_libraries(forte PRIVATE forte-com-ros)
 target_include_directories(forte-com-ros PUBLIC ${catkin_INCLUDE_DIRS})
 target_include_directories(forte-com-ros PUBLIC /opt/ros/indigo/include)

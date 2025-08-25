@@ -25,4 +25,5 @@ forte_register_module(uMIC
 forte_set_process_interface("uMIC" IX QX)
 target_link_libraries(forte PUBLIC umic.so)
 add_library(forte-modules-umic OBJECT processinterface.h processinterface.cpp)
-target_link_libraries(forte PRIVATE forte-modules-umic)
+target_link_libraries(forte-modules-umic PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-umic)

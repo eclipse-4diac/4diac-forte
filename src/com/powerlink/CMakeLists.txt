@@ -98,6 +98,7 @@ add_library(forte-com-powerlink OBJECT
             ${FORTE_MODULE_POWERLINK_TINYXML_DIR}/tinyxmlerror.cpp
             ${FORTE_MODULE_POWERLINK_TINYXML_DIR}/tinyxmlparser.cpp
 )
+target_link_libraries(forte-com-powerlink PUBLIC forte-core)
 target_link_libraries(forte PRIVATE forte-com-powerlink)
 target_include_directories(forte-com-powerlink
                            PUBLIC ${FORTE_MODULE_POWERLINK_LIB_DIR}/Target/X86/Windows/WpdPack/Include

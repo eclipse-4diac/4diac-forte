@@ -40,4 +40,5 @@ add_library(forte-modules-conmeleon_c1 OBJECT
             processinterface.h
             processinterface.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-conmeleon_c1)
+target_link_libraries(forte-modules-conmeleon_c1 PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-conmeleon_c1)

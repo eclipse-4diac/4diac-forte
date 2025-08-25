@@ -51,4 +51,5 @@ add_library(forte-modules-convert OBJECT
             LREAL2LREAL_fbt.h
             LREAL2LREAL_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-convert)
+target_link_libraries(forte-modules-convert PUBLIC forte-core)
+target_link_libraries(forte PUBLIC forte-modules-convert)
