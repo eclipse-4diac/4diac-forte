@@ -14,25 +14,25 @@
  *** Description: Generation of a finite train of sperate events
  *** Version:
  ***     1.0: 2017-09-22/Alois Zoitl - fortiss GmbH - initial API and implementation and/or initial documentation
+ ***     1.0: 2025-08-25/Martin Erich Jobst -  - remove erroneous F_SUB
  *************************************************************************/
 
 #include "E_N_TABLE_fbt.h"
 
-using namespace forte::core::literals;
-
-#include "core/datatypes/forte_uint.h"
 #include "core/iec61131_functions.h"
 #include "core/datatypes/forte_array_common.h"
 #include "core/datatypes/forte_array.h"
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_E_N_TABLE, "E_N_TABLE"_STRID)
+using namespace std::literals;
+using namespace forte::core::literals;
 
 namespace {
-  const auto cDataInputNames = std::array{"DT"_STRID, "N"_STRID};
   const auto cEventInputNames = std::array{"START"_STRID, "STOP"_STRID};
   const auto cEventOutputNames = std::array{"EO0"_STRID, "EO1"_STRID, "EO2"_STRID, "EO3"_STRID};
+  const auto cDataInputNames = std::array{"DT"_STRID, "N"_STRID};
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -48,8 +48,7 @@ namespace {
   const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
       {{}, "START"_STRID, "E_TABLE"_STRID, "START"_STRID},
       {{}, "STOP"_STRID, "E_TABLE"_STRID, "STOP"_STRID},
-      {"E_TABLE"_STRID, "EO"_STRID, "F_SUB"_STRID, "REQ"_STRID},
-      {"F_SUB"_STRID, "CNF"_STRID, "E_DEMUX"_STRID, "EI"_STRID},
+      {"E_TABLE"_STRID, "EO"_STRID, "E_DEMUX"_STRID, "EI"_STRID},
       {"E_DEMUX"_STRID, "EO0"_STRID, {}, "EO0"_STRID},
       {"E_DEMUX"_STRID, "EO1"_STRID, {}, "EO1"_STRID},
       {"E_DEMUX"_STRID, "EO2"_STRID, {}, "EO2"_STRID},
@@ -59,23 +58,23 @@ namespace {
   const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
       {{}, "DT"_STRID, "E_TABLE"_STRID, "DT"_STRID},
       {{}, "N"_STRID, "E_TABLE"_STRID, "N"_STRID},
-      {"E_TABLE"_STRID, "CV"_STRID, "F_SUB"_STRID, "IN1"_STRID},
-      {"F_SUB"_STRID, "OUT"_STRID, "E_DEMUX"_STRID, "K"_STRID},
+      {"E_TABLE"_STRID, "CV"_STRID, "E_DEMUX"_STRID, "K"_STRID},
   });
 
   const SCFB_FBNData cFBNData = {
-      .mEventConnections = cEventConnections,
-      .mDataConnections = cDataConnections,
-      .mAdapterConnections = {},
+    .mEventConnections = cEventConnections,
+    .mDataConnections = cDataConnections,
+    .mAdapterConnections = {},
   };
-} // namespace
+}
+
+DEFINE_FIRMWARE_FB(FORTE_E_N_TABLE, "E_N_TABLE"_STRID)
 
 FORTE_E_N_TABLE::FORTE_E_N_TABLE(const forte::core::StringId paInstanceNameId,
                                  forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_TABLE("E_TABLE"_STRID, *this),
     fb_E_DEMUX("E_DEMUX"_STRID, *this),
-    fb_F_SUB("F_SUB"_STRID, *this),
     conn_EO0(*this, 0),
     conn_EO1(*this, 1),
     conn_EO2(*this, 2),
@@ -83,19 +82,17 @@ FORTE_E_N_TABLE::FORTE_E_N_TABLE(const forte::core::StringId paInstanceNameId,
     conn_DT(nullptr),
     conn_N(nullptr),
     conn_if2in_DT(*this, 0, CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),
-    conn_if2in_N(*this, 0, 0_UINT) {};
+    conn_if2in_N(*this, 1, 0_UINT) {
+};
 
 void FORTE_E_N_TABLE::setInitialValues() {
+  CCompositeFB::setInitialValues();
   conn_if2in_DT.getValue() = CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{};
   conn_if2in_N.getValue() = 0_UINT;
 }
 
-void FORTE_E_N_TABLE::setFBNetworkInitialValues() {
-  fb_F_SUB->var_IN2 = 1_UINT;
-}
-
 void FORTE_E_N_TABLE::readInputData(const TEventID paEIID) {
-  switch (paEIID) {
+  switch(paEIID) {
     case scmEventSTARTID: {
       readData(0, conn_if2in_DT.getValue(), conn_DT);
       readData(1, conn_if2in_N.getValue(), conn_N);
@@ -143,7 +140,7 @@ CDataConnection *FORTE_E_N_TABLE::getDOConUnchecked(TPortId) {
   return nullptr;
 }
 
-CDataConnection *FORTE_E_N_TABLE::getIf2InConUnchecked(TPortId paIndex) {
+CDataConnection *FORTE_E_N_TABLE::getIf2InConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_if2in_DT;
     case 1: return &conn_if2in_N;

@@ -14,13 +14,13 @@
  *** Description: Generation of a finite train of sperate events
  *** Version:
  ***     1.0: 2017-09-22/Alois Zoitl - fortiss GmbH - initial API and implementation and/or initial documentation
+ ***     1.0: 2025-08-25/Martin Erich Jobst -  - remove erroneous F_SUB
  *************************************************************************/
 
 #pragma once
 
 #include "core/cfb.h"
 #include "core/typelib.h"
-#include "core/datatypes/forte_any_magnitude_variant.h"
 #include "core/datatypes/forte_time.h"
 #include "core/datatypes/forte_uint.h"
 #include "core/iec61131_functions.h"
@@ -30,28 +30,24 @@
 #include "core/datatypes/forte_array_variable.h"
 #include "E_DEMUX_fbt.h"
 #include "E_TABLE_fbt.h"
-#include "F_SUB_fbt.h"
 
 class FORTE_E_N_TABLE final : public CCompositeFB {
     DECLARE_FIRMWARE_FB(FORTE_E_N_TABLE)
 
   private:
-    static const TEventID scmEventSTARTID = 0;
-    static const TEventID scmEventSTOPID = 1;
     static const TEventID scmEventEO0ID = 0;
     static const TEventID scmEventEO1ID = 1;
     static const TEventID scmEventEO2ID = 2;
     static const TEventID scmEventEO3ID = 3;
+    static const TEventID scmEventSTARTID = 0;
+    static const TEventID scmEventSTOPID = 1;
 
     forte::core::CInternalFB<FORTE_E_TABLE> fb_E_TABLE;
     forte::core::CInternalFB<FORTE_E_DEMUX> fb_E_DEMUX;
-    forte::core::CInternalFB<FORTE_F_SUB> fb_F_SUB;
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
-    void setFBNetworkInitialValues() override;
-    CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
   public:
     FORTE_E_N_TABLE(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
@@ -72,4 +68,5 @@ class FORTE_E_N_TABLE final : public CCompositeFB {
     CEventConnection *getEOConUnchecked(TPortId) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
+    CDataConnection *getIf2InConUnchecked(TPortId) override;
 };
