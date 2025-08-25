@@ -15,10 +15,7 @@ if (NOT FORTE_COM_OPC_UA)
     return()
 endif ()
 
-add_library(forte-modules-arrowhead-eventHandler-OpcUa OBJECT
+target_sources(forte-modules-arrowhead PRIVATE
             PublishEventOpcUa.h PublishEventOpcUa.cpp SubscribeEventOpcUa.h
             SubscribeEventOpcUa.cpp
-)
-target_link_libraries(forte
-                      PRIVATE forte-modules-arrowhead-eventHandler-OpcUa
 )

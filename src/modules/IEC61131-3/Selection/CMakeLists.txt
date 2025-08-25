@@ -13,7 +13,7 @@
 # Selection
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Selection OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_LIMIT_fbt.h
             F_LIMIT_fbt.cpp
             F_MIN_fbt.h
@@ -25,4 +25,3 @@ add_library(forte-modules-IEC61131-3-Selection OBJECT
             F_MUX_2_fbt.h
             F_MUX_2_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Selection)

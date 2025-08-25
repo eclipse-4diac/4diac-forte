@@ -15,10 +15,7 @@ if (NOT FORTE_COM_OPC_UA)
     return()
 endif ()
 
-add_library(forte-modules-arrowhead-serviceRegistry-OpcUa OBJECT
+target_sources(forte-modules-arrowhead PRIVATE
             RegisterServiceOpcUa.h RegisterServiceOpcUa.cpp
             QueryServiceOpcUa.h QueryServiceOpcUa.cpp
-)
-target_link_libraries(forte
-                      PRIVATE forte-modules-arrowhead-serviceRegistry-OpcUa
 )

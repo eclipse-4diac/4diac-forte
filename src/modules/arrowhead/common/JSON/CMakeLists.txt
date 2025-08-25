@@ -12,9 +12,8 @@
 # Common Arrowhead specific functional blocks
 # ############################################################################
 
-add_library(forte-modules-arrowhead-common-JSON OBJECT
+target_sources(forte-modules-arrowhead PRIVATE
             ANYToJSON_fbt.h ANYToJSON_fbt.cpp ArrowheadJSONHelper.h
             ArrowheadJSONHelper.cpp GetArrayResponseFromJSON_fbt.h
             GetArrayResponseFromJSON_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-arrowhead-common-JSON)

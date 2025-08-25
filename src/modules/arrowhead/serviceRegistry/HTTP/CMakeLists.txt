@@ -15,10 +15,7 @@ if (NOT FORTE_COM_HTTP)
     return()
 endif ()
 
-add_library(forte-modules-arrowhead-serviceRegistry-HTTP OBJECT
+target_sources(forte-modules-arrowhead PRIVATE
             QueryServiceHTTP.h QueryServiceHTTP.cpp RegisterServiceHTTP.h
             RegisterServiceHTTP.cpp
-)
-target_link_libraries(forte
-                      PRIVATE forte-modules-arrowhead-serviceRegistry-HTTP
 )

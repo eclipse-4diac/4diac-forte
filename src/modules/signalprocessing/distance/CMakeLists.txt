@@ -12,7 +12,6 @@
 # ############################################################################
 # Distance
 # ############################################################################
-add_library(forte-modules-signalprocessing-distance OBJECT
+target_sources(forte-modules-signalprocessing PRIVATE
             RangeBasedPulse_fbt.h RangeBasedPulse_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-signalprocessing-distance)

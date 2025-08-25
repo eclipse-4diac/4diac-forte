@@ -15,7 +15,7 @@
 # REAL_TO_xxx Conversion
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Conversion-REAL OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_REAL_TO_DWORD_fbt.h
             F_REAL_TO_DWORD_fbt.cpp
             F_REAL_TO_DINT_fbt.h
@@ -41,4 +41,3 @@ add_library(forte-modules-IEC61131-3-Conversion-REAL OBJECT
             F_REAL_AS_WSTRING_fbt.h
             F_REAL_AS_WSTRING_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Conversion-REAL)

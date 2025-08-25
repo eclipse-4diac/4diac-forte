@@ -15,7 +15,7 @@
 # ############################################################################
 # add_subdirectory(tests)
 
-add_library(forte-modules-IEC61131-3-Comparison OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_GT_fbt.h
             F_GT_fbt.cpp
             F_EQ_fbt.h
@@ -29,4 +29,3 @@ add_library(forte-modules-IEC61131-3-Comparison OBJECT
             F_NE_fbt.h
             F_NE_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Comparison)

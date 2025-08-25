@@ -9,8 +9,7 @@
 # documentation
 # ############################################################################
 
-add_library(forte-modules-zephyr-handle OBJECT
+target_sources(forte-modules-zephyr PRIVATE
             IOHandleGPIO.h IOHandleGPIO.cpp IOHandleADC.h IOHandleADC.cpp
             IOHandlePWM.h IOHandlePWM.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-zephyr-handle)

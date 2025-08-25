@@ -14,7 +14,7 @@
 
 add_subdirectory(JSON)
 
-add_library(forte-modules-arrowhead-common OBJECT
+target_sources(forte-modules-arrowhead PRIVATE
             # datatype
             forte_arrowheadservice.h
             forte_arrowheadservice.cpp
@@ -30,4 +30,3 @@ add_library(forte-modules-arrowhead-common OBJECT
             FieldsToArrowheadCloud.h
             FieldsToArrowheadCloud.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-arrowhead-common)

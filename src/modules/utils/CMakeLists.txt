@@ -14,12 +14,6 @@ forte_register_module(UTILS OFF "FORTE UTILITY FBs" FORTE_MODULE_IEC61131)
 # ############################################################################
 # FORTE UTILITY FBs
 # ############################################################################
-add_subdirectory(selection)
-add_subdirectory(const)
-add_subdirectory(assembling)
-add_subdirectory(splitting)
-add_subdirectory(timing)
-add_subdirectory(signals)
 add_library(forte-modules-utils OBJECT
             GetInstancePath_fbt.h
             GetInstancePath_fbt.cpp
@@ -51,3 +45,10 @@ add_library(forte-modules-utils OBJECT
             TEST_CONDITION_fbt.cpp
 )
 target_link_libraries(forte PRIVATE forte-modules-utils)
+
+add_subdirectory(selection)
+add_subdirectory(const)
+add_subdirectory(assembling)
+add_subdirectory(splitting)
+add_subdirectory(timing)
+add_subdirectory(signals)

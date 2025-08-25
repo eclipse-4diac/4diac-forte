@@ -13,7 +13,6 @@
 # const
 # ############################################################################
 
-add_library(forte-modules-utils-const OBJECT quarterconst_gcf.h
+target_sources(forte-modules-utils PRIVATE quarterconst_gcf.h
                                              quarterconst_gcf.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-utils-const)

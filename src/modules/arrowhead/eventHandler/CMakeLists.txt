@@ -15,7 +15,7 @@
 add_subdirectory(HTTP)
 add_subdirectory(OpcUa)
 
-add_library(forte-modules-arrowhead-eventHandler OBJECT
+target_sources(forte-modules-arrowhead PRIVATE
             forte_arrowheadevent.h
             forte_arrowheadevent.cpp
             forte_publishevent.h
@@ -37,4 +37,3 @@ add_library(forte-modules-arrowhead-eventHandler OBJECT
             SubscribeEventAdp_adp.h
             SubscribeEventAdp_adp.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-arrowhead-eventHandler)

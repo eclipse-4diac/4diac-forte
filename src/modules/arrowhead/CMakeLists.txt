@@ -14,6 +14,9 @@
 
 forte_register_module(Arrowhead OFF "Arrowhead Function Blocks")
 
+add_library(forte-modules-arrowhead OBJECT)
+target_link_libraries(forte PRIVATE forte-modules-arrowhead)
+
 add_subdirectory(common)
 add_subdirectory(orchestrator)
 add_subdirectory(serviceRegistry)

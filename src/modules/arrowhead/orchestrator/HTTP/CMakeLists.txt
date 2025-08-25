@@ -15,7 +15,6 @@ if (NOT FORTE_COM_HTTP)
     return()
 endif ()
 
-add_library(forte-modules-arrowhead-orchestrator-HTTP OBJECT
+target_sources(forte-modules-arrowhead PRIVATE
             RequestOrchestrationHTTP.h RequestOrchestrationHTTP.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-arrowhead-orchestrator-HTTP)

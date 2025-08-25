@@ -15,7 +15,7 @@
 # TIME_TO_xxx Conversion
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Conversion-TIME OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_TIME_AS_STRING_fbt.h
             F_TIME_AS_STRING_fbt.cpp
             F_TIME_IN_S_TO_LINT_fbt.h
@@ -61,4 +61,3 @@ add_library(forte-modules-IEC61131-3-Conversion-TIME OBJECT
             F_TIME_AS_WSTRING_fbt.h
             F_TIME_AS_WSTRING_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Conversion-TIME)

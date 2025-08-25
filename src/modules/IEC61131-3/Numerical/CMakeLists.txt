@@ -13,7 +13,7 @@
 # Numerical
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Numerical OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_ABS_fbt.h
             F_ABS_fbt.cpp
             F_SQRT_fbt.h
@@ -37,4 +37,3 @@ add_library(forte-modules-IEC61131-3-Numerical OBJECT
             F_EXP_fbt.h
             F_EXP_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Numerical)

@@ -16,8 +16,7 @@
 if (NOT FORTE_FUNCTIONBLOCK_TESTS)
     return()
 endif ()
-add_library(forte-modules-IEC61131-3-Comparison-tests OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_EQ_TIME_tester.h F_EQ_TIME_tester.cpp F_GT_TIME_tester.h
             F_GT_TIME_tester.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Comparison-tests)

@@ -33,7 +33,6 @@ add_subdirectory(ULINT)
 add_subdirectory(LWORD)
 add_subdirectory(LINT)
 add_subdirectory(DT)
-add_library(forte-modules-IEC61131-3-Conversion OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_ANY_AS_STRING_fbt.h F_ANY_AS_STRING_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Conversion)

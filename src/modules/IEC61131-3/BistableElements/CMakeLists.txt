@@ -13,7 +13,6 @@
 # BistableElements
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-BistableElements OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             FB_RS_fbt.h FB_RS_fbt.cpp FB_SR_fbt.h FB_SR_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-BistableElements)

@@ -12,7 +12,7 @@
 # ############################################################################
 # assembling
 # ############################################################################
-add_library(forte-modules-utils-assembling OBJECT
+target_sources(forte-modules-utils PRIVATE
             ASSEMBLE_BYTE_FROM_BOOLS_fct.h
             ASSEMBLE_BYTE_FROM_BOOLS_fct.cpp
             ASSEMBLE_BYTE_FROM_QUARTERS_fct.h
@@ -36,4 +36,3 @@ add_library(forte-modules-utils-assembling OBJECT
             ASSEMBLE_WORD_FROM_QUARTERS_fct.h
             ASSEMBLE_WORD_FROM_QUARTERS_fct.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-utils-assembling)

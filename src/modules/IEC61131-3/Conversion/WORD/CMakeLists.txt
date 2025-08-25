@@ -15,7 +15,7 @@
 # WORD_TO_xxx Conversion
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Conversion-WORD OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_WORD_TO_BYTE_fbt.h
             F_WORD_TO_BYTE_fbt.cpp
             F_WORD_TO_DINT_fbt.h
@@ -43,4 +43,3 @@ add_library(forte-modules-IEC61131-3-Conversion-WORD OBJECT
             F_WORD_AS_WSTRING_fbt.h
             F_WORD_AS_WSTRING_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Conversion-WORD)

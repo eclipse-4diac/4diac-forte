@@ -9,6 +9,10 @@
 # implementation and/or initial documentation
 # *******************************************************************************/
 forte_register_module(IEC61131 OFF "IEC61131-3 Function blocks")
+
+add_library(forte-modules-IEC61131-3 OBJECT)
+target_link_libraries(forte PRIVATE forte-modules-IEC61131-3)
+
 # ############################################################################
 # IEC61131-3 FB
 # ############################################################################

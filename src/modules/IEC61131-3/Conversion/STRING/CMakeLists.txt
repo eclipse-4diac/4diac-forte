@@ -13,7 +13,7 @@
 # STRING_AS_xxx Conversion
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Conversion-STRING OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_STRING_AS_BOOL_fbt.h
             F_STRING_AS_BOOL_fbt.cpp
             F_STRING_AS_BYTE_fbt.h
@@ -48,7 +48,4 @@ add_library(forte-modules-IEC61131-3-Conversion-STRING OBJECT
             F_STRING_AS_LREAL_fbt.cpp
             F_STRING_TO_WSTRING_fbt.h
             F_STRING_TO_WSTRING_fbt.cpp
-)
-target_link_libraries(forte
-                      PRIVATE forte-modules-IEC61131-3-Conversion-STRING
 )

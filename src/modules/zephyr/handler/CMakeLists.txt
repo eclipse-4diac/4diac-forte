@@ -9,7 +9,6 @@
 # documentation
 # ############################################################################
 
-add_library(forte-modules-zephyr-handler OBJECT IODeviceController.h
+target_sources(forte-modules-zephyr PRIVATE IODeviceController.h
                                                 IODeviceController.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-zephyr-handler)

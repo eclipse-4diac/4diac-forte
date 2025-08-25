@@ -8,8 +8,7 @@
 # Contributors: Maximilian Scharf - Initial implementation.
 # *******************************************************************************/
 
-add_library(forte-modules-eliteboard-types OBJECT
+target_sources(forte-modules-eliteboard PRIVATE
             EliteBoard_fbt.h EliteBoard_fbt.cpp Port_fbt.h Port_fbt.cpp
             PortAdapter_adp.h PortAdapter_adp.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-eliteboard-types)

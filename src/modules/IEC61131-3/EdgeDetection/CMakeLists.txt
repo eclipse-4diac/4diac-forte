@@ -13,8 +13,7 @@
 # EdgeDetection
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-EdgeDetection OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             FB_F_TRIG_fbt.h FB_F_TRIG_fbt.cpp FB_R_TRIG_fbt.h
             FB_R_TRIG_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-EdgeDetection)

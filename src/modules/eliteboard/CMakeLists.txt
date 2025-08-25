@@ -17,6 +17,9 @@ forte_register_io(ELITEBOARD OFF
                   "Support for the eLITe-Board development board"
 )
 
+add_library(forte-modules-eliteboard OBJECT)
+target_link_libraries(forte PRIVATE forte-modules-eliteboard)
+
 # This should be part of architecture code
 # forte_add_definition("-ffunction-sections -fdata-sections
 # -fno-threadsafe-statics -fno-rtti -fno-exceptions -Wl,--gc-sections")

@@ -14,7 +14,7 @@
 # BOOL_TO_xxx Conversion
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Conversion-BOOL OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_BOOL_TO_BYTE_fbt.h
             F_BOOL_TO_BYTE_fbt.cpp
             F_BOOL_TO_DINT_fbt.h
@@ -44,4 +44,3 @@ add_library(forte-modules-IEC61131-3-Conversion-BOOL OBJECT
             F_BOOL_AS_WSTRING_fbt.h
             F_BOOL_AS_WSTRING_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Conversion-BOOL)

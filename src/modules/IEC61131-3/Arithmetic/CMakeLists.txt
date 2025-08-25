@@ -14,7 +14,7 @@
 # Arithmetic
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Arithmetic OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_ADD_fbt.h
             F_ADD_fbt.cpp
             F_SUB_fbt.h
@@ -54,4 +54,3 @@ add_library(forte-modules-IEC61131-3-Arithmetic OBJECT
             F_SUB_TOD_TOD_fbt.h
             F_SUB_TOD_TOD_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Arithmetic)

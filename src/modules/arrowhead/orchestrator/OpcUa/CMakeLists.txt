@@ -15,9 +15,6 @@ if (NOT FORTE_COM_OPC_UA)
     return()
 endif ()
 
-add_library(forte-modules-arrowhead-orchestrator-OpcUa OBJECT
+target_sources(forte-modules-arrowhead PRIVATE
             RequestOrchestrationOpcUa.h RequestOrchestrationOpcUa.cpp
-)
-target_link_libraries(forte
-                      PRIVATE forte-modules-arrowhead-orchestrator-OpcUa
 )

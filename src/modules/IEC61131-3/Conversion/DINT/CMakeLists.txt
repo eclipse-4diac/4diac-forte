@@ -15,7 +15,7 @@
 # DINT_TO_xxx Conversion
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Conversion-DINT OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_DINT_TO_BYTE_fbt.h
             F_DINT_TO_BYTE_fbt.cpp
             F_DINT_TO_DWORD_fbt.h
@@ -47,4 +47,3 @@ add_library(forte-modules-IEC61131-3-Conversion-DINT OBJECT
             F_DINT_AS_WSTRING_fbt.h
             F_DINT_AS_WSTRING_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Conversion-DINT)

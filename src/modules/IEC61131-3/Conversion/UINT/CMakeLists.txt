@@ -15,7 +15,7 @@
 # UINT_TO_xxx Conversion
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Conversion-UINT OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_UINT_TO_BYTE_fbt.h
             F_UINT_TO_BYTE_fbt.cpp
             F_UINT_TO_DINT_fbt.h
@@ -47,4 +47,3 @@ add_library(forte-modules-IEC61131-3-Conversion-UINT OBJECT
             F_UINT_AS_WSTRING_fbt.h
             F_UINT_AS_WSTRING_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Conversion-UINT)

@@ -13,8 +13,7 @@
 # DT_TO_xxx Conversion
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Conversion-DT OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_DT_TO_TOD_fbt.h F_DT_TO_TOD_fbt.cpp F_DT_TO_DATE_fbt.h
             F_DT_TO_DATE_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Conversion-DT)

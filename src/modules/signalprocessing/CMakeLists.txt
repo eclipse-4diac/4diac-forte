@@ -15,7 +15,6 @@ forte_register_module(SIGNALPROCESSING OFF "SIGNALPROCESSING")
 # ############################################################################
 # SIGNALPROCESSING
 # ############################################################################
-add_subdirectory(distance)
 add_library(forte-modules-signalprocessing OBJECT
             DualHysteresis_fbt.h
             DualHysteresis_fbt.cpp
@@ -33,3 +32,5 @@ add_library(forte-modules-signalprocessing OBJECT
             RampLimitFS_fbt.cpp
 )
 target_link_libraries(forte PRIVATE forte-modules-signalprocessing)
+
+add_subdirectory(distance)

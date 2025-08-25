@@ -13,7 +13,7 @@
 # ############################################################################
 # BitwiseOperators
 # ############################################################################
-add_library(forte-modules-IEC61131-3-BitwiseOperators OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_AND_fbt.h
             F_AND_fbt.cpp
             F_NOT_fbt.h
@@ -39,4 +39,3 @@ add_library(forte-modules-IEC61131-3-BitwiseOperators OBJECT
             F_ROL_fbt.h
             F_ROL_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-BitwiseOperators)

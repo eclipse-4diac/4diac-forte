@@ -8,7 +8,6 @@
 # Contributors: Jonathan Lainer - Initial implementation.
 # *******************************************************************************/
 
-add_library(forte-modules-eliteboard-handler OBJECT
+target_sources(forte-modules-eliteboard PRIVATE
             EliteBoardDeviceController.h EliteBoardDeviceController.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-eliteboard-handler)

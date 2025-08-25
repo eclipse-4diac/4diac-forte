@@ -15,8 +15,7 @@ if (NOT FORTE_COM_HTTP)
     return()
 endif ()
 
-add_library(forte-modules-arrowhead-eventHandler-HTTP OBJECT
+target_sources(forte-modules-arrowhead PRIVATE
             PublishEventHTTP.h PublishEventHTTP.cpp SubscribeEventHTTP.h
             SubscribeEventHTTP.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-arrowhead-eventHandler-HTTP)

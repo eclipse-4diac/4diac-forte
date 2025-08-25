@@ -13,7 +13,7 @@
 # Counters
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Counters OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             FB_CTD_DINT_fbt.h
             FB_CTD_DINT_fbt.cpp
             FB_CTD_UDINT_fbt.h
@@ -43,4 +43,3 @@ add_library(forte-modules-IEC61131-3-Counters OBJECT
             FB_CTUD_ULINT_fbt.h
             FB_CTUD_ULINT_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Counters)

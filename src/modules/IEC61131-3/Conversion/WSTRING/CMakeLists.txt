@@ -13,7 +13,7 @@
 # WSTRING_AS_xxx Conversion
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Conversion-WSTRING OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_WSTRING_AS_UINT_fbt.h
             F_WSTRING_AS_UINT_fbt.cpp
             F_WSTRING_AS_BOOL_fbt.h
@@ -48,7 +48,4 @@ add_library(forte-modules-IEC61131-3-Conversion-WSTRING OBJECT
             F_WSTRING_AS_REAL_fbt.cpp
             F_WSTRING_AS_LREAL_fbt.h
             F_WSTRING_AS_LREAL_fbt.cpp
-)
-target_link_libraries(forte
-                      PRIVATE forte-modules-IEC61131-3-Conversion-WSTRING
 )

@@ -15,7 +15,7 @@
 # INT_TO_xxx Conversion
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Conversion-INT OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_INT_TO_BYTE_fbt.h
             F_INT_TO_BYTE_fbt.cpp
             F_INT_TO_DINT_fbt.h
@@ -47,4 +47,3 @@ add_library(forte-modules-IEC61131-3-Conversion-INT OBJECT
             F_INT_AS_WSTRING_fbt.h
             F_INT_AS_WSTRING_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Conversion-INT)

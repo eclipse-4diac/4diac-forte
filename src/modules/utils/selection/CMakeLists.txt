@@ -12,8 +12,7 @@
 # ############################################################################
 # Selection
 # ############################################################################
-add_library(forte-modules-utils-selection OBJECT
+target_sources(forte-modules-utils PRIVATE
             F_SEL_E_2_fbt.h F_SEL_E_2_fbt.cpp F_SEL_E_3_fbt.h
             F_SEL_E_3_fbt.cpp F_SEL_E_4_fbt.h F_SEL_E_4_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-utils-selection)

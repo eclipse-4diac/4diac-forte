@@ -13,8 +13,7 @@
 # Timers
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Timers OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             FB_TOF_fbt.h FB_TOF_fbt.cpp FB_TON_fbt.h FB_TON_fbt.cpp
             FB_TP_fbt.h FB_TP_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Timers)

@@ -17,9 +17,6 @@ endif ()
 # Zephyr FBs Base
 # ############################################################################
 
-add_subdirectory(handler)
-add_subdirectory(handle)
-
 # ############################################################################
 # Zephyr template FBs
 # ############################################################################
@@ -41,3 +38,6 @@ add_library(forte-modules-zephyr OBJECT
             types/Esp32EthernetKitIO_fbt.cpp
 )
 target_link_libraries(forte PRIVATE forte-modules-zephyr)
+
+add_subdirectory(handler)
+add_subdirectory(handle)

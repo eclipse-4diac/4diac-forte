@@ -13,7 +13,7 @@
 # assembling
 # ############################################################################
 
-add_library(forte-modules-utils-splitting OBJECT
+target_sources(forte-modules-utils PRIVATE
             SPLIT_BYTE_INTO_BOOLS_fct.h
             SPLIT_BYTE_INTO_BOOLS_fct.cpp
             SPLIT_BYTE_INTO_QUARTERS_fct.h
@@ -35,4 +35,3 @@ add_library(forte-modules-utils-splitting OBJECT
             SPLIT_WORD_INTO_QUARTERS_fct.h
             SPLIT_WORD_INTO_QUARTERS_fct.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-utils-splitting)

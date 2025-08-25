@@ -14,7 +14,7 @@
 # xx_TO_BCD_x
 # ############################################################################
 
-add_library(forte-modules-IEC61131-3-Conversion-BCD OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_BYTE_BCD_TO_USINT_fbt.h
             F_BYTE_BCD_TO_USINT_fbt.cpp
             F_WORD_BCD_TO_UINT_fbt.h
@@ -32,4 +32,3 @@ add_library(forte-modules-IEC61131-3-Conversion-BCD OBJECT
             F_ULINT_TO_BCD_LWORD_fbt.h
             F_ULINT_TO_BCD_LWORD_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-Conversion-BCD)

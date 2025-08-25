@@ -12,8 +12,7 @@
 # ############################################################################
 # signals
 # ############################################################################
-add_library(forte-modules-utils-signals OBJECT
+target_sources(forte-modules-utils PRIVATE
             E_BLINK_fbt.h E_BLINK_fbt.cpp E_BLINK_TRAIN_fbt.h
             E_BLINK_TRAIN_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-utils-signals)

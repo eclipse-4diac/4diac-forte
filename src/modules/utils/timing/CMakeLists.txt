@@ -12,7 +12,7 @@
 # ############################################################################
 # timing
 # ############################################################################
-add_library(forte-modules-utils-timing OBJECT
+target_sources(forte-modules-utils PRIVATE
             F_NOW_fct.h
             F_NOW_fct.cpp
             F_NOW_MONOTONIC_fct.h
@@ -22,4 +22,3 @@ add_library(forte-modules-utils-timing OBJECT
             TIMESTAMP_NS_fct.h
             TIMESTAMP_NS_fct.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-utils-timing)

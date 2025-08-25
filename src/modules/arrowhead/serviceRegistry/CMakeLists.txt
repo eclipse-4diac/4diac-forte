@@ -15,7 +15,7 @@
 add_subdirectory(HTTP)
 add_subdirectory(OpcUa)
 
-add_library(forte-modules-arrowhead-serviceRegistry OBJECT
+target_sources(forte-modules-arrowhead PRIVATE
             # datatype
             forte_serviceregistryentry.h
             forte_serviceregistryentry.cpp
@@ -37,4 +37,3 @@ add_library(forte-modules-arrowhead-serviceRegistry OBJECT
             ServiceRegistryEntry2ServiceRegistryEntry_fbt.h
             ServiceRegistryEntry2ServiceRegistryEntry_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-arrowhead-serviceRegistry)

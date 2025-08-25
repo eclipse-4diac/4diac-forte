@@ -7,5 +7,4 @@
 #
 # Contributors: Maximilian Scharf - Initial implementation.
 # *******************************************************************************/
-add_library(forte-modules-eliteboard-handle OBJECT PinHandle.h PinHandle.cpp)
-target_link_libraries(forte PRIVATE forte-modules-eliteboard-handle)
+target_sources(forte-modules-eliteboard PRIVATE PinHandle.h PinHandle.cpp)

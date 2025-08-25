@@ -15,7 +15,7 @@
 add_subdirectory(HTTP)
 add_subdirectory(OpcUa)
 
-add_library(forte-modules-arrowhead-orchestrator OBJECT
+target_sources(forte-modules-arrowhead PRIVATE
             # datatype
             forte_orchestrationform.h
             forte_orchestrationform.cpp
@@ -35,4 +35,3 @@ add_library(forte-modules-arrowhead-orchestrator OBJECT
             OrchestrationForm2OrchestrationForm_fbt.h
             OrchestrationForm2OrchestrationForm_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-arrowhead-orchestrator)

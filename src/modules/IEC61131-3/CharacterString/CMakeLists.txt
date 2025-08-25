@@ -12,7 +12,7 @@
 # ############################################################################
 # CharacterString
 # ############################################################################
-add_library(forte-modules-IEC61131-3-CharacterString OBJECT
+target_sources(forte-modules-IEC61131-3 PRIVATE
             F_LEN_fbt.h
             F_LEN_fbt.cpp
             F_LEFT_fbt.h
@@ -34,4 +34,3 @@ add_library(forte-modules-IEC61131-3-CharacterString OBJECT
             F_CONCAT_DATE_TOD_fbt.h
             F_CONCAT_DATE_TOD_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-modules-IEC61131-3-CharacterString)
