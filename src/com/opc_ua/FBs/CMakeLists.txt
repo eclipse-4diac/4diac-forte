@@ -10,7 +10,7 @@
 # Contributors: Jose Cabral - initial implementation
 # ******************************************************************************/
 
-add_library(forte-com-opc_ua-FBs OBJECT LocalizedText2LocalizedText.h
-                                        LocalizedText2LocalizedText.cpp
+target_sources(forte-com-opc_ua PRIVATE
+        LocalizedText2LocalizedText.h
+        LocalizedText2LocalizedText.cpp
 )
-target_link_libraries(forte PRIVATE forte-com-opc_ua-FBs)
