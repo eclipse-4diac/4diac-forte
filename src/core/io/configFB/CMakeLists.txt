@@ -13,7 +13,7 @@
 # IO Configuration FBs
 # ############################################################################
 
-add_library(forte-core-io-configFB OBJECT
+target_sources(forte-core PRIVATE
             io_base.h
             io_base.cpp
             io_configFB_controller.h
@@ -25,4 +25,3 @@ add_library(forte-core-io-configFB OBJECT
             io_slave_multi.h
             io_slave_multi.cpp
 )
-target_link_libraries(forte PRIVATE forte-core-io-configFB)

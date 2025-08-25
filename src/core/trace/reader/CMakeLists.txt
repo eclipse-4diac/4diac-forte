@@ -11,8 +11,7 @@
 
 target_link_libraries(forte PUBLIC babeltrace2)
 
-add_library(forte-core-trace-reader OBJECT
+target_sources(forte-core PRIVATE
             bt2MessageFactory.h bt2MessageFactory.cpp TraceReaderSink.h
             TraceReaderSink.cpp utils.h utils.cpp
 )
-target_link_libraries(forte PRIVATE forte-core-trace-reader)

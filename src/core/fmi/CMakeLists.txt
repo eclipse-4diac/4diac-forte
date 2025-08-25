@@ -31,7 +31,7 @@ add_subdirectory(comm)
 
 message(STATUS "Process Interface: FORTE FMU")
 
-add_library(forte-core-fmi OBJECT
+target_sources(forte-core PRIVATE
             fmiInterface.cpp
             fmuValueContainer.h
             fmuValueContainer.cpp
@@ -54,5 +54,4 @@ add_library(forte-core-fmi OBJECT
             ../../stdfblib/io/QW_fbt.h
             ../../stdfblib/io/QW_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-core-fmi)
-target_include_directories(forte-core-fmi PUBLIC ${FORTE_FMU_INCLUDE})
+target_include_directories(forte-core PUBLIC ${FORTE_FMU_INCLUDE})

@@ -13,7 +13,7 @@
 # core/util
 # ############################################################################
 
-add_library(forte-core-util OBJECT
+target_sources(forte-core PRIVATE
             factory.h
             hook.h
             singlet.h
@@ -29,4 +29,3 @@ add_library(forte-core-util OBJECT
             configFileParser.h
             configFileParser.cpp
 )
-target_link_libraries(forte PRIVATE forte-core-util)

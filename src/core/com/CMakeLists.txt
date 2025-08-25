@@ -12,7 +12,7 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-add_library(forte-core-com OBJECT
+target_sources(forte-core PRIVATE
         basefb.h
         basefb.cpp
         buffer.h
@@ -24,6 +24,5 @@ add_library(forte-core-com OBJECT
         fb.cpp
         observer.h
 )
-target_link_libraries(forte PRIVATE forte-core-com)
 
 add_subdirectory(impl)

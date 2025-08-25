@@ -12,6 +12,4 @@
 # ############################################################################
 # Core/datatypes/convert
 # ############################################################################
-add_library(forte-core-datatypes-convert OBJECT convert_functions.h)
-set_property(TARGET forte-core-datatypes-convert PROPERTY LINKER_LANGUAGE CXX)
-target_link_libraries(forte PRIVATE forte-core-datatypes-convert)
+target_sources(forte-core PRIVATE convert_functions.h)

@@ -13,7 +13,7 @@
 # IO Mapper
 # ############################################################################
 
-add_library(forte-core-io-mapper OBJECT
+target_sources(forte-core PRIVATE
             io_observer.h
             io_observer.cpp
             io_handle.h
@@ -23,4 +23,3 @@ add_library(forte-core-io-mapper OBJECT
             io_handle_bit.h
             io_handle_bit.cpp
 )
-target_link_libraries(forte PRIVATE forte-core-io-mapper)

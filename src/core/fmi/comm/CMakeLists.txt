@@ -13,9 +13,8 @@
 # ############################################################################
 
 option(FORTE_COM_fmu "Enable Forte Com Fmu" ON)
-add_library(forte-core-fmi-comm OBJECT
-            $<$<BOOL:${FORTE_COM_fmu}>:fmuComLayer.cpp>
-            $<$<BOOL:${FORTE_COM_fmu}>:fmuComLayer.h> fmuHandler.h
+target_sources(forte-core PRIVATE
+            $<$<BOOL:${FORTE_COM_fmu}>:${CMAKE_CURRENT_SOURCE_DIR}/fmuComLayer.cpp>
+            $<$<BOOL:${FORTE_COM_fmu}>:${CMAKE_CURRENT_SOURCE_DIR}/fmuComLayer.h> fmuHandler.h
             fmuHandler.cpp
 )
-target_link_libraries(forte PRIVATE forte-core-fmi-comm)

@@ -21,7 +21,7 @@ option(FORTE_COM_FBDK "Enable Forte Com FBDK" ON)
 option(FORTE_COM_LOCAL "Enable Forte local communication" ON)
 option(FORTE_COM_RAW "Enable Forte raw communication" ON)
 option(FORTE_COM_STRUCT_MEMBER "Local communication layer writing to a single element in a struct" OFF)
-add_library(forte-core-cominfra OBJECT
+target_sources(forte-core PRIVATE
             comtypes.h
             comlayersmanager.h
             basecommfb.h
@@ -30,15 +30,14 @@ add_library(forte-core-cominfra OBJECT
             commfb.cpp
             comlayer.h
             comlayer.cpp
-            $<$<BOOL:${FORTE_COM_ETH}>:ipcomlayer.cpp>
-            $<$<BOOL:${FORTE_COM_ETH}>:ipcomlayer.h>
-            $<$<BOOL:${FORTE_COM_FBDK}>:fbdkasn1layer.cpp>
-            $<$<BOOL:${FORTE_COM_FBDK}>:fbdkasn1layer.h>
-            $<$<BOOL:${FORTE_COM_LOCAL}>:localcomlayer.cpp>
-            $<$<BOOL:${FORTE_COM_LOCAL}>:localcomlayer.h>
-            $<$<BOOL:${FORTE_COM_RAW}>:rawdatacomlayer.cpp>
-            $<$<BOOL:${FORTE_COM_RAW}>:rawdatacomlayer.h>
-            $<$<BOOL:${FORTE_COM_STRUCT_MEMBER}>:structmembercomlayer.cpp>
-            $<$<BOOL:${FORTE_COM_STRUCT_MEMBER}>:structmembercomlayer.h>
+            $<$<BOOL:${FORTE_COM_ETH}>:${CMAKE_CURRENT_SOURCE_DIR}/ipcomlayer.cpp>
+            $<$<BOOL:${FORTE_COM_ETH}>:${CMAKE_CURRENT_SOURCE_DIR}/ipcomlayer.h>
+            $<$<BOOL:${FORTE_COM_FBDK}>:${CMAKE_CURRENT_SOURCE_DIR}/fbdkasn1layer.cpp>
+            $<$<BOOL:${FORTE_COM_FBDK}>:${CMAKE_CURRENT_SOURCE_DIR}/fbdkasn1layer.h>
+            $<$<BOOL:${FORTE_COM_LOCAL}>:${CMAKE_CURRENT_SOURCE_DIR}/localcomlayer.cpp>
+            $<$<BOOL:${FORTE_COM_LOCAL}>:${CMAKE_CURRENT_SOURCE_DIR}/localcomlayer.h>
+            $<$<BOOL:${FORTE_COM_RAW}>:${CMAKE_CURRENT_SOURCE_DIR}/rawdatacomlayer.cpp>
+            $<$<BOOL:${FORTE_COM_RAW}>:${CMAKE_CURRENT_SOURCE_DIR}/rawdatacomlayer.h>
+            $<$<BOOL:${FORTE_COM_STRUCT_MEMBER}>:${CMAKE_CURRENT_SOURCE_DIR}/structmembercomlayer.cpp>
+            $<$<BOOL:${FORTE_COM_STRUCT_MEMBER}>:${CMAKE_CURRENT_SOURCE_DIR}/structmembercomlayer.h>
 )
-target_link_libraries(forte PRIVATE forte-core-cominfra)

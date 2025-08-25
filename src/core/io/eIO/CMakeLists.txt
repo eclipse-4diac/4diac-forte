@@ -9,6 +9,4 @@
 # *******************************************************************************/
 
 add_subdirectory(io)
-add_library(forte-core-io-eIO OBJECT CeBuffer.h CeConfig.h CeSpec.h)
-set_property(TARGET forte-core-io-eIO PROPERTY LINKER_LANGUAGE CXX)
-target_link_libraries(forte PRIVATE forte-core-io-eIO)
+target_sources(forte-core PRIVATE CeBuffer.h CeConfig.h CeSpec.h)

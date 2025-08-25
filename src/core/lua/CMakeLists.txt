@@ -43,7 +43,7 @@ elseif (FORTE_USE_LUATYPES STREQUAL "Lua")
 
 endif ()
 
-add_library(forte-core-lua OBJECT
+target_sources(forte-core PRIVATE
             luaengine.h
             luaengine.cpp
             luatype.h
@@ -61,6 +61,5 @@ add_library(forte-core-lua OBJECT
             luacfbtypeentry.h
             luacfbtypeentry.cpp
 )
-target_link_libraries(forte PRIVATE forte-core-lua)
-target_include_directories(forte-core-lua PUBLIC ${LUAJIT_INCLUDE_DIR})
-target_include_directories(forte-core-lua PUBLIC ${LUA_INCLUDE_DIRS})
+target_include_directories(forte-core PRIVATE ${LUAJIT_INCLUDE_DIR})
+target_include_directories(forte-core PRIVATE ${LUA_INCLUDE_DIRS})

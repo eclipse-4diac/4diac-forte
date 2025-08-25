@@ -67,14 +67,13 @@ if (FORTE_TRACE_CTF_TEST OR FORTE_REPLAY_DEVICE)
     add_subdirectory(reader)
     target_compile_definitions(forte-global INTERFACE FORTE_TRACER_INTERNAL)
 endif ()
-add_library(forte-core-trace OBJECT
-            $<$<BOOL:${FORTE_TRACE_CTF_REPLAY_DEBUGGING}>:replay_debugging/trace_event_output.cpp>
-            $<$<NOT:$<BOOL:${FORTE_TRACE_CTF_REPLAY_DEBUGGING}>>:classic/trace_event_output.cpp>
+target_sources(forte-core PRIVATE
+            $<$<BOOL:${FORTE_TRACE_CTF_REPLAY_DEBUGGING}>:${CMAKE_CURRENT_SOURCE_DIR}/replay_debugging/trace_event_output.cpp>
+            $<$<NOT:$<BOOL:${FORTE_TRACE_CTF_REPLAY_DEBUGGING}>>:${CMAKE_CURRENT_SOURCE_DIR}/classic/trace_event_output.cpp>
             ${FORTE_TRACE_FOLDER}/barectf.h
             ${FORTE_TRACE_FOLDER}/barectf.c
             ${FORTE_TRACE_FOLDER}/barectf-bitfield.h
             barectf_platform_forte.h
             barectf_platform_forte.cpp
 )
-target_link_libraries(forte PRIVATE forte-core-trace)
-target_include_directories(forte-core-trace PUBLIC ${FORTE_TRACE_FOLDER})
+target_include_directories(forte-core PUBLIC ${FORTE_TRACE_FOLDER})

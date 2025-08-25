@@ -13,7 +13,7 @@
 #############################################################################
 
 target_sources(
-        forte-core-com
+        forte-core
         PRIVATE
         null.h
         null.cpp

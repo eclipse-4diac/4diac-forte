@@ -8,7 +8,7 @@
 # Contributors: Maximilian Scharf - Initial implementation.
 # ******************************************************************************/
 
-add_library(forte-core-io-eIO-io OBJECT
+target_sources(forte-core PRIVATE
             # eIO base class
             einputfb.h
             eConfigFB.h
@@ -25,5 +25,4 @@ add_library(forte-core-io-eIO-io OBJECT
             eIWconfig_fbt.h
             eIWconfig_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-core-io-eIO-io)
-target_include_directories(forte-core-io-eIO-io PUBLIC .)
+target_include_directories(forte-core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})

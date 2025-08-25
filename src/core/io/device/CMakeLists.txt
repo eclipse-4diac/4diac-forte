@@ -13,9 +13,8 @@
 # IO Device
 # ############################################################################
 
-add_library(forte-core-io-device OBJECT
+target_sources(forte-core PRIVATE
             io_controller.h io_controller.cpp io_controller_multi.h
             io_controller_multi.cpp io_controller_poll.h
             io_controller_poll.cpp
 )
-target_link_libraries(forte PRIVATE forte-core-io-device)

@@ -27,7 +27,7 @@ add_subdirectory(mapper)
 
 message(STATUS "Process Interface: Modular IO")
 
-add_library(forte-core-io OBJECT
+target_sources(forte-core PRIVATE
             processinterfacefb.h
             processinterfacefb.cpp
             inputfb.h
@@ -55,4 +55,3 @@ add_library(forte-core-io OBJECT
             QX_fbt.h
             QX_fbt.cpp
 )
-target_link_libraries(forte PRIVATE forte-core-io)

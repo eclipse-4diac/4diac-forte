@@ -17,13 +17,6 @@
 # ############################################################################
 add_subdirectory(generated)
 
-add_subdirectory(com)
-add_subdirectory(cominfra)
-add_subdirectory(datatypes)
-add_subdirectory(util)
-add_subdirectory(io)
-add_subdirectory(fmi)
-
 set(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY
     "30"
     CACHE STRING
@@ -123,9 +116,16 @@ add_library(forte-core OBJECT
             membdataconn.cpp
             gatherdataconn.h
             gatherdataconn.cpp
-            $<$<BOOL:${FORTE_USE_FAKE_ECET}>:ecetFake.h>
-            $<$<BOOL:${FORTE_USE_FAKE_ECET}>:ecetFake.cpp>
+            $<$<BOOL:${FORTE_USE_FAKE_ECET}>:${CMAKE_CURRENT_SOURCE_DIR}/ecetFake.h>
+            $<$<BOOL:${FORTE_USE_FAKE_ECET}>:${CMAKE_CURRENT_SOURCE_DIR}/ecetFake.cpp>
             monitoring.h
             monitoring.cpp
 )
 target_link_libraries(forte PRIVATE forte-core)
+
+add_subdirectory(com)
+add_subdirectory(cominfra)
+add_subdirectory(datatypes)
+add_subdirectory(util)
+add_subdirectory(io)
+add_subdirectory(fmi)

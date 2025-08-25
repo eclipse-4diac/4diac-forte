@@ -22,7 +22,7 @@ mark_as_advanced(FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES)
 forte_generate_config_flag_include(FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
 )
 
-add_library(forte-core-datatypes OBJECT
+target_sources(forte-core PRIVATE
             forte_any.h
             forte_any.cpp
             forte_any_elementary.h
@@ -144,4 +144,3 @@ add_library(forte-core-datatypes OBJECT
             unicode_utils.h
             unicode_utils.cpp
 )
-target_link_libraries(forte PRIVATE forte-core-datatypes)

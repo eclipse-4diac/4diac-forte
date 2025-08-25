@@ -10,8 +10,7 @@
 # Contributors: Martin Jobst - initial API and implementation and/or initial
 # documentation
 # ############################################################################
-add_library(forte-core-trace-internal OBJECT
+target_sources(forte-core PRIVATE
             EventMessage.h EventMessage.cpp internalTracer.h
             internalTracer.cpp flexibleTracer.h flexibleTracer.cpp
 )
-target_link_libraries(forte PRIVATE forte-core-trace-internal)
