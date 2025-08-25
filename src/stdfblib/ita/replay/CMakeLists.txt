@@ -26,7 +26,7 @@ endif ()
 target_compile_definitions(forte-global INTERFACE FORTE_REPLAY_DEVICE)
 target_link_libraries(forte PUBLIC ${FORTE_TRACE_READER_LIB})
 
-add_library(forte-stdfblib-ita-replay OBJECT
+target_sources(forte-stdfblib-ita PRIVATE
             deviceReplayer.h
             deviceReplayer.cpp
             resourceReplayer.h
@@ -36,4 +36,3 @@ add_library(forte-stdfblib-ita-replay OBJECT
             ReplayMGR.h
             ReplayMGR.cpp
 )
-target_link_libraries(forte PRIVATE forte-stdfblib-ita-replay)

@@ -93,5 +93,7 @@ add_library(forte-stdfblib-events OBJECT
             E_N_TABLE_fbt.cpp
             E_TABLE_CTRL_fbt.h
             E_TABLE_CTRL_fbt.cpp
+            timedfb.h
+            timedfb.cpp
 )
 target_link_libraries(forte PRIVATE forte-stdfblib-events)

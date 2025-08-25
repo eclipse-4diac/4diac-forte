@@ -12,7 +12,7 @@
 #ifndef _E_RDELAY_H_
 #define _E_RDELAY_H_
 
-#include "../timedfb.h"
+#include "timedfb.h"
 
 /*! \brief Implementation of the E_RDELAY FB.
  */

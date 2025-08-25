@@ -13,7 +13,7 @@
 #ifndef _E_DELAY_H_
 #define _E_DELAY_H_
 
-#include "../timedfb.h"
+#include "timedfb.h"
 
 /*! \brief Implementation of the E_DELAY FB.
  *

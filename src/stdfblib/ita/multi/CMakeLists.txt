@@ -19,8 +19,7 @@ if (NOT FORTE_MULTI_DEVICE)
     return()
 endif ()
 
-add_library(forte-stdfblib-ita-multi OBJECT
+target_sources(forte-stdfblib-ita PRIVATE
             MultiMGR.h MultiMGR.cpp MultiDevice.h MultiDevice.cpp utils.h
             utils.cpp
 )
-target_link_libraries(forte PRIVATE forte-stdfblib-ita-multi)

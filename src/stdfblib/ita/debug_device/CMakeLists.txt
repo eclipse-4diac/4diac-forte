@@ -19,7 +19,6 @@ endif ()
 
 target_compile_definitions(forte-global INTERFACE FORTE_DEBUG_DEVICE)
 
-add_library(forte-stdfblib-ita-debug_device OBJECT
+target_sources(forte-stdfblib-ita PRIVATE
             DebugMGR.h DebugMGR.cpp DebugDevice.h DebugDevice.cpp
 )
-target_link_libraries(forte PRIVATE forte-stdfblib-ita-debug_device)

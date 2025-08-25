@@ -15,6 +15,3 @@ if (FORTE_IO)
 endif ()
 add_subdirectory(ita)
 add_subdirectory(net)
-
-add_library(forte-stdfblib OBJECT timedfb.h timedfb.cpp)
-target_link_libraries(forte PRIVATE forte-stdfblib)

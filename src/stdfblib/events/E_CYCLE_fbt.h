@@ -15,7 +15,7 @@
 #ifndef _E_CYCLE_H_
 #define _E_CYCLE_H_
 
-#include "../timedfb.h"
+#include "timedfb.h"
 
 /*! \brief Implementation of the E_CYCLE FB.
  */
