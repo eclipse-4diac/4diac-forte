@@ -25,24 +25,6 @@ if (FORTE_DYNAMIC_TYPE_LOAD)
 endif (FORTE_DYNAMIC_TYPE_LOAD)
 add_subdirectory(trace)
 
-option(FORTE_STRINGDICT_FIXEDMEMORY
-       "Use a fixed-size version of the string dictionary" OFF
-)
-forte_generate_config_flag_include(FORTE_STRINGDICT_FIXEDMEMORY)
-if (FORTE_STRINGDICT_FIXEDMEMORY)
-    set(FORTE_STRINGDICT_MAXNROFSTRINGS
-        1024
-        CACHE STRING
-              "Maximum number of strings in the fixed-size version of the string dictionary"
-    )
-    set(FORTE_STRINGDICT_BUFFERSIZE
-        8192
-        CACHE STRING
-              "Maximum total size of the fixed-size version of the string dictionary"
-    )
-    forte_generate_config_value_include(FORTE_STRINGDICT_MAXNROFSTRINGS)
-    forte_generate_config_value_include(FORTE_STRINGDICT_BUFFERSIZE)
-endif ()
 add_library(forte-core OBJECT
             conn.h
             dataconn.h
