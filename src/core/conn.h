@@ -21,7 +21,6 @@
 
 #include "core/datatype.h"
 #include "core/mgmcmd.h"
-#include "core/mgmcmdstruct.h"
 #include "core/stringid.h"
 
 // forward declaration of a few classes to reduce include file dependencies

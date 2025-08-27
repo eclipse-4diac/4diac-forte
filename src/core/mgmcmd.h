@@ -17,10 +17,18 @@
 #include <cstdint>
 #include <string>
 
+#include "generated/forte_config.h"
+#include "util/inplace_vector.h"
+#include "core/stringid.h"
+
 /**  \ingroup CORE \defgroup MGMCommands Management Commands Internal Representation
  * \brief In this section the FORTE representation of the management commands is described.
  */
 /*@{*/
+
+namespace forte::core {
+  using TNameIdentifier = util::inplace_vector<forte::core::StringId, cgMaxSupportedNameHierarchy>;
+}
 
 /*!\brief Type for the management command (e.g. create, delete ...)
  *

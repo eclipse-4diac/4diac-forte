@@ -17,14 +17,6 @@
 # ############################################################################
 add_subdirectory(generated)
 
-set(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY
-    "30"
-    CACHE STRING
-          "Max supported hierarchy that can be provided in a management commands"
-)
-mark_as_advanced(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY)
-forte_generate_config_value_include(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY)
-
 option(FORTE_USE_FAKE_ECET "Compile the fake ecet used for testing" FALSE)
 mark_as_advanced(FORTE_USE_FAKE_ECET)
 

@@ -36,8 +36,6 @@ class CEventChainExecutionThread;
 class CTimerHandler;
 class CDevice;
 
-#include "core/mgmcmdstruct.h"
-
 namespace forte {
   class IPlugPin;
   class ISocketPin;

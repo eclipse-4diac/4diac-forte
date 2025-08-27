@@ -10,7 +10,7 @@
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
-#include "core/mgmcmdstruct.h"
+#include "core/mgmcmd.h"
 
 using namespace forte::core::literals;
 
@@ -53,7 +53,7 @@ BOOST_AUTO_TEST_CASE(capacity) {
   // check that we have the capacity as configured in cmake
   forte::core::TNameIdentifier identifier;
 
-  for (size_t i = 0; i < FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY; i++) {
+  for (size_t i = 0; i < cgMaxSupportedNameHierarchy; i++) {
     BOOST_CHECK(identifier.push_back(forte::core::StringId::insert(std::to_string(i))));
     BOOST_CHECK_EQUAL(false, identifier.empty());
   }
@@ -101,15 +101,15 @@ BOOST_AUTO_TEST_CASE(push_back) {
 BOOST_AUTO_TEST_CASE(pop_back) {
   forte::core::TNameIdentifier identifier;
   // fill with testdata
-  for (size_t i = 0; i < FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY; i++) {
+  for (size_t i = 0; i < cgMaxSupportedNameHierarchy; i++) {
     identifier.push_back(forte::core::StringId::insert(std::to_string(i)));
   }
 
-  for (size_t i = 0; i < FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY; i++) {
-    BOOST_TEST(std::to_string(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY - 1 - i) == identifier.back().get());
-    BOOST_TEST(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY - i == identifier.size());
+  for (size_t i = 0; i < cgMaxSupportedNameHierarchy; i++) {
+    BOOST_TEST(std::to_string(cgMaxSupportedNameHierarchy - 1 - i) == identifier.back().get());
+    BOOST_TEST(cgMaxSupportedNameHierarchy - i == identifier.size());
     identifier.pop_back();
-    BOOST_TEST(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY - 1 - i == identifier.size());
+    BOOST_TEST(cgMaxSupportedNameHierarchy - 1 - i == identifier.size());
   }
   BOOST_CHECK(identifier.empty());
 }
@@ -117,7 +117,7 @@ BOOST_AUTO_TEST_CASE(pop_back) {
 BOOST_AUTO_TEST_CASE(iterator) {
   forte::core::TNameIdentifier identifier;
   // fill with testdata
-  for (size_t i = 0; i < FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY; i++) {
+  for (size_t i = 0; i < cgMaxSupportedNameHierarchy; i++) {
     identifier.push_back(forte::core::StringId::insert(std::to_string(i)));
   }
 
@@ -125,7 +125,7 @@ BOOST_AUTO_TEST_CASE(iterator) {
   for (const auto &it : identifier) {
     BOOST_CHECK_EQUAL(forte::core::StringId::insert(std::to_string(i++)), it);
   }
-  BOOST_CHECK_EQUAL(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY,
+  BOOST_CHECK_EQUAL(cgMaxSupportedNameHierarchy,
                     i); // we should have exactly visited each element once but started at zero
 }
 

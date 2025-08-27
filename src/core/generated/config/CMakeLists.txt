@@ -40,6 +40,13 @@ option(FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
 )
 mark_as_advanced(FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES)
 
+set(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY
+        "30"
+        CACHE STRING
+        "Max supported hierarchy that can be provided in a management commands"
+)
+mark_as_advanced(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY)
+
 configure_file(forte_config.h.in
                "${FORTE_GENERATED_FILES_DIR}/forte_config.h"
 )

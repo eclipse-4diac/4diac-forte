@@ -19,7 +19,6 @@
 
 #include "core/conn.h"
 #include "core/stringid.h"
-#include "core/mgmcmdstruct.h"
 #include <vector>
 #include <memory>
 

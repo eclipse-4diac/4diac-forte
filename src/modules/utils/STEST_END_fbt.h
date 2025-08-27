@@ -17,7 +17,6 @@
 #pragma once
 
 #include "core/funcbloc.h"
-#include "core/mgmcmdstruct.h"
 
 class FORTE_STEST_END final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_STEST_END)

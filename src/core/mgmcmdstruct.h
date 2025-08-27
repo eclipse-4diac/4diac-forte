@@ -12,7 +12,6 @@
  *******************************************************************************/
 #pragma once
 
-#include "generated/config/FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY.h"
 #include "core/mgmcmd.h"
 #include "core/util/inplace_vector.h"
 #include "core/stringid.h"
@@ -25,8 +24,6 @@ namespace forte {
      * \brief In this section the FORTE-internal data-exchange-structure for management command passing is described.
      */
     /*@{*/
-
-    typedef util::inplace_vector<forte::core::StringId, FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY> TNameIdentifier;
 
     /*!\brief All the data necessary for processing a management command.
      *
