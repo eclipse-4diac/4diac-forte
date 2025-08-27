@@ -60,6 +60,7 @@
 #include "core/datatypes/forte_lreal.h"
 
 #include "core/typelib_internal.h"
+#include "core/datatypes/forte_array_fixed.h"
 
 using namespace forte::core::literals;
 

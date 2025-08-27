@@ -17,7 +17,7 @@
 #define _GEN_STRUCT_DEMUX_H_
 
 #include "core/genfb.h"
-#include <stdio.h>
+#include "core/datatypes/forte_struct.h"
 
 #include <memory>
 

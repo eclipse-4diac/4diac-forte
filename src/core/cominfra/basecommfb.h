@@ -21,6 +21,8 @@
 
 #include "generated/forte_config.h"
 #include "core/cominfra/comtypes.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_wstring.h"
 #include "core/genfb.h"
 #include "core/esfb.h"
 #include "forte_sync.h"

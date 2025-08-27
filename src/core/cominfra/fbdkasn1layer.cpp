@@ -21,6 +21,9 @@
 #include "arch/timerha.h"
 #include "arch/devlog.h"
 #include "arch/fortenew.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_struct.h"
 
 using namespace forte::com_infra;
 using namespace forte::core::literals;

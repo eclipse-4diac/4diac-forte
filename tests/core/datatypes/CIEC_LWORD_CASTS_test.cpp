@@ -39,6 +39,8 @@
 #include "core/datatypes/forte_ulint.h"
 #include "core/datatypes/forte_lreal.h"
 
+#include <cmath>
+
 using namespace boost::unit_test;
 
 BOOST_AUTO_TEST_SUITE(CIEC_LWORD_casts_function_test)

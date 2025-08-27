@@ -45,6 +45,7 @@
 #include "core/datatypes/forte_time.h"
 
 #include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_array_dynamic.h"
 
 #include "core/datatypes/forte_lword.h"
 #include "core/datatypes/forte_lint.h"

@@ -21,6 +21,8 @@
 #include "forte_boost_output_support.h"
 
 #include "core/datatypes/forte_real.h"
+
+#include <cmath>
 #include <limits>
 
 BOOST_AUTO_TEST_SUITE(CIEC_REAL_function_test)

@@ -33,6 +33,8 @@
 #include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_array_variable.h"
 #include "core/datatypes/forte_array_dynamic.h"
+#include "core/forte_st_iterator.h"
+#include "core/forte_st_util.h"
 
 #include <algorithm>
 #include <cmath>

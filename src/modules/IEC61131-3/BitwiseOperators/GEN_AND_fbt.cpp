@@ -18,6 +18,8 @@
 
 #include "GEN_AND_fbt.h"
 
+#include "core/iec61131_functions.h"
+
 using namespace forte::core::literals;
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_AND, "GEN_AND"_STRID)

@@ -17,6 +17,10 @@
 
 #include "comlayersmanager.h"
 #include "core/typelib.h"
+#include "core/datatypes/forte_array.h"
+#include "core/datatypes/forte_int.h"
+#include "core/datatypes/forte_struct.h"
+
 #include <string>
 #include <errno.h>
 #include "core/util/string_utils.h"

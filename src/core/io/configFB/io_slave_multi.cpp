@@ -13,6 +13,8 @@
 
 #include "core/io/configFB/io_slave_multi.h"
 
+#include "core/iec61131_functions.h"
+
 using namespace forte::core::io;
 
 const CIEC_WSTRING IOConfigFBMultiSlave::scmOK("OK");

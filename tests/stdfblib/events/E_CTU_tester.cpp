@@ -12,6 +12,7 @@
  *******************************************************************************/
 
 #include "../../core/fbtests/fbtestfixture.h"
+#include "core/iec61131_functions.h"
 #include "core/datatypes/forte_uint.h"
 #include "core/datatypes/forte_bool.h"
 

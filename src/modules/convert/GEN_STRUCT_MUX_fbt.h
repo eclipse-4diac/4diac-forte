@@ -16,10 +16,9 @@
 #define _GEN_STRUCT_MUX_H_
 
 #include "core/genfb.h"
-#include <stdio.h>
+#include "core/datatypes/forte_struct.h"
 
 #include <memory>
-#include "core/dataconn.h"
 
 class GEN_STRUCT_MUX final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX)
@@ -39,7 +38,6 @@ class GEN_STRUCT_MUX final : public CGenFunctionBlock<CFunctionBlock> {
     CDataConnection *getDOConUnchecked(const TPortId paIndex) override;
 
   private:
-
     static const TEventID scmEventREQID = 0;
 
     static const TEventID scmEventCNFID = 0;

@@ -20,6 +20,7 @@
 
 #include <memory>
 #include "core/datatypes/forte_any_variant.h"
+#include "core/datatypes/forte_array_dynamic.h"
 
 class GEN_VALUES2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY)

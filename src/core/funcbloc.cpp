@@ -31,6 +31,7 @@
 #include <string.h>
 #include "arch/timerha.h"
 #include "core/device.h"
+#include "core/datatypes/forte_array.h"
 #include "core/util/string_utils.h"
 
 using namespace std::string_literals;

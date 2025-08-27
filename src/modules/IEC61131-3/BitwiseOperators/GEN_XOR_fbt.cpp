@@ -18,6 +18,8 @@
 
 #include "GEN_XOR_fbt.h"
 
+#include "core/iec61131_functions.h"
+
 using namespace forte::core::literals;
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_XOR, "GEN_XOR"_STRID)

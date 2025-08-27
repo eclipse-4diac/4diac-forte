@@ -15,11 +15,10 @@
 #ifndef _FORTESTITERATOR_H_
 #define _FORTESTITERATOR_H_
 
+#include "arch/devlog.h"
+
 #include "core/datatypes/forte_any.h"
 #include "core/iec61131_cast_helper.h"
-#include "core/iec61131_functions.h"
-
-#include <cmath>
 
 /** @brief This iterator class is a generator/input iterator, producing a new value on each iteration, until the preset
  * goal value is met

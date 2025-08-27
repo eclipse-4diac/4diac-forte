@@ -15,6 +15,8 @@
 #define SRC_CORE_IO_CONFIGFB_ADAPTER_MULTI_H_
 
 #include "core/adapter.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_uint.h"
 
 namespace forte {
   namespace core {

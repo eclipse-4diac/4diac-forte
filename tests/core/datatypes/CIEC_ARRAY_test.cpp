@@ -24,6 +24,8 @@
 #include "core/datatypes/forte_string.h"
 #include "core/datatypes/forte_wstring.h"
 #include "core/typelib.h"
+#include "core/datatypes/forte_array_dynamic.h"
+#include "core/datatypes/forte_array_fixed.h"
 #include "core/datatypes/forte_struct.h"
 
 using namespace forte::core::literals;

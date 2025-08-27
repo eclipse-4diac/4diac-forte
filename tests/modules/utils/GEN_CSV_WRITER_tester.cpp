@@ -15,6 +15,7 @@
 #include <cstdio>
 #include <fstream>
 #include "core/datatypes/forte_array_fixed.h"
+#include "core/datatypes/forte_bool.h"
 
 using namespace forte::core::literals;
 

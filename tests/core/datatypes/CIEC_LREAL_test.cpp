@@ -21,6 +21,8 @@
 
 #include "core/datatypes/forte_lreal.h"
 
+#include <cmath>
+
 BOOST_AUTO_TEST_SUITE(CIEC_LREAL_function_test)
 BOOST_AUTO_TEST_CASE(Type_test) {
   CIEC_LREAL nTest;

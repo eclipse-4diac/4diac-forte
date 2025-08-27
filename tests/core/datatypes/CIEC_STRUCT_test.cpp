@@ -24,6 +24,7 @@
 #include "core/datatypes/forte_array.h"
 
 #include "core/typelib.h"
+#include "core/datatypes/forte_array_fixed.h"
 
 using namespace forte::core::literals;
 

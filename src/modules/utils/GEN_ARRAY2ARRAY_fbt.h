@@ -19,6 +19,7 @@
 #define _GEN_ARRAY2ARRAY_H_
 
 #include "core/genfb.h"
+#include "core/datatypes/forte_array_dynamic.h"
 
 class GEN_ARRAY2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY)
@@ -43,12 +44,9 @@ class GEN_ARRAY2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
     CDataConnection *getDOConUnchecked(TPortId paDONum) override;
 
   private:
-
-
     static const TEventID scmEventREQID = 0;
 
     static const TEventID scmEventCNFID = 0;
-
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 

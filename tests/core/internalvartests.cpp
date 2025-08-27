@@ -16,6 +16,8 @@
 #include <boost/test/unit_test.hpp>
 #include "core/basicfb.h"
 #include "fbcontainermock.h"
+#include "core/datatypes/forte_bool.h"
+#include "core/datatypes/forte_uint.h"
 
 using namespace forte::core::literals;
 

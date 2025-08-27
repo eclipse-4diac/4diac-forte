@@ -31,8 +31,6 @@
 #include "core/eventconn.h"
 #include "arch/devlog.h"
 #include "core/stringid.h"
-#include "core/forte_st_iterator.h"
-#include "core/forte_st_util.h"
 
 class CEventChainExecutionThread;
 class CTimerHandler;
