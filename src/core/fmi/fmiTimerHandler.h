@@ -12,7 +12,7 @@
 #ifndef _FMITIMERHANDLER_H_
 #define _FMITIMERHANDLER_H_
 
-#include "arch/timerha.h"
+#include "core/timerha.h"
 #include "core/fmi/fmuEcet.h"
 #include "core/datatypes/forte_lreal.h"
 #include <vector>

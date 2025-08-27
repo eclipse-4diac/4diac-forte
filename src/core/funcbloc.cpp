@@ -29,7 +29,7 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include "arch/timerha.h"
+#include "core/timerha.h"
 #include "core/device.h"
 #include "core/util/string_utils.h"
 

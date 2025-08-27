@@ -13,12 +13,11 @@
 
 using namespace forte::core::literals;
 
-#include "arch/timerha.h"
+#include "core/timerha.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_RDELAY, "E_RDELAY"_STRID)
 
-FORTE_E_RDELAY::FORTE_E_RDELAY(const forte::core::StringId paInstanceNameId,
-                               forte::core::CFBContainer &paContainer) :
+FORTE_E_RDELAY::FORTE_E_RDELAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CTimedFB(paInstanceNameId, paContainer) {
 }
 

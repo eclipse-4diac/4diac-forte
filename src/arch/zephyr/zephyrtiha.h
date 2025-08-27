@@ -13,7 +13,7 @@
 #ifndef SRC_ARCH_ZEPHYR_ZEPHYRTIHA_H_
 #define SRC_ARCH_ZEPHYR_ZEPHYRTIHA_H_
 
-#include "arch/timerha.h"
+#include "core/timerha.h"
 
 #include <zephyr/kernel.h>
 

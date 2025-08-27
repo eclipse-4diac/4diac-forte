@@ -13,7 +13,6 @@
 # *******************************************************************************/
 
 add_library(forte-arch OBJECT
-    timerha.cpp
     devlog.cpp
     forte_architecture.cpp
     $<IF:$<BOOL:${FORTE_LOGGER_READABLE_TIME}>,readableTimeString.cpp,plainTimeString.cpp>

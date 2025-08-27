@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "arch/timerha.h"
+#include "core/timerha.h"
 #include "core/util/factory.h"
 #include "generated/timerhandlerfactory_config.h"
 

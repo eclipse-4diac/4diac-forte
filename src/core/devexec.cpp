@@ -15,7 +15,7 @@
 #include "core/esfb.h"
 #include "core/ecet.h"
 #include "core/extevhan.h"
-#include "arch/timerha.h"
+#include "core/timerha.h"
 #include "arch/devlog.h"
 #include "core/device.h"
 #include "core/timerhandlerfactory.h"

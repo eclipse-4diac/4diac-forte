@@ -15,7 +15,7 @@
  *   Alois Zoitl - worked on reducing the jitter and overhead of timer handler
  *                 Bug #568902
  *******************************************************************************/
-#include "arch/timerha.h"
+#include "core/timerha.h"
 #include "core/datatypes/forte_any_duration.h"
 #include "core/devexec.h"
 #include "core/esfb.h"

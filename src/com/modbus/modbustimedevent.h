@@ -12,7 +12,7 @@
 #ifndef _MODBUSTIMEDEVENT_H_
 #define _MODBUSTIMEDEVENT_H_
 
-#include "arch/timerha.h"
+#include "core/timerha.h"
 #include <modbus.h>
 
 class CModbusTimedEvent {

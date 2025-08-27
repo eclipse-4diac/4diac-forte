@@ -22,14 +22,13 @@
 #include "core/datatypes/forte_array_variable.h"
 #include "ATimeOut_adp.h"
 
-#include "arch/timerha.h"
+#include "core/timerha.h"
 
 class FORTE_E_TimeOut final : public CEventSourceFB {
     DECLARE_FIRMWARE_FB(FORTE_E_TimeOut)
 
   private:
     static const int scmTimeOutSocketAdpNum = 0;
-
 
     bool mActive; //!> flag to indicate that the timed fb is currently active
 

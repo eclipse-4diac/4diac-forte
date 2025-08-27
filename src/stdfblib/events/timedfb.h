@@ -18,7 +18,7 @@
 #define _TIMEDFB_H_
 
 #include "core/esfb.h"
-#include "arch/timerha.h"
+#include "core/timerha.h"
 #include "core/resource.h"
 
 /*!\brief Base class for timed function block like E_CYCLE or E_DELAY providing this interface

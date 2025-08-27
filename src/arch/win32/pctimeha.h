@@ -13,7 +13,7 @@
 #define _PCTIMEHA_H_
 
 #include "forte_thread.h"
-#include "arch/timerha.h"
+#include "core/timerha.h"
 
 /*! \ingroup win32_hal
  *\ingroup EXTEVHAND

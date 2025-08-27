@@ -18,7 +18,7 @@
  *******************************************************************************/
 #include "core/datatypes/forte_time.h"
 #include <string_view>
-#include "arch/timerha.h"
+#include "core/timerha.h"
 #include "core/util/forte_constants.h"
 #include "core/util/string_utils.h"
 

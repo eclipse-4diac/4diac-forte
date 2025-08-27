@@ -14,7 +14,7 @@
 #define _TXTIMEHA_H_
 
 #include <threadx/tx_api.h>
-#include "arch/timerha.h"
+#include "core/timerha.h"
 #include "arch/devlog.h"
 
 /*! \ingroup netos_hal

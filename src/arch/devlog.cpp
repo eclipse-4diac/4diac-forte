@@ -15,7 +15,7 @@
 #ifndef NOLOG
 
 #include "generated/forte_config.h"
-#include "arch/timerha.h"
+#include "core/timerha.h"
 #include "arch/forte_printer.h"
 #include "core/util/criticalregion.h"
 #include "arch/forte_architecture_time.h"

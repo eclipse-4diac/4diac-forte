@@ -12,7 +12,7 @@
 #ifndef _PCTIMEHA_H_
 #define _PCTIMEHA_H_
 
-#include "arch/timerha.h"
+#include "core/timerha.h"
 
 /*! \ingroup pc_hal
  *\ingroup EXTEVHAND

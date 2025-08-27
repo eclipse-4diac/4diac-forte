@@ -18,7 +18,7 @@
 
 #include "comlayersmanager.h"
 #include "core/cominfra/basecommfb.h"
-#include "arch/timerha.h"
+#include "core/timerha.h"
 #include "arch/devlog.h"
 #include "arch/fortenew.h"
 

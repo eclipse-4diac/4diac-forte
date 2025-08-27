@@ -24,7 +24,7 @@
 
 #include "core/esfb.h"
 #include "core/ecet.h"
-#include "arch/timerha.h"
+#include "core/timerha.h"
 
 class FORTE_RT_E_DELAY final : public CEventSourceFB {
     DECLARE_FIRMWARE_FB(FORTE_RT_E_DELAY)
@@ -35,7 +35,6 @@ class FORTE_RT_E_DELAY final : public CEventSourceFB {
     static const TEventID scmEventSTOPID = 2;
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventEOID = 1;
-
 
     bool mActive; //!> flag to indicate that the timed fb is currently active
     bool mInitialized;
