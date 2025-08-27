@@ -14,16 +14,15 @@
  *      primitve types
  *******************************************************************************/
 
-#include "stdfblib/ita/ForteBootFileLoader.h"
+#include "ForteBootFileLoader.h"
+#include "ForteBootFileLoader_config.h"
 
 #include <utility>
 #include "core/util/devlog.h"
 #include "core/datatypes/forte_string.h"
-#include "core/mgmcmd.h"
 #include "core/mgmcmdstruct.h"
 #include "core/device.h"
 #include "core/util/mainparam_utils.h"
-#include "generated/config/FORTE_BOOT_FILE_LOCATION.h"
 
 namespace {
   class BootFileOption final
@@ -40,7 +39,7 @@ namespace {
   BootFileOption gCommandLineBootFile;
 } // namespace
 
-ForteBootFileLoader::ForteBootFileLoader(BootFileCallback paCallback, std::optional<std::string> paPathToFile) :
+ForteBootFileLoader::ForteBootFileLoader(BootFileCallback paCallback, const std::optional<std::string> &paPathToFile) :
     mCallback(std::move(paCallback)) {
   openBootFile(std::move(paPathToFile));
 }
@@ -52,7 +51,7 @@ ForteBootFileLoader::~ForteBootFileLoader() {
   }
 }
 
-bool ForteBootFileLoader::openBootFile(std::optional<std::string> paPathToFile) {
+bool ForteBootFileLoader::openBootFile(const std::optional<std::string> &paPathToFile) {
   bool retVal = false;
   std::string bootFileName;
   if (paPathToFile.has_value()) {
@@ -70,8 +69,9 @@ bool ForteBootFileLoader::openBootFile(std::optional<std::string> paPathToFile) 
         DEVLOG_INFO("Using provided bootfile location from environment variable: %s\n", envBootFileName);
         bootFileName = std::string(envBootFileName);
       } else {
-        DEVLOG_INFO("Using provided bootfile location set in CMake: %s\n", FORTE_BOOT_FILE_LOCATION);
-        bootFileName = std::string(FORTE_BOOT_FILE_LOCATION);
+        DEVLOG_INFO("Using provided bootfile location set in CMake: %s\n",
+                    forte::stdfblib::ita::cgBootFileLocation.data());
+        bootFileName = std::string(forte::stdfblib::ita::cgBootFileLocation);
       }
     }
   }
@@ -97,7 +97,7 @@ bool ForteBootFileLoader::openBootFile(std::optional<std::string> paPathToFile) 
   return retVal;
 }
 
-LoadBootResult ForteBootFileLoader::loadBootFile() {
+LoadBootResult ForteBootFileLoader::loadBootFile() const {
   LoadBootResult eResp = FILE_NOT_OPENED;
   if (nullptr != mBootfile) {
     // we could open the file try to load it
@@ -130,7 +130,7 @@ LoadBootResult ForteBootFileLoader::loadBootFile() {
   return eResp;
 }
 
-bool ForteBootFileLoader::readLine(std::string &line) {
+bool ForteBootFileLoader::readLine(std::string &line) const {
   const unsigned int size = 100;
   line.clear();
   char acLineBuf[size];
@@ -138,13 +138,13 @@ bool ForteBootFileLoader::readLine(std::string &line) {
     if (nullptr != forte_fgets(acLineBuf, size, mBootfile)) {
       line.append(acLineBuf);
     } else {
-      return 0 != line.length();
+      return !line.empty();
     }
   } while (!hasCommandEnded(line));
   return true;
 }
 
-bool ForteBootFileLoader::hasCommandEnded(const std::string &line) const {
+bool ForteBootFileLoader::hasCommandEnded(const std::string &line) {
   return (0 == strcmp(line.c_str() + line.length() - 11, "</Request>\n") ||
           0 == strcmp(line.c_str() + line.length() - 3, "/>\n"));
 }

@@ -17,16 +17,16 @@
  *    - Enhance bootfile loading behavior
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
  *******************************************************************************/
-#include <string.h>
-#include "stdfblib/ita/DEV_MGR.h"
 
-using namespace forte::core::literals;
+#include "DEV_MGR.h"
+
+#include "ForteBootFileLoader.h"
+#include "ForteBootFileLoader_config.h"
 
 #include "core/device.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include "stdfblib/ita/ForteBootFileLoader.h"
 #include "core/util/string_utils.h"
+
+using namespace forte::core::literals;
 
 DEFINE_FIRMWARE_FB(DEV_MGR, "DEV_MGR"_STRID)
 
@@ -53,21 +53,21 @@ namespace {
 
 void DEV_MGR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if (scmEventINITID == paEIID) {
-#ifdef FORTE_SUPPORT_BOOT_FILE
-    if ((true == QI()) && (false == QO())) {
-      // this is the first time init is called try to load a boot file
-      ForteBootFileLoader loader([this](const char *const paDest, char *paCommand) -> bool {
-        return this->executeCommand(paDest, paCommand);
-      });
-      if (loader.needsExit()) {
-        getDevice()->changeExecutionState(EMGMCommandType::Kill);
-        return;
-      }
-      if (loader.isOpen() && LOAD_RESULT_OK == loader.loadBootFile()) {
-        DEVLOG_INFO("Bootfile correctly loaded\n");
+    if constexpr (forte::stdfblib::ita::cgSupportBootFile) {
+      if ((true == QI()) && (false == QO())) {
+        // this is the first time init is called try to load a boot file
+        ForteBootFileLoader loader([this](const char *const paDest, char *paCommand) -> bool {
+          return this->executeCommand(paDest, paCommand);
+        });
+        if (loader.needsExit()) {
+          getDevice()->changeExecutionState(EMGMCommandType::Kill);
+          return;
+        }
+        if (loader.isOpen() && LOAD_RESULT_OK == loader.loadBootFile()) {
+          DEVLOG_INFO("Bootfile correctly loaded\n");
+        }
       }
     }
-#endif
     CCommFB::executeEvent(paEIID, paECET); // initialize the underlying server FB
   } else {
     if (cgExternalEventID == paEIID && // we received a message on the network let the server correctly handle it

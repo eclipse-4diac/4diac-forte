@@ -24,14 +24,15 @@ endif ()
 
 option(FORTE_SUPPORT_BOOT_FILE "Enable 4diac FORTE boot file" ON)
 mark_as_advanced(FORTE_SUPPORT_BOOT_FILE)
-forte_generate_config_flag_include(FORTE_SUPPORT_BOOT_FILE)
 
 set(FORTE_BOOT_FILE_LOCATION
     "forte.fboot"
     CACHE STRING "Path to boot file"
 )
 mark_as_advanced(FORTE_BOOT_FILE_LOCATION)
-forte_generate_config_string_include(FORTE_BOOT_FILE_LOCATION)
+
+configure_file(ForteBootFileLoader_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/ForteBootFileLoader_config.h)
+
 add_subdirectory(debug_device)
 add_subdirectory(multi)
 add_subdirectory(replay)
@@ -46,6 +47,7 @@ add_library(forte-stdfblib-ita OBJECT
             RMT_RES.cpp
             CommandParser.h
             CommandParser.cpp
+        ForteBootFileLoader.h
             $<$<BOOL:${FORTE_COM_OPC_UA}>:Config_EMB_RES.h>
             $<$<BOOL:${FORTE_COM_OPC_UA}>:Config_EMB_RES.cpp>
             $<$<BOOL:${FORTE_ENABLE_OPCUA_DEV}>:OPCUA_DEV.h>
@@ -54,7 +56,8 @@ add_library(forte-stdfblib-ita OBJECT
             $<$<BOOL:${FORTE_ENABLE_OPCUA_DEV}>:OPCUA_MGR.cpp>
             $<$<BOOL:${FORTE_FAKE_TIME}>:FakeTimeDev.h>
             $<$<BOOL:${FORTE_FAKE_TIME}>:FakeTimeDev.cpp>
-            $<$<BOOL:${FORTE_SUPPORT_BOOT_FILE}>:ForteBootFileLoader.h>
             $<$<BOOL:${FORTE_SUPPORT_BOOT_FILE}>:ForteBootFileLoader.cpp>
+        ${CMAKE_CURRENT_BINARY_DIR}/ForteBootFileLoader_config.h
 )
+target_include_directories(forte-stdfblib-ita PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(forte PRIVATE forte-stdfblib-ita)

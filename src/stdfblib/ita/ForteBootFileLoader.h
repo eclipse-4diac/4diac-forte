@@ -13,18 +13,11 @@
 
 #pragma once
 
-#include "generated/config/FORTE_SUPPORT_BOOT_FILE.h"
-#ifdef FORTE_SUPPORT_BOOT_FILE
-
-#include <stdio.h>
-#include <stdlib.h>
 #include "arch/forte_fileio.h"
 
 #include <string>
 #include <functional>
 #include <optional>
-
-class CIEC_STRING;
 
 enum LoadBootResult {
   LOAD_RESULT_OK,
@@ -41,17 +34,18 @@ class ForteBootFileLoader {
      * Constructor which uses the the default values for the boot file location
      * @param paCallback Object to be called for each command
      */
-    explicit ForteBootFileLoader(BootFileCallback paCallback, std::optional<std::string> paPathToFile = std::nullopt);
+    explicit ForteBootFileLoader(BootFileCallback paCallback,
+                                 const std::optional<std::string> &paPathToFile = std::nullopt);
 
     ~ForteBootFileLoader();
 
-    LoadBootResult loadBootFile();
+    [[nodiscard]] LoadBootResult loadBootFile() const;
 
-    bool isOpen() const {
+    [[nodiscard]] bool isOpen() const {
       return (nullptr != mBootfile);
     }
 
-    bool needsExit() const {
+    [[nodiscard]] bool needsExit() const {
       return mNeedsExit;
     }
 
@@ -60,9 +54,7 @@ class ForteBootFileLoader {
     BootFileCallback mCallback; // for now with one callback is enough for all cases
     bool mNeedsExit{false};
 
-    bool openBootFile(std::optional<std::string> paPathToFile);
-    bool readLine(std::string &line);
-    bool hasCommandEnded(const std::string &line) const;
+    bool openBootFile(const std::optional<std::string> &paPathToFile);
+    bool readLine(std::string &line) const;
+    static bool hasCommandEnded(const std::string &line);
 };
-
-#endif
