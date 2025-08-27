@@ -22,10 +22,14 @@ set(FORTE_COM_HTTP_LISTENING_PORT
     80
     CACHE STRING "HTTP Listening Port"
 )
-forte_generate_config_value_include(FORTE_COM_HTTP_LISTENING_PORT)
+
+configure_file(http_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/http_config.h)
+
 add_library(forte-com-HTTP OBJECT
             $<$<BOOL:${FORTE_COM_HTTP}>:httplayer.cpp>
             $<$<BOOL:${FORTE_COM_HTTP}>:httplayer.h> httpparser.h
             httpparser.cpp http_handler.h http_handler.cpp
+        ${CMAKE_CURRENT_BINARY_DIR}/http_config.h
 )
+target_include_directories(forte-com-HTTP PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(forte PRIVATE forte-com-HTTP)

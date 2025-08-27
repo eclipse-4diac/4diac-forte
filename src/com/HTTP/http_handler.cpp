@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "http_handler.h"
+#include "http_config.h"
 
 #include "core/devexec.h"
 #include "core/iec61131_functions.h"
@@ -25,12 +26,11 @@
 #include "core/cominfra/comlayer.h"
 #include "generated/forte_config.h"
 #include <string>
-#include "generated/config/FORTE_COM_HTTP_LISTENING_PORT.h"
 
 using namespace forte::com_infra;
 using namespace std::string_literals;
 
-TForteUInt16 gHTTPServerPort = FORTE_COM_HTTP_LISTENING_PORT;
+TForteUInt16 gHTTPServerPort = forte::com::http::cgDefaultHttpListenPort;
 
 CIPComSocketHandler::TSocketDescriptor CHTTP_Handler::smServerListeningSocket =
     CIPComSocketHandler::scmInvalidSocketDescriptor;
