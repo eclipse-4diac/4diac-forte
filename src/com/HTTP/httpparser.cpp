@@ -18,7 +18,7 @@
 #include <string.h>
 
 #include "core/datatype.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/util/parameterParser.h"
 
 using namespace forte::com_infra;

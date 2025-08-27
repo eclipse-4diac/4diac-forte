@@ -15,7 +15,7 @@
 
 #include <threadx/tx_api.h>
 #include "core/timerha.h"
-#include "arch/devlog.h"
+#include "../../core/devlog.h"
 
 /*! \ingroup netos_hal
  * \ingroup EXTEVHAND

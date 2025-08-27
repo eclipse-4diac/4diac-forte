@@ -19,7 +19,7 @@
 #include "comlayersmanager.h"
 #include "core/cominfra/basecommfb.h"
 #include "core/timerha.h"
-#include "arch/devlog.h"
+#include "../util/devlog.h"
 #include "arch/fortenew.h"
 
 using namespace forte::com_infra;

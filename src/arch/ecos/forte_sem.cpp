@@ -13,7 +13,7 @@
  *******************************************************************************/
 
 #include "forte_sem.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include <cyg/kernel/kapi.h>
 #include <errno.h>
 #include <string.h>

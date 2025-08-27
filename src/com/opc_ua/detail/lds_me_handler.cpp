@@ -1,7 +1,7 @@
 
 #include "com/opc_ua/detail/lds_me_handler.h"
 
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 using namespace forte::com::opc_ua::detail;
 

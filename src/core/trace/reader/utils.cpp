@@ -16,7 +16,7 @@
 #include "core/basicfb.h"
 #include "core/util/parameterParser.h"
 #include "core/device.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/timerhandlerfactory.h"
 #include "core/ecetfactory.h"
 

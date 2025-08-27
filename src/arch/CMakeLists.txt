@@ -13,9 +13,7 @@
 # *******************************************************************************/
 
 add_library(forte-arch OBJECT
-    devlog.cpp
     forte_architecture.cpp
-    $<IF:$<BOOL:${FORTE_LOGGER_READABLE_TIME}>,readableTimeString.cpp,plainTimeString.cpp>
 )
 
 target_link_libraries(forte PRIVATE forte-arch)
@@ -57,9 +55,3 @@ set_property(CACHE FORTE_ARCHITECTURE PROPERTY STRINGS None ${architectures})
 if (FORTE_ARCHITECTURE STREQUAL "None")
     message(FATAL_ERROR "No FORTE_ARCHITECTURE selected. Use one of ${architectures}")
 endif()
-
-set(FORTE_LOGGER_BUFFER_SIZE "300" CACHE STRING "Buffer length of the logger")
-mark_as_advanced(FORTE_LOGGER_BUFFER_SIZE)
-target_compile_definitions(forte-arch PRIVATE FORTE_LOGGER_BUFFER_SIZE=${FORTE_LOGGER_BUFFER_SIZE})
-
-option(FORTE_LOGGER_READABLE_TIME "Logger time in IEC 61131-3 date time literal" OFF)

@@ -14,7 +14,7 @@
 #include <linux/gpio.h>
 #include <sys/ioctl.h>
 #include <poll.h>
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include <fcntl.h>
 #include <unistd.h>
 

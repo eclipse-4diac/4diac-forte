@@ -35,7 +35,7 @@
 #include "core/datatypes/forte_date_and_time.h"
 #include "core/datatypes/forte_time.h"
 #include "core/datatypes/forte_array.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/lua/luamodule.h"
 
 extern "C" {

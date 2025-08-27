@@ -12,7 +12,7 @@
  *******************************************************************************/
 #include <sockhand.h> //needs to be first pulls in the platform specific includes
 #include "arch/fdselecthand.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/devexec.h"
 #include "core/cominfra/commfb.h"
 #include "core/cominfra/comCallback.h"

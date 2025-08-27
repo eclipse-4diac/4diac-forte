@@ -16,7 +16,7 @@
 #include <cstring>
 #include <forte_sync.h>
 #include "core/datatypes/forte_wstring.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 #include "core/io/configFB/io_slave_multi.h"
 #include "slaveHandle/slaveHandle.h"

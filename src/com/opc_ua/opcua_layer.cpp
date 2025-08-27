@@ -22,7 +22,7 @@
 #include "com/opc_ua/opcua_helper.h"
 #include "com/opc_ua/opcua_local_handler.h"
 #include "core/cominfra/basecommfb.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include <cstddef>
 #include "core/datatypes/forte_string.h"
 #include "core/util/criticalregion.h"

@@ -15,7 +15,7 @@
  *******************************************************************************/
 
 #include "pin.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include <unistd.h>
 #include <fcntl.h>
 #include <string>

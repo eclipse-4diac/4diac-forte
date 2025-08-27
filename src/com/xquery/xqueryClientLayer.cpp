@@ -10,7 +10,7 @@
 
 #include "core/extevhan.h"
 #include "core/cominfra/commfb.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "xqueryClientLayer.h"
 #include "xqueryHandler.h"
 #include "core/cominfra/comlayersmanager.h"

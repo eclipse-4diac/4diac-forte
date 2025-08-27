@@ -24,7 +24,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include "arch/devlog.h"
+#include "../util/devlog.h"
 #include "core/util/string_utils.h"
 
 using namespace forte::com_infra;

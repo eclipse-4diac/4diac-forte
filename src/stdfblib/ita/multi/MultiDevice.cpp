@@ -16,7 +16,7 @@
 #include "stdfblib/ita/OPCUA_MGR.h"
 #include "stdfblib/ita/multi/utils.h"
 #include "core/devicefactory.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 using namespace forte::core::literals;
 
@@ -36,9 +36,7 @@ namespace {
   [[maybe_unused]] const forte::core::DeviceFactory::EntryImpl<MultiDevice> entry("Multi"_STRID);
 } // namespace
 
-MultiDevice::MultiDevice(const std::string_view paMGRID) :
-    CDevice(cFBInterfaceSpec, {}),
-    mMGRID(paMGRID) {
+MultiDevice::MultiDevice(const std::string_view paMGRID) : CDevice(cFBInterfaceSpec, {}), mMGRID(paMGRID) {
 
   // avoid creating another MultiDevice in case it was set to it in cmake
   if (forte::core::DeviceFactory::getDefaultImpl() == "Multi"_STRID) {

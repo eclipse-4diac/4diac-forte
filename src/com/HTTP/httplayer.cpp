@@ -18,7 +18,7 @@
 
 #include "httplayer.h"
 #include "httpparser.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include <string.h>
 #include "core/cominfra/basecommfb.h"
 #include "http_handler.h"

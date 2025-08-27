@@ -12,7 +12,7 @@
  *******************************************************************************/
 
 #include "com/opc_ua/opcua_client_config_parser.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 const char *const CUA_ClientConfigFileParser::mKeyNames[] = {"endpoint",      "username",   "password",
 #ifdef UA_ENABLE_ENCRYPTION

@@ -14,7 +14,7 @@
  *******************************************************************************/
 
 #include "core/io/mapper/io_observer.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 using namespace forte::core::io;
 

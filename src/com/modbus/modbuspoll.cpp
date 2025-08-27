@@ -14,7 +14,7 @@
 #include "modbushandler.h"
 #include "modbusioblock.h"
 
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 #include <modbus.h>
 

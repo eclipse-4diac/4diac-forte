@@ -16,7 +16,7 @@
 #include <cyg/kernel/kapi.h>
 #include "core/datatype.h"
 #include "arch/threadbase.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 class CECOSThread;
 typedef CECOSThread CThread; // allows that doxygen can generate better documentation

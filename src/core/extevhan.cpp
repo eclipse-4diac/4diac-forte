@@ -13,7 +13,7 @@
  *******************************************************************************/
 #include "core/extevhan.h"
 #include "core/devexec.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 constinit std::vector<std::function<std::unique_ptr<CExternalEventHandler>(CDeviceExecution &)>>
     CExternalEventHandler::smEventHandlerFactories;

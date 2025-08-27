@@ -15,7 +15,7 @@
  *******************************************************************************/
 
 #include "stdfblib/ita/ForteBootFileLoader.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/datatypes/forte_string.h"
 #include "core/mgmcmd.h"
 #include "core/mgmcmdstruct.h"

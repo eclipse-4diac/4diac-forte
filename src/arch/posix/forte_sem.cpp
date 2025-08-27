@@ -21,7 +21,7 @@
 #include <cassert>
 
 #include "forte_sem.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "arch/utils/timespec_utils.h"
 #include "core/util/criticalregion.h"
 

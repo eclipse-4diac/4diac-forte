@@ -13,7 +13,7 @@
 #include "core/cominfra/commfb.h"
 #include "core/util/criticalregion.h"
 #include "core/datatypes/forte_string.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "xqueryClientLayer.h"
 extern "C" {
 #include <basexdbc.h>

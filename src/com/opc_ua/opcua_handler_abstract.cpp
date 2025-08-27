@@ -12,7 +12,7 @@
  *******************************************************************************/
 #include "com/opc_ua/opcua_handler_abstract.h"
 #include "arch/forte_printer.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/util/parameterParser.h"
 #include <unordered_map>
 

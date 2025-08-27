@@ -11,7 +11,7 @@
  *******************************************************************************/
 
 #include "sysfsprocint.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/util/extevhandlerhelper.h"
 #include "core/util/criticalregion.h"
 #include <string>

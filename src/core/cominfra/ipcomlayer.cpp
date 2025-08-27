@@ -17,7 +17,7 @@
 #include "core/cominfra/ipcomlayer.h"
 
 #include "comlayersmanager.h"
-#include "arch/devlog.h"
+#include "../util/devlog.h"
 #include "core/cominfra/basecommfb.h"
 #include <forte_thread.h>
 #include "core/util/string_utils.h"

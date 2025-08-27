@@ -26,7 +26,7 @@
 #include "core/datatypes/forte_udint.h"
 #include "core/datatypes/forte_lint.h"
 #include "core/datatypes/forte_ulint.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include <map>
 
 using namespace forte::core::literals;

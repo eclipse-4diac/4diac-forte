@@ -21,7 +21,7 @@
 #include "core/util/string_utils.h"
 #include <string.h>
 #include <stdlib.h>
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include <cstdio>
 
 char CIEC_ANY_STRING::smNullString[1] = {'\0'};

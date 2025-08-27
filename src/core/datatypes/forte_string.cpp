@@ -22,7 +22,7 @@
 #include "core/datatypes/forte_string.h"
 #include <cstddef>
 #include "core/datatype.h"
-#include "arch/devlog.h"
+#include "../util/devlog.h"
 #include "core/datatypes/unicode_utils.h"
 #include <string_view>
 #include <charconv>

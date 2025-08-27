@@ -17,7 +17,7 @@
 #include "core/extevhan.h"
 #include <forte_sync.h>
 #include <forte_thread.h>
-#include "arch/devlog.h"
+#include "../../util/devlog.h"
 
 #include "core/io/mapper/io_handle.h"
 

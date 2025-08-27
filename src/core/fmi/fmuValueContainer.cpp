@@ -12,7 +12,7 @@
 
 #include "core/fmi/fmuValueContainer.h"
 #include "core/fmi/fmuInstance.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 fmuValueContainer::fmuValueContainer(fmuValueContainer::valueType pa_valueType, bool pa_needPointerToValue) :
     mErrorOcurred(false),

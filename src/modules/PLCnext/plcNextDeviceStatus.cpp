@@ -20,7 +20,7 @@
 #include "Arp/Device/Interface/Services/IDeviceStatusService.hpp"
 
 #include <libgen.h>
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "plcNextDeviceStatus.h"
 
 #include "core/startuphook.h"

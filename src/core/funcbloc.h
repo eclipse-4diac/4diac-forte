@@ -29,7 +29,7 @@
 #include "core/dataconn.h"
 #include "core/inoutdataconn.h"
 #include "core/eventconn.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/stringid.h"
 #include "core/forte_st_iterator.h"
 #include "core/forte_st_util.h"

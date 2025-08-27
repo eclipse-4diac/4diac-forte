@@ -103,3 +103,10 @@ mark_as_advanced(FORTE_ECET_FIXED_INCLUDE)
 configure_file(ecetfactory_config.h.in
         "${FORTE_GENERATED_FILES_DIR}/ecetfactory_config.h"
 )
+
+set(FORTE_LOGGER_BUFFER_SIZE "300" CACHE STRING "Buffer length of the logger")
+mark_as_advanced(FORTE_LOGGER_BUFFER_SIZE)
+
+configure_file(devlog_config.h.in
+        "${FORTE_GENERATED_FILES_DIR}/devlog_config.h"
+)

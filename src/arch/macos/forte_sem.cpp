@@ -14,7 +14,7 @@
  *******************************************************************************/
 
 #include "forte_sem.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include <errno.h>
 #include <string.h>
 #include <time.h>

@@ -21,7 +21,7 @@ using namespace forte::core::literals;
 
 #include "core/datatypes/forte_real.h"
 #include "core/datatypes/forte_lreal.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 int CIEC_ANY::dummyInit() {
   return 0;

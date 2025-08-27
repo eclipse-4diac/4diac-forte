@@ -13,7 +13,7 @@
 #include "slaveHandle.h"
 #include "core/io/mapper/io_mapper.h"
 #include "../slaveHandler.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 PLCnextSlaveHandle::PLCnextSlaveHandle(forte::core::io::IODeviceController *paController,
                                        forte::core::io::IOMapper::Direction paDirection,

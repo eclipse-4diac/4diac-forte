@@ -14,7 +14,7 @@
  *******************************************************************************/
 #include <fortealloc.h>
 #include "forte_thread.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include <errno.h>
 #include <cstring>
 #include <signal.h>

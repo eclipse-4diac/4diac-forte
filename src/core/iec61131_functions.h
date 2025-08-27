@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/datatypes/convert/convert_functions.h"
 #include "core/iec61131_cast_helper.h"
 #include "core/datatypes/forte_struct.h"

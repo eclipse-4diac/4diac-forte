@@ -15,7 +15,7 @@
 #include "spi.h"
 #include <sstream>
 #include <string>
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include <sys/ioctl.h>
 
 extern "C" { // missing in some versions of spidev.h

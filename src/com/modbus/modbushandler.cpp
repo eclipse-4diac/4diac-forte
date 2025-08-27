@@ -13,7 +13,7 @@
 #include <algorithm>
 #include "modbushandler.h"
 #include "modbuslayer.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/devexec.h"
 #include "core/cominfra/commfb.h"
 

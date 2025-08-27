@@ -19,7 +19,7 @@
 #include <chrono>
 
 #include "arch/forte_architecture_time.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 std::filesystem::path BarectfPlatformFORTE::traceDirectory = std::filesystem::path();
 bool BarectfPlatformFORTE::enabled = false;

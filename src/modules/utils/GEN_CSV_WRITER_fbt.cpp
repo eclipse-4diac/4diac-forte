@@ -23,7 +23,7 @@
 using namespace forte::core::literals;
 
 #include <errno.h>
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER, "GEN_CSV_WRITER"_STRID);
 
@@ -56,8 +56,7 @@ void GEN_CSV_WRITER::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
   }
 }
 
-GEN_CSV_WRITER::GEN_CSV_WRITER(const forte::core::StringId paInstanceNameId,
-                               forte::core::CFBContainer &paContainer) :
+GEN_CSV_WRITER::GEN_CSV_WRITER(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_CNF(*this, 1),

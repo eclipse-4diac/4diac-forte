@@ -18,7 +18,7 @@
 
 using namespace forte::core::literals;
 
-#include "arch/devlog.h"
+#include "../util/devlog.h"
 
 #include "core/datatypes/unicode_utils.h"
 

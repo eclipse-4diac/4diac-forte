@@ -14,7 +14,7 @@
 
 #include "core/io/eIO/CeSpec.h"
 
-#include "arch/devlog.h"
+#include "../../util/devlog.h"
 #include "core/adapter.h"
 
 class FORTE_eGenAdapter;

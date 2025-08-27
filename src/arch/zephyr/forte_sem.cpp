@@ -11,7 +11,7 @@
  ************************************************************************************/
 
 #include "forte_sem.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 namespace forte {
   namespace arch {

@@ -14,7 +14,7 @@
  *******************************************************************************/
 #include <sockhand.h> //needs to be first pulls in the platform specific includes
 #include "arch/bsdsocketinterf.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include <string.h>
 
 void CBSDSocketInterface::closeSocket(TSocketDescriptor paSockD) {

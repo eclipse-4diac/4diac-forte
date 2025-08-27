@@ -11,7 +11,7 @@
  *******************************************************************************/
 
 #include "core/util/configFileParser.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/util/parameterParser.h"
 #include <string.h>
 

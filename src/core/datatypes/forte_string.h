@@ -29,7 +29,7 @@
 #include "core/datatypes/forte_any_string.h"
 #include "core/datatypes/forte_any_int.h"
 #include "core/datatypes/forte_char.h"
-#include "arch/devlog.h"
+#include "../util/devlog.h"
 #include <string>
 #include <stdlib.h>
 

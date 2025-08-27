@@ -13,11 +13,15 @@
 # core/util
 # ############################################################################
 
+option(FORTE_LOGGER_READABLE_TIME "Logger time in IEC 61131-3 date time literal" OFF)
+
 target_sources(forte-core PRIVATE
             factory.h
             hook.h
             singlet.h
             criticalregion.h
+        devlog.h
+        devlog.cpp
             fixed_string.h
             fortearray.h
             inplace_vector.h
@@ -28,4 +32,5 @@ target_sources(forte-core PRIVATE
             parameterParser.cpp
             configFileParser.h
             configFileParser.cpp
+        $<IF:$<BOOL:${FORTE_LOGGER_READABLE_TIME}>,${CMAKE_CURRENT_SOURCE_DIR}/readableTimeString.cpp,${CMAKE_CURRENT_SOURCE_DIR}/plainTimeString.cpp>
 )

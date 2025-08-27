@@ -14,23 +14,25 @@
 #include "EliteBoardDeviceController.h"
 #include "handle/PinHandle.h"
 
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/datatypes/forte_word.h"
 
-#define POLL_FREQUENCY_Hz     1000
-#define PA_POLL_INTERVAL_MS   1000/POLL_FREQUENCY_Hz
+#define POLL_FREQUENCY_Hz 1000
+#define PA_POLL_INTERVAL_MS 1000 / POLL_FREQUENCY_Hz
 
-EliteBoardDeviceController::EliteBoardDeviceController(CDeviceExecution& paDeviceExecution)
-    : forte::core::io::IODevicePollController(paDeviceExecution, PA_POLL_INTERVAL_MS){
+EliteBoardDeviceController::EliteBoardDeviceController(CDeviceExecution &paDeviceExecution) :
+    forte::core::io::IODevicePollController(paDeviceExecution, PA_POLL_INTERVAL_MS) {
 }
 
-EliteBoardDeviceController::~EliteBoardDeviceController() {}
+EliteBoardDeviceController::~EliteBoardDeviceController() {
+}
 
 /* starts the loop thread (when it is not already running) which executes the `controllerPoll` function */
 void EliteBoardDeviceController::startThread() {
   if (!isAlive()) {
     EliteBoardDeviceController::start();
-    DEVLOG_DEBUG("[EliteBoardDeviceController] loop running at %3d Hz / %3d ms cycle time\r\n", POLL_FREQUENCY_Hz, PA_POLL_INTERVAL_MS);
+    DEVLOG_DEBUG("[EliteBoardDeviceController] loop running at %3d Hz / %3d ms cycle time\r\n", POLL_FREQUENCY_Hz,
+                 PA_POLL_INTERVAL_MS);
   }
 }
 
@@ -44,8 +46,7 @@ EliteBoardDeviceController::IOHandle *EliteBoardDeviceController::createIOHandle
       handle = new IOHandleGPIO(this, desc);
       break;
     }
-    default:
-      break;
+    default: break;
   }
   startThread();
   return static_cast<IOHandle *>(handle);

@@ -17,7 +17,7 @@
 #include <iostream>
 #include <fstream>
 #include <string.h>
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/util/string_utils.h"
 #include <tinyxml.h>
 

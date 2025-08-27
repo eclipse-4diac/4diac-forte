@@ -18,7 +18,7 @@
 #include <task.h>
 
 #include "core/datatype.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/datatypes/forte_time.h"
 #include "arch/threadbase.h"
 #include "forte_sync.h"

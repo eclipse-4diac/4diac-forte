@@ -13,7 +13,7 @@
 #include <sys/socket.h>
 #include <net/if.h>
 #include "tsn_layer.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/cominfra/comlayersmanager.h"
 #include "core/cominfra/commfb.h"
 #include <stdio.h>

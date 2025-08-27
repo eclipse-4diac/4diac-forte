@@ -25,7 +25,7 @@
 #include <thread>
 #include <pthread.h>
 #include "core/util/criticalregion.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 #include "plcNextDeviceInterface.h"
 #include "plcNextDeviceStatus.h"

@@ -13,7 +13,7 @@
 
 #include "MQTTClientConfigParser.h"
 
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 const char *const CMQTTClientConfigFileParser::mConfigKeysNames[] = {"endpoint", "username", "password"};
 

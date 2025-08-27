@@ -29,7 +29,7 @@
 
 #include "core/datatypes/forte_array.h"
 #include <stdexcept>
-#include "arch/devlog.h"
+#include "../util/devlog.h"
 #include <utility>
 #include <memory>
 

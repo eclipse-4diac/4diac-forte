@@ -10,7 +10,7 @@
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "posixsercommlayer.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/cominfra/commfb.h"
 #include <unistd.h>
 #include <errno.h>

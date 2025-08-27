@@ -21,7 +21,7 @@
 #include "ecetfactory.h"
 #include "core/esfb.h"
 #include "core/util/criticalregion.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 using namespace forte::core::literals;
 

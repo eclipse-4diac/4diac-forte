@@ -15,7 +15,7 @@
 
 #include "com/opc_ua/opcua_helper.h"
 #include "core/util/parameterParser.h"
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 #include "core/datatypes/convert/convert_functions.h"
 #include "core/datatypes/forte_date.h"
 #include "core/datatypes/forte_struct.h"
