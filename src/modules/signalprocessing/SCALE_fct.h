@@ -16,13 +16,13 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_real.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_real.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_signalprocessing__SCALE)
@@ -31,7 +31,6 @@ class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
@@ -39,8 +38,7 @@ class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_signalprocessing__SCALE(forte::core::StringId paInstanceNameId,
-                                  forte::core::CFBContainer &paContainer);
+    FORTE_signalprocessing__SCALE(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_REAL var_IN;
     CIEC_REAL var_MAX_IN;

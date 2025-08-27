@@ -13,7 +13,7 @@
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
-#include "core/datatypes/forte_any_duration_variant.h"
+#include "forte/datatypes/forte_any_duration_variant.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_ANY_DURATION_VARIANT_function_test)
 

@@ -13,9 +13,9 @@
 #ifndef _GETARRAYRESPONSEFROMJSON_H_
 #define _GETARRAYRESPONSEFROMJSON_H_
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_any.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_any.h"
 
 class FORTE_GetArrayResponseFromJSON : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_GetArrayResponseFromJSON)
@@ -37,7 +37,6 @@ class FORTE_GetArrayResponseFromJSON : public CFunctionBlock {
 
     static const TEventID scmEventCNFID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     bool isResponseEmpty(char *paText);
@@ -46,7 +45,7 @@ class FORTE_GetArrayResponseFromJSON : public CFunctionBlock {
     FORTE_GetArrayResponseFromJSON(const forte::core::StringId paInstanceNameId,
                                    forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_GetArrayResponseFromJSON() override = default;
+        ~FORTE_GetArrayResponseFromJSON() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

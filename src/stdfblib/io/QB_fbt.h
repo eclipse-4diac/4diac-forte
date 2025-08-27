@@ -12,15 +12,15 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_byte.h"
-#include "core/datatypes/forte_string.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_byte.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 #include "core/fmi/processinterface.h"
 
@@ -32,7 +32,6 @@ class FORTE_QB final : public CProcessInterface {
     static const TEventID scmEventREQID = 1;
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventCNFID = 1;
-
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 

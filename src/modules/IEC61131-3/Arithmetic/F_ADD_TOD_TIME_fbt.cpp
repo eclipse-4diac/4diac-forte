@@ -15,7 +15,7 @@
  *******************************************************************************/
 
 #include "F_ADD_TOD_TIME_fbt.h"
-#include "core/datatypes/forte_time_of_day.h"
+#include "forte/datatypes/forte_time_of_day.h"
 
 using namespace forte::core::literals;
 
@@ -23,17 +23,15 @@ DEFINE_FIRMWARE_FB(FORTE_F_ADD_TOD_TIME, "F_ADD_TOD_TIME"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};
-  
-  
+
   const auto cDataOutputNames = std::array{"OUT"_STRID};
-  
-  
+
   const auto cEventInputNames = std::array{"REQ"_STRID};
   const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  
+
   const auto cEventOutputNames = std::array{"CNF"_STRID};
   const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -45,8 +43,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 FORTE_F_ADD_TOD_TIME::FORTE_F_ADD_TOD_TIME(const forte::core::StringId paInstanceNameId,
                                            forte::core::CFBContainer &paContainer) :

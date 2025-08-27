@@ -21,18 +21,18 @@
 
 using namespace forte::core::literals;
 
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 #include "CAdsConnectionManager.h"
 
 DEFINE_FIRMWARE_FB(FORTE_ADS_SERVER_CONFIG, "ADS_SERVER_CONFIG"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{"QI"_STRID, "FRIENDLY_NAME"_STRID, "SERVER_ADS_ADDRESS"_STRID, "ADS_PORT"_STRID,
-                                          "SERVER_IPV4_OR_HOSTNAME"_STRID};
+  const auto cDataInputNames = std::array{"QI"_STRID, "FRIENDLY_NAME"_STRID, "SERVER_ADS_ADDRESS"_STRID,
+                                          "ADS_PORT"_STRID, "SERVER_IPV4_OR_HOSTNAME"_STRID};
   const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
   const auto cEventInputNames = std::array{"INIT"_STRID};
   const auto cEventInputTypeIds = std::array{"EInit"_STRID};

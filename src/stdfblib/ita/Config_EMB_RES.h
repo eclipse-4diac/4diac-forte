@@ -12,10 +12,10 @@
  *******************************************************************************/
 #pragma once
 
-#include "core/resource.h"
+#include "forte/resource.h"
 #include "E_RESTART_fbt.h"
 
-#include "core/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_wstring.h"
 
 class Config_EMB_RES final : public CResource {
     DECLARE_FIRMWARE_FB(Config_EMB_RES);

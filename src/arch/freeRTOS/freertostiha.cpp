@@ -9,7 +9,7 @@
  * Contributors:
  * Milan Vathoopan, Guru Chandrasekhara - initial API and implementation and/or initial documentation
  ************************************************************************************/
-#include "core/devexec.h"
+#include "forte/devexec.h"
 #include "arch/fortenew.h"
 #include "freertostiha.h"
 

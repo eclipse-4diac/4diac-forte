@@ -16,8 +16,8 @@
 
 #pragma once
 
-#include "core/io/configFB/io_adapter_multi.h"
-#include "core/datatypes/forte_uint.h"
+#include "forte/io/configFB/io_adapter_multi.h"
+#include "forte/datatypes/forte_uint.h"
 
 class FORTE_EBBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_EBBusAdapter)

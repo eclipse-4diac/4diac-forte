@@ -12,7 +12,8 @@
  *******************************************************************************/
 
 #include "com/opc_ua/opcua_client_config_parser.h"
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
+#include "../../../core/src/util/configFileParser.h"
 
 const char *const CUA_ClientConfigFileParser::mKeyNames[] = {"endpoint",      "username",   "password",
 #ifdef UA_ENABLE_ENCRYPTION

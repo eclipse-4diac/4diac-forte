@@ -19,14 +19,14 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_dword.h"
-#include "core/datatypes/forte_byte.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_dword.h"
+#include "forte/datatypes/forte_byte.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_ASSEMBLE_DWORD_FROM_QUARTERS final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_QUARTERS)
@@ -35,7 +35,6 @@ class FORTE_ASSEMBLE_DWORD_FROM_QUARTERS final : public CFunctionBlock {
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
@@ -43,8 +42,7 @@ class FORTE_ASSEMBLE_DWORD_FROM_QUARTERS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_ASSEMBLE_DWORD_FROM_QUARTERS(forte::core::StringId paInstanceNameId,
-                                       forte::core::CFBContainer &paContainer);
+    FORTE_ASSEMBLE_DWORD_FROM_QUARTERS(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BYTE var_QUARTER_BYTE_00;
     CIEC_BYTE var_QUARTER_BYTE_01;

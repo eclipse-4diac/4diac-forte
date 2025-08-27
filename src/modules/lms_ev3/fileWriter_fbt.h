@@ -13,7 +13,7 @@
 #ifndef _FILEWRITER_H_
 #define _FILEWRITER_H_
 
-#include "core/funcbloc.h"
+#include "forte/funcbloc.h"
 #include <fstream>
 
 class fileWriter : public CFunctionBlock {
@@ -53,7 +53,6 @@ class fileWriter : public CFunctionBlock {
 
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventCNFID = 1;
-
 
     static const char *const scmOK;
     static const char *const scmNotInitialised;

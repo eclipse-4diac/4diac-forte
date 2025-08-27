@@ -19,7 +19,7 @@
 #include <string>
 #include "forte_boost_output_support.h"
 
-#include "core/datatypes/forte_time.h"
+#include "forte/datatypes/forte_time.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_TIME_function_test)
 BOOST_AUTO_TEST_CASE(Type_test) {

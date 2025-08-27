@@ -18,7 +18,7 @@
  *....Franz Höpfinger - Update it to represent latest Generation Format from 4diac IDE. no Functional Changes.
  *******************************************************************************/
 #include "GEN_E_MUX_fbt.h"
-#include "core/util/string_utils.h"
+#include "forte/util/string_utils.h"
 
 using namespace forte::core::literals;
 

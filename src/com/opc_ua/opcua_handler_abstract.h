@@ -13,8 +13,8 @@
 #ifndef SRC_MODULES_OPC_UA_OPCUA_HANDLER_ABSTRACT_H_
 #define SRC_MODULES_OPC_UA_OPCUA_HANDLER_ABSTRACT_H_
 
-#include "core/extevhan.h"
-#include "core/esfb.h"
+#include "forte/extevhan.h"
+#include "forte/esfb.h"
 #include "com/opc_ua/opcua_action_info.h"
 
 /**

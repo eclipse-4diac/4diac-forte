@@ -13,7 +13,7 @@
 #ifndef SRC_MODULES_FESTO_CECC_FESTO_CONTROLLER_H_
 #define SRC_MODULES_FESTO_CECC_FESTO_CONTROLLER_H_
 
-#include "core/io/device/io_controller_poll.h"
+#include "forte/io/device/io_controller_poll.h"
 #include <linux/spi/spidev.h>
 
 class PLC01A1Controller : public forte::core::io::IODevicePollController {

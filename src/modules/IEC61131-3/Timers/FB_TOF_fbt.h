@@ -16,22 +16,22 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_time.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_time.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_FB_TOF final : public CFunctionBlock {
-  DECLARE_FIRMWARE_FB(FORTE_FB_TOF)
+    DECLARE_FIRMWARE_FB(FORTE_FB_TOF)
 
   private:
     static const TEventID scmEventCNFID = 0;
     static const TEventID scmEventREQID = 0;
-    
+
     bool fallingEdge;
     bool notFirstRisingEdge;
     CIEC_TIME start;
@@ -78,4 +78,3 @@ class FORTE_FB_TOF final : public CFunctionBlock {
       evt_REQ(paIN, paPT, paQ, paET);
     }
 };
-

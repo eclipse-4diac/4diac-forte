@@ -14,10 +14,10 @@
 #ifndef _FORTE_DATATYPETEST_H_
 #define _FORTE_DATATYPETEST_H_
 
-#include "core/datatypes/forte_struct.h"
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_sint.h"
-#include "core/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_struct.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_sint.h"
+#include "forte/datatypes/forte_bool.h"
 
 class CIEC_DataTypeTest : public CIEC_STRUCT {
     DECLARE_FIRMWARE_DATATYPE(DataTypeTest)

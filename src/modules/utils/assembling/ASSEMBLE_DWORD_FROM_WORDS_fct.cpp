@@ -21,20 +21,19 @@
 
 using namespace forte::core::literals;
 
-#include "core/datatypes/forte_dword.h"
-#include "core/datatypes/forte_word.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_dword.h"
+#include "forte/datatypes/forte_word.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 #include "ASSEMBLE_DWORD_FROM_WORDS_fct.h"
 
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_WORDS, "ASSEMBLE_DWORD_FROM_WORDS"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{"WORD_00"_STRID,
-                                                                                             "WORD_01"_STRID};
+  const auto cDataInputNames = std::array{"WORD_00"_STRID, "WORD_01"_STRID};
   const auto cDataOutputNames = std::array{""_STRID};
   const auto cEventInputNames = std::array{"REQ"_STRID};
   const auto cEventInputTypeIds = std::array{"Event"_STRID};
@@ -51,8 +50,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 FORTE_ASSEMBLE_DWORD_FROM_WORDS::FORTE_ASSEMBLE_DWORD_FROM_WORDS(const forte::core::StringId paInstanceNameId,
                                                                  forte::core::CFBContainer &paContainer) :

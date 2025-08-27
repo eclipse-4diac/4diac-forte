@@ -15,7 +15,7 @@
  *******************************************************************************/
 
 #include "GET_AT_INDEX_fbt.h"
-#include "core/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_bool.h"
 
 using namespace forte::core::literals;
 
@@ -23,17 +23,15 @@ DEFINE_FIRMWARE_FB(FORTE_GET_AT_INDEX, "GET_AT_INDEX"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN_ARRAY"_STRID, "INDEX"_STRID};
-  
-  
+
   const auto cDataOutputNames = std::array{"QO"_STRID, "OUT"_STRID};
-  
-  
+
   const auto cEventInputNames = std::array{"REQ"_STRID};
   const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  
+
   const auto cEventOutputNames = std::array{"CNF"_STRID};
   const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -45,8 +43,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const forte::core::StringId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :

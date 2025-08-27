@@ -15,13 +15,13 @@
 
 using namespace forte::core::literals;
 
-#include "core/datatypes/forte_uint.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_CTU, "E_CTU"_STRID)
 
@@ -43,8 +43,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 FORTE_E_CTU::FORTE_E_CTU(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),

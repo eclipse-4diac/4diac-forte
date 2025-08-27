@@ -15,12 +15,12 @@
 
 using namespace forte::core::literals;
 
-#include "core/datatypes/forte_bool.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_SELECT, "E_SELECT"_STRID)
 
@@ -43,8 +43,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_SELECT::FORTE_E_SELECT(const forte::core::StringId paInstanceNameId,
-                               forte::core::CFBContainer &paContainer) :
+FORTE_E_SELECT::FORTE_E_SELECT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO(*this, 0),
     conn_G(nullptr) {

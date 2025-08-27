@@ -17,7 +17,7 @@
 
 #include <cyg/kernel/kernel.hxx>
 #include <cyg/kernel/sema.hxx>
-#include "core/datatype.h"
+#include "forte/datatype.h"
 
 namespace forte {
   namespace arch {

@@ -14,7 +14,7 @@
 #include "modbushandler.h"
 #include "modbusioblock.h"
 
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 
 #include <modbus.h>
 

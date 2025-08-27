@@ -10,7 +10,7 @@
  *   Alois Zoitl, Thomas Strasser, Gerhard Ebenhofer,
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "core/stringid.h"
+#include "forte/stringid.h"
 #include "stdfblib/ita/EMB_RES.h"
 
 using namespace forte::core::literals;

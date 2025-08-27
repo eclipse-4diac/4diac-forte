@@ -14,17 +14,17 @@
 
 #pragma once
 
-#include "core/simplefb.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_udint.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/simplefb.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_udint.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_FB_CTD_UDINT final : public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_FB_CTD_UDINT)
+    DECLARE_FIRMWARE_FB(FORTE_FB_CTD_UDINT)
 
   private:
     static const TEventID scmEventCNFID = 0;
@@ -67,7 +67,8 @@ class FORTE_FB_CTD_UDINT final : public CSimpleFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BOOL &paCD, const CIEC_BOOL &paLD, const CIEC_UDINT &paPV, CIEC_BOOL &paQ, CIEC_UDINT &paCV) {
+    void
+    evt_REQ(const CIEC_BOOL &paCD, const CIEC_BOOL &paLD, const CIEC_UDINT &paPV, CIEC_BOOL &paQ, CIEC_UDINT &paCV) {
       var_CD = paCD;
       var_LD = paLD;
       var_PV = paPV;
@@ -76,8 +77,8 @@ class FORTE_FB_CTD_UDINT final : public CSimpleFB {
       paCV = var_CV;
     }
 
-    void operator()(const CIEC_BOOL &paCD, const CIEC_BOOL &paLD, const CIEC_UDINT &paPV, CIEC_BOOL &paQ, CIEC_UDINT &paCV) {
+    void
+    operator()(const CIEC_BOOL &paCD, const CIEC_BOOL &paLD, const CIEC_UDINT &paPV, CIEC_BOOL &paQ, CIEC_UDINT &paCV) {
       evt_REQ(paCD, paLD, paPV, paQ, paCV);
     }
 };
-

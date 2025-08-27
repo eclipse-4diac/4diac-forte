@@ -18,8 +18,8 @@
 #ifndef _GEN_E_DEMUX_H_
 #define _GEN_E_DEMUX_H_
 
-#include "core/genfb.h"
-#include "core/datatypes/forte_uint.h"
+#include "forte/genfb.h"
+#include "forte/datatypes/forte_uint.h"
 
 #include <memory>
 

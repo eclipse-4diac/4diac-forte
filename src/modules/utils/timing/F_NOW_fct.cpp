@@ -19,12 +19,12 @@
 
 using namespace forte::core::literals;
 
-#include "core/datatypes/forte_date_and_time.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_date_and_time.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 #include "F_NOW_fct.h"
 
 DEFINE_FIRMWARE_FB(FORTE_utils__timing__F_NOW, "utils__timing__F_NOW"_STRID)

@@ -13,13 +13,13 @@
 #ifndef _FIELDSTOEVENTFILTER_H_
 #define _FIELDSTOEVENTFILTER_H_
 
-#include "core/basicfb.h"
-#include "core/datatypes/forte_date_and_time.h"
-#include "core/datatypes/forte_bool.h"
+#include "forte/basicfb.h"
+#include "forte/datatypes/forte_date_and_time.h"
+#include "forte/datatypes/forte_bool.h"
 #include <forte_arrowheadsystem.h>
 #include <forte_eventfilter.h>
-#include "core/datatypes/forte_wstring.h"
-#include "core/datatypes/forte_array.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_array.h"
 
 class FORTE_FieldsToEventFilter : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToEventFilter)
@@ -75,7 +75,6 @@ class FORTE_FieldsToEventFilter : public CBasicFB {
 
     static const TEventID scmEventCNFID = 0;
 
-
     void alg_REQ();
     static const TForteInt16 scmStateSTART = 0;
     static const TForteInt16 scmStateREQ = 1;
@@ -88,7 +87,7 @@ class FORTE_FieldsToEventFilter : public CBasicFB {
   public:
     FORTE_FieldsToEventFilter(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_FieldsToEventFilter() override = default;
+        ~FORTE_FieldsToEventFilter() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

@@ -17,13 +17,13 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_time.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_time.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_utils__timing__F_NOW_MONOTONIC final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_utils__timing__F_NOW_MONOTONIC)
@@ -31,7 +31,6 @@ class FORTE_utils__timing__F_NOW_MONOTONIC final : public CFunctionBlock {
   private:
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
-
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 

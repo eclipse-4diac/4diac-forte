@@ -24,8 +24,8 @@
 #include <libgen.h>
 #include <thread>
 #include <pthread.h>
-#include "core/util/criticalregion.h"
-#include "core/util/devlog.h"
+#include "forte/util/criticalregion.h"
+#include "forte/util/devlog.h"
 
 #include "plcNextDeviceInterface.h"
 #include "plcNextDeviceStatus.h"

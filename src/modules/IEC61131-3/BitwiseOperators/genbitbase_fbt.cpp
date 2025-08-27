@@ -16,7 +16,7 @@
  *******************************************************************************/
 #include "genbitbase_fbt.h"
 #include <memory>
-#include "core/util/string_utils.h"
+#include "forte/util/string_utils.h"
 
 using namespace forte::core::literals;
 

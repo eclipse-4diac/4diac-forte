@@ -11,7 +11,7 @@
  *******************************************************************************/
 
 #include "../../core/fbtests/fbtester.h"
-#include "core/datatypes/forte_time.h"
+#include "forte/datatypes/forte_time.h"
 #include <E_DELAY.h>
 
 using namespace forte::core::literals;

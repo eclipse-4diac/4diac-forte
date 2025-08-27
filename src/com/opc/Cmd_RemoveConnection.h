@@ -15,7 +15,7 @@
 #ifndef CMDREMOVECONNECTION_H_
 #define CMDREMOVECONNECTION_H_
 #include "ICmd.h"
-#include "core/cominfra/comlayer.h"
+#include "forte/cominfra/comlayer.h"
 #include <vector>
 #include <string>
 

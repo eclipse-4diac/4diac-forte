@@ -14,13 +14,13 @@
  *******************************************************************************/
 
 #include "com/opc_ua/opcua_helper.h"
-#include "core/util/parameterParser.h"
-#include "core/util/devlog.h"
-#include "core/datatypes/convert/convert_functions.h"
-#include "core/datatypes/forte_date.h"
-#include "core/datatypes/forte_struct.h"
-#include "core/datatypes/forte_array.h"
-#include "core/util/string_utils.h"
+#include "forte/util/parameterParser.h"
+#include "forte/util/devlog.h"
+#include "forte/datatypes/convert/convert_functions.h"
+#include "forte/datatypes/forte_date.h"
+#include "forte/datatypes/forte_struct.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/util/string_utils.h"
 
 #include "opcua_types.h"
 

@@ -13,8 +13,8 @@
 #ifndef _FDHAND_H_
 #define _FDHAND_H_
 
-#include "core/fortelist.h"
-#include "core/extevhan.h"
+#include "../../core/src/fortelist.h"
+#include "forte/extevhan.h"
 #include <forte_thread.h>
 #include <forte_sync.h>
 #include <sockhand.h>

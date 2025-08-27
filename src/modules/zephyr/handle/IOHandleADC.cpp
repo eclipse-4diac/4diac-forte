@@ -11,7 +11,7 @@
  ************************************************************************************/
 
 #include "IOHandleADC.h"
-#include "core/datatypes/forte_dword.h"
+#include "forte/datatypes/forte_dword.h"
 
 IOHandleADC::IOHandleADC(IODeviceController *paDeviceCtrl, const adc_dt_spec *paADCSpec) :
     IOHandle(paDeviceCtrl, IOMapper::In, CIEC_ANY::e_DWORD),

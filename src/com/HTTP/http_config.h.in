@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "core/datatype.h"
+#include "forte/datatype.h"
 
 namespace forte::com::http {
   constexpr TForteUInt16 cgDefaultHttpListenPort = @FORTE_COM_HTTP_LISTENING_PORT@;

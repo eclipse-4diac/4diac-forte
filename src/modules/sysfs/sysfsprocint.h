@@ -15,7 +15,7 @@
 
 #include "../../stdfblib/io/processinterfacebase.h"
 #include <forte_thread.h>
-#include "core/extevhan.h"
+#include "forte/extevhan.h"
 #include <fstream>
 
 class CSysFsProcessInterface : public CProcessInterfaceBase {

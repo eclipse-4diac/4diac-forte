@@ -9,7 +9,7 @@
 
 #pragma once
 
-#include "core/io/configFB/io_slave_multi.h"
+#include "forte/io/configFB/io_slave_multi.h"
 #include "WagoBusAdapter.h"
 
 #define INIT_HANDLES(noOfBoolInputs, noOfBoolOutputs, noOfAnalogInputs, noOfAnalogOutputs)                             \

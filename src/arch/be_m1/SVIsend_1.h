@@ -13,9 +13,9 @@
 #define _SVISEND_1_H_
 
 #include "BE_SVIFB.h"
-#include "core/datatypes/forte_any.h"
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_any.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_bool.h"
 
 class FORTE_SVIsend_1 : public BE_SVIFB {
     DECLARE_FIRMWARE_FB(FORTE_SVIsend_1)

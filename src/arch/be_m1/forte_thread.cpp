@@ -11,7 +11,7 @@
  *   Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
 #include "forte_thread.h"
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 #include <errno.h>
 #include <BEModule.hpp>
 #include <unistd.h>

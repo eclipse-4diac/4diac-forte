@@ -15,8 +15,8 @@
 #include "opcprocessvar.h"
 #include "OPCGroup.h"
 #include "OPCItem.h"
-#include "core/util/devlog.h"
-#include "core/util/criticalregion.h"
+#include "forte/util/devlog.h"
+#include "forte/util/criticalregion.h"
 
 COpcProcessVar::COpcProcessVar(const std::string &paItemGroupName,
                                const std::string &paItemName,

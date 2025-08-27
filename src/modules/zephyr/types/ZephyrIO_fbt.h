@@ -19,15 +19,15 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_time.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_time.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 #pragma region includes
 #include <types/ZephyrIOBase.h>
 #pragma endregion includes
@@ -40,7 +40,6 @@ class FORTE_ZephyrIO final : public FORTE_ZephyrIOBase {
   private:
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventINITOID = 0;
-
 
 #pragma region remove executeEvent()
     // using FORTE_ZephyrIOBase::executeEvent

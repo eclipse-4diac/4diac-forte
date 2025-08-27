@@ -22,8 +22,8 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "core/datatypes/forte_wstring.h"
-#include "core/datatypes/forte_wchar.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_wchar.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_WSTRING_function_test)
 BOOST_AUTO_TEST_CASE(Type_test) {

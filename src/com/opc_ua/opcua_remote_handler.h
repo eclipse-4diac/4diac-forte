@@ -17,11 +17,10 @@
 #define SRC_MODULES_OPC_UA_OPCUACLIENTHANDLER_H_
 
 #include "forte_thread.h"
-#include "generated/forte_config.h"
-#include "generated/opcua_defaults.h"
+#include "forte/config/forte_config.h"
+#include "opcua_defaults.h"
 #include "com/opc_ua/opcua_handler_abstract.h"
 #include "com/opc_ua/opcua_client_information.h"
-#include "core/fortelist.h"
 
 /**
  * Parent class used by the remote handler and the connection thread. They both iterate a list of clients and executed

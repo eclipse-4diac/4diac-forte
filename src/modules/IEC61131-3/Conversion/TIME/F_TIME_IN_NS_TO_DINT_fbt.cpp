@@ -19,15 +19,15 @@
 
 using namespace forte::core::literals;
 
-#include "core/datatypes/forte_dint.h"
-#include "core/datatypes/forte_lint.h"
-#include "core/datatypes/forte_any_duration_variant.h"
-#include "core/datatypes/forte_time.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_dint.h"
+#include "forte/datatypes/forte_lint.h"
+#include "forte/datatypes/forte_any_duration_variant.h"
+#include "forte/datatypes/forte_time.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_F_TIME_IN_NS_TO_DINT, "F_TIME_IN_NS_TO_DINT"_STRID)
 
@@ -49,8 +49,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 FORTE_F_TIME_IN_NS_TO_DINT::FORTE_F_TIME_IN_NS_TO_DINT(const forte::core::StringId paInstanceNameId,
                                                        forte::core::CFBContainer &paContainer) :

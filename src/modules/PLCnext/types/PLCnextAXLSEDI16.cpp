@@ -22,11 +22,11 @@
 using namespace forte::core::literals;
 
 #include "PLCnextBusAdapter.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_PLCnextAXLSEDI16, "PLCnextAXLSEDI16"_STRID)
 

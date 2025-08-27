@@ -15,7 +15,7 @@
 #include "spi.h"
 #include <sstream>
 #include <string>
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 #include <sys/ioctl.h>
 
 extern "C" { // missing in some versions of spidev.h

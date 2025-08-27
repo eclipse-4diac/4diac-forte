@@ -14,15 +14,15 @@
  *                  - Proper memory usage and deallocation
  *******************************************************************************/
 #include "opccomlayer.h"
-#include "core/util/devlog.h"
-#include "core/cominfra/commfb.h"
-#include "core/util/parameterParser.h"
+#include "forte/util/devlog.h"
+#include "forte/cominfra/commfb.h"
+#include "forte/util/parameterParser.h"
 
 #include "opcconnection.h"
 #include "opcconnectionhandler.h"
 #include "Variant.h"
-#include "core/cominfra/comlayersmanager.h"
-#include "core/util/criticalregion.h"
+#include "forte/cominfra/comlayersmanager.h"
+#include "forte/util/criticalregion.h"
 #include <boost/lexical_cast.hpp>
 
 using namespace forte::com_infra;

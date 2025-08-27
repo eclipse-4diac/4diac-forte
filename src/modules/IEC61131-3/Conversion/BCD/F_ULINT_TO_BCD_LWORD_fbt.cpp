@@ -14,13 +14,13 @@
 
 #include "F_ULINT_TO_BCD_LWORD_fbt.h"
 
-#include "core/datatypes/forte_lword.h"
-#include "core/datatypes/forte_ulint.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_lword.h"
+#include "forte/datatypes/forte_ulint.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 using namespace forte::core::literals;
 

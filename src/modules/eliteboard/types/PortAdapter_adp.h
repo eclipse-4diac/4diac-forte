@@ -12,28 +12,28 @@
 
 #pragma once
 
-#include "core/adapter.h"
-#include "core/datatypes/forte_dword.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/adapter.h"
+#include "forte/datatypes/forte_dword.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_PortAdapter : public forte::CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_PortAdapter)
 
   private:
-    public:
-      static const TEventID scmEventMAPID = 0;
+  public:
+    static const TEventID scmEventMAPID = 0;
 
-    private:
-    public:
-      static const TEventID scmEventMAPOID = 0;
+  private:
+  public:
+    static const TEventID scmEventMAPOID = 0;
 
-    private:
-
+  private:
     void setInitialValues() override;
+
   public:
     CIEC_DWORD var_GPIO_Port_Addr;
 
@@ -49,16 +49,16 @@ class FORTE_PortAdapter : public forte::CAdapter {
 
   protected:
     FORTE_PortAdapter(forte::core::CFBContainer &paContainer,
-                  const SFBInterfaceSpec &paInterfaceSpec,
-                  const forte::core::StringId paInstanceNameId,
-                  TForteUInt8 paParentAdapterlistID);
+                      const SFBInterfaceSpec &paInterfaceSpec,
+                      const forte::core::StringId paInstanceNameId,
+                      TForteUInt8 paParentAdapterlistID);
 };
 
 class FORTE_PortAdapter_Plug final : public FORTE_PortAdapter {
   public:
     FORTE_PortAdapter_Plug(forte::core::StringId paInstanceNameId,
-                        forte::core::CFBContainer &paContainer,
-                        TForteUInt8 paParentAdapterlistID);
+                           forte::core::CFBContainer &paContainer,
+                           TForteUInt8 paParentAdapterlistID);
     ~FORTE_PortAdapter_Plug() override = default;
 
     CEventConnection conn_MAPO;
@@ -78,8 +78,8 @@ class FORTE_PortAdapter_Plug final : public FORTE_PortAdapter {
 class FORTE_PortAdapter_Socket final : public FORTE_PortAdapter {
   public:
     FORTE_PortAdapter_Socket(forte::core::StringId paInstanceNameId,
-                        forte::core::CFBContainer &paContainer,
-                        TForteUInt8 paParentAdapterlistID);
+                             forte::core::CFBContainer &paContainer,
+                             TForteUInt8 paParentAdapterlistID);
     ~FORTE_PortAdapter_Socket() override = default;
 
     CEventConnection conn_MAP;

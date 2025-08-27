@@ -13,7 +13,7 @@
  *******************************************************************************/
 
 #include "bit.h"
-#include "core/util/criticalregion.h"
+#include "forte/util/criticalregion.h"
 
 EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(forte::core::io::IODeviceController *paController,
                                              forte::core::io::IOMapper::Direction paDirection,

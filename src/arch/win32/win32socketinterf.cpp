@@ -17,7 +17,7 @@
 
 #include <sockhand.h> //needs to be first pulls in the platform specific includes
 #include "win32socketinterf.h"
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 #include "arch/forte_stringFunctions.h"
 
 #define S2WS(x) forte_stringToWstring(x)

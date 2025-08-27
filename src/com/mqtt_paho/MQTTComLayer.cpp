@@ -13,11 +13,11 @@
  *******************************************************************************/
 
 #include "MQTTComLayer.h"
-#include "core/util/parameterParser.h"
+#include "forte/util/parameterParser.h"
 #include "MQTTHandler.h"
 #include "MQTTClient.h"
-#include "core/cominfra/comlayersmanager.h"
-#include "core/cominfra/commfb.h"
+#include "forte/cominfra/comlayersmanager.h"
+#include "forte/cominfra/commfb.h"
 #include <string>
 
 using namespace forte::com_infra;

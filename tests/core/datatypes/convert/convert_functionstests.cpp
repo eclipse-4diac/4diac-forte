@@ -14,13 +14,13 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "core/datatypes/convert/convert_functions.h"
+#include "forte/datatypes/convert/convert_functions.h"
 
-#include "core/datatypes/forte_sint.h"
-#include "core/datatypes/forte_lint.h"
-#include "core/datatypes/forte_real.h"
-#include "core/datatypes/forte_date_and_time.h"
-#include "core/datatypes/forte_time_of_day.h"
+#include "forte/datatypes/forte_sint.h"
+#include "forte/datatypes/forte_lint.h"
+#include "forte/datatypes/forte_real.h"
+#include "forte/datatypes/forte_date_and_time.h"
+#include "forte/datatypes/forte_time_of_day.h"
 
 BOOST_AUTO_TEST_SUITE(convert_functions)
 

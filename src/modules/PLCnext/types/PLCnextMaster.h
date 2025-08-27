@@ -19,10 +19,10 @@
 
 #pragma once
 
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_uint.h"
-#include "core/datatypes/forte_wstring.h"
-#include "core/io/configFB/io_master_multi.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/io/configFB/io_master_multi.h"
 #include "PLCnextBusAdapter.h"
 
 class FORTE_PLCnextMaster final : public forte::core::io::IOConfigFBMultiMaster {
@@ -33,7 +33,6 @@ class FORTE_PLCnextMaster final : public forte::core::io::IOConfigFBMultiMaster 
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventINDID = 1;
     static const int scmBusAdapterOutAdpNum = 0;
-
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 

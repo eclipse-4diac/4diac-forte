@@ -13,7 +13,7 @@
 #ifndef SRC_ARCH_ZEPHYR_SEMAPHORE_H_
 #define SRC_ARCH_ZEPHYR_SEMAPHORE_H_
 
-#include "core/datatype.h"
+#include "forte/datatype.h"
 
 #include <zephyr/kernel.h>
 

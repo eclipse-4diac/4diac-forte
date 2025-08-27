@@ -13,12 +13,12 @@
 #ifndef _QUERYSERVICE_H_
 #define _QUERYSERVICE_H_
 
-#include "core/cfb.h"
-#include "core/typelib.h"
+#include "forte/cfb.h"
+#include "forte/typelib.h"
 #include <forte_servicequeryform.h>
 #include <forte_serviceregistryentry.h>
-#include "core/datatypes/forte_wstring.h"
-#include "core/datatypes/forte_array.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_array.h"
 #include "QueryServicesAdp_adp.h"
 
 class FORTE_QueryService : public CCompositeFB {

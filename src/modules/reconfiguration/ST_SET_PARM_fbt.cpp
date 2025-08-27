@@ -11,8 +11,8 @@
  *******************************************************************************/
 #include "ST_SET_PARM_fbt.h"
 
-#include "core/device.h"
-#include "core/mgmcmdstruct.h"
+#include "forte/device.h"
+#include "forte/mgmcmdstruct.h"
 
 using namespace forte::core::literals;
 

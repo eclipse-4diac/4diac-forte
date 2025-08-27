@@ -17,14 +17,14 @@
 #include "http_handler.h"
 #include "http_config.h"
 
-#include "core/devexec.h"
-#include "core/iec61131_functions.h"
-#include "core/cominfra/basecommfb.h"
-#include "core/util/criticalregion.h"
+#include "forte/devexec.h"
+#include "forte/iec61131_functions.h"
+#include "forte/cominfra/basecommfb.h"
+#include "forte/util/criticalregion.h"
 #include "httpparser.h"
 #include "arch/forte_printer.h"
-#include "core/cominfra/comlayer.h"
-#include "core/util/mainparam_utils.h"
+#include "forte/cominfra/comlayer.h"
+#include "forte/util/mainparam_utils.h"
 
 #include <string>
 

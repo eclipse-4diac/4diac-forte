@@ -14,13 +14,13 @@
 
 #include "F_LWORD_TO_USINT_fbt.h"
 
-#include "core/datatypes/forte_lword.h"
-#include "core/datatypes/forte_usint.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_lword.h"
+#include "forte/datatypes/forte_usint.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 using namespace forte::core::literals;
 
@@ -42,10 +42,10 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
+} // namespace
 
-
-FORTE_F_LWORD_TO_USINT::FORTE_F_LWORD_TO_USINT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_LWORD_TO_USINT::FORTE_F_LWORD_TO_USINT(const forte::core::StringId paInstanceNameId,
+                                               forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_LWORD),
     var_OUT(0_USINT),
@@ -60,12 +60,9 @@ void FORTE_F_LWORD_TO_USINT::setInitialValues() {
 }
 
 void FORTE_F_LWORD_TO_USINT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventREQID:
-      enterStateREQ(paECET);
-      break;
-    default:
-      break;
+  switch (paEIID) {
+    case scmEventREQID: enterStateREQ(paECET); break;
+    default: break;
   }
 }
 
@@ -75,57 +72,55 @@ void FORTE_F_LWORD_TO_USINT::enterStateREQ(CEventChainExecutionThread *const paE
 }
 
 void FORTE_F_LWORD_TO_USINT::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_F_LWORD_TO_USINT::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_F_LWORD_TO_USINT::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_F_LWORD_TO_USINT::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_F_LWORD_TO_USINT::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_F_LWORD_TO_USINT::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_F_LWORD_TO_USINT::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -137,6 +132,6 @@ CIEC_ANY *FORTE_F_LWORD_TO_USINT::getVarInternal(size_t) {
 
 void FORTE_F_LWORD_TO_USINT::alg_REQ(void) {
 
-  #line 2 "F_LWORD_TO_USINT.fbt"
+#line 2 "F_LWORD_TO_USINT.fbt"
   var_OUT = func_LWORD_TO_USINT(var_IN);
 }

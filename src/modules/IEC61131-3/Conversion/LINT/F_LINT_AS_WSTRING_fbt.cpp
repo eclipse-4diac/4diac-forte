@@ -14,13 +14,13 @@
 
 #include "F_LINT_AS_WSTRING_fbt.h"
 
-#include "core/datatypes/forte_lint.h"
-#include "core/datatypes/forte_wstring.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_lint.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 using namespace forte::core::literals;
 
@@ -42,8 +42,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 FORTE_F_LINT_AS_WSTRING::FORTE_F_LINT_AS_WSTRING(const forte::core::StringId paInstanceNameId,
                                                  forte::core::CFBContainer &paContainer) :

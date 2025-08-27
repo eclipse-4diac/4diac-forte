@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include "core/esfb.h"
+#include "forte/esfb.h"
 #include "forte_sem.h"
 
 class FORTE_E_RESTART final : public CEventSourceFB {
@@ -24,7 +24,6 @@ class FORTE_E_RESTART final : public CEventSourceFB {
     static const TEventID scmEventCOLDID = 0;
     static const TEventID scmEventWARMID = 1;
     static const TEventID scmEventSTOPID = 2;
-
 
     // semaphore to ensure proper handling of STOP execution state change
     forte::arch::CSemaphore mSuspendSemaphore;

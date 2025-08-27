@@ -16,8 +16,8 @@
 #include <cstring>
 #include <string_view>
 
-#include "core/util/string_utils.h"
-#include "core/device.h"
+#include "forte/util/string_utils.h"
+#include "forte/device.h"
 
 namespace forte::ita {
 

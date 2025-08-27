@@ -14,11 +14,11 @@
 
 #include "arch/forte_architecture_time.h"
 #include "com/opc_ua/opcua_client_information.h"
-#include "core/cominfra/basecommfb.h"
-#include "generated/opcua_defaults.h"
+#include "forte/cominfra/basecommfb.h"
+#include "opcua_defaults.h"
 #include "com/opc_ua/opcua_handler_abstract.h" //for logger
 #include "com/opc_ua/opcua_client_config_parser.h"
-#include "core/util/mainparam_utils.h"
+#include "forte/util/mainparam_utils.h"
 
 #include <algorithm>
 

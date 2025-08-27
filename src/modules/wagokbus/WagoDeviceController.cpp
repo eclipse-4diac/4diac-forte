@@ -12,7 +12,7 @@
 
 #include "WagoDeviceController.h"
 
-#include "core/util/criticalregion.h"
+#include "forte/util/criticalregion.h"
 #include "WagoHandle.h"
 
 const char *const WagoDeviceController::scmKBusDeviceName = "libpackbus";

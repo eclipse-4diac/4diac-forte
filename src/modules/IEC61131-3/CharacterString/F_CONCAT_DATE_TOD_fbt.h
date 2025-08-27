@@ -16,28 +16,23 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_date.h"
-#include "core/datatypes/forte_time_of_day.h"
-#include "core/datatypes/forte_date_and_time.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_date.h"
+#include "forte/datatypes/forte_time_of_day.h"
+#include "forte/datatypes/forte_date_and_time.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_F_CONCAT_DATE_TOD : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_F_CONCAT_DATE_TOD)
 
   private:
-
-
     static const TEventID scmEventREQID = 0;
 
-
     static const TEventID scmEventCNFID = 0;
-
-
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -45,8 +40,7 @@ class FORTE_F_CONCAT_DATE_TOD : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_F_CONCAT_DATE_TOD(const forte::core::StringId paInstanceNameId,
-                            forte::core::CFBContainer &paContainer);
+    FORTE_F_CONCAT_DATE_TOD(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_DATE var_IN1;
     CIEC_TIME_OF_DAY var_IN2;

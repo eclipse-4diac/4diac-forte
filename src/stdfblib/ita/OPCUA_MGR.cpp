@@ -13,8 +13,8 @@
 
 #include "stdfblib/ita/OPCUA_MGR.h"
 
-#include "core/device.h"
-#include "core/stringid.h"
+#include "forte/device.h"
+#include "forte/stringid.h"
 
 /* Management and Resource Type */
 char OPCUA_MGR::smEmptyLocale[] = "";

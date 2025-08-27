@@ -13,8 +13,8 @@
  *******************************************************************************/
 #include "stdfblib/ita/RMT_DEV.h"
 
-#include "core/stringid.h"
-#include "core/devicefactory.h"
+#include "forte/stringid.h"
+#include "forte/devicefactory.h"
 
 using namespace forte::core::literals;
 

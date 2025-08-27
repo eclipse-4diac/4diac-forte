@@ -13,8 +13,8 @@
 #ifndef _REGISTERSERVICEOPCUA_H_
 #define _REGISTERSERVICEOPCUA_H_
 
-#include "core/cfb.h"
-#include "core/typelib.h"
+#include "forte/cfb.h"
+#include "forte/typelib.h"
 #include "RegisterServiceAdp_adp.h"
 
 class FORTE_RegisterServiceOpcUa : public CCompositeFB {
@@ -27,8 +27,7 @@ class FORTE_RegisterServiceOpcUa : public CCompositeFB {
     static const int scm_nregisterServiceAdpNum = 0;
 
   public:
-    FORTE_RegisterServiceOpcUa(const forte::core::StringId paInstanceNameId,
-                               forte::core::CFBContainer &paContainer) :
+    FORTE_RegisterServiceOpcUa(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
         ~FORTE_RegisterServiceOpcUa() override = default;
 };

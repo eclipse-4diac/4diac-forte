@@ -21,14 +21,14 @@
 
 using namespace forte::core::literals;
 
-#include "core/datatypes/forte_any_int_variant.h"
-#include "core/datatypes/forte_byte.h"
-#include "core/datatypes/forte_any_bit_variant.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_any_int_variant.h"
+#include "forte/datatypes/forte_byte.h"
+#include "forte/datatypes/forte_any_bit_variant.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 #include "quarterconst_gcf.h"
 
 DEFINE_FIRMWARE_FB(FORTE_SPLIT_BYTE_INTO_QUARTERS, "SPLIT_BYTE_INTO_QUARTERS"_STRID)

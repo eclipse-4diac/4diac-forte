@@ -12,10 +12,10 @@
 
 #pragma once
 
-#include "core/adapter.h"
-#include "core/typelib.h"
-#include "core/datatypes/forte_time.h"
-#include "core/adapterconn.h"
+#include "forte/adapter.h"
+#include "forte/typelib.h"
+#include "forte/datatypes/forte_time.h"
+#include "forte/adapterconn.h"
 
 class FORTE_ATimeOut : public forte::CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_ATimeOut)

@@ -11,7 +11,7 @@
  *******************************************************************************/
 #include "arch/fortenew.h"
 #include "ecostiha.h"
-#include "core/devexec.h"
+#include "forte/devexec.h"
 
 cyg_sem_t CECOSTimerHandler::mSemaphore;
 

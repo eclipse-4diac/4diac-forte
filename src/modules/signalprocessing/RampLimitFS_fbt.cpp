@@ -19,14 +19,14 @@
 
 using namespace forte::core::literals;
 
-#include "core/datatypes/forte_any_elementary_variant.h"
-#include "core/datatypes/forte_any_num_variant.h"
-#include "core/datatypes/forte_dint.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_any_elementary_variant.h"
+#include "forte/datatypes/forte_any_num_variant.h"
+#include "forte/datatypes/forte_dint.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS, "signalprocessing__RampLimitFS"_STRID)
 
@@ -35,8 +35,8 @@ namespace {
   const auto cDataOutputNames = std::array{"OUT"_STRID};
   const auto cEventInputNames = std::array{"ZERO"_STRID,      "UP_SLOW"_STRID, "UP_FAST"_STRID, "DOWN_SLOW"_STRID,
                                            "DOWN_FAST"_STRID, "FULL"_STRID,    "LOAD"_STRID};
-  const auto cEventInputTypeIds =
-      std::array{"Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID,
+                                             "Event"_STRID, "Event"_STRID, "Event"_STRID};
   const auto cEventOutputNames = std::array{"CNF"_STRID};
   const auto cEventOutputTypeIds = std::array{"Event"_STRID};
   const SFBInterfaceSpec cFBInterfaceSpec = {
@@ -52,8 +52,8 @@ namespace {
   };
 } // namespace
 
-FORTE_signalprocessing__RampLimitFS::FORTE_signalprocessing__RampLimitFS(
-    const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_signalprocessing__RampLimitFS::FORTE_signalprocessing__RampLimitFS(const forte::core::StringId paInstanceNameId,
+                                                                         forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CNF(*this, 0),
     conn_PV(nullptr),

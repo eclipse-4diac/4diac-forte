@@ -18,7 +18,7 @@
 
 #include "GEN_XOR_fbt.h"
 
-#include "core/iec61131_functions.h"
+#include "forte/iec61131_functions.h"
 
 using namespace forte::core::literals;
 

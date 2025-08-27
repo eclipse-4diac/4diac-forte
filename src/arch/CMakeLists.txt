@@ -15,7 +15,7 @@
 add_library(forte-arch OBJECT
     forte_architecture.cpp
 )
-
+target_link_libraries(forte-arch PUBLIC forte-core)
 target_link_libraries(forte PRIVATE forte-arch)
 
 ###############################################################################

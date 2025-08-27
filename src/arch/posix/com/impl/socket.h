@@ -15,8 +15,8 @@
 
 #include <sys/types.h>
 
-#include "core/com/buffer.h"
-#include "core/com/channel.h"
+#include "forte/com/buffer.h"
+#include "forte/com/channel.h"
 
 namespace forte::com::impl {
 

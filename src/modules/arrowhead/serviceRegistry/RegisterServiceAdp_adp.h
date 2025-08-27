@@ -13,17 +13,16 @@
 #ifndef _REGISTERSERVICEADP_H_
 #define _REGISTERSERVICEADP_H_
 
-#include "core/adapter.h"
-#include "core/typelib.h"
+#include "forte/adapter.h"
+#include "forte/typelib.h"
 #include <forte_serviceregistryentry.h>
-#include "core/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_wstring.h"
 
 class FORTE_RegisterServiceAdp : public CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_RegisterServiceAdp)
 
   private:
   private:
-
   public:
     CIEC_ServiceRegistryEntry &serviceRegistryEntry() {
       return *static_cast<CIEC_ServiceRegistryEntry *>((isSocket()) ? getDO(0) : getDI(0));
@@ -44,7 +43,6 @@ class FORTE_RegisterServiceAdp : public CAdapter {
     }
 
   private:
-
   public:
     static const TEventID scmEventregisterServiceID = 0;
     TEventID registerService() {
@@ -56,9 +54,6 @@ class FORTE_RegisterServiceAdp : public CAdapter {
     }
 
   private:
-
-
-
   public:
     ADAPTER_CTOR(FORTE_RegisterServiceAdp) {};
 

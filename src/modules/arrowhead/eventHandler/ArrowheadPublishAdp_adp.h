@@ -13,17 +13,16 @@
 #ifndef _ARROWHEADPUBLISHADP_H_
 #define _ARROWHEADPUBLISHADP_H_
 
-#include "core/adapter.h"
-#include "core/typelib.h"
+#include "forte/adapter.h"
+#include "forte/typelib.h"
 #include <forte_publishevent.h>
-#include "core/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_wstring.h"
 
 class FORTE_ArrowheadPublishAdp : public CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_ArrowheadPublishAdp)
 
   private:
   private:
-
   public:
     CIEC_PublishEvent &publishEvent() {
       return *static_cast<CIEC_PublishEvent *>((isSocket()) ? getDO(0) : getDI(0));
@@ -40,7 +39,6 @@ class FORTE_ArrowheadPublishAdp : public CAdapter {
     }
 
   private:
-
   public:
     static const TEventID scmEventpublishID = 0;
     int publish() {
@@ -48,9 +46,6 @@ class FORTE_ArrowheadPublishAdp : public CAdapter {
     }
 
   private:
-
-
-
   public:
     ADAPTER_CTOR(FORTE_ArrowheadPublishAdp) {};
 

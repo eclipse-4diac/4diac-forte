@@ -89,9 +89,35 @@ target_compile_definitions(forte-global INTERFACE ${FORTE_LOGLEVEL})
 #     endif ()
 # endif ()
 
+#############################################################################
+# Whole archive
+#############################################################################
+if (NOT CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE_SUPPORTED)
+    message(FATAL_ERROR
+            "Enable WHOLE_ARCHIVE linker feature in your CMake toolchain file, for example:\n"
+            "  set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE\n"
+            "      \"-Wl,--whole-archive\" \"<LINK_ITEM>\" \"-Wl,--no-whole-archive\"\n"
+            "  )\n"
+            "  set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE_SUPPORTED TRUE)\n"
+    )
+endif ()
+
 #######################################################################################
 # Main build
 #######################################################################################
+
+if (FORTE_BUILD_EXECUTABLE)
+    add_executable(forte)
+    install(TARGETS forte RUNTIME DESTINATION bin)
+    message(STATUS "Building executable")
+else ()
+    add_library(forte)
+    install(TARGETS forte RUNTIME DESTINATION lib)
+    message(STATUS "Building library")
+endif ()
+
+add_subdirectory(core)
+
 add_subdirectory(src)
 
 enable_testing()

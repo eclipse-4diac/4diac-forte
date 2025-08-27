@@ -18,14 +18,14 @@
 
 using namespace forte::core::literals;
 
-#include "core/datatypes/forte_any_duration_variant.h"
-#include "core/datatypes/forte_date_and_time.h"
-#include "core/datatypes/forte_ulint.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_any_duration_variant.h"
+#include "forte/datatypes/forte_date_and_time.h"
+#include "forte/datatypes/forte_ulint.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 #include "TIMESTAMP_NS_fct.h"
 
 DEFINE_FIRMWARE_FB(FORTE_TIMESTAMP_NS, "TIMESTAMP_NS"_STRID)
@@ -48,8 +48,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 FORTE_TIMESTAMP_NS::FORTE_TIMESTAMP_NS(const forte::core::StringId paInstanceNameId,
                                        forte::core::CFBContainer &paContainer) :

@@ -13,11 +13,11 @@
 #ifndef _STRUCT_MUX_DEMUX_DATA_H_
 #define _STRUCT_MUX_DEMUX_DATA_H_
 
-#include "core/datatypes/forte_struct.h"
+#include "forte/datatypes/forte_struct.h"
 
-#include "core/datatypes/forte_int.h"
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_int.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_array_fixed.h"
 
 class CIEC_Struct_Muxer_Test_Struct_1 : public CIEC_STRUCT {
     DECLARE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_1)

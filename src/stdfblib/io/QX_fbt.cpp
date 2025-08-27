@@ -9,10 +9,9 @@
  * Contributors:
  *   Alois Zoitl, Waldemar Eisenmenger - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "core/io/QX_fbt.h"
+#include "forte/io/QX_fbt.h"
 
 using namespace forte::core::literals;
-
 
 DEFINE_FIRMWARE_FB(FORTE_QX, "QX"_STRID)
 
@@ -34,8 +33,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 FORTE_QX::FORTE_QX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CProcessInterface(paContainer, cFBInterfaceSpec, paInstanceNameId),

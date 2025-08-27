@@ -13,7 +13,8 @@
 
 #include "MQTTClientConfigParser.h"
 
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
+#include "../../../core/src/util/configFileParser.h"
 
 const char *const CMQTTClientConfigFileParser::mConfigKeysNames[] = {"endpoint", "username", "password"};
 

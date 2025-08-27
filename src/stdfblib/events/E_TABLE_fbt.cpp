@@ -20,11 +20,11 @@
 
 using namespace forte::core::literals;
 
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_TABLE, "E_TABLE"_STRID)
 
@@ -67,8 +67,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TABLE::FORTE_E_TABLE(const forte::core::StringId paInstanceNameId,
-                             forte::core::CFBContainer &paContainer) :
+FORTE_E_TABLE::FORTE_E_TABLE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_TABLE_CTRL("E_TABLE_CTRL"_STRID, *this),
     fb_E_DELAY("E_DELAY"_STRID, *this),

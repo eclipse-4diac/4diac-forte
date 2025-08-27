@@ -18,10 +18,10 @@
 #ifndef _GEN_CSV_WRITER_H_
 #define _GEN_CSV_WRITER_H_
 
-#include "core/genfb.h"
+#include "forte/genfb.h"
 #include <stdio.h>
 #include "arch/forte_fileio.h"
-#include "core/datatypes/forte_any_variant.h"
+#include "forte/datatypes/forte_any_variant.h"
 
 #include <memory>
 

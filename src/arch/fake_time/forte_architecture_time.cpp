@@ -13,9 +13,9 @@
  *******************************************************************************/
 
 #include "arch/forte_architecture_time.h"
-#include "core/util/forte_constants.h"
+#include "forte/util/forte_constants.h"
 
-#include "core/timerhandlerfactory.h"
+#include "forte/timerhandlerfactory.h"
 
 using namespace forte::core::literals;
 

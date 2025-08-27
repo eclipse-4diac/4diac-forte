@@ -14,7 +14,7 @@
 #include "../util/fileres.h"
 #include <string>
 #include <iostream>
-#include "core/util/criticalregion.h"
+#include "forte/util/criticalregion.h"
 
 namespace CONMELEON {
 

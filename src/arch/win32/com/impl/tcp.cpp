@@ -14,8 +14,8 @@
 #include "tcp.h"
 #include "net.h"
 
-#include "core/stringid.h"
-#include "core/com/factory.h"
+#include "forte/stringid.h"
+#include "forte/com/factory.h"
 
 using namespace forte::core::literals;
 

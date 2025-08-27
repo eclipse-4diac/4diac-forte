@@ -15,7 +15,7 @@
 
 #include "stdfblib/ita/multi/MultiDevice.h"
 #include "stdfblib/ita/OPCUA_MGR.h"
-#include "core/devicefactory.h"
+#include "forte/devicefactory.h"
 
 using namespace forte::core::literals;
 

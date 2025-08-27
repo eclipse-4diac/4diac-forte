@@ -13,13 +13,13 @@
 #ifndef _FORTE_SERVICEREQUESTFORM_H_
 #define _FORTE_SERVICEREQUESTFORM_H_
 
-#include "core/datatypes/forte_struct.h"
+#include "forte/datatypes/forte_struct.h"
 #include "forte_arrowheadsystem.h"
 #include "forte_arrowheadcloud.h"
 #include "forte_arrowheadservice.h"
-#include "core/datatypes/forte_wstring.h"
-#include "core/datatypes/forte_dint.h"
-#include "core/datatypes/forte_array.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_dint.h"
+#include "forte/datatypes/forte_array.h"
 #include "forte_preferredprovider.h"
 
 class CIEC_ServiceRequestForm : public CIEC_STRUCT {

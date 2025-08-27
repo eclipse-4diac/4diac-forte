@@ -23,7 +23,7 @@
 #include "Arp/System/Rsc/ServiceManager.hpp"
 #include "Arp/Device/Interface/Services/IDeviceStatusService.hpp"
 
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 #include <syslog.h>
 #include <unistd.h>
 #include <libgen.h>
@@ -31,7 +31,7 @@
 #include <pthread.h>
 #include <forte_sync.h>
 
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 
 using namespace Arp;
 using namespace Arp::System::Rsc;

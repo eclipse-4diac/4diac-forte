@@ -13,7 +13,7 @@
 #include <ros/ros.h>
 #include <develog.h>
 
-#include "core/startuphook.h"
+#include "forte/startuphook.h"
 
 namespace {
   void rosStartupHook(int argc, char *arg[]) {

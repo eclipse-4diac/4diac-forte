@@ -11,7 +11,7 @@
  *    Martin Erich Jobst - initial implementation
  *******************************************************************************/
 
-#include "core/stringid.h"
+#include "forte/stringid.h"
 
 #include "forte_boost_output_support.h"
 

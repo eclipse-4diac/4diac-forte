@@ -14,8 +14,8 @@
 
 #include "forte_boost_output_support.h"
 
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_char.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_char.h"
 
 using namespace boost::unit_test;
 

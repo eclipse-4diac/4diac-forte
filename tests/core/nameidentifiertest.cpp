@@ -10,7 +10,7 @@
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
-#include "core/mgmcmd.h"
+#include "forte/mgmcmd.h"
 
 using namespace forte::core::literals;
 

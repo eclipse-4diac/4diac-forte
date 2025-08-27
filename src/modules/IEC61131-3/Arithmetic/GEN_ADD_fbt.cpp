@@ -18,8 +18,8 @@
 
 #include "GEN_ADD_fbt.h"
 
-#include "core/util/string_utils.h"
-#include "core/iec61131_functions.h"
+#include "forte/util/string_utils.h"
+#include "forte/iec61131_functions.h"
 
 using namespace forte::core::literals;
 

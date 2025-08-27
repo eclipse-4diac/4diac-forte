@@ -20,8 +20,8 @@
 #pragma once
 
 #include "../slaveHandler.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_wstring.h"
 #include "PLCnextBusAdapter.h"
 
 class FORTE_PLCnextAXLSESC final : public PLCnextSlaveHandler {
@@ -33,7 +33,6 @@ class FORTE_PLCnextAXLSESC final : public PLCnextSlaveHandler {
     static const TEventID scmEventINDID = 1;
     static const int scmBusAdapterInAdpNum = 0;
     static const int scmBusAdapterOutAdpNum = 1;
-
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 

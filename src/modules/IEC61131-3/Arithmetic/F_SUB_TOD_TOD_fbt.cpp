@@ -15,7 +15,7 @@
  *******************************************************************************/
 
 #include "F_SUB_TOD_TOD_fbt.h"
-#include "core/datatypes/forte_time_of_day.h"
+#include "forte/datatypes/forte_time_of_day.h"
 
 using namespace forte::core::literals;
 

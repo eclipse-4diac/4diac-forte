@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "core/util/hook.h"
+#include "forte/util/hook.h"
 
 #include <open62541.h>
 

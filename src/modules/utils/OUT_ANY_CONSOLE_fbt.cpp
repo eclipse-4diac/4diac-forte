@@ -16,7 +16,7 @@
  *******************************************************************************/
 
 #include "OUT_ANY_CONSOLE_fbt.h"
-#include "core/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_bool.h"
 
 using namespace forte::core::literals;
 

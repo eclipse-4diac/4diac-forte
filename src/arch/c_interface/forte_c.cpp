@@ -15,8 +15,8 @@
 
 #include "arch/forte_architecture.h"
 #include "arch/forte_printer.h"
-#include "core/forteinstance.h"
-#include "core/util/mainparam_utils.h"
+#include "forte/forteinstance.h"
+#include "forte/util/mainparam_utils.h"
 
 namespace {
   const unsigned int defaultPort = 61499;

@@ -19,7 +19,7 @@
 #include "GEN_VALUES2ARRAY_fbt.h"
 #include <memory>
 #include "arch/forte_printer.h"
-#include "core/util/string_utils.h"
+#include "forte/util/string_utils.h"
 
 using namespace forte::core::literals;
 

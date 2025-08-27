@@ -17,8 +17,8 @@
 
 using namespace forte::core::literals;
 
-#include "core/util/devlog.h"
-#include "core/resource.h"
+#include "forte/util/devlog.h"
+#include "forte/resource.h"
 
 unsigned int FORTE_TEST_CONDITION::smExecutedTests = 0;
 unsigned int FORTE_TEST_CONDITION::smFailedTests = 0;

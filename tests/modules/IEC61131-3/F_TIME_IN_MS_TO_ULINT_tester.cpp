@@ -10,7 +10,7 @@
  *   Martin Melik-Merkumians - initial tests
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
-#include "core/datatypes/forte_ulint.h"
+#include "forte/datatypes/forte_ulint.h"
 
 using namespace forte::core::literals;
 

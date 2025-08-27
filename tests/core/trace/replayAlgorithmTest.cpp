@@ -17,8 +17,8 @@
 
 #include "config.h"
 #include "common.h"
-#include "core/device.h"
-#include "core/ecet.h"
+#include "forte/device.h"
+#include "forte/ecet.h"
 #include "core/trace/internal/EventMessage.h"
 #include "core/trace/barectf_platform_forte.h"
 #include "../fbtests/fbtesterglobalfixture.h"

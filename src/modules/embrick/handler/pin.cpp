@@ -15,7 +15,7 @@
  *******************************************************************************/
 
 #include "pin.h"
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 #include <unistd.h>
 #include <fcntl.h>
 #include <string>

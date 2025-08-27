@@ -10,10 +10,10 @@
 
 #include "xqueryHandler.h"
 
-#include "core/cominfra/commfb.h"
-#include "core/util/criticalregion.h"
-#include "core/datatypes/forte_string.h"
-#include "core/util/devlog.h"
+#include "forte/cominfra/commfb.h"
+#include "forte/util/criticalregion.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/util/devlog.h"
 #include "xqueryClientLayer.h"
 extern "C" {
 #include <basexdbc.h>

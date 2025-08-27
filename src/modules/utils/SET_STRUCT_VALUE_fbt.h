@@ -16,27 +16,22 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_any_variant.h"
-#include "core/datatypes/forte_string.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_any_variant.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_SET_STRUCT_VALUE : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_SET_STRUCT_VALUE)
 
   private:
-
-
     static const TEventID scmEventREQID = 0;
 
-
     static const TEventID scmEventCNFID = 0;
-
-
 
     CIEC_ANY *lookForMember(CIEC_STRUCT &paWhereToLook, char *paMemberName);
 

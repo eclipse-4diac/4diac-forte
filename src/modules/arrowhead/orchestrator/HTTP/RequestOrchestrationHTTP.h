@@ -13,8 +13,8 @@
 #ifndef _REQUESTORCHESTRATIONHTTP_H_
 #define _REQUESTORCHESTRATIONHTTP_H_
 
-#include "core/cfb.h"
-#include "core/typelib.h"
+#include "forte/cfb.h"
+#include "forte/typelib.h"
 #include "OrchestratorRequestAdp_adp.h"
 
 class FORTE_RequestOrchestrationHTTP : public CCompositeFB {

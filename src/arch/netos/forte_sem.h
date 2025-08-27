@@ -16,7 +16,7 @@
 #define SRC_ARCH_NETOS_SEMAPHORE_H_
 
 #include <threadx/tx_api.h>
-#include "core/datatype.h"
+#include "forte/datatype.h"
 
 namespace forte {
   namespace arch {

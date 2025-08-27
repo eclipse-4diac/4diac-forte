@@ -13,13 +13,13 @@
 
 using namespace forte::core::literals;
 
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
-#include "core/resource.h"
+#include "forte/resource.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_TRIG, "E_TRIG"_STRID)
 
@@ -40,8 +40,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TRIG::FORTE_E_TRIG(const forte::core::StringId paInstanceNameId,
-                           forte::core::CFBContainer &paContainer) :
+FORTE_E_TRIG::FORTE_E_TRIG(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_EVENTTYPE("EInit"_STRING),
     conn_CNF(*this, 0),

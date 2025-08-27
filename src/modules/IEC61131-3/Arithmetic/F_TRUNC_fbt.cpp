@@ -15,8 +15,8 @@
  *******************************************************************************/
 
 #include "F_TRUNC_fbt.h"
-#include "core/datatypes/forte_any_int_variant.h"
-#include "core/datatypes/forte_any_real_variant.h"
+#include "forte/datatypes/forte_any_int_variant.h"
+#include "forte/datatypes/forte_any_real_variant.h"
 
 using namespace forte::core::literals;
 
@@ -24,17 +24,15 @@ DEFINE_FIRMWARE_FB(FORTE_F_TRUNC, "F_TRUNC"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID};
-  
-  
+
   const auto cDataOutputNames = std::array{"OUT"_STRID};
-  
-  
+
   const auto cEventInputNames = std::array{"REQ"_STRID};
   const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  
+
   const auto cEventOutputNames = std::array{"CNF"_STRID};
   const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -46,11 +44,9 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
+} // namespace
 
-
-FORTE_F_TRUNC::FORTE_F_TRUNC(const forte::core::StringId paInstanceNameId,
-                             forte::core::CFBContainer &paContainer) :
+FORTE_F_TRUNC::FORTE_F_TRUNC(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_REAL_VARIANT()),
     var_OUT(CIEC_ANY_INT_VARIANT()),

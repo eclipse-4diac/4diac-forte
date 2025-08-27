@@ -13,8 +13,8 @@
 #ifndef PIN_HANDLE_H
 #define PIN_HANDLE_H
 
-#include "core/io/mapper/io_handle.h"
-#include "core/io/mapper/io_observer.h"
+#include "forte/io/mapper/io_handle.h"
+#include "forte/io/mapper/io_observer.h"
 #include "EliteBoardDeviceController.h"
 
 #include "stm32h743xx.h"

@@ -14,16 +14,16 @@
 
 #pragma once
 
-#include "core/simplefb.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/simplefb.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_FB_RS final : public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_FB_RS)
+    DECLARE_FIRMWARE_FB(FORTE_FB_RS)
 
   private:
     static const TEventID scmEventCNFID = 0;
@@ -73,4 +73,3 @@ class FORTE_FB_RS final : public CSimpleFB {
       evt_REQ(paS, paR1, paQ1);
     }
 };
-

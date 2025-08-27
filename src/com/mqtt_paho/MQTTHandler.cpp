@@ -16,8 +16,8 @@
  *******************************************************************************/
 
 #include "MQTTHandler.h"
-#include "core/cominfra/commfb.h"
-#include "core/util/criticalregion.h"
+#include "forte/cominfra/commfb.h"
+#include "forte/util/criticalregion.h"
 
 #include "MQTTClient.h"
 

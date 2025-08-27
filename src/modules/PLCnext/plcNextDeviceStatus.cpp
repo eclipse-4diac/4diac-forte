@@ -20,10 +20,10 @@
 #include "Arp/Device/Interface/Services/IDeviceStatusService.hpp"
 
 #include <libgen.h>
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 #include "plcNextDeviceStatus.h"
 
-#include "core/startuphook.h"
+#include "forte/startuphook.h"
 
 #include <unistd.h>
 

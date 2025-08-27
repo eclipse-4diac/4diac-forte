@@ -13,9 +13,9 @@
 #include <algorithm>
 #include "modbushandler.h"
 #include "modbuslayer.h"
-#include "core/util/devlog.h"
-#include "core/devexec.h"
-#include "core/cominfra/commfb.h"
+#include "forte/util/devlog.h"
+#include "forte/devexec.h"
+#include "forte/cominfra/commfb.h"
 
 CModbusHandler::CModbusHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
 }

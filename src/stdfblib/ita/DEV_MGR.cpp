@@ -23,8 +23,8 @@
 #include "ForteBootFileLoader.h"
 #include "ForteBootFileLoader_config.h"
 
-#include "core/device.h"
-#include "core/util/string_utils.h"
+#include "forte/device.h"
+#include "forte/util/string_utils.h"
 
 using namespace forte::core::literals;
 

@@ -22,11 +22,11 @@
 
 using namespace forte::core::literals;
 
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 DEFINE_FIRMWARE_FB(FORTE_E_TRAIN, "E_TRAIN"_STRID)
 
@@ -71,8 +71,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TRAIN::FORTE_E_TRAIN(const forte::core::StringId paInstanceNameId,
-                             forte::core::CFBContainer &paContainer) :
+FORTE_E_TRAIN::FORTE_E_TRAIN(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_CTR("CTR"_STRID, *this),
     fb_GATE("GATE"_STRID, *this),

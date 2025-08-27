@@ -15,13 +15,13 @@
 
 #include <cstring>
 #include <forte_sync.h>
-#include "core/datatypes/forte_wstring.h"
-#include "core/util/devlog.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/util/devlog.h"
 
-#include "core/io/configFB/io_slave_multi.h"
+#include "forte/io/configFB/io_slave_multi.h"
 #include "slaveHandle/slaveHandle.h"
 #include "deviceController.h"
-#include "core/io/mapper/io_mapper.h"
+#include "forte/io/mapper/io_mapper.h"
 #include "types/PLCnextBusAdapter.h"
 #include "plcNextDeviceInterface.h"
 

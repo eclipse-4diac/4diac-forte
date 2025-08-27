@@ -21,15 +21,15 @@
 
 using namespace forte::core::literals;
 
-#include "core/datatypes/forte_byte.h"
-#include "core/datatypes/forte_any_int_variant.h"
-#include "core/datatypes/forte_any_bit_variant.h"
-#include "core/datatypes/forte_lword.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_byte.h"
+#include "forte/datatypes/forte_any_int_variant.h"
+#include "forte/datatypes/forte_any_bit_variant.h"
+#include "forte/datatypes/forte_lword.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 #include "quarterconst_gcf.h"
 #include "ASSEMBLE_LWORD_FROM_QUARTERS_fct.h"
 
@@ -63,8 +63,8 @@ namespace {
   };
 } // namespace
 
-FORTE_ASSEMBLE_LWORD_FROM_QUARTERS::FORTE_ASSEMBLE_LWORD_FROM_QUARTERS(
-    const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_ASSEMBLE_LWORD_FROM_QUARTERS::FORTE_ASSEMBLE_LWORD_FROM_QUARTERS(const forte::core::StringId paInstanceNameId,
+                                                                       forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_QUARTER_BYTE_00(nullptr),

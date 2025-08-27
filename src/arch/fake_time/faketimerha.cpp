@@ -13,11 +13,11 @@
 #include "faketimerha.h"
 
 #include "arch/forte_architecture_time.h"
-#include "core/devexec.h"
-#include "core/ecet.h"
-#include "core/device.h"
-#include "core/timerhandlerfactory.h"
-#include "core/util/forte_constants.h"
+#include "forte/devexec.h"
+#include "forte/ecet.h"
+#include "forte/device.h"
+#include "forte/timerhandlerfactory.h"
+#include "forte/util/forte_constants.h"
 
 using namespace forte::core::literals;
 

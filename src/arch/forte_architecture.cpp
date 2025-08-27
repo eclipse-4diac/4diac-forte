@@ -16,7 +16,7 @@
 
 #include "arch/forte_specific_architecture.h"
 
-#include "core/startuphook.h"
+#include "forte/startuphook.h"
 
 bool CForteGeneralArchitecture::mInitialized = false;
 

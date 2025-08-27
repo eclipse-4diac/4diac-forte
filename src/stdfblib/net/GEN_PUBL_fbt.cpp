@@ -12,7 +12,7 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "GEN_PUBL_fbt.h"
-#include "core/cominfra/comlayersmanager.h"
+#include "forte/cominfra/comlayersmanager.h"
 
 using namespace forte::core::literals;
 

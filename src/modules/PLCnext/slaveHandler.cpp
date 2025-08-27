@@ -12,7 +12,7 @@
 
 #include "slaveHandler.h"
 #include "deviceController.h"
-#include "core/io/mapper/io_mapper.h"
+#include "forte/io/mapper/io_mapper.h"
 
 using namespace forte::core::literals;
 

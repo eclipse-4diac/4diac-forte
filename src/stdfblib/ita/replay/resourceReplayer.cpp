@@ -12,10 +12,10 @@
 
 #include "stdfblib/ita/replay/resourceReplayer.h"
 
-#include "core/resource.h"
-#include "core/resource_internal.h"
-#include "core/trace/reader/utils.h"
-#include "core/ecetFake.h"
+#include "forte/resource.h"
+#include "../../../../core/src/resource_internal.h"
+#include "../../../../core/src/trace/reader/utils.h"
+#include "../../../../core/src/ecetFake.h"
 
 #include <iostream>
 

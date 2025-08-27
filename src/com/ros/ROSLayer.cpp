@@ -19,8 +19,8 @@
 #include <std_msgs/String.h>
 #include <std_msgs/Bool.h>
 #include <std_msgs/Empty.h>
-#include "core/cominfra/commfb.h"
-#include "core/cominfra/comlayersmanager.h"
+#include "forte/cominfra/commfb.h"
+#include "forte/cominfra/comlayersmanager.h"
 
 using namespace forte::com_infra;
 using namespace forte::core::literals;

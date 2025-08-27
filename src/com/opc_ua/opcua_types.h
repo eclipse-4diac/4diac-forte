@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "core/util/registry.h"
+#include "forte/util/registry.h"
 
 #include <open62541.h>
 

@@ -9,7 +9,7 @@
  * Contributors:
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "core/util/singlet.h"
+#include "forte/util/singlet.h"
 
 #ifndef TESTSINGLETON_H_
 #define TESTSINGLETON_H_

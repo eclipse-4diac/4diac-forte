@@ -19,12 +19,12 @@
 #include "../fbtests/fbtesterglobalfixture.h"
 #include "common.h"
 #include "config.h"
-#include "core/trace/internal/EventMessage.h"
-#include "core/trace/reader/utils.h"
-#include "core/device.h"
-#include "core/ecet.h"
-#include "core/mgmcmdstruct.h"
-#include "core/trace/barectf_platform_forte.h"
+#include "../../../../core/src/trace/internal/EventMessage.h"
+#include "../../../../core/src/trace/reader/utils.h"
+#include "forte/device.h"
+#include "forte/ecet.h"
+#include "forte/mgmcmdstruct.h"
+#include "../../../../core/src/trace/barectf_platform_forte.h"
 
 using namespace forte::core::literals;
 

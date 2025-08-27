@@ -16,7 +16,7 @@
 #include <task.h>
 
 #include "arch/forte_architecture_time.h"
-#include "core/util/forte_constants.h"
+#include "forte/util/forte_constants.h"
 
 uint_fast64_t getNanoSecondsMonotonicArch() {
   return (static_cast<uint_fast64_t>(xTaskGetTickCount()) *

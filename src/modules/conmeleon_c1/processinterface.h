@@ -14,7 +14,7 @@
 #define _PROCESSINTERFACE_H_
 
 #include <../../stdfblib/io/processinterfacebase.h>
-#include "core/funcbloc.h"
+#include "forte/funcbloc.h"
 #include "gpio/gpiopin.h"
 #include "spi/ads1018.h"
 

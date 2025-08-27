@@ -13,12 +13,12 @@
 #include <sys/socket.h>
 #include <net/if.h>
 #include "tsn_layer.h"
-#include "core/util/devlog.h"
-#include "core/cominfra/comlayersmanager.h"
-#include "core/cominfra/commfb.h"
+#include "forte/util/devlog.h"
+#include "forte/cominfra/comlayersmanager.h"
+#include "forte/cominfra/commfb.h"
 #include <stdio.h>
-#include "core/util/parameterParser.h"
-#include "core/util/string_utils.h"
+#include "forte/util/parameterParser.h"
+#include "forte/util/string_utils.h"
 
 using namespace forte::com_infra;
 using namespace forte::core::literals;

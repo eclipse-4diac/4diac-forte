@@ -13,12 +13,12 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_uint.h"
-#include "core/datatypes/forte_wstring.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/datatypes/forte_wstring.h"
 
-#include "core/io/configFB/io_configFB_controller.h"
+#include "forte/io/configFB/io_configFB_controller.h"
 
 class RevPiConfig : public forte::core::io::IOConfigFBController {
     DECLARE_FIRMWARE_FB(RevPiConfig)

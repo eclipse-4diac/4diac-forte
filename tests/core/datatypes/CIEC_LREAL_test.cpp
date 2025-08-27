@@ -19,7 +19,7 @@
 #include "forte_boost_output_support.h"
 #include <boost/test/tools/floating_point_comparison.hpp>
 
-#include "core/datatypes/forte_lreal.h"
+#include "forte/datatypes/forte_lreal.h"
 
 #include <cmath>
 

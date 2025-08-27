@@ -13,9 +13,9 @@
 #ifndef _ANYTOJSON_H_
 #define _ANYTOJSON_H_
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_any.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_any.h"
 
 class FORTE_ANYToJSON : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_ANYToJSON)
@@ -33,13 +33,12 @@ class FORTE_ANYToJSON : public CFunctionBlock {
 
     static const TEventID scmEventCNFID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
     FORTE_ANYToJSON(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_ANYToJSON() override = default;
+        ~FORTE_ANYToJSON() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

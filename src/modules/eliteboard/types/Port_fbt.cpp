@@ -15,25 +15,26 @@
 using namespace forte::core::literals;
 
 #include "PortAdapter_adp.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
-#include "core/io/mapper/io_mapper.h"
+#include "forte/io/mapper/io_mapper.h"
 #include <handler/EliteBoardDeviceController.h>
 #include <handle/PinHandle.h>
-#include "core/util/extevhandlerhelper.h"
+#include "forte/util/extevhandlerhelper.h"
 
 using namespace forte::core::io;
 
 DEFINE_FIRMWARE_FB(FORTE_Port, "Port"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{
-      "Pin0"_STRID, "Pin1"_STRID, "Pin2"_STRID,  "Pin3"_STRID,  "Pin4"_STRID,  "Pin5"_STRID,  "Pin6"_STRID,  "Pin7"_STRID,
-      "Pin8"_STRID, "Pin9"_STRID, "Pin10"_STRID, "Pin11"_STRID, "Pin12"_STRID, "Pin13"_STRID, "Pin14"_STRID, "Pin15"_STRID};
+  const auto cDataInputNames =
+      std::array{"Pin0"_STRID,  "Pin1"_STRID,  "Pin2"_STRID,  "Pin3"_STRID, "Pin4"_STRID,  "Pin5"_STRID,
+                 "Pin6"_STRID,  "Pin7"_STRID,  "Pin8"_STRID,  "Pin9"_STRID, "Pin10"_STRID, "Pin11"_STRID,
+                 "Pin12"_STRID, "Pin13"_STRID, "Pin14"_STRID, "Pin15"_STRID};
   const auto cSocketNameIds = std::array{"PortInAdapter"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {

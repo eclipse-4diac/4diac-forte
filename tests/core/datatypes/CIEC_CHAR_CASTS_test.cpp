@@ -12,16 +12,16 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "core/iec61131_functions.h"
+#include "forte/iec61131_functions.h"
 
-#include "core/datatypes/forte_char.h"
-#include "core/datatypes/forte_wchar.h"
-#include "core/datatypes/forte_usint.h"
-#include "core/datatypes/forte_byte.h"
-#include "core/datatypes/forte_word.h"
-#include "core/datatypes/forte_dword.h"
-#include "core/datatypes/forte_lword.h"
-#include "core/datatypes/forte_string.h"
+#include "forte/datatypes/forte_char.h"
+#include "forte/datatypes/forte_wchar.h"
+#include "forte/datatypes/forte_usint.h"
+#include "forte/datatypes/forte_byte.h"
+#include "forte/datatypes/forte_word.h"
+#include "forte/datatypes/forte_dword.h"
+#include "forte/datatypes/forte_lword.h"
+#include "forte/datatypes/forte_string.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_CHAR_CASTS_test)
 

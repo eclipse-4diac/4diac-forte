@@ -17,7 +17,7 @@
 #define FORTE_OPCUA_HELPER_H
 
 #include <open62541.h>
-#include "core/datatypes/forte_any.h"
+#include "forte/datatypes/forte_any.h"
 
 #include <string>
 #include <vector>

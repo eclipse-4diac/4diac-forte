@@ -15,7 +15,7 @@ using namespace forte::core::literals;
 
 #include "struct_mux_demux_data.h"
 #include "fbcontainermock.h"
-#include "core/typelib_internal.h"
+#include "../../core/src/typelib_internal.h"
 
 struct STRUCT_MUX_TestFixture_1 : public CFBTestFixtureBase {
 

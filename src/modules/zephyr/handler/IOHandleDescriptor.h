@@ -13,9 +13,9 @@
 #ifndef ZEPHYRIO_HANDLEDESCRIPTOR_H
 #define ZEPHYRIO_HANDLEDESCRIPTOR_H
 
-#include "core/io/device/io_controller.h"
-#include "core/io/mapper/io_handle.h"
-#include "core/extevhan.h"
+#include "forte/io/device/io_controller.h"
+#include "forte/io/mapper/io_handle.h"
+#include "forte/extevhan.h"
 
 class IOHandleDescriptor : public forte::core::io::IODeviceController::HandleDescriptor {
   public:

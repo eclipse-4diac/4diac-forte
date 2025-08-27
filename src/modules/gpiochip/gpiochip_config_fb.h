@@ -12,11 +12,11 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_uint.h"
-#include "core/datatypes/forte_wstring.h"
-#include "core/io/configFB/io_configFB_controller.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/io/configFB/io_configFB_controller.h"
 
 class GPIOChipConfigFB : public forte::core::io::IOConfigFBController {
     DECLARE_FIRMWARE_FB(GPIOChipConfigFB)
@@ -63,7 +63,6 @@ class GPIOChipConfigFB : public forte::core::io::IOConfigFBController {
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventINDID = 1;
 
-
     void setInitialValues() override;
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
@@ -77,5 +76,6 @@ class GPIOChipConfigFB : public forte::core::io::IOConfigFBController {
 
   public:
     GPIOChipConfigFB(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-    }
-};
+}
+}
+;

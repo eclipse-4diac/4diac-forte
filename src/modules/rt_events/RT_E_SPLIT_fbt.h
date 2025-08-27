@@ -13,16 +13,16 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_time.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_time.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
-#include "core/ecet.h"
+#include "forte/ecet.h"
 
 class FORTE_RT_E_SPLIT final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_RT_E_SPLIT)
@@ -33,7 +33,6 @@ class FORTE_RT_E_SPLIT final : public CFunctionBlock {
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventEO1ID = 1;
     static const TEventID scmEventEO2ID = 2;
-
 
     CEventChainExecutionThread mECEO1, mECEO2;
     bool mInitialized;

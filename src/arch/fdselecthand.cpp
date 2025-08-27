@@ -12,11 +12,11 @@
  *******************************************************************************/
 #include <sockhand.h> //needs to be first pulls in the platform specific includes
 #include "arch/fdselecthand.h"
-#include "core/util/devlog.h"
-#include "core/devexec.h"
-#include "core/cominfra/commfb.h"
-#include "core/cominfra/comCallback.h"
-#include "core/util/criticalregion.h"
+#include "forte/util/devlog.h"
+#include "forte/devexec.h"
+#include "forte/cominfra/commfb.h"
+#include "forte/cominfra/comCallback.h"
+#include "forte/util/criticalregion.h"
 
 CFDSelectHandler::CFDSelectHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
   mConnectionListChanged = false;

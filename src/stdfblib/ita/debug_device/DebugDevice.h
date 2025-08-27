@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "core/device.h"
+#include "forte/device.h"
 #include "stdfblib/ita/debug_device/DebugMGR.h"
 
 // std includes

@@ -13,7 +13,7 @@
 #pragma once
 
 #include "core/trace/internal/EventMessage.h"
-#include "core/stringid.h"
+#include "forte/stringid.h"
 #include "stdfblib/ita/replay/resourceReplayer.h"
 
 #include <memory>

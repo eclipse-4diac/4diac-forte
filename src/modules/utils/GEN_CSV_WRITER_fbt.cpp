@@ -18,12 +18,12 @@
  *******************************************************************************/
 #include "GEN_CSV_WRITER_fbt.h"
 #include <memory>
-#include "core/util/string_utils.h"
+#include "forte/util/string_utils.h"
 
 using namespace forte::core::literals;
 
 #include <errno.h>
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER, "GEN_CSV_WRITER"_STRID);
 

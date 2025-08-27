@@ -13,7 +13,7 @@
  *******************************************************************************/
 #include "handle.h"
 #include "slave.h"
-#include "core/io/mapper/io_mapper.h"
+#include "forte/io/mapper/io_mapper.h"
 
 EmbrickSlaveHandle::EmbrickSlaveHandle(forte::core::io::IODeviceController *paController,
                                        forte::core::io::IOMapper::Direction paDirection,

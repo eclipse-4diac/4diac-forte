@@ -12,7 +12,7 @@
 
 #include "stdfblib/ita/replay/deviceReplayer.h"
 
-#include "core/device.h"
+#include "forte/device.h"
 #include "core/ecetFake.h"
 
 CDeviceReplayer::CResourceInformation::CResourceInformation(CResource &paResource,

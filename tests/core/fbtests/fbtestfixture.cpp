@@ -16,9 +16,9 @@
  *******************************************************************************/
 #include "fbtestfixture.h"
 #include "fbtesterglobalfixture.h"
-#include "core/util/criticalregion.h"
-#include "core/ecet.h"
-#include "core/typelib_internal.h"
+#include "forte/util/criticalregion.h"
+#include "forte/ecet.h"
+#include "../../core/src/typelib_internal.h"
 
 #ifdef WIN32
 #define usleep(x) Sleep((x) / 1000)

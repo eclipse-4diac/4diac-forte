@@ -10,7 +10,7 @@
  *   Markus Meingast
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "core/stringid.h"
+#include "forte/stringid.h"
 #include "stdfblib/ita/Config_EMB_RES.h"
 
 using namespace forte::core::literals;

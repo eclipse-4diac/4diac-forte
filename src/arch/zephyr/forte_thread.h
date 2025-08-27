@@ -13,9 +13,9 @@
 #ifndef SRC_ARCH_ZEPHYR_THREAD_H_
 #define SRC_ARCH_ZEPHYR_THREAD_H_
 
-#include "core/datatype.h"
-#include "core/util/devlog.h"
-#include "core/datatypes/forte_time.h"
+#include "forte/datatype.h"
+#include "forte/util/devlog.h"
+#include "forte/datatypes/forte_time.h"
 #include "arch/threadbase.h"
 #include "forte_sync.h"
 

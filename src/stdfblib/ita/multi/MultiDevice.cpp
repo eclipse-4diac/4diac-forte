@@ -15,8 +15,8 @@
 
 #include "stdfblib/ita/OPCUA_MGR.h"
 #include "stdfblib/ita/multi/utils.h"
-#include "core/devicefactory.h"
-#include "core/util/devlog.h"
+#include "forte/devicefactory.h"
+#include "forte/util/devlog.h"
 
 using namespace forte::core::literals;
 

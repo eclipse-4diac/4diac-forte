@@ -14,17 +14,17 @@
 
 #pragma once
 
-#include "core/simplefb.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_int.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/simplefb.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_int.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_FB_CTD final : public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_FB_CTD)
+    DECLARE_FIRMWARE_FB(FORTE_FB_CTD)
 
   private:
     static const TEventID scmEventCNFID = 0;
@@ -76,8 +76,8 @@ class FORTE_FB_CTD final : public CSimpleFB {
       paCV = var_CV;
     }
 
-    void operator()(const CIEC_BOOL &paCD, const CIEC_BOOL &paLD, const CIEC_INT &paPV, CIEC_BOOL &paQ, CIEC_INT &paCV) {
+    void
+    operator()(const CIEC_BOOL &paCD, const CIEC_BOOL &paLD, const CIEC_INT &paPV, CIEC_BOOL &paQ, CIEC_INT &paCV) {
       evt_REQ(paCD, paLD, paPV, paQ, paCV);
     }
 };
-

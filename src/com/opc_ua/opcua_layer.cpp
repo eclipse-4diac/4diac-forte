@@ -21,16 +21,16 @@
 #include "com/opc_ua/opcua_layer.h"
 #include "com/opc_ua/opcua_helper.h"
 #include "com/opc_ua/opcua_local_handler.h"
-#include "core/cominfra/basecommfb.h"
-#include "core/util/devlog.h"
+#include "forte/cominfra/basecommfb.h"
+#include "forte/util/devlog.h"
 #include <cstddef>
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_struct.h"
-#include "core/util/criticalregion.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_struct.h"
+#include "forte/util/criticalregion.h"
 #include "com/opc_ua/opcua_action_info.h"
 #include "com/opc_ua/opcua_remote_handler.h"
 #include "com/opc_ua/opcua_objectstruct_helper.h"
-#include "core/cominfra/comlayersmanager.h"
+#include "forte/cominfra/comlayersmanager.h"
 
 using namespace forte::com_infra;
 using namespace forte::core::literals;

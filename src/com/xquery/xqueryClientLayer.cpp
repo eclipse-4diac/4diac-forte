@@ -8,12 +8,12 @@
  * SPDX-License-Identifier: EPL-2.0
  **********************************************************************/
 
-#include "core/extevhan.h"
-#include "core/cominfra/commfb.h"
-#include "core/util/devlog.h"
+#include "forte/extevhan.h"
+#include "forte/cominfra/commfb.h"
+#include "forte/util/devlog.h"
 #include "xqueryClientLayer.h"
 #include "xqueryHandler.h"
-#include "core/cominfra/comlayersmanager.h"
+#include "forte/cominfra/comlayersmanager.h"
 extern "C" {
 #include <basexdbc.h>
 }

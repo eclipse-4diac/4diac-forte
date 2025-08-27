@@ -12,14 +12,14 @@
  *******************************************************************************/
 
 #include "com/opc_ua/opcua_ac_layer.h"
-#include "core/util/parameterParser.h"
-#include "core/cominfra/basecommfb.h"
+#include "forte/util/parameterParser.h"
+#include "forte/cominfra/basecommfb.h"
 #include "com/opc_ua/opcua_local_handler.h"
 #include "com/opc_ua/opcua_objectstruct_helper.h"
 #include "com/opc_ua/opcua_action_info.h"
-#include "core/cominfra/comlayersmanager.h"
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_wstring.h"
+#include "forte/cominfra/comlayersmanager.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_wstring.h"
 
 #include <memory>
 

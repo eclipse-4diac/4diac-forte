@@ -13,7 +13,7 @@
 #ifndef _FILEREADER_H_
 #define _FILEREADER_H_
 
-#include "core/funcbloc.h"
+#include "forte/funcbloc.h"
 #include <fstream>
 
 class fileReader : public CFunctionBlock {
@@ -45,7 +45,6 @@ class fileReader : public CFunctionBlock {
 
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventCNFID = 1;
-
 
     static const char *const scmOK;
     static const char *const scmNotInitialised;

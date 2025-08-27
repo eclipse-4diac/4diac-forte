@@ -13,7 +13,7 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "core/datatypes/forte_string_fixed.h"
+#include "forte/datatypes/forte_string_fixed.h"
 
 using namespace std::string_literals;
 

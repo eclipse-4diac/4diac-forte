@@ -14,9 +14,9 @@
 #define _FORTE_THREAD_H_
 
 #include <cyg/kernel/kapi.h>
-#include "core/datatype.h"
+#include "forte/datatype.h"
 #include "arch/threadbase.h"
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 
 class CECOSThread;
 typedef CECOSThread CThread; // allows that doxygen can generate better documentation

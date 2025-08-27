@@ -21,9 +21,9 @@
 #include <cassert>
 
 #include "forte_sem.h"
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 #include "arch/utils/timespec_utils.h"
-#include "core/util/criticalregion.h"
+#include "forte/util/criticalregion.h"
 
 namespace forte {
   namespace arch {

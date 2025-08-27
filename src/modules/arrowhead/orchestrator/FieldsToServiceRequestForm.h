@@ -13,14 +13,14 @@
 #ifndef _FIELDSTOSERVICEREQUESTFORM_H_
 #define _FIELDSTOSERVICEREQUESTFORM_H_
 
-#include "core/basicfb.h"
+#include "forte/basicfb.h"
 #include <forte_preferredprovider.h>
 #include <forte_arrowheadservice.h>
 #include <forte_arrowheadcloud.h>
 #include <forte_arrowheadsystem.h>
 #include <forte_servicerequestform.h>
-#include "core/datatypes/forte_wstring.h"
-#include "core/datatypes/forte_array.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_array.h"
 
 class FORTE_FieldsToServiceRequestForm : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToServiceRequestForm)
@@ -73,7 +73,6 @@ class FORTE_FieldsToServiceRequestForm : public CBasicFB {
 
     static const TEventID scmEventCNFID = 0;
 
-
     void alg_REQ();
     static const TForteInt16 scmStateSTART = 0;
     static const TForteInt16 scmStateREQ = 1;
@@ -84,10 +83,9 @@ class FORTE_FieldsToServiceRequestForm : public CBasicFB {
     virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_FieldsToServiceRequestForm(forte::core::StringId paInstanceNameId,
-                                     forte::core::CFBContainer &paContainer) :
+    FORTE_FieldsToServiceRequestForm(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_FieldsToServiceRequestForm() override = default;
+        ~FORTE_FieldsToServiceRequestForm() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

@@ -14,7 +14,7 @@
 #ifndef _RMT_DEV_H_
 #define _RMT_DEV_H_
 
-#include "core/device.h"
+#include "forte/device.h"
 #include "stdfblib/ita/RMT_RES.h"
 
 /*! \brief Implementation of the RMT_DEV.
@@ -40,7 +40,6 @@ class RMT_DEV : public CDevice {
     void setMGR_ID(std::string_view paVal);
 
   private:
-
     static const forte::core::StringId scmDINameIds[];
     static const forte::core::StringId scmDIDataTypeIds[];
 

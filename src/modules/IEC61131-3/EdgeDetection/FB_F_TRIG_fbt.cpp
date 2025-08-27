@@ -14,12 +14,12 @@
 
 #include "FB_F_TRIG_fbt.h"
 
-#include "core/datatypes/forte_bool.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 using namespace std::literals;
 
@@ -48,8 +48,7 @@ namespace {
 
 DEFINE_FIRMWARE_FB(FORTE_FB_F_TRIG, "FB_F_TRIG"_STRID)
 
-FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(const forte::core::StringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) :
+FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
     var_MEM(true_BOOL),
     var_CLK(0_BOOL),

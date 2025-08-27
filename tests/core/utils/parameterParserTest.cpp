@@ -13,8 +13,8 @@
  *      primitve types
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
-#include "core/util/parameterParser.h"
-#include "core/datatypes/forte_string.h"
+#include "forte/util/parameterParser.h"
+#include "forte/datatypes/forte_string.h"
 #include <string.h>
 
 using namespace std::string_literals;

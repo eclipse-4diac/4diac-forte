@@ -16,7 +16,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "E_CTUD_fbt.h"
-#include "core/basicfb.h"
+#include "forte/basicfb.h"
 
 using namespace forte::core::literals;
 

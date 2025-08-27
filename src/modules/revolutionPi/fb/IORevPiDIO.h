@@ -13,11 +13,11 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_wstring.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_wstring.h"
 #include "IORevPiBusAdapter.h"
-#include "core/io/configFB/io_slave_multi.h"
+#include "forte/io/configFB/io_slave_multi.h"
 
 class FORTE_IORevPiDIO : public forte::core::io::IOConfigFBMultiSlave {
     DECLARE_FIRMWARE_FB(FORTE_IORevPiDIO)
@@ -28,7 +28,6 @@ class FORTE_IORevPiDIO : public forte::core::io::IOConfigFBMultiSlave {
     static const TEventID scmEventINDID = 1;
     static const int scmBusAdapterInAdpNum = 0;
     static const int scmBusAdapterOutAdpNum = 1;
-
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;

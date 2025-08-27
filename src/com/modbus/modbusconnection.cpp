@@ -12,7 +12,7 @@
  *******************************************************************************/
 #include "modbusconnection.h"
 #include "modbuslayer.h"
-#include "core/cominfra/basecommfb.h"
+#include "forte/cominfra/basecommfb.h"
 
 CModbusConnection::CModbusConnection(CModbusHandler *pa_modbusHandler) :
     mModbusConn(nullptr),

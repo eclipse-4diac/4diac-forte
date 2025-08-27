@@ -21,8 +21,8 @@
 #include <functional>
 
 #include "core/trace/internal/EventMessage.h"
-#include "core/stringid.h"
-#include "core/event.h"
+#include "forte/stringid.h"
+#include "forte/event.h"
 
 class CResource;
 class CFakeEventExecutionThread;

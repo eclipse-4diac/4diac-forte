@@ -13,25 +13,27 @@
 
 #include "FIELDBUS_SIGNAL_gcf.h"
 
-#include "core/datatypes/forte_byte.h"
-#include "core/datatypes/forte_dword.h"
-#include "core/datatypes/forte_word.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_byte.h"
+#include "forte/datatypes/forte_dword.h"
+#include "forte/datatypes/forte_word.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 using namespace std::literals;
 
 using namespace forte::core::literals;
 
 namespace {
-    constexpr std::string_view TypeHash ="v1:SHA3-512:721f067bab158051f9496f4a7a754a0892c1de3ff18b2e95192ea2f5b791b092aa5a50e00fc78d7e3bc70e73fb3b56ac0397051c71f79545a0571418a3a18a2a"sv;
+  constexpr std::string_view TypeHash =
+      "v1:SHA3-512:721f067bab158051f9496f4a7a754a0892c1de3ff18b2e95192ea2f5b791b092aa5a50e00fc78d7e3bc70e73fb3b56ac0397051c71f79545a0571418a3a18a2a"sv;
 }
 
-DEFINE_FIRMWARE_GLOBAL_CONST(FORTE_signalprocessing__FIELDBUS_SIGNAL, "signalprocessing__FIELDBUS_SIGNAL"_STRID, TypeHash)
-
+DEFINE_FIRMWARE_GLOBAL_CONST(FORTE_signalprocessing__FIELDBUS_SIGNAL,
+                             "signalprocessing__FIELDBUS_SIGNAL"_STRID,
+                             TypeHash)
 
 const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_REVERSE = 0_BYTE;
 const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_DISABLED = 0_BYTE;

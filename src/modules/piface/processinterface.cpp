@@ -10,7 +10,7 @@
  *   Monika Wenger, Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "core/fmi/processinterface.h"
-#include "core/util/extevhandlerhelper.h"
+#include "forte/util/extevhandlerhelper.h"
 
 CPiFaceProcessInterface::CPiFaceProcessInterface(forte::core::CFBContainer &paContainer,
                                                  const SFBInterfaceSpec &paInterfaceSpec,

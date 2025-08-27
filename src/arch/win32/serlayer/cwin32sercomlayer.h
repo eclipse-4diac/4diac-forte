@@ -13,7 +13,7 @@
 #include <winsock2.h> //to ensure that this is first included in the commlayermanager
 #include <windows.h>
 
-#include "core/cominfra/serialcomlayerbase.h"
+#include "forte/cominfra/serialcomlayerbase.h"
 
 #ifndef CWIN32SERCOMLAYER_H_
 #define CWIN32SERCOMLAYER_H_

@@ -15,7 +15,7 @@
 
 #include <map>
 
-#include "core/util/singlet.h"
+#include "forte/util/singlet.h"
 #include "CAdsConnection.h"
 
 namespace forte {

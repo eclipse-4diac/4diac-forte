@@ -15,8 +15,8 @@
 #pragma once
 
 #include <vector>
-#include "core/genfb.h"
-#include "core/stringid.h"
+#include "forte/genfb.h"
+#include "forte/stringid.h"
 
 class GEN_E_SPLIT final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT)

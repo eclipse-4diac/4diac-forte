@@ -13,12 +13,12 @@
 
 #pragma once
 
-#include "core/basicfb.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/basicfb.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_E_SPLIT final : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_E_SPLIT)
@@ -27,7 +27,6 @@ class FORTE_E_SPLIT final : public CBasicFB {
     static const TEventID scmEventEIID = 0;
     static const TEventID scmEventEO1ID = 0;
     static const TEventID scmEventEO2ID = 1;
-
 
     CIEC_ANY *getVarInternal(size_t) override;
 

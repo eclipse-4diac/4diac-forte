@@ -13,8 +13,8 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/ecet.h"
+#include "forte/funcbloc.h"
+#include "forte/ecet.h"
 
 /*!\brief Base class for all single output real-time event function blocks.
  *

@@ -13,9 +13,9 @@
 #define _GET_CHAN_INFO_H_
 
 #include <mtypes.h>
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_int.h"
-#include "core/datatypes/forte_string.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_int.h"
+#include "forte/datatypes/forte_string.h"
 
 class FORTE_GET_CHAN_INFO : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_GET_CHAN_INFO)

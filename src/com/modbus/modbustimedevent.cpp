@@ -10,7 +10,7 @@
  *   Filip Andren - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "modbustimedevent.h"
-#include "core/iec61131_functions.h"
+#include "forte/iec61131_functions.h"
 
 CModbusTimedEvent::CModbusTimedEvent(TForteUInt32 paUpdateInterval) : mIsStarted(false) {
   mUpdateInterval = paUpdateInterval;

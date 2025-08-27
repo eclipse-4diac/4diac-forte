@@ -13,7 +13,7 @@
 #ifndef _ORCHESTRATIONFORM2ORCHESTRATIONFORM_H_
 #define _ORCHESTRATIONFORM2ORCHESTRATIONFORM_H_
 
-#include "core/funcbloc.h"
+#include "forte/funcbloc.h"
 #include <forte_orchestrationform.h>
 
 class FORTE_OrchestrationForm2OrchestrationForm : public CFunctionBlock {
@@ -32,14 +32,13 @@ class FORTE_OrchestrationForm2OrchestrationForm : public CFunctionBlock {
 
     static const TEventID scmEventCNFID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
     FORTE_OrchestrationForm2OrchestrationForm(const forte::core::StringId paInstanceNameId,
                                               forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_OrchestrationForm2OrchestrationForm() override = default;
+        ~FORTE_OrchestrationForm2OrchestrationForm() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

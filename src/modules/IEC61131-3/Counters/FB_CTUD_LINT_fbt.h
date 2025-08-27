@@ -14,17 +14,17 @@
 
 #pragma once
 
-#include "core/simplefb.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_lint.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/simplefb.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_lint.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_FB_CTUD_LINT final : public CSimpleFB {
-  DECLARE_FIRMWARE_FB(FORTE_FB_CTUD_LINT)
+    DECLARE_FIRMWARE_FB(FORTE_FB_CTUD_LINT)
 
   private:
     static const TEventID scmEventCNFID = 0;
@@ -73,7 +73,14 @@ class FORTE_FB_CTUD_LINT final : public CSimpleFB {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BOOL &paCU, const CIEC_BOOL &paCD, const CIEC_BOOL &paR, const CIEC_BOOL &paLD, const CIEC_LINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_LINT &paCV) {
+    void evt_REQ(const CIEC_BOOL &paCU,
+                 const CIEC_BOOL &paCD,
+                 const CIEC_BOOL &paR,
+                 const CIEC_BOOL &paLD,
+                 const CIEC_LINT &paPV,
+                 CIEC_BOOL &paQU,
+                 CIEC_BOOL &paQD,
+                 CIEC_LINT &paCV) {
       var_CU = paCU;
       var_CD = paCD;
       var_R = paR;
@@ -85,8 +92,14 @@ class FORTE_FB_CTUD_LINT final : public CSimpleFB {
       paCV = var_CV;
     }
 
-    void operator()(const CIEC_BOOL &paCU, const CIEC_BOOL &paCD, const CIEC_BOOL &paR, const CIEC_BOOL &paLD, const CIEC_LINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_LINT &paCV) {
+    void operator()(const CIEC_BOOL &paCU,
+                    const CIEC_BOOL &paCD,
+                    const CIEC_BOOL &paR,
+                    const CIEC_BOOL &paLD,
+                    const CIEC_LINT &paPV,
+                    CIEC_BOOL &paQU,
+                    CIEC_BOOL &paQD,
+                    CIEC_LINT &paCV) {
       evt_REQ(paCU, paCD, paR, paLD, paPV, paQU, paQD, paCV);
     }
 };
-

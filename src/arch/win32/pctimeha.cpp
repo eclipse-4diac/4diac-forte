@@ -10,8 +10,8 @@
  *  Alois Zoitl, Gerhard Ebenhofer - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "pctimeha.h"
-#include "core/devexec.h"
-#include "core/timerhandlerfactory.h"
+#include "forte/devexec.h"
+#include "forte/timerhandlerfactory.h"
 
 #include <windows.h>
 

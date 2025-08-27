@@ -17,8 +17,8 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "core/datatypes/forte_any_int.h"
-#include "core/datatypes/forte_ulint.h"
+#include "forte/datatypes/forte_any_int.h"
+#include "forte/datatypes/forte_ulint.h"
 
 BOOST_AUTO_TEST_SUITE(CIEC_ULINT_function_test)
 

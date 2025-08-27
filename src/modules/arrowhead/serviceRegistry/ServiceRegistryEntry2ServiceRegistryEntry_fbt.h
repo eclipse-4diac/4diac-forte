@@ -13,7 +13,7 @@
 #ifndef _SERVICEREGISTRYENTRY2SERVICEREGISTRYENTRY_H_
 #define _SERVICEREGISTRYENTRY2SERVICEREGISTRYENTRY_H_
 
-#include "core/funcbloc.h"
+#include "forte/funcbloc.h"
 #include <forte_serviceregistryentry.h>
 
 class FORTE_ServiceRegistryEntry2ServiceRegistryEntry : public CFunctionBlock {
@@ -32,14 +32,13 @@ class FORTE_ServiceRegistryEntry2ServiceRegistryEntry : public CFunctionBlock {
 
     static const TEventID scmEventCNFID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
     FORTE_ServiceRegistryEntry2ServiceRegistryEntry(const forte::core::StringId paInstanceNameId,
                                                     forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_ServiceRegistryEntry2ServiceRegistryEntry() override = default;
+        ~FORTE_ServiceRegistryEntry2ServiceRegistryEntry() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

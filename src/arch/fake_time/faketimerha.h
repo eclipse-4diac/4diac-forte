@@ -12,8 +12,8 @@
  *******************************************************************************/
 
 #include "forte_thread.h"
-#include "core/timerha.h"
-#include "core/funcbloc.h"
+#include "forte/timerha.h"
+#include "forte/funcbloc.h"
 
 #include <queue>
 

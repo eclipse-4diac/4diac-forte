@@ -15,8 +15,8 @@
 #ifndef _GEN_STRUCT_MUX_H_
 #define _GEN_STRUCT_MUX_H_
 
-#include "core/genfb.h"
-#include "core/datatypes/forte_struct.h"
+#include "forte/genfb.h"
+#include "forte/datatypes/forte_struct.h"
 
 #include <memory>
 

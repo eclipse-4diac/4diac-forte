@@ -14,11 +14,11 @@
  *******************************************************************************/
 #include "FB_TOF_fbt.h"
 
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 using namespace std::literals;
 
@@ -31,18 +31,17 @@ namespace {
   const auto cDataOutputNames = std::array{"Q"_STRID, "ET"_STRID};
 
   const SFBInterfaceSpec cFBInterfaceSpec = {.mEINames = cEventInputNames,
-                                                 .mEITypeNames = {},
-                                                 .mEONames = cEventOutputNames,
-                                                 .mEOTypeNames = {},
-                                                 .mDINames = cDataInputNames,
-                                                 .mDONames = cDataOutputNames,
-                                                 .mDIONames = {},
-                                                 .mSocketNames = {},
-                                                 .mPlugNames = {}};
-}
+                                             .mEITypeNames = {},
+                                             .mEONames = cEventOutputNames,
+                                             .mEOTypeNames = {},
+                                             .mDINames = cDataInputNames,
+                                             .mDONames = cDataOutputNames,
+                                             .mDIONames = {},
+                                             .mSocketNames = {},
+                                             .mPlugNames = {}};
+} // namespace
 
 DEFINE_FIRMWARE_FB(FORTE_FB_TOF, "FB_TOF"_STRID)
-
 
 FORTE_FB_TOF::FORTE_FB_TOF(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
@@ -54,8 +53,7 @@ FORTE_FB_TOF::FORTE_FB_TOF(const forte::core::StringId paInstanceNameId, forte::
     conn_IN(nullptr),
     conn_PT(nullptr),
     conn_Q(*this, 0, var_Q),
-    conn_ET(*this, 1, var_ET) {
-};
+    conn_ET(*this, 1, var_ET) {};
 
 void FORTE_FB_TOF::setInitialValues() {
   CFunctionBlock::setInitialValues();
@@ -66,7 +64,7 @@ void FORTE_FB_TOF::setInitialValues() {
 }
 
 void FORTE_FB_TOF::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID:
       if (var_IN) {
         var_Q = true_BOOL;
@@ -96,31 +94,29 @@ void FORTE_FB_TOF::executeEvent(const TEventID paEIID, CEventChainExecutionThrea
 }
 
 void FORTE_FB_TOF::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       readData(1, var_PT, conn_PT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_FB_TOF::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(2, var_Q, conn_Q);
       writeData(3, var_ET, conn_ET);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_FB_TOF::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
     case 1: return &var_PT;
   }
@@ -128,7 +124,7 @@ CIEC_ANY *FORTE_FB_TOF::getDI(const size_t paIndex) {
 }
 
 CIEC_ANY *FORTE_FB_TOF::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_Q;
     case 1: return &var_ET;
   }
@@ -136,14 +132,14 @@ CIEC_ANY *FORTE_FB_TOF::getDO(const size_t paIndex) {
 }
 
 CEventConnection *FORTE_FB_TOF::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_FB_TOF::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
     case 1: return &conn_PT;
   }
@@ -151,7 +147,7 @@ CDataConnection **FORTE_FB_TOF::getDIConUnchecked(const TPortId paIndex) {
 }
 
 CDataConnection *FORTE_FB_TOF::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_Q;
     case 1: return &conn_ET;
   }

@@ -14,10 +14,10 @@
  *******************************************************************************/
 
 #include "com/opc_ua/opcua_remote_handler.h"
-#include "core/devexec.h"
-#include "core/iec61131_functions.h"
-#include "core/cominfra/basecommfb.h"
-#include "core/util/criticalregion.h"
+#include "forte/devexec.h"
+#include "forte/iec61131_functions.h"
+#include "forte/cominfra/basecommfb.h"
+#include "forte/util/criticalregion.h"
 #include "arch/forte_printer.h"
 
 using namespace forte::com_infra;

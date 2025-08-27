@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "core/genfb.h"
+#include "forte/genfb.h"
 
 class GEN_FORTE_F_MOVE final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE)
@@ -38,13 +38,9 @@ class GEN_FORTE_F_MOVE final : public CGenFunctionBlock<CFunctionBlock> {
     CDataConnection *getDOConUnchecked(TPortId paDONum) override;
 
   private:
-
-
     static const TEventID scmEventREQID = 0;
 
-
     static const TEventID scmEventCNFID = 0;
-
 
     bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 

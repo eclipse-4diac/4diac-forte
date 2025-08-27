@@ -10,8 +10,8 @@
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "posixsercommlayer.h"
-#include "core/util/devlog.h"
-#include "core/cominfra/commfb.h"
+#include "forte/util/devlog.h"
+#include "forte/cominfra/commfb.h"
 #include <unistd.h>
 #include <errno.h>
 #include <string.h>
@@ -19,8 +19,8 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <sockhand.h>
-#include "core/util/criticalregion.h"
-#include "core/cominfra/comlayersmanager.h"
+#include "forte/util/criticalregion.h"
+#include "forte/cominfra/comlayersmanager.h"
 
 using namespace forte::core::literals;
 

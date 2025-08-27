@@ -13,8 +13,8 @@
 #ifndef _PUBLISHEVENTOPCUA_H_
 #define _PUBLISHEVENTOPCUA_H_
 
-#include "core/cfb.h"
-#include "core/typelib.h"
+#include "forte/cfb.h"
+#include "forte/typelib.h"
 #include "ArrowheadPublishAdp_adp.h"
 
 class FORTE_PublishEventOpcUa : public CCompositeFB {
@@ -27,8 +27,7 @@ class FORTE_PublishEventOpcUa : public CCompositeFB {
     static const int scm_npublishEventAdpNum = 0;
 
   public:
-    FORTE_PublishEventOpcUa(const forte::core::StringId paInstanceNameId,
-                            forte::core::CFBContainer &paContainer) :
+    FORTE_PublishEventOpcUa(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
         ~FORTE_PublishEventOpcUa() override = default;
 };

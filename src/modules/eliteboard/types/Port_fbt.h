@@ -12,16 +12,16 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
+#include "forte/funcbloc.h"
 #include "PortAdapter_adp.h"
-#include "core/datatypes/forte_dword.h"
-#include "core/datatypes/forte_wstring.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
-#include "core/funcbloc.h"
+#include "forte/datatypes/forte_dword.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
+#include "forte/funcbloc.h"
 
 class FORTE_Port final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_Port)

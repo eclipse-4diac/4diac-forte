@@ -13,9 +13,9 @@
 
 #pragma once
 
-#include "core/io/configFB/io_slave_multi.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_wstring.h"
+#include "forte/io/configFB/io_slave_multi.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_wstring.h"
 #include "IORevPiBusAdapter.h"
 
 class FORTE_IORevPiAIO : public forte::core::io::IOConfigFBMultiSlave {
@@ -27,7 +27,6 @@ class FORTE_IORevPiAIO : public forte::core::io::IOConfigFBMultiSlave {
     static const TEventID scmEventINDID = 1;
     static const int scmBusAdapterInAdpNum = 0;
     static const int scmBusAdapterOutAdpNum = 1;
-
 
     static const TForteUInt8 scmSlaveConfigurationIO[];
     static const TForteUInt8 scmSlaveConfigurationIONum;

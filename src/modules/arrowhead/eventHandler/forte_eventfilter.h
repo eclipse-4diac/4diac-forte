@@ -13,12 +13,12 @@
 #ifndef _FORTE_EVENTFILTER_H_
 #define _FORTE_EVENTFILTER_H_
 
-#include "core/datatypes/forte_struct.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_struct.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_wstring.h"
 #include "forte_arrowheadsystem.h"
-#include "core/datatypes/forte_date_and_time.h"
-#include "core/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_date_and_time.h"
+#include "forte/datatypes/forte_bool.h"
 
 class CIEC_EventFilter : public CIEC_STRUCT {
     DECLARE_FIRMWARE_DATATYPE(EventFilter)

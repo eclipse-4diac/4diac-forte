@@ -19,13 +19,13 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_byte.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_byte.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_SPLIT_BYTE_INTO_QUARTERS final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_SPLIT_BYTE_INTO_QUARTERS)
@@ -34,7 +34,6 @@ class FORTE_SPLIT_BYTE_INTO_QUARTERS final : public CFunctionBlock {
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
@@ -42,8 +41,7 @@ class FORTE_SPLIT_BYTE_INTO_QUARTERS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_SPLIT_BYTE_INTO_QUARTERS(forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer);
+    FORTE_SPLIT_BYTE_INTO_QUARTERS(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_BYTE var_IN;
 

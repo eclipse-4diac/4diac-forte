@@ -14,7 +14,7 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include "core/util/criticalregion.h"
+#include "forte/util/criticalregion.h"
 
 #include <umic_dio.h>
 #include <umic_relay.h>

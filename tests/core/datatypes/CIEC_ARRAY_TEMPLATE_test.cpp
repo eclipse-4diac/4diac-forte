@@ -14,14 +14,14 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_int.h"
-#include "core/datatypes/forte_dint.h"
-#include "core/typelib.h"
-#include "core/datatypes/forte_array_dynamic.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_int.h"
+#include "forte/datatypes/forte_dint.h"
+#include "forte/typelib.h"
+#include "forte/datatypes/forte_array_dynamic.h"
 
 using namespace forte::core::literals;
 

@@ -12,9 +12,9 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/io/configFB/io_configFB_controller.h"
-#include "core/util/extevhandlerhelper.h"
+#include "forte/funcbloc.h"
+#include "forte/io/configFB/io_configFB_controller.h"
+#include "forte/util/extevhandlerhelper.h"
 
 class FORTE_ZephyrIOBase : public forte::core::io::IOConfigFBController {
 

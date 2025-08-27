@@ -14,9 +14,9 @@
 #ifndef _TRIGGER_SERVICE_CLIENT_H_
 #define _TRIGGER_SERVICE_CLIENT_H_
 
-#include "core/esfb.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_string.h"
+#include "forte/esfb.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_string.h"
 #include <ros/ros.h>
 #include <std_srvs/Trigger.h>
 

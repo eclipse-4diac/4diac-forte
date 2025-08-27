@@ -17,8 +17,8 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 
-#include "core/stringid.h"
-#include "core/com/factory.h"
+#include "forte/stringid.h"
+#include "forte/com/factory.h"
 
 using namespace forte::core::literals;
 

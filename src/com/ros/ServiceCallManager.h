@@ -14,8 +14,8 @@
 #ifndef CSERVICECALLMANAGER_H
 #define CSERVICECALLMANAGER_H
 
-#include "core/esfb.h"
-#include "core/extevhan.h"
+#include "forte/esfb.h"
+#include "forte/extevhan.h"
 #include <forte_thread.h>
 
 #include <vector>

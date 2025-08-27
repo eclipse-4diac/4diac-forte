@@ -10,7 +10,7 @@
  * Milan Vathoopan, Guru Chandrasekhara - initial API and implementation and/or initial documentation
  * Jose Cabral - Cleaning
  ************************************************************************************/
-#include "core/util/criticalregion.h"
+#include "forte/util/criticalregion.h"
 #include <fortealloc.h>
 
 #include "forte_thread.h"

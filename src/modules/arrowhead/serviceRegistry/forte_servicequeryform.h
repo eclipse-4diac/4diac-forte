@@ -13,10 +13,10 @@
 #ifndef _FORTE_SERVICEQUERYFORM_H_
 #define _FORTE_SERVICEQUERYFORM_H_
 
-#include "core/datatypes/forte_struct.h"
+#include "forte/datatypes/forte_struct.h"
 #include "forte_arrowheadservice.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_dint.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_dint.h"
 
 class CIEC_ServiceQueryForm : public CIEC_STRUCT {
     DECLARE_FIRMWARE_DATATYPE(ServiceQueryForm)

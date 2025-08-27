@@ -15,8 +15,8 @@
 
 #include "generated/ecetfactory.h"
 #include "core/ecetFake.h"
-#include "core/ecetfactory.h"
-#include "core/stringid.h"
+#include "forte/ecetfactory.h"
+#include "forte/stringid.h"
 
 using namespace forte::core::literals;
 

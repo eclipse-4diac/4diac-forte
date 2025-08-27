@@ -18,12 +18,12 @@
 
 using namespace forte::core::literals;
 
-#include "core/datatypes/forte_real.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_real.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 #include "SCALE_LIM_fct.h"
 
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE_LIM, "signalprocessing__SCALE_LIM"_STRID)
@@ -50,8 +50,8 @@ namespace {
   };
 } // namespace
 
-FORTE_signalprocessing__SCALE_LIM::FORTE_signalprocessing__SCALE_LIM(
-    const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_signalprocessing__SCALE_LIM::FORTE_signalprocessing__SCALE_LIM(const forte::core::StringId paInstanceNameId,
+                                                                     forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),

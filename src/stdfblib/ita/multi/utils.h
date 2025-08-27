@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "core/stringid.h"
+#include "forte/stringid.h"
 #include "generated/ecetfactory.h"
 #include "generated/timerhandlerfactory.h"
 

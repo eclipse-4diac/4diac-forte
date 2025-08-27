@@ -10,9 +10,9 @@
 #pragma once
 
 #include "WagoSlaveBase.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_wstring.h"
 
 class FORTE_Wago1405_6 : public WagoSlaveBase {
     DECLARE_FIRMWARE_FB(FORTE_Wago1405_6)
@@ -148,7 +148,6 @@ class FORTE_Wago1405_6 : public WagoSlaveBase {
     static const TEventID scmEventINDID = 1;
     static const int scmBusAdapterInAdpNum = 0;
     static const int scmBusAdapterOutAdpNum = 1;
-
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;

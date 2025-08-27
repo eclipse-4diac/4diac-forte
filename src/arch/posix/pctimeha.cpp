@@ -12,11 +12,11 @@
  *******************************************************************************/
 #include "arch/fortenew.h"
 #include "pctimeha.h"
-#include "core/devexec.h"
+#include "forte/devexec.h"
 #include <time.h>
 #include <sys/time.h>
 #include "arch/utils/timespec_utils.h"
-#include "core/timerhandlerfactory.h"
+#include "forte/timerhandlerfactory.h"
 
 using namespace forte::core::literals;
 

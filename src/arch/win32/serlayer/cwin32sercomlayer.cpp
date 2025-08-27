@@ -11,8 +11,8 @@
  *******************************************************************************/
 #include "cwin32sercomlayer.h"
 #include "cwin32sercomhandler.h"
-#include "core/cominfra/commfb.h"
-#include "core/cominfra/comlayersmanager.h"
+#include "forte/cominfra/commfb.h"
+#include "forte/cominfra/comlayersmanager.h"
 
 using namespace forte::core::literals;
 

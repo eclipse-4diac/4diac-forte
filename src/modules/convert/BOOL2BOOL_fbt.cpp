@@ -14,12 +14,12 @@
 
 #include "BOOL2BOOL_fbt.h"
 
-#include "core/datatypes/forte_bool.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 using namespace forte::core::literals;
 
@@ -43,8 +43,7 @@ namespace {
   };
 } // namespace
 
-FORTE_BOOL2BOOL::FORTE_BOOL2BOOL(const forte::core::StringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) :
+FORTE_BOOL2BOOL::FORTE_BOOL2BOOL(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(false_BOOL),
     var_OUT(false_BOOL),

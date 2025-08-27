@@ -14,8 +14,8 @@
 #include "EliteBoardDeviceController.h"
 #include "handle/PinHandle.h"
 
-#include "core/util/devlog.h"
-#include "core/datatypes/forte_word.h"
+#include "forte/util/devlog.h"
+#include "forte/datatypes/forte_word.h"
 
 #define POLL_FREQUENCY_Hz 1000
 #define PA_POLL_INTERVAL_MS 1000 / POLL_FREQUENCY_Hz

@@ -16,7 +16,7 @@
 
 #include <errno.h>
 #include <string.h>
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 
 #ifdef FORTE_FREERTOS_PLUS_TCP
 #include "sockhand_plustcp.h"

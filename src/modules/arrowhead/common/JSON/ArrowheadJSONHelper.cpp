@@ -14,9 +14,9 @@
 
 using namespace forte::core::literals;
 
-#include "core/datatypes/forte_bool.h"
-#include "core/util/parameterParser.h"
-#include "core/util/devlog.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/util/parameterParser.h"
+#include "forte/util/devlog.h"
 
 void ArrowheadJSONHelper::transformANYToJSON(const CIEC_ANY &paSource, CIEC_STRING &paResult) {
   switch (paSource.getDataTypeID()) {

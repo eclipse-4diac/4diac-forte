@@ -14,17 +14,17 @@
 #pragma once
 
 #include "PowerlinkFunctionBlockAT.h"
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_usint.h"
-#include "core/datatypes/forte_uint.h"
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_real.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_usint.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_real.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_X20AT2402 final : public PowerlinkFunctionBlockAT {
     DECLARE_FIRMWARE_FB(FORTE_X20AT2402)

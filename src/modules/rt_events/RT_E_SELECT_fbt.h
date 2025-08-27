@@ -13,14 +13,14 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_time.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_time.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 #include "rtesingle.h"
 
@@ -33,7 +33,6 @@ class FORTE_RT_E_SELECT final : public CRTEventSingle {
     static const TEventID scmEventEI1ID = 2;
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventEOID = 1;
-
 
     bool checkActivation(TEventID paEIID) override;
 

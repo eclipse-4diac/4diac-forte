@@ -13,10 +13,10 @@
 #define _SET_VALUE_H_
 
 #include <mtypes.h> /* M1 include files    */
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_int.h"
-#include "core/datatypes/forte_sint.h"
-#include "core/datatypes/forte_array.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_int.h"
+#include "forte/datatypes/forte_sint.h"
+#include "forte/datatypes/forte_array.h"
 
 // cppcheck-suppress noConstructor
 class FORTE_SET_VALUE : public CFunctionBlock {

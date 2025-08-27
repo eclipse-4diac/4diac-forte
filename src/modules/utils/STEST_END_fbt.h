@@ -16,14 +16,13 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
+#include "forte/funcbloc.h"
 
 class FORTE_STEST_END final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_STEST_END)
 
   private:
     static const TEventID scmEventREQID = 0;
-
 
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 

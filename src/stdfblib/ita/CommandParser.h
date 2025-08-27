@@ -14,9 +14,9 @@
 #ifndef _COMMAND_PARSER_H
 #define _COMMAND_PARSER_H
 
-#include "core/mgmcmd.h"
-#include "core/mgmcmdstruct.h"
-#include "core/datatypes/forte_string.h"
+#include "forte/mgmcmd.h"
+#include "forte/mgmcmdstruct.h"
+#include "forte/datatypes/forte_string.h"
 
 #include <string>
 

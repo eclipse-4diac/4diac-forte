@@ -13,7 +13,7 @@
 
 #include "ROSManager.h"
 #include <ros/ros.h>
-#include "core/util/extevhandlerhelper.h"
+#include "forte/util/extevhandlerhelper.h"
 
 #include "TRIGGER_SERVICE_SERVER.h"
 

@@ -13,10 +13,10 @@
 #ifndef _SUBSCRIBEEVENT_H_
 #define _SUBSCRIBEEVENT_H_
 
-#include "core/cfb.h"
-#include "core/typelib.h"
+#include "forte/cfb.h"
+#include "forte/typelib.h"
 #include <forte_eventfilter.h>
-#include "core/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_wstring.h"
 #include "SubscribeEventAdp_adp.h"
 
 class FORTE_SubscribeEvent : public CCompositeFB {

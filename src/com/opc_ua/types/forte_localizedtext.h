@@ -14,8 +14,8 @@
 #ifndef _FORTE_LOCALIZEDTEXT_H_
 #define _FORTE_LOCALIZEDTEXT_H_
 
-#include "core/datatypes/forte_struct.h"
-#include "core/datatypes/forte_string.h"
+#include "forte/datatypes/forte_struct.h"
+#include "forte/datatypes/forte_string.h"
 
 class CIEC_LocalizedText : public CIEC_STRUCT {
     DECLARE_FIRMWARE_DATATYPE(LocalizedText)

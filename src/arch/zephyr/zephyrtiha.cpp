@@ -10,10 +10,10 @@
   Dirk Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
 
-#include "core/devexec.h"
+#include "forte/devexec.h"
 #include "arch/fortenew.h"
 #include "zephyrtiha.h"
-#include "core/util/forte_constants.h"
+#include "forte/util/forte_constants.h"
 
 #ifndef K_FP_REGS
 #define K_FP_REGS 0

@@ -13,11 +13,11 @@
 #ifndef _FIELDSTOPUBLISHEVENT_H_
 #define _FIELDSTOPUBLISHEVENT_H_
 
-#include "core/basicfb.h"
+#include "forte/basicfb.h"
 #include <forte_publishevent.h>
 #include <forte_arrowheadsystem.h>
 #include <forte_arrowheadevent.h>
-#include "core/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_wstring.h"
 
 class FORTE_FieldsToPublishEvent : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToPublishEvent)
@@ -43,7 +43,6 @@ class FORTE_FieldsToPublishEvent : public CBasicFB {
 
     static const TEventID scmEventCNFID = 0;
 
-
     void alg_REQ();
     static const TForteInt16 scmStateSTART = 0;
     static const TForteInt16 scmStateREQ = 1;
@@ -56,7 +55,7 @@ class FORTE_FieldsToPublishEvent : public CBasicFB {
   public:
     FORTE_FieldsToPublishEvent(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_FieldsToPublishEvent() override = default;
+        ~FORTE_FieldsToPublishEvent() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

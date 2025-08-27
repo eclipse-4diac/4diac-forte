@@ -13,8 +13,8 @@
 
 using namespace forte::core::literals;
 
-#include "core/device.h"
-#include "core/mgmcmdstruct.h"
+#include "forte/device.h"
+#include "forte/mgmcmdstruct.h"
 
 DEFINE_FIRMWARE_FB(FORTE_EC_SET_EVT, "EC_SET_EVT"_STRID)
 

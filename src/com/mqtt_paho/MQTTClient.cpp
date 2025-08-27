@@ -12,10 +12,10 @@
  *******************************************************************************/
 
 #include "MQTTClient.h"
-#include "core/cominfra/basecommfb.h"
+#include "forte/cominfra/basecommfb.h"
 #include <algorithm>
 #include "MQTTClientConfigParser.h"
-#include "core/util/mainparam_utils.h"
+#include "forte/util/mainparam_utils.h"
 
 namespace {
   class MqttClientConfigFileOption final

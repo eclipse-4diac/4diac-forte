@@ -13,8 +13,8 @@
 #ifndef _QUERYSERVICEHTTP_H_
 #define _QUERYSERVICEHTTP_H_
 
-#include "core/cfb.h"
-#include "core/typelib.h"
+#include "forte/cfb.h"
+#include "forte/typelib.h"
 #include "QueryServicesAdp_adp.h"
 
 class FORTE_QueryServiceHTTP : public CCompositeFB {
@@ -27,8 +27,7 @@ class FORTE_QueryServiceHTTP : public CCompositeFB {
     static const int scm_nqueryServicesAdpNum = 0;
 
   public:
-    FORTE_QueryServiceHTTP(const forte::core::StringId paInstanceNameId,
-                           forte::core::CFBContainer &paContainer) :
+    FORTE_QueryServiceHTTP(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
         ~FORTE_QueryServiceHTTP() override = default;
 };

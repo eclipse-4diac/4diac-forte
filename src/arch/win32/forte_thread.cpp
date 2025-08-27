@@ -11,7 +11,7 @@
  *  Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
 #include "forte_thread.h"
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 
 DWORD WINAPI CWin32Thread::threadFunction(LPVOID arguments) {
   CThreadBase::runThread(static_cast<CWin32Thread *>(arguments));

@@ -17,7 +17,7 @@
 #ifndef _GEN_CLIENT_H_
 #define _GEN_CLIENT_H_
 
-#include "core/cominfra/commfb.h"
+#include "forte/cominfra/commfb.h"
 
 /*! \brief Implementation of the CLIENT_* SIFB.
  *

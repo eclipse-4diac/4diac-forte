@@ -15,7 +15,7 @@
  *******************************************************************************/
 
 #include "F_SUB_DATE_DATE_fbt.h"
-#include "core/datatypes/forte_date.h"
+#include "forte/datatypes/forte_date.h"
 
 using namespace forte::core::literals;
 
@@ -23,17 +23,15 @@ DEFINE_FIRMWARE_FB(FORTE_F_SUB_DATE_DATE, "F_SUB_DATE_DATE"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};
-  
-  
+
   const auto cDataOutputNames = std::array{"OUT"_STRID};
-  
-  
+
   const auto cEventInputNames = std::array{"REQ"_STRID};
   const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  
+
   const auto cEventOutputNames = std::array{"CNF"_STRID};
   const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -45,8 +43,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 FORTE_F_SUB_DATE_DATE::FORTE_F_SUB_DATE_DATE(const forte::core::StringId paInstanceNameId,
                                              forte::core::CFBContainer &paContainer) :

@@ -19,15 +19,15 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_wstring.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/funcbloc.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_SET_LOCAL_ADS_ADDRESS final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_SET_LOCAL_ADS_ADDRESS)
@@ -56,7 +56,6 @@ class FORTE_SET_LOCAL_ADS_ADDRESS final : public CFunctionBlock {
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventINITOID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
@@ -64,9 +63,8 @@ class FORTE_SET_LOCAL_ADS_ADDRESS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_SET_LOCAL_ADS_ADDRESS(const forte::core::StringId paInstanceNameId,
-                                forte::core::CFBContainer &paContainer) :
-    ~FORTE_SET_LOCAL_ADS_ADDRESS() override = default;
+    FORTE_SET_LOCAL_ADS_ADDRESS(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+        ~FORTE_SET_LOCAL_ADS_ADDRESS() override = default;
 
     FORTE_SET_LOCAL_ADS_ADDRESS(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 

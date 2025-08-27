@@ -13,8 +13,8 @@
 #ifndef _SUBSCRIBEEVENTHTTP_H_
 #define _SUBSCRIBEEVENTHTTP_H_
 
-#include "core/cfb.h"
-#include "core/typelib.h"
+#include "forte/cfb.h"
+#include "forte/typelib.h"
 #include "SubscribeEventAdp_adp.h"
 
 class FORTE_SubscribeEventHTTP : public CCompositeFB {
@@ -27,8 +27,7 @@ class FORTE_SubscribeEventHTTP : public CCompositeFB {
     static const int scmSubscribeEventAdpAdpNum = 0;
 
   public:
-    FORTE_SubscribeEventHTTP(const forte::core::StringId paInstanceNameId,
-                             forte::core::CFBContainer &paContainer) :
+    FORTE_SubscribeEventHTTP(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
         ~FORTE_SubscribeEventHTTP() override = default;
 };

@@ -9,7 +9,7 @@
  * Contributors:
  *   Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "core/datatype.h"
+#include "forte/datatype.h"
 
 // Testdata
 // BOOL

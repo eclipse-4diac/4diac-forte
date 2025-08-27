@@ -13,8 +13,8 @@
 #ifndef _SUBSCRIBEEVENTOPCUA_H_
 #define _SUBSCRIBEEVENTOPCUA_H_
 
-#include "core/cfb.h"
-#include "core/typelib.h"
+#include "forte/cfb.h"
+#include "forte/typelib.h"
 #include "SubscribeEventAdp_adp.h"
 
 class FORTE_SubscribeEventOpcUa : public CCompositeFB {
@@ -27,8 +27,7 @@ class FORTE_SubscribeEventOpcUa : public CCompositeFB {
     static const int scmSubscribeEventAdpAdpNum = 0;
 
   public:
-    FORTE_SubscribeEventOpcUa(const forte::core::StringId paInstanceNameId,
-                              forte::core::CFBContainer &paContainer) :
+    FORTE_SubscribeEventOpcUa(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
         ~FORTE_SubscribeEventOpcUa() override = default;
 };

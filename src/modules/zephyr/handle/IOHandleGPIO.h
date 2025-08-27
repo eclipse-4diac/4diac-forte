@@ -13,7 +13,7 @@
 #ifndef IOHANDLEGPIO_H
 #define IOHANDLEGPIO_H
 
-#include "core/io/mapper/io_observer.h"
+#include "forte/io/mapper/io_observer.h"
 #include <handler/IODeviceController.h>
 #include <handler/IOHandleGPIODescriptor.h>
 #include <stdint.h>

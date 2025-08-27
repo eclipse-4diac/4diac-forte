@@ -11,7 +11,7 @@
  *   Jose Cabral - Cleaning of code and error logging added
  *******************************************************************************/
 #include "core/fmi/processinterface.h"
-#include "core/util/extevhandlerhelper.h"
+#include "forte/util/extevhandlerhelper.h"
 #include <unistd.h>
 #include <mlpiGlobal.h>
 #include <mlpiApiLib.h>

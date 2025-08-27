@@ -12,9 +12,9 @@
 
 #pragma once
 
-#include "core/cfb.h"
-#include "core/typelib.h"
-#include "core/datatypes/forte_bool.h"
+#include "forte/cfb.h"
+#include "forte/typelib.h"
+#include "forte/datatypes/forte_bool.h"
 #include "E_PERMIT_fbt.h"
 #include "E_SR_fbt.h"
 #include "E_SWITCH_fbt.h"

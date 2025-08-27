@@ -20,7 +20,7 @@
  *******************************************************************************/
 
 #include "arch/forte_architecture_time.h"
-#include "core/util/forte_constants.h"
+#include "forte/util/forte_constants.h"
 
 time_t forte_timegm(struct tm *pa_tm) {
   return _mkgmtime(pa_tm);

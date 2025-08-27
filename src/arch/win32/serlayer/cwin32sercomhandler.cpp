@@ -11,8 +11,8 @@
  *******************************************************************************/
 #include "cwin32sercomhandler.h"
 #include "cwin32sercomlayer.h"
-#include "core/util/criticalregion.h"
-#include "core/cominfra/basecommfb.h"
+#include "forte/util/criticalregion.h"
+#include "forte/cominfra/basecommfb.h"
 
 CWin32SerComHandler::CWin32SerComHandler(CDeviceExecution &paDeviceExecution) :
     CExternalEventHandler(paDeviceExecution) {

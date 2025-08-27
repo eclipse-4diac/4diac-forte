@@ -16,11 +16,11 @@
 #include <boost/test/unit_test.hpp>
 
 // BOOLEAN
-#include "core/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_bool.h"
 // BIT-Datatypes
-#include "core/datatypes/forte_byte.h"
+#include "forte/datatypes/forte_byte.h"
 
-#include "core/datatypes/forte_sint.h"
+#include "forte/datatypes/forte_sint.h"
 
 #include "CIEC_PARTIAL_test.h"
 

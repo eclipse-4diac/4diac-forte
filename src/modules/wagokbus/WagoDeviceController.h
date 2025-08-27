@@ -13,7 +13,7 @@
 #ifndef SRC_MODULES_WAGOKBUS_MODULAR_WAGODEVICECONTROLLER_H_
 #define SRC_MODULES_WAGOKBUS_MODULAR_WAGODEVICECONTROLLER_H_
 
-#include "core/io/device/io_controller_multi.h"
+#include "forte/io/device/io_controller_multi.h"
 
 #define OS_MUST_BE_ARRAY
 

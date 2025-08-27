@@ -14,10 +14,9 @@
 #ifndef OPCCONNECTIONHANDLER_H_
 #define OPCCONNECTIONHANDLER_H_
 
-#include "core/util/singlet.h"
-#include "core/fortelist.h"
-#include "core/cominfra/comlayer.h"
-#include "core/fortelist.h"
+#include "forte/util/singlet.h"
+#include "forte/cominfra/comlayer.h"
+#include "../../core/src/fortelist.h"
 
 class COpcConnection;
 

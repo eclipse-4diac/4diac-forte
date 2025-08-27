@@ -17,14 +17,14 @@
 
 #pragma once
 
-#include "core/basicfb.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_real.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/basicfb.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_real.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_signalprocessing__DualHysteresis final : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_signalprocessing__DualHysteresis)
@@ -34,7 +34,6 @@ class FORTE_signalprocessing__DualHysteresis final : public CBasicFB {
     static const TEventID scmEventREQID = 1;
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventCNFID = 1;
-
 
     CIEC_ANY *getVarInternal(size_t) override;
 

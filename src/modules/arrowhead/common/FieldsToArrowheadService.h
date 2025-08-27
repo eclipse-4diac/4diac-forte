@@ -13,10 +13,10 @@
 #ifndef _FIELDSTOARROWHEADSERVICE_H_
 #define _FIELDSTOARROWHEADSERVICE_H_
 
-#include "core/basicfb.h"
+#include "forte/basicfb.h"
 #include <forte_arrowheadservice.h>
-#include "core/datatypes/forte_wstring.h"
-#include "core/datatypes/forte_array.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_array.h"
 
 class FORTE_FieldsToArrowheadService : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToArrowheadService)
@@ -52,7 +52,6 @@ class FORTE_FieldsToArrowheadService : public CBasicFB {
 
     static const TEventID scmEventCNFID = 0;
 
-
     void alg_REQ();
     static const TForteInt16 scmStateSTART = 0;
     static const TForteInt16 scmStateREQ = 1;
@@ -63,10 +62,9 @@ class FORTE_FieldsToArrowheadService : public CBasicFB {
     virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_FieldsToArrowheadService(forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+    FORTE_FieldsToArrowheadService(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_FieldsToArrowheadService() override = default;
+        ~FORTE_FieldsToArrowheadService() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

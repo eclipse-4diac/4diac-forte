@@ -13,7 +13,7 @@
 #ifndef _FIELDSTOPREFERREDPROVIDER_H_
 #define _FIELDSTOPREFERREDPROVIDER_H_
 
-#include "core/basicfb.h"
+#include "forte/basicfb.h"
 #include <forte_preferredprovider.h>
 #include <forte_arrowheadcloud.h>
 #include <forte_arrowheadsystem.h>
@@ -38,7 +38,6 @@ class FORTE_FieldsToPreferredProvider : public CBasicFB {
 
     static const TEventID scmEventCNFID = 0;
 
-
     void alg_REQ();
     static const TForteInt16 scmStateSTART = 0;
     static const TForteInt16 scmStateREQ = 1;
@@ -49,10 +48,9 @@ class FORTE_FieldsToPreferredProvider : public CBasicFB {
     virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_FieldsToPreferredProvider(forte::core::StringId paInstanceNameId,
-                                    forte::core::CFBContainer &paContainer) :
+    FORTE_FieldsToPreferredProvider(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_FieldsToPreferredProvider() override = default;
+        ~FORTE_FieldsToPreferredProvider() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

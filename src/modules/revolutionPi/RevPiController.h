@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "core/io/device/io_controller_multi.h"
+#include "forte/io/device/io_controller_multi.h"
 #include "lib/piControlIf.h"
 #include <forte_sem.h>
 

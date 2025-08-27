@@ -13,13 +13,13 @@
 #ifndef _FIELDSTOSERVICEREGISTRYENTRY_H_
 #define _FIELDSTOSERVICEREGISTRYENTRY_H_
 
-#include "core/basicfb.h"
+#include "forte/basicfb.h"
 #include <forte_arrowheadservice.h>
-#include "core/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_bool.h"
 #include <forte_arrowheadsystem.h>
-#include "core/datatypes/forte_dint.h"
+#include "forte/datatypes/forte_dint.h"
 #include <forte_serviceregistryentry.h>
-#include "core/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_wstring.h"
 
 class FORTE_FieldsToServiceRegistryEntry : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_FieldsToServiceRegistryEntry)
@@ -61,7 +61,6 @@ class FORTE_FieldsToServiceRegistryEntry : public CBasicFB {
 
     static const TEventID scmEventCNFID = 0;
 
-
     void alg_REQ();
     static const TForteInt16 scmStateSTART = 0;
     static const TForteInt16 scmStateREQ = 1;
@@ -72,10 +71,9 @@ class FORTE_FieldsToServiceRegistryEntry : public CBasicFB {
     virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_FieldsToServiceRegistryEntry(forte::core::StringId paInstanceNameId,
-                                       forte::core::CFBContainer &paContainer) :
+    FORTE_FieldsToServiceRegistryEntry(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
-    ~FORTE_FieldsToServiceRegistryEntry() override = default;
+        ~FORTE_FieldsToServiceRegistryEntry() override = default;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

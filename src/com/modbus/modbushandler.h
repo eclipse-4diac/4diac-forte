@@ -13,8 +13,8 @@
 #ifndef _MODBUSHANDLER_H_
 #define _MODBUSHANDLER_H_
 
-#include "generated/forte_config.h"
-#include "core/extevhan.h"
+#include "forte/config/forte_config.h"
+#include "forte/extevhan.h"
 
 namespace forte {
   namespace com_infra {

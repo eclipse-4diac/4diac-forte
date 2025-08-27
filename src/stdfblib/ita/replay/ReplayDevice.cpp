@@ -13,10 +13,10 @@
 
 #include "stdfblib/ita/replay/ReplayDevice.h"
 
-#include "core/devicefactory.h"
-#include "core/timerhandlerfactory.h"
-#include "core/ecetfactory.h"
-#include "core/trace/internal/flexibleTracer.h"
+#include "forte/devicefactory.h"
+#include "forte/timerhandlerfactory.h"
+#include "forte/ecetfactory.h"
+#include "../../../../core/src/trace/internal/flexibleTracer.h"
 
 using namespace forte::core::literals;
 

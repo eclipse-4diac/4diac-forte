@@ -13,7 +13,7 @@
  *                  - Code refactoring from char* to std::string
  *******************************************************************************/
 #include "opcconnectionimpl.h"
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 #include "arch/forte_stringFunctions.h"
 
 #include "opceventhandler.h"

@@ -18,8 +18,8 @@
 #ifndef _GEN_ARRAY2ARRAY_H_
 #define _GEN_ARRAY2ARRAY_H_
 
-#include "core/genfb.h"
-#include "core/datatypes/forte_array_dynamic.h"
+#include "forte/genfb.h"
+#include "forte/datatypes/forte_array_dynamic.h"
 
 class GEN_ARRAY2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY)

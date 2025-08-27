@@ -12,7 +12,7 @@
 #ifndef FORTEALLOC_H_
 #define FORTEALLOC_H_
 
-#include "core/datatype.h"
+#include "forte/datatype.h"
 #include <mtypes.h>
 #include <taskLib.h>
 #include <msys_e.h>

@@ -18,10 +18,10 @@
 #include <ros/service_callback_helper.h>
 #include <topic_tools/shape_shifter.h>
 
-#include "core/cominfra/comlayer.h"
-#include "core/extevhan.h"
+#include "forte/cominfra/comlayer.h"
+#include "forte/extevhan.h"
 #include <forte_thread.h>
-#include "core/util/singlet.h"
+#include "forte/util/singlet.h"
 
 #include <string>
 

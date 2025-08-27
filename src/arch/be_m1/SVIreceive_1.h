@@ -13,9 +13,9 @@
 #define _SVIRECEIVE_1_H_
 
 #include "BE_SVIFB.h"
-#include "core/datatypes/forte_any.h"
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_any.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_bool.h"
 
 class FORTE_SVIreceive_1 : public BE_SVIFB {
     DECLARE_FIRMWARE_FB(FORTE_SVIreceive_1)

@@ -14,12 +14,12 @@
 
 using namespace forte::core::literals;
 
-#include "core/datatypes/forte_uint.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 #include "plc01a1_controller.h"
 
 DEFINE_FIRMWARE_FB(PLC01A1ConfigFB, "PLC01A1"_STRID)
@@ -47,8 +47,7 @@ namespace {
   };
 } // namespace
 
-PLC01A1ConfigFB::PLC01A1ConfigFB(const forte::core::StringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) :
+PLC01A1ConfigFB::PLC01A1ConfigFB(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_IN1(u""_WSTRING),

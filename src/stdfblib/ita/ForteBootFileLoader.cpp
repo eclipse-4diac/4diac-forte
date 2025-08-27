@@ -18,11 +18,11 @@
 #include "ForteBootFileLoader_config.h"
 
 #include <utility>
-#include "core/util/devlog.h"
-#include "core/datatypes/forte_string.h"
-#include "core/mgmcmdstruct.h"
-#include "core/device.h"
-#include "core/util/mainparam_utils.h"
+#include "forte/util/devlog.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/mgmcmdstruct.h"
+#include "forte/device.h"
+#include "forte/util/mainparam_utils.h"
 
 namespace {
   class BootFileOption final

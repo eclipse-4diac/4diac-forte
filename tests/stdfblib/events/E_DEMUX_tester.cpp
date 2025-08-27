@@ -12,7 +12,7 @@
  *******************************************************************************/
 
 #include "../../core/fbtests/fbtester.h"
-#include "core/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_bool.h"
 #include <E_DEMUX.h>
 
 using namespace forte::core::literals;

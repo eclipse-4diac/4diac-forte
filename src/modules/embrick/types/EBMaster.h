@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include "core/io/configFB/io_master_multi.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_uint.h"
-#include "core/datatypes/forte_udint.h"
-#include "core/datatypes/forte_wstring.h"
+#include "forte/io/configFB/io_master_multi.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/datatypes/forte_udint.h"
+#include "forte/datatypes/forte_wstring.h"
 #include "EBBusAdapter.h"
 
 class FORTE_EBMaster final : public forte::core::io::IOConfigFBMultiMaster {

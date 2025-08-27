@@ -14,13 +14,13 @@
 
 #include "F_DT_TO_TOD_fbt.h"
 
-#include "core/datatypes/forte_date_and_time.h"
-#include "core/datatypes/forte_time_of_day.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_date_and_time.h"
+#include "forte/datatypes/forte_time_of_day.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 using namespace forte::core::literals;
 

@@ -18,15 +18,15 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_int.h"
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_wstring.h"
-#include "core/typelib.h"
-#include "core/datatypes/forte_array_dynamic.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_struct.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_int.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/typelib.h"
+#include "forte/datatypes/forte_array_dynamic.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_struct.h"
 
 using namespace forte::core::literals;
 

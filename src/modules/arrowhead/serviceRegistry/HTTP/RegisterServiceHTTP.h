@@ -13,8 +13,8 @@
 #ifndef _REGISTERSERVICEHTTP_H_
 #define _REGISTERSERVICEHTTP_H_
 
-#include "core/cfb.h"
-#include "core/typelib.h"
+#include "forte/cfb.h"
+#include "forte/typelib.h"
 #include "RegisterServiceAdp_adp.h"
 
 class FORTE_RegisterServiceHTTP : public CCompositeFB {
@@ -27,8 +27,7 @@ class FORTE_RegisterServiceHTTP : public CCompositeFB {
     static const int scm_nregisterServiceAdpNum = 0;
 
   public:
-    FORTE_RegisterServiceHTTP(const forte::core::StringId paInstanceNameId,
-                              forte::core::CFBContainer &paContainer) :
+    FORTE_RegisterServiceHTTP(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
         ~FORTE_RegisterServiceHTTP() override = default;
 };

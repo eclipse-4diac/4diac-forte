@@ -12,9 +12,9 @@
  *******************************************************************************/
 
 #include "../../core/fbtests/fbtestfixture.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_uint.h"
-#include "core/datatypes/forte_bool.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/datatypes/forte_bool.h"
 
 using namespace forte::core::literals;
 

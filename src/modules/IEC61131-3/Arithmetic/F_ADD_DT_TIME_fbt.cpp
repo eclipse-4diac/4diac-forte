@@ -15,8 +15,8 @@
  *******************************************************************************/
 
 #include "F_ADD_DT_TIME_fbt.h"
-#include "core/datatypes/forte_date_and_time.h"
-#include "core/datatypes/forte_time.h"
+#include "forte/datatypes/forte_date_and_time.h"
+#include "forte/datatypes/forte_time.h"
 
 using namespace forte::core::literals;
 
@@ -44,8 +44,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 FORTE_F_ADD_DT_TIME::FORTE_F_ADD_DT_TIME(const forte::core::StringId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer) :

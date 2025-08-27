@@ -11,8 +11,8 @@
 #ifndef SRC_MODULES_XQUERY_XQUERYCLIENT_H_
 #define SRC_MODULES_XQUERY_XQUERYCLIENT_H_
 
-#include "core/cominfra/comlayer.h"
-#include "core/extevhan.h"
+#include "forte/cominfra/comlayer.h"
+#include "forte/extevhan.h"
 #include <string.h>
 
 using namespace forte::com_infra;

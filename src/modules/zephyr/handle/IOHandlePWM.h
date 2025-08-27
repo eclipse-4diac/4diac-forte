@@ -13,10 +13,10 @@
 #ifndef IOHANDLEPWM_H
 #define IOHANDLEPWM_H
 
-#include "core/io/mapper/io_observer.h"
+#include "forte/io/mapper/io_observer.h"
 #include <handler/IODeviceController.h>
 #include <handler/IOHandlePWMDescriptor.h>
-#include "core/datatypes/forte_dword.h"
+#include "forte/datatypes/forte_dword.h"
 #include <stdint.h>
 
 class IODeviceController;

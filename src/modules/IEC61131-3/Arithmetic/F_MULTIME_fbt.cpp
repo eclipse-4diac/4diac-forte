@@ -15,7 +15,7 @@
  *******************************************************************************/
 
 #include "F_MULTIME_fbt.h"
-#include "core/datatypes/forte_time.h"
+#include "forte/datatypes/forte_time.h"
 
 using namespace forte::core::literals;
 
@@ -23,17 +23,15 @@ DEFINE_FIRMWARE_FB(FORTE_F_MULTIME, "F_MULTIME"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};
-  
-  
+
   const auto cDataOutputNames = std::array{"OUT"_STRID};
-  
-  
+
   const auto cEventInputNames = std::array{"REQ"_STRID};
   const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  
+
   const auto cEventOutputNames = std::array{"CNF"_STRID};
   const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -45,11 +43,9 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
+} // namespace
 
-
-FORTE_F_MULTIME::FORTE_F_MULTIME(const forte::core::StringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) :
+FORTE_F_MULTIME::FORTE_F_MULTIME(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_TIME(0)),
     var_IN2(CIEC_ANY_NUM_VARIANT()),

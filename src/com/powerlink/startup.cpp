@@ -10,7 +10,7 @@
  *  Alois Zoitl - migrated from posix main
  *******************************************************************************/
 
-#include "core/startuphook.h"
+#include "forte/startuphook.h"
 
 #include <EplWrapper.h>
 

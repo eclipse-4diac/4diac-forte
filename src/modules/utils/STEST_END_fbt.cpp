@@ -12,7 +12,7 @@
  *******************************************************************************/
 
 #include "STEST_END_fbt.h"
-#include "core/device.h"
+#include "forte/device.h"
 
 using namespace forte::core::literals;
 
@@ -33,8 +33,7 @@ namespace {
   };
 } // namespace
 
-FORTE_STEST_END::FORTE_STEST_END(const forte::core::StringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) :
+FORTE_STEST_END::FORTE_STEST_END(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId) {};
 
 void FORTE_STEST_END::executeEvent(TEventID paEIID, CEventChainExecutionThread *const) {

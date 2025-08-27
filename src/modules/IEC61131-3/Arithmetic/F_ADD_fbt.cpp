@@ -15,8 +15,8 @@
  *******************************************************************************/
 
 #include "F_ADD_fbt.h"
-#include "core/datatypes/forte_any_magnitude.h"
-#include "core/datatypes/forte_any_magnitude_variant.h"
+#include "forte/datatypes/forte_any_magnitude.h"
+#include "forte/datatypes/forte_any_magnitude_variant.h"
 
 using namespace forte::core::literals;
 
@@ -24,17 +24,15 @@ DEFINE_FIRMWARE_FB(FORTE_F_ADD, "F_ADD"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};
-  
-  
+
   const auto cDataOutputNames = std::array{"OUT"_STRID};
-  
-  
+
   const auto cEventInputNames = std::array{"REQ"_STRID};
   const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  
+
   const auto cEventOutputNames = std::array{"CNF"_STRID};
   const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = {},
@@ -46,8 +44,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 FORTE_F_ADD::FORTE_F_ADD(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),

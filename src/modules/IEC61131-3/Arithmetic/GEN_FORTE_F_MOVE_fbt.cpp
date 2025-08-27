@@ -13,10 +13,10 @@
 
 #include "GEN_FORTE_F_MOVE_fbt.h"
 #include <memory>
-#include "core/eventconn.h"
-#include "core/datatypes/forte_any.h"
-#include "core/datatypes/forte_any_variant.h"
-#include "core/stringid.h"
+#include "forte/eventconn.h"
+#include "forte/datatypes/forte_any.h"
+#include "forte/datatypes/forte_any_variant.h"
+#include "forte/stringid.h"
 
 using namespace forte::core::literals;
 

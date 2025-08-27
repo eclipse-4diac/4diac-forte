@@ -13,8 +13,8 @@
  *******************************************************************************/
 
 #include "analog10.h"
-#include "core/datatypes/forte_dword.h"
-#include "core/util/criticalregion.h"
+#include "forte/datatypes/forte_dword.h"
+#include "forte/util/criticalregion.h"
 
 EmbrickAnalog10SlaveHandle::EmbrickAnalog10SlaveHandle(forte::core::io::IODeviceController *paController,
                                                        forte::core::io::IOMapper::Direction paDirection,

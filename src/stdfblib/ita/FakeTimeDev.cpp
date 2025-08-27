@@ -15,12 +15,11 @@
  *******************************************************************************/
 #include "stdfblib/ita/FakeTimeDev.h"
 
-
-#include "core/stringid.h"
-#include "core/devicefactory.h"
+#include "forte/stringid.h"
+#include "forte/devicefactory.h"
 #include "../../arch/fake_time/faketimerha.h"
 
-#include "core/timerhandlerfactory.h"
+#include "forte/timerhandlerfactory.h"
 
 using namespace forte::core::literals;
 

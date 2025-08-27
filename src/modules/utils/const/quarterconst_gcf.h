@@ -15,16 +15,16 @@
 
 #pragma once
 
-#include "core/datatypes/forte_byte.h"
-#include "core/datatypes/forte_dword.h"
-#include "core/datatypes/forte_lword.h"
-#include "core/datatypes/forte_sint.h"
-#include "core/datatypes/forte_word.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_byte.h"
+#include "forte/datatypes/forte_dword.h"
+#include "forte/datatypes/forte_lword.h"
+#include "forte/datatypes/forte_sint.h"
+#include "forte/datatypes/forte_word.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_quarterconst final {
     DECLARE_FIRMWARE_GLOBAL_CONST()

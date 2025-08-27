@@ -13,19 +13,18 @@
 #ifndef _QUERYSERVICESADP_H_
 #define _QUERYSERVICESADP_H_
 
-#include "core/adapter.h"
-#include "core/typelib.h"
+#include "forte/adapter.h"
+#include "forte/typelib.h"
 #include <forte_servicequeryform.h>
 #include <forte_serviceregistryentry.h>
-#include "core/datatypes/forte_wstring.h"
-#include "core/datatypes/forte_array.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_array.h"
 
 class FORTE_QueryServicesAdp : public CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_QueryServicesAdp)
 
   private:
   private:
-
   public:
     CIEC_ServiceRegistryEntry *serviceEntries() {
       return (CIEC_ServiceRegistryEntry *) (*static_cast<CIEC_ARRAY<> *>(
@@ -37,7 +36,6 @@ class FORTE_QueryServicesAdp : public CAdapter {
     };
 
   private:
-
   public:
     CIEC_ServiceQueryForm &serviceQueryForm() {
       return *static_cast<CIEC_ServiceQueryForm *>((isSocket()) ? getDO(0) : getDI(0));
@@ -54,7 +52,6 @@ class FORTE_QueryServicesAdp : public CAdapter {
     }
 
   private:
-
   public:
     static const TEventID scmEventqueryID = 0;
     TEventID query() {
@@ -62,9 +59,6 @@ class FORTE_QueryServicesAdp : public CAdapter {
     }
 
   private:
-
-
-
   public:
     ADAPTER_CTOR(FORTE_QueryServicesAdp) {};
 

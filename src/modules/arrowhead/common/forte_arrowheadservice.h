@@ -13,10 +13,10 @@
 #ifndef _FORTE_ARROWHEADSERVICE_H_
 #define _FORTE_ARROWHEADSERVICE_H_
 
-#include "core/datatypes/forte_struct.h"
-#include "core/datatypes/forte_wstring.h"
-#include "core/datatypes/forte_dint.h"
-#include "core/datatypes/forte_array.h"
+#include "forte/datatypes/forte_struct.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_dint.h"
+#include "forte/datatypes/forte_array.h"
 
 class CIEC_ArrowheadService : public CIEC_STRUCT {
     DECLARE_FIRMWARE_DATATYPE(ArrowheadService)

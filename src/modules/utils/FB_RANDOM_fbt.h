@@ -21,14 +21,14 @@
 
 #pragma once
 
-#include "core/basicfb.h"
-#include "core/datatypes/forte_real.h"
-#include "core/datatypes/forte_uint.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/basicfb.h"
+#include "forte/datatypes/forte_real.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 #include <random>
 
 class FORTE_FB_RANDOM final : public CBasicFB {
@@ -39,7 +39,6 @@ class FORTE_FB_RANDOM final : public CBasicFB {
     static const TEventID scmEventREQID = 1;
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventCNFID = 1;
-
 
     CIEC_ANY *getVarInternal(size_t) override;
 

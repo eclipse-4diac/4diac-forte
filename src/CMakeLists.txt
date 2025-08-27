@@ -18,17 +18,6 @@ target_include_directories(forte-global INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/st
 ###############################################################################
 # Core infrastructure
 
-if (FORTE_BUILD_EXECUTABLE)
-    add_executable(forte)
-    install(TARGETS forte RUNTIME DESTINATION bin)
-    message(STATUS "Building executable")
-else()
-    add_library(forte)
-    install(TARGETS forte RUNTIME DESTINATION lib)
-    message(STATUS "Building library")
-endif()
-
-add_subdirectory(core)
 add_subdirectory(arch)
 add_subdirectory(stdfblib)
 add_subdirectory(modules)

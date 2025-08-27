@@ -11,9 +11,9 @@
 #ifndef XQUERY_XQUERYHANDLER_H_
 #define XQUERY_XQUERYHANDLER_H_
 
-#include "core/extevhan.h"
+#include "forte/extevhan.h"
 #include "forte_thread.h"
-#include "core/util/singlet.h"
+#include "forte/util/singlet.h"
 #include "forte_sem.h"
 #include "xqueryClientLayer.h"
 #include <vector>

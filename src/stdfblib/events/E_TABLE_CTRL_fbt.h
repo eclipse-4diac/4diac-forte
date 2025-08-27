@@ -18,14 +18,14 @@
 
 #pragma once
 
-#include "core/basicfb.h"
-#include "core/datatypes/forte_time.h"
-#include "core/datatypes/forte_uint.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/basicfb.h"
+#include "forte/datatypes/forte_time.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_E_TABLE_CTRL final : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_E_TABLE_CTRL)
@@ -34,7 +34,6 @@ class FORTE_E_TABLE_CTRL final : public CBasicFB {
     static const TEventID scmEventSTARTID = 0;
     static const TEventID scmEventCLKID = 1;
     static const TEventID scmEventCLKOID = 0;
-
 
     CIEC_ANY *getVarInternal(size_t) override;
 

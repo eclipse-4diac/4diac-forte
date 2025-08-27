@@ -14,8 +14,8 @@
 #pragma once
 
 #include "com/opc_ua/opcua_local_handler.h"
-#include "core/mgmcmd.h"
-#include "core/mgmcmdstruct.h"
+#include "forte/mgmcmd.h"
+#include "forte/mgmcmdstruct.h"
 
 #include <vector>
 #include <string>

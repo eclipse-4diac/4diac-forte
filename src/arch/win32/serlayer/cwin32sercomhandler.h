@@ -11,7 +11,7 @@
  *******************************************************************************/
 #include "../forte_thread.h"
 #include "../forte_sync.h"
-#include "core/extevhan.h"
+#include "forte/extevhan.h"
 #include "../forte_sem.h"
 
 #ifndef CWIN32SERCOMHANDLER_H_

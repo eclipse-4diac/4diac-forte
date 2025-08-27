@@ -13,12 +13,12 @@
 #ifndef _REQUESTORCHESTRATIONFORM_H_
 #define _REQUESTORCHESTRATIONFORM_H_
 
-#include "core/cfb.h"
-#include "core/typelib.h"
+#include "forte/cfb.h"
+#include "forte/typelib.h"
 #include <forte_orchestrationform.h>
 #include <forte_servicerequestform.h>
-#include "core/datatypes/forte_wstring.h"
-#include "core/datatypes/forte_array.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_array.h"
 #include "OrchestratorRequestAdp_adp.h"
 
 class FORTE_RequestOrchestrationForm : public CCompositeFB {

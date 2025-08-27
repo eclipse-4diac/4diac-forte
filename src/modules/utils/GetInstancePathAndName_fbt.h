@@ -13,14 +13,14 @@
 
 #pragma once
 
-#include "core/simplefb.h"
-#include "core/datatypes/forte_char.h"
-#include "core/datatypes/forte_string.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/simplefb.h"
+#include "forte/datatypes/forte_char.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_GetInstancePathAndName final : public CSimpleFB {
     DECLARE_FIRMWARE_FB(FORTE_GetInstancePathAndName)
@@ -28,7 +28,6 @@ class FORTE_GetInstancePathAndName final : public CSimpleFB {
   private:
     static const TEventID scmEventREQID = 0;
     static const TEventID scmEventCNFID = 0;
-
 
     CIEC_ANY *getVarInternal(size_t) override;
 

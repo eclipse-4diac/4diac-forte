@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "core/funcbloc.h"
+#include "forte/funcbloc.h"
 #include "com/opc_ua/types/forte_localizedtext.h"
 
 class FORTE_LocalizedText2LocalizedText : public CFunctionBlock {
@@ -23,15 +23,13 @@ class FORTE_LocalizedText2LocalizedText : public CFunctionBlock {
 
     static const TEventID scmEventCNFID = 0;
 
-
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_LocalizedText2LocalizedText(forte::core::StringId paInstanceNameId,
-                                      forte::core::CFBContainer &paContainer);
+    FORTE_LocalizedText2LocalizedText(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_LocalizedText var_IN;
     CIEC_LocalizedText var_OUT;

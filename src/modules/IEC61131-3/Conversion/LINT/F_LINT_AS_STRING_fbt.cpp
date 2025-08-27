@@ -14,13 +14,13 @@
 
 #include "F_LINT_AS_STRING_fbt.h"
 
-#include "core/datatypes/forte_lint.h"
-#include "core/datatypes/forte_string.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_lint.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 using namespace forte::core::literals;
 
@@ -42,10 +42,10 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
+} // namespace
 
-
-FORTE_F_LINT_AS_STRING::FORTE_F_LINT_AS_STRING(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_LINT_AS_STRING::FORTE_F_LINT_AS_STRING(const forte::core::StringId paInstanceNameId,
+                                               forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_LINT),
     var_OUT(""_STRING),
@@ -60,12 +60,9 @@ void FORTE_F_LINT_AS_STRING::setInitialValues() {
 }
 
 void FORTE_F_LINT_AS_STRING::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventREQID:
-      enterStateREQ(paECET);
-      break;
-    default:
-      break;
+  switch (paEIID) {
+    case scmEventREQID: enterStateREQ(paECET); break;
+    default: break;
   }
 }
 
@@ -75,57 +72,55 @@ void FORTE_F_LINT_AS_STRING::enterStateREQ(CEventChainExecutionThread *const paE
 }
 
 void FORTE_F_LINT_AS_STRING::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_F_LINT_AS_STRING::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_F_LINT_AS_STRING::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_F_LINT_AS_STRING::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_F_LINT_AS_STRING::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_F_LINT_AS_STRING::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_F_LINT_AS_STRING::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -137,6 +132,6 @@ CIEC_ANY *FORTE_F_LINT_AS_STRING::getVarInternal(size_t) {
 
 void FORTE_F_LINT_AS_STRING::alg_REQ(void) {
 
-  #line 2 "F_LINT_AS_STRING.fbt"
+#line 2 "F_LINT_AS_STRING.fbt"
   var_OUT = func_LINT_AS_STRING(var_IN);
 }

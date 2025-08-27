@@ -13,17 +13,16 @@
 #ifndef _SUBSCRIBEEVENTADP_H_
 #define _SUBSCRIBEEVENTADP_H_
 
-#include "core/adapter.h"
-#include "core/typelib.h"
+#include "forte/adapter.h"
+#include "forte/typelib.h"
 #include <forte_eventfilter.h>
-#include "core/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_wstring.h"
 
 class FORTE_SubscribeEventAdp : public CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_SubscribeEventAdp)
 
   private:
   private:
-
   public:
     CIEC_EventFilter &eventFilter() {
       return *static_cast<CIEC_EventFilter *>((isSocket()) ? getDO(0) : getDI(0));
@@ -44,7 +43,6 @@ class FORTE_SubscribeEventAdp : public CAdapter {
     }
 
   private:
-
   public:
     static const TEventID scmEventSubscribeID = 0;
     int Subscribe() {
@@ -56,9 +54,6 @@ class FORTE_SubscribeEventAdp : public CAdapter {
     }
 
   private:
-
-
-
   public:
     ADAPTER_CTOR(FORTE_SubscribeEventAdp) {};
 

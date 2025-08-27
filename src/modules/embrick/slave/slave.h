@@ -21,7 +21,7 @@
 #include "handle.h"
 #include <stdint.h>
 #include <forte_sync.h>
-#include "core/io/mapper/io_mapper.h"
+#include "forte/io/mapper/io_mapper.h"
 
 class EmbrickBusHandler;
 

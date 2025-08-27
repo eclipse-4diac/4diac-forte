@@ -13,19 +13,18 @@
 #ifndef _ORCHESTRATORREQUESTADP_H_
 #define _ORCHESTRATORREQUESTADP_H_
 
-#include "core/adapter.h"
-#include "core/typelib.h"
+#include "forte/adapter.h"
+#include "forte/typelib.h"
 #include <forte_orchestrationform.h>
 #include <forte_servicerequestform.h>
-#include "core/datatypes/forte_wstring.h"
-#include "core/datatypes/forte_array.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_array.h"
 
 class FORTE_OrchestratorRequestAdp : public CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_OrchestratorRequestAdp)
 
   private:
   private:
-
   public:
     CIEC_OrchestrationForm *orchestrationResponse() {
       return (CIEC_OrchestrationForm *) (*static_cast<CIEC_ARRAY<> *>(
@@ -37,7 +36,6 @@ class FORTE_OrchestratorRequestAdp : public CAdapter {
     };
 
   private:
-
   public:
     CIEC_ServiceRequestForm &serviceRequestForm() {
       return *static_cast<CIEC_ServiceRequestForm *>((isSocket()) ? getDO(0) : getDI(0));
@@ -54,7 +52,6 @@ class FORTE_OrchestratorRequestAdp : public CAdapter {
     }
 
   private:
-
   public:
     static const TEventID scmEventrequestOrchestatorID = 0;
     int requestOrchestator() {
@@ -62,9 +59,6 @@ class FORTE_OrchestratorRequestAdp : public CAdapter {
     }
 
   private:
-
-
-
   public:
     ADAPTER_CTOR(FORTE_OrchestratorRequestAdp) {};
 

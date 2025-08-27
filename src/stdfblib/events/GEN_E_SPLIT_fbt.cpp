@@ -13,7 +13,7 @@
  *******************************************************************************/
 
 #include "GEN_E_SPLIT_fbt.h"
-#include "core/util/string_utils.h"
+#include "forte/util/string_utils.h"
 
 using namespace forte::core::literals;
 

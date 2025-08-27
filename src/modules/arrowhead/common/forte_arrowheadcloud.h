@@ -13,10 +13,10 @@
 #ifndef _FORTE_ARROWHEADSCLOUD_H_
 #define _FORTE_ARROWHEADSCLOUD_H_
 
-#include "core/datatypes/forte_struct.h"
-#include "core/datatypes/forte_wstring.h"
-#include "core/datatypes/forte_dint.h"
-#include "core/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_struct.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_dint.h"
+#include "forte/datatypes/forte_bool.h"
 
 class CIEC_ArrowheadCloud : public CIEC_STRUCT {
     DECLARE_FIRMWARE_DATATYPE(ArrowheadCloud)

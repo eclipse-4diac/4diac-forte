@@ -13,7 +13,7 @@
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
-#include "core/datatypes/forte_any_variant.h"
+#include "forte/datatypes/forte_any_variant.h"
 
 using namespace forte::core::literals;
 

@@ -15,8 +15,8 @@
 #ifndef OPCCOMLAYER_H_
 #define OPCCOMLAYER_H_
 
-#include "generated/forte_config.h"
-#include "core/cominfra/comlayer.h"
+#include "forte/config/forte_config.h"
+#include "forte/cominfra/comlayer.h"
 #include "opcprocessvar.h"
 #include <vector>
 #include <deque>

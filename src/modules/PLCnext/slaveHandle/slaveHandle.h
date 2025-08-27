@@ -16,9 +16,9 @@
 #include <stdint.h>
 #include <cstring>
 #include <forte_sync.h>
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_dword.h"
-#include "core/io/mapper/io_handle.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_dword.h"
+#include "forte/io/mapper/io_handle.h"
 #include "../deviceController.h"
 
 class PLCnextSlaveHandler;

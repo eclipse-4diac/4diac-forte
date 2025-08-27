@@ -15,8 +15,8 @@
 #include "slave.h"
 #include <cstddef>
 #include "../handler/bus.h"
-#include "core/io/mapper/io_mapper.h"
-#include "core/util/criticalregion.h"
+#include "forte/io/mapper/io_mapper.h"
+#include "forte/util/criticalregion.h"
 
 const int EmbrickSlaveHandler::scmMaxUpdateErrors = 50;
 

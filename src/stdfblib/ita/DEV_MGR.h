@@ -14,11 +14,11 @@
 #ifndef _DEV_MGR_H_
 #define _DEV_MGR_H_
 
-#include "core/funcbloc.h"
-#include "core/mgmcmdstruct.h"
-#include "core/cominfra/commfb.h"
+#include "forte/funcbloc.h"
+#include "forte/mgmcmdstruct.h"
+#include "forte/cominfra/commfb.h"
 #include "stdfblib/ita/CommandParser.h"
-#include "core/datatypes/forte_string.h"
+#include "forte/datatypes/forte_string.h"
 
 class CDevice;
 
@@ -42,13 +42,11 @@ class DEV_MGR : public forte::com_infra::CCommFB {
 
     EMGMResponse parseAndExecuteMGMCommand(const char *const paDest, char *paCommand);
 
-
     static const TEventID scmEventINITID = 0;
     static const TEventID scmEventREQID = 1;
 
     static const TEventID scmEventINITOID = 0;
     static const TEventID scmEventCNFID = 1;
-
 
     //! The device the block is contained in
     CDevice &mDevice;

@@ -19,11 +19,11 @@
 
 #include "E_N_TABLE_fbt.h"
 
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 using namespace std::literals;
 using namespace forte::core::literals;
@@ -62,16 +62,15 @@ namespace {
   });
 
   const SCFB_FBNData cFBNData = {
-    .mEventConnections = cEventConnections,
-    .mDataConnections = cDataConnections,
-    .mAdapterConnections = {},
+      .mEventConnections = cEventConnections,
+      .mDataConnections = cDataConnections,
+      .mAdapterConnections = {},
   };
-}
+} // namespace
 
 DEFINE_FIRMWARE_FB(FORTE_E_N_TABLE, "E_N_TABLE"_STRID)
 
-FORTE_E_N_TABLE::FORTE_E_N_TABLE(const forte::core::StringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer) :
+FORTE_E_N_TABLE::FORTE_E_N_TABLE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_TABLE("E_TABLE"_STRID, *this),
     fb_E_DEMUX("E_DEMUX"_STRID, *this),
@@ -82,8 +81,7 @@ FORTE_E_N_TABLE::FORTE_E_N_TABLE(const forte::core::StringId paInstanceNameId,
     conn_DT(nullptr),
     conn_N(nullptr),
     conn_if2in_DT(*this, 0, CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),
-    conn_if2in_N(*this, 1, 0_UINT) {
-};
+    conn_if2in_N(*this, 1, 0_UINT) {};
 
 void FORTE_E_N_TABLE::setInitialValues() {
   CCompositeFB::setInitialValues();
@@ -92,7 +90,7 @@ void FORTE_E_N_TABLE::setInitialValues() {
 }
 
 void FORTE_E_N_TABLE::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventSTARTID: {
       readData(0, conn_if2in_DT.getValue(), conn_DT);
       readData(1, conn_if2in_N.getValue(), conn_N);

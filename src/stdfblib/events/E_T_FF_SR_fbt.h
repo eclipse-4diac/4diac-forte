@@ -19,13 +19,13 @@
 
 #pragma once
 
-#include "core/basicfb.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/basicfb.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 class FORTE_E_T_FF_SR final : public CBasicFB {
     DECLARE_FIRMWARE_FB(FORTE_E_T_FF_SR)
@@ -35,7 +35,6 @@ class FORTE_E_T_FF_SR final : public CBasicFB {
     static const TEventID scmEventRID = 1;
     static const TEventID scmEventCLKID = 2;
     static const TEventID scmEventEOID = 0;
-
 
     CIEC_ANY *getVarInternal(size_t) override;
 

@@ -15,10 +15,10 @@
 
 #include <stdio.h>
 #include <signal.h>
-#include "core/forteinstance.h"
+#include "forte/forteinstance.h"
 #include "arch/forte_architecture.h"
 
-#include "core/util/mainparam_utils.h"
+#include "forte/util/mainparam_utils.h"
 
 void hookSignals();
 

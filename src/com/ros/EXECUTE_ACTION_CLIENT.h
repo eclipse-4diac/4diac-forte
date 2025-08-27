@@ -14,10 +14,10 @@
 #ifndef _EXECUTE_ACTION_CLIENT_H_
 #define _EXECUTE_ACTION_CLIENT_H_
 
-#include "core/esfb.h"
-#include "core/datatypes/forte_bool.h"
-#include "core/datatypes/forte_string.h"
-#include "core/datatypes/forte_dint.h"
+#include "forte/esfb.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_dint.h"
 
 #include <actionlib/client/simple_action_client.h>
 #include <reapp_msgs/ExecuteAction.h>

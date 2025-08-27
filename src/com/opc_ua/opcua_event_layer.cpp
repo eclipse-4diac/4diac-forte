@@ -12,10 +12,10 @@
  *******************************************************************************/
 
 #include "com/opc_ua/opcua_event_layer.h"
-#include "core/util/parameterParser.h"
-#include "core/cominfra/basecommfb.h"
+#include "forte/util/parameterParser.h"
+#include "forte/cominfra/basecommfb.h"
 #include "com/opc_ua/opcua_local_handler.h"
-#include "core/cominfra/comlayersmanager.h"
+#include "forte/cominfra/comlayersmanager.h"
 
 using namespace forte::com_infra;
 using namespace forte::core::literals;

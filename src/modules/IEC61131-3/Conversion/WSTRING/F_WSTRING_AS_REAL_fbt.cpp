@@ -14,13 +14,13 @@
 
 #include "F_WSTRING_AS_REAL_fbt.h"
 
-#include "core/datatypes/forte_real.h"
-#include "core/datatypes/forte_wstring.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_real.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 
 using namespace forte::core::literals;
 
@@ -42,10 +42,10 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
+} // namespace
 
-
-FORTE_F_WSTRING_AS_REAL::FORTE_F_WSTRING_AS_REAL(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_WSTRING_AS_REAL::FORTE_F_WSTRING_AS_REAL(const forte::core::StringId paInstanceNameId,
+                                                 forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(u""_WSTRING),
     var_OUT(0_REAL),
@@ -60,12 +60,9 @@ void FORTE_F_WSTRING_AS_REAL::setInitialValues() {
 }
 
 void FORTE_F_WSTRING_AS_REAL::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch(paEIID) {
-    case scmEventREQID:
-      enterStateREQ(paECET);
-      break;
-    default:
-      break;
+  switch (paEIID) {
+    case scmEventREQID: enterStateREQ(paECET); break;
+    default: break;
   }
 }
 
@@ -75,57 +72,55 @@ void FORTE_F_WSTRING_AS_REAL::enterStateREQ(CEventChainExecutionThread *const pa
 }
 
 void FORTE_F_WSTRING_AS_REAL::readInputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 void FORTE_F_WSTRING_AS_REAL::writeOutputData(const TEventID paEIID) {
-  switch(paEIID) {
+  switch (paEIID) {
     case scmEventCNFID: {
       writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
       break;
     }
-    default:
-      break;
+    default: break;
   }
 }
 
 CIEC_ANY *FORTE_F_WSTRING_AS_REAL::getDI(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_IN;
   }
   return nullptr;
 }
 
 CIEC_ANY *FORTE_F_WSTRING_AS_REAL::getDO(const size_t paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
 CEventConnection *FORTE_F_WSTRING_AS_REAL::getEOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
 CDataConnection **FORTE_F_WSTRING_AS_REAL::getDIConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_IN;
   }
   return nullptr;
 }
 
 CDataConnection *FORTE_F_WSTRING_AS_REAL::getDOConUnchecked(const TPortId paIndex) {
-  switch(paIndex) {
+  switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
@@ -137,6 +132,6 @@ CIEC_ANY *FORTE_F_WSTRING_AS_REAL::getVarInternal(size_t) {
 
 void FORTE_F_WSTRING_AS_REAL::alg_REQ(void) {
 
-  #line 2 "F_WSTRING_AS_REAL.fbt"
+#line 2 "F_WSTRING_AS_REAL.fbt"
   var_OUT = func_WSTRING_AS_REAL(var_IN);
 }

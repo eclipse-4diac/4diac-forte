@@ -21,12 +21,12 @@
 
 using namespace forte::core::literals;
 
-#include "core/datatypes/forte_time.h"
-#include "core/iec61131_functions.h"
-#include "core/datatypes/forte_array_common.h"
-#include "core/datatypes/forte_array.h"
-#include "core/datatypes/forte_array_fixed.h"
-#include "core/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_time.h"
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
 #pragma region includes
 #include <handler/IOHandleGPIODescriptor.h>
 #include <handler/IOHandleADCDescriptor.h>
@@ -53,11 +53,9 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
+} // namespace
 
-
-FORTE_ZephyrIO::FORTE_ZephyrIO(const forte::core::StringId paInstanceNameId,
-                               forte::core::CFBContainer &paContainer) :
+FORTE_ZephyrIO::FORTE_ZephyrIO(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 #pragma region base class spec
     FORTE_ZephyrIOBase(paContainer, cFBInterfaceSpec, paInstanceNameId),
 #pragma endregion base class spec

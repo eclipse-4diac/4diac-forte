@@ -11,7 +11,7 @@
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
-#include "core/funcbloc.h"
+#include "forte/funcbloc.h"
 #include "fbcontainermock.h"
 
 class CFunctionBlockMock : public CFunctionBlock {

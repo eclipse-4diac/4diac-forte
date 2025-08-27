@@ -13,13 +13,13 @@
  *******************************************************************************/
 #include <fortealloc.h>
 #include "forte_thread.h"
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 #include <errno.h>
 #include <cstring>
 #include <signal.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include "core/util/criticalregion.h"
+#include "forte/util/criticalregion.h"
 
 forte::arch::CThreadBase<pthread_t>::TThreadHandleType CPosixThread::createThread(long paStackSize) {
   TThreadHandleType retVal = 0;

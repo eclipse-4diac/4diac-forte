@@ -18,11 +18,11 @@ using namespace forte::core::literals;
 #include "com/opc_ua/opcua_layer.h"
 #include "com/opc_ua/struct_member_action_info.h"
 #include "com/opc_ua/struct_action_info.h"
-#include "core/cominfra/basecommfb.h"
+#include "forte/cominfra/basecommfb.h"
 #include "com/opc_ua/opcua_local_handler.h"
-#include "core/util/parameterParser.h"
+#include "forte/util/parameterParser.h"
 #include <sstream>
-#include "core/util/string_utils.h"
+#include "forte/util/string_utils.h"
 
 using namespace forte::com_infra;
 

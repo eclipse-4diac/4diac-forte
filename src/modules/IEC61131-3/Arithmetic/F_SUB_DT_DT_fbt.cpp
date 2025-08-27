@@ -15,7 +15,7 @@
  *******************************************************************************/
 
 #include "F_SUB_DT_DT_fbt.h"
-#include "core/datatypes/forte_date_and_time.h"
+#include "forte/datatypes/forte_date_and_time.h"
 
 using namespace forte::core::literals;
 

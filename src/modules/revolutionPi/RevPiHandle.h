@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "core/io/mapper/io_handle.h"
+#include "forte/io/mapper/io_handle.h"
 #include "RevPiController.h"
 
 class RevPiHandle : public forte::core::io::IOHandle {

@@ -17,8 +17,8 @@
 #ifndef _GENBITBASE_H_
 #define _GENBITBASE_H_
 
-#include "core/genfb.h"
-#include "core/datatypes/forte_any_bit_variant.h"
+#include "forte/genfb.h"
+#include "forte/datatypes/forte_any_bit_variant.h"
 
 #include <memory>
 

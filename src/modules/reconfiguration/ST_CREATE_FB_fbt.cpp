@@ -13,8 +13,8 @@
 
 using namespace forte::core::literals;
 
-#include "core/device.h"
-#include "core/mgmcmdstruct.h"
+#include "forte/device.h"
+#include "forte/mgmcmdstruct.h"
 
 DEFINE_FIRMWARE_FB(FORTE_ST_CREATE_FB, "ST_CREATE_FB"_STRID)
 

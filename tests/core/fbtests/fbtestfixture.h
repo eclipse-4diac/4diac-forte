@@ -17,9 +17,9 @@
 #ifndef TESTS_CORE_FBTESTS_FBTESTFIXTURE_H_
 #define TESTS_CORE_FBTESTS_FBTESTFIXTURE_H_
 
-#include "core/datatypes/forte_any.h"
+#include "forte/datatypes/forte_any.h"
 #include "arch/fortenew.h"
-#include "core/genfb.h"
+#include "forte/genfb.h"
 #include "forte_sync.h"
 #include <boost/test/unit_test.hpp>
 #include <vector>

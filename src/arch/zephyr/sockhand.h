@@ -15,7 +15,7 @@
 
 #include <string.h>
 
-#include "core/util/devlog.h"
+#include "forte/util/devlog.h"
 
 #include <zephyr/net/net_if.h>
 #include <zephyr/posix/arpa/inet.h>

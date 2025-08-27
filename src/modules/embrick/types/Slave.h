@@ -19,7 +19,7 @@
 #include <forte_sync.h>
 #include "../slave/slave.h"
 #include "../slave/handle.h"
-#include "core/io/configFB/io_slave_multi.h"
+#include "forte/io/configFB/io_slave_multi.h"
 
 class EmbrickSlave : public forte::core::io::IOConfigFBMultiSlave, public EmbrickSlaveHandler::Delegate {
   public:

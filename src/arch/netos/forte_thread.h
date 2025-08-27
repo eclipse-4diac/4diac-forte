@@ -14,7 +14,7 @@
 #ifndef _FORTE_THREAD_H_
 #define _FORTE_THREAD_H_
 
-#include "core/datatype.h"
+#include "forte/datatype.h"
 #include "arch/threadbase.h"
 #include <threadx/tx_api.h>
 

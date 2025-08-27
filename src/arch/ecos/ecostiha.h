@@ -13,7 +13,7 @@
 #define _ECOSTIMEHA_H_
 
 #include <cyg/kernel/kapi.h>
-#include "core/timerha.h"
+#include "forte/timerha.h"
 #include "forte_thread.h"
 
 /*! \brief External event handler for the eCos Timer.

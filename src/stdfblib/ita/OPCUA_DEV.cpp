@@ -13,7 +13,7 @@
 
 #include "stdfblib/ita/OPCUA_DEV.h"
 
-#include "core/devicefactory.h"
+#include "forte/devicefactory.h"
 
 using namespace forte::core::literals;
 

@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "core/com/fb.h"
+#include "forte/com/fb.h"
 
 class GEN_SEND_RECV : public forte::com::CommunicationFB {
     DECLARE_GENERIC_FIRMWARE_FB(GEN_SEND_RECV)

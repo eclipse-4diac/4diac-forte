@@ -11,9 +11,9 @@
  *******************************************************************************/
 
 #include "sysfsprocint.h"
-#include "core/util/devlog.h"
-#include "core/util/extevhandlerhelper.h"
-#include "core/util/criticalregion.h"
+#include "forte/util/devlog.h"
+#include "forte/util/extevhandlerhelper.h"
+#include "forte/util/criticalregion.h"
 #include <string>
 
 using namespace std::literals::string_literals;

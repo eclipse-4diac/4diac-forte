@@ -15,7 +15,7 @@
 
 using namespace forte::core::literals;
 
-#include "core/ecet.h"
+#include "forte/ecet.h"
 
 DEFINE_FIRMWARE_FB(RMT_RES, "RMT_RES"_STRID);
 

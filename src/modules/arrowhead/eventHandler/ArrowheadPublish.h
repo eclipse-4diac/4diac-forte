@@ -13,10 +13,10 @@
 #ifndef _ARROWHEADPUBLISH_H_
 #define _ARROWHEADPUBLISH_H_
 
-#include "core/cfb.h"
-#include "core/typelib.h"
+#include "forte/cfb.h"
+#include "forte/typelib.h"
 #include <forte_publishevent.h>
-#include "core/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_wstring.h"
 #include "ArrowheadPublishAdp_adp.h"
 
 class FORTE_ArrowheadPublish : public CCompositeFB {
@@ -41,8 +41,7 @@ class FORTE_ArrowheadPublish : public CCompositeFB {
     static const int scmArrowheadPublishAdpAdpNum = 0;
 
   public:
-    FORTE_ArrowheadPublish(const forte::core::StringId paInstanceNameId,
-                           forte::core::CFBContainer &paContainer) :
+    FORTE_ArrowheadPublish(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
 
         ~FORTE_ArrowheadPublish() override = default;
 };
