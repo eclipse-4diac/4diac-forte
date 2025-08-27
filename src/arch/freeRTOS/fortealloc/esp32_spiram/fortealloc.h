@@ -14,7 +14,7 @@
 
 #include <stdlib.h>
 #include "esp_heap_caps.h"
-#include "arch/datatype.h"
+#include "core/datatype.h"
 
 inline void forte_free(void *paData) {
   free(paData);

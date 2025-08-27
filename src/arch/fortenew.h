@@ -14,7 +14,7 @@
 #ifndef SRC_ARCH_FORTENEW_H_
 #define SRC_ARCH_FORTENEW_H_
 
-#include "arch/datatype.h"
+#include "core/datatype.h"
 #include <fortealloc.h>
 #include <new>
 

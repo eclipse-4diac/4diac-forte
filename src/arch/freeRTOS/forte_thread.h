@@ -17,7 +17,7 @@
 #include <FreeRTOS.h>
 #include <task.h>
 
-#include "arch/datatype.h"
+#include "core/datatype.h"
 #include "arch/devlog.h"
 #include "core/datatypes/forte_time.h"
 #include "arch/threadbase.h"

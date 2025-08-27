@@ -21,7 +21,7 @@
  *******************************************************************************/
 #include "core/datatypes/forte_string.h"
 #include <cstddef>
-#include "arch/datatype.h"
+#include "core/datatype.h"
 #include "arch/devlog.h"
 #include "core/datatypes/unicode_utils.h"
 #include <string_view>

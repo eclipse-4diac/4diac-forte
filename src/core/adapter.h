@@ -17,7 +17,7 @@
 #pragma once
 
 #include "core/adapterconn.h"
-#include "arch/datatype.h"
+#include "core/datatype.h"
 #include "core/funcbloc.h"
 
 namespace forte {

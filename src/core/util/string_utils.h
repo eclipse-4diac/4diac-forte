@@ -16,7 +16,7 @@
 #ifndef _STRING_UTILS_H_
 #define _STRING_UTILS_H_
 
-#include "arch/datatype.h"
+#include "core/datatype.h"
 #include <string>
 #include "core/stringid.h"
 #include "core/datatypes/forte_any.h"

@@ -23,7 +23,7 @@
  *******************************************************************************/
 #include "core/funcbloc.h"
 #include "core/dataconn.h"
-#include "arch/datatype.h"
+#include "core/datatype.h"
 #include "core/eventconn.h"
 #include "core/adapter.h"
 

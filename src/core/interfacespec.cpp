@@ -20,7 +20,7 @@
  *******************************************************************************/
 
 #include "core/interfacespec.h"
-#include "arch/datatype.h"
+#include "core/datatype.h"
 
 using namespace forte::core::literals;
 

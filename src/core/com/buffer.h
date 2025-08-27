@@ -16,7 +16,7 @@
 #include <string>
 #include <cstddef>
 
-#include "arch/datatype.h"
+#include "core/datatype.h"
 #include "arch/devlog.h"
 
 namespace forte::com {

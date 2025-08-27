@@ -18,7 +18,7 @@
 #include <BeTypes.h>
 #include <mtypes.h>
 #include <BETask.hpp>
-#include "arch/datatype.h"
+#include "core/datatype.h"
 #include "arch/threadbase.h"
 
 /**  \ingroup FORTE-HAL

@@ -14,7 +14,7 @@
 #define _FORTE_THREAD_H_
 
 #include <cyg/kernel/kapi.h>
-#include "arch/datatype.h"
+#include "core/datatype.h"
 #include "arch/threadbase.h"
 #include "arch/devlog.h"
 

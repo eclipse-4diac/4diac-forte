@@ -16,7 +16,7 @@
 // If generic malloc and free are to be used, uncomment the next line, and comment the following
 // #include "arch/genfortealloc.h"
 
-#include "arch/datatype.h"
+#include "core/datatype.h"
 #include <stdlib.h>
 
 #include <zephyr/kernel.h>

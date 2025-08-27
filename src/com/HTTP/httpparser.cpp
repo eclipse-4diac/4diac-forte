@@ -17,7 +17,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "arch/datatype.h"
+#include "core/datatype.h"
 #include "arch/devlog.h"
 #include "core/util/parameterParser.h"
 

@@ -13,7 +13,7 @@
 #ifndef SRC_ARCH_ZEPHYR_THREAD_H_
 #define SRC_ARCH_ZEPHYR_THREAD_H_
 
-#include "arch/datatype.h"
+#include "core/datatype.h"
 #include "arch/devlog.h"
 #include "core/datatypes/forte_time.h"
 #include "arch/threadbase.h"

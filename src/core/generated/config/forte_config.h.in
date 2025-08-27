@@ -12,7 +12,7 @@
  *******************************************************************************/
 #pragma once
 
-#include "arch/datatype.h"
+#include "core/datatype.h"
 
 //! Define the number of times the CTimerHandler will be called per second.
 const TForteUInt32 cgForteTicksPerSecond = ${FORTE_TicksPerSecond};
