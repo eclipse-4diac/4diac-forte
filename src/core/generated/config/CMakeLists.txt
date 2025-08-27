@@ -34,6 +34,12 @@ else ()
     )
 endif ()
 mark_as_advanced(FORTE_IPLayerRecvBufferSize)
+
+option(FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
+        "Enable Forte Custom Serializeable Datatypes" ON
+)
+mark_as_advanced(FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES)
+
 configure_file(forte_config.h.in
                "${FORTE_GENERATED_FILES_DIR}/forte_config.h"
 )

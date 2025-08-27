@@ -28,3 +28,6 @@ const unsigned int cgCommunicationInterruptQueueSize = ${FORTE_CommunicationInte
 
 //! Buffer size in bytes to be used by the ip layer as receive buffer.
 const unsigned int cgIPLayerRecvBufferSize = ${FORTE_IPLayerRecvBufferSize};
+
+//! Support custom serializable data types
+#cmakedefine FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES

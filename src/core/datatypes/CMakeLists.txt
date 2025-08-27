@@ -15,13 +15,6 @@
 # ############################################################################
 add_subdirectory(convert)
 
-option(FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
-       "Enable Forte Custom Serializeable Datatypes" ON
-)
-mark_as_advanced(FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES)
-forte_generate_config_flag_include(FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
-)
-
 target_sources(forte-core PRIVATE
             forte_any.h
             forte_any.cpp
