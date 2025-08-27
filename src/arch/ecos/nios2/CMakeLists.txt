@@ -40,7 +40,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Nios2")
    forte_add_sourcefile_h(../sockhand.h)
   endif(FORTE_COM_ETH)
 
-  forte_add_definition("-W -Wall -Wextra -D_KERNEL -D__ECOS -DFORTE_LITTLE_ENDIAN")
+  forte_add_definition("-W -Wall -Wextra -D_KERNEL -D__ECOS")
   forte_add_definition("-Wa,-relax-all -ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions")
 
 endif()

@@ -1651,210 +1651,239 @@ auto swapEndianess(const T<U> &paValue) ->
   return reversed;
 }
 
-#ifdef FORTE_LITTLE_ENDIAN
 template<typename T>
-T func_TO_LITTLE_ENDIAN(const T &paValue) {
+auto func_TO_LITTLE_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::little, T> {
   return paValue;
 }
 
 template<typename T>
-T func_FROM_LITTLE_ENDIAN(const T &paValue) {
+auto func_FROM_LITTLE_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::little, T> {
   return paValue;
 }
 
 template<typename T>
-auto func_TO_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> {
+auto func_TO_BIG_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::little && std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>,
+                              T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_TO_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_BIT, T>, T> {
+auto func_TO_BIG_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::little && std::is_base_of_v<CIEC_ANY_BIT, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_TO_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_CHAR, T>, T> {
+auto func_TO_BIG_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::little && std::is_base_of_v<CIEC_ANY_CHAR, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_TO_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, T> {
+auto func_TO_BIG_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::little && std::is_base_of_v<CIEC_ANY_DATE, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_TO_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> {
+auto func_TO_BIG_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::little && std::is_base_of_v<CIEC_ANY_STRING, T>, T> {
   return swapEndianess(paValue);
 }
 
 CIEC_ARRAY_DYNAMIC func_TO_BIG_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue);
 
 template<typename T>
-auto func_TO_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> {
+auto func_TO_BIG_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::little && std::is_base_of_v<CIEC_STRUCT, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<template<typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
 auto func_TO_BIG_ENDIAN(const T<U, lowerBound, upperBound> &paValue) -> typename std::enable_if_t<
-    std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>,
+    std::endian::native == std::endian::little &&
+        std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>,
     T<U, lowerBound, upperBound>> {
   return swapEndianess(paValue);
 }
 
 template<template<typename> typename T, typename U>
-auto func_TO_BIG_ENDIAN(const T<U> &paValue) ->
-    typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
+auto func_TO_BIG_ENDIAN(const T<U> &paValue) -> typename std::
+    enable_if_t<std::endian::native == std::endian::little && std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_FROM_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> {
+auto func_FROM_BIG_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::little && std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>,
+                              T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_FROM_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_BIT, T>, T> {
+auto func_FROM_BIG_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::little && std::is_base_of_v<CIEC_ANY_BIT, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_FROM_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_CHAR, T>, T> {
+auto func_FROM_BIG_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::little && std::is_base_of_v<CIEC_ANY_CHAR, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_FROM_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, T> {
+auto func_FROM_BIG_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::little && std::is_base_of_v<CIEC_ANY_DATE, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_FROM_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> {
+auto func_FROM_BIG_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::little && std::is_base_of_v<CIEC_ANY_STRING, T>, T> {
   return swapEndianess(paValue);
 }
 
 CIEC_ARRAY_DYNAMIC func_FROM_BIG_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue);
 
 template<typename T>
-auto func_FROM_BIG_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> {
+auto func_FROM_BIG_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::little && std::is_base_of_v<CIEC_STRUCT, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<template<typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
 auto func_FROM_BIG_ENDIAN(const T<U, lowerBound, upperBound> &paValue) -> typename std::enable_if_t<
-    std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>,
+    std::endian::native == std::endian::little &&
+        std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>,
     T<U, lowerBound, upperBound>> {
   return swapEndianess(paValue);
 }
 
 template<template<typename> typename T, typename U>
-auto func_FROM_BIG_ENDIAN(const T<U> &paValue) ->
-    typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
-  return swapEndianess(paValue);
-}
-#endif
-
-#ifdef FORTE_BIG_ENDIAN
-template<typename T>
-auto func_TO_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> {
+auto func_FROM_BIG_ENDIAN(const T<U> &paValue) -> typename std::
+    enable_if_t<std::endian::native == std::endian::little && std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_TO_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_BIT, T>, T> {
+auto func_TO_LITTLE_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::big && std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_TO_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_CHAR, T>, T> {
+auto func_TO_LITTLE_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::big && std::is_base_of_v<CIEC_ANY_BIT, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_TO_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, T> {
+auto func_TO_LITTLE_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::big && std::is_base_of_v<CIEC_ANY_CHAR, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_TO_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> {
+auto func_TO_LITTLE_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::big && std::is_base_of_v<CIEC_ANY_DATE, T>, T> {
+  return swapEndianess(paValue);
+}
+
+template<typename T>
+auto func_TO_LITTLE_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::big && std::is_base_of_v<CIEC_ANY_STRING, T>, T> {
   return swapEndianess(paValue);
 }
 
 CIEC_ARRAY_DYNAMIC func_TO_LITTLE_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue);
 
 template<typename T>
-auto func_TO_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> {
+auto func_TO_LITTLE_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::big && std::is_base_of_v<CIEC_STRUCT, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<template<typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
 auto func_TO_LITTLE_ENDIAN(const T<U, lowerBound, upperBound> &paValue) -> typename std::enable_if_t<
-    std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>,
+    std::endian::native == std::endian::big &&
+        std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>,
     T<U, lowerBound, upperBound>> {
   return swapEndianess(paValue);
 }
 
 template<template<typename> typename T, typename U>
-auto func_TO_LITTLE_ENDIAN(const T<U> &paValue) ->
-    typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
+auto func_TO_LITTLE_ENDIAN(const T<U> &paValue) -> typename std::
+    enable_if_t<std::endian::native == std::endian::big && std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
 auto func_FROM_LITTLE_ENDIAN(const T &paValue) ->
-    typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> {
+    typename std::enable_if_t<std::endian::native == std::endian::big && std::is_base_of_v<CIEC_ANY_MAGNITUDE, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_FROM_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_BIT, T>, T> {
+auto func_FROM_LITTLE_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::big && std::is_base_of_v<CIEC_ANY_BIT, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_FROM_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_CHAR, T>, T> {
+auto func_FROM_LITTLE_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::big && std::is_base_of_v<CIEC_ANY_CHAR, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_FROM_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_DATE, T>, T> {
+auto func_FROM_LITTLE_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::big && std::is_base_of_v<CIEC_ANY_DATE, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-auto func_FROM_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_ANY_STRING, T>, T> {
+auto func_FROM_LITTLE_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::big && std::is_base_of_v<CIEC_ANY_STRING, T>, T> {
   return swapEndianess(paValue);
 }
 
 CIEC_ARRAY_DYNAMIC func_FROM_LITTLE_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue);
 
 template<typename T>
-auto func_FROM_LITTLE_ENDIAN(const T &paValue) -> typename std::enable_if_t<std::is_base_of_v<CIEC_STRUCT, T>, T> {
+auto func_FROM_LITTLE_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::big && std::is_base_of_v<CIEC_STRUCT, T>, T> {
   return swapEndianess(paValue);
 }
 
 template<template<typename, intmax_t, intmax_t> typename T, typename U, intmax_t lowerBound, intmax_t upperBound>
 auto func_FROM_LITTLE_ENDIAN(const T<U, lowerBound, upperBound> &paValue) -> typename std::enable_if_t<
-    std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>,
+    std::endian::native == std::endian::big &&
+        std::is_base_of_v<CIEC_ARRAY_FIXED<U, lowerBound, upperBound>, T<U, lowerBound, upperBound>>,
     T<U, lowerBound, upperBound>> {
   return swapEndianess(paValue);
 }
 
 template<template<typename> typename T, typename U>
-auto func_FROM_LITTLE_ENDIAN(const T<U> &paValue) ->
-    typename std::enable_if_t<std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
+auto func_FROM_LITTLE_ENDIAN(const T<U> &paValue) -> typename std::
+    enable_if_t<std::endian::native == std::endian::big && std::is_base_of_v<CIEC_ARRAY_VARIABLE<U>, T<U>>, T<U>> {
   return swapEndianess(paValue);
 }
 
 template<typename T>
-T func_TO_BIG_ENDIAN(const T &paValue) {
+auto func_TO_BIG_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::big && std::endian::native == std::endian::big, T> {
   return paValue;
 }
 
 template<typename T>
-T func_FROM_BIG_ENDIAN(const T &paValue) {
+auto func_FROM_BIG_ENDIAN(const T &paValue) ->
+    typename std::enable_if_t<std::endian::native == std::endian::big && std::endian::native == std::endian::big, T> {
   return paValue;
 }
-#endif
 
 template<typename T, typename U>
 T func_LOWER_BOUND(const CIEC_ARRAY &paArray, const U &paDimension) {

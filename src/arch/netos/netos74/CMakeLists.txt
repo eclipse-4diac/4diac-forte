@@ -85,7 +85,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "NetOs 7.4")
   forte_add_include_directories(${NETOS_ROOT_PATH_CYG}/src/treck/source/ossupport/netos)
 
   forte_add_definition(-Wpointer-arith -Wundef -Woverloaded-virtual -Wno-write-strings)
-  forte_add_definition(-W -Wall -Wextra -DFORTE_BIG_ENDIAN -DIAM_ENABLED)
+forte_add_definition(-W -Wall -Wextra -DIAM_ENABLED)
   forte_add_definition(-D__GNU__ -DNETOS_GNU_TOOLS -DNETOS_GNU_CLIB_REENT -DNET_OS -DNET_WORKS -D_POSIX_SOURCE)  
   #forte_add_definition(-DBOOT_LOADER)
   forte_add_definition(-DIAM_ENABLED -DNET_OS_SPECIFIC -DFUSION=0 -DTRECK=1 -DNETWORK_STACK=1)

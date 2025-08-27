@@ -15,7 +15,7 @@
 #ifndef _FORTESTITERATOR_H_
 #define _FORTESTITERATOR_H_
 
-#include "arch/devlog.h"
+#include "core/util/devlog.h"
 
 #include "core/datatypes/forte_any.h"
 #include "core/iec61131_cast_helper.h"

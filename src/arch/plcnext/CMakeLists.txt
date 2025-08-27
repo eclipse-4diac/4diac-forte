@@ -38,7 +38,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "PLCnext")
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)
 
-  forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN")
+  forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion")
 
   forte_add_definition("-std=c++11 -fmessage-length=0 -fPIC -Wno-unknown-pragmas -Wno-reorder -Wno-strict-aliasing")
   forte_add_definition("-fno-gnu-unique")

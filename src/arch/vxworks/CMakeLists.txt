@@ -86,7 +86,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "VxWorks")
    forte_add_sourcefile_h(sockhand.h)
   endif(FORTE_COM_ETH)
 
-  forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion -DFORTE_LITTLE_ENDIAN")
+  forte_add_definition("-W -Wall -Wextra -Woverloaded-virtual -Wconversion")
 
   set(FORTE_RTTI_AND_EXCEPTIONS FALSE CACHE BOOL "Enable RTTI and Exceptions")
   mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)

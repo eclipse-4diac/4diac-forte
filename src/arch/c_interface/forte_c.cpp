@@ -23,11 +23,6 @@ namespace {
   const unsigned int maxPortValue = 65535;
 } // namespace
 
-/**
- * @brief Check if the correct endianess has been configured.
- */
-bool checkEndianess();
-
 int forteGlobalInitialize(int argc, char *argv[]) {
   return CForteArchitecture::initialize(argc, argv);
 }
@@ -70,11 +65,6 @@ FORTE_STATUS forteStartInstanceGeneric(int argc, char *argv[], TForteInstance *p
     return FORTE_DEVICE_ALREADY_STARTED;
   }
 
-  if (!checkEndianess()) {
-    // logged already in the function
-    return FORTE_WRONG_ENDIANESS;
-  }
-
   if (!CForteArchitecture::isInitialized()) {
     DEVLOG_ERROR("The low level platform should be initialized before starting a forte instance\n");
     return FORTE_ARCHITECTURE_NOT_READY;
@@ -111,24 +101,4 @@ void forteWaitForInstanceToStop(TForteInstance paInstance) {
   auto *instance = static_cast<C4diacFORTEInstance *>(paInstance);
   instance->awaitDeviceShutdown();
   delete instance;
-}
-
-bool checkEndianess() {
-  volatile TForteInt16 i = 1;
-  char *p = (char *) &i;
-  if (p[0] == 1) {
-    // we are on a little endian platform
-#ifdef FORTE_BIG_ENDIAN
-    DEVLOG_ERROR("Wrong endianess configured! You are on a little endian platform and have configured big endian!\n");
-    return false;
-#endif
-  } else {
-    // we are on a big endian platform
-#ifdef FORTE_LITTLE_ENDIAN
-    DEVLOG_ERROR("Wrong endianess configured! You are on a big endian platform and have configured little endian!\n");
-    return false;
-#endif
-  }
-
-  return true;
 }

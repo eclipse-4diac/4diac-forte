@@ -36,7 +36,7 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Phycore AT91")
   endif(FORTE_COM_ETH)
 
   forte_add_definition("-Wpointer-arith -Wundef -Woverloaded-virtual -Wno-write-strings")
-  forte_add_definition("-W -Wall -Wextra -D_KERNEL -D__ECOS -DFORTE_LITTLE_ENDIAN")
+  forte_add_definition("-W -Wall -Wextra -D_KERNEL -D__ECOS")
   forte_add_definition("-mcpu=arm7tdmi -msoft-float -mno-thumb-interwork -O2")
   forte_add_definition("-ffunction-sections -fdata-sections -fno-threadsafe-statics -fno-rtti -fno-exceptions")
 

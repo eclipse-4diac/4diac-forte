@@ -32,8 +32,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Zephyr")
   forte_add_sourcefile_cpp(../genforte_printer.cpp)
   forte_add_sourcefile_cpp(zephyrforte_fileio.cpp)
 
-  forte_add_definition("-DFORTE_LITTLE_ENDIAN")
-
   forte_add_include_system_directories(${FORTE_ZEPHYR_INCLUDES})
 
   if(FORTE_COM_ETH)

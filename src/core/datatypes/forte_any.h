@@ -23,16 +23,11 @@
 #ifndef _ANY_H_
 #define _ANY_H_
 
-#include <cstring>
+#include <bit>
 #include <limits>
 #include "core/typelib.h"
 #include "core/iec61131_cast_helper.h"
 #include "generated/forte_config.h"
-#include "generated/config/endian.h"
-
-#if (!defined FORTE_LITTLE_ENDIAN) && (!defined FORTE_BIG_ENDIAN)
-#error "Endianess is not defined!"
-#endif
 
 /*!\ingroup COREDTS  CIEC_ANY represents the IEC_ANY data type according to IEC 61131.
  */
@@ -350,98 +345,95 @@ class CIEC_ANY {
     void setTINT64(TForteInt64 src) {
       mAnyData.mLargestInt = TLargestIntValueType(src);
     }
-#ifdef FORTE_BIG_ENDIAN
+
     bool getTBOOL8() const {
-      return (mAnyData.mLargestUInt != 0);
-    }
-    TForteUInt32 getTUINT32() const { // also used for TForteDWord
-      return static_cast<TForteUInt32>(mAnyData.mLargestUInt);
-    }
-
-    TForteUInt16 getTUINT16() cons t { // also used for TForteWord
-      return static_cast<TForteUInt16>(mAnyData.mLargestUInt);
-    }
-
-    TForteUInt8 getTUINT8() const { // also used for TForteByte
-      return static_cast<TForteUInt8>(mAnyData.mLargestUInt);
-    }
-
-    TForteInt32 getTINT32() const {
-      return static_cast<TForteInt32>(mAnyData.mLargestInt);
-    }
-
-    TForteInt16 getTINT16() const {
-      return static_cast<TForteInt16>(mAnyData.mLargestInt);
-    }
-
-    TForteInt8 getTINT8() const {
-      return static_cast<TForteInt8>(mAnyData.mLargestInt);
-    }
-
-    TForteChar getChar8() const {
-      return static_cast<TForteChar>(mAnyData.mLargestInt);
-    }
-
-    TForteWChar getChar16() const {
-      return static_cast<TForteWChar>(mAnyData.mLargestInt);
-    }
-
-    TForteUInt64 getTUINT64() const { // also used for LWORD
-      return static_cast<TForteUInt64>(mAnyData.mLargestUInt);
-    }
-
-    TForteInt64 getTINT64() const {
-      return static_cast<TForteInt64>(mAnyData.mLargestInt);
-    }
-#else
-#ifdef FORTE_LITTLE_ENDIAN
-    bool getTBOOL8() const {
-      return mAnyData.mBool;
+      if constexpr (std::endian::native == std::endian::little) {
+        return mAnyData.mBool;
+      } else {
+        return (mAnyData.mLargestUInt != 0);
+      }
     }
 
     TForteUInt32 getTUINT32() const { // also used for TForteDWord
-      return mAnyData.mUInt32;
+      if constexpr (std::endian::native == std::endian::little) {
+        return mAnyData.mUInt32;
+      } else {
+        return static_cast<TForteUInt32>(mAnyData.mLargestUInt);
+      }
     }
 
     TForteUInt16 getTUINT16() const { // also used for TForteWord
-      return mAnyData.mUInt16;
+      if constexpr (std::endian::native == std::endian::little) {
+        return mAnyData.mUInt16;
+      } else {
+        return static_cast<TForteUInt16>(mAnyData.mLargestUInt);
+      }
     }
 
     TForteUInt8 getTUINT8() const { // also used for TForteByte
-      return mAnyData.mUInt8;
+      if constexpr (std::endian::native == std::endian::little) {
+        return mAnyData.mUInt8;
+      } else {
+        return static_cast<TForteUInt8>(mAnyData.mLargestUInt);
+      }
     }
 
     TForteInt32 getTINT32() const {
-      return mAnyData.mInt32;
+      if constexpr (std::endian::native == std::endian::little) {
+        return mAnyData.mInt32;
+      } else {
+        return static_cast<TForteInt32>(mAnyData.mLargestInt);
+      }
     }
 
     TForteInt16 getTINT16() const {
-      return mAnyData.mInt16;
+      if constexpr (std::endian::native == std::endian::little) {
+        return mAnyData.mInt16;
+      } else {
+        return static_cast<TForteInt16>(mAnyData.mLargestInt);
+      }
     }
 
     TForteInt8 getTINT8() const {
-      return mAnyData.mInt8;
+      if constexpr (std::endian::native == std::endian::little) {
+        return mAnyData.mInt8;
+      } else {
+        return static_cast<TForteInt8>(mAnyData.mLargestInt);
+      }
     }
 
     TForteChar getChar8() const {
-      return mAnyData.mChar8;
+      if constexpr (std::endian::native == std::endian::little) {
+        return mAnyData.mChar8;
+      } else {
+        return static_cast<TForteChar>(mAnyData.mLargestInt);
+      }
     }
 
     TForteWChar getChar16() const {
-      return mAnyData.mWChar16;
+      if constexpr (std::endian::native == std::endian::little) {
+        return mAnyData.mWChar16;
+      } else {
+        return static_cast<TForteWChar>(mAnyData.mLargestInt);
+      }
     }
 
     TForteUInt64 getTUINT64() const { // also used for LWORD
-      return mAnyData.mUInt64;
+      if constexpr (std::endian::native == std::endian::little) {
+        return mAnyData.mUInt64;
+      } else {
+        return static_cast<TForteUInt64>(mAnyData.mLargestUInt);
+      }
     }
 
     TForteInt64 getTINT64() const {
-      return mAnyData.mInt64;
+      if constexpr (std::endian::native == std::endian::little) {
+        return mAnyData.mInt64;
+      } else {
+        return static_cast<TForteInt64>(mAnyData.mLargestInt);
+      }
     }
-#else
-#error Endianess not defined!
-#endif // #ifdef FORTE_BIG_ENDIAN
-#endif // #ifdef FORTE_LITTLE_ENDIAN
+
     //!< get-Methods are Big/Little Endian independent
     TForteFloat getTFLOAT() const {
       return (TForteFloat) mAnyData.mFloat;

@@ -595,29 +595,42 @@ void swapEndianessInplace(CIEC_STRUCT &paValue) {
   }
 }
 
-#ifdef FORTE_LITTLE_ENDIAN
 CIEC_ARRAY_DYNAMIC func_TO_BIG_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue) {
-  CIEC_ARRAY_DYNAMIC reversed(paValue);
-  swapEndianessInplace(reversed);
-  return reversed;
+  if constexpr (std::endian::native == std::endian::little) {
+    CIEC_ARRAY_DYNAMIC reversed(paValue);
+    swapEndianessInplace(reversed);
+    return reversed;
+  } else {
+    return paValue;
+  }
 }
 
 CIEC_ARRAY_DYNAMIC func_FROM_BIG_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue) {
-  CIEC_ARRAY_DYNAMIC reversed(paValue);
-  swapEndianessInplace(reversed);
-  return reversed;
+  if constexpr (std::endian::native == std::endian::little) {
+    CIEC_ARRAY_DYNAMIC reversed(paValue);
+    swapEndianessInplace(reversed);
+    return reversed;
+  } else {
+    return paValue;
+  }
 }
-#endif
-#ifdef FORTE_BIG_ENDIAN
+
 CIEC_ARRAY_DYNAMIC func_TO_LITTLE_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue) {
-  CIEC_ARRAY_DYNAMIC reversed(paValue);
-  swapEndianessInplace(reversed);
-  return reversed;
+  if constexpr (std::endian::native == std::endian::big) {
+    CIEC_ARRAY_DYNAMIC reversed(paValue);
+    swapEndianessInplace(reversed);
+    return reversed;
+  } else {
+    return paValue;
+  }
 }
 
 CIEC_ARRAY_DYNAMIC func_FROM_LITTLE_ENDIAN(const CIEC_ARRAY_DYNAMIC &paValue) {
-  CIEC_ARRAY_DYNAMIC reversed(paValue);
-  swapEndianessInplace(reversed);
-  return reversed;
+  if constexpr (std::endian::native == std::endian::big) {
+    CIEC_ARRAY_DYNAMIC reversed(paValue);
+    swapEndianessInplace(reversed);
+    return reversed;
+  } else {
+    return paValue;
+  }
 }
-#endif

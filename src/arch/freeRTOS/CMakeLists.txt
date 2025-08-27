@@ -74,8 +74,6 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "FreeRTOSLwIP")
 
   forte_add_to_executable_cpp(main)
 
-  forte_add_definition("-DFORTE_LITTLE_ENDIAN")
-
   forte_add_include_system_directories(${FORTE_FreeRTOSLwIP_INCLUDES})
 
   if(FORTE_COM_ETH)

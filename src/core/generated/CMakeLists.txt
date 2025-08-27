@@ -51,11 +51,6 @@ function(forte_generate_config_string_include symbol)
     )
 endfunction()
 
-file(GENERATE
-  OUTPUT "${FORTE_GENERATED_FILES_DIR}/config/endian.h"
-  CONTENT "#define FORTE_${CMAKE_CXX_BYTE_ORDER}\n"
-)
-
 function(_forte_evaluate_trivial_generator_expressions var)
     # evaluate a few trivial generator expressions, mainly $<BOOL:${FORTE_FOO_ENABLED}> and $<IF:...>
     set(file "${${var}}")
