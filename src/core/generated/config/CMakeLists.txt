@@ -36,7 +36,7 @@ endif ()
 mark_as_advanced(FORTE_IPLayerRecvBufferSize)
 
 option(FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
-        "Enable Forte Custom Serializeable Datatypes" ON
+        "Enable Forte Custom Serializeable Datatypes" OFF
 )
 mark_as_advanced(FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES)
 
