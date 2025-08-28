@@ -24,13 +24,31 @@
 #include "httpparser.h"
 #include "arch/forte_printer.h"
 #include "core/cominfra/comlayer.h"
-#include "generated/forte_config.h"
+#include "core/util/mainparam_utils.h"
+
 #include <string>
 
 using namespace forte::com_infra;
 using namespace std::string_literals;
 
-TForteUInt16 gHTTPServerPort = forte::com::http::cgDefaultHttpListenPort;
+namespace {
+  class HTTP_ServerPortOption final
+      : public forte::core::util::CommandLineParser::IntOptionImpl<TForteUInt16,
+                                                                   "Hp",
+                                                                   "http-listen-port",
+                                                                   "<port>",
+                                                                   "Set the listening port for the HTTP server"> {
+    public:
+      bool setOption(const TForteUInt16 paArgument) override {
+        mArgument = paArgument;
+        return true;
+      }
+
+      TForteUInt16 mArgument = forte::com::http::cgDefaultHttpListenPort;
+  };
+
+  HTTP_ServerPortOption gHTTPServerPort;
+} // namespace
 
 CIPComSocketHandler::TSocketDescriptor CHTTP_Handler::smServerListeningSocket =
     CIPComSocketHandler::scmInvalidSocketDescriptor;
@@ -384,12 +402,12 @@ void CHTTP_Handler::stopTimeoutThread() {
 void CHTTP_Handler::openHTTPServer() {
   if (CIPComSocketHandler::scmInvalidSocketDescriptor == smServerListeningSocket) {
     char address[] = "127.0.0.1";
-    smServerListeningSocket = CIPComSocketHandler::openTCPServerConnection(address, gHTTPServerPort);
+    smServerListeningSocket = CIPComSocketHandler::openTCPServerConnection(address, gHTTPServerPort.mArgument);
     if (CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket) {
       mDeviceExecution.getExtEvHandler<CIPComSocketHandler>().addComCallback(smServerListeningSocket, this);
-      DEVLOG_INFO("[HTTP Handler] HTTP server listening on port %u\n", gHTTPServerPort);
+      DEVLOG_INFO("[HTTP Handler] HTTP server listening on port %u\n", gHTTPServerPort.mArgument);
     } else {
-      DEVLOG_ERROR("[HTTP Handler] Couldn't start HTTP server on port %u\n", gHTTPServerPort);
+      DEVLOG_ERROR("[HTTP Handler] Couldn't start HTTP server on port %u\n", gHTTPServerPort.mArgument);
     }
   }
 }

@@ -13,10 +13,10 @@
 
 #include "forte_c.h"
 
-#include "arch/utils/mainparam_utils.h"
 #include "arch/forte_architecture.h"
 #include "arch/forte_printer.h"
 #include "core/forteinstance.h"
+#include "core/util/mainparam_utils.h"
 
 namespace {
   const unsigned int defaultPort = 61499;
@@ -70,9 +70,9 @@ FORTE_STATUS forteStartInstanceGeneric(int argc, char *argv[], TForteInstance *p
     return FORTE_ARCHITECTURE_NOT_READY;
   }
 
-  const auto ipPort = parseCommandLineArguments(argc, argv);
-  if ((ipPort == nullptr) || (0 == strlen(ipPort)) || (nullptr == strchr(ipPort, ':'))) {
-    listHelp();
+  const std::string ipPort = forte::core::util::CommandLineParser::parseCommandLineArguments(argc, argv);
+  if (ipPort.empty() || ipPort.find(':') == std::string::npos) {
+    forte::core::util::CommandLineParser::listHelp();
     return FORTE_WRONG_PARAMETERS;
   }
 

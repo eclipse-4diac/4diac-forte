@@ -20,15 +20,26 @@
 
 #include "arch/forte_architecture_time.h"
 #include "core/util/devlog.h"
+#include "core/util/mainparam_utils.h"
+
+namespace {
+  class OutputDirectoryOption final
+      : public forte::core::util::CommandLineParser::
+            OptionImpl<"t", "trace", "<directory>", "Set the output directory for CTF traces"> {
+    public:
+      bool parseOption(const std::string_view paArgument) override {
+        BarectfPlatformFORTE::setup(paArgument);
+        return true;
+      }
+  };
+
+  [[maybe_unused]] OutputDirectoryOption gOutputDirectory;
+} // namespace
 
 std::filesystem::path BarectfPlatformFORTE::traceDirectory = std::filesystem::path();
 bool BarectfPlatformFORTE::enabled = false;
 
-void barectfSetup(std::string directory) {
-  BarectfPlatformFORTE::setup(directory);
-}
-
-void BarectfPlatformFORTE::setup(std::string directory) {
+void BarectfPlatformFORTE::setup(std::string_view directory) {
   traceDirectory = std::filesystem::path(directory).make_preferred();
   if (traceDirectory.empty()) {
     DEVLOG_INFO("[TRACE_CTF]: no output directory given, disabling TRACE_CTF\n");

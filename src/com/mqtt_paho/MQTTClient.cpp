@@ -15,8 +15,23 @@
 #include "core/cominfra/basecommfb.h"
 #include <algorithm>
 #include "MQTTClientConfigParser.h"
+#include "core/util/mainparam_utils.h"
 
-std::string gMqttClientConfigFile;
+namespace {
+  class MqttClientConfigFileOption final
+      : public forte::core::util::CommandLineParser::
+            OptionImpl<"mc", "mqtt-client-config-file", "<file>", "Set the configuration file for the MQTT clients"> {
+    public:
+      bool parseOption(const std::string_view paArgument) override {
+        mArgument = paArgument;
+        return true;
+      }
+
+      std::string mArgument;
+  };
+
+  MqttClientConfigFileOption gMqttClientConfigFile;
+} // namespace
 
 CMQTTClient::CMQTTClient(const std::string &paAddress, const std::string &paClientId, MQTTHandler &paHandler) :
     mAddress(paAddress),
@@ -192,10 +207,10 @@ int CMQTTClient::initClient() {
 
   std::string username;
   std::string password;
-  if ("" != gMqttClientConfigFile) { // file was provided
+  if (!gMqttClientConfigFile.mArgument.empty()) { // file was provided
     CMQTTClientConfigFileParser::MQTTConfigFromFile result =
         CMQTTClientConfigFileParser::MQTTConfigFromFile(username, password);
-    if (CMQTTClientConfigFileParser::loadConfig(gMqttClientConfigFile, mAddress, result)) {
+    if (CMQTTClientConfigFileParser::loadConfig(gMqttClientConfigFile.mArgument, mAddress, result)) {
       mClientConnectionOptions.username = username.c_str();
       mClientConnectionOptions.password = password.c_str();
     } else {

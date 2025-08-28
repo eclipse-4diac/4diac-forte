@@ -15,18 +15,34 @@
  *******************************************************************************/
 
 #include "stdfblib/ita/ForteBootFileLoader.h"
+
+#include <utility>
 #include "core/util/devlog.h"
 #include "core/datatypes/forte_string.h"
 #include "core/mgmcmd.h"
 #include "core/mgmcmdstruct.h"
 #include "core/device.h"
+#include "core/util/mainparam_utils.h"
 #include "generated/config/FORTE_BOOT_FILE_LOCATION.h"
 
-char *gCommandLineBootFile = nullptr;
+namespace {
+  class BootFileOption final
+      : public forte::core::util::CommandLineParser::OptionImpl<"f", "bootfile", "<file>", "Set the boot-file path"> {
+    public:
+      bool parseOption(const std::string_view paArgument) override {
+        mArgument = paArgument;
+        return true;
+      }
+
+      std::string mArgument;
+  };
+
+  BootFileOption gCommandLineBootFile;
+} // namespace
 
 ForteBootFileLoader::ForteBootFileLoader(BootFileCallback paCallback, std::optional<std::string> paPathToFile) :
-    mCallback(paCallback) {
-  openBootFile(paPathToFile);
+    mCallback(std::move(paCallback)) {
+  openBootFile(std::move(paPathToFile));
 }
 
 ForteBootFileLoader::~ForteBootFileLoader() {
@@ -43,9 +59,10 @@ bool ForteBootFileLoader::openBootFile(std::optional<std::string> paPathToFile) 
     bootFileName = paPathToFile.value();
     DEVLOG_INFO("Using provided bootfile location passed as parameter: %s\n", bootFileName.c_str());
   } else {
-    if (gCommandLineBootFile) {
-      DEVLOG_INFO("Using provided bootfile location set in the command line: %s\n", gCommandLineBootFile);
-      bootFileName = std::string(gCommandLineBootFile);
+    if (!gCommandLineBootFile.mArgument.empty()) {
+      DEVLOG_INFO("Using provided bootfile location set in the command line: %s\n",
+                  gCommandLineBootFile.mArgument.c_str());
+      bootFileName = gCommandLineBootFile.mArgument;
     } else {
       // select provided or default boot file name
       char *envBootFileName = forte_getenv("FORTE_BOOT_FILE");

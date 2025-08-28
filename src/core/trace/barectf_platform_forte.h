@@ -97,7 +97,7 @@ class BarectfPlatformFORTE final {
       return barectf_is_tracing_enabled(&context);
     }
 
-    static void setup(std::string directory);
+    static void setup(std::string_view directory);
 
   private:
     std::ofstream output;

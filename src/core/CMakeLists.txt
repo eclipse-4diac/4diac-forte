@@ -51,6 +51,7 @@ add_library(forte-core OBJECT
             device.h
             device.cpp
             devicefactory.h
+        devicefactory.cpp
             devexec.h
             devexec.cpp
             forteinstance.h
@@ -70,6 +71,7 @@ add_library(forte-core OBJECT
         timerha.h
         timerha.cpp
             timerhandlerfactory.h
+        timerhandlerfactory.cpp
             typelib.h
             typelib.cpp
             ecet.h

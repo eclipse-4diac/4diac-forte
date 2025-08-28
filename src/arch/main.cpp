@@ -18,7 +18,7 @@
 #include "core/forteinstance.h"
 #include "arch/forte_architecture.h"
 
-#include "arch/utils/mainparam_utils.h"
+#include "core/util/mainparam_utils.h"
 
 void hookSignals();
 
@@ -42,10 +42,10 @@ int main(int argc, char *arg[]) {
 
   hookSignals();
 
-  const char *ipPort = parseCommandLineArguments(argc, arg);
-  if ((ipPort == nullptr) || (0 == strlen(ipPort)) || (nullptr == strchr(ipPort, ':'))) {
+  const std::string ipPort = forte::core::util::CommandLineParser::parseCommandLineArguments(argc, arg);
+  if (ipPort.empty() || ipPort.find(':') == std::string::npos) {
     //! Lists the help for FORTE
-    listHelp();
+    forte::core::util::CommandLineParser::listHelp();
     return -1;
   }
 

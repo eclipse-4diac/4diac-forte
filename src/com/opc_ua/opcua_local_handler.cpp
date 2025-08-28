@@ -27,8 +27,8 @@
 #include "core/cominfra/basecommfb.h"
 #include "core/util/parameterParser.h"
 #include "core/util/string_utils.h"
+#include "core/util/mainparam_utils.h"
 #include "arch/forte_printer.h"
-#include "arch/utils/mainparam_utils.h"
 #include "com/opc_ua/opcua_local_handler.h"
 #include "com/opc_ua/struct_action_info.h"
 #ifdef FORTE_COM_OPC_UA_MULTICAST
@@ -40,14 +40,32 @@
 #include "sockhand.h"
 #endif
 
-const char *const COPC_UA_Local_Handler::mEnglishLocaleForNodes = "en-US";
-const char *const COPC_UA_Local_Handler::mDefaultDescriptionForVariableNodes = "Digital port of Function Block";
-
-TForteUInt16 gOpcuaServerPort = FORTE_COM_OPC_UA_PORT;
-TForteUInt16 gOpcuaServerMaxIterationInterval = FORTE_COM_OPC_UA_SERVER_MAX_ITERATION_INTERVAL;
-
 using namespace forte::com_infra;
 using namespace std::string_literals;
+
+namespace {
+  class OpcuaServerPortOption final
+      : public forte::core::util::CommandLineParser::IntOptionImpl<TForteUInt16,
+                                                                   "op",
+                                                                   "opc_ua-listen-port",
+                                                                   "<port>",
+                                                                   "Set the listening port for the OPC UA connection"> {
+    public:
+      bool setOption(const TForteUInt16 paArgument) override {
+        mArgument = paArgument;
+        return true;
+      }
+
+      TForteUInt16 mArgument = FORTE_COM_OPC_UA_PORT;
+  };
+
+  OpcuaServerPortOption gOpcuaServerPort;
+
+  TForteUInt16 gOpcuaServerMaxIterationInterval = FORTE_COM_OPC_UA_SERVER_MAX_ITERATION_INTERVAL;
+} // namespace
+
+const char *const COPC_UA_Local_Handler::mEnglishLocaleForNodes = "en-US";
+const char *const COPC_UA_Local_Handler::mDefaultDescriptionForVariableNodes = "Digital port of Function Block";
 
 COPC_UA_Local_Handler::COPC_UA_Local_Handler(CDeviceExecution &paDeviceExecution) :
     COPC_UA_HandlerAbstract(paDeviceExecution),
@@ -72,7 +90,7 @@ void COPC_UA_Local_Handler::disableHandler() {
 }
 
 void COPC_UA_Local_Handler::run() {
-  DEVLOG_INFO("[OPC UA LOCAL]: Starting OPC UA Server: opc.tcp://localhost:%d\n", gOpcuaServerPort);
+  DEVLOG_INFO("[OPC UA LOCAL]: Starting OPC UA Server: opc.tcp://localhost:%d\n", gOpcuaServerPort.mArgument);
 
   mUaServer = UA_Server_new();
   if (mUaServer) {
@@ -85,7 +103,7 @@ void COPC_UA_Local_Handler::run() {
     *uaServerConfig->logging = COPC_UA_HandlerAbstract::getLogger();
 
     UA_ServerStrings serverStrings;
-    generateServerStrings(gOpcuaServerPort, serverStrings);
+    generateServerStrings(gOpcuaServerPort.mArgument, serverStrings);
     configureUAServer(serverStrings, *uaServerConfig);
 
     if (initializeNodesets(*mUaServer)) {
@@ -125,7 +143,7 @@ void COPC_UA_Local_Handler::run() {
         DEVLOG_ERROR("[OPC UA LOCAL]: Error starting up the server. Error: %s\n", UA_StatusCode_name(retVal));
       }
     } else {
-      DEVLOG_ERROR("[OPC UA LOCAL]: Couldn't initialize Nodesets\n", gOpcuaServerPort);
+      DEVLOG_ERROR("[OPC UA LOCAL]: Couldn't initialize Nodesets\n", gOpcuaServerPort.mArgument);
     }
     /* Reassign original logger to avoid memory leak. */
     *uaServerConfig->logging = uaLogger;

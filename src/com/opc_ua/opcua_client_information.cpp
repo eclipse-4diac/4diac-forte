@@ -18,11 +18,25 @@
 #include "generated/opcua_defaults.h"
 #include "com/opc_ua/opcua_handler_abstract.h" //for logger
 #include "com/opc_ua/opcua_client_config_parser.h"
+#include "core/util/mainparam_utils.h"
 
 #include <algorithm>
-#include <stdio.h>
 
-std::string gOpcuaClientConfigFile;
+namespace {
+  class OpcuaClientConfigFile final
+      : public forte::core::util::CommandLineParser::
+            OptionImpl<"oc", "opc_ua-config-file", "<file>", "Set the configuration file for the OPC UA clients"> {
+    public:
+      bool parseOption(const std::string_view paArgument) override {
+        mArgument = paArgument;
+        return true;
+      }
+
+      std::string mArgument;
+  };
+
+  OpcuaClientConfigFile gOpcuaClientConfigFile;
+} // namespace
 
 CUA_ClientInformation::CUA_ClientInformation(const std::string &paEndpoint) : mEndpointUrl(paEndpoint) {
 }
@@ -52,12 +66,12 @@ bool CUA_ClientInformation::configureClient() {
 bool CUA_ClientInformation::configureClientFromFile(UA_ClientConfig &paConfig) {
   bool retVal = true;
 
-  if (!gOpcuaClientConfigFile.empty()) { // file was provided
+  if (!gOpcuaClientConfigFile.mArgument.empty()) { // file was provided
     std::string endpoint = mEndpointUrl;
     CUA_ClientConfigFileParser::UA_ConfigFromFile result =
         CUA_ClientConfigFileParser::UA_ConfigFromFile(paConfig, mUsername, mPassword);
 
-    retVal = CUA_ClientConfigFileParser::loadConfig(gOpcuaClientConfigFile, endpoint, result);
+    retVal = CUA_ClientConfigFileParser::loadConfig(gOpcuaClientConfigFile.mArgument, endpoint, result);
   } else {
     UA_StatusCode retValOpcUa = UA_ClientConfig_setDefault(&paConfig);
     if (UA_STATUSCODE_GOOD != retValOpcUa) {

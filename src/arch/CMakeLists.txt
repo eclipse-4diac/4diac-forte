@@ -42,8 +42,6 @@ add_subdirectory(fake_time)
 add_subdirectory(win32)
 # add_subdirectory(zephyr)
 
-add_subdirectory(utils)
-
 ###############################################################################
 # Configuration Options
 

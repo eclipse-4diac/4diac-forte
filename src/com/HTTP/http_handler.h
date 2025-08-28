@@ -29,8 +29,6 @@
 
 #include <vector>
 
-extern TForteUInt16 gHTTPServerPort;
-
 // cppcheck-suppress noConstructor
 class CHTTP_Handler : public CExternalEventHandler,
                       public RegisterExternalEventHandler<CHTTP_Handler>,
