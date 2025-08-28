@@ -12,7 +12,6 @@
  *******************************************************************************/
 #pragma once
 
-#include "generated/config/FORTE_WINDOWS_XP_COMPAT.h"
 #include <windows.h>
 
 #define CSyncObject CPCSyncObject // allows that doxygen can generate better documenation
@@ -42,9 +41,9 @@ class CPCSyncObject {
     CPCSyncObject &operator=(const CPCSyncObject &) = delete;
 
   private:
-#ifdef FORTE_WINDOWS_XP_COMPAT
-    CRITICAL_SECTION mLock;
-#else
+#if _WIN32_WINNT >= 0x0600
     SRWLOCK mLock;
+#else
+    CRITICAL_SECTION mLock;
 #endif
 };

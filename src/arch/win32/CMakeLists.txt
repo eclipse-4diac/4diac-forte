@@ -19,7 +19,6 @@ target_include_directories(forte-global INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/)
 target_sources(forte PRIVATE ../main.cpp)
 
 option(FORTE_WINDOWS_XP_COMPAT "Use only APIs that still work on Windows XP" OFF)
-forte_generate_config_flag_include(FORTE_WINDOWS_XP_COMPAT)
 
 target_sources(forte-arch PRIVATE
     fortealloc.h
@@ -67,7 +66,12 @@ target_compile_definitions(forte-global INTERFACE _CRT_SECURE_NO_WARNINGS)
 target_compile_definitions(forte-global INTERFACE _NO_W32_PSEUDO_MODIFIERS)   #takes care of IN, OUT and OPTIONAL in mingw
 target_compile_definitions(forte-global INTERFACE FORTE_USE_DEFAULT_NEW_AND_DELETE)
 
-  
+if (FORTE_WINDOWS_XP_COMPAT)
+    target_compile_definitions(forte-global INTERFACE _WIN32_WINNT=0x0501) # Windows XP
+else ()
+    target_compile_definitions(forte-global INTERFACE _WIN32_WINNT=0x0600) # Windows Vista
+endif ()
+
 if (FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
     target_compile_definitions(forte-global INTERFACE BOOST_TEST_NO_LIB)
 endif (FORTE_TESTS AND FORTE_USE_TEST_CONFIG_IN_FORTE)
