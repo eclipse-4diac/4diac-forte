@@ -15,6 +15,8 @@
 #include "core/resource.h"
 #include "E_RESTART_fbt.h"
 
+#include "core/datatypes/forte_wstring.h"
+
 class Config_EMB_RES final : public CResource {
     DECLARE_FIRMWARE_FB(Config_EMB_RES);
 
@@ -35,7 +37,6 @@ class Config_EMB_RES final : public CResource {
 
     CDataConnection *conn_opcua_namespace;
     COutDataConnection<CIEC_WSTRING> conn_opcua_namespace_int;
-
 
     static const forte::core::StringId scmVarInputNameIds[];
     static const forte::core::StringId scmDIDataTypeIds[];

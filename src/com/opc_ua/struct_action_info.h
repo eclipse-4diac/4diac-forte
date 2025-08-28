@@ -17,6 +17,7 @@
 #include "com/opc_ua/opcua_layer.h"
 #include "com/opc_ua/opcua_objectstruct_helper.h"
 #include "com/opc_ua/opcua_local_handler.h"
+#include "core/datatypes/forte_struct.h"
 
 class CStructActionInfo : public CStructMemberActionInfo {
   public:

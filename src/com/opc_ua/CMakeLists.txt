@@ -97,10 +97,6 @@ configure_file(opcua_defaults.h.in
                ${FORTE_GENERATED_FILES_DIR}/opcua_defaults.h
 )
 
-add_subdirectory(FBs)
-add_subdirectory(types)
-add_subdirectory(detail)
-
 if (FORTE_COM_OPC_UA_ENCRYPTION)
     set(FORTE_COM_OPC_UA_ENCRYPTION_INCLUDE_DIR
         ""
@@ -162,3 +158,7 @@ target_link_directories(forte-com-opc_ua PUBLIC ${FORTE_COM_OPC_UA_LIB_DIR})
 target_link_directories(forte-com-opc_ua PUBLIC
                         ${FORTE_COM_OPC_UA_ENCRYPTION_LIB_DIR}
 )
+
+add_subdirectory(FBs)
+add_subdirectory(types)
+add_subdirectory(detail)

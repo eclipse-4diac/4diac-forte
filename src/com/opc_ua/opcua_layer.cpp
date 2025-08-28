@@ -25,6 +25,7 @@
 #include "core/util/devlog.h"
 #include <cstddef>
 #include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_struct.h"
 #include "core/util/criticalregion.h"
 #include "com/opc_ua/opcua_action_info.h"
 #include "com/opc_ua/opcua_remote_handler.h"
