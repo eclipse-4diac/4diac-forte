@@ -13,9 +13,16 @@
 
 #include "com/opc_ua/types/forte_localizedtext.h"
 
+#include "com/opc_ua/opcua_types.h"
+
 using namespace forte::core::literals;
 
 using namespace std::string_literals;
+
+namespace {
+  [[maybe_unused]] const forte::com::opc_ua::OPC_UA_External_Types::Entry entry("LocalizedText"_STRID,
+                                                                                &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
+}
 
 DEFINE_FIRMWARE_DATATYPE(LocalizedText, "LocalizedText"_STRID);
 

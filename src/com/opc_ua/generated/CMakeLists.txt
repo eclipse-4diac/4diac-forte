@@ -8,5 +8,4 @@
 # Contributors: OFFIS e.V. - initial rewrite
 # *******************************************************************************/
 
-add_subdirectory(types)
 add_subdirectory(nodesets)

@@ -10,4 +10,7 @@
 # Contributors: Jose Cabral - initial implementation
 # ******************************************************************************/
 
-forte_opcua_register_type(forte_localizedtext LocalizedText "UA")
+target_sources(forte-com-opc_ua PRIVATE
+        forte_localizedtext.cpp
+        forte_localizedtext.h
+)

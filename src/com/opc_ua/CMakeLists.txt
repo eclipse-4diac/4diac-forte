@@ -117,7 +117,7 @@ endif ()
 add_library(forte-com-opc_ua OBJECT
             $<$<BOOL:${FORTE_COM_OPC_UA}>:opcua_layer.cpp>
             $<$<BOOL:${FORTE_COM_OPC_UA}>:opcua_layer.h>
-            opcua_types.cpp
+        opcua_types.h
             $<$<BOOL:${FORTE_COM_OPC_UA_Events}>:opcua_event_layer.cpp>
             $<$<BOOL:${FORTE_COM_OPC_UA_Events}>:opcua_event_layer.h>
             $<$<BOOL:${FORTE_COM_OPC_UA_AC}>:opcua_ac_layer.cpp>

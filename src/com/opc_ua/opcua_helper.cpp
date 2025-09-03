@@ -22,6 +22,8 @@
 #include "core/datatypes/forte_array.h"
 #include "core/util/string_utils.h"
 
+#include "opcua_types.h"
+
 static const CIEC_DATE::TValueType internalToOPCUAEpochDifferenceInNanoseconds = 11644473600000000LL;
 
 template<typename T_FORTE_TYPE, typename T_OPCUA_TYPE>
@@ -477,4 +479,13 @@ void COPC_UA_Helper::copyNodeIds(const UA_BrowsePathResult *paBrowsePathsResults
     *paParentNodeId = UA_NodeId_new();
     **paParentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_ROOTFOLDER);
   }
+}
+
+const UA_DataType *COPC_UA_Helper::getExternalOPCUATypeFromAny(const CIEC_ANY &paAnyType) {
+  CIEC_ANY::EDataTypeID typeId = paAnyType.getDataTypeID();
+  if (CIEC_ANY::e_STRUCT == typeId) {
+    const forte::core::StringId typeOfStructure = static_cast<const CIEC_STRUCT &>(paAnyType).getStructTypeNameID();
+    return forte::com::opc_ua::OPC_UA_External_Types::get(typeOfStructure);
+  }
+  return nullptr;
 }

@@ -13,11 +13,19 @@
 
 #include "forte_datatypetest.h"
 
+#include "com/opc_ua/opcua_types.h"
+#include "generated/ua_types_fordiacNamespace_generated.h"
+
 using namespace forte::core::literals;
+
+namespace {
+  [[maybe_unused]] const forte::com::opc_ua::OPC_UA_External_Types::Entry
+      entry("DataTypeTest"_STRID, &UA_UA_TYPES_FORDIACNAMESPACE[UA_UA_TYPES_FORDIACNAMESPACE_DATATYPETEST]);
+}
 
 DEFINE_FIRMWARE_DATATYPE(DataTypeTest, "DataTypeTest"_STRID);
 
-CIEC_DataTypeTest::CIEC_DataTypeTest() : CIEC_STRUCT(), var_Name(""), var_Age(0), var_IsRegistered(false) {
+CIEC_DataTypeTest::CIEC_DataTypeTest() : CIEC_STRUCT(), var_Name(""_STRING), var_Age(0), var_IsRegistered(false) {
 }
 
 forte::core::StringId CIEC_DataTypeTest::getStructTypeNameID() const {

@@ -198,11 +198,6 @@ class COPC_UA_Helper {
     static const UA_TypeConvert scmMapForteTypeIdToOpcUa[];
 
     /**
-     * Array of conversion functions for added types
-     */
-    static const UA_TypeConvert_external scmExternalMapForteTypeIdToOpcUa[];
-
-    /**
      * If the type being looked for is not a basic one, it will look in the externally added types
      * @param paAnyType IEC 61131-3 container which is used to look for the corresponding OPC UA type
      * @return The OPC UA type pointer, or 0 if not found

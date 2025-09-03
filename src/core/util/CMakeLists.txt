@@ -27,6 +27,7 @@ target_sources(forte-core PRIVATE
             inplace_vector.h
         mainparam_utils.h
         mainparam_utils.cpp
+        registry.h
             ringbuf.h
             string_utils.h
             string_utils.cpp
