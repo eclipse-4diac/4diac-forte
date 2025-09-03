@@ -16,7 +16,7 @@
 #include "EplCNCallback.h"
 #include "forte/util/singlet.h"
 #include "../../core/src/fortelist.h"
-#include <forte_sync.h>
+#include "forte/arch/forte_sync.h"
 
 struct EplMapping {
     struct EplMappingValues {

@@ -20,7 +20,7 @@
 #include "forte/cominfra/basecommfb.h"
 #include "forte/timerha.h"
 #include "forte/util/devlog.h"
-#include "arch/fortenew.h"
+#include "forte/arch/fortenew.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_struct.h"

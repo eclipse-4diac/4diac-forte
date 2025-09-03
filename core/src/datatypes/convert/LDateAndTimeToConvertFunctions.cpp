@@ -19,7 +19,7 @@
 
 #include "forte/datatypes/convert/LDateAndTimeToConvertFunctions.h"
 
-#include "arch/forte_architecture_time.h"
+#include "forte/arch/forte_architecture_time.h"
 
 CIEC_LDATE func_LDT_TO_LDATE(const CIEC_LDATE_AND_TIME &paVal) {
   TForteUInt64 nBuffer = paVal;

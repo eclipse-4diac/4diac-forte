@@ -18,7 +18,7 @@
 #include "forte/iec61131_functions.h"
 #include "forte/cominfra/basecommfb.h"
 #include "forte/util/criticalregion.h"
-#include "arch/forte_printer.h"
+#include "forte/arch/forte_printer.h"
 
 using namespace forte::com_infra;
 

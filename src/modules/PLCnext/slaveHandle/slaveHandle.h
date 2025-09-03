@@ -15,7 +15,7 @@
 
 #include <stdint.h>
 #include <cstring>
-#include <forte_sync.h>
+#include "forte/arch/forte_sync.h"
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_dword.h"
 #include "forte/io/mapper/io_handle.h"

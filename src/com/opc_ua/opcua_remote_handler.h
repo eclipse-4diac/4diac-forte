@@ -16,7 +16,7 @@
 #ifndef SRC_MODULES_OPC_UA_OPCUACLIENTHANDLER_H_
 #define SRC_MODULES_OPC_UA_OPCUACLIENTHANDLER_H_
 
-#include "forte_thread.h"
+#include "forte/arch/forte_thread.h"
 #include "forte/config/forte_config.h"
 #include "opcua_defaults.h"
 #include "com/opc_ua/opcua_handler_abstract.h"

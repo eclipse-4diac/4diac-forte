@@ -15,7 +15,7 @@
 #define CROSMANAGER_H_
 
 #include "forte/extevhan.h"
-#include <forte_thread.h>
+#include "forte/arch/forte_thread.h"
 
 #include "forte/datatypes/forte_string.h"
 #include <string>

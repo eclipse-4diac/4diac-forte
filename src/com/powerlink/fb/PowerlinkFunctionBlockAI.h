@@ -14,7 +14,7 @@
 #define POWERLINKFUNCTIONBLOCKAI_H
 
 #include "forte/funcbloc.h"
-#include "forte_sync.h"
+#include "forte/arch/forte_sync.h"
 
 #include "EplCNCallback.h"
 #include "EplWrapper.h"

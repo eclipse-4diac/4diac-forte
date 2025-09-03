@@ -30,7 +30,7 @@
 #include "forte/util/devlog.h"
 #include "forte/util/string_utils.h"
 
-#include "arch/forte_fileio.h"
+#include "forte/arch/forte_fileio.h"
 
 #include "unicode_utils.h"
 

@@ -21,7 +21,7 @@
 #include "../slave/handles/analog.h"
 #include "../slave/handles/analog10.h"
 #include "arch/utils/timespec_utils.h"
-#include <fortealloc.h>
+#include "forte/arch/fortealloc.h"
 
 const char *const EmbrickBusHandler::scmSlaveUpdateFailed = "Update of slave failed.";
 const char *const EmbrickBusHandler::scmNoSlavesFound = "No slave modules found.";

@@ -16,7 +16,7 @@
 #define OPCCONNECTION_H_
 
 #include "forte/cominfra/comlayer.h"
-#include "forte_sync.h"
+#include "forte/arch/forte_sync.h"
 #include "windows.h"
 #include "Variant.h"
 #include <vector>

@@ -17,11 +17,11 @@
 #ifndef SRC_MODULES_HTTP_OPCUAHANDLER_H_
 #define SRC_MODULES_HTTP_OPCUAHANDLER_H_
 
-#include <forte_thread.h>
+#include "forte/arch/forte_thread.h"
 #include "forte/extevhan.h"
 #include "forte/conn.h"
 #include <stdio.h>
-#include <sockhand.h>
+#include "forte/arch/sockhand.h"
 #include "forte/datatypes/forte_string.h"
 #include "httplayer.h"
 #include "forte/cominfra/comCallback.h"

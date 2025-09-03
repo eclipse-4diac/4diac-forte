@@ -13,7 +13,7 @@
 #ifndef CRITICALREGION_H_
 #define CRITICALREGION_H_
 
-#include "forte_sync.h"
+#include "forte/arch/forte_sync.h"
 
 class CCriticalRegion {
   public:

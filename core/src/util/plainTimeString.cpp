@@ -10,7 +10,7 @@
  *  Ketut Kumajaya - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "arch/forte_architecture_time.h"
+#include "forte/arch/forte_architecture_time.h"
 #include <sstream>
 
 std::string getRealtimeString() {

@@ -13,7 +13,7 @@
 #include "EplWrapper.h"
 #include "ProcessImageMatrix.h"
 #include "EplXmlReader.h"
-#include <forte_thread.h>
+#include "forte/arch/forte_thread.h"
 
 #define CONFIG_POWERLINK_USERSTACK
 

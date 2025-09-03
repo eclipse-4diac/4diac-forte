@@ -20,7 +20,7 @@
 #include "forte/datatypes/forte_wstring.h"
 #include "forte/datatypes/forte_any_variant.h"
 
-#include "forte_sync.h"
+#include "forte/arch/forte_sync.h"
 
 namespace forte::com {
 

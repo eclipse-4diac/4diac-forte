@@ -11,7 +11,7 @@
  *    Jose Cabral - initial implementation
  *******************************************************************************/
 #include "com/opc_ua/opcua_handler_abstract.h"
-#include "arch/forte_printer.h"
+#include "forte/arch/forte_printer.h"
 #include "forte/util/devlog.h"
 #include "forte/util/parameterParser.h"
 #include <unordered_map>

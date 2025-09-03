@@ -17,7 +17,7 @@
 #include "forte/io/mapper/io_handle.h"
 #include <stdint.h>
 #include <cstring>
-#include <forte_sync.h>
+#include "forte/arch/forte_sync.h"
 
 class EmbrickSlaveHandler;
 

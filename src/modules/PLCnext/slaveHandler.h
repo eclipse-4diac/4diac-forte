@@ -14,7 +14,7 @@
 #define SRC_MODULES_PLCNEXT_SLAVEHANDLER_H_
 
 #include <cstring>
-#include <forte_sync.h>
+#include "forte/arch/forte_sync.h"
 #include "forte/datatypes/forte_wstring.h"
 #include "forte/util/devlog.h"
 

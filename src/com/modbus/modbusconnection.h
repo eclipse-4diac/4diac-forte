@@ -14,7 +14,7 @@
 #define _MODBUSCONNECTION_H_
 
 #include <modbus.h>
-#include <forte_thread.h>
+#include "forte/arch/forte_thread.h"
 #include "modbushandler.h"
 #include "modbusioblock.h"
 #include "modbusenums.h"

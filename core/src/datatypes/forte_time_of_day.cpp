@@ -19,7 +19,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "forte/datatypes/forte_time_of_day.h"
-#include "arch/forte_architecture_time.h"
+#include "forte/arch/forte_architecture_time.h"
 #include "forte/util/string_utils.h"
 
 using namespace forte::core::literals;

@@ -15,7 +15,7 @@
 
 #include <string>
 #include <utility> // needed for std::pair
-#include "arch/forte_fileio.h"
+#include "forte/arch/forte_fileio.h"
 
 /**
  * Helper class to parse configuration files. For now, all lines must be formed as key=value or empty lines

@@ -18,7 +18,7 @@
 #include <iomanip>
 #include <chrono>
 
-#include "arch/forte_architecture_time.h"
+#include "forte/arch/forte_architecture_time.h"
 #include "forte/util/devlog.h"
 #include "forte/util/mainparam_utils.h"
 

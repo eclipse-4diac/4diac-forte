@@ -16,9 +16,9 @@
 
 #include "forte/config/devlog_config.h"
 #include "forte/timerha.h"
-#include "arch/forte_printer.h"
+#include "forte/arch/forte_printer.h"
 #include "forte/util/criticalregion.h"
-#include "arch/forte_architecture_time.h"
+#include "forte/arch/forte_architecture_time.h"
 #include <cstdlib>
 #include <cstdarg>
 

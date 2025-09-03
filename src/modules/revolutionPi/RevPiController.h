@@ -15,7 +15,7 @@
 
 #include "forte/io/device/io_controller_multi.h"
 #include "lib/piControlIf.h"
-#include <forte_sem.h>
+#include "forte/arch/forte_sem.h"
 
 class RevPiHandle;
 

@@ -19,7 +19,7 @@
 #include "forte/cominfra/comlayersmanager.h"
 #include "forte/util/devlog.h"
 #include "forte/cominfra/basecommfb.h"
-#include <forte_thread.h>
+#include "forte/arch/forte_thread.h"
 #include "forte/util/string_utils.h"
 
 using namespace forte::com_infra;

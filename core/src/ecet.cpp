@@ -15,7 +15,7 @@
  *      -  fix that external event queue becomes event locker after it is full
  *******************************************************************************/
 #include "forte/config/forte_config.h"
-#include "arch/fortenew.h"
+#include "forte/arch/fortenew.h"
 #include "forte/ecet.h"
 
 #include "forte/ecetfactory.h"

@@ -20,7 +20,7 @@
 #include "packages.h"
 #include "handle.h"
 #include <stdint.h>
-#include <forte_sync.h>
+#include "forte/arch/forte_sync.h"
 #include "forte/io/mapper/io_mapper.h"
 
 class EmbrickBusHandler;

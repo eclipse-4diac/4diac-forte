@@ -20,7 +20,7 @@
 
 #include "forte/genfb.h"
 #include <stdio.h>
-#include "arch/forte_fileio.h"
+#include "forte/arch/forte_fileio.h"
 #include "forte/datatypes/forte_any_variant.h"
 
 #include <memory>

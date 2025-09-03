@@ -16,7 +16,7 @@
 #define SRC_MODULES_EMBRICK_TYPES_SLAVE_H_
 
 #include "EBBusAdapter.h"
-#include <forte_sync.h>
+#include "forte/arch/forte_sync.h"
 #include "../slave/slave.h"
 #include "../slave/handle.h"
 #include "forte/io/configFB/io_slave_multi.h"

@@ -24,10 +24,10 @@
 #ifndef SRC_MODULES_OPC_UA_OPCUALOCALHANDLER_H_
 #define SRC_MODULES_OPC_UA_OPCUALOCALHANDLER_H_
 
-#include <forte_thread.h>
+#include "forte/arch/forte_thread.h"
 #include "forte/conn.h"
-#include <forte_sem.h>
-#include <forte_sync.h>
+#include "forte/arch/forte_sem.h"
+#include "forte/arch/forte_sync.h"
 #include "com/opc_ua/opcua_handler_abstract.h"
 #include "com/opc_ua/opcua_helper.h"
 

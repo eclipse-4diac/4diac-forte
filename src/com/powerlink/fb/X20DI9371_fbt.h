@@ -24,7 +24,7 @@
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
-#include "forte_sync.h"
+#include "forte/arch/forte_sync.h"
 
 class FORTE_X20DI9371 final : public PowerlinkFunctionBlockDI {
     DECLARE_FIRMWARE_FB(FORTE_X20DI9371)

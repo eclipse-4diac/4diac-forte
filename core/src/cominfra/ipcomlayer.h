@@ -14,7 +14,7 @@
 #ifndef IPCOMLAYER_H_
 #define IPCOMLAYER_H_
 
-#include <sockhand.h>
+#include "forte/arch/sockhand.h"
 #include "forte/config/forte_config.h"
 #include "forte/cominfra/comlayer.h"
 

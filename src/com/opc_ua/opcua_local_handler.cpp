@@ -28,7 +28,7 @@
 #include "forte/util/parameterParser.h"
 #include "forte/util/string_utils.h"
 #include "forte/util/mainparam_utils.h"
-#include "arch/forte_printer.h"
+#include "forte/arch/forte_printer.h"
 #include "com/opc_ua/opcua_local_handler.h"
 
 #include "opcua_nodesets.h"
@@ -39,7 +39,7 @@
 #include <string>
 
 #ifndef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
-#include "sockhand.h"
+#include "forte/arch/sockhand.h"
 #endif
 
 using namespace forte::com_infra;

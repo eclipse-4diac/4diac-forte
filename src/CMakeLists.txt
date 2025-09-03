@@ -18,7 +18,6 @@ target_include_directories(forte-global INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/st
 ###############################################################################
 # Core infrastructure
 
-add_subdirectory(arch)
 add_subdirectory(stdfblib)
 add_subdirectory(modules)
 

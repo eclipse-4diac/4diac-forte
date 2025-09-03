@@ -15,7 +15,7 @@
  *******************************************************************************/
 #include "forte/iec61131_functions.h"
 
-#include "arch/forte_architecture_time.h"
+#include "forte/arch/forte_architecture_time.h"
 
 /*** TRUNC ***/
 CIEC_SINT func_TRUNC_SINT(const CIEC_REAL &paIN) {

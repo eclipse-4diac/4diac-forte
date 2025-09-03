@@ -17,7 +17,7 @@
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #include <cstddef>
-#include "arch/fortenew.h"
+#include "forte/arch/fortenew.h"
 #include <memory>
 #include <string.h>
 #include <stdio.h>

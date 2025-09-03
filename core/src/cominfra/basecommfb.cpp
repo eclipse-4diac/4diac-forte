@@ -20,7 +20,7 @@
 #include "forte/cominfra/comlayer.h"
 #include "forte/cominfra/comlayersmanager.h"
 #include "forte/resource.h"
-#include "arch/fortenew.h"
+#include "forte/arch/fortenew.h"
 #include <string.h>
 #include <stdio.h>
 #include <stdlib.h>

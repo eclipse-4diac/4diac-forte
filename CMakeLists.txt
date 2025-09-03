@@ -117,6 +117,7 @@ else ()
 endif ()
 
 add_subdirectory(core)
+add_subdirectory(arch)
 
 add_subdirectory(src)
 

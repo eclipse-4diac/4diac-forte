@@ -17,7 +17,7 @@
 
 #include "com/opc_ua/opcua_action_info.h"
 
-#include "forte_sync.h"
+#include "forte/arch/forte_sync.h"
 
 #include <string>
 #include <vector>

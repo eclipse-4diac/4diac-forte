@@ -19,7 +19,7 @@
 
 #include "forte/config/forte_config.h"
 #include "forte/extevhan.h"
-#include "forte_sync.h"
+#include "forte/arch/forte_sync.h"
 #include "forte/datatypes/forte_time.h"
 #include <vector>
 

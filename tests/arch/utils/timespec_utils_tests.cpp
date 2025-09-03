@@ -13,7 +13,7 @@
 
 #include <boost/test/unit_test.hpp>
 
-#include "../../../src/arch/utils/timespec_utils.h"
+#include "../../../arch/common/src/utils/timespec_utils.h"
 
 using namespace boost::unit_test;
 

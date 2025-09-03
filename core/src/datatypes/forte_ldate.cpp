@@ -22,7 +22,7 @@
 
 using namespace forte::core::literals;
 
-#include "arch/forte_architecture_time.h"
+#include "forte/arch/forte_architecture_time.h"
 
 DEFINE_FIRMWARE_DATATYPE(LDATE, "LDATE"_STRID)
 

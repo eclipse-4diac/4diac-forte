@@ -12,9 +12,9 @@
 #define XQUERY_XQUERYHANDLER_H_
 
 #include "forte/extevhan.h"
-#include "forte_thread.h"
+#include "forte/arch/forte_thread.h"
 #include "forte/util/singlet.h"
-#include "forte_sem.h"
+#include "forte/arch/forte_sem.h"
 #include "xqueryClientLayer.h"
 #include <vector>
 

@@ -18,7 +18,7 @@
  *******************************************************************************/
 #include "GEN_VALUES2ARRAY_fbt.h"
 #include <memory>
-#include "arch/forte_printer.h"
+#include "forte/arch/forte_printer.h"
 #include "forte/util/string_utils.h"
 
 using namespace forte::core::literals;

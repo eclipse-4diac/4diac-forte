@@ -25,7 +25,7 @@
 #include "forte/datatypes/forte_wstring.h"
 #include "forte/genfb.h"
 #include "forte/esfb.h"
-#include "forte_sync.h"
+#include "forte/arch/forte_sync.h"
 
 namespace forte {
   namespace com_infra {

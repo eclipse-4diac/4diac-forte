@@ -20,9 +20,9 @@
 
 #include "forte/extevhan.h"
 #include "MQTTComLayer.h"
-#include <forte_sync.h>
-#include <forte_thread.h>
-#include <forte_sem.h>
+#include "forte/arch/forte_sync.h"
+#include "forte/arch/forte_thread.h"
+#include "forte/arch/forte_sem.h"
 #include <string>
 #include <vector>
 #include <memory>

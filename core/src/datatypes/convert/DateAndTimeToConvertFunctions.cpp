@@ -24,7 +24,7 @@
 
 #include "forte/datatypes/convert/DateAndTimeToConvertFunctions.h"
 
-#include "arch/forte_architecture_time.h"
+#include "forte/arch/forte_architecture_time.h"
 
 CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal) {
   TForteUInt64 nBuffer = paVal;

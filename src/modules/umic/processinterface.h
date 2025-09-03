@@ -14,7 +14,7 @@
 #define _UMICPROCINT_H_
 
 #include <../../stdfblib/io/processinterfacebase.h>
-#include <forte_sync.h>
+#include "forte/arch/forte_sync.h"
 #include <string>
 
 #define UMIC_LED_ENABLED 1

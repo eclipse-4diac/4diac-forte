@@ -24,7 +24,7 @@
 #include <string_view>
 #include "forte/conn.h"
 #include "forte/datatypes/forte_any_string.h"
-#include "arch/fortenew.h"
+#include "forte/arch/fortenew.h"
 #include "forte/funcbloc.h"
 #include "forte/mgmcmd.h"
 #include "forte/adapterconn.h"

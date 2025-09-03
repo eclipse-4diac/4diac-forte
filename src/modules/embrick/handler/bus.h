@@ -23,9 +23,9 @@
 #include "spi.h"
 #include "pin.h"
 #include "../slave/slave.h"
-#include <forte_sync.h>
-#include <forte_sem.h>
-#include <forte_thread.h>
+#include "forte/arch/forte_sync.h"
+#include "forte/arch/forte_sem.h"
+#include "forte/arch/forte_thread.h"
 
 const unsigned int TransferBufferLength = 150;
 const unsigned int SyncGapMultiplicator = 15;

@@ -14,7 +14,7 @@
 #define _SYSFSPROCINT_H_
 
 #include "../../stdfblib/io/processinterfacebase.h"
-#include <forte_thread.h>
+#include "forte/arch/forte_thread.h"
 #include "forte/extevhan.h"
 #include <fstream>
 

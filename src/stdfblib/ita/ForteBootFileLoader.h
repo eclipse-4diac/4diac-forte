@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "arch/forte_fileio.h"
+#include "forte/arch/forte_fileio.h"
 
 #include <string>
 #include <functional>

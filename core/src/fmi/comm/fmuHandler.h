@@ -16,7 +16,7 @@
 #include "forte/util/singlet.h"
 #include "forte/extevhan.h"
 #include "core/fmi/comm/fmuComLayer.h"
-#include <forte_sync.h>
+#include "forte/arch/forte_sync.h"
 #include "forte/datatypes/forte_string.h"
 #include <map>
 #include <vector>

@@ -13,7 +13,7 @@
 #include "modbusclientconnection.h"
 #include "forte/util/devlog.h"
 #include "modbuspoll.h"
-#include <forte_thread.h>
+#include "forte/arch/forte_thread.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <fcntl.h>

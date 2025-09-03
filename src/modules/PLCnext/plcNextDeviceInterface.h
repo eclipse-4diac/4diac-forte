@@ -29,7 +29,7 @@
 #include <libgen.h>
 #include <thread>
 #include <pthread.h>
-#include <forte_sync.h>
+#include "forte/arch/forte_sync.h"
 
 #include "forte/util/devlog.h"
 

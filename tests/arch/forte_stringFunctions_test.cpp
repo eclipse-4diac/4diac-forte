@@ -11,7 +11,7 @@
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 
-#include "arch/forte_stringFunctions.h"
+#include "../../common/src/forte_stringFunctions.h"
 
 BOOST_AUTO_TEST_SUITE(forte_stringFunctions_test)
 

@@ -17,7 +17,7 @@
 
 #include "forte/cominfra/comlayer.h"
 #include "forte/stringid.h"
-#include <forte_sync.h>
+#include "forte/arch/forte_sync.h"
 #include <vector>
 
 class CIEC_ANY;

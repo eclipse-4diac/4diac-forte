@@ -17,7 +17,7 @@
 
 #include "forte/funcbloc.h"
 #include "forte/datatypes/forte_bool.h"
-#include "forte_sync.h"
+#include "forte/arch/forte_sync.h"
 
 class FORTE_TEST_CONDITION final : public CFunctionBlock {
     DECLARE_FIRMWARE_FB(FORTE_TEST_CONDITION)

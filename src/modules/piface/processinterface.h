@@ -16,7 +16,7 @@
 
 #include <../../stdfblib/io/processinterfacebase.h>
 #include "forte/extevhan.h"
-#include <forte_thread.h>
+#include "forte/arch/forte_thread.h"
 #include <vector>
 #include "../conmeleon_c1/spi/spidevice.h"
 

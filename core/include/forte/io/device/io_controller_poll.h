@@ -15,7 +15,7 @@
 #define SRC_CORE_IO_DEVICE_IO_CONTROLLER_POLL_H_
 
 #include "forte/io/device/io_controller.h"
-#include "forte_sem.h"
+#include "forte/arch/forte_sem.h"
 
 namespace forte {
   namespace core {

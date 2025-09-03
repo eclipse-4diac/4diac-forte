@@ -20,7 +20,7 @@
 
 #include <cstring>
 
-#include "arch/fortenew.h"
+#include "forte/arch/fortenew.h"
 #include "forte/util/string_utils.h"
 #include "unicode_utils.h"
 

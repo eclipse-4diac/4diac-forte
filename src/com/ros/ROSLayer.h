@@ -20,7 +20,7 @@
 
 #include "forte/cominfra/comlayer.h"
 #include "forte/extevhan.h"
-#include <forte_thread.h>
+#include "forte/arch/forte_thread.h"
 #include "forte/util/singlet.h"
 
 #include <string>

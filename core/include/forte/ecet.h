@@ -18,9 +18,9 @@
 #include "forte/datatypes/forte_time.h"
 #include "forte/util/ringbuf.h"
 #include "forte/config/forte_config.h"
-#include "forte_thread.h"
-#include "forte_sync.h"
-#include "forte_sem.h"
+#include "forte/arch/forte_thread.h"
+#include "forte/arch/forte_sync.h"
+#include "forte/arch/forte_sem.h"
 
 /*! \ingroup CORE\brief Class for executing one event chain.
  *

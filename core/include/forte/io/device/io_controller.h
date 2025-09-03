@@ -15,8 +15,8 @@
 #define SRC_CORE_IO_DEVICE_CONTROLLER_H_
 
 #include "forte/extevhan.h"
-#include "forte_sync.h"
-#include "forte_thread.h"
+#include "forte/arch/forte_sync.h"
+#include "forte/arch/forte_thread.h"
 #include "forte/util/devlog.h"
 
 #include "forte/io/mapper/io_handle.h"

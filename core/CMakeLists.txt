@@ -13,6 +13,7 @@
 #############################################################################
 
 add_library(forte-core)
+target_link_libraries(forte-core PUBLIC forte-arch)
 target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-core>)
 
 add_subdirectory(src)

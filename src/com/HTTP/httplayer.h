@@ -18,7 +18,7 @@
 #define _HTTPCOMLAYER_H_
 
 #include "forte/config/forte_config.h"
-#include <forte_sem.h>
+#include "forte/arch/forte_sem.h"
 #include "forte/cominfra/comlayer.h"
 #include "forte/datatypes/forte_string.h"
 #include "forte/util/parameterParser.h"

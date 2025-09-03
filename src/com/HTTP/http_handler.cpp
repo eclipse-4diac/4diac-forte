@@ -22,7 +22,7 @@
 #include "forte/cominfra/basecommfb.h"
 #include "forte/util/criticalregion.h"
 #include "httpparser.h"
-#include "arch/forte_printer.h"
+#include "forte/arch/forte_printer.h"
 #include "forte/cominfra/comlayer.h"
 #include "forte/util/mainparam_utils.h"
 
