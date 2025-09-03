@@ -570,7 +570,7 @@ COPC_UA_ObjectStruct_Helper::getStructMemberBrowsePathWithNSIndex(const std::str
   std::stringstream ss;
   char buf[100];
   snprintf(buf, sizeof(buf), smMemberNamespaceIndex.c_str(), mOpcuaObjectNamespaceIndex);
-  ss << paBrowsePathPrefix << buf << structMemberNameId;
+  ss << paBrowsePathPrefix << buf << structMemberNameId.get();
   return ss.str();
 }
 

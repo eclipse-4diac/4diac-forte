@@ -1037,7 +1037,7 @@ UA_StatusCode COPC_UA_Local_Handler::executeCreateObject(CActionInfo &paActionIn
     }
 
   } else {
-    DEVLOG_ERROR("[OPC UA LOCAL]: The type of the object to create could not be found \n",
+    DEVLOG_ERROR("[OPC UA LOCAL]: The type of the object to create could not be found at FB %s\n",
                  paActionInfo.getLayer().getCommFB()->getInstanceName());
   }
 
