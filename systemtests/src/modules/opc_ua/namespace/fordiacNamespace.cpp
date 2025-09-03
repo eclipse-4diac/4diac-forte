@@ -11,10 +11,9 @@
  *    Martin Erich Jobst - initial implementation
  *******************************************************************************/
 
-#pragma once
+#include "com/opc_ua/opcua_nodesets.h"
+#include "generated/ua_namespace_fordiacNamespace.h"
 
-#include "util/hook.h"
-
-namespace forte::core {
-  using StartupHookRegistry = util::hook::Registry<void, int, char **>;
+namespace {
+  [[maybe_unused]] const forte::com::opc_ua::OPC_UA_Nodesets::EntryImpl<ua_namespace_fordiacNamespace> entry;
 }

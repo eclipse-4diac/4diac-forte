@@ -13,8 +13,10 @@
 
 #pragma once
 
-#include "util/hook.h"
+#include "core/util/hook.h"
 
-namespace forte::core {
-  using StartupHookRegistry = util::hook::Registry<void, int, char **>;
+#include <open62541.h>
+
+namespace forte::com::opc_ua {
+  using OPC_UA_Nodesets = core::util::hook::Registry<UA_StatusCode, UA_Server *>;
 }

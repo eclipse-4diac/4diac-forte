@@ -25,8 +25,6 @@ if (NOT FORTE_COM_OPC_UA)
     return()
 endif ()
 
-add_subdirectory(generated)
-
 set(FORTE_COM_OPC_UA_PORT
     4840
     CACHE STRING "Port where the OPC_UA server will listen"

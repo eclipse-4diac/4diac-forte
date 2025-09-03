@@ -215,7 +215,7 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract,
      * @param paUaServer OPC UA Server
      * @return True if no error occurred, false otherwise
      */
-    bool initializeNodesets(UA_Server &paUaServer);
+    static bool initializeNodesets(UA_Server &paUaServer);
 
     /**
      * Map to know which actions are using which nodes. When an action is unitialized, this is checked

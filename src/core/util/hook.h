@@ -17,14 +17,14 @@
 
 namespace forte::core::util::hook {
 
-  template<typename... Args>
+  template<typename T, typename... Args>
   class Registry final {
     public:
       class Entry {
         public:
           virtual ~Entry() = default;
 
-          virtual void operator()(Args... paArgs) = 0;
+          virtual T operator()(Args... paArgs) = 0;
 
         protected:
           Entry() {
@@ -32,19 +32,28 @@ namespace forte::core::util::hook {
           }
       };
 
-      template<void (*Impl)(Args...)>
+      template<T (*Impl)(Args...)>
       class EntryImpl final : public Entry {
         public:
           EntryImpl() = default;
 
-          void operator()(Args... paArgs) override {
-            Impl(std::forward<Args>(paArgs)...);
+          T operator()(Args... paArgs) override {
+            return Impl(std::forward<Args>(paArgs)...);
           }
       };
 
-      static void invoke(Args... paArgs) {
-        for (auto &entry : entries) {
-          (*entry)(std::forward<Args>(paArgs)...);
+      static T invoke(Args... paArgs) {
+        if constexpr (std::is_same_v<T, void>) {
+          for (auto &entry : entries) {
+            (*entry)(std::forward<Args>(paArgs)...);
+          }
+          return;
+        } else {
+          T result{};
+          for (auto &entry : entries) {
+            result += (*entry)(std::forward<Args>(paArgs)...);
+          }
+          return result;
         }
       }
 
@@ -58,6 +67,6 @@ namespace forte::core::util::hook {
       constinit static std::vector<Entry *> entries;
   };
 
-  template<typename... Args>
-  constinit std::vector<typename Registry<Args...>::Entry *> Registry<Args...>::entries;
+  template<typename T, typename... Args>
+  constinit std::vector<typename Registry<T, Args...>::Entry *> Registry<T, Args...>::entries;
 } // namespace forte::core::util::hook

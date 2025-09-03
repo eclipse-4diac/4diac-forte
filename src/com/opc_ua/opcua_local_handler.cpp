@@ -30,6 +30,8 @@
 #include "core/util/mainparam_utils.h"
 #include "arch/forte_printer.h"
 #include "com/opc_ua/opcua_local_handler.h"
+
+#include "opcua_nodesets.h"
 #include "com/opc_ua/struct_action_info.h"
 #ifdef FORTE_COM_OPC_UA_MULTICAST
 #include "com/opc_ua/detail/lds_me_handler.h"
@@ -1601,4 +1603,8 @@ void COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite(UA_Server *,
     ::getExtEvHandler<COPC_UA_Local_Handler>(*variableCallbackHandle->mActionInfo.getLayer().getCommFB())
         .startNewEventChain(variableCallbackHandle->mActionInfo.getLayer().getCommFB());
   }
+}
+
+bool COPC_UA_Local_Handler::initializeNodesets(UA_Server &paUaServer) {
+  return forte::com::opc_ua::OPC_UA_Nodesets::invoke(&paUaServer) == UA_STATUSCODE_GOOD;
 }

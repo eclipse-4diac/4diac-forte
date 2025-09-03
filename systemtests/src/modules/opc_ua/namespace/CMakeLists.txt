@@ -9,10 +9,9 @@
 # *   Jose Cabral  - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-forte_opcua_register_nodeset(fordiacNamespace ${CMAKE_CURRENT_SOURCE_DIR}/generated)
-
 # FIXME do not add test sources to non-test target
 target_sources(forte-com-opc_ua PRIVATE
+        fordiacNamespace.cpp
         forte_datatypetest.cpp
         forte_datatypetest.h
         generated/ua_namespace_fordiacNamespace.c
