@@ -73,17 +73,6 @@ set(FORTE_COM_OPC_UA_LIB
 )
 if (FORTE_ARCHITECTURE STREQUAL "Win32")
     target_link_libraries(forte PUBLIC iphlpapi)
-    target_compile_definitions(forte-global INTERFACE UA_ARCHITECTURE_WIN32)
-elseif (FORTE_ARCHITECTURE STREQUAL "VxWorks")
-    target_compile_definitions(forte-global INTERFACE UA_ARCHITECTURE_VXWORKS)
-elseif (FORTE_ARCHITECTURE STREQUAL "Nios2")
-    target_compile_definitions(forte-global INTERFACE UA_ARCHITECTURE_ECOS)
-elseif (FORTE_ARCHITECTURE STREQUAL "FreeRTOSLwIP")
-    target_compile_definitions(forte-global
-                               INTERFACE UA_ARCHITECTURE_FREERTOSLWIP
-    )
-else ()
-    target_compile_definitions(forte-global INTERFACE UA_ARCHITECTURE_POSIX)
 endif ()
 target_include_directories(forte-global
                            INTERFACE ${FORTE_COM_OPC_UA_INCLUDE_DIR}
