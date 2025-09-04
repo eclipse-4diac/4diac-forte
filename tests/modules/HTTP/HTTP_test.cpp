@@ -11,7 +11,7 @@
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 
-#include "../../../src/com/HTTP/httpparser.h"
+#include "../../../com/HTTP/httpparser.h"
 using namespace std::string_literals;
 
 BOOST_AUTO_TEST_SUITE(HTTPParser_function_test)

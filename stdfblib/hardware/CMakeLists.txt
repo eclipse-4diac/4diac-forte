@@ -35,4 +35,8 @@ target_compile_definitions(forte-hardware PRIVATE $<$<BOOL:${FORTE_ENABLE_OPCUA_
 target_link_libraries(forte-hardware PUBLIC forte-core forte-events)
 target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-hardware>)
 
+if (FORTE_COM_OPC_UA)
+    target_link_libraries(forte-hardware PRIVATE forte-com-opc_ua)
+endif ()
+
 add_subdirectory(src)

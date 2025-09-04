@@ -13,7 +13,7 @@
 
 #include "forte_datatypetest.h"
 
-#include "com/opc_ua/opcua_types.h"
+#include "forte/com/opc_ua/opcua_types.h"
 #include "generated/ua_types_fordiacNamespace_generated.h"
 
 using namespace forte::core::literals;

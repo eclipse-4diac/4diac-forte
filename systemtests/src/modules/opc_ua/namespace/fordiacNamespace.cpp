@@ -11,7 +11,7 @@
  *    Martin Erich Jobst - initial implementation
  *******************************************************************************/
 
-#include "com/opc_ua/opcua_nodesets.h"
+#include "forte/com/opc_ua/opcua_nodesets.h"
 #include "generated/ua_namespace_fordiacNamespace.h"
 
 namespace {

@@ -23,7 +23,6 @@ add_subdirectory(modules)
 # Modules
 
 forte_add_modules(modules)
-forte_add_modules(com)
 
 set(FORTE_EXTERNAL_MODULES_DIRECTORY "" CACHE PATH "Path to a directory with FORTE modules located outside of the FORTE source code")
 set(FORTE_EXTERNAL_MODULES_DIRECTORIES "" CACHE STRING "List of paths to directories with FORTE modules located outside of the FORTE source code")

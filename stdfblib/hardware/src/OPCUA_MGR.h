@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "com/opc_ua/opcua_local_handler.h"
+#include "../../../com/opc_ua/src/opcua_local_handler.h"
 #include "forte/mgmcmd.h"
 #include "forte/mgmcmdstruct.h"
 

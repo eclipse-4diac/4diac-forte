@@ -119,6 +119,7 @@ endif ()
 add_subdirectory(core)
 add_subdirectory(arch)
 add_subdirectory(stdfblib)
+add_subdirectory(com)
 
 add_subdirectory(src)
 
