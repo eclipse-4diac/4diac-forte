@@ -24,8 +24,8 @@
 #include "forte/datatypes/forte_array_variable.h"
 
 #include "RT_E_CYCLE_fbt.h"
-#include "E_CTU_fbt.h"
-#include "E_SWITCH_fbt.h"
+#include "forte/iec61499/events/E_CTU_fbt.h"
+#include "forte/iec61499/events/E_SWITCH_fbt.h"
 
 class FORTE_RT_E_TRAIN final : public CCompositeFB {
     DECLARE_FIRMWARE_FB(FORTE_RT_E_TRAIN)

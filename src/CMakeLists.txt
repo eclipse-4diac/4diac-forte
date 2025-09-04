@@ -12,13 +12,10 @@
 # *******************************************************************************/
 
 target_include_directories(forte-global INTERFACE ${CMAKE_CURRENT_SOURCE_DIR})
-target_include_directories(forte-global INTERFACE ${CMAKE_CURRENT_SOURCE_DIR}/stdfblib/events)
-
 
 ###############################################################################
 # Core infrastructure
 
-add_subdirectory(stdfblib)
 add_subdirectory(modules)
 
 

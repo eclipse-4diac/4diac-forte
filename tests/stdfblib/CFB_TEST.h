@@ -15,11 +15,11 @@
 #include "forte/cfb.h"
 #include "forte/typelib.h"
 #include "forte/datatypes/forte_bool.h"
-#include "E_PERMIT_fbt.h"
-#include "E_SR_fbt.h"
-#include "E_SWITCH_fbt.h"
-#include "GEN_E_DEMUX_fbt.h"
-#include "GEN_E_MUX_fbt.h"
+#include "forte/iec61499/events/E_PERMIT_fbt.h"
+#include "forte/iec61499/events/E_SR_fbt.h"
+#include "forte/iec61499/events/E_SWITCH_fbt.h"
+#include "forte/iec61499/events/GEN_E_DEMUX_fbt.h"
+#include "forte/iec61499/events/GEN_E_MUX_fbt.h"
 
 class FORTE_CFB_TEST final : public CCompositeFB {
     DECLARE_FIRMWARE_FB(FORTE_CFB_TEST)

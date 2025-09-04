@@ -25,7 +25,7 @@
 
 #include "../../core/src/cominfra/fbdkasn1layer.h"
 #include "forte/cominfra/commfb.h"
-#include "stdfblib/ita/EMB_RES.h"
+#include "../../stdfblib/hardware/src/EMB_RES.h"
 
 #include <boost/test/tools/floating_point_comparison.hpp>
 #include <memory>

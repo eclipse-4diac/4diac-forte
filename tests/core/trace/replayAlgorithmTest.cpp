@@ -22,10 +22,10 @@
 #include "core/trace/internal/EventMessage.h"
 #include "core/trace/barectf_platform_forte.h"
 #include "../fbtests/fbtesterglobalfixture.h"
-#include "stdfblib/ita/replay/deviceReplayer.h"
+#include "deviceReplayer.h"
 #include "core/trace/reader/utils.h"
-#include "stdfblib/ita/ForteBootFileLoader.h"
-#include "stdfblib/ita/CommandParser.h"
+#include "ForteBootFileLoader.h"
+#include "CommandParser.h"
 
 using namespace forte::core::literals;
 
@@ -432,7 +432,7 @@ namespace {
   std::unique_ptr<CDevice> createDeviceFromFile(forte::core::StringId paDeviceName, const std::string &paFilePath) {
     auto device = std::make_unique<CTesterDevice>(paDeviceName);
     device->initialize();
-    forte::ita::CommandParser commandParser(*device);
+    forte::hardware::CommandParser commandParser(*device);
 
     ForteBootFileLoader fileLoader(
         [&commandParser](const char *paDest, char *paCommand) -> bool {

@@ -15,7 +15,7 @@
 #include <boost/test/tools/old/interface.hpp>
 #include <boost/test/unit_test.hpp>
 
-#include "E_CTUD_fbt.h"
+#include "forte/iec61499/events/E_CTUD_fbt.h"
 #include "forte/basicfb.h"
 
 using namespace forte::core::literals;

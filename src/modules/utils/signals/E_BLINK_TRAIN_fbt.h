@@ -30,8 +30,8 @@
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
-#include "E_PULSE_fbt.h"
-#include "E_TRAIN_fbt.h"
+#include "forte/iec61499/events/E_PULSE_fbt.h"
+#include "forte/iec61499/events/E_TRAIN_fbt.h"
 #include "GEN_ADD_fbt.h"
 
 class FORTE_E_BLINK_TRAIN final : public CCompositeFB {

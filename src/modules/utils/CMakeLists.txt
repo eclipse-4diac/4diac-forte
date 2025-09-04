@@ -44,7 +44,7 @@ add_library(forte-modules-utils OBJECT
             TEST_CONDITION_fbt.h
             TEST_CONDITION_fbt.cpp
 )
-target_link_libraries(forte-modules-utils PUBLIC forte-core)
+target_link_libraries(forte-modules-utils PUBLIC forte-core forte-events)
 target_link_libraries(forte PUBLIC forte-modules-utils)
 
 add_subdirectory(selection)

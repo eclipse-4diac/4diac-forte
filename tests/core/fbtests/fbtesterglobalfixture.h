@@ -16,7 +16,7 @@
 #define TESTS_CORE_FBTESTS_FBTESTERGLOBALFIXTURE_H_
 
 #include "forte/device.h"
-#include "stdfblib/ita/EMB_RES.h"
+#include "../../stdfblib/hardware/src/EMB_RES.h"
 
 #include <memory>
 

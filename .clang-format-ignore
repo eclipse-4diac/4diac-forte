@@ -1,5 +1,4 @@
 core/src/trace/classic/generated/**
 core/src/trace/replay_debugging/generated/**
-src/stdfblib/**
 src/com/opc_ua/FBs/**
 src/modules/**
