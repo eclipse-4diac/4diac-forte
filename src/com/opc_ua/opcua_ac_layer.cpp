@@ -18,6 +18,8 @@
 #include "com/opc_ua/opcua_objectstruct_helper.h"
 #include "com/opc_ua/opcua_action_info.h"
 #include "core/cominfra/comlayersmanager.h"
+#include "core/datatypes/forte_string.h"
+#include "core/datatypes/forte_wstring.h"
 
 #include <memory>
 
