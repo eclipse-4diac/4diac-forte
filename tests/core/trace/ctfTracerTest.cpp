@@ -23,6 +23,7 @@
 #include "core/trace/reader/utils.h"
 #include "core/device.h"
 #include "core/ecet.h"
+#include "core/mgmcmdstruct.h"
 #include "core/trace/barectf_platform_forte.h"
 
 using namespace forte::core::literals;
@@ -187,7 +188,7 @@ namespace {
     auto device = std::make_unique<CTesterDevice>(paDeviceName);
 
     BOOST_TEST_INFO("Create Resource");
-    BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName, "EMB_RES"_STRID));
+    BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName, "EMB_RES"_STRID, ""));
 
     BOOST_TEST_INFO("Start Device");
     BOOST_CHECK(device->initialize());
@@ -199,10 +200,10 @@ namespace {
     auto switchInstanceName = "Switch"_STRID;
 
     BOOST_TEST_INFO("Create E_CTU");
-    BOOST_CHECK(EMGMResponse::Ready == resource->createFB(counterInstanceName, "E_CTU"_STRID));
+    BOOST_CHECK(EMGMResponse::Ready == resource->createFB(counterInstanceName, "E_CTU"_STRID, ""));
 
     BOOST_TEST_INFO("Create E_SWITCH");
-    BOOST_CHECK(EMGMResponse::Ready == resource->createFB(switchInstanceName, "E_SWITCH"_STRID));
+    BOOST_CHECK(EMGMResponse::Ready == resource->createFB(switchInstanceName, "E_SWITCH"_STRID, ""));
 
     forte::core::SManagementCMD command;
     command.mCMD = EMGMCommandType::CreateConnection;

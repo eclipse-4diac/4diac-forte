@@ -33,9 +33,6 @@ mark_as_advanced(FORTE_BOOT_FILE_LOCATION)
 
 configure_file(ForteBootFileLoader_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/ForteBootFileLoader_config.h)
 
-add_subdirectory(debug_device)
-add_subdirectory(multi)
-add_subdirectory(replay)
 add_library(forte-stdfblib-ita OBJECT
             DEV_MGR.h
             DEV_MGR.cpp
@@ -61,3 +58,7 @@ add_library(forte-stdfblib-ita OBJECT
 )
 target_include_directories(forte-stdfblib-ita PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(forte PRIVATE forte-stdfblib-ita)
+
+add_subdirectory(debug_device)
+add_subdirectory(multi)
+add_subdirectory(replay)

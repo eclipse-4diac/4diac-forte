@@ -16,8 +16,8 @@
 
 #include "core/stringid.h"
 
-#include "generated/ecetfactory.h"
-#include "generated/timerhandlerfactory.h"
+#include "core/ecetfactory.h"
+#include "core/timerhandlerfactory.h"
 #include "core/trace/internal/flexibleTracer.h"
 
 #include <string>

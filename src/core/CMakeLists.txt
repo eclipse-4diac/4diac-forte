@@ -20,11 +20,6 @@ add_subdirectory(generated)
 option(FORTE_USE_FAKE_ECET "Compile the fake ecet used for testing" FALSE)
 mark_as_advanced(FORTE_USE_FAKE_ECET)
 
-if (FORTE_DYNAMIC_TYPE_LOAD)
-    add_subdirectory(lua)
-endif (FORTE_DYNAMIC_TYPE_LOAD)
-add_subdirectory(trace)
-
 add_library(forte-core OBJECT
             conn.h
             dataconn.h
@@ -107,3 +102,5 @@ add_subdirectory(datatypes)
 add_subdirectory(util)
 add_subdirectory(io)
 add_subdirectory(fmi)
+add_subdirectory(lua)
+add_subdirectory(trace)

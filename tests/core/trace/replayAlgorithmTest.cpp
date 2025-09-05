@@ -101,10 +101,10 @@ namespace {
     auto device = std::make_unique<CTesterDevice>(paDeviceName);
 
     BOOST_TEST_INFO("Create Resource 1");
-    BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName1, "EMB_RES"_STRID));
+    BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName1, "EMB_RES"_STRID, ""));
 
     BOOST_TEST_INFO("Create Resource 2");
-    BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName2, "EMB_RES"_STRID));
+    BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName2, "EMB_RES"_STRID, ""));
 
     BOOST_TEST_INFO("Start Device");
     BOOST_CHECK(device->initialize());
@@ -120,13 +120,13 @@ namespace {
       BOOST_TEST_INFO(paResourceName1);
 
       BOOST_TEST_INFO("Create FB Cycle");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(cycleName, "E_CYCLE"_STRID));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(cycleName, "E_CYCLE"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB CTU");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(ctuName, "E_CTU"_STRID));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(ctuName, "E_CTU"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB Publish");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(publishName, "PUBLISH_1"_STRID));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(publishName, "PUBLISH_1"_STRID, ""));
 
       forte::core::SManagementCMD command;
       command.mCMD = EMGMCommandType::CreateConnection;
@@ -225,28 +225,28 @@ namespace {
       BOOST_TEST_INFO(paResourceName2);
 
       BOOST_TEST_INFO("Create FB Subscribe");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(subscribeName, "SUBSCRIBE_1"_STRID));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(subscribeName, "SUBSCRIBE_1"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB Cycle");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(cycleName, "E_CYCLE"_STRID));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(cycleName, "E_CYCLE"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB CTU");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(ctuName, "E_CTU"_STRID));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(ctuName, "E_CTU"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB ADD");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(addName, "F_ADD"_STRID));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(addName, "F_ADD"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB MUL");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(mulName, "F_MUL"_STRID));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(mulName, "F_MUL"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB UINT2UINT 1");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(uint2uintFirst, "UINT2UINT"_STRID));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(uint2uintFirst, "UINT2UINT"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB UINT2UINT 2");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(uint2uintSecond, "UINT2UINT"_STRID));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(uint2uintSecond, "UINT2UINT"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB UINT2UINT 3");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(uint2uintThird, "UINT2UINT"_STRID));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(uint2uintThird, "UINT2UINT"_STRID, ""));
 
       forte::core::SManagementCMD command;
       command.mCMD = EMGMCommandType::CreateConnection;
@@ -468,7 +468,7 @@ namespace {
     auto allTracedEvents = forte::trace::reader::utils::getEventMessages(CTF_OUTPUT_DIR).value();
 
     forte::trace::reader::utils::setFactoriesSettings(
-        {EcetFactory::AvailableEcets::fake, "FakeTime"_STRID, CFlexibleTracer::AvailableTracers::Internal});
+        {"Fake"_STRID, "FakeTime"_STRID, CFlexibleTracer::AvailableTracers::Internal});
 
     // test with reproduce all
     {

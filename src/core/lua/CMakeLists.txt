@@ -12,6 +12,10 @@
 # core/lua
 # ############################################################################
 
+if (NOT FORTE_DYNAMIC_TYPE_LOAD)
+    return()
+endif ()
+
 find_package(PkgConfig)
 
 if (FORTE_USE_LUATYPES STREQUAL "LuaJIT")

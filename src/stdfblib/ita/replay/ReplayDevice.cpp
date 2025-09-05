@@ -16,8 +16,6 @@
 #include "core/devicefactory.h"
 #include "core/timerhandlerfactory.h"
 #include "core/ecetfactory.h"
-#include "generated/timerhandlerfactory.h"
-#include "generated/ecetfactory.h"
 #include "core/trace/internal/flexibleTracer.h"
 
 using namespace forte::core::literals;

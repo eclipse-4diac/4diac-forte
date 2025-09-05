@@ -30,7 +30,7 @@ namespace forte::tests::traces {
 
     std::filesystem::copy_file(METADATA_FILE, destMetadata / std::move(paDestMetadata));
 
-    BarectfPlatformFORTE::setup(destMetadata);
+    BarectfPlatformFORTE::setup(CTF_OUTPUT_DIR);
   }
 
   void checkMessages(std::unordered_map<std::string, std::vector<EventMessage>> &paExpected,

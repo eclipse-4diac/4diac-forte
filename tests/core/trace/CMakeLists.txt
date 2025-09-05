@@ -21,13 +21,14 @@ if(FORTE_TRACE_CTF_TEST)
 
   if(FORTE_TRACE_CTF_REPLAY_DEBUGGING)
     forte_test_add_sourcefile_cpp(replayAlgorithmTest.cpp)
+    SET(METADATA_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/core/trace/replay_debugging/generated/metadata)
   else()
     # currently the replay debugging traces a little bit differently from the classic one so the test does not apply
     forte_test_add_sourcefile_cpp(ctfTracerTest.cpp) 
+    SET(METADATA_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../../../src/core/trace/classic/generated/metadata)
   endif()
 
   SET(CTF_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/ctfOutput)
-  SET(METADATA_FILE ${CMAKE_CURRENT_BINARY_DIR}/src/core/trace/metadata)
   SET(REFERENCE_SYSTEMS_FILE ${CMAKE_CURRENT_SOURCE_DIR}/referenceSystem.fboot)
 
   configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/tests/core/trace/config.cpp)

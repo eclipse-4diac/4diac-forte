@@ -15,6 +15,7 @@
 
 #include "com/opc_ua/opcua_local_handler.h"
 #include "core/mgmcmd.h"
+#include "core/mgmcmdstruct.h"
 
 #include <vector>
 #include <string>

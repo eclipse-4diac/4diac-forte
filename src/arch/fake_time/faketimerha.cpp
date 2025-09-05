@@ -11,10 +11,13 @@
  *    Ernst Blecha - add jumping to a point in time that has already passed
  *******************************************************************************/
 #include "faketimerha.h"
+
+#include "arch/forte_architecture_time.h"
 #include "core/devexec.h"
 #include "core/ecet.h"
 #include "core/device.h"
 #include "core/timerhandlerfactory.h"
+#include "core/util/forte_constants.h"
 
 using namespace forte::core::literals;
 
