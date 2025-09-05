@@ -61,6 +61,7 @@ add_library(forte-core OBJECT
             fbcontainer.cpp
             resource.h
             resource.cpp
+        resource_internal.h
             stringid.h
             stringid.cpp
         timerha.h

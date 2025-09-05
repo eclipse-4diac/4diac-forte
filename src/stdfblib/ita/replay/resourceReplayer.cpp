@@ -13,6 +13,7 @@
 #include "stdfblib/ita/replay/resourceReplayer.h"
 
 #include "core/resource.h"
+#include "core/resource_internal.h"
 #include "core/trace/reader/utils.h"
 #include "core/ecetFake.h"
 
@@ -135,5 +136,5 @@ std::vector<EventMessage> CResourceReplayer::getGeneratedEvents() {
         }
         return {};
       },
-      mResource.getTracer().getTracerVariant());
+      mResource.getInternal().getTracer().getTracerVariant());
 }

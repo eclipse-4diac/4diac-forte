@@ -1,8 +1,9 @@
 #include "core/funcbloc.h"
 #include "core/resource.h"
+#include "core/resource_internal.h"
 
 void CFunctionBlock::traceOutputEvent(TEventID paEOID, CEventChainExecutionThread *const paECET) {
-  if (auto &tracer = getResource()->getTracer(); tracer.isEnabled()) {
+  if (auto &tracer = getResource()->getInternal().getTracer(); tracer.isEnabled()) {
 
     // don't trace events that are not connected since they don't increase the event counter
     if (getEOConUnchecked(static_cast<TPortId>(paEOID))->getDestinationList().size() == 0) {

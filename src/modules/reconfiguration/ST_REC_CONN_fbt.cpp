@@ -11,9 +11,10 @@
  *******************************************************************************/
 #include "ST_REC_CONN_fbt.h"
 
-using namespace forte::core::literals;
-
 #include "core/device.h"
+#include "core/mgmcmdstruct.h"
+
+using namespace forte::core::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_ST_REC_CONN, "ST_REC_CONN"_STRID)
 

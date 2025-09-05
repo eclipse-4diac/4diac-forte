@@ -11,9 +11,10 @@
  *******************************************************************************/
 #include "EC_STOP_ELEM_fbt.h"
 
-using namespace forte::core::literals;
-
 #include "core/device.h"
+#include "core/mgmcmdstruct.h"
+
+using namespace forte::core::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_EC_STOP_ELEM, "EC_STOP_ELEM"_STRID)
 

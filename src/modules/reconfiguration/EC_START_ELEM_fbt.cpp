@@ -11,9 +11,10 @@
  *******************************************************************************/
 #include "EC_START_ELEM_fbt.h"
 
-using namespace forte::core::literals;
-
 #include "core/device.h"
+#include "core/mgmcmdstruct.h"
+
+using namespace forte::core::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_EC_START_ELEM, "EC_START_ELEM"_STRID)
 

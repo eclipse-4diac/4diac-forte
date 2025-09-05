@@ -21,15 +21,13 @@
 #include "core/fbcontainer.h"
 #include "core/funcbloc.h"
 
-#include "core/monitoring.h"
+namespace forte {
+  class ResourceInternal;
 
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
-class CLuaEngine;
-#endif
-
-#ifdef FORTE_TRACE_CTF
-#include "core/trace/tracerConfig.h"
-#endif
+  namespace core {
+    struct SManagementCMD;
+  }
+} // namespace forte
 
 /*! \ingroup CORE\brief Base class for all resources handling the reconfiguration management within this
  * resource and the background execution of event chains.
@@ -53,8 +51,6 @@ class CResource : public CFunctionBlock {
               forte::core::StringId paInstanceNameId);
 
     ~CResource() override;
-
-    bool initialize() override;
 
     /*!\brief Execute the given management command
      *
@@ -106,27 +102,15 @@ class CResource : public CFunctionBlock {
     virtual EMGMResponse
     writeValue(forte::core::TNameIdentifier &paNameList, const std::string &paValue, bool paForce = false);
 
-    forte::core::CMonitoringHandler &getMonitoringHandler() {
-      return mMonitoringHandler;
-    }
-
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
-    CLuaEngine *getLuaEngine() {
-      return luaEngine;
-    }
-#endif
-
-#ifdef FORTE_TRACE_CTF
-    CForteTracer &getTracer() {
-      return mTracer;
-    }
-#endif
-
     bool isDynamicContainer() override {
       return true;
     }
 
     CConnection::Wrapper getOutputConnection(std::span<const forte::core::StringId> paSrcNameList) override;
+
+    [[nodiscard]] forte::ResourceInternal &getInternal() const {
+      return *mInternal;
+    }
 
   protected:
     CResource(const SFBInterfaceSpec &paInterfaceSpec, forte::core::StringId paInstanceNameId);
@@ -185,10 +169,6 @@ class CResource : public CFunctionBlock {
      */
     EMGMResponse createConnection(forte::core::SManagementCMD &paCommand);
 
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
-    CLuaEngine *luaEngine; //!< The Lua engine for this container
-#endif
-
   private:
     /*!\brief Create a new connection between source and destination
      *
@@ -243,11 +223,7 @@ class CResource : public CFunctionBlock {
      */
     std::unique_ptr<CEventChainExecutionThread> mResourceEventExecution;
 
-    forte::core::CMonitoringHandler mMonitoringHandler;
-
-#ifdef FORTE_TRACE_CTF
-    CForteTracer mTracer;
-#endif // FORTE_TRACE_CTF
+    std::unique_ptr<forte::ResourceInternal> mInternal;
 };
 
 #endif /*RESOURCE_H_*/

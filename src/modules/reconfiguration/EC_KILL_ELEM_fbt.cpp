@@ -11,9 +11,10 @@
  *******************************************************************************/
 #include "EC_KILL_ELEM_fbt.h"
 
-using namespace forte::core::literals;
-
 #include "core/device.h"
+#include "core/mgmcmdstruct.h"
+
+using namespace forte::core::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_EC_KILL_ELEM, "EC_KILL_ELEM"_STRID)
 

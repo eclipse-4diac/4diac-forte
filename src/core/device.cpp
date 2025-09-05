@@ -13,8 +13,8 @@
  *******************************************************************************/
 
 #include "core/device.h"
-#include "core/ecet.h"
-#include <string.h>
+
+#include "mgmcmdstruct.h"
 
 EMGMResponse CDevice::executeMGMCommand(forte::core::SManagementCMD &paCommand) {
   EMGMResponse retval = EMGMResponse::InvalidDst;

@@ -19,6 +19,7 @@
  *    Fabio Gandolfi - send also subapps on requested resources
  *******************************************************************************/
 #include "core/resource.h"
+#include "core/resource_internal.h"
 
 #include <string_view>
 #include "core/conn.h"
@@ -259,41 +260,17 @@ CResource::CResource(forte::core::CFBContainer &paDevice,
                      const SFBInterfaceSpec &paInterfaceSpec,
                      const forte::core::StringId paInstanceNameId) :
     CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId),
-    mResourceEventExecution(forte::core::EcetFactory::create()),
-    mMonitoringHandler(*this)
-#ifdef FORTE_TRACE_CTF
-    ,
-    mTracer(paInstanceNameId, FORTE_TRACE_CTF_BUFFER_SIZE)
-#endif
-{
+    mInternal(std::make_unique<forte::ResourceInternal>(*this)),
+    mResourceEventExecution(forte::core::EcetFactory::create()) {
 }
 
 CResource::CResource(const SFBInterfaceSpec &paInterfaceSpec, const forte::core::StringId paInstanceNameId) :
     CFunctionBlock(*this, paInterfaceSpec, paInstanceNameId),
-    mResourceEventExecution(nullptr),
-    mMonitoringHandler(*this)
-#ifdef FORTE_TRACE_CTF
-    ,
-    mTracer(paInstanceNameId, FORTE_TRACE_CTF_BUFFER_SIZE)
-#endif
-{
+    mInternal(std::make_unique<forte::ResourceInternal>(*this)),
+    mResourceEventExecution(nullptr) {
 }
 
-bool CResource::initialize() {
-  if (!CFunctionBlock::initialize()) {
-    return false;
-  }
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
-  luaEngine = new CLuaEngine();
-#endif
-  return true;
-}
-
-CResource::~CResource() {
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
-  delete luaEngine;
-#endif
-}
+CResource::~CResource() = default;
 
 EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand) {
   EMGMResponse retVal = EMGMResponse::InvalidDst;
@@ -355,7 +332,7 @@ EMGMResponse CResource::executeMGMCommand(forte::core::SManagementCMD &paCommand
                                                       paCommand.mAdditionalParams);
         break;
       case EMGMCommandType::QueryConnection: retVal = queryConnections(paCommand.mAdditionalParams, *this); break;
-      default: retVal = mMonitoringHandler.executeMonitoringCommand(paCommand); break;
+      default: retVal = getInternal().getMonitoringHandler().executeMonitoringCommand(paCommand); break;
     }
   }
   return retVal;

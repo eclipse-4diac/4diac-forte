@@ -22,6 +22,7 @@
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "core/funcbloc.h"
+
 #include "core/dataconn.h"
 #include "core/datatype.h"
 #include "core/eventconn.h"
@@ -31,6 +32,7 @@
 #include <string.h>
 #include "core/timerha.h"
 #include "core/device.h"
+#include "core/resource_internal.h"
 #include "core/datatypes/forte_array.h"
 #include "core/util/string_utils.h"
 
@@ -473,7 +475,7 @@ void CFunctionBlock::toString(std::string &paTargetBuf) const {
 //**********************************************************
 #ifdef FORTE_TRACE_CTF
 void CFunctionBlock::traceInputEvent(TEventID paEIID) {
-  if (auto &tracer = getResource()->getTracer(); tracer.isEnabled()) {
+  if (auto &tracer = getResource()->getInternal().getTracer(); tracer.isEnabled()) {
     tracer.traceReceiveInputEvent(getFBTypeName(), getFullQualifiedApplicationInstanceName('.').c_str(),
                                   static_cast<uint64_t>(paEIID));
     traceInstanceData();
@@ -481,7 +483,7 @@ void CFunctionBlock::traceInputEvent(TEventID paEIID) {
 }
 
 void CFunctionBlock::traceReadData(TPortId paDINum, CIEC_ANY &paValue) {
-  if (auto &tracer = getResource()->getTracer(); tracer.isEnabled()) {
+  if (auto &tracer = getResource()->getInternal().getTracer(); tracer.isEnabled()) {
 
     std::string valueString;
     paValue.toString(valueString);
@@ -491,7 +493,7 @@ void CFunctionBlock::traceReadData(TPortId paDINum, CIEC_ANY &paValue) {
 }
 
 void CFunctionBlock::traceWriteData(TPortId paDONum, CIEC_ANY &paValue) {
-  if (auto &tracer = getResource()->getTracer(); tracer.isEnabled()) {
+  if (auto &tracer = getResource()->getInternal().getTracer(); tracer.isEnabled()) {
 
     std::string valueString;
     paValue.toString(valueString);

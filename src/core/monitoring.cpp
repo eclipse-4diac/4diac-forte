@@ -15,8 +15,10 @@
 #include <algorithm>
 #include "generated/forte_config.h"
 #include "core/monitoring.h"
+
 #include "core/funcbloc.h"
 #include "core/resource.h"
+#include "core/resource_internal.h"
 #include "core/ecet.h"
 #include "core/util/string_utils.h"
 #include <format>
@@ -228,7 +230,7 @@ EMGMResponse CMonitoringHandler::readWatches(std::string &paResponse) {
     // we are in the device
     for (CFBContainer::TFBContainerList::iterator itRunner = mResource.getChildren().begin();
          itRunner != mResource.getChildren().end(); ++itRunner) {
-      static_cast<CResource *>(*itRunner)->getMonitoringHandler().readResourceWatches(paResponse);
+      static_cast<CResource *>(*itRunner)->getInternal().getMonitoringHandler().readResourceWatches(paResponse);
     }
   } else {
     // we are within a resource

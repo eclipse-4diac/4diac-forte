@@ -18,7 +18,9 @@
  *******************************************************************************/
 
 #include "core/basefb.h"
+
 #include "core/resource.h"
+#include "core/resource_internal.h"
 #include "core/util/string_utils.h"
 
 CBaseFB::CBaseFB(forte::core::CFBContainer &paContainer,
@@ -114,10 +116,10 @@ void CBaseFB::traceInstanceData() {
     ++i;
   }
 
-  getResource()->getTracer().traceInstanceData(getFBTypeName(), getFullQualifiedApplicationInstanceName('.').c_str(),
-                                               static_cast<uint32_t>(inputs.size()), inputs_c_str.data(),
-                                               static_cast<uint32_t>(outputs.size()), outputs_c_str.data(),
-                                               static_cast<uint32_t>(internals.size()), internals_c_str.data(),
-                                               static_cast<uint32_t>(internalFbs.size()), internalFbs_c_str.data());
+  getResource()->getInternal().getTracer().traceInstanceData(
+      getFBTypeName(), getFullQualifiedApplicationInstanceName('.').c_str(), static_cast<uint32_t>(inputs.size()),
+      inputs_c_str.data(), static_cast<uint32_t>(outputs.size()), outputs_c_str.data(),
+      static_cast<uint32_t>(internals.size()), internals_c_str.data(), static_cast<uint32_t>(internalFbs.size()),
+      internalFbs_c_str.data());
 }
 #endif
