@@ -120,8 +120,7 @@ add_subdirectory(core)
 add_subdirectory(arch)
 add_subdirectory(stdfblib)
 add_subdirectory(com)
-
-add_subdirectory(src)
+add_subdirectory(modules)
 
 enable_testing()
 add_subdirectory(systemtests)

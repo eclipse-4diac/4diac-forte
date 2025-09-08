@@ -1,0 +1,128 @@
+/*******************************************************************************
+ * Copyright (c) 2024 Monika Wenger
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Monika Wenger - initial API and implementation and/or initial documentation
+ *******************************************************************************/
+
+#include "forte/iec61131/conversion/F_ANY_AS_STRING_fbt.h"
+
+using namespace forte::core::literals;
+
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
+
+DEFINE_FIRMWARE_FB(FORTE_F_ANY_AS_STRING, "F_ANY_AS_STRING"_STRID)
+
+namespace {
+  const auto cDataInputNames = std::array{"IN"_STRID};
+  const auto cDataOutputNames = std::array{"OUT"_STRID};
+  const auto cEventInputNames = std::array{"REQ"_STRID};
+  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = cEventInputNames,
+      .mEITypeNames = {},
+      .mEONames = cEventOutputNames,
+      .mEOTypeNames = {},
+      .mDINames = cDataInputNames,
+      .mDONames = cDataOutputNames,
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
+} // namespace
+
+FORTE_F_ANY_AS_STRING::FORTE_F_ANY_AS_STRING(const forte::core::StringId paInstanceNameId,
+                                             forte::core::CFBContainer &paContainer) :
+    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
+    conn_CNF(*this, 0),
+    conn_IN(nullptr),
+    conn_OUT(*this, 0, var_OUT) {
+}
+
+void FORTE_F_ANY_AS_STRING::setInitialValues() {
+  var_IN.reset();
+  var_OUT = ""_STRING;
+}
+
+void FORTE_F_ANY_AS_STRING::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  switch (paEIID) {
+    case scmEventREQID: alg_REQ(); break;
+    default: break;
+  }
+  sendOutputEvent(scmEventCNFID, paECET);
+}
+
+void FORTE_F_ANY_AS_STRING::readInputData(const TEventID paEIID) {
+  switch (paEIID) {
+    case scmEventREQID: {
+      readData(0, var_IN, conn_IN);
+      break;
+    }
+    default: break;
+  }
+}
+
+void FORTE_F_ANY_AS_STRING::writeOutputData(const TEventID paEIID) {
+  switch (paEIID) {
+    case scmEventCNFID: {
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
+      break;
+    }
+    default: break;
+  }
+}
+
+CIEC_ANY *FORTE_F_ANY_AS_STRING::getDI(const size_t paIndex) {
+  switch (paIndex) {
+    case 0: return &var_IN;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_F_ANY_AS_STRING::getDO(const size_t paIndex) {
+  switch (paIndex) {
+    case 0: return &var_OUT;
+  }
+  return nullptr;
+}
+
+CEventConnection *FORTE_F_ANY_AS_STRING::getEOConUnchecked(const TPortId paIndex) {
+  switch (paIndex) {
+    case 0: return &conn_CNF;
+  }
+  return nullptr;
+}
+
+CDataConnection **FORTE_F_ANY_AS_STRING::getDIConUnchecked(const TPortId paIndex) {
+  switch (paIndex) {
+    case 0: return &conn_IN;
+  }
+  return nullptr;
+}
+
+CDataConnection *FORTE_F_ANY_AS_STRING::getDOConUnchecked(const TPortId paIndex) {
+  switch (paIndex) {
+    case 0: return &conn_OUT;
+  }
+  return nullptr;
+}
+
+CIEC_ANY *FORTE_F_ANY_AS_STRING::getVarInternal(size_t) {
+  return nullptr;
+}
+
+void FORTE_F_ANY_AS_STRING::alg_REQ(void) {
+  var_OUT = func_ANY_AS_STRING(var_IN);
+}
