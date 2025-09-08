@@ -21,8 +21,9 @@
 using namespace std::literals;
 
 using namespace forte::core::literals;
+using namespace forte::iec61499::events;
 
-DEFINE_ADAPTER_TYPE(FORTE_ARTimeOut, "ARTimeOut"_STRID)
+DEFINE_ADAPTER_TYPE(FORTE_ARTimeOut, "iec61499::events::ARTimeOut"_STRID)
 
 namespace {
   const auto cDataOutputNames = std::array{"DT"_STRID};

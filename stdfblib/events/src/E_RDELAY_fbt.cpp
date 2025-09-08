@@ -17,7 +17,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_RDELAY, "E_RDELAY"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_RDELAY, "iec61499::events::E_RDELAY"_STRID)
 
 FORTE_E_RDELAY::FORTE_E_RDELAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CTimedFB(paInstanceNameId, paContainer) {

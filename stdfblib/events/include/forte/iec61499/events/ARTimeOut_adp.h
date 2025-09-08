@@ -20,85 +20,87 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_ARTimeOut : public forte::CAdapter {
-    DECLARE_ADAPTER_TYPE(FORTE_ARTimeOut)
+namespace forte::iec61499::events {
+  class FORTE_ARTimeOut : public forte::CAdapter {
+      DECLARE_ADAPTER_TYPE(FORTE_ARTimeOut)
 
-  private:
-  public:
-    static const TEventID scmEventTimeOutID = 0;
+    private:
+    public:
+      static const TEventID scmEventTimeOutID = 0;
 
-  private:
-  public:
-    static const TEventID scmEventSTARTID = 0;
-    static const TEventID scmEventSTOPID = 1;
+    private:
+    public:
+      static const TEventID scmEventSTARTID = 0;
+      static const TEventID scmEventSTOPID = 1;
 
-  private:
-  protected:
-    void setInitialValues() override;
+    private:
+    protected:
+      void setInitialValues() override;
 
-  public:
-    CIEC_TIME var_DT;
+    public:
+      CIEC_TIME var_DT;
 
-    TEventID evt_TimeOut() {
-      return getParentAdapterListEventID() + scmEventTimeOutID;
-    }
+      TEventID evt_TimeOut() {
+        return getParentAdapterListEventID() + scmEventTimeOutID;
+      }
 
-    TEventID evt_START() {
-      return getParentAdapterListEventID() + scmEventSTARTID;
-    }
+      TEventID evt_START() {
+        return getParentAdapterListEventID() + scmEventSTARTID;
+      }
 
-    TEventID evt_STOP() {
-      return getParentAdapterListEventID() + scmEventSTOPID;
-    }
+      TEventID evt_STOP() {
+        return getParentAdapterListEventID() + scmEventSTOPID;
+      }
 
-    virtual ~FORTE_ARTimeOut() override = default;
+      virtual ~FORTE_ARTimeOut() override = default;
 
-  protected:
-    FORTE_ARTimeOut(forte::core::CFBContainer &paContainer,
-                    const SFBInterfaceSpec &paInterfaceSpec,
-                    const forte::core::StringId paInstanceNameId,
-                    TForteUInt8 paParentAdapterlistID);
-};
+    protected:
+      FORTE_ARTimeOut(forte::core::CFBContainer &paContainer,
+                      const SFBInterfaceSpec &paInterfaceSpec,
+                      const forte::core::StringId paInstanceNameId,
+                      TForteUInt8 paParentAdapterlistID);
+  };
 
-class FORTE_ARTimeOut_Plug final : public FORTE_ARTimeOut {
-  public:
-    FORTE_ARTimeOut_Plug(forte::core::StringId paInstanceNameId,
-                         forte::core::CFBContainer &paContainer,
-                         TForteUInt8 paParentAdapterlistID);
-    ~FORTE_ARTimeOut_Plug() override = default;
-
-    CEventConnection conn_TimeOut;
-
-    CDataConnection *conn_DT;
-
-  private:
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
-};
-
-class FORTE_ARTimeOut_Socket final : public FORTE_ARTimeOut {
-  public:
-    FORTE_ARTimeOut_Socket(forte::core::StringId paInstanceNameId,
+  class FORTE_ARTimeOut_Plug final : public FORTE_ARTimeOut {
+    public:
+      FORTE_ARTimeOut_Plug(forte::core::StringId paInstanceNameId,
                            forte::core::CFBContainer &paContainer,
                            TForteUInt8 paParentAdapterlistID);
-    ~FORTE_ARTimeOut_Socket() override = default;
+      ~FORTE_ARTimeOut_Plug() override = default;
 
-    CEventConnection conn_START;
-    CEventConnection conn_STOP;
+      CEventConnection conn_TimeOut;
 
-    COutDataConnection<CIEC_TIME> conn_DT;
+      CDataConnection *conn_DT;
 
-  private:
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
-};
+    private:
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
+  };
+
+  class FORTE_ARTimeOut_Socket final : public FORTE_ARTimeOut {
+    public:
+      FORTE_ARTimeOut_Socket(forte::core::StringId paInstanceNameId,
+                             forte::core::CFBContainer &paContainer,
+                             TForteUInt8 paParentAdapterlistID);
+      ~FORTE_ARTimeOut_Socket() override = default;
+
+      CEventConnection conn_START;
+      CEventConnection conn_STOP;
+
+      COutDataConnection<CIEC_TIME> conn_DT;
+
+    private:
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
+  };
+} // namespace forte::iec61499::events

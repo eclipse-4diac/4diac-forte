@@ -70,7 +70,7 @@ namespace {
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_N_TABLE, "E_N_TABLE"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_N_TABLE, "iec61499::events::E_N_TABLE"_STRID)
 
 FORTE_E_N_TABLE::FORTE_E_N_TABLE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),

@@ -18,7 +18,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_CYCLE, "E_CYCLE"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_CYCLE, "iec61499::events::E_CYCLE"_STRID)
 
 void FORTE_E_CYCLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if (paEIID == csmEventSTARTID) {

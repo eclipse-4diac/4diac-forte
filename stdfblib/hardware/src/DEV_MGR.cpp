@@ -28,7 +28,7 @@
 
 using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(DEV_MGR, "DEV_MGR"_STRID)
+DEFINE_FIRMWARE_FB(DEV_MGR, "iec61499::hardware::DEV_MGR"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"QI"_STRID, "ID"_STRID, "RESP"_STRID};

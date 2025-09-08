@@ -16,7 +16,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, "E_TimeOut"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_TimeOut, "iec61499::events::E_TimeOut"_STRID)
 
 namespace {
   const auto cSocketNameIds = std::array{"TimeOutSocket"_STRID};

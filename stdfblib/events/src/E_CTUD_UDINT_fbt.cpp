@@ -31,7 +31,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_CTUD_UDINT, "E_CTUD_UDINT"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_CTUD_UDINT, "iec61499::events::E_CTUD_UDINT"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"PV"_STRID};

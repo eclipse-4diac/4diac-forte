@@ -33,7 +33,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_TABLE_CTRL, "E_TABLE_CTRL"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_TABLE_CTRL, "iec61499::events::E_TABLE_CTRL"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"DT"_STRID, "N"_STRID};

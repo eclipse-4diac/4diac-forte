@@ -15,7 +15,7 @@
 
 using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(EMB_RES, "EMB_RES"_STRID);
+DEFINE_FIRMWARE_FB(EMB_RES, "iec61499::hardware::EMB_RES"_STRID);
 
 const SFBInterfaceSpec cFBInterfaceSpec = {
     .mEINames = {},

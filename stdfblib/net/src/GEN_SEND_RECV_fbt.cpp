@@ -36,7 +36,7 @@ namespace {
 
 using namespace forte::iec61499::net;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_SEND_RECV, "GEN_SEND_RECV"_STRID)
+DEFINE_GENERIC_FIRMWARE_FB(GEN_SEND_RECV, "iec61499::net::GEN_SEND_RECV"_STRID)
 
 GEN_SEND_RECV::GEN_SEND_RECV(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CommunicationFB(paContainer, cFBInterfaceSpec, paInstanceNameId),

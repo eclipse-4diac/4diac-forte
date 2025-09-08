@@ -21,7 +21,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_TONOF, "E_TONOF"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_TONOF, "iec61499::events::E_TONOF"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID, "PT_ON"_STRID, "PT_OFF"_STRID};

@@ -17,7 +17,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::net;
 
-DEFINE_GENERIC_FIRMWARE_FB(FORTE_PUBLISH_1, "PUBLISH_1"_STRID)
+DEFINE_GENERIC_FIRMWARE_FB(FORTE_PUBLISH_1, "iec61499::net::PUBLISH_1"_STRID)
 
 FORTE_PUBLISH_1::FORTE_PUBLISH_1(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     GEN_PUBLISH(paInstanceNameId, paContainer) {

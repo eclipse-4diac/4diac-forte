@@ -24,7 +24,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_MERGE, "E_MERGE"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_MERGE, "iec61499::events::E_MERGE"_STRID)
 
 namespace {
   const auto cEventInputNames = std::array{"EI1"_STRID, "EI2"_STRID};

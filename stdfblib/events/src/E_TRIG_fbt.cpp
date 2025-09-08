@@ -23,7 +23,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_TRIG, "E_TRIG"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_TRIG, "iec61499::events::E_TRIG"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"EVENTTYPE"_STRID};

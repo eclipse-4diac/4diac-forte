@@ -19,7 +19,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_RESTART, "E_RESTART"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_RESTART, "iec61499::events::E_RESTART"_STRID)
 
 const auto cEventOutputNames = std::array{"COLD"_STRID, "WARM"_STRID, "STOP"_STRID};
 const SFBInterfaceSpec cFBInterfaceSpec = {

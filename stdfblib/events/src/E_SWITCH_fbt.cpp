@@ -24,7 +24,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_SWITCH, "E_SWITCH"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_SWITCH, "iec61499::events::E_SWITCH"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"G"_STRID};

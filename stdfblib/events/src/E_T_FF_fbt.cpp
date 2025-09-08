@@ -23,7 +23,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_T_FF, "E_T_FF"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_T_FF, "iec61499::events::E_T_FF"_STRID)
 
 const auto cDataOutputNames = std::array{"Q"_STRID};
 const auto cEventInputNames = std::array{"CLK"_STRID};

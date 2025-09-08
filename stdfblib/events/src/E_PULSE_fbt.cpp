@@ -22,7 +22,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_PULSE, "E_PULSE"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_PULSE, "iec61499::events::E_PULSE"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"PT"_STRID};

@@ -24,7 +24,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_SELECT, "E_SELECT"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_SELECT, "iec61499::events::E_SELECT"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"G"_STRID};

@@ -17,7 +17,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::net;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_SERVER, "GEN_SERVER"_STRID)
+DEFINE_GENERIC_FIRMWARE_FB(GEN_SERVER, "iec61499::net::GEN_SERVER"_STRID)
 
 GEN_SERVER::GEN_SERVER(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     forte::com_infra::CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Server) {

@@ -12,8 +12,10 @@
 
 #include "forte/iec61499/events/ATimeOut_adp.h"
 #include "forte/eventconn.h"
+#include "forte/iec61499/events/E_N_TABLE_fbt.h"
 
 using namespace forte::core::literals;
+using namespace forte::iec61499::events;
 
 namespace {
   const auto cDataOutputNames = std::array{"DT"_STRID};
@@ -45,7 +47,7 @@ namespace {
   };
 } // namespace
 
-DEFINE_ADAPTER_TYPE(FORTE_ATimeOut, "ATimeOut"_STRID)
+DEFINE_ADAPTER_TYPE(FORTE_ATimeOut, "iec61499::events::ATimeOut"_STRID)
 
 void FORTE_ATimeOut::setInitialValues() {
   var_DT = 0_TIME;

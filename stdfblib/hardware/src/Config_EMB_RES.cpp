@@ -15,7 +15,7 @@
 
 using namespace forte::core::literals;
 
-DEFINE_FIRMWARE_FB(Config_EMB_RES, "Config_EMB_RES"_STRID);
+DEFINE_FIRMWARE_FB(Config_EMB_RES, "iec61499::hardware::Config_EMB_RES"_STRID);
 
 namespace {
   const auto cDataInputNames = std::array{"OPCUA_Namespace"_STRID};

@@ -17,7 +17,7 @@ using namespace forte::core::literals;
 
 #include "forte/ecet.h"
 
-DEFINE_FIRMWARE_FB(RMT_RES, "RMT_RES"_STRID);
+DEFINE_FIRMWARE_FB(RMT_RES, "iec61499::hardware::RMT_RES"_STRID);
 
 namespace {
   const auto cDataInputNames = std::array{"MGR_ID"_STRID};

@@ -24,7 +24,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_SPLIT, "E_SPLIT"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_SPLIT, "iec61499::events::E_SPLIT"_STRID)
 
 const auto cEventInputNames = std::array{"EI"_STRID};
 const auto cEventOutputNames = std::array{"EO1"_STRID, "EO2"_STRID};

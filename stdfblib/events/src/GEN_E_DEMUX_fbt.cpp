@@ -22,7 +22,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX, "GEN_E_DEMUX"_STRID)
+DEFINE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX, "iec61499::events::GEN_E_DEMUX"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"K"_STRID};

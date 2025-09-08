@@ -30,7 +30,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::events;
 
-DEFINE_FIRMWARE_FB(FORTE_E_TRAIN, "E_TRAIN"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_TRAIN, "iec61499::events::E_TRAIN"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"DT"_STRID, "N"_STRID};

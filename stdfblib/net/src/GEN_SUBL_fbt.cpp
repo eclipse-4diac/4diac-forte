@@ -18,7 +18,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61499::net;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBL, "GEN_SUBL"_STRID)
+DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBL, "iec61499::net::GEN_SUBL"_STRID)
 
 const char *const GEN_SUBL::scmLocalIDPrefix = "loc[";
 const char *const GEN_SUBL::scmLocalIDSuffix = "]";
