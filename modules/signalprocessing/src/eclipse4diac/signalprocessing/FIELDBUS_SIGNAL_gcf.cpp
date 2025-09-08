@@ -32,7 +32,7 @@ namespace {
 }
 
 DEFINE_FIRMWARE_GLOBAL_CONST(FORTE_signalprocessing__FIELDBUS_SIGNAL,
-                             "signalprocessing__FIELDBUS_SIGNAL"_STRID,
+                             "eclipse4diac::signalprocessing::FIELDBUS_SIGNAL"_STRID,
                              TypeHash)
 
 const CIEC_BYTE FORTE_signalprocessing__FIELDBUS_SIGNAL::var_REVERSE = 0_BYTE;

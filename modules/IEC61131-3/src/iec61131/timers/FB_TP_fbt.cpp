@@ -44,7 +44,7 @@ namespace {
 
 using namespace forte::iec61131::timers;
 
-DEFINE_FIRMWARE_FB(FORTE_FB_TP, "FB_TP"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_FB_TP, "iec61131::timers::FB_TP"_STRID)
 
 FORTE_FB_TP::FORTE_FB_TP(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),

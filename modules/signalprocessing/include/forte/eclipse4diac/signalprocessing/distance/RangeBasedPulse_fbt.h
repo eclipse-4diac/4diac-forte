@@ -27,8 +27,8 @@
 #include "forte/datatypes/forte_array_variable.h"
 
 namespace forte::eclipse4diac::signalprocessing::distance {
-  class FORTE_signalprocessing__distance__RangeBasedPulse final : public CSimpleFB {
-      DECLARE_FIRMWARE_FB(FORTE_signalprocessing__distance__RangeBasedPulse)
+  class FORTE_RangeBasedPulse final : public CSimpleFB {
+      DECLARE_FIRMWARE_FB(FORTE_RangeBasedPulse)
 
     private:
       static const TEventID scmEventREQID = 0;
@@ -49,8 +49,7 @@ namespace forte::eclipse4diac::signalprocessing::distance {
       void setInitialValues() override;
 
     public:
-      FORTE_signalprocessing__distance__RangeBasedPulse(forte::core::StringId paInstanceNameId,
-                                                        forte::core::CFBContainer &paContainer);
+      FORTE_RangeBasedPulse(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
       CIEC_UDINT var_DIST_IN;
       CIEC_UDINT var_DIST_OFF;

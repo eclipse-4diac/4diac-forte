@@ -26,8 +26,8 @@
 #include "forte/datatypes/forte_array_variable.h"
 
 namespace forte::eclipse4diac::signalprocessing {
-  class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
-      DECLARE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS)
+  class FORTE_RampLimitFS final : public CSimpleFB {
+      DECLARE_FIRMWARE_FB(FORTE_RampLimitFS)
 
     private:
       static const TEventID scmEventZEROID = 0;
@@ -56,8 +56,7 @@ namespace forte::eclipse4diac::signalprocessing {
       void setInitialValues() override;
 
     public:
-      FORTE_signalprocessing__RampLimitFS(forte::core::StringId paInstanceNameId,
-                                          forte::core::CFBContainer &paContainer);
+      FORTE_RampLimitFS(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
       CIEC_DINT var_PV;
       CIEC_DINT var_VAL_ZERO;

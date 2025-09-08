@@ -27,7 +27,7 @@ unsigned int FORTE_TEST_CONDITION::smFailedTests = 0;
 
 bool FORTE_TEST_CONDITION::smfinalReportPrinted = false;
 
-DEFINE_FIRMWARE_FB(FORTE_TEST_CONDITION, "TEST_CONDITION"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_TEST_CONDITION, "eclipse4diac::utils::TEST_CONDITION"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"check"_STRID};

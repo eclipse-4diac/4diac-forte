@@ -20,7 +20,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61131::selection;
 
-DEFINE_FIRMWARE_FB(FORTE_F_MUX_2, "F_MUX_2"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_F_MUX_2, "iec61131::selection::F_MUX_2"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"K"_STRID, "IN1"_STRID, "IN2"_STRID};

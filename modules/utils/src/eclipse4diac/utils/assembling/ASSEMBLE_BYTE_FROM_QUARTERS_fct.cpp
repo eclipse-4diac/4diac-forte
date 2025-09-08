@@ -32,7 +32,8 @@ using namespace forte::core::literals;
 #include "quarterconst_gcf.h"
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_BYTE_FROM_QUARTERS_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_QUARTERS, "ASSEMBLE_BYTE_FROM_QUARTERS"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_QUARTERS,
+                   "eclipse4diac::utils::assembling::ASSEMBLE_BYTE_FROM_QUARTERS"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"BYTE"_STRID, "BYTE"_STRID, "BYTE"_STRID, "BYTE"_STRID};

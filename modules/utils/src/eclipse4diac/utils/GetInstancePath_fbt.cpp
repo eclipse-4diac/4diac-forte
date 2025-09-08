@@ -17,7 +17,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::utils;
 
-DEFINE_FIRMWARE_FB(FORTE_GetInstancePath, "GetInstancePath"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_GetInstancePath, "eclipse4diac::utils::GetInstancePath"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"Sep"_STRID};

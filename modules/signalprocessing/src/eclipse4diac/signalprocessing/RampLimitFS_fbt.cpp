@@ -30,7 +30,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::signalprocessing;
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS, "signalprocessing__RampLimitFS"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_RampLimitFS, "eclipse4diac::signalprocessing::RampLimitFS"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"PV"_STRID, "VAL_ZERO"_STRID, "SLOW"_STRID, "FAST"_STRID, "VAL_FULL"_STRID};
@@ -54,8 +54,8 @@ namespace {
   };
 } // namespace
 
-FORTE_signalprocessing__RampLimitFS::FORTE_signalprocessing__RampLimitFS(const forte::core::StringId paInstanceNameId,
-                                                                         forte::core::CFBContainer &paContainer) :
+FORTE_RampLimitFS::FORTE_RampLimitFS(const forte::core::StringId paInstanceNameId,
+                                     forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CNF(*this, 0),
     conn_PV(nullptr),
@@ -66,7 +66,7 @@ FORTE_signalprocessing__RampLimitFS::FORTE_signalprocessing__RampLimitFS(const f
     conn_OUT(*this, 0, var_OUT) {
 }
 
-void FORTE_signalprocessing__RampLimitFS::setInitialValues() {
+void FORTE_RampLimitFS::setInitialValues() {
   var_PV = 0_DINT;
   var_VAL_ZERO = 0_DINT;
   var_SLOW = 0_DINT;
@@ -75,8 +75,7 @@ void FORTE_signalprocessing__RampLimitFS::setInitialValues() {
   var_OUT = 0_DINT;
 }
 
-void FORTE_signalprocessing__RampLimitFS::executeEvent(const TEventID paEIID,
-                                                       CEventChainExecutionThread *const paECET) {
+void FORTE_RampLimitFS::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventZEROID: alg_ZERO(); break;
     case scmEventUP_SLOWID: alg_UP_SLOW(); break;
@@ -90,7 +89,7 @@ void FORTE_signalprocessing__RampLimitFS::executeEvent(const TEventID paEIID,
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void FORTE_signalprocessing__RampLimitFS::readInputData(const TEventID paEIID) {
+void FORTE_RampLimitFS::readInputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventZEROID: {
       readData(1, var_VAL_ZERO, conn_VAL_ZERO);
@@ -124,7 +123,7 @@ void FORTE_signalprocessing__RampLimitFS::readInputData(const TEventID paEIID) {
   }
 }
 
-void FORTE_signalprocessing__RampLimitFS::writeOutputData(const TEventID paEIID) {
+void FORTE_RampLimitFS::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
       writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
@@ -134,7 +133,7 @@ void FORTE_signalprocessing__RampLimitFS::writeOutputData(const TEventID paEIID)
   }
 }
 
-CIEC_ANY *FORTE_signalprocessing__RampLimitFS::getDI(const size_t paIndex) {
+CIEC_ANY *FORTE_RampLimitFS::getDI(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_PV;
     case 1: return &var_VAL_ZERO;
@@ -145,21 +144,21 @@ CIEC_ANY *FORTE_signalprocessing__RampLimitFS::getDI(const size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_signalprocessing__RampLimitFS::getDO(const size_t paIndex) {
+CIEC_ANY *FORTE_RampLimitFS::getDO(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_OUT;
   }
   return nullptr;
 }
 
-CEventConnection *FORTE_signalprocessing__RampLimitFS::getEOConUnchecked(const TPortId paIndex) {
+CEventConnection *FORTE_RampLimitFS::getEOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
-CDataConnection **FORTE_signalprocessing__RampLimitFS::getDIConUnchecked(const TPortId paIndex) {
+CDataConnection **FORTE_RampLimitFS::getDIConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_PV;
     case 1: return &conn_VAL_ZERO;
@@ -170,24 +169,24 @@ CDataConnection **FORTE_signalprocessing__RampLimitFS::getDIConUnchecked(const T
   return nullptr;
 }
 
-CDataConnection *FORTE_signalprocessing__RampLimitFS::getDOConUnchecked(const TPortId paIndex) {
+CDataConnection *FORTE_RampLimitFS::getDOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_OUT;
   }
   return nullptr;
 }
 
-CIEC_ANY *FORTE_signalprocessing__RampLimitFS::getVarInternal(size_t) {
+CIEC_ANY *FORTE_RampLimitFS::getVarInternal(size_t) {
   return nullptr;
 }
 
-void FORTE_signalprocessing__RampLimitFS::alg_ZERO(void) {
+void FORTE_RampLimitFS::alg_ZERO(void) {
 
 #line 2 "RampLimitFS.fbt"
   var_OUT = var_VAL_ZERO;
 }
 
-void FORTE_signalprocessing__RampLimitFS::alg_UP_SLOW(void) {
+void FORTE_RampLimitFS::alg_UP_SLOW(void) {
 
 #line 6 "RampLimitFS.fbt"
   var_OUT = func_ADD(var_OUT, var_SLOW);
@@ -198,7 +197,7 @@ void FORTE_signalprocessing__RampLimitFS::alg_UP_SLOW(void) {
   }
 }
 
-void FORTE_signalprocessing__RampLimitFS::alg_UP_FAST(void) {
+void FORTE_RampLimitFS::alg_UP_FAST(void) {
 
 #line 13 "RampLimitFS.fbt"
   var_OUT = func_ADD(var_OUT, var_FAST);
@@ -209,7 +208,7 @@ void FORTE_signalprocessing__RampLimitFS::alg_UP_FAST(void) {
   }
 }
 
-void FORTE_signalprocessing__RampLimitFS::alg_DOWN_SLOW(void) {
+void FORTE_RampLimitFS::alg_DOWN_SLOW(void) {
 
 #line 20 "RampLimitFS.fbt"
   var_OUT = func_SUB(var_OUT, var_SLOW);
@@ -220,7 +219,7 @@ void FORTE_signalprocessing__RampLimitFS::alg_DOWN_SLOW(void) {
   }
 }
 
-void FORTE_signalprocessing__RampLimitFS::alg_DOWN_FAST(void) {
+void FORTE_RampLimitFS::alg_DOWN_FAST(void) {
 
 #line 27 "RampLimitFS.fbt"
   var_OUT = func_SUB(var_OUT, var_FAST);
@@ -231,13 +230,13 @@ void FORTE_signalprocessing__RampLimitFS::alg_DOWN_FAST(void) {
   }
 }
 
-void FORTE_signalprocessing__RampLimitFS::alg_FULL(void) {
+void FORTE_RampLimitFS::alg_FULL(void) {
 
 #line 34 "RampLimitFS.fbt"
   var_OUT = var_VAL_FULL;
 }
 
-void FORTE_signalprocessing__RampLimitFS::alg_LOAD(void) {
+void FORTE_RampLimitFS::alg_LOAD(void) {
 
 #line 38 "RampLimitFS.fbt"
   var_OUT = var_PV;

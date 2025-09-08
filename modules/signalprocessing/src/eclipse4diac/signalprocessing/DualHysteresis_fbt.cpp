@@ -29,7 +29,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::signalprocessing;
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__DualHysteresis, "signalprocessing__DualHysteresis"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_DualHysteresis, "eclipse4diac::signalprocessing::DualHysteresis"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"QI"_STRID, "MI"_STRID, "DEAD"_STRID, "HYSTERESIS"_STRID, "INPUT"_STRID};
@@ -51,8 +51,8 @@ namespace {
   };
 } // namespace
 
-FORTE_signalprocessing__DualHysteresis::FORTE_signalprocessing__DualHysteresis(
-    const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_DualHysteresis::FORTE_DualHysteresis(const forte::core::StringId paInstanceNameId,
+                                           forte::core::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_QI(0_BOOL),
     var_MI(0.5_REAL),
@@ -74,7 +74,7 @@ FORTE_signalprocessing__DualHysteresis::FORTE_signalprocessing__DualHysteresis(
     conn_DO_DOWN(*this, 2, var_DO_DOWN) {
 }
 
-void FORTE_signalprocessing__DualHysteresis::setInitialValues() {
+void FORTE_DualHysteresis::setInitialValues() {
   CBasicFB::setInitialValues();
   var_QI = 0_BOOL;
   var_MI = 0.5_REAL;
@@ -86,7 +86,7 @@ void FORTE_signalprocessing__DualHysteresis::setInitialValues() {
   var_DO_DOWN = 0_BOOL;
 }
 
-void FORTE_signalprocessing__DualHysteresis::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+void FORTE_DualHysteresis::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   do {
     switch (mECCState) {
       case scmStateSTART:
@@ -141,41 +141,41 @@ void FORTE_signalprocessing__DualHysteresis::executeEvent(TEventID paEIID, CEven
   } while (true);
 }
 
-void FORTE_signalprocessing__DualHysteresis::enterStateSTART(CEventChainExecutionThread *const) {
+void FORTE_DualHysteresis::enterStateSTART(CEventChainExecutionThread *const) {
   mECCState = scmStateSTART;
 }
 
-void FORTE_signalprocessing__DualHysteresis::enterStateInit(CEventChainExecutionThread *const paECET) {
+void FORTE_DualHysteresis::enterStateInit(CEventChainExecutionThread *const paECET) {
   mECCState = scmStateInit;
   alg_initialize();
   sendOutputEvent(scmEventINITOID, paECET);
 }
 
-void FORTE_signalprocessing__DualHysteresis::enterStateUP(CEventChainExecutionThread *const paECET) {
+void FORTE_DualHysteresis::enterStateUP(CEventChainExecutionThread *const paECET) {
   mECCState = scmStateUP;
   alg_alUp();
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void FORTE_signalprocessing__DualHysteresis::enterStateNeutral(CEventChainExecutionThread *const paECET) {
+void FORTE_DualHysteresis::enterStateNeutral(CEventChainExecutionThread *const paECET) {
   mECCState = scmStateNeutral;
   alg_alNeutral();
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void FORTE_signalprocessing__DualHysteresis::enterStateDeInit(CEventChainExecutionThread *const paECET) {
+void FORTE_DualHysteresis::enterStateDeInit(CEventChainExecutionThread *const paECET) {
   mECCState = scmStateDeInit;
   alg_deInitialize();
   sendOutputEvent(scmEventINITOID, paECET);
 }
 
-void FORTE_signalprocessing__DualHysteresis::enterStateDOWN(CEventChainExecutionThread *const paECET) {
+void FORTE_DualHysteresis::enterStateDOWN(CEventChainExecutionThread *const paECET) {
   mECCState = scmStateDOWN;
   alg_alDown();
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void FORTE_signalprocessing__DualHysteresis::readInputData(const TEventID paEIID) {
+void FORTE_DualHysteresis::readInputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITID: {
       readData(0, var_QI, conn_QI);
@@ -193,7 +193,7 @@ void FORTE_signalprocessing__DualHysteresis::readInputData(const TEventID paEIID
   }
 }
 
-void FORTE_signalprocessing__DualHysteresis::writeOutputData(const TEventID paEIID) {
+void FORTE_DualHysteresis::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventINITOID: {
       writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
@@ -208,7 +208,7 @@ void FORTE_signalprocessing__DualHysteresis::writeOutputData(const TEventID paEI
   }
 }
 
-CIEC_ANY *FORTE_signalprocessing__DualHysteresis::getDI(const size_t paIndex) {
+CIEC_ANY *FORTE_DualHysteresis::getDI(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_QI;
     case 1: return &var_MI;
@@ -219,7 +219,7 @@ CIEC_ANY *FORTE_signalprocessing__DualHysteresis::getDI(const size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_signalprocessing__DualHysteresis::getDO(const size_t paIndex) {
+CIEC_ANY *FORTE_DualHysteresis::getDO(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_QO;
     case 1: return &var_DO_UP;
@@ -228,7 +228,7 @@ CIEC_ANY *FORTE_signalprocessing__DualHysteresis::getDO(const size_t paIndex) {
   return nullptr;
 }
 
-CEventConnection *FORTE_signalprocessing__DualHysteresis::getEOConUnchecked(const TPortId paIndex) {
+CEventConnection *FORTE_DualHysteresis::getEOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_INITO;
     case 1: return &conn_CNF;
@@ -236,7 +236,7 @@ CEventConnection *FORTE_signalprocessing__DualHysteresis::getEOConUnchecked(cons
   return nullptr;
 }
 
-CDataConnection **FORTE_signalprocessing__DualHysteresis::getDIConUnchecked(const TPortId paIndex) {
+CDataConnection **FORTE_DualHysteresis::getDIConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_QI;
     case 1: return &conn_MI;
@@ -247,7 +247,7 @@ CDataConnection **FORTE_signalprocessing__DualHysteresis::getDIConUnchecked(cons
   return nullptr;
 }
 
-CDataConnection *FORTE_signalprocessing__DualHysteresis::getDOConUnchecked(const TPortId paIndex) {
+CDataConnection *FORTE_DualHysteresis::getDOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_QO;
     case 1: return &conn_DO_UP;
@@ -256,11 +256,11 @@ CDataConnection *FORTE_signalprocessing__DualHysteresis::getDOConUnchecked(const
   return nullptr;
 }
 
-CIEC_ANY *FORTE_signalprocessing__DualHysteresis::getVarInternal(size_t) {
+CIEC_ANY *FORTE_DualHysteresis::getVarInternal(size_t) {
   return nullptr;
 }
 
-void FORTE_signalprocessing__DualHysteresis::alg_initialize(void) {
+void FORTE_DualHysteresis::alg_initialize(void) {
 
 #line 3 "DualHysteresis.fbt"
   var_QO = var_QI;
@@ -270,7 +270,7 @@ void FORTE_signalprocessing__DualHysteresis::alg_initialize(void) {
   var_DO_DOWN = false_BOOL;
 }
 
-void FORTE_signalprocessing__DualHysteresis::alg_deInitialize(void) {
+void FORTE_DualHysteresis::alg_deInitialize(void) {
 
 #line 11 "DualHysteresis.fbt"
   var_QO = false_BOOL;
@@ -280,7 +280,7 @@ void FORTE_signalprocessing__DualHysteresis::alg_deInitialize(void) {
   var_DO_DOWN = false_BOOL;
 }
 
-void FORTE_signalprocessing__DualHysteresis::alg_alNeutral(void) {
+void FORTE_DualHysteresis::alg_alNeutral(void) {
 
 #line 18 "DualHysteresis.fbt"
   var_QO = var_QI;
@@ -290,7 +290,7 @@ void FORTE_signalprocessing__DualHysteresis::alg_alNeutral(void) {
   var_DO_DOWN = false_BOOL;
 }
 
-void FORTE_signalprocessing__DualHysteresis::alg_alUp(void) {
+void FORTE_DualHysteresis::alg_alUp(void) {
 
 #line 25 "DualHysteresis.fbt"
   var_QO = var_QI;
@@ -303,7 +303,7 @@ void FORTE_signalprocessing__DualHysteresis::alg_alUp(void) {
   }
 }
 
-void FORTE_signalprocessing__DualHysteresis::alg_alDown(void) {
+void FORTE_DualHysteresis::alg_alDown(void) {
 
 #line 34 "DualHysteresis.fbt"
   var_QO = var_QI;

@@ -24,8 +24,8 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_signalprocessing__SCALE)
+class FORTE_SCALE final : public CFunctionBlock {
+    DECLARE_FIRMWARE_FB(FORTE_SCALE)
 
   private:
     static const TEventID scmEventREQID = 0;
@@ -38,7 +38,7 @@ class FORTE_signalprocessing__SCALE final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_signalprocessing__SCALE(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_SCALE(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
     CIEC_REAL var_IN;
     CIEC_REAL var_MAX_IN;

@@ -16,7 +16,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::rtevents;
 
-DEFINE_FIRMWARE_FB(FORTE_RT_E_CYCLE, "RT_E_CYCLE"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_RT_E_CYCLE, "eclipse4diac::rtevents::RT_E_CYCLE"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"DT"_STRID, "Deadline"_STRID, "WCET"_STRID};

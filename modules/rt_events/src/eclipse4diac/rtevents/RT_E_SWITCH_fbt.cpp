@@ -16,7 +16,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::rtevents;
 
-DEFINE_FIRMWARE_FB(FORTE_RT_E_SWITCH, "RT_E_SWITCH"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_RT_E_SWITCH, "eclipse4diac::rtevents::RT_E_SWITCH"_STRID)
 
 namespace {
   const auto cDataInputNames =

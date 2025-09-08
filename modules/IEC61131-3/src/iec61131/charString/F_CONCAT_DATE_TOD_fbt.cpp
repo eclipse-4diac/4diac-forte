@@ -22,7 +22,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61131::charString;
 
-DEFINE_FIRMWARE_FB(FORTE_F_CONCAT_DATE_TOD, "F_CONCAT_DATE_TOD"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_F_CONCAT_DATE_TOD, "iec61131::charString::F_CONCAT_DATE_TOD"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};

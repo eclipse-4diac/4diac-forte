@@ -20,7 +20,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61131::numerical;
 
-DEFINE_FIRMWARE_FB(FORTE_F_TAN, "F_TAN"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_F_TAN, "iec61131::numerical::F_TAN"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID};

@@ -33,7 +33,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::utils;
 
-DEFINE_FIRMWARE_FB(FORTE_FB_RANDOM, "FB_RANDOM"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_FB_RANDOM, "eclipse4diac::utils::FB_RANDOM"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"SEED"_STRID};

@@ -26,7 +26,7 @@ using namespace forte::core::literals;
 #include "forte/datatypes/forte_array_variable.h"
 #include "forte/eclipse4diac/signalprocessing/SCALE_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE, "signalprocessing__SCALE"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_SCALE, "eclipse4diac::signalprocessing::SCALE"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID, "MAX_IN"_STRID, "MIN_IN"_STRID, "MAX_OUT"_STRID, "MIN_OUT"_STRID};
@@ -48,8 +48,7 @@ namespace {
   };
 } // namespace
 
-FORTE_signalprocessing__SCALE::FORTE_signalprocessing__SCALE(const forte::core::StringId paInstanceNameId,
-                                                             forte::core::CFBContainer &paContainer) :
+FORTE_SCALE::FORTE_SCALE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
@@ -60,7 +59,7 @@ FORTE_signalprocessing__SCALE::FORTE_signalprocessing__SCALE(const forte::core::
     conn_(*this, 0, var_) {
 }
 
-void FORTE_signalprocessing__SCALE::setInitialValues() {
+void FORTE_SCALE::setInitialValues() {
   var_IN = 0_REAL;
   var_MAX_IN = 0_REAL;
   var_MIN_IN = 0_REAL;
@@ -69,7 +68,7 @@ void FORTE_signalprocessing__SCALE::setInitialValues() {
   var_ = 0_REAL;
 }
 
-void FORTE_signalprocessing__SCALE::readInputData(const TEventID paEIID) {
+void FORTE_SCALE::readInputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
@@ -83,7 +82,7 @@ void FORTE_signalprocessing__SCALE::readInputData(const TEventID paEIID) {
   }
 }
 
-void FORTE_signalprocessing__SCALE::writeOutputData(const TEventID paEIID) {
+void FORTE_SCALE::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
       writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
@@ -93,7 +92,7 @@ void FORTE_signalprocessing__SCALE::writeOutputData(const TEventID paEIID) {
   }
 }
 
-CIEC_ANY *FORTE_signalprocessing__SCALE::getDI(const size_t paIndex) {
+CIEC_ANY *FORTE_SCALE::getDI(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_IN;
     case 1: return &var_MAX_IN;
@@ -104,21 +103,21 @@ CIEC_ANY *FORTE_signalprocessing__SCALE::getDI(const size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_signalprocessing__SCALE::getDO(const size_t paIndex) {
+CIEC_ANY *FORTE_SCALE::getDO(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_;
   }
   return nullptr;
 }
 
-CEventConnection *FORTE_signalprocessing__SCALE::getEOConUnchecked(const TPortId paIndex) {
+CEventConnection *FORTE_SCALE::getEOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
-CDataConnection **FORTE_signalprocessing__SCALE::getDIConUnchecked(const TPortId paIndex) {
+CDataConnection **FORTE_SCALE::getDIConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_IN;
     case 1: return &conn_MAX_IN;
@@ -129,14 +128,14 @@ CDataConnection **FORTE_signalprocessing__SCALE::getDIConUnchecked(const TPortId
   return nullptr;
 }
 
-CDataConnection *FORTE_signalprocessing__SCALE::getDOConUnchecked(const TPortId paIndex) {
+CDataConnection *FORTE_SCALE::getDOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_;
   }
   return nullptr;
 }
 
-void FORTE_signalprocessing__SCALE::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
+void FORTE_SCALE::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
   var_ = func_SCALE(var_IN, var_MAX_IN, var_MIN_IN, var_MAX_OUT, var_MIN_OUT);
   sendOutputEvent(scmEventCNFID, paECET);
 }

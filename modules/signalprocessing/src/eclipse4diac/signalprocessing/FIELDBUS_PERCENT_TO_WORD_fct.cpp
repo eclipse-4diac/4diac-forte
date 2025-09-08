@@ -30,7 +30,8 @@ using namespace forte::core::literals;
 #include "forte/eclipse4diac/signalprocessing/FIELDBUS_PERCENT_TO_WORD_fct.h"
 #include "forte/eclipse4diac/signalprocessing/FIELDBUS_SIGNAL_gcf.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD, "signalprocessing__FIELDBUS_PERCENT_TO_WORD"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD,
+                   "eclipse4diac::signalprocessing::FIELDBUS_PERCENT_TO_WORD"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"RI"_STRID};

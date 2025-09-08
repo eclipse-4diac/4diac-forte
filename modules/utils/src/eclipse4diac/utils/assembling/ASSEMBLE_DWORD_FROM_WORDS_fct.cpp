@@ -30,7 +30,7 @@ using namespace forte::core::literals;
 #include "forte/datatypes/forte_array_variable.h"
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_DWORD_FROM_WORDS_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_WORDS, "ASSEMBLE_DWORD_FROM_WORDS"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_WORDS, "eclipse4diac::utils::assembling::ASSEMBLE_DWORD_FROM_WORDS"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"WORD_00"_STRID, "WORD_01"_STRID};

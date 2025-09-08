@@ -22,7 +22,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::utils;
 
-DEFINE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE, "OUT_ANY_CONSOLE"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE, "eclipse4diac::utils::OUT_ANY_CONSOLE"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"QI"_STRID, "LABEL"_STRID, "IN"_STRID};

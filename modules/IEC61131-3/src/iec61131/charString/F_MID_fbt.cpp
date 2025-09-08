@@ -20,7 +20,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61131::charString;
 
-DEFINE_FIRMWARE_FB(FORTE_F_MID, "F_MID"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_F_MID, "iec61131::charString::F_MID"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID, "L"_STRID, "P"_STRID};

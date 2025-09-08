@@ -20,7 +20,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61131::selection;
 
-DEFINE_FIRMWARE_FB(FORTE_F_MIN, "F_MIN"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_F_MIN, "iec61131::selection::F_MIN"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};

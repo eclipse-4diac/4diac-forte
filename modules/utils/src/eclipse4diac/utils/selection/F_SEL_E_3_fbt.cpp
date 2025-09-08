@@ -21,7 +21,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::utils::selection;
 
-DEFINE_FIRMWARE_FB(FORTE_F_SEL_E_3, "F_SEL_E_3"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_F_SEL_E_3, "eclipse4diac::utils::selection::F_SEL_E_3"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN0"_STRID, "IN1"_STRID, "IN2"_STRID};

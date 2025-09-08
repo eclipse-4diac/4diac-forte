@@ -28,7 +28,7 @@ using namespace forte::core::literals;
 #include "forte/datatypes/forte_array_variable.h"
 #include "forte/eclipse4diac/utils/timing/TIMESTAMP_NS_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_TIMESTAMP_NS, "TIMESTAMP_NS"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_TIMESTAMP_NS, "eclipse4diac::utils::timing::TIMESTAMP_NS"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"startDate"_STRID};

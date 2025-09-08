@@ -20,7 +20,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61131::charString;
 
-DEFINE_FIRMWARE_FB(FORTE_F_DELETE, "F_DELETE"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_F_DELETE, "iec61131::charString::F_DELETE"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID, "L"_STRID, "P"_STRID};

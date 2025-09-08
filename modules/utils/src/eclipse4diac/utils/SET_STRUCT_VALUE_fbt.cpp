@@ -20,7 +20,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::utils;
 
-DEFINE_FIRMWARE_FB(FORTE_SET_STRUCT_VALUE, "SET_STRUCT_VALUE"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_SET_STRUCT_VALUE, "eclipse4diac::utils::SET_STRUCT_VALUE"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"in_struct"_STRID, "member"_STRID, "element_value"_STRID};

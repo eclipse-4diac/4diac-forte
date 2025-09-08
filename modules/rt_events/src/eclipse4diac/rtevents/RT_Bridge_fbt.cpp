@@ -20,7 +20,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::rtevents;
 
-DEFINE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge, "GEN_RT_Bridge"_STRID)
+DEFINE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge, "eclipse4diac::rtevents::GEN_RT_Bridge"_STRID)
 
 namespace {
   const auto cEventInputNames = std::array{"RD"_STRID, "WR"_STRID};

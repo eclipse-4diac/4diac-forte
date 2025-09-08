@@ -25,7 +25,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::convert;
 
-DEFINE_FIRMWARE_FB(FORTE_TIME2TIME, "TIME2TIME"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_TIME2TIME, "eclipse4diac::convert::TIME2TIME"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID};

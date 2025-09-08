@@ -32,7 +32,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::utils::timing;
 
-DEFINE_FIRMWARE_FB(FORTE_E_STOPWATCH, "E_STOPWATCH"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_STOPWATCH, "eclipse4diac::utils::timing::E_STOPWATCH"_STRID)
 
 namespace {
   const auto cDataOutputNames = std::array{"TD"_STRID};

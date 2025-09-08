@@ -22,7 +22,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::utils;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY, "GEN_ARRAY2ARRAY"_STRID)
+DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY, "eclipse4diac::utils::GEN_ARRAY2ARRAY"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID};

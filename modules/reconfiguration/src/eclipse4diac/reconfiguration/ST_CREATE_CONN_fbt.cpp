@@ -18,7 +18,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::reconfiguration;
 
-DEFINE_FIRMWARE_FB(FORTE_ST_CREATE_CONN, "ST_CREATE_CONN"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_ST_CREATE_CONN, "eclipse4diac::reconfiguration::ST_CREATE_CONN"_STRID)
 
 namespace {
   const auto cDataInputNames =

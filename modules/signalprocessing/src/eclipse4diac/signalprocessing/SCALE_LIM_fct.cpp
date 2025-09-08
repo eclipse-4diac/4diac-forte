@@ -26,7 +26,7 @@ using namespace forte::core::literals;
 #include "forte/datatypes/forte_array_variable.h"
 #include "forte/eclipse4diac/signalprocessing/SCALE_LIM_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE_LIM, "signalprocessing__SCALE_LIM"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE_LIM, "eclipse4diac::signalprocessing::SCALE_LIM"_STRID)
 
 namespace {
   const auto cDataInputNames =

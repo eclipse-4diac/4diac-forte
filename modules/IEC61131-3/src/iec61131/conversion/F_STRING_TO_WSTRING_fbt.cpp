@@ -26,7 +26,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61131::conversion;
 
-DEFINE_FIRMWARE_FB(FORTE_F_STRING_TO_WSTRING, "F_STRING_TO_WSTRING"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_F_STRING_TO_WSTRING, "iec61131::conversion::F_STRING_TO_WSTRING"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID};

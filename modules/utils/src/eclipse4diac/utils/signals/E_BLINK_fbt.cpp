@@ -29,7 +29,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::utils::signals;
 
-DEFINE_FIRMWARE_FB(FORTE_E_BLINK, "E_BLINK"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_E_BLINK, "eclipse4diac::utils::signals::E_BLINK"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"TIMELOW"_STRID, "TIMEHIGH"_STRID};

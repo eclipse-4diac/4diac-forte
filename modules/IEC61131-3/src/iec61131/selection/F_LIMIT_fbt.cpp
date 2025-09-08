@@ -20,7 +20,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61131::selection;
 
-DEFINE_FIRMWARE_FB(FORTE_F_LIMIT, "F_LIMIT"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_F_LIMIT, "iec61131::selection::F_LIMIT"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"MN"_STRID, "IN"_STRID, "MX"_STRID};

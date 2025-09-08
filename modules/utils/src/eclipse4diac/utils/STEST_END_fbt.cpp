@@ -18,7 +18,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::utils;
 
-DEFINE_FIRMWARE_FB(FORTE_STEST_END, "STEST_END"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_STEST_END, "eclipse4diac::utils::STEST_END"_STRID)
 
 namespace {
   const auto cEventInputNames = std::array{"REQ"_STRID};

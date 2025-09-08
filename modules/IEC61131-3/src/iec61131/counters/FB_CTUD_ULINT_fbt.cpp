@@ -44,7 +44,7 @@ namespace {
 
 using namespace forte::iec61131::counters;
 
-DEFINE_FIRMWARE_FB(FORTE_FB_CTUD_ULINT, "FB_CTUD_ULINT"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_FB_CTUD_ULINT, "iec61131::counters::FB_CTUD_ULINT"_STRID)
 
 FORTE_FB_CTUD_ULINT::FORTE_FB_CTUD_ULINT(const forte::core::StringId paInstanceNameId,
                                          forte::core::CFBContainer &paContainer) :

@@ -29,8 +29,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::signalprocessing::distance;
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__distance__RangeBasedPulse,
-                   "signalprocessing__distance__RangeBasedPulse"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_RangeBasedPulse, "eclipse4diac::signalprocessing::distance::RangeBasedPulse"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"DIST_IN"_STRID, "DIST_OFF"_STRID, "DIST_HIGH"_STRID, "DIST_LOW"_STRID};
@@ -52,8 +51,8 @@ namespace {
   const auto cInternalsNames = std::array{"DIST_REMAINDER"_STRID};
 } // namespace
 
-FORTE_signalprocessing__distance__RangeBasedPulse::FORTE_signalprocessing__distance__RangeBasedPulse(
-    const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_RangeBasedPulse::FORTE_RangeBasedPulse(const forte::core::StringId paInstanceNameId,
+                                             forte::core::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
     conn_CNF(*this, 0),
     conn_DIST_IN(nullptr),
@@ -63,7 +62,7 @@ FORTE_signalprocessing__distance__RangeBasedPulse::FORTE_signalprocessing__dista
     conn_Q(*this, 0, var_Q) {
 }
 
-void FORTE_signalprocessing__distance__RangeBasedPulse::setInitialValues() {
+void FORTE_RangeBasedPulse::setInitialValues() {
   var_DIST_REMAINDER = 0_UDINT;
   var_DIST_IN = 0_UDINT;
   var_DIST_OFF = 0_UDINT;
@@ -72,20 +71,19 @@ void FORTE_signalprocessing__distance__RangeBasedPulse::setInitialValues() {
   var_Q = 0_BOOL;
 }
 
-void FORTE_signalprocessing__distance__RangeBasedPulse::executeEvent(const TEventID paEIID,
-                                                                     CEventChainExecutionThread *const paECET) {
+void FORTE_RangeBasedPulse::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventREQID: enterStateREQ(paECET); break;
     default: break;
   }
 }
 
-void FORTE_signalprocessing__distance__RangeBasedPulse::enterStateREQ(CEventChainExecutionThread *const paECET) {
+void FORTE_RangeBasedPulse::enterStateREQ(CEventChainExecutionThread *const paECET) {
   alg_REQ();
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void FORTE_signalprocessing__distance__RangeBasedPulse::readInputData(const TEventID paEIID) {
+void FORTE_RangeBasedPulse::readInputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_DIST_IN, conn_DIST_IN);
@@ -98,7 +96,7 @@ void FORTE_signalprocessing__distance__RangeBasedPulse::readInputData(const TEve
   }
 }
 
-void FORTE_signalprocessing__distance__RangeBasedPulse::writeOutputData(const TEventID paEIID) {
+void FORTE_RangeBasedPulse::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
       writeData(cFBInterfaceSpec.getNumDIs() + 0, var_Q, conn_Q);
@@ -108,7 +106,7 @@ void FORTE_signalprocessing__distance__RangeBasedPulse::writeOutputData(const TE
   }
 }
 
-CIEC_ANY *FORTE_signalprocessing__distance__RangeBasedPulse::getDI(const size_t paIndex) {
+CIEC_ANY *FORTE_RangeBasedPulse::getDI(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_DIST_IN;
     case 1: return &var_DIST_OFF;
@@ -118,21 +116,21 @@ CIEC_ANY *FORTE_signalprocessing__distance__RangeBasedPulse::getDI(const size_t 
   return nullptr;
 }
 
-CIEC_ANY *FORTE_signalprocessing__distance__RangeBasedPulse::getDO(const size_t paIndex) {
+CIEC_ANY *FORTE_RangeBasedPulse::getDO(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_Q;
   }
   return nullptr;
 }
 
-CEventConnection *FORTE_signalprocessing__distance__RangeBasedPulse::getEOConUnchecked(const TPortId paIndex) {
+CEventConnection *FORTE_RangeBasedPulse::getEOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
-CDataConnection **FORTE_signalprocessing__distance__RangeBasedPulse::getDIConUnchecked(const TPortId paIndex) {
+CDataConnection **FORTE_RangeBasedPulse::getDIConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_DIST_IN;
     case 1: return &conn_DIST_OFF;
@@ -142,21 +140,21 @@ CDataConnection **FORTE_signalprocessing__distance__RangeBasedPulse::getDIConUnc
   return nullptr;
 }
 
-CDataConnection *FORTE_signalprocessing__distance__RangeBasedPulse::getDOConUnchecked(const TPortId paIndex) {
+CDataConnection *FORTE_RangeBasedPulse::getDOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_Q;
   }
   return nullptr;
 }
 
-CIEC_ANY *FORTE_signalprocessing__distance__RangeBasedPulse::getVarInternal(const size_t paIndex) {
+CIEC_ANY *FORTE_RangeBasedPulse::getVarInternal(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_DIST_REMAINDER;
   }
   return nullptr;
 }
 
-void FORTE_signalprocessing__distance__RangeBasedPulse::alg_REQ(void) {
+void FORTE_RangeBasedPulse::alg_REQ(void) {
 
 #line 3 "RangeBasedPulse.fbt"
   var_DIST_REMAINDER = func_MOD<CIEC_UDINT>(func_ADD<CIEC_UDINT>(var_DIST_IN, var_DIST_OFF),

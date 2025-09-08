@@ -32,7 +32,7 @@ using namespace forte::core::literals;
 #include "forte/datatypes/forte_array_variable.h"
 #include "quarterconst_gcf.h"
 
-DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_QUARTERS, "SPLIT_WORD_INTO_QUARTERS"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_QUARTERS, "eclipse4diac::utils::splitting::SPLIT_WORD_INTO_QUARTERS"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID};

@@ -21,7 +21,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::utils;
 
-DEFINE_FIRMWARE_FB(FORTE_GET_AT_INDEX, "GET_AT_INDEX"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_GET_AT_INDEX, "eclipse4diac::utils::GET_AT_INDEX"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN_ARRAY"_STRID, "INDEX"_STRID};

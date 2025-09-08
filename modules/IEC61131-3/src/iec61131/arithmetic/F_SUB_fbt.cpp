@@ -20,7 +20,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61131::arithmetic;
 
-DEFINE_FIRMWARE_FB(FORTE_F_SUB, "F_SUB"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_F_SUB, "iec61131::arithmetic::F_SUB"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};

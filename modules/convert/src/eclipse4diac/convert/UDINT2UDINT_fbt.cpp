@@ -25,7 +25,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::convert;
 
-DEFINE_FIRMWARE_FB(FORTE_UDINT2UDINT, "UDINT2UDINT"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_UDINT2UDINT, "eclipse4diac::convert::UDINT2UDINT"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID};

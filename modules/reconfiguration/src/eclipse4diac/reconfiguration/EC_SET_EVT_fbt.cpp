@@ -18,7 +18,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::reconfiguration;
 
-DEFINE_FIRMWARE_FB(FORTE_EC_SET_EVT, "EC_SET_EVT"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_EC_SET_EVT, "eclipse4diac::reconfiguration::EC_SET_EVT"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"QI"_STRID, "FB_NAME"_STRID, "FB_EVENT_IO"_STRID, "DST"_STRID};

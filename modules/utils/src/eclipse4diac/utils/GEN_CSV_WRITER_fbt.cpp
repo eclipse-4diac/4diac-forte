@@ -27,7 +27,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::utils;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER, "GEN_CSV_WRITER"_STRID);
+DEFINE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER, "eclipse4diac::utils::GEN_CSV_WRITER"_STRID);
 
 namespace {
   const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};

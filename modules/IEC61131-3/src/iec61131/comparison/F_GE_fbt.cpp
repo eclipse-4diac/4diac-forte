@@ -20,7 +20,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61131::comparison;
 
-DEFINE_FIRMWARE_FB(FORTE_F_GE, "F_GE"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_F_GE, "iec61131::comparison::F_GE"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};

@@ -29,7 +29,7 @@ using namespace forte::core::literals;
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-DEFINE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_WORDS, "SPLIT_DWORD_INTO_WORDS"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_WORDS, "eclipse4diac::utils::splitting::SPLIT_DWORD_INTO_WORDS"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID};

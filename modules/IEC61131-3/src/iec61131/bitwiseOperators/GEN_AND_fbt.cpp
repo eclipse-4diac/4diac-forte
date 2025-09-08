@@ -24,7 +24,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61131::bitwiseOperators;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_AND, "GEN_AND"_STRID)
+DEFINE_GENERIC_FIRMWARE_FB(GEN_AND, "iec61131::bitwiseOperators::GEN_AND"_STRID)
 
 GEN_AND::GEN_AND(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
     CGenBitBase(paInstanceNameId, paContainer) {

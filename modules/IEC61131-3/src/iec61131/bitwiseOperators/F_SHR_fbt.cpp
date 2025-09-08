@@ -20,7 +20,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61131::bitwiseOperators;
 
-DEFINE_FIRMWARE_FB(FORTE_F_SHR, "F_SHR"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_F_SHR, "iec61131::bitwiseOperators::F_SHR"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID, "N"_STRID};

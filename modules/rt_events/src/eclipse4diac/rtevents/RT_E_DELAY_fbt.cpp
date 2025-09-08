@@ -16,7 +16,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::rtevents;
 
-DEFINE_FIRMWARE_FB(FORTE_RT_E_DELAY, "RT_E_DELAY"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_RT_E_DELAY, "eclipse4diac::rtevents::RT_E_DELAY"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"QI"_STRID, "DT"_STRID, "Tmin"_STRID, "Deadline"_STRID, "WCET"_STRID};

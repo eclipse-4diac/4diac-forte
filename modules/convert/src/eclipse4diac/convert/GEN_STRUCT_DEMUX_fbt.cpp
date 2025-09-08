@@ -25,7 +25,7 @@ using namespace forte::eclipse4diac::convert;
 
 using namespace forte::eclipse4diac::convert;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX, "GEN_STRUCT_DEMUX"_STRID);
+DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX, "eclipse4diac::convert::GEN_STRUCT_DEMUX"_STRID);
 
 namespace {
   const auto cEventInputNames = std::array{"REQ"_STRID};

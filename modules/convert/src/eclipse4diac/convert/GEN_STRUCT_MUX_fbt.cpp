@@ -18,7 +18,7 @@ using namespace forte::core::literals;
 
 using namespace forte::eclipse4diac::convert;
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX, "GEN_STRUCT_MUX"_STRID);
+DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX, "eclipse4diac::convert::GEN_STRUCT_MUX"_STRID);
 
 namespace {
   const auto cEventInputNames = std::array{"REQ"_STRID};

@@ -26,7 +26,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61131::conversion;
 
-DEFINE_FIRMWARE_FB(FORTE_F_WSTRING_AS_LINT, "F_WSTRING_AS_LINT"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_F_WSTRING_AS_LINT, "iec61131::conversion::F_WSTRING_AS_LINT"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID};

@@ -44,7 +44,7 @@ namespace {
 
 using namespace forte::iec61131::counters;
 
-DEFINE_FIRMWARE_FB(FORTE_FB_CTD_LINT, "FB_CTD_LINT"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_FB_CTD_LINT, "iec61131::counters::FB_CTD_LINT"_STRID)
 
 FORTE_FB_CTD_LINT::FORTE_FB_CTD_LINT(const forte::core::StringId paInstanceNameId,
                                      forte::core::CFBContainer &paContainer) :

@@ -22,7 +22,7 @@ using namespace forte::core::literals;
 
 using namespace forte::iec61131::arithmetic;
 
-DEFINE_FIRMWARE_FB(FORTE_F_ADD_DT_TIME, "F_ADD_DT_TIME"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_F_ADD_DT_TIME, "iec61131::arithmetic::F_ADD_DT_TIME"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};
