@@ -1,9 +1,9 @@
-;<Request ID="1" Action="CREATE"><FB Name="noNameFile" Type="EMB_RES" /></Request>
-noNameFile;<Request ID="2" Action="CREATE"><FB Name="noNameFile.CSV_WRITER_1" Type="CSV_WRITER_1" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="noNameFile" Type="iec61499::hardware::EMB_RES" /></Request>
+noNameFile;<Request ID="2" Action="CREATE"><FB Name="noNameFile.CSV_WRITER_1" Type="eclipse4diac::utils::CSV_WRITER_1" /></Request>
 noNameFile;<Request ID="3" Action="WRITE"><Connection Source="1" Destination="noNameFile.CSV_WRITER_1.QI" /></Request>
-noNameFile;<Request ID="4" Action="CREATE"><FB Name="noNameFile.InitTest" Type="TEST_CONDITION" /></Request>
-noNameFile;<Request ID="5" Action="CREATE"><FB Name="noNameFile.endNormal" Type="STEST_END" /></Request>
-noNameFile;<Request ID="6" Action="CREATE"><FB Name="noNameFile.F_NOT" Type="F_NOT" /></Request>
+noNameFile;<Request ID="4" Action="CREATE"><FB Name="noNameFile.InitTest" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
+noNameFile;<Request ID="5" Action="CREATE"><FB Name="noNameFile.endNormal" Type="eclipse4diac::utils::STEST_END" /></Request>
+noNameFile;<Request ID="6" Action="CREATE"><FB Name="noNameFile.F_NOT" Type="iec61131::bitwiseOperators::F_NOT" /></Request>
 noNameFile;<Request ID="7" Action="CREATE"><Connection Source="noNameFile.F_NOT.CNF" Destination="noNameFile.InitTest.REQ" /></Request>
 noNameFile;<Request ID="8" Action="CREATE"><Connection Source="noNameFile.InitTest.CNF" Destination="noNameFile.endNormal.REQ" /></Request>
 noNameFile;<Request ID="9" Action="CREATE"><Connection Source="noNameFile.CSV_WRITER_1.INITO" Destination="noNameFile.F_NOT.REQ" /></Request>
