@@ -23,26 +23,28 @@
 #include "forte/datatypes/forte_array_variable.h"
 #include "forte/iec61499/events/E_RDELAY_fbt.h"
 
-class FORTE_E_RTimeOut final : public CCompositeFB {
-    DECLARE_FIRMWARE_FB(FORTE_E_RTimeOut)
+namespace forte::iec61499::events {
+  class FORTE_E_RTimeOut final : public CCompositeFB {
+      DECLARE_FIRMWARE_FB(FORTE_E_RTimeOut)
 
-  private:
-    forte::core::CInternalFB<FORTE_E_RDELAY> fb_DLY;
+    private:
+      forte::core::CInternalFB<FORTE_E_RDELAY> fb_DLY;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_E_RTimeOut(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_E_RTimeOut(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    forte::CSocketPin<FORTE_ARTimeOut_Socket> var_TimeOutSocket;
+      forte::CSocketPin<FORTE_ARTimeOut_Socket> var_TimeOutSocket;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    forte::ISocketPin *getSocketPinUnchecked(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
-    CDataConnection *getIf2InConUnchecked(TPortId) override;
-};
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      forte::ISocketPin *getSocketPinUnchecked(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
+      CDataConnection *getIf2InConUnchecked(TPortId) override;
+  };
+} // namespace forte::iec61499::events

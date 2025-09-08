@@ -27,7 +27,7 @@ class EMB_RES : public CResource {
     CDataConnection **getDIConUnchecked(TPortId) override;
 
   private:
-    forte::core::CInternalFB<FORTE_E_RESTART> fb_START;
+    forte::core::CInternalFB<forte::iec61499::events::FORTE_E_RESTART> fb_START;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

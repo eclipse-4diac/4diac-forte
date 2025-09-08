@@ -15,6 +15,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61499::net;
+
 DEFINE_GENERIC_FIRMWARE_FB(GEN_CLIENT, "GEN_CLIENT"_STRID)
 
 GEN_CLIENT::GEN_CLIENT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :

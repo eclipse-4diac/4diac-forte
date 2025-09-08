@@ -21,6 +21,8 @@ using namespace forte::core::literals;
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
+using namespace forte::eclipse4diac::io;
+
 DEFINE_FIRMWARE_FB(FORTE_IE, "IE"_STRID)
 
 namespace {

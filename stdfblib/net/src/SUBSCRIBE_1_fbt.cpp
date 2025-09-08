@@ -15,6 +15,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61499::net;
+
 DEFINE_GENERIC_FIRMWARE_FB(FORTE_SUBSCRIBE_1, "SUBSCRIBE_1"_STRID)
 
 FORTE_SUBSCRIBE_1::FORTE_SUBSCRIBE_1(const forte::core::StringId paInstanceNameId,

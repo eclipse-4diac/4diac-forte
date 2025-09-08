@@ -29,38 +29,40 @@
 #include "forte/iec61499/events/E_DELAY_fbt.h"
 #include "forte/iec61499/events/E_RS_fbt.h"
 
-class FORTE_E_TON final : public CCompositeFB {
-    DECLARE_FIRMWARE_FB(FORTE_E_TON)
+namespace forte::iec61499::events {
+  class FORTE_E_TON final : public CCompositeFB {
+      DECLARE_FIRMWARE_FB(FORTE_E_TON)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    forte::core::CInternalFB<FORTE_E_SWITCH> fb_E_SWITCH;
-    forte::core::CInternalFB<FORTE_E_DELAY> fb_E_DELAY;
-    forte::core::CInternalFB<FORTE_E_RS> fb_E_RS;
+      forte::core::CInternalFB<FORTE_E_SWITCH> fb_E_SWITCH;
+      forte::core::CInternalFB<FORTE_E_DELAY> fb_E_DELAY;
+      forte::core::CInternalFB<FORTE_E_RS> fb_E_RS;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
-    CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
+      CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
-  public:
-    FORTE_E_TON(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_E_TON(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_IN;
-    CDataConnection *conn_PT;
+      CDataConnection *conn_IN;
+      CDataConnection *conn_PT;
 
-    COutDataConnection<CIEC_BOOL> conn_Q;
+      COutDataConnection<CIEC_BOOL> conn_Q;
 
-    COutDataConnection<CIEC_BOOL> conn_if2in_IN;
-    COutDataConnection<CIEC_TIME> conn_if2in_PT;
+      COutDataConnection<CIEC_BOOL> conn_if2in_IN;
+      COutDataConnection<CIEC_TIME> conn_if2in_PT;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
-};
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
+  };
+} // namespace forte::iec61499::events

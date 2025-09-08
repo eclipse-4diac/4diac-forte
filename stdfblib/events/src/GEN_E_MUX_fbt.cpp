@@ -22,6 +22,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61499::events;
+
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_MUX, "GEN_E_MUX"_STRID);
 
 namespace {

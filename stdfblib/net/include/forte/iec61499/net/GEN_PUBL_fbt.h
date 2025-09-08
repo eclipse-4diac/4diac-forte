@@ -20,19 +20,21 @@
  *
  */
 
-class GEN_PUBL : public GEN_PUBLISH {
-    DECLARE_GENERIC_FIRMWARE_FB(GEN_PUBL)
-  public:
-    GEN_PUBL(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+namespace forte::iec61499::net {
+  class GEN_PUBL : public GEN_PUBLISH {
+      DECLARE_GENERIC_FIRMWARE_FB(GEN_PUBL)
+    public:
+      GEN_PUBL(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    bool configureFB(const char *paConfigString) override;
+      bool configureFB(const char *paConfigString) override;
 
-  protected:
-    static const char *const scmLocalIDPrefix;
-    static const char *const scmLocalIDSuffix;
+    protected:
+      static const char *const scmLocalIDPrefix;
+      static const char *const scmLocalIDSuffix;
 
-  private:
-    char *getDefaultIDString(const char *paID) override;
-};
+    private:
+      char *getDefaultIDString(const char *paID) override;
+  };
+} // namespace forte::iec61499::net
 
 #endif /*GEN_PUBL_H_*/

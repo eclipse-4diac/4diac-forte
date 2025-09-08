@@ -16,14 +16,16 @@
 
 /*! \brief Implementation of the E_RDELAY FB.
  */
-class FORTE_E_RDELAY : public CTimedFB {
-    DECLARE_FIRMWARE_FB(FORTE_E_RDELAY)
-  private:
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+namespace forte::iec61499::events {
+  class FORTE_E_RDELAY : public CTimedFB {
+      DECLARE_FIRMWARE_FB(FORTE_E_RDELAY)
+    private:
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  public:
-    FORTE_E_RDELAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~FORTE_E_RDELAY() override = default;
-};
+    public:
+      FORTE_E_RDELAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      ~FORTE_E_RDELAY() override = default;
+  };
+} // namespace forte::iec61499::events
 
 #endif /*E_RDELAY_H_*/

@@ -19,57 +19,59 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_E_TRIG final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_E_TRIG)
+namespace forte::iec61499::events {
+  class FORTE_E_TRIG final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_E_TRIG)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    CEventChainExecutionThread *mEcet;
+      CEventChainExecutionThread *mEcet;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-    /*!\brief This function will trigger unconnected event ports of a certain EventType within a resource
-     * \param paEventTypeId ID of event type to be triggered
-     */
-    void triggerEventsInResource(forte::core::CFBContainer *paContainer,
-                                 const TEventTypeID paEventType,
-                                 CEventChainExecutionThread *const paECET);
+      /*!\brief This function will trigger unconnected event ports of a certain EventType within a resource
+       * \param paEventTypeId ID of event type to be triggered
+       */
+      void triggerEventsInResource(forte::core::CFBContainer *paContainer,
+                                   const TEventTypeID paEventType,
+                                   CEventChainExecutionThread *const paECET);
 
-    /*!\brief This function will trigger unconnected event ports of a certain EventType
-     * \param paEventTypeId ID of event type to be triggered
-     * \param paFb function block search for events to be triggerd
-     * \param paECET event chain execution thread to add the event
-     */
-    void
-    triggerEventsOfType(TEventTypeID paEventTypeId, CFunctionBlock *paFb, CEventChainExecutionThread *const paECET);
+      /*!\brief This function will trigger unconnected event ports of a certain EventType
+       * \param paEventTypeId ID of event type to be triggered
+       * \param paFb function block search for events to be triggerd
+       * \param paECET event chain execution thread to add the event
+       */
+      void
+      triggerEventsOfType(TEventTypeID paEventTypeId, CFunctionBlock *paFb, CEventChainExecutionThread *const paECET);
 
-  public:
-    FORTE_E_TRIG(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_E_TRIG(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_STRING var_EVENTTYPE;
+      CIEC_STRING var_EVENTTYPE;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_EVENTTYPE;
+      CDataConnection *conn_EVENTTYPE;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_STRING &paEVENTTYPE) {
-      var_EVENTTYPE = paEVENTTYPE;
-      executeEvent(scmEventREQID, nullptr);
-    }
+      void evt_REQ(const CIEC_STRING &paEVENTTYPE) {
+        var_EVENTTYPE = paEVENTTYPE;
+        executeEvent(scmEventREQID, nullptr);
+      }
 
-    void operator()(const CIEC_STRING &paEVENTTYPE) {
-      evt_REQ(paEVENTTYPE);
-    }
-};
+      void operator()(const CIEC_STRING &paEVENTTYPE) {
+        evt_REQ(paEVENTTYPE);
+      }
+  };
+} // namespace forte::iec61499::events

@@ -28,6 +28,8 @@ using namespace forte::core::literals;
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
+using namespace forte::iec61499::events;
+
 DEFINE_FIRMWARE_FB(FORTE_E_T_FF_SR, "E_T_FF_SR"_STRID)
 
 const auto cDataOutputNames = std::array{"Q"_STRID};

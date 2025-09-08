@@ -19,6 +19,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61499::events;
+
 DEFINE_FIRMWARE_FB(FORTE_E_TONOF, "E_TONOF"_STRID)
 
 namespace {

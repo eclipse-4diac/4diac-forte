@@ -15,45 +15,47 @@
 
 #include "forte/iec61499/net/GEN_SUBSCRIBE_fbt.h"
 
-class FORTE_SUBSCRIBE_1 : public GEN_SUBSCRIBE {
-    DECLARE_GENERIC_FIRMWARE_FB(FORTE_SUBSCRIBE_1)
+namespace forte::iec61499::net {
+  class FORTE_SUBSCRIBE_1 : public GEN_SUBSCRIBE {
+      DECLARE_GENERIC_FIRMWARE_FB(FORTE_SUBSCRIBE_1)
 
-  protected:
-    static const TEventID scmEventRSPID = scmSendNotificationEventID;
+    protected:
+      static const TEventID scmEventRSPID = scmSendNotificationEventID;
 
-  public:
-    FORTE_SUBSCRIBE_1(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~FORTE_SUBSCRIBE_1() override = default;
+    public:
+      FORTE_SUBSCRIBE_1(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      ~FORTE_SUBSCRIBE_1() override = default;
 
-    void evt_INIT(const CIEC_BOOL &pa_QI,
-                  const CIEC_WSTRING &pa_ID,
-                  CIEC_BOOL &pa_QO,
-                  CIEC_WSTRING &pa_STATUS,
-                  CIEC_ANY &pa_RD_1) {
-      QI() = pa_QI;
-      ID() = pa_ID;
-      receiveInputEvent(scmEventINITID, nullptr);
-      pa_QO = QO();
-      pa_STATUS = STATUS();
-      pa_RD_1.setValue(getRDs()[0]->unwrap());
-    }
-    void evt_RSP(const CIEC_BOOL &pa_QI,
-                 const CIEC_WSTRING &pa_ID,
-                 CIEC_BOOL &pa_QO,
-                 CIEC_WSTRING &pa_STATUS,
-                 CIEC_ANY &pa_RD_1) {
-      QI() = pa_QI;
-      ID() = pa_ID;
-      receiveInputEvent(scmEventRSPID, nullptr);
-      pa_QO = QO();
-      pa_STATUS = STATUS();
-      pa_RD_1.setValue(getRDs()[0]->unwrap());
-    }
-    void operator()(const CIEC_BOOL &pa_QI,
+      void evt_INIT(const CIEC_BOOL &pa_QI,
                     const CIEC_WSTRING &pa_ID,
                     CIEC_BOOL &pa_QO,
                     CIEC_WSTRING &pa_STATUS,
                     CIEC_ANY &pa_RD_1) {
-      evt_INIT(pa_QI, pa_ID, pa_QO, pa_STATUS, pa_RD_1);
-    }
-};
+        QI() = pa_QI;
+        ID() = pa_ID;
+        receiveInputEvent(scmEventINITID, nullptr);
+        pa_QO = QO();
+        pa_STATUS = STATUS();
+        pa_RD_1.setValue(getRDs()[0]->unwrap());
+      }
+      void evt_RSP(const CIEC_BOOL &pa_QI,
+                   const CIEC_WSTRING &pa_ID,
+                   CIEC_BOOL &pa_QO,
+                   CIEC_WSTRING &pa_STATUS,
+                   CIEC_ANY &pa_RD_1) {
+        QI() = pa_QI;
+        ID() = pa_ID;
+        receiveInputEvent(scmEventRSPID, nullptr);
+        pa_QO = QO();
+        pa_STATUS = STATUS();
+        pa_RD_1.setValue(getRDs()[0]->unwrap());
+      }
+      void operator()(const CIEC_BOOL &pa_QI,
+                      const CIEC_WSTRING &pa_ID,
+                      CIEC_BOOL &pa_QO,
+                      CIEC_WSTRING &pa_STATUS,
+                      CIEC_ANY &pa_RD_1) {
+        evt_INIT(pa_QI, pa_ID, pa_QO, pa_STATUS, pa_RD_1);
+      }
+  };
+} // namespace forte::iec61499::net

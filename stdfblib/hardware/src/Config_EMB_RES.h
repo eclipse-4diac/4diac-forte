@@ -33,7 +33,7 @@ class Config_EMB_RES final : public CResource {
 
     CConnection *getResIf2InConnectionUnchecked(TPortId) override;
 
-    forte::core::CInternalFB<FORTE_E_RESTART> fb_START;
+    forte::core::CInternalFB<forte::iec61499::events::FORTE_E_RESTART> fb_START;
 
     CDataConnection *conn_opcua_namespace;
     COutDataConnection<CIEC_WSTRING> conn_opcua_namespace_int;

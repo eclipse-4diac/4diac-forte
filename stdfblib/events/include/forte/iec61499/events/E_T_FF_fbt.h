@@ -20,50 +20,52 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_E_T_FF final : public CBasicFB {
-    DECLARE_FIRMWARE_FB(FORTE_E_T_FF)
+namespace forte::iec61499::events {
+  class FORTE_E_T_FF final : public CBasicFB {
+      DECLARE_FIRMWARE_FB(FORTE_E_T_FF)
 
-  private:
-    static const TEventID scmEventCLKID = 0;
-    static const TEventID scmEventEOID = 0;
+    private:
+      static const TEventID scmEventCLKID = 0;
+      static const TEventID scmEventEOID = 0;
 
-    CIEC_ANY *getVarInternal(size_t) override;
+      CIEC_ANY *getVarInternal(size_t) override;
 
-    void alg_TOGGLE(void);
+      void alg_TOGGLE(void);
 
-    static const TForteInt16 scmStateSTART = 0;
-    static const TForteInt16 scmStateSET = 1;
+      static const TForteInt16 scmStateSTART = 0;
+      static const TForteInt16 scmStateSET = 1;
 
-    void enterStateSTART(CEventChainExecutionThread *const paECET);
-    void enterStateSET(CEventChainExecutionThread *const paECET);
+      void enterStateSTART(CEventChainExecutionThread *const paECET);
+      void enterStateSET(CEventChainExecutionThread *const paECET);
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_E_T_FF(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_E_T_FF(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_BOOL var_Q;
+      CIEC_BOOL var_Q;
 
-    CEventConnection conn_EO;
+      CEventConnection conn_EO;
 
-    COutDataConnection<CIEC_BOOL> conn_Q;
+      COutDataConnection<CIEC_BOOL> conn_Q;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_CLK(CIEC_BOOL &paQ) {
-      receiveInputEvent(scmEventCLKID, nullptr);
-      paQ = var_Q;
-    }
+      void evt_CLK(CIEC_BOOL &paQ) {
+        receiveInputEvent(scmEventCLKID, nullptr);
+        paQ = var_Q;
+      }
 
-    void operator()(CIEC_BOOL &paQ) {
-      evt_CLK(paQ);
-    }
-};
+      void operator()(CIEC_BOOL &paQ) {
+        evt_CLK(paQ);
+      }
+  };
+} // namespace forte::iec61499::events

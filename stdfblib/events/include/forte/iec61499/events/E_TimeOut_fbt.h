@@ -24,34 +24,36 @@
 
 #include "forte/timerha.h"
 
-class FORTE_E_TimeOut final : public CEventSourceFB {
-    DECLARE_FIRMWARE_FB(FORTE_E_TimeOut)
+namespace forte::iec61499::events {
+  class FORTE_E_TimeOut final : public CEventSourceFB {
+      DECLARE_FIRMWARE_FB(FORTE_E_TimeOut)
 
-  private:
-    static const int scmTimeOutSocketAdpNum = 0;
+    private:
+      static const int scmTimeOutSocketAdpNum = 0;
 
-    bool mActive; //!> flag to indicate that the timed fb is currently active
+      bool mActive; //!> flag to indicate that the timed fb is currently active
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
 
-  public:
-    FORTE_E_TimeOut(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    bool initialize() override;
+    public:
+      FORTE_E_TimeOut(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      bool initialize() override;
 
-    forte::CSocketPin<FORTE_ATimeOut_Socket> var_TimeOutSocket;
+      forte::CSocketPin<FORTE_ATimeOut_Socket> var_TimeOutSocket;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    forte::ISocketPin *getSocketPinUnchecked(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      forte::ISocketPin *getSocketPinUnchecked(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
+      EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
-  protected:
-    void setInitialValues() override;
-};
+    protected:
+      void setInitialValues() override;
+  };
+} // namespace forte::iec61499::events

@@ -17,39 +17,41 @@
 #include "forte/esfb.h"
 #include "forte/arch/forte_sem.h"
 
-class FORTE_E_RESTART final : public CEventSourceFB {
-    DECLARE_FIRMWARE_FB(FORTE_E_RESTART)
+namespace forte::iec61499::events {
+  class FORTE_E_RESTART final : public CEventSourceFB {
+      DECLARE_FIRMWARE_FB(FORTE_E_RESTART)
 
-  private:
-    static const TEventID scmEventCOLDID = 0;
-    static const TEventID scmEventWARMID = 1;
-    static const TEventID scmEventSTOPID = 2;
+    private:
+      static const TEventID scmEventCOLDID = 0;
+      static const TEventID scmEventWARMID = 1;
+      static const TEventID scmEventSTOPID = 2;
 
-    // semaphore to ensure proper handling of STOP execution state change
-    forte::arch::CSemaphore mSuspendSemaphore;
+      // semaphore to ensure proper handling of STOP execution state change
+      forte::arch::CSemaphore mSuspendSemaphore;
 
-    TEventID mEventToSend;
+      TEventID mEventToSend;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
 
-  public:
-    FORTE_E_RESTART(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_E_RESTART(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CEventConnection conn_COLD;
-    CEventConnection conn_WARM;
-    CEventConnection conn_STOP;
+      CEventConnection conn_COLD;
+      CEventConnection conn_WARM;
+      CEventConnection conn_STOP;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
+      EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
-  protected:
-    void setInitialValues() override;
-};
+    protected:
+      void setInitialValues() override;
+  };
+} // namespace forte::iec61499::events

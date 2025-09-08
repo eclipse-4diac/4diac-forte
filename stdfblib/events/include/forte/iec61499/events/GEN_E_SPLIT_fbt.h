@@ -18,26 +18,28 @@
 #include "forte/genfb.h"
 #include "forte/stringid.h"
 
-class GEN_E_SPLIT final : public CGenFunctionBlock<CFunctionBlock> {
-    DECLARE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT)
+namespace forte::iec61499::events {
+  class GEN_E_SPLIT final : public CGenFunctionBlock<CFunctionBlock> {
+      DECLARE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT)
 
-  private:
-    static const TEventID scmEventEIID = 0;
+    private:
+      static const TEventID scmEventEIID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
 
-    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+      bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    std::vector<forte::core::StringId> mEventOutputNames;
+      std::vector<forte::core::StringId> mEventOutputNames;
 
-  public:
-    GEN_E_SPLIT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      GEN_E_SPLIT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
-};
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
+  };
+} // namespace forte::iec61499::events

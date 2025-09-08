@@ -17,6 +17,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61499::events;
+
 DEFINE_GENERIC_FIRMWARE_FB(GEN_E_SPLIT, "GEN_E_SPLIT"_STRID)
 
 namespace {

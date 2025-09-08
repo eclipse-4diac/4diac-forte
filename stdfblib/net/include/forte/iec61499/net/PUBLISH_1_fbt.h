@@ -15,45 +15,47 @@
 
 #include "forte/iec61499/net/GEN_PUBLISH_fbt.h"
 
-class FORTE_PUBLISH_1 : public GEN_PUBLISH {
-    DECLARE_GENERIC_FIRMWARE_FB(FORTE_PUBLISH_1)
+namespace forte::iec61499::net {
+  class FORTE_PUBLISH_1 : public GEN_PUBLISH {
+      DECLARE_GENERIC_FIRMWARE_FB(FORTE_PUBLISH_1)
 
-  protected:
-    static const TEventID scmEventREQID = scmSendNotificationEventID;
+    protected:
+      static const TEventID scmEventREQID = scmSendNotificationEventID;
 
-  public:
-    FORTE_PUBLISH_1(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~FORTE_PUBLISH_1() override = default;
+    public:
+      FORTE_PUBLISH_1(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      ~FORTE_PUBLISH_1() override = default;
 
-    void evt_INIT(const CIEC_BOOL &pa_QI,
-                  const CIEC_WSTRING &pa_ID,
-                  const CIEC_ANY &pa_SD_1,
-                  CIEC_BOOL &pa_QO,
-                  CIEC_WSTRING &pa_STATUS) {
-      QI() = pa_QI;
-      ID() = pa_ID;
-      getSDs()[0]->setValue(pa_SD_1.unwrap());
-      receiveInputEvent(scmEventINITID, nullptr);
-      pa_QO = QO();
-      pa_STATUS = STATUS();
-    }
-    void evt_REQ(const CIEC_BOOL &pa_QI,
-                 const CIEC_WSTRING &pa_ID,
-                 const CIEC_ANY &pa_SD_1,
-                 CIEC_BOOL &pa_QO,
-                 CIEC_WSTRING &pa_STATUS) {
-      QI() = pa_QI;
-      ID() = pa_ID;
-      getSDs()[0]->setValue(pa_SD_1.unwrap());
-      receiveInputEvent(scmEventREQID, nullptr);
-      pa_QO = QO();
-      pa_STATUS = STATUS();
-    }
-    void operator()(const CIEC_BOOL &pa_QI,
+      void evt_INIT(const CIEC_BOOL &pa_QI,
                     const CIEC_WSTRING &pa_ID,
                     const CIEC_ANY &pa_SD_1,
                     CIEC_BOOL &pa_QO,
                     CIEC_WSTRING &pa_STATUS) {
-      evt_INIT(pa_QI, pa_ID, pa_SD_1, pa_QO, pa_STATUS);
-    }
-};
+        QI() = pa_QI;
+        ID() = pa_ID;
+        getSDs()[0]->setValue(pa_SD_1.unwrap());
+        receiveInputEvent(scmEventINITID, nullptr);
+        pa_QO = QO();
+        pa_STATUS = STATUS();
+      }
+      void evt_REQ(const CIEC_BOOL &pa_QI,
+                   const CIEC_WSTRING &pa_ID,
+                   const CIEC_ANY &pa_SD_1,
+                   CIEC_BOOL &pa_QO,
+                   CIEC_WSTRING &pa_STATUS) {
+        QI() = pa_QI;
+        ID() = pa_ID;
+        getSDs()[0]->setValue(pa_SD_1.unwrap());
+        receiveInputEvent(scmEventREQID, nullptr);
+        pa_QO = QO();
+        pa_STATUS = STATUS();
+      }
+      void operator()(const CIEC_BOOL &pa_QI,
+                      const CIEC_WSTRING &pa_ID,
+                      const CIEC_ANY &pa_SD_1,
+                      CIEC_BOOL &pa_QO,
+                      CIEC_WSTRING &pa_STATUS) {
+        evt_INIT(pa_QI, pa_ID, pa_SD_1, pa_QO, pa_STATUS);
+      }
+  };
+} // namespace forte::iec61499::net

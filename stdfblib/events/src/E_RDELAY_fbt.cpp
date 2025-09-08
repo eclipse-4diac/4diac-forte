@@ -15,6 +15,8 @@ using namespace forte::core::literals;
 
 #include "forte/timerha.h"
 
+using namespace forte::iec61499::events;
+
 DEFINE_FIRMWARE_FB(FORTE_E_RDELAY, "E_RDELAY"_STRID)
 
 FORTE_E_RDELAY::FORTE_E_RDELAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :

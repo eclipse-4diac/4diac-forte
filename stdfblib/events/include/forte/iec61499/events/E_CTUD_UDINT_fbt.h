@@ -28,102 +28,104 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_E_CTUD_UDINT final : public CBasicFB {
-    DECLARE_FIRMWARE_FB(FORTE_E_CTUD_UDINT)
+namespace forte::iec61499::events {
+  class FORTE_E_CTUD_UDINT final : public CBasicFB {
+      DECLARE_FIRMWARE_FB(FORTE_E_CTUD_UDINT)
 
-  private:
-    static const TEventID scmEventCUID = 0;
-    static const TEventID scmEventCDID = 1;
-    static const TEventID scmEventRID = 2;
-    static const TEventID scmEventLDID = 3;
-    static const TEventID scmEventCOID = 0;
-    static const TEventID scmEventROID = 1;
-    static const TEventID scmEventLDOID = 2;
+    private:
+      static const TEventID scmEventCUID = 0;
+      static const TEventID scmEventCDID = 1;
+      static const TEventID scmEventRID = 2;
+      static const TEventID scmEventLDID = 3;
+      static const TEventID scmEventCOID = 0;
+      static const TEventID scmEventROID = 1;
+      static const TEventID scmEventLDOID = 2;
 
-    CIEC_ANY *getVarInternal(size_t) override;
+      CIEC_ANY *getVarInternal(size_t) override;
 
-    void alg_CountUp(void);
-    void alg_Reset(void);
-    void alg_Load(void);
-    void alg_UpdateQUQD(void);
-    void alg_CountDown(void);
+      void alg_CountUp(void);
+      void alg_Reset(void);
+      void alg_Load(void);
+      void alg_UpdateQUQD(void);
+      void alg_CountDown(void);
 
-    static const TForteInt16 scmStateSTART = 0;
-    static const TForteInt16 scmStateCU = 1;
-    static const TForteInt16 scmStateR = 2;
-    static const TForteInt16 scmStateCD = 3;
-    static const TForteInt16 scmStateLD = 4;
+      static const TForteInt16 scmStateSTART = 0;
+      static const TForteInt16 scmStateCU = 1;
+      static const TForteInt16 scmStateR = 2;
+      static const TForteInt16 scmStateCD = 3;
+      static const TForteInt16 scmStateLD = 4;
 
-    void enterStateSTART(CEventChainExecutionThread *const paECET);
-    void enterStateCU(CEventChainExecutionThread *const paECET);
-    void enterStateR(CEventChainExecutionThread *const paECET);
-    void enterStateCD(CEventChainExecutionThread *const paECET);
-    void enterStateLD(CEventChainExecutionThread *const paECET);
+      void enterStateSTART(CEventChainExecutionThread *const paECET);
+      void enterStateCU(CEventChainExecutionThread *const paECET);
+      void enterStateR(CEventChainExecutionThread *const paECET);
+      void enterStateCD(CEventChainExecutionThread *const paECET);
+      void enterStateLD(CEventChainExecutionThread *const paECET);
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_E_CTUD_UDINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_E_CTUD_UDINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_UDINT var_PV;
+      CIEC_UDINT var_PV;
 
-    CIEC_BOOL var_QU;
-    CIEC_BOOL var_QD;
-    CIEC_UDINT var_CV;
+      CIEC_BOOL var_QU;
+      CIEC_BOOL var_QD;
+      CIEC_UDINT var_CV;
 
-    CEventConnection conn_CO;
-    CEventConnection conn_RO;
-    CEventConnection conn_LDO;
+      CEventConnection conn_CO;
+      CEventConnection conn_RO;
+      CEventConnection conn_LDO;
 
-    CDataConnection *conn_PV;
+      CDataConnection *conn_PV;
 
-    COutDataConnection<CIEC_BOOL> conn_QU;
-    COutDataConnection<CIEC_BOOL> conn_QD;
-    COutDataConnection<CIEC_UDINT> conn_CV;
+      COutDataConnection<CIEC_BOOL> conn_QU;
+      COutDataConnection<CIEC_BOOL> conn_QD;
+      COutDataConnection<CIEC_UDINT> conn_CV;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_CU(const CIEC_UDINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UDINT &paCV) {
-      var_PV = paPV;
-      executeEvent(scmEventCUID, nullptr);
-      paQU = var_QU;
-      paQD = var_QD;
-      paCV = var_CV;
-    }
+      void evt_CU(const CIEC_UDINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UDINT &paCV) {
+        var_PV = paPV;
+        executeEvent(scmEventCUID, nullptr);
+        paQU = var_QU;
+        paQD = var_QD;
+        paCV = var_CV;
+      }
 
-    void evt_CD(const CIEC_UDINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UDINT &paCV) {
-      var_PV = paPV;
-      executeEvent(scmEventCDID, nullptr);
-      paQU = var_QU;
-      paQD = var_QD;
-      paCV = var_CV;
-    }
+      void evt_CD(const CIEC_UDINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UDINT &paCV) {
+        var_PV = paPV;
+        executeEvent(scmEventCDID, nullptr);
+        paQU = var_QU;
+        paQD = var_QD;
+        paCV = var_CV;
+      }
 
-    void evt_R(const CIEC_UDINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UDINT &paCV) {
-      var_PV = paPV;
-      executeEvent(scmEventRID, nullptr);
-      paQU = var_QU;
-      paQD = var_QD;
-      paCV = var_CV;
-    }
+      void evt_R(const CIEC_UDINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UDINT &paCV) {
+        var_PV = paPV;
+        executeEvent(scmEventRID, nullptr);
+        paQU = var_QU;
+        paQD = var_QD;
+        paCV = var_CV;
+      }
 
-    void evt_LD(const CIEC_UDINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UDINT &paCV) {
-      var_PV = paPV;
-      executeEvent(scmEventLDID, nullptr);
-      paQU = var_QU;
-      paQD = var_QD;
-      paCV = var_CV;
-    }
+      void evt_LD(const CIEC_UDINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UDINT &paCV) {
+        var_PV = paPV;
+        executeEvent(scmEventLDID, nullptr);
+        paQU = var_QU;
+        paQD = var_QD;
+        paCV = var_CV;
+      }
 
-    void operator()(const CIEC_UDINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UDINT &paCV) {
-      evt_CU(paPV, paQU, paQD, paCV);
-    }
-};
+      void operator()(const CIEC_UDINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UDINT &paCV) {
+        evt_CU(paPV, paQU, paQD, paCV);
+      }
+  };
+} // namespace forte::iec61499::events

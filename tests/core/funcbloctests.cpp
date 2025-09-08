@@ -25,7 +25,7 @@ using namespace forte::core::literals;
 BOOST_AUTO_TEST_SUITE(FUNCBLOC)
 
 BOOST_AUTO_TEST_CASE(FB_TO_STRING_TEST) {
-  FORTE_E_CTUD testFb(
+  forte::iec61499::events::FORTE_E_CTUD testFb(
       {}, CFBContainerMock::smDefaultFBContMock); // Dummy FB, do not use for anything else than testing toString
   constexpr char result[] = "(PV:=0, QU:=FALSE, QD:=FALSE, CV:=0)";
   std::string buffer;

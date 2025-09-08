@@ -22,32 +22,34 @@
 /*! \brief Implementation of the PUBLISH SIFB.
  */
 
-class GEN_PUBLISH : public forte::com_infra::CCommFB {
-    DECLARE_GENERIC_FIRMWARE_FB(GEN_PUBLISH)
+namespace forte::iec61499::net {
+  class GEN_PUBLISH : public forte::com_infra::CCommFB {
+      DECLARE_GENERIC_FIRMWARE_FB(GEN_PUBLISH)
 
-  public:
-    GEN_PUBLISH(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      GEN_PUBLISH(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    ~GEN_PUBLISH() override = default;
+      ~GEN_PUBLISH() override = default;
 
-    template<typename... Args>
-    void evt_INIT(Args &&...paArgs) {
-      writeInputArguments(std::forward<Args>(paArgs)...);
-      receiveInputEvent(scmEventINITID, nullptr);
-      readOutputArguments(std::forward<Args>(paArgs)...);
-    }
+      template<typename... Args>
+      void evt_INIT(Args &&...paArgs) {
+        writeInputArguments(std::forward<Args>(paArgs)...);
+        receiveInputEvent(scmEventINITID, nullptr);
+        readOutputArguments(std::forward<Args>(paArgs)...);
+      }
 
-    template<typename... Args>
-    void evt_REQ(Args &&...paArgs) {
-      writeInputArguments(std::forward<Args>(paArgs)...);
-      receiveInputEvent(scmSendNotificationEventID, nullptr);
-      readOutputArguments(std::forward<Args>(paArgs)...);
-    }
+      template<typename... Args>
+      void evt_REQ(Args &&...paArgs) {
+        writeInputArguments(std::forward<Args>(paArgs)...);
+        receiveInputEvent(scmSendNotificationEventID, nullptr);
+        readOutputArguments(std::forward<Args>(paArgs)...);
+      }
 
-    template<typename... Args>
-    void operator()(Args &&...paArgs) {
-      evt_INIT(std::forward<Args>(paArgs)...);
-    }
-};
+      template<typename... Args>
+      void operator()(Args &&...paArgs) {
+        evt_INIT(std::forward<Args>(paArgs)...);
+      }
+  };
+} // namespace forte::iec61499::net
 
 #endif //_GEN_PUBLISH_H_

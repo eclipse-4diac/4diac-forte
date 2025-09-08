@@ -23,31 +23,33 @@
  *
  */
 
-class GEN_SERVER : public forte::com_infra::CCommFB {
-    DECLARE_GENERIC_FIRMWARE_FB(GEN_SERVER)
-  public:
-    GEN_SERVER(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+namespace forte::iec61499::net {
+  class GEN_SERVER : public forte::com_infra::CCommFB {
+      DECLARE_GENERIC_FIRMWARE_FB(GEN_SERVER)
+    public:
+      GEN_SERVER(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    ~GEN_SERVER() override = default;
+      ~GEN_SERVER() override = default;
 
-    template<typename... Args>
-    void evt_INIT(Args &&...paArgs) {
-      writeArguments(std::forward<Args>(paArgs)...); // write all arguments to get type information
-      receiveInputEvent(scmEventINITID, nullptr);
-      readOutputArguments(std::forward<Args>(paArgs)...);
-    }
+      template<typename... Args>
+      void evt_INIT(Args &&...paArgs) {
+        writeArguments(std::forward<Args>(paArgs)...); // write all arguments to get type information
+        receiveInputEvent(scmEventINITID, nullptr);
+        readOutputArguments(std::forward<Args>(paArgs)...);
+      }
 
-    template<typename... Args>
-    void evt_RSP(Args &&...paArgs) {
-      writeInputArguments(std::forward<Args>(paArgs)...);
-      receiveInputEvent(scmSendNotificationEventID, nullptr);
-      readOutputArguments(std::forward<Args>(paArgs)...);
-    }
+      template<typename... Args>
+      void evt_RSP(Args &&...paArgs) {
+        writeInputArguments(std::forward<Args>(paArgs)...);
+        receiveInputEvent(scmSendNotificationEventID, nullptr);
+        readOutputArguments(std::forward<Args>(paArgs)...);
+      }
 
-    template<typename... Args>
-    void operator()(Args &&...paArgs) {
-      evt_INIT(std::forward<Args>(paArgs)...);
-    }
-};
+      template<typename... Args>
+      void operator()(Args &&...paArgs) {
+        evt_INIT(std::forward<Args>(paArgs)...);
+      }
+  };
+} // namespace forte::iec61499::net
 
 #endif //_GEN_SERVER_H_

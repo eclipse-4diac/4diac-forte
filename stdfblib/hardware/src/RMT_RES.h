@@ -38,8 +38,8 @@ class RMT_RES final : public CResource {
     CDataConnection *conn_MGR_ID;
     COutDataConnection<CIEC_WSTRING> conn_MGR_ID_int;
 
-    forte::core::CInternalFB<FORTE_E_RESTART> fb_START;
-    forte::core::CInternalFB<FORTE_E_SR> fb_MGR_FF;
+    forte::core::CInternalFB<forte::iec61499::events::FORTE_E_RESTART> fb_START;
+    forte::core::CInternalFB<forte::iec61499::events::FORTE_E_SR> fb_MGR_FF;
     forte::core::CInternalFB<DEV_MGR> fb_MGR;
 
     static const forte::core::StringId scmVarInputNameIds[];

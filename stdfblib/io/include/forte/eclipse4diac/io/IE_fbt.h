@@ -24,64 +24,66 @@
 
 #include "core/fmi/processinterface.h"
 
-class FORTE_IE final : public CProcessInterface {
-    DECLARE_FIRMWARE_FB(FORTE_IE)
+namespace forte::eclipse4diac::io {
+  class FORTE_IE final : public CProcessInterface {
+      DECLARE_FIRMWARE_FB(FORTE_IE)
 
-  private:
-    static const TEventID scmEventINITID = 0;
-    static const TEventID scmEventREQID = 1;
-    static const TEventID scmEventINITOID = 0;
-    static const TEventID scmEventCNFID = 1;
-    static const TEventID scmEventINDID = 2;
+    private:
+      static const TEventID scmEventINITID = 0;
+      static const TEventID scmEventREQID = 1;
+      static const TEventID scmEventINITOID = 0;
+      static const TEventID scmEventCNFID = 1;
+      static const TEventID scmEventINDID = 2;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_IE(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_IE(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_BOOL var_QI;
-    CIEC_STRING var_PARAMS;
+      CIEC_BOOL var_QI;
+      CIEC_STRING var_PARAMS;
 
-    CIEC_BOOL var_QO;
-    CIEC_STRING var_STATUS;
+      CIEC_BOOL var_QO;
+      CIEC_STRING var_STATUS;
 
-    CEventConnection conn_INITO;
-    CEventConnection conn_CNF;
-    CEventConnection conn_IND;
+      CEventConnection conn_INITO;
+      CEventConnection conn_CNF;
+      CEventConnection conn_IND;
 
-    CDataConnection *conn_QI;
-    CDataConnection *conn_PARAMS;
+      CDataConnection *conn_QI;
+      CDataConnection *conn_PARAMS;
 
-    COutDataConnection<CIEC_BOOL> conn_QO;
-    COutDataConnection<CIEC_STRING> conn_STATUS;
+      COutDataConnection<CIEC_BOOL> conn_QO;
+      COutDataConnection<CIEC_STRING> conn_STATUS;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
-      var_QI = paQI;
-      var_PARAMS = paPARAMS;
-      receiveInputEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
-    }
+      void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+        var_QI = paQI;
+        var_PARAMS = paPARAMS;
+        receiveInputEvent(scmEventINITID, nullptr);
+        paQO = var_QO;
+        paSTATUS = var_STATUS;
+      }
 
-    void evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
-      var_QI = paQI;
-      var_PARAMS = paPARAMS;
-      receiveInputEvent(scmEventREQID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
-    }
+      void evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+        var_QI = paQI;
+        var_PARAMS = paPARAMS;
+        receiveInputEvent(scmEventREQID, nullptr);
+        paQO = var_QO;
+        paSTATUS = var_STATUS;
+      }
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
-      evt_INIT(paQI, paPARAMS, paQO, paSTATUS);
-    }
-};
+      void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+        evt_INIT(paQI, paPARAMS, paQO, paSTATUS);
+      }
+  };
+} // namespace forte::eclipse4diac::io

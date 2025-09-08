@@ -12,7 +12,8 @@
  * Contributors:
  *   Alois Zoitl
  *     - initial API and implementation and/or initial documentation
- *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Alois Zoitl - introduced new CGenFB namespace forte::iec61499::events {
+class for better handling generic FBs
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #ifndef _GEN_E_DEMUX_H_
@@ -23,34 +24,36 @@
 
 #include <memory>
 
-class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
-    DECLARE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX)
+namespace forte::iec61499::events {
+  class GEN_E_DEMUX : public CGenFunctionBlock<CFunctionBlock> {
+      DECLARE_GENERIC_FIRMWARE_FB(GEN_E_DEMUX)
 
-  protected:
-    CIEC_ANY *getDI(size_t) override;
-    CDataConnection **getDIConUnchecked(const TPortId paIndex) override;
+    protected:
+      CIEC_ANY *getDI(size_t) override;
+      CDataConnection **getDIConUnchecked(const TPortId paIndex) override;
 
-    size_t getGenDIOffset() override {
-      return 0;
-    }
+      size_t getGenDIOffset() override {
+        return 0;
+      }
 
-  private:
-    static const TEventID scmEventEIID = 0;
+    private:
+      static const TEventID scmEventEIID = 0;
 
-    std::vector<forte::core::StringId> mEventOutputNames;
+      std::vector<forte::core::StringId> mEventOutputNames;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEI) override;
-    void writeOutputData(TEventID paEO) override;
+      void readInputData(TEventID paEI) override;
+      void writeOutputData(TEventID paEO) override;
 
-    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+      bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    CIEC_UINT var_K;
-    CDataConnection *conn_K;
+      CIEC_UINT var_K;
+      CDataConnection *conn_K;
 
-  public:
-    GEN_E_DEMUX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~GEN_E_DEMUX() override = default;
-};
+    public:
+      GEN_E_DEMUX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      ~GEN_E_DEMUX() override = default;
+  };
+} // namespace forte::iec61499::events
 #endif //_GEN_E_DEMUX_H_

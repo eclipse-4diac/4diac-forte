@@ -22,14 +22,16 @@
  * is that it will not start in an own new ecexectuionthread (or background trhead of the resource). It
  * will use the EC-Thread of the EC that sent the start command.
  */
-class FORTE_E_DELAY : public CTimedFB {
-    DECLARE_FIRMWARE_FB(FORTE_E_DELAY)
-  private:
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+namespace forte::iec61499::events {
+  class FORTE_E_DELAY : public CTimedFB {
+      DECLARE_FIRMWARE_FB(FORTE_E_DELAY)
+    private:
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  public:
-    FORTE_E_DELAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~FORTE_E_DELAY() override = default;
-};
+    public:
+      FORTE_E_DELAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      ~FORTE_E_DELAY() override = default;
+  };
+} // namespace forte::iec61499::events
 
 #endif /*E_DELAY_H_*/

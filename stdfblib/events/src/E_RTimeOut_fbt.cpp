@@ -23,6 +23,8 @@ using namespace std::literals;
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61499::events;
+
 DEFINE_FIRMWARE_FB(FORTE_E_RTimeOut, "E_RTimeOut"_STRID)
 
 namespace {

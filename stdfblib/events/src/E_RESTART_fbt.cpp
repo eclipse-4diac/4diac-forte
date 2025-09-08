@@ -17,6 +17,8 @@ using namespace forte::core::literals;
 
 #include "forte/device.h"
 
+using namespace forte::iec61499::events;
+
 DEFINE_FIRMWARE_FB(FORTE_E_RESTART, "E_RESTART"_STRID)
 
 const auto cEventOutputNames = std::array{"COLD"_STRID, "WARM"_STRID, "STOP"_STRID};

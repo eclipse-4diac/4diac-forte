@@ -19,17 +19,19 @@
 
 /*! \brief Implementation of the E_CYCLE FB.
  */
-class FORTE_E_CYCLE : public CTimedFB {
-    DECLARE_FIRMWARE_FB(FORTE_E_CYCLE)
-  public:
-    FORTE_E_CYCLE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
-        CTimedFB(paInstanceNameId, paContainer) {
-    }
+namespace forte::iec61499::events {
+  class FORTE_E_CYCLE : public CTimedFB {
+      DECLARE_FIRMWARE_FB(FORTE_E_CYCLE)
+    public:
+      FORTE_E_CYCLE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+          CTimedFB(paInstanceNameId, paContainer) {
+      }
 
-    ~FORTE_E_CYCLE() override = default;
+      ~FORTE_E_CYCLE() override = default;
 
-  private:
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
-};
+    private:
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+  };
+} // namespace forte::iec61499::events
 
 #endif /*E_CYCLE_H_*/
