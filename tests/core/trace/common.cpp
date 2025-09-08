@@ -17,7 +17,7 @@
 #include <boost/test/unit_test.hpp>
 
 #include "config.h"
-#include "core/trace/barectf_platform_forte.h"
+#include "../../../core/src/trace/barectf_platform_forte.h"
 
 namespace forte::tests::traces {
 
@@ -54,8 +54,8 @@ namespace forte::tests::traces {
       }
 
       // add extra event to check that the comparison fails
-      expectedMessages.emplace_back("sendOutputEvent", std::make_unique<FBInputEventPayload>("E_RESTART", "START", 2),
-                                    0);
+      expectedMessages.emplace_back(
+          "sendOutputEvent", std::make_unique<FBInputEventPayload>("iec61499::events::E_RESTART", "START", 2), 0);
       BOOST_CHECK(expectedMessages != actualMessages);
 
       // remove the recently added message in case is needed again later

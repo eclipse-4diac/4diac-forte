@@ -12,7 +12,7 @@
  *      - initial implementation
  *******************************************************************************/
 
-#include "core/trace/internal/internalTracer.h"
+#include "internalTracer.h"
 
 #include "forte/arch/forte_architecture_time.h"
 

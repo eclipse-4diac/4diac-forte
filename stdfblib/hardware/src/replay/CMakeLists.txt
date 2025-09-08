@@ -24,7 +24,7 @@ if (NOT FORTE_REPLAY_DEVICE)
 endif ()
 
 target_compile_definitions(forte-hardware PRIVATE FORTE_REPLAY_DEVICE)
-target_link_libraries(forte-hardware PUBLIC ${FORTE_TRACE_READER_LIB})
+target_link_libraries(forte-hardware PRIVATE ${FORTE_TRACE_READER_LIB})
 
 target_sources(forte-hardware PRIVATE
         deviceReplayer.h

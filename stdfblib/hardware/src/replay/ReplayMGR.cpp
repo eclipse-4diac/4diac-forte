@@ -13,8 +13,8 @@
 
 #include "ReplayMGR.h"
 
-#include "core/ecetFake.h"
-#include "core/trace/reader/utils.h"
+#include "../../../core/src/ecetFake.h"
+#include "../../../core/src/trace/reader/utils.h"
 #include "ReplayDevice.h"
 
 ReplayMGR::ReplayMGR(ReplayDevice &paDevice, OPCUA_MGR &paOpcuaMgr) : mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {

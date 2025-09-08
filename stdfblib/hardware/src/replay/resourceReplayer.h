@@ -20,7 +20,7 @@
 #include <optional>
 #include <functional>
 
-#include "core/trace/internal/EventMessage.h"
+#include "../../../core/src/trace/internal/EventMessage.h"
 #include "forte/stringid.h"
 #include "forte/event.h"
 

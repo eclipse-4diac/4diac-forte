@@ -18,31 +18,31 @@ if (NOT FORTE_TRACE_CTF)
 endif ()
 
 set(FORTE_TRACE_CTF_BUFFER_SIZE
-    4096
-    CACHE STRING "FORTE Common Trace Format (CTF) trace buffer size"
+        4096
+        CACHE STRING "FORTE Common Trace Format (CTF) trace buffer size"
 )
 option(FORTE_TRACE_CTF_REPLAY_DEBUGGING
-       "FORTE Common Trace Format (CTF) tracing for replay debugging." OFF
+        "FORTE Common Trace Format (CTF) tracing for replay debugging." OFF
 )
 
 target_compile_definitions(forte-core PUBLIC FORTE_TRACE_CTF)
-target_compile_definitions(forte-global
-                           INTERFACE FORTE_TRACE_CTF_BUFFER_SIZE=${FORTE_TRACE_CTF_BUFFER_SIZE}
+target_compile_definitions(forte-core PUBLIC
+        FORTE_TRACE_CTF_BUFFER_SIZE=${FORTE_TRACE_CTF_BUFFER_SIZE}
 )
 
 if (FORTE_TRACE_CTF_REPLAY_DEBUGGING)
-    target_compile_definitions(forte-global
-                               INTERFACE FORTE_TRACE_CTF_REPLAY_DEBUGGING
+    target_compile_definitions(forte-core PUBLIC
+            FORTE_TRACE_CTF_REPLAY_DEBUGGING
     )
     set(FORTE_TRACE_CONFIG_FILE
-        ${CMAKE_CURRENT_SOURCE_DIR}/replay_debugging/config.yaml
+            ${CMAKE_CURRENT_SOURCE_DIR}/replay_debugging/config.yaml
     )
     set(FORTE_TRACE_FOLDER
-        ${CMAKE_CURRENT_SOURCE_DIR}/replay_debugging/generated
+            ${CMAKE_CURRENT_SOURCE_DIR}/replay_debugging/generated
     )
 else ()
     set(FORTE_TRACE_CONFIG_FILE
-        ${CMAKE_CURRENT_SOURCE_DIR}/classic/config.yaml
+            ${CMAKE_CURRENT_SOURCE_DIR}/classic/config.yaml
     )
     set(FORTE_TRACE_FOLDER ${CMAKE_CURRENT_SOURCE_DIR}/classic/generated)
 endif ()
@@ -50,22 +50,22 @@ target_include_directories(forte-core PRIVATE ${FORTE_TRACE_FOLDER})
 
 find_program(barectf_PROGRAM barectf)
 add_custom_target(regenerate-barectf
-                  COMMAND ${barectf_PROGRAM} -c ${FORTE_TRACE_FOLDER} -H
-                          ${FORTE_TRACE_FOLDER} -m ${FORTE_TRACE_FOLDER}
-                          ${FORTE_TRACE_CONFIG_FILE}
+        COMMAND ${barectf_PROGRAM} -c ${FORTE_TRACE_FOLDER} -H
+        ${FORTE_TRACE_FOLDER} -m ${FORTE_TRACE_FOLDER}
+        ${FORTE_TRACE_CONFIG_FILE}
 )
 
 option(FORTE_TRACE_CTF_ALWAYS_REGENERATE
-       "Always regenerate CTF trace source and header files" OFF
+        "Always regenerate CTF trace source and header files" OFF
 )
 if (FORTE_TRACE_CTF_ALWAYS_REGENERATE)
-    add_dependencies(forte-global regenerate-barectf)
+    add_dependencies(forte-core regenerate-barectf)
 endif ()
 
 if (FORTE_TRACE_CTF_TEST OR FORTE_REPLAY_DEVICE)
     add_subdirectory(internal)
     add_subdirectory(reader)
-    target_compile_definitions(forte-core PRIVATE FORTE_TRACER_INTERNAL)
+    target_compile_definitions(forte-core PUBLIC FORTE_TRACER_INTERNAL)
 endif ()
 target_sources(forte-core PRIVATE
             $<$<BOOL:${FORTE_TRACE_CTF_REPLAY_DEBUGGING}>:${CMAKE_CURRENT_SOURCE_DIR}/replay_debugging/trace_event_output.cpp>

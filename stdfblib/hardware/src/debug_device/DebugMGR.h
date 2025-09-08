@@ -13,7 +13,7 @@
 
 #pragma once
 
-#include "OPCUA_MGR.h"
+#include "../OPCUA_MGR.h"
 
 #include <functional>
 #include <string>

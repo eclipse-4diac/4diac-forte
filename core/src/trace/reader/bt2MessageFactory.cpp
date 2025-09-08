@@ -10,7 +10,7 @@
  *   Jose Cabral- initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "core/trace/reader/bt2MessageFactory.h"
+#include "bt2MessageFactory.h"
 
 #include "iostream"
 

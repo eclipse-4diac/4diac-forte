@@ -13,7 +13,7 @@
  *      - initial implementation
  *******************************************************************************/
 
-#include "core/trace/barectf_platform_forte.h"
+#include "barectf_platform_forte.h"
 
 #include <iomanip>
 #include <chrono>
@@ -34,28 +34,41 @@ namespace {
   };
 
   [[maybe_unused]] OutputDirectoryOption gOutputDirectory;
+
+  constinit std::string traceDirectory;
+  constinit bool enabled = false;
+
+  std::string dateCapture() {
+    const auto now = std::chrono::system_clock::now();
+    const std::time_t time = std::chrono::system_clock::to_time_t(now);
+    const auto millisecondsPart =
+        std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count() % 1000;
+    struct tm ptm;
+    forte_localtime(&time, &ptm);
+    std::ostringstream stream;
+    stream << std::put_time(&ptm, "%Y%m%d_%H%M%S");
+    stream << std::setfill('0') << std::setw(3) << millisecondsPart;
+    return stream.str();
+  }
 } // namespace
 
-std::filesystem::path BarectfPlatformFORTE::traceDirectory = std::filesystem::path();
-bool BarectfPlatformFORTE::enabled = false;
-
-void BarectfPlatformFORTE::setup(std::string_view directory) {
-  traceDirectory = std::filesystem::path(directory).make_preferred();
-  if (traceDirectory.empty()) {
+void BarectfPlatformFORTE::setup(std::string_view paDirectory) {
+  if (paDirectory.empty()) {
     DEVLOG_INFO("[TRACE_CTF]: no output directory given, disabling TRACE_CTF\n");
     enabled = false;
     return;
   }
-  if (traceDirectory.is_relative()) {
-    traceDirectory = std::filesystem::absolute(traceDirectory);
+  std::filesystem::path directory = std::filesystem::path(paDirectory).make_preferred();
+  if (directory.is_relative()) {
+    directory = std::filesystem::absolute(directory);
   }
 
-  if (std::filesystem::is_directory(traceDirectory)) {
-    DEVLOG_INFO("[TRACE_CTF]: enabling TRACE_CTF, output in \"%s\"\n", traceDirectory.string().c_str());
+  if (std::filesystem::is_directory(directory)) {
+    DEVLOG_INFO("[TRACE_CTF]: enabling TRACE_CTF, output in \"%s\"\n", directory.c_str());
     enabled = true;
+    traceDirectory = directory.string();
   } else {
-    DEVLOG_INFO("[TRACE_CTF]: non-existent output directory given \"%s\", disabling TRACE_CTF\n",
-                traceDirectory.string().c_str());
+    DEVLOG_INFO("[TRACE_CTF]: non-existent output directory given \"%s\", disabling TRACE_CTF\n", directory.c_str());
     enabled = false;
   }
 }
@@ -85,10 +98,10 @@ void BarectfPlatformFORTE::closePacket(void *data) {
   }
 }
 
-const struct barectf_platform_callbacks BarectfPlatformFORTE::barectfCallbacks = {.default_clock_get_value = getClock,
-                                                                                  .is_backend_full = isBackendFull,
-                                                                                  .open_packet = openPacket,
-                                                                                  .close_packet = closePacket};
+constinit barectf_platform_callbacks BarectfPlatformFORTE::barectfCallbacks = {.default_clock_get_value = getClock,
+                                                                               .is_backend_full = isBackendFull,
+                                                                               .open_packet = openPacket,
+                                                                               .close_packet = closePacket};
 
 BarectfPlatformFORTE::BarectfPlatformFORTE(std::filesystem::path filename, size_t bufferSize) :
     buffer(enabled ? new uint8_t[bufferSize] : nullptr) {
@@ -104,7 +117,7 @@ BarectfPlatformFORTE::BarectfPlatformFORTE(std::filesystem::path filename, size_
 }
 
 BarectfPlatformFORTE::BarectfPlatformFORTE(forte::core::StringId instanceName, size_t bufferSize) :
-    BarectfPlatformFORTE(traceDirectory /
+    BarectfPlatformFORTE(std::filesystem::path{traceDirectory} /
                              (std::string("trace_") + (instanceName.data() ? instanceName.data() : "null") + "_" +
                               dateCapture() + ".ctf"),
                          bufferSize) {
@@ -117,17 +130,4 @@ BarectfPlatformFORTE::~BarectfPlatformFORTE() {
     }
     output.flush();
   }
-}
-
-std::string BarectfPlatformFORTE::dateCapture() {
-  const auto now = std::chrono::system_clock::now();
-  const std::time_t time = std::chrono::system_clock::to_time_t(now);
-  const auto millisecondsPart =
-      std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count() % 1000;
-  struct tm ptm;
-  forte_localtime(&time, &ptm);
-  std::ostringstream stream;
-  stream << std::put_time(&ptm, "%Y%m%d_%H%M%S");
-  stream << std::setfill('0') << std::setw(3) << millisecondsPart;
-  return stream.str();
 }

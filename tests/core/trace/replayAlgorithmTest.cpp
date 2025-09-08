@@ -19,13 +19,13 @@
 #include "common.h"
 #include "forte/device.h"
 #include "forte/ecet.h"
-#include "core/trace/internal/EventMessage.h"
-#include "core/trace/barectf_platform_forte.h"
+#include "../../../core/src/trace/internal/EventMessage.h"
+#include "../../../core/src/trace/barectf_platform_forte.h"
 #include "../fbtests/fbtesterglobalfixture.h"
-#include "deviceReplayer.h"
-#include "core/trace/reader/utils.h"
-#include "ForteBootFileLoader.h"
-#include "CommandParser.h"
+#include "../../../stdfblib/hardware/src/replay/deviceReplayer.h"
+#include "../../../core/src/trace/reader/utils.h"
+#include "../../../stdfblib/hardware/src/ForteBootFileLoader.h"
+#include "../../../stdfblib/hardware/src/CommandParser.h"
 
 using namespace forte::core::literals;
 
@@ -101,10 +101,10 @@ namespace {
     auto device = std::make_unique<CTesterDevice>(paDeviceName);
 
     BOOST_TEST_INFO("Create Resource 1");
-    BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName1, "EMB_RES"_STRID, ""));
+    BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName1, "iec61499::hardware::EMB_RES"_STRID, ""));
 
     BOOST_TEST_INFO("Create Resource 2");
-    BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName2, "EMB_RES"_STRID, ""));
+    BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName2, "iec61499::hardware::EMB_RES"_STRID, ""));
 
     BOOST_TEST_INFO("Start Device");
     BOOST_CHECK(device->initialize());
@@ -120,13 +120,13 @@ namespace {
       BOOST_TEST_INFO(paResourceName1);
 
       BOOST_TEST_INFO("Create FB Cycle");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(cycleName, "E_CYCLE"_STRID, ""));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(cycleName, "iec61499::events::E_CYCLE"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB CTU");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(ctuName, "E_CTU"_STRID, ""));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(ctuName, "iec61499::events::E_CTU"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB Publish");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(publishName, "PUBLISH_1"_STRID, ""));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(publishName, "iec61499::net::PUBLISH_1"_STRID, ""));
 
       forte::core::SManagementCMD command;
       command.mCMD = EMGMCommandType::CreateConnection;
@@ -225,28 +225,31 @@ namespace {
       BOOST_TEST_INFO(paResourceName2);
 
       BOOST_TEST_INFO("Create FB Subscribe");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(subscribeName, "SUBSCRIBE_1"_STRID, ""));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(subscribeName, "iec61499::net::SUBSCRIBE_1"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB Cycle");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(cycleName, "E_CYCLE"_STRID, ""));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(cycleName, "iec61499::events::E_CYCLE"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB CTU");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(ctuName, "E_CTU"_STRID, ""));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(ctuName, "iec61499::events::E_CTU"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB ADD");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(addName, "F_ADD"_STRID, ""));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(addName, "iec61131::arithmetic::F_ADD"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB MUL");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(mulName, "F_MUL"_STRID, ""));
+      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(mulName, "iec61131::arithmetic::F_MUL"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB UINT2UINT 1");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(uint2uintFirst, "UINT2UINT"_STRID, ""));
+      BOOST_REQUIRE(EMGMResponse::Ready ==
+                    resource->createFB(uint2uintFirst, "eclipse4diac::convert::UINT2UINT"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB UINT2UINT 2");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(uint2uintSecond, "UINT2UINT"_STRID, ""));
+      BOOST_REQUIRE(EMGMResponse::Ready ==
+                    resource->createFB(uint2uintSecond, "eclipse4diac::convert::UINT2UINT"_STRID, ""));
 
       BOOST_TEST_INFO("Create FB UINT2UINT 3");
-      BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(uint2uintThird, "UINT2UINT"_STRID, ""));
+      BOOST_REQUIRE(EMGMResponse::Ready ==
+                    resource->createFB(uint2uintThird, "eclipse4diac::convert::UINT2UINT"_STRID, ""));
 
       forte::core::SManagementCMD command;
       command.mCMD = EMGMCommandType::CreateConnection;

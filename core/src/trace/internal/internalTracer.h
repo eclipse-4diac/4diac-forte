@@ -17,7 +17,7 @@
 
 #include <vector>
 
-#include "core/trace/internal/EventMessage.h"
+#include "EventMessage.h"
 #include "forte/stringid.h"
 
 /**

@@ -78,9 +78,11 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
   auto eventCounter = 0; // used only for replay debugging, but it's easier to keep here instaed of extra #ifdef
 
   auto addInitiaOrFinalEvent = [&eventCounter](std::vector<EventMessage> &paMessages, bool paIsInitial) {
-    paMessages.emplace_back("receiveInputEvent", std::make_unique<FBInputEventPayload>("E_RESTART", "START", 65534), 0);
+    paMessages.emplace_back("receiveInputEvent",
+                            std::make_unique<FBInputEventPayload>("iec61499::events::E_RESTART", "START", 65534), 0);
     paMessages.emplace_back("sendOutputEvent",
-                            std::make_unique<FBOutputEventPayload>("E_RESTART", "START", paIsInitial ? 0 : 2
+                            std::make_unique<FBOutputEventPayload>("iec61499::events::E_RESTART", "START",
+                                                                   paIsInitial ? 0 : 2
 #ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
                                                                    ,
                                                                    eventCounter, std::vector<std::string>{}
@@ -109,16 +111,17 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
 
   eventCounter++;
 
-  resourceMessages.emplace_back("receiveInputEvent", std::make_unique<FBInputEventPayload>("E_CTU", "Counter", 0), 0);
+  resourceMessages.emplace_back("receiveInputEvent",
+                                std::make_unique<FBInputEventPayload>("iec61499::events::E_CTU", "Counter", 0), 0);
   resourceMessages.emplace_back(
       "instanceData",
-      std::make_unique<FBInstanceDataPayload>("E_CTU", "Counter", std::vector<std::string>{"1"},
+      std::make_unique<FBInstanceDataPayload>("iec61499::events::E_CTU", "Counter", std::vector<std::string>{"1"},
                                               std::vector<std::string>{"FALSE", "0"}, std::vector<std::string>{},
                                               std::vector<std::string>{}),
       0);
 
   resourceMessages.emplace_back("sendOutputEvent",
-                                std::make_unique<FBOutputEventPayload>("E_CTU", "Counter", 0
+                                std::make_unique<FBOutputEventPayload>("iec61499::events::E_CTU", "Counter", 0
 #ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
                                                                        ,
                                                                        eventCounter,
@@ -126,20 +129,24 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
 #endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
                                                                        ),
                                 0);
-  resourceMessages.emplace_back("outputData", std::make_unique<FBDataPayload>("E_CTU", "Counter", 0, "TRUE"), 0);
-  resourceMessages.emplace_back("outputData", std::make_unique<FBDataPayload>("E_CTU", "Counter", 1, "1"), 0);
+  resourceMessages.emplace_back("outputData",
+                                std::make_unique<FBDataPayload>("iec61499::events::E_CTU", "Counter", 0, "TRUE"), 0);
+  resourceMessages.emplace_back("outputData",
+                                std::make_unique<FBDataPayload>("iec61499::events::E_CTU", "Counter", 1, "1"), 0);
   eventCounter++;
 
-  resourceMessages.emplace_back("receiveInputEvent", std::make_unique<FBInputEventPayload>("E_SWITCH", "Switch", 0), 0);
+  resourceMessages.emplace_back("receiveInputEvent",
+                                std::make_unique<FBInputEventPayload>("iec61499::events::E_SWITCH", "Switch", 0), 0);
   resourceMessages.emplace_back("instanceData",
                                 std::make_unique<FBInstanceDataPayload>(
-                                    "E_SWITCH", "Switch", std::vector<std::string>{"FALSE"}, std::vector<std::string>{},
-                                    std::vector<std::string>{}, std::vector<std::string>{}),
+                                    "iec61499::events::E_SWITCH", "Switch", std::vector<std::string>{"FALSE"},
+                                    std::vector<std::string>{}, std::vector<std::string>{}, std::vector<std::string>{}),
                                 0);
-  resourceMessages.emplace_back("inputData", std::make_unique<FBDataPayload>("E_SWITCH", "Switch", 0, "TRUE"), 0);
+  resourceMessages.emplace_back("inputData",
+                                std::make_unique<FBDataPayload>("iec61499::events::E_SWITCH", "Switch", 0, "TRUE"), 0);
 
   resourceMessages.emplace_back("sendOutputEvent",
-                                std::make_unique<FBOutputEventPayload>("E_SWITCH", "Switch", 1
+                                std::make_unique<FBOutputEventPayload>("iec61499::events::E_SWITCH", "Switch", 1
 #ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
                                                                        ,
                                                                        eventCounter, std::vector<std::string>{}
@@ -148,16 +155,17 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
                                 0);
   eventCounter++;
 
-  resourceMessages.emplace_back("receiveInputEvent", std::make_unique<FBInputEventPayload>("E_CTU", "Counter", 1), 0);
+  resourceMessages.emplace_back("receiveInputEvent",
+                                std::make_unique<FBInputEventPayload>("iec61499::events::E_CTU", "Counter", 1), 0);
   resourceMessages.emplace_back(
       "instanceData",
-      std::make_unique<FBInstanceDataPayload>("E_CTU", "Counter", std::vector<std::string>{"1"},
+      std::make_unique<FBInstanceDataPayload>("iec61499::events::E_CTU", "Counter", std::vector<std::string>{"1"},
                                               std::vector<std::string>{"TRUE", "1"}, std::vector<std::string>{},
                                               std::vector<std::string>{}),
       0);
 
   resourceMessages.emplace_back("sendOutputEvent",
-                                std::make_unique<FBOutputEventPayload>("E_CTU", "Counter", 1
+                                std::make_unique<FBOutputEventPayload>("iec61499::events::E_CTU", "Counter", 1
 #ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
                                                                        ,
                                                                        eventCounter,
@@ -165,8 +173,10 @@ BOOST_AUTO_TEST_CASE(sequential_events_test) {
 #endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
                                                                        ),
                                 0);
-  resourceMessages.emplace_back("outputData", std::make_unique<FBDataPayload>("E_CTU", "Counter", 0, "FALSE"), 0);
-  resourceMessages.emplace_back("outputData", std::make_unique<FBDataPayload>("E_CTU", "Counter", 1, "0"), 0);
+  resourceMessages.emplace_back("outputData",
+                                std::make_unique<FBDataPayload>("iec61499::events::E_CTU", "Counter", 0, "FALSE"), 0);
+  resourceMessages.emplace_back("outputData",
+                                std::make_unique<FBDataPayload>("iec61499::events::E_CTU", "Counter", 1, "0"), 0);
 
   addInitiaOrFinalEvent(resourceMessages, false);
 
@@ -188,7 +198,7 @@ namespace {
     auto device = std::make_unique<CTesterDevice>(paDeviceName);
 
     BOOST_TEST_INFO("Create Resource");
-    BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName, "EMB_RES"_STRID, ""));
+    BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName, "iec61499::hardware::EMB_RES"_STRID, ""));
 
     BOOST_TEST_INFO("Start Device");
     BOOST_CHECK(device->initialize());
@@ -200,10 +210,10 @@ namespace {
     auto switchInstanceName = "Switch"_STRID;
 
     BOOST_TEST_INFO("Create E_CTU");
-    BOOST_CHECK(EMGMResponse::Ready == resource->createFB(counterInstanceName, "E_CTU"_STRID, ""));
+    BOOST_CHECK(EMGMResponse::Ready == resource->createFB(counterInstanceName, "iec61499::events::E_CTU"_STRID, ""));
 
     BOOST_TEST_INFO("Create E_SWITCH");
-    BOOST_CHECK(EMGMResponse::Ready == resource->createFB(switchInstanceName, "E_SWITCH"_STRID, ""));
+    BOOST_CHECK(EMGMResponse::Ready == resource->createFB(switchInstanceName, "iec61499::events::E_SWITCH"_STRID, ""));
 
     forte::core::SManagementCMD command;
     command.mCMD = EMGMCommandType::CreateConnection;

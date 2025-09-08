@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "core/trace/internal/EventMessage.h"
+#include "../../../../core/src/trace/internal/EventMessage.h"
 #include "forte/stringid.h"
 #include "resourceReplayer.h"
 

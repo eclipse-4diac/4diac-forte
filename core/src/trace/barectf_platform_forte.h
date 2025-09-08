@@ -97,22 +97,18 @@ class BarectfPlatformFORTE final {
       return barectf_is_tracing_enabled(&context);
     }
 
-    static void setup(std::string_view directory);
+    static void setup(std::string_view paDirectory);
 
   private:
     std::ofstream output;
     std::unique_ptr<uint8_t[]> buffer;
     barectf_default_ctx context;
 
-    static bool enabled;
-    static std::filesystem::path traceDirectory;
-
-    static uint64_t getClock(void *const data);
+    static uint64_t getClock(void *data);
     static int isBackendFull(void *data);
     static void openPacket(void *data);
     static void closePacket(void *data);
-    static const struct barectf_platform_callbacks barectfCallbacks;
-    static std::string dateCapture();
+    static constinit barectf_platform_callbacks barectfCallbacks;
 };
 
 #endif // BARECTF_PLATFORM_FORTE_H

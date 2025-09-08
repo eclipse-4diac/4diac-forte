@@ -12,7 +12,7 @@
 
 #pragma once
 
-#include "core/trace/internal/EventMessage.h"
+#include "../internal/EventMessage.h"
 
 class bt_message;
 

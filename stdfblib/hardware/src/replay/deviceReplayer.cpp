@@ -13,7 +13,7 @@
 #include "deviceReplayer.h"
 
 #include "forte/device.h"
-#include "core/ecetFake.h"
+#include "../../../core/src/ecetFake.h"
 
 CDeviceReplayer::CResourceInformation::CResourceInformation(CResource &paResource,
                                                             const std::vector<EventMessage> &paExternalEvents) :

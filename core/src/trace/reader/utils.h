@@ -16,9 +16,9 @@
 
 #include "forte/stringid.h"
 
-#include "core/ecetfactory.h"
-#include "core/timerhandlerfactory.h"
-#include "core/trace/internal/flexibleTracer.h"
+#include "forte/ecetfactory.h"
+#include "forte/timerhandlerfactory.h"
+#include "../internal/flexibleTracer.h"
 
 #include <string>
 #include <set>

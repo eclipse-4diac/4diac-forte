@@ -13,8 +13,7 @@
 
 #pragma once
 
-#include "DebugMGR.h"
-#include "OPCUA_MGR.h"
+#include "../OPCUA_MGR.h"
 #include "deviceReplayer.h"
 
 #include <functional>
