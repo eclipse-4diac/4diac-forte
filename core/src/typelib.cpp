@@ -227,7 +227,6 @@ namespace {
   template<typename T>
   T *findGenericTypeEntry(std::vector<T *> &vec, const forte::core::StringId paTypeNameId) {
     const std::size_t underScore = getFirstNonTypeNameUnderscorePos(paTypeNameId);
-
     if (underScore == std::string_view::npos) {
       // We found no underscore in the type name, so it can't be a generic type
       return nullptr;
@@ -235,8 +234,15 @@ namespace {
 
     std::string genFBName;
     genFBName.reserve(4 + underScore);
-    genFBName += "GEN_"s;
-    genFBName.append(paTypeNameId, 0, underScore);
+    if (const std::size_t lastPackageSeparator = paTypeNameId.get().rfind("::", underScore);
+        lastPackageSeparator != std::string_view::npos) {
+      genFBName.append(paTypeNameId, 0, lastPackageSeparator + 2);
+      genFBName += "GEN_"s;
+      genFBName.append(paTypeNameId, lastPackageSeparator + 2, underScore - lastPackageSeparator - 2);
+    } else {
+      genFBName += "GEN_"s;
+      genFBName.append(paTypeNameId, 0, underScore);
+    }
 
     return findTypeEntry(vec, forte::core::StringId::lookup(genFBName));
   }
