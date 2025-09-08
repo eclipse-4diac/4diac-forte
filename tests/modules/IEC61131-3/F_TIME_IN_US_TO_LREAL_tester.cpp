@@ -15,7 +15,7 @@ using namespace forte::core::literals;
 
 struct F_TIME_IN_US_TO_LREAL_TestFixture : public CFBTestFixtureBase {
 
-    F_TIME_IN_US_TO_LREAL_TestFixture() : CFBTestFixtureBase("F_TIME_IN_US_TO_LREAL"_STRID) {
+    F_TIME_IN_US_TO_LREAL_TestFixture() : CFBTestFixtureBase("iec61131::conversion::F_TIME_IN_US_TO_LREAL"_STRID) {
       setInputData({&mIn_F_TIME_IN_US_TO_LREAL});
       setOutputData({&mOut_F_TIME_IN_US_TO_LREAL});
       CFBTestFixtureBase::setup();

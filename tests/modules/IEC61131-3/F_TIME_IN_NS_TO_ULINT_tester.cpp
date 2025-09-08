@@ -16,7 +16,7 @@ using namespace forte::core::literals;
 
 struct F_TIME_IN_NS_TO_ULINT_TestFixture : public CFBTestFixtureBase {
 
-    F_TIME_IN_NS_TO_ULINT_TestFixture() : CFBTestFixtureBase("F_TIME_IN_NS_TO_ULINT"_STRID) {
+    F_TIME_IN_NS_TO_ULINT_TestFixture() : CFBTestFixtureBase("iec61131::conversion::F_TIME_IN_NS_TO_ULINT"_STRID) {
       setInputData({&mIn_F_TIME_IN_NS_TO_ULINT});
       setOutputData({&mOut_F_TIME_IN_NS_TO_ULINT});
       CFBTestFixtureBase::setup();

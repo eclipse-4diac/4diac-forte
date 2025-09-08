@@ -16,7 +16,7 @@ using namespace forte::core::literals;
 
 struct F_TIME_IN_MS_TO_LINT_TestFixture : public CFBTestFixtureBase {
 
-    F_TIME_IN_MS_TO_LINT_TestFixture() : CFBTestFixtureBase("F_TIME_IN_MS_TO_LINT"_STRID) {
+    F_TIME_IN_MS_TO_LINT_TestFixture() : CFBTestFixtureBase("iec61131::conversion::F_TIME_IN_MS_TO_LINT"_STRID) {
       setInputData({&mIn_F_TIME_IN_MS_TO_LINT});
       setOutputData({&mOut_F_TIME_IN_MS_TO_LINT});
       CFBTestFixtureBase::setup();

@@ -18,7 +18,7 @@ using namespace forte::core::literals;
 
 struct E_SR_TestFixture : public CFBTestFixtureBase {
 
-    E_SR_TestFixture() : CFBTestFixtureBase("E_SR"_STRID) {
+    E_SR_TestFixture() : CFBTestFixtureBase("iec61499::events::E_SR"_STRID) {
       setOutputData({&mOutQ});
       CFBTestFixtureBase::setup();
     }

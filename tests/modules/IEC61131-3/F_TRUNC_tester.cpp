@@ -17,7 +17,7 @@ using namespace forte::core::literals;
 
 struct F_TRUNC_TestFixture : public CFBTestFixtureBase {
 
-    F_TRUNC_TestFixture() : CFBTestFixtureBase("F_TRUNC"_STRID) {
+    F_TRUNC_TestFixture() : CFBTestFixtureBase("iec61131::arithmetic::F_TRUNC"_STRID) {
       setInputData({&mIn_TRUNC});
       setOutputData({&mOut_TRUNC});
       CFBTestFixtureBase::setup();

@@ -24,7 +24,10 @@ using namespace std::string_literals;
 template<typename T1, typename T2>
 class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
   public:
-    GEN_CSV_WRITER_TestFixture() : CFBTestFixtureBase("CSV_WRITER_2"_STRID), mSD_1(T1()), mSD_2(T2()) {
+    GEN_CSV_WRITER_TestFixture() :
+        CFBTestFixtureBase("eclipse4diac::utils::CSV_WRITER_2"_STRID),
+        mSD_1(T1()),
+        mSD_2(T2()) {
       setInputData({&mQI, &mFILE_NAME, &mSD_1, &mSD_2});
       setOutputData({&mQO, &mSTATUS});
       CFBTestFixtureBase::setup();

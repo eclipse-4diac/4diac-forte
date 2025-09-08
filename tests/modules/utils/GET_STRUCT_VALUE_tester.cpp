@@ -124,7 +124,7 @@ DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test2, "GET_STRUCT_VALUE_Struct
 struct GET_STRUCT_VALUE_GenericTestFixture : public CFBTestFixtureBase {
 
     GET_STRUCT_VALUE_GenericTestFixture(CIEC_ANY *paIN_STRUCT, CIEC_ANY *paOUT) :
-        CFBTestFixtureBase("GET_STRUCT_VALUE"_STRID) {
+        CFBTestFixtureBase("eclipse4diac::utils::GET_STRUCT_VALUE"_STRID) {
       setInputData({paIN_STRUCT, &mMember});
       setOutputData({&mQO, paOUT});
     }

@@ -19,7 +19,7 @@ using namespace forte::core::literals;
 
 struct E_SELECT_TestFixture : public CFBTestFixtureBase {
 
-    E_SELECT_TestFixture() : CFBTestFixtureBase("E_SELECT"_STRID) {
+    E_SELECT_TestFixture() : CFBTestFixtureBase("iec61499::events::E_SELECT"_STRID) {
       setInputData({&mInG});
       CFBTestFixtureBase::setup();
     }

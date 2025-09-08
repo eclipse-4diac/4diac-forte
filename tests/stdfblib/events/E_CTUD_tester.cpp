@@ -19,7 +19,7 @@ using namespace forte::core::literals;
 
 struct E_CTUD_TestFixture : public CFBTestFixtureBase {
 
-    E_CTUD_TestFixture() : CFBTestFixtureBase("E_CTUD"_STRID) {
+    E_CTUD_TestFixture() : CFBTestFixtureBase("iec61499::events::E_CTUD"_STRID) {
       setInputData({&mInPV});
       setOutputData({&mOutQU, &mOutQD, &mOutCV});
       CFBTestFixtureBase::setup();

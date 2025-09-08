@@ -18,7 +18,7 @@ using namespace forte::core::literals;
 
 struct E_PERMIT_TestFixture : public CFBTestFixtureBase {
 
-    E_PERMIT_TestFixture() : CFBTestFixtureBase("E_PERMIT"_STRID) {
+    E_PERMIT_TestFixture() : CFBTestFixtureBase("iec61499::events::E_PERMIT"_STRID) {
       setInputData({&mInPERMIT});
       CFBTestFixtureBase::setup();
     }
