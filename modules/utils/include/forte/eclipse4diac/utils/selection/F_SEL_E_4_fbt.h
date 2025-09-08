@@ -25,92 +25,94 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_F_SEL_E_4 final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_F_SEL_E_4)
+namespace forte::eclipse4diac::utils::selection {
+  class FORTE_F_SEL_E_4 final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_F_SEL_E_4)
 
-  private:
-    static const TEventID scmEventREQ0ID = 0;
-    static const TEventID scmEventREQ1ID = 1;
-    static const TEventID scmEventREQ2ID = 2;
-    static const TEventID scmEventREQ3ID = 3;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQ0ID = 0;
+      static const TEventID scmEventREQ1ID = 1;
+      static const TEventID scmEventREQ2ID = 2;
+      static const TEventID scmEventREQ3ID = 3;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_F_SEL_E_4(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_F_SEL_E_4(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_ANY_VARIANT var_IN0;
-    CIEC_ANY_VARIANT var_IN1;
-    CIEC_ANY_VARIANT var_IN2;
-    CIEC_ANY_VARIANT var_IN3;
+      CIEC_ANY_VARIANT var_IN0;
+      CIEC_ANY_VARIANT var_IN1;
+      CIEC_ANY_VARIANT var_IN2;
+      CIEC_ANY_VARIANT var_IN3;
 
-    CIEC_ANY_VARIANT var_OUT;
+      CIEC_ANY_VARIANT var_OUT;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_IN0;
-    CDataConnection *conn_IN1;
-    CDataConnection *conn_IN2;
-    CDataConnection *conn_IN3;
+      CDataConnection *conn_IN0;
+      CDataConnection *conn_IN1;
+      CDataConnection *conn_IN2;
+      CDataConnection *conn_IN3;
 
-    COutDataConnection<CIEC_ANY_VARIANT> conn_OUT;
+      COutDataConnection<CIEC_ANY_VARIANT> conn_OUT;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CIEC_ANY *getDIO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
-    CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
-    CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CIEC_ANY *getDIO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
+      CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
+      CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
 
-    void evt_REQ0(
-        const CIEC_ANY &paIN0, const CIEC_ANY &paIN1, const CIEC_ANY &paIN2, const CIEC_ANY &paIN3, CIEC_ANY &paOUT) {
-      var_IN0 = paIN0;
-      var_IN1 = paIN1;
-      var_IN2 = paIN2;
-      var_IN3 = paIN3;
-      receiveInputEvent(scmEventREQ0ID, nullptr);
-      paOUT.setValue(var_OUT.unwrap());
-    }
+      void evt_REQ0(
+          const CIEC_ANY &paIN0, const CIEC_ANY &paIN1, const CIEC_ANY &paIN2, const CIEC_ANY &paIN3, CIEC_ANY &paOUT) {
+        var_IN0 = paIN0;
+        var_IN1 = paIN1;
+        var_IN2 = paIN2;
+        var_IN3 = paIN3;
+        receiveInputEvent(scmEventREQ0ID, nullptr);
+        paOUT.setValue(var_OUT.unwrap());
+      }
 
-    void evt_REQ1(
-        const CIEC_ANY &paIN0, const CIEC_ANY &paIN1, const CIEC_ANY &paIN2, const CIEC_ANY &paIN3, CIEC_ANY &paOUT) {
-      var_IN0 = paIN0;
-      var_IN1 = paIN1;
-      var_IN2 = paIN2;
-      var_IN3 = paIN3;
-      receiveInputEvent(scmEventREQ1ID, nullptr);
-      paOUT.setValue(var_OUT.unwrap());
-    }
+      void evt_REQ1(
+          const CIEC_ANY &paIN0, const CIEC_ANY &paIN1, const CIEC_ANY &paIN2, const CIEC_ANY &paIN3, CIEC_ANY &paOUT) {
+        var_IN0 = paIN0;
+        var_IN1 = paIN1;
+        var_IN2 = paIN2;
+        var_IN3 = paIN3;
+        receiveInputEvent(scmEventREQ1ID, nullptr);
+        paOUT.setValue(var_OUT.unwrap());
+      }
 
-    void evt_REQ2(
-        const CIEC_ANY &paIN0, const CIEC_ANY &paIN1, const CIEC_ANY &paIN2, const CIEC_ANY &paIN3, CIEC_ANY &paOUT) {
-      var_IN0 = paIN0;
-      var_IN1 = paIN1;
-      var_IN2 = paIN2;
-      var_IN3 = paIN3;
-      receiveInputEvent(scmEventREQ2ID, nullptr);
-      paOUT.setValue(var_OUT.unwrap());
-    }
+      void evt_REQ2(
+          const CIEC_ANY &paIN0, const CIEC_ANY &paIN1, const CIEC_ANY &paIN2, const CIEC_ANY &paIN3, CIEC_ANY &paOUT) {
+        var_IN0 = paIN0;
+        var_IN1 = paIN1;
+        var_IN2 = paIN2;
+        var_IN3 = paIN3;
+        receiveInputEvent(scmEventREQ2ID, nullptr);
+        paOUT.setValue(var_OUT.unwrap());
+      }
 
-    void evt_REQ3(
-        const CIEC_ANY &paIN0, const CIEC_ANY &paIN1, const CIEC_ANY &paIN2, const CIEC_ANY &paIN3, CIEC_ANY &paOUT) {
-      var_IN0 = paIN0;
-      var_IN1 = paIN1;
-      var_IN2 = paIN2;
-      var_IN3 = paIN3;
-      receiveInputEvent(scmEventREQ3ID, nullptr);
-      paOUT.setValue(var_OUT.unwrap());
-    }
+      void evt_REQ3(
+          const CIEC_ANY &paIN0, const CIEC_ANY &paIN1, const CIEC_ANY &paIN2, const CIEC_ANY &paIN3, CIEC_ANY &paOUT) {
+        var_IN0 = paIN0;
+        var_IN1 = paIN1;
+        var_IN2 = paIN2;
+        var_IN3 = paIN3;
+        receiveInputEvent(scmEventREQ3ID, nullptr);
+        paOUT.setValue(var_OUT.unwrap());
+      }
 
-    void operator()(
-        const CIEC_ANY &paIN0, const CIEC_ANY &paIN1, const CIEC_ANY &paIN2, const CIEC_ANY &paIN3, CIEC_ANY &paOUT) {
-      evt_REQ0(paIN0, paIN1, paIN2, paIN3, paOUT);
-    }
-};
+      void operator()(
+          const CIEC_ANY &paIN0, const CIEC_ANY &paIN1, const CIEC_ANY &paIN2, const CIEC_ANY &paIN3, CIEC_ANY &paOUT) {
+        evt_REQ0(paIN0, paIN1, paIN2, paIN3, paOUT);
+      }
+  };
+} // namespace forte::eclipse4diac::utils::selection

@@ -19,6 +19,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::utils::selection;
+
 DEFINE_FIRMWARE_FB(FORTE_F_SEL_E_4, "F_SEL_E_4"_STRID)
 
 namespace {

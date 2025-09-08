@@ -21,6 +21,8 @@ using namespace forte::core::literals;
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
+using namespace forte::iec61131::conversion;
+
 DEFINE_FIRMWARE_FB(FORTE_F_ANY_AS_STRING, "F_ANY_AS_STRING"_STRID)
 
 namespace {

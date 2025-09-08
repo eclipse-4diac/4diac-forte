@@ -11,7 +11,8 @@
  * Contributors:
  *   Matthias Plasch
  *   - initial API and implementation and/or initial documentation
- *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Alois Zoitl - introduced new CGenFB namespace forte::iec61131::bitwiseOperators {
+class for better handling generic FBs
  *   Martin Jobst
  *     - refactor for ANY variant
  *******************************************************************************/
@@ -21,15 +22,17 @@
 
 #include "genbitbase_fbt.h"
 
-class GEN_XOR : public CGenBitBase {
-    DECLARE_GENERIC_FIRMWARE_FB(GEN_XOR)
+namespace forte::iec61131::bitwiseOperators {
+  class GEN_XOR : public CGenBitBase {
+      DECLARE_GENERIC_FIRMWARE_FB(GEN_XOR)
 
-  private:
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+    private:
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-  public:
-    GEN_XOR(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~GEN_XOR() override = default;
-};
+    public:
+      GEN_XOR(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      ~GEN_XOR() override = default;
+  };
+} // namespace forte::iec61131::bitwiseOperators
 
 #endif //_GEN_XOR_H_

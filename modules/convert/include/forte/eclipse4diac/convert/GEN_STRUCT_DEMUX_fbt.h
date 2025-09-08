@@ -21,54 +21,56 @@
 
 #include <memory>
 
-class GEN_STRUCT_DEMUX final : public CGenFunctionBlock<CFunctionBlock> {
-    DECLARE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX)
+namespace forte::eclipse4diac::convert {
+  class GEN_STRUCT_DEMUX final : public CGenFunctionBlock<CFunctionBlock> {
+      DECLARE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX)
 
-  protected:
-    size_t getGenEOOffset() override {
-      return 1;
-    }
+    protected:
+      size_t getGenEOOffset() override {
+        return 1;
+      }
 
-    size_t getGenDIOffset() override {
-      return 1;
-    }
+      size_t getGenDIOffset() override {
+        return 1;
+      }
 
-    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t paIndex) override;
-    CDataConnection **getDIConUnchecked(const TPortId paIndex) override;
+      CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t paIndex) override;
+      CDataConnection **getDIConUnchecked(const TPortId paIndex) override;
 
-  private:
-    static constexpr char NESTED_VAR_SEPARATOR = '%';
-    static constexpr std::string_view STRUCT_NAME_SEPARATOR = "____";
+    private:
+      static constexpr char NESTED_VAR_SEPARATOR = '%';
+      static constexpr std::string_view STRUCT_NAME_SEPARATOR = "____";
 
-    static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventREQID = 0;
 
-    static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEI) override;
-    void writeOutputData(TEventID paEO) override;
+      void readInputData(TEventID paEI) override;
+      void writeOutputData(TEventID paEO) override;
 
-    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+      bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    void fillConfiguredInterfaceSpec(std::vector<std::string_view> &paConfiguredMemberNames);
-    void fillInterfaceSpec();
+      void fillConfiguredInterfaceSpec(std::vector<std::string_view> &paConfiguredMemberNames);
+      void fillInterfaceSpec();
 
-    std::vector<std::string_view> getConfiguredMemberNames(std::string_view paMemberNameString);
-    CIEC_ANY *getNestedMember(const forte::core::StringId paNameId, CIEC_STRUCT *paStructType);
+      std::vector<std::string_view> getConfiguredMemberNames(std::string_view paMemberNameString);
+      CIEC_ANY *getNestedMember(const forte::core::StringId paNameId, CIEC_STRUCT *paStructType);
 
-    CEventConnection conn_CNF;
-    std::unique_ptr<CIEC_STRUCT> var_IN;
-    CDataConnection *conn_IN;
-    std::vector<forte::core::StringId> mDoNames;
-    std::vector<CIEC_ANY *> mConfiguredDOPorts;
+      CEventConnection conn_CNF;
+      std::unique_ptr<CIEC_STRUCT> var_IN;
+      CDataConnection *conn_IN;
+      std::vector<forte::core::StringId> mDoNames;
+      std::vector<CIEC_ANY *> mConfiguredDOPorts;
 
-  public:
-    GEN_STRUCT_DEMUX(const GEN_STRUCT_DEMUX &paOther) = delete;
-    GEN_STRUCT_DEMUX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~GEN_STRUCT_DEMUX() override = default;
-};
+    public:
+      GEN_STRUCT_DEMUX(const GEN_STRUCT_DEMUX &paOther) = delete;
+      GEN_STRUCT_DEMUX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      ~GEN_STRUCT_DEMUX() override = default;
+  };
+} // namespace forte::eclipse4diac::convert
 
 #endif //_GEN_STRUCT_DEMUX_H_

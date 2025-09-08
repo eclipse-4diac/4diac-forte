@@ -33,39 +33,40 @@
 #include "forte/iec61499/events/E_PULSE_fbt.h"
 #include "GEN_ADD_fbt.h"
 
-class FORTE_E_BLINK final : public CCompositeFB {
-    DECLARE_FIRMWARE_FB(FORTE_E_BLINK)
+namespace forte::eclipse4diac::utils::signals {
+  class FORTE_E_BLINK final : public CCompositeFB {
+      DECLARE_FIRMWARE_FB(FORTE_E_BLINK)
 
-  private:
-    static const TEventID scmEventSTARTID = 0;
-    static const TEventID scmEventSTOPID = 1;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventSTARTID = 0;
+      static const TEventID scmEventSTOPID = 1;
+      static const TEventID scmEventCNFID = 0;
 
-    forte::core::CInternalFB<FORTE_E_PULSE> fb_E_TP;
-    forte::core::CInternalFB<FORTE_E_CYCLE> fb_E_CYCLE;
-    forte::core::CInternalFB<GEN_ADD> fb_ADD_2;
+      forte::core::CInternalFB<FORTE_E_PULSE> fb_E_TP;
+      forte::core::CInternalFB<FORTE_E_CYCLE> fb_E_CYCLE;
+      forte::core::CInternalFB<GEN_ADD> fb_ADD_2;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
-    CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
+      CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
-  public:
-    FORTE_E_BLINK(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_E_BLINK(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_TIMELOW;
-    CDataConnection *conn_TIMEHIGH;
+      CDataConnection *conn_TIMELOW;
+      CDataConnection *conn_TIMEHIGH;
 
-    COutDataConnection<CIEC_BOOL> conn_OUT;
+      COutDataConnection<CIEC_BOOL> conn_OUT;
 
-    COutDataConnection<CIEC_TIME> conn_if2in_TIMELOW;
-    COutDataConnection<CIEC_TIME> conn_if2in_TIMEHIGH;
+      COutDataConnection<CIEC_TIME> conn_if2in_TIMELOW;
+      COutDataConnection<CIEC_TIME> conn_if2in_TIMEHIGH;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
-};
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
+  };

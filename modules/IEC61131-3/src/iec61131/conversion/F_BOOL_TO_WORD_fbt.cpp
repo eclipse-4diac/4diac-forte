@@ -24,6 +24,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::conversion;
+
 DEFINE_FIRMWARE_FB(FORTE_F_BOOL_TO_WORD, "F_BOOL_TO_WORD"_STRID)
 
 namespace {

@@ -19,6 +19,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::arithmetic;
+
 DEFINE_FIRMWARE_FB(FORTE_F_SUB_DT_DT, "F_SUB_DT_DT"_STRID)
 
 namespace {

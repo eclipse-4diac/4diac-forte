@@ -24,6 +24,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::conversion;
+
 DEFINE_FIRMWARE_FB(FORTE_F_UINT_AS_WSTRING, "F_UINT_AS_WSTRING"_STRID)
 
 namespace {

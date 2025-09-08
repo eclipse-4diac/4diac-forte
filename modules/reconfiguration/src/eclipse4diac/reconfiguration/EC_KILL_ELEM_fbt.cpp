@@ -16,6 +16,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::reconfiguration;
+
 DEFINE_FIRMWARE_FB(FORTE_EC_KILL_ELEM, "EC_KILL_ELEM"_STRID)
 
 namespace {

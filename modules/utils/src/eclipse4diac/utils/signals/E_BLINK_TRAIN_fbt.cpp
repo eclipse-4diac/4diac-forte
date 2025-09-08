@@ -27,6 +27,8 @@ using namespace forte::core::literals;
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
+using namespace forte::eclipse4diac::utils::signals;
+
 DEFINE_FIRMWARE_FB(FORTE_E_BLINK_TRAIN, "E_BLINK_TRAIN"_STRID)
 
 namespace {

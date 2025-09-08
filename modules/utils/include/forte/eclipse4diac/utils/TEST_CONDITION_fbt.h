@@ -19,48 +19,50 @@
 #include "forte/datatypes/forte_bool.h"
 #include "forte/arch/forte_sync.h"
 
-class FORTE_TEST_CONDITION final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_TEST_CONDITION)
+namespace forte::eclipse4diac::utils {
+  class FORTE_TEST_CONDITION final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_TEST_CONDITION)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    static unsigned int smExecutedTests;
-    static unsigned int smFailedTests;
+      static unsigned int smExecutedTests;
+      static unsigned int smFailedTests;
 
-    static bool smfinalReportPrinted;
+      static bool smfinalReportPrinted;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-    CSyncObject mFinalReportMutex;
+      CSyncObject mFinalReportMutex;
 
-  public:
-    FORTE_TEST_CONDITION(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~FORTE_TEST_CONDITION() override;
+    public:
+      FORTE_TEST_CONDITION(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      ~FORTE_TEST_CONDITION() override;
 
-    CIEC_BOOL var_check;
+      CIEC_BOOL var_check;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_check;
+      CDataConnection *conn_check;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BOOL &pacheck) {
-      var_check = pacheck;
-      executeEvent(scmEventREQID, nullptr);
-    }
+      void evt_REQ(const CIEC_BOOL &pacheck) {
+        var_check = pacheck;
+        executeEvent(scmEventREQID, nullptr);
+      }
 
-    void operator()(const CIEC_BOOL &pacheck) {
-      evt_REQ(pacheck);
-    }
-};
+      void operator()(const CIEC_BOOL &pacheck) {
+        evt_REQ(pacheck);
+      }
+  };
+} // namespace forte::eclipse4diac::utils

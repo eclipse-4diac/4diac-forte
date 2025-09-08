@@ -12,7 +12,8 @@
  * Contributors:
  *   Matthias Plasch, Alois Zoitl
  *   - initial API and implementation and/or initial documentation
- *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Alois Zoitl - introduced new CGenFB namespace forte::eclipse4diac::utils {
+class for better handling generic FBs
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
 #ifndef _GEN_ARRAY2ARRAY_H_
@@ -21,50 +22,52 @@
 #include "forte/genfb.h"
 #include "forte/datatypes/forte_array_dynamic.h"
 
-class GEN_ARRAY2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
-    DECLARE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY)
+namespace forte::eclipse4diac::utils {
+  class GEN_ARRAY2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
+      DECLARE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY)
 
-  protected:
-    size_t getGenEOOffset() override {
-      return 1;
-    }
+    protected:
+      size_t getGenEOOffset() override {
+        return 1;
+      }
 
-    size_t getGenDIOffset() override {
-      return 1;
-    }
+      size_t getGenDIOffset() override {
+        return 1;
+      }
 
-    size_t getGenDOOffset() override {
-      return 1;
-    }
+      size_t getGenDOOffset() override {
+        return 1;
+      }
 
-    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
-    CIEC_ANY *getDI(size_t paIndex) override;
-    CIEC_ANY *getDO(size_t paIndex) override;
-    CDataConnection **getDIConUnchecked(const TPortId paIndex) override;
-    CDataConnection *getDOConUnchecked(TPortId paDONum) override;
+      CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+      CIEC_ANY *getDI(size_t paIndex) override;
+      CIEC_ANY *getDO(size_t paIndex) override;
+      CDataConnection **getDIConUnchecked(const TPortId paIndex) override;
+      CDataConnection *getDOConUnchecked(TPortId paDONum) override;
 
-  private:
-    static const TEventID scmEventREQID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
 
-    static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEI) override;
-    void writeOutputData(TEventID paEO) override;
+      void readInputData(TEventID paEI) override;
+      void writeOutputData(TEventID paEO) override;
 
-    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+      bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CIEC_ARRAY_DYNAMIC var_IN;
-    CDataConnection *conn_IN;
+      CIEC_ARRAY_DYNAMIC var_IN;
+      CDataConnection *conn_IN;
 
-    COutDataConnection<CIEC_ARRAY_DYNAMIC> conn_OUT;
+      COutDataConnection<CIEC_ARRAY_DYNAMIC> conn_OUT;
 
-  public:
-    GEN_ARRAY2ARRAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~GEN_ARRAY2ARRAY() override = default;
-};
+    public:
+      GEN_ARRAY2ARRAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      ~GEN_ARRAY2ARRAY() override = default;
+  };
+} // namespace forte::eclipse4diac::utils
 
 #endif //_GEN_ARRAY2ARRAY_H_

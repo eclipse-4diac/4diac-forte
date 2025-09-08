@@ -23,6 +23,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::convert;
+
 DEFINE_FIRMWARE_FB(FORTE_REAL2REAL, "REAL2REAL"_STRID)
 
 namespace {

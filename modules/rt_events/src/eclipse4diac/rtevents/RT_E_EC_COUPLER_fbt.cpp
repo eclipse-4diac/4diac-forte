@@ -14,6 +14,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::rtevents;
+
 DEFINE_FIRMWARE_FB(FORTE_RT_E_EC_COUPLER, "RT_E_EC_COUPLER"_STRID)
 
 namespace {

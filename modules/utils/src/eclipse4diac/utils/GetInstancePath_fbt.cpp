@@ -15,6 +15,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::utils;
+
 DEFINE_FIRMWARE_FB(FORTE_GetInstancePath, "GetInstancePath"_STRID)
 
 namespace {

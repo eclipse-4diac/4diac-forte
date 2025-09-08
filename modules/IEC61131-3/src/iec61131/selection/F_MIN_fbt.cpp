@@ -18,6 +18,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::selection;
+
 DEFINE_FIRMWARE_FB(FORTE_F_MIN, "F_MIN"_STRID)
 
 namespace {

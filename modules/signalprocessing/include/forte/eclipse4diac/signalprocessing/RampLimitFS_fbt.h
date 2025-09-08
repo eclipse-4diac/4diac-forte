@@ -25,173 +25,176 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
-    DECLARE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS)
+namespace forte::eclipse4diac::signalprocessing {
+  class FORTE_signalprocessing__RampLimitFS final : public CSimpleFB {
+      DECLARE_FIRMWARE_FB(FORTE_signalprocessing__RampLimitFS)
 
-  private:
-    static const TEventID scmEventZEROID = 0;
-    static const TEventID scmEventUP_SLOWID = 1;
-    static const TEventID scmEventUP_FASTID = 2;
-    static const TEventID scmEventDOWN_SLOWID = 3;
-    static const TEventID scmEventDOWN_FASTID = 4;
-    static const TEventID scmEventFULLID = 5;
-    static const TEventID scmEventLOADID = 6;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventZEROID = 0;
+      static const TEventID scmEventUP_SLOWID = 1;
+      static const TEventID scmEventUP_FASTID = 2;
+      static const TEventID scmEventDOWN_SLOWID = 3;
+      static const TEventID scmEventDOWN_FASTID = 4;
+      static const TEventID scmEventFULLID = 5;
+      static const TEventID scmEventLOADID = 6;
+      static const TEventID scmEventCNFID = 0;
 
-    CIEC_ANY *getVarInternal(size_t) override;
+      CIEC_ANY *getVarInternal(size_t) override;
 
-    void alg_ZERO(void);
-    void alg_UP_SLOW(void);
-    void alg_UP_FAST(void);
-    void alg_DOWN_SLOW(void);
-    void alg_DOWN_FAST(void);
-    void alg_FULL(void);
-    void alg_LOAD(void);
+      void alg_ZERO(void);
+      void alg_UP_SLOW(void);
+      void alg_UP_FAST(void);
+      void alg_DOWN_SLOW(void);
+      void alg_DOWN_FAST(void);
+      void alg_FULL(void);
+      void alg_LOAD(void);
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_signalprocessing__RampLimitFS(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_signalprocessing__RampLimitFS(forte::core::StringId paInstanceNameId,
+                                          forte::core::CFBContainer &paContainer);
 
-    CIEC_DINT var_PV;
-    CIEC_DINT var_VAL_ZERO;
-    CIEC_DINT var_SLOW;
-    CIEC_DINT var_FAST;
-    CIEC_DINT var_VAL_FULL;
+      CIEC_DINT var_PV;
+      CIEC_DINT var_VAL_ZERO;
+      CIEC_DINT var_SLOW;
+      CIEC_DINT var_FAST;
+      CIEC_DINT var_VAL_FULL;
 
-    CIEC_DINT var_OUT;
+      CIEC_DINT var_OUT;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_PV;
-    CDataConnection *conn_VAL_ZERO;
-    CDataConnection *conn_SLOW;
-    CDataConnection *conn_FAST;
-    CDataConnection *conn_VAL_FULL;
+      CDataConnection *conn_PV;
+      CDataConnection *conn_VAL_ZERO;
+      CDataConnection *conn_SLOW;
+      CDataConnection *conn_FAST;
+      CDataConnection *conn_VAL_FULL;
 
-    COutDataConnection<CIEC_DINT> conn_OUT;
+      COutDataConnection<CIEC_DINT> conn_OUT;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_ZERO(const CIEC_DINT &paPV,
-                  const CIEC_DINT &paVAL_ZERO,
-                  const CIEC_DINT &paSLOW,
-                  const CIEC_DINT &paFAST,
-                  const CIEC_DINT &paVAL_FULL,
-                  CIEC_DINT &paOUT) {
-      var_PV = paPV;
-      var_VAL_ZERO = paVAL_ZERO;
-      var_SLOW = paSLOW;
-      var_FAST = paFAST;
-      var_VAL_FULL = paVAL_FULL;
-      executeEvent(scmEventZEROID, nullptr);
-      paOUT = var_OUT;
-    }
-
-    void evt_UP_SLOW(const CIEC_DINT &paPV,
-                     const CIEC_DINT &paVAL_ZERO,
-                     const CIEC_DINT &paSLOW,
-                     const CIEC_DINT &paFAST,
-                     const CIEC_DINT &paVAL_FULL,
-                     CIEC_DINT &paOUT) {
-      var_PV = paPV;
-      var_VAL_ZERO = paVAL_ZERO;
-      var_SLOW = paSLOW;
-      var_FAST = paFAST;
-      var_VAL_FULL = paVAL_FULL;
-      executeEvent(scmEventUP_SLOWID, nullptr);
-      paOUT = var_OUT;
-    }
-
-    void evt_UP_FAST(const CIEC_DINT &paPV,
-                     const CIEC_DINT &paVAL_ZERO,
-                     const CIEC_DINT &paSLOW,
-                     const CIEC_DINT &paFAST,
-                     const CIEC_DINT &paVAL_FULL,
-                     CIEC_DINT &paOUT) {
-      var_PV = paPV;
-      var_VAL_ZERO = paVAL_ZERO;
-      var_SLOW = paSLOW;
-      var_FAST = paFAST;
-      var_VAL_FULL = paVAL_FULL;
-      executeEvent(scmEventUP_FASTID, nullptr);
-      paOUT = var_OUT;
-    }
-
-    void evt_DOWN_SLOW(const CIEC_DINT &paPV,
-                       const CIEC_DINT &paVAL_ZERO,
-                       const CIEC_DINT &paSLOW,
-                       const CIEC_DINT &paFAST,
-                       const CIEC_DINT &paVAL_FULL,
-                       CIEC_DINT &paOUT) {
-      var_PV = paPV;
-      var_VAL_ZERO = paVAL_ZERO;
-      var_SLOW = paSLOW;
-      var_FAST = paFAST;
-      var_VAL_FULL = paVAL_FULL;
-      executeEvent(scmEventDOWN_SLOWID, nullptr);
-      paOUT = var_OUT;
-    }
-
-    void evt_DOWN_FAST(const CIEC_DINT &paPV,
-                       const CIEC_DINT &paVAL_ZERO,
-                       const CIEC_DINT &paSLOW,
-                       const CIEC_DINT &paFAST,
-                       const CIEC_DINT &paVAL_FULL,
-                       CIEC_DINT &paOUT) {
-      var_PV = paPV;
-      var_VAL_ZERO = paVAL_ZERO;
-      var_SLOW = paSLOW;
-      var_FAST = paFAST;
-      var_VAL_FULL = paVAL_FULL;
-      executeEvent(scmEventDOWN_FASTID, nullptr);
-      paOUT = var_OUT;
-    }
-
-    void evt_FULL(const CIEC_DINT &paPV,
-                  const CIEC_DINT &paVAL_ZERO,
-                  const CIEC_DINT &paSLOW,
-                  const CIEC_DINT &paFAST,
-                  const CIEC_DINT &paVAL_FULL,
-                  CIEC_DINT &paOUT) {
-      var_PV = paPV;
-      var_VAL_ZERO = paVAL_ZERO;
-      var_SLOW = paSLOW;
-      var_FAST = paFAST;
-      var_VAL_FULL = paVAL_FULL;
-      executeEvent(scmEventFULLID, nullptr);
-      paOUT = var_OUT;
-    }
-
-    void evt_LOAD(const CIEC_DINT &paPV,
-                  const CIEC_DINT &paVAL_ZERO,
-                  const CIEC_DINT &paSLOW,
-                  const CIEC_DINT &paFAST,
-                  const CIEC_DINT &paVAL_FULL,
-                  CIEC_DINT &paOUT) {
-      var_PV = paPV;
-      var_VAL_ZERO = paVAL_ZERO;
-      var_SLOW = paSLOW;
-      var_FAST = paFAST;
-      var_VAL_FULL = paVAL_FULL;
-      executeEvent(scmEventLOADID, nullptr);
-      paOUT = var_OUT;
-    }
-
-    void operator()(const CIEC_DINT &paPV,
+      void evt_ZERO(const CIEC_DINT &paPV,
                     const CIEC_DINT &paVAL_ZERO,
                     const CIEC_DINT &paSLOW,
                     const CIEC_DINT &paFAST,
                     const CIEC_DINT &paVAL_FULL,
                     CIEC_DINT &paOUT) {
-      evt_ZERO(paPV, paVAL_ZERO, paSLOW, paFAST, paVAL_FULL, paOUT);
-    }
-};
+        var_PV = paPV;
+        var_VAL_ZERO = paVAL_ZERO;
+        var_SLOW = paSLOW;
+        var_FAST = paFAST;
+        var_VAL_FULL = paVAL_FULL;
+        executeEvent(scmEventZEROID, nullptr);
+        paOUT = var_OUT;
+      }
+
+      void evt_UP_SLOW(const CIEC_DINT &paPV,
+                       const CIEC_DINT &paVAL_ZERO,
+                       const CIEC_DINT &paSLOW,
+                       const CIEC_DINT &paFAST,
+                       const CIEC_DINT &paVAL_FULL,
+                       CIEC_DINT &paOUT) {
+        var_PV = paPV;
+        var_VAL_ZERO = paVAL_ZERO;
+        var_SLOW = paSLOW;
+        var_FAST = paFAST;
+        var_VAL_FULL = paVAL_FULL;
+        executeEvent(scmEventUP_SLOWID, nullptr);
+        paOUT = var_OUT;
+      }
+
+      void evt_UP_FAST(const CIEC_DINT &paPV,
+                       const CIEC_DINT &paVAL_ZERO,
+                       const CIEC_DINT &paSLOW,
+                       const CIEC_DINT &paFAST,
+                       const CIEC_DINT &paVAL_FULL,
+                       CIEC_DINT &paOUT) {
+        var_PV = paPV;
+        var_VAL_ZERO = paVAL_ZERO;
+        var_SLOW = paSLOW;
+        var_FAST = paFAST;
+        var_VAL_FULL = paVAL_FULL;
+        executeEvent(scmEventUP_FASTID, nullptr);
+        paOUT = var_OUT;
+      }
+
+      void evt_DOWN_SLOW(const CIEC_DINT &paPV,
+                         const CIEC_DINT &paVAL_ZERO,
+                         const CIEC_DINT &paSLOW,
+                         const CIEC_DINT &paFAST,
+                         const CIEC_DINT &paVAL_FULL,
+                         CIEC_DINT &paOUT) {
+        var_PV = paPV;
+        var_VAL_ZERO = paVAL_ZERO;
+        var_SLOW = paSLOW;
+        var_FAST = paFAST;
+        var_VAL_FULL = paVAL_FULL;
+        executeEvent(scmEventDOWN_SLOWID, nullptr);
+        paOUT = var_OUT;
+      }
+
+      void evt_DOWN_FAST(const CIEC_DINT &paPV,
+                         const CIEC_DINT &paVAL_ZERO,
+                         const CIEC_DINT &paSLOW,
+                         const CIEC_DINT &paFAST,
+                         const CIEC_DINT &paVAL_FULL,
+                         CIEC_DINT &paOUT) {
+        var_PV = paPV;
+        var_VAL_ZERO = paVAL_ZERO;
+        var_SLOW = paSLOW;
+        var_FAST = paFAST;
+        var_VAL_FULL = paVAL_FULL;
+        executeEvent(scmEventDOWN_FASTID, nullptr);
+        paOUT = var_OUT;
+      }
+
+      void evt_FULL(const CIEC_DINT &paPV,
+                    const CIEC_DINT &paVAL_ZERO,
+                    const CIEC_DINT &paSLOW,
+                    const CIEC_DINT &paFAST,
+                    const CIEC_DINT &paVAL_FULL,
+                    CIEC_DINT &paOUT) {
+        var_PV = paPV;
+        var_VAL_ZERO = paVAL_ZERO;
+        var_SLOW = paSLOW;
+        var_FAST = paFAST;
+        var_VAL_FULL = paVAL_FULL;
+        executeEvent(scmEventFULLID, nullptr);
+        paOUT = var_OUT;
+      }
+
+      void evt_LOAD(const CIEC_DINT &paPV,
+                    const CIEC_DINT &paVAL_ZERO,
+                    const CIEC_DINT &paSLOW,
+                    const CIEC_DINT &paFAST,
+                    const CIEC_DINT &paVAL_FULL,
+                    CIEC_DINT &paOUT) {
+        var_PV = paPV;
+        var_VAL_ZERO = paVAL_ZERO;
+        var_SLOW = paSLOW;
+        var_FAST = paFAST;
+        var_VAL_FULL = paVAL_FULL;
+        executeEvent(scmEventLOADID, nullptr);
+        paOUT = var_OUT;
+      }
+
+      void operator()(const CIEC_DINT &paPV,
+                      const CIEC_DINT &paVAL_ZERO,
+                      const CIEC_DINT &paSLOW,
+                      const CIEC_DINT &paFAST,
+                      const CIEC_DINT &paVAL_FULL,
+                      CIEC_DINT &paOUT) {
+        evt_ZERO(paPV, paVAL_ZERO, paSLOW, paFAST, paVAL_FULL, paOUT);
+      }
+  };
+} // namespace forte::eclipse4diac::signalprocessing

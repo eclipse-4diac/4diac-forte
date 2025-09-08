@@ -18,6 +18,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::rtevents;
+
 DEFINE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge, "GEN_RT_Bridge"_STRID)
 
 namespace {

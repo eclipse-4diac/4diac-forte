@@ -23,49 +23,51 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_F_TIME_IN_NS_TO_DINT final : public CSimpleFB {
-    DECLARE_FIRMWARE_FB(FORTE_F_TIME_IN_NS_TO_DINT)
+namespace forte::iec61131::conversion {
+  class FORTE_F_TIME_IN_NS_TO_DINT final : public CSimpleFB {
+      DECLARE_FIRMWARE_FB(FORTE_F_TIME_IN_NS_TO_DINT)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    CIEC_ANY *getVarInternal(size_t) override;
+      CIEC_ANY *getVarInternal(size_t) override;
 
-    void alg_REQ(void);
+      void alg_REQ(void);
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_F_TIME_IN_NS_TO_DINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_F_TIME_IN_NS_TO_DINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_TIME var_IN;
-    CIEC_DINT var_OUT;
+      CIEC_TIME var_IN;
+      CIEC_DINT var_OUT;
 
-    CEventConnection conn_CNF;
-    CDataConnection *conn_IN;
-    COutDataConnection<CIEC_DINT> conn_OUT;
+      CEventConnection conn_CNF;
+      CDataConnection *conn_IN;
+      COutDataConnection<CIEC_DINT> conn_OUT;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CIEC_ANY *getDIO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
-    CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
-    CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CIEC_ANY *getDIO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
+      CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
+      CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_TIME &paIN, CIEC_DINT &paOUT) {
-      var_IN = paIN;
-      receiveInputEvent(scmEventREQID, nullptr);
-      paOUT = var_OUT;
-    }
+      void evt_REQ(const CIEC_TIME &paIN, CIEC_DINT &paOUT) {
+        var_IN = paIN;
+        receiveInputEvent(scmEventREQID, nullptr);
+        paOUT = var_OUT;
+      }
 
-    void operator()(const CIEC_TIME &paIN, CIEC_DINT &paOUT) {
-      evt_REQ(paIN, paOUT);
-    }
-};
+      void operator()(const CIEC_TIME &paIN, CIEC_DINT &paOUT) {
+        evt_REQ(paIN, paOUT);
+      }
+  };
+} // namespace forte::iec61131::conversion

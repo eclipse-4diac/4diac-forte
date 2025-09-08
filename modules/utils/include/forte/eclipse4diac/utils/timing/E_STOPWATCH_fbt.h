@@ -28,82 +28,84 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_E_STOPWATCH final : public CBasicFB {
-    DECLARE_FIRMWARE_FB(FORTE_E_STOPWATCH)
+namespace forte::eclipse4diac::utils::timing {
+  class FORTE_E_STOPWATCH final : public CBasicFB {
+      DECLARE_FIRMWARE_FB(FORTE_E_STOPWATCH)
 
-  private:
-    static const TEventID scmEventSTARTID = 0;
-    static const TEventID scmEventETID = 1;
-    static const TEventID scmEventSTOPID = 2;
-    static const TEventID scmEventRESETID = 3;
-    static const TEventID scmEventEOID = 0;
-    static const TEventID scmEventETOID = 1;
-    static const TEventID scmEventRESETOID = 2;
+    private:
+      static const TEventID scmEventSTARTID = 0;
+      static const TEventID scmEventETID = 1;
+      static const TEventID scmEventSTOPID = 2;
+      static const TEventID scmEventRESETID = 3;
+      static const TEventID scmEventEOID = 0;
+      static const TEventID scmEventETOID = 1;
+      static const TEventID scmEventRESETOID = 2;
 
-    CIEC_TIME var_startTime;
+      CIEC_TIME var_startTime;
 
-    CIEC_ANY *getVarInternal(size_t) override;
+      CIEC_ANY *getVarInternal(size_t) override;
 
-    void alg_captureStartTime(void);
-    void alg_calcDiff(void);
-    void alg_reset(void);
+      void alg_captureStartTime(void);
+      void alg_calcDiff(void);
+      void alg_reset(void);
 
-    static const TForteInt16 scmStateSTART = 0;
-    static const TForteInt16 scmStateMeasure = 1;
-    static const TForteInt16 scmStateSTOP = 2;
-    static const TForteInt16 scmStateTrig = 3;
-    static const TForteInt16 scmStateRESET = 4;
+      static const TForteInt16 scmStateSTART = 0;
+      static const TForteInt16 scmStateMeasure = 1;
+      static const TForteInt16 scmStateSTOP = 2;
+      static const TForteInt16 scmStateTrig = 3;
+      static const TForteInt16 scmStateRESET = 4;
 
-    void enterStateSTART(CEventChainExecutionThread *const paECET);
-    void enterStateMeasure(CEventChainExecutionThread *const paECET);
-    void enterStateSTOP(CEventChainExecutionThread *const paECET);
-    void enterStateTrig(CEventChainExecutionThread *const paECET);
-    void enterStateRESET(CEventChainExecutionThread *const paECET);
+      void enterStateSTART(CEventChainExecutionThread *const paECET);
+      void enterStateMeasure(CEventChainExecutionThread *const paECET);
+      void enterStateSTOP(CEventChainExecutionThread *const paECET);
+      void enterStateTrig(CEventChainExecutionThread *const paECET);
+      void enterStateRESET(CEventChainExecutionThread *const paECET);
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_E_STOPWATCH(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_E_STOPWATCH(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_TIME var_TD;
+      CIEC_TIME var_TD;
 
-    CEventConnection conn_EO;
-    CEventConnection conn_ETO;
-    CEventConnection conn_RESETO;
+      CEventConnection conn_EO;
+      CEventConnection conn_ETO;
+      CEventConnection conn_RESETO;
 
-    COutDataConnection<CIEC_TIME> conn_TD;
+      COutDataConnection<CIEC_TIME> conn_TD;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_START(CIEC_TIME &paTD) {
-      executeEvent(scmEventSTARTID, nullptr);
-      paTD = var_TD;
-    }
+      void evt_START(CIEC_TIME &paTD) {
+        executeEvent(scmEventSTARTID, nullptr);
+        paTD = var_TD;
+      }
 
-    void evt_ET(CIEC_TIME &paTD) {
-      executeEvent(scmEventETID, nullptr);
-      paTD = var_TD;
-    }
+      void evt_ET(CIEC_TIME &paTD) {
+        executeEvent(scmEventETID, nullptr);
+        paTD = var_TD;
+      }
 
-    void evt_STOP(CIEC_TIME &paTD) {
-      executeEvent(scmEventSTOPID, nullptr);
-      paTD = var_TD;
-    }
+      void evt_STOP(CIEC_TIME &paTD) {
+        executeEvent(scmEventSTOPID, nullptr);
+        paTD = var_TD;
+      }
 
-    void evt_RESET(CIEC_TIME &paTD) {
-      executeEvent(scmEventRESETID, nullptr);
-      paTD = var_TD;
-    }
+      void evt_RESET(CIEC_TIME &paTD) {
+        executeEvent(scmEventRESETID, nullptr);
+        paTD = var_TD;
+      }
 
-    void operator()(CIEC_TIME &paTD) {
-      evt_START(paTD);
-    }
-};
+      void operator()(CIEC_TIME &paTD) {
+        evt_START(paTD);
+      }
+  };
+} // namespace forte::eclipse4diac::utils::timing

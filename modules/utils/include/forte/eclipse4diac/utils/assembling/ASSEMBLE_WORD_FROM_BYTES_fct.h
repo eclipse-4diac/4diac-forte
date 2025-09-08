@@ -73,5 +73,6 @@ class FORTE_ASSEMBLE_WORD_FROM_BYTES final : public CFunctionBlock {
       evt_REQ(paBYTE_00, paBYTE_01, pa);
     }
 };
+}
 
 CIEC_WORD func_ASSEMBLE_WORD_FROM_BYTES(CIEC_BYTE st_lv_BYTE_00, CIEC_BYTE st_lv_BYTE_01);

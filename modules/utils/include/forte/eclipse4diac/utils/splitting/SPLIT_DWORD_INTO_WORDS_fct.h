@@ -73,5 +73,6 @@ class FORTE_SPLIT_DWORD_INTO_WORDS final : public CFunctionBlock {
       evt_REQ(paIN, paWORD_00, paWORD_01);
     }
 };
+}
 
 void func_SPLIT_DWORD_INTO_WORDS(CIEC_DWORD st_lv_IN, CIEC_WORD &st_lv_WORD_00, CIEC_WORD &st_lv_WORD_01);

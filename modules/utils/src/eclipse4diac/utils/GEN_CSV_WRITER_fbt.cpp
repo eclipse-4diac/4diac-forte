@@ -25,6 +25,8 @@ using namespace forte::core::literals;
 #include <errno.h>
 #include "forte/util/devlog.h"
 
+using namespace forte::eclipse4diac::utils;
+
 DEFINE_GENERIC_FIRMWARE_FB(GEN_CSV_WRITER, "GEN_CSV_WRITER"_STRID);
 
 namespace {

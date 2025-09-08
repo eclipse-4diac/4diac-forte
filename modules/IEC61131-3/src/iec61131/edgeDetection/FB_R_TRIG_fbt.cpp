@@ -23,6 +23,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::edgeDetection;
+
 DEFINE_FIRMWARE_FB(FORTE_FB_R_TRIG, "FB_R_TRIG"_STRID)
 
 namespace {

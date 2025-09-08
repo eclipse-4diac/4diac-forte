@@ -86,6 +86,7 @@ class FORTE_ASSEMBLE_BYTE_FROM_QUARTERS final : public CFunctionBlock {
       evt_REQ(paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03, pa);
     }
 };
+}
 
 CIEC_BYTE func_ASSEMBLE_BYTE_FROM_QUARTERS(CIEC_BYTE st_lv_QUARTER_BYTE_00,
                                            CIEC_BYTE st_lv_QUARTER_BYTE_01,

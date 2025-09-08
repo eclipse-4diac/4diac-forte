@@ -20,6 +20,8 @@ using namespace forte::core::literals;
 #include "forte/util/devlog.h"
 #include "forte/resource.h"
 
+using namespace forte::eclipse4diac::utils;
+
 unsigned int FORTE_TEST_CONDITION::smExecutedTests = 0;
 unsigned int FORTE_TEST_CONDITION::smFailedTests = 0;
 

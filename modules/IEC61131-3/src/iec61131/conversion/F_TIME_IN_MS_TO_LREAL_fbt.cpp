@@ -25,6 +25,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::conversion;
+
 DEFINE_FIRMWARE_FB(FORTE_F_TIME_IN_MS_TO_LREAL, "F_TIME_IN_MS_TO_LREAL"_STRID)
 
 namespace {

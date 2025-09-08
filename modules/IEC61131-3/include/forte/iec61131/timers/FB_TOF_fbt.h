@@ -25,56 +25,58 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_FB_TOF final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_FB_TOF)
+namespace forte::iec61131::timers {
+  class FORTE_FB_TOF final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_FB_TOF)
 
-  private:
-    static const TEventID scmEventCNFID = 0;
-    static const TEventID scmEventREQID = 0;
+    private:
+      static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventREQID = 0;
 
-    bool fallingEdge;
-    bool notFirstRisingEdge;
-    CIEC_TIME start;
-    CIEC_TIME count;
+      bool fallingEdge;
+      bool notFirstRisingEdge;
+      CIEC_TIME start;
+      CIEC_TIME count;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_FB_TOF(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_FB_TOF(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_BOOL var_IN;
-    CIEC_TIME var_PT;
+      CIEC_BOOL var_IN;
+      CIEC_TIME var_PT;
 
-    CIEC_BOOL var_Q;
-    CIEC_TIME var_ET;
+      CIEC_BOOL var_Q;
+      CIEC_TIME var_ET;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_IN;
-    CDataConnection *conn_PT;
+      CDataConnection *conn_IN;
+      CDataConnection *conn_PT;
 
-    COutDataConnection<CIEC_BOOL> conn_Q;
-    COutDataConnection<CIEC_TIME> conn_ET;
+      COutDataConnection<CIEC_BOOL> conn_Q;
+      COutDataConnection<CIEC_TIME> conn_ET;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BOOL &paIN, const CIEC_TIME &paPT, CIEC_BOOL &paQ, CIEC_TIME &paET) {
-      var_IN = paIN;
-      var_PT = paPT;
-      executeEvent(scmEventREQID, nullptr);
-      paQ = var_Q;
-      paET = var_ET;
-    }
+      void evt_REQ(const CIEC_BOOL &paIN, const CIEC_TIME &paPT, CIEC_BOOL &paQ, CIEC_TIME &paET) {
+        var_IN = paIN;
+        var_PT = paPT;
+        executeEvent(scmEventREQID, nullptr);
+        paQ = var_Q;
+        paET = var_ET;
+      }
 
-    void operator()(const CIEC_BOOL &paIN, const CIEC_TIME &paPT, CIEC_BOOL &paQ, CIEC_TIME &paET) {
-      evt_REQ(paIN, paPT, paQ, paET);
-    }
-};
+      void operator()(const CIEC_BOOL &paIN, const CIEC_TIME &paPT, CIEC_BOOL &paQ, CIEC_TIME &paET) {
+        evt_REQ(paIN, paPT, paQ, paET);
+      }
+  };
+} // namespace forte::iec61131::timers

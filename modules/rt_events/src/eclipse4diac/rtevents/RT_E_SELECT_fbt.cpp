@@ -14,6 +14,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::rtevents;
+
 DEFINE_FIRMWARE_FB(FORTE_RT_E_SELECT, "RT_E_SELECT"_STRID)
 
 namespace {

@@ -16,6 +16,8 @@ using namespace forte::core::literals;
 #include "forte/device.h"
 #include "forte/mgmcmdstruct.h"
 
+using namespace forte::eclipse4diac::reconfiguration;
+
 DEFINE_FIRMWARE_FB(FORTE_EC_SET_EVT, "EC_SET_EVT"_STRID)
 
 namespace {

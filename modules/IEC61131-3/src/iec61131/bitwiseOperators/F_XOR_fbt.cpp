@@ -18,6 +18,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::bitwiseOperators;
+
 DEFINE_FIRMWARE_FB(FORTE_F_XOR, "F_XOR"_STRID)
 
 namespace {

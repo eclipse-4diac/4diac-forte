@@ -22,6 +22,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::utils;
+
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2VALUES, "GEN_ARRAY2VALUES"_STRID)
 
 namespace {

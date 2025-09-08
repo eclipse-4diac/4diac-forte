@@ -107,6 +107,7 @@ class FORTE_ASSEMBLE_BYTE_FROM_BOOLS final : public CFunctionBlock {
       evt_REQ(paBIT_00, paBIT_01, paBIT_02, paBIT_03, paBIT_04, paBIT_05, paBIT_06, paBIT_07, pa);
     }
 };
+}
 
 CIEC_BYTE func_ASSEMBLE_BYTE_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00,
                                         CIEC_BOOL st_lv_BIT_01,

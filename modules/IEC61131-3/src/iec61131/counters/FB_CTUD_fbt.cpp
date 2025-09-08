@@ -42,6 +42,8 @@ namespace {
                                              .mPlugNames = {}};
 } // namespace
 
+using namespace forte::iec61131::counters;
+
 DEFINE_FIRMWARE_FB(FORTE_FB_CTUD, "FB_CTUD"_STRID)
 
 FORTE_FB_CTUD::FORTE_FB_CTUD(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :

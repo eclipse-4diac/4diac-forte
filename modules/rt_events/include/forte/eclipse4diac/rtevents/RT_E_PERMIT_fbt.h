@@ -24,74 +24,76 @@
 
 #include "rtesingle.h"
 
-class FORTE_RT_E_PERMIT final : public CRTEventSingle {
-    DECLARE_FIRMWARE_FB(FORTE_RT_E_PERMIT)
+namespace forte::eclipse4diac::rtevents {
+  class FORTE_RT_E_PERMIT final : public CRTEventSingle {
+      DECLARE_FIRMWARE_FB(FORTE_RT_E_PERMIT)
 
-  private:
-    static const TEventID scmEventINITID = 0;
-    static const TEventID scmEventEIID = 1;
-    static const TEventID scmEventINITOID = 0;
-    static const TEventID scmEventEOID = 1;
+    private:
+      static const TEventID scmEventINITID = 0;
+      static const TEventID scmEventEIID = 1;
+      static const TEventID scmEventINITOID = 0;
+      static const TEventID scmEventEOID = 1;
 
-    bool checkActivation(TEventID) override;
+      bool checkActivation(TEventID) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_RT_E_PERMIT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_RT_E_PERMIT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_BOOL var_PERMIT;
-    CIEC_TIME var_Tmin;
-    CIEC_TIME var_WCET;
-    CEventConnection conn_INITO;
-    CEventConnection conn_EO;
-    CDataConnection *conn_QI;
-    CDataConnection *conn_PERMIT;
-    CDataConnection *conn_Tmin;
-    CDataConnection *conn_Deadline;
-    CDataConnection *conn_WCET;
-    COutDataConnection<CIEC_BOOL> conn_QO;
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
-    void evt_INIT(const CIEC_BOOL &pa_QI,
-                  const CIEC_BOOL &pa_PERMIT,
-                  const CIEC_TIME &pa_Tmin,
-                  const CIEC_TIME &pa_Deadline,
-                  const CIEC_TIME &pa_WCET,
-                  CIEC_BOOL &pa_QO) {
-      var_QI = pa_QI;
-      var_PERMIT = pa_PERMIT;
-      var_Tmin = pa_Tmin;
-      var_Deadline = pa_Deadline;
-      var_WCET = pa_WCET;
-      receiveInputEvent(scmEventINITID, nullptr);
-      pa_QO = var_QO;
-    }
-    void evt_EI(const CIEC_BOOL &pa_QI,
-                const CIEC_BOOL &pa_PERMIT,
-                const CIEC_TIME &pa_Tmin,
-                const CIEC_TIME &pa_Deadline,
-                const CIEC_TIME &pa_WCET,
-                CIEC_BOOL &pa_QO) {
-      var_QI = pa_QI;
-      var_PERMIT = pa_PERMIT;
-      var_Tmin = pa_Tmin;
-      var_Deadline = pa_Deadline;
-      var_WCET = pa_WCET;
-      receiveInputEvent(scmEventEIID, nullptr);
-      pa_QO = var_QO;
-    }
-    void operator()(const CIEC_BOOL &pa_QI,
+      CIEC_BOOL var_PERMIT;
+      CIEC_TIME var_Tmin;
+      CIEC_TIME var_WCET;
+      CEventConnection conn_INITO;
+      CEventConnection conn_EO;
+      CDataConnection *conn_QI;
+      CDataConnection *conn_PERMIT;
+      CDataConnection *conn_Tmin;
+      CDataConnection *conn_Deadline;
+      CDataConnection *conn_WCET;
+      COutDataConnection<CIEC_BOOL> conn_QO;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
+      void evt_INIT(const CIEC_BOOL &pa_QI,
                     const CIEC_BOOL &pa_PERMIT,
                     const CIEC_TIME &pa_Tmin,
                     const CIEC_TIME &pa_Deadline,
                     const CIEC_TIME &pa_WCET,
                     CIEC_BOOL &pa_QO) {
-      evt_INIT(pa_QI, pa_PERMIT, pa_Tmin, pa_Deadline, pa_WCET, pa_QO);
-    }
-};
+        var_QI = pa_QI;
+        var_PERMIT = pa_PERMIT;
+        var_Tmin = pa_Tmin;
+        var_Deadline = pa_Deadline;
+        var_WCET = pa_WCET;
+        receiveInputEvent(scmEventINITID, nullptr);
+        pa_QO = var_QO;
+      }
+      void evt_EI(const CIEC_BOOL &pa_QI,
+                  const CIEC_BOOL &pa_PERMIT,
+                  const CIEC_TIME &pa_Tmin,
+                  const CIEC_TIME &pa_Deadline,
+                  const CIEC_TIME &pa_WCET,
+                  CIEC_BOOL &pa_QO) {
+        var_QI = pa_QI;
+        var_PERMIT = pa_PERMIT;
+        var_Tmin = pa_Tmin;
+        var_Deadline = pa_Deadline;
+        var_WCET = pa_WCET;
+        receiveInputEvent(scmEventEIID, nullptr);
+        pa_QO = var_QO;
+      }
+      void operator()(const CIEC_BOOL &pa_QI,
+                      const CIEC_BOOL &pa_PERMIT,
+                      const CIEC_TIME &pa_Tmin,
+                      const CIEC_TIME &pa_Deadline,
+                      const CIEC_TIME &pa_WCET,
+                      CIEC_BOOL &pa_QO) {
+        evt_INIT(pa_QI, pa_PERMIT, pa_Tmin, pa_Deadline, pa_WCET, pa_QO);
+      }
+  };
+} // namespace forte::eclipse4diac::rtevents

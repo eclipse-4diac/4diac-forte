@@ -18,6 +18,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::numerical;
+
 DEFINE_FIRMWARE_FB(FORTE_F_ATAN, "F_ATAN"_STRID)
 
 namespace {

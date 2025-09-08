@@ -18,6 +18,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::selection;
+
 DEFINE_FIRMWARE_FB(FORTE_F_LIMIT, "F_LIMIT"_STRID)
 
 namespace {

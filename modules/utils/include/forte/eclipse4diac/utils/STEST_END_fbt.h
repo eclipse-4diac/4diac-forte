@@ -18,36 +18,38 @@
 
 #include "forte/funcbloc.h"
 
-class FORTE_STEST_END final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_STEST_END)
+namespace forte::eclipse4diac::utils {
+  class FORTE_STEST_END final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_STEST_END)
 
-  private:
-    static const TEventID scmEventREQID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
 
-  public:
-    FORTE_STEST_END(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_STEST_END(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ() {
-      executeEvent(scmEventREQID, nullptr);
-    }
+      void evt_REQ() {
+        executeEvent(scmEventREQID, nullptr);
+      }
 
-    void operator()() {
-      evt_REQ();
-    }
+      void operator()() {
+        evt_REQ();
+      }
 
-  protected:
-    void setInitialValues() override {
-      // no variables so nothing to do
-    }
-};
+    protected:
+      void setInitialValues() override {
+        // no variables so nothing to do
+      }
+  };
+} // namespace forte::eclipse4diac::utils

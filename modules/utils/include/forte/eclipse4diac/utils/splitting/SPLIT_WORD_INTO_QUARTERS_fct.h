@@ -108,6 +108,7 @@ class FORTE_SPLIT_WORD_INTO_QUARTERS final : public CFunctionBlock {
               paQUARTER_BYTE_05, paQUARTER_BYTE_06, paQUARTER_BYTE_07);
     }
 };
+}
 
 void func_SPLIT_WORD_INTO_QUARTERS(CIEC_WORD st_lv_IN,
                                    CIEC_BYTE &st_lv_QUARTER_BYTE_00,

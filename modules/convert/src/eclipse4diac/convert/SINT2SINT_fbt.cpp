@@ -23,6 +23,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::convert;
+
 DEFINE_FIRMWARE_FB(FORTE_SINT2SINT, "SINT2SINT"_STRID)
 
 namespace {

@@ -26,62 +26,64 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_SET_AT_INDEX : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_SET_AT_INDEX)
+namespace forte::eclipse4diac::utils {
+  class FORTE_SET_AT_INDEX : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_SET_AT_INDEX)
 
-  private:
-    static const TEventID scmEventREQID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
 
-    static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
 
-  public:
-    FORTE_SET_AT_INDEX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_SET_AT_INDEX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_ANY_VARIANT var_IN_ARRAY;
-    CIEC_UINT var_INDEX;
-    CIEC_ANY_VARIANT var_VALUE;
-    CIEC_BOOL var_QO;
-    CIEC_ANY_VARIANT var_OUT_ARRAY;
+      CIEC_ANY_VARIANT var_IN_ARRAY;
+      CIEC_UINT var_INDEX;
+      CIEC_ANY_VARIANT var_VALUE;
+      CIEC_BOOL var_QO;
+      CIEC_ANY_VARIANT var_OUT_ARRAY;
 
-    CEventConnection conn_CNF;
-    CDataConnection *conn_IN_ARRAY;
-    CDataConnection *conn_INDEX;
-    CDataConnection *conn_VALUE;
-    COutDataConnection<CIEC_BOOL> conn_QO;
-    COutDataConnection<CIEC_ANY_VARIANT> conn_OUT_ARRAY;
+      CEventConnection conn_CNF;
+      CDataConnection *conn_IN_ARRAY;
+      CDataConnection *conn_INDEX;
+      CDataConnection *conn_VALUE;
+      COutDataConnection<CIEC_BOOL> conn_QO;
+      COutDataConnection<CIEC_ANY_VARIANT> conn_OUT_ARRAY;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_ANY &pa_IN_ARRAY,
-                 const CIEC_UINT &pa_INDEX,
-                 const CIEC_ANY &pa_VALUE,
-                 CIEC_BOOL &pa_QO,
-                 CIEC_ANY &pa_OUT_ARRAY) {
-      var_IN_ARRAY = pa_IN_ARRAY;
-      var_INDEX = pa_INDEX;
-      var_VALUE = pa_VALUE;
-      receiveInputEvent(scmEventREQID, nullptr);
-      pa_QO = var_QO;
-      pa_OUT_ARRAY.setValue(var_OUT_ARRAY.unwrap());
-    }
+      void evt_REQ(const CIEC_ANY &pa_IN_ARRAY,
+                   const CIEC_UINT &pa_INDEX,
+                   const CIEC_ANY &pa_VALUE,
+                   CIEC_BOOL &pa_QO,
+                   CIEC_ANY &pa_OUT_ARRAY) {
+        var_IN_ARRAY = pa_IN_ARRAY;
+        var_INDEX = pa_INDEX;
+        var_VALUE = pa_VALUE;
+        receiveInputEvent(scmEventREQID, nullptr);
+        pa_QO = var_QO;
+        pa_OUT_ARRAY.setValue(var_OUT_ARRAY.unwrap());
+      }
 
-    void operator()(const CIEC_ANY &pa_IN_ARRAY,
-                    const CIEC_UINT &pa_INDEX,
-                    const CIEC_ANY &pa_VALUE,
-                    CIEC_BOOL &pa_QO,
-                    CIEC_ANY &pa_OUT_ARRAY) {
-      evt_REQ(pa_IN_ARRAY, pa_INDEX, pa_VALUE, pa_QO, pa_OUT_ARRAY);
-    }
+      void operator()(const CIEC_ANY &pa_IN_ARRAY,
+                      const CIEC_UINT &pa_INDEX,
+                      const CIEC_ANY &pa_VALUE,
+                      CIEC_BOOL &pa_QO,
+                      CIEC_ANY &pa_OUT_ARRAY) {
+        evt_REQ(pa_IN_ARRAY, pa_INDEX, pa_VALUE, pa_QO, pa_OUT_ARRAY);
+      }
 
-  protected:
-    void setInitialValues() override;
-};
+    protected:
+      void setInitialValues() override;
+  };
+} // namespace forte::eclipse4diac::utils

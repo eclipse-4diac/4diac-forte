@@ -18,6 +18,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::charString;
+
 DEFINE_FIRMWARE_FB(FORTE_F_CONCAT, "F_CONCAT"_STRID)
 
 namespace {

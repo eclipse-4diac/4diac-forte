@@ -16,6 +16,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::reconfiguration;
+
 DEFINE_FIRMWARE_FB(FORTE_EC_STOP_ELEM, "EC_STOP_ELEM"_STRID)
 
 namespace {

@@ -16,6 +16,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::convert;
+
 DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX, "GEN_STRUCT_MUX"_STRID);
 
 namespace {

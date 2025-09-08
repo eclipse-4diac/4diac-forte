@@ -233,6 +233,7 @@ class FORTE_ASSEMBLE_LWORD_FROM_QUARTERS final : public CFunctionBlock {
               paQUARTER_BYTE_30, paQUARTER_BYTE_31, pa);
     }
 };
+}
 
 CIEC_LWORD func_ASSEMBLE_LWORD_FROM_QUARTERS(CIEC_BYTE st_lv_QUARTER_BYTE_00,
                                              CIEC_BYTE st_lv_QUARTER_BYTE_01,

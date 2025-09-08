@@ -22,48 +22,50 @@
 
 #include <memory>
 
-class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
+namespace forte::iec61131::bitwiseOperators {
+  class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
 
-  protected:
-    CGenBitBase(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~CGenBitBase() override = default;
+    protected:
+      CGenBitBase(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      ~CGenBitBase() override = default;
 
-    CIEC_ANY_BIT_VARIANT &var_IN(size_t paIndex) {
-      return mGenDIs[paIndex];
-    }
+      CIEC_ANY_BIT_VARIANT &var_IN(size_t paIndex) {
+        return mGenDIs[paIndex];
+      }
 
-    size_t getGenEOOffset() override {
-      return 1;
-    }
+      size_t getGenEOOffset() override {
+        return 1;
+      }
 
-    size_t getGenDOOffset() override {
-      return 1;
-    }
+      size_t getGenDOOffset() override {
+        return 1;
+      }
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId paDONum) override;
-    void createGenInputData() override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId paDONum) override;
+      void createGenInputData() override;
 
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    CIEC_ANY_BIT_VARIANT var_OUT;
+      CIEC_ANY_BIT_VARIANT var_OUT;
 
-  private:
-    std::vector<forte::core::StringId> mDataInputNames;
+    private:
+      std::vector<forte::core::StringId> mDataInputNames;
 
-    void readInputData(TEventID paEI) override;
-    void writeOutputData(TEventID paEO) override;
+      void readInputData(TEventID paEI) override;
+      void writeOutputData(TEventID paEO) override;
 
-    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+      bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    std::unique_ptr<CIEC_ANY_BIT_VARIANT[]> mGenDIs;
+      std::unique_ptr<CIEC_ANY_BIT_VARIANT[]> mGenDIs;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    COutDataConnection<CIEC_ANY_BIT_VARIANT> conn_OUT;
-};
+      COutDataConnection<CIEC_ANY_BIT_VARIANT> conn_OUT;
+  };
+} // namespace forte::iec61131::bitwiseOperators
 
 #endif /* _GENBITBASE_H_ */

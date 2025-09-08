@@ -393,6 +393,7 @@ class FORTE_ASSEMBLE_LWORD_FROM_BOOLS final : public CFunctionBlock {
               paBIT_60, paBIT_61, paBIT_62, paBIT_63, pa);
     }
 };
+}
 
 CIEC_LWORD func_ASSEMBLE_LWORD_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00,
                                           CIEC_BOOL st_lv_BIT_01,

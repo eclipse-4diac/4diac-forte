@@ -22,54 +22,56 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_FB_SR final : public CSimpleFB {
-    DECLARE_FIRMWARE_FB(FORTE_FB_SR)
+namespace forte::iec61131::bistableElements {
+  class FORTE_FB_SR final : public CSimpleFB {
+      DECLARE_FIRMWARE_FB(FORTE_FB_SR)
 
-  private:
-    static const TEventID scmEventCNFID = 0;
-    static const TEventID scmEventREQID = 0;
+    private:
+      static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventREQID = 0;
 
-    CIEC_ANY *getVarInternal(size_t) override;
+      CIEC_ANY *getVarInternal(size_t) override;
 
-    void alg_REQ(void);
+      void alg_REQ(void);
 
-    void enterStateREQ(CEventChainExecutionThread *const paECET);
+      void enterStateREQ(CEventChainExecutionThread *const paECET);
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_FB_SR(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_FB_SR(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_BOOL var_S1;
-    CIEC_BOOL var_R;
+      CIEC_BOOL var_S1;
+      CIEC_BOOL var_R;
 
-    CIEC_BOOL var_Q1;
+      CIEC_BOOL var_Q1;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_S1;
-    CDataConnection *conn_R;
+      CDataConnection *conn_S1;
+      CDataConnection *conn_R;
 
-    COutDataConnection<CIEC_BOOL> conn_Q1;
+      COutDataConnection<CIEC_BOOL> conn_Q1;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BOOL &paS1, const CIEC_BOOL &paR, CIEC_BOOL &paQ1) {
-      var_S1 = paS1;
-      var_R = paR;
-      executeEvent(scmEventREQID, nullptr);
-      paQ1 = var_Q1;
-    }
+      void evt_REQ(const CIEC_BOOL &paS1, const CIEC_BOOL &paR, CIEC_BOOL &paQ1) {
+        var_S1 = paS1;
+        var_R = paR;
+        executeEvent(scmEventREQID, nullptr);
+        paQ1 = var_Q1;
+      }
 
-    void operator()(const CIEC_BOOL &paS1, const CIEC_BOOL &paR, CIEC_BOOL &paQ1) {
-      evt_REQ(paS1, paR, paQ1);
-    }
-};
+      void operator()(const CIEC_BOOL &paS1, const CIEC_BOOL &paR, CIEC_BOOL &paQ1) {
+        evt_REQ(paS1, paR, paQ1);
+      }
+  };
+} // namespace forte::iec61131::bistableElements

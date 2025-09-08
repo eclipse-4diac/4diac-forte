@@ -41,6 +41,8 @@ namespace {
                                              .mPlugNames = {}};
 } // namespace
 
+using namespace forte::iec61131::bistableElements;
+
 DEFINE_FIRMWARE_FB(FORTE_FB_RS, "FB_RS"_STRID)
 
 FORTE_FB_RS::FORTE_FB_RS(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :

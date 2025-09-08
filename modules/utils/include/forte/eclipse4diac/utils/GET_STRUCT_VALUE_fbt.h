@@ -25,53 +25,56 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_GET_STRUCT_VALUE : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_GET_STRUCT_VALUE)
+namespace forte::eclipse4diac::utils {
+  class FORTE_GET_STRUCT_VALUE : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_GET_STRUCT_VALUE)
 
-  private:
-    static const TEventID scmEventREQID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
 
-    static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    CIEC_ANY *lookForMember(CIEC_STRUCT &paWhereToLook, char *paMemberName);
+      CIEC_ANY *lookForMember(CIEC_STRUCT &paWhereToLook, char *paMemberName);
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
 
-  public:
-    FORTE_GET_STRUCT_VALUE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_GET_STRUCT_VALUE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_ANY_VARIANT var_in_struct;
-    CIEC_STRING var_member;
-    CIEC_BOOL var_QO;
-    CIEC_ANY_VARIANT var_output;
+      CIEC_ANY_VARIANT var_in_struct;
+      CIEC_STRING var_member;
+      CIEC_BOOL var_QO;
+      CIEC_ANY_VARIANT var_output;
 
-    CEventConnection conn_CNF;
-    CDataConnection *conn_in_struct;
-    CDataConnection *conn_member;
-    COutDataConnection<CIEC_BOOL> conn_QO;
-    COutDataConnection<CIEC_ANY_VARIANT> conn_output;
+      CEventConnection conn_CNF;
+      CDataConnection *conn_in_struct;
+      CDataConnection *conn_member;
+      COutDataConnection<CIEC_BOOL> conn_QO;
+      COutDataConnection<CIEC_ANY_VARIANT> conn_output;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_ANY &pa_in_struct, const CIEC_STRING &pa_member, CIEC_BOOL &pa_QO, CIEC_ANY &pa_output) {
-      var_in_struct = pa_in_struct;
-      var_member = pa_member;
-      receiveInputEvent(scmEventREQID, nullptr);
-      pa_QO = var_QO;
-      pa_output.setValue(var_output.unwrap());
-    }
+      void evt_REQ(const CIEC_ANY &pa_in_struct, const CIEC_STRING &pa_member, CIEC_BOOL &pa_QO, CIEC_ANY &pa_output) {
+        var_in_struct = pa_in_struct;
+        var_member = pa_member;
+        receiveInputEvent(scmEventREQID, nullptr);
+        pa_QO = var_QO;
+        pa_output.setValue(var_output.unwrap());
+      }
 
-    void operator()(const CIEC_ANY &pa_in_struct, const CIEC_STRING &pa_member, CIEC_BOOL &pa_QO, CIEC_ANY &pa_output) {
-      evt_REQ(pa_in_struct, pa_member, pa_QO, pa_output);
-    }
+      void
+      operator()(const CIEC_ANY &pa_in_struct, const CIEC_STRING &pa_member, CIEC_BOOL &pa_QO, CIEC_ANY &pa_output) {
+        evt_REQ(pa_in_struct, pa_member, pa_QO, pa_output);
+      }
 
-  protected:
-    void setInitialValues() override;
-};
+    protected:
+      void setInitialValues() override;
+  };
+} // namespace forte::eclipse4diac::utils

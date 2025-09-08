@@ -22,51 +22,53 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_UDINT2UDINT final : public CSimpleFB {
-    DECLARE_FIRMWARE_FB(FORTE_UDINT2UDINT)
+namespace forte::eclipse4diac::convert {
+  class FORTE_UDINT2UDINT final : public CSimpleFB {
+      DECLARE_FIRMWARE_FB(FORTE_UDINT2UDINT)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    CIEC_ANY *getVarInternal(size_t) override;
+      CIEC_ANY *getVarInternal(size_t) override;
 
-    void alg_REQ(void);
+      void alg_REQ(void);
 
-    void enterStateREQ(CEventChainExecutionThread *const paECET);
+      void enterStateREQ(CEventChainExecutionThread *const paECET);
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_UDINT2UDINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_UDINT2UDINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_UDINT var_IN;
+      CIEC_UDINT var_IN;
 
-    CIEC_UDINT var_OUT;
+      CIEC_UDINT var_OUT;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_IN;
+      CDataConnection *conn_IN;
 
-    COutDataConnection<CIEC_UDINT> conn_OUT;
+      COutDataConnection<CIEC_UDINT> conn_OUT;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_UDINT &paIN, CIEC_UDINT &paOUT) {
-      var_IN = paIN;
-      executeEvent(scmEventREQID, nullptr);
-      paOUT = var_OUT;
-    }
+      void evt_REQ(const CIEC_UDINT &paIN, CIEC_UDINT &paOUT) {
+        var_IN = paIN;
+        executeEvent(scmEventREQID, nullptr);
+        paOUT = var_OUT;
+      }
 
-    void operator()(const CIEC_UDINT &paIN, CIEC_UDINT &paOUT) {
-      evt_REQ(paIN, paOUT);
-    }
-};
+      void operator()(const CIEC_UDINT &paIN, CIEC_UDINT &paOUT) {
+        evt_REQ(paIN, paOUT);
+      }
+  };
+} // namespace forte::eclipse4diac::convert

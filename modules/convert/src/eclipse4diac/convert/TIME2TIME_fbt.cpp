@@ -23,6 +23,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::convert;
+
 DEFINE_FIRMWARE_FB(FORTE_TIME2TIME, "TIME2TIME"_STRID)
 
 namespace {

@@ -20,6 +20,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::arithmetic;
+
 DEFINE_FIRMWARE_FB(FORTE_F_ADD_DT_TIME, "F_ADD_DT_TIME"_STRID)
 
 namespace {

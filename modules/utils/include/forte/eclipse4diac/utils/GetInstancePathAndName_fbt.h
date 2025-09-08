@@ -22,52 +22,54 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_GetInstancePathAndName final : public CSimpleFB {
-    DECLARE_FIRMWARE_FB(FORTE_GetInstancePathAndName)
+namespace forte::eclipse4diac::utils {
+  class FORTE_GetInstancePathAndName final : public CSimpleFB {
+      DECLARE_FIRMWARE_FB(FORTE_GetInstancePathAndName)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    CIEC_ANY *getVarInternal(size_t) override;
+      CIEC_ANY *getVarInternal(size_t) override;
 
-    void alg_REQ(void);
+      void alg_REQ(void);
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_GetInstancePathAndName(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_GetInstancePathAndName(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_CHAR var_Sep;
+      CIEC_CHAR var_Sep;
 
-    CIEC_STRING var_Path;
-    CIEC_STRING var_Name;
+      CIEC_STRING var_Path;
+      CIEC_STRING var_Name;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_Sep;
+      CDataConnection *conn_Sep;
 
-    COutDataConnection<CIEC_STRING> conn_Path;
-    COutDataConnection<CIEC_STRING> conn_Name;
+      COutDataConnection<CIEC_STRING> conn_Path;
+      COutDataConnection<CIEC_STRING> conn_Name;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_CHAR &paSep, CIEC_STRING &paPath, CIEC_STRING &paName) {
-      var_Sep = paSep;
-      executeEvent(scmEventREQID, nullptr);
-      paPath = var_Path;
-      paName = var_Name;
-    }
+      void evt_REQ(const CIEC_CHAR &paSep, CIEC_STRING &paPath, CIEC_STRING &paName) {
+        var_Sep = paSep;
+        executeEvent(scmEventREQID, nullptr);
+        paPath = var_Path;
+        paName = var_Name;
+      }
 
-    void operator()(const CIEC_CHAR &paSep, CIEC_STRING &paPath, CIEC_STRING &paName) {
-      evt_REQ(paSep, paPath, paName);
-    }
-};
+      void operator()(const CIEC_CHAR &paSep, CIEC_STRING &paPath, CIEC_STRING &paName) {
+        evt_REQ(paSep, paPath, paName);
+      }
+  };
+} // namespace forte::eclipse4diac::utils

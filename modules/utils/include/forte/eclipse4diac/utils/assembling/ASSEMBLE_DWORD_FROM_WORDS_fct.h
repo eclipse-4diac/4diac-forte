@@ -73,5 +73,6 @@ class FORTE_ASSEMBLE_DWORD_FROM_WORDS final : public CFunctionBlock {
       evt_REQ(paWORD_00, paWORD_01, pa);
     }
 };
+}
 
 CIEC_DWORD func_ASSEMBLE_DWORD_FROM_WORDS(CIEC_WORD st_lv_WORD_00, CIEC_WORD st_lv_WORD_01);

@@ -24,6 +24,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::conversion;
+
 DEFINE_FIRMWARE_FB(FORTE_F_BYTE_BCD_TO_USINT, "F_BYTE_BCD_TO_USINT"_STRID)
 
 namespace {

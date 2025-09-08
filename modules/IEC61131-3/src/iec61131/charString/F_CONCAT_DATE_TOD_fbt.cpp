@@ -20,6 +20,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::charString;
+
 DEFINE_FIRMWARE_FB(FORTE_F_CONCAT_DATE_TOD, "F_CONCAT_DATE_TOD"_STRID)
 
 namespace {

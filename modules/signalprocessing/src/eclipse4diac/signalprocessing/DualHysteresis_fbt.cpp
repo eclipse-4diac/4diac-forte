@@ -27,6 +27,8 @@ using namespace forte::core::literals;
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
+using namespace forte::eclipse4diac::signalprocessing;
+
 DEFINE_FIRMWARE_FB(FORTE_signalprocessing__DualHysteresis, "signalprocessing__DualHysteresis"_STRID)
 
 namespace {

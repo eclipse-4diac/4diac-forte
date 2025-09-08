@@ -73,5 +73,6 @@ class FORTE_SPLIT_WORD_INTO_BYTES final : public CFunctionBlock {
       evt_REQ(paIN, paBYTE_00, paBYTE_01);
     }
 };
+}
 
 void func_SPLIT_WORD_INTO_BYTES(CIEC_WORD st_lv_IN, CIEC_BYTE &st_lv_BYTE_00, CIEC_BYTE &st_lv_BYTE_01);

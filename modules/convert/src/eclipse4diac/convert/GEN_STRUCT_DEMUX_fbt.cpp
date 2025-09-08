@@ -21,6 +21,10 @@ using namespace forte::core::literals;
 #include <stdio.h>
 #include "forte/eclipse4diac/convert/GEN_STRUCT_DEMUX_fbt.h"
 
+using namespace forte::eclipse4diac::convert;
+
+using namespace forte::eclipse4diac::convert;
+
 DEFINE_GENERIC_FIRMWARE_FB(GEN_STRUCT_DEMUX, "GEN_STRUCT_DEMUX"_STRID);
 
 namespace {

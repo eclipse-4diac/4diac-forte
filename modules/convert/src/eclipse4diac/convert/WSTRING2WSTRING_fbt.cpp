@@ -23,6 +23,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::convert;
+
 DEFINE_FIRMWARE_FB(FORTE_WSTRING2WSTRING, "WSTRING2WSTRING"_STRID)
 
 namespace {

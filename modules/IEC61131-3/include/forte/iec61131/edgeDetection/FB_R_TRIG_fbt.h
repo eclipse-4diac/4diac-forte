@@ -22,53 +22,55 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_FB_R_TRIG final : public CSimpleFB {
-    DECLARE_FIRMWARE_FB(FORTE_FB_R_TRIG)
+namespace forte::iec61131::edgeDetection {
+  class FORTE_FB_R_TRIG final : public CSimpleFB {
+      DECLARE_FIRMWARE_FB(FORTE_FB_R_TRIG)
 
-  private:
-    static const TEventID scmEventCNFID = 0;
-    static const TEventID scmEventREQID = 0;
+    private:
+      static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventREQID = 0;
 
-    CIEC_BOOL var_MEM;
+      CIEC_BOOL var_MEM;
 
-    CIEC_ANY *getVarInternal(size_t) override;
+      CIEC_ANY *getVarInternal(size_t) override;
 
-    void alg_REQ(void);
+      void alg_REQ(void);
 
-    void enterStateREQ(CEventChainExecutionThread *const paECET);
+      void enterStateREQ(CEventChainExecutionThread *const paECET);
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_FB_R_TRIG(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_FB_R_TRIG(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_BOOL var_CLK;
+      CIEC_BOOL var_CLK;
 
-    CIEC_BOOL var_Q;
+      CIEC_BOOL var_Q;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_CLK;
+      CDataConnection *conn_CLK;
 
-    COutDataConnection<CIEC_BOOL> conn_Q;
+      COutDataConnection<CIEC_BOOL> conn_Q;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BOOL &paCLK, CIEC_BOOL &paQ) {
-      var_CLK = paCLK;
-      executeEvent(scmEventREQID, nullptr);
-      paQ = var_Q;
-    }
+      void evt_REQ(const CIEC_BOOL &paCLK, CIEC_BOOL &paQ) {
+        var_CLK = paCLK;
+        executeEvent(scmEventREQID, nullptr);
+        paQ = var_Q;
+      }
 
-    void operator()(const CIEC_BOOL &paCLK, CIEC_BOOL &paQ) {
-      evt_REQ(paCLK, paQ);
-    }
-};
+      void operator()(const CIEC_BOOL &paCLK, CIEC_BOOL &paQ) {
+        evt_REQ(paCLK, paQ);
+      }
+  };
+} // namespace forte::iec61131::edgeDetection

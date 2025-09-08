@@ -18,6 +18,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::utils;
+
 DEFINE_FIRMWARE_FB(FORTE_SET_STRUCT_VALUE, "SET_STRUCT_VALUE"_STRID)
 
 namespace {

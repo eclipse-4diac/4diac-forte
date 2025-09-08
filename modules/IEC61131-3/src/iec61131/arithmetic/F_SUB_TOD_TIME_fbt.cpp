@@ -19,6 +19,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::arithmetic;
+
 DEFINE_FIRMWARE_FB(FORTE_F_SUB_TOD_TIME, "F_SUB_TOD_TIME"_STRID)
 
 namespace {

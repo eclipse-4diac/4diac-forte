@@ -22,6 +22,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::bitwiseOperators;
+
 DEFINE_GENERIC_FIRMWARE_FB(GEN_XOR, "GEN_XOR"_STRID)
 
 GEN_XOR::GEN_XOR(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :

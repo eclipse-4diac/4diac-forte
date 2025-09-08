@@ -27,54 +27,56 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_OUT_ANY_CONSOLE : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE)
+namespace forte::eclipse4diac::utils {
+  class FORTE_OUT_ANY_CONSOLE : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE)
 
-  private:
-    static const TEventID scmEventREQID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
 
-    static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
 
-  public:
-    FORTE_OUT_ANY_CONSOLE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_OUT_ANY_CONSOLE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_BOOL var_QI;
-    CIEC_STRING var_LABEL;
-    CIEC_ANY_VARIANT var_IN;
-    CIEC_BOOL var_QO;
+      CIEC_BOOL var_QI;
+      CIEC_STRING var_LABEL;
+      CIEC_ANY_VARIANT var_IN;
+      CIEC_BOOL var_QO;
 
-    CEventConnection conn_CNF;
-    CDataConnection *conn_QI;
-    CDataConnection *conn_LABEL;
-    CDataConnection *conn_IN;
-    COutDataConnection<CIEC_BOOL> conn_QO;
+      CEventConnection conn_CNF;
+      CDataConnection *conn_QI;
+      CDataConnection *conn_LABEL;
+      CDataConnection *conn_IN;
+      COutDataConnection<CIEC_BOOL> conn_QO;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_LABEL, const CIEC_ANY &pa_IN, CIEC_BOOL &pa_QO) {
-      var_QI = pa_QI;
-      var_LABEL = pa_LABEL;
-      var_IN = pa_IN;
-      receiveInputEvent(scmEventREQID, nullptr);
-      pa_QO = var_QO;
-    }
+      void evt_REQ(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_LABEL, const CIEC_ANY &pa_IN, CIEC_BOOL &pa_QO) {
+        var_QI = pa_QI;
+        var_LABEL = pa_LABEL;
+        var_IN = pa_IN;
+        receiveInputEvent(scmEventREQID, nullptr);
+        pa_QO = var_QO;
+      }
 
-    void operator()(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_LABEL, const CIEC_ANY &pa_IN, CIEC_BOOL &pa_QO) {
-      evt_REQ(pa_QI, pa_LABEL, pa_IN, pa_QO);
-    }
+      void operator()(const CIEC_BOOL &pa_QI, const CIEC_STRING &pa_LABEL, const CIEC_ANY &pa_IN, CIEC_BOOL &pa_QO) {
+        evt_REQ(pa_QI, pa_LABEL, pa_IN, pa_QO);
+      }
 
-  protected:
-    void setInitialValues() override;
+    protected:
+      void setInitialValues() override;
 
-  private:
-    std::string mDataOutPutBuffer;
-};
+    private:
+      std::string mDataOutPutBuffer;
+  };
+} // namespace forte::eclipse4diac::utils

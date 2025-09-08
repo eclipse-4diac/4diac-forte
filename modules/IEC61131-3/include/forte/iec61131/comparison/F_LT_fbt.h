@@ -25,48 +25,50 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_F_LT : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_F_LT)
+namespace forte::iec61131::comparison {
+  class FORTE_F_LT : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_F_LT)
 
-  private:
-    static const TEventID scmEventREQID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
 
-    static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
 
-  public:
-    FORTE_F_LT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_F_LT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_ANY_ELEMENTARY_VARIANT var_IN1;
-    CIEC_ANY_ELEMENTARY_VARIANT var_IN2;
-    CIEC_BOOL var_OUT;
+      CIEC_ANY_ELEMENTARY_VARIANT var_IN1;
+      CIEC_ANY_ELEMENTARY_VARIANT var_IN2;
+      CIEC_BOOL var_OUT;
 
-    CEventConnection conn_CNF;
-    CDataConnection *conn_IN1;
-    CDataConnection *conn_IN2;
-    COutDataConnection<CIEC_BOOL> conn_OUT;
+      CEventConnection conn_CNF;
+      CDataConnection *conn_IN1;
+      CDataConnection *conn_IN2;
+      COutDataConnection<CIEC_BOOL> conn_OUT;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_ANY_ELEMENTARY &pa_IN1, const CIEC_ANY_ELEMENTARY &pa_IN2, CIEC_BOOL &pa_OUT) {
-      var_IN1 = pa_IN1;
-      var_IN2 = pa_IN2;
-      receiveInputEvent(scmEventREQID, nullptr);
-      pa_OUT = var_OUT;
-    }
+      void evt_REQ(const CIEC_ANY_ELEMENTARY &pa_IN1, const CIEC_ANY_ELEMENTARY &pa_IN2, CIEC_BOOL &pa_OUT) {
+        var_IN1 = pa_IN1;
+        var_IN2 = pa_IN2;
+        receiveInputEvent(scmEventREQID, nullptr);
+        pa_OUT = var_OUT;
+      }
 
-    void operator()(const CIEC_ANY_ELEMENTARY &pa_IN1, const CIEC_ANY_ELEMENTARY &pa_IN2, CIEC_BOOL &pa_OUT) {
-      evt_REQ(pa_IN1, pa_IN2, pa_OUT);
-    }
+      void operator()(const CIEC_ANY_ELEMENTARY &pa_IN1, const CIEC_ANY_ELEMENTARY &pa_IN2, CIEC_BOOL &pa_OUT) {
+        evt_REQ(pa_IN1, pa_IN2, pa_OUT);
+      }
 
-  protected:
-    void setInitialValues() override;
-};
+    protected:
+      void setInitialValues() override;
+  };
+} // namespace forte::iec61131::comparison

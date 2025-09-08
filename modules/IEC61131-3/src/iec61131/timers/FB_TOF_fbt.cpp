@@ -41,6 +41,8 @@ namespace {
                                              .mPlugNames = {}};
 } // namespace
 
+using namespace forte::iec61131::timers;
+
 DEFINE_FIRMWARE_FB(FORTE_FB_TOF, "FB_TOF"_STRID)
 
 FORTE_FB_TOF::FORTE_FB_TOF(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :

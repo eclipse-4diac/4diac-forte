@@ -19,6 +19,7 @@
 #include "forte/util/string_utils.h"
 
 using namespace forte::core::literals;
+using namespace forte::iec61131::bitwiseOperators;
 
 namespace {
   const auto cDataOutputNames = std::array{"OUT"_STRID};

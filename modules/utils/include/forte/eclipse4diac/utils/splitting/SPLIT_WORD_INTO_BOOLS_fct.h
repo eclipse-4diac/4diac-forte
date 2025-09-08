@@ -148,6 +148,7 @@ class FORTE_SPLIT_WORD_INTO_BOOLS final : public CFunctionBlock {
               paBIT_10, paBIT_11, paBIT_12, paBIT_13, paBIT_14, paBIT_15);
     }
 };
+}
 
 void func_SPLIT_WORD_INTO_BOOLS(CIEC_WORD st_lv_IN,
                                 CIEC_BOOL &st_lv_BIT_00,

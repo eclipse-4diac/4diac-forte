@@ -107,6 +107,7 @@ class FORTE_SPLIT_BYTE_INTO_BOOLS final : public CFunctionBlock {
       evt_REQ(paIN, paBIT_00, paBIT_01, paBIT_02, paBIT_03, paBIT_04, paBIT_05, paBIT_06, paBIT_07);
     }
 };
+}
 
 void func_SPLIT_BYTE_INTO_BOOLS(CIEC_BYTE st_lv_IN,
                                 CIEC_BOOL &st_lv_BIT_00,

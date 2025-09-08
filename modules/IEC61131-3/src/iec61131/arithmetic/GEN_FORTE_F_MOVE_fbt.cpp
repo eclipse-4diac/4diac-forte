@@ -20,6 +20,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::arithmetic;
+
 DEFINE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE, "GEN_F_MOVE"_STRID)
 
 namespace {

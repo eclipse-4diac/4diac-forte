@@ -30,6 +30,8 @@ using namespace forte::core::literals;
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
+using namespace forte::eclipse4diac::utils::timing;
+
 DEFINE_FIRMWARE_FB(FORTE_E_STOPWATCH, "E_STOPWATCH"_STRID)
 
 namespace {

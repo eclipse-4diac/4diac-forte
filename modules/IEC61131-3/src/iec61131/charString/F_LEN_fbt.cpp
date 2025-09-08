@@ -18,6 +18,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::charString;
+
 DEFINE_FIRMWARE_FB(FORTE_F_LEN, "F_LEN"_STRID)
 
 namespace {

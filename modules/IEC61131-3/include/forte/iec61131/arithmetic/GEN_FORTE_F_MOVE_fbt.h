@@ -15,50 +15,52 @@
 
 #include "forte/genfb.h"
 
-class GEN_FORTE_F_MOVE final : public CGenFunctionBlock<CFunctionBlock> {
-    DECLARE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE)
+namespace forte::iec61131::arithmetic {
+  class GEN_FORTE_F_MOVE final : public CGenFunctionBlock<CFunctionBlock> {
+      DECLARE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE)
 
-  protected:
-    size_t getGenEOOffset() override {
-      return 1;
-    }
+    protected:
+      size_t getGenEOOffset() override {
+        return 1;
+      }
 
-    size_t getGenDIOffset() override {
-      return 1;
-    }
+      size_t getGenDIOffset() override {
+        return 1;
+      }
 
-    size_t getGenDOOffset() override {
-      return 1;
-    }
+      size_t getGenDOOffset() override {
+        return 1;
+      }
 
-    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
-    CIEC_ANY *getDI(size_t paIndex) override;
-    CIEC_ANY *getDO(size_t paIndex) override;
-    CDataConnection **getDIConUnchecked(const TPortId paIndex) override;
-    CDataConnection *getDOConUnchecked(TPortId paDONum) override;
+      CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+      CIEC_ANY *getDI(size_t paIndex) override;
+      CIEC_ANY *getDO(size_t paIndex) override;
+      CDataConnection **getDIConUnchecked(const TPortId paIndex) override;
+      CDataConnection *getDOConUnchecked(TPortId paDONum) override;
 
-  private:
-    static const TEventID scmEventREQID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
 
-    static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+      bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
 
-    static forte::core::StringId getDataTypeNameId(const char *paConfigString);
+      static forte::core::StringId getDataTypeNameId(const char *paConfigString);
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    std::unique_ptr<CIEC_ANY> mIn;
-    CDataConnection *conn_IN;
+      std::unique_ptr<CIEC_ANY> mIn;
+      CDataConnection *conn_IN;
 
-    std::unique_ptr<CGenDataConnection> conn_OUT;
+      std::unique_ptr<CGenDataConnection> conn_OUT;
 
-  public:
-    GEN_FORTE_F_MOVE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~GEN_FORTE_F_MOVE() override = default;
-};
+    public:
+      GEN_FORTE_F_MOVE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      ~GEN_FORTE_F_MOVE() override = default;
+  };
+} // namespace forte::iec61131::arithmetic

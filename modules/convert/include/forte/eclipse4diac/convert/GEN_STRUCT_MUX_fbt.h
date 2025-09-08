@@ -20,45 +20,47 @@
 
 #include <memory>
 
-class GEN_STRUCT_MUX final : public CGenFunctionBlock<CFunctionBlock> {
-    DECLARE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX)
+namespace forte::eclipse4diac::convert {
+  class GEN_STRUCT_MUX final : public CGenFunctionBlock<CFunctionBlock> {
+      DECLARE_GENERIC_FIRMWARE_FB(GEN_STRUCT_MUX)
 
-  protected:
-    size_t getGenEOOffset() override {
-      return 1;
-    }
+    protected:
+      size_t getGenEOOffset() override {
+        return 1;
+      }
 
-    size_t getGenDOOffset() override {
-      return 1;
-    }
+      size_t getGenDOOffset() override {
+        return 1;
+      }
 
-    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t paIndex) override;
-    CDataConnection *getDOConUnchecked(const TPortId paIndex) override;
+      CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t paIndex) override;
+      CDataConnection *getDOConUnchecked(const TPortId paIndex) override;
 
-  private:
-    static const TEventID scmEventREQID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
 
-    static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEI) override;
-    void writeOutputData(TEventID paEO) override;
+      void readInputData(TEventID paEI) override;
+      void writeOutputData(TEventID paEO) override;
 
-    bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
+      bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-    CEventConnection conn_CNF;
-    std::unique_ptr<CIEC_STRUCT> var_OUT;
-    std::unique_ptr<CGenDataConnection> conn_OUT;
+      CEventConnection conn_CNF;
+      std::unique_ptr<CIEC_STRUCT> var_OUT;
+      std::unique_ptr<CGenDataConnection> conn_OUT;
 
-  public:
-    GEN_STRUCT_MUX(const GEN_STRUCT_MUX &paOther) = delete;
-    GEN_STRUCT_MUX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
-    ~GEN_STRUCT_MUX() override = default;
+    public:
+      GEN_STRUCT_MUX(const GEN_STRUCT_MUX &paOther) = delete;
+      GEN_STRUCT_MUX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      ~GEN_STRUCT_MUX() override = default;
 
-    static forte::core::StringId getStructNameId(std::string_view paConfigString);
-};
+      static forte::core::StringId getStructNameId(std::string_view paConfigString);
+  };
+} // namespace forte::eclipse4diac::convert
 
 #endif //_GEN_STRUCT_MUX_H_

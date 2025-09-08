@@ -30,6 +30,8 @@ namespace {
 
 } // namespace
 
+using namespace forte::iec61131::arithmetic;
+
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ADD, "GEN_ADD"_STRID)
 
 GEN_ADD::GEN_ADD(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :

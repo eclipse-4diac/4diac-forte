@@ -46,6 +46,8 @@ namespace {
 
 } // namespace
 
+using namespace forte::iec61131::edgeDetection;
+
 DEFINE_FIRMWARE_FB(FORTE_FB_F_TRIG, "FB_F_TRIG"_STRID)
 
 FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :

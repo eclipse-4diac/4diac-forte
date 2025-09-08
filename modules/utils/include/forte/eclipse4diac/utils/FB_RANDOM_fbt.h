@@ -31,71 +31,73 @@
 #include "forte/datatypes/forte_array_variable.h"
 #include <random>
 
-class FORTE_FB_RANDOM final : public CBasicFB {
-    DECLARE_FIRMWARE_FB(FORTE_FB_RANDOM)
+namespace forte::eclipse4diac::utils {
+  class FORTE_FB_RANDOM final : public CBasicFB {
+      DECLARE_FIRMWARE_FB(FORTE_FB_RANDOM)
 
-  private:
-    static const TEventID scmEventINITID = 0;
-    static const TEventID scmEventREQID = 1;
-    static const TEventID scmEventINITOID = 0;
-    static const TEventID scmEventCNFID = 1;
+    private:
+      static const TEventID scmEventINITID = 0;
+      static const TEventID scmEventREQID = 1;
+      static const TEventID scmEventINITOID = 0;
+      static const TEventID scmEventCNFID = 1;
 
-    CIEC_ANY *getVarInternal(size_t) override;
+      CIEC_ANY *getVarInternal(size_t) override;
 
-    void alg_INIT(void);
-    void alg_REQ(void);
+      void alg_INIT(void);
+      void alg_REQ(void);
 
-    static const TForteInt16 scmStateSTART = 0;
-    static const TForteInt16 scmStateREQ = 1;
-    static const TForteInt16 scmStateState = 2;
+      static const TForteInt16 scmStateSTART = 0;
+      static const TForteInt16 scmStateREQ = 1;
+      static const TForteInt16 scmStateState = 2;
 
-    void enterStateSTART(CEventChainExecutionThread *const paECET);
-    void enterStateREQ(CEventChainExecutionThread *const paECET);
-    void enterStateState(CEventChainExecutionThread *const paECET);
+      void enterStateSTART(CEventChainExecutionThread *const paECET);
+      void enterStateREQ(CEventChainExecutionThread *const paECET);
+      void enterStateState(CEventChainExecutionThread *const paECET);
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-    std::random_device mRandomDevice; // Will be used to obtain a seed for the random number engine
-    std::mt19937 mRandomGenerator; // Standard mersenne_twister_engine
-    std::uniform_real_distribution<float> mDistribution;
+      std::random_device mRandomDevice; // Will be used to obtain a seed for the random number engine
+      std::mt19937 mRandomGenerator; // Standard mersenne_twister_engine
+      std::uniform_real_distribution<float> mDistribution;
 
-  public:
-    FORTE_FB_RANDOM(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    public:
+      FORTE_FB_RANDOM(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
 
-    CIEC_UINT var_SEED;
+      CIEC_UINT var_SEED;
 
-    CIEC_REAL var_VAL;
+      CIEC_REAL var_VAL;
 
-    CEventConnection conn_INITO;
-    CEventConnection conn_CNF;
+      CEventConnection conn_INITO;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_SEED;
+      CDataConnection *conn_SEED;
 
-    COutDataConnection<CIEC_REAL> conn_VAL;
+      COutDataConnection<CIEC_REAL> conn_VAL;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_INIT(const CIEC_UINT &paSEED, CIEC_REAL &paVAL) {
-      var_SEED = paSEED;
-      receiveInputEvent(scmEventINITID, nullptr);
-      paVAL = var_VAL;
-    }
+      void evt_INIT(const CIEC_UINT &paSEED, CIEC_REAL &paVAL) {
+        var_SEED = paSEED;
+        receiveInputEvent(scmEventINITID, nullptr);
+        paVAL = var_VAL;
+      }
 
-    void evt_REQ(const CIEC_UINT &paSEED, CIEC_REAL &paVAL) {
-      var_SEED = paSEED;
-      receiveInputEvent(scmEventREQID, nullptr);
-      paVAL = var_VAL;
-    }
+      void evt_REQ(const CIEC_UINT &paSEED, CIEC_REAL &paVAL) {
+        var_SEED = paSEED;
+        receiveInputEvent(scmEventREQID, nullptr);
+        paVAL = var_VAL;
+      }
 
-    void operator()(const CIEC_UINT &paSEED, CIEC_REAL &paVAL) {
-      evt_INIT(paSEED, paVAL);
-    }
-};
+      void operator()(const CIEC_UINT &paSEED, CIEC_REAL &paVAL) {
+        evt_INIT(paSEED, paVAL);
+      }
+  };
+} // namespace forte::eclipse4diac::utils

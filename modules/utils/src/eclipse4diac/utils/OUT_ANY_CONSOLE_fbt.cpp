@@ -20,6 +20,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::utils;
+
 DEFINE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE, "OUT_ANY_CONSOLE"_STRID)
 
 namespace {

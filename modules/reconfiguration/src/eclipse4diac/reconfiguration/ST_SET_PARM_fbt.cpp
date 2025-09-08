@@ -16,6 +16,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::eclipse4diac::reconfiguration;
+
 DEFINE_FIRMWARE_FB(FORTE_ST_SET_PARM, "ST_SET_PARM"_STRID)
 
 namespace {

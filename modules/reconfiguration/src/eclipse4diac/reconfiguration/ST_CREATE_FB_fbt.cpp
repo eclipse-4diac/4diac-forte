@@ -16,6 +16,8 @@ using namespace forte::core::literals;
 #include "forte/device.h"
 #include "forte/mgmcmdstruct.h"
 
+using namespace forte::eclipse4diac::reconfiguration;
+
 DEFINE_FIRMWARE_FB(FORTE_ST_CREATE_FB, "ST_CREATE_FB"_STRID)
 
 namespace {

@@ -86,6 +86,7 @@ class FORTE_SPLIT_BYTE_INTO_QUARTERS final : public CFunctionBlock {
       evt_REQ(paIN, paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03);
     }
 };
+}
 
 void func_SPLIT_BYTE_INTO_QUARTERS(CIEC_BYTE st_lv_IN,
                                    CIEC_BYTE &st_lv_QUARTER_BYTE_00,

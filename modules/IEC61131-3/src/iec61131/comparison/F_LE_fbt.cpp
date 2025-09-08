@@ -18,6 +18,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::comparison;
+
 DEFINE_FIRMWARE_FB(FORTE_F_LE, "F_LE"_STRID)
 
 namespace {

@@ -18,6 +18,8 @@
 
 using namespace forte::core::literals;
 
+using namespace forte::iec61131::selection;
+
 DEFINE_FIRMWARE_FB(FORTE_F_MUX_2, "F_MUX_2"_STRID)
 
 namespace {
