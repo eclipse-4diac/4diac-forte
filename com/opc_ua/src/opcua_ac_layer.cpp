@@ -104,9 +104,7 @@ EComResponse COPC_UA_AC_Layer::openConnection(char *paLayerParameter) {
   std::string instancePath(parser[PathToInstance] ? parser[PathToInstance] : smEmptyString);
   eRetVal = createOPCUAObject(server, instancePath, isPublisher);
   if (eRetVal == e_InitOk) {
-    for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
-      mRDBuffer.emplace_back(getCommFB()->getRDs()[i]->clone(nullptr));
-    }
+    initializeRDBuffer();
   }
   return eRetVal;
 }
@@ -150,6 +148,13 @@ EComResponse COPC_UA_AC_Layer::processInterrupt() {
   return e_ProcessDataOk;
 }
 
+void COPC_UA_AC_Layer::initializeRDBuffer() {
+  for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
+    mRDBuffer.emplace_back(getCommFB()->getRDs()[i]->clone(nullptr));
+    mRDBuffer[i]->setValue(false_BOOL);
+  }
+}
+
 UA_StatusCode COPC_UA_AC_Layer::triggerAlarm() {
   COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(mHandler);
   UA_Server *server = localHandler->getUAServer();
@@ -160,8 +165,8 @@ UA_StatusCode COPC_UA_AC_Layer::triggerAlarm() {
     status |= setConditionField(server, UA_QUALIFIEDNAME(0, smSeverity), severityValue, &UA_TYPES[UA_TYPES_UINT16]);
   }
   if (mMessageTextPortIndex >= 0) {
-    CIEC_STRING *messagePort = static_cast<CIEC_STRING *>(getCommFB()->getDI(mMessageTextPortIndex));
-    UA_LocalizedText messageValue = UA_LOCALIZEDTEXT(smEmptyString, getNameFromString(messagePort->c_str()));
+    CIEC_STRING &messagePort = static_cast<CIEC_STRING &>(getCommFB()->getDI(mMessageTextPortIndex)->unwrap());
+    UA_LocalizedText messageValue = UA_LOCALIZEDTEXT(smEmptyString, getNameFromString(messagePort.c_str()));
     status |=
         setConditionField(server, UA_QUALIFIEDNAME(0, smMessage), &messageValue, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
   }
@@ -210,7 +215,7 @@ EComResponse COPC_UA_AC_Layer::initOPCUAType(UA_Server *paServer, const std::str
   std::string browsePath(COPC_UA_ObjectStruct_Helper::getBrowsePath(scmAlarmTypeBrowsePath, paTypeName,
                                                                     1)); // TODO Change 1 to namespaceIndex
   if (isOPCUAObjectPresent(browsePath, &mTypeNodeId)) {
-    if (paIsPublisher && !isFullyInitialised(paTypeName)) {
+    if (paIsPublisher && !isFullyInitialized(paTypeName)) {
       return addOPCUATypeProperties(paServer, paTypeName);
     }
     return e_InitOk;
@@ -355,7 +360,7 @@ UA_StatusCode COPC_UA_AC_Layer::initializeMapping() {
   UA_BrowseResult_clear(&result);
   if (foundProperties != mUAPropertyMap.size()) {
     DEVLOG_ERROR("[OPC UA A&C LAYER]: Number of found Input properties does not match number of properties to be "
-                 "mapped. Expected: %d, Actual: %d",
+                 "mapped. Expected: %d, Actual: %d\n",
                  mUAPropertyMap.size(), foundProperties);
     return UA_STATUSCODE_BADNODEIDUNKNOWN;
   }
@@ -365,6 +370,7 @@ UA_StatusCode COPC_UA_AC_Layer::initializeMapping() {
 UA_BrowseResult COPC_UA_AC_Layer::browseNode(UA_NodeId &paNodeId) {
   COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(mHandler);
   UA_BrowseDescription nodesToBrowse;
+  UA_BrowseDescription_init(&nodesToBrowse);
   nodesToBrowse.nodeId = paNodeId;
   nodesToBrowse.browseDirection = UA_BROWSEDIRECTION_FORWARD;
   nodesToBrowse.nodeClassMask = UA_NODECLASS_VARIABLE;
@@ -394,7 +400,7 @@ bool COPC_UA_AC_Layer::checkFBOutputNames() {
   return true;
 }
 
-bool COPC_UA_AC_Layer::isFullyInitialised(const std::string &paTypeName) {
+bool COPC_UA_AC_Layer::isFullyInitialized(const std::string &paTypeName) {
   bool retVal = false;
   UA_BrowseResult result = browseNode(mTypeNodeId);
   std::string variableName = getCommFB()->getFBInterfaceSpec().mDONames[0].data();
@@ -459,6 +465,11 @@ EComResponse COPC_UA_AC_Layer::initializeMemberActions(const std::string &paPare
   if (mMessageTextPortIndex == -1) {
     DEVLOG_INFO("[OPC UA A&C LAYER]: No Data Port \"%s\" defined for FB %s. Using default value instead.",
                 smMessageText, getCommFB()->getInstanceName());
+  }
+  if (mHandler->initializeAction(*mMemberActionInfo) != UA_STATUSCODE_GOOD) {
+    DEVLOG_ERROR("[OPC UA A&C LAYER]: Error occured in FB %s while initializing members\n",
+                 getCommFB()->getInstanceName());
+    return e_InitTerminated;
   }
   return e_InitOk;
 }

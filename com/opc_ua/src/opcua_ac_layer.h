@@ -88,6 +88,8 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
      */
     void closeConnection() override;
 
+    void initializeRDBuffer();
+
     UA_StatusCode triggerAlarm();
 
     UA_StatusCode
@@ -114,7 +116,7 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
 
     UA_BrowseResult browseNode(UA_NodeId &paNodeId);
 
-    bool isFullyInitialised(const std::string &paTypeName);
+    bool isFullyInitialized(const std::string &paTypeName);
 
     bool checkFBOutputNames();
 
