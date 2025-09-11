@@ -125,7 +125,20 @@ class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract,
                                         std::string &paNodeName,
                                         std::vector<UA_NodeId *> &paRreferencedNodes) const;
 
+    /**
+     * Browse server with a specified configuration
+     * \param paBrowsePathDescription Browse configuration
+     * \return Result of the browse request
+     *  */
     UA_BrowseResult browseServer(UA_BrowseDescription &paBrowseDescription);
+
+    /**
+     * Receive Alarm data and start new event chain
+     * \param paData Received data
+     * \param paSize Size of data
+     * \param paLayer Source of received alarm
+     */
+    void onAlarmStateChanged(const void *paData, unsigned int paSize, COPC_UA_Layer *paLayer);
 
     /**
      * Default value for the namespace of the browsename for all created nodes

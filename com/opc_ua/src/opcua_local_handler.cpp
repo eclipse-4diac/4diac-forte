@@ -1608,3 +1608,12 @@ void COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite(UA_Server *,
 bool COPC_UA_Local_Handler::initializeNodesets(UA_Server &paUaServer) {
   return forte::com::opc_ua::OPC_UA_Nodesets::invoke(&paUaServer) == UA_STATUSCODE_GOOD;
 }
+
+void COPC_UA_Local_Handler::onAlarmStateChanged(const void *paData, unsigned int paSize, COPC_UA_Layer *paLayer) {
+  if (paLayer->recvData(paData, paSize) != e_ProcessDataOk) {
+    DEVLOG_ERROR("[OPC UA LOCAL]: Receive Alarm Data failed for FB %s!\n", paLayer->getCommFB()->getInstanceName());
+    return;
+  }
+  paLayer->getCommFB()->interruptCommFB(paLayer);
+  startNewEventChain(paLayer->getCommFB());
+}

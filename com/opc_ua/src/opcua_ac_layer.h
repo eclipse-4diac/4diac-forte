@@ -74,6 +74,8 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
         {"Acknowledged", -1},
     };
 
+    std::vector<std::unique_ptr<CIEC_ANY>> mRDBuffer;
+
     /**
      * Called when INIT is triggered in the FB and QI is set to true
      * @param paLayerParameter String conatained between the square brackets in the ID data input (opc_ua[...])

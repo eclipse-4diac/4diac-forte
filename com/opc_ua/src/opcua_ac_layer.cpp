@@ -103,6 +103,11 @@ EComResponse COPC_UA_AC_Layer::openConnection(char *paLayerParameter) {
   }
   std::string instancePath(parser[PathToInstance] ? parser[PathToInstance] : smEmptyString);
   eRetVal = createOPCUAObject(server, instancePath, isPublisher);
+  if (eRetVal == e_InitOk) {
+    for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
+      mRDBuffer.emplace_back(getCommFB()->getRDs()[i]->clone(nullptr));
+    }
+  }
   return eRetVal;
 }
 
@@ -112,7 +117,15 @@ void COPC_UA_AC_Layer::closeConnection() {
   }
 }
 
-EComResponse COPC_UA_AC_Layer::recvData(const void *, unsigned int) {
+EComResponse COPC_UA_AC_Layer::recvData(const void *paData, unsigned int) {
+  auto data = static_cast<const std::pair<TPortId, const CIEC_BOOL> *>(paData);
+  TPortId portId = data->first;
+  if (portId >= mRDBuffer.size()) {
+    DEVLOG_ERROR("[OPC UA A&C LAYER]: Wrong PortId for receiving data. Maximum allowed Id: %d, Actual: %d\n",
+                 mRDBuffer.size(), portId);
+    return e_ProcessDataRecvFaild;
+  }
+  (*mRDBuffer[portId]).setValue(data->second);
   return e_ProcessDataOk;
 }
 
@@ -131,7 +144,9 @@ EComResponse COPC_UA_AC_Layer::sendData(void *, unsigned int) {
 }
 
 EComResponse COPC_UA_AC_Layer::processInterrupt() {
-  // TODO
+  for (size_t i = 0; i < getCommFB()->getNumRD(); i++) {
+    getCommFB()->getRDs()[i]->setValue(*mRDBuffer[i]);
+  }
   return e_ProcessDataOk;
 }
 
@@ -599,6 +614,13 @@ UA_StatusCode COPC_UA_AC_Layer::onEnabled(UA_Server *server, const UA_NodeId *co
 }
 
 UA_StatusCode COPC_UA_AC_Layer::onActive(UA_Server *server, const UA_NodeId *condition) {
+  COPC_UA_AC_Layer *layer;
+  UA_Server_getNodeContext(server, *condition, (void **) &layer);
+  COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(layer->mHandler);
+  if (layer->getCommFB()->getComServiceType() == e_Subscriber) {
+    std::pair<TPortId, const CIEC_BOOL> data = std::make_pair(layer->mFBOutputMap[smActive], true_BOOL);
+    localHandler->onAlarmStateChanged(static_cast<const void *>(&data), 0, layer);
+  }
   UA_DateTime dateTime = UA_DateTime_now();
   UA_StatusCode status = UA_Server_writeObjectProperty_scalar(server, *condition, UA_QUALIFIEDNAME(0, smTime),
                                                               &dateTime, &UA_TYPES[UA_TYPES_DATETIME]);
@@ -609,18 +631,16 @@ UA_StatusCode COPC_UA_AC_Layer::onActive(UA_Server *server, const UA_NodeId *con
 }
 
 UA_StatusCode COPC_UA_AC_Layer::onAcknowledged(UA_Server *server, const UA_NodeId *condition) {
-  UA_Boolean activeStateId = false;
-  UA_Variant value;
-  UA_QualifiedName activeStateField = UA_QUALIFIEDNAME(0, smActiveState);
-  UA_QualifiedName activeStateIdField = UA_QUALIFIEDNAME(0, smId);
-
-  UA_Variant_setScalar(&value, &activeStateId, &UA_TYPES[UA_TYPES_BOOLEAN]);
-  UA_StatusCode status =
-      UA_Server_setConditionVariableFieldProperty(server, *condition, &value, activeStateField, activeStateIdField);
-
+  COPC_UA_AC_Layer *layer;
+  UA_Server_getNodeContext(server, *condition, (void **) &layer);
+  COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(layer->mHandler);
+  if (layer->getCommFB()->getComServiceType() == e_Subscriber) {
+    std::pair<TPortId, const CIEC_BOOL> data = std::make_pair(layer->mFBOutputMap[smAcked], true_BOOL);
+    localHandler->onAlarmStateChanged(static_cast<const void *>(&data), 0, layer);
+  }
   UA_DateTime dateTime = UA_DateTime_now();
-  status |= UA_Server_writeObjectProperty_scalar(server, *condition, UA_QUALIFIEDNAME(0, smTime), &dateTime,
-                                                 &UA_TYPES[UA_TYPES_DATETIME]);
+  UA_StatusCode status = UA_Server_writeObjectProperty_scalar(server, *condition, UA_QUALIFIEDNAME(0, smTime),
+                                                              &dateTime, &UA_TYPES[UA_TYPES_DATETIME]);
   if (status != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA A&C LAYER]: Acknowledged State callback failed, Status Code: %s\n",
                  UA_StatusCode_name(status));
