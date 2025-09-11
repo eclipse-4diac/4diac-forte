@@ -69,6 +69,11 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
         {"Severity", UA_NODEID_NULL},
     };
 
+    std::unordered_map<std::string, TPortId> mFBOutputMap = {
+        {"Active", -1},
+        {"Acknowledged", -1},
+    };
+
     /**
      * Called when INIT is triggered in the FB and QI is set to true
      * @param paLayerParameter String conatained between the square brackets in the ID data input (opc_ua[...])
@@ -101,17 +106,17 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
                                         std::string &paBrowsePath,
                                         bool paIsPublisher);
 
-    UA_StatusCode
-    addOPCUACondition(UA_Server *paServer, const std::string &paPathToInstance, std::string &paBrowsePath);
+    UA_StatusCode addOPCUACondition(UA_Server *paServer, std::string &paBrowsePath);
 
     UA_StatusCode initializeMapping();
+
+    bool checkFBOutputNames();
 
     forte::com_infra::EComResponse setConditionCallbacks(UA_Server *paServer);
 
     forte::com_infra::EComResponse createAlarmType(UA_Server *paServer, const std::string &paTypeName);
 
-    forte::com_infra::EComResponse
-    addOPCUATypeProperties(UA_Server *paServer, const std::string &paTypeName, bool paIsPublisher);
+    forte::com_infra::EComResponse addOPCUATypeProperties(UA_Server *paServer, const std::string &paTypeName);
 
     forte::com_infra::EComResponse addOPCUATypeEnableStateProperty(UA_Server *paServer);
 
@@ -124,9 +129,9 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
 
     void addNewNodeId(UA_NodeId *paNodeIdToAdd);
 
-    bool isOPCUAObjectPresent(std::string &paBrowsePath);
+    bool isOPCUAObjectPresent(std::string &paBrowsePath, UA_NodeId *paNewNodeId);
 
-    std::string getPortNameFromConnection(forte::core::StringId paPortNameId, bool paIsPublisher);
+    std::string getPortNameFromConnection(forte::core::StringId paPortNameId);
 
     std::string getFBNameFromConnection(bool paIsPublisher);
 
