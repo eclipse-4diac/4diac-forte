@@ -1,4 +1,3 @@
-option(FORTE_SYSTEM_TESTS "FORTE System Tests" OFF)
 if (NOT FORTE_SYSTEM_TESTS)
   return()
 endif()

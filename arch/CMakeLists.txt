@@ -12,9 +12,23 @@
 # *    - added utils directory
 # *******************************************************************************/
 
+include(CMakeDependentOption)
+include(CheckCXXCompilerFlag)
+
+check_cxx_compiler_flag(-frtti HAVE_RTTI_FLAG)
+check_cxx_compiler_flag(-fexceptions HAVE_EXCEPTIONS_FLAG)
+
+cmake_dependent_option(FORTE_RTTI_AND_EXCEPTIONS "Enable RTTI and Exceptions" OFF "HAVE_RTTI_FLAG AND HAVE_EXCEPTIONS_FLAG AND NOT FORTE_TESTS" ON)
+mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
+
 add_library(forte-arch)
 target_link_libraries(forte-arch PUBLIC forte-core)
 target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-arch>)
+
+target_compile_options(forte-arch PUBLIC
+        $<$<BOOL:${HAVE_RTTI_FLAG}>:$<IF:$<BOOL:${FORTE_RTTI_AND_EXCEPTIONS}>,-frtti,-fno-rtti>>
+        $<$<BOOL:${HAVE_EXCEPTIONS_FLAG}>:$<IF:$<BOOL:${FORTE_RTTI_AND_EXCEPTIONS}>,-fexceptions,-fno-exceptions>>
+)
 
 ###############################################################################
 # Architectures
@@ -23,7 +37,7 @@ macro(forte_register_architecture arch)
     set_property(TARGET forte-arch APPEND PROPERTY forte_architectures ${arch})
     if (NOT FORTE_ARCHITECTURE STREQUAL "${arch}")
         return()
-    endif()
+    endif ()
 endmacro()
 
 add_subdirectory(common)
@@ -52,4 +66,4 @@ set_property(CACHE FORTE_ARCHITECTURE PROPERTY STRINGS None ${architectures})
 
 if (FORTE_ARCHITECTURE STREQUAL "None")
     message(FATAL_ERROR "No FORTE_ARCHITECTURE selected. Use one of ${architectures}")
-endif()
+endif ()

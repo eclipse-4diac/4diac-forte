@@ -12,12 +12,9 @@
 # *   Martin Melik-Merkumians  - adds subdirectory for arch tests
 # *******************************************************************************/
 
-option(FORTE_TESTS "Build Tests" OFF)
 if (NOT FORTE_TESTS)
   return()
 endif()
-
-set(FORTE_RTTI_AND_EXCEPTIONS ON CACHE BOOL "This value is forced ON because of FORTE_TESTS enabled" FORCE)
 
 if (FORTE_ARCHITECTURE STREQUAL "Posix")
   option(FORTE_TEST_CODE_COVERAGE_ANALYSIS "Perform code coverage analyis with GCOV and presentation with LCOV" OFF)

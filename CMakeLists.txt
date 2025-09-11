@@ -33,15 +33,15 @@ project(FORTE
 #######################################################################################
 # Global configuration
 #######################################################################################
+option(FORTE_TESTS "Build Tests" OFF)
+option(FORTE_SYSTEM_TESTS "FORTE System Tests" OFF)
+
 option(FORTE_BUILD_EXECUTABLE "Build 4diac FORTE as an executable, otherwise build a library" ON)
 mark_as_advanced(FORTE_BUILD_EXECUTABLE)
 
 # TODO
 #option(FORTE_C_INTERFACE "Build C interface to 4diac FORTE" OFF)
 #mark_as_advanced(FORTE_C_INTERFACE)
-
-option(FORTE_RTTI_AND_EXCEPTIONS "Enable RTTI and Exceptions" OFF)
-mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
 
 add_library(forte-global INTERFACE)
 link_libraries(forte-global)
@@ -125,14 +125,8 @@ add_subdirectory(stdfblib)
 add_subdirectory(com)
 add_subdirectory(modules)
 
-enable_testing()
+if (FORTE_TESTS OR FORTE_SYSTEM_TESTS)
+    enable_testing()
+endif ()
 add_subdirectory(systemtests)
 add_subdirectory(tests)
-
-# set this late as it may be overridden by tests
-if (NOT MSVC)
-    target_compile_options(forte-global INTERFACE
-        $<IF:$<BOOL:${FORTE_RTTI_AND_EXCEPTIONS}>,-frtti,-fno-rtti>
-        $<IF:$<BOOL:${FORTE_RTTI_AND_EXCEPTIONS}>,-fexceptions,-fno-exceptions>
-    )
-endif()

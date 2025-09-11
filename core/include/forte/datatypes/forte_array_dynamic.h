@@ -514,12 +514,12 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
 
     [[nodiscard]] reference at(intmax_t paIndex) override {
       if (paIndex < mLowerBound || paIndex > mUpperBound || !mData) {
-#ifdef FORTE_RTTI_AND_EXCEPTIONS
+#if __cpp_exceptions
         throw std::out_of_range("array::at: Index: " + std::to_string(paIndex) +
                                 " >=  size: " + std::to_string(size()));
-#else // FORTE_RTTI_AND_EXCEPTIONS
+#else
         std::abort();
-#endif // FORTE_RTTI_AND_EXCEPTIONS
+#endif
       }
       return *reinterpret_cast<pointer>(reinterpret_cast<TForteByte *>(mData) +
                                         getDataArrayIndex(paIndex) * mElementSize);
@@ -527,12 +527,12 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
 
     [[nodiscard]] const_reference at(intmax_t paIndex) const override {
       if (paIndex < mLowerBound || paIndex > mUpperBound || !mData) {
-#ifdef FORTE_RTTI_AND_EXCEPTIONS
+#if __cpp_exceptions
         throw std::out_of_range("array::at: Index: " + std::to_string(paIndex) +
                                 " >=  size: " + std::to_string(size()));
-#else // FORTE_RTTI_AND_EXCEPTIONS
+#else
         std::abort();
-#endif // FORTE_RTTI_AND_EXCEPTIONS
+#endif
       }
       return *reinterpret_cast<const_pointer>(reinterpret_cast<const TForteByte *>(mData) +
                                               getDataArrayIndex(paIndex) * mElementSize);
