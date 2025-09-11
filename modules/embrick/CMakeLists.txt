@@ -23,7 +23,7 @@ endif ()
 # emBrick FBs
 # ############################################################################
 
-add_library(forte-embrick OBJECT
+add_library(forte-embrick
             handler/spi.h
             handler/spi.cpp
             handler/pin.h

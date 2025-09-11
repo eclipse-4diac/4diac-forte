@@ -17,7 +17,7 @@ forte_register_io(ELITEBOARD OFF
                   "Support for the eLITe-Board development board"
 )
 
-add_library(forte-eliteboard OBJECT)
+add_library(forte-eliteboard)
 target_link_libraries(forte-eliteboard PUBLIC forte-core)
 target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-eliteboard>)
 

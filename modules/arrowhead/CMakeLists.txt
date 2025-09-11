@@ -18,7 +18,7 @@ if (NOT FORTE_MODULE_Arrowhead)
     return()
 endif ()
 
-add_library(forte-arrowhead OBJECT)
+add_library(forte-arrowhead)
 target_link_libraries(forte-arrowhead PUBLIC forte-core)
 target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-arrowhead>)
 

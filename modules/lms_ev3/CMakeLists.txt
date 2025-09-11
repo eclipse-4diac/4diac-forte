@@ -30,7 +30,7 @@ forte_set_process_interface("Lego Mindstorms EV3"
                             ID
                             QD
 )
-add_library(forte-lms_ev3 OBJECT
+add_library(forte-lms_ev3
             processinterface.h processinterface.cpp fileWriter_fbt.h
             fileWriter_fbt.cpp fileReader_fbt.h fileReader_fbt.cpp
 )

@@ -36,7 +36,7 @@ forte_set_process_interface("ADS"
                             QL
 )
 
-add_library(forte-ads OBJECT
+add_library(forte-ads
             CAdsProcessInterface.h
             CAdsProcessInterface.cpp
             CAdsConnection.h

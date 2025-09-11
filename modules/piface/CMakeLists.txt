@@ -23,7 +23,7 @@ if (NOT FORTE_MODULE_PiFace)
 endif ()
 
 forte_set_process_interface("PiFace" IX QX)
-add_library(forte-piface OBJECT
+add_library(forte-piface
             processinterface.h processinterface.cpp
             ../conmeleon_c1/spi/spidevice.h ../conmeleon_c1/spi/spidevice.cpp
 )

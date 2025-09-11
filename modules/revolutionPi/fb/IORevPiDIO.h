@@ -15,6 +15,7 @@
 
 #include "forte/funcbloc.h"
 #include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
 #include "IORevPiBusAdapter.h"
 #include "forte/io/configFB/io_slave_multi.h"

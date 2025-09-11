@@ -23,7 +23,7 @@ endif ()
 # i2c-dev
 # ############################################################################
 forte_set_process_interface("I2C-Dev" IX QX IW QW)
-add_library(forte-i2c_dev OBJECT
+add_library(forte-i2c_dev
             processinterface.h i2cprocessinterface.h i2cprocessinterface.cpp
 )
 target_link_libraries(forte-i2c_dev PUBLIC forte-core)

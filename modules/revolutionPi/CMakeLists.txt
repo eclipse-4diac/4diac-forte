@@ -18,7 +18,7 @@ if (NOT FORTE_MODULE_REVOLUTIONPI)
     return()
 endif ()
 
-add_library(forte-revolutionPi OBJECT
+add_library(forte-revolutionPi
             lib/piControlIf.h
             lib/piControlIf.c
             RevPiController.h

@@ -23,7 +23,7 @@ endif ()
 # SysFs
 # ############################################################################
 forte_set_process_interface("Odroid" IX QX IW)
-add_library(forte-odroid OBJECT
+add_library(forte-odroid
             ../sysfs/sysfsprocint.h ../sysfs/sysfsprocint.cpp
             processinterface.h processinterface.cpp
 )

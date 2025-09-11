@@ -34,7 +34,7 @@ target_link_libraries(forte PUBLIC Arp.System.ModuleLib)
 target_link_libraries(forte PUBLIC Arp.System.Module)
 target_link_libraries(forte PUBLIC Arp.Plc.AnsiC)
 
-add_library(forte-PLCnext OBJECT
+add_library(forte-PLCnext
             types/PLCnextBusAdapter.h
             types/PLCnextBusAdapter.cpp
             types/PLCnextAXLSEDI16.h

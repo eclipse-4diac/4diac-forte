@@ -24,7 +24,7 @@ endif ()
 # ############################################################################
 
 forte_set_process_interface("Raspberry-SPS" IX QX IW QW)
-add_library(forte-raspberry_sps OBJECT
+add_library(forte-raspberry_sps
             ../i2c_dev/i2cprocessinterface.h
             ../i2c_dev/i2cprocessinterface.cpp processinterface.h
             processinterface.cpp

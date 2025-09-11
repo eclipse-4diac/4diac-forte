@@ -49,7 +49,7 @@ else ()
     )
 endif (catkin_FOUND)
 
-add_library(forte-ros OBJECT
+add_library(forte-ros
             $<$<BOOL:${FORTE_COM_ROS}>:ROSLayer.cpp>
             $<$<BOOL:${FORTE_COM_ROS}>:ROSLayer.h>
             ROSManager.h

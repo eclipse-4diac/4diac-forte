@@ -25,6 +25,6 @@ endif ()
 
 forte_set_process_interface("uMIC" IX QX)
 target_link_libraries(forte PUBLIC umic.so)
-add_library(forte-umic OBJECT processinterface.h processinterface.cpp)
+add_library(forte-umic processinterface.h processinterface.cpp)
 target_link_libraries(forte-umic PUBLIC forte-core)
 target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-umic>)

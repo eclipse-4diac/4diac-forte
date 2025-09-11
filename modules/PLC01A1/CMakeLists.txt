@@ -19,7 +19,7 @@ if (NOT FORTE_MODULE_PLC01A1)
     return()
 endif ()
 
-add_library(forte-PLC01A1 OBJECT
+add_library(forte-PLC01A1
             plc01a1_controller.h plc01a1_controller.cpp plc01a1_config_fb.h
             plc01a1_config_fb.cpp
 )

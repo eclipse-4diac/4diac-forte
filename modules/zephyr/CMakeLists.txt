@@ -36,7 +36,7 @@ forte_register_io(ESP32ETHERNETKIT OFF
 )
 
 # ############################################################################
-add_library(forte-zephyr OBJECT
+add_library(forte-zephyr
             types/ZephyrIOBase.h types/ZephyrIOBase.cpp types/ZephyrIO_fbt.h
             types/ZephyrIO_fbt.cpp types/Esp32EthernetKitIO_fbt.h
             types/Esp32EthernetKitIO_fbt.cpp

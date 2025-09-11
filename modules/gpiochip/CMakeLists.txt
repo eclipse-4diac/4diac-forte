@@ -20,7 +20,7 @@ if (NOT FORTE_MODULE_GPIOCHIP)
     return()
 endif ()
 
-add_library(forte-gpiochip OBJECT
+add_library(forte-gpiochip
             gpiochip_controller.h gpiochip_controller.cpp
             gpiochip_config_fb.h gpiochip_config_fb.cpp
 )

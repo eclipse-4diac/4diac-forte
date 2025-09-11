@@ -44,7 +44,7 @@ elseif (FORTE_ARCHITECTURE STREQUAL "Posix")
     target_link_libraries(forte PUBLIC powerlink pcap rt)
 endif ()
 
-add_library(forte-powerlink OBJECT
+add_library(forte-powerlink
             ${FORTE_MODULE_POWERLINK_LIB_DIR}/EplStack/trace.c
             EplWrapper.cpp
             EplWrapper.h
