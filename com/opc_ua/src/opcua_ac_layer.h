@@ -110,6 +110,10 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
 
     UA_StatusCode initializeMapping();
 
+    UA_BrowseResult browseNode(UA_NodeId &paNodeId);
+
+    bool isFullyInitialised(const std::string &paTypeName);
+
     bool checkFBOutputNames();
 
     forte::com_infra::EComResponse setConditionCallbacks(UA_Server *paServer);
@@ -137,9 +141,9 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
 
     char *getNameFromString(const std::string &paName);
 
-    static UA_StatusCode enabledStateCallback(UA_Server *server, const UA_NodeId *condition);
+    static UA_StatusCode onEnabled(UA_Server *server, const UA_NodeId *condition);
 
-    static UA_StatusCode activeStateCallback(UA_Server *server, const UA_NodeId *condition);
+    static UA_StatusCode onActive(UA_Server *server, const UA_NodeId *condition);
 
-    static UA_StatusCode ackedStateCallback(UA_Server *server, const UA_NodeId *condition);
+    static UA_StatusCode onAcknowledged(UA_Server *server, const UA_NodeId *condition);
 };

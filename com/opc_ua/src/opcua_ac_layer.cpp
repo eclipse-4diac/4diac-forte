@@ -195,12 +195,16 @@ EComResponse COPC_UA_AC_Layer::initOPCUAType(UA_Server *paServer, const std::str
   std::string browsePath(COPC_UA_ObjectStruct_Helper::getBrowsePath(scmAlarmTypeBrowsePath, paTypeName,
                                                                     1)); // TODO Change 1 to namespaceIndex
   if (isOPCUAObjectPresent(browsePath, &mTypeNodeId)) {
-    if (paIsPublisher) {
+    if (paIsPublisher && !isFullyInitialised(paTypeName)) {
       return addOPCUATypeProperties(paServer, paTypeName);
     }
     return e_InitOk;
   }
-  return createAlarmType(paServer, paTypeName);
+  EComResponse eRetVal = createAlarmType(paServer, paTypeName);
+  if (eRetVal == e_InitOk && paIsPublisher) {
+    eRetVal = addOPCUATypeProperties(paServer, paTypeName);
+  }
+  return eRetVal;
 }
 
 EComResponse
@@ -222,8 +226,17 @@ COPC_UA_AC_Layer::createOPCUAObject(UA_Server *paServer, const std::string &paPa
     }
     return e_InitOk;
   }
+
   if (addOPCUACondition(paServer, conditionBrowsePath) != UA_STATUSCODE_GOOD) {
     return e_InitTerminated;
+  }
+  if (paIsPublisher) {
+    if (initializeMapping() != UA_STATUSCODE_GOOD) {
+      return e_InitTerminated;
+    }
+    if (initializeMemberActions(conditionBrowsePath) != e_InitOk) {
+      return e_InitTerminated;
+    }
   }
   return setConditionCallbacks(paServer);
 }
@@ -290,9 +303,9 @@ UA_StatusCode COPC_UA_AC_Layer::addOPCUACondition(UA_Server *paServer, std::stri
   char *conditionName = getNameFromString(scmAlarmConditionName);
   char *conditionBrowsePath = getNameFromString(paBrowsePath);
   mConditionInstanceId = UA_NODEID_STRING(1, conditionBrowsePath); // TODO Change 1 to namespaceIndex
-  UA_StatusCode status =
-      UA_Server_createCondition(paServer, mConditionInstanceId, mTypeNodeId, UA_QUALIFIEDNAME(1, conditionName),
-                                mConditionSourceId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT), &mConditionInstanceId);
+  UA_StatusCode status = UA_Server_createConditionWithContext(
+      paServer, mConditionInstanceId, mTypeNodeId, UA_QUALIFIEDNAME(1, conditionName), mConditionSourceId,
+      UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT), this, &mConditionInstanceId);
   if (status != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA A&C LAYER]: Adding Condition failed for FB %s. StatusCode %s\n",
                  getCommFB()->getInstanceName(), UA_StatusCode_name(status));
@@ -314,14 +327,7 @@ UA_StatusCode COPC_UA_AC_Layer::addOPCUACondition(UA_Server *paServer, std::stri
 }
 
 UA_StatusCode COPC_UA_AC_Layer::initializeMapping() {
-  COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(mHandler);
-  UA_BrowseDescription nodesToBrowse;
-  nodesToBrowse.nodeId = mConditionInstanceId;
-  nodesToBrowse.browseDirection = UA_BROWSEDIRECTION_FORWARD;
-  nodesToBrowse.nodeClassMask = UA_NODECLASS_VARIABLE;
-  nodesToBrowse.resultMask = UA_BROWSERESULTMASK_BROWSENAME;
-  UA_BrowseResult result = localHandler->browseServer(nodesToBrowse);
-
+  UA_BrowseResult result = browseNode(mConditionInstanceId);
   size_t foundProperties = 0;
   for (size_t i = 0; i < result.referencesSize; i++) {
     UA_ReferenceDescription *ref = &result.references[i];
@@ -333,12 +339,22 @@ UA_StatusCode COPC_UA_AC_Layer::initializeMapping() {
   }
   UA_BrowseResult_clear(&result);
   if (foundProperties != mUAPropertyMap.size()) {
-    DEVLOG_ERROR("[OPC UA A&C LAYER]: Number of found properties does not match number of properties to be mapped. "
-                 "Expected: %d, Actual: %d",
+    DEVLOG_ERROR("[OPC UA A&C LAYER]: Number of found Input properties does not match number of properties to be "
+                 "mapped. Expected: %d, Actual: %d",
                  mUAPropertyMap.size(), foundProperties);
     return UA_STATUSCODE_BADNODEIDUNKNOWN;
   }
   return UA_STATUSCODE_GOOD;
+}
+
+UA_BrowseResult COPC_UA_AC_Layer::browseNode(UA_NodeId &paNodeId) {
+  COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(mHandler);
+  UA_BrowseDescription nodesToBrowse;
+  nodesToBrowse.nodeId = paNodeId;
+  nodesToBrowse.browseDirection = UA_BROWSEDIRECTION_FORWARD;
+  nodesToBrowse.nodeClassMask = UA_NODECLASS_VARIABLE;
+  nodesToBrowse.resultMask = UA_BROWSERESULTMASK_BROWSENAME;
+  return localHandler->browseServer(nodesToBrowse);
 }
 
 bool COPC_UA_AC_Layer::checkFBOutputNames() {
@@ -363,23 +379,39 @@ bool COPC_UA_AC_Layer::checkFBOutputNames() {
   return true;
 }
 
+bool COPC_UA_AC_Layer::isFullyInitialised(const std::string &paTypeName) {
+  bool retVal = false;
+  UA_BrowseResult result = browseNode(mTypeNodeId);
+  std::string variableName = getCommFB()->getFBInterfaceSpec().mDONames[0].data();
+  std::string memberBrowsePath = COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(paTypeName, variableName);
+  for (size_t i = 0; i < result.referencesSize; i++) {
+    UA_ReferenceDescription *ref = &result.references[i];
+    std::string browseName((const char *) ref->browseName.name.data, ref->browseName.name.length);
+    if (browseName == memberBrowsePath) {
+      retVal = true;
+      break;
+    }
+  }
+  UA_BrowseResult_clear(&result);
+  return retVal;
+}
+
 EComResponse COPC_UA_AC_Layer::setConditionCallbacks(UA_Server *paServer) {
-  EComResponse eRetVal = e_InitOk;
-  UA_TwoStateVariableChangeCallback callback = enabledStateCallback;
+  UA_TwoStateVariableChangeCallback callback = onEnabled;
   UA_StatusCode status = UA_Server_setConditionTwoStateVariableCallback(
       paServer, mConditionInstanceId, mConditionSourceId, false, callback, UA_ENTERING_ENABLEDSTATE);
-  callback = activeStateCallback;
+  callback = onActive;
   status |= UA_Server_setConditionTwoStateVariableCallback(paServer, mConditionInstanceId, mConditionSourceId, false,
                                                            callback, UA_ENTERING_ACTIVESTATE);
-  callback = ackedStateCallback;
+  callback = onAcknowledged;
   status |= UA_Server_setConditionTwoStateVariableCallback(paServer, mConditionInstanceId, mConditionSourceId, false,
                                                            callback, UA_ENTERING_ACKEDSTATE);
   if (status != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA A&C LAYER]: Setting Condition callback methods failed for FB %s, Status Code: %s\n",
                  getCommFB()->getInstanceName(), UA_StatusCode_name(status));
-    eRetVal = e_InitTerminated;
+    return e_InitTerminated;
   }
-  return eRetVal;
+  return e_InitOk;
 }
 
 EComResponse COPC_UA_AC_Layer::initializeMemberActions(const std::string &paParentBrowsePath) {
@@ -525,7 +557,7 @@ std::string COPC_UA_AC_Layer::getPortNameFromConnection(forte::core::StringId pa
   const CDataConnection *portConnection = getCommFB()->getDIConnection(paPortNameId);
   const CConnectionPoint connectionPoint = portConnection->getSourceId();
   TPortId portId = connectionPoint.getPortId();
-  return std::string(connectionPoint.getFB().getFBInterfaceSpec().mDINames[portId]);
+  return std::string(connectionPoint.getFB().getFBInterfaceSpec().mDINames[portId].data());
 }
 
 std::string COPC_UA_AC_Layer::getFBNameFromConnection(bool paIsPublisher) {
@@ -556,7 +588,7 @@ char *COPC_UA_AC_Layer::getNameFromString(const std::string &paName) {
   return name;
 }
 
-UA_StatusCode COPC_UA_AC_Layer::enabledStateCallback(UA_Server *server, const UA_NodeId *condition) {
+UA_StatusCode COPC_UA_AC_Layer::onEnabled(UA_Server *server, const UA_NodeId *condition) {
   UA_DateTime dateTime = UA_DateTime_now();
   UA_StatusCode status = UA_Server_writeObjectProperty_scalar(server, *condition, UA_QUALIFIEDNAME(0, smTime),
                                                               &dateTime, &UA_TYPES[UA_TYPES_DATETIME]);
@@ -566,7 +598,7 @@ UA_StatusCode COPC_UA_AC_Layer::enabledStateCallback(UA_Server *server, const UA
   return status;
 }
 
-UA_StatusCode COPC_UA_AC_Layer::activeStateCallback(UA_Server *server, const UA_NodeId *condition) {
+UA_StatusCode COPC_UA_AC_Layer::onActive(UA_Server *server, const UA_NodeId *condition) {
   UA_DateTime dateTime = UA_DateTime_now();
   UA_StatusCode status = UA_Server_writeObjectProperty_scalar(server, *condition, UA_QUALIFIEDNAME(0, smTime),
                                                               &dateTime, &UA_TYPES[UA_TYPES_DATETIME]);
@@ -576,7 +608,7 @@ UA_StatusCode COPC_UA_AC_Layer::activeStateCallback(UA_Server *server, const UA_
   return status;
 }
 
-UA_StatusCode COPC_UA_AC_Layer::ackedStateCallback(UA_Server *server, const UA_NodeId *condition) {
+UA_StatusCode COPC_UA_AC_Layer::onAcknowledged(UA_Server *server, const UA_NodeId *condition) {
   UA_Boolean activeStateId = false;
   UA_Variant value;
   UA_QualifiedName activeStateField = UA_QUALIFIEDNAME(0, smActiveState);
