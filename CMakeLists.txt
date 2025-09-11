@@ -22,7 +22,7 @@
 #      - complete rewrite
 # *******************************************************************************/
 
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.30)
 project(FORTE
         DESCRIPTION "4diac FORTE is a small portable implementation of an IEC 61499 runtime environment targeting small embedded control devices, implemented in C++."
         HOMEPAGE_URL "https://eclipse.dev/4diac/"
