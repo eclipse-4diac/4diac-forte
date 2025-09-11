@@ -10,7 +10,6 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
-#include "forte/arch/fortenew.h"
 #include "forte/util/criticalregion.h"
 #include "forte/arch/forte_thread.h"
 #include <unistd.h>

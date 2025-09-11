@@ -11,7 +11,6 @@
  ************************************************************************************/
 
 #include "forte/devexec.h"
-#include "forte/arch/fortenew.h"
 #include "zephyrtiha.h"
 #include "forte/util/forte_constants.h"
 

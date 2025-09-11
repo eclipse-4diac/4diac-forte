@@ -12,7 +12,6 @@
  *  Jens Reimann - fix waiting for thread initialization
  *  Thomas Wagner - copy from "arch/posix": removing #include <sys/wait.h>
  *******************************************************************************/
-#include "forte/arch/fortealloc.h"
 #include "forte/arch/forte_thread.h"
 #include "forte/util/devlog.h"
 #include <errno.h>

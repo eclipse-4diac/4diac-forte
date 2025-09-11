@@ -11,7 +11,6 @@
  *  Martin Melik-Merkumians - updates timer handler to use monotonic clock
  *  Agostino Mascitti - PikeOS adaption
  *******************************************************************************/
-#include "forte/arch/fortenew.h"
 #include "pctimeha.h"
 #include "forte/devexec.h"
 #include <time.h>

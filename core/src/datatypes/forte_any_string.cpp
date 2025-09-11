@@ -20,7 +20,6 @@
 
 #include <cstring>
 
-#include "forte/arch/fortenew.h"
 #include "forte/util/string_utils.h"
 #include "unicode_utils.h"
 
@@ -28,7 +27,7 @@ char CIEC_ANY_STRING::smNullString[1] = {'\0'};
 
 CIEC_ANY_STRING::~CIEC_ANY_STRING() {
   if (getGenData()) {
-    forte_free(getGenData());
+    operator delete(getGenData());
   }
 }
 
@@ -78,12 +77,12 @@ void CIEC_ANY_STRING::reserve(const TForteUInt16 paRequestedSize) {
       nNewLength = paRequestedSize;
     }
 
-    TForteByte *newMemory = (TForteByte *) forte_malloc(
-        nNewLength + 5); // the plus five are 2 bytes for length, 2 bytes for capacity and one for a backup \0
+    TForteByte *newMemory = static_cast<TForteByte *>(operator new(
+        nNewLength + 5)); // the plus five are 2 bytes for length, 2 bytes for capacity and one for a backup \0
     TForteByte *oldMemory = getGenData();
     if (nullptr != oldMemory) {
       memcpy(newMemory, oldMemory, getCapacity() + 5);
-      forte_free(oldMemory);
+      operator delete(oldMemory);
     }
     setGenData(newMemory);
     setAllocatedLength(static_cast<TForteUInt16>(

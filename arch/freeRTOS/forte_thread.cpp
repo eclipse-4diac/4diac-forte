@@ -11,7 +11,6 @@
  * Jose Cabral - Cleaning
  ************************************************************************************/
 #include "forte/util/criticalregion.h"
-#include "forte/arch/fortealloc.h"
 
 #include "forte/arch/forte_thread.h"
 

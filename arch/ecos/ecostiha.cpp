@@ -9,7 +9,6 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#include "forte/arch/fortenew.h"
 #include "ecostiha.h"
 #include "forte/devexec.h"
 

@@ -18,7 +18,6 @@
 #define TESTS_CORE_FBTESTS_FBTESTFIXTURE_H_
 
 #include "forte/datatypes/forte_any.h"
-#include "forte/arch/fortenew.h"
 #include "forte/genfb.h"
 #include "forte/arch/forte_sync.h"
 #include <boost/test/unit_test.hpp>

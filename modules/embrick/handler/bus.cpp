@@ -21,7 +21,6 @@
 #include "../slave/handles/analog.h"
 #include "../slave/handles/analog10.h"
 #include "arch/utils/timespec_utils.h"
-#include "forte/arch/fortealloc.h"
 
 const char *const EmbrickBusHandler::scmSlaveUpdateFailed = "Update of slave failed.";
 const char *const EmbrickBusHandler::scmNoSlavesFound = "No slave modules found.";
@@ -151,9 +150,9 @@ void EmbrickBusHandler::prepareLoop() {
   // TODO Combine slaves list and scheduling information
   // DISCUSS Speed of array and forte_list?
 
-  mSList = (struct SEntry **) forte_malloc(sizeof(struct SEntry *) * mDevices.size());
+  mSList = (struct SEntry **) operator new(sizeof(struct SEntry *) * mDevices.size());
   for (size_t i = 0; i < mDevices.size(); i++) {
-    mSList[i] = (struct SEntry *) forte_malloc(sizeof(struct SEntry));
+    mSList[i] = (struct SEntry *) operator new(sizeof(struct SEntry));
     mSList[i]->mSlave = mDevices[i];
     mSList[i]->mNextDeadline = mNextLoop;
     mSList[i]->mLastDuration = 0;
@@ -234,9 +233,9 @@ void EmbrickBusHandler::runLoop() {
 void EmbrickBusHandler::cleanLoop() {
   // Free memory of list
   for (size_t i = 0; i < mDevices.size(); i++) {
-    forte_free(mSList[i]);
+    operator delete(mSList[i]);
   }
-  forte_free(mSList);
+  operator delete(mSList);
   mSList = nullptr;
 }
 

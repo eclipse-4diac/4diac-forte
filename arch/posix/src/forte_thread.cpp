@@ -11,7 +11,6 @@
  *  Alois Zoitl - extracted common functions to new base class CThreadBase
  *  Jens Reimann - fix waiting for thread initialization
  *******************************************************************************/
-#include "forte/arch/fortealloc.h"
 #include "forte/arch/forte_thread.h"
 #include "forte/util/devlog.h"
 #include <errno.h>

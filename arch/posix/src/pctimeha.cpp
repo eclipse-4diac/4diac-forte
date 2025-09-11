@@ -10,7 +10,6 @@
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *  Martin Melik-Merkumians - updates timer handler to use monotonic clock
  *******************************************************************************/
-#include "forte/arch/fortenew.h"
 #include "pctimeha.h"
 #include "forte/devexec.h"
 #include <time.h>

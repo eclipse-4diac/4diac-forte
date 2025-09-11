@@ -10,7 +10,6 @@
   Dirk O. Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
 
-#include "forte/arch/fortenew.h"
 #include "forte/arch/forte_fileio.h"
 #include <cstring>
 #include <zephyr/fs/fs.h>

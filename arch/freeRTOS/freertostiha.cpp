@@ -10,7 +10,6 @@
  * Milan Vathoopan, Guru Chandrasekhara - initial API and implementation and/or initial documentation
  ************************************************************************************/
 #include "forte/devexec.h"
-#include "forte/arch/fortenew.h"
 #include "freertostiha.h"
 
 CFreeRTOSTimerHandler::CFreeRTOSTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {

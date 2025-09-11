@@ -18,8 +18,6 @@ target_sources(forte-arch PUBLIC
         forte_sem.h
         forte_sync.h
         forte_thread.h
-        fortealloc.h
-        ../../../../common/include/forte/arch/genfortealloc.h
         $<$<BOOL:${FORTE_COM_ETH}>:${CMAKE_CURRENT_SOURCE_DIR}/sockhand.h>
         $<$<BOOL:${FORTE_COM_ETH}>:${CMAKE_CURRENT_SOURCE_DIR}/../../../../common/include/forte/arch/bsdsocketinterf.h>
         $<$<BOOL:${FORTE_COM_ETH}>:${CMAKE_CURRENT_SOURCE_DIR}/../../../../common/include/forte/arch/fdselecthand.h>

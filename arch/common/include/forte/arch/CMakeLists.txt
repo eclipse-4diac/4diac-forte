@@ -20,6 +20,5 @@ target_sources(forte-arch PUBLIC
         forte_fileio.h
         forte_printer.h
         forte_specific_architecture.h
-        fortenew.h
         threadbase.h
 )
