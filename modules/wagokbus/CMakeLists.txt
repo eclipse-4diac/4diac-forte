@@ -14,30 +14,63 @@
 #############################################################################
 # WAGO KBUS SIFBs
 #############################################################################
-if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+if (NOT "${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+  return ()
+endif ()
 
-    option(FORTE_MODULE_WagoKbus "Wago Kbus interface" OFF)
+option(FORTE_MODULE_WagoKbus "Wago Kbus interface" OFF)
+          
+if (NOT FORTE_MODULE_WagoKbus)
+  return()
+endif ()
 
-    if (NOT FORTE_MODULE_WagoKbus)
-        return()
-    endif ()
-
-forte_add_include_directories(${CMAKE_CURRENT_SOURCE_DIR})  
-forte_add_sourcefile_hcpp(WagoHandle WagoDeviceController)
-forte_add_sourcefile_hcpp(types/WagoMaster types/WagoBusAdapter types/WagoSlaveBase)
-forte_add_sourcefile_hcpp(types/Wago1506 types/Wago1405_6 types/Wago1504_5 types/Wago459 types/Wago636_fbt)
-  
 SET(FORTE_WAGO_INCLUDE_DIR "" CACHE STRING "Path where the include for wago is found") 
 SET(FORTE_WAGO_LIB_DIR "" CACHE STRING "Path where the  libraries for wago is found") 
 
-forte_add_include_system_directories(${FORTE_WAGO_INCLUDE_DIR})
-forte_add_include_system_directories(${FORTE_WAGO_INCLUDE_DIR}/dal)
-forte_add_include_system_directories(${FORTE_WAGO_INCLUDE_DIR}/OsLinux)
-forte_add_link_directories(${FORTE_WAGO_LIB_DIR})
 
-forte_add_link_library(dal libloader pthread ffi dbus-glib-1 glib-2.0)
-forte_add_link_library(typelabel oslinux dbuskbuscommon)
+add_library(forte-wagoKbus
+            WagoHandle.h
+            WagoHandle.cpp
+            WagoDeviceController.h
+            WagoDeviceController.cpp
+            types/WagoMaster.h
+            types/WagoMaster.cpp
+            types/WagoBusAdapter.h
+            types/WagoBusAdapter.cpp
+            types/WagoSlaveBase.h
+            types/WagoSlaveBase.cpp
+            types/Wago1506.h
+            types/Wago1506.cpp
+            types/Wago1405_6.h
+            types/Wago1405_6.cpp
+            types/Wago1504_5.h
+            types/Wago1504_5.cpp
+            types/Wago459.h
+            types/Wago459.cpp
+            types/Wago636_fbt.h
+            types/Wago636_fbt.cpp
+)
+
+target_link_libraries(forte-wagoKbus PUBLIC forte-core)
+target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-wagoKbus>)
+
+target_include_directories(forte-wagoKbus PRIVATE
+            ${FORTE_WAGO_INCLUDE_DIR}
+            ${FORTE_WAGO_INCLUDE_DIR}/dal
+            ${FORTE_WAGO_INCLUDE_DIR}/OsLinux
+)
+
+target_link_directories(forte-wagoKbus PUBLIC ${FORTE_WAGO_LIB_DIR})
+target_link_libraries(forte-wagoKbus PRIVATE
+            dal
+            libloader
+            pthread
+            ffi
+            dbus-glib-1
+            glib-2.0
+            typelabel
+            oslinux
+            dbuskbuscommon
+)
 
 #TODO: Further dependencies are to be checked and added later
-
-endif("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
