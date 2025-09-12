@@ -12,8 +12,6 @@
  *******************************************************************************/
 #include "forte/util/devlog.h"
 
-#ifndef NOLOG
-
 #include "forte/config/devlog_config.h"
 #include "forte/timerha.h"
 #include "forte/arch/forte_printer.h"
@@ -48,9 +46,6 @@
 std::string getRealtimeString();
 
 static const char *scLogLevel[] = {"INFO", "WARNING", "ERROR", "DEBUG", "TRACE"};
-
-// this define allows to provide an own log handler (see LMS for an example of this)
-#ifndef FORTE_EXTERNAL_LOG_HANDLER
 
 /*! \brief print the given log message with the error level and a time stamp
  *
@@ -99,7 +94,3 @@ void printLogMessage(E_MsgLevel paLevel, const char *paMessage) {
   (paLevel == E_MsgLevel::Error ? std::cerr : std::cout) << std::flush;
 #endif
 }
-
-#endif /* FORTE_EXTERNAL_LOG_HANDLER */
-
-#endif /* NOLOG */

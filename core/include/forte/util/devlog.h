@@ -10,8 +10,8 @@
  *   Rene Smodic, Thomas Strasser, Alois Zoitl, Ingo Hegny, Monika Wenger
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _DEVLOG_H_
-#define _DEVLOG_H_
+
+#pragma once
 
 /*!\ingroup FORTE_HAL
  * \brief CDeviceLog is the entity that logs messages created by the FORTE Runtime system.
@@ -29,11 +29,12 @@ enum class E_MsgLevel { Info, Warning, Error, Debug, Trace };
  * NOLOG: log no messages
  */
 
-#if !(defined(NOLOG) || defined(LOGERROR) || defined(LOGWARNING) || defined(LOGINFO) || defined(LOGDEBUG))
-#define LOGDEBUG /* Set default loglevel */
+#if !(defined(FORTE_NOLOG) || defined(FORTE_LOGERROR) || defined(FORTE_LOGWARNING) || defined(FORTE_LOGINFO) ||        \
+      defined(FORTE_LOGDEBUG))
+#define FORTE_LOGDEBUG /* Set default loglevel */
 #endif
 
-#ifdef LOGDEBUG
+#ifdef FORTE_LOGDEBUG
 #define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
 #define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
 #define DEVLOG_INFO(...) logMessage(E_MsgLevel::Info, __VA_ARGS__)
@@ -44,7 +45,7 @@ enum class E_MsgLevel { Info, Warning, Error, Debug, Trace };
 #define DEVLOG_DEBUG_VAR(X) X
 #endif
 
-#ifdef LOGERROR
+#ifdef FORTE_LOGERROR
 #define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
 #define DEVLOG_WARNING(...)
 #define DEVLOG_INFO(...)
@@ -55,7 +56,7 @@ enum class E_MsgLevel { Info, Warning, Error, Debug, Trace };
 #define DEVLOG_DEBUG_VAR(X)
 #endif
 
-#ifdef LOGWARNING
+#ifdef FORTE_LOGWARNING
 #define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
 #define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
 #define DEVLOG_INFO(...)
@@ -66,7 +67,7 @@ enum class E_MsgLevel { Info, Warning, Error, Debug, Trace };
 #define DEVLOG_DEBUG_VAR(X)
 #endif
 
-#ifdef LOGINFO
+#ifdef FORTE_LOGINFO
 #define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
 #define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
 #define DEVLOG_INFO(...) logMessage(E_MsgLevel::Info, __VA_ARGS__)
@@ -77,7 +78,7 @@ enum class E_MsgLevel { Info, Warning, Error, Debug, Trace };
 #define DEVLOG_DEBUG_VAR(X)
 #endif
 
-#ifdef NOLOG
+#ifdef FORTE_NOLOG
 #define DEVLOG_INFO(...)
 #define DEVLOG_WARNING(...)
 #define DEVLOG_ERROR(...)
@@ -88,19 +89,17 @@ enum class E_MsgLevel { Info, Warning, Error, Debug, Trace };
 #define DEVLOG_DEBUG_VAR(X)
 #endif
 
-#if (defined(FORTE_TRACE_EVENTS) && !defined(NOLOG))
+#if (defined(FORTE_TRACE_EVENTS) && !defined(FORTE_NOLOG))
 #define FORTE_TRACE(...) logMessage(E_MsgLevel::Trace, __VA_ARGS__)
 #else
 #define FORTE_TRACE(...)
 #endif
 
-#ifndef NOLOG
+#ifndef FORTE_NOLOG
 
 /*! \brief Adds an Entry to the LogBook
  *
  */
 void logMessage(E_MsgLevel paLevel, const char *pacMessage, ...);
 
-#endif // #ifndef NOLOG
-
-#endif //_DEVLOG_H_
+#endif // #ifndef FORTE_NOLOG

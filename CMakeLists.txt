@@ -46,28 +46,6 @@ mark_as_advanced(FORTE_BUILD_EXECUTABLE)
 add_library(forte-global INTERFACE)
 link_libraries(forte-global)
 
-#######################################################################################
-# Determine log level
-#######################################################################################
-string(TOLOWER "${CMAKE_BUILD_TYPE}" BUILD_TYPE_LOWERCASE)
-if (BUILD_TYPE_LOWERCASE STREQUAL "debug")
-    if (FORTE_LOGLEVEL MATCHES "NOLOG")
-        message(WARNING "Log Level is set to NOLOG and CMAKE_BUILD_TYPE is set to Debug. Are sure you don't want to log anything?")
-    endif()
-    if (NOT DEFINED FORTE_LOGLEVEL)
-    	message(STATUS "No Log Level was specified. Setting Log Level to Debug default LOGINFO.")
-        set(FORTE_LOGLEVEL "LOGINFO" CACHE STRING "Loglevel to use" FORCE)
-    endif()
-else()
-    if (NOT DEFINED FORTE_LOGLEVEL)
-        message(STATUS "No Log Level was specified. Setting Log Level to Release default LOGERROR.")
-        set(FORTE_LOGLEVEL "LOGERROR" CACHE STRING "Loglevel to use" FORCE)
-    endif()
-endif()
-set_property(CACHE FORTE_LOGLEVEL PROPERTY STRINGS LOGDEBUG LOGERROR LOGWARNING LOGINFO NOLOG)
-
-target_compile_definitions(forte-global INTERFACE ${FORTE_LOGLEVEL})
-
 #############################################################################
 # Configure stacktrace
 #############################################################################

@@ -29,7 +29,7 @@ CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openTCPServerConnect
                                                                                     unsigned short paPort) {
   TSocketDescriptor nRetVal = -1;
 
-#ifndef LOGINFO
+#ifndef FORTE_LOGINFO
   (void) paIPAddr;
 #else
   DEVLOG_INFO("CBSDSocketInterface: Opening TCP-Server connection at: %s:%d\n", paIPAddr, paPort);

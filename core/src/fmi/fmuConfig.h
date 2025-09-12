@@ -171,7 +171,7 @@ const unsigned int allowedStatesInFunction[] = {
 
 #define NOT_USED(var) (void) var;
 
-#ifdef LOGDEBUG
+#ifdef FORTE_LOGDEBUG
 #include "forte/arch/forte_sync.h"
 #include <sstream>
 #include "core/fmi/fmuInstance.h"

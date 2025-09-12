@@ -13,14 +13,18 @@
 # core/util
 # ############################################################################
 
+set(FORTE_LOGLEVEL "$<IF:$<CONFIG:Debug>,LOGINFO,LOGERROR>" CACHE STRING "Loglevel to use")
+set_property(CACHE FORTE_LOGLEVEL PROPERTY STRINGS LOGDEBUG LOGERROR LOGWARNING LOGINFO NOLOG)
+
 option(FORTE_LOGGER_READABLE_TIME "Logger time in IEC 61131-3 date time literal" OFF)
 
 target_sources(forte-core PRIVATE
         configFileParser.cpp
         configFileParser.h
-        devlog.cpp
         mainparam_utils.cpp
         parameterParser.cpp
         string_utils.cpp
+        $<$<NOT:$<OR:$<STREQUAL:${FORTE_LOGLEVEL},NOLOG>,$<BOOL:${FORTE_EXTERNAL_LOG_HANDLER}>>>:${CMAKE_CURRENT_SOURCE_DIR}/devlog.cpp>
         $<IF:$<BOOL:${FORTE_LOGGER_READABLE_TIME}>,${CMAKE_CURRENT_SOURCE_DIR}/readableTimeString.cpp,${CMAKE_CURRENT_SOURCE_DIR}/plainTimeString.cpp>
 )
+target_compile_definitions(forte-core PUBLIC "FORTE_${FORTE_LOGLEVEL}")
