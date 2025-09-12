@@ -16,6 +16,9 @@
 #include "forte/funcbloc.h"
 #include "forte/ecet.h"
 
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_time.h"
+
 namespace forte::eclipse4diac::rtevents {
   /*!\brief Base class for all single output real-time event function blocks.
    *

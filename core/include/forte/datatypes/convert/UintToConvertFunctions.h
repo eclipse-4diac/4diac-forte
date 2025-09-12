@@ -16,74 +16,91 @@
  *     to use new cast function
  *******************************************************************************/
 
-#ifndef SRC_CORE_DATATYPES_CONVERT_UINTTOCONVERTFUNCTIONS_H_
-#define SRC_CORE_DATATYPES_CONVERT_UINTTOCONVERTFUNCTIONS_H_
+#pragma once
+
+#include "forte/datatypes/forte_any.h"
+#include "forte/datatypes/forte_byte.h"
+#include "forte/datatypes/forte_dint.h"
+#include "forte/datatypes/forte_dword.h"
+#include "forte/datatypes/forte_int.h"
+#include "forte/datatypes/forte_lint.h"
+#include "forte/datatypes/forte_lreal.h"
+#include "forte/datatypes/forte_lword.h"
+#include "forte/datatypes/forte_real.h"
+#include "forte/datatypes/forte_sint.h"
+#include "forte/datatypes/forte_udint.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/datatypes/forte_ulint.h"
+#include "forte/datatypes/forte_usint.h"
+#include "forte/datatypes/forte_word.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_wstring.h"
+
+#include "convert_function_utils.h"
 
 //********************************************************************************************
 //   UINT_TO_*  functions
 //********************************************************************************************
-inline const CIEC_DINT func_UINT_TO_DINT(const CIEC_UINT &paVal) {
+inline CIEC_DINT func_UINT_TO_DINT(const CIEC_UINT &paVal) {
   return CIEC_ANY::cast<CIEC_DINT>(paVal);
 }
 
-inline const CIEC_INT func_UINT_TO_INT(const CIEC_UINT &paVal) {
+inline CIEC_INT func_UINT_TO_INT(const CIEC_UINT &paVal) {
   return CIEC_ANY::cast<CIEC_INT>(paVal);
 }
 
-inline const CIEC_BYTE func_UINT_TO_BYTE(const CIEC_UINT &paVal) {
+inline CIEC_BYTE func_UINT_TO_BYTE(const CIEC_UINT &paVal) {
   return CIEC_ANY::cast<CIEC_BYTE>(paVal);
 }
 
-inline const CIEC_LINT func_UINT_TO_LINT(const CIEC_UINT &paVal) {
+inline CIEC_LINT func_UINT_TO_LINT(const CIEC_UINT &paVal) {
   return CIEC_ANY::cast<CIEC_LINT>(paVal);
 }
 
-inline const CIEC_LREAL func_UINT_TO_LREAL(const CIEC_UINT &paVal) {
+inline CIEC_LREAL func_UINT_TO_LREAL(const CIEC_UINT &paVal) {
   return CIEC_ANY::cast<CIEC_LREAL>(paVal);
 }
 
-inline const CIEC_LWORD func_UINT_TO_LWORD(const CIEC_UINT &paVal) {
+inline CIEC_LWORD func_UINT_TO_LWORD(const CIEC_UINT &paVal) {
   return CIEC_ANY::cast<CIEC_LWORD>(paVal);
 }
 
-inline const CIEC_REAL func_UINT_TO_REAL(const CIEC_UINT &paVal) {
+inline CIEC_REAL func_UINT_TO_REAL(const CIEC_UINT &paVal) {
   return CIEC_ANY::cast<CIEC_REAL>(paVal);
 }
 
-inline const CIEC_SINT func_UINT_TO_SINT(const CIEC_UINT &paVal) {
+inline CIEC_SINT func_UINT_TO_SINT(const CIEC_UINT &paVal) {
   return CIEC_ANY::cast<CIEC_SINT>(paVal);
 }
 
-inline const CIEC_DWORD func_UINT_TO_DWORD(const CIEC_UINT &paVal) {
+inline CIEC_DWORD func_UINT_TO_DWORD(const CIEC_UINT &paVal) {
   return CIEC_ANY::cast<CIEC_DWORD>(paVal);
 }
 
-inline const CIEC_UDINT func_UINT_TO_UDINT(const CIEC_UINT &paVal) {
+inline CIEC_UDINT func_UINT_TO_UDINT(const CIEC_UINT &paVal) {
   return CIEC_ANY::cast<CIEC_UDINT>(paVal);
 }
 
-inline const CIEC_ULINT func_UINT_TO_ULINT(const CIEC_UINT &paVal) {
+inline CIEC_ULINT func_UINT_TO_ULINT(const CIEC_UINT &paVal) {
   return CIEC_ANY::cast<CIEC_ULINT>(paVal);
 }
 
-inline const CIEC_USINT func_UINT_TO_USINT(const CIEC_UINT &paVal) {
+inline CIEC_USINT func_UINT_TO_USINT(const CIEC_UINT &paVal) {
   return CIEC_ANY::cast<CIEC_USINT>(paVal);
 }
 
-inline const CIEC_WORD func_UINT_TO_WORD(const CIEC_UINT &paVal) {
+inline CIEC_WORD func_UINT_TO_WORD(const CIEC_UINT &paVal) {
   return CIEC_ANY::cast<CIEC_WORD>(paVal);
 }
 
-inline const CIEC_STRING func_UINT_AS_STRING(const CIEC_UINT &paVal) {
+inline CIEC_STRING func_UINT_AS_STRING(const CIEC_UINT &paVal) {
   CIEC_STRING string;
   stringConverter(string, paVal);
   return string;
 }
 
-inline const CIEC_WSTRING func_UINT_AS_WSTRING(const CIEC_UINT &paVal) {
+inline CIEC_WSTRING func_UINT_AS_WSTRING(const CIEC_UINT &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;
 }
-
-#endif /* SRC_CORE_DATATYPES_CONVERT_UINTTOCONVERTFUNCTIONS_H_ */

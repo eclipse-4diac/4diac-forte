@@ -16,6 +16,7 @@ target_sources(forte-core PUBLIC
         FILE_SET HEADERS
         FILES
         convert_functions.h
+        convert_function_utils.h
         SintToConvertFunctions.h
         DintToConvertFunctions.h
         DwordToConvertFunctions.h

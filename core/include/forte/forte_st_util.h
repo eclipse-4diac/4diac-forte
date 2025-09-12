@@ -14,6 +14,11 @@
 
 #pragma once
 
+#include <type_traits>
+
+#include "forte/datatypes/forte_any.h"
+#include "forte/datatypes/forte_any_bit.h"
+
 template<typename T>
 T &ST_IGNORE_OUT_PARAM(T &&value) {
   return value;

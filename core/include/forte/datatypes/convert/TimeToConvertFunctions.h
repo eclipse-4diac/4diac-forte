@@ -16,44 +16,49 @@
  *     to use new cast function
  *******************************************************************************/
 
-#ifndef SRC_CORE_DATATYPES_CONVERT_TIMETOCONVERTFUNCTIONS_H_
-#define SRC_CORE_DATATYPES_CONVERT_TIMETOCONVERTFUNCTIONS_H_
+#pragma once
+
+#include "forte/datatypes/forte_any.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_time.h"
+#include "forte/datatypes/forte_ltime.h"
+
+#include "convert_function_utils.h"
 
 //********************************************************************************************
 //   L/TIME_TO_*  functions
 //********************************************************************************************
 
-inline const CIEC_TIME func_LTIME_TO_TIME(const CIEC_LTIME &paValue) {
+inline CIEC_TIME func_LTIME_TO_TIME(const CIEC_LTIME &paValue) {
   return CIEC_TIME(static_cast<CIEC_LTIME::TValueType>(paValue));
 }
 
-inline const CIEC_LTIME func_TIME_TO_LTIME(const CIEC_TIME &paValue) {
+inline CIEC_LTIME func_TIME_TO_LTIME(const CIEC_TIME &paValue) {
   return CIEC_ANY::cast<CIEC_TIME>(paValue);
 }
 
 /** Non-standard functions */
-inline const CIEC_STRING func_TIME_AS_STRING(const CIEC_TIME &paVal) {
+inline CIEC_STRING func_TIME_AS_STRING(const CIEC_TIME &paVal) {
   CIEC_STRING string;
   stringConverter(string, paVal);
   return string;
 }
 
-inline const CIEC_WSTRING func_TIME_AS_WSTRING(const CIEC_TIME &paVal) {
+inline CIEC_WSTRING func_TIME_AS_WSTRING(const CIEC_TIME &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;
 }
 
-inline const CIEC_STRING func_LTIME_AS_STRING(const CIEC_LTIME &paVal) {
+inline CIEC_STRING func_LTIME_AS_STRING(const CIEC_LTIME &paVal) {
   CIEC_STRING string;
   stringConverter(string, paVal);
   return string;
 }
 
-inline const CIEC_WSTRING func_LTIME_AS_WSTRING(const CIEC_LTIME &paVal) {
+inline CIEC_WSTRING func_LTIME_AS_WSTRING(const CIEC_LTIME &paVal) {
   CIEC_WSTRING string;
   stringConverter(string, paVal);
   return string;
 }
-
-#endif /* SRC_CORE_DATATYPES_CONVERT_TIMETOCONVERTFUNCTIONS_H_ */

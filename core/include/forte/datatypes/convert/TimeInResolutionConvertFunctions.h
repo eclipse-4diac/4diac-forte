@@ -12,8 +12,15 @@
  *    Martin Erich Jobst - add templated versions for ANY_DURATION
  *******************************************************************************/
 
-#ifndef SRC_CORE_DATATYPES_CONVERT_TIMEINRESOLUTIONCONVERTFUNCTIONS_H_
-#define SRC_CORE_DATATYPES_CONVERT_TIMEINRESOLUTIONCONVERTFUNCTIONS_H_
+#pragma once
+
+#include "forte/datatypes/forte_dint.h"
+#include "forte/datatypes/forte_lint.h"
+#include "forte/datatypes/forte_lreal.h"
+#include "forte/datatypes/forte_udint.h"
+#include "forte/datatypes/forte_ulint.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_time.h"
 
 #include "forte/iec61131_cast_helper.h"
 #include "forte/util/forte_constants.h"
@@ -32,7 +39,7 @@
  * @return TIME value in seconds
  */
 template<typename T, typename U>
-inline const T func_TIME_IN_S_TO(const U &paValue) {
+inline T func_TIME_IN_S_TO(const U &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_NUM, T>), "T not of ANY_NUM");
   static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
   if (std::is_base_of_v<CIEC_ANY_REAL, T>) {
@@ -54,7 +61,7 @@ inline const T func_TIME_IN_S_TO(const U &paValue) {
  * @return TIME value in milliseconds
  */
 template<typename T, typename U>
-inline const T func_TIME_IN_MS_TO(const U &paValue) {
+inline T func_TIME_IN_MS_TO(const U &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_NUM, T>), "T not of ANY_NUM");
   static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
   if (std::is_base_of_v<CIEC_ANY_REAL, T>) {
@@ -77,7 +84,7 @@ inline const T func_TIME_IN_MS_TO(const U &paValue) {
  * @return TIME value in microseconds
  */
 template<typename T, typename U>
-inline const T func_TIME_IN_US_TO(const U &paValue) {
+inline T func_TIME_IN_US_TO(const U &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_NUM, T>), "T not of ANY_NUM");
   static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
   if (std::is_base_of_v<CIEC_ANY_REAL, T>) {
@@ -100,7 +107,7 @@ inline const T func_TIME_IN_US_TO(const U &paValue) {
  * @return TIME value in nanoseconds
  */
 template<typename T, typename U>
-inline const T func_TIME_IN_NS_TO(const U &paValue) {
+inline T func_TIME_IN_NS_TO(const U &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_NUM, T>), "T not of ANY_NUM");
   static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
   return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()));
@@ -117,7 +124,7 @@ inline const T func_TIME_IN_NS_TO(const U &paValue) {
  * @return TIME value in seconds
  */
 template<typename T>
-inline const CIEC_LINT func_TIME_IN_S_TO_LINT(const T &paValue) {
+inline CIEC_LINT func_TIME_IN_S_TO_LINT(const T &paValue) {
   return func_TIME_IN_S_TO<CIEC_LINT>(paValue);
 }
 
@@ -128,7 +135,7 @@ inline const CIEC_LINT func_TIME_IN_S_TO_LINT(const T &paValue) {
  * @return TIME value in milliseconds
  */
 template<typename T>
-inline const CIEC_LINT func_TIME_IN_MS_TO_LINT(const T &paValue) {
+inline CIEC_LINT func_TIME_IN_MS_TO_LINT(const T &paValue) {
   return func_TIME_IN_MS_TO<CIEC_LINT>(paValue);
 }
 
@@ -139,7 +146,7 @@ inline const CIEC_LINT func_TIME_IN_MS_TO_LINT(const T &paValue) {
  * @return TIME value in microseconds
  */
 template<typename T>
-inline const CIEC_LINT func_TIME_IN_US_TO_LINT(const T &paValue) {
+inline CIEC_LINT func_TIME_IN_US_TO_LINT(const T &paValue) {
   return func_TIME_IN_US_TO<CIEC_LINT>(paValue);
 }
 
@@ -150,7 +157,7 @@ inline const CIEC_LINT func_TIME_IN_US_TO_LINT(const T &paValue) {
  * @return TIME value in nanoseconds
  */
 template<typename T>
-inline const CIEC_LINT func_TIME_IN_NS_TO_LINT(const T &paValue) {
+inline CIEC_LINT func_TIME_IN_NS_TO_LINT(const T &paValue) {
   return func_TIME_IN_NS_TO<CIEC_LINT>(paValue);
 }
 
@@ -165,7 +172,7 @@ inline const CIEC_LINT func_TIME_IN_NS_TO_LINT(const T &paValue) {
  * @return TIME value in seconds
  */
 template<typename T>
-inline const CIEC_ULINT func_TIME_IN_S_TO_ULINT(const T &paValue) {
+inline CIEC_ULINT func_TIME_IN_S_TO_ULINT(const T &paValue) {
   return func_TIME_IN_S_TO<CIEC_ULINT>(paValue);
 }
 
@@ -176,7 +183,7 @@ inline const CIEC_ULINT func_TIME_IN_S_TO_ULINT(const T &paValue) {
  * @return TIME value in milliseconds
  */
 template<typename T>
-inline const CIEC_ULINT func_TIME_IN_MS_TO_ULINT(const T &paValue) {
+inline CIEC_ULINT func_TIME_IN_MS_TO_ULINT(const T &paValue) {
   return func_TIME_IN_MS_TO<CIEC_ULINT>(paValue);
 }
 
@@ -187,7 +194,7 @@ inline const CIEC_ULINT func_TIME_IN_MS_TO_ULINT(const T &paValue) {
  * @return TIME value in microseconds
  */
 template<typename T>
-inline const CIEC_ULINT func_TIME_IN_US_TO_ULINT(const T &paValue) {
+inline CIEC_ULINT func_TIME_IN_US_TO_ULINT(const T &paValue) {
   return func_TIME_IN_US_TO<CIEC_ULINT>(paValue);
 }
 
@@ -198,7 +205,7 @@ inline const CIEC_ULINT func_TIME_IN_US_TO_ULINT(const T &paValue) {
  * @return TIME value in nanoseconds
  */
 template<typename T>
-inline const CIEC_ULINT func_TIME_IN_NS_TO_ULINT(const T &paValue) {
+inline CIEC_ULINT func_TIME_IN_NS_TO_ULINT(const T &paValue) {
   return func_TIME_IN_NS_TO<CIEC_ULINT>(paValue);
 }
 
@@ -213,7 +220,7 @@ inline const CIEC_ULINT func_TIME_IN_NS_TO_ULINT(const T &paValue) {
  * @return TIME value in seconds
  */
 template<typename T>
-inline const CIEC_LREAL func_TIME_IN_S_TO_LREAL(const T &paValue) {
+inline CIEC_LREAL func_TIME_IN_S_TO_LREAL(const T &paValue) {
   return func_TIME_IN_S_TO<CIEC_LREAL>(paValue);
 }
 
@@ -224,7 +231,7 @@ inline const CIEC_LREAL func_TIME_IN_S_TO_LREAL(const T &paValue) {
  * @return TIME value in milliseconds
  */
 template<typename T>
-inline const CIEC_LREAL func_TIME_IN_MS_TO_LREAL(const T &paValue) {
+inline CIEC_LREAL func_TIME_IN_MS_TO_LREAL(const T &paValue) {
   return func_TIME_IN_MS_TO<CIEC_LREAL>(paValue);
 }
 
@@ -235,7 +242,7 @@ inline const CIEC_LREAL func_TIME_IN_MS_TO_LREAL(const T &paValue) {
  * @return TIME value in microseconds
  */
 template<typename T>
-inline const CIEC_LREAL func_TIME_IN_US_TO_LREAL(const T &paValue) {
+inline CIEC_LREAL func_TIME_IN_US_TO_LREAL(const T &paValue) {
   return func_TIME_IN_US_TO<CIEC_LREAL>(paValue);
 }
 
@@ -246,7 +253,7 @@ inline const CIEC_LREAL func_TIME_IN_US_TO_LREAL(const T &paValue) {
  * @return TIME value in nanoseconds
  */
 template<typename T>
-inline const CIEC_LREAL func_TIME_IN_NS_TO_LREAL(const T &paValue) {
+inline CIEC_LREAL func_TIME_IN_NS_TO_LREAL(const T &paValue) {
   return func_TIME_IN_NS_TO<CIEC_LREAL>(paValue);
 }
 
@@ -261,7 +268,7 @@ inline const CIEC_LREAL func_TIME_IN_NS_TO_LREAL(const T &paValue) {
  * @return TIME value in seconds
  */
 template<typename T>
-inline const CIEC_UDINT func_TIME_IN_S_TO_UDINT(const T &paValue) {
+inline CIEC_UDINT func_TIME_IN_S_TO_UDINT(const T &paValue) {
   return func_TIME_IN_S_TO<CIEC_UDINT>(paValue);
 }
 
@@ -272,7 +279,7 @@ inline const CIEC_UDINT func_TIME_IN_S_TO_UDINT(const T &paValue) {
  * @return TIME value in milliseconds
  */
 template<typename T>
-inline const CIEC_UDINT func_TIME_IN_MS_TO_UDINT(const T &paValue) {
+inline CIEC_UDINT func_TIME_IN_MS_TO_UDINT(const T &paValue) {
   return func_TIME_IN_MS_TO<CIEC_UDINT>(paValue);
 }
 
@@ -283,7 +290,7 @@ inline const CIEC_UDINT func_TIME_IN_MS_TO_UDINT(const T &paValue) {
  * @return TIME value in microseconds
  */
 template<typename T>
-inline const CIEC_UDINT func_TIME_IN_US_TO_UDINT(const T &paValue) {
+inline CIEC_UDINT func_TIME_IN_US_TO_UDINT(const T &paValue) {
   return func_TIME_IN_US_TO<CIEC_UDINT>(paValue);
 }
 
@@ -294,7 +301,7 @@ inline const CIEC_UDINT func_TIME_IN_US_TO_UDINT(const T &paValue) {
  * @return TIME value in nanoseconds
  */
 template<typename T>
-inline const CIEC_UDINT func_TIME_IN_NS_TO_UDINT(const T &paValue) {
+inline CIEC_UDINT func_TIME_IN_NS_TO_UDINT(const T &paValue) {
   return func_TIME_IN_NS_TO<CIEC_UDINT>(paValue);
 }
 
@@ -309,7 +316,7 @@ inline const CIEC_UDINT func_TIME_IN_NS_TO_UDINT(const T &paValue) {
  * @return TIME value in seconds
  */
 template<typename T>
-inline const CIEC_DINT func_TIME_IN_S_TO_DINT(const T &paValue) {
+inline CIEC_DINT func_TIME_IN_S_TO_DINT(const T &paValue) {
   return func_TIME_IN_S_TO<CIEC_DINT>(paValue);
 }
 
@@ -320,7 +327,7 @@ inline const CIEC_DINT func_TIME_IN_S_TO_DINT(const T &paValue) {
  * @return TIME value in milliseconds
  */
 template<typename T>
-inline const CIEC_DINT func_TIME_IN_MS_TO_DINT(const T &paValue) {
+inline CIEC_DINT func_TIME_IN_MS_TO_DINT(const T &paValue) {
   return func_TIME_IN_MS_TO<CIEC_DINT>(paValue);
 }
 
@@ -331,7 +338,7 @@ inline const CIEC_DINT func_TIME_IN_MS_TO_DINT(const T &paValue) {
  * @return TIME value in microseconds
  */
 template<typename T>
-inline const CIEC_DINT func_TIME_IN_US_TO_DINT(const T &paValue) {
+inline CIEC_DINT func_TIME_IN_US_TO_DINT(const T &paValue) {
   return func_TIME_IN_US_TO<CIEC_DINT>(paValue);
 }
 
@@ -342,8 +349,6 @@ inline const CIEC_DINT func_TIME_IN_US_TO_DINT(const T &paValue) {
  * @return TIME value in nanoseconds
  */
 template<typename T>
-inline const CIEC_DINT func_TIME_IN_NS_TO_DINT(const T &paValue) {
+inline CIEC_DINT func_TIME_IN_NS_TO_DINT(const T &paValue) {
   return func_TIME_IN_NS_TO<CIEC_DINT>(paValue);
 }
-
-#endif /* SRC_CORE_DATATYPES_CONVERT_TIMEINRESOLUTIONCONVERTFUNCTIONS_H_ */

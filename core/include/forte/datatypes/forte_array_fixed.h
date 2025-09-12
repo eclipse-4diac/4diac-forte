@@ -23,6 +23,7 @@
 #include <array>
 #include <algorithm>
 #include "forte/datatypes/forte_ulint.h"
+#include "forte/util/devlog.h"
 
 template<typename T>
 class CIEC_ARRAY_VARIABLE;

@@ -14,10 +14,7 @@
 
 #pragma once
 
-#ifndef SRC_CORE_DATATYPES_CONVERT_OVERLOADEDCONVERTFUNCTIONS_H_
-#define SRC_CORE_DATATYPES_CONVERT_OVERLOADEDCONVERTFUNCTIONS_H_
-
-#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_any.h"
 #include "forte/datatypes/forte_byte.h"
 #include "forte/datatypes/forte_dint.h"
 #include "forte/datatypes/forte_dword.h"
@@ -42,7 +39,6 @@
 #include "forte/datatypes/forte_ltime_of_day.h"
 #include "forte/datatypes/forte_ldate_and_time.h"
 #include "forte/datatypes/forte_ldate.h"
-#include "forte/iec61131_cast_helper.h"
 
 template<typename T>
 inline auto func_TO_LREAL(const T &paVal) {
@@ -199,5 +195,3 @@ inline auto func_TO_CHAR(const T &paVal) {
   static_assert(forte::core::mpl::is_implicit_or_explicit_castable_v<T, CIEC_CHAR>);
   return CIEC_ANY::cast<CIEC_CHAR>(paVal);
 }
-
-#endif /* SRC_CORE_DATATYPES_CONVERT_OVERLOADEDCONVERTFUNCTIONS_H_ */

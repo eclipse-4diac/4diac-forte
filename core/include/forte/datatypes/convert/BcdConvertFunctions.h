@@ -18,8 +18,18 @@
  *      - adds more *_BCD_TO_** functions
  *******************************************************************************/
 
-#ifndef SRC_CORE_DATATYPES_CONVERT_BCDCONVERTFUNCTIONS_H_
-#define SRC_CORE_DATATYPES_CONVERT_BCDCONVERTFUNCTIONS_H_
+#pragma once
+
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_byte.h"
+#include "forte/datatypes/forte_dword.h"
+#include "forte/datatypes/forte_lword.h"
+#include "forte/datatypes/forte_udint.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/datatypes/forte_ulint.h"
+#include "forte/datatypes/forte_usint.h"
+#include "forte/datatypes/forte_word.h"
+#include "forte/datatypes/forte_string.h"
 
 //********************************************************************************************
 //   *_BCD_TO_**  functions
@@ -66,70 +76,70 @@ const CIEC_ULINT func_BCD_TO_ULINT(const T &paVal) {
 }
 
 /**** BYTE_BCD_TO_* ****/
-inline const CIEC_USINT func_BYTE_BCD_TO_USINT(const CIEC_BYTE &paVal) {
+inline CIEC_USINT func_BYTE_BCD_TO_USINT(const CIEC_BYTE &paVal) {
   return func_BCD_TO<CIEC_USINT>(paVal);
 }
 
-inline const CIEC_UINT func_BYTE_BCD_TO_UINT(const CIEC_BYTE &paVal) {
+inline CIEC_UINT func_BYTE_BCD_TO_UINT(const CIEC_BYTE &paVal) {
   return func_BCD_TO<CIEC_UINT>(paVal);
 }
 
-inline const CIEC_UDINT func_BYTE_BCD_TO_UDINT(const CIEC_BYTE &paVal) {
+inline CIEC_UDINT func_BYTE_BCD_TO_UDINT(const CIEC_BYTE &paVal) {
   return func_BCD_TO<CIEC_UDINT>(paVal);
 }
 
-inline const CIEC_ULINT func_BYTE_BCD_TO_ULINT(const CIEC_BYTE &paVal) {
+inline CIEC_ULINT func_BYTE_BCD_TO_ULINT(const CIEC_BYTE &paVal) {
   return func_BCD_TO<CIEC_ULINT>(paVal);
 }
 
 /**** WORD_BCD_TO_* ****/
-inline const CIEC_USINT func_WORD_BCD_TO_USINT(const CIEC_WORD &paVal) {
+inline CIEC_USINT func_WORD_BCD_TO_USINT(const CIEC_WORD &paVal) {
   return func_BCD_TO<CIEC_USINT>(paVal);
 }
 
-inline const CIEC_UINT func_WORD_BCD_TO_UINT(const CIEC_WORD &paVal) {
+inline CIEC_UINT func_WORD_BCD_TO_UINT(const CIEC_WORD &paVal) {
   return func_BCD_TO<CIEC_UINT>(paVal);
 }
 
-inline const CIEC_UDINT func_WORD_BCD_TO_UDINT(const CIEC_WORD &paVal) {
+inline CIEC_UDINT func_WORD_BCD_TO_UDINT(const CIEC_WORD &paVal) {
   return func_BCD_TO<CIEC_UDINT>(paVal);
 }
 
-inline const CIEC_ULINT func_WORD_BCD_TO_ULINT(const CIEC_WORD &paVal) {
+inline CIEC_ULINT func_WORD_BCD_TO_ULINT(const CIEC_WORD &paVal) {
   return func_BCD_TO<CIEC_ULINT>(paVal);
 }
 
 /**** DWORD_BCD_TO_* ****/
-inline const CIEC_USINT func_DWORD_BCD_TO_USINT(const CIEC_DWORD &paVal) {
+inline CIEC_USINT func_DWORD_BCD_TO_USINT(const CIEC_DWORD &paVal) {
   return func_BCD_TO<CIEC_USINT>(paVal);
 }
 
-inline const CIEC_UINT func_DWORD_BCD_TO_UINT(const CIEC_DWORD &paVal) {
+inline CIEC_UINT func_DWORD_BCD_TO_UINT(const CIEC_DWORD &paVal) {
   return func_BCD_TO<CIEC_UINT>(paVal);
 }
 
-inline const CIEC_UDINT func_DWORD_BCD_TO_UDINT(const CIEC_DWORD &paVal) {
+inline CIEC_UDINT func_DWORD_BCD_TO_UDINT(const CIEC_DWORD &paVal) {
   return func_BCD_TO<CIEC_UDINT>(paVal);
 }
 
-inline const CIEC_ULINT func_DWORD_BCD_TO_ULINT(const CIEC_DWORD &paVal) {
+inline CIEC_ULINT func_DWORD_BCD_TO_ULINT(const CIEC_DWORD &paVal) {
   return func_BCD_TO<CIEC_ULINT>(paVal);
 }
 
 /**** LWORD_BCD_TO_* ****/
-inline const CIEC_USINT func_LWORD_BCD_TO_USINT(const CIEC_LWORD &paVal) {
+inline CIEC_USINT func_LWORD_BCD_TO_USINT(const CIEC_LWORD &paVal) {
   return func_BCD_TO<CIEC_USINT>(paVal);
 }
 
-inline const CIEC_UINT func_LWORD_BCD_TO_UINT(const CIEC_LWORD &paVal) {
+inline CIEC_UINT func_LWORD_BCD_TO_UINT(const CIEC_LWORD &paVal) {
   return func_BCD_TO<CIEC_UINT>(paVal);
 }
 
-inline const CIEC_UDINT func_LWORD_BCD_TO_UDINT(const CIEC_LWORD &paVal) {
+inline CIEC_UDINT func_LWORD_BCD_TO_UDINT(const CIEC_LWORD &paVal) {
   return func_BCD_TO<CIEC_UDINT>(paVal);
 }
 
-inline const CIEC_ULINT func_LWORD_BCD_TO_ULINT(const CIEC_LWORD &paVal) {
+inline CIEC_ULINT func_LWORD_BCD_TO_ULINT(const CIEC_LWORD &paVal) {
   return func_BCD_TO<CIEC_ULINT>(paVal);
 }
 
@@ -180,71 +190,69 @@ const CIEC_LWORD func_TO_BCD_LWORD(const T &paVal) {
 }
 
 /**** USINT_TO_BCD_* ****/
-inline const CIEC_BYTE func_USINT_TO_BCD_BYTE(const CIEC_USINT &paVal) {
+inline CIEC_BYTE func_USINT_TO_BCD_BYTE(const CIEC_USINT &paVal) {
   return func_TO_BCD<CIEC_BYTE>(paVal);
 }
 
-inline const CIEC_WORD func_USINT_TO_BCD_WORD(const CIEC_USINT &paVal) {
+inline CIEC_WORD func_USINT_TO_BCD_WORD(const CIEC_USINT &paVal) {
   return func_TO_BCD<CIEC_WORD>(paVal);
 }
 
-inline const CIEC_DWORD func_USINT_TO_BCD_DWORD(const CIEC_USINT &paVal) {
+inline CIEC_DWORD func_USINT_TO_BCD_DWORD(const CIEC_USINT &paVal) {
   return func_TO_BCD<CIEC_DWORD>(paVal);
 }
 
-inline const CIEC_LWORD func_USINT_TO_BCD_LWORD(const CIEC_USINT &paVal) {
+inline CIEC_LWORD func_USINT_TO_BCD_LWORD(const CIEC_USINT &paVal) {
   return func_TO_BCD<CIEC_LWORD>(paVal);
 }
 
 /**** UINT_TO_BCD_* ****/
-inline const CIEC_BYTE func_UINT_TO_BCD_BYTE(const CIEC_UINT &paVal) {
+inline CIEC_BYTE func_UINT_TO_BCD_BYTE(const CIEC_UINT &paVal) {
   return func_TO_BCD<CIEC_BYTE>(paVal);
 }
 
-inline const CIEC_WORD func_UINT_TO_BCD_WORD(const CIEC_UINT &paVal) {
+inline CIEC_WORD func_UINT_TO_BCD_WORD(const CIEC_UINT &paVal) {
   return func_TO_BCD<CIEC_WORD>(paVal);
 }
 
-inline const CIEC_DWORD func_UINT_TO_BCD_DWORD(const CIEC_UINT &paVal) {
+inline CIEC_DWORD func_UINT_TO_BCD_DWORD(const CIEC_UINT &paVal) {
   return func_TO_BCD<CIEC_DWORD>(paVal);
 }
 
-inline const CIEC_LWORD func_UINT_TO_BCD_LWORD(const CIEC_UINT &paVal) {
+inline CIEC_LWORD func_UINT_TO_BCD_LWORD(const CIEC_UINT &paVal) {
   return func_TO_BCD<CIEC_LWORD>(paVal);
 }
 
 /**** UDINT_TO_BCD_* ****/
-inline const CIEC_BYTE func_UDINT_TO_BCD_BYTE(const CIEC_UDINT &paVal) {
+inline CIEC_BYTE func_UDINT_TO_BCD_BYTE(const CIEC_UDINT &paVal) {
   return func_TO_BCD<CIEC_BYTE>(paVal);
 }
 
-inline const CIEC_WORD func_UDINT_TO_BCD_WORD(const CIEC_UDINT &paVal) {
+inline CIEC_WORD func_UDINT_TO_BCD_WORD(const CIEC_UDINT &paVal) {
   return func_TO_BCD<CIEC_WORD>(paVal);
 }
 
-inline const CIEC_DWORD func_UDINT_TO_BCD_DWORD(const CIEC_UDINT &paVal) {
+inline CIEC_DWORD func_UDINT_TO_BCD_DWORD(const CIEC_UDINT &paVal) {
   return func_TO_BCD<CIEC_DWORD>(paVal);
 }
 
-inline const CIEC_LWORD func_UDINT_TO_BCD_LWORD(const CIEC_UDINT &paVal) {
+inline CIEC_LWORD func_UDINT_TO_BCD_LWORD(const CIEC_UDINT &paVal) {
   return func_TO_BCD<CIEC_LWORD>(paVal);
 }
 
 /**** ULINT_TO_BCD_* ****/
-inline const CIEC_BYTE func_ULINT_TO_BCD_BYTE(const CIEC_ULINT &paVal) {
+inline CIEC_BYTE func_ULINT_TO_BCD_BYTE(const CIEC_ULINT &paVal) {
   return func_TO_BCD<CIEC_BYTE>(paVal);
 }
 
-inline const CIEC_WORD func_ULINT_TO_BCD_WORD(const CIEC_ULINT &paVal) {
+inline CIEC_WORD func_ULINT_TO_BCD_WORD(const CIEC_ULINT &paVal) {
   return func_TO_BCD<CIEC_WORD>(paVal);
 }
 
-inline const CIEC_DWORD func_ULINT_TO_BCD_DWORD(const CIEC_ULINT &paVal) {
+inline CIEC_DWORD func_ULINT_TO_BCD_DWORD(const CIEC_ULINT &paVal) {
   return func_TO_BCD<CIEC_DWORD>(paVal);
 }
 
-inline const CIEC_LWORD func_ULINT_TO_BCD_LWORD(const CIEC_ULINT &paVal) {
+inline CIEC_LWORD func_ULINT_TO_BCD_LWORD(const CIEC_ULINT &paVal) {
   return func_TO_BCD<CIEC_LWORD>(paVal);
 }
-
-#endif /* SRC_CORE_DATATYPES_CONVERT_BCDCONVERTFUNCTIONS_H_ */

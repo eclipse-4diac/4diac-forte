@@ -17,13 +17,18 @@
  *     to use new cast function
  *******************************************************************************/
 
-#ifndef SRC_CORE_DATATYPES_CONVERT_DATEANDTIMETOCONVERTFUNCTIONS_H_
-#define SRC_CORE_DATATYPES_CONVERT_DATEANDTIMETOCONVERTFUNCTIONS_H_
+#pragma once
+
+#include "forte/datatypes/forte_any.h"
+#include "forte/datatypes/forte_time_of_day.h"
+#include "forte/datatypes/forte_date.h"
+#include "forte/datatypes/forte_ltime_of_day.h"
+#include "forte/datatypes/forte_ldate_and_time.h"
 
 //********************************************************************************************
 //   DT_TO_**  functions
 //********************************************************************************************
-inline const CIEC_LDATE_AND_TIME func_DT_TO_LDT(const CIEC_DATE_AND_TIME &paValue) {
+inline CIEC_LDATE_AND_TIME func_DT_TO_LDT(const CIEC_DATE_AND_TIME &paValue) {
   return CIEC_LDATE_AND_TIME(paValue);
 }
 
@@ -31,8 +36,6 @@ CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal);
 
 CIEC_TIME_OF_DAY func_DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal);
 
-inline const CIEC_LTIME_OF_DAY func_DT_TO_LTOD(const CIEC_DATE_AND_TIME &paValue) {
+inline CIEC_LTIME_OF_DAY func_DT_TO_LTOD(const CIEC_DATE_AND_TIME &paValue) {
   return CIEC_LTIME_OF_DAY(func_DT_TO_TOD(paValue));
 }
-
-#endif /* SRC_CORE_DATATYPES_CONVERT_DATEANDTIMETOCONVERTFUNCTIONS_H_ */

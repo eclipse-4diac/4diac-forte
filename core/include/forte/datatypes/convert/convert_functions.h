@@ -20,63 +20,19 @@
  *   Monika Wenger - func_ANY_AS_STRING
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#ifndef SRC_CORE_DATATYPES_CONVERT_CONVERT_FUNCTIONS_H_
-#define SRC_CORE_DATATYPES_CONVERT_CONVERT_FUNCTIONS_H_
+
+#pragma once
+
+#include "convert_function_utils.h"
 
 #include "forte/datatypes/forte_any.h"
-#include "forte/datatypes/forte_bool.h"
-#include "forte/datatypes/forte_byte.h"
-#include "forte/datatypes/forte_dint.h"
-#include "forte/datatypes/forte_dword.h"
-#include "forte/datatypes/forte_int.h"
-#include "forte/datatypes/forte_lint.h"
-#include "forte/datatypes/forte_lreal.h"
-#include "forte/datatypes/forte_lword.h"
-#include "forte/datatypes/forte_real.h"
-#include "forte/datatypes/forte_sint.h"
-#include "forte/datatypes/forte_udint.h"
-#include "forte/datatypes/forte_uint.h"
-#include "forte/datatypes/forte_ulint.h"
-#include "forte/datatypes/forte_usint.h"
-#include "forte/datatypes/forte_word.h"
 #include "forte/datatypes/forte_string.h"
-#include "forte/datatypes/forte_wstring.h"
-#include "forte/datatypes/forte_time.h"
-#include "forte/datatypes/forte_time_of_day.h"
-#include "forte/datatypes/forte_date_and_time.h"
-#include "forte/datatypes/forte_date.h"
-#include "forte/datatypes/forte_ltime.h"
-#include "forte/datatypes/forte_ltime_of_day.h"
-#include "forte/datatypes/forte_ldate_and_time.h"
-#include "forte/datatypes/forte_ldate.h"
-#include "forte/datatypes/forte_struct.h"
-#include "forte/datatypes/forte_array.h"
-#include <math.h>
-
-// some compilers don't have this definition or is behind __STDC_CONSTANT_MACROS.
-// since this definition is only used here, we define it instead of enabling __STDC_CONSTANT_MACROS globally,
-// because it's not easy to detect which compilers will or not have this definition
-#ifndef UINT64_C
-#define UINT64_C(x) (x##ULL)
-#endif
 
 /*! \file
  * This file implements the type conversion functions as defined by IEC 61131-3 in subclause 2.5.1.5.1
  */
 
-inline void stringConverter(CIEC_WSTRING &paString, const CIEC_ANY &paVal) {
-  std::string buffer;
-  paVal.toString(buffer);
-  paString = CIEC_WSTRING(buffer.c_str());
-}
-
-inline void stringConverter(CIEC_STRING &paString, const CIEC_ANY &paVal) {
-  std::string buffer;
-  paVal.toString(buffer);
-  paString = CIEC_STRING(std::move(buffer));
-}
-
-inline const CIEC_STRING func_ANY_AS_STRING(const CIEC_ANY &paVal) {
+inline CIEC_STRING func_ANY_AS_STRING(const CIEC_ANY &paVal) {
   CIEC_STRING string;
   stringConverter(string, paVal.unwrap());
   return string;
@@ -108,5 +64,3 @@ inline const CIEC_STRING func_ANY_AS_STRING(const CIEC_ANY &paVal) {
 #include "BcdConvertFunctions.h"
 #include "TimeInResolutionConvertFunctions.h"
 #include "overloadedConvertFunctions.h"
-
-#endif /* SRC_CORE_DATATYPES_CONVERT_CONVERT_FUNCTIONS_H_ */

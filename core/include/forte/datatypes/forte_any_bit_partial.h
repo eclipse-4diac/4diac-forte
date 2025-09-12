@@ -15,6 +15,7 @@
 
 #include <limits>
 #include "forte/iec61131_cast_helper.h"
+#include "forte/datatypes/forte_any.h"
 #include "forte/util/devlog.h"
 
 template<typename PartialType, typename SourceType>

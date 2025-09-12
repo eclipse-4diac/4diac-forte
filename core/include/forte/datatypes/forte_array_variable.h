@@ -19,8 +19,13 @@
  *******************************************************************************/
 #pragma once
 
-#include "forte/datatypes/forte_array_common.h"
 #include <vector>
+
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_int.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/datatypes/forte_ulint.h"
 
 template<typename T>
 class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
