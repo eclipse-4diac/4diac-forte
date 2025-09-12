@@ -11,7 +11,7 @@
  *  Tarik Terzimehic - make OPC UA server port setable from the command line
  *******************************************************************************/
 
-#include "forte_c.h"
+#include "forte/forte_c.h"
 
 #include "forte/arch/forte_architecture.h"
 #include "forte/arch/forte_printer.h"

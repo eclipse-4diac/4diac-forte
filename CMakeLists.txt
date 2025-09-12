@@ -39,10 +39,6 @@ option(FORTE_SYSTEM_TESTS "FORTE System Tests" OFF)
 option(FORTE_BUILD_EXECUTABLE "Build 4diac FORTE as an executable, otherwise build a library" ON)
 mark_as_advanced(FORTE_BUILD_EXECUTABLE)
 
-# TODO
-#option(FORTE_C_INTERFACE "Build C interface to 4diac FORTE" OFF)
-#mark_as_advanced(FORTE_C_INTERFACE)
-
 #############################################################################
 # Whole archive
 #############################################################################

@@ -41,6 +41,7 @@ macro(forte_register_architecture arch)
 endmacro()
 
 add_subdirectory(common)
+add_subdirectory(c_interface)
 
 # add_subdirectory(be_m1)
 # add_subdirectory(ecos)
