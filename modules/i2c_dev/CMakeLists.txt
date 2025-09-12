@@ -28,3 +28,4 @@ add_library(forte-i2c_dev
 )
 target_link_libraries(forte-i2c_dev PUBLIC forte-core)
 target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-i2c_dev>)
+install(TARGETS forte-i2c_dev EXPORT forte-export FILE_SET HEADERS)

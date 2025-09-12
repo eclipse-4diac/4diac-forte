@@ -127,3 +127,5 @@ target_link_directories(forte-powerlink
 target_link_directories(forte-powerlink PUBLIC
                         ${FORTE_MODULE_POWERLINK_LIB_DIR}
 )
+
+install(TARGETS forte-powerlink EXPORT forte-export FILE_SET HEADERS)

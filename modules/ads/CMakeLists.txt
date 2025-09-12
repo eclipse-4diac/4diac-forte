@@ -54,3 +54,5 @@ target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-ads>)
 target_include_directories(forte-ads
                            PUBLIC ${FORTE_MODULE_ADS_PI_ADS_ROOT}/AdsLib
 )
+
+install(TARGETS forte-ads EXPORT forte-export FILE_SET HEADERS)

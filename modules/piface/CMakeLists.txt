@@ -29,3 +29,4 @@ add_library(forte-piface
 )
 target_link_libraries(forte-piface PUBLIC forte-core)
 target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-piface>)
+install(TARGETS forte-piface EXPORT forte-export FILE_SET HEADERS)

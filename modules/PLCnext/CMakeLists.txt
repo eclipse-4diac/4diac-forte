@@ -63,3 +63,5 @@ target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-PLCnext>)
 target_include_directories(forte-PLCnext
                            PUBLIC ${ArpProgramming_INCLUDE_DIR}
 )
+
+install(TARGETS forte-PLCnext EXPORT forte-export FILE_SET HEADERS)

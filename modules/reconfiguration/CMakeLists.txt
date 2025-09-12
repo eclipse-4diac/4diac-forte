@@ -24,3 +24,5 @@ target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-reconfigur
 
 add_subdirectory(include)
 add_subdirectory(src)
+
+install(TARGETS forte-reconfiguration EXPORT forte-export FILE_SET HEADERS)

@@ -44,3 +44,5 @@ add_library(forte-conmeleon_c1 OBJECT
 )
 target_link_libraries(forte-conmeleon_c1 PUBLIC forte-core)
 target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-conmeleon_c1>)
+
+install(TARGETS forte-conmeleon_c1 EXPORT forte-export FILE_SET HEADERS)

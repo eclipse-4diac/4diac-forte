@@ -18,3 +18,5 @@ target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-events>)
 
 add_subdirectory(include)
 add_subdirectory(src)
+
+install(TARGETS forte-events EXPORT forte-export FILE_SET HEADERS)

@@ -68,3 +68,5 @@ set_property(CACHE FORTE_ARCHITECTURE PROPERTY STRINGS None ${architectures})
 if (FORTE_ARCHITECTURE STREQUAL "None")
     message(FATAL_ERROR "No FORTE_ARCHITECTURE selected. Use one of ${architectures}")
 endif ()
+
+install(TARGETS forte-arch EXPORT forte-export FILE_SET HEADERS)

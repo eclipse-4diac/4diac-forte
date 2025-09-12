@@ -46,3 +46,5 @@ target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-zephyr>)
 
 add_subdirectory(handler)
 add_subdirectory(handle)
+
+install(TARGETS forte-zephyr EXPORT forte-export FILE_SET HEADERS)

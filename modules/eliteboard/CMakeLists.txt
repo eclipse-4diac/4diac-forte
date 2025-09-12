@@ -28,3 +28,5 @@ target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-eliteboard
 add_subdirectory(handle)
 add_subdirectory(handler)
 add_subdirectory(types)
+
+install(TARGETS forte-eliteboard EXPORT forte-export FILE_SET HEADERS)

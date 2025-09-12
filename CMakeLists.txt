@@ -58,11 +58,9 @@ endif ()
 
 if (FORTE_BUILD_EXECUTABLE)
     add_executable(forte)
-    install(TARGETS forte RUNTIME DESTINATION bin)
     message(STATUS "Building executable")
 else ()
     add_library(forte)
-    install(TARGETS forte RUNTIME DESTINATION lib)
     message(STATUS "Building library")
 endif ()
 
@@ -77,3 +75,36 @@ if (FORTE_TESTS OR FORTE_SYSTEM_TESTS)
 endif ()
 add_subdirectory(systemtests)
 add_subdirectory(tests)
+
+#######################################################################################
+# Install support
+#######################################################################################
+
+include(GNUInstallDirs)
+include(CMakePackageConfigHelpers)
+
+set(ConfigPackageLocation lib/cmake/forte-${PROJECT_VERSION})
+
+configure_package_config_file(
+        forte-config.cmake.in
+        ${CMAKE_CURRENT_BINARY_DIR}/forte-config.cmake
+        INSTALL_DESTINATION ${ConfigPackageLocation}
+)
+
+write_basic_package_version_file(
+        ${CMAKE_CURRENT_BINARY_DIR}/forte-config-version.cmake
+        COMPATIBILITY SameMajorVersion
+)
+
+install(TARGETS forte EXPORT forte-export FILE_SET HEADERS)
+
+install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/forte-config.cmake
+        ${CMAKE_CURRENT_BINARY_DIR}/forte-config-version.cmake
+        DESTINATION ${ConfigPackageLocation}
+)
+
+install(EXPORT forte-export
+        DESTINATION ${ConfigPackageLocation}
+        EXPORT_LINK_INTERFACE_LIBRARIES
+)

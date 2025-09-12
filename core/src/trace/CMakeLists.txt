@@ -76,4 +76,4 @@ target_sources(forte-core PRIVATE
             barectf_platform_forte.h
             barectf_platform_forte.cpp
 )
-target_include_directories(forte-core PUBLIC ${FORTE_TRACE_FOLDER})
+target_include_directories(forte-core PUBLIC $<BUILD_LOCAL_INTERFACE:${FORTE_TRACE_FOLDER}>)

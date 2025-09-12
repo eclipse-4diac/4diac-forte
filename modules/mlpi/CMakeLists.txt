@@ -34,3 +34,5 @@ target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-mlpi>)
 target_include_directories(forte-mlpi
                            PUBLIC ${FORTE_COM_MLPI_DIR}/mlpiCore/include
 )
+
+install(TARGETS forte-mlpi EXPORT forte-export FILE_SET HEADERS)

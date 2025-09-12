@@ -26,3 +26,5 @@ add_subdirectory(common)
 add_subdirectory(orchestrator)
 add_subdirectory(serviceRegistry)
 add_subdirectory(eventHandler)
+
+install(TARGETS forte-arrowhead EXPORT forte-export FILE_SET HEADERS)

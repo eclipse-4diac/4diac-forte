@@ -12,12 +12,8 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-add_library(forte-core)
-target_compile_features(forte-core PUBLIC cxx_std_20)
-target_link_libraries(forte-core PUBLIC forte-arch)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-core>)
+@PACKAGE_INIT@
 
-add_subdirectory(src)
-add_subdirectory(include)
+include(${CMAKE_CURRENT_LIST_DIR}/forte-export.cmake)
 
-install(TARGETS forte-core EXPORT forte-export FILE_SET HEADERS)
+check_required_components(forte)

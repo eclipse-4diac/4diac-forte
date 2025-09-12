@@ -69,3 +69,5 @@ target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-ros>)
 target_include_directories(forte-ros PUBLIC ${catkin_INCLUDE_DIRS})
 target_include_directories(forte-ros PUBLIC /opt/ros/indigo/include)
 target_link_directories(forte-ros PUBLIC /opt/ros/indigo/lib)
+
+install(TARGETS forte-ros EXPORT forte-export FILE_SET HEADERS)

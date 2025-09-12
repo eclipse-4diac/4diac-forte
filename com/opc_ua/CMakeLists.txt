@@ -119,3 +119,5 @@ endif ()
 
 add_subdirectory(include)
 add_subdirectory(src)
+
+install(TARGETS forte-com-opc_ua EXPORT forte-export FILE_SET HEADERS)

@@ -40,3 +40,5 @@ if (FORTE_COM_OPC_UA)
 endif ()
 
 add_subdirectory(src)
+
+install(TARGETS forte-hardware EXPORT forte-export FILE_SET HEADERS)

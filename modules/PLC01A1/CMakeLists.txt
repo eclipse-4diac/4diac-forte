@@ -25,3 +25,4 @@ add_library(forte-PLC01A1
 )
 target_link_libraries(forte-PLC01A1 PUBLIC forte-core)
 target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-PLC01A1>)
+install(TARGETS forte-PLC01A1 EXPORT forte-export FILE_SET HEADERS)
