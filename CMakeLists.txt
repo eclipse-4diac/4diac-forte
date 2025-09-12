@@ -47,30 +47,6 @@ add_library(forte-global INTERFACE)
 link_libraries(forte-global)
 
 #############################################################################
-# Configure stacktrace
-#############################################################################
-# if (FORTE_STACKTRACE)
-#     if (FORTE_STACKTRACE_IMPL MATCHES "boost")
-#         find_package(Boost REQUIRED)
-#         forte_add_link_library(backtrace)
-#         forte_add_custom_configuration("#define BOOST_STACKTRACE_USE_BACKTRACE")
-
-#         if (WIN32 OR MINGW)
-#             forte_add_link_flags(-no-pie)
-#         elseif (UNIX)
-#             forte_add_link_flags(-rdynamic)
-#             forte_add_link_library(dl)
-#         endif ()
-#     endif ()
-
-#     if (FORTE_STACKTRACE_IMPL MATCHES "cxx23")
-#         if (CMAKE_COMPILER_IS_GNUCXX)
-#             forte_add_link_library(-lstdc++_libbacktrace)
-#         endif ()
-#     endif ()
-# endif ()
-
-#############################################################################
 # Whole archive
 #############################################################################
 if (NOT CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE_SUPPORTED)
