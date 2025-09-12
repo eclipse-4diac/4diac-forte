@@ -1,0 +1,32 @@
+# This starter workflow is for a CMake project running on multiple platforms. There is a different starter workflow if you just want a single platform.
+# See: https://github.com/actions/starter-workflows/blob/main/ci/cmake-single-platform.yml
+name: Verify interface header sets
+
+on:
+  push:
+    branches: [ "release", "develop", "freeze", "feature/**" ]
+  pull_request:
+    branches: [ "release", "develop", "freeze", "feature/**" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Set reusable strings
+        # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
+        id: strings
+        shell: bash
+        run: |
+          echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
+
+      - name: Configure CMake
+        run: >
+          cmake -B ${{ steps.strings.outputs.build-output-dir }} -S ${{ github.workspace }} -G Ninja
+          -DCMAKE_VERIFY_INTERFACE_HEADER_SETS=ON
+          --preset posix-release
+
+      - name: Build
+        run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --target all_verify_interface_header_sets

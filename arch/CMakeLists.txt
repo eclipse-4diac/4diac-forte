@@ -30,6 +30,8 @@ target_compile_options(forte-arch PUBLIC
         $<$<BOOL:${HAVE_EXCEPTIONS_FLAG}>:$<IF:$<BOOL:${FORTE_RTTI_AND_EXCEPTIONS}>,-fexceptions,-fno-exceptions>>
 )
 
+set_target_properties(forte-arch PROPERTIES VERIFY_INTERFACE_HEADER_SETS OFF)
+
 ###############################################################################
 # Architectures
 
