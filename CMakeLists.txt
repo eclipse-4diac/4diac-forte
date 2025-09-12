@@ -43,9 +43,6 @@ mark_as_advanced(FORTE_BUILD_EXECUTABLE)
 #option(FORTE_C_INTERFACE "Build C interface to 4diac FORTE" OFF)
 #mark_as_advanced(FORTE_C_INTERFACE)
 
-add_library(forte-global INTERFACE)
-link_libraries(forte-global)
-
 #############################################################################
 # Whole archive
 #############################################################################

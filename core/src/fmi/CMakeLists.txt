@@ -19,7 +19,7 @@ option(FORTE_ENABLE_FMU
 if (NOT FORTE_ENABLE_FMU)
     return()
 endif ()
-target_compile_definitions(forte-global INTERFACE FORTE_FMU)
+target_compile_definitions(forte-core PUBLIC FORTE_FMU)
 
 set(FORTE_FMU_INCLUDE
     ""

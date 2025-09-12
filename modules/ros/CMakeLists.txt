@@ -23,8 +23,6 @@ if (NOT FORTE_MODULE_ROS)
     return()
 endif ()
 
-target_compile_definitions(forte-global INTERFACE FORTE_ROS)
-
 # ############################################################################
 # Communication Layer for ROS (publish, subscribe)
 # ############################################################################

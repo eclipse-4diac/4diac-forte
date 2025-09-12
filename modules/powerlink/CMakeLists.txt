@@ -38,7 +38,7 @@ set(FORTE_MODULE_POWERLINK_TINYXML_DIR
 )
 
 if (FORTE_ARCHITECTURE STREQUAL "Win32")
-    target_compile_definitions(forte-global INTERFACE WPCAP)
+    target_compile_definitions(forte-powerlink PRIVATE WPCAP)
     target_link_libraries(forte PUBLIC openPOWERLINK wpcap iphlpapi)
 elseif (FORTE_ARCHITECTURE STREQUAL "Posix")
     target_link_libraries(forte PUBLIC powerlink pcap rt)
