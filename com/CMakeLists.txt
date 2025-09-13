@@ -11,7 +11,7 @@
 #    Martin Erich Jobst
 #      - initial API and implementation and/or initial documentation
 #############################################################################
-
+add_subdirectory(can)
 add_subdirectory(HTTP)
 add_subdirectory(modbus)
 add_subdirectory(mqtt_paho)
