@@ -22,3 +22,11 @@ target_sources(forte-arch PUBLIC
         forte_specific_architecture.h
         threadbase.h
 )
+
+set_source_files_properties(
+        bsdsocketinterf.h
+        fdselecthand.h
+        TARGET_DIRECTORY forte-arch
+        PROPERTIES
+        SKIP_LINTING ON
+)
