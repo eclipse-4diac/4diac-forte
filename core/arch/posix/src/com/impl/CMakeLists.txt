@@ -12,12 +12,21 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-add_library(forte-core)
-target_compile_features(forte-core PUBLIC cxx_std_20)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-core>)
+if (NOT FORTE_COM_ETH)
+    return()
+endif ()
 
-add_subdirectory(src)
-add_subdirectory(include)
-add_subdirectory(arch)
-
-install(TARGETS forte-core EXPORT forte-export FILE_SET HEADERS)
+target_sources(forte-core PRIVATE
+        net.cpp
+        net.h
+        socket.cpp
+        socket.h
+        tcp.cpp
+        tcp.h
+        tcp_listen.cpp
+        tcp_listen.h
+        udp.cpp
+        udp.h
+        udp_listen.cpp
+        udp_listen.h
+)

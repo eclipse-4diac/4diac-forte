@@ -12,12 +12,21 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-add_library(forte-core)
-target_compile_features(forte-core PUBLIC cxx_std_20)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-core>)
+target_sources(forte-core PUBLIC
+        FILE_SET HEADERS
+        FILES
+        forte_architecture.h
+        forte_architecture_time.h
+        forte_fileio.h
+        forte_printer.h
+        forte_specific_architecture.h
+        threadbase.h
+)
 
-add_subdirectory(src)
-add_subdirectory(include)
-add_subdirectory(arch)
-
-install(TARGETS forte-core EXPORT forte-export FILE_SET HEADERS)
+set_source_files_properties(
+        bsdsocketinterf.h
+        fdselecthand.h
+        TARGET_DIRECTORY forte-core
+        PROPERTIES
+        SKIP_LINTING ON
+)

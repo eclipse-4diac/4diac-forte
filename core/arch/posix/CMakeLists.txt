@@ -12,12 +12,16 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-add_library(forte-core)
-target_compile_features(forte-core PUBLIC cxx_std_20)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-core>)
+forte_register_architecture(Posix)
 
-add_subdirectory(src)
+target_link_libraries(forte-core PUBLIC
+        pthread
+        $<$<NOT:$<BOOL:${APPLE}>>:rt>
+)
+
+set(FORTE_POSIX_GENERATE_MAP_FILE FALSE CACHE BOOL "Enable the generation of map files")
+mark_as_advanced(FORTE_POSIX_GENERATE_MAP_FILE)
+target_link_options(forte-core PUBLIC $<$<BOOL:${FORTE_POSIX_GENERATE_MAP_FILE}>:-Wl,-M,-Map,forte.map,-cref>)
+
 add_subdirectory(include)
-add_subdirectory(arch)
-
-install(TARGETS forte-core EXPORT forte-export FILE_SET HEADERS)
+add_subdirectory(src)

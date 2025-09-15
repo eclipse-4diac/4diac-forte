@@ -12,12 +12,12 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-add_library(forte-core)
-target_compile_features(forte-core PUBLIC cxx_std_20)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-core>)
+target_sources(forte-core PRIVATE
+        forte_architecture.cpp
+)
 
-add_subdirectory(src)
-add_subdirectory(include)
-add_subdirectory(arch)
-
-install(TARGETS forte-core EXPORT forte-export FILE_SET HEADERS)
+# only add main.cpp when 'forte' is an executable
+get_target_property(FORTE_TARGET_TYPE forte TYPE)
+if (FORTE_TARGET_TYPE STREQUAL "EXECUTABLE")
+    target_sources(forte PRIVATE main.cpp)
+endif ()
