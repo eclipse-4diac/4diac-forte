@@ -33,7 +33,7 @@ mark_as_advanced(FORTE_BOOT_FILE_LOCATION)
 add_library(forte-hardware)
 target_compile_definitions(forte-hardware PRIVATE $<$<BOOL:${FORTE_ENABLE_OPCUA_DEV}>:FORTE_OPCUA_DEVICE>)
 target_link_libraries(forte-hardware PUBLIC forte-core forte-events)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-hardware>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-hardware,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-hardware>>)
 
 if (FORTE_COM_OPC_UA)
     target_link_libraries(forte-hardware PRIVATE forte-com-opc_ua)

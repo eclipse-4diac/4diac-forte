@@ -20,7 +20,7 @@ endif ()
 
 add_library(forte-arrowhead)
 target_link_libraries(forte-arrowhead PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-arrowhead>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-arrowhead,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-arrowhead>>)
 
 add_subdirectory(common)
 add_subdirectory(orchestrator)

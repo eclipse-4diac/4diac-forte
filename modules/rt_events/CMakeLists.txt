@@ -20,7 +20,7 @@ endif ()
 
 add_library(forte-rtevents)
 target_link_libraries(forte-rtevents PUBLIC forte-core forte-events)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-rtevents>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-rtevents,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-rtevents>>)
 
 add_subdirectory(include)
 add_subdirectory(src)

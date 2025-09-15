@@ -30,7 +30,7 @@ forte_set_process_interface("MLPI" IX QX)
 
 add_library(forte-mlpi processinterface.h processinterface.cpp)
 target_link_libraries(forte-mlpi PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-mlpi>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-mlpi,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-mlpi>>)
 target_include_directories(forte-mlpi
                            PUBLIC ${FORTE_COM_MLPI_DIR}/mlpiCore/include
 )

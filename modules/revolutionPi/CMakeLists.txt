@@ -35,5 +35,5 @@ add_library(forte-revolutionPi
             fb/IORevPiAIO.cpp
 )
 target_link_libraries(forte-revolutionPi PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-revolutionPi>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-revolutionPi,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-revolutionPi>>)
 install(TARGETS forte-revolutionPi EXPORT forte-export FILE_SET HEADERS)

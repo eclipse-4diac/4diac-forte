@@ -19,7 +19,7 @@ forte_register_io(ELITEBOARD OFF
 
 add_library(forte-eliteboard)
 target_link_libraries(forte-eliteboard PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-eliteboard>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-eliteboard,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-eliteboard>>)
 
 # This should be part of architecture code
 # forte_add_definition("-ffunction-sections -fdata-sections

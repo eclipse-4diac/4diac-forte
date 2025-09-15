@@ -14,7 +14,7 @@
 
 add_library(forte-core)
 target_compile_features(forte-core PUBLIC cxx_std_20)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-core>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-core,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-core>>)
 
 add_subdirectory(src)
 add_subdirectory(include)

@@ -35,5 +35,5 @@ add_library(forte-lms_ev3
             fileWriter_fbt.cpp fileReader_fbt.h fileReader_fbt.cpp
 )
 target_link_libraries(forte-lms_ev3 PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-lms_ev3>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-lms_ev3,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-lms_ev3>>)
 install(TARGETS forte-lms_ev3 EXPORT forte-export FILE_SET HEADERS)

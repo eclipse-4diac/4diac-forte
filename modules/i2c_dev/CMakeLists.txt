@@ -27,5 +27,5 @@ add_library(forte-i2c_dev
             processinterface.h i2cprocessinterface.h i2cprocessinterface.cpp
 )
 target_link_libraries(forte-i2c_dev PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-i2c_dev>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-i2c_dev,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-i2c_dev>>)
 install(TARGETS forte-i2c_dev EXPORT forte-export FILE_SET HEADERS)

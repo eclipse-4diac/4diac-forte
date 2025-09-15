@@ -59,7 +59,7 @@ add_library(forte-PLCnext
             plcNextDeviceStatus.cpp
 )
 target_link_libraries(forte-PLCnext PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-PLCnext>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-PLCnext,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-PLCnext>>)
 target_include_directories(forte-PLCnext
                            PUBLIC ${ArpProgramming_INCLUDE_DIR}
 )

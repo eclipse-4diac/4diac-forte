@@ -92,7 +92,7 @@ endif ()
 
 add_library(forte-com-opc_ua)
 target_link_libraries(forte-com-opc_ua PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-com-opc_ua>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-com-opc_ua,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-com-opc_ua>>)
 
 if (FORTE_ARCHITECTURE STREQUAL "Win32")
     target_link_libraries(forte-com-opc_ua PRIVATE iphlpapi)

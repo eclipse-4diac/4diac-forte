@@ -20,7 +20,7 @@ endif ()
 
 add_library(forte-iec61131-3)
 target_link_libraries(forte-iec61131-3 PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-iec61131-3>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-iec61131-3,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-iec61131-3>>)
 
 add_subdirectory(include)
 add_subdirectory(src)

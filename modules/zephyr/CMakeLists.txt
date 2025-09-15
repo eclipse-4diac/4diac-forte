@@ -42,7 +42,7 @@ add_library(forte-zephyr
             types/Esp32EthernetKitIO_fbt.cpp
 )
 target_link_libraries(forte-zephyr PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-zephyr>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-zephyr,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-zephyr>>)
 
 add_subdirectory(handler)
 add_subdirectory(handle)

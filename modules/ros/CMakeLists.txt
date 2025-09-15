@@ -65,7 +65,7 @@ add_library(forte-ros
             startup.cpp
 )
 target_link_libraries(forte-ros PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-ros>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-ros,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-ros>>)
 target_include_directories(forte-ros PUBLIC ${catkin_INCLUDE_DIRS})
 target_include_directories(forte-ros PUBLIC /opt/ros/indigo/include)
 target_link_directories(forte-ros PUBLIC /opt/ros/indigo/lib)

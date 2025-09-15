@@ -53,7 +53,7 @@ add_library(forte-com-opc
         Cmd_SetProcessVarValue.cpp
 )
 target_link_libraries(forte-com-opc PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-com-opc>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-com-opc,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-com-opc>>)
 target_include_directories(forte-com-opc PRIVATE ${FORTE_COM_OPC_BOOST_ROOT})
 target_include_directories(forte-com-opc PRIVATE ${FORTE_COM_OPC_LIB_ROOT}/include/OPCClientToolKit)
 target_link_directories(forte-com-opc PUBLIC ${FORTE_COM_OPC_LIB_ROOT}/lib)

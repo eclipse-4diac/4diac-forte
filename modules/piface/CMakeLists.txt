@@ -28,5 +28,5 @@ add_library(forte-piface
             ../conmeleon_c1/spi/spidevice.h ../conmeleon_c1/spi/spidevice.cpp
 )
 target_link_libraries(forte-piface PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-piface>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-piface,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-piface>>)
 install(TARGETS forte-piface EXPORT forte-export FILE_SET HEADERS)

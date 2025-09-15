@@ -14,7 +14,7 @@
 
 add_library(forte-events)
 target_link_libraries(forte-events PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-events>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-events,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-events>>)
 
 add_subdirectory(include)
 add_subdirectory(src)

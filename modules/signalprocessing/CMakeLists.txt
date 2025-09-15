@@ -20,7 +20,7 @@ endif ()
 
 add_library(forte-signalprocessing)
 target_link_libraries(forte-signalprocessing PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-signalprocessing>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-signalprocessing,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-signalprocessing>>)
 
 add_subdirectory(include)
 add_subdirectory(src)

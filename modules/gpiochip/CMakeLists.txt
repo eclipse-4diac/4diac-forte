@@ -25,5 +25,5 @@ add_library(forte-gpiochip
             gpiochip_config_fb.h gpiochip_config_fb.cpp
 )
 target_link_libraries(forte-gpiochip PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-gpiochip>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-gpiochip,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-gpiochip>>)
 install(TARGETS forte-gpiochip EXPORT forte-export FILE_SET HEADERS)

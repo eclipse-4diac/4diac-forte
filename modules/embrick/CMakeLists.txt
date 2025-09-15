@@ -52,5 +52,5 @@ add_library(forte-embrick
             types/EBSlave2301.cpp
 )
 target_link_libraries(forte-embrick PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-embrick>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-embrick,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-embrick>>)
 install(TARGETS forte-embrick EXPORT forte-export FILE_SET HEADERS)

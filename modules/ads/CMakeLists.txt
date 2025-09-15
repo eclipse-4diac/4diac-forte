@@ -50,7 +50,7 @@ add_library(forte-ads
             processinterface.h
 )
 target_link_libraries(forte-ads PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-ads>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-ads,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-ads>>)
 target_include_directories(forte-ads
                            PUBLIC ${FORTE_MODULE_ADS_PI_ADS_ROOT}/AdsLib
 )

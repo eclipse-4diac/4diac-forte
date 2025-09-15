@@ -42,7 +42,7 @@ add_library(forte-com-mqtt_paho
         MQTTClientConfigParser.cpp
 )
 target_link_libraries(forte-com-mqtt_paho PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-com-mqtt_paho>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-com-mqtt_paho,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-com-mqtt_paho>>)
 
 target_include_directories(forte-com-mqtt_paho PRIVATE ${FORTE_COM_PAHOMQTT_INCLUDE_DIR})
 target_link_directories(forte-com-mqtt_paho PUBLIC ${FORTE_COM_PAHOMQTT_LIB_DIR})

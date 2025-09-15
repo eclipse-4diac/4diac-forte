@@ -39,16 +39,19 @@ option(FORTE_SYSTEM_TESTS "FORTE System Tests" OFF)
 option(FORTE_BUILD_EXECUTABLE "Build 4diac FORTE as an executable, otherwise build a library" ON)
 mark_as_advanced(FORTE_BUILD_EXECUTABLE)
 
+option(BUILD_SHARED_LIBS "Build using shared libraries" OFF)
+
 #############################################################################
 # Whole archive
 #############################################################################
-if (NOT CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE_SUPPORTED)
+if (NOT BUILD_SHARED_LIBS AND NOT CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE_SUPPORTED)
     message(FATAL_ERROR
             "Enable WHOLE_ARCHIVE linker feature in your CMake toolchain file, for example:\n"
-            "  set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE\n"
-            "      \"-Wl,--whole-archive\" \"<LINK_ITEM>\" \"-Wl,--no-whole-archive\"\n"
-            "  )\n"
+            "  set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE \"LINKER:--whole-archive\"\n"
+            "                                             \"<LINK_ITEM>\"\n"
+            "                                             \"LINKER:--no-whole-archive\")\n"
             "  set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE_SUPPORTED TRUE)\n"
+            "  set(CMAKE_LINK_LIBRARY_WHOLE_ARCHIVE_PROPERTIES LIBRARY_TYPE=STATIC UNICITY=YES OVERRIDE=DEFAULT)\n"
     )
 endif ()
 

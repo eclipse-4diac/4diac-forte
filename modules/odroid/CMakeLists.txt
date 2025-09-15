@@ -28,5 +28,5 @@ add_library(forte-odroid
             processinterface.h processinterface.cpp
 )
 target_link_libraries(forte-odroid PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-odroid>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-odroid,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-odroid>>)
 install(TARGETS forte-odroid EXPORT forte-export FILE_SET HEADERS)

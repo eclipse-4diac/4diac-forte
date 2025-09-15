@@ -24,5 +24,5 @@ add_library(forte-PLC01A1
             plc01a1_config_fb.cpp
 )
 target_link_libraries(forte-PLC01A1 PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-PLC01A1>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-PLC01A1,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-PLC01A1>>)
 install(TARGETS forte-PLC01A1 EXPORT forte-export FILE_SET HEADERS)

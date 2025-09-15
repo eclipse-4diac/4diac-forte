@@ -101,7 +101,7 @@ add_library(forte-powerlink
             ${FORTE_MODULE_POWERLINK_TINYXML_DIR}/tinyxmlparser.cpp
 )
 target_link_libraries(forte-powerlink PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-powerlink>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-powerlink,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-powerlink>>)
 target_include_directories(forte-powerlink
                            PUBLIC ${FORTE_MODULE_POWERLINK_LIB_DIR}/Target/X86/Windows/WpdPack/Include
 )

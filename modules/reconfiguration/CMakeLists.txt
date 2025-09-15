@@ -20,7 +20,7 @@ endif ()
 
 add_library(forte-reconfiguration)
 target_link_libraries(forte-reconfiguration PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-reconfiguration>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-reconfiguration,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-reconfiguration>>)
 
 add_subdirectory(include)
 add_subdirectory(src)

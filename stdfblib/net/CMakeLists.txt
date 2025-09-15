@@ -14,7 +14,7 @@
 
 add_library(forte-net)
 target_link_libraries(forte-net PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-net>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-net,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-net>>)
 
 add_subdirectory(include)
 add_subdirectory(src)

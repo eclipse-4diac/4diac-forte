@@ -30,5 +30,5 @@ add_library(forte-raspberry_sps
             processinterface.cpp
 )
 target_link_libraries(forte-raspberry_sps PUBLIC forte-core)
-target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-raspberry_sps>)
+target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-raspberry_sps,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-raspberry_sps>>)
 install(TARGETS forte-raspberry_sps EXPORT forte-export FILE_SET HEADERS)
