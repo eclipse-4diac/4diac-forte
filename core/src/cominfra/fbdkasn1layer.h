@@ -26,13 +26,13 @@
 
 #include <set>
 
-class CIEC_TIME;
-class CIEC_STRUCT;
-class CIEC_ARRAY;
-class CIEC_STRING;
-class CIEC_WSTRING;
-
 namespace forte {
+  class CIEC_TIME;
+  class CIEC_STRUCT;
+  class CIEC_ARRAY;
+  class CIEC_STRING;
+  class CIEC_WSTRING;
+
   namespace com_infra {
 
     class CFBDKASN1ComLayer : public CComLayer {

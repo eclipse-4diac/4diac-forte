@@ -19,128 +19,130 @@
 #include "forte/datatypes/forte_any.h"
 #include "forte/datatypes/forte_any_bit.h"
 
-template<typename T>
-T &ST_IGNORE_OUT_PARAM(T &&value) {
-  return value;
-}
+namespace forte {
+  template<typename T>
+  T &ST_IGNORE_OUT_PARAM(T &&value) {
+    return value;
+  }
 
-/** @brief Extends lifetime of a temporary rvalue for function calls
- *
- * This extended the percieved lifetime of a temporary object for the compiler.
- * Its needed for Partials and negation of output parameters.
- *
- * Its the same as ST_IGNORE_OUT_PARAM, but a different name, as it has a different
- * reason in the code. Currently, aliasing of template functions does not work, so the
- * code was duplicated.
- */
-template<typename T>
-T &ST_EXTEND_LIFETIME(T &&value) {
-  return value;
-}
+  /** @brief Extends lifetime of a temporary rvalue for function calls
+   *
+   * This extended the percieved lifetime of a temporary object for the compiler.
+   * Its needed for Partials and negation of output parameters.
+   *
+   * Its the same as ST_IGNORE_OUT_PARAM, but a different name, as it has a different
+   * reason in the code. Currently, aliasing of template functions does not work, so the
+   * code was duplicated.
+   */
+  template<typename T>
+  T &ST_EXTEND_LIFETIME(T &&value) {
+    return value;
+  }
 
-template<typename T>
-class COutputGuard;
+  template<typename T>
+  class COutputGuard;
 
-template<typename T>
-class COutputParameter {
-    friend COutputGuard<COutputParameter>;
-    static_assert(std::negation_v<std::is_base_of<CIEC_ANY_BIT, T>>, "COutputReference not for ANY_BIT");
+  template<typename T>
+  class COutputParameter {
+      friend COutputGuard<COutputParameter>;
+      static_assert(std::negation_v<std::is_base_of<CIEC_ANY_BIT, T>>, "COutputReference not for ANY_BIT");
 
-  public:
-    COutputParameter() : mOutput(nullptr) {
-    }
-
-    template<typename U,
-             std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>> &&
-                                  std::is_assignable_v<std::remove_reference_t<U>, T>,
-                              bool> = true>
-    COutputParameter(U &&paOutput) : mOutput(&paOutput) {
-    }
-
-    T *get() noexcept {
-      return &mValue;
-    }
-
-    T &operator*() noexcept {
-      return mValue;
-    }
-
-    T *operator->() noexcept {
-      return &mValue;
-    }
-
-  private:
-    void writeBack() {
-      if (mOutput) {
-        mOutput->setValue(mValue);
+    public:
+      COutputParameter() : mOutput(nullptr) {
       }
-    }
 
-    T mValue;
-    CIEC_ANY *mOutput;
-};
+      template<typename U,
+               std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>> &&
+                                    std::is_assignable_v<std::remove_reference_t<U>, T>,
+                                bool> = true>
+      COutputParameter(U &&paOutput) : mOutput(&paOutput) {
+      }
 
-template<typename T>
-class CAnyBitOutputParameter {
-    friend COutputGuard<CAnyBitOutputParameter>;
-    static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>, "CAnyBitOutputReference only for ANY_BIT");
+      T *get() noexcept {
+        return &mValue;
+      }
 
-  public:
-    CAnyBitOutputParameter() : mOutput(nullptr), mNegate(false) {
-    }
+      T &operator*() noexcept {
+        return mValue;
+      }
 
-    template<typename U,
-             std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>> &&
-                                  std::is_assignable_v<std::remove_reference_t<U>, T>,
-                              bool> = true>
-    CAnyBitOutputParameter(U &&paOutput) : mOutput(&paOutput), mNegate(false) {
-    }
+      T *operator->() noexcept {
+        return &mValue;
+      }
 
-    template<typename U,
-             std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>> &&
-                                  std::is_assignable_v<std::remove_reference_t<U>, T>,
-                              bool> = true>
-    CAnyBitOutputParameter(U &&paOutput, const bool paNegate) : mOutput(&paOutput), mNegate(paNegate) {
-    }
-
-    T *get() noexcept {
-      return &mValue;
-    }
-
-    T &operator*() noexcept {
-      return mValue;
-    }
-
-    T *operator->() noexcept {
-      return &mValue;
-    }
-
-  private:
-    void writeBack() {
-      if (mOutput) {
-        if (mNegate) {
-          mOutput->setValue(func_NOT(mValue));
-        } else {
+    private:
+      void writeBack() {
+        if (mOutput) {
           mOutput->setValue(mValue);
         }
       }
-    }
 
-    T mValue;
-    CIEC_ANY *mOutput;
-    bool mNegate;
-};
+      T mValue;
+      CIEC_ANY *mOutput;
+  };
 
-template<typename T>
-class COutputGuard {
-  public:
-    explicit COutputGuard(T &paParameter) : mParameter(paParameter) {
-    }
+  template<typename T>
+  class CAnyBitOutputParameter {
+      friend COutputGuard<CAnyBitOutputParameter>;
+      static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>, "CAnyBitOutputReference only for ANY_BIT");
 
-    ~COutputGuard() {
-      mParameter.writeBack();
-    }
+    public:
+      CAnyBitOutputParameter() : mOutput(nullptr), mNegate(false) {
+      }
 
-  private:
-    T &mParameter;
-};
+      template<typename U,
+               std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>> &&
+                                    std::is_assignable_v<std::remove_reference_t<U>, T>,
+                                bool> = true>
+      CAnyBitOutputParameter(U &&paOutput) : mOutput(&paOutput), mNegate(false) {
+      }
+
+      template<typename U,
+               std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>> &&
+                                    std::is_assignable_v<std::remove_reference_t<U>, T>,
+                                bool> = true>
+      CAnyBitOutputParameter(U &&paOutput, const bool paNegate) : mOutput(&paOutput), mNegate(paNegate) {
+      }
+
+      T *get() noexcept {
+        return &mValue;
+      }
+
+      T &operator*() noexcept {
+        return mValue;
+      }
+
+      T *operator->() noexcept {
+        return &mValue;
+      }
+
+    private:
+      void writeBack() {
+        if (mOutput) {
+          if (mNegate) {
+            mOutput->setValue(func_NOT(mValue));
+          } else {
+            mOutput->setValue(mValue);
+          }
+        }
+      }
+
+      T mValue;
+      CIEC_ANY *mOutput;
+      bool mNegate;
+  };
+
+  template<typename T>
+  class COutputGuard {
+    public:
+      explicit COutputGuard(T &paParameter) : mParameter(paParameter) {
+      }
+
+      ~COutputGuard() {
+        mParameter.writeBack();
+      }
+
+    private:
+      T &mParameter;
+  };
+} // namespace forte

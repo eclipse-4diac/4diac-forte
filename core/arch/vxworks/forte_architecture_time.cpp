@@ -18,11 +18,11 @@
 #include "forte/util/forte_constants.h"
 
 uint_fast64_t getNanoSecondsMonotonicArch() {
-  return (forte::constants::cNanosecondsPerSecond > timerFreq())
-             ? sysTimestamp() / (timerFreq() / forte::constants::cNanosecondsPerSecond)
+  return (forte::util::constants::cNanosecondsPerSecond > timerFreq())
+             ? sysTimestamp() / (timerFreq() / forte::util::constants::cNanosecondsPerSecond)
              : (sysTimestamp() / timerFreq()) *
-                   forte::constants::cNanosecondsPerSecond; /// forte::constants::cNanosecondsPerSecond)
-                                                            /// * sysClkRateGet();
+                   forte::util::constants::cNanosecondsPerSecond; /// forte::util::constants::cNanosecondsPerSecond)
+                                                                  /// * sysClkRateGet();
 }
 
 uint_fast64_t getNanoSecondsRealtimeArch() {

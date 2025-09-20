@@ -21,341 +21,316 @@
 #include <string>
 #include <map>
 
-class CDevice;
+namespace forte {
+  class CDevice;
 
-namespace forte::iec61499::hardware {
-  class OPCUA_MGR {
-    public:
-      OPCUA_MGR(CDevice &paUaDevice);
+  namespace iec61499::hardware {
+    class OPCUA_MGR {
+      public:
+        OPCUA_MGR(CDevice &paUaDevice);
 
-      virtual ~OPCUA_MGR();
+        virtual ~OPCUA_MGR();
 
-      EMGMResponse initialize();
+        EMGMResponse initialize();
 
-      bool isInitialized();
+        bool isInitialized();
 
-      static void initArgument(UA_Argument &paArgument, int paTypeId, char *paName, char *paDescription);
+        static void initArgument(UA_Argument &paArgument, int paTypeId, char *paName, char *paDescription);
 
-      struct MethodInformation {
-          std::string mMethodName;
-          std::string mDisplayName;
-          std::string mDescription;
-          std::vector<UA_Argument> mInArguments;
-          std::vector<UA_Argument> mOutArguments;
-          UA_MethodCallback mCallback;
-          void *mNodeContext;
-      };
+        struct MethodInformation {
+            std::string mMethodName;
+            std::string mDisplayName;
+            std::string mDescription;
+            std::vector<UA_Argument> mInArguments;
+            std::vector<UA_Argument> mOutArguments;
+            UA_MethodCallback mCallback;
+            void *mNodeContext;
+        };
 
-      void addExtraMgmMethod(const MethodInformation &paMethod);
+        void addExtraMgmMethod(const MethodInformation &paMethod);
 
-      void addExtraResourceMethod(const MethodInformation &paMethod);
+        void addExtraResourceMethod(const MethodInformation &paMethod);
 
-    private:
-      static char smEmptyLocale[];
+      private:
+        static char smEmptyLocale[];
 
-      /* Management and Resource Type */
-      static char smMgmtType[];
-      static char smMgmtName[];
-      static char smResType[];
+        /* Management and Resource Type */
+        static char smMgmtType[];
+        static char smMgmtName[];
+        static char smResType[];
 
-      /* Write Device */
-      static char smWriteDevMethodName[];
-      static char smWriteDevArgName[];
-      static char smWriteDevArgDescription[];
-      static char smWriteDevAttrDisplayName[];
-      static char smWriteDevAttrDescription[];
+        /* Write Device */
+        static char smWriteDevMethodName[];
+        static char smWriteDevArgName[];
+        static char smWriteDevArgDescription[];
+        static char smWriteDevAttrDisplayName[];
+        static char smWriteDevAttrDescription[];
 
-      /* Start Device */
-      static char smStartDevMethodName[];
-      static char smStartDevAttrDisplayName[];
-      static char smStartDevAttrDescription[];
+        /* Start Device */
+        static char smStartDevMethodName[];
+        static char smStartDevAttrDisplayName[];
+        static char smStartDevAttrDescription[];
 
-      /* Stop Device */
-      static char smStopDevMethodName[];
-      static char smStopDevAttrDisplayName[];
-      static char smStopDevAttrDescription[];
+        /* Stop Device */
+        static char smStopDevMethodName[];
+        static char smStopDevAttrDisplayName[];
+        static char smStopDevAttrDescription[];
 
-      /* Reset Device */
-      static char smResetDevMethodName[];
-      static char smResetDevAttrDisplayName[];
-      static char smResetDevAttrDescription[];
+        /* Reset Device */
+        static char smResetDevMethodName[];
+        static char smResetDevAttrDisplayName[];
+        static char smResetDevAttrDescription[];
 
-      /* Kill Device */
-      static char smKillDevMethodName[];
-      static char smKillDevAttrDisplayName[];
-      static char smKillDevAttrDescription[];
+        /* Kill Device */
+        static char smKillDevMethodName[];
+        static char smKillDevAttrDisplayName[];
+        static char smKillDevAttrDescription[];
 
-      /* Create Resource */
-      static char smCreateResMethodName[];
-      static char smCreateResArg1Name[];
-      static char smCreateResArg1Description[];
-      static char smCreateResArg2Name[];
-      static char smCreateResArg2Description[];
-      static char smCreateResOutArgName[];
-      static char smCreateResOutArgDescription[];
-      static char smCreateResAttrDisplayName[];
-      static char smCreateResAttrDescription[];
+        /* Create Resource */
+        static char smCreateResMethodName[];
+        static char smCreateResArg1Name[];
+        static char smCreateResArg1Description[];
+        static char smCreateResArg2Name[];
+        static char smCreateResArg2Description[];
+        static char smCreateResOutArgName[];
+        static char smCreateResOutArgDescription[];
+        static char smCreateResAttrDisplayName[];
+        static char smCreateResAttrDescription[];
 
-      /* Write Resource */
-      static char smWriteResMethodName[];
-      static char smWriteResArg1Name[];
-      static char smWriteResArg1Description[];
-      static char smWriteResArg2Name[];
-      static char smWriteResArg2Description[];
-      static char smWriteResAttrDisplayName[];
-      static char smWriteResAttrDescription[];
+        /* Write Resource */
+        static char smWriteResMethodName[];
+        static char smWriteResArg1Name[];
+        static char smWriteResArg1Description[];
+        static char smWriteResArg2Name[];
+        static char smWriteResArg2Description[];
+        static char smWriteResAttrDisplayName[];
+        static char smWriteResAttrDescription[];
 
-      /* Start Resource */
-      static char smStartResMethodName[];
-      static char smStartResArgName[];
-      static char smStartResArgDescription[];
-      static char smStartResAttrDisplayName[];
-      static char smStartResAttrDescription[];
+        /* Start Resource */
+        static char smStartResMethodName[];
+        static char smStartResArgName[];
+        static char smStartResArgDescription[];
+        static char smStartResAttrDisplayName[];
+        static char smStartResAttrDescription[];
 
-      /* Stop Resource */
-      static char smStopResMethodName[];
-      static char smStopResArgName[];
-      static char smStopResArgDescription[];
-      static char smStopResAttrDisplayName[];
-      static char smStopResAttrDescription[];
+        /* Stop Resource */
+        static char smStopResMethodName[];
+        static char smStopResArgName[];
+        static char smStopResArgDescription[];
+        static char smStopResAttrDisplayName[];
+        static char smStopResAttrDescription[];
 
-      /* Reset Resource */
-      static char smResetResMethodName[];
-      static char smResetResArgName[];
-      static char smResetResArgDescription[];
-      static char smResetResAttrDisplayName[];
-      static char smResetResAttrDescription[];
+        /* Reset Resource */
+        static char smResetResMethodName[];
+        static char smResetResArgName[];
+        static char smResetResArgDescription[];
+        static char smResetResAttrDisplayName[];
+        static char smResetResAttrDescription[];
 
-      /* Kill Resource */
-      static char smKillResMethodName[];
-      static char smKillResArgName[];
-      static char smKillResArgDescription[];
-      static char smKillResAttrDisplayName[];
-      static char smKillResAttrDescription[];
+        /* Kill Resource */
+        static char smKillResMethodName[];
+        static char smKillResArgName[];
+        static char smKillResArgDescription[];
+        static char smKillResAttrDisplayName[];
+        static char smKillResAttrDescription[];
 
-      /* Delete Resource */
-      static char smDeleteResMethodName[];
-      static char smDeleteResArgName[];
-      static char smDeleteResArgDescription[];
-      static char smDeleteResAttrDisplayName[];
-      static char smDeleteResAttrDescription[];
+        /* Delete Resource */
+        static char smDeleteResMethodName[];
+        static char smDeleteResArgName[];
+        static char smDeleteResArgDescription[];
+        static char smDeleteResAttrDisplayName[];
+        static char smDeleteResAttrDescription[];
 
-      /* Create FB */
-      static char smCreateFBMethodName[];
-      static char smCreateFBArg1Name[];
-      static char smCreateFBArg1Description[];
-      static char smCreateFBArg2Name[];
-      static char smCreateFBArg2Description[];
-      static char smCreateFBAttrDisplayName[];
-      static char smCreateFBAttrDescription[];
+        /* Create FB */
+        static char smCreateFBMethodName[];
+        static char smCreateFBArg1Name[];
+        static char smCreateFBArg1Description[];
+        static char smCreateFBArg2Name[];
+        static char smCreateFBArg2Description[];
+        static char smCreateFBAttrDisplayName[];
+        static char smCreateFBAttrDescription[];
 
-      /* Write FB */
-      static char smWriteFBMethodName[];
-      static char smWriteFBArg1Name[];
-      static char smWriteFBArg1Description[];
-      static char smWriteFBArg2Name[];
-      static char smWriteFBArg2Description[];
-      static char smWriteFBAttrDisplayName[];
-      static char smWriteFBAttrDescription[];
+        /* Write FB */
+        static char smWriteFBMethodName[];
+        static char smWriteFBArg1Name[];
+        static char smWriteFBArg1Description[];
+        static char smWriteFBArg2Name[];
+        static char smWriteFBArg2Description[];
+        static char smWriteFBAttrDisplayName[];
+        static char smWriteFBAttrDescription[];
 
-      /* Start FB */
-      static char smStartFBMethodName[];
-      static char smStartFBArg1Name[];
-      static char smStartFBArg1Description[];
-      static char smStartFBAttrDisplayName[];
-      static char smStartFBAttrDescription[];
+        /* Start FB */
+        static char smStartFBMethodName[];
+        static char smStartFBArg1Name[];
+        static char smStartFBArg1Description[];
+        static char smStartFBAttrDisplayName[];
+        static char smStartFBAttrDescription[];
 
-      /* Stop FB */
-      static char smStopFBMethodName[];
-      static char smStopFBArg1Name[];
-      static char smStopFBArg1Description[];
-      static char smStopFBAttrDisplayName[];
-      static char smStopFBAttrDescription[];
+        /* Stop FB */
+        static char smStopFBMethodName[];
+        static char smStopFBArg1Name[];
+        static char smStopFBArg1Description[];
+        static char smStopFBAttrDisplayName[];
+        static char smStopFBAttrDescription[];
 
-      /* Reset FB */
-      static char smResetFBMethodName[];
-      static char smResetFBArg1Name[];
-      static char smResetFBArg1Description[];
-      static char smResetFBAttrDisplayName[];
-      static char smResetFBAttrDescription[];
+        /* Reset FB */
+        static char smResetFBMethodName[];
+        static char smResetFBArg1Name[];
+        static char smResetFBArg1Description[];
+        static char smResetFBAttrDisplayName[];
+        static char smResetFBAttrDescription[];
 
-      /* Kill FB */
-      static char smKillFBMethodName[];
-      static char smKillFBArg1Name[];
-      static char smKillFBArg1Description[];
-      static char smKillFBAttrDisplayName[];
-      static char smKillFBAttrDescription[];
+        /* Kill FB */
+        static char smKillFBMethodName[];
+        static char smKillFBArg1Name[];
+        static char smKillFBArg1Description[];
+        static char smKillFBAttrDisplayName[];
+        static char smKillFBAttrDescription[];
 
-      /* Delete FB */
-      static char smDeleteFBMethodName[];
-      static char smDeleteFBArg1Name[];
-      static char smDeleteFBArg1Description[];
-      static char smDeleteFBAttrDisplayName[];
-      static char smDeleteFBAttrDescription[];
+        /* Delete FB */
+        static char smDeleteFBMethodName[];
+        static char smDeleteFBArg1Name[];
+        static char smDeleteFBArg1Description[];
+        static char smDeleteFBAttrDisplayName[];
+        static char smDeleteFBAttrDescription[];
 
-      /* Create Connection */
-      static char smCreateConnMethodName[];
-      static char smCreateConnArg1Name[];
-      static char smCreateConnArg1Description[];
-      static char smCreateConnArg2Name[];
-      static char smCreateConnArg2Description[];
-      static char smCreateConnAttrDisplayName[];
-      static char smCreateConnAttrDescription[];
+        /* Create Connection */
+        static char smCreateConnMethodName[];
+        static char smCreateConnArg1Name[];
+        static char smCreateConnArg1Description[];
+        static char smCreateConnArg2Name[];
+        static char smCreateConnArg2Description[];
+        static char smCreateConnAttrDisplayName[];
+        static char smCreateConnAttrDescription[];
 
-      /* Delete Connection */
-      static char smDeleteConnMethodName[];
-      static char smDeleteConnArg1Name[];
-      static char smDeleteConnArg1Description[];
-      static char smDeleteConnArg2Name[];
-      static char smDeleteConnArg2Description[];
-      static char smDeleteConnAttrDisplayName[];
-      static char smDeleteConnAttrDescription[];
+        /* Delete Connection */
+        static char smDeleteConnMethodName[];
+        static char smDeleteConnArg1Name[];
+        static char smDeleteConnArg1Description[];
+        static char smDeleteConnArg2Name[];
+        static char smDeleteConnArg2Description[];
+        static char smDeleteConnAttrDisplayName[];
+        static char smDeleteConnAttrDescription[];
 
-      /* Query Resources */
-      static char smQueryResourcesMethodName[];
-      static char smQueryResourcesDisplayName[];
-      static char smQueryResourcesDescription[];
-      static char smQueryResourcesOutArgName[];
-      static char smQueryResourcesOutArgDescription[];
+        /* Query Resources */
+        static char smQueryResourcesMethodName[];
+        static char smQueryResourcesDisplayName[];
+        static char smQueryResourcesDescription[];
+        static char smQueryResourcesOutArgName[];
+        static char smQueryResourcesOutArgDescription[];
 
-      /* Query FB Type */
-      static char smQueryFBTypeMethodName[];
-      static char smQueryFBTypeOutArgName[];
-      static char smQueryFBTypeOutArgDescription[];
-      static char smQueryFBTypeDisplayName[];
-      static char smQueryFBTypeDescription[];
-      static char smQueryFBTypeArgName[];
-      static char smQueryFBTypeArgDescription[];
+        /* Query FB Type */
+        static char smQueryFBTypeMethodName[];
+        static char smQueryFBTypeOutArgName[];
+        static char smQueryFBTypeOutArgDescription[];
+        static char smQueryFBTypeDisplayName[];
+        static char smQueryFBTypeDescription[];
+        static char smQueryFBTypeArgName[];
+        static char smQueryFBTypeArgDescription[];
 
-      /* Query Data Type */
-      static char smQueryDataTypeMethodName[];
-      static char smQueryDataTypeOutArgName[];
-      static char smQueryDataTypeOutArgDescription[];
-      static char smQueryDataTypeDisplayName[];
-      static char smQueryDataTypeDescription[];
-      static char smQueryDataTypeArgName[];
-      static char smQueryDataTypeArgDescription[];
+        /* Query Data Type */
+        static char smQueryDataTypeMethodName[];
+        static char smQueryDataTypeOutArgName[];
+        static char smQueryDataTypeOutArgDescription[];
+        static char smQueryDataTypeDisplayName[];
+        static char smQueryDataTypeDescription[];
+        static char smQueryDataTypeArgName[];
+        static char smQueryDataTypeArgDescription[];
 
-      /* Query Global Const  */
-      static char smQueryGlobalConstTypeMethodName[];
-      static char smQueryGlobalConstTypeOutArgName[];
-      static char smQueryGlobalConstTypeOutArgDescription[];
-      static char smQueryGlobalConstTypeDisplayName[];
-      static char smQueryGlobalConstTypeDescription[];
-      static char smQueryGlobalConstTypeArgName[];
-      static char smQueryGlobalConstTypeArgDescription[];
+        /* Query Global Const  */
+        static char smQueryGlobalConstTypeMethodName[];
+        static char smQueryGlobalConstTypeOutArgName[];
+        static char smQueryGlobalConstTypeOutArgDescription[];
+        static char smQueryGlobalConstTypeDisplayName[];
+        static char smQueryGlobalConstTypeDescription[];
+        static char smQueryGlobalConstTypeArgName[];
+        static char smQueryGlobalConstTypeArgDescription[];
 
-      /* Add Watch */
-      static char smAddWatchMethodName[];
-      static char smAddWatchArgName[];
-      static char smAddWatchArgDescription[];
-      static char smAddWatchAttrDisplayName[];
-      static char smAddWatchAttrDescription[];
+        /* Add Watch */
+        static char smAddWatchMethodName[];
+        static char smAddWatchArgName[];
+        static char smAddWatchArgDescription[];
+        static char smAddWatchAttrDisplayName[];
+        static char smAddWatchAttrDescription[];
 
-      /* Read Watches */
-      static char smReadWatchesMethodName[];
-      static char smReadWatchesDisplayName[];
-      static char smReadWatchesDescription[];
-      static char smReadWatchesOutArgName[];
-      static char smReadWatchesOutArgDescription[];
+        /* Read Watches */
+        static char smReadWatchesMethodName[];
+        static char smReadWatchesDisplayName[];
+        static char smReadWatchesDescription[];
+        static char smReadWatchesOutArgName[];
+        static char smReadWatchesOutArgDescription[];
 
-      /* Remove Watch */
-      static char smRemoveWatchMethodName[];
-      static char smRemoveWatchArgName[];
-      static char smRemoveWatchArgDescription[];
-      static char smRemoveWatchAttrDisplayName[];
-      static char smRemoveWatchAttrDescription[];
+        /* Remove Watch */
+        static char smRemoveWatchMethodName[];
+        static char smRemoveWatchArgName[];
+        static char smRemoveWatchArgDescription[];
+        static char smRemoveWatchAttrDisplayName[];
+        static char smRemoveWatchAttrDescription[];
 
-      /* Trigger Event */
-      static char smTriggerEventMethodName[];
-      static char smTriggerEventArgName[];
-      static char smTriggerEventArgDescription[];
-      static char smTriggerEventAttrDisplayName[];
-      static char smTriggerEventAttrDescription[];
-      static const char *scmTriggerEventParam;
+        /* Trigger Event */
+        static char smTriggerEventMethodName[];
+        static char smTriggerEventArgName[];
+        static char smTriggerEventArgDescription[];
+        static char smTriggerEventAttrDisplayName[];
+        static char smTriggerEventAttrDescription[];
+        static const char *scmTriggerEventParam;
 
-      /* Force Value */
-      static char smForceValueMethodName[];
-      static char smForceValueArg1Name[];
-      static char smForceValueArg1Description[];
-      static char smForceValueArg2Name[];
-      static char smForceValueArg2Description[];
-      static char smForceValueAttrDisplayName[];
-      static char smForceValueAttrDescription[];
+        /* Force Value */
+        static char smForceValueMethodName[];
+        static char smForceValueArg1Name[];
+        static char smForceValueArg1Description[];
+        static char smForceValueArg2Name[];
+        static char smForceValueArg2Description[];
+        static char smForceValueAttrDisplayName[];
+        static char smForceValueAttrDescription[];
 
-      /* Clear Force */
-      static char smClearForceMethodName[];
-      static char smClearForceArgName[];
-      static char smClearForceArgDescription[];
-      static char smClearForceAttrDisplayName[];
-      static char smClearForceAttrDescription[];
+        /* Clear Force */
+        static char smClearForceMethodName[];
+        static char smClearForceArgName[];
+        static char smClearForceArgDescription[];
+        static char smClearForceAttrDisplayName[];
+        static char smClearForceAttrDescription[];
 
-      static const std::map<EMGMResponse, UA_StatusCode> scResponseMap;
+        static const std::map<EMGMResponse, UA_StatusCode> scResponseMap;
 
-      static const UA_UInt16 smNamespaces[];
+        static const UA_UInt16 smNamespaces[];
 
-      CDevice &mUaDevice;
+        CDevice &mUaDevice;
 
-      com_infra::opc_ua::COPC_UA_Local_Handler &mUaHandler;
+        com_infra::opc_ua::COPC_UA_Local_Handler &mUaHandler;
 
-      SManagementCMD mCommand;
+        SManagementCMD mCommand;
 
-      UA_NodeId mMgmtTypeId;
+        UA_NodeId mMgmtTypeId;
 
-      UA_NodeId mMgmtNodeId;
+        UA_NodeId mMgmtNodeId;
 
-      UA_NodeId mResourceTypeId;
+        UA_NodeId mResourceTypeId;
 
-      std::map<std::string, UA_NodeId> resourceNodeMap;
+        std::map<std::string, UA_NodeId> resourceNodeMap;
 
-      std::vector<MethodInformation> mExtraMgmMethods;
+        std::vector<MethodInformation> mExtraMgmMethods;
 
-      std::vector<MethodInformation> mExtraResourceMethods;
+        std::vector<MethodInformation> mExtraResourceMethods;
 
-      /**** OPCUA Methods ****/
+        /**** OPCUA Methods ****/
 
-      EMGMResponse createIEC61499MgmtObject(UA_Server *paServer);
+        EMGMResponse createIEC61499MgmtObject(UA_Server *paServer);
 
-      EMGMResponse defineIEC61499MgmtObjectType(UA_Server *paServer);
+        EMGMResponse defineIEC61499MgmtObjectType(UA_Server *paServer);
 
-      EMGMResponse addMgmtObjectInstance();
+        EMGMResponse addMgmtObjectInstance();
 
-      EMGMResponse createIEC61499ResourceObjectType(UA_Server *paServer);
+        EMGMResponse createIEC61499ResourceObjectType(UA_Server *paServer);
 
-      EMGMResponse defineIEC61499ResourceObjectType(UA_Server *paServer);
+        EMGMResponse defineIEC61499ResourceObjectType(UA_Server *paServer);
 
-      EMGMResponse addResourceObjectInstance(char *name, UA_NodeId &paNodeId, UA_NodeId paParentNodeId);
+        EMGMResponse addResourceObjectInstance(char *name, UA_NodeId &paNodeId, UA_NodeId paParentNodeId);
 
-      EMGMResponse removeResourceObjectInstance(std::string resourceName);
+        EMGMResponse removeResourceObjectInstance(std::string resourceName);
 
-      EMGMResponse addCreateResourceMethod(UA_Server *paServer);
-      static UA_StatusCode onCreateResource(UA_Server *server,
-                                            const UA_NodeId *sessionId,
-                                            void *sessionHandle,
-                                            const UA_NodeId *methodId,
-                                            void *methodContext,
-                                            const UA_NodeId *objectId,
-                                            void *objectContext,
-                                            size_t inputSize,
-                                            const UA_Variant *input,
-                                            size_t outputSize,
-                                            UA_Variant *output);
-
-      EMGMResponse addCreateFBMethod(UA_Server *paServer);
-      static UA_StatusCode onCreateFB(UA_Server *server,
-                                      const UA_NodeId *sessionId,
-                                      void *sessionHandle,
-                                      const UA_NodeId *methodId,
-                                      void *methodContext,
-                                      const UA_NodeId *objectId,
-                                      void *objectContext,
-                                      size_t inputSize,
-                                      const UA_Variant *input,
-                                      size_t outputSize,
-                                      UA_Variant *output);
-
-      EMGMResponse addCreateConnectionMethod(UA_Server *paServer);
-      static UA_StatusCode onCreateConnection(UA_Server *server,
+        EMGMResponse addCreateResourceMethod(UA_Server *paServer);
+        static UA_StatusCode onCreateResource(UA_Server *server,
                                               const UA_NodeId *sessionId,
                                               void *sessionHandle,
                                               const UA_NodeId *methodId,
@@ -367,86 +342,8 @@ namespace forte::iec61499::hardware {
                                               size_t outputSize,
                                               UA_Variant *output);
 
-      EMGMResponse addWriteDeviceMethod(UA_Server *paServer);
-      static UA_StatusCode onWriteDevice(UA_Server *server,
-                                         const UA_NodeId *sessionId,
-                                         void *sessionHandle,
-                                         const UA_NodeId *methodId,
-                                         void *methodContext,
-                                         const UA_NodeId *objectId,
-                                         void *objectContext,
-                                         size_t inputSize,
-                                         const UA_Variant *input,
-                                         size_t outputSize,
-                                         UA_Variant *output);
-
-      EMGMResponse addWriteResourceMethod(UA_Server *paServer);
-      static UA_StatusCode onWriteResource(UA_Server *server,
-                                           const UA_NodeId *sessionId,
-                                           void *sessionHandle,
-                                           const UA_NodeId *methodId,
-                                           void *methodContext,
-                                           const UA_NodeId *objectId,
-                                           void *objectContext,
-                                           size_t inputSize,
-                                           const UA_Variant *input,
-                                           size_t outputSize,
-                                           UA_Variant *output);
-
-      EMGMResponse addWriteFBMethod(UA_Server *paServer);
-      static UA_StatusCode onWriteFB(UA_Server *server,
-                                     const UA_NodeId *sessionId,
-                                     void *sessionHandle,
-                                     const UA_NodeId *methodId,
-                                     void *methodContext,
-                                     const UA_NodeId *objectId,
-                                     void *objectContext,
-                                     size_t inputSize,
-                                     const UA_Variant *input,
-                                     size_t outputSize,
-                                     UA_Variant *output);
-
-      EMGMResponse addStartDeviceMethod(UA_Server *paServer);
-      static UA_StatusCode onStartDevice(UA_Server *server,
-                                         const UA_NodeId *sessionId,
-                                         void *sessionHandle,
-                                         const UA_NodeId *methodId,
-                                         void *methodContext,
-                                         const UA_NodeId *objectId,
-                                         void *objectContext,
-                                         size_t inputSize,
-                                         const UA_Variant *input,
-                                         size_t outputSize,
-                                         UA_Variant *output);
-
-      EMGMResponse addStartResourceMethod(UA_Server *paServer);
-      static UA_StatusCode onStartResource(UA_Server *server,
-                                           const UA_NodeId *sessionId,
-                                           void *sessionHandle,
-                                           const UA_NodeId *methodId,
-                                           void *methodContext,
-                                           const UA_NodeId *objectId,
-                                           void *objectContext,
-                                           size_t inputSize,
-                                           const UA_Variant *input,
-                                           size_t outputSize,
-                                           UA_Variant *output);
-
-      EMGMResponse addStartFBMethod(UA_Server *paServer);
-      static UA_StatusCode onStartFB(UA_Server *server,
-                                     const UA_NodeId *sessionId,
-                                     void *sessionHandle,
-                                     const UA_NodeId *methodId,
-                                     void *methodContext,
-                                     const UA_NodeId *objectId,
-                                     void *objectContext,
-                                     size_t inputSize,
-                                     const UA_Variant *input,
-                                     size_t outputSize,
-                                     UA_Variant *output);
-
-      EMGMResponse addStopDeviceMethod(UA_Server *paServer);
-      static UA_StatusCode onStopDevice(UA_Server *server,
+        EMGMResponse addCreateFBMethod(UA_Server *paServer);
+        static UA_StatusCode onCreateFB(UA_Server *server,
                                         const UA_NodeId *sessionId,
                                         void *sessionHandle,
                                         const UA_NodeId *methodId,
@@ -458,47 +355,21 @@ namespace forte::iec61499::hardware {
                                         size_t outputSize,
                                         UA_Variant *output);
 
-      EMGMResponse addStopResourceMethod(UA_Server *paServer);
-      static UA_StatusCode onStopResource(UA_Server *server,
-                                          const UA_NodeId *sessionId,
-                                          void *sessionHandle,
-                                          const UA_NodeId *methodId,
-                                          void *methodContext,
-                                          const UA_NodeId *objectId,
-                                          void *objectContext,
-                                          size_t inputSize,
-                                          const UA_Variant *input,
-                                          size_t outputSize,
-                                          UA_Variant *output);
+        EMGMResponse addCreateConnectionMethod(UA_Server *paServer);
+        static UA_StatusCode onCreateConnection(UA_Server *server,
+                                                const UA_NodeId *sessionId,
+                                                void *sessionHandle,
+                                                const UA_NodeId *methodId,
+                                                void *methodContext,
+                                                const UA_NodeId *objectId,
+                                                void *objectContext,
+                                                size_t inputSize,
+                                                const UA_Variant *input,
+                                                size_t outputSize,
+                                                UA_Variant *output);
 
-      EMGMResponse addStopFBMethod(UA_Server *paServer);
-      static UA_StatusCode onStopFB(UA_Server *server,
-                                    const UA_NodeId *sessionId,
-                                    void *sessionHandle,
-                                    const UA_NodeId *methodId,
-                                    void *methodContext,
-                                    const UA_NodeId *objectId,
-                                    void *objectContext,
-                                    size_t inputSize,
-                                    const UA_Variant *input,
-                                    size_t outputSize,
-                                    UA_Variant *output);
-
-      EMGMResponse addResetDeviceMethod(UA_Server *paServer);
-      static UA_StatusCode onResetDevice(UA_Server *server,
-                                         const UA_NodeId *sessionId,
-                                         void *sessionHandle,
-                                         const UA_NodeId *methodId,
-                                         void *methodContext,
-                                         const UA_NodeId *objectId,
-                                         void *objectContext,
-                                         size_t inputSize,
-                                         const UA_Variant *input,
-                                         size_t outputSize,
-                                         UA_Variant *output);
-
-      EMGMResponse addResetResourceMethod(UA_Server *paServer);
-      static UA_StatusCode onResetResource(UA_Server *server,
+        EMGMResponse addWriteDeviceMethod(UA_Server *paServer);
+        static UA_StatusCode onWriteDevice(UA_Server *server,
                                            const UA_NodeId *sessionId,
                                            void *sessionHandle,
                                            const UA_NodeId *methodId,
@@ -510,34 +381,73 @@ namespace forte::iec61499::hardware {
                                            size_t outputSize,
                                            UA_Variant *output);
 
-      EMGMResponse addResetFBMethod(UA_Server *paServer);
-      static UA_StatusCode onResetFB(UA_Server *server,
-                                     const UA_NodeId *sessionId,
-                                     void *sessionHandle,
-                                     const UA_NodeId *methodId,
-                                     void *methodContext,
-                                     const UA_NodeId *objectId,
-                                     void *objectContext,
-                                     size_t inputSize,
-                                     const UA_Variant *input,
-                                     size_t outputSize,
-                                     UA_Variant *output);
+        EMGMResponse addWriteResourceMethod(UA_Server *paServer);
+        static UA_StatusCode onWriteResource(UA_Server *server,
+                                             const UA_NodeId *sessionId,
+                                             void *sessionHandle,
+                                             const UA_NodeId *methodId,
+                                             void *methodContext,
+                                             const UA_NodeId *objectId,
+                                             void *objectContext,
+                                             size_t inputSize,
+                                             const UA_Variant *input,
+                                             size_t outputSize,
+                                             UA_Variant *output);
 
-      EMGMResponse addKillDeviceMethod(UA_Server *paServer);
-      static UA_StatusCode onKillDevice(UA_Server *server,
-                                        const UA_NodeId *sessionId,
-                                        void *sessionHandle,
-                                        const UA_NodeId *methodId,
-                                        void *methodContext,
-                                        const UA_NodeId *objectId,
-                                        void *objectContext,
-                                        size_t inputSize,
-                                        const UA_Variant *input,
-                                        size_t outputSize,
-                                        UA_Variant *output);
+        EMGMResponse addWriteFBMethod(UA_Server *paServer);
+        static UA_StatusCode onWriteFB(UA_Server *server,
+                                       const UA_NodeId *sessionId,
+                                       void *sessionHandle,
+                                       const UA_NodeId *methodId,
+                                       void *methodContext,
+                                       const UA_NodeId *objectId,
+                                       void *objectContext,
+                                       size_t inputSize,
+                                       const UA_Variant *input,
+                                       size_t outputSize,
+                                       UA_Variant *output);
 
-      EMGMResponse addKillResourceMethod(UA_Server *paServer);
-      static UA_StatusCode onKillResource(UA_Server *server,
+        EMGMResponse addStartDeviceMethod(UA_Server *paServer);
+        static UA_StatusCode onStartDevice(UA_Server *server,
+                                           const UA_NodeId *sessionId,
+                                           void *sessionHandle,
+                                           const UA_NodeId *methodId,
+                                           void *methodContext,
+                                           const UA_NodeId *objectId,
+                                           void *objectContext,
+                                           size_t inputSize,
+                                           const UA_Variant *input,
+                                           size_t outputSize,
+                                           UA_Variant *output);
+
+        EMGMResponse addStartResourceMethod(UA_Server *paServer);
+        static UA_StatusCode onStartResource(UA_Server *server,
+                                             const UA_NodeId *sessionId,
+                                             void *sessionHandle,
+                                             const UA_NodeId *methodId,
+                                             void *methodContext,
+                                             const UA_NodeId *objectId,
+                                             void *objectContext,
+                                             size_t inputSize,
+                                             const UA_Variant *input,
+                                             size_t outputSize,
+                                             UA_Variant *output);
+
+        EMGMResponse addStartFBMethod(UA_Server *paServer);
+        static UA_StatusCode onStartFB(UA_Server *server,
+                                       const UA_NodeId *sessionId,
+                                       void *sessionHandle,
+                                       const UA_NodeId *methodId,
+                                       void *methodContext,
+                                       const UA_NodeId *objectId,
+                                       void *objectContext,
+                                       size_t inputSize,
+                                       const UA_Variant *input,
+                                       size_t outputSize,
+                                       UA_Variant *output);
+
+        EMGMResponse addStopDeviceMethod(UA_Server *paServer);
+        static UA_StatusCode onStopDevice(UA_Server *server,
                                           const UA_NodeId *sessionId,
                                           void *sessionHandle,
                                           const UA_NodeId *methodId,
@@ -549,21 +459,8 @@ namespace forte::iec61499::hardware {
                                           size_t outputSize,
                                           UA_Variant *output);
 
-      EMGMResponse addKillFBMethod(UA_Server *paServer);
-      static UA_StatusCode onKillFB(UA_Server *server,
-                                    const UA_NodeId *sessionId,
-                                    void *sessionHandle,
-                                    const UA_NodeId *methodId,
-                                    void *methodContext,
-                                    const UA_NodeId *objectId,
-                                    void *objectContext,
-                                    size_t inputSize,
-                                    const UA_Variant *input,
-                                    size_t outputSize,
-                                    UA_Variant *output);
-
-      EMGMResponse addDeleteResourceMethod(UA_Server *paServer);
-      static UA_StatusCode onDeleteResource(UA_Server *server,
+        EMGMResponse addStopResourceMethod(UA_Server *paServer);
+        static UA_StatusCode onStopResource(UA_Server *server,
                                             const UA_NodeId *sessionId,
                                             void *sessionHandle,
                                             const UA_NodeId *methodId,
@@ -575,8 +472,8 @@ namespace forte::iec61499::hardware {
                                             size_t outputSize,
                                             UA_Variant *output);
 
-      EMGMResponse addDeleteFBMethod(UA_Server *paServer);
-      static UA_StatusCode onDeleteFB(UA_Server *server,
+        EMGMResponse addStopFBMethod(UA_Server *paServer);
+        static UA_StatusCode onStopFB(UA_Server *server,
                                       const UA_NodeId *sessionId,
                                       void *sessionHandle,
                                       const UA_NodeId *methodId,
@@ -588,8 +485,86 @@ namespace forte::iec61499::hardware {
                                       size_t outputSize,
                                       UA_Variant *output);
 
-      EMGMResponse addDeleteConnectionMethod(UA_Server *paServer);
-      static UA_StatusCode onDeleteConnection(UA_Server *server,
+        EMGMResponse addResetDeviceMethod(UA_Server *paServer);
+        static UA_StatusCode onResetDevice(UA_Server *server,
+                                           const UA_NodeId *sessionId,
+                                           void *sessionHandle,
+                                           const UA_NodeId *methodId,
+                                           void *methodContext,
+                                           const UA_NodeId *objectId,
+                                           void *objectContext,
+                                           size_t inputSize,
+                                           const UA_Variant *input,
+                                           size_t outputSize,
+                                           UA_Variant *output);
+
+        EMGMResponse addResetResourceMethod(UA_Server *paServer);
+        static UA_StatusCode onResetResource(UA_Server *server,
+                                             const UA_NodeId *sessionId,
+                                             void *sessionHandle,
+                                             const UA_NodeId *methodId,
+                                             void *methodContext,
+                                             const UA_NodeId *objectId,
+                                             void *objectContext,
+                                             size_t inputSize,
+                                             const UA_Variant *input,
+                                             size_t outputSize,
+                                             UA_Variant *output);
+
+        EMGMResponse addResetFBMethod(UA_Server *paServer);
+        static UA_StatusCode onResetFB(UA_Server *server,
+                                       const UA_NodeId *sessionId,
+                                       void *sessionHandle,
+                                       const UA_NodeId *methodId,
+                                       void *methodContext,
+                                       const UA_NodeId *objectId,
+                                       void *objectContext,
+                                       size_t inputSize,
+                                       const UA_Variant *input,
+                                       size_t outputSize,
+                                       UA_Variant *output);
+
+        EMGMResponse addKillDeviceMethod(UA_Server *paServer);
+        static UA_StatusCode onKillDevice(UA_Server *server,
+                                          const UA_NodeId *sessionId,
+                                          void *sessionHandle,
+                                          const UA_NodeId *methodId,
+                                          void *methodContext,
+                                          const UA_NodeId *objectId,
+                                          void *objectContext,
+                                          size_t inputSize,
+                                          const UA_Variant *input,
+                                          size_t outputSize,
+                                          UA_Variant *output);
+
+        EMGMResponse addKillResourceMethod(UA_Server *paServer);
+        static UA_StatusCode onKillResource(UA_Server *server,
+                                            const UA_NodeId *sessionId,
+                                            void *sessionHandle,
+                                            const UA_NodeId *methodId,
+                                            void *methodContext,
+                                            const UA_NodeId *objectId,
+                                            void *objectContext,
+                                            size_t inputSize,
+                                            const UA_Variant *input,
+                                            size_t outputSize,
+                                            UA_Variant *output);
+
+        EMGMResponse addKillFBMethod(UA_Server *paServer);
+        static UA_StatusCode onKillFB(UA_Server *server,
+                                      const UA_NodeId *sessionId,
+                                      void *sessionHandle,
+                                      const UA_NodeId *methodId,
+                                      void *methodContext,
+                                      const UA_NodeId *objectId,
+                                      void *objectContext,
+                                      size_t inputSize,
+                                      const UA_Variant *input,
+                                      size_t outputSize,
+                                      UA_Variant *output);
+
+        EMGMResponse addDeleteResourceMethod(UA_Server *paServer);
+        static UA_StatusCode onDeleteResource(UA_Server *server,
                                               const UA_NodeId *sessionId,
                                               void *sessionHandle,
                                               const UA_NodeId *methodId,
@@ -601,34 +576,47 @@ namespace forte::iec61499::hardware {
                                               size_t outputSize,
                                               UA_Variant *output);
 
-      EMGMResponse addQueryResourcesMethod(UA_Server *paServer);
-      static UA_StatusCode onQueryResources(UA_Server *server,
-                                            const UA_NodeId *sessionId,
-                                            void *sessionHandle,
-                                            const UA_NodeId *methodId,
-                                            void *methodContext,
-                                            const UA_NodeId *objectId,
-                                            void *objectContext,
-                                            size_t inputSize,
-                                            const UA_Variant *input,
-                                            size_t outputSize,
-                                            UA_Variant *output);
+        EMGMResponse addDeleteFBMethod(UA_Server *paServer);
+        static UA_StatusCode onDeleteFB(UA_Server *server,
+                                        const UA_NodeId *sessionId,
+                                        void *sessionHandle,
+                                        const UA_NodeId *methodId,
+                                        void *methodContext,
+                                        const UA_NodeId *objectId,
+                                        void *objectContext,
+                                        size_t inputSize,
+                                        const UA_Variant *input,
+                                        size_t outputSize,
+                                        UA_Variant *output);
 
-      EMGMResponse addQueryFBTypeMethod(UA_Server *paServer);
-      static UA_StatusCode onQueryFBType(UA_Server *server,
-                                         const UA_NodeId *sessionId,
-                                         void *sessionHandle,
-                                         const UA_NodeId *methodId,
-                                         void *methodContext,
-                                         const UA_NodeId *objectId,
-                                         void *objectContext,
-                                         size_t inputSize,
-                                         const UA_Variant *input,
-                                         size_t outputSize,
-                                         UA_Variant *output);
+        EMGMResponse addDeleteConnectionMethod(UA_Server *paServer);
+        static UA_StatusCode onDeleteConnection(UA_Server *server,
+                                                const UA_NodeId *sessionId,
+                                                void *sessionHandle,
+                                                const UA_NodeId *methodId,
+                                                void *methodContext,
+                                                const UA_NodeId *objectId,
+                                                void *objectContext,
+                                                size_t inputSize,
+                                                const UA_Variant *input,
+                                                size_t outputSize,
+                                                UA_Variant *output);
 
-      EMGMResponse addQueryDataTypeMethod(UA_Server *paServer);
-      static UA_StatusCode onQueryDataType(UA_Server *server,
+        EMGMResponse addQueryResourcesMethod(UA_Server *paServer);
+        static UA_StatusCode onQueryResources(UA_Server *server,
+                                              const UA_NodeId *sessionId,
+                                              void *sessionHandle,
+                                              const UA_NodeId *methodId,
+                                              void *methodContext,
+                                              const UA_NodeId *objectId,
+                                              void *objectContext,
+                                              size_t inputSize,
+                                              const UA_Variant *input,
+                                              size_t outputSize,
+                                              UA_Variant *output);
+
+        EMGMResponse addQueryFBTypeMethod(UA_Server *paServer);
+        static UA_StatusCode onQueryFBType(UA_Server *server,
                                            const UA_NodeId *sessionId,
                                            void *sessionHandle,
                                            const UA_NodeId *methodId,
@@ -640,62 +628,88 @@ namespace forte::iec61499::hardware {
                                            size_t outputSize,
                                            UA_Variant *output);
 
-      EMGMResponse addQueryGlobalConstTypeMethod(UA_Server *paServer);
-      static UA_StatusCode onQueryGlobalConstType(UA_Server *server,
-                                                  const UA_NodeId *sessionId,
-                                                  void *sessionHandle,
-                                                  const UA_NodeId *methodId,
-                                                  void *methodContext,
-                                                  const UA_NodeId *objectId,
-                                                  void *objectContext,
-                                                  size_t inputSize,
-                                                  const UA_Variant *input,
-                                                  size_t outputSize,
-                                                  UA_Variant *output);
+        EMGMResponse addQueryDataTypeMethod(UA_Server *paServer);
+        static UA_StatusCode onQueryDataType(UA_Server *server,
+                                             const UA_NodeId *sessionId,
+                                             void *sessionHandle,
+                                             const UA_NodeId *methodId,
+                                             void *methodContext,
+                                             const UA_NodeId *objectId,
+                                             void *objectContext,
+                                             size_t inputSize,
+                                             const UA_Variant *input,
+                                             size_t outputSize,
+                                             UA_Variant *output);
 
-      /* FORTE Monitoring */
+        EMGMResponse addQueryGlobalConstTypeMethod(UA_Server *paServer);
+        static UA_StatusCode onQueryGlobalConstType(UA_Server *server,
+                                                    const UA_NodeId *sessionId,
+                                                    void *sessionHandle,
+                                                    const UA_NodeId *methodId,
+                                                    void *methodContext,
+                                                    const UA_NodeId *objectId,
+                                                    void *objectContext,
+                                                    size_t inputSize,
+                                                    const UA_Variant *input,
+                                                    size_t outputSize,
+                                                    UA_Variant *output);
 
-      EMGMResponse addAddWatchMethod(UA_Server *paServer);
-      static UA_StatusCode onAddWatch(UA_Server *server,
-                                      const UA_NodeId *sessionId,
-                                      void *sessionHandle,
-                                      const UA_NodeId *methodId,
-                                      void *methodContext,
-                                      const UA_NodeId *objectId,
-                                      void *objectContext,
-                                      size_t inputSize,
-                                      const UA_Variant *input,
-                                      size_t outputSize,
-                                      UA_Variant *output);
+        /* FORTE Monitoring */
 
-      EMGMResponse addReadWatchesMethod(UA_Server *paServer);
-      static UA_StatusCode onReadWatches(UA_Server *server,
-                                         const UA_NodeId *sessionId,
-                                         void *sessionHandle,
-                                         const UA_NodeId *methodId,
-                                         void *methodContext,
-                                         const UA_NodeId *objectId,
-                                         void *objectContext,
-                                         size_t inputSize,
-                                         const UA_Variant *input,
-                                         size_t outputSize,
-                                         UA_Variant *output);
+        EMGMResponse addAddWatchMethod(UA_Server *paServer);
+        static UA_StatusCode onAddWatch(UA_Server *server,
+                                        const UA_NodeId *sessionId,
+                                        void *sessionHandle,
+                                        const UA_NodeId *methodId,
+                                        void *methodContext,
+                                        const UA_NodeId *objectId,
+                                        void *objectContext,
+                                        size_t inputSize,
+                                        const UA_Variant *input,
+                                        size_t outputSize,
+                                        UA_Variant *output);
 
-      EMGMResponse addRemoveWatchMethod(UA_Server *paServer);
-      static UA_StatusCode onRemoveWatch(UA_Server *server,
-                                         const UA_NodeId *sessionId,
-                                         void *sessionHandle,
-                                         const UA_NodeId *methodId,
-                                         void *methodContext,
-                                         const UA_NodeId *objectId,
-                                         void *objectContext,
-                                         size_t inputSize,
-                                         const UA_Variant *input,
-                                         size_t outputSize,
-                                         UA_Variant *output);
+        EMGMResponse addReadWatchesMethod(UA_Server *paServer);
+        static UA_StatusCode onReadWatches(UA_Server *server,
+                                           const UA_NodeId *sessionId,
+                                           void *sessionHandle,
+                                           const UA_NodeId *methodId,
+                                           void *methodContext,
+                                           const UA_NodeId *objectId,
+                                           void *objectContext,
+                                           size_t inputSize,
+                                           const UA_Variant *input,
+                                           size_t outputSize,
+                                           UA_Variant *output);
 
-      EMGMResponse addTriggerEventMethod(UA_Server *paServer);
-      static UA_StatusCode onTriggerEvent(UA_Server *server,
+        EMGMResponse addRemoveWatchMethod(UA_Server *paServer);
+        static UA_StatusCode onRemoveWatch(UA_Server *server,
+                                           const UA_NodeId *sessionId,
+                                           void *sessionHandle,
+                                           const UA_NodeId *methodId,
+                                           void *methodContext,
+                                           const UA_NodeId *objectId,
+                                           void *objectContext,
+                                           size_t inputSize,
+                                           const UA_Variant *input,
+                                           size_t outputSize,
+                                           UA_Variant *output);
+
+        EMGMResponse addTriggerEventMethod(UA_Server *paServer);
+        static UA_StatusCode onTriggerEvent(UA_Server *server,
+                                            const UA_NodeId *sessionId,
+                                            void *sessionHandle,
+                                            const UA_NodeId *methodId,
+                                            void *methodContext,
+                                            const UA_NodeId *objectId,
+                                            void *objectContext,
+                                            size_t inputSize,
+                                            const UA_Variant *input,
+                                            size_t outputSize,
+                                            UA_Variant *output);
+
+        EMGMResponse addForceValueMethod(UA_Server *paServer);
+        static UA_StatusCode onForceValue(UA_Server *server,
                                           const UA_NodeId *sessionId,
                                           void *sessionHandle,
                                           const UA_NodeId *methodId,
@@ -707,70 +721,58 @@ namespace forte::iec61499::hardware {
                                           size_t outputSize,
                                           UA_Variant *output);
 
-      EMGMResponse addForceValueMethod(UA_Server *paServer);
-      static UA_StatusCode onForceValue(UA_Server *server,
-                                        const UA_NodeId *sessionId,
-                                        void *sessionHandle,
-                                        const UA_NodeId *methodId,
-                                        void *methodContext,
-                                        const UA_NodeId *objectId,
-                                        void *objectContext,
-                                        size_t inputSize,
-                                        const UA_Variant *input,
-                                        size_t outputSize,
-                                        UA_Variant *output);
+        EMGMResponse addClearForceMethod(UA_Server *paServer);
+        static UA_StatusCode onClearForce(UA_Server *server,
+                                          const UA_NodeId *sessionId,
+                                          void *sessionHandle,
+                                          const UA_NodeId *methodId,
+                                          void *methodContext,
+                                          const UA_NodeId *objectId,
+                                          void *objectContext,
+                                          size_t inputSize,
+                                          const UA_Variant *input,
+                                          size_t outputSize,
+                                          UA_Variant *output);
 
-      EMGMResponse addClearForceMethod(UA_Server *paServer);
-      static UA_StatusCode onClearForce(UA_Server *server,
-                                        const UA_NodeId *sessionId,
-                                        void *sessionHandle,
-                                        const UA_NodeId *methodId,
-                                        void *methodContext,
-                                        const UA_NodeId *objectId,
-                                        void *objectContext,
-                                        size_t inputSize,
-                                        const UA_Variant *input,
-                                        size_t outputSize,
-                                        UA_Variant *output);
+        /* Helpers */
+        EMGMResponse addMethodNode(UA_Server *paServer,
+                                   char *paMethodName,
+                                   UA_NodeId paParentNodeId,
+                                   UA_MethodAttributes paAttr,
+                                   const UA_Argument *paInArgs,
+                                   size_t paInArgSize,
+                                   const UA_Argument *paOutArgs,
+                                   size_t paOutArgSize,
+                                   UA_MethodCallback paCallback,
+                                   void *nodeContext = nullptr);
 
-      /* Helpers */
-      EMGMResponse addMethodNode(UA_Server *paServer,
-                                 char *paMethodName,
-                                 UA_NodeId paParentNodeId,
-                                 UA_MethodAttributes paAttr,
-                                 const UA_Argument *paInArgs,
-                                 size_t paInArgSize,
-                                 const UA_Argument *paOutArgs,
-                                 size_t paOutArgSize,
-                                 UA_MethodCallback paCallback,
-                                 void *nodeContext = nullptr);
+        UA_MethodAttributes createAttribute(char *paDisplayName, char *paDescription);
 
-      UA_MethodAttributes createAttribute(char *paDisplayName, char *paDescription);
+        UA_StatusCode addReference(UA_Server *paServer, UA_NodeId &paMethodId);
 
-      UA_StatusCode addReference(UA_Server *paServer, UA_NodeId &paMethodId);
+        void clearMGMCommand();
 
-      void clearMGMCommand();
+        void setMGMCommand(EMGMCommandType paCMD,
+                           StringId paDestination,
+                           const char *paAdditionalParams,
+                           const char *paFirstParam,
+                           const char *paSecondParam);
 
-      void setMGMCommand(EMGMCommandType paCMD,
-                         StringId paDestination,
-                         const char *paAdditionalParams,
-                         const char *paFirstParam,
-                         const char *paSecondParam);
+        void setMGMCommand(EMGMCommandType paCMD,
+                           StringId paDestination,
+                           const char *paAdditionalParams,
+                           std::vector<std::string> &paFirstParam,
+                           std::vector<std::string> paSecondParam = std::vector<std::string>());
 
-      void setMGMCommand(EMGMCommandType paCMD,
-                         StringId paDestination,
-                         const char *paAdditionalParams,
-                         std::vector<std::string> &paFirstParam,
-                         std::vector<std::string> paSecondParam = std::vector<std::string>());
+        static std::string getInputValue(UA_String paInput);
 
-      static std::string getInputValue(UA_String paInput);
+        static void parseDestinationName(const std::string &paDestination, std::vector<std::string> &paTarget);
 
-      static void parseDestinationName(const std::string &paDestination, std::vector<std::string> &paTarget);
+        static void
+        parseHashedTypeName(const std::string_view paHashedTypeName, std::string &paTypeName, std::string &paTypeHash);
 
-      static void
-      parseHashedTypeName(const std::string_view paHashedTypeName, std::string &paTypeName, std::string &paTypeHash);
-
-      EMGMResponse
-      addExtraMethods(UA_Server *paServer, UA_NodeId paParentNodeId, std::vector<MethodInformation> &paMethods);
-  };
-} // namespace forte::iec61499::hardware
+        EMGMResponse
+        addExtraMethods(UA_Server *paServer, UA_NodeId paParentNodeId, std::vector<MethodInformation> &paMethods);
+    };
+  } // namespace iec61499::hardware
+} // namespace forte

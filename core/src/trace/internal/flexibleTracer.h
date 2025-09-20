@@ -24,75 +24,76 @@
 #include "../barectf_platform_forte.h"
 #include "internalTracer.h"
 
-/**
- * @brief A tracer that can be changed to use the existing tracers: BarectfPlatformFORTE and CInternalTracer
- *
- */
-class CFlexibleTracer final {
-  public:
-    enum class AvailableTracers { BareCtf, Internal };
+namespace forte::trace {
+  /**
+   * @brief A tracer that can be changed to use the existing tracers: BarectfPlatformFORTE and CInternalTracer
+   *
+   */
+  class CFlexibleTracer final {
+    public:
+      enum class AvailableTracers { BareCtf, Internal };
 
-    using TracerVariant = std::variant<std::monostate, BarectfPlatformFORTE, CInternalTracer>;
+      using TracerVariant = std::variant<std::monostate, BarectfPlatformFORTE, CInternalTracer>;
 
-    CFlexibleTracer(forte::StringId instanceName, size_t bufferSize);
+      CFlexibleTracer(forte::StringId instanceName, size_t bufferSize);
 
-    ~CFlexibleTracer() = default;
+      ~CFlexibleTracer() = default;
 
-    CFlexibleTracer(const CFlexibleTracer &) = delete;
-    CFlexibleTracer &operator=(const CFlexibleTracer &) = delete;
+      CFlexibleTracer(const CFlexibleTracer &) = delete;
+      CFlexibleTracer &operator=(const CFlexibleTracer &) = delete;
 
-    CFlexibleTracer(CFlexibleTracer &&) = delete;
-    CFlexibleTracer &operator=(CFlexibleTracer &&) = delete;
+      CFlexibleTracer(CFlexibleTracer &&) = delete;
+      CFlexibleTracer &operator=(CFlexibleTracer &&) = delete;
 
-    void traceInstanceData(const char *const paTypeName,
-                           const char *const paInstanceName,
-                           const uint32_t paInputsLength,
-                           const char *const *const paInputs,
-                           const uint32_t paOutputsLength,
-                           const char *const *const paOutputs,
-                           const uint32_t paInternalLength,
-                           const char *const *const paInternal,
-                           const uint32_t paInternalFBsLength,
-                           const char *const *const paInternalFBs);
+      void traceInstanceData(const char *const paTypeName,
+                             const char *const paInstanceName,
+                             const uint32_t paInputsLength,
+                             const char *const *const paInputs,
+                             const uint32_t paOutputsLength,
+                             const char *const *const paOutputs,
+                             const uint32_t paInternalLength,
+                             const char *const *const paInternal,
+                             const uint32_t paInternalFBsLength,
+                             const char *const *const paInternalFBs);
 
-    void
-    traceReceiveInputEvent(const char *const paTypeName, const char *const paInstanceName, const uint64_t paEventId);
+      void
+      traceReceiveInputEvent(const char *const paTypeName, const char *const paInstanceName, const uint64_t paEventId);
 
-    void traceSendOutputEvent(const char *const paTypeName,
-                              const char *const paInstanceName,
-                              const uint64_t paEventId
+      void traceSendOutputEvent(const char *const paTypeName,
+                                const char *const paInstanceName,
+                                const uint64_t paEventId
 #ifdef FORTE_TRACE_CTF_REPLAY_DEBUGGING
-                              ,
-                              const uint64_t paEventCounter,
-                              const uint32_t paOutputsLength,
-                              const char *const *const paOutputs
+                                ,
+                                const uint64_t paEventCounter,
+                                const uint32_t paOutputsLength,
+                                const char *const *const paOutputs
 #endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
-    );
+      );
 
-    void traceInputData(const char *const paTypeName,
-                        const char *const paInstanceName,
-                        const uint64_t paDataId,
-                        const char *const paValue);
+      void traceInputData(const char *const paTypeName,
+                          const char *const paInstanceName,
+                          const uint64_t paDataId,
+                          const char *const paValue);
 
-    void traceOutputData(const char *const paTypeName,
-                         const char *const paInstanceName,
-                         const uint64_t paDataId,
-                         const char *const paValue);
+      void traceOutputData(const char *const paTypeName,
+                           const char *const paInstanceName,
+                           const uint64_t paDataId,
+                           const char *const paValue);
 
-    bool isEnabled();
+      bool isEnabled();
 
-    const TracerVariant &getTracerVariant() const;
+      const TracerVariant &getTracerVariant() const;
 
-    /**
-     * @brief Select the tracer to use
-     * @param paTracerType the type of tracer to be used
-     */
-    static void setTracer(AvailableTracers paTracerType);
+      /**
+       * @brief Select the tracer to use
+       * @param paTracerType the type of tracer to be used
+       */
+      static void setTracer(AvailableTracers paTracerType);
 
-  private:
-    static inline AvailableTracers mCurrentTracer{AvailableTracers::BareCtf};
+    private:
+      static inline AvailableTracers mCurrentTracer{AvailableTracers::BareCtf};
 
-    TracerVariant mTracer{};
-};
-
+      TracerVariant mTracer{};
+  };
+} // namespace forte::trace
 #endif // FLEXIBLE_TRACER_H

@@ -21,45 +21,47 @@
 
 #include "forte/funcbloc.h"
 
-class CBaseFB : public CFunctionBlock {
-  public:
-    ~CBaseFB() override = default;
+namespace forte {
+  class CBaseFB : public CFunctionBlock {
+    public:
+      ~CBaseFB() override = default;
 
-    CIEC_ANY *getVar(forte::StringId *paNameList, unsigned int paNameListSize) override;
+      CIEC_ANY *getVar(forte::StringId *paNameList, unsigned int paNameListSize) override;
 
-    void toString(std::string &paTargetBuf) const override;
+      void toString(std::string &paTargetBuf) const override;
 
 #ifdef FORTE_TRACE_CTF
-    void traceInstanceData() override;
+      void traceInstanceData() override;
 #endif
 
-  protected:
-    CBaseFB(CFBContainer &paContainer,
-            const SFBInterfaceSpec &paInterfaceSpec,
-            forte::StringId paInstanceNameId,
-            std::span<const forte::StringId> paVarInternalNames);
+    protected:
+      CBaseFB(CFBContainer &paContainer,
+              const SFBInterfaceSpec &paInterfaceSpec,
+              forte::StringId paInstanceNameId,
+              std::span<const forte::StringId> paVarInternalNames);
 
-    /*! \brief Get the internal variable with given number
-     *
-     * Attention this function will not perform any range checks on the paVarIntNum parameter!
-     * @param paVarIntNum number of the internal variable starting with 0
-     * @return pointer to the internal variable
-     */
-    virtual CIEC_ANY *getVarInternal(size_t paVarIntNum) = 0;
+      /*! \brief Get the internal variable with given number
+       *
+       * Attention this function will not perform any range checks on the paVarIntNum parameter!
+       * @param paVarIntNum number of the internal variable starting with 0
+       * @return pointer to the internal variable
+       */
+      virtual CIEC_ANY *getVarInternal(size_t paVarIntNum) = 0;
 
-    const CIEC_ANY *getVarInternal(size_t paVarIntNum) const {
-      return const_cast<CBaseFB *>(this)->getVarInternal(paVarIntNum);
-    }
+      const CIEC_ANY *getVarInternal(size_t paVarIntNum) const {
+        return const_cast<CBaseFB *>(this)->getVarInternal(paVarIntNum);
+      }
 
-    void setInitialValues() override = 0;
+      void setInitialValues() override = 0;
 
-  private:
-    /*!\brief Get the pointer to a internal variable of the basic FB.
-     *
-     * \param paInternalName StringId of the internal variable name.
-     * \return Pointer to the internal variable or 0.
-     */
-    CIEC_ANY *getInternalVar(forte::StringId paInternalName);
+    private:
+      /*!\brief Get the pointer to a internal variable of the basic FB.
+       *
+       * \param paInternalName StringId of the internal variable name.
+       * \return Pointer to the internal variable or 0.
+       */
+      CIEC_ANY *getInternalVar(forte::StringId paInternalName);
 
-    const std::span<const forte::StringId> cmVarInternalNames;
-};
+      const std::span<const forte::StringId> cmVarInternalNames;
+  };
+} // namespace forte

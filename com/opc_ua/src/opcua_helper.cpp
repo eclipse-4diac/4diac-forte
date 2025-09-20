@@ -375,7 +375,7 @@ namespace forte::com_infra::opc_ua {
 
     std::string copyOfOriginal(startNodePath, nodePathLength);
 
-    CParameterParser folderParser(copyOfOriginal.c_str(), '/');
+    util::CParameterParser folderParser(copyOfOriginal.c_str(), '/');
 
     (*paFolderCount) = folderParser.parseParameters();
 
@@ -438,7 +438,7 @@ namespace forte::com_infra::opc_ua {
 
     UA_UInt16 browsenameNamespace = paDefaultNamespace;
     std::string targetName;
-    CParameterParser browseNameParser(paNodeName, ':');
+    util::CParameterParser browseNameParser(paNodeName, ':');
     size_t parsingResult = browseNameParser.parseParameters();
     if (scmMaxNoOfParametersInBrowseName == parsingResult) {
       browsenameNamespace = static_cast<UA_UInt16>(util::strtol(browseNameParser[0], nullptr, 10));

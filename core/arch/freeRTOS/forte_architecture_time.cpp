@@ -20,7 +20,7 @@
 
 uint_fast64_t getNanoSecondsMonotonicArch() {
   return (static_cast<uint_fast64_t>(xTaskGetTickCount()) *
-          (forte::constants::cNanosecondsPerSecond / static_cast<uint_fast64_t>(configTICK_RATE_HZ)));
+          (forte::util::constants::cNanosecondsPerSecond / static_cast<uint_fast64_t>(configTICK_RATE_HZ)));
 }
 
 uint_fast64_t getNanoSecondsRealtimeArch() {

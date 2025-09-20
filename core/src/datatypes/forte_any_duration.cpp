@@ -14,13 +14,15 @@
 #include "forte/datatypes/forte_any_duration.h"
 #include <format>
 
-// change time elements to string
+namespace forte {
+  // change time elements to string
 
-void CIEC_ANY_DURATION::timeElementsToString(std::string &paTargetBuf,
-                                             int64_t paTimeElement,
-                                             const std::string &paUnit) const {
-  if (paTimeElement != 0) {
-    std::format_to(std::back_inserter(paTargetBuf), "{}", paTimeElement);
-    paTargetBuf += paUnit;
+  void CIEC_ANY_DURATION::timeElementsToString(std::string &paTargetBuf,
+                                               int64_t paTimeElement,
+                                               const std::string &paUnit) const {
+    if (paTimeElement != 0) {
+      std::format_to(std::back_inserter(paTargetBuf), "{}", paTimeElement);
+      paTargetBuf += paUnit;
+    }
   }
-}
+} // namespace forte

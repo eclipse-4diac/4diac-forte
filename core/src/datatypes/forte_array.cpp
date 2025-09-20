@@ -29,67 +29,69 @@
 
 using namespace forte::literals;
 
-forte::StringId CIEC_ARRAY::getTypeNameID() const {
-  return "ARRAY"_STRID;
-}
-
-void CIEC_ARRAY::setValue(const CIEC_ANY &paValue) {
-  if (paValue.getDataTypeID() == e_ARRAY) {
-    operator=(static_cast<const CIEC_ARRAY &>(paValue));
+namespace forte {
+  forte::StringId CIEC_ARRAY::getTypeNameID() const {
+    return "ARRAY"_STRID;
   }
-}
 
-void CIEC_ARRAY::reset() {
-  for (intmax_t i = getLowerBound(), end = getUpperBound(); i <= end; ++i) {
-    operator[](i).reset();
+  void CIEC_ARRAY::setValue(const CIEC_ANY &paValue) {
+    if (paValue.getDataTypeID() == e_ARRAY) {
+      operator=(static_cast<const CIEC_ARRAY &>(paValue));
+    }
   }
-}
 
-void CIEC_ARRAY::toString(std::string &paTargetBuf) const {
-  if (size() > cmCollapseMaxSize) {
-    toCollapsedString(paTargetBuf);
-  } else {
+  void CIEC_ARRAY::reset() {
+    for (intmax_t i = getLowerBound(), end = getUpperBound(); i <= end; ++i) {
+      operator[](i).reset();
+    }
+  }
+
+  void CIEC_ARRAY::toString(std::string &paTargetBuf) const {
+    if (size() > cmCollapseMaxSize) {
+      toCollapsedString(paTargetBuf);
+    } else {
+      paTargetBuf += '[';
+      if (size()) { // check if initialized
+        for (intmax_t i = getLowerBound(), end = getUpperBound(); i <= end; ++i) {
+          operator[](i).toString(paTargetBuf);
+          if (i != end) {
+            paTargetBuf += ',';
+          }
+        }
+      }
+      paTargetBuf += ']';
+    }
+  }
+
+  void CIEC_ARRAY::toCollapsedString(std::string &paTargetBuf) const {
     paTargetBuf += '[';
-    if (size()) { // check if initialized
-      for (intmax_t i = getLowerBound(), end = getUpperBound(); i <= end; ++i) {
-        operator[](i).toString(paTargetBuf);
+    size_t count = 0;
+    const CIEC_ANY *lastElement = nullptr;
+    for (intmax_t i = getLowerBound(), end = getUpperBound(); i <= end; ++i) {
+      if (lastElement != nullptr && !lastElement->equals(operator[](i))) {
+        toCollapsedElementString(*lastElement, count, paTargetBuf);
         if (i != end) {
           paTargetBuf += ',';
         }
+        count = 0;
       }
+      lastElement = &operator[](i);
+      count++;
+    }
+    if (lastElement) {
+      toCollapsedElementString(*lastElement, count, paTargetBuf);
     }
     paTargetBuf += ']';
   }
-}
 
-void CIEC_ARRAY::toCollapsedString(std::string &paTargetBuf) const {
-  paTargetBuf += '[';
-  size_t count = 0;
-  const CIEC_ANY *lastElement = nullptr;
-  for (intmax_t i = getLowerBound(), end = getUpperBound(); i <= end; ++i) {
-    if (lastElement != nullptr && !lastElement->equals(operator[](i))) {
-      toCollapsedElementString(*lastElement, count, paTargetBuf);
-      if (i != end) {
-        paTargetBuf += ',';
-      }
-      count = 0;
+  void CIEC_ARRAY::toCollapsedElementString(const CIEC_ANY &paElement, size_t paCount, std::string &paTargetBuf) const {
+    if (paCount > 1) {
+      CIEC_ULINT(paCount).toString(paTargetBuf);
+      paTargetBuf += '(';
     }
-    lastElement = &operator[](i);
-    count++;
+    paElement.toString(paTargetBuf);
+    if (paCount > 1) {
+      paTargetBuf += ')';
+    }
   }
-  if (lastElement) {
-    toCollapsedElementString(*lastElement, count, paTargetBuf);
-  }
-  paTargetBuf += ']';
-}
-
-void CIEC_ARRAY::toCollapsedElementString(const CIEC_ANY &paElement, size_t paCount, std::string &paTargetBuf) const {
-  if (paCount > 1) {
-    CIEC_ULINT(paCount).toString(paTargetBuf);
-    paTargetBuf += '(';
-  }
-  paElement.toString(paTargetBuf);
-  if (paCount > 1) {
-    paTargetBuf += ')';
-  }
-}
+} // namespace forte

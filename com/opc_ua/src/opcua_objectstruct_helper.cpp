@@ -515,12 +515,12 @@ namespace forte::com_infra::opc_ua {
   }
 
   UA_UInt16 COPC_UA_ObjectStruct_Helper::getNamespaceIndexFromBrowsepath(const std::string &paBrowsePath) {
-    CParameterParser mainParser(paBrowsePath.c_str(), '/');
+    util::CParameterParser mainParser(paBrowsePath.c_str(), '/');
     size_t parsingResult = mainParser.parseParameters();
     if (parsingResult > 0) {
       size_t elementNameIndex = strcmp("", mainParser[parsingResult - 1]) != 0 ? parsingResult - 1 : parsingResult - 2;
       std::string objectName(mainParser[elementNameIndex]);
-      CParameterParser nsIndexParser(objectName.c_str(), ':');
+      util::CParameterParser nsIndexParser(objectName.c_str(), ':');
       parsingResult = nsIndexParser.parseParameters();
       if (parsingResult > 1) {
         return static_cast<UA_UInt16>(util::strtoul(nsIndexParser[0], nullptr, 10));
@@ -533,12 +533,12 @@ namespace forte::com_infra::opc_ua {
 
   std::string COPC_UA_ObjectStruct_Helper::removeNamespaceIndicesFromBrowsePath(const std::string &paBrowsePath) {
     std::stringstream ss;
-    CParameterParser mainParser(paBrowsePath.c_str(), '/');
+    util::CParameterParser mainParser(paBrowsePath.c_str(), '/');
     size_t mainParserLength = mainParser.parseParameters();
     for (size_t i = 0; i < mainParserLength; i++) {
       std::string nodePair(mainParser[i]);
       if (!nodePair.empty()) {
-        CParameterParser nsIndexParser(nodePair.c_str(), ':');
+        util::CParameterParser nsIndexParser(nodePair.c_str(), ':');
         size_t parserLength = nsIndexParser.parseParameters();
         size_t browsePathIndex = parserLength > 1 ? 1 : 0;
         ss << '/' << nsIndexParser[browsePathIndex];

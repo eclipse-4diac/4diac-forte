@@ -15,12 +15,14 @@
 
 using namespace forte::literals;
 
-DEFINE_FIRMWARE_DATATYPE(ULINT, "ULINT"_STRID)
+namespace forte {
+  DEFINE_FIRMWARE_DATATYPE(ULINT, "ULINT"_STRID)
 
-template CIEC_ULINT &CIEC_ULINT::operator= <>(const CIEC_USINT &paValue);
+  template CIEC_ULINT &CIEC_ULINT::operator= <>(const CIEC_USINT &paValue);
 
-template CIEC_ULINT &CIEC_ULINT::operator= <>(const CIEC_UINT &paValue);
+  template CIEC_ULINT &CIEC_ULINT::operator= <>(const CIEC_UINT &paValue);
 
-template CIEC_ULINT &CIEC_ULINT::operator= <>(const CIEC_UDINT &paValue);
+  template CIEC_ULINT &CIEC_ULINT::operator= <>(const CIEC_UDINT &paValue);
 
-const forte::StringId forte::CDataTypeTrait<CIEC_ULINT>::scmDataTypeName = "ULINT"_STRID;
+  const forte::StringId forte::CDataTypeTrait<CIEC_ULINT>::scmDataTypeName = "ULINT"_STRID;
+} // namespace forte

@@ -12,8 +12,10 @@
 
 #include "forte/iec61131_functions.h"
 
-std::string getRealtimeString() {
-  std::string str;
-  func_NOW().toString(str);
-  return str;
-}
+namespace forte::arch {
+  std::string getRealtimeString() {
+    std::string str;
+    func_NOW().toString(str);
+    return str;
+  }
+} // namespace forte::arch

@@ -19,12 +19,14 @@
 #include "forte/io/inputfb.h"
 #include "forte/datatypes/forte_bool.h"
 
-/*! /brief generic class for IX function blocks providing access to one boolean physical input
- *
- */
-class FORTE_IX final : public forte::io::CInputFB<CIEC_BOOL> {
-    DECLARE_FIRMWARE_FB(FORTE_IX)
+namespace forte::io {
+  /*! /brief generic class for IX function blocks providing access to one boolean physical input
+   *
+   */
+  class FORTE_IX final : public forte::io::CInputFB<CIEC_BOOL> {
+      DECLARE_FIRMWARE_FB(FORTE_IX)
 
-  public:
-    FORTE_IX(forte::StringId paInstanceNameId, CFBContainer &paContainer);
-};
+    public:
+      FORTE_IX(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+  };
+} // namespace forte::io

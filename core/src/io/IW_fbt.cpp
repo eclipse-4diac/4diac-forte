@@ -17,10 +17,10 @@
 
 using namespace forte::literals;
 
-using namespace forte::io;
+namespace forte::io {
+  DEFINE_FIRMWARE_FB(FORTE_IW, "IW"_STRID)
 
-DEFINE_FIRMWARE_FB(FORTE_IW, "IW"_STRID)
-
-FORTE_IW::FORTE_IW(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
-    CInputFB<CIEC_WORD>(paContainer, paInstanceNameId) {
-}
+  FORTE_IW::FORTE_IW(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+      CInputFB<CIEC_WORD>(paContainer, paInstanceNameId) {
+  }
+} // namespace forte::io

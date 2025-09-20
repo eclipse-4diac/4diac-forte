@@ -20,70 +20,72 @@
 #include "CommandParser.h"
 #include "forte/datatypes/forte_string.h"
 
-class CDevice;
+namespace forte {
+  class CDevice;
 
-namespace forte::iec61499::hardware {
-  /*! \brief Implementation of the DEV_MGR FB.
-   */
-  class DEV_MGR : public com_infra::CCommFB {
-      DECLARE_FIRMWARE_FB(DEV_MGR)
+  namespace iec61499::hardware {
+    /*! \brief Implementation of the DEV_MGR FB.
+     */
+    class DEV_MGR : public com_infra::CCommFB {
+        DECLARE_FIRMWARE_FB(DEV_MGR)
 
-    public:
-      DEV_MGR(StringId paInstanceNameId, CFBContainer &paContainer);
-      ~DEV_MGR() override;
+      public:
+        DEV_MGR(StringId paInstanceNameId, CFBContainer &paContainer);
+        ~DEV_MGR() override;
 
-      bool initialize() override;
+        bool initialize() override;
 
-    protected:
-      void createGenInputData() override;
-      void createGenOutputData() override;
+      protected:
+        void createGenInputData() override;
+        void createGenOutputData() override;
 
-    private:
-      bool executeCommand(const char *const paDest, char *paCommand);
+      private:
+        bool executeCommand(const char *const paDest, char *paCommand);
 
-      EMGMResponse parseAndExecuteMGMCommand(const char *const paDest, char *paCommand);
+        EMGMResponse parseAndExecuteMGMCommand(const char *const paDest, char *paCommand);
 
-      static const TEventID scmEventINITID = 0;
-      static const TEventID scmEventREQID = 1;
+        static const TEventID scmEventINITID = 0;
+        static const TEventID scmEventREQID = 1;
 
-      static const TEventID scmEventINITOID = 0;
-      static const TEventID scmEventCNFID = 1;
+        static const TEventID scmEventINITOID = 0;
+        static const TEventID scmEventCNFID = 1;
 
-      //! The device the block is contained in
-      CDevice &mDevice;
+        //! The device the block is contained in
+        CDevice &mDevice;
 
-      CommandParser mCommandParser;
+        CommandParser mCommandParser;
 
-      void executeRQST();
+        void executeRQST();
 
-      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+        void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-      CIEC_BOOL &QI() {
-        return *static_cast<CIEC_BOOL *>(getDI(0));
-      };
+        CIEC_BOOL &QI() {
+          return *static_cast<CIEC_BOOL *>(getDI(0));
+        };
 
-      CIEC_STRING &ID() {
-        return *static_cast<CIEC_STRING *>(getDI(1));
-      };
+        CIEC_STRING &ID() {
+          return *static_cast<CIEC_STRING *>(getDI(1));
+        };
 
-      CIEC_STRING &RESP() {
-        return *static_cast<CIEC_STRING *>(getDI(2));
-      };
+        CIEC_STRING &RESP() {
+          return *static_cast<CIEC_STRING *>(getDI(2));
+        };
 
-      CIEC_BOOL &QO() {
-        return *static_cast<CIEC_BOOL *>(getDO(0));
-      };
+        CIEC_BOOL &QO() {
+          return *static_cast<CIEC_BOOL *>(getDO(0));
+        };
 
-      CIEC_STRING &STATUS() {
-        return *static_cast<CIEC_STRING *>(getDO(1));
-      };
+        CIEC_STRING &STATUS() {
+          return *static_cast<CIEC_STRING *>(getDO(1));
+        };
 
-      CIEC_STRING &DST() {
-        return *static_cast<CIEC_STRING *>(getDO(2));
-      };
+        CIEC_STRING &DST() {
+          return *static_cast<CIEC_STRING *>(getDO(2));
+        };
 
-      CIEC_STRING &RQST() {
-        return *static_cast<CIEC_STRING *>(getDO(3));
-      };
-  };
-} // namespace forte::iec61499::hardware
+        CIEC_STRING &RQST() {
+          return *static_cast<CIEC_STRING *>(getDO(3));
+        };
+    };
+  } // namespace iec61499::hardware
+} // namespace forte

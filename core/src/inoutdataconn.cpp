@@ -16,88 +16,91 @@
 
 #include "forte/funcbloc.h"
 
-EMGMResponse CInOutDataConnection::connect(CFunctionBlock &paDstFB,
-                                           const std::span<const forte::StringId> paDstPortNameId) {
-  // Check if the superclass connect is working (connection with plain IN)
-  EMGMResponse retVal = CDataConnection::connect(paDstFB, paDstPortNameId);
-  if (retVal != EMGMResponse::NoSuchObject) {
-    return retVal; // we already have a connection
+namespace forte {
+  EMGMResponse CInOutDataConnection::connect(CFunctionBlock &paDstFB,
+                                             const std::span<const forte::StringId> paDstPortNameId) {
+    // Check if the superclass connect is working (connection with plain IN)
+    EMGMResponse retVal = CDataConnection::connect(paDstFB, paDstPortNameId);
+    if (retVal != EMGMResponse::NoSuchObject) {
+      return retVal; // we already have a connection
+    }
+
+    if (paDstPortNameId.size() != 1) {
+      return EMGMResponse::NoSuchObject;
+    }
+
+    const TPortId dstPortId = paDstFB.getFBInterfaceSpec().getDIOID(paDstPortNameId.front());
+    if (dstPortId == cgInvalidEventID) {
+      return EMGMResponse::NoSuchObject;
+    }
+
+    const CIEC_ANY *dstDataPoint = paDstFB.getDIOFromPortId(dstPortId);
+    retVal = establishDataConnection(paDstFB, dstPortId, *dstDataPoint);
+    if (retVal != EMGMResponse::Ready) {
+      return retVal;
+    }
+
+    paDstFB.incConnRefCount();
+    getSourceId().getFB().incConnRefCount();
+    return EMGMResponse::Ready;
   }
 
-  if (paDstPortNameId.size() != 1) {
-    return EMGMResponse::NoSuchObject;
+  EMGMResponse CInOutDataConnection::disconnect(CFunctionBlock &paDstFB,
+                                                const std::span<const forte::StringId> paDstPortNameId) {
+    EMGMResponse retVal = CDataConnection::disconnect(paDstFB, paDstPortNameId);
+    if (retVal != EMGMResponse::NoSuchObject) {
+      return retVal; // we already have a connection
+    }
+
+    if (paDstPortNameId.size() != 1) {
+      return EMGMResponse::NoSuchObject;
+    }
+
+    const TPortId dstPortId = paDstFB.getFBInterfaceSpec().getDIOID(paDstPortNameId.front());
+    if (dstPortId == cgInvalidEventID) {
+      return EMGMResponse::NoSuchObject;
+    }
+
+    auto it =
+        std::remove(mInOutDestinationIds.begin(), mInOutDestinationIds.end(), CConnectionPoint(paDstFB, dstPortId));
+    if (it == mInOutDestinationIds.end()) {
+      return EMGMResponse::NoSuchObject;
+    }
+    mInOutDestinationIds.erase(it, mInOutDestinationIds.end());
+    paDstFB.connectDIO(dstPortId, nullptr);
+    paDstFB.decConnRefCount();
+    getSourceId().getFB().decConnRefCount();
+    return EMGMResponse::Ready;
   }
 
-  const TPortId dstPortId = paDstFB.getFBInterfaceSpec().getDIOID(paDstPortNameId.front());
-  if (dstPortId == cgInvalidEventID) {
-    return EMGMResponse::NoSuchObject;
+  void CInOutDataConnection::setValue(CIEC_ANY *paValue) {
+    mValue = paValue;
+    for (auto connectionPoint : mInOutDestinationIds) {
+      connectionPoint.getFB().connectDIO(connectionPoint.getPortId(), this);
+    }
   }
 
-  const CIEC_ANY *dstDataPoint = paDstFB.getDIOFromPortId(dstPortId);
-  retVal = establishDataConnection(paDstFB, dstPortId, *dstDataPoint);
-  if (retVal != EMGMResponse::Ready) {
-    return retVal;
+  EMGMResponse CInOutDataConnection::establishDataConnection(CFunctionBlock &paDstFB,
+                                                             const TPortId paDstPortId,
+                                                             const CIEC_ANY &paDstDataPoint) {
+    if (getValue().getDataTypeID() == CIEC_ANY::e_ANY) {
+      handleAnySrcPortConnection(paDstDataPoint);
+    } else if (!canBeConnected(getValue(), paDstDataPoint)) {
+      return EMGMResponse::InvalidOperation;
+    }
+
+    CConnectionPoint dstPoint(paDstFB, paDstPortId);
+    if (std::find(mInOutDestinationIds.begin(), mInOutDestinationIds.end(), dstPoint) != mInOutDestinationIds.end()) {
+      return EMGMResponse::InvalidState;
+    }
+    if (!paDstFB.connectDIO(paDstPortId, this)) {
+      return EMGMResponse::InvalidState;
+    }
+    mInOutDestinationIds.push_back(dstPoint);
+    return EMGMResponse::Ready;
   }
 
-  paDstFB.incConnRefCount();
-  getSourceId().getFB().incConnRefCount();
-  return EMGMResponse::Ready;
-}
-
-EMGMResponse CInOutDataConnection::disconnect(CFunctionBlock &paDstFB,
-                                              const std::span<const forte::StringId> paDstPortNameId) {
-  EMGMResponse retVal = CDataConnection::disconnect(paDstFB, paDstPortNameId);
-  if (retVal != EMGMResponse::NoSuchObject) {
-    return retVal; // we already have a connection
+  void CInOutDataConnection::getSourcePortName(forte::TNameIdentifier &paResult) const {
+    paResult.push_back(getSourceId().getFB().getFBInterfaceSpec().mDIONames[getSourceId().getPortId()]);
   }
-
-  if (paDstPortNameId.size() != 1) {
-    return EMGMResponse::NoSuchObject;
-  }
-
-  const TPortId dstPortId = paDstFB.getFBInterfaceSpec().getDIOID(paDstPortNameId.front());
-  if (dstPortId == cgInvalidEventID) {
-    return EMGMResponse::NoSuchObject;
-  }
-
-  auto it = std::remove(mInOutDestinationIds.begin(), mInOutDestinationIds.end(), CConnectionPoint(paDstFB, dstPortId));
-  if (it == mInOutDestinationIds.end()) {
-    return EMGMResponse::NoSuchObject;
-  }
-  mInOutDestinationIds.erase(it, mInOutDestinationIds.end());
-  paDstFB.connectDIO(dstPortId, nullptr);
-  paDstFB.decConnRefCount();
-  getSourceId().getFB().decConnRefCount();
-  return EMGMResponse::Ready;
-}
-
-void CInOutDataConnection::setValue(CIEC_ANY *paValue) {
-  mValue = paValue;
-  for (auto connectionPoint : mInOutDestinationIds) {
-    connectionPoint.getFB().connectDIO(connectionPoint.getPortId(), this);
-  }
-}
-
-EMGMResponse CInOutDataConnection::establishDataConnection(CFunctionBlock &paDstFB,
-                                                           const TPortId paDstPortId,
-                                                           const CIEC_ANY &paDstDataPoint) {
-  if (getValue().getDataTypeID() == CIEC_ANY::e_ANY) {
-    handleAnySrcPortConnection(paDstDataPoint);
-  } else if (!canBeConnected(getValue(), paDstDataPoint)) {
-    return EMGMResponse::InvalidOperation;
-  }
-
-  CConnectionPoint dstPoint(paDstFB, paDstPortId);
-  if (std::find(mInOutDestinationIds.begin(), mInOutDestinationIds.end(), dstPoint) != mInOutDestinationIds.end()) {
-    return EMGMResponse::InvalidState;
-  }
-  if (!paDstFB.connectDIO(paDstPortId, this)) {
-    return EMGMResponse::InvalidState;
-  }
-  mInOutDestinationIds.push_back(dstPoint);
-  return EMGMResponse::Ready;
-}
-
-void CInOutDataConnection::getSourcePortName(forte::TNameIdentifier &paResult) const {
-  paResult.push_back(getSourceId().getFB().getFBInterfaceSpec().mDIONames[getSourceId().getPortId()]);
-}
+} // namespace forte

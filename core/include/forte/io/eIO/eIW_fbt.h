@@ -15,14 +15,14 @@
 #include "forte/io/eIO/einputfb.h"
 #include "forte/datatypes/forte_word.h"
 
-using namespace forte::literals;
+namespace forte::io {
+  /*! /brief generic class for eIW function blocks providing (event-triggerd) access to a physical input
+   *
+   */
+  class FORTE_eIW final : public CeInputFB<CIEC_WORD> {
+      DECLARE_FIRMWARE_FB(FORTE_eIW)
 
-/*! /brief generic class for eIW function blocks providing (event-triggerd) access to a physical input
- *
- */
-class FORTE_eIW final : public CeInputFB<CIEC_WORD> {
-    DECLARE_FIRMWARE_FB(FORTE_eIW)
-
-  public:
-    FORTE_eIW(forte::StringId paInstanceNameId, CFBContainer &paContainer);
-};
+    public:
+      FORTE_eIW(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+  };
+} // namespace forte::io

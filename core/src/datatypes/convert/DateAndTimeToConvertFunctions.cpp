@@ -26,37 +26,39 @@
 
 #include "forte/arch/forte_architecture_time.h"
 
-CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal) {
-  TForteUInt64 nBuffer = paVal;
-  time_t t = static_cast<time_t>(nBuffer / 1000000000ULL);
-  struct tm ptm;
+namespace forte {
+  CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal) {
+    TForteUInt64 nBuffer = paVal;
+    time_t t = static_cast<time_t>(nBuffer / 1000000000ULL);
+    struct tm ptm;
 
-  if (nullptr == forte_gmtime(&t, &ptm)) {
-    return CIEC_DATE(0);
+    if (nullptr == arch::forte_gmtime(&t, &ptm)) {
+      return CIEC_DATE(0);
+    }
+
+    ptm.tm_hour = 0;
+    ptm.tm_min = 0;
+    ptm.tm_sec = 0;
+
+    t = arch::forte_timegm(&ptm);
+    if (static_cast<time_t>(-1) == t) {
+      return CIEC_DATE(0);
+    }
+
+    return CIEC_DATE(t * 1000000000ULL);
   }
 
-  ptm.tm_hour = 0;
-  ptm.tm_min = 0;
-  ptm.tm_sec = 0;
+  CIEC_TIME_OF_DAY func_DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal) {
+    TForteUInt64 nBuffer = paVal;
+    time_t t = static_cast<time_t>(nBuffer / 1000000000ULL);
+    struct tm ptm;
 
-  t = forte_timegm(&ptm);
-  if (static_cast<time_t>(-1) == t) {
-    return CIEC_DATE(0);
+    if (nullptr == arch::forte_gmtime(&t, &ptm)) {
+      return CIEC_TIME_OF_DAY(0);
+    }
+
+    return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>(
+        (ptm.tm_hour * UINT64_C(3600) + ptm.tm_min * UINT64_C(60) + ptm.tm_sec) * UINT64_C(1000000000) +
+        (nBuffer % UINT64_C(1000000000))));
   }
-
-  return CIEC_DATE(t * 1000000000ULL);
-}
-
-CIEC_TIME_OF_DAY func_DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal) {
-  TForteUInt64 nBuffer = paVal;
-  time_t t = static_cast<time_t>(nBuffer / 1000000000ULL);
-  struct tm ptm;
-
-  if (nullptr == forte_gmtime(&t, &ptm)) {
-    return CIEC_TIME_OF_DAY(0);
-  }
-
-  return CIEC_TIME_OF_DAY(static_cast<TForteUInt64>(
-      (ptm.tm_hour * UINT64_C(3600) + ptm.tm_min * UINT64_C(60) + ptm.tm_sec) * UINT64_C(1000000000) +
-      (nBuffer % UINT64_C(1000000000))));
-}
+} // namespace forte

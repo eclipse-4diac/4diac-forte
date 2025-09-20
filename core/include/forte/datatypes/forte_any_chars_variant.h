@@ -22,67 +22,69 @@
 #include "forte/datatypes/forte_wchar.h"
 #include "forte/datatypes/forte_wstring.h"
 
-using TIecAnyCharsVariantType = std::variant<
-    // ANY_ELEMENTARY
-    //  ANY_CHARS
-    //   ANY_CHAR
-    CIEC_CHAR,
-    CIEC_WCHAR,
-    //   ANY_STRING
-    CIEC_STRING,
-    CIEC_WSTRING
-    // end
-    >;
+namespace forte {
+  using TIecAnyCharsVariantType = std::variant<
+      // ANY_ELEMENTARY
+      //  ANY_CHARS
+      //   ANY_CHAR
+      CIEC_CHAR,
+      CIEC_WCHAR,
+      //   ANY_STRING
+      CIEC_STRING,
+      CIEC_WSTRING
+      // end
+      >;
 
-class CIEC_ANY_CHARS_VARIANT : public CIEC_ANY_CHARS, public TIecAnyCharsVariantType {
-    DECLARE_FIRMWARE_DATATYPE(ANY_CHARS_VARIANT)
-  public:
-    using TIecAnyCharsVariantType::variant;
-    using TIecAnyCharsVariantType::operator=;
-    template<class>
-    static inline constexpr bool always_false_v = false;
+  class CIEC_ANY_CHARS_VARIANT : public CIEC_ANY_CHARS, public TIecAnyCharsVariantType {
+      DECLARE_FIRMWARE_DATATYPE(ANY_CHARS_VARIANT)
+    public:
+      using TIecAnyCharsVariantType::variant;
+      using TIecAnyCharsVariantType::operator=;
+      template<class>
+      static inline constexpr bool always_false_v = false;
 
-    CIEC_ANY_CHARS_VARIANT(const CIEC_ANY_CHARS_VARIANT &paVal) : CIEC_ANY_CHARS(), variant(paVal) {
-    }
+      CIEC_ANY_CHARS_VARIANT(const CIEC_ANY_CHARS_VARIANT &paVal) : CIEC_ANY_CHARS(), variant(paVal) {
+      }
 
-    CIEC_ANY_CHARS_VARIANT(const CIEC_ANY_CHARS &paVal) {
-      setValue(paVal.unwrap());
-    }
+      CIEC_ANY_CHARS_VARIANT(const CIEC_ANY_CHARS &paVal) {
+        setValue(paVal.unwrap());
+      }
 
-    CIEC_ANY_CHARS_VARIANT &operator=(const CIEC_ANY_CHARS_VARIANT &paOther) {
-      variant::operator=(paOther);
-      return *this;
-    }
+      CIEC_ANY_CHARS_VARIANT &operator=(const CIEC_ANY_CHARS_VARIANT &paOther) {
+        variant::operator=(paOther);
+        return *this;
+      }
 
-    CIEC_ANY_CHARS_VARIANT &operator=(const CIEC_ANY_CHARS &paOther) {
-      setValue(paOther.unwrap());
-      return *this;
-    }
+      CIEC_ANY_CHARS_VARIANT &operator=(const CIEC_ANY_CHARS &paOther) {
+        setValue(paOther.unwrap());
+        return *this;
+      }
 
-    void setValue(const CIEC_ANY &paValue) override;
+      void setValue(const CIEC_ANY &paValue) override;
 
-    void reset() override {
-      unwrap().reset();
-    }
+      void reset() override {
+        unwrap().reset();
+      }
 
-    bool setDefaultValue(EDataTypeID paDataTypeId);
+      bool setDefaultValue(EDataTypeID paDataTypeId);
 
-    [[nodiscard]] CIEC_ANY_CHARS &unwrap() override;
+      [[nodiscard]] CIEC_ANY_CHARS &unwrap() override;
 
-    [[nodiscard]] const CIEC_ANY_CHARS &unwrap() const override;
+      [[nodiscard]] const CIEC_ANY_CHARS &unwrap() const override;
 
-    int fromString(const char *paValue) override;
+      int fromString(const char *paValue) override;
 
-    void toString(std::string &paTargetBuf) const override;
+      void toString(std::string &paTargetBuf) const override;
 
-    [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
-      return unwrap().equals(paOther.unwrap());
-    }
-};
+      [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
+        return unwrap().equals(paOther.unwrap());
+      }
+  };
 
-static_assert(std::is_copy_constructible_v<CIEC_ANY_CHARS_VARIANT>);
-static_assert(std::is_move_constructible_v<CIEC_ANY_CHARS_VARIANT>);
-static_assert(std::is_constructible_v<CIEC_ANY_CHARS_VARIANT, const CIEC_ANY_CHARS &>);
-static_assert(std::is_copy_assignable_v<CIEC_ANY_CHARS_VARIANT>);
-static_assert(std::is_assignable_v<CIEC_ANY_CHARS_VARIANT, const CIEC_ANY_CHARS &>);
-static_assert(std::is_destructible_v<CIEC_ANY_CHARS_VARIANT>);
+  static_assert(std::is_copy_constructible_v<CIEC_ANY_CHARS_VARIANT>);
+  static_assert(std::is_move_constructible_v<CIEC_ANY_CHARS_VARIANT>);
+  static_assert(std::is_constructible_v<CIEC_ANY_CHARS_VARIANT, const CIEC_ANY_CHARS &>);
+  static_assert(std::is_copy_assignable_v<CIEC_ANY_CHARS_VARIANT>);
+  static_assert(std::is_assignable_v<CIEC_ANY_CHARS_VARIANT, const CIEC_ANY_CHARS &>);
+  static_assert(std::is_destructible_v<CIEC_ANY_CHARS_VARIANT>);
+} // namespace forte

@@ -10,28 +10,27 @@
  *  Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_ARCH_COMMON_FORTE_SPECIFIC_ARCHITECTURE_H_
-#define SRC_ARCH_COMMON_FORTE_SPECIFIC_ARCHITECTURE_H_
+#pragma once
 
-class CForteSpecificArchitecture {
-  public:
-    /**
-     * @brief Initalize everything needed in the lower layers that is needed for forte to run
-     * This is called only once before any forte instances is started
-     *
-     * @param argc Number of arguments passed, same as in the main function
-     * @param argv Arguments passed, same as in the main function
-     * @return 0 if no error happenned, another value specificied by the specific architecture otherwise
-     */
-    static int initialize(int argc, char *argv[]);
+namespace forte::arch {
+  class CForteSpecificArchitecture {
+    public:
+      /**
+       * @brief Initalize everything needed in the lower layers that is needed for forte to run
+       * This is called only once before any forte instances is started
+       *
+       * @param argc Number of arguments passed, same as in the main function
+       * @param argv Arguments passed, same as in the main function
+       * @return 0 if no error happenned, another value specificied by the specific architecture otherwise
+       */
+      static int initialize(int argc, char *argv[]);
 
-    /**
-     * @brief Uninitialize everything needed in the lower layers. This is called only once after all forte instances
-     * were used
-     *
-     * @return 0 if no error happenned, another value specificied by the specific architecture otherwise
-     */
-    static int deinitialize();
-};
-
-#endif /* SRC_ARCH_COMMON_FORTE_SPECIFIC_ARCHITECTURE_H_ */
+      /**
+       * @brief Uninitialize everything needed in the lower layers. This is called only once after all forte instances
+       * were used
+       *
+       * @return 0 if no error happenned, another value specificied by the specific architecture otherwise
+       */
+      static int deinitialize();
+  };
+} // namespace forte::arch

@@ -16,19 +16,19 @@
 #include "forte/io/mapper/io_observer.h"
 #include "forte/util/devlog.h"
 
-using namespace forte::io;
+namespace forte::io {
+  IOObserver::IOObserver() : mHandle(nullptr) {
+  }
 
-IOObserver::IOObserver() : mHandle(nullptr) {
-}
+  IOObserver::~IOObserver() {
+    IOMapper::getInstance().deregisterObserver(this);
+  }
 
-IOObserver::~IOObserver() {
-  IOMapper::getInstance().deregisterObserver(this);
-}
+  void IOObserver::onHandle(IOHandle *const paHandle) {
+    this->mHandle = paHandle;
+  }
 
-void IOObserver::onHandle(IOHandle *const paHandle) {
-  this->mHandle = paHandle;
-}
-
-void IOObserver::dropHandle() {
-  this->mHandle = nullptr;
-}
+  void IOObserver::dropHandle() {
+    this->mHandle = nullptr;
+  }
+} // namespace forte::io

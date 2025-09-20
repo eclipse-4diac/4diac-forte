@@ -23,66 +23,68 @@
 #include "forte/datatypes/forte_lword.h"
 #include "forte/datatypes/forte_word.h"
 
-using TIecAnyBitVariantType = std::variant<
-    // ANY_ELEMENTARY
-    //  ANY_BIT
-    CIEC_BOOL,
-    CIEC_BYTE,
-    CIEC_WORD,
-    CIEC_DWORD,
-    CIEC_LWORD
-    // end
-    >;
+namespace forte {
+  using TIecAnyBitVariantType = std::variant<
+      // ANY_ELEMENTARY
+      //  ANY_BIT
+      CIEC_BOOL,
+      CIEC_BYTE,
+      CIEC_WORD,
+      CIEC_DWORD,
+      CIEC_LWORD
+      // end
+      >;
 
-class CIEC_ANY_BIT_VARIANT : public CIEC_ANY_BIT, public TIecAnyBitVariantType {
-    DECLARE_FIRMWARE_DATATYPE(ANY_BIT_VARIANT)
-  public:
-    using TIecAnyBitVariantType::variant;
-    using TIecAnyBitVariantType::operator=;
-    template<class>
-    static inline constexpr bool always_false_v = false;
+  class CIEC_ANY_BIT_VARIANT : public CIEC_ANY_BIT, public TIecAnyBitVariantType {
+      DECLARE_FIRMWARE_DATATYPE(ANY_BIT_VARIANT)
+    public:
+      using TIecAnyBitVariantType::variant;
+      using TIecAnyBitVariantType::operator=;
+      template<class>
+      static inline constexpr bool always_false_v = false;
 
-    CIEC_ANY_BIT_VARIANT(const CIEC_ANY_BIT_VARIANT &paVal) : CIEC_ANY_BIT(), variant(paVal) {
-    }
+      CIEC_ANY_BIT_VARIANT(const CIEC_ANY_BIT_VARIANT &paVal) : CIEC_ANY_BIT(), variant(paVal) {
+      }
 
-    CIEC_ANY_BIT_VARIANT(const CIEC_ANY_BIT &paVal) {
-      setValue(paVal.unwrap());
-    }
+      CIEC_ANY_BIT_VARIANT(const CIEC_ANY_BIT &paVal) {
+        setValue(paVal.unwrap());
+      }
 
-    CIEC_ANY_BIT_VARIANT &operator=(const CIEC_ANY_BIT_VARIANT &paOther) {
-      variant::operator=(paOther);
-      return *this;
-    }
+      CIEC_ANY_BIT_VARIANT &operator=(const CIEC_ANY_BIT_VARIANT &paOther) {
+        variant::operator=(paOther);
+        return *this;
+      }
 
-    CIEC_ANY_BIT_VARIANT &operator=(const CIEC_ANY_BIT &paOther) {
-      setValue(paOther.unwrap());
-      return *this;
-    }
+      CIEC_ANY_BIT_VARIANT &operator=(const CIEC_ANY_BIT &paOther) {
+        setValue(paOther.unwrap());
+        return *this;
+      }
 
-    void setValue(const CIEC_ANY &paValue) override;
+      void setValue(const CIEC_ANY &paValue) override;
 
-    void reset() override {
-      unwrap().reset();
-    }
+      void reset() override {
+        unwrap().reset();
+      }
 
-    bool setDefaultValue(EDataTypeID paDataTypeId);
+      bool setDefaultValue(EDataTypeID paDataTypeId);
 
-    [[nodiscard]] CIEC_ANY_BIT &unwrap() override;
+      [[nodiscard]] CIEC_ANY_BIT &unwrap() override;
 
-    [[nodiscard]] const CIEC_ANY_BIT &unwrap() const override;
+      [[nodiscard]] const CIEC_ANY_BIT &unwrap() const override;
 
-    int fromString(const char *paValue) override;
+      int fromString(const char *paValue) override;
 
-    void toString(std::string &paTargetBuf) const override;
+      void toString(std::string &paTargetBuf) const override;
 
-    [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
-      return unwrap().equals(paOther.unwrap());
-    }
-};
+      [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
+        return unwrap().equals(paOther.unwrap());
+      }
+  };
 
-static_assert(std::is_copy_constructible_v<CIEC_ANY_BIT_VARIANT>);
-static_assert(std::is_move_constructible_v<CIEC_ANY_BIT_VARIANT>);
-static_assert(std::is_constructible_v<CIEC_ANY_BIT_VARIANT, const CIEC_ANY_BIT &>);
-static_assert(std::is_copy_assignable_v<CIEC_ANY_BIT_VARIANT>);
-static_assert(std::is_assignable_v<CIEC_ANY_BIT_VARIANT, const CIEC_ANY_BIT &>);
-static_assert(std::is_destructible_v<CIEC_ANY_BIT_VARIANT>);
+  static_assert(std::is_copy_constructible_v<CIEC_ANY_BIT_VARIANT>);
+  static_assert(std::is_move_constructible_v<CIEC_ANY_BIT_VARIANT>);
+  static_assert(std::is_constructible_v<CIEC_ANY_BIT_VARIANT, const CIEC_ANY_BIT &>);
+  static_assert(std::is_copy_assignable_v<CIEC_ANY_BIT_VARIANT>);
+  static_assert(std::is_assignable_v<CIEC_ANY_BIT_VARIANT, const CIEC_ANY_BIT &>);
+  static_assert(std::is_destructible_v<CIEC_ANY_BIT_VARIANT>);
+} // namespace forte

@@ -47,7 +47,7 @@ namespace forte::io {
       typedef std::map<std::string, IOObserver *> TObserverMap;
       TObserverMap mObservers;
 
-      CSyncObject mSyncMutex;
+      arch::CSyncObject mSyncMutex;
   };
 
 } // namespace forte::io

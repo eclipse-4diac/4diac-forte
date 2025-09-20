@@ -16,29 +16,29 @@
 
 #include "forte/io/device/io_controller.h"
 
-using namespace forte::io;
-
-IOHandle::IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType) :
-    mController(paController),
-    mType(paType),
-    mDirection(paDirection),
-    mObserver(nullptr) {
-}
-
-IOHandle::~IOHandle() {
-  IOMapper::getInstance().deregisterHandle(*this);
-}
-
-void IOHandle::onObserver(IOObserver *paObserver) {
-  this->mObserver = paObserver;
-}
-
-void IOHandle::dropObserver() {
-  this->mObserver = nullptr;
-}
-
-void IOHandle::onChange() {
-  if (mObserver != nullptr && mObserver->onChange()) {
-    mController->fireIndicationEvent(mObserver);
+namespace forte::io {
+  IOHandle::IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType) :
+      mController(paController),
+      mType(paType),
+      mDirection(paDirection),
+      mObserver(nullptr) {
   }
-}
+
+  IOHandle::~IOHandle() {
+    IOMapper::getInstance().deregisterHandle(*this);
+  }
+
+  void IOHandle::onObserver(IOObserver *paObserver) {
+    this->mObserver = paObserver;
+  }
+
+  void IOHandle::dropObserver() {
+    this->mObserver = nullptr;
+  }
+
+  void IOHandle::onChange() {
+    if (mObserver != nullptr && mObserver->onChange()) {
+      mController->fireIndicationEvent(mObserver);
+    }
+  }
+} // namespace forte::io

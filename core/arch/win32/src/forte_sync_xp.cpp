@@ -13,19 +13,21 @@
 
 #include "forte/arch/forte_sync.h"
 
-CPCSyncObject::CPCSyncObject() {
-  InitializeCriticalSection(&mLock);
-}
+namespace forte::arch {
+  CPCSyncObject::CPCSyncObject() {
+    InitializeCriticalSection(&mLock);
+  }
 
-CPCSyncObject::~CPCSyncObject() {
-  DeleteCriticalSection(&mLock);
-}
+  CPCSyncObject::~CPCSyncObject() {
+    DeleteCriticalSection(&mLock);
+  }
 
-void CPCSyncObject::lock() {
-  EnterCriticalSection(&mLock);
-}
+  void CPCSyncObject::lock() {
+    EnterCriticalSection(&mLock);
+  }
 
-//! Free the resource coming after the lock command
-void CPCSyncObject::unlock() {
-  LeaveCriticalSection(&mLock);
-}
+  //! Free the resource coming after the lock command
+  void CPCSyncObject::unlock() {
+    LeaveCriticalSection(&mLock);
+  }
+} // namespace forte::arch

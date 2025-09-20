@@ -22,194 +22,195 @@
 #include "forte/device.h"
 #include "forte/util/criticalregion.h"
 
-using namespace forte::com_infra;
 using namespace forte::literals;
 
-namespace {
-  [[maybe_unused]] const ComLayerManager::EntryImpl<CLocalComLayer> entry("loc"_STRID);
-}
-
-CLocalComLayer::CLocalCommGroupsManager CLocalComLayer::smLocalCommGroupsManager;
-
-CLocalComLayer::CLocalComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB) : CComLayer(paUpperLayer, paFB) {
-}
-
-CLocalComLayer::~CLocalComLayer() {
-  closeConnection();
-}
-
-EComResponse CLocalComLayer::sendData(void *, unsigned int) {
-  CIEC_ANY **sds = mFb->getSDs();
-  TPortId numSDs = mFb->getNumSD();
-
-  CLocalCommGroup *comGroup = getLocalCommGroupsManager().getComGroup(mGroupID);
-
-  if (comGroup == nullptr) {
-    return e_ProcessDataSendFailed;
+namespace forte::com_infra {
+  namespace {
+    [[maybe_unused]] const ComLayerManager::EntryImpl<CLocalComLayer> entry("loc"_STRID);
   }
 
-  for (auto runner : comGroup->mSublList) {
-    CBaseCommFB &subFb(*runner->getCommFB());
-    CCriticalRegion criticalRegion(subFb.getFBLock());
-    setRDs(subFb, sds, numSDs);
-    subFb.interruptCommFB(runner);
-    subFb.getDevice()->getDeviceExecution().startNewEventChain(&subFb);
+  CLocalComLayer::CLocalCommGroupsManager CLocalComLayer::smLocalCommGroupsManager;
+
+  CLocalComLayer::CLocalComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB) : CComLayer(paUpperLayer, paFB) {
   }
 
-  return e_ProcessDataOk;
-}
-
-void CLocalComLayer::setRDs(CBaseCommFB &paSubl, CIEC_ANY **paSDs, TPortId paNumSDs) {
-  CIEC_ANY **aRDs = paSubl.getRDs();
-  for (size_t i = 0; i < paNumSDs; ++i) {
-    aRDs[i]->setValue(*paSDs[i]);
+  CLocalComLayer::~CLocalComLayer() {
+    closeConnection();
   }
-}
 
-EComResponse CLocalComLayer::openConnection(char *const paLayerParameter) {
-  mGroupID = StringId::insert(paLayerParameter);
+  EComResponse CLocalComLayer::sendData(void *, unsigned int) {
+    CIEC_ANY **sds = mFb->getSDs();
+    TPortId numSDs = mFb->getNumSD();
 
-  switch (mFb->getComServiceType()) {
-    case e_Server:
-    case e_Client: break;
-    case e_Publisher:
-      if (!getLocalCommGroupsManager().registerPubl(mGroupID, this)) {
-        return e_InitInvalidId;
-      }
-      break;
-    case e_Subscriber:
-      if (!getLocalCommGroupsManager().registerSubl(mGroupID, this)) {
-        return e_InitInvalidId;
-      }
-      break;
+    CLocalCommGroup *comGroup = getLocalCommGroupsManager().getComGroup(mGroupID);
+
+    if (comGroup == nullptr) {
+      return e_ProcessDataSendFailed;
+    }
+
+    for (auto runner : comGroup->mSublList) {
+      CBaseCommFB &subFb(*runner->getCommFB());
+      util::CCriticalRegion criticalRegion(subFb.getFBLock());
+      setRDs(subFb, sds, numSDs);
+      subFb.interruptCommFB(runner);
+      subFb.getDevice()->getDeviceExecution().startNewEventChain(&subFb);
+    }
+
+    return e_ProcessDataOk;
   }
-  return e_InitOk;
-}
 
-void CLocalComLayer::closeConnection() {
-  if (e_Publisher == mFb->getComServiceType()) {
-    getLocalCommGroupsManager().unregisterPubl(mGroupID, this);
-  } else {
-    getLocalCommGroupsManager().unregisterSubl(mGroupID, this);
+  void CLocalComLayer::setRDs(CBaseCommFB &paSubl, CIEC_ANY **paSDs, TPortId paNumSDs) {
+    CIEC_ANY **aRDs = paSubl.getRDs();
+    for (size_t i = 0; i < paNumSDs; ++i) {
+      aRDs[i]->setValue(*paSDs[i]);
+    }
   }
-}
 
-/********************** CLocalCommGroupsManager *************************************/
-bool CLocalComLayer::CLocalCommGroupsManager::registerPubl(const StringId paGroupID, CLocalComLayer *paLayer) {
-  CBaseCommFB *commFb = paLayer->getCommFB();
-  return registerPubl(paGroupID, paLayer, commFb->getSDs(), commFb->getNumSD());
-}
+  EComResponse CLocalComLayer::openConnection(char *const paLayerParameter) {
+    mGroupID = StringId::insert(paLayerParameter);
 
-CLocalComLayer::CLocalCommGroup *CLocalComLayer::CLocalCommGroupsManager::getComGroup(const StringId paGroupID) {
-  auto iterator = getLocalCommGroupIterator(paGroupID);
-  if (isGroupIteratorForGroup(iterator, paGroupID)) {
-    return &(*iterator);
+    switch (mFb->getComServiceType()) {
+      case e_Server:
+      case e_Client: break;
+      case e_Publisher:
+        if (!getLocalCommGroupsManager().registerPubl(mGroupID, this)) {
+          return e_InitInvalidId;
+        }
+        break;
+      case e_Subscriber:
+        if (!getLocalCommGroupsManager().registerSubl(mGroupID, this)) {
+          return e_InitInvalidId;
+        }
+        break;
+    }
+    return e_InitOk;
   }
-  return nullptr;
-}
 
-bool CLocalComLayer::CLocalCommGroupsManager::registerPubl(const StringId paGroupID,
-                                                           CLocalComLayer *paLayer,
-                                                           CIEC_ANY **paDataPins,
-                                                           TPortId paNumDataPins) {
-  CCriticalRegion criticalRegion(mSync);
-  CLocalCommGroup *const group = findOrCreateLocalCommGroup(paGroupID, paDataPins, paNumDataPins);
-  if (group == nullptr) {
-    return false;
+  void CLocalComLayer::closeConnection() {
+    if (e_Publisher == mFb->getComServiceType()) {
+      getLocalCommGroupsManager().unregisterPubl(mGroupID, this);
+    } else {
+      getLocalCommGroupsManager().unregisterSubl(mGroupID, this);
+    }
   }
-  group->mPublList.push_back(paLayer);
-  return true;
-}
 
-void CLocalComLayer::CLocalCommGroupsManager::unregisterPubl(const StringId paGroupID, CLocalComLayer *paLayer) {
-  CCriticalRegion criticalRegion(mSync);
-  auto comGroupIt = getLocalCommGroupIterator(paGroupID);
-  if (isGroupIteratorForGroup(comGroupIt, paGroupID)) {
-    removeListEntry(comGroupIt->mPublList, paLayer);
-    checkForGroupRemoval(comGroupIt);
+  /********************** CLocalCommGroupsManager *************************************/
+  bool CLocalComLayer::CLocalCommGroupsManager::registerPubl(const StringId paGroupID, CLocalComLayer *paLayer) {
+    CBaseCommFB *commFb = paLayer->getCommFB();
+    return registerPubl(paGroupID, paLayer, commFb->getSDs(), commFb->getNumSD());
   }
-}
 
-bool CLocalComLayer::CLocalCommGroupsManager::registerSubl(const StringId paGroupID, CLocalComLayer *paLayer) {
-  CCriticalRegion criticalRegion(mSync);
-  CBaseCommFB *commFb = paLayer->getCommFB();
-  CLocalCommGroup *const group = findOrCreateLocalCommGroup(paGroupID, commFb->getRDs(), commFb->getNumRD());
-  if (group == nullptr) {
-    return false;
-  }
-  group->mSublList.push_back(paLayer);
-  return true;
-}
-
-void CLocalComLayer::CLocalCommGroupsManager::unregisterSubl(const StringId paGroupID, CLocalComLayer *paLayer) {
-  CCriticalRegion criticalRegion(mSync);
-  auto comGroupIt = getLocalCommGroupIterator(paGroupID);
-  if (isGroupIteratorForGroup(comGroupIt, paGroupID)) {
-    removeListEntry(comGroupIt->mSublList, paLayer);
-    checkForGroupRemoval(comGroupIt);
-  }
-}
-
-CLocalComLayer::CLocalCommGroupsManager::TLocalCommGroupList::iterator
-CLocalComLayer::CLocalCommGroupsManager::getLocalCommGroupIterator(StringId paID) {
-  return lower_bound(mLocalCommGroups.begin(), mLocalCommGroups.end(), paID,
-                     [](const CLocalCommGroup &locGroup, StringId groupId) { return locGroup.mGroupName < groupId; });
-}
-
-CLocalComLayer::CLocalCommGroup *CLocalComLayer::CLocalCommGroupsManager::findOrCreateLocalCommGroup(
-    StringId paID, CIEC_ANY **paDataPins, TPortId paNumDataPins) {
-  auto iter = getLocalCommGroupIterator(paID);
-  if (isGroupIteratorForGroup(iter, paID)) {
-    if (checkDataTypes(*iter, paDataPins, paNumDataPins)) {
-      return &(*iter);
+  CLocalComLayer::CLocalCommGroup *CLocalComLayer::CLocalCommGroupsManager::getComGroup(const StringId paGroupID) {
+    auto iterator = getLocalCommGroupIterator(paGroupID);
+    if (isGroupIteratorForGroup(iterator, paGroupID)) {
+      return &(*iterator);
     }
     return nullptr;
   }
-  return &(*mLocalCommGroups.insert(iter, CLocalCommGroup(paID, buildDataTypeList(paDataPins, paNumDataPins))));
-}
 
-void CLocalComLayer::CLocalCommGroupsManager::checkForGroupRemoval(TLocalCommGroupList::iterator comGroupIt) {
-  if ((comGroupIt->mPublList.empty()) && (comGroupIt->mSublList.empty())) {
-    mLocalCommGroups.erase(comGroupIt);
-  }
-}
-
-void CLocalComLayer::CLocalCommGroupsManager::removeListEntry(CLocalCommGroup::TLocalComLayerList &paComLayerList,
-                                                              CLocalComLayer *paLayer) {
-  auto iter = std::find(paComLayerList.begin(), paComLayerList.end(), paLayer);
-  if (iter != paComLayerList.end()) {
-    paComLayerList.erase(iter);
-  }
-}
-
-CLocalComLayer::CLocalCommGroup::TLocalComDataTypeList
-CLocalComLayer::CLocalCommGroupsManager::buildDataTypeList(CIEC_ANY **paDataPins, TPortId paNumDataPins) {
-  CLocalCommGroup::TLocalComDataTypeList dataTypes;
-
-  if (paDataPins != nullptr) {
-    dataTypes.reserve(paNumDataPins);
-    for (size_t i = 0; i < paNumDataPins; i++) {
-      dataTypes.push_back(paDataPins[i]->unwrap().getTypeNameID());
-    }
-  }
-
-  return dataTypes;
-}
-
-bool CLocalComLayer::CLocalCommGroupsManager::checkDataTypes(const CLocalCommGroup &group,
+  bool CLocalComLayer::CLocalCommGroupsManager::registerPubl(const StringId paGroupID,
+                                                             CLocalComLayer *paLayer,
                                                              CIEC_ANY **paDataPins,
                                                              TPortId paNumDataPins) {
-  if (paNumDataPins != group.mDataTypes.size()) {
-    return false;
-  }
-
-  size_t i = 0;
-  for (auto runner : group.mDataTypes) {
-    if (runner != paDataPins[i]->unwrap().getTypeNameID()) {
+    util::CCriticalRegion criticalRegion(mSync);
+    CLocalCommGroup *const group = findOrCreateLocalCommGroup(paGroupID, paDataPins, paNumDataPins);
+    if (group == nullptr) {
       return false;
     }
-    i++;
+    group->mPublList.push_back(paLayer);
+    return true;
   }
 
-  return true;
-}
+  void CLocalComLayer::CLocalCommGroupsManager::unregisterPubl(const StringId paGroupID, CLocalComLayer *paLayer) {
+    util::CCriticalRegion criticalRegion(mSync);
+    auto comGroupIt = getLocalCommGroupIterator(paGroupID);
+    if (isGroupIteratorForGroup(comGroupIt, paGroupID)) {
+      removeListEntry(comGroupIt->mPublList, paLayer);
+      checkForGroupRemoval(comGroupIt);
+    }
+  }
+
+  bool CLocalComLayer::CLocalCommGroupsManager::registerSubl(const StringId paGroupID, CLocalComLayer *paLayer) {
+    util::CCriticalRegion criticalRegion(mSync);
+    CBaseCommFB *commFb = paLayer->getCommFB();
+    CLocalCommGroup *const group = findOrCreateLocalCommGroup(paGroupID, commFb->getRDs(), commFb->getNumRD());
+    if (group == nullptr) {
+      return false;
+    }
+    group->mSublList.push_back(paLayer);
+    return true;
+  }
+
+  void CLocalComLayer::CLocalCommGroupsManager::unregisterSubl(const StringId paGroupID, CLocalComLayer *paLayer) {
+    util::CCriticalRegion criticalRegion(mSync);
+    auto comGroupIt = getLocalCommGroupIterator(paGroupID);
+    if (isGroupIteratorForGroup(comGroupIt, paGroupID)) {
+      removeListEntry(comGroupIt->mSublList, paLayer);
+      checkForGroupRemoval(comGroupIt);
+    }
+  }
+
+  CLocalComLayer::CLocalCommGroupsManager::TLocalCommGroupList::iterator
+  CLocalComLayer::CLocalCommGroupsManager::getLocalCommGroupIterator(StringId paID) {
+    return lower_bound(mLocalCommGroups.begin(), mLocalCommGroups.end(), paID,
+                       [](const CLocalCommGroup &locGroup, StringId groupId) { return locGroup.mGroupName < groupId; });
+  }
+
+  CLocalComLayer::CLocalCommGroup *CLocalComLayer::CLocalCommGroupsManager::findOrCreateLocalCommGroup(
+      StringId paID, CIEC_ANY **paDataPins, TPortId paNumDataPins) {
+    auto iter = getLocalCommGroupIterator(paID);
+    if (isGroupIteratorForGroup(iter, paID)) {
+      if (checkDataTypes(*iter, paDataPins, paNumDataPins)) {
+        return &(*iter);
+      }
+      return nullptr;
+    }
+    return &(*mLocalCommGroups.insert(iter, CLocalCommGroup(paID, buildDataTypeList(paDataPins, paNumDataPins))));
+  }
+
+  void CLocalComLayer::CLocalCommGroupsManager::checkForGroupRemoval(TLocalCommGroupList::iterator comGroupIt) {
+    if ((comGroupIt->mPublList.empty()) && (comGroupIt->mSublList.empty())) {
+      mLocalCommGroups.erase(comGroupIt);
+    }
+  }
+
+  void CLocalComLayer::CLocalCommGroupsManager::removeListEntry(CLocalCommGroup::TLocalComLayerList &paComLayerList,
+                                                                CLocalComLayer *paLayer) {
+    auto iter = std::find(paComLayerList.begin(), paComLayerList.end(), paLayer);
+    if (iter != paComLayerList.end()) {
+      paComLayerList.erase(iter);
+    }
+  }
+
+  CLocalComLayer::CLocalCommGroup::TLocalComDataTypeList
+  CLocalComLayer::CLocalCommGroupsManager::buildDataTypeList(CIEC_ANY **paDataPins, TPortId paNumDataPins) {
+    CLocalCommGroup::TLocalComDataTypeList dataTypes;
+
+    if (paDataPins != nullptr) {
+      dataTypes.reserve(paNumDataPins);
+      for (size_t i = 0; i < paNumDataPins; i++) {
+        dataTypes.push_back(paDataPins[i]->unwrap().getTypeNameID());
+      }
+    }
+
+    return dataTypes;
+  }
+
+  bool CLocalComLayer::CLocalCommGroupsManager::checkDataTypes(const CLocalCommGroup &group,
+                                                               CIEC_ANY **paDataPins,
+                                                               TPortId paNumDataPins) {
+    if (paNumDataPins != group.mDataTypes.size()) {
+      return false;
+    }
+
+    size_t i = 0;
+    for (auto runner : group.mDataTypes) {
+      if (runner != paDataPins[i]->unwrap().getTypeNameID()) {
+        return false;
+      }
+      i++;
+    }
+
+    return true;
+  }
+} // namespace forte::com_infra

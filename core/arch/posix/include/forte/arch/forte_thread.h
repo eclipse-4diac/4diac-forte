@@ -10,61 +10,61 @@
  *  Alois Zoitl, Rene Smodic, Ingo Hegny, Martin Melik Merkiumians - initial API and implementation and/or initial
  *documentation Alois Zoitl - extracted common functions to new base class CThreadBase
  *******************************************************************************/
-#ifndef _FORTE_THREAD_H_
-#define _FORTE_THREAD_H_
+
+#pragma once
 
 #include "forte/arch/threadbase.h"
 #include "forte/arch/forte_sync.h"
 #include <pthread.h>
 
-/**  \ingroup FORTE-HAL
- * \defgroup posix_hal PC FORTE Hardware Abstraction Layer
- *
- * \brief The FORTE-HAL implementation for normal PCs
- *
- * It will mainly work under linux or linux similar environments like cygwin.
- */
+namespace forte::arch {
+  /**  \ingroup FORTE-HAL
+   * \defgroup posix_hal PC FORTE Hardware Abstraction Layer
+   *
+   * \brief The FORTE-HAL implementation for normal PCs
+   *
+   * It will mainly work under linux or linux similar environments like cygwin.
+   */
 
-/*! \ingroup posix_hal
- * \brief The thread implementation for the posix thread interface.
- */
-class CPosixThread : public CThreadBase<pthread_t> {
-  public:
-    /*! \brief Constructor of the Thread class
-     *
-     *  Does all the necessary steps in order to get the thread running with the start()-method
-     *  @param paStackSize the Size of the stack the thread is allowed to use. 0 means use system default stack size.
-     *      If you like to set this value it is best to use the form: PTHREAD_STACK_MIN + additional bytes you need.
-     */
-    explicit CPosixThread(long paStackSize = 0);
+  /*! \ingroup posix_hal
+   * \brief The thread implementation for the posix thread interface.
+   */
+  class CPosixThread : public CThreadBase<pthread_t> {
+    public:
+      /*! \brief Constructor of the Thread class
+       *
+       *  Does all the necessary steps in order to get the thread running with the start()-method
+       *  @param paStackSize the Size of the stack the thread is allowed to use. 0 means use system default stack size.
+       *      If you like to set this value it is best to use the form: PTHREAD_STACK_MIN + additional bytes you need.
+       */
+      explicit CPosixThread(long paStackSize = 0);
 
-    /*! \brief Stops and destroys thread.
-     *
-     *  Will stop the execution if running and destroy the thread including all system specific data.
-     */
-    ~CPosixThread() override;
+      /*! \brief Stops and destroys thread.
+       *
+       *  Will stop the execution if running and destroy the thread including all system specific data.
+       */
+      ~CPosixThread() override;
 
-    /*! \brief Sleep the calling thread
-     *
-     * @param paMilliSeconds The milliseconds for the thread to sleep
-     */
+      /*! \brief Sleep the calling thread
+       *
+       * @param paMilliSeconds The milliseconds for the thread to sleep
+       */
 
-    static void sleepThread(unsigned int paMilliSeconds);
+      static void sleepThread(unsigned int paMilliSeconds);
 
-  private:
-    TThreadHandleType createThread(long paStackSize) override;
+    private:
+      TThreadHandleType createThread(long paStackSize) override;
 
-    /*!\brief Function that is given to the system thread support that should be called for the thread.
-     *
-     * this function will call the run method of the thread instance.
-     */
-    static void *threadFunction(void *paArguments);
+      /*!\brief Function that is given to the system thread support that should be called for the thread.
+       *
+       * this function will call the run method of the thread instance.
+       */
+      static void *threadFunction(void *paArguments);
 
-  public:
-    CPosixThread(const CPosixThread &) = delete;
-    CPosixThread &operator=(const CPosixThread &) = delete;
-};
+    public:
+      CPosixThread(const CPosixThread &) = delete;
+      CPosixThread &operator=(const CPosixThread &) = delete;
+  };
 
-typedef CPosixThread CThread; // allows that doxygen can generate better documentation
-
-#endif /*FORTE_THREAD_H_*/
+  typedef CPosixThread CThread; // allows that doxygen can generate better documentation
+} // namespace forte::arch

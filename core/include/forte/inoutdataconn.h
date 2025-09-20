@@ -19,55 +19,57 @@
 #include "forte/datatypes/forte_any.h"
 #include "forte/dataconn.h"
 
-class CInOutDataConnection : public CDataConnection {
-  public:
-    CInOutDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_ANY *paValue) :
-        CDataConnection(paSrcFB, paSrcPortId),
-        mValue(paValue) {
-    }
-
-    EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
-
-    EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
-
-    void getSourcePortName(forte::TNameIdentifier &paResult) const override;
-
-    void writeData(const CIEC_ANY &paValue) override {
-      if (mValue) {
-        mValue->setValue(paValue.unwrap());
+namespace forte {
+  class CInOutDataConnection : public CDataConnection {
+    public:
+      CInOutDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_ANY *paValue) :
+          CDataConnection(paSrcFB, paSrcPortId),
+          mValue(paValue) {
       }
-    }
 
-    void readData(CIEC_ANY &paValue) const override {
-      if (mValue) {
-        paValue.setValue(mValue->unwrap());
+      EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
+
+      EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
+
+      void getSourcePortName(forte::TNameIdentifier &paResult) const override;
+
+      void writeData(const CIEC_ANY &paValue) override {
+        if (mValue) {
+          mValue->setValue(paValue.unwrap());
+        }
       }
-    }
 
-    void setValue(CIEC_ANY *paValue);
+      void readData(CIEC_ANY &paValue) const override {
+        if (mValue) {
+          paValue.setValue(mValue->unwrap());
+        }
+      }
 
-    CIEC_ANY &getValue() override {
-      return *mValue;
-    }
+      void setValue(CIEC_ANY *paValue);
 
-  protected:
-    EMGMResponse establishDataConnection(CFunctionBlock &paDstFB,
-                                         const TPortId paDstPortId,
-                                         const CIEC_ANY &paDstDataPoint) override;
+      CIEC_ANY &getValue() override {
+        return *mValue;
+      }
 
-  private:
-    CIEC_ANY *mValue;
-    std::vector<CConnectionPoint> mInOutDestinationIds;
-};
+    protected:
+      EMGMResponse establishDataConnection(CFunctionBlock &paDstFB,
+                                           const TPortId paDstPortId,
+                                           const CIEC_ANY &paDstDataPoint) override;
 
-template<typename T>
-class COutInOutDataConnection final : public CInOutDataConnection {
-  public:
-    COutInOutDataConnection(CFunctionBlock &paSrcFB, TPortId paSrcPortId, const T &paValue) :
-        CInOutDataConnection(paSrcFB, paSrcPortId, &mValue),
-        mValue(paValue) {
-    }
+    private:
+      CIEC_ANY *mValue;
+      std::vector<CConnectionPoint> mInOutDestinationIds;
+  };
 
-  private:
-    T mValue;
-};
+  template<typename T>
+  class COutInOutDataConnection final : public CInOutDataConnection {
+    public:
+      COutInOutDataConnection(CFunctionBlock &paSrcFB, TPortId paSrcPortId, const T &paValue) :
+          CInOutDataConnection(paSrcFB, paSrcPortId, &mValue),
+          mValue(paValue) {
+      }
+
+    private:
+      T mValue;
+  };
+} // namespace forte

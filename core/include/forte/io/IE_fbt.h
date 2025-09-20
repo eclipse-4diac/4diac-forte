@@ -20,36 +20,38 @@
 
 #include "forte/io/processinterfacefb.h"
 
-class FORTE_IE final : public forte::io::CProcessInterfaceFB {
-    DECLARE_FIRMWARE_FB(FORTE_IE)
+namespace forte::io {
+  class FORTE_IE final : public forte::io::CProcessInterfaceFB {
+      DECLARE_FIRMWARE_FB(FORTE_IE)
 
-  private:
-    static const TEventID scmEventINDID = 2;
+    private:
+      static const TEventID scmEventINDID = 2;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void writeOutputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
 
-  public:
-    FORTE_IE(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    public:
+      FORTE_IE(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CEventConnection conn_IND;
+      CEventConnection conn_IND;
 
-    CEventConnection *getEOConUnchecked(TPortId) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
 
-    CIEC_ANY::EDataTypeID getIOObserverDataType() override {
-      return CIEC_ANY::e_Max;
-    }
+      CIEC_ANY::EDataTypeID getIOObserverDataType() override {
+        return CIEC_ANY::e_Max;
+      }
 
-    forte::io::IOMapper::Direction getDirection() override {
-      return forte::io::IOMapper::In;
-    }
+      forte::io::IOMapper::Direction getDirection() override {
+        return forte::io::IOMapper::In;
+      }
 
-    void evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
-      var_QI = paQI;
-      var_PARAMS = paPARAMS;
-      receiveInputEvent(scmEventREQID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
-    }
-};
+      void evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+        var_QI = paQI;
+        var_PARAMS = paPARAMS;
+        receiveInputEvent(scmEventREQID, nullptr);
+        paQO = var_QO;
+        paSTATUS = var_STATUS;
+      }
+  };
+} // namespace forte::io

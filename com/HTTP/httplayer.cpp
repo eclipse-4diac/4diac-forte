@@ -82,7 +82,7 @@ namespace forte::com_infra::http {
   EComResponse CHttpComLayer::openClientConnection(char *paLayerParameter) {
     EComResponse eRetVal = e_InitInvalidId;
     if (2 == mFb->getNumRD() && 3 == mFb->getNumSD()) {
-      CParameterParser parser(paLayerParameter, ';', 3); // IP:PORT;POST|PUT|GET;[content-type]
+      util::CParameterParser parser(paLayerParameter, ';', 3); // IP:PORT;POST|PUT|GET;[content-type]
       handleContentAndRequestType(parser, parser.parseParameters());
       handleAddress(parser[0]);
       eRetVal = e_InitOk;
@@ -129,7 +129,7 @@ namespace forte::com_infra::http {
     return everythingOK;
   }
 
-  bool CHttpComLayer::handleContentAndRequestType(CParameterParser &paParser, size_t paNoOfParameters) {
+  bool CHttpComLayer::handleContentAndRequestType(util::CParameterParser &paParser, size_t paNoOfParameters) {
     bool everythingOK = true;
     if (1 < paNoOfParameters) {
       if (3 == paNoOfParameters) {
@@ -153,7 +153,7 @@ namespace forte::com_infra::http {
     if (firstSlash) {
       mPath = std::string(firstSlash);
       *firstSlash = '\0';
-      CParameterParser portParser(addressToParse.c_str(), ':', 2);
+      util::CParameterParser portParser(addressToParse.c_str(), ':', 2);
       if (2 == portParser.parseParameters()) {
         mHost = std::string(portParser[0]);
         mPort = static_cast<TForteUInt16>(util::strtoul(portParser[1], nullptr, 10));

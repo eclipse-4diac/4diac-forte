@@ -13,42 +13,42 @@
 
 #include "forte/io/device/io_controller_poll.h"
 
-using namespace forte::io;
+namespace forte::io {
+  IODevicePollController::IODevicePollController(CDeviceExecution &paDeviceExecution, float paPollInterval) :
+      IODeviceController(paDeviceExecution),
+      mPollInterval(paPollInterval) {
+  }
 
-IODevicePollController::IODevicePollController(CDeviceExecution &paDeviceExecution, float paPollInterval) :
-    IODeviceController(paDeviceExecution),
-    mPollInterval(paPollInterval) {
-}
+  void IODevicePollController::handleChangeEvent(IOHandle *) {
+    forcePoll();
+  }
 
-void IODevicePollController::handleChangeEvent(IOHandle *) {
-  forcePoll();
-}
+  void IODevicePollController::runLoop() {
+    while (isAlive()) {
+      mForceLoop.timedWait(
+          static_cast<TForteUInt64>(mPollInterval * 1E6)); // If timeout occurred is a normal waiting, otherwise is a
+                                                           // forced loop. Don't care about the return value
 
-void IODevicePollController::runLoop() {
-  while (isAlive()) {
-    mForceLoop.timedWait(static_cast<TForteUInt64>(
-        mPollInterval *
-        1E6)); // If timeout occurred is a normal waiting, otherwise is a forced loop. Don't care about the return value
+      // Perform poll operation
+      poll();
 
-    // Perform poll operation
-    poll();
-
-    if (hasError()) {
-      break;
+      if (hasError()) {
+        break;
+      }
     }
   }
-}
 
-void IODevicePollController::setPollInterval(float paPollInterval) {
-  if (paPollInterval <= 0) {
-    DEVLOG_WARNING("[IODevicePollController] Configured PollInterval is set to an invalid value '%d'. Set to 25.\n",
-                   paPollInterval);
-    paPollInterval = 25;
+  void IODevicePollController::setPollInterval(float paPollInterval) {
+    if (paPollInterval <= 0) {
+      DEVLOG_WARNING("[IODevicePollController] Configured PollInterval is set to an invalid value '%d'. Set to 25.\n",
+                     paPollInterval);
+      paPollInterval = 25;
+    }
+
+    this->mPollInterval = paPollInterval;
   }
 
-  this->mPollInterval = paPollInterval;
-}
-
-void IODevicePollController::forcePoll() {
-  mForceLoop.inc();
-}
+  void IODevicePollController::forcePoll() {
+    mForceLoop.inc();
+  }
+} // namespace forte::io

@@ -20,7 +20,7 @@
 #include <iostream>
 
 namespace forte::iec61499::hardware {
-  CResourceReplayer::CResourceReplayer(CResource &paResource, std::vector<EventMessage> paExternalEvents) :
+  CResourceReplayer::CResourceReplayer(CResource &paResource, std::vector<trace::EventMessage> paExternalEvents) :
       mResource{paResource},
       mEcet{*dynamic_cast<CFakeEventExecutionThread *>(mResource.getResourceEventExecution())},
       mExternalEvents{std::move(paExternalEvents)} {
@@ -73,7 +73,7 @@ namespace forte::iec61499::hardware {
     paOther.mReleaseEcet = nullptr;
   }
 
-  std::vector<EventMessage> CResourceReplayer::reproduceAll() {
+  std::vector<trace::EventMessage> CResourceReplayer::reproduceAll() {
 
     while (reproduceNextEvent() != std::nullopt)
       ;
@@ -87,7 +87,7 @@ namespace forte::iec61499::hardware {
     // as long as the event counter is less than X, and then trigger the external event X
     while (mStepperIndex < mExternalEvents.size()) {
 
-      auto payload = mExternalEvents[mStepperIndex].getPayload<FBOutputEventPayload>();
+      auto payload = mExternalEvents[mStepperIndex].getPayload<trace::FBOutputEventPayload>();
 
       auto simulateExternalOutputEvent = [this](TEventEntry paEvent, const std::vector<std::string> &paOutputs) {
         // copy output data to FB
@@ -127,11 +127,11 @@ namespace forte::iec61499::hardware {
     return std::nullopt;
   }
 
-  std::vector<EventMessage> CResourceReplayer::getGeneratedEvents() {
+  std::vector<trace::EventMessage> CResourceReplayer::getGeneratedEvents() {
     return std::visit(
-        [this](auto &&paTracer) -> std::vector<EventMessage> {
+        [this](auto &&paTracer) -> std::vector<trace::EventMessage> {
           using T = std::decay_t<decltype(paTracer)>;
-          if constexpr (std::is_same_v<T, CInternalTracer> == true) {
+          if constexpr (std::is_same_v<T, trace::CInternalTracer> == true) {
             return paTracer.getEvents();
           }
           return {};

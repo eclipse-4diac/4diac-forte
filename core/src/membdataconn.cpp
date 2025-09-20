@@ -13,9 +13,9 @@
 
 #include "membdataconn.h"
 
-using namespace forte::internal;
-
-void CMemberDataConnection::getSourcePortName(TNameIdentifier &paResult) const {
-  CDataConnection::getSourcePortName(paResult);
-  paResult.insert(paResult.end(), cmMemberName.cbegin(), cmMemberName.cend());
-}
+namespace forte::internal {
+  void CMemberDataConnection::getSourcePortName(TNameIdentifier &paResult) const {
+    CDataConnection::getSourcePortName(paResult);
+    paResult.insert(paResult.end(), cmMemberName.cbegin(), cmMemberName.cend());
+  }
+} // namespace forte::internal

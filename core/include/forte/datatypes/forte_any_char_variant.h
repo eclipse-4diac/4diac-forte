@@ -20,64 +20,66 @@
 #include "forte/datatypes/forte_char.h"
 #include "forte/datatypes/forte_wchar.h"
 
-using TIecAnyCharVariantType = std::variant<
-    // ANY_ELEMENTARY
-    //  ANY_CHARS
-    //   ANY_CHAR
-    CIEC_CHAR,
-    CIEC_WCHAR
-    // end
-    >;
+namespace forte {
+  using TIecAnyCharVariantType = std::variant<
+      // ANY_ELEMENTARY
+      //  ANY_CHARS
+      //   ANY_CHAR
+      CIEC_CHAR,
+      CIEC_WCHAR
+      // end
+      >;
 
-class CIEC_ANY_CHAR_VARIANT : public CIEC_ANY_CHAR, public TIecAnyCharVariantType {
-    DECLARE_FIRMWARE_DATATYPE(ANY_CHAR_VARIANT)
-  public:
-    using TIecAnyCharVariantType::variant;
-    using TIecAnyCharVariantType::operator=;
-    template<class>
-    static inline constexpr bool always_false_v = false;
+  class CIEC_ANY_CHAR_VARIANT : public CIEC_ANY_CHAR, public TIecAnyCharVariantType {
+      DECLARE_FIRMWARE_DATATYPE(ANY_CHAR_VARIANT)
+    public:
+      using TIecAnyCharVariantType::variant;
+      using TIecAnyCharVariantType::operator=;
+      template<class>
+      static inline constexpr bool always_false_v = false;
 
-    CIEC_ANY_CHAR_VARIANT(const CIEC_ANY_CHAR_VARIANT &paVal) : CIEC_ANY_CHAR(), variant(paVal) {
-    }
+      CIEC_ANY_CHAR_VARIANT(const CIEC_ANY_CHAR_VARIANT &paVal) : CIEC_ANY_CHAR(), variant(paVal) {
+      }
 
-    CIEC_ANY_CHAR_VARIANT(const CIEC_ANY_CHAR &paVal) {
-      setValue(paVal.unwrap());
-    }
+      CIEC_ANY_CHAR_VARIANT(const CIEC_ANY_CHAR &paVal) {
+        setValue(paVal.unwrap());
+      }
 
-    CIEC_ANY_CHAR_VARIANT &operator=(const CIEC_ANY_CHAR_VARIANT &paOther) {
-      variant::operator=(paOther);
-      return *this;
-    }
+      CIEC_ANY_CHAR_VARIANT &operator=(const CIEC_ANY_CHAR_VARIANT &paOther) {
+        variant::operator=(paOther);
+        return *this;
+      }
 
-    CIEC_ANY_CHAR_VARIANT &operator=(const CIEC_ANY_CHAR &paOther) {
-      setValue(paOther.unwrap());
-      return *this;
-    }
+      CIEC_ANY_CHAR_VARIANT &operator=(const CIEC_ANY_CHAR &paOther) {
+        setValue(paOther.unwrap());
+        return *this;
+      }
 
-    void setValue(const CIEC_ANY &paValue) override;
+      void setValue(const CIEC_ANY &paValue) override;
 
-    void reset() override {
-      unwrap().reset();
-    }
+      void reset() override {
+        unwrap().reset();
+      }
 
-    bool setDefaultValue(EDataTypeID paDataTypeId);
+      bool setDefaultValue(EDataTypeID paDataTypeId);
 
-    [[nodiscard]] CIEC_ANY_CHAR &unwrap() override;
+      [[nodiscard]] CIEC_ANY_CHAR &unwrap() override;
 
-    [[nodiscard]] const CIEC_ANY_CHAR &unwrap() const override;
+      [[nodiscard]] const CIEC_ANY_CHAR &unwrap() const override;
 
-    int fromString(const char *paValue) override;
+      int fromString(const char *paValue) override;
 
-    void toString(std::string &paTargetBuf) const override;
+      void toString(std::string &paTargetBuf) const override;
 
-    [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
-      return unwrap().equals(paOther.unwrap());
-    }
-};
+      [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
+        return unwrap().equals(paOther.unwrap());
+      }
+  };
 
-static_assert(std::is_copy_constructible_v<CIEC_ANY_CHAR_VARIANT>);
-static_assert(std::is_move_constructible_v<CIEC_ANY_CHAR_VARIANT>);
-static_assert(std::is_constructible_v<CIEC_ANY_CHAR_VARIANT, const CIEC_ANY_CHAR &>);
-static_assert(std::is_copy_assignable_v<CIEC_ANY_CHAR_VARIANT>);
-static_assert(std::is_assignable_v<CIEC_ANY_CHAR_VARIANT, const CIEC_ANY_CHAR &>);
-static_assert(std::is_destructible_v<CIEC_ANY_CHAR_VARIANT>);
+  static_assert(std::is_copy_constructible_v<CIEC_ANY_CHAR_VARIANT>);
+  static_assert(std::is_move_constructible_v<CIEC_ANY_CHAR_VARIANT>);
+  static_assert(std::is_constructible_v<CIEC_ANY_CHAR_VARIANT, const CIEC_ANY_CHAR &>);
+  static_assert(std::is_copy_assignable_v<CIEC_ANY_CHAR_VARIANT>);
+  static_assert(std::is_assignable_v<CIEC_ANY_CHAR_VARIANT, const CIEC_ANY_CHAR &>);
+  static_assert(std::is_destructible_v<CIEC_ANY_CHAR_VARIANT>);
+} // namespace forte

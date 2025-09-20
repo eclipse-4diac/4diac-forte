@@ -22,12 +22,11 @@
 #include <unordered_map>
 #include <vector>
 
-class CFakeEventExecutionThread;
-class CFunctionBlock;
-class CDevice;
-class CResource;
-
 namespace forte {
+  class CFakeEventExecutionThread;
+  class CFunctionBlock;
+  class CDevice;
+  class CResource;
   class CFBContainer;
 
   namespace iec61499::hardware {
@@ -45,7 +44,7 @@ namespace forte {
          * @param paExternalEvents list of output events of Service Function Blocks separated by resource name
          */
         CDeviceReplayer(CDevice &paDevice,
-                        const std::unordered_map<std::string, std::vector<EventMessage>> &paExternalEvents);
+                        const std::unordered_map<std::string, std::vector<trace::EventMessage>> &paExternalEvents);
 
         ~CDeviceReplayer() = default;
 
@@ -54,7 +53,7 @@ namespace forte {
          *
          * @return list of full events of the device separated by resource name
          */
-        std::unordered_map<std::string, std::vector<EventMessage>> reproduceAll();
+        std::unordered_map<std::string, std::vector<trace::EventMessage>> reproduceAll();
 
         /**
          * @brief Reproduce the next event
@@ -70,7 +69,7 @@ namespace forte {
          *
          * @return list of full events of the device separated by resource name
          */
-        std::unordered_map<std::string, std::vector<EventMessage>> getGeneratedEvents();
+        std::unordered_map<std::string, std::vector<trace::EventMessage>> getGeneratedEvents();
 
       private:
         CDevice &mDevice;
@@ -81,7 +80,7 @@ namespace forte {
          */
         class CResourceInformation {
           public:
-            CResourceInformation(CResource &paResource, const std::vector<EventMessage> &paEvents);
+            CResourceInformation(CResource &paResource, const std::vector<trace::EventMessage> &paEvents);
 
             CResourceReplayer mResourceReplayer;
             CResource &mResource;

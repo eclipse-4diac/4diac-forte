@@ -19,54 +19,56 @@
 
 using namespace forte::literals;
 
-namespace {
-  [[maybe_unused]] const forte::TimerHandlerFactory::EntryImpl<CPCTimerHandler> entry("default"_STRID);
-}
-
-CPCTimerHandler::CPCTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
-}
-
-CPCTimerHandler::~CPCTimerHandler() {
-  disableHandler();
-}
-
-void CPCTimerHandler::run() {
-  struct timespec stReq;
-  stReq.tv_sec = 0;
-  stReq.tv_nsec = (1000000 / getTicksPerSecond()) * 1000;
-
-  struct timespec stOldTime;
-  struct timespec stNewTime;
-  struct timespec stReqTime;
-  // Timer interval is 1ms
-  stReqTime.tv_sec = 0;
-  stReqTime.tv_nsec = (1000000 / getTicksPerSecond()) * 1000;
-  struct timespec stDiffTime;
-  struct timespec stRemainingTime = {0, 0};
-
-  clock_gettime(CLOCK_MONOTONIC, &stOldTime);
-  while (isAlive()) {
-
-    nanosleep(&stReq, nullptr);
-
-    clock_gettime(CLOCK_MONOTONIC, &stNewTime);
-
-    timespecSub(&stNewTime, &stOldTime, &stDiffTime);
-
-    timespecAdd(&stRemainingTime, &stDiffTime, &stRemainingTime);
-
-    while (!timespecLessThan(&stRemainingTime, &stReqTime)) {
-      nextTick();
-      timespecSub(&stRemainingTime, &stReqTime, &stRemainingTime);
-    }
-    stOldTime = stNewTime; // in c++ this should work fine
+namespace forte::arch {
+  namespace {
+    [[maybe_unused]] const forte::TimerHandlerFactory::EntryImpl<CPCTimerHandler> entry("default"_STRID);
   }
-}
 
-void CPCTimerHandler::enableHandler() {
-  start();
-}
+  CPCTimerHandler::CPCTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
+  }
 
-void CPCTimerHandler::disableHandler() {
-  end();
-}
+  CPCTimerHandler::~CPCTimerHandler() {
+    disableHandler();
+  }
+
+  void CPCTimerHandler::run() {
+    struct timespec stReq;
+    stReq.tv_sec = 0;
+    stReq.tv_nsec = (1000000 / getTicksPerSecond()) * 1000;
+
+    struct timespec stOldTime;
+    struct timespec stNewTime;
+    struct timespec stReqTime;
+    // Timer interval is 1ms
+    stReqTime.tv_sec = 0;
+    stReqTime.tv_nsec = (1000000 / getTicksPerSecond()) * 1000;
+    struct timespec stDiffTime;
+    struct timespec stRemainingTime = {0, 0};
+
+    clock_gettime(CLOCK_MONOTONIC, &stOldTime);
+    while (isAlive()) {
+
+      nanosleep(&stReq, nullptr);
+
+      clock_gettime(CLOCK_MONOTONIC, &stNewTime);
+
+      timespecSub(&stNewTime, &stOldTime, &stDiffTime);
+
+      timespecAdd(&stRemainingTime, &stDiffTime, &stRemainingTime);
+
+      while (!timespecLessThan(&stRemainingTime, &stReqTime)) {
+        nextTick();
+        timespecSub(&stRemainingTime, &stReqTime, &stRemainingTime);
+      }
+      stOldTime = stNewTime; // in c++ this should work fine
+    }
+  }
+
+  void CPCTimerHandler::enableHandler() {
+    start();
+  }
+
+  void CPCTimerHandler::disableHandler() {
+    end();
+  }
+} // namespace forte::arch

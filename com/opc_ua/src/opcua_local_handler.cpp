@@ -122,7 +122,7 @@ namespace forte::com_infra::opc_ua {
             while (isAlive()) {
               UA_UInt16 timeToSleepMs;
               {
-                CCriticalRegion criticalRegion(mServerAccessMutex);
+                util::CCriticalRegion criticalRegion(mServerAccessMutex);
                 timeToSleepMs = UA_Server_run_iterate(mUaServer, false);
               }
 
@@ -311,7 +311,7 @@ namespace forte::com_infra::opc_ua {
     UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
     if (mUaServer) { // if the server failed at starting, nothing will be initialized
       // other thread may currently create nodes, thus mutex
-      CCriticalRegion criticalRegion(mServerAccessMutex);
+      util::CCriticalRegion criticalRegion(mServerAccessMutex);
       switch (paActionInfo.getAction()) {
         case CActionInfo::eRead: retVal = initializeVariable(paActionInfo, false); break;
         case CActionInfo::eWrite: retVal = initializeVariable(paActionInfo, true); break;
@@ -336,7 +336,7 @@ namespace forte::com_infra::opc_ua {
                                                                        CIEC_ANY &paMember) {
     UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
     if (mUaServer) {
-      CCriticalRegion criticalRegion(mServerAccessMutex);
+      util::CCriticalRegion criticalRegion(mServerAccessMutex);
       if (paActionInfo->getAction() == CActionInfo::eWrite) {
         retVal = initializeObjectStructMemberVariable(paActionInfo, &paMember, true);
       } else if (paActionInfo->getAction() == CActionInfo::eRead) {
@@ -349,7 +349,7 @@ namespace forte::com_infra::opc_ua {
   UA_StatusCode COPC_UA_Local_Handler::executeAction(CActionInfo &paActionInfo) {
     UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
 
-    CCriticalRegion criticalRegion(mServerAccessMutex);
+    util::CCriticalRegion criticalRegion(mServerAccessMutex);
     switch (paActionInfo.getAction()) {
       case CActionInfo::eWrite: retVal = executeWrite(paActionInfo); break;
       case CActionInfo::eCreateMethod: retVal = executeCreateMethod(paActionInfo); break;
@@ -370,7 +370,7 @@ namespace forte::com_infra::opc_ua {
   UA_StatusCode COPC_UA_Local_Handler::executeStructAction(CActionInfo &paActionInfo, CIEC_ANY &paMember) {
     UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
 
-    CCriticalRegion criticalRegion(mServerAccessMutex);
+    util::CCriticalRegion criticalRegion(mServerAccessMutex);
     switch (paActionInfo.getAction()) {
       case CActionInfo::eWrite: retVal = executeStructWrite(paActionInfo, paMember); break;
       default: // eCallMethod, eSubscribe will never reach here since they weren't initialized. eRead is a Subscribe FB
@@ -386,7 +386,7 @@ namespace forte::com_infra::opc_ua {
 
   UA_StatusCode COPC_UA_Local_Handler::uninitializeAction(CActionInfo &paActionInfo) {
     UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
-    CCriticalRegion criticalRegion(mServerAccessMutex);
+    util::CCriticalRegion criticalRegion(mServerAccessMutex);
     switch (paActionInfo.getAction()) {
       case CActionInfo::eRead:
       case CActionInfo::eWrite:
@@ -1480,19 +1480,19 @@ namespace forte::com_infra::opc_ua {
   COPC_UA_Local_Handler::CLocalMethodCall &
   COPC_UA_Local_Handler::addMethodCall(CLocalMethodInfo &paActionInfo,
                                        COPC_UA_Helper::UA_SendVariable_handle &paHandleRecv) {
-    CCriticalRegion criticalRegion(mMethodCallsMutex);
+    util::CCriticalRegion criticalRegion(mMethodCallsMutex);
     mMethodCalls.emplace_back(paActionInfo, paHandleRecv);
     return mMethodCalls.back();
   }
 
   void COPC_UA_Local_Handler::removeMethodCall(const CLocalMethodCall &toRemove) {
-    CCriticalRegion criticalRegion(mMethodCallsMutex);
+    util::CCriticalRegion criticalRegion(mMethodCallsMutex);
     std::erase(mMethodCalls, toRemove);
   }
 
   COPC_UA_Local_Handler::CLocalMethodCall *
   COPC_UA_Local_Handler::getLocalMethodCall(const CLocalMethodInfo &paActionInfo) {
-    CCriticalRegion criticalRegion(mMethodCallsMutex);
+    util::CCriticalRegion criticalRegion(mMethodCallsMutex);
     CLocalMethodCall *retVal = nullptr;
     for (auto &methodCall : mMethodCalls) {
       if (methodCall.mActionInfo == &paActionInfo) {
@@ -1559,10 +1559,10 @@ namespace forte::com_infra::opc_ua {
 
           // when the method finishes, and RSP is triggered, sendHandle will be filled with the right information
           const CLocalMethodCall &localMethodCall =
-              ::getExtEvHandler<COPC_UA_Local_Handler>(*localMethodHandle->getLayer().getCommFB())
+              util::getExtEvHandler<COPC_UA_Local_Handler>(*localMethodHandle->getLayer().getCommFB())
                   .addMethodCall(*localMethodHandle, sendHandle);
 
-          ::getExtEvHandler<COPC_UA_Local_Handler>(*localMethodHandle->getLayer().getCommFB())
+          util::getExtEvHandler<COPC_UA_Local_Handler>(*localMethodHandle->getLayer().getCommFB())
               .startNewEventChain(localMethodHandle->getLayer().getCommFB());
 
           // This function is called from the opcua server thread, so we release the lock so the method can be finished
@@ -1580,7 +1580,7 @@ namespace forte::com_infra::opc_ua {
           }
           thisHandler->mServerAccessMutex.lock();
 
-          ::getExtEvHandler<COPC_UA_Local_Handler>(*localMethodHandle->getLayer().getCommFB())
+          util::getExtEvHandler<COPC_UA_Local_Handler>(*localMethodHandle->getLayer().getCommFB())
               .removeMethodCall(localMethodCall);
         }
       }
@@ -1610,7 +1610,7 @@ namespace forte::com_infra::opc_ua {
     if (e_Nothing != retVal) {
       variableCallbackHandle->mActionInfo.getLayer().getCommFB()->interruptCommFB(
           &variableCallbackHandle->mActionInfo.getLayer());
-      ::getExtEvHandler<COPC_UA_Local_Handler>(*variableCallbackHandle->mActionInfo.getLayer().getCommFB())
+      util::getExtEvHandler<COPC_UA_Local_Handler>(*variableCallbackHandle->mActionInfo.getLayer().getCommFB())
           .startNewEventChain(variableCallbackHandle->mActionInfo.getLayer().getCommFB());
     }
   }

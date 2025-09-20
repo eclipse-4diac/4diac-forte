@@ -43,7 +43,7 @@ namespace forte::com_infra::opc_ua {
   }
 
   CUA_ClientInformation::~CUA_ClientInformation() {
-    CCriticalRegion clientRegion(mClientMutex);
+    util::CCriticalRegion clientRegion(mClientMutex);
     uninitializeClient();
   }
 
@@ -112,13 +112,13 @@ namespace forte::com_infra::opc_ua {
     bool tryAnotherChangeImmediately = true;
 
     if (mNeedsReconnection) {
-      uint_fast64_t now = getNanoSecondsMonotonic();
+      uint_fast64_t now = arch::getNanoSecondsMonotonic();
       if ((now - mLastReconnectionTry) < scmConnectionRetryTimeoutNano) { // if connection timeout didn't happen, return
         // that more changes are still needed
         tryAnotherChangeImmediately = false;
       }
     } else if (mWaitToInitializeActions) {
-      uint_fast64_t now = getNanoSecondsMonotonic();
+      uint_fast64_t now = arch::getNanoSecondsMonotonic();
       if ((now - mLastActionInitializationTry) <
           scmInitializeActionRetryNano) { // if an action failed, wait scmInitializeActionRetryNano until next retry to
         // initialize them
@@ -134,7 +134,7 @@ namespace forte::com_infra::opc_ua {
           noMoreChangesNeeded = true;
         } else {
           mWaitToInitializeActions = true;
-          mLastActionInitializationTry = getNanoSecondsMonotonic();
+          mLastActionInitializationTry = arch::getNanoSecondsMonotonic();
         }
         tryAnotherChangeImmediately = false;
       } else {
@@ -144,7 +144,7 @@ namespace forte::com_infra::opc_ua {
               ("[OPC UA CLIENT]: Couldn't connect to endpoint %s. Forte will try to reconnect in %u milliseconds\n"),
               mEndpointUrl.c_str(), static_cast<unsigned int>(scmConnectionRetryTimeoutNano / 1E6));
           mNeedsReconnection = true;
-          mLastReconnectionTry = getNanoSecondsMonotonic();
+          mLastReconnectionTry = arch::getNanoSecondsMonotonic();
         } else { // if connection succeeded, don't break the while and try to handle subscriptions immediately
           mNeedsReconnection = false;
           DEVLOG_INFO("[OPC UA CLIENT]: Client connected to endpoint %s\n", mEndpointUrl.c_str());
@@ -160,7 +160,7 @@ namespace forte::com_infra::opc_ua {
   }
 
   UA_StatusCode CUA_ClientInformation::executeRead(CActionInfo &paActionInfo) {
-    CCriticalRegion clientRegion(mClientMutex);
+    util::CCriticalRegion clientRegion(mClientMutex);
 
     UA_ReadRequest request;
     UA_ReadRequest_init(&request);
@@ -199,7 +199,7 @@ namespace forte::com_infra::opc_ua {
   }
 
   UA_StatusCode CUA_ClientInformation::executeWrite(CActionInfo &paActionInfo) {
-    CCriticalRegion clientRegion(mClientMutex);
+    util::CCriticalRegion clientRegion(mClientMutex);
 
     UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
     UA_WriteRequest request;
@@ -243,7 +243,7 @@ namespace forte::com_infra::opc_ua {
   }
 
   UA_StatusCode CUA_ClientInformation::executeCallMethod(CActionInfo &paActionInfo) {
-    CCriticalRegion clientRegion(mClientMutex);
+    util::CCriticalRegion clientRegion(mClientMutex);
 
     UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
     UA_CallRequest request;
@@ -299,7 +299,7 @@ namespace forte::com_infra::opc_ua {
   }
 
   bool CUA_ClientInformation::isActionInitialized(const CActionInfo &paActionInfo) {
-    CCriticalRegion clientRegion(mClientMutex);
+    util::CCriticalRegion clientRegion(mClientMutex);
     bool retVal = true;
     for (auto actionToBeInitialized : mActionsToBeInitialized) {
       if (actionToBeInitialized == &paActionInfo) {

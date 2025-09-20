@@ -18,79 +18,73 @@
  *   Martin Jobst - add user-defined literal
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#ifndef _FORTE_USINT_H_
-#define _FORTE_USINT_H_
+
+#pragma once
 
 #include "forte/datatypes/forte_any_unsigned.h"
 #include <limits>
 
-/*!\ingroup COREDTS CIEC_USINT represents the usint data type according to IEC 61131.
- */
-class CIEC_USINT final : public CIEC_ANY_UNSIGNED {
-    DECLARE_FIRMWARE_DATATYPE(USINT)
-
-  public:
-    using TValueType = TForteUInt8;
-    [[deprecated("Please use the corresponding numeric_limits template")]]
-    static constexpr size_t scmBitLength = 8U;
-    [[deprecated("Please use the corresponding numeric_limits template")]]
-    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
-    [[deprecated("Please use the corresponding numeric_limits template")]]
-    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
-
-    CIEC_USINT() = default;
-
-    CIEC_USINT(const CIEC_USINT &paValue) : CIEC_ANY_UNSIGNED() {
-      setValueSimple(paValue);
-    }
-
-    explicit CIEC_USINT(const CIEC_ANY_INT &paValue) : CIEC_ANY_UNSIGNED() {
-      setValueSimple(paValue);
-    }
-
-    explicit CIEC_USINT(const TValueType paValue) {
-      setTUINT8(paValue);
-    }
-
-    ~CIEC_USINT() override = default;
-
-    CIEC_USINT &operator=(const CIEC_USINT &paValue) {
-      setValueSimple(paValue);
-      return *this;
-    }
-
-    template<typename T,
-             std::enable_if_t<std::is_same_v<typename forte::mpl::implicit_cast_t<T, CIEC_USINT>, CIEC_USINT>, int> = 0>
-    CIEC_USINT &operator=(const T &paValue) {
-      setValueSimple(paValue);
-      return *this;
-    }
-
-    /*! \brief Converts CIEC_UDINT to elementary unsigned 16 bit integer
-     *
-     *   Conversion operator for converting CIEC_UDINT to elementary unsigned 16 bit integer
-     */
-    explicit operator TForteUInt8() const {
-      return getTUINT8();
-    }
-
-    EDataTypeID getDataTypeID() const override {
-      return e_USINT;
-    }
-};
-
-inline CIEC_USINT operator""_USINT(unsigned long long int paValue) {
-  return CIEC_USINT(static_cast<CIEC_USINT::TValueType>(paValue));
-}
-
-namespace std {
-  template<>
-  struct numeric_limits<CIEC_USINT> : public forte::templates::numeric_limits<CIEC_USINT> {
-      static constexpr size_t bitLength = 8U;
-  };
-} // namespace std
-
 namespace forte {
+  /*!\ingroup COREDTS CIEC_USINT represents the usint data type according to IEC 61131.
+   */
+  class CIEC_USINT final : public CIEC_ANY_UNSIGNED {
+      DECLARE_FIRMWARE_DATATYPE(USINT)
+
+    public:
+      using TValueType = TForteUInt8;
+      [[deprecated("Please use the corresponding numeric_limits template")]]
+      static constexpr size_t scmBitLength = 8U;
+      [[deprecated("Please use the corresponding numeric_limits template")]]
+      static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+      [[deprecated("Please use the corresponding numeric_limits template")]]
+      static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
+
+      CIEC_USINT() = default;
+
+      CIEC_USINT(const CIEC_USINT &paValue) : CIEC_ANY_UNSIGNED() {
+        setValueSimple(paValue);
+      }
+
+      explicit CIEC_USINT(const CIEC_ANY_INT &paValue) : CIEC_ANY_UNSIGNED() {
+        setValueSimple(paValue);
+      }
+
+      explicit CIEC_USINT(const TValueType paValue) {
+        setTUINT8(paValue);
+      }
+
+      ~CIEC_USINT() override = default;
+
+      CIEC_USINT &operator=(const CIEC_USINT &paValue) {
+        setValueSimple(paValue);
+        return *this;
+      }
+
+      template<
+          typename T,
+          std::enable_if_t<std::is_same_v<typename forte::mpl::implicit_cast_t<T, CIEC_USINT>, CIEC_USINT>, int> = 0>
+      CIEC_USINT &operator=(const T &paValue) {
+        setValueSimple(paValue);
+        return *this;
+      }
+
+      /*! \brief Converts CIEC_UDINT to elementary unsigned 16 bit integer
+       *
+       *   Conversion operator for converting CIEC_UDINT to elementary unsigned 16 bit integer
+       */
+      explicit operator TForteUInt8() const {
+        return getTUINT8();
+      }
+
+      EDataTypeID getDataTypeID() const override {
+        return e_USINT;
+      }
+  };
+
+  inline CIEC_USINT operator""_USINT(unsigned long long int paValue) {
+    return CIEC_USINT(static_cast<CIEC_USINT::TValueType>(paValue));
+  }
+
   template<>
   struct CDataTypeTrait<CIEC_USINT> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_USINT;
@@ -98,4 +92,9 @@ namespace forte {
   };
 } // namespace forte
 
-#endif /*_FORTE_USINT_H_*/
+namespace std {
+  template<>
+  struct numeric_limits<forte::CIEC_USINT> : public forte::templates::numeric_limits<forte::CIEC_USINT> {
+      static constexpr size_t bitLength = 8U;
+  };
+} // namespace std

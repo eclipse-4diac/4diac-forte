@@ -19,16 +19,18 @@
 
 #include "forte/datatypes/forte_any_int.h"
 
-/*!\ingroup COREDTS CIEC_ANY_SIGNED represents all signed integer data types according to IEC 61131.
+namespace forte {
+  /*!\ingroup COREDTS CIEC_ANY_SIGNED represents all signed integer data types according to IEC 61131.
 
- */
-class CIEC_ANY_SIGNED : public CIEC_ANY_INT {
-  public:
-    CIEC_ANY_SIGNED() = default;
+   */
+  class CIEC_ANY_SIGNED : public CIEC_ANY_INT {
+    public:
+      CIEC_ANY_SIGNED() = default;
 
-    explicit CIEC_ANY_SIGNED(TLargestIntValueType paVal) {
-      setSignedValue(paVal);
-    }
+      explicit CIEC_ANY_SIGNED(TLargestIntValueType paVal) {
+        setSignedValue(paVal);
+      }
 
-    ~CIEC_ANY_SIGNED() override = default;
-};
+      ~CIEC_ANY_SIGNED() override = default;
+  };
+} // namespace forte

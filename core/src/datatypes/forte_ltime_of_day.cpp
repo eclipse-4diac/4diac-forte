@@ -23,81 +23,83 @@
 
 using namespace forte::literals;
 
-DEFINE_FIRMWARE_DATATYPE(LTIME_OF_DAY, "LTIME_OF_DAY"_STRID)
+namespace forte {
+  DEFINE_FIRMWARE_DATATYPE(LTIME_OF_DAY, "LTIME_OF_DAY"_STRID)
 
-int CIEC_LTIME_OF_DAY::fromString(const char *paValue) {
-  // 15:00:00.000
-  struct tm tm;
-  int msec = 0;
-  char *acBuffer = const_cast<char *>(paValue);
+  int CIEC_LTIME_OF_DAY::fromString(const char *paValue) {
+    // 15:00:00.000
+    struct tm tm;
+    int msec = 0;
+    char *acBuffer = const_cast<char *>(paValue);
 
-  memset(&tm, 0, sizeof(tm));
+    memset(&tm, 0, sizeof(tm));
 
-  if ('l' == tolower(*acBuffer)) {
-    if (('t' == tolower(acBuffer[1])) && ('o' == tolower(acBuffer[2])) && ('d' == tolower(acBuffer[3]))) {
-      acBuffer += 4;
-    } else {
-      // TODO maybe allow to turn this check of for small devices
-      if ((0 == strncmp("ltime_of_day", acBuffer, 12)) || (0 == strncmp("LTIME_OF_DAY", acBuffer, 12))) {
-        acBuffer += 12;
+    if ('l' == tolower(*acBuffer)) {
+      if (('t' == tolower(acBuffer[1])) && ('o' == tolower(acBuffer[2])) && ('d' == tolower(acBuffer[3]))) {
+        acBuffer += 4;
+      } else {
+        // TODO maybe allow to turn this check of for small devices
+        if ((0 == strncmp("ltime_of_day", acBuffer, 12)) || (0 == strncmp("LTIME_OF_DAY", acBuffer, 12))) {
+          acBuffer += 12;
+        }
       }
+
+      if ('#' != *acBuffer) {
+        return -1;
+      }
+      acBuffer++;
     }
 
-    if ('#' != *acBuffer) {
-      return -1;
-    }
-    acBuffer++;
-  }
-
-  if ('\0' != *acBuffer) {
-    tm.tm_hour = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
-    if (':' == *acBuffer) {
-      ++acBuffer;
-      tm.tm_min = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
+    if ('\0' != *acBuffer) {
+      tm.tm_hour = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
       if (':' == *acBuffer) {
         ++acBuffer;
-        tm.tm_sec = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
-        if ('.' == *acBuffer) {
-          unsigned int nNums = 0;
+        tm.tm_min = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
+        if (':' == *acBuffer) {
           ++acBuffer;
-          while (isdigit(*acBuffer)) {
-            msec = 10 * msec + forte::util::charDigitToInt(*acBuffer);
+          tm.tm_sec = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
+          if ('.' == *acBuffer) {
+            unsigned int nNums = 0;
             ++acBuffer;
-            ++nNums;
-          }
-
-          if (nNums < 3) {
-            for (unsigned int i = nNums; i < 3; ++i) {
-              msec *= 10;
+            while (isdigit(*acBuffer)) {
+              msec = 10 * msec + forte::util::charDigitToInt(*acBuffer);
+              ++acBuffer;
+              ++nNums;
             }
-          } else {
-            for (unsigned int i = 0; i < (nNums - 3); ++i) {
-              msec /= 10;
+
+            if (nNums < 3) {
+              for (unsigned int i = nNums; i < 3; ++i) {
+                msec *= 10;
+              }
+            } else {
+              for (unsigned int i = 0; i < (nNums - 3); ++i) {
+                msec /= 10;
+              }
             }
           }
         }
+      } else {
+        if ('\0' != *acBuffer) {
+          return -1;
+        }
       }
     } else {
-      if ('\0' != *acBuffer) {
-        return -1;
-      }
+      return -1;
     }
-  } else {
-    return -1;
+
+    setTUINT64(((tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec) * 1000ULL + msec) * 1000000ULL);
+
+    return static_cast<int>(acBuffer - paValue);
   }
 
-  setTUINT64(((tm.tm_hour * 3600 + tm.tm_min * 60 + tm.tm_sec) * 1000ULL + msec) * 1000000ULL);
+  void CIEC_LTIME_OF_DAY::toString(std::string &paTargetBuf) const {
+    TForteUInt64 ntoStingBuffer = getTUINT64();
+    time_t t = static_cast<time_t>(ntoStingBuffer / (1000ULL * 1000000ULL));
 
-  return static_cast<int>(acBuffer - paValue);
-}
+    std::format_to(std::back_inserter(paTargetBuf), "LTOD#{:02}:{:02}:{:02}.{:03}", static_cast<int>(t / 3600),
+                   static_cast<int>((t % 3600) / 60), static_cast<int>(t % 60),
+                   (int) ((ntoStingBuffer / 1000000) % 1000));
+  }
 
-void CIEC_LTIME_OF_DAY::toString(std::string &paTargetBuf) const {
-  TForteUInt64 ntoStingBuffer = getTUINT64();
-  time_t t = static_cast<time_t>(ntoStingBuffer / (1000ULL * 1000000ULL));
-
-  std::format_to(std::back_inserter(paTargetBuf), "LTOD#{:02}:{:02}:{:02}.{:03}", static_cast<int>(t / 3600),
-                 static_cast<int>((t % 3600) / 60), static_cast<int>(t % 60),
-                 (int) ((ntoStingBuffer / 1000000) % 1000));
-}
-
-const forte::StringId forte::CDataTypeTrait<CIEC_LTIME_OF_DAY>::scmDataTypeName = "LTIME_OF_DAY"_STRID;
+  const forte::StringId forte::CDataTypeTrait<CIEC_LTIME_OF_DAY>::scmDataTypeName = "LTIME_OF_DAY"_STRID;
+} // namespace forte

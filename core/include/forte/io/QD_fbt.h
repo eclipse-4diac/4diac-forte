@@ -19,11 +19,13 @@
 #include "forte/io/outputfb.h"
 #include "forte/datatypes/forte_dword.h"
 
-/*! /brief generic class for QD function blocks providing access to one double word physical output
- */
-class FORTE_QD final : public forte::io::COutputFB<CIEC_DWORD> {
-    DECLARE_FIRMWARE_FB(FORTE_QD)
+namespace forte::io {
+  /*! /brief generic class for QD function blocks providing access to one double word physical output
+   */
+  class FORTE_QD final : public forte::io::COutputFB<CIEC_DWORD> {
+      DECLARE_FIRMWARE_FB(FORTE_QD)
 
-  public:
-    FORTE_QD(forte::StringId paInstanceNameId, CFBContainer &paContainer);
-};
+    public:
+      FORTE_QD(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+  };
+} // namespace forte::io

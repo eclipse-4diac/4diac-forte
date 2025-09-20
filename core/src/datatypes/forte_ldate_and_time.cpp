@@ -24,98 +24,101 @@
 
 using namespace forte::literals;
 
-DEFINE_FIRMWARE_DATATYPE(LDATE_AND_TIME, "LDATE_AND_TIME"_STRID)
+namespace forte {
+  DEFINE_FIRMWARE_DATATYPE(LDATE_AND_TIME, "LDATE_AND_TIME"_STRID)
 
-int CIEC_LDATE_AND_TIME::fromString(const char *paValue) {
-  // 2007-12-21-15:00:00.000
-  int nRetVal = -1;
-  char *acBuffer = const_cast<char *>(paValue);
+  int CIEC_LDATE_AND_TIME::fromString(const char *paValue) {
+    // 2007-12-21-15:00:00.000
+    int nRetVal = -1;
+    char *acBuffer = const_cast<char *>(paValue);
 
-  if ('l' == tolower(*acBuffer)) {
-    if (('d' == tolower(acBuffer[1])) && ('t' == tolower(acBuffer[2]))) {
-      acBuffer += 3;
-    } else {
-      // TODO maybe allow to turn this check of for small devices
-      if ((0 == strncmp("ldate_and_time", acBuffer, 14)) || (0 == strncmp("LDATE_AND_TIME", acBuffer, 14))) {
-        acBuffer += 14;
+    if ('l' == tolower(*acBuffer)) {
+      if (('d' == tolower(acBuffer[1])) && ('t' == tolower(acBuffer[2]))) {
+        acBuffer += 3;
+      } else {
+        // TODO maybe allow to turn this check of for small devices
+        if ((0 == strncmp("ldate_and_time", acBuffer, 14)) || (0 == strncmp("LDATE_AND_TIME", acBuffer, 14))) {
+          acBuffer += 14;
+        }
       }
+
+      if ('#' != *acBuffer) {
+        return -1;
+      }
+      acBuffer++;
     }
 
-    if ('#' != *acBuffer) {
-      return -1;
-    }
-    acBuffer++;
-  }
+    struct tm tm;
+    unsigned int msec = 0;
 
-  struct tm tm;
-  unsigned int msec = 0;
+    memset(&tm, 0, sizeof(tm));
 
-  memset(&tm, 0, sizeof(tm));
-
-  // Duplicate code the same as in forte date
-  if ('\0' != *acBuffer) {
-    tm.tm_year = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10) - 1900);
-    if ('-' == *acBuffer) {
-      ++acBuffer;
-      tm.tm_mon = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10) - 1);
+    // Duplicate code the same as in forte date
+    if ('\0' != *acBuffer) {
+      tm.tm_year = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10) - 1900);
       if ('-' == *acBuffer) {
         ++acBuffer;
-        tm.tm_mday = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
-
+        tm.tm_mon = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10) - 1);
         if ('-' == *acBuffer) {
           ++acBuffer;
-          // duplicate code this one can be find in time of day
-          tm.tm_hour = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
-          if (':' == *acBuffer) {
+          tm.tm_mday = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
+
+          if ('-' == *acBuffer) {
             ++acBuffer;
-            tm.tm_min = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
+            // duplicate code this one can be find in time of day
+            tm.tm_hour = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
             if (':' == *acBuffer) {
               ++acBuffer;
-              tm.tm_sec = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
-              if ('.' == *acBuffer) {
-                unsigned int nNums = 0;
+              tm.tm_min = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
+              if (':' == *acBuffer) {
                 ++acBuffer;
-                while (isdigit(*acBuffer)) {
-                  msec = 10 * msec + forte::util::charDigitToInt(*acBuffer);
+                tm.tm_sec = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
+                if ('.' == *acBuffer) {
+                  unsigned int nNums = 0;
                   ++acBuffer;
-                  ++nNums;
-                }
+                  while (isdigit(*acBuffer)) {
+                    msec = 10 * msec + forte::util::charDigitToInt(*acBuffer);
+                    ++acBuffer;
+                    ++nNums;
+                  }
 
-                if (nNums < 3) {
-                  for (unsigned int i = nNums; i < 3; ++i) {
-                    msec *= 10;
-                  }
-                } else {
-                  for (unsigned int i = 0; i < (nNums - 3); ++i) {
-                    msec /= 10;
+                  if (nNums < 3) {
+                    for (unsigned int i = nNums; i < 3; ++i) {
+                      msec *= 10;
+                    }
+                  } else {
+                    for (unsigned int i = 0; i < (nNums - 3); ++i) {
+                      msec /= 10;
+                    }
                   }
                 }
+                nRetVal = static_cast<int>(acBuffer - paValue);
               }
-              nRetVal = static_cast<int>(acBuffer - paValue);
             }
           }
         }
       }
     }
+
+    if (-1 != nRetVal && !setDateAndTime(tm, msec)) {
+      nRetVal = -1;
+    }
+
+    return nRetVal;
   }
 
-  if (-1 != nRetVal && !setDateAndTime(tm, msec)) {
-    nRetVal = -1;
+  void CIEC_LDATE_AND_TIME::toString(std::string &paTargetBuf) const {
+    tm ptm;
+    if (nullptr != getTimeStruct(&ptm)) {
+      std::format_to(std::back_inserter(paTargetBuf), "LDT#{:04}-{:02}-{:02}-{:02}:{:02}:{:02}.{:03}",
+                     1900 + ptm.tm_year, ptm.tm_mon + 1, ptm.tm_mday, ptm.tm_hour, ptm.tm_min, ptm.tm_sec,
+                     getMilliSeconds());
+    }
   }
 
-  return nRetVal;
-}
-
-void CIEC_LDATE_AND_TIME::toString(std::string &paTargetBuf) const {
-  tm ptm;
-  if (nullptr != getTimeStruct(&ptm)) {
-    std::format_to(std::back_inserter(paTargetBuf), "LDT#{:04}-{:02}-{:02}-{:02}:{:02}:{:02}.{:03}", 1900 + ptm.tm_year,
-                   ptm.tm_mon + 1, ptm.tm_mday, ptm.tm_hour, ptm.tm_min, ptm.tm_sec, getMilliSeconds());
+  void CIEC_LDATE_AND_TIME::toGMTString(std::string &paTargetBuf) const {
+    toString(paTargetBuf);
   }
-}
 
-void CIEC_LDATE_AND_TIME::toGMTString(std::string &paTargetBuf) const {
-  toString(paTargetBuf);
-}
-
-const forte::StringId forte::CDataTypeTrait<CIEC_LDATE_AND_TIME>::scmDataTypeName = "LDATE_AND_TIME"_STRID;
+  const forte::StringId forte::CDataTypeTrait<CIEC_LDATE_AND_TIME>::scmDataTypeName = "LDATE_AND_TIME"_STRID;
+} // namespace forte

@@ -12,20 +12,24 @@
  *    Alois Zoitl, Martin Jobst - initial implementation and rework communication infrastructure
  *******************************************************************************/
 
+#pragma once
+
 #include "forte/device.h"
 
-class C4diacFORTEInstance {
-  public:
-    C4diacFORTEInstance() = default;
+namespace forte {
+  class C4diacFORTEInstance {
+    public:
+      C4diacFORTEInstance() = default;
 
-    ~C4diacFORTEInstance();
+      ~C4diacFORTEInstance();
 
-    bool startupNewDevice(const std::string &paMGRID);
+      bool startupNewDevice(const std::string &paMGRID);
 
-    void triggerDeviceShutdown();
+      void triggerDeviceShutdown();
 
-    void awaitDeviceShutdown();
+      void awaitDeviceShutdown();
 
-  private:
-    std::unique_ptr<CDevice> mActiveDevice;
-};
+    private:
+      std::unique_ptr<CDevice> mActiveDevice;
+  };
+} // namespace forte

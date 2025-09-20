@@ -18,32 +18,34 @@
 
 #include "forte/startuphook.h"
 
-bool CForteGeneralArchitecture::mInitialized = false;
+namespace forte::arch {
+  bool CForteGeneralArchitecture::mInitialized = false;
 
-int CForteGeneralArchitecture::initialize(int argc, char *argv[]) {
-  if (mInitialized) {
-    return 0;
-  }
-  if (auto result = CForteSpecificArchitecture::initialize(argc, argv); result != 0) {
-    return result;
-  }
-  forte::StartupHookRegistry::invoke(argc, argv);
-  mInitialized = true;
-  return 0;
-}
-
-int CForteGeneralArchitecture::deinitialize() {
-  if (!mInitialized) {
+  int CForteGeneralArchitecture::initialize(int argc, char *argv[]) {
+    if (mInitialized) {
+      return 0;
+    }
+    if (auto result = CForteSpecificArchitecture::initialize(argc, argv); result != 0) {
+      return result;
+    }
+    forte::StartupHookRegistry::invoke(argc, argv);
+    mInitialized = true;
     return 0;
   }
 
-  if (auto result = CForteSpecificArchitecture::deinitialize(); result != 0) {
-    return result;
-  }
-  mInitialized = false;
-  return 0;
-}
+  int CForteGeneralArchitecture::deinitialize() {
+    if (!mInitialized) {
+      return 0;
+    }
 
-bool CForteGeneralArchitecture::isInitialized() {
-  return mInitialized;
-}
+    if (auto result = CForteSpecificArchitecture::deinitialize(); result != 0) {
+      return result;
+    }
+    mInitialized = false;
+    return 0;
+  }
+
+  bool CForteGeneralArchitecture::isInitialized() {
+    return mInitialized;
+  }
+} // namespace forte::arch

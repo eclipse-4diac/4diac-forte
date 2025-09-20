@@ -12,18 +12,21 @@
 
 #include "forte/arch/forte_sync.h"
 
-CPCSyncObject::CPCSyncObject() : mLock(SRWLOCK_INIT) {
-}
+namespace forte::arch {
 
-CPCSyncObject::~CPCSyncObject() {
-  // we don't need to do anything here
-}
+  CPCSyncObject::CPCSyncObject() : mLock(SRWLOCK_INIT) {
+  }
 
-void CPCSyncObject::lock() {
-  AcquireSRWLockExclusive(&mLock);
-}
+  CPCSyncObject::~CPCSyncObject() {
+    // we don't need to do anything here
+  }
 
-//! Free the resource coming after the lock command
-void CPCSyncObject::unlock() {
-  ReleaseSRWLockExclusive(&mLock);
-}
+  void CPCSyncObject::lock() {
+    AcquireSRWLockExclusive(&mLock);
+  }
+
+  //! Free the resource coming after the lock command
+  void CPCSyncObject::unlock() {
+    ReleaseSRWLockExclusive(&mLock);
+  }
+} // namespace forte::arch

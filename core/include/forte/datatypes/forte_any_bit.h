@@ -16,23 +16,23 @@
  *    Martin Melik Merkumians - changes multibit access index from template
  *      parameter to call argument
  *******************************************************************************/
-#ifndef _ANY_BIT_H_
-#define _ANY_BIT_H_
+
+#pragma once
 
 #include "forte/datatypes/forte_any_elementary.h"
 
-/*!\ingroup COREDTS IIEC_ANY_BIT represents any bit data types according to IEC 61131.
- */
-class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY {
-  public:
-    ~CIEC_ANY_BIT() override = default;
+namespace forte {
+  /*!\ingroup COREDTS IIEC_ANY_BIT represents any bit data types according to IEC 61131.
+   */
+  class CIEC_ANY_BIT : public CIEC_ANY_ELEMENTARY {
+    public:
+      ~CIEC_ANY_BIT() override = default;
 
-    void reset() override {
-      setTUINT64(0);
-    }
+      void reset() override {
+        setTUINT64(0);
+      }
 
-  protected:
-    CIEC_ANY_BIT() = default;
-};
-
-#endif /*_MANY_BIT_H_*/
+    protected:
+      CIEC_ANY_BIT() = default;
+  };
+} // namespace forte

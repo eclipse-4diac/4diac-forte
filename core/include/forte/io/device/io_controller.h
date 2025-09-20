@@ -38,7 +38,7 @@ namespace forte::io {
    * - base structure for safe startups and resets (see #init, #runLoop, and #deInit)
    * - automatic error handling and restart (see #IOConfigFBController)
    */
-  class IODeviceController : public CExternalEventHandler, protected CThread {
+  class IODeviceController : public CExternalEventHandler, protected arch::CThread {
       friend class IOConfigFBController;
 
     public:
@@ -201,7 +201,7 @@ namespace forte::io {
 
       /*! @brief Synchronizes the access to the #inputHandles and #outputHandles. Use it for iterations over the
        * lists. */
-      CSyncObject mHandleMutex;
+      arch::CSyncObject mHandleMutex;
 
       /*! @brief All input handles of the main controller
        * The list should only contain input handles of the main controller.

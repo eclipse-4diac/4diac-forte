@@ -10,8 +10,8 @@
  *   Alois Zoitl, Patrick Smejkal
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _FDHAND_H_
-#define _FDHAND_H_
+
+#pragma once
 
 #include "../../core/src/fortelist.h"
 #include "forte/extevhan.h"
@@ -23,53 +23,52 @@ namespace forte {
   namespace com_infra {
     class CComCallback;
   }
-} // namespace forte
 
-/*!\brief An external event handler for file descriptor based external events.
- *
- * This handler uses a thread and the select function to monitor given file descriptors on
- * data reception. Examples for possible file descriptors are sockets or com re
- */
+  namespace arch {
+    /*!\brief An external event handler for file descriptor based external events.
+     *
+     * This handler uses a thread and the select function to monitor given file descriptors on
+     * data reception. Examples for possible file descriptors are sockets or com re
+     */
+    class CFDSelectHandler : public CExternalEventHandler,
+                             public RegisterExternalEventHandler<CFDSelectHandler>,
+                             private CThread {
+      public:
+        explicit CFDSelectHandler(CDeviceExecution &paDeviceExecution);
+        ~CFDSelectHandler() override;
 
-class CFDSelectHandler : public CExternalEventHandler,
-                         public RegisterExternalEventHandler<CFDSelectHandler>,
-                         private CThread {
-  public:
-    explicit CFDSelectHandler(CDeviceExecution &paDeviceExecution);
-    ~CFDSelectHandler() override;
+        typedef FORTE_SOCKET_TYPE
+            TFileDescriptor; //!< General type definition for a file descriptor. To be used by the callback classes.
+        static const TFileDescriptor scmInvalidFileDescriptor = FORTE_INVALID_SOCKET;
 
-    typedef FORTE_SOCKET_TYPE
-        TFileDescriptor; //!< General type definition for a file descriptor. To be used by the callback classes.
-    static const TFileDescriptor scmInvalidFileDescriptor = FORTE_INVALID_SOCKET;
+        void addComCallback(TFileDescriptor paFD, forte::com_infra::CComCallback *paComLayer);
+        void removeComCallback(TFileDescriptor paFD);
 
-    void addComCallback(TFileDescriptor paFD, forte::com_infra::CComCallback *paComLayer);
-    void removeComCallback(TFileDescriptor paFD);
+        /* functions needed for the external event handler interface */
+        void enableHandler() override {
+          start();
+        }
 
-    /* functions needed for the external event handler interface */
-    void enableHandler() override {
-      start();
-    }
+        void disableHandler() override {
+          end();
+        }
 
-    void disableHandler() override {
-      end();
-    }
+      protected:
+        void run() override;
 
-  protected:
-    void run() override;
+      private:
+        struct TConnContType {
+            TFileDescriptor mSockDes;
+            forte::com_infra::CComCallback *mCallee;
+        };
 
-  private:
-    struct TConnContType {
-        TFileDescriptor mSockDes;
-        forte::com_infra::CComCallback *mCallee;
+        typedef CSinglyLinkedList<TConnContType> TConnectionContainer;
+
+        TFileDescriptor createFDSet(fd_set *mFDSet);
+
+        TConnectionContainer mConnectionsList;
+        CSyncObject mSync;
+        bool mConnectionListChanged;
     };
-
-    typedef CSinglyLinkedList<TConnContType> TConnectionContainer;
-
-    TFileDescriptor createFDSet(fd_set *mFDSet);
-
-    TConnectionContainer mConnectionsList;
-    CSyncObject mSync;
-    bool mConnectionListChanged;
-};
-
-#endif
+  } // namespace arch
+} // namespace forte

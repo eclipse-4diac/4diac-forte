@@ -16,34 +16,36 @@
 
 #define CSyncObject CPCSyncObject // allows that doxygen can generate better documenation
 
-/*! \ingroup win32_hal
- * \brief The sync object implementation for the win32 thread interface.
- *
- * In the win32 version a CRITICAL_SECTION is used for the sync object.
- *
- */
+namespace forte::arch {
+  /*! \ingroup win32_hal
+   * \brief The sync object implementation for the win32 thread interface.
+   *
+   * In the win32 version a CRITICAL_SECTION is used for the sync object.
+   *
+   */
 
-class CPCSyncObject {
-  public:
-    CPCSyncObject();
-    ~CPCSyncObject();
+  class CPCSyncObject {
+    public:
+      CPCSyncObject();
+      ~CPCSyncObject();
 
-    /*!\brief Lock the resource coming after the lock command
-     *
-     * This function blocks until it will get the lock for the coming critical section.
-     */
-    void lock();
+      /*!\brief Lock the resource coming after the lock command
+       *
+       * This function blocks until it will get the lock for the coming critical section.
+       */
+      void lock();
 
-    //! Free the resource coming after the lock command
-    void unlock();
+      //! Free the resource coming after the lock command
+      void unlock();
 
-    CPCSyncObject(const CPCSyncObject &) = delete;
-    CPCSyncObject &operator=(const CPCSyncObject &) = delete;
+      CPCSyncObject(const CPCSyncObject &) = delete;
+      CPCSyncObject &operator=(const CPCSyncObject &) = delete;
 
-  private:
+    private:
 #if _WIN32_WINNT >= 0x0600
-    SRWLOCK mLock;
+      SRWLOCK mLock;
 #else
-    CRITICAL_SECTION mLock;
+      CRITICAL_SECTION mLock;
 #endif
-};
+  };
+} // namespace forte::arch

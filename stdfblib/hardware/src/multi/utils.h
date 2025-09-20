@@ -19,30 +19,32 @@
 
 using namespace forte::literals;
 
-class CDevice;
+namespace forte {
+  class CDevice;
 
-namespace forte::iec61499::hardware {
-  class OPCUA_MGR;
+  namespace iec61499::hardware {
+    class OPCUA_MGR;
 
-  /**
-   * @brief Get the OpcuaMgr of the device if it has any
-   *
-   * @param paDevice the device were to look for the opcua mgr. The lookup is based on the current default device
-   * value set in the device factory
-   * @return a pointer to the opcua mgr of the device, nullptr if the device does not have a opcua mgr
-   */
-  OPCUA_MGR *getOpcuaMgr(CDevice &paDevice);
+    /**
+     * @brief Get the OpcuaMgr of the device if it has any
+     *
+     * @param paDevice the device were to look for the opcua mgr. The lookup is based on the current default device
+     * value set in the device factory
+     * @return a pointer to the opcua mgr of the device, nullptr if the device does not have a opcua mgr
+     */
+    OPCUA_MGR *getOpcuaMgr(CDevice &paDevice);
 
-  struct FactoriesSettings {
-      StringId mEcet{"default"_STRID};
-      StringId mTimer{"default"_STRID};
-  };
+    struct FactoriesSettings {
+        StringId mEcet{"default"_STRID};
+        StringId mTimer{"default"_STRID};
+    };
 
-  /**
-   * @brief Set the desired factories settings
-   *
-   * @param paFactoriesSettings settings to be set
-   */
-  void setFactoriesSettings(FactoriesSettings paFactoriesSettings);
+    /**
+     * @brief Set the desired factories settings
+     *
+     * @param paFactoriesSettings settings to be set
+     */
+    void setFactoriesSettings(FactoriesSettings paFactoriesSettings);
 
-} // namespace forte::iec61499::hardware
+  } // namespace iec61499::hardware
+} // namespace forte

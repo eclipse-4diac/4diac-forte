@@ -16,10 +16,12 @@
 
 using namespace forte::literals;
 
-DEFINE_FIRMWARE_DATATYPE(INT, "INT"_STRID)
+namespace forte {
+  DEFINE_FIRMWARE_DATATYPE(INT, "INT"_STRID)
 
-template CIEC_INT &CIEC_INT::operator= <>(const CIEC_SINT &paValue);
+  template CIEC_INT &CIEC_INT::operator= <>(const CIEC_SINT &paValue);
 
-template CIEC_INT &CIEC_INT::operator= <>(const CIEC_USINT &paValue);
+  template CIEC_INT &CIEC_INT::operator= <>(const CIEC_USINT &paValue);
 
-const forte::StringId forte::CDataTypeTrait<CIEC_INT>::scmDataTypeName = "INT"_STRID;
+  const forte::StringId forte::CDataTypeTrait<CIEC_INT>::scmDataTypeName = "INT"_STRID;
+} // namespace forte

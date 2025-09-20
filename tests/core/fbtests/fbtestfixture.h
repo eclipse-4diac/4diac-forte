@@ -108,7 +108,7 @@ namespace forte::test {
        */
       std::deque<TEventID> mFBOutputEvents;
 
-      CSyncObject mOutputEventLock;
+      arch::CSyncObject mOutputEventLock;
 
       std::vector<CIEC_ANY *> mInputDataBuffers;
       std::vector<CIEC_ANY *> mOutputDataBuffers;

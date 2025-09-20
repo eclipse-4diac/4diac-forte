@@ -20,96 +20,100 @@
 #include <vector>
 #include <concepts>
 
-class CDeviceExecution;
-class CEventSourceFB;
-class CFunctionBlock;
+namespace forte {
+  class CDeviceExecution;
+  class CEventSourceFB;
+  class CFunctionBlock;
 
-/**  \defgroup FORTE_HAL FORTE Hardware Abstraction Layer - FORTE-HAL
- * \brief The FORTE-HAL is the abstraction of HW dependent features important
- * and needed in each port of FORTE.
- */
-/*@{*/
+  /**  \defgroup FORTE_HAL FORTE Hardware Abstraction Layer - FORTE-HAL
+   * \brief The FORTE-HAL is the abstraction of HW dependent features important
+   * and needed in each port of FORTE.
+   */
+  /*@{*/
 
-/**\defgroup EXTEVHAND External Event Handling
- */
-/*@{*/
+  /**\defgroup EXTEVHAND External Event Handling
+   */
+  /*@{*/
 
-template<typename T>
-class RegisterExternalEventHandler;
+  template<typename T>
+  class RegisterExternalEventHandler;
 
-/*! \brief Baseclass for handling incoming interrupts and similar external events.
- *
- * Implementations of such classes should provide the following functions for ES-FBs:
- *   - registerFB(CFunctionBlock *paESFB, ...) allows the ES-FB to register to this ExternalEventHandler for recieving
- * external events (e.g. INIT+). the specific parameters depend on the ExternalEventHandler.
- *   - unregisterFB(CFunctionBlock *paESFB) the ES-FB doesn't want to receive any external events any more (e.g. INIT-).
- */
+  /*! \brief Baseclass for handling incoming interrupts and similar external events.
+   *
+   * Implementations of such classes should provide the following functions for ES-FBs:
+   *   - registerFB(CFunctionBlock *paESFB, ...) allows the ES-FB to register to this ExternalEventHandler for recieving
+   * external events (e.g. INIT+). the specific parameters depend on the ExternalEventHandler.
+   *   - unregisterFB(CFunctionBlock *paESFB) the ES-FB doesn't want to receive any external events any more (e.g.
+   * INIT-).
+   */
 
-class CExternalEventHandler {
-    template<typename T>
-    friend class RegisterExternalEventHandler;
+  class CExternalEventHandler {
+      template<typename T>
+      friend class RegisterExternalEventHandler;
 
-  public:
-    explicit CExternalEventHandler(CDeviceExecution &paDeviceExecution);
+    public:
+      explicit CExternalEventHandler(CDeviceExecution &paDeviceExecution);
 
-    virtual ~CExternalEventHandler() = default;
-    /*!\brief Enables this event source
-     *
-     */
-    virtual void enableHandler() = 0;
-    /*!\brief Disable this event source
-     */
-    virtual void disableHandler() = 0;
+      virtual ~CExternalEventHandler() = default;
+      /*!\brief Enables this event source
+       *
+       */
+      virtual void enableHandler() = 0;
+      /*!\brief Disable this event source
+       */
+      virtual void disableHandler() = 0;
 
-    [[nodiscard]] static const std::vector<std::function<std::unique_ptr<CExternalEventHandler>(CDeviceExecution &)>> &
-    getFactories() {
-      return smEventHandlerFactories;
-    }
+      [[nodiscard]] static const std::vector<
+          std::function<std::unique_ptr<CExternalEventHandler>(CDeviceExecution &)>> &
+      getFactories() {
+        return smEventHandlerFactories;
+      }
 
-  protected:
-    /*!\brief register event source at device execution for starting a new event chain
-     *
-     * this function checks if the external event handler is allowed to start new event chains and if yes performs the
-     * necessary actions.
-     *
-     * @param paECStartFB the event source function block which starts the new event chain
-     */
-    void startNewEventChain(CEventSourceFB *paECStartFB);
+    protected:
+      /*!\brief register event source at device execution for starting a new event chain
+       *
+       * this function checks if the external event handler is allowed to start new event chains and if yes performs the
+       * necessary actions.
+       *
+       * @param paECStartFB the event source function block which starts the new event chain
+       */
+      void startNewEventChain(CEventSourceFB *paECStartFB);
 
-    CDeviceExecution &mDeviceExecution;
+      CDeviceExecution &mDeviceExecution;
 
-  private:
-    template<typename T>
-      requires std::derived_from<T, CExternalEventHandler> && std::derived_from<T, RegisterExternalEventHandler<T>>
-    static std::size_t registerExtEvHandler() {
-      smEventHandlerFactories.emplace_back(T::create);
-      // return values start at 1, since index 0 is the timer handler
-      return smEventHandlerFactories.size();
-    }
+    private:
+      template<typename T>
+        requires std::derived_from<T, CExternalEventHandler> && std::derived_from<T, RegisterExternalEventHandler<T>>
+      static std::size_t registerExtEvHandler() {
+        smEventHandlerFactories.emplace_back(T::create);
+        // return values start at 1, since index 0 is the timer handler
+        return smEventHandlerFactories.size();
+      }
 
-    constinit static std::vector<std::function<std::unique_ptr<CExternalEventHandler>(CDeviceExecution &)>>
-        smEventHandlerFactories;
-};
+      constinit static std::vector<std::function<std::unique_ptr<CExternalEventHandler>(CDeviceExecution &)>>
+          smEventHandlerFactories;
+  };
 
-template<typename T>
-class RegisterExternalEventHandler {
-    friend CExternalEventHandler;
+  template<typename T>
+  class RegisterExternalEventHandler {
+      friend CExternalEventHandler;
 
-  public:
-    RegisterExternalEventHandler() {
-      (void) &scmHandlerIdentifier;
-    }
+    public:
+      RegisterExternalEventHandler() {
+        (void) &scmHandlerIdentifier;
+      }
 
-    static const std::size_t scmHandlerIdentifier;
+      static const std::size_t scmHandlerIdentifier;
 
-  private:
-    static std::unique_ptr<CExternalEventHandler> create(CDeviceExecution &paDeviceExecution) {
-      return std::make_unique<T>(paDeviceExecution);
-    }
-};
+    private:
+      static std::unique_ptr<CExternalEventHandler> create(CDeviceExecution &paDeviceExecution) {
+        return std::make_unique<T>(paDeviceExecution);
+      }
+  };
 
-template<typename T>
-const size_t RegisterExternalEventHandler<T>::scmHandlerIdentifier = CExternalEventHandler::registerExtEvHandler<T>();
+  template<typename T>
+  const size_t RegisterExternalEventHandler<T>::scmHandlerIdentifier = CExternalEventHandler::registerExtEvHandler<T>();
 
-/*@}*/
-/*@}*/
+  /*@}*/
+  /*@}*/
+} // namespace forte

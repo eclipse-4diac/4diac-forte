@@ -14,47 +14,46 @@
  *  Martin Jobst - add high-resolution realtime clock
  *******************************************************************************/
 
-#ifndef SRC_ARCH_FORTE_ARCHITECTURE_TIME_H_
-#define SRC_ARCH_FORTE_ARCHITECTURE_TIME_H_
+#pragma once
 
 #include <time.h>
 
 #include "forte/util/forte_constants.h"
 
-time_t forte_time_arch();
-uint_fast64_t getNanoSecondsMonotonicArch();
-uint_fast64_t getNanoSecondsRealtimeArch();
+namespace forte::arch {
+  time_t forte_time_arch();
+  uint_fast64_t getNanoSecondsMonotonicArch();
+  uint_fast64_t getNanoSecondsRealtimeArch();
 
 #ifdef FORTE_FAKE_TIME
 
-time_t forte_time_fake();
-uint_fast64_t getNanoSecondsMonotonicFake();
-uint_fast64_t getNanoSecondsRealtimeFake();
+  time_t forte_time_fake();
+  uint_fast64_t getNanoSecondsMonotonicFake();
+  uint_fast64_t getNanoSecondsRealtimeFake();
 
-constexpr auto forte_time = forte_time_fake;
-constexpr auto getNanoSecondsMonotonic = getNanoSecondsMonotonicFake;
-constexpr auto getNanoSecondsRealtime = getNanoSecondsRealtimeFake;
+  constexpr auto forte_time = forte_time_fake;
+  constexpr auto getNanoSecondsMonotonic = getNanoSecondsMonotonicFake;
+  constexpr auto getNanoSecondsRealtime = getNanoSecondsRealtimeFake;
 
 #else // FORTE_FAKE_TIME
 
-constexpr auto forte_time = forte_time_arch;
-constexpr auto getNanoSecondsMonotonic = getNanoSecondsMonotonicArch;
-constexpr auto getNanoSecondsRealtime = getNanoSecondsRealtimeArch;
+  constexpr auto forte_time = forte_time_arch;
+  constexpr auto getNanoSecondsMonotonic = getNanoSecondsMonotonicArch;
+  constexpr auto getNanoSecondsRealtime = getNanoSecondsRealtimeArch;
 
 #endif // FORTE_FAKE_TIME
 
-struct tm *forte_localtime(const time_t *paTime, struct tm *const paResult);
+  struct tm *forte_localtime(const time_t *paTime, struct tm *const paResult);
 
-inline time_t forte_mktime(struct tm *pa_tm) {
-  return mktime(pa_tm);
-}
+  inline time_t forte_mktime(struct tm *pa_tm) {
+    return mktime(pa_tm);
+  }
 
-time_t forte_timegm(struct tm *pa_tm);
+  time_t forte_timegm(struct tm *pa_tm);
 
-struct tm *forte_gmtime(const time_t *const paTime, struct tm *const paResult);
+  struct tm *forte_gmtime(const time_t *const paTime, struct tm *const paResult);
 
-inline time_t forte_time_arch() {
-  return time(nullptr);
-}
-
-#endif /* SRC_ARCH_FORTE_ARCHITECTURE_TIME_H_ */
+  inline time_t forte_time_arch() {
+    return time(nullptr);
+  }
+} // namespace forte::arch

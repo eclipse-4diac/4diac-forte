@@ -169,7 +169,7 @@ namespace forte::test {
   }
 
   void CFBTestFixtureBase::executeEvent(TEventID paEIID, CEventChainExecutionThread *const) {
-    CCriticalRegion criticalRegion(mOutputEventLock);
+    util::CCriticalRegion criticalRegion(mOutputEventLock);
     mFBOutputEvents.push_back(paEIID);
   }
 
@@ -190,7 +190,7 @@ namespace forte::test {
   }
 
   TEventID CFBTestFixtureBase::pullFirstChainEventID() {
-    CCriticalRegion criticalRegion(mOutputEventLock);
+    util::CCriticalRegion criticalRegion(mOutputEventLock);
     if (mFBOutputEvents.empty()) {
       return cgInvalidEventID;
     }
@@ -200,7 +200,7 @@ namespace forte::test {
   }
 
   bool CFBTestFixtureBase::eventChainEmpty() {
-    CCriticalRegion criticalRegion(mOutputEventLock);
+    util::CCriticalRegion criticalRegion(mOutputEventLock);
     return mFBOutputEvents.empty();
   }
 

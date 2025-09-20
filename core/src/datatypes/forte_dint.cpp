@@ -15,14 +15,16 @@
 
 using namespace forte::literals;
 
-DEFINE_FIRMWARE_DATATYPE(DINT, "DINT"_STRID)
+namespace forte {
+  DEFINE_FIRMWARE_DATATYPE(DINT, "DINT"_STRID)
 
-template CIEC_DINT &CIEC_DINT::operator= <>(const CIEC_SINT &paValue);
+  template CIEC_DINT &CIEC_DINT::operator= <>(const CIEC_SINT &paValue);
 
-template CIEC_DINT &CIEC_DINT::operator= <>(const CIEC_INT &paValue);
+  template CIEC_DINT &CIEC_DINT::operator= <>(const CIEC_INT &paValue);
 
-template CIEC_DINT &CIEC_DINT::operator= <>(const CIEC_USINT &paValue);
+  template CIEC_DINT &CIEC_DINT::operator= <>(const CIEC_USINT &paValue);
 
-template CIEC_DINT &CIEC_DINT::operator= <>(const CIEC_UINT &paValue);
+  template CIEC_DINT &CIEC_DINT::operator= <>(const CIEC_UINT &paValue);
 
-const forte::StringId forte::CDataTypeTrait<CIEC_DINT>::scmDataTypeName = "DINT"_STRID;
+  const forte::StringId forte::CDataTypeTrait<CIEC_DINT>::scmDataTypeName = "DINT"_STRID;
+} // namespace forte

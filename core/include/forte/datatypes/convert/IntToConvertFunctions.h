@@ -38,69 +38,71 @@
 
 #include "convert_function_utils.h"
 
-//********************************************************************************************
-//   INT_TO_*  functions
-//********************************************************************************************
-inline CIEC_BYTE func_INT_TO_BYTE(const CIEC_INT &paVal) {
-  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
-}
+namespace forte {
+  //********************************************************************************************
+  //   INT_TO_*  functions
+  //********************************************************************************************
+  inline CIEC_BYTE func_INT_TO_BYTE(const CIEC_INT &paVal) {
+    return CIEC_ANY::cast<CIEC_BYTE>(paVal);
+  }
 
-inline CIEC_DWORD func_INT_TO_DWORD(const CIEC_INT &paVal) {
-  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
-}
+  inline CIEC_DWORD func_INT_TO_DWORD(const CIEC_INT &paVal) {
+    return CIEC_ANY::cast<CIEC_DWORD>(paVal);
+  }
 
-inline CIEC_DINT func_INT_TO_DINT(const CIEC_INT &paVal) {
-  return CIEC_ANY::cast<CIEC_DINT>(paVal);
-}
+  inline CIEC_DINT func_INT_TO_DINT(const CIEC_INT &paVal) {
+    return CIEC_ANY::cast<CIEC_DINT>(paVal);
+  }
 
-inline CIEC_LINT func_INT_TO_LINT(const CIEC_INT &paVal) {
-  return CIEC_ANY::cast<CIEC_LINT>(paVal);
-}
+  inline CIEC_LINT func_INT_TO_LINT(const CIEC_INT &paVal) {
+    return CIEC_ANY::cast<CIEC_LINT>(paVal);
+  }
 
-inline CIEC_LREAL func_INT_TO_LREAL(const CIEC_INT &paVal) {
-  return CIEC_ANY::cast<CIEC_LREAL>(paVal);
-}
+  inline CIEC_LREAL func_INT_TO_LREAL(const CIEC_INT &paVal) {
+    return CIEC_ANY::cast<CIEC_LREAL>(paVal);
+  }
 
-inline CIEC_LWORD func_INT_TO_LWORD(const CIEC_INT &paVal) {
-  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
-}
+  inline CIEC_LWORD func_INT_TO_LWORD(const CIEC_INT &paVal) {
+    return CIEC_ANY::cast<CIEC_LWORD>(paVal);
+  }
 
-inline CIEC_REAL func_INT_TO_REAL(const CIEC_INT &paVal) {
-  return CIEC_ANY::cast<CIEC_REAL>(paVal);
-}
+  inline CIEC_REAL func_INT_TO_REAL(const CIEC_INT &paVal) {
+    return CIEC_ANY::cast<CIEC_REAL>(paVal);
+  }
 
-inline CIEC_SINT func_INT_TO_SINT(const CIEC_INT &paVal) {
-  return CIEC_ANY::cast<CIEC_SINT>(paVal);
-}
+  inline CIEC_SINT func_INT_TO_SINT(const CIEC_INT &paVal) {
+    return CIEC_ANY::cast<CIEC_SINT>(paVal);
+  }
 
-inline CIEC_UDINT func_INT_TO_UDINT(const CIEC_INT &paVal) {
-  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
-}
+  inline CIEC_UDINT func_INT_TO_UDINT(const CIEC_INT &paVal) {
+    return CIEC_ANY::cast<CIEC_UDINT>(paVal);
+  }
 
-inline CIEC_UINT func_INT_TO_UINT(const CIEC_INT &paVal) {
-  return CIEC_ANY::cast<CIEC_UINT>(paVal);
-}
+  inline CIEC_UINT func_INT_TO_UINT(const CIEC_INT &paVal) {
+    return CIEC_ANY::cast<CIEC_UINT>(paVal);
+  }
 
-inline CIEC_ULINT func_INT_TO_ULINT(const CIEC_INT &paVal) {
-  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
-}
+  inline CIEC_ULINT func_INT_TO_ULINT(const CIEC_INT &paVal) {
+    return CIEC_ANY::cast<CIEC_ULINT>(paVal);
+  }
 
-inline CIEC_USINT func_INT_TO_USINT(const CIEC_INT &paVal) {
-  return CIEC_ANY::cast<CIEC_USINT>(paVal);
-}
+  inline CIEC_USINT func_INT_TO_USINT(const CIEC_INT &paVal) {
+    return CIEC_ANY::cast<CIEC_USINT>(paVal);
+  }
 
-inline CIEC_WORD func_INT_TO_WORD(const CIEC_INT &paVal) {
-  return CIEC_ANY::cast<CIEC_WORD>(paVal);
-}
+  inline CIEC_WORD func_INT_TO_WORD(const CIEC_INT &paVal) {
+    return CIEC_ANY::cast<CIEC_WORD>(paVal);
+  }
 
-inline CIEC_STRING func_INT_AS_STRING(const CIEC_INT &paVal) {
-  CIEC_STRING string;
-  stringConverter(string, paVal);
-  return string;
-}
+  inline CIEC_STRING func_INT_AS_STRING(const CIEC_INT &paVal) {
+    CIEC_STRING string;
+    stringConverter(string, paVal);
+    return string;
+  }
 
-inline CIEC_WSTRING func_INT_AS_WSTRING(const CIEC_INT &paVal) {
-  CIEC_WSTRING string;
-  stringConverter(string, paVal);
-  return string;
-}
+  inline CIEC_WSTRING func_INT_AS_WSTRING(const CIEC_INT &paVal) {
+    CIEC_WSTRING string;
+    stringConverter(string, paVal);
+    return string;
+  }
+} // namespace forte

@@ -10,58 +10,57 @@
  *    Alois Zoitl, Thomas Strasser, Ingo Hegny
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#ifndef _DEVEXEC_H
-#define _DEVEXEC_H
 
-class CFunctionBlock;
-class CEventSourceFB;
-class CExternalEventHandler;
-class CTimerHandler;
-class CDevice;
+#pragma once
 
 #include <memory>
 #include <vector>
 
-/**\ingroup CORE
- Handles all the IEC 61499 execution requests and aspects within one device
+namespace forte {
+  class CFunctionBlock;
+  class CEventSourceFB;
+  class CExternalEventHandler;
+  class CTimerHandler;
+  class CDevice;
 
- @author az
- */
-class CDeviceExecution {
-  public:
-    explicit CDeviceExecution(CDevice &paDevice);
+  /**\ingroup CORE
+   Handles all the IEC 61499 execution requests and aspects within one device
+  @author az
+   */
+  class CDeviceExecution {
+    public:
+      explicit CDeviceExecution(CDevice &paDevice);
 
-    ~CDeviceExecution();
+      ~CDeviceExecution();
 
-    /*!\brief an external event occurred at an ES and a new event source is to start.
-     *
-     * In this function the CDeviceExecution does all means necessary that the new event chain will be executed
-     * correctly.
-     * \param paECStartFB The start FB of the event chain
-     */
-    void startNewEventChain(CEventSourceFB *paECStartFB) const;
+      /*!\brief an external event occurred at an ES and a new event source is to start.
+       *
+       * In this function the CDeviceExecution does all means necessary that the new event chain will be executed
+       * correctly.
+       * \param paECStartFB The start FB of the event chain
+       */
+      void startNewEventChain(CEventSourceFB *paECStartFB) const;
 
-    [[nodiscard]] CTimerHandler &getTimer() const;
+      [[nodiscard]] CTimerHandler &getTimer() const;
 
-    template<typename T>
-    T &getExtEvHandler() {
-      return static_cast<T &>(*getExtEvHandler(T::scmHandlerIdentifier));
-    }
+      template<typename T>
+      T &getExtEvHandler() {
+        return static_cast<T &>(*getExtEvHandler(T::scmHandlerIdentifier));
+      }
 
-    void disableHandlers();
+      void disableHandlers();
 
-    CDevice &getDevice();
+      CDevice &getDevice();
 
-  private:
-    [[nodiscard]] CExternalEventHandler *getExtEvHandler(size_t paIdentifer) const;
+    private:
+      [[nodiscard]] CExternalEventHandler *getExtEvHandler(size_t paIdentifer) const;
 
-    CDevice &mDevice;
+      CDevice &mDevice;
 
-    /*!\brief List of currently available external event sources.
-     *
-     * The element 0 is always the timer event source.
-     */
-    std::vector<std::unique_ptr<CExternalEventHandler>> mRegisteredEventHandlers;
-};
-
-#endif
+      /*!\brief List of currently available external event sources.
+       *
+       * The element 0 is always the timer event source.
+       */
+      std::vector<std::unique_ptr<CExternalEventHandler>> mRegisteredEventHandlers;
+  };
+} // namespace forte

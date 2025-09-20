@@ -14,37 +14,37 @@
  *                - initial implementation and rework communication infrastructure
  *   Markus Meingast, Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#ifndef _ANY_ELE_H_
-#define _ANY_ELE_H_
+
+#pragma once
 
 #include "forte/datatypes/forte_any.h"
 
-/*!\ingroup COREDTS IIEC_ANY_ELEMENTARY represents the elementary data types according to
- *  IEC 61131.
- */
-class CIEC_ANY_ELEMENTARY : public CIEC_ANY {
-  public:
-    CIEC_ANY_ELEMENTARY(const CIEC_ANY_ELEMENTARY &paVal) : CIEC_ANY() {
-      setLargestUInt(paVal.getLargestUInt());
-    }
+namespace forte {
+  /*!\ingroup COREDTS IIEC_ANY_ELEMENTARY represents the elementary data types according to
+   *  IEC 61131.
+   */
+  class CIEC_ANY_ELEMENTARY : public CIEC_ANY {
+    public:
+      CIEC_ANY_ELEMENTARY(const CIEC_ANY_ELEMENTARY &paVal) : CIEC_ANY() {
+        setLargestUInt(paVal.getLargestUInt());
+      }
 
-    ~CIEC_ANY_ELEMENTARY() override = default;
+      ~CIEC_ANY_ELEMENTARY() override = default;
 
-    EDataTypeID getDataTypeID() const override {
-      return e_ANY;
-    }
+      EDataTypeID getDataTypeID() const override {
+        return e_ANY;
+      }
 
-    void toString(std::string &paTargetBuf) const override;
-    int fromString(const char *paValue) override;
+      void toString(std::string &paTargetBuf) const override;
+      int fromString(const char *paValue) override;
 
-    static EDataTypeID getElementaryDataTypeId(forte::StringId paTypeNameId);
+      static EDataTypeID getElementaryDataTypeId(forte::StringId paTypeNameId);
 
-  protected:
-    CIEC_ANY_ELEMENTARY() = default;
+    protected:
+      CIEC_ANY_ELEMENTARY() = default;
 
-  private:
-    bool isTypeSpecifier(const char *paValue, const char *paHashPosition) const;
-    bool isCastable(forte::StringId paTypeNameId) const;
-};
-
-#endif /*_MANY_ELE_H_*/
+    private:
+      bool isTypeSpecifier(const char *paValue, const char *paHashPosition) const;
+      bool isCastable(forte::StringId paTypeNameId) const;
+  };
+} // namespace forte

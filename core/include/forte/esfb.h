@@ -11,40 +11,40 @@
  *    Thomas Strasser, Alois Zoitl, Gerhard Ebenhofer
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#ifndef _ESFB_H_
-#define _ESFB_H_
+
+#pragma once
 
 #include "forte/funcbloc.h"
 
-/*!\ingroup CORE\brief Base-Class for all event sources.
- */
-class CEventSourceFB : public CFunctionBlock {
-  private:
-    /* \brief the event chain executor used by this ES.
-     */
-    CEventChainExecutionThread *mEventChainExecutor;
-    TEventEntry mEventSourceEventEntry; //! the event entry to start the event chain
+namespace forte {
+  /*!\ingroup CORE\brief Base-Class for all event sources.
+   */
+  class CEventSourceFB : public CFunctionBlock {
+    private:
+      /* \brief the event chain executor used by this ES.
+       */
+      CEventChainExecutionThread *mEventChainExecutor;
+      TEventEntry mEventSourceEventEntry; //! the event entry to start the event chain
 
-  public:
-    CEventSourceFB(CFBContainer &paContainer,
-                   const SFBInterfaceSpec &paInterfaceSpec,
-                   forte::StringId paInstanceNameId) :
-        CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
-        mEventChainExecutor(nullptr),
-        mEventSourceEventEntry(*this, cgExternalEventID) {
-    }
+    public:
+      CEventSourceFB(CFBContainer &paContainer,
+                     const SFBInterfaceSpec &paInterfaceSpec,
+                     forte::StringId paInstanceNameId) :
+          CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
+          mEventChainExecutor(nullptr),
+          mEventSourceEventEntry(*this, cgExternalEventID) {
+      }
 
-    ~CEventSourceFB() override = default;
-    void setEventChainExecutor(CEventChainExecutionThread *paEventChainExecutor) {
-      mEventChainExecutor = paEventChainExecutor;
-    };
-    CEventChainExecutionThread *getEventChainExecutor() {
-      return mEventChainExecutor;
-    };
+      ~CEventSourceFB() override = default;
+      void setEventChainExecutor(CEventChainExecutionThread *paEventChainExecutor) {
+        mEventChainExecutor = paEventChainExecutor;
+      };
+      CEventChainExecutionThread *getEventChainExecutor() {
+        return mEventChainExecutor;
+      };
 
-    TEventEntry *getEventSourceEventEntry() {
-      return &mEventSourceEventEntry;
-    };
-};
-
-#endif /*_ESFB_H_*/
+      TEventEntry *getEventSourceEventEntry() {
+        return &mEventSourceEventEntry;
+      };
+  };
+} // namespace forte

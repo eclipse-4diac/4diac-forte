@@ -91,7 +91,7 @@ namespace forte::com {
       std::vector<CIEC_ANY_VARIANT> mGenDOs;
 
     private:
-      CSyncObject mFBLock;
+      arch::CSyncObject mFBLock;
 
       std::vector<StringId> mDINames;
       std::vector<StringId> mDONames;

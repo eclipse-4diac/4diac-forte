@@ -39,7 +39,7 @@ namespace forte::eclipse4diac::signalprocessing {
       void setInitialValues() override;
 
     public:
-      FORTE_SCALE(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    FORTE_SCALE(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_REAL var_IN;
       CIEC_REAL var_MAX_IN;

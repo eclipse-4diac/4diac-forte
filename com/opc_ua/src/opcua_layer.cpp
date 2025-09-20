@@ -58,7 +58,7 @@ namespace forte::com_infra::opc_ua {
                      : static_cast<COPC_UA_HandlerAbstract *>(&getExtEvHandler<COPC_UA_Local_Handler>());
       if (checkTypesFromInterface()) {
         if (UA_STATUSCODE_GOOD == mHandler->initializeAction(*mActionInfo)) {
-          CCriticalRegion criticalRegion(mRDBufferMutex);
+          util::CCriticalRegion criticalRegion(mRDBufferMutex);
           response = e_InitOk;
           for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
             mRDBuffer.emplace_back(getCommFB()->getRDs()[i]->clone(nullptr));
@@ -85,7 +85,7 @@ namespace forte::com_infra::opc_ua {
           }
           response = mStructObjectHelper->createObjectNode(*mActionInfo, structType);
           if (!isPublisher && (response == e_InitOk)) {
-            CCriticalRegion criticalRegion(mRDBufferMutex);
+            util::CCriticalRegion criticalRegion(mRDBufferMutex);
             mRDBuffer = mStructObjectHelper->initializeRDBuffer(structType);
           }
         }
@@ -96,7 +96,7 @@ namespace forte::com_infra::opc_ua {
 
   void COPC_UA_Layer::closeConnection() {
     if (mHandler) {
-      CCriticalRegion criticalRegion(mRDBufferMutex);
+      util::CCriticalRegion criticalRegion(mRDBufferMutex);
       mHandler->uninitializeAction(*mActionInfo);
       mActionInfo.reset();
 
@@ -119,7 +119,7 @@ namespace forte::com_infra::opc_ua {
     if (!handleRecv->mFailed) {
       if (handleRecv->mData.size() != 0) {
         if (handleRecv->mData.size() + handleRecv->mOffset <= getCommFB()->getNumRD()) {
-          CCriticalRegion criticalRegion(mRDBufferMutex);
+          util::CCriticalRegion criticalRegion(mRDBufferMutex);
           for (size_t i = 0; i < handleRecv->mData.size(); i++) {
             long long bufferIndex = mIsObjectNodeStruct
                                         ? mStructObjectHelper->getRDBufferIndexFromNodeId(handleRecv->mNodeId)
@@ -174,7 +174,7 @@ namespace forte::com_infra::opc_ua {
   }
 
   EComResponse COPC_UA_Layer::processInterrupt() {
-    CCriticalRegion criticalRegion(mRDBufferMutex);
+    util::CCriticalRegion criticalRegion(mRDBufferMutex);
     if (mIsObjectNodeStruct) {
       CIEC_STRUCT &structType = static_cast<CIEC_STRUCT &>(getCommFB()->getRDs()[0]->unwrap());
       COPC_UA_ObjectStruct_Helper::setMemberValues(structType, mRDBuffer);
@@ -219,11 +219,11 @@ namespace forte::com_infra::opc_ua {
   }
 
   bool COPC_UA_Layer::getDataAlreadyPresentRead() {
-    CCriticalRegion dataReadRegion(mDataAlreadyPresentMutex);
+    util::CCriticalRegion dataReadRegion(mDataAlreadyPresentMutex);
     return mDataAlreadyPresent;
   }
   void COPC_UA_Layer::setDataAlreadyPresentRead(bool paDataRead) {
-    CCriticalRegion dataReadRegion(mDataAlreadyPresentMutex);
+    util::CCriticalRegion dataReadRegion(mDataAlreadyPresentMutex);
     mDataAlreadyPresent = paDataRead;
   }
 

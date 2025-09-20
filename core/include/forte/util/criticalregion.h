@@ -10,23 +10,23 @@
  *   Alois Zoitl
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef CRITICALREGION_H_
-#define CRITICALREGION_H_
+
+#pragma once
 
 #include "forte/arch/forte_sync.h"
 
-class CCriticalRegion {
-  public:
-    explicit CCriticalRegion(CSyncObject &paSyncObject) : mSyncObject(paSyncObject) {
-      mSyncObject.lock();
-    }
+namespace forte::util {
+  class CCriticalRegion {
+    public:
+      explicit CCriticalRegion(arch::CSyncObject &paSyncObject) : mSyncObject(paSyncObject) {
+        mSyncObject.lock();
+      }
 
-    ~CCriticalRegion() {
-      mSyncObject.unlock();
-    }
+      ~CCriticalRegion() {
+        mSyncObject.unlock();
+      }
 
-  private:
-    CSyncObject &mSyncObject;
-};
-
-#endif /* CRITICALREGION_H_ */
+    private:
+      arch::CSyncObject &mSyncObject;
+  };
+} // namespace forte::util

@@ -21,8 +21,8 @@
  *   Martin Jobst - add user-defined literal
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#ifndef _FORTE_BYTE_H_
-#define _FORTE_BYTE_H_
+
+#pragma once
 
 #include "forte/datatypes/forte_any_bit.h"
 #include "forte/datatypes/forte_bool.h"
@@ -32,107 +32,100 @@
 
 #include <limits>
 
-/*!\ingroup COREDTS CIEC_BYTE represents the byte data type according to IEC 61131.
- */
-class CIEC_BYTE : public CIEC_ANY_BIT {
-    DECLARE_FIRMWARE_DATATYPE(BYTE)
-
-  public:
-    using TValueType = TForteByte;
-    [[deprecated("Please use the corresponding numeric_limits template")]]
-    constexpr static size_t scmBitLength = 8U;
-
-    [[deprecated("Please use the corresponding numeric_limits template")]]
-    static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
-    [[deprecated("Please use the corresponding numeric_limits template")]]
-    static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
-
-    CIEC_BYTE() = default;
-
-    CIEC_BYTE(const CIEC_BYTE &paValue) : CIEC_ANY_BIT() {
-      setValueSimple(paValue);
-    }
-
-    CIEC_BYTE(const CIEC_BOOL &paValue) : CIEC_ANY_BIT() {
-      setValueSimple(paValue);
-    }
-
-    explicit CIEC_BYTE(const TValueType paValue) {
-      setTUINT8(paValue);
-    }
-
-    ~CIEC_BYTE() override = default;
-
-    CIEC_BYTE &operator=(const CIEC_BYTE &paValue) {
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-
-    CIEC_BYTE &operator=(const CIEC_BOOL &paValue) {
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-
-    /*! \brief Converts CIEC_BYTE to elementary byte
-     *
-     *   Conversion operator for converting CIEC_BYTE to elementary byte
-     */
-    operator TForteByte() const {
-      return getTUINT8();
-    }
-
-    EDataTypeID getDataTypeID() const override final {
-      return e_BYTE;
-    }
-
-    /*! \brief Partial access within a CIEC_BYTE (e.g. [BYTE].partial<CIEC_BOOL,1>())
-     *
-     */
-    template<class T>
-    CIEC_ANY_BIT_PARTIAL<T, CIEC_BYTE> partial(size_t paIndex) {
-      return CIEC_ANY_BIT_PARTIAL<T, CIEC_BYTE>(*this, paIndex);
-    }
-
-    template<class T>
-    T partial(size_t paIndex) const {
-      return CIEC_ANY_BIT_PARTIAL<T, CIEC_BYTE>::partialValue(*this, paIndex);
-    }
-
-    template<class T>
-    T cpartial(size_t paIndex) const {
-      return partial<T>(paIndex);
-    }
-
-    template<class T>
-    CIEC_ANY_BIT_PARTIAL<T, CIEC_BYTE> partial(const CIEC_ANY_INT &paIndex) {
-      return partial<T>(paIndex.getUnsignedValue());
-    }
-
-    template<class T>
-    T partial(const CIEC_ANY_INT &paIndex) const {
-      return partial<T>(paIndex.getUnsignedValue());
-    }
-
-    template<class T>
-    T cpartial(const CIEC_ANY_INT &paIndex) const {
-      return partial<T>(paIndex);
-    }
-};
-
-inline CIEC_BYTE operator""_BYTE(unsigned long long int paValue) {
-  return CIEC_BYTE(static_cast<CIEC_BYTE::TValueType>(paValue));
-}
-
-namespace std {
-  template<>
-  struct numeric_limits<CIEC_BYTE> : public forte::templates::numeric_limits<CIEC_BYTE> {
-      static constexpr size_t bitLength = 8U;
-  };
-} // namespace std
-
 namespace forte {
+  /*!\ingroup COREDTS CIEC_BYTE represents the byte data type according to IEC 61131.
+   */
+  class CIEC_BYTE : public CIEC_ANY_BIT {
+      DECLARE_FIRMWARE_DATATYPE(BYTE)
+
+    public:
+      using TValueType = TForteByte;
+      [[deprecated("Please use the corresponding numeric_limits template")]]
+      constexpr static size_t scmBitLength = 8U;
+
+      [[deprecated("Please use the corresponding numeric_limits template")]]
+      static constexpr TValueType scmMinVal = std::numeric_limits<TValueType>::min();
+      [[deprecated("Please use the corresponding numeric_limits template")]]
+      static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
+
+      CIEC_BYTE() = default;
+
+      CIEC_BYTE(const CIEC_BYTE &paValue) : CIEC_ANY_BIT() {
+        setValueSimple(paValue);
+      }
+
+      CIEC_BYTE(const CIEC_BOOL &paValue) : CIEC_ANY_BIT() {
+        setValueSimple(paValue);
+      }
+
+      explicit CIEC_BYTE(const TValueType paValue) {
+        setTUINT8(paValue);
+      }
+
+      ~CIEC_BYTE() override = default;
+
+      CIEC_BYTE &operator=(const CIEC_BYTE &paValue) {
+        // Simple value assignment - no self assignment check needed
+        setValueSimple(paValue);
+        return *this;
+      }
+
+      CIEC_BYTE &operator=(const CIEC_BOOL &paValue) {
+        // Simple value assignment - no self assignment check needed
+        setValueSimple(paValue);
+        return *this;
+      }
+
+      /*! \brief Converts CIEC_BYTE to elementary byte
+       *
+       *   Conversion operator for converting CIEC_BYTE to elementary byte
+       */
+      operator TForteByte() const {
+        return getTUINT8();
+      }
+
+      EDataTypeID getDataTypeID() const override final {
+        return e_BYTE;
+      }
+
+      /*! \brief Partial access within a CIEC_BYTE (e.g. [BYTE].partial<CIEC_BOOL,1>())
+       *
+       */
+      template<class T>
+      CIEC_ANY_BIT_PARTIAL<T, CIEC_BYTE> partial(size_t paIndex) {
+        return CIEC_ANY_BIT_PARTIAL<T, CIEC_BYTE>(*this, paIndex);
+      }
+
+      template<class T>
+      T partial(size_t paIndex) const {
+        return CIEC_ANY_BIT_PARTIAL<T, CIEC_BYTE>::partialValue(*this, paIndex);
+      }
+
+      template<class T>
+      T cpartial(size_t paIndex) const {
+        return partial<T>(paIndex);
+      }
+
+      template<class T>
+      CIEC_ANY_BIT_PARTIAL<T, CIEC_BYTE> partial(const CIEC_ANY_INT &paIndex) {
+        return partial<T>(paIndex.getUnsignedValue());
+      }
+
+      template<class T>
+      T partial(const CIEC_ANY_INT &paIndex) const {
+        return partial<T>(paIndex.getUnsignedValue());
+      }
+
+      template<class T>
+      T cpartial(const CIEC_ANY_INT &paIndex) const {
+        return partial<T>(paIndex);
+      }
+  };
+
+  inline CIEC_BYTE operator""_BYTE(unsigned long long int paValue) {
+    return CIEC_BYTE(static_cast<CIEC_BYTE::TValueType>(paValue));
+  }
+
   template<>
   struct CDataTypeTrait<CIEC_BYTE> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_BYTE;
@@ -140,4 +133,9 @@ namespace forte {
   };
 } // namespace forte
 
-#endif /*_FORTE_BYTE_H_*/
+namespace std {
+  template<>
+  struct numeric_limits<forte::CIEC_BYTE> : public forte::templates::numeric_limits<forte::CIEC_BYTE> {
+      static constexpr size_t bitLength = 8U;
+  };
+} // namespace std

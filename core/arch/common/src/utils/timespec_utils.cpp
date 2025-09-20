@@ -14,7 +14,7 @@
 #include "forte/datatype.h"
 #include <time.h>
 
-static const TForteInt64 SecondInNanoSeconds = 1000000000LL;
+static const forte::TForteInt64 SecondInNanoSeconds = 1000000000LL;
 
 void timespecSub(const struct timespec *const minuend,
                  const struct timespec *const subtrahend,

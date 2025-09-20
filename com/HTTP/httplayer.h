@@ -83,7 +83,7 @@ namespace forte::com_infra::http {
 
       bool handleAddress(const char *paAddress);
 
-      bool handleContentAndRequestType(CParameterParser &paParser, size_t paNoOfParameters);
+      bool handleContentAndRequestType(util::CParameterParser &paParser, size_t paNoOfParameters);
 
       bool storeRequestType(const char *paType);
 

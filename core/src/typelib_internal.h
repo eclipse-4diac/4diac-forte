@@ -24,13 +24,12 @@
 #include "forte/stringid.h"
 #include <vector>
 
-class CFunctionBlock;
-class CResource;
-class CIEC_ANY;
-
 namespace forte {
   class CAdapter;
   class CFBContainer;
+  class CFunctionBlock;
+  class CResource;
+  class CIEC_ANY;
 
   /*!\brief Create a new FB instance of given type and given instance name.
    *

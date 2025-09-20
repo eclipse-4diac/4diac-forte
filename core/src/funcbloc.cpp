@@ -37,6 +37,7 @@
 
 #include "resource_internal.h"
 
+using namespace forte;
 using namespace std::string_literals;
 
 CFunctionBlock::CFunctionBlock(CFBContainer &paContainer,

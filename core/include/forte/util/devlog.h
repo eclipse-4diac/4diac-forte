@@ -13,21 +13,22 @@
 
 #pragma once
 
-/*!\ingroup FORTE_HAL
- * \brief CDeviceLog is the entity that logs messages created by the FORTE Runtime system.
- * They can be printed to a console or archived somewhere (This is implementation dependent).
- */
+namespace forte::util {
+  /*!\ingroup FORTE_HAL
+   * \brief CDeviceLog is the entity that logs messages created by the FORTE Runtime system.
+   * They can be printed to a console or archived somewhere (This is implementation dependent).
+   */
 
-enum class E_MsgLevel { Info, Warning, Error, Debug, Trace };
+  enum class E_MsgLevel { Info, Warning, Error, Debug, Trace };
 
-// possible loglevels: NOLOG, LOGERROR, LOGWARNING, LOGINFO, LOGDEBUG
-/* Meaning:
- * LOGERROR: log only error messages
- * LOGWARNING: log error and warning messages
- * LOGINFO: log error, warning, and info messages
- * LOGDEBUG: log all messages: error, warning, info, and debug
- * NOLOG: log no messages
- */
+  // possible loglevels: NOLOG, LOGERROR, LOGWARNING, LOGINFO, LOGDEBUG
+  /* Meaning:
+   * LOGERROR: log only error messages
+   * LOGWARNING: log error and warning messages
+   * LOGINFO: log error, warning, and info messages
+   * LOGDEBUG: log all messages: error, warning, info, and debug
+   * NOLOG: log no messages
+   */
 
 #if !(defined(FORTE_NOLOG) || defined(FORTE_LOGERROR) || defined(FORTE_LOGWARNING) || defined(FORTE_LOGINFO) ||        \
       defined(FORTE_LOGDEBUG))
@@ -35,10 +36,10 @@ enum class E_MsgLevel { Info, Warning, Error, Debug, Trace };
 #endif
 
 #ifdef FORTE_LOGDEBUG
-#define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
-#define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
-#define DEVLOG_INFO(...) logMessage(E_MsgLevel::Info, __VA_ARGS__)
-#define DEVLOG_DEBUG(...) logMessage(E_MsgLevel::Debug, __VA_ARGS__)
+#define DEVLOG_ERROR(...) ::forte::util::logMessage(::forte::util::E_MsgLevel::Error, __VA_ARGS__)
+#define DEVLOG_WARNING(...) ::forte::util::logMessage(::forte::util::E_MsgLevel::Warning, __VA_ARGS__)
+#define DEVLOG_INFO(...) ::forte::util::logMessage(::forte::util::E_MsgLevel::Info, __VA_ARGS__)
+#define DEVLOG_DEBUG(...) ::forte::util::logMessage(::forte::util::E_MsgLevel::Debug, __VA_ARGS__)
 #define DEVLOG_ERROR_VAR(X) X
 #define DEVLOG_WARNING_VAR(X) X
 #define DEVLOG_INFO_VAR(X) X
@@ -46,7 +47,7 @@ enum class E_MsgLevel { Info, Warning, Error, Debug, Trace };
 #endif
 
 #ifdef FORTE_LOGERROR
-#define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
+#define DEVLOG_ERROR(...) ::forte::util::logMessage(::forte::util::E_MsgLevel::Error, __VA_ARGS__)
 #define DEVLOG_WARNING(...)
 #define DEVLOG_INFO(...)
 #define DEVLOG_DEBUG(...)
@@ -57,8 +58,8 @@ enum class E_MsgLevel { Info, Warning, Error, Debug, Trace };
 #endif
 
 #ifdef FORTE_LOGWARNING
-#define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
-#define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
+#define DEVLOG_ERROR(...) ::forte::util::logMessage(::forte::util::E_MsgLevel::Error, __VA_ARGS__)
+#define DEVLOG_WARNING(...) ::forte::util::logMessage(::forte::util::E_MsgLevel::Warning, __VA_ARGS__)
 #define DEVLOG_INFO(...)
 #define DEVLOG_DEBUG(...)
 #define DEVLOG_ERROR_VAR(X) X
@@ -68,9 +69,9 @@ enum class E_MsgLevel { Info, Warning, Error, Debug, Trace };
 #endif
 
 #ifdef FORTE_LOGINFO
-#define DEVLOG_ERROR(...) logMessage(E_MsgLevel::Error, __VA_ARGS__)
-#define DEVLOG_WARNING(...) logMessage(E_MsgLevel::Warning, __VA_ARGS__)
-#define DEVLOG_INFO(...) logMessage(E_MsgLevel::Info, __VA_ARGS__)
+#define DEVLOG_ERROR(...) ::forte::util::logMessage(::forte::util::E_MsgLevel::Error, __VA_ARGS__)
+#define DEVLOG_WARNING(...) ::forte::util::logMessage(::forte::util::E_MsgLevel::Warning, __VA_ARGS__)
+#define DEVLOG_INFO(...) ::forte::util::logMessage(::forte::util::E_MsgLevel::Info, __VA_ARGS__)
 #define DEVLOG_DEBUG(...)
 #define DEVLOG_ERROR_VAR(X) X
 #define DEVLOG_WARNING_VAR(X) X
@@ -90,16 +91,16 @@ enum class E_MsgLevel { Info, Warning, Error, Debug, Trace };
 #endif
 
 #if (defined(FORTE_TRACE_EVENTS) && !defined(FORTE_NOLOG))
-#define FORTE_TRACE(...) logMessage(E_MsgLevel::Trace, __VA_ARGS__)
+#define FORTE_TRACE(...) ::forte::util::logMessage(::forte::util::E_MsgLevel::Trace, __VA_ARGS__)
 #else
 #define FORTE_TRACE(...)
 #endif
 
 #ifndef FORTE_NOLOG
 
-/*! \brief Adds an Entry to the LogBook
- *
- */
-void logMessage(E_MsgLevel paLevel, const char *pacMessage, ...);
-
+  /*! \brief Adds an Entry to the LogBook
+   *
+   */
+  void logMessage(E_MsgLevel paLevel, const char *pacMessage, ...);
 #endif // #ifndef FORTE_NOLOG
+} // namespace forte::util

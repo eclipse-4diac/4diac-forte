@@ -17,40 +17,42 @@
 
 #include <queue>
 
-/*! \brief the fake timer handler for testing.
- *
- */
-class CFakeTimerHandler : public CTimerHandler, public CThread {
+namespace forte::arch {
+  /*! \brief the fake timer handler for testing.
+   *
+   */
+  class CFakeTimerHandler : public CTimerHandler, public CThread {
 
-  public:
-    explicit CFakeTimerHandler(CDeviceExecution &paDeviceExecution);
+    public:
+      explicit CFakeTimerHandler(CDeviceExecution &paDeviceExecution);
 
-    virtual ~CFakeTimerHandler();
+      virtual ~CFakeTimerHandler();
 
-    virtual void run();
+      virtual void run();
 
-    /*!\brief Enables this event source
-     *
-     */
-    virtual void enableHandler(void) override;
-    /*!\brief Disable this event source
-     */
-    virtual void disableHandler(void) override;
+      /*!\brief Enables this event source
+       *
+       */
+      virtual void enableHandler(void) override;
+      /*!\brief Disable this event source
+       */
+      virtual void disableHandler(void) override;
 
-    void setSleepTime(const CIEC_TIME &, CFunctionBlock *fb);
-    void sleepToTime(const CIEC_TIME &);
+      void setSleepTime(const CIEC_TIME &, CFunctionBlock *fb);
+      void sleepToTime(const CIEC_TIME &);
 
-  private:
-    typedef TForteUInt64 TLargestUIntValueType;
+    private:
+      typedef TForteUInt64 TLargestUIntValueType;
 
-    struct napinfo {
-        TLargestUIntValueType napDuration;
-        TLargestUIntValueType wakeupTime;
-        CFunctionBlock *fakeSleepFb;
-    };
+      struct napinfo {
+          TLargestUIntValueType napDuration;
+          TLargestUIntValueType wakeupTime;
+          CFunctionBlock *fakeSleepFb;
+      };
 
-    void startOutputEvent(CFunctionBlock *fb);
-    CEventChainExecutionThread *getExecThread(CFunctionBlock *fakeSleepFb);
+      void startOutputEvent(CFunctionBlock *fb);
+      CEventChainExecutionThread *getExecThread(CFunctionBlock *fakeSleepFb);
 
-    std::queue<napinfo> sleepTimes;
-};
+      std::queue<napinfo> sleepTimes;
+  };
+} // namespace forte::arch

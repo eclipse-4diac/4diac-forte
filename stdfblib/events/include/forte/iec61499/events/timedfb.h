@@ -14,56 +14,56 @@
  *    - initial API and implementation and/or initial documentation
  *   Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
-#ifndef _TIMEDFB_H_
-#define _TIMEDFB_H_
+
+#pragma once
 
 #include "forte/esfb.h"
 #include "forte/timerha.h"
 #include "forte/resource.h"
 
-/*!\brief Base class for timed function block like E_CYCLE or E_DELAY providing this interface
- */
-class CTimedFB : public CEventSourceFB {
-  protected:
-    static const forte::StringId scmEINameIds[];
-    static const forte::StringId scmEONameIds[];
-    static const forte::StringId scmDINameIds[];
-    static const forte::StringId scmDIDataTypeNameIds[];
+namespace forte::iec61499::events {
+  /*!\brief Base class for timed function block like E_CYCLE or E_DELAY providing this interface
+   */
+  class CTimedFB : public CEventSourceFB {
+    protected:
+      static const forte::StringId scmEINameIds[];
+      static const forte::StringId scmEONameIds[];
+      static const forte::StringId scmDINameIds[];
+      static const forte::StringId scmDIDataTypeNameIds[];
 
-    static const TEventID csmEventSTARTID = 0;
-    static const TEventID csmEventSTOPID = 1;
+      static const TEventID csmEventSTARTID = 0;
+      static const TEventID csmEventSTOPID = 1;
 
-    static const TEventID csmEOID = 0;
+      static const TEventID csmEOID = 0;
 
-    bool mActive; //!> flag to indicate that the timed fb is currently active
+      bool mActive; //!> flag to indicate that the timed fb is currently active
 
-    CTimedFB(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      CTimedFB(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    /*!\brief execute the input events of timed FBs as far it is possible
-     *
-     * Derived Timed FBs only normally need only the start event as this is different for each timed FB type (e.g.
-     * periodic vs. onetimeshot)
-     */
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      /*!\brief execute the input events of timed FBs as far it is possible
+       *
+       * Derived Timed FBs only normally need only the start event as this is different for each timed FB type (e.g.
+       * periodic vs. onetimeshot)
+       */
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEI) override;
-    void writeOutputData(TEventID paEO) override;
+      void readInputData(TEventID paEI) override;
+      void writeOutputData(TEventID paEO) override;
 
-  public:
-    CIEC_TIME var_DT;
-    CDataConnection *conn_DT;
-    CEventConnection conn_EO;
+    public:
+      CIEC_TIME var_DT;
+      CDataConnection *conn_DT;
+      CEventConnection conn_EO;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
+      EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
-  protected:
-    void setInitialValues() override;
-};
-
-#endif /*TIMEDFB_H_*/
+    protected:
+      void setInitialValues() override;
+  };
+} // namespace forte::iec61499::events

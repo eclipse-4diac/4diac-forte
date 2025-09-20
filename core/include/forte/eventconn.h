@@ -11,67 +11,65 @@
  *    Thomas Strasser, Alois Zoitl,
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#ifndef _EVENCONN_H_
-#define _EVENCONN_H_
+
+#pragma once
 
 #include <vector>
 #include "forte/conn.h"
 
-class CEventChainExecutionThread;
+namespace forte {
+  class CEventChainExecutionThread;
 
-/*!\ingroup CORE \brief Class for handling an event connection.
- *
- */
-class CEventConnection : public CConnection {
-  public:
-    CEventConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId);
+  /*!\ingroup CORE \brief Class for handling an event connection.
+   *
+   */
+  class CEventConnection : public CConnection {
+    public:
+      CEventConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId);
 
-    ~CEventConnection() override;
+      ~CEventConnection() override;
 
-    EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
+      EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
 
-    EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
-                                       std::span<const forte::StringId> paDstPortNameId) override;
+      EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
+                                         std::span<const forte::StringId> paDstPortNameId) override;
 
-    EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
+      EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
 
-    void getSourcePortName(forte::TNameIdentifier &paResult) const override;
+      void getSourcePortName(forte::TNameIdentifier &paResult) const override;
 
-    /*! \brief Triggers the event connection and all destinations are notified.
-     *
-     *
-     *  \param paExecEnv Pointer to the execution environment the event is sent in.
-     */
-    void triggerEvent(CEventChainExecutionThread *paExecEnv) const;
+      /*! \brief Triggers the event connection and all destinations are notified.
+       *
+       *
+       *  \param paExecEnv Pointer to the execution environment the event is sent in.
+       */
+      void triggerEvent(CEventChainExecutionThread *paExecEnv) const;
 
-    /*! \brief Check if there are destinations added to this connection
-     *
-     * \return true if there are destinations
-     */
-    bool isConnected() const {
-      return !mDestinationIds.empty();
-    }
+      /*! \brief Check if there are destinations added to this connection
+       *
+       * \return true if there are destinations
+       */
+      bool isConnected() const {
+        return !mDestinationIds.empty();
+      }
 
-    /*! \brief Get list of destinations of the connection
-     */
-    const std::vector<CConnectionPoint> &getDestinationList() const {
-      return mDestinationIds;
-    }
+      /*! \brief Get list of destinations of the connection
+       */
+      const std::vector<CConnectionPoint> &getDestinationList() const {
+        return mDestinationIds;
+      }
 
-  protected:
-    EMGMResponse addDestination(const CConnectionPoint &paDestPoint);
+    protected:
+      EMGMResponse addDestination(const CConnectionPoint &paDestPoint);
 
-    EMGMResponse removeDestination(const CConnectionPoint &paDestPoint);
+      EMGMResponse removeDestination(const CConnectionPoint &paDestPoint);
 
-  private:
-    /*!\brief a list of destinations the connection is connected to.
-     *
-     * By storing a list of destinations an implicit support for fan-out is given.
-     * The destination is represented as string id the same way as the sourceId
-     */
-    std::vector<CConnectionPoint> mDestinationIds;
-};
-
-typedef CEventConnection *TEventConnectionPtr;
-
-#endif /*_EVENCONN_H_*/
+    private:
+      /*!\brief a list of destinations the connection is connected to.
+       *
+       * By storing a list of destinations an implicit support for fan-out is given.
+       * The destination is represented as string id the same way as the sourceId
+       */
+      std::vector<CConnectionPoint> mDestinationIds;
+  };
+} // namespace forte

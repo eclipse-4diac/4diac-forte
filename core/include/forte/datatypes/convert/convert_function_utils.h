@@ -27,14 +27,16 @@
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
 
-inline void stringConverter(CIEC_WSTRING &paString, const CIEC_ANY &paVal) {
-  std::string buffer;
-  paVal.toString(buffer);
-  paString = CIEC_WSTRING(buffer.c_str());
-}
+namespace forte {
+  inline void stringConverter(CIEC_WSTRING &paString, const CIEC_ANY &paVal) {
+    std::string buffer;
+    paVal.toString(buffer);
+    paString = CIEC_WSTRING(buffer.c_str());
+  }
 
-inline void stringConverter(CIEC_STRING &paString, const CIEC_ANY &paVal) {
-  std::string buffer;
-  paVal.toString(buffer);
-  paString = CIEC_STRING(std::move(buffer));
-}
+  inline void stringConverter(CIEC_STRING &paString, const CIEC_ANY &paVal) {
+    std::string buffer;
+    paVal.toString(buffer);
+    paString = CIEC_STRING(std::move(buffer));
+  }
+} // namespace forte

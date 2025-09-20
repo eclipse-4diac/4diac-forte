@@ -183,9 +183,9 @@ namespace forte::trace::reader::utils {
     // The file name is given in the CTF tracer inside forte as
     // "trace_"  + INSTANCE_NAME + "_" + DATE_TIME + ".ctf"),
 
-    CParameterParser portNameParser(portName, '|', 3);
+    util::CParameterParser portNameParser(portName, '|', 3);
     portNameParser.parseParameters();
-    CParameterParser fileNameParser(std::filesystem::path(portNameParser[2]).filename().c_str(), '_', 4);
+    util::CParameterParser fileNameParser(std::filesystem::path(portNameParser[2]).filename().c_str(), '_', 4);
     auto totalParameters = fileNameParser.parseParameters();
 
     std::string result = fileNameParser[1];

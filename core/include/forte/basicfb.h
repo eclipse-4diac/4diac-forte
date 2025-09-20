@@ -20,27 +20,29 @@
 #include "forte/basefb.h"
 #include "forte/datatypes/forte_state.h"
 
-/*!\ingroup CORE
- *
- * \brief Class for handling firmware basic function blocks.
- */
-class CBasicFB : public CBaseFB {
-  public:
-    ~CBasicFB() override = default;
+namespace forte {
+  /*!\ingroup CORE
+   *
+   * \brief Class for handling firmware basic function blocks.
+   */
+  class CBasicFB : public CBaseFB {
+    public:
+      ~CBasicFB() override = default;
 
-    CIEC_ANY *getVar(forte::StringId *paNameList, unsigned int paNameListSize) override;
+      CIEC_ANY *getVar(forte::StringId *paNameList, unsigned int paNameListSize) override;
 
-  protected:
-    CBasicFB(CFBContainer &paContainer,
-             const SFBInterfaceSpec &paInterfaceSpec,
-             forte::StringId paInstanceNameId,
-             std::span<const forte::StringId> paVarInternalNames);
+    protected:
+      CBasicFB(CFBContainer &paContainer,
+               const SFBInterfaceSpec &paInterfaceSpec,
+               forte::StringId paInstanceNameId,
+               std::span<const forte::StringId> paVarInternalNames);
 
-    void setInitialValues() override = 0;
+      void setInitialValues() override = 0;
 
-    CIEC_STATE mECCState; //! the current state of the ecc. start value is 0 = initial state id
+      CIEC_STATE mECCState; //! the current state of the ecc. start value is 0 = initial state id
 
 #ifdef FORTE_FMU
-    friend class fmuInstance;
+      friend class fmuInstance;
 #endif // FORTE_FMU
-};
+  };
+} // namespace forte

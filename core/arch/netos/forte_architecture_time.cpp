@@ -19,9 +19,9 @@
 #include "forte/util/forte_constants.h"
 
 uint_fast64_t getNanoSecondsMonotonicArch() {
-  return forte::constants::cNanosecondsPerSecond < BSP_TICKS_PER_SECOND
-             ? tx_time_get() / (BSP_TICKS_PER_SECOND / forte::constants::cNanosecondsPerSecond)
-             : (tx_time_get() / BSP_TICKS_PER_SECOND) * forte::constants::cNanosecondsPerSecond;
+  return forte::util::constants::cNanosecondsPerSecond < BSP_TICKS_PER_SECOND
+             ? tx_time_get() / (BSP_TICKS_PER_SECOND / forte::util::constants::cNanosecondsPerSecond)
+             : (tx_time_get() / BSP_TICKS_PER_SECOND) * forte::util::constants::cNanosecondsPerSecond;
 }
 
 uint_fast64_t getNanoSecondsRealtimeArch() {

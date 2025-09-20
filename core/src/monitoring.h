@@ -21,10 +21,10 @@
 #include "forte/conn.h"
 #include "forte/stringid.h"
 
-class CFunctionBlock;
-class CResource;
-
 namespace forte {
+  class CFunctionBlock;
+  class CResource;
+
   namespace internal {
 
     class CWatchEntry {

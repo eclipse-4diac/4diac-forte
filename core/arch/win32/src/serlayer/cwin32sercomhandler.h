@@ -9,45 +9,45 @@
  * Contributors:
  *   Martin Melik-Merkumians - initial API and implementation and/or initial documentation
  *******************************************************************************/
+
+#pragma once
+
 #include "forte/arch/forte_thread.h"
 #include "forte/arch/forte_sync.h"
 #include "forte/extevhan.h"
 #include "forte/arch/forte_sem.h"
 
-#ifndef CWIN32SERCOMHANDLER_H_
-#define CWIN32SERCOMHANDLER_H_
+namespace forte::arch {
+  class CWin32SerComLayer;
 
-class CWin32SerComLayer;
+  class CWin32SerComHandler : public CExternalEventHandler,
+                              public RegisterExternalEventHandler<CWin32SerComHandler>,
+                              public CThread {
+    public:
+      explicit CWin32SerComHandler(CDeviceExecution &paDeviceExecution);
+      ~CWin32SerComHandler() override;
 
-class CWin32SerComHandler : public CExternalEventHandler,
-                            public RegisterExternalEventHandler<CWin32SerComHandler>,
-                            public CThread {
-  public:
-    explicit CWin32SerComHandler(CDeviceExecution &paDeviceExecution);
-    ~CWin32SerComHandler() override;
+      void registerSerComLayer(CWin32SerComLayer *paComLayer);
+      void unregisterSerComLayer(CWin32SerComLayer *paComLayer);
 
-    void registerSerComLayer(CWin32SerComLayer *paComLayer);
-    void unregisterSerComLayer(CWin32SerComLayer *paComLayer);
+      /* functions needed for the external event handler interface */
+      void enableHandler() override {
+        start();
+      }
 
-    /* functions needed for the external event handler interface */
-    void enableHandler() override {
-      start();
-    }
+      void disableHandler() override {
+        setAlive(false);
+        mSem.inc();
+        end();
+      }
 
-    void disableHandler() override {
-      setAlive(false);
-      mSem.inc();
-      end();
-    }
+    private:
+      void run();
 
-  private:
-    void run();
+      std::vector<CWin32SerComLayer *> mComLayerList;
+      CSyncObject mSync;
 
-    std::vector<CWin32SerComLayer *> mComLayerList;
-    CSyncObject mSync;
-
-    //! Sempahore for implementing a suspend feature similar to what we are doing in CEventChainExecutionThread
-    CSemaphore mSem;
-};
-
-#endif /* CWIN32SERCOMLAYER_H_ */
+      //! Sempahore for implementing a suspend feature similar to what we are doing in CEventChainExecutionThread
+      CSemaphore mSem;
+  };
+} // namespace forte::arch

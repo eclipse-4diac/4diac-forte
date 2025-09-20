@@ -20,6 +20,7 @@
 #include <cstring>
 #include "forte/util/string_utils.h"
 
+using namespace forte;
 using namespace std::string_literals;
 
 CIEC_ANY *CIEC_STRUCT::getMemberNamed(forte::StringId paMemberNameId) {

@@ -116,7 +116,7 @@ namespace forte::iec61499::hardware {
     EMGMResponse eRetVal = CDevice::writeValue(paNameList, paValue, paForce);
     if ((EMGMResponse::Ready == eRetVal) && ("FakeTime"_STRID == portName)) {
       // fake time was written, update CFakeTimerHandler
-      static_cast<CFakeTimerHandler &>(getTimer()).sleepToTime(conn_FakeTime_int.getValue());
+      static_cast<arch::CFakeTimerHandler &>(getTimer()).sleepToTime(conn_FakeTime_int.getValue());
     }
     return eRetVal;
   }

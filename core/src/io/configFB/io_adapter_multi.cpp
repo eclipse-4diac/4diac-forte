@@ -14,22 +14,22 @@
 #include "forte/io/configFB/io_adapter_multi.h"
 #include "forte/datatypes/forte_bool.h"
 
-using namespace forte::io;
+namespace forte::io {
+  IOConfigFBMultiAdapter::IOConfigFBMultiAdapter(const std::span<const TForteUInt8> paSlaveConfigurationIO,
+                                                 CFBContainer &paContainer,
+                                                 const SFBInterfaceSpec &paInterfaceSpec,
+                                                 const StringId paInstanceNameId,
+                                                 TForteUInt8 paParentAdapterlistID) :
+      CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
+      cmSlaveConfigurationIO(paSlaveConfigurationIO) {
+  }
 
-IOConfigFBMultiAdapter::IOConfigFBMultiAdapter(const std::span<const TForteUInt8> paSlaveConfigurationIO,
-                                               CFBContainer &paContainer,
-                                               const SFBInterfaceSpec &paInterfaceSpec,
-                                               const StringId paInstanceNameId,
-                                               TForteUInt8 paParentAdapterlistID) :
-    CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
-    cmSlaveConfigurationIO(paSlaveConfigurationIO) {
-}
+  IOConfigFBMultiAdapter::~IOConfigFBMultiAdapter() = default;
 
-IOConfigFBMultiAdapter::~IOConfigFBMultiAdapter() = default;
-
-void IOConfigFBMultiAdapter::setInitialValues() {
-  var_QO = false_BOOL;
-  var_QI = false_BOOL;
-  var_MasterId = 0_UINT;
-  var_Index = 0_UINT;
-}
+  void IOConfigFBMultiAdapter::setInitialValues() {
+    var_QO = false_BOOL;
+    var_QI = false_BOOL;
+    var_MasterId = 0_UINT;
+    var_Index = 0_UINT;
+  }
+} // namespace forte::io

@@ -26,39 +26,41 @@
 
 #include "convert_function_utils.h"
 
-//********************************************************************************************
-//   L/TIME_TO_*  functions
-//********************************************************************************************
+namespace forte {
+  //********************************************************************************************
+  //   L/TIME_TO_*  functions
+  //********************************************************************************************
 
-inline CIEC_TIME func_LTIME_TO_TIME(const CIEC_LTIME &paValue) {
-  return CIEC_TIME(static_cast<CIEC_LTIME::TValueType>(paValue));
-}
+  inline CIEC_TIME func_LTIME_TO_TIME(const CIEC_LTIME &paValue) {
+    return CIEC_TIME(static_cast<CIEC_LTIME::TValueType>(paValue));
+  }
 
-inline CIEC_LTIME func_TIME_TO_LTIME(const CIEC_TIME &paValue) {
-  return CIEC_ANY::cast<CIEC_TIME>(paValue);
-}
+  inline CIEC_LTIME func_TIME_TO_LTIME(const CIEC_TIME &paValue) {
+    return CIEC_ANY::cast<CIEC_TIME>(paValue);
+  }
 
-/** Non-standard functions */
-inline CIEC_STRING func_TIME_AS_STRING(const CIEC_TIME &paVal) {
-  CIEC_STRING string;
-  stringConverter(string, paVal);
-  return string;
-}
+  /** Non-standard functions */
+  inline CIEC_STRING func_TIME_AS_STRING(const CIEC_TIME &paVal) {
+    CIEC_STRING string;
+    stringConverter(string, paVal);
+    return string;
+  }
 
-inline CIEC_WSTRING func_TIME_AS_WSTRING(const CIEC_TIME &paVal) {
-  CIEC_WSTRING string;
-  stringConverter(string, paVal);
-  return string;
-}
+  inline CIEC_WSTRING func_TIME_AS_WSTRING(const CIEC_TIME &paVal) {
+    CIEC_WSTRING string;
+    stringConverter(string, paVal);
+    return string;
+  }
 
-inline CIEC_STRING func_LTIME_AS_STRING(const CIEC_LTIME &paVal) {
-  CIEC_STRING string;
-  stringConverter(string, paVal);
-  return string;
-}
+  inline CIEC_STRING func_LTIME_AS_STRING(const CIEC_LTIME &paVal) {
+    CIEC_STRING string;
+    stringConverter(string, paVal);
+    return string;
+  }
 
-inline CIEC_WSTRING func_LTIME_AS_WSTRING(const CIEC_LTIME &paVal) {
-  CIEC_WSTRING string;
-  stringConverter(string, paVal);
-  return string;
-}
+  inline CIEC_WSTRING func_LTIME_AS_WSTRING(const CIEC_LTIME &paVal) {
+    CIEC_WSTRING string;
+    stringConverter(string, paVal);
+    return string;
+  }
+} // namespace forte

@@ -18,9 +18,9 @@
 
 using namespace forte::literals;
 
-using namespace forte::io;
+namespace forte::io {
+  DEFINE_FIRMWARE_FB(FORTE_ID, "ID"_STRID)
 
-DEFINE_FIRMWARE_FB(FORTE_ID, "ID"_STRID)
-
-FORTE_ID::FORTE_ID(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
-    CInputFB<CIEC_DWORD>(paContainer, paInstanceNameId) {};
+  FORTE_ID::FORTE_ID(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+      CInputFB<CIEC_DWORD>(paContainer, paInstanceNameId) {};
+} // namespace forte::io

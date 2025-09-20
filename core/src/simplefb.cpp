@@ -13,6 +13,8 @@
 
 #include "forte/simplefb.h"
 
-void CSimpleFB::setInitialValues() {
-  CBaseFB::setInitialValues();
-}
+namespace forte {
+  void CSimpleFB::setInitialValues() {
+    CBaseFB::setInitialValues();
+  }
+} // namespace forte

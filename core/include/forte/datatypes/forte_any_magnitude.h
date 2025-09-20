@@ -12,25 +12,25 @@
  *    Martin Melik Markumians
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#ifndef _ANY_MAG_H_
-#define _ANY_MAG_H_
+
+#pragma once
 
 #include "forte/datatypes/forte_any_elementary.h"
 
-/*!\ingroup COREDTS CIEC_ANY_MAGNITUDE represents the magnitude data types according to
- *  IEC 61131.
+namespace forte {
+  /*!\ingroup COREDTS CIEC_ANY_MAGNITUDE represents the magnitude data types according to
+   *  IEC 61131.
 
- */
-class CIEC_ANY_MAGNITUDE : public CIEC_ANY_ELEMENTARY {
-  public:
-    ~CIEC_ANY_MAGNITUDE() override = default;
+   */
+  class CIEC_ANY_MAGNITUDE : public CIEC_ANY_ELEMENTARY {
+    public:
+      ~CIEC_ANY_MAGNITUDE() override = default;
 
-    EDataTypeID getDataTypeID() const override {
-      return e_ANY;
-    }
+      EDataTypeID getDataTypeID() const override {
+        return e_ANY;
+      }
 
-  protected:
-    CIEC_ANY_MAGNITUDE() = default;
-};
-
-#endif /*_MANY_MAG_H_*/
+    protected:
+      CIEC_ANY_MAGNITUDE() = default;
+  };
+} // namespace forte

@@ -13,17 +13,19 @@
 #include "forte/arch/forte_specific_architecture.h"
 #include "forte/arch/sockhand.h"
 
-int CForteSpecificArchitecture::initialize(int, char **) {
-  // Windows Socket Startupcode
-  WORD wVersionRequested;
-  WSADATA wsaData;
+namespace forte::arch {
+  int CForteSpecificArchitecture::initialize(int, char **) {
+    // Windows Socket Startupcode
+    WORD wVersionRequested;
+    WSADATA wsaData;
 
-  /* Use the MAKEWORD(lowbyte, highbyte) macro declared in Windef.h */
-  wVersionRequested = MAKEWORD(2, 2);
+    /* Use the MAKEWORD(lowbyte, highbyte) macro declared in Windef.h */
+    wVersionRequested = MAKEWORD(2, 2);
 
-  return WSAStartup(wVersionRequested, &wsaData);
-}
+    return WSAStartup(wVersionRequested, &wsaData);
+  }
 
-int CForteSpecificArchitecture::deinitialize() {
-  return WSACleanup();
-}
+  int CForteSpecificArchitecture::deinitialize() {
+    return WSACleanup();
+  }
+} // namespace forte::arch

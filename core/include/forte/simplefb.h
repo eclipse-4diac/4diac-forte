@@ -20,14 +20,16 @@
 
 #include "forte/basefb.h"
 
-class CSimpleFB : public CBaseFB {
-  protected:
-    CSimpleFB(CFBContainer &paContainer,
-              const SFBInterfaceSpec &paInterfaceSpec,
-              forte::StringId paInstanceNameId,
-              std::span<const forte::StringId> paVarInternalNames) :
-        CBaseFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternalNames) {
-    }
+namespace forte {
+  class CSimpleFB : public CBaseFB {
+    protected:
+      CSimpleFB(CFBContainer &paContainer,
+                const SFBInterfaceSpec &paInterfaceSpec,
+                forte::StringId paInstanceNameId,
+                std::span<const forte::StringId> paVarInternalNames) :
+          CBaseFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternalNames) {
+      }
 
-    void setInitialValues() override = 0;
-};
+      void setInitialValues() override = 0;
+  };
+} // namespace forte

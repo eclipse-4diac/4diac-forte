@@ -16,47 +16,47 @@
 
 #include "forte/datatypes/forte_any_variant.h"
 
-using namespace forte::com;
+namespace forte::com {
+  ComResult BaseCommunicationFB::open(const std::string_view paID) {
+    std::vector<ComChannelDescriptor> descriptors = parseComId(paID);
+    if (descriptors.empty()) {
+      return ComResult::InvalidId;
+    }
 
-ComResult BaseCommunicationFB::open(const std::string_view paID) {
-  std::vector<ComChannelDescriptor> descriptors = parseComId(paID);
-  if (descriptors.empty()) {
-    return ComResult::InvalidId;
+    mChannel = ComChannelFactory<std::span<CIEC_ANY_VARIANT>>::create(descriptors.front().mChannel, *this);
+    if (!mChannel) {
+      return ComResult::InvalidId;
+    }
+
+    if (const ComResult result = mChannel->open(descriptors.front().mConfigString, std::span{descriptors}.subspan(1));
+        result != ComResult::Ok) {
+      mChannel.reset();
+      return result;
+    }
+
+    return ComResult::Ok;
   }
 
-  mChannel = ComChannelFactory<std::span<CIEC_ANY_VARIANT>>::create(descriptors.front().mChannel, *this);
-  if (!mChannel) {
-    return ComResult::InvalidId;
+  void BaseCommunicationFB::close() {
+    if (mChannel) {
+      mChannel->close();
+      mChannel.reset();
+    }
   }
 
-  if (const ComResult result = mChannel->open(descriptors.front().mConfigString, std::span{descriptors}.subspan(1));
-      result != ComResult::Ok) {
-    mChannel.reset();
-    return result;
+  ComResult BaseCommunicationFB::send(const std::span<CIEC_ANY_VARIANT> paData) {
+    return mChannel ? mChannel->send(paData) : ComResult::NoSocket;
   }
 
-  return ComResult::Ok;
-}
-
-void BaseCommunicationFB::close() {
-  if (mChannel) {
-    mChannel->close();
-    mChannel.reset();
+  ComResult BaseCommunicationFB::poll() {
+    return mChannel ? mChannel->poll() : ComResult::NoSocket;
   }
-}
 
-ComResult BaseCommunicationFB::send(const std::span<CIEC_ANY_VARIANT> paData) {
-  return mChannel ? mChannel->send(paData) : ComResult::NoSocket;
-}
-
-ComResult BaseCommunicationFB::poll() {
-  return mChannel ? mChannel->poll() : ComResult::NoSocket;
-}
-
-EMGMResponse BaseCommunicationFB::changeExecutionState(const EMGMCommandType paCommand) {
-  const EMGMResponse retVal = CEventSourceFB::changeExecutionState(paCommand);
-  if (retVal == EMGMResponse::Ready && paCommand == EMGMCommandType::Kill && mChannel) {
-    close();
+  EMGMResponse BaseCommunicationFB::changeExecutionState(const EMGMCommandType paCommand) {
+    const EMGMResponse retVal = CEventSourceFB::changeExecutionState(paCommand);
+    if (retVal == EMGMResponse::Ready && paCommand == EMGMCommandType::Kill && mChannel) {
+      close();
+    }
+    return retVal;
   }
-  return retVal;
-}
+} // namespace forte::com

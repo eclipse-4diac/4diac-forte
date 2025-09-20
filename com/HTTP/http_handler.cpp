@@ -50,8 +50,8 @@ namespace forte::com_infra::http {
     HTTP_ServerPortOption gHTTPServerPort;
   } // namespace
 
-  CIPComSocketHandler::TSocketDescriptor CHTTP_Handler::smServerListeningSocket =
-      CIPComSocketHandler::scmInvalidSocketDescriptor;
+  arch::CIPComSocketHandler::TSocketDescriptor CHTTP_Handler::smServerListeningSocket =
+      arch::CIPComSocketHandler::scmInvalidSocketDescriptor;
 
   char CHTTP_Handler::sRecvBuffer[];
   unsigned int CHTTP_Handler::sBufFillSize = 0;
@@ -79,7 +79,7 @@ namespace forte::com_infra::http {
   }
 
   void CHTTP_Handler::clearServerLayers() {
-    CCriticalRegion criticalRegion(mServerMutex);
+    util::CCriticalRegion criticalRegion(mServerMutex);
     for (auto &serverLayer : mServerLayers) {
       for (auto socket : serverLayer.mSockets) {
         removeAndCloseSocket(socket);
@@ -89,7 +89,7 @@ namespace forte::com_infra::http {
   }
 
   void CHTTP_Handler::clearClientLayers() {
-    CCriticalRegion criticalRegion(mClientMutex);
+    util::CCriticalRegion criticalRegion(mClientMutex);
     for (auto &clientLayer : mClientLayers) {
       removeAndCloseSocket(clientLayer.mSocket);
     }
@@ -97,7 +97,7 @@ namespace forte::com_infra::http {
   }
 
   void CHTTP_Handler::clearAcceptedSockets() {
-    CCriticalRegion criticalRegion(mAcceptedMutex);
+    util::CCriticalRegion criticalRegion(mAcceptedMutex);
     for (auto &acceptedSocket : mAcceptedSockets) {
       removeAndCloseSocket(acceptedSocket.mSocket);
     }
@@ -107,25 +107,26 @@ namespace forte::com_infra::http {
   EComResponse
   CHTTP_Handler::recvData(const void *paData,
                           unsigned int) { // TODO: do something with the size parameter of the received data?
-    CIPComSocketHandler::TSocketDescriptor socket =
-        *(static_cast<const CIPComSocketHandler::TSocketDescriptor *>(paData));
+    arch::CIPComSocketHandler::TSocketDescriptor socket =
+        *(static_cast<const arch::CIPComSocketHandler::TSocketDescriptor *>(paData));
 
     if (socket == smServerListeningSocket) {
-      CIPComSocketHandler::TSocketDescriptor newConnection = CIPComSocketHandler::acceptTCPConnection(socket);
-      if (CIPComSocketHandler::scmInvalidSocketDescriptor != newConnection) {
-        CCriticalRegion criticalRegion(mAcceptedMutex);
+      arch::CIPComSocketHandler::TSocketDescriptor newConnection =
+          arch::CIPComSocketHandler::acceptTCPConnection(socket);
+      if (arch::CIPComSocketHandler::scmInvalidSocketDescriptor != newConnection) {
+        util::CCriticalRegion criticalRegion(mAcceptedMutex);
         HTTPAcceptedSockets accepted;
         accepted.mSocket = newConnection;
         accepted.mStartTime = func_NOW_MONOTONIC();
         mAcceptedSockets.emplace_back(std::move(accepted));
-        mDeviceExecution.getExtEvHandler<CIPComSocketHandler>().addComCallback(newConnection, this);
+        mDeviceExecution.getExtEvHandler<arch::CIPComSocketHandler>().addComCallback(newConnection, this);
         resumeSelfsuspend();
       } else {
         DEVLOG_ERROR("[HTTP Handler] Couldn't accept new HTTP connection\n");
       }
     } else {
-      int recvLen = CIPComSocketHandler::receiveDataFromTCP(socket, &sRecvBuffer[sBufFillSize],
-                                                            cgIPLayerRecvBufferSize - sBufFillSize);
+      int recvLen = arch::CIPComSocketHandler::receiveDataFromTCP(socket, &sRecvBuffer[sBufFillSize],
+                                                                  cgIPLayerRecvBufferSize - sBufFillSize);
       if (0 == recvLen) {
         removeAndCloseSocket(socket);
         removeHTTPLayerFromClientList(socket);
@@ -143,9 +144,9 @@ namespace forte::com_infra::http {
     return e_Nothing;
   }
 
-  bool CHTTP_Handler::recvClients(const CIPComSocketHandler::TSocketDescriptor paSocket,
+  bool CHTTP_Handler::recvClients(const arch::CIPComSocketHandler::TSocketDescriptor paSocket,
                                   const int paRecvLength) { // check clients
-    CCriticalRegion criticalRegion(mClientMutex);
+    util::CCriticalRegion criticalRegion(mClientMutex);
     for (auto clientLayer = mClientLayers.begin(); clientLayer != mClientLayers.end(); clientLayer++) {
       if (clientLayer->mSocket == paSocket) {
         if (e_ProcessDataOk == clientLayer->mLayer->recvData(sRecvBuffer, static_cast<unsigned int>(paRecvLength))) {
@@ -160,8 +161,8 @@ namespace forte::com_infra::http {
     return false;
   }
 
-  bool CHTTP_Handler::removeHTTPLayerFromClientList(const CIPComSocketHandler::TSocketDescriptor paSocket) {
-    CCriticalRegion criticalRegion(mClientMutex);
+  bool CHTTP_Handler::removeHTTPLayerFromClientList(const arch::CIPComSocketHandler::TSocketDescriptor paSocket) {
+    util::CCriticalRegion criticalRegion(mClientMutex);
     for (auto clientLayer = mClientLayers.begin(); clientLayer != mClientLayers.end(); clientLayer++) {
       if (clientLayer->mSocket == paSocket) {
         // removeAndCloseSocket(paSocket);
@@ -173,8 +174,8 @@ namespace forte::com_infra::http {
     return false;
   }
 
-  bool CHTTP_Handler::recvServers(const CIPComSocketHandler::TSocketDescriptor paSocket) {
-    CCriticalRegion criticalRegion(mServerMutex);
+  bool CHTTP_Handler::recvServers(const arch::CIPComSocketHandler::TSocketDescriptor paSocket) {
+    util::CCriticalRegion criticalRegion(mServerMutex);
     removeSocketFromAccepted(paSocket);
 
     bool found = false;
@@ -220,8 +221,8 @@ namespace forte::com_infra::http {
     return found;
   }
 
-  void CHTTP_Handler::removeSocketFromAccepted(const CIPComSocketHandler::TSocketDescriptor paSocket) {
-    CCriticalRegion criticalRegion(mAcceptedMutex);
+  void CHTTP_Handler::removeSocketFromAccepted(const arch::CIPComSocketHandler::TSocketDescriptor paSocket) {
+    util::CCriticalRegion criticalRegion(mAcceptedMutex);
     for (auto acceptedSocket = mAcceptedSockets.begin(); acceptedSocket != mAcceptedSockets.end(); acceptedSocket++) {
       if (acceptedSocket->mSocket == paSocket) {
         mAcceptedSockets.erase(acceptedSocket);
@@ -230,7 +231,7 @@ namespace forte::com_infra::http {
     }
   }
 
-  void CHTTP_Handler::handlerReceivedWrongPath(const CIPComSocketHandler::TSocketDescriptor paSocket,
+  void CHTTP_Handler::handlerReceivedWrongPath(const arch::CIPComSocketHandler::TSocketDescriptor paSocket,
                                                const std::string &paPath) {
     DEVLOG_ERROR("[HTTP Handler] Path %s has no FB registered\n", paPath.c_str());
 
@@ -240,27 +241,28 @@ namespace forte::com_infra::http {
     std::string mReqData;
     CHttpParser::createResponse(toSend, result, mContentType, mReqData);
     if (static_cast<int>(toSend.length()) !=
-        CIPComSocketHandler::sendDataOnTCP(paSocket, toSend.c_str(), static_cast<unsigned int>(toSend.length()))) {
+        arch::CIPComSocketHandler::sendDataOnTCP(paSocket, toSend.c_str(),
+                                                 static_cast<unsigned int>(toSend.length()))) {
       DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", toSend.c_str());
     }
     removeAndCloseSocket(paSocket);
   }
 
   bool CHTTP_Handler::sendClientData(CHttpComLayer *paLayer, const std::string &paToSend) {
-    CIPComSocketHandler::TSocketDescriptor newSocket =
-        CIPComSocketHandler::openTCPClientConnection(paLayer->getHost().data(), paLayer->getPort());
-    if (CIPComSocketHandler::scmInvalidSocketDescriptor != newSocket) {
+    arch::CIPComSocketHandler::TSocketDescriptor newSocket =
+        arch::CIPComSocketHandler::openTCPClientConnection(paLayer->getHost().data(), paLayer->getPort());
+    if (arch::CIPComSocketHandler::scmInvalidSocketDescriptor != newSocket) {
       if (static_cast<int>(paToSend.length()) ==
-          CIPComSocketHandler::sendDataOnTCP(newSocket, paToSend.c_str(),
-                                             static_cast<unsigned int>(paToSend.length()))) {
-        CCriticalRegion criticalRegion(mClientMutex);
+          arch::CIPComSocketHandler::sendDataOnTCP(newSocket, paToSend.c_str(),
+                                                   static_cast<unsigned int>(paToSend.length()))) {
+        util::CCriticalRegion criticalRegion(mClientMutex);
         HTTPClientWaiting toAdd;
         toAdd.mLayer = paLayer;
         toAdd.mSocket = newSocket;
         toAdd.mStartTime = func_NOW_MONOTONIC();
         startTimeoutThread();
         mClientLayers.emplace_back(std::move(toAdd));
-        mDeviceExecution.getExtEvHandler<CIPComSocketHandler>().addComCallback(newSocket, this);
+        mDeviceExecution.getExtEvHandler<arch::CIPComSocketHandler>().addComCallback(newSocket, this);
         resumeSelfsuspend();
         return true;
       } else {
@@ -276,7 +278,7 @@ namespace forte::com_infra::http {
   }
 
   bool CHTTP_Handler::addServerPath(CHttpComLayer *paLayer, const std::string &paPath) {
-    CCriticalRegion criticalRegion(mServerMutex);
+    util::CCriticalRegion criticalRegion(mServerMutex);
 
     for (auto &serverLayer : mServerLayers) {
       if (serverLayer.mPath == paPath) {
@@ -297,7 +299,7 @@ namespace forte::com_infra::http {
   }
 
   void CHTTP_Handler::removeServerPath(const std::string &paPath) {
-    CCriticalRegion criticalRegion(mServerMutex);
+    util::CCriticalRegion criticalRegion(mServerMutex);
 
     for (auto serverLayer = mServerLayers.begin(); serverLayer != mServerLayers.end(); serverLayer++) {
       if (serverLayer->mPath == paPath) {
@@ -349,7 +351,7 @@ namespace forte::com_infra::http {
   }
 
   void CHTTP_Handler::checkClientLayers() {
-    CCriticalRegion criticalRegion(mClientMutex);
+    util::CCriticalRegion criticalRegion(mClientMutex);
     if (!mClientLayers.empty()) {
       std::vector<HTTPClientWaiting *> clientsToDelete;
       for (auto clientLayer = mClientLayers.begin(); clientLayer != mClientLayers.end();) {
@@ -369,7 +371,7 @@ namespace forte::com_infra::http {
   }
 
   void CHTTP_Handler::checkAcceptedSockets() {
-    CCriticalRegion criticalRegion(mAcceptedMutex);
+    util::CCriticalRegion criticalRegion(mAcceptedMutex);
     if (!mAcceptedSockets.empty()) {
       std::vector<HTTPAcceptedSockets *> acceptedToDelete;
       for (auto acceptedSocket = mAcceptedSockets.begin(); acceptedSocket != mAcceptedSockets.end();) {
@@ -401,11 +403,11 @@ namespace forte::com_infra::http {
   }
 
   void CHTTP_Handler::openHTTPServer() {
-    if (CIPComSocketHandler::scmInvalidSocketDescriptor == smServerListeningSocket) {
+    if (arch::CIPComSocketHandler::scmInvalidSocketDescriptor == smServerListeningSocket) {
       char address[] = "127.0.0.1";
-      smServerListeningSocket = CIPComSocketHandler::openTCPServerConnection(address, gHTTPServerPort.mArgument);
-      if (CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket) {
-        mDeviceExecution.getExtEvHandler<CIPComSocketHandler>().addComCallback(smServerListeningSocket, this);
+      smServerListeningSocket = arch::CIPComSocketHandler::openTCPServerConnection(address, gHTTPServerPort.mArgument);
+      if (arch::CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket) {
+        mDeviceExecution.getExtEvHandler<arch::CIPComSocketHandler>().addComCallback(smServerListeningSocket, this);
         DEVLOG_INFO("[HTTP Handler] HTTP server listening on port %u\n", gHTTPServerPort.mArgument);
       } else {
         DEVLOG_ERROR("[HTTP Handler] Couldn't start HTTP server on port %u\n", gHTTPServerPort.mArgument);
@@ -414,15 +416,15 @@ namespace forte::com_infra::http {
   }
 
   void CHTTP_Handler::closeHTTPServer() {
-    if (CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket) {
+    if (arch::CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket) {
       removeAndCloseSocket(smServerListeningSocket);
-      smServerListeningSocket = CIPComSocketHandler::scmInvalidSocketDescriptor;
+      smServerListeningSocket = arch::CIPComSocketHandler::scmInvalidSocketDescriptor;
     }
   }
 
-  void CHTTP_Handler::removeAndCloseSocket(const CIPComSocketHandler::TSocketDescriptor paSocket) {
-    mDeviceExecution.getExtEvHandler<CIPComSocketHandler>().removeComCallback(paSocket);
-    mDeviceExecution.getExtEvHandler<CIPComSocketHandler>().closeSocket(paSocket);
+  void CHTTP_Handler::removeAndCloseSocket(const arch::CIPComSocketHandler::TSocketDescriptor paSocket) {
+    mDeviceExecution.getExtEvHandler<arch::CIPComSocketHandler>().removeComCallback(paSocket);
+    mDeviceExecution.getExtEvHandler<arch::CIPComSocketHandler>().closeSocket(paSocket);
   }
 
   void CHTTP_Handler::resumeSelfsuspend() {
@@ -442,8 +444,8 @@ namespace forte::com_infra::http {
       if (serverLayer.mLayer == paLayer) {
         auto socket = serverLayer.mSockets.begin();
         if (static_cast<int>(paAnswer.length()) !=
-            CIPComSocketHandler::sendDataOnTCP(*socket, paAnswer.c_str(),
-                                               static_cast<unsigned int>(paAnswer.length()))) {
+            arch::CIPComSocketHandler::sendDataOnTCP(*socket, paAnswer.c_str(),
+                                                     static_cast<unsigned int>(paAnswer.length()))) {
           DEVLOG_ERROR("[HTTP Handler]: Error sending back the answer %s \n", paAnswer.c_str());
         }
         removeAndCloseSocket(*socket);

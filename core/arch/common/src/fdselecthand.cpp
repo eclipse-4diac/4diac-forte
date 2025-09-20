@@ -18,125 +18,127 @@
 #include "forte/cominfra/comCallback.h"
 #include "forte/util/criticalregion.h"
 
-CFDSelectHandler::CFDSelectHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
-  mConnectionListChanged = false;
-}
+namespace forte::arch {
+  CFDSelectHandler::CFDSelectHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
+    mConnectionListChanged = false;
+  }
 
-CFDSelectHandler::~CFDSelectHandler() {
-  this->end();
-}
+  CFDSelectHandler::~CFDSelectHandler() {
+    this->end();
+  }
 
-// single-threaded-network-code
-void CFDSelectHandler::run() {
+  // single-threaded-network-code
+  void CFDSelectHandler::run() {
 
-  struct timeval tv;
-  fd_set anFDSet;
-  fd_set anFDSetMaster;
+    struct timeval tv;
+    fd_set anFDSet;
+    fd_set anFDSetMaster;
 
-  TFileDescriptor nHighestFDID = scmInvalidFileDescriptor;
-  int retval = 0;
+    TFileDescriptor nHighestFDID = scmInvalidFileDescriptor;
+    int retval = 0;
 
-  FD_ZERO(&anFDSetMaster);
+    FD_ZERO(&anFDSetMaster);
 
-  while (isAlive()) {
-    // TODO: create method to prevent 100ms timeout on reconnection
-    mSync.lock();
-    if (true == mConnectionListChanged) {
-      nHighestFDID = createFDSet(&anFDSetMaster);
-    }
-    anFDSet = anFDSetMaster;
-    mSync.unlock();
-
-    tv.tv_sec = 1; // TODO : To be set!
-    tv.tv_usec = 0;
-
-    if (scmInvalidFileDescriptor != nHighestFDID) {
-      retval = select(static_cast<int>(nHighestFDID + 1), &anFDSet, nullptr, nullptr, &tv);
-      if (!isAlive()) {
-        // the thread has been closed in the meantime do not process any messages anymore
-        return;
-      }
-    } else {
-      retval = 0;
-    }
-
-    if (retval > 0) {
+    while (isAlive()) {
+      // TODO: create method to prevent 100ms timeout on reconnection
       mSync.lock();
-      TConnectionContainer::Iterator itEnd(mConnectionsList.end());
-      for (TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd;) {
-        // need to retrieve the callee as the iterator may get invalid in the recvDat function below in case of
-        // connection closing
-        forte::com_infra::CComCallback *callee = itRunner->mCallee;
-        TFileDescriptor sockDes = itRunner->mSockDes;
-        ++itRunner;
+      if (true == mConnectionListChanged) {
+        nHighestFDID = createFDSet(&anFDSetMaster);
+      }
+      anFDSet = anFDSetMaster;
+      mSync.unlock();
 
-        if ((0 != FD_ISSET(sockDes, &anFDSet)) && (nullptr != callee)) {
-          mSync.unlock();
-          if (forte::com_infra::e_Nothing != callee->recvData(&sockDes, 0)) {
-            startNewEventChain(callee->getCommFB());
+      tv.tv_sec = 1; // TODO : To be set!
+      tv.tv_usec = 0;
+
+      if (scmInvalidFileDescriptor != nHighestFDID) {
+        retval = select(static_cast<int>(nHighestFDID + 1), &anFDSet, nullptr, nullptr, &tv);
+        if (!isAlive()) {
+          // the thread has been closed in the meantime do not process any messages anymore
+          return;
+        }
+      } else {
+        retval = 0;
+      }
+
+      if (retval > 0) {
+        mSync.lock();
+        TConnectionContainer::Iterator itEnd(mConnectionsList.end());
+        for (TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd;) {
+          // need to retrieve the callee as the iterator may get invalid in the recvDat function below in case of
+          // connection closing
+          forte::com_infra::CComCallback *callee = itRunner->mCallee;
+          TFileDescriptor sockDes = itRunner->mSockDes;
+          ++itRunner;
+
+          if ((0 != FD_ISSET(sockDes, &anFDSet)) && (nullptr != callee)) {
+            mSync.unlock();
+            if (forte::com_infra::e_Nothing != callee->recvData(&sockDes, 0)) {
+              startNewEventChain(callee->getCommFB());
+            }
+            mSync.lock();
           }
-          mSync.lock();
+        }
+        mSync.unlock();
+      } else {
+        if (retval != 0) {
+#ifdef WIN32
+          DEVLOG_ERROR("Select failed: %d", WSAGetLastError());
+#else
+          DEVLOG_ERROR("Select failed: %s", strerror(errno));
+#endif
         }
       }
-      mSync.unlock();
-    } else {
-      if (retval != 0) {
-#ifdef WIN32
-        DEVLOG_ERROR("Select failed: %d", WSAGetLastError());
-#else
-        DEVLOG_ERROR("Select failed: %s", strerror(errno));
-#endif
-      }
     }
   }
-}
 
-void CFDSelectHandler::addComCallback(TFileDescriptor paFD, forte::com_infra::CComCallback *paComCallback) {
-  {
-    CCriticalRegion criticalRegion(mSync);
-    TConnContType stNewNode = {paFD, paComCallback};
-    mConnectionsList.pushBack(stNewNode);
+  void CFDSelectHandler::addComCallback(TFileDescriptor paFD, forte::com_infra::CComCallback *paComCallback) {
+    {
+      util::CCriticalRegion criticalRegion(mSync);
+      TConnContType stNewNode = {paFD, paComCallback};
+      mConnectionsList.pushBack(stNewNode);
+      mConnectionListChanged = true;
+    }
+    if (!isAlive()) {
+      this->start();
+    }
+  }
+
+  void CFDSelectHandler::removeComCallback(TFileDescriptor paFD) {
+    util::CCriticalRegion criticalRegion(mSync);
+
+    TConnectionContainer::Iterator itRunner(mConnectionsList.begin());
+    TConnectionContainer::Iterator itRefNode(mConnectionsList.end());
+    TConnectionContainer::Iterator itEnd(mConnectionsList.end());
+
+    while (itRunner != itEnd) {
+      if (itRunner->mSockDes == paFD) {
+        if (itRefNode == itEnd) {
+          mConnectionsList.popFront();
+        } else {
+          mConnectionsList.eraseAfter(itRefNode);
+        }
+        break;
+      }
+
+      itRefNode = itRunner;
+      ++itRunner;
+    }
+
     mConnectionListChanged = true;
   }
-  if (!isAlive()) {
-    this->start();
-  }
-}
 
-void CFDSelectHandler::removeComCallback(TFileDescriptor paFD) {
-  CCriticalRegion criticalRegion(mSync);
-
-  TConnectionContainer::Iterator itRunner(mConnectionsList.begin());
-  TConnectionContainer::Iterator itRefNode(mConnectionsList.end());
-  TConnectionContainer::Iterator itEnd(mConnectionsList.end());
-
-  while (itRunner != itEnd) {
-    if (itRunner->mSockDes == paFD) {
-      if (itRefNode == itEnd) {
-        mConnectionsList.popFront();
-      } else {
-        mConnectionsList.eraseAfter(itRefNode);
+  CFDSelectHandler::TFileDescriptor CFDSelectHandler::createFDSet(fd_set *mFDSet) {
+    TFileDescriptor nRetVal = scmInvalidFileDescriptor;
+    FD_ZERO(mFDSet);
+    TConnectionContainer::Iterator itEnd(mConnectionsList.end());
+    for (TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd; ++itRunner) {
+      FD_SET(itRunner->mSockDes, mFDSet);
+      if (itRunner->mSockDes > nRetVal || scmInvalidFileDescriptor == nRetVal) {
+        nRetVal = itRunner->mSockDes;
       }
-      break;
     }
-
-    itRefNode = itRunner;
-    ++itRunner;
+    mConnectionListChanged = false;
+    return nRetVal;
   }
-
-  mConnectionListChanged = true;
-}
-
-CFDSelectHandler::TFileDescriptor CFDSelectHandler::createFDSet(fd_set *mFDSet) {
-  TFileDescriptor nRetVal = scmInvalidFileDescriptor;
-  FD_ZERO(mFDSet);
-  TConnectionContainer::Iterator itEnd(mConnectionsList.end());
-  for (TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd; ++itRunner) {
-    FD_SET(itRunner->mSockDes, mFDSet);
-    if (itRunner->mSockDes > nRetVal || scmInvalidFileDescriptor == nRetVal) {
-      nRetVal = itRunner->mSockDes;
-    }
-  }
-  mConnectionListChanged = false;
-  return nRetVal;
-}
+} // namespace forte::arch

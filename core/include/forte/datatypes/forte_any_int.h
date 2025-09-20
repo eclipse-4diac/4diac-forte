@@ -12,47 +12,47 @@
  *    Martin Melik Markumians
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#ifndef _ANY_INT_H_
-#define _ANY_INT_H_
+
+#pragma once
 
 #include "forte/datatypes/forte_any_num.h"
 
-/*!\ingroup COREDTS CIEC_ANY_INT represents all integer data types according to IEC 61131.
+namespace forte {
+  /*!\ingroup COREDTS CIEC_ANY_INT represents all integer data types according to IEC 61131.
 
- */
-class CIEC_ANY_INT : public CIEC_ANY_NUM {
-  public:
-    explicit CIEC_ANY_INT(TLargestIntValueType paVal) {
-      setSignedValue(paVal);
-    }
+   */
+  class CIEC_ANY_INT : public CIEC_ANY_NUM {
+    public:
+      explicit CIEC_ANY_INT(TLargestIntValueType paVal) {
+        setSignedValue(paVal);
+      }
 
-    ~CIEC_ANY_INT() override = default;
+      ~CIEC_ANY_INT() override = default;
 
-    void reset() override {
-      setLargestInt(0);
-    }
+      void reset() override {
+        setLargestInt(0);
+      }
 
-    bool isSigned() const {
-      return e_LINT >= getDataTypeID();
-    }
+      bool isSigned() const {
+        return e_LINT >= getDataTypeID();
+      }
 
-    TLargestUIntValueType getUnsignedValue() const {
-      return getLargestUInt();
-    }
+      TLargestUIntValueType getUnsignedValue() const {
+        return getLargestUInt();
+      }
 
-    TLargestIntValueType getSignedValue() const {
-      return getLargestInt();
-    }
+      TLargestIntValueType getSignedValue() const {
+        return getLargestInt();
+      }
 
-    void setSignedValue(TLargestIntValueType mVal) {
-      setLargestInt(mVal);
-    }
+      void setSignedValue(TLargestIntValueType mVal) {
+        setLargestInt(mVal);
+      }
 
-    void setUnsignedValue(TLargestIntValueType mVal) {
-      setLargestInt(mVal);
-    }
+      void setUnsignedValue(TLargestIntValueType mVal) {
+        setLargestInt(mVal);
+      }
 
-    CIEC_ANY_INT() = default;
-};
-
-#endif /*_MANY_INT_H_*/
+      CIEC_ANY_INT() = default;
+  };
+} // namespace forte

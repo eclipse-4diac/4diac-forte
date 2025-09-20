@@ -131,7 +131,7 @@ namespace forte::com_infra::opc_ua {
        */
       void setDataAlreadyPresentRead(bool paDataRead);
       bool getDataAlreadyPresentRead();
-      CSyncObject mDataAlreadyPresentMutex;
+      arch::CSyncObject mDataAlreadyPresentMutex;
       bool mDataAlreadyPresent;
 
       bool mIsObjectNodeStruct;
@@ -154,7 +154,7 @@ namespace forte::com_infra::opc_ua {
       /**
        * Mutex to access the mRDBuffer
        */
-      CSyncObject mRDBufferMutex;
+      arch::CSyncObject mRDBufferMutex;
   };
 } // namespace forte::com_infra::opc_ua
 #endif /* SRC_MODULES_OPC_UA_OPCUA_LAYER_H_ */

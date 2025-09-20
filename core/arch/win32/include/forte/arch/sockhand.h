@@ -9,8 +9,8 @@
  * Contributors:
  *  Alois Zoitl, Gerhard Ebenhofer - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef SOCKHAND_H_
-#define SOCKHAND_H_
+
+#pragma once
 
 #include <winsock2.h>
 #include <windows.h>
@@ -24,6 +24,6 @@
 #include "forte/arch/fdselecthand.h"
 #include "forte/arch/win32socketinterf.h"
 
-typedef CGenericIPComSocketHandler<CFDSelectHandler, CWin32SocketInterface> CIPComSocketHandler;
-
-#endif /* SOCKHAND_H_ */
+namespace forte::arch {
+  typedef CGenericIPComSocketHandler<CFDSelectHandler, CWin32SocketInterface> CIPComSocketHandler;
+}

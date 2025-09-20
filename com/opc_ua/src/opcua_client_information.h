@@ -100,7 +100,7 @@ namespace forte::com_infra::opc_ua {
        * Getter of the mutex of the client
        * @return Mutex of the clinet
        */
-      inline CSyncObject &getMutex() {
+      inline arch::CSyncObject &getMutex() {
         return mClientMutex;
       }
 
@@ -385,7 +385,7 @@ namespace forte::com_infra::opc_ua {
       /**
        * Mutex of the client
        */
-      CSyncObject mClientMutex;
+      arch::CSyncObject mClientMutex;
 
       /**
        * Information needed for subscription

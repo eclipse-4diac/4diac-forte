@@ -68,7 +68,7 @@ namespace forte::io {
 
       float mPollInterval;
 
-      CSemaphore mForceLoop;
+      arch::CSemaphore mForceLoop;
   };
 
 } // namespace forte::io

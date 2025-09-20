@@ -61,7 +61,7 @@ namespace forte::iec61499::hardware {
   const std::string_view ReplayDevice::setInitialState(const std::string_view paMGRID) {
     TimerHandlerFactory::setDefaultImpl("FakeTime"_STRID);
     EcetFactory::setDefaultImpl("Fake"_STRID);
-    CFlexibleTracer::setTracer(CFlexibleTracer::AvailableTracers::Internal);
+    trace::CFlexibleTracer::setTracer(trace::CFlexibleTracer::AvailableTracers::Internal);
     return paMGRID;
   }
 } // namespace forte::iec61499::hardware

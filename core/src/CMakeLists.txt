@@ -64,7 +64,6 @@ target_sources(forte-core PRIVATE
         stringid.cpp
         timerha.cpp
         timerhandlerfactory.cpp
-        typeinit.h
         typelib.cpp
         typelib_internal.h
         $<$<BOOL:${FORTE_USE_FAKE_ECET}>:${CMAKE_CURRENT_SOURCE_DIR}/ecetFake.h>

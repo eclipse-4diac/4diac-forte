@@ -9,31 +9,31 @@
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _PCTIMEHA_H_
-#define _PCTIMEHA_H_
+
+#pragma once
 
 #include "forte/arch/forte_thread.h"
 #include "forte/timerha.h"
 
-/*! \ingroup posix_hal
- *\ingroup EXTEVHAND
- *\brief the timer handler for the pc architecture.
- */
-class CPCTimerHandler : public CTimerHandler, private CThread {
-  public:
-    explicit CPCTimerHandler(CDeviceExecution &paDeviceExecution);
+namespace forte::arch {
+  /*! \ingroup posix_hal
+   *\ingroup EXTEVHAND
+   *\brief the timer handler for the pc architecture.
+   */
+  class CPCTimerHandler : public CTimerHandler, private CThread {
+    public:
+      explicit CPCTimerHandler(CDeviceExecution &paDeviceExecution);
 
-    ~CPCTimerHandler() override;
+      ~CPCTimerHandler() override;
 
-    void run() override;
+      void run() override;
 
-    /*!\brief Enables this event source
-     *
-     */
-    void enableHandler() override;
-    /*!\brief Disable this event source
-     */
-    void disableHandler() override;
-};
-
-#endif /*PCTIMEHA_H_*/
+      /*!\brief Enables this event source
+       *
+       */
+      void enableHandler() override;
+      /*!\brief Disable this event source
+       */
+      void disableHandler() override;
+  };
+} // namespace forte::arch

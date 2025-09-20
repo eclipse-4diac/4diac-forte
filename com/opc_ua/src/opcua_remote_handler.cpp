@@ -40,7 +40,7 @@ namespace forte::com_infra::opc_ua {
 
   void COPC_UA_Client_IterationList::addClient(CUA_ClientInformation &paClientInformation) {
     if (paClientInformation.isClientValid()) {
-      CCriticalRegion iterationListRegion(getNewClientsMutex());
+      util::CCriticalRegion iterationListRegion(getNewClientsMutex());
       addClientToList(paClientInformation, getNewClients());
       mNeedsIteration.inc();
       mNewClientsPresent = true;
@@ -48,8 +48,8 @@ namespace forte::com_infra::opc_ua {
   }
 
   void COPC_UA_Client_IterationList::removeClient(CUA_ClientInformation &paClientInformation) {
-    CCriticalRegion iterationListRegion(getIterationClientsMutex());
-    CCriticalRegion newClientsRegion(getNewClientsMutex());
+    util::CCriticalRegion iterationListRegion(getIterationClientsMutex());
+    util::CCriticalRegion newClientsRegion(getNewClientsMutex());
 
     // client could still be in the newList
     std::erase(getNewClients(), &paClientInformation);
@@ -93,8 +93,8 @@ namespace forte::com_infra::opc_ua {
   }
 
   void COPC_UA_Client_IterationList::updateClientList() {
-    CCriticalRegion iterationListRegion(getIterationClientsMutex());
-    CCriticalRegion newClientsRegion(getNewClientsMutex());
+    util::CCriticalRegion iterationListRegion(getIterationClientsMutex());
+    util::CCriticalRegion newClientsRegion(getNewClientsMutex());
     for (auto clientInformation : getNewClients()) {
       addClientToList(*clientInformation, getIterationClients());
     }
@@ -190,7 +190,7 @@ namespace forte::com_infra::opc_ua {
   }
 
   void COPC_UA_Remote_Handler::cleanResources() {
-    CCriticalRegion criticalRegion(mAllClientListMutex);
+    util::CCriticalRegion criticalRegion(mAllClientListMutex);
     for (auto clientInformation : mAllClients) {
       mConnectionHandler.removeClient(*clientInformation);
       removeClient(*clientInformation);
@@ -210,7 +210,7 @@ namespace forte::com_infra::opc_ua {
   }
 
   CUA_ClientInformation *COPC_UA_Remote_Handler::getClient(const std::string &paEndpoint) {
-    CCriticalRegion allClientsRegion(mAllClientListMutex);
+    util::CCriticalRegion allClientsRegion(mAllClientListMutex);
 
     CUA_ClientInformation *client = nullptr;
     for (auto clientInformation : mAllClients) {
@@ -233,9 +233,9 @@ namespace forte::com_infra::opc_ua {
   }
 
   void COPC_UA_Remote_Handler::addActionToClient(CActionInfo &paActionInfo) {
-    CCriticalRegion allClientsRegion(mAllClientListMutex);
+    util::CCriticalRegion allClientsRegion(mAllClientListMutex);
     for (auto clientInformation : mAllClients) {
-      CCriticalRegion clientRegion(clientInformation->getMutex());
+      util::CCriticalRegion clientRegion(clientInformation->getMutex());
       if (clientInformation->getEndpoint() == paActionInfo.getEndpoint()) {
         clientInformation->addAction(paActionInfo);
         addClientToConnectionHandler(*clientInformation);
@@ -245,11 +245,11 @@ namespace forte::com_infra::opc_ua {
   }
 
   void COPC_UA_Remote_Handler::removeActionFromClient(CActionInfo &paActionInfo) {
-    CCriticalRegion allClientsRegion(mAllClientListMutex);
+    util::CCriticalRegion allClientsRegion(mAllClientListMutex);
 
     CUA_ClientInformation *clientToDelete = nullptr;
     for (auto clientInformation : mAllClients) {
-      CCriticalRegion clientRegion(clientInformation->getMutex());
+      util::CCriticalRegion clientRegion(clientInformation->getMutex());
       if (clientInformation->getEndpoint() == paActionInfo.getEndpoint()) {
         clientInformation->removeAction(paActionInfo);
         clientToDelete = clientInformation;
@@ -275,12 +275,12 @@ namespace forte::com_infra::opc_ua {
   }
 
   bool COPC_UA_Remote_Handler::handleClients() {
-    CCriticalRegion iterationCriticalRegion(
+    util::CCriticalRegion iterationCriticalRegion(
         getIterationClientsMutex()); // this is needed because removing a client from the list could cause trouble
     std::vector<CUA_ClientInformation *> failedClients;
     bool asyncIsNeeded = false;
     for (auto clientInformation : getIterationClients()) {
-      CCriticalRegion criticalRegionClienMutex(clientInformation->getMutex());
+      util::CCriticalRegion criticalRegionClienMutex(clientInformation->getMutex());
       if (clientInformation->isAsyncNeeded()) {
         if (!clientInformation->executeAsyncCalls()) {
           failedClients.push_back(clientInformation);
@@ -298,8 +298,8 @@ namespace forte::com_infra::opc_ua {
         DEVLOG_ERROR("[OPC UA REMOTE]: There was a problem checking remote %s.\n", failedClient->getEndpoint().c_str());
 
         // we cannot use COPC_UA_Client_IterationList::remove here because it locks mIterationClientsMutex
-        CCriticalRegion newClientsRegion(getNewClientsMutex());
-        CCriticalRegion criticalRegionClienMutex(failedClient->getMutex());
+        util::CCriticalRegion newClientsRegion(getNewClientsMutex());
+        util::CCriticalRegion criticalRegionClienMutex(failedClient->getMutex());
 
         std::erase(getIterationClients(), failedClient);
         std::erase(getNewClients(), failedClient); // client could still be in the newList
@@ -321,11 +321,11 @@ namespace forte::com_infra::opc_ua {
   COPC_UA_Remote_Handler::UA_ConnectionHandler::~UA_ConnectionHandler() = default;
 
   bool COPC_UA_Remote_Handler::UA_ConnectionHandler::handleClients() {
-    CCriticalRegion clientsClientsRegion(getIterationClientsMutex());
+    util::CCriticalRegion clientsClientsRegion(getIterationClientsMutex());
     std::vector<CUA_ClientInformation *> clientsToRemove;
     bool needsRetry = false;
     for (auto clientInformation : getIterationClients()) {
-      CCriticalRegion clientRegion(clientInformation->getMutex());
+      util::CCriticalRegion clientRegion(clientInformation->getMutex());
       if (clientInformation->handleClientState()) {
         clientsToRemove.push_back(clientInformation);
       } else {

@@ -29,7 +29,7 @@ namespace forte::com_infra::opc_ua {
    * the action ot be executed periodically on the clients is done in the pure virtual handleClients(). The iteration
    * can sleep forever or sleep for some time and then iterate again. In both cases, the thread can be awaken.
    */
-  class COPC_UA_Client_IterationList : public CThread {
+  class COPC_UA_Client_IterationList : public arch::CThread {
     public:
       /**
        * Constructor of the class
@@ -97,7 +97,7 @@ namespace forte::com_infra::opc_ua {
        * Access to private member mIterationClientsMutex
        * @return mIterationClientsMutex
        */
-      CSyncObject &getIterationClientsMutex() {
+      arch::CSyncObject &getIterationClientsMutex() {
         return mIterationClientsMutex;
       }
 
@@ -113,7 +113,7 @@ namespace forte::com_infra::opc_ua {
        * Access to private member mIterationClients
        * @return mNewClientsMutex
        */
-      CSyncObject &getNewClientsMutex() {
+      arch::CSyncObject &getNewClientsMutex() {
         return mNewClientsMutex;
       }
 
@@ -126,7 +126,7 @@ namespace forte::com_infra::opc_ua {
       /**
        * Mutex to access the list of clients which is iterated
        */
-      CSyncObject mIterationClientsMutex;
+      arch::CSyncObject mIterationClientsMutex;
 
       /**
        * List of new clients. It serves as a buffer that is latter added to the main iteration list
@@ -136,7 +136,7 @@ namespace forte::com_infra::opc_ua {
       /**
        * Mutex to access the list of new clients
        */
-      CSyncObject mNewClientsMutex;
+      arch::CSyncObject mNewClientsMutex;
 
       /**
        * Adds a client to a list. If the client is already present, no client is added
@@ -159,7 +159,7 @@ namespace forte::com_infra::opc_ua {
       /**
        * Indicates if the iteration should continue
        */
-      CSemaphore mNeedsIteration;
+      arch::CSemaphore mNeedsIteration;
 
       /**
        * Cyclic time to sleep if another iteration is needed. This is the period at which the iteration occurs normally
@@ -306,7 +306,7 @@ namespace forte::com_infra::opc_ua {
       /**
        *  Mutex to access the list with all clients
        */
-      CSyncObject mAllClientListMutex;
+      arch::CSyncObject mAllClientListMutex;
   };
 } // namespace forte::com_infra::opc_ua
 #endif /* SRC_MODULES_OPC_UA_OPCUACLIENTHANDLER_H_ */

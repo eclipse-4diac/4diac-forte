@@ -14,30 +14,30 @@
 #include "forte/cominfra/comlayer.h"
 #include "forte/cominfra/commfb.h"
 
-using namespace forte::com_infra;
-
-CComLayer::CComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
-    mConnectionState(e_Disconnected),
-    mTopLayer(paUpperLayer),
-    mBottomLayer(nullptr),
-    mFb(paComFB) {
-  if (nullptr != mTopLayer) {
-    mTopLayer->setBottomLayer(this);
+namespace forte::com_infra {
+  CComLayer::CComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
+      mConnectionState(e_Disconnected),
+      mTopLayer(paUpperLayer),
+      mBottomLayer(nullptr),
+      mFb(paComFB) {
+    if (nullptr != mTopLayer) {
+      mTopLayer->setBottomLayer(this);
+    }
   }
-}
 
-CComLayer::~CComLayer() {
-  if (mBottomLayer != nullptr) {
-    mBottomLayer->closeConnection();
-    delete mBottomLayer;
+  CComLayer::~CComLayer() {
+    if (mBottomLayer != nullptr) {
+      mBottomLayer->closeConnection();
+      delete mBottomLayer;
+    }
   }
-}
 
-EComResponse CComLayer::processInterrupt() {
-  return e_Nothing;
-}
+  EComResponse CComLayer::processInterrupt() {
+    return e_Nothing;
+  }
 
-const CIEC_ANY &CComLayer::getSDx(void *paData, int paSdNum) {
-  const CIEC_ANY **sds = static_cast<const CIEC_ANY **>(paData);
-  return sds[paSdNum]->unwrap();
-}
+  const CIEC_ANY &CComLayer::getSDx(void *paData, int paSdNum) {
+    const CIEC_ANY **sds = static_cast<const CIEC_ANY **>(paData);
+    return sds[paSdNum]->unwrap();
+  }
+} // namespace forte::com_infra

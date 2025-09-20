@@ -34,7 +34,7 @@ namespace forte::com_infra::opc_ua {
 
   std::unique_ptr<CActionInfo> CActionInfo::getActionInfoFromParams(const char *paParams, COPC_UA_Layer &paLayer) {
     std::unique_ptr<CActionInfo> retVal = nullptr;
-    CParameterParser mainParser(paParams, ';');
+    util::CParameterParser mainParser(paParams, ';');
     size_t amountOfParameters = mainParser.parseParameters();
 
     if (scmMinimumAmounOfParameters <= amountOfParameters) {
@@ -293,7 +293,7 @@ namespace forte::com_infra::opc_ua {
 
   bool CActionInfo::CActionParser::handlePair(const char *paPair, std::vector<CNodePairInfo> &paResult) {
     bool retVal = false;
-    CParameterParser pairParser(paPair, ',');
+    util::CParameterParser pairParser(paPair, ',');
     std::string browsePathResult;
     UA_NodeId *nodeIdResult = nullptr;
     size_t noOfParameters = pairParser.parseParameters();
@@ -323,7 +323,8 @@ namespace forte::com_infra::opc_ua {
     // should come from the browsename
     unsigned int identifierPosition = 0;
 
-    CParameterParser mainParser(paNodeIdString, ':'); // namespace and identifier should be divided by a colon. If first
+    util::CParameterParser mainParser(paNodeIdString,
+                                      ':'); // namespace and identifier should be divided by a colon. If first
     // parameter is omitted, namespace 0 is assumed
     size_t numberOfParameters = mainParser.parseParameters();
 
@@ -365,7 +366,7 @@ namespace forte::com_infra::opc_ua {
   }
 
   bool CActionInfo::CActionParser::parseIdentifier(const char *paIdentifier, UA_NodeId &paResult) {
-    CParameterParser identifierParser(paIdentifier, '='); //<identifiertype>=<identifier>
+    util::CParameterParser identifierParser(paIdentifier, '='); //<identifiertype>=<identifier>
     if (eMaxNumberOfNodeIdIdenfiertPositions == identifierParser.parseParameters()) {
       if (0 == strcmp(identifierParser[eIdenfierType], "i")) { // numeric
         paResult.identifierType = UA_NODEIDTYPE_NUMERIC;
@@ -403,7 +404,7 @@ namespace forte::com_infra::opc_ua {
 
   CLocalMethodInfo::~CLocalMethodInfo() = default;
 
-  CSemaphore &CLocalMethodInfo::getResultReady() {
+  arch::CSemaphore &CLocalMethodInfo::getResultReady() {
     return mResultIsReady;
   }
 } // namespace forte::com_infra::opc_ua

@@ -9,46 +9,46 @@
  * Contributors:
  *  Alois Zoitl, Gerhard Ebenhofer - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _PCTIMEHA_H_
-#define _PCTIMEHA_H_
+
+#pragma once
 
 #include "forte/arch/forte_thread.h"
 #include "forte/timerha.h"
 
-/*! \ingroup win32_hal
- *\ingroup EXTEVHAND
- *\brief the timer handler for the pc architecture.
- */
-class CPCTimerHandler : public CTimerHandler, public CThread {
-  private:
-    /*!\brief default time base of the used timer. in useconds.
-     */
-    static const TForteInt32 csmTicksPerSecond;
-    /*!\brief callback function for the system timer
-     */
+namespace forte::arch {
+  /*! \ingroup win32_hal
+   *\ingroup EXTEVHAND
+   *\brief the timer handler for the pc architecture.
+   */
+  class CPCTimerHandler : public CTimerHandler, public CThread {
+    private:
+      /*!\brief default time base of the used timer. in useconds.
+       */
+      static const TForteInt32 csmTicksPerSecond;
+      /*!\brief callback function for the system timer
+       */
 
-  public:
-    explicit CPCTimerHandler(CDeviceExecution &paDeviceExecution);
+    public:
+      explicit CPCTimerHandler(CDeviceExecution &paDeviceExecution);
 
-    ~CPCTimerHandler() override;
+      ~CPCTimerHandler() override;
 
-    void run() override;
+      void run() override;
 
-    /*!\brief Enables this event source
-     *
-     */
-    void enableHandler() override;
-    /*!\brief Disable this event source
-     */
-    void disableHandler() override;
+      /*!\brief Enables this event source
+       *
+       */
+      void enableHandler() override;
+      /*!\brief Disable this event source
+       */
+      void disableHandler() override;
 
-    /*! \brief Get the time base of the runtime
-     *
-     * \return internal runtime ticks per millisecond
-     */
-    virtual TForteUInt32 getTicksPerSecond() {
-      return csmTicksPerSecond;
-    };
-};
-
-#endif /*PCTIMEHA_H_*/
+      /*! \brief Get the time base of the runtime
+       *
+       * \return internal runtime ticks per millisecond
+       */
+      virtual TForteUInt32 getTicksPerSecond() {
+        return csmTicksPerSecond;
+      };
+  };
+} // namespace forte::arch

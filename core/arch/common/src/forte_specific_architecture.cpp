@@ -12,10 +12,12 @@
 
 #include "forte/arch/forte_specific_architecture.h"
 
-int CForteSpecificArchitecture::initialize(int, char **) {
-  return 0;
-}
+namespace forte::arch {
+  int CForteSpecificArchitecture::initialize(int, char **) {
+    return 0;
+  }
 
-int CForteSpecificArchitecture::deinitialize() {
-  return 0;
-}
+  int CForteSpecificArchitecture::deinitialize() {
+    return 0;
+  }
+} // namespace forte::arch

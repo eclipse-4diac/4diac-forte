@@ -22,14 +22,13 @@
 #include <vector>
 #include <memory>
 
-class CFunctionBlock;
-class CDevice;
-class CResource;
-
 namespace forte {
 
   class CAdapter;
   class CAnyAdapterPin;
+  class CDevice;
+  class CFunctionBlock;
+  class CResource;
 
   class CFBContainer {
       template<typename U>

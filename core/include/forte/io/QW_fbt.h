@@ -18,12 +18,14 @@
 #include "forte/io/outputfb.h"
 #include "forte/datatypes/forte_word.h"
 
-/*! /brief generic class for QW function blocks providing access to one word physical output
- *
- */
-class FORTE_QW final : public forte::io::COutputFB<CIEC_WORD> {
-    DECLARE_FIRMWARE_FB(FORTE_QW)
+namespace forte::io {
+  /*! /brief generic class for QW function blocks providing access to one word physical output
+   *
+   */
+  class FORTE_QW final : public forte::io::COutputFB<CIEC_WORD> {
+      DECLARE_FIRMWARE_FB(FORTE_QW)
 
-  public:
-    FORTE_QW(forte::StringId paInstanceNameId, CFBContainer &paContainer);
-};
+    public:
+      FORTE_QW(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+  };
+} // namespace forte::io

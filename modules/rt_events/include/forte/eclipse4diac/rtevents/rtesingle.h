@@ -26,7 +26,7 @@ namespace forte::eclipse4diac::rtevents {
   class CRTEventSingle : public CFunctionBlock {
     private:
       CEventChainExecutionThread mECEO;
-      CSyncObject mSyncObj; //!< Lock for protected the RT_E_FB from mutual events
+      arch::CSyncObject mSyncObj; //!< Lock for protected the RT_E_FB from mutual events
       bool mInitialized;
 
       /*! \brief check if the succeeding EC part needs to be activated.

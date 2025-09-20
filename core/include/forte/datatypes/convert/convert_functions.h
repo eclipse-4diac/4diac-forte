@@ -28,16 +28,6 @@
 #include "forte/datatypes/forte_any.h"
 #include "forte/datatypes/forte_string.h"
 
-/*! \file
- * This file implements the type conversion functions as defined by IEC 61131-3 in subclause 2.5.1.5.1
- */
-
-inline CIEC_STRING func_ANY_AS_STRING(const CIEC_ANY &paVal) {
-  CIEC_STRING string;
-  stringConverter(string, paVal.unwrap());
-  return string;
-}
-
 #include "TimeOfDayToConvertFunctions.h"
 #include "DateAndTimeToConvertFunctions.h"
 #include "LDateAndTimeToConvertFunctions.h"
@@ -64,3 +54,15 @@ inline CIEC_STRING func_ANY_AS_STRING(const CIEC_ANY &paVal) {
 #include "BcdConvertFunctions.h"
 #include "TimeInResolutionConvertFunctions.h"
 #include "overloadedConvertFunctions.h"
+
+namespace forte {
+  /*! \file
+   * This file implements the type conversion functions as defined by IEC 61131-3 in subclause 2.5.1.5.1
+   */
+
+  inline CIEC_STRING func_ANY_AS_STRING(const CIEC_ANY &paVal) {
+    CIEC_STRING string;
+    stringConverter(string, paVal.unwrap());
+    return string;
+  }
+} // namespace forte

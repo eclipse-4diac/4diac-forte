@@ -193,7 +193,7 @@ namespace forte::com_infra::http {
     char *helperChar = strstr(paSrc, "\r\n");
     if (helperChar != nullptr) {
       *helperChar = '\0';
-      CParameterParser parser(paSrc, ' ');
+      util::CParameterParser parser(paSrc, ' ');
       if (3 <= parser.parseParameters()) { // Reason-Phrase can contain spaces in it
         paDest = std::string(parser[1]);
       } else {

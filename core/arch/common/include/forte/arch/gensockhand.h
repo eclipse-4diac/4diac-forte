@@ -9,8 +9,8 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _GENSOCKHAND_H_
-#define _GENSOCKHAND_H_
+
+#pragma once
 
 #ifndef FORTE_SOCKET_TYPE
 #define FORTE_SOCKET_TYPE int
@@ -20,26 +20,26 @@
 #define FORTE_INVALID_SOCKET -1
 #endif
 
-/*!\brief Template class allowing to easily setup IP communication socket handlers.
- *
- * There are two template parameters:
- *  - THandler  an external event handler which allows Comlayers to register with a descriptor and get notifications on
- * received messages
- *  - TSocektCreator a class providing methods for creating and deleting tcp and udp sockets
- */
-template<typename THandler, typename TSocketCreator>
-class CGenericIPComSocketHandler : public THandler, public TSocketCreator {
-  public:
-    //! Type needed by the class CIPCommLayer
-    typedef FORTE_SOCKET_TYPE TSocketDescriptor;
+namespace forte::arch {
+  /*!\brief Template class allowing to easily setup IP communication socket handlers.
+   *
+   * There are two template parameters:
+   *  - THandler  an external event handler which allows Comlayers to register with a descriptor and get notifications
+   * on received messages
+   *  - TSocektCreator a class providing methods for creating and deleting tcp and udp sockets
+   */
+  template<typename THandler, typename TSocketCreator>
+  class CGenericIPComSocketHandler : public THandler, public TSocketCreator {
+    public:
+      //! Type needed by the class CIPCommLayer
+      typedef FORTE_SOCKET_TYPE TSocketDescriptor;
 
-    static const TSocketDescriptor scmInvalidSocketDescriptor = FORTE_INVALID_SOCKET;
+      static const TSocketDescriptor scmInvalidSocketDescriptor = FORTE_INVALID_SOCKET;
 
-    // as this class is just a place holder for the others we don't want to have an instance of it
-    CGenericIPComSocketHandler() = delete;
-    CGenericIPComSocketHandler(const CGenericIPComSocketHandler &) = delete;
-    CGenericIPComSocketHandler &operator=(const CGenericIPComSocketHandler &) = delete;
-    ~CGenericIPComSocketHandler() override = default;
-};
-
-#endif /* _GENSOCKHAND_H_ */
+      // as this class is just a place holder for the others we don't want to have an instance of it
+      CGenericIPComSocketHandler() = delete;
+      CGenericIPComSocketHandler(const CGenericIPComSocketHandler &) = delete;
+      CGenericIPComSocketHandler &operator=(const CGenericIPComSocketHandler &) = delete;
+      ~CGenericIPComSocketHandler() override = default;
+  };
+} // namespace forte::arch

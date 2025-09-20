@@ -21,57 +21,54 @@
 
 using namespace forte::literals;
 
-namespace {
-  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<forte::com_infra::CRawDataComLayer>
-      entry("raw"_STRID);
-}
+namespace forte::com_infra {
+  namespace {
+    [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<forte::com_infra::CRawDataComLayer>
+        entry("raw"_STRID);
+  }
 
-namespace forte {
-  namespace com_infra {
+  CRawDataComLayer::CRawDataComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB) : CComLayer(paUpperLayer, paFB) {
+  }
 
-    CRawDataComLayer::CRawDataComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB) : CComLayer(paUpperLayer, paFB) {
+  CRawDataComLayer::~CRawDataComLayer() = default;
+
+  void CRawDataComLayer::closeConnection() {
+    // We don't need to do anything specific on closing
+  }
+
+  EComResponse CRawDataComLayer::sendData(void *paData, unsigned int) {
+    const CIEC_ANY **apoSDs = static_cast<const CIEC_ANY **>(paData);
+    const CIEC_STRING &val(static_cast<const CIEC_STRING &>(apoSDs[0]->unwrap()));
+    mBottomLayer->sendData((void *) val.getStorage().c_str(), val.length());
+    return e_ProcessDataOk;
+  }
+
+  EComResponse CRawDataComLayer::recvData(const void *paData, unsigned int paSize) {
+    if (nullptr == mTopLayer && mFb->getNumRD() == 1) {
+      CIEC_ANY **apoRDs = static_cast<CIEC_ANY **>(mFb->getRDs());
+      CIEC_STRING &val(static_cast<CIEC_STRING &>(apoRDs[0]->unwrap()));
+      val.assign(static_cast<const char *>(paData), static_cast<TForteUInt16>(paSize));
     }
+    return e_ProcessDataOk;
+  }
 
-    CRawDataComLayer::~CRawDataComLayer() = default;
-
-    void CRawDataComLayer::closeConnection() {
-      // We don't need to do anything specific on closing
+  EComResponse CRawDataComLayer::openConnection(char *) {
+    switch (mFb->getComServiceType()) {
+      case e_Client:
+      case e_Publisher:
+        if (mFb->getNumSD() != 1 ||
+            (mFb->getNumSD() > 0 && CIEC_ANY::e_STRING != mFb->getSDs()[0]->unwrap().getDataTypeID())) {
+          return e_InitTerminated;
+        }
+        break;
+      case e_Server:
+      case e_Subscriber:
+        if (mFb->getNumRD() != 1 ||
+            (mFb->getNumRD() > 0 && CIEC_ANY::e_STRING != mFb->getRDs()[0]->unwrap().getDataTypeID())) {
+          return e_InitTerminated;
+        }
+        break;
     }
-
-    EComResponse CRawDataComLayer::sendData(void *paData, unsigned int) {
-      const CIEC_ANY **apoSDs = static_cast<const CIEC_ANY **>(paData);
-      const CIEC_STRING &val(static_cast<const CIEC_STRING &>(apoSDs[0]->unwrap()));
-      mBottomLayer->sendData((void *) val.getStorage().c_str(), val.length());
-      return e_ProcessDataOk;
-    }
-
-    EComResponse CRawDataComLayer::recvData(const void *paData, unsigned int paSize) {
-      if (nullptr == mTopLayer && mFb->getNumRD() == 1) {
-        CIEC_ANY **apoRDs = static_cast<CIEC_ANY **>(mFb->getRDs());
-        CIEC_STRING &val(static_cast<CIEC_STRING &>(apoRDs[0]->unwrap()));
-        val.assign(static_cast<const char *>(paData), static_cast<TForteUInt16>(paSize));
-      }
-      return e_ProcessDataOk;
-    }
-
-    EComResponse CRawDataComLayer::openConnection(char *) {
-      switch (mFb->getComServiceType()) {
-        case e_Client:
-        case e_Publisher:
-          if (mFb->getNumSD() != 1 ||
-              (mFb->getNumSD() > 0 && CIEC_ANY::e_STRING != mFb->getSDs()[0]->unwrap().getDataTypeID())) {
-            return e_InitTerminated;
-          }
-          break;
-        case e_Server:
-        case e_Subscriber:
-          if (mFb->getNumRD() != 1 ||
-              (mFb->getNumRD() > 0 && CIEC_ANY::e_STRING != mFb->getRDs()[0]->unwrap().getDataTypeID())) {
-            return e_InitTerminated;
-          }
-          break;
-      }
-      return e_InitOk;
-    }
-  } /* namespace com_infra */
-} /* namespace forte */
+    return e_InitOk;
+  }
+} // namespace forte::com_infra

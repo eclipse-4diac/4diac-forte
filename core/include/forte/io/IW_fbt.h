@@ -18,12 +18,14 @@
 #include "forte/io/inputfb.h"
 #include "forte/datatypes/forte_word.h"
 
-/*! /brief generic class for IW function blocks providing access to one word physical input
- *
- */
-class FORTE_IW final : public forte::io::CInputFB<CIEC_WORD> {
-    DECLARE_FIRMWARE_FB(FORTE_IW)
+namespace forte::io {
+  /*! /brief generic class for IW function blocks providing access to one word physical input
+   *
+   */
+  class FORTE_IW final : public forte::io::CInputFB<CIEC_WORD> {
+      DECLARE_FIRMWARE_FB(FORTE_IW)
 
-  public:
-    FORTE_IW(forte::StringId paInstanceNameId, CFBContainer &paContainer);
-};
+    public:
+      FORTE_IW(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+  };
+} // namespace forte::io

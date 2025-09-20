@@ -12,55 +12,50 @@
  *    and documentation
  *******************************************************************************/
 
-#ifndef SRC_ARCH_WIN32_SEMAPHORE_H_
-#define SRC_ARCH_WIN32_SEMAPHORE_H_
+#pragma once
 
 #include <windows.h>
 
 #include "forte/datatype.h"
 
-namespace forte {
-  namespace arch {
+namespace forte::arch {
 
-    /*!\brief counting semaphore for syncing operation in FORTE
-     *
-     * The semaphore is initialized with the value given.
-     */
-    class CWin32Semaphore {
-      public:
-        explicit CWin32Semaphore(unsigned int paInitialValue = 0);
-        ~CWin32Semaphore();
+  /*!\brief counting semaphore for syncing operation in FORTE
+   *
+   * The semaphore is initialized with the value given.
+   */
+  class CWin32Semaphore {
+    public:
+      explicit CWin32Semaphore(unsigned int paInitialValue = 0);
+      ~CWin32Semaphore();
 
-        /** @brief Unlocks (increments) the semaphore
-         *
-         */
-        void inc();
-        /** @brief Waits until the semaphore can be locked
-         *
-         */
-        void waitIndefinitely();
+      /** @brief Unlocks (increments) the semaphore
+       *
+       */
+      void inc();
+      /** @brief Waits until the semaphore can be locked
+       *
+       */
+      void waitIndefinitely();
 
-        /** @brief Checks if the semaphore is locked, and waits the specified amount of time if it is locked
-         *
-         * @param paRelativeTimeout - The relative time span to wait in nanoseconds
-         * @return true - semaphore has become available before the timeout, false - semaphore was not available before
-         * timeout
-         */
-        bool timedWait(const TForteUInt64 paRelativeTimeout);
+      /** @brief Checks if the semaphore is locked, and waits the specified amount of time if it is locked
+       *
+       * @param paRelativeTimeout - The relative time span to wait in nanoseconds
+       * @return true - semaphore has become available before the timeout, false - semaphore was not available before
+       * timeout
+       */
+      bool timedWait(const TForteUInt64 paRelativeTimeout);
 
-        /** @brief Tries to immediately get the semaphore, if it is available
-         *
-         * @return true - semaphore was available, false - semaphore was not available
-         */
-        bool tryNoWait();
+      /** @brief Tries to immediately get the semaphore, if it is available
+       *
+       * @return true - semaphore was available, false - semaphore was not available
+       */
+      bool tryNoWait();
 
-      private:
-        HANDLE mSemaphore;
-    };
+    private:
+      HANDLE mSemaphore;
+  };
 
-    typedef CWin32Semaphore CSemaphore;
+  typedef CWin32Semaphore CSemaphore;
 
-  } /* namespace arch */
-} /* namespace forte */
-
-#endif /* SRC_ARCH_WIN32_SEMAPHORE_H_ */
+} // namespace forte::arch

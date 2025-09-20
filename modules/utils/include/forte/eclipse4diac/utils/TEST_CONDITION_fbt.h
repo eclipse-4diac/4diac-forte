@@ -38,7 +38,7 @@ namespace forte::eclipse4diac::utils {
       void writeOutputData(TEventID paEIID) override;
       void setInitialValues() override;
 
-      CSyncObject mFinalReportMutex;
+      arch::CSyncObject mFinalReportMutex;
 
     public:
       FORTE_TEST_CONDITION(StringId paInstanceNameId, CFBContainer &paContainer);

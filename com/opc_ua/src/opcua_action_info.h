@@ -373,7 +373,7 @@ namespace forte::com_infra::opc_ua {
        * Getter for the semaphore of the action
        * @return the semaphore of the action
        */
-      CSemaphore &getResultReady();
+      arch::CSemaphore &getResultReady();
 
       CLocalMethodInfo(const CLocalMethodInfo &paObj) = delete;
       CLocalMethodInfo &operator=(const CLocalMethodInfo &other) = delete;
@@ -383,7 +383,7 @@ namespace forte::com_infra::opc_ua {
        * When a method is called, it waits with this semaphore until the response comes back to the FB, when this
        * semaphore is increased indicating the method has finished
        */
-      CSemaphore mResultIsReady;
+      arch::CSemaphore mResultIsReady;
   };
 } // namespace forte::com_infra::opc_ua
 #endif /* SRC_MODULES_OPC_UA_OPCUA_ACTION_INFO_H_ */

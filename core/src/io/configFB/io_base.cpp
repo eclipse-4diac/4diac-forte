@@ -13,12 +13,12 @@
 
 #include "forte/io/configFB/io_base.h"
 
-using namespace forte::io;
+namespace forte::io {
+  IOConfigFBBase::IOConfigFBBase(CFBContainer &paContainer,
+                                 const SFBInterfaceSpec &paInterfaceSpec,
+                                 const StringId paInstanceNameId) :
+      CEventSourceFB(paContainer, paInterfaceSpec, paInstanceNameId) {
+  }
 
-IOConfigFBBase::IOConfigFBBase(CFBContainer &paContainer,
-                               const SFBInterfaceSpec &paInterfaceSpec,
-                               const StringId paInstanceNameId) :
-    CEventSourceFB(paContainer, paInterfaceSpec, paInstanceNameId) {
-}
-
-IOConfigFBBase::~IOConfigFBBase() = default;
+  IOConfigFBBase::~IOConfigFBBase() = default;
+} // namespace forte::io

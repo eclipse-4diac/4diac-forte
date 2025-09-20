@@ -17,7 +17,6 @@
 #include "forte/ecet.h"
 
 namespace forte {
-
   CAdapter::CAdapter(CFBContainer &paContainer,
                      const SFBInterfaceSpec &paInterfaceSpec,
                      const StringId paInstanceNameId,

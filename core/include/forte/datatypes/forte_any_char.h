@@ -11,32 +11,32 @@
  *    Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#ifndef _ANY_CHAR_H_
-#define _ANY_CHAR_H_
+
+#pragma once
 
 #include "forte/datatypes/forte_any_chars.h"
 
-/*!\ingroup COREDTS CIEC_ANY_CHAR represents ANY_CHAR data types according to
- *  IEC 61131.
- */
-class CIEC_ANY_CHAR : public CIEC_ANY_CHARS {
-  public:
-    CIEC_ANY_CHAR(const CIEC_ANY_CHAR &paVal) : CIEC_ANY_CHARS() {
-      setLargestUInt(paVal.getLargestUInt());
-    }
+namespace forte {
+  /*!\ingroup COREDTS CIEC_ANY_CHAR represents ANY_CHAR data types according to
+   *  IEC 61131.
+   */
+  class CIEC_ANY_CHAR : public CIEC_ANY_CHARS {
+    public:
+      CIEC_ANY_CHAR(const CIEC_ANY_CHAR &paVal) : CIEC_ANY_CHARS() {
+        setLargestUInt(paVal.getLargestUInt());
+      }
 
-    ~CIEC_ANY_CHAR() override = default;
+      ~CIEC_ANY_CHAR() override = default;
 
-    EDataTypeID getDataTypeID() const override {
-      return e_ANY;
-    }
+      EDataTypeID getDataTypeID() const override {
+        return e_ANY;
+      }
 
-    void reset() override {
-      setLargestInt(0);
-    }
+      void reset() override {
+        setLargestInt(0);
+      }
 
-  protected:
-    CIEC_ANY_CHAR() = default;
-};
-
-#endif /*_ANY_CHAR_H_*/
+    protected:
+      CIEC_ANY_CHAR() = default;
+  };
+} // namespace forte

@@ -14,11 +14,11 @@
 #include "negdataconn.h"
 
 using namespace forte::literals;
-
-using namespace forte::internal;
 using namespace std::string_literals;
 
-void CNegatingDataConnection::getSourcePortName(TNameIdentifier &paResult) const {
-  CDataConnection::getSourcePortName(paResult);
-  paResult.push_back("NOT"_STRID);
-}
+namespace forte::internal {
+  void CNegatingDataConnection::getSourcePortName(TNameIdentifier &paResult) const {
+    CDataConnection::getSourcePortName(paResult);
+    paResult.push_back("NOT"_STRID);
+  }
+} // namespace forte::internal

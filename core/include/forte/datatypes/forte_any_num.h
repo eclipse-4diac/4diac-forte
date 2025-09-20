@@ -12,24 +12,24 @@
  *    Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#ifndef _ANY_NUM_H_
-#define _ANY_NUM_H_
+
+#pragma once
 
 #include "forte/datatypes/forte_any_magnitude.h"
 
-/*!\ingroup COREDTS CIEC_ANY_NUM represents any number data types according to IEC 61131.
+namespace forte {
+  /*!\ingroup COREDTS CIEC_ANY_NUM represents any number data types according to IEC 61131.
 
- */
-class CIEC_ANY_NUM : public CIEC_ANY_MAGNITUDE {
-  public:
-    ~CIEC_ANY_NUM() override = default;
+   */
+  class CIEC_ANY_NUM : public CIEC_ANY_MAGNITUDE {
+    public:
+      ~CIEC_ANY_NUM() override = default;
 
-    EDataTypeID getDataTypeID() const override {
-      return e_ANY;
-    }
+      EDataTypeID getDataTypeID() const override {
+        return e_ANY;
+      }
 
-  protected:
-    CIEC_ANY_NUM() = default;
-};
-
-#endif /*_MANY_NUM_H_*/
+    protected:
+      CIEC_ANY_NUM() = default;
+  };
+} // namespace forte

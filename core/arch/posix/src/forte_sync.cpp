@@ -11,11 +11,13 @@
  *******************************************************************************/
 #include "forte/arch/forte_sync.h"
 
-CPThreadSyncObject::CPThreadSyncObject() {
-  pthread_mutex_init(&mMutex, nullptr);
-}
+namespace forte::arch {
+  CPThreadSyncObject::CPThreadSyncObject() {
+    pthread_mutex_init(&mMutex, nullptr);
+  }
 
-CPThreadSyncObject::~CPThreadSyncObject() {
-  pthread_mutex_destroy(&mMutex);
-  // TODO handle return value
-}
+  CPThreadSyncObject::~CPThreadSyncObject() {
+    pthread_mutex_destroy(&mMutex);
+    // TODO handle return value
+  }
+} // namespace forte::arch

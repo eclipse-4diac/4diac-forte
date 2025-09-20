@@ -37,70 +37,72 @@
 
 #include "convert_function_utils.h"
 
-//********************************************************************************************
-//   BYTE_TO_*  functions
-//********************************************************************************************
+namespace forte {
+  //********************************************************************************************
+  //   BYTE_TO_*  functions
+  //********************************************************************************************
 
-inline CIEC_LWORD func_BYTE_TO_LWORD(const CIEC_BYTE &paVal) {
-  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
-}
+  inline CIEC_LWORD func_BYTE_TO_LWORD(const CIEC_BYTE &paVal) {
+    return CIEC_ANY::cast<CIEC_LWORD>(paVal);
+  }
 
-inline CIEC_DWORD func_BYTE_TO_DWORD(const CIEC_BYTE &paVal) {
-  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
-}
+  inline CIEC_DWORD func_BYTE_TO_DWORD(const CIEC_BYTE &paVal) {
+    return CIEC_ANY::cast<CIEC_DWORD>(paVal);
+  }
 
-inline CIEC_WORD func_BYTE_TO_WORD(const CIEC_BYTE &paVal) {
-  return CIEC_ANY::cast<CIEC_WORD>(paVal);
-}
+  inline CIEC_WORD func_BYTE_TO_WORD(const CIEC_BYTE &paVal) {
+    return CIEC_ANY::cast<CIEC_WORD>(paVal);
+  }
 
-inline CIEC_BOOL func_BYTE_TO_BOOL(const CIEC_BYTE &paVal) {
-  return CIEC_ANY::cast<CIEC_BOOL>(paVal);
-}
+  inline CIEC_BOOL func_BYTE_TO_BOOL(const CIEC_BYTE &paVal) {
+    return CIEC_ANY::cast<CIEC_BOOL>(paVal);
+  }
 
-inline CIEC_LINT func_BYTE_TO_LINT(const CIEC_BYTE &paVal) {
-  return CIEC_ANY::cast<CIEC_LINT>(paVal);
-}
+  inline CIEC_LINT func_BYTE_TO_LINT(const CIEC_BYTE &paVal) {
+    return CIEC_ANY::cast<CIEC_LINT>(paVal);
+  }
 
-inline CIEC_DINT func_BYTE_TO_DINT(const CIEC_BYTE &paVal) {
-  return CIEC_ANY::cast<CIEC_DINT>(paVal);
-}
+  inline CIEC_DINT func_BYTE_TO_DINT(const CIEC_BYTE &paVal) {
+    return CIEC_ANY::cast<CIEC_DINT>(paVal);
+  }
 
-inline CIEC_INT func_BYTE_TO_INT(const CIEC_BYTE &paVal) {
-  return CIEC_ANY::cast<CIEC_INT>(paVal);
-}
+  inline CIEC_INT func_BYTE_TO_INT(const CIEC_BYTE &paVal) {
+    return CIEC_ANY::cast<CIEC_INT>(paVal);
+  }
 
-inline CIEC_SINT func_BYTE_TO_SINT(const CIEC_BYTE &paVal) {
-  return CIEC_ANY::cast<CIEC_SINT>(paVal);
-}
+  inline CIEC_SINT func_BYTE_TO_SINT(const CIEC_BYTE &paVal) {
+    return CIEC_ANY::cast<CIEC_SINT>(paVal);
+  }
 
-inline CIEC_ULINT func_BYTE_TO_ULINT(const CIEC_BYTE &paVal) {
-  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
-}
+  inline CIEC_ULINT func_BYTE_TO_ULINT(const CIEC_BYTE &paVal) {
+    return CIEC_ANY::cast<CIEC_ULINT>(paVal);
+  }
 
-inline CIEC_UDINT func_BYTE_TO_UDINT(const CIEC_BYTE &paVal) {
-  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
-}
+  inline CIEC_UDINT func_BYTE_TO_UDINT(const CIEC_BYTE &paVal) {
+    return CIEC_ANY::cast<CIEC_UDINT>(paVal);
+  }
 
-inline CIEC_UINT func_BYTE_TO_UINT(const CIEC_BYTE &paVal) {
-  return CIEC_ANY::cast<CIEC_UINT>(paVal);
-}
+  inline CIEC_UINT func_BYTE_TO_UINT(const CIEC_BYTE &paVal) {
+    return CIEC_ANY::cast<CIEC_UINT>(paVal);
+  }
 
-inline CIEC_USINT func_BYTE_TO_USINT(const CIEC_BYTE &paVal) {
-  return CIEC_ANY::cast<CIEC_USINT>(paVal);
-}
+  inline CIEC_USINT func_BYTE_TO_USINT(const CIEC_BYTE &paVal) {
+    return CIEC_ANY::cast<CIEC_USINT>(paVal);
+  }
 
-inline CIEC_CHAR func_BYTE_TO_CHAR(const CIEC_BYTE &paVal) {
-  return CIEC_ANY::cast<CIEC_CHAR>(paVal);
-}
+  inline CIEC_CHAR func_BYTE_TO_CHAR(const CIEC_BYTE &paVal) {
+    return CIEC_ANY::cast<CIEC_CHAR>(paVal);
+  }
 
-inline CIEC_STRING func_BYTE_AS_STRING(const CIEC_BYTE &paVal) {
-  CIEC_STRING string;
-  stringConverter(string, paVal);
-  return string;
-}
+  inline CIEC_STRING func_BYTE_AS_STRING(const CIEC_BYTE &paVal) {
+    CIEC_STRING string;
+    stringConverter(string, paVal);
+    return string;
+  }
 
-inline CIEC_WSTRING func_BYTE_AS_WSTRING(const CIEC_BYTE &paVal) {
-  CIEC_WSTRING string;
-  stringConverter(string, paVal);
-  return string;
-}
+  inline CIEC_WSTRING func_BYTE_AS_WSTRING(const CIEC_BYTE &paVal) {
+    CIEC_WSTRING string;
+    stringConverter(string, paVal);
+    return string;
+  }
+} // namespace forte

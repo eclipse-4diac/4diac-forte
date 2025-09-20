@@ -17,35 +17,31 @@
 #include <errno.h>
 #include <string.h>
 
-namespace forte {
-  namespace arch {
-
-    CWin32Semaphore::CWin32Semaphore(unsigned int paInitialValue) {
-      mSemaphore = CreateSemaphore(nullptr, (paInitialValue > 1 ? 1 : 0), 1, nullptr);
-      if (0 == mSemaphore) {
-        DEVLOG_ERROR("Could not initialize suspend semaphore: %d\n", GetLastError());
-      }
+namespace forte::arch {
+  CWin32Semaphore::CWin32Semaphore(unsigned int paInitialValue) {
+    mSemaphore = CreateSemaphore(nullptr, (paInitialValue > 1 ? 1 : 0), 1, nullptr);
+    if (0 == mSemaphore) {
+      DEVLOG_ERROR("Could not initialize suspend semaphore: %d\n", GetLastError());
     }
+  }
 
-    CWin32Semaphore::~CWin32Semaphore() {
-      CloseHandle(mSemaphore);
-    }
+  CWin32Semaphore::~CWin32Semaphore() {
+    CloseHandle(mSemaphore);
+  }
 
-    void CWin32Semaphore::inc() {
-      ReleaseSemaphore(mSemaphore, 1, 0);
-    }
+  void CWin32Semaphore::inc() {
+    ReleaseSemaphore(mSemaphore, 1, 0);
+  }
 
-    void CWin32Semaphore::waitIndefinitely() {
-      WaitForSingleObject(mSemaphore, INFINITE);
-    }
+  void CWin32Semaphore::waitIndefinitely() {
+    WaitForSingleObject(mSemaphore, INFINITE);
+  }
 
-    bool CWin32Semaphore::timedWait(TForteUInt64 paRelativeTimeout) {
-      return (0 == WaitForSingleObject(mSemaphore, static_cast<DWORD>(paRelativeTimeout / 1000000 /* 1E6*/)));
-    }
+  bool CWin32Semaphore::timedWait(TForteUInt64 paRelativeTimeout) {
+    return (0 == WaitForSingleObject(mSemaphore, static_cast<DWORD>(paRelativeTimeout / 1000000 /* 1E6*/)));
+  }
 
-    bool CWin32Semaphore::tryNoWait() {
-      return (0 == WaitForSingleObject(mSemaphore, 0));
-    }
-
-  } /* namespace arch */
-} /* namespace forte */
+  bool CWin32Semaphore::tryNoWait() {
+    return (0 == WaitForSingleObject(mSemaphore, 0));
+  }
+} // namespace forte::arch

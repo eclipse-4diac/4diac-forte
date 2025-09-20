@@ -12,20 +12,20 @@
  *    Monika Wenger
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#ifndef _ANY_DER_H_
-#define _ANY_DER_H_
+
+#pragma once
 
 #include "forte/datatypes/forte_any.h"
 
-/*!\ingroup COREDTS CIEC_ANY_DERIVED represents the user defined data types according to
- *  IEC 61131.
- */
-class CIEC_ANY_DERIVED : public CIEC_ANY {
-  public:
-    ~CIEC_ANY_DERIVED() override = default;
+namespace forte {
+  /*!\ingroup COREDTS CIEC_ANY_DERIVED represents the user defined data types according to
+   *  IEC 61131.
+   */
+  class CIEC_ANY_DERIVED : public CIEC_ANY {
+    public:
+      ~CIEC_ANY_DERIVED() override = default;
 
-  protected:
-    CIEC_ANY_DERIVED() = default;
-};
-
-#endif /*_MANY_DER_H_*/
+    protected:
+      CIEC_ANY_DERIVED() = default;
+  };
+} // namespace forte

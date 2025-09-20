@@ -16,74 +16,76 @@
 
 using namespace forte::literals;
 
-DEFINE_FIRMWARE_DATATYPE(ANY_DATE_VARIANT, "ANY_DATE"_STRID)
+namespace forte {
+  DEFINE_FIRMWARE_DATATYPE(ANY_DATE_VARIANT, "ANY_DATE"_STRID)
 
-void CIEC_ANY_DATE_VARIANT::setValue(const CIEC_ANY &paValue) {
-  switch (paValue.getDataTypeID()) {
-    case e_ANY: CIEC_ANY_DATE_VARIANT::setValue(paValue.unwrap()); break;
-    case e_DATE: operator=(static_cast<const CIEC_DATE &>(paValue)); break;
-    case e_TIME_OF_DAY: operator=(static_cast<const CIEC_TIME_OF_DAY &>(paValue)); break;
-    case e_DATE_AND_TIME: operator=(static_cast<const CIEC_DATE_AND_TIME &>(paValue)); break;
-    case e_LDATE: operator=(static_cast<const CIEC_LDATE &>(paValue)); break;
-    case e_LTIME_OF_DAY: operator=(static_cast<const CIEC_LTIME_OF_DAY &>(paValue)); break;
-    case e_LDATE_AND_TIME: operator=(static_cast<const CIEC_LDATE_AND_TIME &>(paValue)); break;
-    default: break;
-  }
-}
-
-bool CIEC_ANY_DATE_VARIANT::setDefaultValue(EDataTypeID paDataTypeId) {
-  switch (paDataTypeId) {
-    case e_DATE: operator=(CIEC_DATE(0)); return true;
-    case e_TIME_OF_DAY: operator=(CIEC_TIME_OF_DAY(0)); return true;
-    case e_DATE_AND_TIME: operator=(CIEC_DATE_AND_TIME(0)); return true;
-    case e_LDATE: operator=(CIEC_LDATE(0)); return true;
-    case e_LTIME_OF_DAY: operator=(CIEC_LTIME_OF_DAY(0)); return true;
-    case e_LDATE_AND_TIME: operator=(CIEC_LDATE_AND_TIME(0)); return true;
-    default: break;
-  }
-  return false;
-}
-
-CIEC_ANY_DATE &CIEC_ANY_DATE_VARIANT::unwrap() {
-  return std::visit(
-      [](auto &&value) -> CIEC_ANY_DATE & {
-        using T = std::decay_t<decltype(value)>;
-        if constexpr (std::is_base_of_v<CIEC_ANY_DATE, T>) {
-          return value;
-        } else {
-          static_assert(always_false_v<T>, "non-exhaustive visitor");
-        }
-      },
-      static_cast<variant &>(*this));
-}
-
-const CIEC_ANY_DATE &CIEC_ANY_DATE_VARIANT::unwrap() const {
-  return std::visit(
-      [](auto &&value) -> const CIEC_ANY_DATE & {
-        using T = std::decay_t<decltype(value)>;
-        if constexpr (std::is_base_of_v<CIEC_ANY_DATE, T>) {
-          return value;
-        } else {
-          static_assert(always_false_v<T>, "non-exhaustive visitor");
-        }
-      },
-      static_cast<const variant &>(*this));
-}
-
-int CIEC_ANY_DATE_VARIANT::fromString(const char *paValue) {
-  int nRetVal = -1;
-  const char *hashPos = strchr(paValue, '#');
-  if (nullptr != hashPos) {
-    forte::StringId typeNameId = parseTypeName(paValue, hashPos);
-    EDataTypeID dataTypeId = getElementaryDataTypeId(typeNameId);
-    if (setDefaultValue(dataTypeId)) {
-      CIEC_ANY &value = unwrap();
-      nRetVal = value.fromString(paValue);
+  void CIEC_ANY_DATE_VARIANT::setValue(const CIEC_ANY &paValue) {
+    switch (paValue.getDataTypeID()) {
+      case e_ANY: CIEC_ANY_DATE_VARIANT::setValue(paValue.unwrap()); break;
+      case e_DATE: operator=(static_cast<const CIEC_DATE &>(paValue)); break;
+      case e_TIME_OF_DAY: operator=(static_cast<const CIEC_TIME_OF_DAY &>(paValue)); break;
+      case e_DATE_AND_TIME: operator=(static_cast<const CIEC_DATE_AND_TIME &>(paValue)); break;
+      case e_LDATE: operator=(static_cast<const CIEC_LDATE &>(paValue)); break;
+      case e_LTIME_OF_DAY: operator=(static_cast<const CIEC_LTIME_OF_DAY &>(paValue)); break;
+      case e_LDATE_AND_TIME: operator=(static_cast<const CIEC_LDATE_AND_TIME &>(paValue)); break;
+      default: break;
     }
   }
-  return nRetVal;
-}
 
-void CIEC_ANY_DATE_VARIANT::toString(std::string &paTargetBuf) const {
-  unwrap().toString(paTargetBuf);
-}
+  bool CIEC_ANY_DATE_VARIANT::setDefaultValue(EDataTypeID paDataTypeId) {
+    switch (paDataTypeId) {
+      case e_DATE: operator=(CIEC_DATE(0)); return true;
+      case e_TIME_OF_DAY: operator=(CIEC_TIME_OF_DAY(0)); return true;
+      case e_DATE_AND_TIME: operator=(CIEC_DATE_AND_TIME(0)); return true;
+      case e_LDATE: operator=(CIEC_LDATE(0)); return true;
+      case e_LTIME_OF_DAY: operator=(CIEC_LTIME_OF_DAY(0)); return true;
+      case e_LDATE_AND_TIME: operator=(CIEC_LDATE_AND_TIME(0)); return true;
+      default: break;
+    }
+    return false;
+  }
+
+  CIEC_ANY_DATE &CIEC_ANY_DATE_VARIANT::unwrap() {
+    return std::visit(
+        [](auto &&value) -> CIEC_ANY_DATE & {
+          using T = std::decay_t<decltype(value)>;
+          if constexpr (std::is_base_of_v<CIEC_ANY_DATE, T>) {
+            return value;
+          } else {
+            static_assert(always_false_v<T>, "non-exhaustive visitor");
+          }
+        },
+        static_cast<variant &>(*this));
+  }
+
+  const CIEC_ANY_DATE &CIEC_ANY_DATE_VARIANT::unwrap() const {
+    return std::visit(
+        [](auto &&value) -> const CIEC_ANY_DATE & {
+          using T = std::decay_t<decltype(value)>;
+          if constexpr (std::is_base_of_v<CIEC_ANY_DATE, T>) {
+            return value;
+          } else {
+            static_assert(always_false_v<T>, "non-exhaustive visitor");
+          }
+        },
+        static_cast<const variant &>(*this));
+  }
+
+  int CIEC_ANY_DATE_VARIANT::fromString(const char *paValue) {
+    int nRetVal = -1;
+    const char *hashPos = strchr(paValue, '#');
+    if (nullptr != hashPos) {
+      forte::StringId typeNameId = parseTypeName(paValue, hashPos);
+      EDataTypeID dataTypeId = getElementaryDataTypeId(typeNameId);
+      if (setDefaultValue(dataTypeId)) {
+        CIEC_ANY &value = unwrap();
+        nRetVal = value.fromString(paValue);
+      }
+    }
+    return nRetVal;
+  }
+
+  void CIEC_ANY_DATE_VARIANT::toString(std::string &paTargetBuf) const {
+    unwrap().toString(paTargetBuf);
+  }
+} // namespace forte

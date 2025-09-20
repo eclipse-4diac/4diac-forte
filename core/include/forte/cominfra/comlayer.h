@@ -20,94 +20,92 @@
 #include "forte/cominfra/comCallback.h"
 #include "forte/util/extevhandlerhelper.h"
 
-namespace forte {
-  namespace com_infra {
+namespace forte::com_infra {
 
-    class CBaseCommFB;
+  class CBaseCommFB;
 
-    class CComLayer : public CComCallback {
-      public:
-        ~CComLayer() override;
+  class CComLayer : public CComCallback {
+    public:
+      ~CComLayer() override;
 
-        /*!\brief Configure the current layer and perform necessary means to setup the connection
-         *
-         * Depending on the layers functionality different things have to be performed here.
-         * This can range from doing nothing to establishing a TCP session.
-         *
-         * @param paLayerParameter configuration data for this layer
-         * @return status of the opening process
-         *      - e_InitOk of the opening process was successful
-         */
-        virtual EComResponse openConnection(char *paLayerParameter) = 0;
+      /*!\brief Configure the current layer and perform necessary means to setup the connection
+       *
+       * Depending on the layers functionality different things have to be performed here.
+       * This can range from doing nothing to establishing a TCP session.
+       *
+       * @param paLayerParameter configuration data for this layer
+       * @return status of the opening process
+       *      - e_InitOk of the opening process was successful
+       */
+      virtual EComResponse openConnection(char *paLayerParameter) = 0;
 
-        /*!\brief Close this layer
-         *
-         * Implementations of this function should perform the actions necessary for closing.
-         */
-        virtual void closeConnection() = 0;
+      /*!\brief Close this layer
+       *
+       * Implementations of this function should perform the actions necessary for closing.
+       */
+      virtual void closeConnection() = 0;
 
-        /*!\brief Take the given data and perform the necessary process for sending
-         *
-         * If necessary invoke bottom layer sendData functions.
-         *
-         * @param paData pointer to the data to be sent
-         * @param paSize size of the data to be sent
-         * @return status of the sending process:
-         *    - e_ProcessDataOk ... if sending process was successful
-         */
-        virtual EComResponse sendData(void *paData, unsigned int paSize) = 0;
+      /*!\brief Take the given data and perform the necessary process for sending
+       *
+       * If necessary invoke bottom layer sendData functions.
+       *
+       * @param paData pointer to the data to be sent
+       * @param paSize size of the data to be sent
+       * @return status of the sending process:
+       *    - e_ProcessDataOk ... if sending process was successful
+       */
+      virtual EComResponse sendData(void *paData, unsigned int paSize) = 0;
 
-        /*!\brief Finish to process the data received in a context outside the communication interrupt i.e. within the
-         * event chain of the ComFB.
-         *
-         * This function shall be used for finishing the data reception.
-         */
-        virtual EComResponse processInterrupt();
+      /*!\brief Finish to process the data received in a context outside the communication interrupt i.e. within the
+       * event chain of the ComFB.
+       *
+       * This function shall be used for finishing the data reception.
+       */
+      virtual EComResponse processInterrupt();
 
-        /*!\brief get the top layer
-         */
-        CComLayer *getTopLayer() const {
-          return mTopLayer;
-        }
+      /*!\brief get the top layer
+       */
+      CComLayer *getTopLayer() const {
+        return mTopLayer;
+      }
 
-        /*!\brief get the bottom layer
-         */
-        CComLayer *getBottomLayer() const {
-          return mBottomLayer;
-        }
+      /*!\brief get the bottom layer
+       */
+      CComLayer *getBottomLayer() const {
+        return mBottomLayer;
+      }
 
-        /*!\brief set the bottom layer
-         */
-        void setBottomLayer(CComLayer *layer) {
-          mBottomLayer = layer;
-        }
+      /*!\brief set the bottom layer
+       */
+      void setBottomLayer(CComLayer *layer) {
+        mBottomLayer = layer;
+      }
 
-        /*!\brief get the FB of this layer
-         */
-        CBaseCommFB *getCommFB() const override {
-          return mFb;
-        }
+      /*!\brief get the FB of this layer
+       */
+      CBaseCommFB *getCommFB() const override {
+        return mFb;
+      }
 
-      protected:
-        CComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
+    protected:
+      CComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
 
-        template<typename T>
-        T &getExtEvHandler() {
-          return ::getExtEvHandler<T>(*mFb);
-        }
+      template<typename T>
+      T &getExtEvHandler() {
+        return util::getExtEvHandler<T>(*mFb);
+      }
 
-        const CIEC_ANY &getSDx(void *paData, int paSdNum);
+      const CIEC_ANY &getSDx(void *paData, int paSdNum);
 
-        EComConnectionState mConnectionState;
+      EComConnectionState mConnectionState;
 
-        CComLayer *mTopLayer;
-        CComLayer *mBottomLayer;
-        CBaseCommFB *mFb;
+      CComLayer *mTopLayer;
+      CComLayer *mBottomLayer;
+      CBaseCommFB *mFb;
 
-      private:
-    };
+    private:
+  };
 
-  } // namespace com_infra
-} // namespace forte
+} // namespace forte::com_infra
 
 #endif

@@ -20,49 +20,51 @@
 #include "forte/device.h"
 #include "forte/timerhandlerfactory.h"
 
-CDeviceExecution::CDeviceExecution(CDevice &paDevice) : mDevice(paDevice) {
-  mRegisteredEventHandlers.reserve(CExternalEventHandler::getFactories().size() + 1);
-  mRegisteredEventHandlers.push_back(forte::TimerHandlerFactory::create(*this));
-  for (auto &factory : CExternalEventHandler::getFactories()) {
-    mRegisteredEventHandlers.push_back(factory(*this));
-  }
-  getTimer().enableHandler();
-}
-
-CDeviceExecution::~CDeviceExecution() {
-  // FIXME: deleting a handler should disable it automatically
-  disableHandlers();
-}
-
-void CDeviceExecution::startNewEventChain(CEventSourceFB *paECStartFB) const {
-  // maybe in the future here has to be added something for handling priority adaption and stuff like this.
-  if (nullptr != paECStartFB) {
-    CEventChainExecutionThread *poEventChainExecutor = paECStartFB->getEventChainExecutor();
-    if (nullptr != poEventChainExecutor) {
-      poEventChainExecutor->startEventChain(*paECStartFB->getEventSourceEventEntry());
-    } else {
-      DEVLOG_ERROR(
-          "[CDeviceExecution] Couldn't start new event chain because the event has no CEventChainExecutionThread");
+namespace forte {
+  CDeviceExecution::CDeviceExecution(CDevice &paDevice) : mDevice(paDevice) {
+    mRegisteredEventHandlers.reserve(CExternalEventHandler::getFactories().size() + 1);
+    mRegisteredEventHandlers.push_back(forte::TimerHandlerFactory::create(*this));
+    for (auto &factory : CExternalEventHandler::getFactories()) {
+      mRegisteredEventHandlers.push_back(factory(*this));
     }
-  } else {
-    DEVLOG_ERROR("[CDeviceExecution] Couldn't start new event chain because the event source was null");
+    getTimer().enableHandler();
   }
-}
 
-CExternalEventHandler *CDeviceExecution::getExtEvHandler(size_t paIdentifer) const {
-  return mRegisteredEventHandlers[paIdentifer].get();
-}
-
-CTimerHandler &CDeviceExecution::getTimer() const {
-  return *static_cast<CTimerHandler *>(mRegisteredEventHandlers[0].get());
-}
-
-void CDeviceExecution::disableHandlers() {
-  for (auto &handler : mRegisteredEventHandlers) {
-    handler->disableHandler();
+  CDeviceExecution::~CDeviceExecution() {
+    // FIXME: deleting a handler should disable it automatically
+    disableHandlers();
   }
-}
 
-CDevice &CDeviceExecution::getDevice() {
-  return mDevice;
-}
+  void CDeviceExecution::startNewEventChain(CEventSourceFB *paECStartFB) const {
+    // maybe in the future here has to be added something for handling priority adaption and stuff like this.
+    if (nullptr != paECStartFB) {
+      CEventChainExecutionThread *poEventChainExecutor = paECStartFB->getEventChainExecutor();
+      if (nullptr != poEventChainExecutor) {
+        poEventChainExecutor->startEventChain(*paECStartFB->getEventSourceEventEntry());
+      } else {
+        DEVLOG_ERROR(
+            "[CDeviceExecution] Couldn't start new event chain because the event has no CEventChainExecutionThread");
+      }
+    } else {
+      DEVLOG_ERROR("[CDeviceExecution] Couldn't start new event chain because the event source was null");
+    }
+  }
+
+  CExternalEventHandler *CDeviceExecution::getExtEvHandler(size_t paIdentifer) const {
+    return mRegisteredEventHandlers[paIdentifer].get();
+  }
+
+  CTimerHandler &CDeviceExecution::getTimer() const {
+    return *static_cast<CTimerHandler *>(mRegisteredEventHandlers[0].get());
+  }
+
+  void CDeviceExecution::disableHandlers() {
+    for (auto &handler : mRegisteredEventHandlers) {
+      handler->disableHandler();
+    }
+  }
+
+  CDevice &CDeviceExecution::getDevice() {
+    return mDevice;
+  }
+} // namespace forte

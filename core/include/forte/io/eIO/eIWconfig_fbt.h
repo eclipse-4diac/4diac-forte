@@ -17,56 +17,58 @@
 #include "forte/datatypes/forte_wstring.h"
 #include "forte/io/eIO/eGenAdapter_adp.h"
 
-class FORTE_eIWconfig final : public CeConfigFB {
-    DECLARE_FIRMWARE_FB(FORTE_eIWconfig)
+namespace forte::io {
+  class FORTE_eIWconfig final : public CeConfigFB {
+      DECLARE_FIRMWARE_FB(FORTE_eIWconfig)
 
-  private:
-    static const TEventID scmEventCONFID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventCONFID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_eIWconfig(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    public:
+      FORTE_eIWconfig(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_WORD var_ST;
-    CIEC_WORD var_BT;
-    CIEC_WORD var_GRAD;
+      CIEC_WORD var_ST;
+      CIEC_WORD var_BT;
+      CIEC_WORD var_GRAD;
 
-    CIEC_WSTRING var_STATUS;
+      CIEC_WSTRING var_STATUS;
 
-    forte::CSocketPin<FORTE_eGenAdapter_Socket> var_eIW;
+      forte::CSocketPin<FORTE_eGenAdapter_Socket> var_eIW;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_ST;
-    CDataConnection *conn_BT;
-    CDataConnection *conn_GRAD;
+      CDataConnection *conn_ST;
+      CDataConnection *conn_BT;
+      CDataConnection *conn_GRAD;
 
-    COutDataConnection<CIEC_WSTRING> conn_STATUS;
+      COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    forte::ISocketPin *getSocketPinUnchecked(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      forte::ISocketPin *getSocketPinUnchecked(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_CONF(const CIEC_WORD &paST, const CIEC_WORD &paBT, const CIEC_WORD &paGRAD, CIEC_WSTRING &paSTATUS) {
-      var_ST = paST;
-      var_BT = paBT;
-      var_GRAD = paGRAD;
-      executeEvent(scmEventCONFID, nullptr);
-      paSTATUS = var_STATUS;
-    }
+      void evt_CONF(const CIEC_WORD &paST, const CIEC_WORD &paBT, const CIEC_WORD &paGRAD, CIEC_WSTRING &paSTATUS) {
+        var_ST = paST;
+        var_BT = paBT;
+        var_GRAD = paGRAD;
+        executeEvent(scmEventCONFID, nullptr);
+        paSTATUS = var_STATUS;
+      }
 
-    void operator()(const CIEC_WORD &paST, const CIEC_WORD &paBT, const CIEC_WORD &paGRAD, CIEC_WSTRING &paSTATUS) {
-      evt_CONF(paST, paBT, paGRAD, paSTATUS);
-    }
+      void operator()(const CIEC_WORD &paST, const CIEC_WORD &paBT, const CIEC_WORD &paGRAD, CIEC_WSTRING &paSTATUS) {
+        evt_CONF(paST, paBT, paGRAD, paSTATUS);
+      }
 
-    bool eventGen() override;
-};
+      bool eventGen() override;
+  };
+} // namespace forte::io

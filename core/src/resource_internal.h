@@ -46,7 +46,7 @@ namespace forte {
 #endif
 
 #ifdef FORTE_TRACE_CTF
-      CForteTracer &getTracer() {
+      trace::CForteTracer &getTracer() {
         return mTracer;
       }
 #endif
@@ -55,7 +55,7 @@ namespace forte {
       CMonitoringHandler mMonitoringHandler;
 
 #ifdef FORTE_TRACE_CTF
-      CForteTracer mTracer;
+      trace::CForteTracer mTracer;
 #endif // FORTE_TRACE_CTF
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD

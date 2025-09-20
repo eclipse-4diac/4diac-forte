@@ -14,10 +14,10 @@
 
 using namespace forte::literals;
 
-using namespace forte::io;
+namespace forte::io {
+  DEFINE_FIRMWARE_FB(FORTE_eIX, "eIX"_STRID)
 
-DEFINE_FIRMWARE_FB(FORTE_eIX, "eIX"_STRID)
-
-FORTE_eIX::FORTE_eIX(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
-    CeInputFB<CIEC_BOOL>(paContainer, paInstanceNameId) {
-}
+  FORTE_eIX::FORTE_eIX(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+      CeInputFB<CIEC_BOOL>(paContainer, paInstanceNameId) {
+  }
+} // namespace forte::io

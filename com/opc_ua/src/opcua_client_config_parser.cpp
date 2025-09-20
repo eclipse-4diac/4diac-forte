@@ -29,11 +29,11 @@ namespace forte::com_infra::opc_ua {
     bool retVal = true;
     UA_StatusCode retValOpcUa = UA_STATUSCODE_GOOD;
 
-    CConfigFileParser configFileParser(paFileLocation);
+    util::CConfigFileParser configFileParser(paFileLocation);
     bool endpointFound = false;
     const std::string endpointKey = mKeyNames[eEndpoint];
 
-    if (CConfigFileParser::lookForKeyValueInFile(configFileParser, endpointKey, paEndpoint, endpointFound)) {
+    if (util::CConfigFileParser::lookForKeyValueInFile(configFileParser, endpointKey, paEndpoint, endpointFound)) {
       if (endpointFound) {
 
 #ifdef UA_ENABLE_ENCRYPTION
@@ -48,7 +48,7 @@ namespace forte::com_infra::opc_ua {
           std::pair<std::string, std::string> resultPair;
 
           switch (configFileParser.parseNextLine(resultPair)) {
-            case CConfigFileParser::eOk:
+            case util::CConfigFileParser::eOk:
               if (0 == resultPair.first.compare(mKeyNames[eEndpoint])) {
                 moreLinesToRead = false;
               } else if (0 == resultPair.first.compare(mKeyNames[eUsername])) {
@@ -76,10 +76,10 @@ namespace forte::com_infra::opc_ua {
                                resultPair.first.c_str());
               }
               break;
-            case CConfigFileParser::eEmptyLine:
+            case util::CConfigFileParser::eEmptyLine:
               // do nothing, keep reading
               break;
-            case CConfigFileParser::eEndOfFile: moreLinesToRead = false; break;
+            case util::CConfigFileParser::eEndOfFile: moreLinesToRead = false; break;
             default: // eWrongLine, eFileNotOpened, eInternalError
               retVal = false;
               moreLinesToRead = false;

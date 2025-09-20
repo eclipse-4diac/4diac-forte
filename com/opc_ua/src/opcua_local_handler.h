@@ -41,7 +41,7 @@ namespace forte::com_infra::opc_ua {
   // cppcheck-suppress noConstructor
   class COPC_UA_Local_Handler : public COPC_UA_HandlerAbstract,
                                 public RegisterExternalEventHandler<COPC_UA_Local_Handler>,
-                                public CThread {
+                                public arch::CThread {
     public:
       explicit COPC_UA_Local_Handler(CDeviceExecution &paDeviceExecution);
       ~COPC_UA_Local_Handler() override;
@@ -182,7 +182,7 @@ namespace forte::com_infra::opc_ua {
       /**
        * Indicates that the server has started, and allow waiting threads to work on it
        */
-      CSemaphore mServerStarted;
+      arch::CSemaphore mServerStarted;
 
       /**
        * Stops the OPC UA server
@@ -404,12 +404,12 @@ namespace forte::com_infra::opc_ua {
       /**
        * Mutex used to avoid many threads (Resources) to access the server
        */
-      CSyncObject mServerAccessMutex;
+      arch::CSyncObject mServerAccessMutex;
 
       /**
        * Semaphore to tell the server it needs iteration
        */
-      CSemaphore mServerNeedsIteration;
+      arch::CSemaphore mServerNeedsIteration;
 
       /**
        * The minimum time the iteration loop must wait when no interrupted
@@ -759,7 +759,7 @@ namespace forte::com_infra::opc_ua {
       /**
        * Mutex to access mMethodCalls
        */
-      CSyncObject mMethodCallsMutex;
+      arch::CSyncObject mMethodCallsMutex;
 
       /**
        * Add a method call to the list when onServerMethodCall is called

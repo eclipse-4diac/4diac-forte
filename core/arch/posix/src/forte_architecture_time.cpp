@@ -17,14 +17,14 @@
 #include "forte/arch/forte_architecture_time.h"
 #include "forte/util/forte_constants.h"
 
-time_t forte_timegm(struct tm *pa_tm) {
+time_t forte::arch::forte_timegm(struct tm *pa_tm) {
   return timegm(pa_tm);
 }
 
-struct tm *forte_localtime(const time_t *paTime, struct tm *const paResult) {
+struct tm *forte::arch::forte_localtime(const time_t *paTime, struct tm *const paResult) {
   return localtime_r(paTime, paResult);
 }
 
-struct tm *forte_gmtime(const time_t *const paTime, struct tm *const paResult) {
+struct tm *forte::arch::forte_gmtime(const time_t *const paTime, struct tm *const paResult) {
   return gmtime_r(paTime, paResult);
 }

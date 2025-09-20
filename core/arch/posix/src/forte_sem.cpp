@@ -26,83 +26,80 @@
 
 #include "../../common/src/utils/timespec_utils.h"
 
-namespace forte {
-  namespace arch {
+namespace forte::arch {
+  CPThreadSemaphore::CPThreadSemaphore(bool paInitialValue) : mPosted(paInitialValue) {
+    pthread_condattr_t condAttr;
 
-    CPThreadSemaphore::CPThreadSemaphore(bool paInitialValue) : mPosted(paInitialValue) {
-      pthread_condattr_t condAttr;
+    if (pthread_condattr_init(&condAttr) != 0) {
+      DEVLOG_ERROR("Could not initialize cv attributes\n");
+    }
+    if (pthread_condattr_setclock(&condAttr, CLOCK_MONOTONIC) != 0) {
+      DEVLOG_ERROR("Could not set cv clock\n");
+    }
+    if (pthread_cond_init(&mCond, &condAttr) != 0) {
+      DEVLOG_ERROR("Could not initialize condition variable\n");
+    }
+    pthread_condattr_destroy(&condAttr);
+  }
 
-      if (pthread_condattr_init(&condAttr) != 0) {
-        DEVLOG_ERROR("Could not initialize cv attributes\n");
-      }
-      if (pthread_condattr_setclock(&condAttr, CLOCK_MONOTONIC) != 0) {
-        DEVLOG_ERROR("Could not set cv clock\n");
-      }
-      if (pthread_cond_init(&mCond, &condAttr) != 0) {
-        DEVLOG_ERROR("Could not initialize condition variable\n");
-      }
-      pthread_condattr_destroy(&condAttr);
+  CPThreadSemaphore::~CPThreadSemaphore() {
+    pthread_cond_destroy(&mCond);
+  }
+
+  void CPThreadSemaphore::inc() {
+    util::CCriticalRegion cr(mMutex);
+    mPosted = true;
+    pthread_cond_signal(&mCond);
+  }
+
+  void CPThreadSemaphore::waitIndefinitely() {
+    util::CCriticalRegion cr(mMutex);
+    while (!mPosted) {
+      pthread_cond_wait(&mCond, mMutex.getPosixMutex());
+    }
+    mPosted = false;
+  }
+
+  bool CPThreadSemaphore::timedWait(const TForteUInt64 paRelativeTimeout) {
+    util::CCriticalRegion cr(mMutex);
+
+    if (mPosted) {
+      mPosted = false;
+      return true;
     }
 
-    CPThreadSemaphore::~CPThreadSemaphore() {
-      pthread_cond_destroy(&mCond);
+    timespec timeoutSpec = {static_cast<time_t>(paRelativeTimeout / 1000000000ULL),
+                            static_cast<time_t>(paRelativeTimeout % 1000000000ULL)};
+
+    timespec currentTime = {0, 0};
+    clock_gettime(CLOCK_MONOTONIC, &currentTime);
+
+    timespec expectedAbsoluteTimeoutTime = {0, 0};
+    timespecAdd(&currentTime, &timeoutSpec, &expectedAbsoluteTimeoutTime);
+
+    int rc = 0;
+    while (!mPosted && rc == 0) {
+      rc = pthread_cond_timedwait(&mCond, mMutex.getPosixMutex(), &expectedAbsoluteTimeoutTime);
     }
 
-    void CPThreadSemaphore::inc() {
-      CCriticalRegion cr(mMutex);
-      mPosted = true;
-      pthread_cond_signal(&mCond);
+    if (rc != 0 && rc != ETIMEDOUT) {
+      DEVLOG_ERROR("Unexpected error during condition variable wait: %i\n", rc);
     }
 
-    void CPThreadSemaphore::waitIndefinitely() {
-      CCriticalRegion cr(mMutex);
-      while (!mPosted) {
-        pthread_cond_wait(&mCond, mMutex.getPosixMutex());
-      }
+    assert(!(rc == 0 && !mPosted) && (bool) "should have been posted when waiting successfully");
+
+    bool success = (mPosted && rc == 0);
+    if (success) {
       mPosted = false;
     }
 
-    bool CPThreadSemaphore::timedWait(const TForteUInt64 paRelativeTimeout) {
-      CCriticalRegion cr(mMutex);
+    return success;
+  }
 
-      if (mPosted) {
-        mPosted = false;
-        return true;
-      }
-
-      timespec timeoutSpec = {static_cast<time_t>(paRelativeTimeout / 1000000000ULL),
-                              static_cast<time_t>(paRelativeTimeout % 1000000000ULL)};
-
-      timespec currentTime = {0, 0};
-      clock_gettime(CLOCK_MONOTONIC, &currentTime);
-
-      timespec expectedAbsoluteTimeoutTime = {0, 0};
-      timespecAdd(&currentTime, &timeoutSpec, &expectedAbsoluteTimeoutTime);
-
-      int rc = 0;
-      while (!mPosted && rc == 0) {
-        rc = pthread_cond_timedwait(&mCond, mMutex.getPosixMutex(), &expectedAbsoluteTimeoutTime);
-      }
-
-      if (rc != 0 && rc != ETIMEDOUT) {
-        DEVLOG_ERROR("Unexpected error during condition variable wait: %i\n", rc);
-      }
-
-      assert(!(rc == 0 && !mPosted) && (bool) "should have been posted when waiting successfully");
-
-      bool success = (mPosted && rc == 0);
-      if (success) {
-        mPosted = false;
-      }
-
-      return success;
-    }
-
-    bool CPThreadSemaphore::tryNoWait() {
-      CCriticalRegion cr(mMutex);
-      bool success = mPosted;
-      mPosted = false;
-      return success;
-    }
-  } /* namespace arch */
-} /* namespace forte */
+  bool CPThreadSemaphore::tryNoWait() {
+    util::CCriticalRegion cr(mMutex);
+    bool success = mPosted;
+    mPosted = false;
+    return success;
+  }
+} // namespace forte::arch

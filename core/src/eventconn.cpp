@@ -15,83 +15,85 @@
 #include "forte/ecet.h"
 #include "forte/funcbloc.h"
 
-CEventConnection::CEventConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId) :
-    CConnection(paSrcFB, paSrcPortId) {
-}
-
-CEventConnection::~CEventConnection() = default;
-
-EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB,
-                                       const std::span<const forte::StringId> paDstPortNameId) {
-  if (paDstPortNameId.size() != 1) {
-    return EMGMResponse::NoSuchObject;
+namespace forte {
+  CEventConnection::CEventConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId) :
+      CConnection(paSrcFB, paSrcPortId) {
   }
 
-  const TEventID dstPortId = paDstFB.getFBInterfaceSpec().getEIID(paDstPortNameId.front());
-  if (dstPortId == cgInvalidEventID) {
-    return EMGMResponse::NoSuchObject;
+  CEventConnection::~CEventConnection() = default;
+
+  EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB,
+                                         const std::span<const forte::StringId> paDstPortNameId) {
+    if (paDstPortNameId.size() != 1) {
+      return EMGMResponse::NoSuchObject;
+    }
+
+    const TEventID dstPortId = paDstFB.getFBInterfaceSpec().getEIID(paDstPortNameId.front());
+    if (dstPortId == cgInvalidEventID) {
+      return EMGMResponse::NoSuchObject;
+    }
+
+    const EMGMResponse retVal = addDestination(CConnectionPoint(paDstFB, dstPortId));
+    paDstFB.addInputEventConnection(dstPortId);
+    return retVal;
   }
 
-  const EMGMResponse retVal = addDestination(CConnectionPoint(paDstFB, dstPortId));
-  paDstFB.addInputEventConnection(dstPortId);
-  return retVal;
-}
+  EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
+                                                       const std::span<const forte::StringId> paDstPortNameId) {
+    if (paDstPortNameId.size() != 1) {
+      return EMGMResponse::NoSuchObject;
+    }
 
-EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
-                                                     const std::span<const forte::StringId> paDstPortNameId) {
-  if (paDstPortNameId.size() != 1) {
-    return EMGMResponse::NoSuchObject;
+    const TEventID dstPortId = paDstFB.getFBInterfaceSpec().getEOID(paDstPortNameId.front());
+    if (dstPortId == cgInvalidEventID) {
+      return EMGMResponse::NoSuchObject;
+    }
+
+    return addDestination(CConnectionPoint(paDstFB, dstPortId | cgInternal2InterfaceMarker));
   }
 
-  const TEventID dstPortId = paDstFB.getFBInterfaceSpec().getEOID(paDstPortNameId.front());
-  if (dstPortId == cgInvalidEventID) {
-    return EMGMResponse::NoSuchObject;
+  EMGMResponse CEventConnection::disconnect(CFunctionBlock &paDstFB,
+                                            const std::span<const forte::StringId> paDstPortNameId) {
+    if (paDstPortNameId.size() != 1) {
+      return EMGMResponse::NoSuchObject;
+    }
+
+    const TEventID dstPortId = paDstFB.getFBInterfaceSpec().getEIID(paDstPortNameId.front());
+    if (dstPortId == cgInvalidEventID) {
+      return EMGMResponse::NoSuchObject;
+    }
+
+    const EMGMResponse retval = removeDestination(CConnectionPoint(paDstFB, dstPortId));
+    paDstFB.removeInputEventConnection(dstPortId);
+    return retval;
   }
 
-  return addDestination(CConnectionPoint(paDstFB, dstPortId | cgInternal2InterfaceMarker));
-}
-
-EMGMResponse CEventConnection::disconnect(CFunctionBlock &paDstFB,
-                                          const std::span<const forte::StringId> paDstPortNameId) {
-  if (paDstPortNameId.size() != 1) {
-    return EMGMResponse::NoSuchObject;
-  }
-
-  const TEventID dstPortId = paDstFB.getFBInterfaceSpec().getEIID(paDstPortNameId.front());
-  if (dstPortId == cgInvalidEventID) {
-    return EMGMResponse::NoSuchObject;
-  }
-
-  const EMGMResponse retval = removeDestination(CConnectionPoint(paDstFB, dstPortId));
-  paDstFB.removeInputEventConnection(dstPortId);
-  return retval;
-}
-
-void CEventConnection::triggerEvent(CEventChainExecutionThread *paExecEnv) const {
-  if (paExecEnv != nullptr) {
-    for (const auto &runner : mDestinationIds) {
-      paExecEnv->addEventEntry(runner);
+  void CEventConnection::triggerEvent(CEventChainExecutionThread *paExecEnv) const {
+    if (paExecEnv != nullptr) {
+      for (const auto &runner : mDestinationIds) {
+        paExecEnv->addEventEntry(runner);
+      }
     }
   }
-}
 
-EMGMResponse CEventConnection::addDestination(const CConnectionPoint &paDestPoint) {
-  if (std::find(mDestinationIds.begin(), mDestinationIds.end(), paDestPoint) != mDestinationIds.end()) {
-    return EMGMResponse::InvalidState;
+  EMGMResponse CEventConnection::addDestination(const CConnectionPoint &paDestPoint) {
+    if (std::find(mDestinationIds.begin(), mDestinationIds.end(), paDestPoint) != mDestinationIds.end()) {
+      return EMGMResponse::InvalidState;
+    }
+    mDestinationIds.push_back(paDestPoint);
+    return EMGMResponse::Ready;
   }
-  mDestinationIds.push_back(paDestPoint);
-  return EMGMResponse::Ready;
-}
 
-EMGMResponse CEventConnection::removeDestination(const CConnectionPoint &paDestPoint) {
-  auto it = std::remove(mDestinationIds.begin(), mDestinationIds.end(), paDestPoint);
-  if (it == mDestinationIds.end()) {
-    return EMGMResponse::InvalidState;
+  EMGMResponse CEventConnection::removeDestination(const CConnectionPoint &paDestPoint) {
+    auto it = std::remove(mDestinationIds.begin(), mDestinationIds.end(), paDestPoint);
+    if (it == mDestinationIds.end()) {
+      return EMGMResponse::InvalidState;
+    }
+    mDestinationIds.erase(it, mDestinationIds.end());
+    return EMGMResponse::Ready;
   }
-  mDestinationIds.erase(it, mDestinationIds.end());
-  return EMGMResponse::Ready;
-}
 
-void CEventConnection::getSourcePortName(forte::TNameIdentifier &paResult) const {
-  paResult.push_back(getSourceId().getFB().getFBInterfaceSpec().mEONames[getSourceId().getPortId()]);
-}
+  void CEventConnection::getSourcePortName(forte::TNameIdentifier &paResult) const {
+    paResult.push_back(getSourceId().getFB().getFBInterfaceSpec().mEONames[getSourceId().getPortId()]);
+  }
+} // namespace forte

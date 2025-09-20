@@ -19,12 +19,14 @@
 #include "forte/io/outputfb.h"
 #include "forte/datatypes/forte_bool.h"
 
-/*! /brief generic class for QX function blocks providing access to one boolean physical output
- *
- */
-class FORTE_QX final : public forte::io::COutputFB<CIEC_BOOL> {
-    DECLARE_FIRMWARE_FB(FORTE_QX)
+namespace forte::io {
+  /*! /brief generic class for QX function blocks providing access to one boolean physical output
+   *
+   */
+  class FORTE_QX final : public forte::io::COutputFB<CIEC_BOOL> {
+      DECLARE_FIRMWARE_FB(FORTE_QX)
 
-  public:
-    FORTE_QX(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
-};
+    public:
+      FORTE_QX(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
+  };
+} // namespace forte::io

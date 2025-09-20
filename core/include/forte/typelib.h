@@ -24,36 +24,34 @@
 #include "forte/mgmcmd.h"
 #include <string_view>
 
-// forward declaration of a few classes to reduce include file dependencies
-class CFunctionBlock;
-class CResource;
-class CIEC_ANY;
-
 namespace forte {
   class CAdapter;
+  class CFunctionBlock;
   class CFBContainer;
-} // namespace forte
+  class CResource;
+  class CIEC_ANY;
 
-//!\ingroup CORE Type for a function pointer which allows to create a functionblock instance
-typedef CFunctionBlock *(*TFunctionBlockCreateFunc)(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+  //!\ingroup CORE Type for a function pointer which allows to create a functionblock instance
+  typedef CFunctionBlock *(*TFunctionBlockCreateFunc)(forte::StringId paInstanceNameId,
+                                                      forte::CFBContainer &paContainer);
 
-//!\ingroup CORE Type for a function pointer which allows to create an adapter instance
-typedef forte::CAdapter *(*TAdapterCreateFunc)(forte::StringId paInstanceNameId,
-                                               forte::CFBContainer &paContainer,
-                                               bool paIsPlug,
-                                               TForteUInt8 paParentAdapterlistID);
+  //!\ingroup CORE Type for a function pointer which allows to create an adapter instance
+  typedef forte::CAdapter *(*TAdapterCreateFunc)(forte::StringId paInstanceNameId,
+                                                 forte::CFBContainer &paContainer,
+                                                 bool paIsPlug,
+                                                 TForteUInt8 paParentAdapterlistID);
 
-//!\ingroup CORE Type for a function pointer which allows to create a data type instance
-typedef CIEC_ANY *(*TDataTypeCreateFunc)(TForteByte *paDataBuf);
+  //!\ingroup CORE Type for a function pointer which allows to create a data type instance
+  typedef CIEC_ANY *(*TDataTypeCreateFunc)(TForteByte *paDataBuf);
 
 //!\ingroup CORE This define is used to create the definition necessary for generic FirmwareFunction blocks in order to
 //! get them automatically added to the FirmwareType list.
 #define DECLARE_GENERIC_FIRMWARE_FB(fbclass)                                                                           \
 private:                                                                                                               \
-  const static forte::CFBTypeEntry csmFirmwareFBEntry_##fbclass;                                                       \
+  const static ::forte::CFBTypeEntry csmFirmwareFBEntry_##fbclass;                                                     \
                                                                                                                        \
 public:                                                                                                                \
-  static CFunctionBlock *createFB(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) {                \
+  static CFunctionBlock *createFB(::forte::StringId paInstanceNameId, ::forte::CFBContainer &paContainer) {            \
     return new fbclass(paInstanceNameId, paContainer);                                                                 \
   };                                                                                                                   \
                                                                                                                        \
@@ -64,13 +62,13 @@ private:
 #define DECLARE_FIRMWARE_FB(fbclass)                                                                                   \
   DECLARE_GENERIC_FIRMWARE_FB(fbclass)                                                                                 \
 public:                                                                                                                \
-  forte::StringId getFBTypeId() const override;                                                                        \
+  ::forte::StringId getFBTypeId() const override;                                                                      \
                                                                                                                        \
 private:
 
 #define DEFINE_GENERIC_FIRMWARE_FB(fbclass, fbTypeNameId)                                                              \
-  const forte::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass((fbTypeNameId), std::string_view{},                  \
-                                                                  fbclass::createFB);
+  const ::forte::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass((fbTypeNameId), std::string_view{},                \
+                                                                    fbclass::createFB);
 
 #define GET_TYPE_HASH(_1, ...) _1
 
@@ -78,21 +76,21 @@ private:
  * needed for the prebuild script that generates the constant string list.
  */
 #define DEFINE_FIRMWARE_FB(fbclass, fbTypeNameId, ...)                                                                 \
-  const forte::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass(                                                     \
+  const ::forte::CFBTypeEntry fbclass::csmFirmwareFBEntry_##fbclass(                                                   \
       (fbTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}), fbclass::createFB);                \
-  forte::StringId fbclass::getFBTypeId() const {                                                                       \
+  ::forte::StringId fbclass::getFBTypeId() const {                                                                     \
     return (fbTypeNameId);                                                                                             \
   }
 
 //!\ingroup CORE This define is used to create the definition necessary for Adapter types.
 #define DECLARE_ADAPTER_TYPE(adapterclass)                                                                             \
 private:                                                                                                               \
-  const static forte::CAdapterTypeEntry csmAdapterTypeEntry_##adapterclass;                                            \
+  const static ::forte::CAdapterTypeEntry csmAdapterTypeEntry_##adapterclass;                                          \
                                                                                                                        \
 public:                                                                                                                \
-  static forte::CAdapter *createAdapter(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer,            \
-                                        bool paIsPlug, TForteUInt8 paParentAdapterlistID);                             \
-  forte::StringId getFBTypeId() const override {                                                                       \
+  static ::forte::CAdapter *createAdapter(::forte::StringId paInstanceNameId, ::forte::CFBContainer &paContainer,      \
+                                          bool paIsPlug, ::forte::TForteUInt8 paParentAdapterlistID);                  \
+  ::forte::StringId getFBTypeId() const override {                                                                     \
     return (csmAdapterTypeEntry_##adapterclass.getTypeNameId());                                                       \
   };                                                                                                                   \
                                                                                                                        \
@@ -100,10 +98,11 @@ private:
 
 //!\ingroup CORE This define is used to create the implementation for the above definition.
 #define DEFINE_ADAPTER_TYPE(adapterclass, adapterTypeNameId, ...)                                                      \
-  const forte::CAdapterTypeEntry adapterclass::csmAdapterTypeEntry_##adapterclass(                                     \
+  const ::forte::CAdapterTypeEntry adapterclass::csmAdapterTypeEntry_##adapterclass(                                   \
       (adapterTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}), adapterclass::createAdapter); \
-  forte::CAdapter *adapterclass::createAdapter(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer,     \
-                                               bool paIsPlug, TForteUInt8 paParentAdapterlistID) {                     \
+  ::forte::CAdapter *adapterclass::createAdapter(::forte::StringId paInstanceNameId,                                   \
+                                                 ::forte::CFBContainer &paContainer, bool paIsPlug,                    \
+                                                 TForteUInt8 paParentAdapterlistID) {                                  \
     if (paIsPlug) {                                                                                                    \
       return new adapterclass##_Plug(paInstanceNameId, paContainer, paParentAdapterlistID);                            \
     }                                                                                                                  \
@@ -111,7 +110,7 @@ private:
   };
 
 #define DEFINE_GENERIC_ADAPTER_TYPE(adapterclass, adapterTypeNameId)                                                   \
-  const forte::CAdapterTypeEntry adapterclass::csmAdapterTypeEntry_##adapterclass(                                     \
+  const ::forte::CAdapterTypeEntry adapterclass::csmAdapterTypeEntry_##adapterclass(                                   \
       (adapterTypeNameId), std::string_view{}, adapterclass::createAdapter, 0);
 
 //!\ingroup CORE This define is used to create the definition necessary for Firmware datatype in order to get them
@@ -127,30 +126,28 @@ public:                                                                         
   CIEC_ANY *clone(TForteByte *paDataBuf) const override {                                                              \
     return (0 != paDataBuf) ? new (paDataBuf) CIEC_##datatypename(*this) : new CIEC_##datatypename(*this);             \
   }                                                                                                                    \
-  forte::StringId getTypeNameID() const override {                                                                     \
+  ::forte::StringId getTypeNameID() const override {                                                                   \
     return CIEC_##datatypename::csmFirmwareDataTypeEntry_##datatypename.getTypeNameId();                               \
   }                                                                                                                    \
                                                                                                                        \
 private:                                                                                                               \
-  const static forte::CDataTypeEntry csmFirmwareDataTypeEntry_##datatypename;
+  const static ::forte::CDataTypeEntry csmFirmwareDataTypeEntry_##datatypename;
 
 //!\ingroup CORE This define is used to create the implementation for the above definition.
 #define DEFINE_FIRMWARE_DATATYPE(datatypename, datatypenameid, ...)                                                    \
-  const forte::CDataTypeEntry CIEC_##datatypename::csmFirmwareDataTypeEntry_##datatypename(                            \
+  const ::forte::CDataTypeEntry CIEC_##datatypename::csmFirmwareDataTypeEntry_##datatypename(                          \
       (datatypenameid), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}),                                  \
       CIEC_##datatypename::createDataType, sizeof(CIEC_##datatypename));
 
 #define DECLARE_FIRMWARE_GLOBAL_CONST()                                                                                \
 private:                                                                                                               \
-  const static forte::CGlobalConstEntry csmGlobalConstEntry;
+  const static ::forte::CGlobalConstEntry csmGlobalConstEntry;
 
 #define DEFINE_FIRMWARE_GLOBAL_CONST(gcClass, gcTypeNameId, ...)                                                       \
-  const forte::CGlobalConstEntry gcClass::csmGlobalConstEntry(                                                         \
+  const ::forte::CGlobalConstEntry gcClass::csmGlobalConstEntry(                                                       \
       (gcTypeNameId), GET_TYPE_HASH(__VA_ARGS__ __VA_OPT__(, ) std::string_view{}));
 
-struct SFBInterfaceSpec;
-
-namespace forte {
+  struct SFBInterfaceSpec;
 
   //! The base class for all type entries in the type lib.
   class CTypeEntry {

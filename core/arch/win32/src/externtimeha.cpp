@@ -13,39 +13,43 @@
 #include "forte/devexec.h"
 #include <windows.h>
 
-CExternTimerHandler *CExternTimerHandler::smFORTEExtTimer = nullptr;
+using namespace forte::literals;
 
-const TForteInt32 CExternTimerHandler::csmTicksPerSecond = 1000;
+namespace forte::arch {
+  CExternTimerHandler *CExternTimerHandler::smFORTEExtTimer = nullptr;
 
-extern "C" __declspec(dllexport) void __stdcall nextTick(void) {
-  CExternTimerHandler::externNextTick();
-}
+  const TForteInt32 CExternTimerHandler::csmTicksPerSecond = 1000;
 
-extern "C" __declspec(dllexport) unsigned int __stdcall getTicksPerSecond() {
-  return CExternTimerHandler::getExternTicksPerSecond();
-}
-
-CExternTimerHandler::CExternTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
-  if (CExternTimerHandler::smFORTEExtTimer != nullptr) { // creating two timers is not possible
-    CExternTimerHandler::smFORTEExtTimer = this;
+  extern "C" __declspec(dllexport) void __stdcall nextTick(void) {
+    CExternTimerHandler::externNextTick();
   }
-}
 
-CExternTimerHandler::~CExternTimerHandler() {
-  disableHandler();
-  CExternTimerHandler::smFORTEExtTimer = nullptr;
-}
-
-void CExternTimerHandler::externNextTick() {
-  if (CExternTimerHandler::smFORTEExtTimer) {
-    CExternTimerHandler::smFORTEExtTimer->nextTick();
+  extern "C" __declspec(dllexport) unsigned int __stdcall getTicksPerSecond() {
+    return CExternTimerHandler::getExternTicksPerSecond();
   }
-}
 
-void CExternTimerHandler::enableHandler() {
-  // TODO think on hwo to handle this.
-}
+  CExternTimerHandler::CExternTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
+    if (CExternTimerHandler::smFORTEExtTimer != nullptr) { // creating two timers is not possible
+      CExternTimerHandler::smFORTEExtTimer = this;
+    }
+  }
 
-void CExternTimerHandler::disableHandler() {
-  // TODO think on hwo to handle this.
-}
+  CExternTimerHandler::~CExternTimerHandler() {
+    disableHandler();
+    CExternTimerHandler::smFORTEExtTimer = nullptr;
+  }
+
+  void CExternTimerHandler::externNextTick() {
+    if (CExternTimerHandler::smFORTEExtTimer) {
+      CExternTimerHandler::smFORTEExtTimer->nextTick();
+    }
+  }
+
+  void CExternTimerHandler::enableHandler() {
+    // TODO think on hwo to handle this.
+  }
+
+  void CExternTimerHandler::disableHandler() {
+    // TODO think on hwo to handle this.
+  }
+} // namespace forte::arch

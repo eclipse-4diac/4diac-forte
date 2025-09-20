@@ -12,22 +12,22 @@
  *    Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#ifndef _ANY_REA_H_
-#define _ANY_REA_H_
+
+#pragma once
 
 #include "forte/datatypes/forte_any_num.h"
 
-/*!\ingroup COREDTS CIEC_ANY_REAL represents any real data types according to IEC 61131.
+namespace forte {
+  /*!\ingroup COREDTS CIEC_ANY_REAL represents any real data types according to IEC 61131.
 
- */
-class CIEC_ANY_REAL : public CIEC_ANY_NUM {
-  public:
-    ~CIEC_ANY_REAL() override = default;
+   */
+  class CIEC_ANY_REAL : public CIEC_ANY_NUM {
+    public:
+      ~CIEC_ANY_REAL() override = default;
 
-  protected:
-    CIEC_ANY_REAL() = default;
+    protected:
+      CIEC_ANY_REAL() = default;
 
-    static void normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos);
-};
-
-#endif /*_MANY_REA_H_*/
+      static void normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos);
+  };
+} // namespace forte

@@ -72,7 +72,7 @@ namespace forte {
           return *static_cast<CIEC_BOOL *>(getDO(0));
         }
 
-        CSyncObject &getFBLock() {
+        arch::CSyncObject &getFBLock() {
           return mFBLock;
         }
 
@@ -141,7 +141,7 @@ namespace forte {
         CComLayer *mInterruptQueue[cgCommunicationInterruptQueueSize];
 
       private:
-        CSyncObject mFBLock;
+        arch::CSyncObject mFBLock;
 
       public:
         CBaseCommFB(const CBaseCommFB &) = delete;

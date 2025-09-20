@@ -15,6 +15,7 @@
 #include <format>
 #include "forte/datatypes/forte_any_chars.h"
 
+using namespace forte;
 using namespace std::literals::string_literals;
 
 void CIEC_ANY_CHARS::dollarEscapeChar(std::string &paTargetBuf, char paSymbol, const EDataTypeID paTypeID) {

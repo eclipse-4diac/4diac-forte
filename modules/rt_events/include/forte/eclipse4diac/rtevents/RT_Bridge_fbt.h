@@ -53,7 +53,7 @@ namespace forte::eclipse4diac::rtevents {
 
       bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-      CSyncObject mSyncObject;
+      arch::CSyncObject mSyncObject;
 
       std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDIs;
       std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDOs;

@@ -34,7 +34,8 @@ namespace forte::eclipse4diac::rtevents {
   }
 
   void FORTE_GEN_RT_Bridge::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-    CCriticalRegion criticalRegion(mSyncObject); // protect the processing of the data independent of the calling event
+  util::CCriticalRegion criticalRegion(
+      mSyncObject); // protect the processing of the data independent of the calling event
     switch (paEIID) {
       case scmEventRDID: sendOutputEvent(scmEventRDOID, paECET); break;
       case scmEventWRID:

@@ -39,11 +39,11 @@ namespace forte::eclipse4diac::utils {
 
   void FORTE_STEST_END::executeEvent(TEventID paEIID, CEventChainExecutionThread *const) {
     if (scmEventREQID == paEIID) {
-      CThread::sleepThread(250); // avoid killing the device before it was properly started (DEV_MGR still was
-                                 // initializing the ipCommlayer when it was killed)
-      getDevice()->changeExecutionState(EMGMCommandType::Kill);
-    }
+    arch::CThread::sleepThread(250); // avoid killing the device before it was properly started (DEV_MGR still was
+                                     // initializing the ipCommlayer when it was killed)
+    getDevice()->changeExecutionState(EMGMCommandType::Kill);
   }
+}
 
   void FORTE_STEST_END::readInputData(TEventID) {
     // nothing to do

@@ -22,18 +22,18 @@
 #include "forte/arch/forte_architecture_time.h"
 #include "forte/util/forte_constants.h"
 
-time_t forte_timegm(struct tm *pa_tm) {
+time_t forte::arch::forte_timegm(struct tm *pa_tm) {
   return _mkgmtime(pa_tm);
 }
 
-struct tm *forte_localtime(const time_t *paTime, struct tm *const paResult) {
+struct tm *forte::arch::forte_localtime(const time_t *paTime, struct tm *const paResult) {
   if (0 == localtime_s(paResult, paTime)) {
     return paResult;
   }
   return nullptr;
 }
 
-struct tm *forte_gmtime(const time_t *const paTime, struct tm *const paResult) {
+struct tm *forte::arch::forte_gmtime(const time_t *const paTime, struct tm *const paResult) {
   if (0 == gmtime_s(paResult, paTime)) {
     return paResult;
   }

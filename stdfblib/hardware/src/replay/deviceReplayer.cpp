@@ -16,15 +16,15 @@
 #include "../../../core/src/ecetFake.h"
 
 namespace forte::iec61499::hardware {
-  CDeviceReplayer::CResourceInformation::CResourceInformation(CResource &paResource,
-                                                              const std::vector<EventMessage> &paExternalEvents) :
+  CDeviceReplayer::CResourceInformation::CResourceInformation(
+      CResource &paResource, const std::vector<trace::EventMessage> &paExternalEvents) :
       mResourceReplayer(paResource, paExternalEvents),
       mResource{paResource},
       mEcet{*dynamic_cast<CFakeEventExecutionThread *>(mResource.getResourceEventExecution())} {
   }
 
-  CDeviceReplayer::CDeviceReplayer(CDevice &paDevice,
-                                   const std::unordered_map<std::string, std::vector<EventMessage>> &paExternalEvents) :
+  CDeviceReplayer::CDeviceReplayer(
+      CDevice &paDevice, const std::unordered_map<std::string, std::vector<trace::EventMessage>> &paExternalEvents) :
       mDevice{paDevice} {
     for (auto child : mDevice.getChildren()) {
       auto resource =
@@ -37,9 +37,9 @@ namespace forte::iec61499::hardware {
     }
   }
 
-  std::unordered_map<std::string, std::vector<EventMessage>> CDeviceReplayer::reproduceAll() {
+  std::unordered_map<std::string, std::vector<trace::EventMessage>> CDeviceReplayer::reproduceAll() {
 
-    std::unordered_map<std::string, std::vector<EventMessage>> generatedMessages;
+    std::unordered_map<std::string, std::vector<trace::EventMessage>> generatedMessages;
 
     for (auto &resourceInformation : mResourceInformations) {
       generatedMessages.insert(
@@ -58,8 +58,8 @@ namespace forte::iec61499::hardware {
     return std::nullopt;
   }
 
-  std::unordered_map<std::string, std::vector<EventMessage>> CDeviceReplayer::getGeneratedEvents() {
-    std::unordered_map<std::string, std::vector<EventMessage>> generatedMessages;
+  std::unordered_map<std::string, std::vector<trace::EventMessage>> CDeviceReplayer::getGeneratedEvents() {
+    std::unordered_map<std::string, std::vector<trace::EventMessage>> generatedMessages;
     for (auto &resourceInformation : mResourceInformations) {
       generatedMessages.insert({resourceInformation.mResource.getInstanceName(),
                                 resourceInformation.mResourceReplayer.getGeneratedEvents()});

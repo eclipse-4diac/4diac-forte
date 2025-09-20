@@ -38,69 +38,71 @@
 
 #include "convert_function_utils.h"
 
-//********************************************************************************************
-//   DINT_TO_*  functions
-//********************************************************************************************
-inline CIEC_BYTE func_DINT_TO_BYTE(const CIEC_DINT &paVal) {
-  return CIEC_ANY::cast<CIEC_BYTE>(paVal);
-}
+namespace forte {
+  //********************************************************************************************
+  //   DINT_TO_*  functions
+  //********************************************************************************************
+  inline CIEC_BYTE func_DINT_TO_BYTE(const CIEC_DINT &paVal) {
+    return CIEC_ANY::cast<CIEC_BYTE>(paVal);
+  }
 
-inline CIEC_DWORD func_DINT_TO_DWORD(const CIEC_DINT &paVal) {
-  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
-}
+  inline CIEC_DWORD func_DINT_TO_DWORD(const CIEC_DINT &paVal) {
+    return CIEC_ANY::cast<CIEC_DWORD>(paVal);
+  }
 
-inline CIEC_INT func_DINT_TO_INT(const CIEC_DINT &paVal) {
-  return CIEC_ANY::cast<CIEC_INT>(paVal);
-}
+  inline CIEC_INT func_DINT_TO_INT(const CIEC_DINT &paVal) {
+    return CIEC_ANY::cast<CIEC_INT>(paVal);
+  }
 
-inline CIEC_LINT func_DINT_TO_LINT(const CIEC_DINT &paVal) {
-  return CIEC_ANY::cast<CIEC_LINT>(paVal);
-}
+  inline CIEC_LINT func_DINT_TO_LINT(const CIEC_DINT &paVal) {
+    return CIEC_ANY::cast<CIEC_LINT>(paVal);
+  }
 
-inline CIEC_LREAL func_DINT_TO_LREAL(const CIEC_DINT &paVal) {
-  return CIEC_ANY::cast<CIEC_LREAL>(paVal);
-}
+  inline CIEC_LREAL func_DINT_TO_LREAL(const CIEC_DINT &paVal) {
+    return CIEC_ANY::cast<CIEC_LREAL>(paVal);
+  }
 
-inline CIEC_LWORD func_DINT_TO_LWORD(const CIEC_DINT &paVal) {
-  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
-}
+  inline CIEC_LWORD func_DINT_TO_LWORD(const CIEC_DINT &paVal) {
+    return CIEC_ANY::cast<CIEC_LWORD>(paVal);
+  }
 
-inline CIEC_REAL func_DINT_TO_REAL(const CIEC_DINT &paVal) {
-  return CIEC_ANY::cast<CIEC_REAL>(paVal);
-}
+  inline CIEC_REAL func_DINT_TO_REAL(const CIEC_DINT &paVal) {
+    return CIEC_ANY::cast<CIEC_REAL>(paVal);
+  }
 
-inline CIEC_SINT func_DINT_TO_SINT(const CIEC_DINT &paVal) {
-  return CIEC_ANY::cast<CIEC_SINT>(paVal);
-}
+  inline CIEC_SINT func_DINT_TO_SINT(const CIEC_DINT &paVal) {
+    return CIEC_ANY::cast<CIEC_SINT>(paVal);
+  }
 
-inline CIEC_UDINT func_DINT_TO_UDINT(const CIEC_DINT &paVal) {
-  return CIEC_ANY::cast<CIEC_UDINT>(paVal);
-}
+  inline CIEC_UDINT func_DINT_TO_UDINT(const CIEC_DINT &paVal) {
+    return CIEC_ANY::cast<CIEC_UDINT>(paVal);
+  }
 
-inline CIEC_UINT func_DINT_TO_UINT(const CIEC_DINT &paVal) {
-  return CIEC_ANY::cast<CIEC_UINT>(paVal);
-}
+  inline CIEC_UINT func_DINT_TO_UINT(const CIEC_DINT &paVal) {
+    return CIEC_ANY::cast<CIEC_UINT>(paVal);
+  }
 
-inline CIEC_ULINT func_DINT_TO_ULINT(const CIEC_DINT &paVal) {
-  return CIEC_ANY::cast<CIEC_ULINT>(paVal);
-}
+  inline CIEC_ULINT func_DINT_TO_ULINT(const CIEC_DINT &paVal) {
+    return CIEC_ANY::cast<CIEC_ULINT>(paVal);
+  }
 
-inline CIEC_USINT func_DINT_TO_USINT(const CIEC_DINT &paVal) {
-  return CIEC_ANY::cast<CIEC_USINT>(paVal);
-}
+  inline CIEC_USINT func_DINT_TO_USINT(const CIEC_DINT &paVal) {
+    return CIEC_ANY::cast<CIEC_USINT>(paVal);
+  }
 
-inline CIEC_WORD func_DINT_TO_WORD(const CIEC_DINT &paVal) {
-  return CIEC_ANY::cast<CIEC_WORD>(paVal);
-}
+  inline CIEC_WORD func_DINT_TO_WORD(const CIEC_DINT &paVal) {
+    return CIEC_ANY::cast<CIEC_WORD>(paVal);
+  }
 
-inline CIEC_STRING func_DINT_AS_STRING(const CIEC_DINT &paVal) {
-  CIEC_STRING string;
-  stringConverter(string, paVal);
-  return string;
-}
+  inline CIEC_STRING func_DINT_AS_STRING(const CIEC_DINT &paVal) {
+    CIEC_STRING string;
+    stringConverter(string, paVal);
+    return string;
+  }
 
-inline CIEC_WSTRING func_DINT_AS_WSTRING(const CIEC_DINT &paVal) {
-  CIEC_WSTRING string;
-  stringConverter(string, paVal);
-  return string;
-}
+  inline CIEC_WSTRING func_DINT_AS_WSTRING(const CIEC_DINT &paVal) {
+    CIEC_WSTRING string;
+    stringConverter(string, paVal);
+    return string;
+  }
+} // namespace forte

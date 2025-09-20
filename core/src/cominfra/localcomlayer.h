@@ -20,9 +20,8 @@
 #include "forte/arch/forte_sync.h"
 #include <vector>
 
-class CIEC_ANY;
-
 namespace forte {
+  class CIEC_ANY;
 
   namespace com_infra {
 
@@ -107,7 +106,7 @@ namespace forte {
 
             /*!\brief The Sync object used locking the access to the internal used datastructures
              */
-            CSyncObject mSync;
+            arch::CSyncObject mSync;
 
             TLocalCommGroupList mLocalCommGroups;
 

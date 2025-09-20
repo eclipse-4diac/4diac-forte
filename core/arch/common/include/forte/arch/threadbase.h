@@ -19,8 +19,6 @@
 #include "forte/arch/forte_sem.h"
 #include "forte/arch/forte_sync.h"
 
-using namespace forte::arch;
-
 namespace forte::arch {
 
   class EmptyThreadDeletePolicy {
@@ -201,7 +199,7 @@ namespace forte::arch {
 
   template<typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
   void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::start() {
-    CCriticalRegion criticalRegion(mThreadMutex);
+    util::CCriticalRegion criticalRegion(mThreadMutex);
     if (nullHandle == mThreadHandle) {
       mThreadHandle = createThread(mStackSize);
       if (nullHandle == mThreadHandle) {
@@ -220,7 +218,7 @@ namespace forte::arch {
 
   template<typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
   void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::end() {
-    CCriticalRegion criticalRegion(mThreadMutex);
+    util::CCriticalRegion criticalRegion(mThreadMutex);
     if (nullHandle != mThreadHandle) {
       stop();
       join();

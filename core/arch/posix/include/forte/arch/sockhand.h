@@ -27,6 +27,8 @@
 #include "forte/arch/fdselecthand.h"
 #include "forte/arch/bsdsocketinterf.h"
 
-typedef CGenericIPComSocketHandler<CFDSelectHandler, CBSDSocketInterface> CIPComSocketHandler;
+namespace forte::arch {
+  typedef CGenericIPComSocketHandler<CFDSelectHandler, CBSDSocketInterface> CIPComSocketHandler;
+}
 
 #endif /* SOCKHAND_H_ */

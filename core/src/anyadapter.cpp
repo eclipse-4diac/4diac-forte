@@ -20,93 +20,95 @@
 
 using namespace forte::literals;
 
-using namespace forte;
-
-CAnyAdapterPin::CAnyAdapterPin(StringId paInstanceNameId) : mInstanceNameId(paInstanceNameId) {
-}
-
-CAnyAdapterPin::~CAnyAdapterPin() {
-  removeConfiguredAdapter();
-}
-
-void CAnyAdapterPin::createConfiguredAdapter(CAdapter *paPeer,
-                                             CFunctionBlock &paParent,
-                                             bool paIsPlug,
-                                             TForteUInt8 paParentAdapterlistID) {
-  removeConfiguredAdapter();
-  EMGMResponse errorMSG;
-  mConfiguredAdapter = std::unique_ptr<CAdapter>(
-      createAdapter(mInstanceNameId, paPeer->getFBTypeId(), paParent, paIsPlug, paParentAdapterlistID, errorMSG));
-
-  if (mConfiguredAdapter) {
-    paParent.addFB(*mConfiguredAdapter);
-    mConfiguredAdapter->setPeer(paPeer);
+namespace forte {
+  CAnyAdapterPin::CAnyAdapterPin(StringId paInstanceNameId) : mInstanceNameId(paInstanceNameId) {
   }
-}
 
-void CAnyAdapterPin::removeConfiguredAdapter() {
-  if (mConfiguredAdapter) {
-    mConfiguredAdapter->getParent().removeFB(*mConfiguredAdapter);
+  CAnyAdapterPin::~CAnyAdapterPin() {
+    removeConfiguredAdapter();
   }
-}
 
-CAnyPlugPin::CAnyPlugPin(StringId paInstanceNameId, CFunctionBlock &paParentFB, TForteUInt8 paParentAdapterlistID) :
-    CAnyAdapterPin(paInstanceNameId),
-    mAdapterCon(paParentFB, paParentAdapterlistID, *this) {
-}
+  void CAnyAdapterPin::createConfiguredAdapter(CAdapter *paPeer,
+                                               CFunctionBlock &paParent,
+                                               bool paIsPlug,
+                                               TForteUInt8 paParentAdapterlistID) {
+    removeConfiguredAdapter();
+    EMGMResponse errorMSG;
+    mConfiguredAdapter = std::unique_ptr<CAdapter>(
+        createAdapter(mInstanceNameId, paPeer->getFBTypeId(), paParent, paIsPlug, paParentAdapterlistID, errorMSG));
 
-CAdapter *CAnyPlugPin::getAdapterBlock() {
-  return mConfiguredAdapter.get();
-}
-
-StringId CAnyPlugPin::getAdapterTypeId() const {
-  return (mConfiguredAdapter) ? mConfiguredAdapter->getFBTypeId() : "ANY_ADAPTER"_STRID;
-}
-
-bool CAnyPlugPin::isCompatible(IAdapterPin &paPeer) {
-  return paPeer.getAdapterTypeId() != "ANY_ADAPTER"_STRID;
-}
-
-CAdapterConnection &CAnyPlugPin::getAdapterCon() {
-  return mAdapterCon;
-}
-
-void CAnyPlugPin::setPeer(CAdapter *paPeer) {
-  if (paPeer != nullptr) {
-    auto srcInfo = mAdapterCon.getSourceId();
-    createConfiguredAdapter(paPeer, srcInfo.getFB(), true, static_cast<TForteUInt8>(srcInfo.getPortId()));
+    if (mConfiguredAdapter) {
+      paParent.addFB(*mConfiguredAdapter);
+      mConfiguredAdapter->setPeer(paPeer);
+    }
   }
-}
 
-CAnySocketPin::CAnySocketPin(StringId paInstanceNameId, CFunctionBlock &paParentFB, TForteUInt8 paParentAdapterlistID) :
-    CAnyAdapterPin(paInstanceNameId),
-    mParentFB(paParentFB),
-    mParentAdapterlistID(paParentAdapterlistID) {
-}
-
-CAdapter *CAnySocketPin::getAdapterBlock() {
-  return mConfiguredAdapter.get();
-}
-
-StringId CAnySocketPin::getAdapterTypeId() const {
-  return (mConfiguredAdapter) ? mConfiguredAdapter->getFBTypeId() : "ANY_ADAPTER"_STRID;
-}
-
-bool CAnySocketPin::isCompatible(IAdapterPin &paPeer) {
-  return paPeer.getAdapterTypeId() != "ANY_ADAPTER"_STRID;
-}
-
-bool CAnySocketPin::connect(CAdapterConnection &paConn) {
-  mAdapterCon = &paConn;
-  createConfiguredAdapter(paConn.getPlug().getAdapterBlock(), mParentFB, true, mParentAdapterlistID);
-  if (!mConfiguredAdapter) {
-    return false;
+  void CAnyAdapterPin::removeConfiguredAdapter() {
+    if (mConfiguredAdapter) {
+      mConfiguredAdapter->getParent().removeFB(*mConfiguredAdapter);
+    }
   }
-  paConn.getPlug().setPeer(getAdapterBlock());
-  return true;
-}
 
-void CAnySocketPin::disconnect() {
-  removeConfiguredAdapter();
-  mAdapterCon = nullptr;
-}
+  CAnyPlugPin::CAnyPlugPin(StringId paInstanceNameId, CFunctionBlock &paParentFB, TForteUInt8 paParentAdapterlistID) :
+      CAnyAdapterPin(paInstanceNameId),
+      mAdapterCon(paParentFB, paParentAdapterlistID, *this) {
+  }
+
+  CAdapter *CAnyPlugPin::getAdapterBlock() {
+    return mConfiguredAdapter.get();
+  }
+
+  StringId CAnyPlugPin::getAdapterTypeId() const {
+    return (mConfiguredAdapter) ? mConfiguredAdapter->getFBTypeId() : "ANY_ADAPTER"_STRID;
+  }
+
+  bool CAnyPlugPin::isCompatible(IAdapterPin &paPeer) {
+    return paPeer.getAdapterTypeId() != "ANY_ADAPTER"_STRID;
+  }
+
+  CAdapterConnection &CAnyPlugPin::getAdapterCon() {
+    return mAdapterCon;
+  }
+
+  void CAnyPlugPin::setPeer(CAdapter *paPeer) {
+    if (paPeer != nullptr) {
+      auto srcInfo = mAdapterCon.getSourceId();
+      createConfiguredAdapter(paPeer, srcInfo.getFB(), true, static_cast<TForteUInt8>(srcInfo.getPortId()));
+    }
+  }
+
+  CAnySocketPin::CAnySocketPin(StringId paInstanceNameId,
+                               CFunctionBlock &paParentFB,
+                               TForteUInt8 paParentAdapterlistID) :
+      CAnyAdapterPin(paInstanceNameId),
+      mParentFB(paParentFB),
+      mParentAdapterlistID(paParentAdapterlistID) {
+  }
+
+  CAdapter *CAnySocketPin::getAdapterBlock() {
+    return mConfiguredAdapter.get();
+  }
+
+  StringId CAnySocketPin::getAdapterTypeId() const {
+    return (mConfiguredAdapter) ? mConfiguredAdapter->getFBTypeId() : "ANY_ADAPTER"_STRID;
+  }
+
+  bool CAnySocketPin::isCompatible(IAdapterPin &paPeer) {
+    return paPeer.getAdapterTypeId() != "ANY_ADAPTER"_STRID;
+  }
+
+  bool CAnySocketPin::connect(CAdapterConnection &paConn) {
+    mAdapterCon = &paConn;
+    createConfiguredAdapter(paConn.getPlug().getAdapterBlock(), mParentFB, true, mParentAdapterlistID);
+    if (!mConfiguredAdapter) {
+      return false;
+    }
+    paConn.getPlug().setPeer(getAdapterBlock());
+    return true;
+  }
+
+  void CAnySocketPin::disconnect() {
+    removeConfiguredAdapter();
+    mAdapterCon = nullptr;
+  }
+} // namespace forte

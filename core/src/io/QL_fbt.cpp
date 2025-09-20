@@ -16,9 +16,9 @@
 #include "forte/io/QL_fbt.h"
 using namespace forte::literals;
 
-using namespace forte::io;
+namespace forte::io {
+  DEFINE_FIRMWARE_FB(FORTE_QL, "QL"_STRID)
 
-DEFINE_FIRMWARE_FB(FORTE_QL, "QL"_STRID)
-
-FORTE_QL::FORTE_QL(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
-    COutputFB<CIEC_LWORD>(paContainer, paInstanceNameId) {};
+  FORTE_QL::FORTE_QL(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+      COutputFB<CIEC_LWORD>(paContainer, paInstanceNameId) {};
+} // namespace forte::io

@@ -16,6 +16,7 @@
 #include "forte/datatypes/forte_any_real.h"
 #include <cctype>
 
+using namespace forte;
 using namespace std::literals::string_literals;
 
 void CIEC_ANY_REAL::normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos) {

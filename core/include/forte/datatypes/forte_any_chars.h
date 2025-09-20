@@ -11,30 +11,30 @@
  *    Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
-#ifndef _ANY_CHARS_H_
-#define _ANY_CHARS_H_
+
+#pragma once
 
 #include "forte/datatypes/forte_any_elementary.h"
 
-/*!\ingroup COREDTS CIEC_ANY_CHARS represents ANY_CHARS data types according to
- *  IEC 61131.
- */
-class CIEC_ANY_CHARS : public CIEC_ANY_ELEMENTARY {
-  public:
-    CIEC_ANY_CHARS(const CIEC_ANY_CHARS &paVal) : CIEC_ANY_ELEMENTARY() {
-      setLargestUInt(paVal.getLargestUInt());
-    }
+namespace forte {
+  /*!\ingroup COREDTS CIEC_ANY_CHARS represents ANY_CHARS data types according to
+   *  IEC 61131.
+   */
+  class CIEC_ANY_CHARS : public CIEC_ANY_ELEMENTARY {
+    public:
+      CIEC_ANY_CHARS(const CIEC_ANY_CHARS &paVal) : CIEC_ANY_ELEMENTARY() {
+        setLargestUInt(paVal.getLargestUInt());
+      }
 
-    ~CIEC_ANY_CHARS() override = default;
+      ~CIEC_ANY_CHARS() override = default;
 
-    EDataTypeID getDataTypeID() const override {
-      return e_ANY;
-    }
+      EDataTypeID getDataTypeID() const override {
+        return e_ANY;
+      }
 
-  protected:
-    CIEC_ANY_CHARS() = default;
+    protected:
+      CIEC_ANY_CHARS() = default;
 
-    static void dollarEscapeChar(std::string &paTargetBuf, char paSymbol, const EDataTypeID paTypeID);
-};
-
-#endif /*_ANY_CHARS_H_*/
+      static void dollarEscapeChar(std::string &paTargetBuf, char paSymbol, const EDataTypeID paTypeID);
+  };
+} // namespace forte

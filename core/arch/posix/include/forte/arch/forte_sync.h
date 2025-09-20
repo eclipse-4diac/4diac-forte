@@ -10,63 +10,59 @@
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *  Jörg Walter - make objects non-copyable
  *******************************************************************************/
-#ifndef _FORTE_SYNC_H_
-#define _FORTE_SYNC_H_
+
+#pragma once
 
 #include <pthread.h>
 
-namespace forte {
-  namespace arch {
-    // forward declaration of CPThreadSemaphore so that we can use it in friend
-    class CPThreadSemaphore;
-  } // namespace arch
-} // namespace forte
+namespace forte::arch {
+  // forward declaration of CPThreadSemaphore so that we can use it in friend
+  class CPThreadSemaphore;
 
-/*! \ingroup posix_hal
- * \brief The sync object implementation for the posix thread interface.
- *
- * In the posix version a mutex is used for the sync object.
- *
- */
+  /*! \ingroup posix_hal
+   * \brief The sync object implementation for the posix thread interface.
+   *
+   * In the posix version a mutex is used for the sync object.
+   *
+   */
 
-class CPThreadSyncObject {
-  public:
-    CPThreadSyncObject();
-    ~CPThreadSyncObject();
+  class CPThreadSyncObject {
+    public:
+      CPThreadSyncObject();
+      ~CPThreadSyncObject();
 
-    /*!\brief Lock the resource coming after the lock command
-     *
-     * This function blocks until it will get the lock for the coming critical section.
-     */
-    void lock() {
-      pthread_mutex_lock(&mMutex);
-      // TODO handle return value
-    }
+      /*!\brief Lock the resource coming after the lock command
+       *
+       * This function blocks until it will get the lock for the coming critical section.
+       */
+      void lock() {
+        pthread_mutex_lock(&mMutex);
+        // TODO handle return value
+      }
 
-    //! Free the resource coming after the lock command
-    void unlock() {
-      pthread_mutex_unlock(&mMutex);
-      // TODO handle return value
-    }
+      //! Free the resource coming after the lock command
+      void unlock() {
+        pthread_mutex_unlock(&mMutex);
+        // TODO handle return value
+      }
 
-  private:
-    //! Accessor method to the mutex allowing platform specific code to use this sync object class.
-    pthread_mutex_t *getPosixMutex() {
-      return &mMutex;
-    }
+    private:
+      //! Accessor method to the mutex allowing platform specific code to use this sync object class.
+      pthread_mutex_t *getPosixMutex() {
+        return &mMutex;
+      }
 
-  public:
-    // prevent copies, since pthread_mutex_t may not be copied
-    CPThreadSyncObject(const CPThreadSyncObject &) = delete;
-    CPThreadSyncObject &operator=(const CPThreadSyncObject &) = delete;
+    public:
+      // prevent copies, since pthread_mutex_t may not be copied
+      CPThreadSyncObject(const CPThreadSyncObject &) = delete;
+      CPThreadSyncObject &operator=(const CPThreadSyncObject &) = delete;
 
-  private:
-    //! The posix thread mutex handle of the operating system.
-    pthread_mutex_t mMutex;
+    private:
+      //! The posix thread mutex handle of the operating system.
+      pthread_mutex_t mMutex;
 
-    friend class forte::arch::CPThreadSemaphore;
-};
+      friend class forte::arch::CPThreadSemaphore;
+  };
 
-typedef CPThreadSyncObject CSyncObject; // allows that doxygen can generate better documenation
-
-#endif /*FORTE_SYNC_H_*/
+  typedef CPThreadSyncObject CSyncObject; // allows that doxygen can generate better documenation
+} // namespace forte::arch

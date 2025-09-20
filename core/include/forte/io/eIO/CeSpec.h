@@ -26,252 +26,256 @@
 #include "forte/io/mapper/io_handle.h"
 #include "forte/io/processinterfacefb.h"
 
-using namespace forte::io;
+namespace forte::io {
+  enum EeIOTypes {
+    eIO_RISING_EDGE = 10,
+    eIO_FALLING_EDGE = 20,
+    eIO_UPPER_THRESHOLD = 30,
+    eIO_LOWER_THRESHOLD = 40,
+    eIO_BOUNDED_AREA = 50,
+    eIO_GRADIENT = 60
+  };
 
-enum EeIOTypes {
-  eIO_RISING_EDGE = 10,
-  eIO_FALLING_EDGE = 20,
-  eIO_UPPER_THRESHOLD = 30,
-  eIO_LOWER_THRESHOLD = 40,
-  eIO_BOUNDED_AREA = 50,
-  eIO_GRADIENT = 60
-};
+  class CeSpecBase {
+    private:
+      CProcessInterfaceFB *mEIO;
 
-class CeSpecBase {
-  private:
-    CProcessInterfaceFB *mEIO;
+    protected:
+      bool mTriggered;
 
-  protected:
-    bool mTriggered;
-
-    bool checkConditionTriggered(bool condition) {
-      if (condition) {
-        if (!mTriggered) {
-          mTriggered = true;
-          return true;
+      bool checkConditionTriggered(bool condition) {
+        if (condition) {
+          if (!mTriggered) {
+            mTriggered = true;
+            return true;
+          }
+        } else {
+          mTriggered = false;
         }
-      } else {
-        mTriggered = false;
-      }
-      return false;
-    }
-
-  public:
-    EeIOTypes mEIOType;
-    virtual ~CeSpecBase() = default;
-    virtual void trigger() = 0;
-    virtual bool checkCondition() = 0;
-    virtual void readToBuffer() = 0;
-    virtual void readToBuffer(CIEC_ANY *) = 0;
-    IOHandle *mHandle;
-
-    CeSpecBase(EeIOTypes paType, IOHandle *paHandle, CProcessInterfaceFB *paEIOfb) :
-        mEIO(paEIOfb),
-        mEIOType(paType),
-        mHandle(paHandle) {
-    }
-
-    CProcessInterfaceFB *getEIOfb() {
-      return mEIO;
-    }
-};
-
-template<typename T, std::size_t size>
-class CeSpec : public CeSpecBase {
-  protected:
-    CeBuffer<T, size> mBuffer;
-
-  public:
-    CeSpec(EeIOTypes paType, CProcessInterfaceFB *paEIOfb, IOHandle *paHandle) : CeSpecBase(paType, paHandle, paEIOfb) {
-    }
-
-    ~CeSpec() override = default;
-
-    void trigger() override {
-      if (getEIOfb()) {
-        // DEVLOG_WARNING("[EventSpec] trigger!\r\n");
-      } else {
-        DEVLOG_WARNING("[EventSpec] CProcessInterfaceFB == nullptr !\r\n");
-      }
-    }
-
-    void readToBuffer() override {
-      T tempValue;
-      mHandle->get(tempValue);
-      mBuffer.push(tempValue);
-    }
-
-    void readToBuffer(CIEC_ANY *paValue) override {
-      auto tempValue = static_cast<T *>(paValue);
-      mBuffer.push(*tempValue);
-    }
-
-    bool checkCondition() override = 0;
-};
-
-class CeIO_RisingEdge : public CeSpec<CIEC_BOOL, BUFFER_SIZE_RISING_EDGE> {
-  public:
-    CeIO_RisingEdge(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle) : CeSpec(eIO_RISING_EDGE, paEIOfb, paHandle) {
-    }
-
-    bool checkCondition() final {
-      if (mHandle == nullptr) {
-        DEVLOG_DEBUG("[EIO_RisingEdge] mHandle is nullptr\r\n");
         return false;
       }
 
-      /* CRITERIA */
-      /* ============================================ */
-      mBuffer.makeSnapshot();
-      auto orderedHistory = mBuffer.getSnapshot();
-      auto curVal = orderedHistory[0];
-      auto prevVal = orderedHistory[1];
-      bool condition = curVal && !prevVal;
-      /* ============================================ */
+    public:
+      EeIOTypes mEIOType;
+      virtual ~CeSpecBase() = default;
+      virtual void trigger() = 0;
+      virtual bool checkCondition() = 0;
+      virtual void readToBuffer() = 0;
+      virtual void readToBuffer(CIEC_ANY *) = 0;
+      IOHandle *mHandle;
 
-      return checkConditionTriggered(condition);
-    }
-};
-
-class CeIO_FallingEdge : public CeSpec<CIEC_BOOL, BUFFER_SIZE_FALLING_EDGE> {
-  public:
-    CeIO_FallingEdge(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle) : CeSpec(eIO_FALLING_EDGE, paEIOfb, paHandle) {
-    }
-
-    bool checkCondition() final {
-      if (mHandle == nullptr) {
-        DEVLOG_DEBUG("[EIO_FallingEdge] mHandle is nullptr\r\n");
-        return false;
+      CeSpecBase(EeIOTypes paType, IOHandle *paHandle, CProcessInterfaceFB *paEIOfb) :
+          mEIO(paEIOfb),
+          mEIOType(paType),
+          mHandle(paHandle) {
       }
 
-      /* CRITERIA */
-      /* ============================================ */
-      mBuffer.makeSnapshot();
-      auto orderedHistory = mBuffer.getSnapshot();
-      auto curVal = orderedHistory[0];
-      auto prevVal = orderedHistory[1];
-      bool condition = !curVal && prevVal;
-      /* ============================================ */
+      CProcessInterfaceFB *getEIOfb() {
+        return mEIO;
+      }
+  };
 
-      return checkConditionTriggered(condition);
-    }
-};
+  template<typename T, std::size_t size>
+  class CeSpec : public CeSpecBase {
+    protected:
+      CeBuffer<T, size> mBuffer;
 
-class CeIO_UpperThreshold : public CeSpec<CIEC_WORD, BUFFER_SIZE_UPPER_THRESHOLD> {
-  public:
-    CeIO_UpperThreshold(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paThreshold) :
-        CeSpec(eIO_UPPER_THRESHOLD, paEIOfb, paHandle),
-        mUpperThreshold(paThreshold) {
-    }
-
-    bool checkCondition() final {
-      if (mHandle == nullptr) {
-        DEVLOG_DEBUG("[EIO_UPPER_THRESHOLD] mHandle is nullptr\r\n");
-        return false;
+    public:
+      CeSpec(EeIOTypes paType, CProcessInterfaceFB *paEIOfb, IOHandle *paHandle) :
+          CeSpecBase(paType, paHandle, paEIOfb) {
       }
 
-      /* CRITERIA */
-      /* ============================================ */
-      uint32_t curVal = mBuffer.getCurrentData();
-      bool condition = curVal > mUpperThreshold;
-      /* ============================================ */
+      ~CeSpec() override = default;
 
-      return checkConditionTriggered(condition);
-    }
-
-  private:
-    uint32_t mUpperThreshold;
-};
-
-class CeIO_LowerThreshold : public CeSpec<CIEC_WORD, BUFFER_SIZE_LOWER_THRESHOLD> {
-  public:
-    CeIO_LowerThreshold(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paThreshold) :
-        CeSpec(eIO_LOWER_THRESHOLD, paEIOfb, paHandle),
-        mLowerThreshold(paThreshold) {
-    }
-
-    bool checkCondition() final {
-      if (mHandle == nullptr) {
-        DEVLOG_DEBUG("[EIO_LOWER_THRESHOLD] mHandle is nullptr\r\n");
-        return false;
+      void trigger() override {
+        if (getEIOfb()) {
+          // DEVLOG_WARNING("[EventSpec] trigger!\r\n");
+        } else {
+          DEVLOG_WARNING("[EventSpec] CProcessInterfaceFB == nullptr !\r\n");
+        }
       }
 
-      /* CRITERIA */
-      /* ============================================ */
-      uint32_t curVal = mBuffer.getCurrentData();
-      bool condition = curVal < mLowerThreshold;
-      /* ============================================ */
-
-      return checkConditionTriggered(condition);
-    }
-
-  private:
-    uint32_t mLowerThreshold;
-};
-
-class CeIO_BoundedArea : public CeSpec<CIEC_WORD, BUFFER_SIZE_BOUNDED_AREA> {
-  public:
-    CeIO_BoundedArea(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paBiggerThan, uint32_t paSmallerThan) :
-        CeSpec(eIO_BOUNDED_AREA, paEIOfb, paHandle),
-        mBiggerThan(paBiggerThan),
-        mSmallerThan(paSmallerThan) {
-    }
-
-    bool checkCondition() final {
-      if (mHandle == nullptr) {
-        DEVLOG_DEBUG("[EIO_BoundedArea] mHandle is nullptr\r\n");
-        return false;
+      void readToBuffer() override {
+        T tempValue;
+        mHandle->get(tempValue);
+        mBuffer.push(tempValue);
       }
 
-      /* CRITERIA */
-      /* ============================================ */
-      uint32_t curVal = mBuffer.getCurrentData();
-      bool condition = false;
-
-      // checks if value leaves bounded area
-      if (mBiggerThan > mSmallerThan) {
-        condition = curVal > mBiggerThan || curVal < mSmallerThan;
+      void readToBuffer(CIEC_ANY *paValue) override {
+        auto tempValue = static_cast<T *>(paValue);
+        mBuffer.push(*tempValue);
       }
 
-      // checks if value enters bounded area
-      if (mBiggerThan < mSmallerThan) {
-        condition = curVal > mBiggerThan && curVal < mSmallerThan;
-      }
-      /* ============================================ */
+      bool checkCondition() override = 0;
+  };
 
-      return checkConditionTriggered(condition);
-    }
-
-  private:
-    uint32_t mBiggerThan;
-    uint32_t mSmallerThan;
-};
-
-class CeIO_Gradient : public CeSpec<CIEC_WORD, BUFFER_SIZE_GRADIENT> {
-  public:
-    CeIO_Gradient(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paDifference) :
-        CeSpec(eIO_GRADIENT, paEIOfb, paHandle),
-        mGradient(paDifference) {
-    }
-
-    bool checkCondition() final {
-      if (mHandle == nullptr) {
-        DEVLOG_DEBUG("[EIO_Gradient] mHandle is nullptr\r\n");
-        return false;
+  class CeIO_RisingEdge : public CeSpec<CIEC_BOOL, BUFFER_SIZE_RISING_EDGE> {
+    public:
+      CeIO_RisingEdge(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle) : CeSpec(eIO_RISING_EDGE, paEIOfb, paHandle) {
       }
 
-      /* CRITERIA */
-      /* ============================================ */
-      mBuffer.makeSnapshot();
-      auto orderedHistory = mBuffer.getSnapshot();
-      auto curVal = uint32_t(orderedHistory[0]);
-      auto prevVal = uint32_t(orderedHistory[1]);
-      bool condition = curVal > prevVal + mGradient || curVal < prevVal - mGradient;
-      // /* ============================================ */
+      bool checkCondition() final {
+        if (mHandle == nullptr) {
+          DEVLOG_DEBUG("[EIO_RisingEdge] mHandle is nullptr\r\n");
+          return false;
+        }
 
-      return condition ? true : false;
-    }
+        /* CRITERIA */
+        /* ============================================ */
+        mBuffer.makeSnapshot();
+        auto orderedHistory = mBuffer.getSnapshot();
+        auto curVal = orderedHistory[0];
+        auto prevVal = orderedHistory[1];
+        bool condition = curVal && !prevVal;
+        /* ============================================ */
 
-  private:
-    uint32_t mGradient;
-};
+        return checkConditionTriggered(condition);
+      }
+  };
+
+  class CeIO_FallingEdge : public CeSpec<CIEC_BOOL, BUFFER_SIZE_FALLING_EDGE> {
+    public:
+      CeIO_FallingEdge(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle) : CeSpec(eIO_FALLING_EDGE, paEIOfb, paHandle) {
+      }
+
+      bool checkCondition() final {
+        if (mHandle == nullptr) {
+          DEVLOG_DEBUG("[EIO_FallingEdge] mHandle is nullptr\r\n");
+          return false;
+        }
+
+        /* CRITERIA */
+        /* ============================================ */
+        mBuffer.makeSnapshot();
+        auto orderedHistory = mBuffer.getSnapshot();
+        auto curVal = orderedHistory[0];
+        auto prevVal = orderedHistory[1];
+        bool condition = !curVal && prevVal;
+        /* ============================================ */
+
+        return checkConditionTriggered(condition);
+      }
+  };
+
+  class CeIO_UpperThreshold : public CeSpec<CIEC_WORD, BUFFER_SIZE_UPPER_THRESHOLD> {
+    public:
+      CeIO_UpperThreshold(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paThreshold) :
+          CeSpec(eIO_UPPER_THRESHOLD, paEIOfb, paHandle),
+          mUpperThreshold(paThreshold) {
+      }
+
+      bool checkCondition() final {
+        if (mHandle == nullptr) {
+          DEVLOG_DEBUG("[EIO_UPPER_THRESHOLD] mHandle is nullptr\r\n");
+          return false;
+        }
+
+        /* CRITERIA */
+        /* ============================================ */
+        uint32_t curVal = mBuffer.getCurrentData();
+        bool condition = curVal > mUpperThreshold;
+        /* ============================================ */
+
+        return checkConditionTriggered(condition);
+      }
+
+    private:
+      uint32_t mUpperThreshold;
+  };
+
+  class CeIO_LowerThreshold : public CeSpec<CIEC_WORD, BUFFER_SIZE_LOWER_THRESHOLD> {
+    public:
+      CeIO_LowerThreshold(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paThreshold) :
+          CeSpec(eIO_LOWER_THRESHOLD, paEIOfb, paHandle),
+          mLowerThreshold(paThreshold) {
+      }
+
+      bool checkCondition() final {
+        if (mHandle == nullptr) {
+          DEVLOG_DEBUG("[EIO_LOWER_THRESHOLD] mHandle is nullptr\r\n");
+          return false;
+        }
+
+        /* CRITERIA */
+        /* ============================================ */
+        uint32_t curVal = mBuffer.getCurrentData();
+        bool condition = curVal < mLowerThreshold;
+        /* ============================================ */
+
+        return checkConditionTriggered(condition);
+      }
+
+    private:
+      uint32_t mLowerThreshold;
+  };
+
+  class CeIO_BoundedArea : public CeSpec<CIEC_WORD, BUFFER_SIZE_BOUNDED_AREA> {
+    public:
+      CeIO_BoundedArea(CProcessInterfaceFB *paEIOfb,
+                       IOHandle *paHandle,
+                       uint32_t paBiggerThan,
+                       uint32_t paSmallerThan) :
+          CeSpec(eIO_BOUNDED_AREA, paEIOfb, paHandle),
+          mBiggerThan(paBiggerThan),
+          mSmallerThan(paSmallerThan) {
+      }
+
+      bool checkCondition() final {
+        if (mHandle == nullptr) {
+          DEVLOG_DEBUG("[EIO_BoundedArea] mHandle is nullptr\r\n");
+          return false;
+        }
+
+        /* CRITERIA */
+        /* ============================================ */
+        uint32_t curVal = mBuffer.getCurrentData();
+        bool condition = false;
+
+        // checks if value leaves bounded area
+        if (mBiggerThan > mSmallerThan) {
+          condition = curVal > mBiggerThan || curVal < mSmallerThan;
+        }
+
+        // checks if value enters bounded area
+        if (mBiggerThan < mSmallerThan) {
+          condition = curVal > mBiggerThan && curVal < mSmallerThan;
+        }
+        /* ============================================ */
+
+        return checkConditionTriggered(condition);
+      }
+
+    private:
+      uint32_t mBiggerThan;
+      uint32_t mSmallerThan;
+  };
+
+  class CeIO_Gradient : public CeSpec<CIEC_WORD, BUFFER_SIZE_GRADIENT> {
+    public:
+      CeIO_Gradient(CProcessInterfaceFB *paEIOfb, IOHandle *paHandle, uint32_t paDifference) :
+          CeSpec(eIO_GRADIENT, paEIOfb, paHandle),
+          mGradient(paDifference) {
+      }
+
+      bool checkCondition() final {
+        if (mHandle == nullptr) {
+          DEVLOG_DEBUG("[EIO_Gradient] mHandle is nullptr\r\n");
+          return false;
+        }
+
+        /* CRITERIA */
+        /* ============================================ */
+        mBuffer.makeSnapshot();
+        auto orderedHistory = mBuffer.getSnapshot();
+        auto curVal = uint32_t(orderedHistory[0]);
+        auto prevVal = uint32_t(orderedHistory[1]);
+        bool condition = curVal > prevVal + mGradient || curVal < prevVal - mGradient;
+        // /* ============================================ */
+
+        return condition ? true : false;
+      }
+
+    private:
+      uint32_t mGradient;
+  };
+} // namespace forte::io

@@ -25,17 +25,19 @@
 #include "forte/datatypes/forte_ltime_of_day.h"
 #include "forte/datatypes/forte_ldate_and_time.h"
 
-//********************************************************************************************
-//   DT_TO_**  functions
-//********************************************************************************************
-inline CIEC_LDATE_AND_TIME func_DT_TO_LDT(const CIEC_DATE_AND_TIME &paValue) {
-  return CIEC_LDATE_AND_TIME(paValue);
-}
+namespace forte {
+  //********************************************************************************************
+  //   DT_TO_**  functions
+  //********************************************************************************************
+  inline CIEC_LDATE_AND_TIME func_DT_TO_LDT(const CIEC_DATE_AND_TIME &paValue) {
+    return CIEC_LDATE_AND_TIME(paValue);
+  }
 
-CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal);
+  CIEC_DATE func_DT_TO_DATE(const CIEC_DATE_AND_TIME &paVal);
 
-CIEC_TIME_OF_DAY func_DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal);
+  CIEC_TIME_OF_DAY func_DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal);
 
-inline CIEC_LTIME_OF_DAY func_DT_TO_LTOD(const CIEC_DATE_AND_TIME &paValue) {
-  return CIEC_LTIME_OF_DAY(func_DT_TO_TOD(paValue));
-}
+  inline CIEC_LTIME_OF_DAY func_DT_TO_LTOD(const CIEC_DATE_AND_TIME &paValue) {
+    return CIEC_LTIME_OF_DAY(func_DT_TO_TOD(paValue));
+  }
+} // namespace forte

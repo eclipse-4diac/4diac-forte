@@ -14,46 +14,48 @@
 #include "forte/util/criticalregion.h"
 #include "forte/cominfra/basecommfb.h"
 
-CWin32SerComHandler::CWin32SerComHandler(CDeviceExecution &paDeviceExecution) :
-    CExternalEventHandler(paDeviceExecution) {
-}
-
-CWin32SerComHandler::~CWin32SerComHandler() {
-  this->end();
-}
-
-void CWin32SerComHandler::registerSerComLayer(CWin32SerComLayer *paComLayer) {
-  {
-    CCriticalRegion region(mSync);
-    mComLayerList.push_back(paComLayer);
+namespace forte::arch {
+  CWin32SerComHandler::CWin32SerComHandler(CDeviceExecution &paDeviceExecution) :
+      CExternalEventHandler(paDeviceExecution) {
   }
-  if (!isAlive()) {
-    this->start();
+
+  CWin32SerComHandler::~CWin32SerComHandler() {
+    this->end();
   }
-  mSem.inc();
-}
 
-void CWin32SerComHandler::unregisterSerComLayer(CWin32SerComLayer *paComLayer) {
-  CCriticalRegion region(mSync);
-  mComLayerList.erase(std::remove(mComLayerList.begin(), mComLayerList.end(), paComLayer), mComLayerList.end());
-}
-
-void CWin32SerComHandler::run() {
-  while (isAlive()) {
-
-    if (mComLayerList.empty()) {
-      mSem.waitIndefinitely();
+  void CWin32SerComHandler::registerSerComLayer(CWin32SerComLayer *paComLayer) {
+    {
+      util::CCriticalRegion region(mSync);
+      mComLayerList.push_back(paComLayer);
     }
     if (!isAlive()) {
-      break;
+      this->start();
     }
-
-    CCriticalRegion region(mSync);
-    for (CWin32SerComLayer *it : mComLayerList) {
-      if (forte::com_infra::e_Nothing != it->recvData(0, 0)) {
-        startNewEventChain(it->getCommFB());
-      }
-    }
-    Sleep(1000);
+    mSem.inc();
   }
-}
+
+  void CWin32SerComHandler::unregisterSerComLayer(CWin32SerComLayer *paComLayer) {
+    util::CCriticalRegion region(mSync);
+    mComLayerList.erase(std::remove(mComLayerList.begin(), mComLayerList.end(), paComLayer), mComLayerList.end());
+  }
+
+  void CWin32SerComHandler::run() {
+    while (isAlive()) {
+
+      if (mComLayerList.empty()) {
+        mSem.waitIndefinitely();
+      }
+      if (!isAlive()) {
+        break;
+      }
+
+      util::CCriticalRegion region(mSync);
+      for (CWin32SerComLayer *it : mComLayerList) {
+        if (forte::com_infra::e_Nothing != it->recvData(0, 0)) {
+          startNewEventChain(it->getCommFB());
+        }
+      }
+      Sleep(1000);
+    }
+  }
+} // namespace forte::arch

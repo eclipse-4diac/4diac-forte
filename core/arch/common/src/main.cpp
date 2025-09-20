@@ -20,21 +20,29 @@
 
 #include "forte/util/mainparam_utils.h"
 
-void hookSignals();
+namespace {
+  forte::C4diacFORTEInstance g4diacForteInstance;
 
-C4diacFORTEInstance g4diacForteInstance;
+  void endForte(int) {
+    g4diacForteInstance.triggerDeviceShutdown();
+  }
 
-void endForte(int) {
-  g4diacForteInstance.triggerDeviceShutdown();
-}
+  void callOnExit() {
+    forte::arch::CForteArchitecture::deinitialize();
+  }
 
-void callOnExit() {
-  CForteArchitecture::deinitialize();
-}
+  void hookSignals() {
+    signal(SIGINT, endForte);
+    signal(SIGTERM, endForte);
+#ifndef WIN32
+    signal(SIGHUP, endForte);
+#endif
+  }
+} // namespace
 
 int main(int argc, char *arg[]) {
 
-  if (auto result = CForteArchitecture::initialize(argc, arg); result != 0) {
+  if (auto result = forte::arch::CForteArchitecture::initialize(argc, arg); result != 0) {
     return result;
   }
 
@@ -59,12 +67,4 @@ int main(int argc, char *arg[]) {
   DEVLOG_INFO("FORTE finished\n");
 
   return 0;
-}
-
-void hookSignals() {
-  signal(SIGINT, endForte);
-  signal(SIGTERM, endForte);
-#ifndef WIN32
-  signal(SIGHUP, endForte);
-#endif
 }

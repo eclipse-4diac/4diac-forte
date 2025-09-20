@@ -16,23 +16,25 @@
 
 #include "forte/datatype.h"
 
-//! Define the number of times the CTimerHandler will be called per second.
-constexpr TForteUInt32 cgForteTicksPerSecond = ${FORTE_TicksPerSecond};
+namespace forte {
+  //! Define the number of times the CTimerHandler will be called per second.
+  constexpr TForteUInt32 cgForteTicksPerSecond = ${FORTE_TicksPerSecond};
 
-//! Define the initial size of the event chain list used in the event chain execution thread.
-constexpr std::size_t cgEventChainEventListSize = ${FORTE_EventChainEventListSize};
+  //! Define the initial size of the event chain list used in the event chain execution thread.
+  constexpr std::size_t cgEventChainEventListSize = ${FORTE_EventChainEventListSize};
 
-//! Define the initial size of the event chain's external event list.
-constexpr std::size_t cgEventChainExternalEventListSize = ${FORTE_EventChainExternalEventListSize};
+  //! Define the initial size of the event chain's external event list.
+  constexpr std::size_t cgEventChainExternalEventListSize = ${FORTE_EventChainExternalEventListSize};
 
-//! Defines the number of pending communication messages can be handled by a communication function block
-constexpr std::size_t cgCommunicationInterruptQueueSize = ${FORTE_CommunicationInterruptQueueSize};
+  //! Defines the number of pending communication messages can be handled by a communication function block
+  constexpr std::size_t cgCommunicationInterruptQueueSize = ${FORTE_CommunicationInterruptQueueSize};
 
-//! Buffer size in bytes to be used by the ip layer as receive buffer.
-constexpr std::size_t cgIPLayerRecvBufferSize = ${FORTE_IPLayerRecvBufferSize};
+  //! Buffer size in bytes to be used by the ip layer as receive buffer.
+  constexpr std::size_t cgIPLayerRecvBufferSize = ${FORTE_IPLayerRecvBufferSize};
 
-//! Maximum supported depth of the name hierarchy.
-constexpr std::size_t cgMaxSupportedNameHierarchy = ${FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY};
+  //! Maximum supported depth of the name hierarchy.
+  constexpr std::size_t cgMaxSupportedNameHierarchy = ${FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY};
+}
 
 //! Support custom serializable data types
 #cmakedefine FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES

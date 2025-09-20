@@ -13,50 +13,50 @@
 
 #include "forte/io/mapper/io_handle_bit.h"
 
-using namespace forte::io;
+namespace forte::io {
+  IOHandleBit::IOHandleBit(IODeviceController *paController,
+                           IOMapper::Direction paDirection,
+                           uint8_t paOffset,
+                           uint8_t paPosition,
+                           uint8_t *paImage) :
+      IOHandle(paController, paDirection, CIEC_ANY::e_BOOL),
+      mOffset(paOffset),
+      mMask((uint8_t) (1 << paPosition)),
+      mImage(paImage) {
+  }
 
-IOHandleBit::IOHandleBit(IODeviceController *paController,
-                         IOMapper::Direction paDirection,
-                         uint8_t paOffset,
-                         uint8_t paPosition,
-                         uint8_t *paImage) :
-    IOHandle(paController, paDirection, CIEC_ANY::e_BOOL),
-    mOffset(paOffset),
-    mMask((uint8_t) (1 << paPosition)),
-    mImage(paImage) {
-}
+  void IOHandleBit::onObserver(IOObserver *paObserver) {
+    IOHandle::onObserver(paObserver);
 
-void IOHandleBit::onObserver(IOObserver *paObserver) {
-  IOHandle::onObserver(paObserver);
-
-  if (mDirection == IOMapper::In) {
-    CIEC_BOOL state;
-    get(state);
-    if (state) {
-      mController->fireIndicationEvent(paObserver);
+    if (mDirection == IOMapper::In) {
+      CIEC_BOOL state;
+      get(state);
+      if (state) {
+        mController->fireIndicationEvent(paObserver);
+      }
     }
   }
-}
 
-void IOHandleBit::dropObserver() {
-  IOHandle::dropObserver();
-  reset();
-}
-
-void IOHandleBit::set(const CIEC_ANY &paState) {
-  if (static_cast<const CIEC_BOOL &>(paState)) {
-    *(mImage + mOffset) = (uint8_t) (*(mImage + mOffset) | mMask);
-  } else {
-    *(mImage + mOffset) = (uint8_t) (*(mImage + mOffset) & ~mMask);
+  void IOHandleBit::dropObserver() {
+    IOHandle::dropObserver();
+    reset();
   }
 
-  mController->handleChangeEvent(this);
-}
+  void IOHandleBit::set(const CIEC_ANY &paState) {
+    if (static_cast<const CIEC_BOOL &>(paState)) {
+      *(mImage + mOffset) = (uint8_t) (*(mImage + mOffset) | mMask);
+    } else {
+      *(mImage + mOffset) = (uint8_t) (*(mImage + mOffset) & ~mMask);
+    }
 
-void IOHandleBit::get(CIEC_ANY &paState) {
-  static_cast<CIEC_BOOL &>(paState) = CIEC_BOOL((*(mImage + mOffset) & mMask) != 0);
-}
+    mController->handleChangeEvent(this);
+  }
 
-bool IOHandleBit::equal(uint8_t *paOldImage) const {
-  return (*(mImage + mOffset) & mMask) == (*(paOldImage + mOffset) & mMask);
-}
+  void IOHandleBit::get(CIEC_ANY &paState) {
+    static_cast<CIEC_BOOL &>(paState) = CIEC_BOOL((*(mImage + mOffset) & mMask) != 0);
+  }
+
+  bool IOHandleBit::equal(uint8_t *paOldImage) const {
+    return (*(mImage + mOffset) & mMask) == (*(paOldImage + mOffset) & mMask);
+  }
+} // namespace forte::io

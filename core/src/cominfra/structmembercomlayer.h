@@ -16,9 +16,8 @@
 #include "localcomlayer.h"
 #include <vector>
 
-class CIEC_STRUCT;
-
 namespace forte {
+  class CIEC_STRUCT;
 
   namespace com_infra {
 

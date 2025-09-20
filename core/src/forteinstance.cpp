@@ -16,35 +16,37 @@
 #include "forte/forteinstance.h"
 #include "forte/devicefactory.h"
 
-C4diacFORTEInstance::~C4diacFORTEInstance() {
-  if (mActiveDevice) {
-    mActiveDevice->deinitialize();
+namespace forte {
+  C4diacFORTEInstance::~C4diacFORTEInstance() {
+    if (mActiveDevice) {
+      mActiveDevice->deinitialize();
+    }
   }
-}
 
-bool C4diacFORTEInstance::startupNewDevice(const std::string &paMGRID) {
-  if (mActiveDevice) {
-    // we have a current active device stop it
-    triggerDeviceShutdown();
-    awaitDeviceShutdown();
-    mActiveDevice->deinitialize();
+  bool C4diacFORTEInstance::startupNewDevice(const std::string &paMGRID) {
+    if (mActiveDevice) {
+      // we have a current active device stop it
+      triggerDeviceShutdown();
+      awaitDeviceShutdown();
+      mActiveDevice->deinitialize();
+    }
+    mActiveDevice = forte::DeviceFactory::create(paMGRID);
+    if (mActiveDevice) {
+      mActiveDevice->initialize();
+      mActiveDevice->startDevice();
+    }
+    return mActiveDevice.operator bool();
   }
-  mActiveDevice = forte::DeviceFactory::create(paMGRID);
-  if (mActiveDevice) {
-    mActiveDevice->initialize();
-    mActiveDevice->startDevice();
-  }
-  return mActiveDevice.operator bool();
-}
 
-void C4diacFORTEInstance::triggerDeviceShutdown() {
-  if (mActiveDevice) {
-    mActiveDevice->changeExecutionState(EMGMCommandType::Kill);
+  void C4diacFORTEInstance::triggerDeviceShutdown() {
+    if (mActiveDevice) {
+      mActiveDevice->changeExecutionState(EMGMCommandType::Kill);
+    }
   }
-}
 
-void C4diacFORTEInstance::awaitDeviceShutdown() {
-  if (mActiveDevice) {
-    mActiveDevice->awaitShutdown();
+  void C4diacFORTEInstance::awaitDeviceShutdown() {
+    if (mActiveDevice) {
+      mActiveDevice->awaitShutdown();
+    }
   }
-}
+} // namespace forte

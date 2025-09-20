@@ -32,7 +32,7 @@ namespace forte::com_infra::http {
   // cppcheck-suppress noConstructor
   class CHTTP_Handler : public CExternalEventHandler,
                         public RegisterExternalEventHandler<CHTTP_Handler>,
-                        public CThread,
+                        public arch::CThread,
                         public CComCallback {
     public:
       explicit CHTTP_Handler(CDeviceExecution &paDeviceExecution);
@@ -77,9 +77,9 @@ namespace forte::com_infra::http {
 
       void closeHTTPServer();
 
-      void removeAndCloseSocket(const CIPComSocketHandler::TSocketDescriptor paSocket);
+      void removeAndCloseSocket(const arch::CIPComSocketHandler::TSocketDescriptor paSocket);
 
-      bool removeHTTPLayerFromClientList(const CIPComSocketHandler::TSocketDescriptor paSocket);
+      bool removeHTTPLayerFromClientList(const arch::CIPComSocketHandler::TSocketDescriptor paSocket);
 
       void resumeSelfsuspend();
 
@@ -89,13 +89,14 @@ namespace forte::com_infra::http {
 
       void forceCloseHelper(CHttpComLayer *paLayer, bool paFromRecv);
 
-      bool recvClients(const CIPComSocketHandler::TSocketDescriptor paSocket, const int paRecvLength);
+      bool recvClients(const arch::CIPComSocketHandler::TSocketDescriptor paSocket, const int paRecvLength);
 
-      bool recvServers(const CIPComSocketHandler::TSocketDescriptor paSocket);
+      bool recvServers(const arch::CIPComSocketHandler::TSocketDescriptor paSocket);
 
-      void removeSocketFromAccepted(const CIPComSocketHandler::TSocketDescriptor paSocket);
+      void removeSocketFromAccepted(const arch::CIPComSocketHandler::TSocketDescriptor paSocket);
 
-      void handlerReceivedWrongPath(const CIPComSocketHandler::TSocketDescriptor paSocket, const std::string &paPath);
+      void handlerReceivedWrongPath(const arch::CIPComSocketHandler::TSocketDescriptor paSocket,
+                                    const std::string &paPath);
 
       void clearServerLayers();
 
@@ -106,32 +107,33 @@ namespace forte::com_infra::http {
       struct HTTPServerWaiting {
           CHttpComLayer *mLayer;
           std::string mPath;
-          std::vector<CIPComSocketHandler::TSocketDescriptor> mSockets; // to handle many connections to the same path
+          std::vector<arch::CIPComSocketHandler::TSocketDescriptor>
+              mSockets; // to handle many connections to the same path
       };
 
       struct HTTPClientWaiting {
           CHttpComLayer *mLayer;
-          CIPComSocketHandler::TSocketDescriptor mSocket;
+          arch::CIPComSocketHandler::TSocketDescriptor mSocket;
           CIEC_TIME mStartTime;
       };
 
       struct HTTPAcceptedSockets {
-          CIPComSocketHandler::TSocketDescriptor mSocket;
+          arch::CIPComSocketHandler::TSocketDescriptor mSocket;
           CIEC_TIME mStartTime;
       };
 
       std::vector<HTTPServerWaiting> mServerLayers;
-      CSyncObject mServerMutex;
+      arch::CSyncObject mServerMutex;
 
       std::vector<HTTPClientWaiting> mClientLayers;
-      CSyncObject mClientMutex;
+      arch::CSyncObject mClientMutex;
 
       std::vector<HTTPAcceptedSockets> mAcceptedSockets;
-      CSyncObject mAcceptedMutex;
+      arch::CSyncObject mAcceptedMutex;
 
-      CSemaphore mSuspendSemaphore;
+      arch::CSemaphore mSuspendSemaphore;
 
-      static CIPComSocketHandler::TSocketDescriptor smServerListeningSocket;
+      static arch::CIPComSocketHandler::TSocketDescriptor smServerListeningSocket;
 
       static char sRecvBuffer[cgIPLayerRecvBufferSize];
       static unsigned int sBufFillSize;
@@ -139,6 +141,6 @@ namespace forte::com_infra::http {
       static const unsigned int scmSendTimeout;
       static const unsigned int scmAcceptedTimeout;
 
-      CSemaphore mThreadStarted;
+      arch::CSemaphore mThreadStarted;
   };
 } // namespace forte::com_infra::http

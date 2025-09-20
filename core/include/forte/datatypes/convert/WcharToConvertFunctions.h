@@ -20,23 +20,25 @@
 #include "forte/datatypes/forte_wstring.h"
 #include "forte/datatypes/forte_char.h"
 
-inline CIEC_CHAR func_WCHAR_TO_CHAR(const CIEC_WCHAR &paVal) {
-  return CIEC_ANY::cast<CIEC_CHAR>(paVal);
-}
+namespace forte {
+  inline CIEC_CHAR func_WCHAR_TO_CHAR(const CIEC_WCHAR &paVal) {
+    return CIEC_ANY::cast<CIEC_CHAR>(paVal);
+  }
 
-inline CIEC_WORD func_WCHAR_TO_WORD(const CIEC_WCHAR &paVal) {
-  return CIEC_ANY::cast<CIEC_WORD>(paVal);
-}
+  inline CIEC_WORD func_WCHAR_TO_WORD(const CIEC_WCHAR &paVal) {
+    return CIEC_ANY::cast<CIEC_WORD>(paVal);
+  }
 
-inline CIEC_DWORD func_WCHAR_TO_DWORD(const CIEC_WCHAR &paVal) {
-  return CIEC_ANY::cast<CIEC_DWORD>(paVal);
-}
+  inline CIEC_DWORD func_WCHAR_TO_DWORD(const CIEC_WCHAR &paVal) {
+    return CIEC_ANY::cast<CIEC_DWORD>(paVal);
+  }
 
-inline CIEC_LWORD func_WCHAR_TO_LWORD(const CIEC_WCHAR &paVal) {
-  return CIEC_ANY::cast<CIEC_LWORD>(paVal);
-}
+  inline CIEC_LWORD func_WCHAR_TO_LWORD(const CIEC_WCHAR &paVal) {
+    return CIEC_ANY::cast<CIEC_LWORD>(paVal);
+  }
 
-inline CIEC_WSTRING func_WCHAR_TO_WSTRING(const CIEC_WCHAR &paVal) {
-  CIEC_WSTRING wstringCast(paVal);
-  return wstringCast;
-}
+  inline CIEC_WSTRING func_WCHAR_TO_WSTRING(const CIEC_WCHAR &paVal) {
+    CIEC_WSTRING wstringCast(paVal);
+    return wstringCast;
+  }
+} // namespace forte

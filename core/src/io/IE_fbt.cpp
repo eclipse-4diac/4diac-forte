@@ -20,58 +20,58 @@
 
 using namespace forte::literals;
 
-using namespace forte::io;
+namespace forte::io {
+  namespace {
+    const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
+    const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+    const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID, "IND"_STRID};
+    const auto cEventOutputTypeIds = std::array{"EInit"_STRID, "Event"_STRID, "Event"_STRID};
+    const auto cDataInputNames = std::array{"QI"_STRID, "PARAMS"_STRID};
+    const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
 
-namespace {
-  const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
-  const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID, "IND"_STRID};
-  const auto cEventOutputTypeIds = std::array{"EInit"_STRID, "Event"_STRID, "Event"_STRID};
-  const auto cDataInputNames = std::array{"QI"_STRID, "PARAMS"_STRID};
-  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = cEventInputTypeIds,
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = cEventOutputTypeIds,
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
+  DEFINE_FIRMWARE_FB(FORTE_IE, "IE"_STRID)
 
-DEFINE_FIRMWARE_FB(FORTE_IE, "IE"_STRID)
+  FORTE_IE::FORTE_IE(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+      CProcessInterfaceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      conn_IND(*this, 2) {};
 
-FORTE_IE::FORTE_IE(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
-    CProcessInterfaceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
-    conn_IND(*this, 2) {};
-
-void FORTE_IE::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case cgExternalEventID: sendOutputEvent(scmEventINDID, paECET); break;
-    case scmEventREQID:
-      var_QO = var_QI;
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
-    default: CProcessInterfaceFB::executeEvent(paEIID, paECET); break;
+  void FORTE_IE::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case cgExternalEventID: sendOutputEvent(scmEventINDID, paECET); break;
+      case scmEventREQID:
+        var_QO = var_QI;
+        sendOutputEvent(scmEventCNFID, paECET);
+        break;
+      default: CProcessInterfaceFB::executeEvent(paEIID, paECET); break;
+    }
   }
-}
 
-void FORTE_IE::writeOutputData(const TEventID paEIID) {
-  if (paEIID == scmEventINDID) {
-    writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
-    writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
-  } else {
-    CProcessInterfaceFB::writeOutputData(paEIID);
+  void FORTE_IE::writeOutputData(const TEventID paEIID) {
+    if (paEIID == scmEventINDID) {
+      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
+    } else {
+      CProcessInterfaceFB::writeOutputData(paEIID);
+    }
   }
-}
 
-CEventConnection *FORTE_IE::getEOConUnchecked(const TPortId paIndex) {
-  if (paIndex == 2) {
-    return &conn_IND;
+  CEventConnection *FORTE_IE::getEOConUnchecked(const TPortId paIndex) {
+    if (paIndex == 2) {
+      return &conn_IND;
+    }
+    return CProcessInterfaceFB::getEOConUnchecked(paIndex);
   }
-  return CProcessInterfaceFB::getEOConUnchecked(paIndex);
-}
+} // namespace forte::io

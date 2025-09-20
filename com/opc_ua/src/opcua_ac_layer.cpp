@@ -78,7 +78,7 @@ namespace forte::com_infra::opc_ua {
 
   EComResponse COPC_UA_AC_Layer::openConnection(char *paLayerParameter) {
     EComResponse eRetVal = e_InitTerminated;
-    CParameterParser parser(paLayerParameter, ';');
+    util::CParameterParser parser(paLayerParameter, ';');
     size_t nrOfParams = parser.parseParameters();
     if (nrOfParams != scmNumberOfAlarmParameters) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Wrong number of parameters for FB %s. Expected: %d, Actual: %d\n",

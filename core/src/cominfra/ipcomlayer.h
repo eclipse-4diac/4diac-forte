@@ -33,19 +33,20 @@ namespace forte {
         EComResponse processInterrupt() override;
 
       protected:
-        CIPComSocketHandler::TSocketDescriptor mSocketID;
-        CIPComSocketHandler::TUDPDestAddr mDestAddr;
+        arch::CIPComSocketHandler::TSocketDescriptor mSocketID;
+        arch::CIPComSocketHandler::TUDPDestAddr mDestAddr;
 
       private:
-        void closeSocket(CIPComSocketHandler::TSocketDescriptor *paSocketID);
+        void closeSocket(arch::CIPComSocketHandler::TSocketDescriptor *paSocketID);
 
         EComResponse openConnection(char *paLayerParameter) override;
         void closeConnection() override;
         void handledConnectedDataRecv();
         void handleConnectionAttemptInConnected() const;
 
-        CIPComSocketHandler::TSocketDescriptor mListeningID; //!> to be used by server type connections. there the
-                                                             //! mSocketID will be used for the accepted connection.
+        arch::CIPComSocketHandler::TSocketDescriptor
+            mListeningID; //!> to be used by server type connections. there the
+                          //! mSocketID will be used for the accepted connection.
         EComResponse mInterruptResp;
         char mRecvBuffer[cgIPLayerRecvBufferSize];
         unsigned int mBufFillSize;

@@ -19,14 +19,16 @@
 #include "forte/datatypes/forte_date_and_time.h"
 #include "forte/datatypes/forte_ltime_of_day.h"
 
-//********************************************************************************************
-//   L/TOD_TO_*  functions
-//********************************************************************************************
+namespace forte {
+  //********************************************************************************************
+  //   L/TOD_TO_*  functions
+  //********************************************************************************************
 
-inline CIEC_TIME_OF_DAY func_LTOD_TO_TOD(const CIEC_LTIME_OF_DAY &paValue) {
-  return CIEC_TIME_OF_DAY(static_cast<CIEC_LTIME_OF_DAY::TValueType>(paValue));
-}
+  inline CIEC_TIME_OF_DAY func_LTOD_TO_TOD(const CIEC_LTIME_OF_DAY &paValue) {
+    return CIEC_TIME_OF_DAY(static_cast<CIEC_LTIME_OF_DAY::TValueType>(paValue));
+  }
 
-inline CIEC_LTIME_OF_DAY func_TOD_TO_LTOD(const CIEC_TIME_OF_DAY &paValue) {
-  return CIEC_ANY::cast<CIEC_TIME_OF_DAY>(paValue);
-}
+  inline CIEC_LTIME_OF_DAY func_TOD_TO_LTOD(const CIEC_TIME_OF_DAY &paValue) {
+    return CIEC_ANY::cast<CIEC_TIME_OF_DAY>(paValue);
+  }
+} // namespace forte

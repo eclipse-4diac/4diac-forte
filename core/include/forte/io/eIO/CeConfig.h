@@ -17,58 +17,60 @@
 #include "forte/util/devlog.h"
 #include "forte/adapter.h"
 
-class FORTE_eGenAdapter;
-/**
- * This class handles the registration of event-triggers and
- * maintains a record of all registered event-triggers from this instance, within this instance.
- */
-class CeConfig {
-  private:
-    CProcessInterfaceFB *mPeer;
+namespace forte::io {
+  class FORTE_eGenAdapter;
+  /**
+   * This class handles the registration of event-triggers and
+   * maintains a record of all registered event-triggers from this instance, within this instance.
+   */
+  class CeConfig {
+    private:
+      CProcessInterfaceFB *mPeer;
 
-  protected:
-    std::vector<CeSpecBase *> mEventGenList;
+    protected:
+      std::vector<CeSpecBase *> mEventGenList;
 
-    void registerEventTrigger(CeSpecBase *paEvent) {
-      mEventGenList.push_back(paEvent);
-    }
-
-    void deregisterEventTrigger(CeSpecBase *paEvent) {
-      auto it = std::find(mEventGenList.begin(), mEventGenList.end(), paEvent);
-      if (it != mEventGenList.end()) {
-        mEventGenList.erase(it);
-        delete paEvent;
+      void registerEventTrigger(CeSpecBase *paEvent) {
+        mEventGenList.push_back(paEvent);
       }
-    }
 
-    void deregisterFBsEventTrigger() {
-      for (CeSpecBase *eventSpec : mEventGenList) {
-        deregisterEventTrigger(eventSpec);
+      void deregisterEventTrigger(CeSpecBase *paEvent) {
+        auto it = std::find(mEventGenList.begin(), mEventGenList.end(), paEvent);
+        if (it != mEventGenList.end()) {
+          mEventGenList.erase(it);
+          delete paEvent;
+        }
       }
-    }
 
-    bool setIOPeer(forte::CAdapter *paAdapter) {
-      /* connecting to adapter peer */
-      if (auto *peerAdapter = paAdapter->getPeer(); peerAdapter != nullptr) {
-        mPeer = &static_cast<CProcessInterfaceFB &>(peerAdapter->getParent());
-      } else {
-        DEVLOG_ERROR("[getIOPeer] Could not reach IO FB via adapter!\r\n");
-        return false;
+      void deregisterFBsEventTrigger() {
+        for (CeSpecBase *eventSpec : mEventGenList) {
+          deregisterEventTrigger(eventSpec);
+        }
       }
-      if (mPeer == nullptr) {
-        DEVLOG_ERROR("[getIOPeer] IO instance is nullptr.\r\n");
-        return false;
-      }
-      return true;
-    }
 
-    CProcessInterfaceFB *getIOPeer(forte::CAdapter *paAdapter) {
-      if (mPeer == nullptr) {
-        setIOPeer(paAdapter);
+      bool setIOPeer(forte::CAdapter *paAdapter) {
+        /* connecting to adapter peer */
+        if (auto *peerAdapter = paAdapter->getPeer(); peerAdapter != nullptr) {
+          mPeer = &static_cast<CProcessInterfaceFB &>(peerAdapter->getParent());
+        } else {
+          DEVLOG_ERROR("[getIOPeer] Could not reach IO FB via adapter!\r\n");
+          return false;
+        }
+        if (mPeer == nullptr) {
+          DEVLOG_ERROR("[getIOPeer] IO instance is nullptr.\r\n");
+          return false;
+        }
+        return true;
       }
-      return mPeer;
-    }
 
-  public:
-    virtual bool eventGen() = 0;
-};
+      CProcessInterfaceFB *getIOPeer(forte::CAdapter *paAdapter) {
+        if (mPeer == nullptr) {
+          setIOPeer(paAdapter);
+        }
+        return mPeer;
+      }
+
+    public:
+      virtual bool eventGen() = 0;
+  };
+} // namespace forte::io

@@ -13,8 +13,10 @@
 #include "forte/arch/forte_architecture_time.h"
 #include <sstream>
 
-std::string getRealtimeString() {
-  std::ostringstream stream;
-  stream << "T#" << getNanoSecondsRealtime();
-  return stream.str();
-}
+namespace forte::arch {
+  std::string getRealtimeString() {
+    std::ostringstream stream;
+    stream << "T#" << getNanoSecondsRealtime();
+    return stream.str();
+  }
+} // namespace forte::arch

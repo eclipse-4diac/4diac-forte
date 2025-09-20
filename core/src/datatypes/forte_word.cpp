@@ -15,6 +15,8 @@
 
 using namespace forte::literals;
 
-DEFINE_FIRMWARE_DATATYPE(WORD, "WORD"_STRID)
+namespace forte {
+  DEFINE_FIRMWARE_DATATYPE(WORD, "WORD"_STRID)
 
-const forte::StringId forte::CDataTypeTrait<CIEC_WORD>::scmDataTypeName = "WORD"_STRID;
+  const forte::StringId forte::CDataTypeTrait<CIEC_WORD>::scmDataTypeName = "WORD"_STRID;
+} // namespace forte

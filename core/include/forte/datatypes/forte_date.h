@@ -17,91 +17,84 @@
  *   Martin Jobst - add user-defined literal
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#ifndef _FORTE_DATE_H_
-#define _FORTE_DATE_H_
+
+#pragma once
 
 #include "forte/datatypes/forte_any_date.h"
 
-/*!\ingroup COREDTS CIEC_DATE represents the time data types according to IEC 61131.
- */
-
-class CIEC_DATE final : public CIEC_ANY_DATE {
-    DECLARE_FIRMWARE_DATATYPE(DATE)
-  public:
-    [[deprecated("Please use the corresponding numeric_limits template")]]
-    constexpr static size_t scmBitLength = 64U;
-
-    CIEC_DATE() = default;
-
-    CIEC_DATE(const CIEC_DATE &paValue) : CIEC_ANY_DATE() {
-      setValueSimple(paValue);
-    }
-
-    explicit CIEC_DATE(const TValueType paValue) {
-      setTUINT64(paValue);
-    }
-
-    ~CIEC_DATE() override = default;
-
-    CIEC_DATE &operator=(const CIEC_DATE &paValue) {
-      // Simple value assignment - no self assignment check needed
-      setValueSimple(paValue);
-      return *this;
-    }
-
-    /*! \brief Converts CIEC_TIME to unsigned 64 bit integer
-     *
-     *   Conversion operator for converting CIEC_TIME to unsigned 64 bit integer
-     */
-    operator TForteUInt64() const {
-      return getTUINT64();
-    }
-
-    EDataTypeID getDataTypeID() const override {
-      return e_DATE;
-    }
-
-    /*! \brief Converts string value to data type value
-     *
-     *   This command implements a conversion function from IEC 61131
-     *   data type (string format) to a C++ conform type.
-     *   This function is necessary for communication with a proper engineering system.
-     *   \param paValue Pointer to the given String
-     *   \return Can be the following response:
-     *   \return number of bytes taken used from the buffer
-     *        -1 on on error
-     */
-    int fromString(const char *paValue) override;
-    /*! \brief Converts data type value to string
-     *
-     *   This command implements a conversion function from C++ data type
-     *   to IEC 61131 conform data type (string format).
-     *   This function is necessary for communication with a proper engineering system.
-     *   \param paTargetBuf Reference to the provided buffer
-     */
-    void toString(std::string &paTargetBuf) const override;
-};
-
-inline bool operator==(const CIEC_DATE left, const CIEC_DATE &right) {
-  return static_cast<TForteUInt64>(left) == static_cast<TForteUInt64>(right);
-}
-
-inline bool operator!=(const CIEC_DATE left, const CIEC_DATE &right) {
-  return !(left == right);
-}
-
-inline CIEC_DATE operator""_DATE(unsigned long long int paValue) {
-  return CIEC_DATE(static_cast<CIEC_DATE::TValueType>(paValue));
-}
-
-namespace std {
-  template<>
-  struct numeric_limits<CIEC_DATE> : public forte::templates::numeric_limits<CIEC_DATE> {
-      static constexpr size_t bitLength = 64U;
-  };
-} // namespace std
-
 namespace forte {
+  /*!\ingroup COREDTS CIEC_DATE represents the time data types according to IEC 61131.
+   */
+
+  class CIEC_DATE final : public CIEC_ANY_DATE {
+      DECLARE_FIRMWARE_DATATYPE(DATE)
+    public:
+      [[deprecated("Please use the corresponding numeric_limits template")]]
+      constexpr static size_t scmBitLength = 64U;
+
+      CIEC_DATE() = default;
+
+      CIEC_DATE(const CIEC_DATE &paValue) : CIEC_ANY_DATE() {
+        setValueSimple(paValue);
+      }
+
+      explicit CIEC_DATE(const TValueType paValue) {
+        setTUINT64(paValue);
+      }
+
+      ~CIEC_DATE() override = default;
+
+      CIEC_DATE &operator=(const CIEC_DATE &paValue) {
+        // Simple value assignment - no self assignment check needed
+        setValueSimple(paValue);
+        return *this;
+      }
+
+      /*! \brief Converts CIEC_TIME to unsigned 64 bit integer
+       *
+       *   Conversion operator for converting CIEC_TIME to unsigned 64 bit integer
+       */
+      operator TForteUInt64() const {
+        return getTUINT64();
+      }
+
+      EDataTypeID getDataTypeID() const override {
+        return e_DATE;
+      }
+
+      /*! \brief Converts string value to data type value
+       *
+       *   This command implements a conversion function from IEC 61131
+       *   data type (string format) to a C++ conform type.
+       *   This function is necessary for communication with a proper engineering system.
+       *   \param paValue Pointer to the given String
+       *   \return Can be the following response:
+       *   \return number of bytes taken used from the buffer
+       *        -1 on on error
+       */
+      int fromString(const char *paValue) override;
+      /*! \brief Converts data type value to string
+       *
+       *   This command implements a conversion function from C++ data type
+       *   to IEC 61131 conform data type (string format).
+       *   This function is necessary for communication with a proper engineering system.
+       *   \param paTargetBuf Reference to the provided buffer
+       */
+      void toString(std::string &paTargetBuf) const override;
+  };
+
+  inline bool operator==(const CIEC_DATE left, const CIEC_DATE &right) {
+    return static_cast<TForteUInt64>(left) == static_cast<TForteUInt64>(right);
+  }
+
+  inline bool operator!=(const CIEC_DATE left, const CIEC_DATE &right) {
+    return !(left == right);
+  }
+
+  inline CIEC_DATE operator""_DATE(unsigned long long int paValue) {
+    return CIEC_DATE(static_cast<CIEC_DATE::TValueType>(paValue));
+  }
+
   template<>
   struct CDataTypeTrait<CIEC_DATE> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_DATE;
@@ -109,4 +102,9 @@ namespace forte {
   };
 } // namespace forte
 
-#endif /*_FORTE_DATE_H_*/
+namespace std {
+  template<>
+  struct numeric_limits<forte::CIEC_DATE> : public forte::templates::numeric_limits<forte::CIEC_DATE> {
+      static constexpr size_t bitLength = 64U;
+  };
+} // namespace std

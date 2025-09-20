@@ -18,136 +18,140 @@
 
 using namespace forte::literals;
 
-namespace {
-  [[maybe_unused]] const forte::EcetFactory::EntryImpl<CFakeEventExecutionThread> entry("Fake"_STRID);
-}
-
-CFakeEventExecutionThread::CFakeEventExecutionThread() : CEventChainExecutionThread() {
-  mProcessEventCallback = [this](TEventEntry paEvent) { paEvent.getFB().receiveInputEvent(paEvent.getPortId(), this); };
-  removeExternalControl();
-}
-
-void CFakeEventExecutionThread::removeExternalControl() {
-  mIsRemoteEnabled = false;
-  resumeSelfSuspend();
-}
-
-void CFakeEventExecutionThread::takeExternalControl() {
-  mIsRemoteEnabled = true;
-}
-
-void CFakeEventExecutionThread::setRemoteCallbackForEventTriggering(HandleEvent paCallback) {
-  mProcessEventCallback = paCallback;
-}
-
-void CFakeEventExecutionThread::triggerNextEvent() {
-  // if remote is not enabled, we don't manually trigger events
-  if (!mIsRemoteEnabled) {
-    return;
+namespace forte {
+  namespace {
+    [[maybe_unused]] const forte::EcetFactory::EntryImpl<CFakeEventExecutionThread> entry("Fake"_STRID);
   }
 
-  // manually triggering events, is similar to the regular one but:
-  // - no external events are handled
-  // - if no events are available, the function returns instead of suspending itself
-  auto event = mEventList.pop();
-  if (nullptr == event) {
-    return;
-  }
-  mProcessEventCallback(*event);
-}
-
-void CFakeEventExecutionThread::startEventChain(TEventEntry paEvent) {
-  // if remote is enabled, external events are inhibited
-  if (mIsRemoteEnabled) {
-    return;
-  }
-  CEventChainExecutionThread::startEventChain(paEvent);
-}
-
-// remote methods
-void CFakeEventExecutionThread::insertFront(TEventEntry paEvent) {
-  // the ring buffer does not have a way to insert in the front,
-  // so we create a new one and push the event first there and then the rest
-  // and then copy the events back to the original list
-  decltype(mEventList) temp;
-  temp.push(paEvent);
-  while (hasEvent()) {
-    temp.push(*mEventList.pop());
+  CFakeEventExecutionThread::CFakeEventExecutionThread() : CEventChainExecutionThread() {
+    mProcessEventCallback = [this](TEventEntry paEvent) {
+      paEvent.getFB().receiveInputEvent(paEvent.getPortId(), this);
+    };
+    removeExternalControl();
   }
 
-  while (!temp.isEmpty()) {
-    mEventList.push(*temp.pop());
-  }
-}
-
-void CFakeEventExecutionThread::removeFromBack(size_t paNumberOfItemsToRemove) {
-  // if remote is not enabled, we don't manually remove events
-  if (!mIsRemoteEnabled) {
-    return;
+  void CFakeEventExecutionThread::removeExternalControl() {
+    mIsRemoteEnabled = false;
+    resumeSelfSuspend();
   }
 
-  std::vector<TEventEntry> temp;
-  while (hasEvent()) {
-    temp.push_back(*mEventList.pop());
+  void CFakeEventExecutionThread::takeExternalControl() {
+    mIsRemoteEnabled = true;
   }
 
-  while (paNumberOfItemsToRemove-- != 0) {
-    temp.pop_back();
-    mEventCounter--;
+  void CFakeEventExecutionThread::setRemoteCallbackForEventTriggering(HandleEvent paCallback) {
+    mProcessEventCallback = paCallback;
   }
 
-  for (auto &event : temp) {
-    mEventList.push(event);
+  void CFakeEventExecutionThread::triggerNextEvent() {
+    // if remote is not enabled, we don't manually trigger events
+    if (!mIsRemoteEnabled) {
+      return;
+    }
+
+    // manually triggering events, is similar to the regular one but:
+    // - no external events are handled
+    // - if no events are available, the function returns instead of suspending itself
+    auto event = mEventList.pop();
+    if (nullptr == event) {
+      return;
+    }
+    mProcessEventCallback(*event);
   }
-}
 
-std::optional<TEventEntry> CFakeEventExecutionThread::getNextEvent() {
-  auto nextEvent = mEventList.pop(); // get a copy, but need to pop for it
-  if (nextEvent == nullptr) {
-    return std::nullopt;
-  }
-
-  insertFront(*nextEvent);
-  return *nextEvent;
-}
-
-uint64_t CFakeEventExecutionThread::getEventCounter() {
-  return mEventCounter;
-}
-
-inline bool CFakeEventExecutionThread::hasEvent() {
-  return !mEventList.isEmpty();
-}
-
-// we don't need the complexities of a separate thread, so
-// the funtion just set to sleep when is controlled from outside
-void CFakeEventExecutionThread::run() {
-  while (isAlive()) {
+  void CFakeEventExecutionThread::startEventChain(TEventEntry paEvent) {
+    // if remote is enabled, external events are inhibited
     if (mIsRemoteEnabled) {
-      selfSuspend();
+      return;
+    }
+    CEventChainExecutionThread::startEventChain(paEvent);
+  }
+
+  // remote methods
+  void CFakeEventExecutionThread::insertFront(TEventEntry paEvent) {
+    // the ring buffer does not have a way to insert in the front,
+    // so we create a new one and push the event first there and then the rest
+    // and then copy the events back to the original list
+    decltype(mEventList) temp;
+    temp.push(paEvent);
+    while (hasEvent()) {
+      temp.push(*mEventList.pop());
+    }
+
+    while (!temp.isEmpty()) {
+      mEventList.push(*temp.pop());
+    }
+  }
+
+  void CFakeEventExecutionThread::removeFromBack(size_t paNumberOfItemsToRemove) {
+    // if remote is not enabled, we don't manually remove events
+    if (!mIsRemoteEnabled) {
+      return;
+    }
+
+    std::vector<TEventEntry> temp;
+    while (hasEvent()) {
+      temp.push_back(*mEventList.pop());
+    }
+
+    while (paNumberOfItemsToRemove-- != 0) {
+      temp.pop_back();
+      mEventCounter--;
+    }
+
+    for (auto &event : temp) {
+      mEventList.push(event);
+    }
+  }
+
+  std::optional<TEventEntry> CFakeEventExecutionThread::getNextEvent() {
+    auto nextEvent = mEventList.pop(); // get a copy, but need to pop for it
+    if (nextEvent == nullptr) {
+      return std::nullopt;
+    }
+
+    insertFront(*nextEvent);
+    return *nextEvent;
+  }
+
+  uint64_t CFakeEventExecutionThread::getEventCounter() {
+    return mEventCounter;
+  }
+
+  inline bool CFakeEventExecutionThread::hasEvent() {
+    return !mEventList.isEmpty();
+  }
+
+  // we don't need the complexities of a separate thread, so
+  // the funtion just set to sleep when is controlled from outside
+  void CFakeEventExecutionThread::run() {
+    while (isAlive()) {
       if (mIsRemoteEnabled) {
+        selfSuspend();
+        if (mIsRemoteEnabled) {
+          continue;
+        }
+      }
+      if (auto nextEvent = getNextEvent(); nextEvent.has_value() && mBreakpoints.count(nextEvent.value()) != 0) {
+        takeExternalControl();
+        mBreakpointWasHit(nextEvent.value());
         continue;
       }
+      mainRun();
     }
-    if (auto nextEvent = getNextEvent(); nextEvent.has_value() && mBreakpoints.count(nextEvent.value()) != 0) {
-      takeExternalControl();
-      mBreakpointWasHit(nextEvent.value());
-      continue;
-    }
-    mainRun();
   }
-}
 
-// Breakpoint methods
+  // Breakpoint methods
 
-void CFakeEventExecutionThread::addBreakpoint(TEventEntry paBreakpoint) {
-  mBreakpoints.insert(paBreakpoint);
-}
+  void CFakeEventExecutionThread::addBreakpoint(TEventEntry paBreakpoint) {
+    mBreakpoints.insert(paBreakpoint);
+  }
 
-void CFakeEventExecutionThread::removeBreakpoint(TEventEntry paBreakpoint) {
-  mBreakpoints.erase(paBreakpoint);
-}
+  void CFakeEventExecutionThread::removeBreakpoint(TEventEntry paBreakpoint) {
+    mBreakpoints.erase(paBreakpoint);
+  }
 
-void CFakeEventExecutionThread::setBreakpointHitCallback(HandleEvent paCallback) {
-  mBreakpointWasHit = paCallback;
-}
+  void CFakeEventExecutionThread::setBreakpointHitCallback(HandleEvent paCallback) {
+    mBreakpointWasHit = paCallback;
+  }
+} // namespace forte

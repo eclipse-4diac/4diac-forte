@@ -10,35 +10,35 @@
  *   Alois Zoitl, Ingo Hegny - initial API and implementation and/or initial documentation
  *   Jörg Walter - improve UDP multicast support
  *******************************************************************************/
-#ifndef BSDSOCKETINTERF_H_
-#define BSDSOCKETINTERF_H_
 
-class CWin32SocketInterface {
-  public:
-    typedef SOCKET TSocketDescriptor;
-    typedef struct sockaddr_in TUDPDestAddr;
-    static constexpr const char *scmAllInterfaces = "0.0.0.0";
+#pragma once
 
-    static void closeSocket(TSocketDescriptor paSockD);
-    static TSocketDescriptor openTCPServerConnection(char *paIPAddr, unsigned short paPort);
-    static TSocketDescriptor openTCPClientConnection(char *paIPAddr, unsigned short paPort);
-    static TSocketDescriptor acceptTCPConnection(TSocketDescriptor paListeningSockD);
-    static int sendDataOnTCP(TSocketDescriptor paSockD, const char *paData, unsigned int paSize);
-    static int receiveDataFromTCP(TSocketDescriptor paSockD, char *paData, unsigned int paBufSize);
+namespace forte::arch {
+  class CWin32SocketInterface {
+    public:
+      typedef SOCKET TSocketDescriptor;
+      typedef struct sockaddr_in TUDPDestAddr;
+      static constexpr const char *scmAllInterfaces = "0.0.0.0";
 
-    static TSocketDescriptor openUDPSendPort(char *paIPAddr,
-                                             unsigned short paPort,
-                                             TUDPDestAddr *mDestAddr,
-                                             const char *acMCInterface = nullptr);
-    static TSocketDescriptor
-    openUDPReceivePort(char *paIPAddr, unsigned short paPort, const char *paMCInterface = scmAllInterfaces);
-    static int sendDataOnUDP(TSocketDescriptor paSockD, TUDPDestAddr *paDestAddr, char *paData, unsigned int paSize);
-    static int receiveDataFromUDP(TSocketDescriptor paSockD, char *paData, unsigned int paBufSize);
+      static void closeSocket(TSocketDescriptor paSockD);
+      static TSocketDescriptor openTCPServerConnection(char *paIPAddr, unsigned short paPort);
+      static TSocketDescriptor openTCPClientConnection(char *paIPAddr, unsigned short paPort);
+      static TSocketDescriptor acceptTCPConnection(TSocketDescriptor paListeningSockD);
+      static int sendDataOnTCP(TSocketDescriptor paSockD, const char *paData, unsigned int paSize);
+      static int receiveDataFromTCP(TSocketDescriptor paSockD, char *paData, unsigned int paBufSize);
 
-  private:
-    CWin32SocketInterface(); // this function is not implemented as we don't want instances of this class
+      static TSocketDescriptor openUDPSendPort(char *paIPAddr,
+                                               unsigned short paPort,
+                                               TUDPDestAddr *mDestAddr,
+                                               const char *acMCInterface = nullptr);
+      static TSocketDescriptor
+      openUDPReceivePort(char *paIPAddr, unsigned short paPort, const char *paMCInterface = scmAllInterfaces);
+      static int sendDataOnUDP(TSocketDescriptor paSockD, TUDPDestAddr *paDestAddr, char *paData, unsigned int paSize);
+      static int receiveDataFromUDP(TSocketDescriptor paSockD, char *paData, unsigned int paBufSize);
 
-    static LPSTR getErrorMessage(int paErrorNumber);
-};
+    private:
+      CWin32SocketInterface(); // this function is not implemented as we don't want instances of this class
 
-#endif /* BSDSOCKETINTERF_H_ */
+      static LPSTR getErrorMessage(int paErrorNumber);
+  };
+} // namespace forte::arch

@@ -15,14 +15,14 @@
 #include "forte/io/eIO/einputfb.h"
 #include "forte/datatypes/forte_bool.h"
 
-using namespace forte::literals;
+namespace forte::io {
+  /*! /brief generic class for eIX function blocks providing (event-triggerd) access to one boolean physical input
+   *
+   */
+  class FORTE_eIX final : public CeInputFB<CIEC_BOOL> {
+      DECLARE_FIRMWARE_FB(FORTE_eIX)
 
-/*! /brief generic class for eIX function blocks providing (event-triggerd) access to one boolean physical input
- *
- */
-class FORTE_eIX final : public CeInputFB<CIEC_BOOL> {
-    DECLARE_FIRMWARE_FB(FORTE_eIX)
-
-  public:
-    FORTE_eIX(forte::StringId paInstanceNameId, CFBContainer &paContainer);
-};
+    public:
+      FORTE_eIX(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+  };
+} // namespace forte::io

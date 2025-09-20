@@ -40,7 +40,7 @@ namespace forte::com_infra::opc_ua {
 
   EComResponse COPC_UA_Event_Layer::openConnection(char *paLayerParameter) {
     EComResponse eRetVal = e_InitTerminated;
-    CParameterParser parser(paLayerParameter, ',', 1);
+    util::CParameterParser parser(paLayerParameter, ',', 1);
     size_t nrOfParams = parser.parseParameters();
     if (nrOfParams != scmNumberOfParameters) {
       DEVLOG_ERROR("[OPC UA EVENT LAYER]: Too many layer arguments! Number of arguments: %d\n", nrOfParams);

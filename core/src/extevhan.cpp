@@ -15,14 +15,16 @@
 #include "forte/devexec.h"
 #include "forte/util/devlog.h"
 
-constinit std::vector<std::function<std::unique_ptr<CExternalEventHandler>(CDeviceExecution &)>>
-    CExternalEventHandler::smEventHandlerFactories;
+namespace forte {
+  constinit std::vector<std::function<std::unique_ptr<CExternalEventHandler>(CDeviceExecution &)>>
+      CExternalEventHandler::smEventHandlerFactories;
 
-CExternalEventHandler::CExternalEventHandler(CDeviceExecution &paDeviceExecution) :
-    mDeviceExecution(paDeviceExecution) {
-}
+  CExternalEventHandler::CExternalEventHandler(CDeviceExecution &paDeviceExecution) :
+      mDeviceExecution(paDeviceExecution) {
+  }
 
-void CExternalEventHandler::startNewEventChain(CEventSourceFB *paECStartFB) {
-  FORTE_TRACE("Starting EC\n");
-  mDeviceExecution.startNewEventChain(paECStartFB);
-}
+  void CExternalEventHandler::startNewEventChain(CEventSourceFB *paECStartFB) {
+    FORTE_TRACE("Starting EC\n");
+    mDeviceExecution.startNewEventChain(paECStartFB);
+  }
+} // namespace forte

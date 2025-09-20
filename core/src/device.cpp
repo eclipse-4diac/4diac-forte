@@ -16,24 +16,26 @@
 
 #include "forte/mgmcmdstruct.h"
 
-EMGMResponse CDevice::executeMGMCommand(forte::SManagementCMD &paCommand) {
-  EMGMResponse retval = EMGMResponse::InvalidDst;
+namespace forte {
+  EMGMResponse CDevice::executeMGMCommand(forte::SManagementCMD &paCommand) {
+    EMGMResponse retval = EMGMResponse::InvalidDst;
 
-  if (paCommand.mDestination.empty()) {
-    retval = CResource::executeMGMCommand(paCommand);
-  } else {
-    CResource *res = static_cast<CResource *>(getChild(paCommand.mDestination));
-    if (nullptr != res) {
-      paCommand.mDestination = {};
-      retval = res->executeMGMCommand(paCommand);
+    if (paCommand.mDestination.empty()) {
+      retval = CResource::executeMGMCommand(paCommand);
+    } else {
+      CResource *res = static_cast<CResource *>(getChild(paCommand.mDestination));
+      if (nullptr != res) {
+        paCommand.mDestination = {};
+        retval = res->executeMGMCommand(paCommand);
+      }
     }
+    return retval;
   }
-  return retval;
-}
 
-EMGMResponse CDevice::changeExecutionState(EMGMCommandType paCommand) {
-  if (EMGMCommandType::Kill == paCommand) {
-    mDeviceExecution.disableHandlers();
+  EMGMResponse CDevice::changeExecutionState(EMGMCommandType paCommand) {
+    if (EMGMCommandType::Kill == paCommand) {
+      mDeviceExecution.disableHandlers();
+    }
+    return CResource::changeExecutionState(paCommand);
   }
-  return CResource::changeExecutionState(paCommand);
-}
+} // namespace forte

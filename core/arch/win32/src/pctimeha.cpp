@@ -17,69 +17,71 @@
 
 using namespace forte::literals;
 
-namespace {
-  [[maybe_unused]] const forte::TimerHandlerFactory::EntryImpl<CPCTimerHandler> entry("default"_STRID);
-}
+namespace forte::arch {
+  namespace {
+    [[maybe_unused]] const forte::TimerHandlerFactory::EntryImpl<CPCTimerHandler> entry("default"_STRID);
+  }
 
-constexpr TForteInt32 CPCTimerHandler::csmTicksPerSecond = 1000;
+  constexpr TForteInt32 CPCTimerHandler::csmTicksPerSecond = 1000;
 
-CPCTimerHandler::CPCTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
-}
+  CPCTimerHandler::CPCTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {
+  }
 
-CPCTimerHandler::~CPCTimerHandler() {
-  disableHandler();
-}
+  CPCTimerHandler::~CPCTimerHandler() {
+    disableHandler();
+  }
 
-void CPCTimerHandler::run() {
-  DWORD stReq = 0; // in us
-  LARGE_INTEGER stReqTimeVal = {0, 0};
+  void CPCTimerHandler::run() {
+    DWORD stReq = 0; // in us
+    LARGE_INTEGER stReqTimeVal = {0, 0};
 
-  LARGE_INTEGER stFrequenzy = {0, 0}; // clocks per second
-  LARGE_INTEGER stElapsed1 = {0, 0};
-  LARGE_INTEGER stElapsed2 = {0, 0};
-  LARGE_INTEGER stError = {0, 0};
-  LARGE_INTEGER stISum = {0, 0};
-  LARGE_INTEGER stWaittime = {0, 0};
+    LARGE_INTEGER stFrequenzy = {0, 0}; // clocks per second
+    LARGE_INTEGER stElapsed1 = {0, 0};
+    LARGE_INTEGER stElapsed2 = {0, 0};
+    LARGE_INTEGER stError = {0, 0};
+    LARGE_INTEGER stISum = {0, 0};
+    LARGE_INTEGER stWaittime = {0, 0};
 
-  QueryPerformanceFrequency(&stFrequenzy);
-  QueryPerformanceCounter(&stElapsed1);
-
-  stReqTimeVal.QuadPart = stFrequenzy.QuadPart / CPCTimerHandler::csmTicksPerSecond;
-  // stReqTimeVal = 1000000 / CPCTimerHandler::csmTicksPerSecond;
-
-  while (isAlive()) {
-    stWaittime.QuadPart *= 1000; // calculate in ms, not sec
-    stReq = static_cast<DWORD>(stWaittime.QuadPart / stFrequenzy.QuadPart); // calculate elapsed time in ms
-
-    // dont give up the thread if we still have to do some ticks(some os have 10ms minimum threadtime)
-    if (stReq > 0) {
-      Sleep(stReq);
-    }
-    nextTick();
-
-    // sample new time
-    stElapsed2.QuadPart = stElapsed1.QuadPart;
+    QueryPerformanceFrequency(&stFrequenzy);
     QueryPerformanceCounter(&stElapsed1);
 
-    // calulate controler error: Diff - Setupvalue = Error
-    stError.QuadPart = stElapsed1.QuadPart - stElapsed2.QuadPart;
-    stError.QuadPart = stReqTimeVal.QuadPart - stError.QuadPart;
+    stReqTimeVal.QuadPart = stFrequenzy.QuadPart / CPCTimerHandler::csmTicksPerSecond;
+    // stReqTimeVal = 1000000 / CPCTimerHandler::csmTicksPerSecond;
 
-    // I-controller
-    stISum.QuadPart += stError.QuadPart;
+    while (isAlive()) {
+      stWaittime.QuadPart *= 1000; // calculate in ms, not sec
+      stReq = static_cast<DWORD>(stWaittime.QuadPart / stFrequenzy.QuadPart); // calculate elapsed time in ms
 
-    // calculate new Output
-    stWaittime.QuadPart = stReqTimeVal.QuadPart + stISum.QuadPart;
-    if (stWaittime.QuadPart < 0) {
-      stWaittime.QuadPart = 0;
+      // dont give up the thread if we still have to do some ticks(some os have 10ms minimum threadtime)
+      if (stReq > 0) {
+        Sleep(stReq);
+      }
+      nextTick();
+
+      // sample new time
+      stElapsed2.QuadPart = stElapsed1.QuadPart;
+      QueryPerformanceCounter(&stElapsed1);
+
+      // calulate controler error: Diff - Setupvalue = Error
+      stError.QuadPart = stElapsed1.QuadPart - stElapsed2.QuadPart;
+      stError.QuadPart = stReqTimeVal.QuadPart - stError.QuadPart;
+
+      // I-controller
+      stISum.QuadPart += stError.QuadPart;
+
+      // calculate new Output
+      stWaittime.QuadPart = stReqTimeVal.QuadPart + stISum.QuadPart;
+      if (stWaittime.QuadPart < 0) {
+        stWaittime.QuadPart = 0;
+      }
     }
   }
-}
 
-void CPCTimerHandler::enableHandler() {
-  start();
-}
+  void CPCTimerHandler::enableHandler() {
+    start();
+  }
 
-void CPCTimerHandler::disableHandler() {
-  end();
-}
+  void CPCTimerHandler::disableHandler() {
+    end();
+  }
+} // namespace forte::arch

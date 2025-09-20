@@ -55,7 +55,7 @@ namespace forte::eclipse4diac::utils {
   }
 
   FORTE_TEST_CONDITION::~FORTE_TEST_CONDITION() {
-    CCriticalRegion finalReportRegion(mFinalReportMutex);
+  util::CCriticalRegion finalReportRegion(mFinalReportMutex);
     if (!smfinalReportPrinted) {
       smfinalReportPrinted = true;
       DEVLOG_INFO(" ------------------------------------------------------------------------------\n");
