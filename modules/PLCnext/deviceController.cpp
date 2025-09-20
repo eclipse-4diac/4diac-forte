@@ -14,7 +14,7 @@
 #include "slaveHandle/bitSlaveHandle.h"
 #include "slaveHandle/slaveHandle.h"
 
-void PLCnextDeviceController::setConfig(struct forte::io::IODeviceController::Config *paConfig) {
+void PLCnextDeviceController::setConfig(struct Config *paConfig) {
   if (isAlive()) {
     DEVLOG_ERROR("PLCnext[PLCnextDeviceController]: Cannot change configuration while running.\n");
     return;
@@ -38,8 +38,7 @@ void PLCnextDeviceController::registerSlaveHandler(PLCnextSlaveHandler *slave) {
   mDevices.push_back(slave);
 }
 
-forte::io::IOHandle *
-PLCnextDeviceController::createIOHandle(forte::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
+forte::io::IOHandle *PLCnextDeviceController::createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
   HandleDescriptor &desc = static_cast<HandleDescriptor &>(paHandleDescriptor);
   PLCnextSlaveHandler *device = getSlave(desc.mSlaveIndex);
 
@@ -62,7 +61,7 @@ void PLCnextDeviceController::runLoop() {
       it->update();
     }
 
-    CThread::sleepThread(mConfig.updateInterval);
+    sleepThread(mConfig.updateInterval);
   }
 }
 

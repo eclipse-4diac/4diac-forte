@@ -32,9 +32,9 @@ namespace forte::io {
   class CProcessInterfaceFB : public CEventSourceFB, public IOObserver {
 
     public:
-      CProcessInterfaceFB(forte::CFBContainer &paContainer,
+      CProcessInterfaceFB(CFBContainer &paContainer,
                           const SFBInterfaceSpec &paInterfaceSpec,
-                          const forte::StringId paInstanceNameId);
+                          const StringId paInstanceNameId);
       ~CProcessInterfaceFB() override;
 
       bool onChange() override;

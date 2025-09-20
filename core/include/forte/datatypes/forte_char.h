@@ -63,7 +63,7 @@ class CIEC_CHAR : public CIEC_ANY_CHAR {
     int fromString(const char *paValue) override;
 
     EDataTypeID getDataTypeID() const final {
-      return CIEC_ANY::e_CHAR;
+      return e_CHAR;
     }
 };
 
@@ -90,7 +90,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_CHAR> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_CHAR;
-      static const forte::StringId scmDataTypeName;
+      static const StringId scmDataTypeName;
   };
 } // namespace forte
 

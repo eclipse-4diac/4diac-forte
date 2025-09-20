@@ -44,7 +44,7 @@ namespace forte::iec61131::conversion {
       void setInitialValues() override;
 
     public:
-      FORTE_F_ULINT_TO_SINT(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_ULINT_TO_SINT(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_ULINT var_IN;
 

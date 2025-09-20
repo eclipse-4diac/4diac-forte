@@ -150,11 +150,11 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
     int toUTF16(TForteByte *paBuffer, unsigned int paBufferSize) const;
 
     EDataTypeID getDataTypeID() const override {
-      return CIEC_ANY::e_WSTRING;
+      return e_WSTRING;
     }
 
     void setValue(const CIEC_ANY &paValue) override {
-      if (paValue.getDataTypeID() == CIEC_ANY::e_WSTRING) {
+      if (paValue.getDataTypeID() == e_WSTRING) {
         const CIEC_WSTRING &roSrc(static_cast<const CIEC_WSTRING &>(paValue));
         this->assign(roSrc.getValue(), roSrc.length());
       }
@@ -183,7 +183,7 @@ class CIEC_WSTRING final : public CIEC_ANY_STRING {
     void toString(std::string &paTargetBuf) const override;
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
-      if (paOther.getDataTypeID() == CIEC_ANY::e_WSTRING) {
+      if (paOther.getDataTypeID() == e_WSTRING) {
         return 0 == strcmp(getValue(), static_cast<const CIEC_WSTRING &>(paOther).getValue());
       }
       return false;
@@ -227,7 +227,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_WSTRING> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_WSTRING;
-      static const forte::StringId scmDataTypeName;
+      static const StringId scmDataTypeName;
   };
 } // namespace forte
 

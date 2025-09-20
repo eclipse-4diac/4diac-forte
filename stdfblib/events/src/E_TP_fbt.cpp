@@ -65,7 +65,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TP::FORTE_E_TP(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_E_TP::FORTE_E_TP(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_DELAY("E_DELAY"_STRID, *this),
     fb_E_RS("E_RS"_STRID, *this),

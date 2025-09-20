@@ -18,7 +18,7 @@
 
 class CPosixSerCommLayer : public CSerialComLayerBase<FORTE_SOCKET_TYPE, FORTE_INVALID_SOCKET> {
   public:
-    CPosixSerCommLayer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB);
+    CPosixSerCommLayer(CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB);
     ~CPosixSerCommLayer() override;
 
     forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize) override;

@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_SUB::FORTE_F_SUB(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_F_SUB::FORTE_F_SUB(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_MAGNITUDE_VARIANT()),
     var_IN2(CIEC_ANY_MAGNITUDE_VARIANT()),
@@ -63,8 +63,8 @@ void FORTE_F_SUB::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
           [](auto &&paIN1, auto &&paIN2) -> CIEC_ANY_MAGNITUDE_VARIANT {
             using T = std::decay_t<decltype(paIN1)>;
             using U = std::decay_t<decltype(paIN2)>;
-            using deductedType = typename forte::mpl::get_sub_operator_result_type<T, U>::type;
-            if constexpr (!std::is_same<deductedType, forte::mpl::NullType>::value) {
+            using deductedType = typename mpl::get_sub_operator_result_type<T, U>::type;
+            if constexpr (!std::is_same<deductedType, mpl::NullType>::value) {
               return func_SUB(paIN1, paIN2);
             }
             DEVLOG_ERROR("Subtracting incompatible types %s and %s\n", paIN1.getTypeNameID().data(),

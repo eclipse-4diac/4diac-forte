@@ -20,7 +20,7 @@ struct F_TRUNC_TestFixture : public CFBTestFixtureBase {
     F_TRUNC_TestFixture() : CFBTestFixtureBase("iec61131::arithmetic::F_TRUNC"_STRID) {
       setInputData({&mIn_TRUNC});
       setOutputData({&mOut_TRUNC});
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_REAL mIn_TRUNC; // DATA INPUT

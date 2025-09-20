@@ -48,8 +48,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_CONCAT_DATE_TOD::FORTE_F_CONCAT_DATE_TOD(const forte::StringId paInstanceNameId,
-                                                 forte::CFBContainer &paContainer) :
+FORTE_F_CONCAT_DATE_TOD::FORTE_F_CONCAT_DATE_TOD(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_DATE(0)),
     var_IN2(CIEC_TIME_OF_DAY(0)),

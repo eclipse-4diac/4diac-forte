@@ -42,7 +42,7 @@ class FORTE_SPLIT_LWORD_INTO_QUARTERS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_SPLIT_LWORD_INTO_QUARTERS(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    FORTE_SPLIT_LWORD_INTO_QUARTERS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
     CIEC_LWORD var_IN;
 

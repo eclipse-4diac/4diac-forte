@@ -30,7 +30,7 @@ const char *const WagoDeviceController::scmFailedGetTerminalList = "Call to ldkc
 const char *const WagoDeviceController::scmFailedToGetDeviceList = "Failed to get device list";
 
 WagoDeviceController::WagoDeviceController(CDeviceExecution &paDeviceExecution) :
-    forte::io::IODeviceMultiController(paDeviceExecution),
+    IODeviceMultiController(paDeviceExecution),
     mAppDevInterface(0),
     mTaskId(0),
     mKBusDeviceId(scmInvalidDeviceId),
@@ -45,7 +45,7 @@ WagoDeviceController::~WagoDeviceController() {
   // do nothing
 }
 
-void WagoDeviceController::setConfig(struct forte::io::IODeviceController::Config *paConfig) {
+void WagoDeviceController::setConfig(struct Config *paConfig) {
   this->mConfig = *static_cast<WagoConfig *>(paConfig);
 }
 
@@ -90,8 +90,7 @@ const char *WagoDeviceController::init() {
   return 0;
 }
 
-forte::io::IOHandle *
-WagoDeviceController::createIOHandle(forte::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
+forte::io::IOHandle *WagoDeviceController::createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
   WagoHandleDescriptor &desc(static_cast<WagoHandleDescriptor &>(paHandleDescriptor));
   TForteUInt32 outputOffset;
   TForteUInt32 inputOffset;
@@ -131,7 +130,7 @@ void WagoDeviceController::runLoop() {
   stEvent.State = ApplicationState_Running; // Set application state to "Running" to drive kbus by ourselves.
   if (DAL_SUCCESS == mAppDevInterface->ApplicationStateChanged(stEvent)) {
     while (isAlive()) {
-      CThread::sleepThread(mConfig.updateInterval);
+      sleepThread(mConfig.updateInterval);
       if (!triggerKBusCycle()) {
         break; // we have severe problem exit KBus handling thread
       }

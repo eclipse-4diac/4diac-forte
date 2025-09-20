@@ -59,7 +59,7 @@ class CEventChainExecutionThread : public CThread {
     void changeExecutionState(EMGMCommandType paCommand);
 
     void joinEventChainExecutionThread() {
-      CThread::join();
+      join();
     }
 
     bool isProcessingEvents() const {
@@ -125,7 +125,7 @@ class CEventChainExecutionThread : public CThread {
     //! SyncObject for protecting the list in regard to several accesses
     CSyncObject mExternalEventListSync;
 
-    forte::arch::CSemaphore mSuspendSemaphore;
+    CSemaphore mSuspendSemaphore;
 
     /*! \brief Flag indicating if this event chain execution thread is currently processing any events
      *

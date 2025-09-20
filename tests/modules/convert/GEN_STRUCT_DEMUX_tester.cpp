@@ -23,7 +23,7 @@ struct STRUCT_DEMUX_TestFixture_1 : public CFBTestFixtureBase {
         CFBTestFixtureBase("eclipse4diac::convert::STRUCT_DEMUX_1Struct_Muxer_Test_Struct_1"_STRID) {
       setInputData({&mIn});
       setOutputData({&mVar1, &mVar2, &mVar3});
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_INT mVar1;
@@ -94,7 +94,7 @@ struct STRUCT_DEMUX_TestFixture_2 : public CFBTestFixtureBase {
         CFBTestFixtureBase("eclipse4diac::convert::STRUCT_DEMUX_1Struct_Muxer_Test_Struct_2"_STRID) {
       setInputData({&mIn});
       setOutputData({&mVar1, &mVar2, &mVar3});
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_INT mVar1;
@@ -170,7 +170,7 @@ struct STRUCT_DEMUX_TestFixture_5 : public CFBTestFixtureBase {
         CFBTestFixtureBase("eclipse4diac::convert::STRUCT_DEMUX_1Struct_Muxer_Test_Struct_5"_STRID) {
       setInputData({&mIn});
       setOutputData({&mVar1, &mVar2, &mVar3});
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_INT mVar1;

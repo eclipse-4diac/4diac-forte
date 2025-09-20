@@ -77,16 +77,16 @@ bool CConfigFileParser::lookForKeyValueInFile(CConfigFileParser &paFileParse,
     std::pair<std::string, std::string> resultPair;
 
     switch (paFileParse.parseNextLine(resultPair)) {
-      case CConfigFileParser::eOk:
+      case eOk:
         if (0 == resultPair.first.compare(paKey) && 0 == resultPair.second.compare(paValue)) {
           paFound = true;
           moreLinesToRead = false;
         }
         break;
-      case CConfigFileParser::eEmptyLine:
+      case eEmptyLine:
         // do nothing, keep reading
         break;
-      case CConfigFileParser::eEndOfFile: moreLinesToRead = false; break;
+      case eEndOfFile: moreLinesToRead = false; break;
       default:
         // CConfigFileParser::eWrongLine
         // CConfigFileParser::eFileNotOpened

@@ -38,7 +38,7 @@ class fmuValueContainer {
     typedef void (*newValueArrived)(void *);
 
   public:
-    explicit fmuValueContainer(fmuValueContainer::valueType pa_valueType, bool pa_needPointerToValue);
+    explicit fmuValueContainer(valueType pa_valueType, bool pa_needPointerToValue);
     fmuValueContainer(fmuValueContainer &pa_Source);
     virtual ~fmuValueContainer();
 
@@ -58,10 +58,10 @@ class fmuValueContainer {
       return mValue->getDataTypeID();
     }
 
-    static fmuValueContainer::valueType getValueFromType(CIEC_ANY::EDataTypeID pa_type);
+    static valueType getValueFromType(CIEC_ANY::EDataTypeID pa_type);
 
   private:
-    CIEC_ANY *allocateValuePointer(fmuValueContainer::valueType pa_valueType);
+    CIEC_ANY *allocateValuePointer(valueType pa_valueType);
 
   protected:
     CIEC_ANY *mValue;

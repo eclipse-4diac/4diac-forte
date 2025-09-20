@@ -18,7 +18,7 @@ const TForteUInt8 WagoSlaveBase::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 WagoSlaveBase::scmSlaveConfigurationIONum = 0;
 
 WagoSlaveBase::WagoSlaveBase(int paType,
-                             forte::CFBContainer &paContainer,
+                             CFBContainer &paContainer,
                              const SFBInterfaceSpec &paInterfaceSpec,
                              const forte::StringId paInstanceNameId) :
     IOConfigFBMultiSlave(
@@ -30,7 +30,7 @@ WagoSlaveBase::WagoSlaveBase(int paType,
 void WagoSlaveBase::initWagoHandle(int paDIIndex,
                                    int paIOIndex,
                                    CIEC_ANY::EDataTypeID paType,
-                                   forte::io::IOMapper::Direction paDirection) {
+                                   IOMapper::Direction paDirection) {
   WagoDeviceController::WagoHandleDescriptor desc(static_cast<CIEC_STRING *>(getDI(paDIIndex))->getStorage(),
                                                   paDirection, mIndex, paType, static_cast<TForteUInt32>(paIOIndex));
   initHandle(desc);

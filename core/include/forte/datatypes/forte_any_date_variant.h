@@ -67,7 +67,7 @@ class CIEC_ANY_DATE_VARIANT : public CIEC_ANY_DATE, public TIecAnyDateVariantTyp
       unwrap().reset();
     }
 
-    bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
+    bool setDefaultValue(EDataTypeID paDataTypeId);
 
     [[nodiscard]] CIEC_ANY_DATE &unwrap() override;
 

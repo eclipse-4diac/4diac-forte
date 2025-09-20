@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_DIVTIME::FORTE_F_DIVTIME(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_F_DIVTIME::FORTE_F_DIVTIME(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_TIME(0)),
     var_IN2(CIEC_ANY_NUM_VARIANT()),

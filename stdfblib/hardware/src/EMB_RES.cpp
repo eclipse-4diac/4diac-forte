@@ -29,7 +29,7 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
     .mPlugNames = {},
 };
 
-EMB_RES::EMB_RES(forte::StringId paInstanceNameId, forte::CFBContainer &paDevice) :
+EMB_RES::EMB_RES(forte::StringId paInstanceNameId, CFBContainer &paDevice) :
     CResource(paDevice, cFBInterfaceSpec, paInstanceNameId),
     fb_START("START"_STRID, *this) {
 }

@@ -88,7 +88,7 @@ void RevPiController::runLoop() {
   }
 }
 
-void RevPiController::addSlaveHandle(size_t, std::unique_ptr<forte::io::IOHandle> paHandle) {
+void RevPiController::addSlaveHandle(size_t, std::unique_ptr<IOHandle> paHandle) {
   CCriticalRegion criticalRegion(mHandleMutex);
   paHandle->isInput() ? mInputHandles.push_back(std::move(paHandle)) : mOutputHandles.push_back(std::move(paHandle));
 }

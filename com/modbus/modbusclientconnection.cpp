@@ -127,7 +127,7 @@ void CModbusClientConnection::run() {
       tryConnect();
     }
 
-    CThread::sleepThread(1);
+    sleepThread(1);
   }
 }
 

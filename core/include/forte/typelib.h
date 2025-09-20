@@ -156,7 +156,7 @@ namespace forte {
   class CTypeEntry {
 
     public:
-      constexpr forte::StringId getTypeNameId() const {
+      constexpr StringId getTypeNameId() const {
         return mTypeNameId;
       }
 
@@ -169,19 +169,19 @@ namespace forte {
       }
 
     protected:
-      constexpr explicit CTypeEntry(forte::StringId paTypeNameId, std::string_view paTypeHash);
+      constexpr explicit CTypeEntry(StringId paTypeNameId, std::string_view paTypeHash);
 
     private:
-      forte::StringId mTypeNameId;
+      StringId mTypeNameId;
       std::string_view mTypeHash;
   };
 
   //! The base class for all function block types entries in the type lib.
   class CFBTypeEntry : public CTypeEntry {
     public:
-      CFBTypeEntry(forte::StringId paTypeNameId, std::string_view paTypeHash, TFunctionBlockCreateFunc paCreateFB);
+      CFBTypeEntry(StringId paTypeNameId, std::string_view paTypeHash, TFunctionBlockCreateFunc paCreateFB);
 
-      CFunctionBlock *createFBInstance(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) {
+      CFunctionBlock *createFBInstance(StringId paInstanceNameId, CFBContainer &paContainer) {
         return mFBCreationFunc(paInstanceNameId, paContainer);
       }
 
@@ -193,12 +193,12 @@ namespace forte {
    */
   class CAdapterTypeEntry : public CTypeEntry {
     public:
-      CAdapterTypeEntry(forte::StringId paTypeNameId, std::string_view paTypeHash, TAdapterCreateFunc paCreateAdapter);
+      CAdapterTypeEntry(StringId paTypeNameId, std::string_view paTypeHash, TAdapterCreateFunc paCreateAdapter);
 
-      forte::CAdapter *createAdapterInstance(forte::StringId paInstanceNameId,
-                                             forte::CFBContainer &paContainer,
-                                             bool paIsPlug,
-                                             TForteUInt8 paParentAdapterlistID) {
+      CAdapter *createAdapterInstance(StringId paInstanceNameId,
+                                      CFBContainer &paContainer,
+                                      bool paIsPlug,
+                                      TForteUInt8 paParentAdapterlistID) {
         return mAdapterCreationFunc(paInstanceNameId, paContainer, paIsPlug, paParentAdapterlistID);
       }
 
@@ -209,10 +209,7 @@ namespace forte {
   //! The base class for all data type entries in the type lib.
   class CDataTypeEntry : public CTypeEntry {
     public:
-      CDataTypeEntry(forte::StringId paTypeNameId,
-                     std::string_view paTypeHash,
-                     TDataTypeCreateFunc paCreateDT,
-                     size_t paSize);
+      CDataTypeEntry(StringId paTypeNameId, std::string_view paTypeHash, TDataTypeCreateFunc paCreateDT, size_t paSize);
 
       CIEC_ANY *createDataTypeInstance(TForteByte *paDataBuf) {
         return mDTCreateFunc(paDataBuf);
@@ -229,7 +226,7 @@ namespace forte {
 
   class CGlobalConstEntry : public CTypeEntry {
     public:
-      CGlobalConstEntry(forte::StringId paTypeNameId, std::string_view paTypeHash);
+      CGlobalConstEntry(StringId paTypeNameId, std::string_view paTypeHash);
   };
 
   /*!\brief Create an instance of an data type.
@@ -239,8 +236,8 @@ namespace forte {
    * This is indicated with a return value of nullptr.
    * @return pointer to the create data type.
    */
-  CIEC_ANY *createDataTypeInstance(forte::StringId paDTNameId, TForteByte *paDataBuf);
+  CIEC_ANY *createDataTypeInstance(StringId paDTNameId, TForteByte *paDataBuf);
 
-  CDataTypeEntry *getDataTypeEntry(forte::StringId paTypeNameId);
+  CDataTypeEntry *getDataTypeEntry(StringId paTypeNameId);
 
 } // namespace forte

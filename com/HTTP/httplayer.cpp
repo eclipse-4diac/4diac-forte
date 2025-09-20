@@ -32,7 +32,7 @@ using namespace forte::literals;
 using namespace std::string_literals;
 
 namespace {
-  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CHttpComLayer> entry("http"_STRID);
+  [[maybe_unused]] const ComLayerManager::EntryImpl<CHttpComLayer> entry("http"_STRID);
 }
 
 CHttpComLayer::CHttpComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
@@ -156,7 +156,7 @@ bool CHttpComLayer::handleAddress(const char *paAddress) {
     CParameterParser portParser(addressToParse.c_str(), ':', 2);
     if (2 == portParser.parseParameters()) {
       mHost = std::string(portParser[0]);
-      mPort = static_cast<TForteUInt16>(forte::util::strtoul(portParser[1], nullptr, 10));
+      mPort = static_cast<TForteUInt16>(util::strtoul(portParser[1], nullptr, 10));
     } else {
       mHost = addressToParse;
       DEVLOG_INFO("[HTTP Layer] No port was found on the parameter, using default 80\n");
@@ -255,8 +255,7 @@ EComResponse CHttpComLayer::recvData(const void *paData, unsigned int paSize) {
   return mInterruptResp;
 }
 
-EComResponse forte::com_infra::CHttpComLayer::recvServerData(std::vector<std::string> &,
-                                                             std::vector<std::string> &paParameterValues) {
+EComResponse CHttpComLayer::recvServerData(std::vector<std::string> &, std::vector<std::string> &paParameterValues) {
   // for now, the parameterNames are not taken in account, and the parameters are put in the same order they arrived
 
   mInterruptResp = e_Nothing;
@@ -329,10 +328,10 @@ void CHttpComLayer::serializeData(const CIEC_ANY &paSDx, std::string &paMember) 
   }
 }
 
-std::string &forte::com_infra::CHttpComLayer::getHost() {
+std::string &CHttpComLayer::getHost() {
   return mHost;
 }
 
-TForteUInt16 forte::com_infra::CHttpComLayer::getPort() const {
+TForteUInt16 CHttpComLayer::getPort() const {
   return mPort;
 }

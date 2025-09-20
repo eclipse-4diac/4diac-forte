@@ -32,9 +32,7 @@ namespace forte::com {
       static constexpr TEventID scmEventReceiveID = cgExternalEventID - 2;
 
     protected:
-      CommunicationFB(CFBContainer &paContainer,
-                      const SFBInterfaceSpec &paInterfaceSpec,
-                      forte::StringId paInstanceNameId);
+      CommunicationFB(CFBContainer &paContainer, const SFBInterfaceSpec &paInterfaceSpec, StringId paInstanceNameId);
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *paECET) override;
 
@@ -95,8 +93,8 @@ namespace forte::com {
     private:
       CSyncObject mFBLock;
 
-      std::vector<forte::StringId> mDINames;
-      std::vector<forte::StringId> mDONames;
+      std::vector<StringId> mDINames;
+      std::vector<StringId> mDONames;
   };
 
 } // namespace forte::com

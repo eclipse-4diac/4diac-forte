@@ -56,7 +56,7 @@ namespace {
   };
 } // namespace
 
-FORTE_PLCnextBusAdapter::FORTE_PLCnextBusAdapter(forte::CFBContainer &paContainer,
+FORTE_PLCnextBusAdapter::FORTE_PLCnextBusAdapter(CFBContainer &paContainer,
                                                  const SFBInterfaceSpec &paInterfaceSpec,
                                                  const forte::StringId paInstanceNameId,
                                                  TForteUInt8 paParentAdapterlistID) :
@@ -69,7 +69,7 @@ FORTE_PLCnextBusAdapter::FORTE_PLCnextBusAdapter(forte::CFBContainer &paContaine
 }
 
 void FORTE_PLCnextBusAdapter::setInitialValues() {
-  forte::CAdapter::setInitialValues();
+  CAdapter::setInitialValues();
   var_QO = 0_BOOL;
   var_QI = 0_BOOL;
   var_MasterId = 0_UINT;
@@ -78,7 +78,7 @@ void FORTE_PLCnextBusAdapter::setInitialValues() {
 }
 
 FORTE_PLCnextBusAdapter_Plug::FORTE_PLCnextBusAdapter_Plug(forte::StringId paInstanceNameId,
-                                                           forte::CFBContainer &paContainer,
+                                                           CFBContainer &paContainer,
                                                            TForteUInt8 paParentAdapterlistID) :
     FORTE_PLCnextBusAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_INITO(*this, 0),
@@ -159,7 +159,7 @@ CDataConnection *FORTE_PLCnextBusAdapter_Plug::getDOConUnchecked(const TPortId p
 }
 
 FORTE_PLCnextBusAdapter_Socket::FORTE_PLCnextBusAdapter_Socket(forte::StringId paInstanceNameId,
-                                                               forte::CFBContainer &paContainer,
+                                                               CFBContainer &paContainer,
                                                                TForteUInt8 paParentAdapterlistID) :
     FORTE_PLCnextBusAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_INIT(*this, 0),

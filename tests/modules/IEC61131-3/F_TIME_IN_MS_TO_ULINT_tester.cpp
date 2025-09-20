@@ -19,7 +19,7 @@ struct F_TIME_IN_MS_TO_ULINT_TestFixture : public CFBTestFixtureBase {
     F_TIME_IN_MS_TO_ULINT_TestFixture() : CFBTestFixtureBase("iec61131::conversion::F_TIME_IN_MS_TO_ULINT"_STRID) {
       setInputData({&mIn_F_TIME_IN_MS_TO_ULINT});
       setOutputData({&mOut_F_TIME_IN_MS_TO_ULINT});
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_TIME mIn_F_TIME_IN_MS_TO_ULINT; // DATA INPUT

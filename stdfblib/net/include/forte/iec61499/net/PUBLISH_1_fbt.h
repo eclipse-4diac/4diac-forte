@@ -23,7 +23,7 @@ namespace forte::iec61499::net {
       static const TEventID scmEventREQID = scmSendNotificationEventID;
 
     public:
-      FORTE_PUBLISH_1(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_PUBLISH_1(const StringId paInstanceNameId, CFBContainer &paContainer);
       ~FORTE_PUBLISH_1() override = default;
 
       void evt_INIT(const CIEC_BOOL &pa_QI,

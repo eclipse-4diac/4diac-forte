@@ -45,7 +45,7 @@ namespace forte::eclipse4diac::rtevents {
       void setInitialValues() override;
 
     public:
-      FORTE_RT_E_SPLIT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_RT_E_SPLIT(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_BOOL var_QI;
       CIEC_TIME var_Tmin;

@@ -27,7 +27,7 @@ namespace {
   const auto cEventOutputNames = std::array{"RDO"_STRID};
 } // namespace
 
-FORTE_GEN_RT_Bridge::FORTE_GEN_RT_Bridge(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_GEN_RT_Bridge::FORTE_GEN_RT_Bridge(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_RDO(*this, 0) {};
 
@@ -68,7 +68,7 @@ bool FORTE_GEN_RT_Bridge::createInterfaceSpec(const char *paConfigString, SFBInt
   const char *pos = strrchr(paConfigString, '_');
   if (nullptr != pos) {
     pos++; // move after underscore
-    numPorts = static_cast<size_t>(forte::util::strtoul(pos, nullptr, 10));
+    numPorts = static_cast<size_t>(util::strtoul(pos, nullptr, 10));
   } else {
     return false;
   }

@@ -30,7 +30,7 @@ class GEN_CSV_WRITER_TestFixture : public CFBTestFixtureBase {
         mSD_2(T2()) {
       setInputData({&mQI, &mFILE_NAME, &mSD_1, &mSD_2});
       setOutputData({&mQO, &mSTATUS});
-      CFBTestFixtureBase::setup();
+      setup();
 
       mQI = true_BOOL;
       mFILE_NAME = CIEC_STRING("./GEN_CSV_WRITER.temp"s);

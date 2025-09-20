@@ -20,7 +20,7 @@ struct E_SR_TestFixture : public CFBTestFixtureBase {
 
     E_SR_TestFixture() : CFBTestFixtureBase("iec61499::events::E_SR"_STRID) {
       setOutputData({&mOutQ});
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_BOOL mOutQ; // DATA OUTPUT

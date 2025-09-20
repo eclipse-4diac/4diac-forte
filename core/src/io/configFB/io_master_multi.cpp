@@ -21,9 +21,9 @@ const char *const IOConfigFBMultiMaster::scmFailedToInitSlaves =
 std::vector<IOConfigFBMultiMaster *> IOConfigFBMultiMaster::mInstances;
 TForteUInt16 IOConfigFBMultiMaster::mInstancesIncrement = 0;
 
-IOConfigFBMultiMaster::IOConfigFBMultiMaster(forte::CFBContainer &paContainer,
+IOConfigFBMultiMaster::IOConfigFBMultiMaster(CFBContainer &paContainer,
                                              const SFBInterfaceSpec &paInterfaceSpec,
-                                             const forte::StringId paInstanceNameId) :
+                                             const StringId paInstanceNameId) :
     IOConfigFBController(paContainer, paInterfaceSpec, paInstanceNameId) {
   mId = mInstancesIncrement++;
   mInstances.push_back(this);

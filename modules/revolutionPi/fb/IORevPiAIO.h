@@ -37,7 +37,7 @@ class FORTE_IORevPiAIO : public forte::io::IOConfigFBMultiSlave {
     void setInitialValues() override;
 
   public:
-    FORTE_IORevPiAIO(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    FORTE_IORevPiAIO(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
     virtual ~FORTE_IORevPiAIO() {};
 

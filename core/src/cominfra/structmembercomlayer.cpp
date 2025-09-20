@@ -30,15 +30,14 @@ using namespace forte::com_infra;
 using namespace forte::literals;
 
 namespace {
-  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CStructMemberLocalComLayer>
-      entry("structmemb"_STRID);
+  [[maybe_unused]] const ComLayerManager::EntryImpl<CStructMemberLocalComLayer> entry("structmemb"_STRID);
 }
 
 CStructMemberLocalComLayer::CStructMemberLocalComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB) :
     CLocalComLayer(paUpperLayer, paFB) {
 }
 
-void CStructMemberLocalComLayer::setRDs(forte::com_infra::CBaseCommFB &paSubl, CIEC_ANY **paSDs, TPortId) {
+void CStructMemberLocalComLayer::setRDs(CBaseCommFB &paSubl, CIEC_ANY **paSDs, TPortId) {
   CIEC_ANY *target = getTargetByIndex(static_cast<CIEC_STRUCT *>(&(paSubl.getRDs()[0]->unwrap())), mIndexList);
   if (nullptr != target)
     target->setValue(paSDs[0]->unwrap());
@@ -73,7 +72,7 @@ bool CStructMemberLocalComLayer::parseArrayIndexFromString(const char *paNestedS
   }
 
   const char *indexString = str.substr(startIndex, stopIndex - startIndex).data();
-  TForteInt16 index = static_cast<TForteInt16>(forte::util::strtol(indexString, nullptr, 10));
+  TForteInt16 index = static_cast<TForteInt16>(util::strtol(indexString, nullptr, 10));
 
   if (errno == ERANGE) {
     return false;
@@ -90,16 +89,16 @@ CStructMemberLocalComLayer::buildIndexList(CIEC_ANY *paRoot, const char *paNeste
   TTargetStructIndexList resultList;
 
   for (size_t i = 0; i < numNestedStructs; i++) {
-    forte::StringId id;
+    StringId id;
     CIEC_INT arrayIndex;
-    bool containsIndex = CStructMemberLocalComLayer::parseArrayIndexFromString(parser[i], arrayIndex);
+    bool containsIndex = parseArrayIndexFromString(parser[i], arrayIndex);
 
     if (!containsIndex) {
-      id = forte::StringId::insert(parser[i]);
+      id = StringId::insert(parser[i]);
     } else {
       std::string sub = parser[i];
       sub.erase(sub.find('['), std::string::npos);
-      id = forte::StringId::insert(sub.data());
+      id = StringId::insert(sub.data());
     }
 
     size_t memberIndex = static_cast<CIEC_STRUCT *>(paRoot)->getMemberIndex(id);
@@ -147,10 +146,10 @@ EComResponse CStructMemberLocalComLayer::openConnection(char *paLayerParameter) 
     return e_InitInvalidId;
   }
 
-  forte::StringId groupNameID = mGroupID = forte::StringId::insert(parser[EComStringIndex::e_LOCALGROUPNAME]);
-  forte::StringId dataTypeNameID = forte::StringId::insert(parser[EComStringIndex::e_STRUCTTYPE]);
+  StringId groupNameID = mGroupID = StringId::insert(parser[e_LOCALGROUPNAME]);
+  StringId dataTypeNameID = StringId::insert(parser[e_STRUCTTYPE]);
 
-  CIEC_STRUCT *const dummy = static_cast<CIEC_STRUCT *>(forte::createDataTypeInstance(dataTypeNameID, nullptr));
+  CIEC_STRUCT *const dummy = static_cast<CIEC_STRUCT *>(createDataTypeInstance(dataTypeNameID, nullptr));
 
   if (nullptr == dummy) {
     DEVLOG_ERROR("[StructMemberLayer] The struct is not available in the data type lib: %s!\r\n",
@@ -158,7 +157,7 @@ EComResponse CStructMemberLocalComLayer::openConnection(char *paLayerParameter) 
     return e_InitInvalidId;
   }
 
-  mIndexList = buildIndexList(dummy, parser[EComStringIndex::e_STRUCTMEMBERNAME]);
+  mIndexList = buildIndexList(dummy, parser[e_STRUCTMEMBERNAME]);
 
   if (mIndexList.empty()) {
     DEVLOG_ERROR("[StructMemberLayer] The specified struct has no member \"%s\"!\r\n",

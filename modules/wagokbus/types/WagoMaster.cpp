@@ -39,7 +39,7 @@ namespace {
   };
 } // namespace
 
-FORTE_WagoMaster::FORTE_WagoMaster(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_WagoMaster::FORTE_WagoMaster(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_UpdateInterval(25_UINT),
@@ -66,7 +66,7 @@ void FORTE_WagoMaster::setConfig() {
   getDeviceController()->setConfig(&config);
 }
 
-forte::io::IODeviceController *FORTE_WagoMaster::createDeviceController(CDeviceExecution &paDeviceExecution) {
+IODeviceController *FORTE_WagoMaster::createDeviceController(CDeviceExecution &paDeviceExecution) {
   return new WagoDeviceController(paDeviceExecution);
 }
 

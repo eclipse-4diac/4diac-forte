@@ -42,7 +42,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ST_REC_CONN::FORTE_ST_REC_CONN(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_ST_REC_CONN::FORTE_ST_REC_CONN(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_QI(nullptr),
@@ -88,32 +88,32 @@ void FORTE_ST_REC_CONN::executeEvent(TEventID paEIID, CEventChainExecutionThread
 }
 
 void FORTE_ST_REC_CONN::executeRQST() {
-  forte::SManagementCMD theCommand;
+  SManagementCMD theCommand;
   // delete old connection
-  theCommand.mDestination = forte::StringId::lookup(var_DST.getValue());
-  theCommand.mFirstParam.push_back(forte::StringId::lookup(var_OLD_SRC_FB.getValue()));
-  theCommand.mFirstParam.push_back(forte::StringId::lookup(var_OLD_SRC_FB_OUT.getValue()));
-  theCommand.mSecondParam.push_back(forte::StringId::lookup(var_OLD_DST_FB.getValue()));
-  theCommand.mSecondParam.push_back(forte::StringId::lookup(var_OLD_DST_FB_IN.getValue()));
+  theCommand.mDestination = StringId::lookup(var_DST.getValue());
+  theCommand.mFirstParam.push_back(StringId::lookup(var_OLD_SRC_FB.getValue()));
+  theCommand.mFirstParam.push_back(StringId::lookup(var_OLD_SRC_FB_OUT.getValue()));
+  theCommand.mSecondParam.push_back(StringId::lookup(var_OLD_DST_FB.getValue()));
+  theCommand.mSecondParam.push_back(StringId::lookup(var_OLD_DST_FB_IN.getValue()));
   theCommand.mCMD = EMGMCommandType::DeleteConnection;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   if (resp == EMGMResponse::Ready) {
     // create new connection
-    theCommand.mDestination = forte::StringId::lookup(var_DST.getValue());
+    theCommand.mDestination = StringId::lookup(var_DST.getValue());
     theCommand.mFirstParam.clear();
-    theCommand.mFirstParam.push_back(forte::StringId::lookup(var_NEW_SRC_FB.getValue()));
-    theCommand.mFirstParam.push_back(forte::StringId::lookup(var_NEW_SRC_FB_OUT.getValue()));
-    theCommand.mSecondParam.push_back(forte::StringId::lookup(var_NEW_DST_FB.getValue()));
-    theCommand.mSecondParam.push_back(forte::StringId::lookup(var_NEW_DST_FB_IN.getValue()));
+    theCommand.mFirstParam.push_back(StringId::lookup(var_NEW_SRC_FB.getValue()));
+    theCommand.mFirstParam.push_back(StringId::lookup(var_NEW_SRC_FB_OUT.getValue()));
+    theCommand.mSecondParam.push_back(StringId::lookup(var_NEW_DST_FB.getValue()));
+    theCommand.mSecondParam.push_back(StringId::lookup(var_NEW_DST_FB_IN.getValue()));
     theCommand.mCMD = EMGMCommandType::CreateConnection;
     resp = getDevice()->executeMGMCommand(theCommand);
   }
 
   // calculate return value
   var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);
-  const std::string retVal(forte::mgm_cmd::getResponseText(resp));
+  const std::string retVal(mgm_cmd::getResponseText(resp));
   DEVLOG_DEBUG("%s\n", retVal.c_str());
   var_STATUS = CIEC_WSTRING(retVal.c_str());
 }

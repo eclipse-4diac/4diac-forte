@@ -64,7 +64,7 @@ class CIEC_TIME_OF_DAY final : public CIEC_ANY_DATE {
     }
 
     EDataTypeID getDataTypeID() const override {
-      return CIEC_ANY::e_TIME_OF_DAY;
+      return e_TIME_OF_DAY;
     }
 
     /*! \brief Converts string value to data type value
@@ -103,7 +103,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_TIME_OF_DAY> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_TIME_OF_DAY;
-      static const forte::StringId scmDataTypeName;
+      static const StringId scmDataTypeName;
   };
 } // namespace forte
 

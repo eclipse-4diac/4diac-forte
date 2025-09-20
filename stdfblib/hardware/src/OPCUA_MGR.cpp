@@ -1484,7 +1484,7 @@ UA_StatusCode OPCUA_MGR::onTriggerEvent(UA_Server *,
   const char *resourceName = static_cast<const char *>(objectContext);
   OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
   uaMGR->setMGMCommand(EMGMCommandType::MonitoringTriggerEvent, forte::StringId::insert(resourceName),
-                       OPCUA_MGR::scmTriggerEventParam, fullFbName);
+                       scmTriggerEventParam, fullFbName);
   eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
   return scResponseMap.find(eRetVal)->second;
 }

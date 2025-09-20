@@ -38,7 +38,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_RT_E_DELAY::FORTE_RT_E_DELAY(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_EO(*this, 1),

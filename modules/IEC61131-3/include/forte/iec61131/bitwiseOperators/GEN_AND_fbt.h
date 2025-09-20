@@ -30,7 +30,7 @@ namespace forte::iec61131::bitwiseOperators {
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     public:
-      GEN_AND(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      GEN_AND(const StringId paInstanceNameId, CFBContainer &paContainer);
       ~GEN_AND() override = default;
   };
 } // namespace forte::iec61131::bitwiseOperators

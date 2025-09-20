@@ -137,7 +137,7 @@ struct GET_STRUCT_VALUE_Main_TestFixture : public GET_STRUCT_VALUE_GenericTestFi
 
     GET_STRUCT_VALUE_Main_TestFixture() : GET_STRUCT_VALUE_GenericTestFixture(&mIn_struct, &mOut) {
       mIn_struct.fromString("(Val1:=1,Val2:=(Val1:=['strin1','string2',''], Val2:=2))");
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_GET_STRUCT_VALUE_Struct_test2 mIn_struct;
@@ -202,7 +202,7 @@ struct GET_STRUCT_VALUE_WRONG_OUTPUT_TYPE_TestFixture : public GET_STRUCT_VALUE_
 
     GET_STRUCT_VALUE_WRONG_OUTPUT_TYPE_TestFixture() : GET_STRUCT_VALUE_GenericTestFixture(&mIn_struct, &mOut) {
       mIn_struct = CIEC_INT(1);
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_INT mIn_struct;

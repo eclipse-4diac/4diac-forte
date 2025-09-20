@@ -19,6 +19,6 @@ using namespace forte::iec61499::net;
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBSCRIBE, "iec61499::net::GEN_SUBSCRIBE"_STRID)
 
-GEN_SUBSCRIBE::GEN_SUBSCRIBE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
-    forte::com_infra::CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Subscriber) {
+GEN_SUBSCRIBE::GEN_SUBSCRIBE(const StringId paInstanceNameId, CFBContainer &paContainer) :
+    CCommFB(paInstanceNameId, paContainer, com_infra::e_Subscriber) {
 }

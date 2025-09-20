@@ -41,7 +41,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ST_CREATE_CONN::FORTE_ST_CREATE_CONN(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_ST_CREATE_CONN::FORTE_ST_CREATE_CONN(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_QI(nullptr),
@@ -79,20 +79,20 @@ void FORTE_ST_CREATE_CONN::executeEvent(TEventID paEIID, CEventChainExecutionThr
 }
 
 void FORTE_ST_CREATE_CONN::executeRQST() {
-  forte::SManagementCMD theCommand;
+  SManagementCMD theCommand;
 
-  theCommand.mDestination = forte::StringId::lookup(var_DST.getValue());
-  theCommand.mFirstParam.push_back(forte::StringId::lookup(var_SRC_FB.getValue()));
-  theCommand.mFirstParam.push_back(forte::StringId::lookup(var_SRC_FB_OUT.getValue()));
-  theCommand.mSecondParam.push_back(forte::StringId::lookup(var_DST_FB.getValue()));
-  theCommand.mSecondParam.push_back(forte::StringId::lookup(var_DST_FB_IN.getValue()));
+  theCommand.mDestination = StringId::lookup(var_DST.getValue());
+  theCommand.mFirstParam.push_back(StringId::lookup(var_SRC_FB.getValue()));
+  theCommand.mFirstParam.push_back(StringId::lookup(var_SRC_FB_OUT.getValue()));
+  theCommand.mSecondParam.push_back(StringId::lookup(var_DST_FB.getValue()));
+  theCommand.mSecondParam.push_back(StringId::lookup(var_DST_FB_IN.getValue()));
   theCommand.mCMD = EMGMCommandType::CreateConnection;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   // calculate return value
   var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);
-  const std::string retVal(forte::mgm_cmd::getResponseText(resp));
+  const std::string retVal(mgm_cmd::getResponseText(resp));
   DEVLOG_DEBUG("%s\n", retVal.c_str());
   var_STATUS = CIEC_WSTRING(retVal.c_str());
 }

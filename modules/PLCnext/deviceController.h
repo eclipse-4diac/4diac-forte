@@ -28,18 +28,17 @@ class PLCnextDeviceController : public forte::io::IODeviceMultiController {
       BitString16 = 16 // Analog
     };
 
-    PLCnextDeviceController(CDeviceExecution &paDeviceExecution) :
-        forte::io::IODeviceMultiController(paDeviceExecution) {
+    PLCnextDeviceController(CDeviceExecution &paDeviceExecution) : IODeviceMultiController(paDeviceExecution) {
       mConfig.updateInterval = 25; // set default
     };
 
     ~PLCnextDeviceController() override = default;
 
-    struct PLCnextConfig : forte::io::IODeviceController::Config {
+    struct PLCnextConfig : Config {
         unsigned int updateInterval;
     };
 
-    class HandleDescriptor : public forte::io::IODeviceMultiController::HandleDescriptor {
+    class HandleDescriptor : public IODeviceMultiController::HandleDescriptor {
       public:
         HandleType mType;
         uint16_t mPosition;
@@ -49,13 +48,13 @@ class PLCnextDeviceController : public forte::io::IODeviceMultiController {
                          size_t paSlaveIndex,
                          uint16_t position,
                          HandleType paType) :
-            forte::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
+            IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
             mType(paType),
             mPosition(position) {
         }
     };
 
-    void setConfig(struct forte::io::IODeviceController::Config *paConfig) override;
+    void setConfig(struct Config *paConfig) override;
     void registerSlaveHandler(PLCnextSlaveHandler *slave);
 
     PLCnextSlaveHandler *getSlave(size_t paIndex);
@@ -65,7 +64,7 @@ class PLCnextDeviceController : public forte::io::IODeviceMultiController {
   protected:
     const char *init() override;
 
-    forte::io::IOHandle *createIOHandle(forte::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
+    forte::io::IOHandle *createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
     void deInit() override;
     void runLoop() override;

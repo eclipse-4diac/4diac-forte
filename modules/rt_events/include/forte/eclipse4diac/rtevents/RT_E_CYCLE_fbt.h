@@ -45,7 +45,7 @@ namespace forte::eclipse4diac::rtevents {
       void setInitialValues() override;
 
     public:
-      FORTE_RT_E_CYCLE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_RT_E_CYCLE(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 

@@ -375,7 +375,7 @@ class CLocalMethodInfo : public CActionInfo {
      * Getter for the semaphore of the action
      * @return the semaphore of the action
      */
-    forte::arch::CSemaphore &getResultReady();
+    CSemaphore &getResultReady();
 
     CLocalMethodInfo(const CLocalMethodInfo &paObj) = delete;
     CLocalMethodInfo &operator=(const CLocalMethodInfo &other) = delete;
@@ -385,7 +385,7 @@ class CLocalMethodInfo : public CActionInfo {
      * When a method is called, it waits with this semaphore until the response comes back to the FB, when this
      * semaphore is increased indicating the method has finished
      */
-    forte::arch::CSemaphore mResultIsReady;
+    CSemaphore mResultIsReady;
 };
 
 #endif /* SRC_MODULES_OPC_UA_OPCUA_ACTION_INFO_H_ */

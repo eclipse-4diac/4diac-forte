@@ -28,7 +28,7 @@ using namespace forte::com_infra;
 using namespace forte::literals;
 
 namespace {
-  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CFBDKASN1ComLayer> entry("fbdk"_STRID);
+  [[maybe_unused]] const ComLayerManager::EntryImpl<CFBDKASN1ComLayer> entry("fbdk"_STRID);
 }
 
 const std::set<CIEC_ANY::EDataTypeID> CFBDKASN1ComLayer::scmSimpleEncodableDataTypes{

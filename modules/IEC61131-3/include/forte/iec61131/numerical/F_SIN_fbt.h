@@ -39,7 +39,7 @@ namespace forte::iec61131::numerical {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_F_SIN(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_SIN(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_ANY_REAL_VARIANT var_IN;
       CIEC_ANY_REAL_VARIANT var_OUT;

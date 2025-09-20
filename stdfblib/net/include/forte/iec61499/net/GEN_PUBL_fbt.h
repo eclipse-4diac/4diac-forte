@@ -24,7 +24,7 @@ namespace forte::iec61499::net {
   class GEN_PUBL : public GEN_PUBLISH {
       DECLARE_GENERIC_FIRMWARE_FB(GEN_PUBL)
     public:
-      GEN_PUBL(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      GEN_PUBL(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       bool configureFB(const char *paConfigString) override;
 

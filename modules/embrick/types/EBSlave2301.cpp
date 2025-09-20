@@ -41,7 +41,7 @@ namespace {
   };
 } // namespace
 
-FORTE_EBSlave2301::FORTE_EBSlave2301(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_EBSlave2301::FORTE_EBSlave2301(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     EmbrickSlave(scmSlaveConfigurationIO,
                  scmSlaveConfigurationIONum,
                  EmbrickSlaveHandler::G_2RelNo4RelCo,

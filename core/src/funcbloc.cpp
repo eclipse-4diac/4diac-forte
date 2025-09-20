@@ -39,7 +39,7 @@
 
 using namespace std::string_literals;
 
-CFunctionBlock::CFunctionBlock(forte::CFBContainer &paContainer,
+CFunctionBlock::CFunctionBlock(CFBContainer &paContainer,
                                const SFBInterfaceSpec &paInterfaceSpec,
                                forte::StringId paInstanceNameId) :
     CFBContainer(paInstanceNameId, paContainer),

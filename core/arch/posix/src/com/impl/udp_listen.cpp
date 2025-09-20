@@ -42,10 +42,10 @@ ssize_t UDPListenChannel::recv() {
   sockaddr_storage remoteAddr{};
   socklen_t remoteAddrLen = sizeof(remoteAddr);
   const ssize_t bytesReceived =
-      ::recvfrom(getSocket(), getBuffer().data() + getBuffer().size(), getMaxReceiveSize() - getBuffer().size(), 0,
-                 reinterpret_cast<sockaddr *>(&remoteAddr), &remoteAddrLen);
+      recvfrom(getSocket(), getBuffer().data() + getBuffer().size(), getMaxReceiveSize() - getBuffer().size(), 0,
+               reinterpret_cast<sockaddr *>(&remoteAddr), &remoteAddrLen);
   if (bytesReceived > 0 && !mConnected) {
-    if (::connect(getSocket(), reinterpret_cast<sockaddr *>(&remoteAddr), remoteAddrLen)) {
+    if (connect(getSocket(), reinterpret_cast<sockaddr *>(&remoteAddr), remoteAddrLen)) {
       return -1;
     };
     mConnected = true;

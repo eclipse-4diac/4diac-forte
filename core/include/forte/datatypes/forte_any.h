@@ -171,7 +171,7 @@ class CIEC_ANY {
      *   The data type identifier is unique for each data type within FORTE.
      */
     virtual EDataTypeID getDataTypeID() const {
-      return CIEC_ANY::e_ANY;
+      return e_ANY;
     }
 
     virtual forte::StringId getTypeNameID() const;
@@ -594,7 +594,7 @@ namespace forte {
   template<typename T, typename = typename std::enable_if_t<std::is_base_of_v<CIEC_ANY, T>>>
   struct CDataTypeTrait {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_Max;
-      static constexpr forte::StringId scmDataTypeName{};
+      static constexpr StringId scmDataTypeName{};
   };
 
 } // namespace forte

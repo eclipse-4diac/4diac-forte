@@ -44,7 +44,7 @@ namespace forte::iec61131::conversion {
       void setInitialValues() override;
 
     public:
-      FORTE_F_DT_TO_DATE(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_DT_TO_DATE(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_DATE_AND_TIME var_IN;
 

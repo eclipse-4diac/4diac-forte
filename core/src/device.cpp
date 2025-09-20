@@ -22,7 +22,7 @@ EMGMResponse CDevice::executeMGMCommand(forte::SManagementCMD &paCommand) {
   if (!paCommand.mDestination) {
     retval = CResource::executeMGMCommand(paCommand);
   } else {
-    CResource *res = static_cast<CResource *>(CFBContainer::getChild(paCommand.mDestination));
+    CResource *res = static_cast<CResource *>(getChild(paCommand.mDestination));
     if (nullptr != res) {
       paCommand.mDestination = {};
       retval = res->executeMGMCommand(paCommand);

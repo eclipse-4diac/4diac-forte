@@ -65,7 +65,7 @@ class CIEC_ANY_CHARS_VARIANT : public CIEC_ANY_CHARS, public TIecAnyCharsVariant
       unwrap().reset();
     }
 
-    bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
+    bool setDefaultValue(EDataTypeID paDataTypeId);
 
     [[nodiscard]] CIEC_ANY_CHARS &unwrap() override;
 

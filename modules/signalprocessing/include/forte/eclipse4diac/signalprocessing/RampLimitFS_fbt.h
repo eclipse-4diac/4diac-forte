@@ -56,7 +56,7 @@ namespace forte::eclipse4diac::signalprocessing {
       void setInitialValues() override;
 
     public:
-      FORTE_RampLimitFS(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_RampLimitFS(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_DINT var_PV;
       CIEC_DINT var_VAL_ZERO;

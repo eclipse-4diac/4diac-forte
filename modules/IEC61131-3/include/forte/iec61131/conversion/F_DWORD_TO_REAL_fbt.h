@@ -44,7 +44,7 @@ namespace forte::iec61131::conversion {
       void setInitialValues() override;
 
     public:
-      FORTE_F_DWORD_TO_REAL(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_DWORD_TO_REAL(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_DWORD var_IN;
 

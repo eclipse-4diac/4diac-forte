@@ -39,7 +39,7 @@ namespace forte::iec61131::selection {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_F_LIMIT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_LIMIT(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_ANY_ELEMENTARY_VARIANT var_MN;
       CIEC_ANY_ELEMENTARY_VARIANT var_IN;

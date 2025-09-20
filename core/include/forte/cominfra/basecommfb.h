@@ -38,7 +38,7 @@ namespace forte {
 
         EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
-        forte::com_infra::EComServiceType getComServiceType() const {
+        EComServiceType getComServiceType() const {
           return mCommServiceType;
         }
 
@@ -77,9 +77,7 @@ namespace forte {
         }
 
       protected:
-        CBaseCommFB(const forte::StringId paInstanceNameId,
-                    forte::CFBContainer &paContainer,
-                    forte::com_infra::EComServiceType paCommServiceType);
+        CBaseCommFB(const StringId paInstanceNameId, CFBContainer &paContainer, EComServiceType paCommServiceType);
 
         /*!\brief Extract the id and the parameter and the ID. The format is ID[PARAMS] where the opening and closing
          * brackets are actually a opening and a closing brackets. They can be escaped using the $ sign. The opening

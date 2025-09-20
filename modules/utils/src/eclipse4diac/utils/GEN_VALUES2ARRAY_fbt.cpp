@@ -33,7 +33,7 @@ namespace {
   const auto cEventOutputNames = std::array{"CNF"_STRID};
 } // namespace
 
-GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_OUT(*this, 0, var_OUT) {
@@ -75,8 +75,8 @@ bool GEN_VALUES2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterf
     return false;
   }
   // there is a number and a data type of inputs within the typename
-  unsigned int numDIs = static_cast<unsigned int>(forte::util::strtoul(dNumberPos, nullptr, 10));
-  auto arrayValueTypeId = forte::StringId::lookup(++dTypePos);
+  unsigned int numDIs = static_cast<unsigned int>(util::strtoul(dNumberPos, nullptr, 10));
+  auto arrayValueTypeId = StringId::lookup(++dTypePos);
 
   if (numDIs < 2) {
     return false;

@@ -92,7 +92,7 @@ class COpcEventHandler : public CExternalEventHandler,
     static TCallbackDescriptor mCallbackDescCount;
 
     static CSyncObject mSync;
-    static forte::arch::CSemaphore mStateSemaphore;
+    static CSemaphore mStateSemaphore;
     static bool mIsSemaphoreEmpty;
 
     typedef CSinglyLinkedList<ICmd *> TCommandQueue;

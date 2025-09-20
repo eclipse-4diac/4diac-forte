@@ -48,7 +48,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_ADD_DT_TIME::FORTE_F_ADD_DT_TIME(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_F_ADD_DT_TIME::FORTE_F_ADD_DT_TIME(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_DATE_AND_TIME(0)),
     var_IN2(CIEC_TIME(0)),

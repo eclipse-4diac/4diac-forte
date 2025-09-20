@@ -54,7 +54,7 @@ namespace {
       {"Source", "SourceName"},
   };
 
-  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<COPC_UA_AC_Layer> entry("ua_ac"_STRID);
+  [[maybe_unused]] const ComLayerManager::EntryImpl<COPC_UA_AC_Layer> entry("ua_ac"_STRID);
 } // namespace
 
 COPC_UA_AC_Layer::COPC_UA_AC_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
@@ -517,7 +517,7 @@ EComResponse COPC_UA_AC_Layer::addOPCUATypeProperties(UA_Server *paServer, const
   return addOPCUATypeEnableStateProperty(paServer);
 }
 
-forte::com_infra::EComResponse COPC_UA_AC_Layer::addOPCUATypeEnableStateProperty(UA_Server *paServer) {
+EComResponse COPC_UA_AC_Layer::addOPCUATypeEnableStateProperty(UA_Server *paServer) {
   UA_VariableAttributes vAttr = UA_VariableAttributes_default;
   vAttr.displayName = UA_LOCALIZEDTEXT(smEmptyString, smEnableStateProperty);
   vAttr.valueRank = UA_VALUERANK_ANY;

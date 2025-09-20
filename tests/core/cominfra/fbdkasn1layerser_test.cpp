@@ -56,7 +56,7 @@ using namespace forte::literals;
 
 class CFBDKASN1ComLayerTestMock : public forte::com_infra::CFBDKASN1ComLayer {
   public:
-    CFBDKASN1ComLayerTestMock() : forte::com_infra::CFBDKASN1ComLayer(nullptr, nullptr) {
+    CFBDKASN1ComLayerTestMock() : CFBDKASN1ComLayer(nullptr, nullptr) {
       mBottomLayer = &mTestLayer;
     }
 
@@ -72,9 +72,9 @@ class CFBDKASN1ComLayerTestMock : public forte::com_infra::CFBDKASN1ComLayer {
     }
 
   private:
-    class TestMockBottomLayer : public forte::com_infra::CComLayer {
+    class TestMockBottomLayer : public CComLayer {
       public:
-        TestMockBottomLayer() : forte::com_infra::CComLayer(nullptr, nullptr) {
+        TestMockBottomLayer() : CComLayer(nullptr, nullptr) {
           mData = nullptr;
           mAllocData = nullptr;
           mSize = 0;

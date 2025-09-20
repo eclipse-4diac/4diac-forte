@@ -213,12 +213,12 @@ class CIEC_STRING : public CIEC_ANY_STRING {
     }
 
     EDataTypeID getDataTypeID() const override final {
-      return CIEC_ANY::e_STRING;
+      return e_STRING;
     }
 
     class PARTIAL_ACCESS_TYPE : public CIEC_CHAR {
-        using value_type = CIEC_CHAR::TValueType;
-        using pointer_type = CIEC_CHAR::TValueType *;
+        using value_type = TValueType;
+        using pointer_type = TValueType *;
 
       public:
         using CIEC_CHAR::operator=;
@@ -338,7 +338,7 @@ class CIEC_STRING : public CIEC_ANY_STRING {
     }
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
-      if (paOther.getDataTypeID() == CIEC_ANY::e_STRING) {
+      if (paOther.getDataTypeID() == e_STRING) {
         return *this == static_cast<const CIEC_STRING &>(paOther);
       }
       return false;
@@ -356,9 +356,9 @@ class CIEC_STRING : public CIEC_ANY_STRING {
     void toUTF8(std::string &paBuffer, bool paEscape) const override;
 
     void setValue(const CIEC_ANY &paValue) override {
-      if (paValue.getDataTypeID() == CIEC_ANY::e_STRING) {
+      if (paValue.getDataTypeID() == e_STRING) {
         *this = static_cast<const CIEC_STRING &>(paValue);
-      } else if (paValue.getDataTypeID() == CIEC_ANY::e_CHAR) {
+      } else if (paValue.getDataTypeID() == e_CHAR) {
         *this = static_cast<const CIEC_CHAR &>(paValue);
       }
     }
@@ -377,7 +377,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_STRING> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_STRING;
-      static const forte::StringId scmDataTypeName;
+      static const StringId scmDataTypeName;
   };
 } // namespace forte
 

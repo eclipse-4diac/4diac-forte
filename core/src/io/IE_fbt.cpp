@@ -45,7 +45,7 @@ namespace {
 
 DEFINE_FIRMWARE_FB(FORTE_IE, "IE"_STRID)
 
-FORTE_IE::FORTE_IE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_IE::FORTE_IE(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     CProcessInterfaceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_IND(*this, 2) {};
 

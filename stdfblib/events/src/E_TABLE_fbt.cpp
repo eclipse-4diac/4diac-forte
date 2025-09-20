@@ -69,7 +69,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TABLE::FORTE_E_TABLE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_E_TABLE::FORTE_E_TABLE(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_TABLE_CTRL("E_TABLE_CTRL"_STRID, *this),
     fb_E_DELAY("E_DELAY"_STRID, *this),

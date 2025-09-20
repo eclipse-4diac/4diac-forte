@@ -33,7 +33,7 @@ IODeviceController::IODeviceController(CDeviceExecution &paDeviceExecution) :
 void IODeviceController::run() {
   // Delay initialization
   if (mInitDelay > 0) {
-    CThread::sleepThread(mInitDelay * 1000);
+    sleepThread(mInitDelay * 1000);
   }
 
   mError = init();
@@ -54,7 +54,7 @@ void IODeviceController::run() {
   deInit();
 
   while (isAlive()) {
-    CThread::sleepThread(10);
+    sleepThread(10);
   }
 }
 

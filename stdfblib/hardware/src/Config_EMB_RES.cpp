@@ -33,7 +33,7 @@ namespace {
   };
 } // namespace
 
-Config_EMB_RES::Config_EMB_RES(forte::StringId paInstanceNameId, forte::CFBContainer &paDevice) :
+Config_EMB_RES::Config_EMB_RES(forte::StringId paInstanceNameId, CFBContainer &paDevice) :
     CResource(paDevice, cFBInterfaceSpec, paInstanceNameId),
     fb_START("START"_STRID, *this),
     conn_opcua_namespace(nullptr),

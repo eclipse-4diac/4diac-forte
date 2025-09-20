@@ -43,7 +43,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_SWITCH::FORTE_E_SWITCH(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_E_SWITCH::FORTE_E_SWITCH(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO0(*this, 0),
     conn_EO1(*this, 1),

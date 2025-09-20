@@ -47,7 +47,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_CTU::FORTE_E_CTU(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_E_CTU::FORTE_E_CTU(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CUO(*this, 0),
     conn_RO(*this, 1),

@@ -46,8 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_STRING_AS_BYTE::FORTE_F_STRING_AS_BYTE(const forte::StringId paInstanceNameId,
-                                               forte::CFBContainer &paContainer) :
+FORTE_F_STRING_AS_BYTE::FORTE_F_STRING_AS_BYTE(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(""_STRING),
     var_OUT(0_BYTE),

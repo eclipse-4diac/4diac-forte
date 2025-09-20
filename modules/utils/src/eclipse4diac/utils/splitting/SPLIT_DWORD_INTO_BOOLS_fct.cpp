@@ -57,7 +57,7 @@ namespace {
 } // namespace
 
 FORTE_SPLIT_DWORD_INTO_BOOLS::FORTE_SPLIT_DWORD_INTO_BOOLS(const forte::StringId paInstanceNameId,
-                                                           forte::CFBContainer &paContainer) :
+                                                           CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),

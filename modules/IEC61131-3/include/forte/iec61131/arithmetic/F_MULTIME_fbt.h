@@ -40,7 +40,7 @@ namespace forte::iec61131::arithmetic {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_F_MULTIME(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_MULTIME(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_TIME var_IN1;
       CIEC_ANY_NUM_VARIANT var_IN2;

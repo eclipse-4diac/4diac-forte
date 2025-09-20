@@ -47,7 +47,7 @@ namespace {
   const auto cInternalsNames = std::array{"MEM"_STRID};
 } // namespace
 
-FORTE_FB_R_TRIG::FORTE_FB_R_TRIG(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_FB_R_TRIG::FORTE_FB_R_TRIG(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
     var_MEM(0_BOOL),
     var_CLK(0_BOOL),

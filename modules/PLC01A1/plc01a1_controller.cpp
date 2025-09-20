@@ -40,7 +40,7 @@ const uint32_t PLC01A1Controller::scmSPIInputMaxSpeed = 6250000; // 6.25 MHz
 const uint32_t PLC01A1Controller::scmSPIOutputMaxSpeed = 5000000; // 5 MHz
 
 PLC01A1Controller::PLC01A1Controller(CDeviceExecution &paDeviceExecution) :
-    forte::io::IODevicePollController(paDeviceExecution, 25),
+    IODevicePollController(paDeviceExecution, 25),
     mSPIInputFd(0),
     mSPIOutputFd(0) {
   memset(mInputArrayOld, 0, scmInputArrayLenght);
@@ -67,7 +67,7 @@ PLC01A1Controller::PLC01A1Controller(CDeviceExecution &paDeviceExecution) :
   mOutputTR.bits_per_word = scmSPIBits;
 }
 
-void PLC01A1Controller::setConfig(struct forte::io::IODeviceController::Config *paConfig) {
+void PLC01A1Controller::setConfig(struct IODeviceController::Config *paConfig) {
   Config newConfig = *static_cast<Config *>(paConfig);
   setPollInterval(static_cast<float>(newConfig.mUpdateInterval));
 }
@@ -158,8 +158,7 @@ bool PLC01A1Controller::isHandleValueEqual(forte::io::IOHandle &paHandle) {
   return ((forte::io::IOHandleBit &) paHandle).equal(mInputArrayOld);
 }
 
-forte::io::IOHandle *
-PLC01A1Controller::initHandle(forte::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
+forte::io::IOHandle *PLC01A1Controller::initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
   HandleDescriptor &desc = static_cast<HandleDescriptor &>(paHandleDescriptor);
 
   return new forte::io::IOHandleBit(this, desc.mDirection, desc.mOffset, desc.mPosition,

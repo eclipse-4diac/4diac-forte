@@ -17,7 +17,7 @@
 using namespace forte::com_infra;
 
 CComLayer::CComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
-    mConnectionState(forte::com_infra::e_Disconnected),
+    mConnectionState(e_Disconnected),
     mTopLayer(paUpperLayer),
     mBottomLayer(nullptr),
     mFb(paComFB) {

@@ -35,7 +35,7 @@ namespace {
   };
 } // namespace
 
-CTimedFB::CTimedFB(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+CTimedFB::CTimedFB(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_DT(0_TIME),
     conn_DT(nullptr),

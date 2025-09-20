@@ -24,7 +24,7 @@ using namespace forte::com_infra;
 using namespace forte::literals;
 
 namespace {
-  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<MQTTComLayer> entry("mqtt"_STRID);
+  [[maybe_unused]] const ComLayerManager::EntryImpl<MQTTComLayer> entry("mqtt"_STRID);
 }
 
 MQTTComLayer::MQTTComLayer(CComLayer *paUpperLayer, CBaseCommFB *pFB) :

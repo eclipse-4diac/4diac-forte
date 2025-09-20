@@ -117,7 +117,7 @@ void GPIOChipController::runLoop() {
   if (mConfig.mReadWriteMode != Config::Input) {
     // output does not need any loop logic, values are written directly from the handle
     while (isAlive() && !hasError()) {
-      CThread::sleepThread(100);
+      sleepThread(100);
     }
     return;
   }
@@ -175,7 +175,6 @@ void GPIOChipController::handleChangeEvent(forte::io::IOHandle *) {
   }
 }
 
-forte::io::IOHandle *
-GPIOChipController::initHandle(forte::io::IODeviceController::HandleDescriptor *paHandleDescriptor) {
+forte::io::IOHandle *GPIOChipController::initHandle(HandleDescriptor *paHandleDescriptor) {
   return new forte::io::IOHandleBit(this, paHandleDescriptor->mDirection, 0, 0, &mValue);
 }

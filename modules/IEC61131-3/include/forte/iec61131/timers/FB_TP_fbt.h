@@ -43,7 +43,7 @@ namespace forte::iec61131::timers {
       void setInitialValues() override;
 
     public:
-      FORTE_FB_TP(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_FB_TP(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_BOOL var_IN;
       CIEC_TIME var_PT;

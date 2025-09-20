@@ -36,9 +36,9 @@ namespace forte::eclipse4diac::rtevents {
       static const TEventID scmEventSTOPID = 1;
       static const TEventID scmEventEOID = 0;
 
-      forte::CInternalFB<FORTE_RT_E_CYCLE> fb_RT_E_CYCLE;
-      forte::CInternalFB<iec61499::events::FORTE_E_CTU> fb_E_CTU;
-      forte::CInternalFB<iec61499::events::FORTE_E_SWITCH> fb_E_SWITCH;
+      CInternalFB<FORTE_RT_E_CYCLE> fb_RT_E_CYCLE;
+      CInternalFB<iec61499::events::FORTE_E_CTU> fb_E_CTU;
+      CInternalFB<iec61499::events::FORTE_E_SWITCH> fb_E_SWITCH;
 
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;
@@ -46,7 +46,7 @@ namespace forte::eclipse4diac::rtevents {
       CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
     public:
-      FORTE_RT_E_TRAIN(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_RT_E_TRAIN(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CEventConnection conn_EO;
       CDataConnection *conn_DT;

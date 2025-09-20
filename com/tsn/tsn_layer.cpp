@@ -24,7 +24,7 @@ using namespace forte::com_infra;
 using namespace forte::literals;
 
 namespace {
-  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CTSNLayer> entry("tsn"_STRID);
+  [[maybe_unused]] const ComLayerManager::EntryImpl<CTSNLayer> entry("tsn"_STRID);
 }
 
 CTSNLayer::CTSNLayer(CComLayer *paUpperLayer, CBaseCommFB *paBaseCommFB) : CIPComLayer(paUpperLayer, paBaseCommFB) {
@@ -42,9 +42,9 @@ EComResponse CTSNLayer::openConnection(char *paLayerParameter) {
     DEVLOG_ERROR("[TSN Layer] Wrong parameters (%s)\n", paLayerParameter);
   } else {
 
-    unsigned int vlanPriority = static_cast<unsigned int>(forte::util::strtoul(parser[3], nullptr, 10));
+    unsigned int vlanPriority = static_cast<unsigned int>(util::strtoul(parser[3], nullptr, 10));
     char *dstIPAddress = const_cast<char *>(parser[0]);
-    TForteUInt16 nPort = static_cast<TForteUInt16>(forte::util::strtoul(parser[1], nullptr, 10));
+    TForteUInt16 nPort = static_cast<TForteUInt16>(util::strtoul(parser[1], nullptr, 10));
 
     CIPComSocketHandler::TSocketDescriptor nSockDes = CIPComSocketHandler::scmInvalidSocketDescriptor;
     mConnectionState = e_Connected;
@@ -101,7 +101,7 @@ EComResponse CTSNLayer::setVLANPriorityForSocket(unsigned int paVlanPriority) {
 EComResponse CTSNLayer::setVLANIDForSocket(const char *paId) {
   EComResponse eRetVal = e_InitInvalidId;
 
-  unsigned int id = static_cast<unsigned int>(forte::util::strtoul(paId, nullptr, 10));
+  unsigned int id = static_cast<unsigned int>(util::strtoul(paId, nullptr, 10));
   if (scmMinVLANID <= id && scmMaxVLANID >= id) {
     struct ifreq ifr;
     memset(&ifr, 0, sizeof(ifr));

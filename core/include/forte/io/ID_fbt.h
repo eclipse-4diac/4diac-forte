@@ -25,5 +25,5 @@ class FORTE_ID final : public forte::io::CInputFB<CIEC_DWORD> {
     DECLARE_FIRMWARE_FB(FORTE_ID)
 
   public:
-    FORTE_ID(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    FORTE_ID(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 };

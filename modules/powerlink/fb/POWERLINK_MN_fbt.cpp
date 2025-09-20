@@ -37,7 +37,7 @@ namespace {
   };
 } // namespace
 
-FORTE_POWERLINK_MN::FORTE_POWERLINK_MN(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_POWERLINK_MN::FORTE_POWERLINK_MN(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_QI(nullptr),

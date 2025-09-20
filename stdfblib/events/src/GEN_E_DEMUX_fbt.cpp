@@ -29,7 +29,7 @@ namespace {
   const auto cEventInputNames = std::array{"EI"_STRID};
 } // namespace
 
-GEN_E_DEMUX::GEN_E_DEMUX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+GEN_E_DEMUX::GEN_E_DEMUX(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_K(nullptr) {
 }
@@ -63,9 +63,9 @@ bool GEN_E_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
     ++acPos;
     if ('D' != *acPos) {
       // we have an underscore and it is not the first underscore after E
-      size_t numEOs = static_cast<TEventID>(forte::util::strtoul(acPos, nullptr, 10));
+      size_t numEOs = static_cast<TEventID>(util::strtoul(acPos, nullptr, 10));
 
-      if (numEOs < CFunctionBlock::scmMaxInterfaceEvents) {
+      if (numEOs < scmMaxInterfaceEvents) {
         generateGenericInterfacePointNameArray("EO", mEventOutputNames, numEOs);
 
         paInterfaceSpec.mEINames = cEventInputNames;

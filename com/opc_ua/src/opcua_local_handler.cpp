@@ -102,7 +102,7 @@ void COPC_UA_Local_Handler::run() {
      * works properly.
      */
     UA_Logger uaLogger = *uaServerConfig->logging;
-    *uaServerConfig->logging = COPC_UA_HandlerAbstract::getLogger();
+    *uaServerConfig->logging = getLogger();
 
     UA_ServerStrings serverStrings;
     generateServerStrings(gOpcuaServerPort.mArgument, serverStrings);
@@ -663,7 +663,7 @@ UA_StatusCode COPC_UA_Local_Handler::registerVariableCallBack(const UA_NodeId &p
                                                               CActionInfo &paActionInfo,
                                                               size_t paPortIndex) {
 
-  const UA_ValueCallback writeCallback = {nullptr, COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite};
+  const UA_ValueCallback writeCallback = {nullptr, CUA_LocalCallbackFunctions::onWrite};
   UA_StatusCode retVal = UA_Server_setVariableNode_valueCallback(mUaServer, paNodeId, writeCallback);
   if (UA_STATUSCODE_GOOD == retVal) {
 
@@ -869,10 +869,9 @@ UA_StatusCode COPC_UA_Local_Handler::createMethodNode(CCreateMethodInfo &paCreat
 
   UA_StatusCode retVal = UA_Server_addMethodNode(
       mUaServer, requestedNodeId, parentNodeId, UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT),
-      *paCreateMethodInfo.mBrowseName, methodAttributes,
-      COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onServerMethodCall, paCreateMethodInfo.mInputSize,
-      paCreateMethodInfo.mInputArguments, paCreateMethodInfo.mOutputSize, paCreateMethodInfo.mOutputArguments, this,
-      paCreateMethodInfo.mReturnedNodeId);
+      *paCreateMethodInfo.mBrowseName, methodAttributes, CUA_LocalCallbackFunctions::onServerMethodCall,
+      paCreateMethodInfo.mInputSize, paCreateMethodInfo.mInputArguments, paCreateMethodInfo.mOutputSize,
+      paCreateMethodInfo.mOutputArguments, this, paCreateMethodInfo.mReturnedNodeId);
 
   if (UA_STATUSCODE_GOOD == retVal) {
     if (!*paNodeId) {

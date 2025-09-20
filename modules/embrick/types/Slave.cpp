@@ -25,10 +25,10 @@ const CIEC_WSTRING EmbrickSlave::scmUnknown("Invalid status code");
 EmbrickSlave::EmbrickSlave(const TForteUInt8 *const paSlaveConfigurationIO,
                            const TForteUInt8 paSlaveConfigurationIO_num,
                            int paType,
-                           forte::CFBContainer &paContainer,
+                           CFBContainer &paContainer,
                            const SFBInterfaceSpec &paInterfaceSpec,
                            const forte::StringId paInstanceNameId) :
-    forte::io::IOConfigFBMultiSlave(
+    IOConfigFBMultiSlave(
         paSlaveConfigurationIO, paSlaveConfigurationIO_num, paType, paContainer, paInterfaceSpec, paInstanceNameId),
     var_BusAdapterIn("BusAdapterIn"_STRID, *this, 0),
     var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0),

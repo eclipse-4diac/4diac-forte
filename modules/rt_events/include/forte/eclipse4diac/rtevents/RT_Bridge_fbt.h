@@ -22,7 +22,7 @@ namespace forte::eclipse4diac::rtevents {
       DECLARE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge)
 
     public:
-      FORTE_GEN_RT_Bridge(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_GEN_RT_Bridge(StringId paInstanceNameId, CFBContainer &paContainer);
       ~FORTE_GEN_RT_Bridge() override = default;
 
       CEventConnection conn_RDO;
@@ -58,7 +58,7 @@ namespace forte::eclipse4diac::rtevents {
       std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDIs;
       std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDOs;
 
-      std::vector<forte::StringId> mDINames;
-      std::vector<forte::StringId> mDONames;
+      std::vector<StringId> mDINames;
+      std::vector<StringId> mDONames;
   };
 } // namespace forte::eclipse4diac::rtevents

@@ -118,5 +118,5 @@ struct SFBInterfaceSpec {
 };
 
 namespace forte {
-  TPortId getPortId(forte::StringId paPortNameId, std::span<const forte::StringId> paPortNames);
+  TPortId getPortId(StringId paPortNameId, std::span<const StringId> paPortNames);
 }

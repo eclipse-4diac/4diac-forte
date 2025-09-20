@@ -23,11 +23,11 @@ class RevPiController : public forte::io::IODeviceMultiController {
   public:
     RevPiController(CDeviceExecution &paDeviceExecution);
 
-    struct Config : forte::io::IODeviceController::Config {
+    struct Config : IODeviceController::Config {
         unsigned int updateInterval; //!< Sets the frequency for the data update cycle. The default value is 25 Hz.
     };
 
-    struct HandleDescriptor : forte::io::IODeviceMultiController::HandleDescriptor {
+    struct HandleDescriptor : IODeviceMultiController::HandleDescriptor {
         CIEC_ANY::EDataTypeID mType;
         uint8_t mOffset;
         uint8_t mPosition;
@@ -38,14 +38,14 @@ class RevPiController : public forte::io::IODeviceMultiController {
                          CIEC_ANY::EDataTypeID paType,
                          uint8_t paOffset,
                          uint8_t paPosition) :
-            forte::io::IODeviceMultiController::HandleDescriptor(paID, paDirection, paSlaveIndex),
+            IODeviceMultiController::HandleDescriptor(paID, paDirection, paSlaveIndex),
             mType(paType),
             mOffset(paOffset),
             mPosition(paPosition) {
         }
     };
 
-    void setConfig(struct forte::io::IODeviceController::Config *config);
+    void setConfig(struct IODeviceController::Config *config);
 
     /*! @brief Adds a handle for a slave
      *
@@ -69,7 +69,7 @@ class RevPiController : public forte::io::IODeviceMultiController {
   protected:
     const char *init();
 
-    forte::io::IOHandle *createIOHandle(forte::io::IODeviceController::HandleDescriptor &handleDescriptor) override;
+    forte::io::IOHandle *createIOHandle(IODeviceController::HandleDescriptor &handleDescriptor) override;
 
     void deInit();
 

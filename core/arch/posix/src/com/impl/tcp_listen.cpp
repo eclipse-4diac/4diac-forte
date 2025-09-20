@@ -40,7 +40,7 @@ int TCPListenChannel::socket(const std::string_view paConfigString) {
     return -1;
   }
 
-  if (::listen(sock, 1)) {
+  if (listen(sock, 1)) {
     ::close(sock);
     return -1;
   }
@@ -57,7 +57,7 @@ ComResult TCPListenChannel::send(ComBuffer paData) {
 
 ssize_t TCPListenChannel::recv() {
   if (mConnectionSocket < 0) {
-    mConnectionSocket = ::accept(getSocket(), nullptr, nullptr);
+    mConnectionSocket = accept(getSocket(), nullptr, nullptr);
     if (mConnectionSocket < 0 || net::setNonBlocking(mConnectionSocket)) {
       return -1;
     }

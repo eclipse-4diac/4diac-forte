@@ -27,7 +27,7 @@ class CMQTTClient;
 
 using namespace forte::com_infra;
 
-class MQTTComLayer : public forte::com_infra::CComLayer {
+class MQTTComLayer : public CComLayer {
   public:
     MQTTComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB);
     ~MQTTComLayer() override;

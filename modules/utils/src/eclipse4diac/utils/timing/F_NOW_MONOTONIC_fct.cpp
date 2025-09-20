@@ -47,7 +47,7 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
 };
 
 FORTE_utils__timing__F_NOW_MONOTONIC::FORTE_utils__timing__F_NOW_MONOTONIC(const forte::StringId paInstanceNameId,
-                                                                           forte::CFBContainer &paContainer) :
+                                                                           CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_(*this, 0, var_) {

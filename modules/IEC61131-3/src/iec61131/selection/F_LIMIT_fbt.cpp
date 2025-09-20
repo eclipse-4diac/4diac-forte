@@ -41,7 +41,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_LIMIT::FORTE_F_LIMIT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_F_LIMIT::FORTE_F_LIMIT(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_MN(CIEC_ANY_ELEMENTARY_VARIANT()),
     var_IN(CIEC_ANY_ELEMENTARY_VARIANT()),

@@ -15,7 +15,7 @@
 #include "flexibleTracer.h"
 
 void CFlexibleTracer::setTracer(AvailableTracers paTracerType) {
-  CFlexibleTracer::mCurrentTracer = paTracerType;
+  mCurrentTracer = paTracerType;
 }
 
 const CFlexibleTracer::TracerVariant &CFlexibleTracer::getTracerVariant() const {

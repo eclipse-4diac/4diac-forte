@@ -54,7 +54,7 @@ namespace {
 } // namespace
 
 FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT::FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT(
-    const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+    const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_WI(nullptr),

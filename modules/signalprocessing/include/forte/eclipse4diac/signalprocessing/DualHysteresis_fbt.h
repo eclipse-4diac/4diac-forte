@@ -65,7 +65,7 @@ namespace forte::eclipse4diac::signalprocessing {
       void setInitialValues() override;
 
     public:
-      FORTE_DualHysteresis(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_DualHysteresis(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_BOOL var_QI;
       CIEC_REAL var_MI;

@@ -44,7 +44,7 @@ namespace forte::iec61131::conversion {
       void setInitialValues() override;
 
     public:
-      FORTE_F_WSTRING_AS_TIME(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_WSTRING_AS_TIME(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_WSTRING var_IN;
 

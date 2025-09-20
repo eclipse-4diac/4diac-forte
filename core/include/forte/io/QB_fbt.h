@@ -22,5 +22,5 @@ class FORTE_QB final : public forte::io::COutputFB<CIEC_BYTE> {
     DECLARE_FIRMWARE_FB(FORTE_QB)
 
   public:
-    FORTE_QB(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    FORTE_QB(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 };

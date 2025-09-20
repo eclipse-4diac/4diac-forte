@@ -48,7 +48,7 @@ namespace {
   };
 } // namespace
 
-FORTE_SCALE::FORTE_SCALE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_SCALE::FORTE_SCALE(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),

@@ -43,7 +43,7 @@ namespace {
       .mPlugNames = {},
   };
 } // namespace
-FORTE_E_MERGE::FORTE_E_MERGE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_E_MERGE::FORTE_E_MERGE(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO(*this, 0) {
 }

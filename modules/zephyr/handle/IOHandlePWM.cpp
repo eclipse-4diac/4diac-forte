@@ -14,7 +14,7 @@
 
 class IOHandlePWMPeriod : public forte::io::IOHandle {
     using IOObserver = forte::io::IOObserver;
-    using IOHandle = forte::io::IOHandle;
+    using IOHandle = IOHandle;
     using IOMapper = forte::io::IOMapper;
 
   public:

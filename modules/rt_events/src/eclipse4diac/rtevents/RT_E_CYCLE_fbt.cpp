@@ -38,7 +38,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_EO(*this, 0),
     conn_DT(nullptr),

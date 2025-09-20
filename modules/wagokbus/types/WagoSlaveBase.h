@@ -21,7 +21,7 @@ class WagoSlaveBase : public forte::io::IOConfigFBMultiSlave {
 
   public:
     WagoSlaveBase(int paType,
-                  forte::CFBContainer &paContainer,
+                  CFBContainer &paContainer,
                   const SFBInterfaceSpec &paInterfaceSpec,
                   const forte::StringId paInstanceNameId);
     ~WagoSlaveBase() override = default;

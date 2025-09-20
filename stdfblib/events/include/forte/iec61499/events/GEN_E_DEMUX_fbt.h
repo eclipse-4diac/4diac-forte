@@ -39,7 +39,7 @@ namespace forte::iec61499::events {
     private:
       static const TEventID scmEventEIID = 0;
 
-      std::vector<forte::StringId> mEventOutputNames;
+      std::vector<StringId> mEventOutputNames;
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -52,7 +52,7 @@ namespace forte::iec61499::events {
       CDataConnection *conn_K;
 
     public:
-      GEN_E_DEMUX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      GEN_E_DEMUX(const StringId paInstanceNameId, CFBContainer &paContainer);
       ~GEN_E_DEMUX() override = default;
   };
 } // namespace forte::iec61499::events

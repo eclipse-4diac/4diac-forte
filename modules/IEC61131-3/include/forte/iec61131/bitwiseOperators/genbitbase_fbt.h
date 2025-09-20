@@ -26,7 +26,7 @@ namespace forte::iec61131::bitwiseOperators {
   class CGenBitBase : public CGenFunctionBlock<CFunctionBlock> {
 
     protected:
-      CGenBitBase(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      CGenBitBase(const StringId paInstanceNameId, CFBContainer &paContainer);
       ~CGenBitBase() override = default;
 
       CIEC_ANY_BIT_VARIANT &var_IN(size_t paIndex) {
@@ -53,7 +53,7 @@ namespace forte::iec61131::bitwiseOperators {
       CIEC_ANY_BIT_VARIANT var_OUT;
 
     private:
-      std::vector<forte::StringId> mDataInputNames;
+      std::vector<StringId> mDataInputNames;
 
       void readInputData(TEventID paEI) override;
       void writeOutputData(TEventID paEO) override;

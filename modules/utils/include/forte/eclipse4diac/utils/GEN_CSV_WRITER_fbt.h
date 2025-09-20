@@ -80,7 +80,7 @@ namespace forte::eclipse4diac::utils {
       CDataConnection *getDOConUnchecked(TPortId paDONum) override;
 
     public:
-      GEN_CSV_WRITER(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      GEN_CSV_WRITER(const StringId paInstanceNameId, CFBContainer &paContainer);
       ~GEN_CSV_WRITER() override;
 
     private:
@@ -91,7 +91,7 @@ namespace forte::eclipse4diac::utils {
 
       decltype(forte_fopen(nullptr, nullptr)) mCSVFile;
 
-      std::vector<forte::StringId> mDataInputNames;
+      std::vector<StringId> mDataInputNames;
 
       std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDIs;
 

@@ -60,7 +60,7 @@ class CIEC_ANY_DURATION_VARIANT : public CIEC_ANY_DURATION, public TIecAnyDurati
       unwrap().reset();
     }
 
-    bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
+    bool setDefaultValue(EDataTypeID paDataTypeId);
 
     [[nodiscard]] CIEC_ANY_DURATION &unwrap() override;
 

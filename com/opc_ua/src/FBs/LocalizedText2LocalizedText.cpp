@@ -42,7 +42,7 @@ namespace {
 } // namespace
 
 FORTE_LocalizedText2LocalizedText::FORTE_LocalizedText2LocalizedText(forte::StringId paInstanceNameId,
-                                                                     forte::CFBContainer &paContainer) :
+                                                                     CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_LocalizedText()),
     var_OUT(CIEC_LocalizedText()),

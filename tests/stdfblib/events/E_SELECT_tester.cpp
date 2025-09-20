@@ -21,7 +21,7 @@ struct E_SELECT_TestFixture : public CFBTestFixtureBase {
 
     E_SELECT_TestFixture() : CFBTestFixtureBase("iec61499::events::E_SELECT"_STRID) {
       setInputData({&mInG});
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_BOOL mInG; // DATA INPUT

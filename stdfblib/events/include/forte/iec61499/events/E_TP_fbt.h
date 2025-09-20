@@ -39,9 +39,9 @@ namespace forte::iec61499::events {
       static const TEventID scmEventRID = 1;
       static const TEventID scmEventCNFID = 0;
 
-      forte::CInternalFB<FORTE_E_DELAY> fb_E_DELAY;
-      forte::CInternalFB<FORTE_E_RS> fb_E_RS;
-      forte::CInternalFB<FORTE_E_PERMIT> fb_E_PERMIT;
+      CInternalFB<FORTE_E_DELAY> fb_E_DELAY;
+      CInternalFB<FORTE_E_RS> fb_E_RS;
+      CInternalFB<FORTE_E_PERMIT> fb_E_PERMIT;
 
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;
@@ -49,7 +49,7 @@ namespace forte::iec61499::events {
       CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
     public:
-      FORTE_E_TP(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_TP(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CEventConnection conn_CNF;
 

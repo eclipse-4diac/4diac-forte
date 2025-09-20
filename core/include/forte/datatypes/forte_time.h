@@ -65,7 +65,7 @@ class CIEC_TIME final : public CIEC_ANY_DURATION {
     }
 
     EDataTypeID getDataTypeID() const override {
-      return CIEC_ANY::e_TIME;
+      return e_TIME;
     }
 
     /*! \brief Converts string value to data type value
@@ -116,7 +116,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_TIME> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_TIME;
-      static const forte::StringId scmDataTypeName;
+      static const StringId scmDataTypeName;
   };
 } // namespace forte
 

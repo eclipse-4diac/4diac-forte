@@ -38,7 +38,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RT_E_EC_COUPLER::FORTE_RT_E_EC_COUPLER(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_RT_E_EC_COUPLER::FORTE_RT_E_EC_COUPLER(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CRTEventSingle(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_EO(*this, 1),

@@ -53,7 +53,7 @@ class fileReader : public CFunctionBlock {
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    fileReader(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    fileReader(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
     ~fileReader() override = default;
 
   private:

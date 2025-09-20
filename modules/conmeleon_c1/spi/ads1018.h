@@ -112,7 +112,7 @@ namespace CONMELEON {
        *
        * The constructor sets the default parameters to mBitsPerWord = 8
        */
-      CAds1018(const char *sDevice, unsigned int nSpeed, CONMELEON::ESpiMode enMode);
+      CAds1018(const char *sDevice, unsigned int nSpeed, ESpiMode enMode);
 
       /*! \fn EChannelConfig   getChannelConfig()
        * \brief reads the current channel configuration of the ADS1018

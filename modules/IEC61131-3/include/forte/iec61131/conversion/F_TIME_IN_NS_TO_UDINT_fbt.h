@@ -42,7 +42,7 @@ namespace forte::iec61131::conversion {
       void setInitialValues() override;
 
     public:
-      FORTE_F_TIME_IN_NS_TO_UDINT(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_TIME_IN_NS_TO_UDINT(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_TIME var_IN;
       CIEC_UDINT var_OUT;

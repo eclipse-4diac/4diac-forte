@@ -21,8 +21,7 @@
 template<size_t maxLength>
 class CIEC_STRING_FIXED final : public CIEC_STRING {
     static_assert(maxLength > 0, "Length must be larger than 0");
-    static_assert(maxLength <= CIEC_STRING::scmMaxStringLen,
-                  "Length must be smaller than CIEC_STRING::scmMaxStringLen");
+    static_assert(maxLength <= scmMaxStringLen, "Length must be smaller than CIEC_STRING::scmMaxStringLen");
 
   public:
     static constexpr size_t scmMaxStringLen = maxLength;

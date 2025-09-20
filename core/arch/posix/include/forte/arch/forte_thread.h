@@ -28,7 +28,7 @@
 /*! \ingroup posix_hal
  * \brief The thread implementation for the posix thread interface.
  */
-class CPosixThread : public forte::arch::CThreadBase<pthread_t> {
+class CPosixThread : public CThreadBase<pthread_t> {
   public:
     /*! \brief Constructor of the Thread class
      *

@@ -48,11 +48,11 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
     DECLARE_FIRMWARE_DATATYPE(ARRAY_DYNAMIC)
   public:
     using difference_type = std::ptrdiff_t;
-    using value_type = typename CIEC_ARRAY::value_type;
-    using pointer = typename CIEC_ARRAY::pointer;
-    using const_pointer = typename CIEC_ARRAY::const_pointer;
-    using reference = typename CIEC_ARRAY::reference;
-    using const_reference = typename CIEC_ARRAY::const_reference;
+    using value_type = value_type;
+    using pointer = pointer;
+    using const_pointer = const_pointer;
+    using reference = reference;
+    using const_reference = const_reference;
 
     using CIEC_ARRAY::at;
     using CIEC_ARRAY::operator[];
@@ -61,9 +61,9 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
     class iterator {
       public:
         using difference_type = std::ptrdiff_t;
-        using value_type = typename CIEC_ARRAY_DYNAMIC::value_type;
-        using pointer = typename CIEC_ARRAY_DYNAMIC::pointer;
-        using reference = typename CIEC_ARRAY_DYNAMIC::reference;
+        using value_type = value_type;
+        using pointer = pointer;
+        using reference = reference;
         using iterator_category = std::random_access_iterator_tag;
 
         constexpr iterator(size_t paElementSize, void *paData) : mElementSize(paElementSize), mData(paData) {
@@ -173,9 +173,9 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
     class const_iterator {
       public:
         using difference_type = std::ptrdiff_t;
-        using value_type = typename CIEC_ARRAY_DYNAMIC::value_type;
-        using pointer = typename CIEC_ARRAY_DYNAMIC::const_pointer;
-        using reference = typename CIEC_ARRAY_DYNAMIC::const_reference;
+        using value_type = value_type;
+        using pointer = const_pointer;
+        using reference = const_reference;
         using iterator_category = std::random_access_iterator_tag;
 
         constexpr const_iterator(size_t paElementSize, const void *paData) :
@@ -558,8 +558,8 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
 
     void setBounds(const CIEC_ARRAY &paArray) override;
 
-    [[nodiscard]] CIEC_ANY::EDataTypeID getElementDataTypeID() const override {
-      return mData != nullptr ? reinterpret_cast<CIEC_ANY *>(mData)->getDataTypeID() : CIEC_ANY::e_ANY;
+    [[nodiscard]] EDataTypeID getElementDataTypeID() const override {
+      return mData != nullptr ? reinterpret_cast<CIEC_ANY *>(mData)->getDataTypeID() : e_ANY;
     }
 
     [[nodiscard]] forte::StringId getElementTypeNameID() const override {
@@ -605,7 +605,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
 
     inline void clear() {
       if (mData) {
-        std::destroy_n(CIEC_ARRAY_DYNAMIC::begin(), mSize);
+        std::destroy_n(begin(), mSize);
       }
       operator delete(mData);
       mData = nullptr;

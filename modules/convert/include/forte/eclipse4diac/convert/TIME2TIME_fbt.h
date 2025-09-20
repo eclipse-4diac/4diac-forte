@@ -43,7 +43,7 @@ namespace forte::eclipse4diac::convert {
       void setInitialValues() override;
 
     public:
-      FORTE_TIME2TIME(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_TIME2TIME(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_TIME var_IN;
 

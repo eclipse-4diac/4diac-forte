@@ -45,7 +45,7 @@ namespace {
   };
 } // namespace
 
-FORTE_WORD2WORD::FORTE_WORD2WORD(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_WORD2WORD::FORTE_WORD2WORD(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_WORD),
     var_OUT(0_WORD),

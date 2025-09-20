@@ -35,7 +35,7 @@ namespace {
   };
 } // namespace
 
-FORTE_STEST_END::FORTE_STEST_END(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_STEST_END::FORTE_STEST_END(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId) {};
 
 void FORTE_STEST_END::executeEvent(TEventID paEIID, CEventChainExecutionThread *const) {

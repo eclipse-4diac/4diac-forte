@@ -28,7 +28,7 @@ int CForteGeneralArchitecture::initialize(int argc, char *argv[]) {
     return result;
   }
   forte::StartupHookRegistry::invoke(argc, argv);
-  CForteGeneralArchitecture::mInitialized = true;
+  mInitialized = true;
   return 0;
 }
 
@@ -40,7 +40,7 @@ int CForteGeneralArchitecture::deinitialize() {
   if (auto result = CForteSpecificArchitecture::deinitialize(); result != 0) {
     return result;
   }
-  CForteGeneralArchitecture::mInitialized = false;
+  mInitialized = false;
   return 0;
 }
 

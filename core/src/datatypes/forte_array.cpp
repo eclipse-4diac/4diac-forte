@@ -34,7 +34,7 @@ forte::StringId CIEC_ARRAY::getTypeNameID() const {
 }
 
 void CIEC_ARRAY::setValue(const CIEC_ANY &paValue) {
-  if (paValue.getDataTypeID() == CIEC_ANY::e_ARRAY) {
+  if (paValue.getDataTypeID() == e_ARRAY) {
     operator=(static_cast<const CIEC_ARRAY &>(paValue));
   }
 }

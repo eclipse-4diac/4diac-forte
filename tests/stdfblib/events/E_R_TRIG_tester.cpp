@@ -20,7 +20,7 @@ struct E_R_TRIG_TestFixture : public CFBTestFixtureBase {
 
     E_R_TRIG_TestFixture() : CFBTestFixtureBase("iec61499::events::E_R_TRIG"_STRID) {
       setInputData({&mInQI});
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_BOOL mInQI; // DATA INPUT

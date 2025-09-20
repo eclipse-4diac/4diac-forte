@@ -47,7 +47,7 @@ namespace {
 
 } // namespace
 
-FORTE_WagoBusAdapter::FORTE_WagoBusAdapter(forte::CFBContainer &paContainer,
+FORTE_WagoBusAdapter::FORTE_WagoBusAdapter(CFBContainer &paContainer,
                                            const SFBInterfaceSpec &paInterfaceSpec,
                                            const forte::StringId paInstanceNameId,
                                            TForteUInt8 paParentAdapterlistID) :
@@ -59,7 +59,7 @@ FORTE_WagoBusAdapter::FORTE_WagoBusAdapter(forte::CFBContainer &paContainer,
 }
 
 void FORTE_WagoBusAdapter::setInitialValues() {
-  forte::CAdapter::setInitialValues();
+  CAdapter::setInitialValues();
   var_QO = 0_BOOL;
   var_QI = 0_BOOL;
   var_MasterId = 0_UINT;
@@ -67,7 +67,7 @@ void FORTE_WagoBusAdapter::setInitialValues() {
 }
 
 FORTE_WagoBusAdapter_Plug::FORTE_WagoBusAdapter_Plug(forte::StringId paInstanceNameId,
-                                                     forte::CFBContainer &paContainer,
+                                                     CFBContainer &paContainer,
                                                      TForteUInt8 paParentAdapterlistID) :
     FORTE_WagoBusAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_INITO(*this, 0),
@@ -143,7 +143,7 @@ CDataConnection *FORTE_WagoBusAdapter_Plug::getDOConUnchecked(const TPortId paIn
 }
 
 FORTE_WagoBusAdapter_Socket::FORTE_WagoBusAdapter_Socket(forte::StringId paInstanceNameId,
-                                                         forte::CFBContainer &paContainer,
+                                                         CFBContainer &paContainer,
                                                          TForteUInt8 paParentAdapterlistID) :
     FORTE_WagoBusAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_INIT(*this, 0),

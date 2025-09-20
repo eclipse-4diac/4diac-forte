@@ -40,7 +40,7 @@ EMGMResponse checkForActionEquivalentState(const CFunctionBlock &paFB, const EMG
   return EMGMResponse::InvalidState;
 }
 
-CFBContainer::CFBContainer(forte::StringId paContInstanceName, CFBContainer &paParent) :
+CFBContainer::CFBContainer(StringId paContInstanceName, CFBContainer &paParent) :
     mContInstanceName(paContInstanceName),
     mParent(paParent) {
 }
@@ -92,9 +92,8 @@ void CFBContainer::getFullQualifiedApplicationInstanceName(TNameIdentifier &paRe
   paResult.push_back(getInstanceNameId());
 }
 
-EMGMResponse CFBContainer::createFB(const std::span<const forte::StringId> paNameList,
-                                    forte::StringId paTypeName,
-                                    std::string_view paTypeHash) {
+EMGMResponse
+CFBContainer::createFB(const std::span<const StringId> paNameList, StringId paTypeName, std::string_view paTypeHash) {
   if (paNameList.empty()) {
     return EMGMResponse::InvalidDst;
   }
@@ -112,8 +111,7 @@ EMGMResponse CFBContainer::createFB(const std::span<const forte::StringId> paNam
   return EMGMResponse::InvalidDst;
 }
 
-EMGMResponse
-CFBContainer::createFB(forte::StringId paInstanceNameId, forte::StringId paTypeName, std::string_view paTypeHash) {
+EMGMResponse CFBContainer::createFB(StringId paInstanceNameId, StringId paTypeName, std::string_view paTypeHash) {
   if (!isDynamicContainer()) {
     return EMGMResponse::InvalidDst;
   }
@@ -134,12 +132,12 @@ CFBContainer::createFB(forte::StringId paInstanceNameId, forte::StringId paTypeN
   return EMGMResponse::Ready;
 }
 
-EMGMResponse CFBContainer::deleteFB(const std::span<const forte::StringId> paNameList) {
+EMGMResponse CFBContainer::deleteFB(const std::span<const StringId> paNameList) {
   if (paNameList.empty()) {
     return EMGMResponse::NoSuchObject;
   }
 
-  forte::StringId childName = paNameList.front();
+  StringId childName = paNameList.front();
   auto childIt = getChildrenIterator(childName);
   if (isChild(childIt, childName)) {
     CFBContainer *child = *childIt;
@@ -162,7 +160,7 @@ EMGMResponse CFBContainer::deleteFB(const std::span<const forte::StringId> paNam
   return EMGMResponse::NoSuchObject;
 }
 
-CFunctionBlock *CFBContainer::getFB(forte::StringId paFBName) {
+CFunctionBlock *CFBContainer::getFB(StringId paFBName) {
   if (paFBName) {
     CFBContainer *child = getChild(paFBName);
     if (child != nullptr && child->isFB()) {
@@ -185,22 +183,21 @@ CFunctionBlock *CFBContainer::getFB(NameIterator &paNameListIt, NameIterator paN
   return isFB() ? static_cast<CFunctionBlock *>(this) : nullptr;
 }
 
-CFBContainer *CFBContainer::getChild(forte::StringId paName) {
+CFBContainer *CFBContainer::getChild(StringId paName) {
   TFBContainerList::iterator it = getChildrenIterator(paName);
   return isChild(it, paName) ? *it : nullptr;
 }
 
-CFBContainer::TFBContainerList::iterator CFBContainer::getChildrenIterator(forte::StringId paName) {
+CFBContainer::TFBContainerList::iterator CFBContainer::getChildrenIterator(StringId paName) {
   if (paName && !mChildren.empty()) {
-    return std::lower_bound(mChildren.begin(), mChildren.end(), paName,
-                            [](CFBContainer *container, forte::StringId containerName) {
-                              return container->getInstanceNameId() < containerName;
-                            });
+    return std::lower_bound(
+        mChildren.begin(), mChildren.end(), paName,
+        [](CFBContainer *container, StringId containerName) { return container->getInstanceNameId() < containerName; });
   }
   return mChildren.end();
 }
 
-CFBContainer *CFBContainer::findOrCreateContainer(forte::StringId paContainerName) {
+CFBContainer *CFBContainer::findOrCreateContainer(StringId paContainerName) {
   CFBContainer *retVal;
   if (mChildren.empty()) {
     retVal = new CFBContainer(paContainerName, *this);
@@ -231,22 +228,22 @@ EMGMResponse CFBContainer::changeExecutionState(EMGMCommandType paCommand) {
   return retVal;
 }
 
-CConnection *CFBContainer::getInputConnection(const std::span<const forte::StringId> paDstNameList) {
+CConnection *CFBContainer::getInputConnection(const std::span<const StringId> paDstNameList) {
   if (paDstNameList.empty()) {
     return nullptr;
   }
-  forte::StringId name = paDstNameList.front();
+  StringId name = paDstNameList.front();
   if (const auto child = getChild(name); child) {
     return child->getInputConnection(paDstNameList.subspan(1));
   }
   return nullptr;
 }
 
-CConnection::Wrapper CFBContainer::getOutputConnection(const std::span<const forte::StringId> paSrcNameList) {
+CConnection::Wrapper CFBContainer::getOutputConnection(const std::span<const StringId> paSrcNameList) {
   if (paSrcNameList.empty()) {
     return CConnection::Wrapper();
   }
-  forte::StringId name = paSrcNameList.front();
+  StringId name = paSrcNameList.front();
   if (const auto child = getChild(name); child) {
     return child->getOutputConnection(paSrcNameList.subspan(1));
   }

@@ -40,7 +40,7 @@ class PLCnextSlaveHandler : public forte::io::IOConfigFBMultiSlave {
     forte::CPlugPin<FORTE_PLCnextBusAdapter_Plug> var_BusAdapterOut;
     forte::CSocketPin<FORTE_PLCnextBusAdapter_Socket> var_BusAdapterIn;
 
-    const SlaveType slaveType = SlaveType::UnknownSlave;
+    const SlaveType slaveType = UnknownSlave;
 
     size_t imageSize = 0;
     size_t imageOffset = 0;
@@ -49,7 +49,7 @@ class PLCnextSlaveHandler : public forte::io::IOConfigFBMultiSlave {
     CSyncObject handleMutex;
 
     PLCnextSlaveHandler(int paType,
-                        forte::CFBContainer &paContainer,
+                        CFBContainer &paContainer,
                         const SFBInterfaceSpec *paInterfaceSpec,
                         const forte::StringId paInstanceNameId);
 

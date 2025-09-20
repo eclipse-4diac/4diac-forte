@@ -28,7 +28,7 @@ char COPC_UA_Event_Layer::smEventMessageProperty[] = "Message";
 char COPC_UA_Event_Layer::smEventSourceProperty[] = "SourceName";
 
 namespace {
-  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<COPC_UA_Event_Layer> entry("ua_ev"_STRID);
+  [[maybe_unused]] const ComLayerManager::EntryImpl<COPC_UA_Event_Layer> entry("ua_ev"_STRID);
 }
 
 COPC_UA_Event_Layer::COPC_UA_Event_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
@@ -90,7 +90,7 @@ EComResponse COPC_UA_Event_Layer::processInterrupt() {
   return e_ProcessDataOk;
 }
 
-forte::com_infra::EComResponse COPC_UA_Event_Layer::createOPCUAEvent(UA_Server *paServer) {
+EComResponse COPC_UA_Event_Layer::createOPCUAEvent(UA_Server *paServer) {
   if (addNewEventType(paServer, mEventTypeNode, mEventTypeName) != UA_STATUSCODE_GOOD) {
     DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to create OPC UA Event %s.\n", mEventTypeName.c_str());
     return e_InitTerminated;

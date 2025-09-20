@@ -37,7 +37,7 @@ namespace forte::eclipse4diac::utils {
       void setInitialValues() override;
 
     public:
-      FORTE_GetInstancePath(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_GetInstancePath(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_CHAR var_Sep;
 

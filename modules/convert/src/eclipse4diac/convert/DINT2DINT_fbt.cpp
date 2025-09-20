@@ -45,7 +45,7 @@ namespace {
   };
 } // namespace
 
-FORTE_DINT2DINT::FORTE_DINT2DINT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_DINT2DINT::FORTE_DINT2DINT(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_DINT),
     var_OUT(0_DINT),

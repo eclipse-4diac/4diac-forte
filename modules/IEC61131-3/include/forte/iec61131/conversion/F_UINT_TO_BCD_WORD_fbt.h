@@ -44,7 +44,7 @@ namespace forte::iec61131::conversion {
       void setInitialValues() override;
 
     public:
-      FORTE_F_UINT_TO_BCD_WORD(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_UINT_TO_BCD_WORD(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_UINT var_IN;
 

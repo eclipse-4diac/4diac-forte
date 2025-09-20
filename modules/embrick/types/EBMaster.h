@@ -42,7 +42,7 @@ class FORTE_EBMaster final : public forte::io::IOConfigFBMultiMaster {
     void onStartup(CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_EBMaster(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    FORTE_EBMaster(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_UINT var_BusInterface;

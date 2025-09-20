@@ -41,7 +41,7 @@ namespace forte::iec61131::charString {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_F_CONCAT_DATE_TOD(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_CONCAT_DATE_TOD(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_DATE var_IN1;
       CIEC_TIME_OF_DAY var_IN2;

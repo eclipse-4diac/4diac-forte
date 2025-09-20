@@ -21,7 +21,7 @@ class COPC_UA_HandlerAbstract;
 
 class COPC_UA_Event_Layer : public forte::com_infra::CComLayer {
   public:
-    COPC_UA_Event_Layer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paComFB);
+    COPC_UA_Event_Layer(CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paComFB);
 
     ~COPC_UA_Event_Layer() override;
 

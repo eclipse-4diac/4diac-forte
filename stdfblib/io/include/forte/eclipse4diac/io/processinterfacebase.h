@@ -18,7 +18,7 @@
 
 class CProcessInterfaceBase : public CEventSourceFB {
   public:
-    CProcessInterfaceBase(forte::CFBContainer &paContainer,
+    CProcessInterfaceBase(CFBContainer &paContainer,
                           const SFBInterfaceSpec &paInterfaceSpec,
                           const forte::StringId paInstanceNameId) :
         CEventSourceFB(paContainer, paInterfaceSpec, paInstanceNameId) {

@@ -56,7 +56,7 @@ namespace {
 
 DEFINE_ADAPTER_TYPE(FORTE_EBBusAdapter, "EBBusAdapter"_STRID)
 
-FORTE_EBBusAdapter::FORTE_EBBusAdapter(forte::CFBContainer &paContainer,
+FORTE_EBBusAdapter::FORTE_EBBusAdapter(CFBContainer &paContainer,
                                        const SFBInterfaceSpec &paInterfaceSpec,
                                        const forte::StringId paInstanceNameId,
                                        TForteUInt8 paParentAdapterlistID) :
@@ -69,7 +69,7 @@ void FORTE_EBBusAdapter::setInitialValues() {
 }
 
 FORTE_EBBusAdapter_Plug::FORTE_EBBusAdapter_Plug(forte::StringId paInstanceNameId,
-                                                 forte::CFBContainer &paContainer,
+                                                 CFBContainer &paContainer,
                                                  TForteUInt8 paParentAdapterlistID) :
     FORTE_EBBusAdapter(paContainer, scmFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_INITO(*this, 0),
@@ -138,7 +138,7 @@ FORTE_EBBusAdapter_Socket *FORTE_EBBusAdapter_Plug::getSocket() {
 }
 
 FORTE_EBBusAdapter_Socket::FORTE_EBBusAdapter_Socket(forte::StringId paInstanceNameId,
-                                                     forte::CFBContainer &paContainer,
+                                                     CFBContainer &paContainer,
                                                      TForteUInt8 paParentAdapterlistID) :
     FORTE_EBBusAdapter(paContainer, scmFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_QO(nullptr),

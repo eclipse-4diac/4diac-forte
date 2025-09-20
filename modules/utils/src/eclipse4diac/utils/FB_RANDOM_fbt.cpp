@@ -55,7 +55,7 @@ namespace {
   };
 } // namespace
 
-FORTE_FB_RANDOM::FORTE_FB_RANDOM(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_FB_RANDOM::FORTE_FB_RANDOM(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_SEED(0_UINT),
     var_VAL(0_REAL),

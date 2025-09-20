@@ -42,7 +42,7 @@ class COPC_UA_Layer : public forte::com_infra::CComLayer {
      * @param paUpperLayer
      * @param paComFB
      */
-    COPC_UA_Layer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paComFB);
+    COPC_UA_Layer(CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paComFB);
 
     /**
      * Class destructor

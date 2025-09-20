@@ -73,7 +73,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TRAIN::FORTE_E_TRAIN(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_E_TRAIN::FORTE_E_TRAIN(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_CTR("CTR"_STRID, *this),
     fb_GATE("GATE"_STRID, *this),

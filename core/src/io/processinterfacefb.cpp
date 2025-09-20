@@ -32,9 +32,9 @@ const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDirectionInput(
     "Mapped invalid direction. An I block requires an input handle."_STRING);
 const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDataType("Mapped invalid data type."_STRING);
 
-CProcessInterfaceFB::CProcessInterfaceFB(forte::CFBContainer &paContainer,
+CProcessInterfaceFB::CProcessInterfaceFB(CFBContainer &paContainer,
                                          const SFBInterfaceSpec &paInterfaceSpec,
-                                         const forte::StringId paInstanceNameId) :
+                                         const StringId paInstanceNameId) :
     CEventSourceFB(paContainer, paInterfaceSpec, paInstanceNameId),
     IOObserver(),
     var_QI(0_BOOL),
@@ -97,9 +97,9 @@ CProcessInterfaceFB::~CProcessInterfaceFB() {
 void CProcessInterfaceFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
   if (paEIID == scmEventINITID) {
     if (var_QI) {
-      var_QO = CProcessInterfaceFB::initialise(paECET);
+      var_QO = initialise(paECET);
     } else {
-      var_QO = CProcessInterfaceFB::deinitialise();
+      var_QO = deinitialise();
     }
     sendOutputEvent(scmEventINITOID, paECET);
   }

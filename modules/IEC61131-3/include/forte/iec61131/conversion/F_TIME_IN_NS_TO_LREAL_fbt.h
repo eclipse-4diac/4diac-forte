@@ -44,7 +44,7 @@ namespace forte::iec61131::conversion {
       void setInitialValues() override;
 
     public:
-      FORTE_F_TIME_IN_NS_TO_LREAL(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_TIME_IN_NS_TO_LREAL(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_TIME var_IN;
 

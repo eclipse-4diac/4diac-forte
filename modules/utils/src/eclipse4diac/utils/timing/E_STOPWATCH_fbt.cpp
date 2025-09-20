@@ -55,7 +55,7 @@ namespace {
   const auto cInternalsNames = std::array{"startTime"_STRID};
 } // namespace
 
-FORTE_E_STOPWATCH::FORTE_E_STOPWATCH(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_E_STOPWATCH::FORTE_E_STOPWATCH(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
     conn_EO(*this, 0),
     conn_ETO(*this, 1),

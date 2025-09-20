@@ -42,7 +42,7 @@ namespace forte::eclipse4diac::utils {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_GET_STRUCT_VALUE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_GET_STRUCT_VALUE(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_ANY_VARIANT var_in_struct;
       CIEC_STRING var_member;

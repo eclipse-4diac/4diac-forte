@@ -127,7 +127,7 @@ void CIEC_TIME::toString(std::string &paValue) const {
   TValueType timeValNano = static_cast<TValueType>(*this);
 
   //  generate the correct string for the min value
-  if (timeValNano == std::numeric_limits<CIEC_TIME::TValueType>::min()) {
+  if (timeValNano == std::numeric_limits<TValueType>::min()) {
     paValue += MIN_TIME_VALUE;
     return;
   }

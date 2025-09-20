@@ -51,7 +51,7 @@ namespace {
 } // namespace
 
 FORTE_signalprocessing__SCALE_LIM::FORTE_signalprocessing__SCALE_LIM(const forte::StringId paInstanceNameId,
-                                                                     forte::CFBContainer &paContainer) :
+                                                                     CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),

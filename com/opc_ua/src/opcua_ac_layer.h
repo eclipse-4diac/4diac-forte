@@ -21,7 +21,7 @@ class CActionInfo;
 
 class COPC_UA_AC_Layer : public COPC_UA_Layer {
   public:
-    COPC_UA_AC_Layer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paComFB);
+    COPC_UA_AC_Layer(CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paComFB);
 
     ~COPC_UA_AC_Layer() override;
 

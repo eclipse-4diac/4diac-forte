@@ -45,7 +45,7 @@ class FORTE_EBBusAdapter : public forte::io::IOConfigFBMultiAdapter {
     }
 
   protected:
-    FORTE_EBBusAdapter(forte::CFBContainer &paContainer,
+    FORTE_EBBusAdapter(CFBContainer &paContainer,
                        const SFBInterfaceSpec &paInterfaceSpec,
                        const forte::StringId paInstanceNameId,
                        TForteUInt8 paParentAdapterlistID);
@@ -56,7 +56,7 @@ class FORTE_EBBusAdapter_Socket;
 class FORTE_EBBusAdapter_Plug final : public FORTE_EBBusAdapter {
   public:
     FORTE_EBBusAdapter_Plug(forte::StringId paInstanceNameId,
-                            forte::CFBContainer &paContainer,
+                            CFBContainer &paContainer,
                             TForteUInt8 paParentAdapterlistID);
     ~FORTE_EBBusAdapter_Plug() override = default;
 
@@ -86,7 +86,7 @@ class FORTE_EBBusAdapter_Plug final : public FORTE_EBBusAdapter {
 class FORTE_EBBusAdapter_Socket final : public FORTE_EBBusAdapter {
   public:
     FORTE_EBBusAdapter_Socket(forte::StringId paInstanceNameId,
-                              forte::CFBContainer &paContainer,
+                              CFBContainer &paContainer,
                               TForteUInt8 paParentAdapterlistID);
     ~FORTE_EBBusAdapter_Socket() override = default;
 

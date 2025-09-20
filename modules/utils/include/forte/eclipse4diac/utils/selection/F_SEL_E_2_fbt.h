@@ -41,7 +41,7 @@ namespace forte::eclipse4diac::utils::selection {
       void setInitialValues() override;
 
     public:
-      FORTE_F_SEL_E_2(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_SEL_E_2(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_ANY_VARIANT var_IN0;
       CIEC_ANY_VARIANT var_IN1;

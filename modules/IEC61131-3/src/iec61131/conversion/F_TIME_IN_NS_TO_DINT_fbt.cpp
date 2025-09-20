@@ -53,8 +53,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_TIME_IN_NS_TO_DINT::FORTE_F_TIME_IN_NS_TO_DINT(const forte::StringId paInstanceNameId,
-                                                       forte::CFBContainer &paContainer) :
+FORTE_F_TIME_IN_NS_TO_DINT::FORTE_F_TIME_IN_NS_TO_DINT(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CNF(*this, 0),
     conn_IN(nullptr),

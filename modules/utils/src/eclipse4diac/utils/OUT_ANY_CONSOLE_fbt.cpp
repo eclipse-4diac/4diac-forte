@@ -45,7 +45,7 @@ namespace {
   };
 } // namespace
 
-FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(false_BOOL),
     var_LABEL(""_STRING),

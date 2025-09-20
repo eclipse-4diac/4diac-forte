@@ -22,7 +22,7 @@ using namespace forte::iec61499::events;
 
 DEFINE_FIRMWARE_FB(FORTE_E_DELAY, "iec61499::events::E_DELAY"_STRID)
 
-FORTE_E_DELAY::FORTE_E_DELAY(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_E_DELAY::FORTE_E_DELAY(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CTimedFB(paInstanceNameId, paContainer) {
 }
 

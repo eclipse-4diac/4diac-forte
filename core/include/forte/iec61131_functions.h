@@ -1376,7 +1376,7 @@ T func_TOUPPER(const T &paIn) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "Operand must be of type ANY_STRING!");
   if constexpr (std::is_base_of_v<CIEC_STRING, T>) {
     CIEC_STRING::storage_type buffer(paIn.getStorage());
-    std::transform(buffer.begin(), buffer.end(), buffer.begin(), ::toupper);
+    std::transform(buffer.begin(), buffer.end(), buffer.begin(), toupper);
     return CIEC_STRING(buffer);
   } else {
     T temp(paIn);
@@ -1393,7 +1393,7 @@ T func_TOLOWER(const T &paIn) {
   static_assert(std::is_base_of_v<CIEC_ANY_STRING, T>, "Operand must be of type ANY_STRING!");
   if constexpr (std::is_base_of_v<CIEC_STRING, T>) {
     CIEC_STRING::storage_type buffer(paIn.getStorage());
-    std::transform(buffer.begin(), buffer.end(), buffer.begin(), ::tolower);
+    std::transform(buffer.begin(), buffer.end(), buffer.begin(), tolower);
     return CIEC_STRING(buffer);
   } else {
     T temp(paIn);

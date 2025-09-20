@@ -45,7 +45,7 @@ namespace {
   };
 } // namespace
 
-FORTE_TIME2TIME::FORTE_TIME2TIME(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_TIME2TIME::FORTE_TIME2TIME(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_TIME),
     var_OUT(0_TIME),

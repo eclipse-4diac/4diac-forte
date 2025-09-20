@@ -20,11 +20,11 @@ class PLC01A1Controller : public forte::io::IODevicePollController {
   public:
     explicit PLC01A1Controller(CDeviceExecution &paDeviceExecution);
 
-    struct Config : forte::io::IODeviceController::Config {
+    struct Config : IODeviceController::Config {
         unsigned int mUpdateInterval; //!< Sets the frequency for the data update cycle. The default value is 25 Hz.
     };
 
-    class HandleDescriptor : public forte::io::IODeviceController::HandleDescriptor {
+    class HandleDescriptor : public IODeviceController::HandleDescriptor {
       public:
         uint8_t mOffset;
         uint8_t mPosition;
@@ -33,17 +33,17 @@ class PLC01A1Controller : public forte::io::IODevicePollController {
                          forte::io::IOMapper::Direction paDirection,
                          uint8_t paOffset,
                          uint8_t paPosition) :
-            forte::io::IODeviceController::HandleDescriptor(paId, paDirection),
+            IODeviceController::HandleDescriptor(paId, paDirection),
             mOffset(paOffset),
             mPosition(paPosition) {
         }
     };
 
-    void setConfig(struct forte::io::IODeviceController::Config *paConfig);
+    void setConfig(struct IODeviceController::Config *paConfig);
 
     virtual bool isHandleValueEqual(forte::io::IOHandle &paHandle);
 
-    forte::io::IOHandle *initHandle(forte::io::IODeviceController::HandleDescriptor &paHandleDescriptor);
+    forte::io::IOHandle *initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor);
 
   protected:
     const char *init();

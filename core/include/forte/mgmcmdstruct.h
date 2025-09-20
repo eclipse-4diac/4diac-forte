@@ -48,7 +48,7 @@ namespace forte {
        * should be exectued in is the target.
        * FIXME if more than the resource should be supported (e.g. composite FBs) the type needs to be changed .
        */
-      forte::StringId mDestination;
+      StringId mDestination;
 
       /*!\brief The first parameter of the command e.g. the FB name to create or the src of an connection.
        *

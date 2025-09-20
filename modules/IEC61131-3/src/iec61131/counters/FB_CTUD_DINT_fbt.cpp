@@ -46,7 +46,7 @@ using namespace forte::iec61131::counters;
 
 DEFINE_FIRMWARE_FB(FORTE_FB_CTUD_DINT, "iec61131::counters::FB_CTUD_DINT"_STRID)
 
-FORTE_FB_CTUD_DINT::FORTE_FB_CTUD_DINT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_FB_CTUD_DINT::FORTE_FB_CTUD_DINT(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_CU(0_BOOL),
     var_CD(0_BOOL),

@@ -23,9 +23,9 @@ namespace forte::io {
 
   class IOConfigFBMultiMaster : public IOConfigFBController {
     public:
-      IOConfigFBMultiMaster(forte::CFBContainer &paContainer,
+      IOConfigFBMultiMaster(CFBContainer &paContainer,
                             const SFBInterfaceSpec &paInterfaceSpec,
-                            const forte::StringId paInstanceNameId);
+                            const StringId paInstanceNameId);
 
       static IOConfigFBMultiMaster *getMasterById(TForteUInt16 paId);
 

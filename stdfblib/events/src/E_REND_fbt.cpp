@@ -44,7 +44,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_REND::FORTE_E_REND(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_E_REND::FORTE_E_REND(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO(*this, 0) {
 }

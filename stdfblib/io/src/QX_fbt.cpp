@@ -37,7 +37,7 @@ namespace {
   };
 } // namespace
 
-FORTE_QX::FORTE_QX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_QX::FORTE_QX(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     CProcessInterface(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_CNF(*this, 1),

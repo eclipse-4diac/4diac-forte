@@ -143,7 +143,7 @@ class CIEC_LREAL final : public CIEC_ANY_REAL {
     }
 
     EDataTypeID getDataTypeID() const override {
-      return CIEC_ANY::e_LREAL;
+      return e_LREAL;
     }
 
     void setValue(const CIEC_ANY &paValue) override;
@@ -173,7 +173,7 @@ class CIEC_LREAL final : public CIEC_ANY_REAL {
     void toString(std::string &paTargetBuf) const override;
 
     [[nodiscard]] bool equals(const CIEC_ANY &paOther) const override {
-      if (paOther.getDataTypeID() == CIEC_ANY::e_LREAL) {
+      if (paOther.getDataTypeID() == e_LREAL) {
         return getTDFLOAT() == static_cast<const CIEC_LREAL &>(paOther).getTDFLOAT();
       }
       return false;
@@ -205,7 +205,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_LREAL> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_LREAL;
-      static const forte::StringId scmDataTypeName;
+      static const StringId scmDataTypeName;
   };
 } // namespace forte
 

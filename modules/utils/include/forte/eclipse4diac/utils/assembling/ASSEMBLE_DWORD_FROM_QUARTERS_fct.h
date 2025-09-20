@@ -42,7 +42,7 @@ class FORTE_ASSEMBLE_DWORD_FROM_QUARTERS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_ASSEMBLE_DWORD_FROM_QUARTERS(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    FORTE_ASSEMBLE_DWORD_FROM_QUARTERS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
     CIEC_BYTE var_QUARTER_BYTE_00;
     CIEC_BYTE var_QUARTER_BYTE_01;

@@ -58,7 +58,7 @@ void GEN_CSV_WRITER::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
   }
 }
 
-GEN_CSV_WRITER::GEN_CSV_WRITER(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+GEN_CSV_WRITER::GEN_CSV_WRITER(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_CNF(*this, 1),
@@ -101,7 +101,7 @@ bool GEN_CSV_WRITER::createInterfaceSpec(const char *paConfigString, SFBInterfac
   const char *acPos = strrchr(paConfigString, '_');
   if (nullptr != acPos) {
     acPos++;
-    size_t numGenDIs = static_cast<TPortId>(forte::util::strtoul(acPos, nullptr, 10));
+    size_t numGenDIs = static_cast<TPortId>(util::strtoul(acPos, nullptr, 10));
     mDataInputNames.reserve(numGenDIs + 2);
     mDataInputNames.emplace_back("QI"_STRID);
     mDataInputNames.emplace_back("FILE_NAME"_STRID);

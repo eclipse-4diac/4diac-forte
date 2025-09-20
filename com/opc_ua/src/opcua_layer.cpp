@@ -36,7 +36,7 @@ using namespace forte::com_infra;
 using namespace forte::literals;
 
 namespace {
-  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<COPC_UA_Layer> entry("opc_ua"_STRID);
+  [[maybe_unused]] const ComLayerManager::EntryImpl<COPC_UA_Layer> entry("opc_ua"_STRID);
 }
 
 COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
@@ -66,9 +66,9 @@ EComResponse COPC_UA_Layer::openConnection(char *paLayerParameter) {
       }
     } else {
       bool isPublisher;
-      if (getCommFB()->getComServiceType() == EComServiceType::e_Publisher) {
+      if (getCommFB()->getComServiceType() == e_Publisher) {
         isPublisher = true;
-      } else if (getCommFB()->getComServiceType() == EComServiceType::e_Subscriber) {
+      } else if (getCommFB()->getComServiceType() == e_Subscriber) {
         isPublisher = false;
       } else {
         return response;

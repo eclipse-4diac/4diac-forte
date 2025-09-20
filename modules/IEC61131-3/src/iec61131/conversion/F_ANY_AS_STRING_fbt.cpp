@@ -45,7 +45,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_ANY_AS_STRING::FORTE_F_ANY_AS_STRING(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_F_ANY_AS_STRING::FORTE_F_ANY_AS_STRING(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CNF(*this, 0),
     conn_IN(nullptr),

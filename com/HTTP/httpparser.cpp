@@ -75,10 +75,10 @@ bool CHttpParser::parseResponse(std::string &paBody, std::string &paResponseCode
   return false;
 }
 
-bool forte::com_infra::CHttpParser::parseGetRequest(std::string &paPath,
-                                                    std::vector<std::string> &paParameterNames,
-                                                    std::vector<std::string> &paParameterValues,
-                                                    char *paData) {
+bool CHttpParser::parseGetRequest(std::string &paPath,
+                                  std::vector<std::string> &paParameterNames,
+                                  std::vector<std::string> &paParameterValues,
+                                  char *paData) {
   if (0 == strncmp(paData, "GET ", 4)) {
     paData = paData + 4;
 
@@ -104,7 +104,7 @@ bool forte::com_infra::CHttpParser::parseGetRequest(std::string &paPath,
   return true;
 }
 
-bool forte::com_infra::CHttpParser::parsePutPostRequest(std::string &paPath, std::string &paContent, char *paData) {
+bool CHttpParser::parsePutPostRequest(std::string &paPath, std::string &paContent, char *paData) {
   if (0 == strncmp(paData, "PUT ", 4)) {
     paData += sizeof("PUT ") - 1;
   } else if (0 == strncmp(paData, "POST ", 5)) {
@@ -134,7 +134,7 @@ bool forte::com_infra::CHttpParser::parsePutPostRequest(std::string &paPath, std
   return true;
 }
 
-CHttpComLayer::ERequestType forte::com_infra::CHttpParser::getTypeOfRequest(const char *paRequest) {
+CHttpComLayer::ERequestType CHttpParser::getTypeOfRequest(const char *paRequest) {
   if (0 == strncmp(paRequest, "GET ", 4)) {
     return CHttpComLayer::e_GET;
   } else if (0 == strncmp(paRequest, "PUT ", 4)) {
@@ -147,10 +147,10 @@ CHttpComLayer::ERequestType forte::com_infra::CHttpParser::getTypeOfRequest(cons
   }
 }
 
-void forte::com_infra::CHttpParser::createResponse(std::string &paDest,
-                                                   const std::string &paResult,
-                                                   const std::string &paContentType,
-                                                   const std::string &paBody) {
+void CHttpParser::createResponse(std::string &paDest,
+                                 const std::string &paResult,
+                                 const std::string &paContentType,
+                                 const std::string &paBody) {
   paDest = paResult;
   addBodyToRequest(paBody, paContentType, paDest);
 }
@@ -208,9 +208,9 @@ bool CHttpParser::getHttpResponseCode(std::string &paDest, char *paSrc) {
   }
 }
 
-unsigned int forte::com_infra::CHttpParser::parseGETParameters(char *paParameters,
-                                                               std::vector<std::string> &paParameterNames,
-                                                               std::vector<std::string> &paParameterValues) {
+unsigned int CHttpParser::parseGETParameters(char *paParameters,
+                                             std::vector<std::string> &paParameterNames,
+                                             std::vector<std::string> &paParameterValues) {
   paParameterNames.clear();
   paParameterValues.clear();
 

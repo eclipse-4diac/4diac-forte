@@ -56,8 +56,7 @@ namespace CONMELEON {
     m_ConversionDuration = 625;
   }
 
-  CAds1018::CAds1018(const char *sDevice, unsigned int nSpeed, CONMELEON::ESpiMode enMode) :
-      CSpiDevice(sDevice, nSpeed, enMode) {
+  CAds1018::CAds1018(const char *sDevice, unsigned int nSpeed, ESpiMode enMode) : CSpiDevice(sDevice, nSpeed, enMode) {
 
     m_ConfigRegister[0] = 0x05; // MSB
     m_ConfigRegister[1] = 0x8B; // LSB
@@ -170,7 +169,7 @@ namespace CONMELEON {
 
       // we write the configuration register first without reading back anything, to trigger a single shot conversion if
       // necessary
-      if (CSpiDevice::write(TX, 4)) {
+      if (write(TX, 4)) {
 
         // wait until the conversion is finished
         usleep(m_ConversionDuration);
@@ -180,7 +179,7 @@ namespace CONMELEON {
         TX[2] = TX[0];
 
         // now we can read something back, data will be in the first two bytes MSB first
-        if (CSpiDevice::transfer(TX, RX, 4)) {
+        if (transfer(TX, RX, 4)) {
 
           m_DataRegister[0] = RX[0];
           m_DataRegister[1] = RX[1];

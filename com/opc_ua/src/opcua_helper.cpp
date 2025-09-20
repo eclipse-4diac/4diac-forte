@@ -267,10 +267,10 @@ size_t COPC_UA_Helper::convertStructFromOPCUAType(void const *const paSrc, CIEC_
 
 void COPC_UA_Helper::fillVariant(UA_Variant &paVariant, const CIEC_ANY &paDataSource) {
   UA_Variant_init(&paVariant);
-  paVariant.type = COPC_UA_Helper::getOPCUATypeFromAny(paDataSource);
+  paVariant.type = getOPCUATypeFromAny(paDataSource);
   void *varValue = UA_new(paVariant.type);
   UA_init(varValue, paVariant.type);
-  COPC_UA_Helper::convertToOPCUAType(paDataSource, varValue);
+  convertToOPCUAType(paDataSource, varValue);
   UA_Variant_setScalarCopy(&paVariant, varValue, paVariant.type);
   paVariant.storageType = UA_VARIANT_DATA;
   UA_delete(varValue, paVariant.type);

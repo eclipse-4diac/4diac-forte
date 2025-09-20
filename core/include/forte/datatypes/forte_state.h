@@ -62,7 +62,7 @@ class CIEC_STATE final : public CIEC_ANY_INT {
     }
 
     EDataTypeID getDataTypeID() const override {
-      return CIEC_ANY::e_UINT;
+      return e_UINT;
     }
 };
 

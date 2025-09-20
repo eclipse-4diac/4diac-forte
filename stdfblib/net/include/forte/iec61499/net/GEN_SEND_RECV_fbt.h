@@ -16,7 +16,7 @@
 #include "forte/com/fb.h"
 
 namespace forte::iec61499::net {
-  class GEN_SEND_RECV : public forte::com::CommunicationFB {
+  class GEN_SEND_RECV : public com::CommunicationFB {
       DECLARE_GENERIC_FIRMWARE_FB(GEN_SEND_RECV)
 
     public:
@@ -32,7 +32,7 @@ namespace forte::iec61499::net {
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *paECET) override;
 
-      GEN_SEND_RECV(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      GEN_SEND_RECV(StringId paInstanceNameId, CFBContainer &paContainer);
 
       ~GEN_SEND_RECV() override = default;
 

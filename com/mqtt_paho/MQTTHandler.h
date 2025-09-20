@@ -60,7 +60,7 @@ class MQTTHandler : public CExternalEventHandler, public RegisterExternalEventHa
     static CSyncObject smMQTTMutex;
     static const int smSleepTime = 5000;
 
-    static forte::arch::CSemaphore mStateSemaphore;
+    static CSemaphore mStateSemaphore;
     static bool mIsSemaphoreEmpty;
 
     std::vector<std::shared_ptr<CMQTTClient>> mClients;

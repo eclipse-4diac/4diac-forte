@@ -85,7 +85,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED {
     void reset() override;
 
     EDataTypeID getDataTypeID() const final {
-      return CIEC_ANY::e_STRUCT;
+      return e_STRUCT;
     }
 
     /*! \brief Converts array value to data type value
@@ -171,7 +171,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_STRUCT> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_STRUCT;
-      static constexpr forte::StringId scmDataTypeName{};
+      static constexpr StringId scmDataTypeName{};
   };
 } // namespace forte
 

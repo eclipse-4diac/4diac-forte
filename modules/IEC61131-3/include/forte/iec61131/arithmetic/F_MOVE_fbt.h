@@ -39,7 +39,7 @@ namespace forte::iec61131::arithmetic {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_F_MOVE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_MOVE(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_ANY_VARIANT var_IN;
       CIEC_ANY_VARIANT var_OUT;

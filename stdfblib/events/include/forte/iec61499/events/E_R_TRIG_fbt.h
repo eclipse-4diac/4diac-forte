@@ -32,8 +32,8 @@ namespace forte::iec61499::events {
       static const TEventID scmEventEIID = 0;
       static const TEventID scmEventEOID = 0;
 
-      forte::CInternalFB<FORTE_E_D_FF> fb_E_D_FF;
-      forte::CInternalFB<FORTE_E_SWITCH> fb_E_SWITCH;
+      CInternalFB<FORTE_E_D_FF> fb_E_D_FF;
+      CInternalFB<FORTE_E_SWITCH> fb_E_SWITCH;
 
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;
@@ -41,7 +41,7 @@ namespace forte::iec61499::events {
       CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
     public:
-      FORTE_E_R_TRIG(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_R_TRIG(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CEventConnection conn_EO;
       CDataConnection *conn_QI;

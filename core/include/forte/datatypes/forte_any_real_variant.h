@@ -61,7 +61,7 @@ class CIEC_ANY_REAL_VARIANT : public CIEC_ANY_REAL, public TIecAnyRealVariantTyp
       unwrap().reset();
     }
 
-    bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
+    bool setDefaultValue(EDataTypeID paDataTypeId);
 
     [[nodiscard]] CIEC_ANY_REAL &unwrap() override;
 

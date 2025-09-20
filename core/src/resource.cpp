@@ -255,7 +255,7 @@ namespace {
 
 #endif // FORTE_DYNAMIC_TYPE_LOAD
 
-CResource::CResource(forte::CFBContainer &paDevice,
+CResource::CResource(CFBContainer &paDevice,
                      const SFBInterfaceSpec &paInterfaceSpec,
                      const forte::StringId paInstanceNameId) :
     CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId),

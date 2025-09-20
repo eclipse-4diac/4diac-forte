@@ -76,7 +76,7 @@ template<typename... RD>
 class CDeserTestMockCommFB : public forte::com_infra::CCommFB {
 
   public:
-    CDeserTestMockCommFB() : forte::com_infra::CCommFB({}, resource, forte::com_infra::e_Publisher) {
+    CDeserTestMockCommFB() : CCommFB({}, resource, forte::com_infra::e_Publisher) {
 
       mDONames.reserve(2 + sizeof...(RD));
       mDONames.push_back(scmInputTypes[0]);

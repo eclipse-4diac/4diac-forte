@@ -20,7 +20,7 @@ EmbrickSlaveHandle::EmbrickSlaveHandle(forte::io::IODeviceController *paControll
                                        CIEC_ANY::EDataTypeID paType,
                                        uint8_t paOffset,
                                        EmbrickSlaveHandler *paSlave) :
-    forte::io::IOHandle(paController, paDirection, paType),
+    IOHandle(paController, paDirection, paType),
     mOffset(paOffset),
     mSlave(paSlave),
     mUpdateMutex(&mSlave->mUpdateMutex) {
@@ -38,11 +38,11 @@ void EmbrickSlaveHandle::set(const CIEC_ANY &) {
 void EmbrickSlaveHandle::onObserver(forte::io::IOObserver *paObserver) {
   reset();
 
-  forte::io::IOHandle::onObserver(paObserver);
+  IOHandle::onObserver(paObserver);
 }
 
 void EmbrickSlaveHandle::dropObserver() {
-  forte::io::IOHandle::dropObserver();
+  IOHandle::dropObserver();
 
   reset();
 }

@@ -60,7 +60,7 @@ class CIEC_ANY_STRING_VARIANT : public CIEC_ANY_STRING, public TIecAnyStringVari
       unwrap().reset();
     }
 
-    bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
+    bool setDefaultValue(EDataTypeID paDataTypeId);
 
     [[nodiscard]] CIEC_ANY_STRING &unwrap() override;
 

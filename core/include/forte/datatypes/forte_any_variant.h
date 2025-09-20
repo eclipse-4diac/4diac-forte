@@ -126,7 +126,7 @@ class CIEC_ANY_VARIANT : public CIEC_ANY, public TIecAnyVariantType {
       unwrap().reset();
     }
 
-    bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
+    bool setDefaultValue(EDataTypeID paDataTypeId);
 
     [[nodiscard]] CIEC_ANY &unwrap() override;
 

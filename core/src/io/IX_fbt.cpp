@@ -21,6 +21,6 @@ using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_IX, "IX"_STRID)
 
-FORTE_IX::FORTE_IX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_IX::FORTE_IX(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     CInputFB<CIEC_BOOL>(paContainer, paInstanceNameId) {
 }

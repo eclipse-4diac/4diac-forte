@@ -19,16 +19,15 @@
 
 using namespace forte::internal;
 
-EMGMResponse CGatheringDataConnection::connect(CFunctionBlock &, std::span<const forte::StringId>) {
+EMGMResponse CGatheringDataConnection::connect(CFunctionBlock &, std::span<const StringId>) {
   return EMGMResponse::InvalidOperation; // can not explicitly connect gathering connection
 }
 
-EMGMResponse CGatheringDataConnection::connectToCFBInterface(CFunctionBlock &, std::span<const forte::StringId>) {
+EMGMResponse CGatheringDataConnection::connectToCFBInterface(CFunctionBlock &, std::span<const StringId>) {
   return EMGMResponse::InvalidOperation; // can not explicitly connect gathering connection
 }
 
-EMGMResponse CGatheringDataConnection::disconnect(CFunctionBlock &paDstFB,
-                                                  std::span<const forte::StringId> paDstPortNameId) {
+EMGMResponse CGatheringDataConnection::disconnect(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) {
   if (paDstPortNameId.size() != 1) {
     return EMGMResponse::NoSuchObject;
   }
@@ -59,7 +58,7 @@ void CGatheringDataConnection::readData(CIEC_ANY &) const {
   }
 }
 
-EMGMResponse CGatheringDataConnection::addMemberConnection(const std::span<const forte::StringId> paMemberName,
+EMGMResponse CGatheringDataConnection::addMemberConnection(const std::span<const StringId> paMemberName,
                                                            CDataConnection &paConnection) {
   if (CIEC_ANY *member = getValue().getMemberNamed(paMemberName)) {
     return addMemberConnection(member, &paConnection, paMemberName);
@@ -67,14 +66,14 @@ EMGMResponse CGatheringDataConnection::addMemberConnection(const std::span<const
   return EMGMResponse::NoSuchObject;
 }
 
-EMGMResponse CGatheringDataConnection::removeMemberConnection(const std::span<const forte::StringId> paMemberName) {
+EMGMResponse CGatheringDataConnection::removeMemberConnection(const std::span<const StringId> paMemberName) {
   if (const CIEC_ANY *member = getValue().getMemberNamed(paMemberName)) {
     return removeMemberConnection(member);
   }
   return EMGMResponse::NoSuchObject;
 }
 
-CDataConnection *CGatheringDataConnection::getMemberConnection(const std::span<const forte::StringId> paMemberName) {
+CDataConnection *CGatheringDataConnection::getMemberConnection(const std::span<const StringId> paMemberName) {
   if (const CIEC_ANY *member = getValue().getMemberNamed(paMemberName)) {
     return getMemberConnection(member);
   }
@@ -83,7 +82,7 @@ CDataConnection *CGatheringDataConnection::getMemberConnection(const std::span<c
 
 EMGMResponse CGatheringDataConnection::addMemberConnection(CIEC_ANY *paMember,
                                                            CDataConnection *paConnection,
-                                                           const std::span<const forte::StringId> paMemberName) {
+                                                           const std::span<const StringId> paMemberName) {
   if (std::ranges::find_if(mGatheringData, [paMember](const SGatheringData &paData) {
         return paData.mMember == paMember;
       }) != mGatheringData.end()) {

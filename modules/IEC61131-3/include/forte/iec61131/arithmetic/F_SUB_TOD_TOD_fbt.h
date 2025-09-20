@@ -40,7 +40,7 @@ namespace forte::iec61131::arithmetic {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_F_SUB_TOD_TOD(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_SUB_TOD_TOD(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_TIME_OF_DAY var_IN1;
       CIEC_TIME_OF_DAY var_IN2;

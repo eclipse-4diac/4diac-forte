@@ -42,7 +42,7 @@ namespace forte::iec61131::selection {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_F_SEL(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_SEL(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_BOOL var_G;
       CIEC_ANY_VARIANT var_IN0;

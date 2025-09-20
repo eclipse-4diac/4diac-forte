@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_DT_TO_DATE::FORTE_F_DT_TO_DATE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_F_DT_TO_DATE::FORTE_F_DT_TO_DATE(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_DATE_AND_TIME),
     var_OUT(0_DATE),

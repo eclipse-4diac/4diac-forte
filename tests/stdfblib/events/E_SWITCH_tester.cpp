@@ -21,7 +21,7 @@ struct E_SWITCH_TestFixture : public CFBTestFixtureBase {
 
     E_SWITCH_TestFixture() : CFBTestFixtureBase("iec61499::events::E_SWITCH"_STRID) {
       setInputData({&mInG});
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_BOOL mInG; // DATA INPUT

@@ -94,7 +94,7 @@ int CMQTTClient::onMqttMessageArrived(void *paContext, char *paTopicName, int, M
 
     for (MQTTComLayer *layer : client->mLayers) {
       if (layer->getTopicName() == paTopicName) {
-        if (forte::com_infra::e_Nothing != layer->recvData(pPayLoad, payLoadSize)) {
+        if (e_Nothing != layer->recvData(pPayLoad, payLoadSize)) {
           client->mHandler.startNewEventChain(layer);
         }
       }

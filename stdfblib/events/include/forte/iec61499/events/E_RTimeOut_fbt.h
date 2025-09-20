@@ -28,20 +28,20 @@ namespace forte::iec61499::events {
       DECLARE_FIRMWARE_FB(FORTE_E_RTimeOut)
 
     private:
-      forte::CInternalFB<FORTE_E_RDELAY> fb_DLY;
+      CInternalFB<FORTE_E_RDELAY> fb_DLY;
 
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;
       void setInitialValues() override;
 
     public:
-      FORTE_E_RTimeOut(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_RTimeOut(StringId paInstanceNameId, CFBContainer &paContainer);
 
-      forte::CSocketPin<FORTE_ARTimeOut_Socket> var_TimeOutSocket;
+      CSocketPin<FORTE_ARTimeOut_Socket> var_TimeOutSocket;
 
       CIEC_ANY *getDI(size_t) override;
       CIEC_ANY *getDO(size_t) override;
-      forte::ISocketPin *getSocketPinUnchecked(size_t) override;
+      ISocketPin *getSocketPinUnchecked(size_t) override;
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;

@@ -37,8 +37,8 @@ std::unique_ptr<CActionInfo> CActionInfo::getActionInfoFromParams(const char *pa
   size_t amountOfParameters = mainParser.parseParameters();
 
   if (scmMinimumAmounOfParameters <= amountOfParameters) {
-    CActionInfo::UA_ActionType action = CActionParser::getActionEnum(mainParser[CActionParser::eActionType]);
-    if (CActionInfo::eActionUnknown != action) {
+    UA_ActionType action = CActionParser::getActionEnum(mainParser[CActionParser::eActionType]);
+    if (eActionUnknown != action) {
 
       std::string endpoint;
       size_t startOfNodePairs = CActionParser::eNodePairs;
@@ -47,7 +47,7 @@ std::unique_ptr<CActionInfo> CActionInfo::getActionInfoFromParams(const char *pa
         startOfNodePairs--;
       }
 
-      if (CActionInfo::eCreateMethod == action) {
+      if (eCreateMethod == action) {
         retVal.reset(new CLocalMethodInfo(paLayer, endpoint));
       } else {
         retVal.reset(new CActionInfo(paLayer, action, endpoint));
@@ -272,9 +272,9 @@ bool CActionInfo::checkDeleteNodeAction(forte::com_infra::EComServiceType paFbTy
 // **************  ACTION PARSER ******************* //
 
 CActionInfo::UA_ActionType CActionInfo::CActionParser::getActionEnum(const char *paActionString) {
-  CActionInfo::UA_ActionType action = CActionInfo::eActionUnknown;
+  UA_ActionType action = eActionUnknown;
   for (size_t i = 0; i < eActionUnknown; i++) {
-    if (0 == strcmp(paActionString, CActionInfo::mActionNames[i])) {
+    if (0 == strcmp(paActionString, mActionNames[i])) {
       action = static_cast<UA_ActionType>(i);
       break;
     }
@@ -302,12 +302,12 @@ bool CActionInfo::CActionParser::handlePair(const char *paPair, std::vector<CNod
   std::string browsePathResult;
   UA_NodeId *nodeIdResult = nullptr;
   size_t noOfParameters = pairParser.parseParameters();
-  if (CActionParser::eMaxNumberOfPositions == noOfParameters) {
-    browsePathResult = std::string(pairParser[CActionParser::eBrowseName]);
-    nodeIdResult = parseNodeId(pairParser[CActionParser::eNodeId]);
+  if (eMaxNumberOfPositions == noOfParameters) {
+    browsePathResult = std::string(pairParser[eBrowseName]);
+    nodeIdResult = parseNodeId(pairParser[eNodeId]);
     retVal = nodeIdResult;
-  } else if (CActionParser::eMaxNumberOfPositions - 1 == noOfParameters) { // no NodeId was provided
-    browsePathResult = std::string(pairParser[CActionParser::eBrowseName]);
+  } else if (eMaxNumberOfPositions - 1 == noOfParameters) { // no NodeId was provided
+    browsePathResult = std::string(pairParser[eBrowseName]);
     retVal = true;
   } else {
     DEVLOG_ERROR("[OPC UA ACTION]: The pair %s doesn't have the proper format BROWSENAME,NODEID\n", paPair);
@@ -332,14 +332,14 @@ UA_NodeId *CActionInfo::CActionParser::parseNodeId(const char *paNodeIdString) {
   size_t numberOfParameters = mainParser.parseParameters();
 
   switch (numberOfParameters) {
-    case CActionParser::eMaxNumberOfNodeIdPositions: // Namespace is present
+    case eMaxNumberOfNodeIdPositions: // Namespace is present
       identifierPosition++;
       if (!parseNamespace(mainParser[0], *resultNodeId)) {
         somethingFailed = true;
         break;
       }
       // fall through
-    case CActionParser::eMaxNumberOfNodeIdPositions - 1: // NOSONAR
+    case eMaxNumberOfNodeIdPositions - 1: // NOSONAR
       if (!parseIdentifier(mainParser[identifierPosition], *resultNodeId)) {
         somethingFailed = true;
       }
@@ -370,19 +370,19 @@ bool CActionInfo::CActionParser::parseNamespace(const char *paNamespace, UA_Node
 
 bool CActionInfo::CActionParser::parseIdentifier(const char *paIdentifier, UA_NodeId &paResult) {
   CParameterParser identifierParser(paIdentifier, '='); //<identifiertype>=<identifier>
-  if (CActionParser::eMaxNumberOfNodeIdIdenfiertPositions == identifierParser.parseParameters()) {
-    if (0 == strcmp(identifierParser[CActionParser::eIdenfierType], "i")) { // numeric
+  if (eMaxNumberOfNodeIdIdenfiertPositions == identifierParser.parseParameters()) {
+    if (0 == strcmp(identifierParser[eIdenfierType], "i")) { // numeric
       paResult.identifierType = UA_NODEIDTYPE_NUMERIC;
       paResult.identifier.numeric =
-          static_cast<UA_UInt32>(forte::util::strtoul(identifierParser[CActionParser::eIdenfierValue], nullptr,
+          static_cast<UA_UInt32>(forte::util::strtoul(identifierParser[eIdenfierValue], nullptr,
                                                       10)); // TODO: should we check for return value here?
-    } else if (0 == strcmp(identifierParser[CActionParser::eIdenfierType], "s")) { // string
+    } else if (0 == strcmp(identifierParser[eIdenfierType], "s")) { // string
       paResult.identifierType = UA_NODEIDTYPE_STRING;
-      paResult.identifier.string = UA_String_fromChars(identifierParser[CActionParser::eIdenfierValue]);
-    } else if (0 == strcmp(identifierParser[CActionParser::eIdenfierType], "g")) { // GUID
+      paResult.identifier.string = UA_String_fromChars(identifierParser[eIdenfierValue]);
+    } else if (0 == strcmp(identifierParser[eIdenfierType], "g")) { // GUID
       DEVLOG_ERROR("[OPC UA ACTION]:GUID type is not yet implemented\n");
       return false;
-    } else if (0 == strcmp(identifierParser[CActionParser::eIdenfierType], "b")) { // byteString
+    } else if (0 == strcmp(identifierParser[eIdenfierType], "b")) { // byteString
       paResult.identifierType = UA_NODEIDTYPE_BYTESTRING;
       paResult.identifier.byteString = UA_BYTESTRING_ALLOC(identifierParser[CActionParser::eIdenfierValue]);
     } else {
@@ -407,6 +407,6 @@ CLocalMethodInfo::CLocalMethodInfo(COPC_UA_Layer &paLayer, const std::string &pa
 
 CLocalMethodInfo::~CLocalMethodInfo() = default;
 
-forte::arch::CSemaphore &CLocalMethodInfo::getResultReady() {
+CSemaphore &CLocalMethodInfo::getResultReady() {
   return mResultIsReady;
 }

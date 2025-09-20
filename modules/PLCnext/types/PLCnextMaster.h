@@ -44,7 +44,7 @@ class FORTE_PLCnextMaster final : public forte::io::IOConfigFBMultiMaster {
     void setConfig() override;
 
   public:
-    FORTE_PLCnextMaster(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    FORTE_PLCnextMaster(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_UINT var_SlaveUpdateInterval;

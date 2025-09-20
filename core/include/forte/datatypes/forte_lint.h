@@ -99,7 +99,7 @@ class CIEC_LINT final : public CIEC_ANY_SIGNED {
     }
 
     CIEC_LINT operator-() const {
-      return CIEC_LINT(-1 * static_cast<CIEC_LINT::TValueType>(*this));
+      return CIEC_LINT(-1 * static_cast<TValueType>(*this));
     }
 
     /*! \brief Converts CIEC_LINT to elementary byte
@@ -111,7 +111,7 @@ class CIEC_LINT final : public CIEC_ANY_SIGNED {
     }
 
     EDataTypeID getDataTypeID() const override {
-      return CIEC_ANY::e_LINT;
+      return e_LINT;
     }
 };
 
@@ -130,7 +130,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_LINT> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_LINT;
-      static const forte::StringId scmDataTypeName;
+      static const StringId scmDataTypeName;
   };
 } // namespace forte
 

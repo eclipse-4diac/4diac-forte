@@ -45,7 +45,7 @@ class FORTE_IORevPiBusAdapter : public forte::io::IOConfigFBMultiAdapter {
     ~FORTE_IORevPiBusAdapter() override = default;
 
   protected:
-    FORTE_IORevPiBusAdapter(forte::CFBContainer &paContainer,
+    FORTE_IORevPiBusAdapter(CFBContainer &paContainer,
                             const SFBInterfaceSpec &paInterfaceSpec,
                             const forte::StringId paInstanceNameId,
                             TForteUInt8 paParentAdapterlistID);
@@ -54,7 +54,7 @@ class FORTE_IORevPiBusAdapter : public forte::io::IOConfigFBMultiAdapter {
 class FORTE_IORevPiBusAdapter_Plug final : public FORTE_IORevPiBusAdapter {
   public:
     FORTE_IORevPiBusAdapter_Plug(forte::StringId paInstanceNameId,
-                                 forte::CFBContainer &paContainer,
+                                 CFBContainer &paContainer,
                                  TForteUInt8 paParentAdapterlistID);
     ~FORTE_IORevPiBusAdapter_Plug() override = default;
 
@@ -79,7 +79,7 @@ class FORTE_IORevPiBusAdapter_Plug final : public FORTE_IORevPiBusAdapter {
 class FORTE_IORevPiBusAdapter_Socket final : public FORTE_IORevPiBusAdapter {
   public:
     FORTE_IORevPiBusAdapter_Socket(forte::StringId paInstanceNameId,
-                                   forte::CFBContainer &paContainer,
+                                   CFBContainer &paContainer,
                                    TForteUInt8 paParentAdapterlistID);
     ~FORTE_IORevPiBusAdapter_Socket() override = default;
 

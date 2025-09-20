@@ -48,7 +48,7 @@ namespace forte::iec61499::events {
       void setInitialValues() override;
 
     public:
-      FORTE_E_D_FF(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_D_FF(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_BOOL var_D;
 

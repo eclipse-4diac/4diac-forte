@@ -292,5 +292,5 @@ CIEC_ANY::EDataTypeID CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(const forte::
   if (scm_StringToTypeId.find(paTypeNameId) != scm_StringToTypeId.end()) {
     return scm_StringToTypeId.at(paTypeNameId);
   }
-  return CIEC_ANY::e_ANY;
+  return e_ANY;
 }

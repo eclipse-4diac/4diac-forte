@@ -47,7 +47,7 @@ namespace {
   };
 } // namespace
 
-FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN_ARRAY(CIEC_ANY_VARIANT()),
     var_INDEX(0_UINT),

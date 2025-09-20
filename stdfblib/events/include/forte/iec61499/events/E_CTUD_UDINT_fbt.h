@@ -68,7 +68,7 @@ namespace forte::iec61499::events {
       void setInitialValues() override;
 
     public:
-      FORTE_E_CTUD_UDINT(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_CTUD_UDINT(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_UDINT var_PV;
 

@@ -44,7 +44,7 @@ class FORTE_WagoBusAdapter : public forte::io::IOConfigFBMultiAdapter {
     ~FORTE_WagoBusAdapter() override = default;
 
   protected:
-    FORTE_WagoBusAdapter(forte::CFBContainer &paContainer,
+    FORTE_WagoBusAdapter(CFBContainer &paContainer,
                          const SFBInterfaceSpec &paInterfaceSpec,
                          const forte::StringId paInstanceNameId,
                          TForteUInt8 paParentAdapterlistID);
@@ -53,7 +53,7 @@ class FORTE_WagoBusAdapter : public forte::io::IOConfigFBMultiAdapter {
 class FORTE_WagoBusAdapter_Plug final : public FORTE_WagoBusAdapter {
   public:
     FORTE_WagoBusAdapter_Plug(forte::StringId paInstanceNameId,
-                              forte::CFBContainer &paContainer,
+                              CFBContainer &paContainer,
                               TForteUInt8 paParentAdapterlistID);
     ~FORTE_WagoBusAdapter_Plug() override = default;
 
@@ -78,7 +78,7 @@ class FORTE_WagoBusAdapter_Plug final : public FORTE_WagoBusAdapter {
 class FORTE_WagoBusAdapter_Socket final : public FORTE_WagoBusAdapter {
   public:
     FORTE_WagoBusAdapter_Socket(forte::StringId paInstanceNameId,
-                                forte::CFBContainer &paContainer,
+                                CFBContainer &paContainer,
                                 TForteUInt8 paParentAdapterlistID);
     ~FORTE_WagoBusAdapter_Socket() override = default;
 

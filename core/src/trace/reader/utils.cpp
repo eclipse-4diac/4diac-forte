@@ -27,32 +27,32 @@
 
 namespace forte::trace::reader::utils {
 
-  CFunctionBlock *getFB(forte::CFBContainer *paContainer, const std::string &paFunctionBlockName) {
+  CFunctionBlock *getFB(CFBContainer *paContainer, const std::string &paFunctionBlockName) {
     if (paContainer == nullptr) {
       return nullptr;
     }
 
-    forte::TNameIdentifier id;
+    TNameIdentifier id;
 
     // copy from OPCUA_MGR with some modifications
     std::string fbNamePart(paFunctionBlockName);
     size_t index = fbNamePart.find_first_of(".");
     while (index != std::string::npos) {
-      id.push_back(forte::StringId::insert(fbNamePart.substr(0, index)));
+      id.push_back(StringId::insert(fbNamePart.substr(0, index)));
       fbNamePart = fbNamePart.substr(index + 1);
       index = fbNamePart.find_first_of(".");
     }
-    id.push_back(forte::StringId::insert(fbNamePart.substr(0, index)));
+    id.push_back(StringId::insert(fbNamePart.substr(0, index)));
 
     auto it = id.cbegin();
     return paContainer->getFB(it, id.cend());
   }
 
-  CFunctionBlock *getFB(forte::CFBContainer *paContainer, forte::StringId paFunctionBlockName) {
+  CFunctionBlock *getFB(CFBContainer *paContainer, StringId paFunctionBlockName) {
     if (paContainer == nullptr) {
       return nullptr;
     }
-    forte::TNameIdentifier id;
+    TNameIdentifier id;
     id.push_back(paFunctionBlockName);
     auto it = id.cbegin();
     return paContainer->getFB(it, id.cend());
@@ -64,14 +64,14 @@ namespace forte::trace::reader::utils {
     CFlexibleTracer::setTracer(paFactoriesSettings.mTracer);
   }
 
-  std::set<forte::StringId> getServiceFunctionBlockTypes(forte::CFBContainer &paContainer) {
+  std::set<StringId> getServiceFunctionBlockTypes(CFBContainer &paContainer) {
 
-    std::set<forte::StringId> result;
+    std::set<StringId> result;
 
     // Get a list of all types that are not service FB (either Composite or Basic)
-    std::function<void(forte::CFBContainer *)> iterateContainers;
+    std::function<void(CFBContainer *)> iterateContainers;
 
-    iterateContainers = [&iterateContainers, &result](forte::CFBContainer *paSubcontainer) {
+    iterateContainers = [&iterateContainers, &result](CFBContainer *paSubcontainer) {
       for (const auto child : paSubcontainer->getChildren()) {
         if (child == nullptr) {
           continue;
@@ -227,7 +227,7 @@ namespace forte::trace::reader::utils {
       if (paMessage.getEventType() != "sendOutputEvent") {
         return false;
       }
-      auto type = forte::StringId::lookup(paMessage.getPayload<AbstractPayload>()->getTypeName());
+      auto type = StringId::lookup(paMessage.getPayload<AbstractPayload>()->getTypeName());
       return validTypes.find(type) != validTypes.end();
     };
 

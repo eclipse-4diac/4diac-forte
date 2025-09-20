@@ -44,7 +44,7 @@ namespace forte::iec61499::events {
       void setInitialValues() override;
 
     public:
-      FORTE_E_MERGE(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_MERGE(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CEventConnection conn_EO;
 

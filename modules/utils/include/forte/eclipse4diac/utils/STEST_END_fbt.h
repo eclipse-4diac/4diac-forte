@@ -31,7 +31,7 @@ namespace forte::eclipse4diac::utils {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_STEST_END(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_STEST_END(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_ANY *getDI(size_t) override;
       CIEC_ANY *getDO(size_t) override;

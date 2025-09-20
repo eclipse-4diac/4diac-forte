@@ -89,7 +89,7 @@ void DEV_MGR::executeRQST() {
   delete[] (request);
 }
 
-DEV_MGR::DEV_MGR(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+DEV_MGR::DEV_MGR(forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Server),
     mDevice(*paContainer.getDevice()),
     mCommandParser(mDevice) {

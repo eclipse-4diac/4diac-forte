@@ -28,7 +28,7 @@ namespace {
   [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CPosixSerCommLayer> entry("ser"_STRID);
 }
 
-CPosixSerCommLayer::CPosixSerCommLayer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB) :
+CPosixSerCommLayer::CPosixSerCommLayer(CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB) :
     CSerialComLayerBase(paUpperLayer, paFB) {
 }
 

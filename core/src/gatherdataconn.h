@@ -24,20 +24,19 @@ namespace forte::internal {
           CDelegatingDataConnection(paSrcFB, paSrcPortId, paValue) {
       }
 
-      EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
+      EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) override;
 
-      EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
-                                         std::span<const forte::StringId> paDstPortNameId) override;
+      EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) override;
 
-      EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
+      EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) override;
 
       void readData(CIEC_ANY &paValue) const override;
 
-      EMGMResponse addMemberConnection(std::span<const forte::StringId> paMemberName, CDataConnection &paConnection);
+      EMGMResponse addMemberConnection(std::span<const StringId> paMemberName, CDataConnection &paConnection);
 
-      EMGMResponse removeMemberConnection(std::span<const forte::StringId> paMemberName);
+      EMGMResponse removeMemberConnection(std::span<const StringId> paMemberName);
 
-      CDataConnection *getMemberConnection(std::span<const forte::StringId> paMemberName) override;
+      CDataConnection *getMemberConnection(std::span<const StringId> paMemberName) override;
 
       [[nodiscard]] bool isGathering() const override {
         return true;
@@ -48,9 +47,8 @@ namespace forte::internal {
       }
 
     private:
-      EMGMResponse addMemberConnection(CIEC_ANY *paMember,
-                                       CDataConnection *paConnection,
-                                       std::span<const forte::StringId> paMemberName);
+      EMGMResponse
+      addMemberConnection(CIEC_ANY *paMember, CDataConnection *paConnection, std::span<const StringId> paMemberName);
 
       EMGMResponse removeMemberConnection(const CIEC_ANY *paMember);
 

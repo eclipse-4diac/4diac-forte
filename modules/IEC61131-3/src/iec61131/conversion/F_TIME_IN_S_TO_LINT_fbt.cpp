@@ -47,8 +47,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_TIME_IN_S_TO_LINT::FORTE_F_TIME_IN_S_TO_LINT(const forte::StringId paInstanceNameId,
-                                                     forte::CFBContainer &paContainer) :
+FORTE_F_TIME_IN_S_TO_LINT::FORTE_F_TIME_IN_S_TO_LINT(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_TIME),
     var_OUT(0_LINT),

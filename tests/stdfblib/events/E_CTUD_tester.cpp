@@ -22,7 +22,7 @@ struct E_CTUD_TestFixture : public CFBTestFixtureBase {
     E_CTUD_TestFixture() : CFBTestFixtureBase("iec61499::events::E_CTUD"_STRID) {
       setInputData({&mInPV});
       setOutputData({&mOutQU, &mOutQD, &mOutCV});
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_UINT mInPV; // Preset value

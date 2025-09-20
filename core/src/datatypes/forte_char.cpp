@@ -25,7 +25,7 @@ DEFINE_FIRMWARE_DATATYPE(CHAR, "CHAR"_STRID)
 
 void CIEC_CHAR::toString(std::string &paTargetBuf) const {
   paTargetBuf += "CHAR#'"s;
-  dollarEscapeChar(paTargetBuf, static_cast<char>(operator TForteChar()), CIEC_ANY::e_STRING);
+  dollarEscapeChar(paTargetBuf, static_cast<char>(operator TForteChar()), e_STRING);
   paTargetBuf += '\'';
 }
 

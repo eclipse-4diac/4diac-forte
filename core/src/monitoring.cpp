@@ -31,7 +31,7 @@ using namespace forte::internal;
 const std::string cgClosingXMLTag = "\">"s;
 
 namespace {
-  constexpr auto watchEntryComparator = [](const CWatchEntry &paItem, forte::StringId paPortId) {
+  constexpr auto watchEntryComparator = [](const CWatchEntry &paItem, StringId paPortId) {
     return paItem.getPortId() < paPortId;
   };
 
@@ -39,7 +39,7 @@ namespace {
     return &paItem.getFB() < paFB;
   };
 
-  void addDataWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry, forte::StringId paPortId, CIEC_ANY &paDataVal) {
+  void addDataWatch(SFBMonitoringEntry &paFBMonitoringEntry, StringId paPortId, CIEC_ANY &paDataVal) {
     auto &dataWatches = paFBMonitoringEntry.mWatchedDataPoints;
     auto it = std::lower_bound(dataWatches.begin(), dataWatches.end(), paPortId, watchEntryComparator);
 
@@ -51,7 +51,7 @@ namespace {
     dataWatches.emplace(it, paPortId, paDataVal, paFBMonitoringEntry.getFB().getAbsDataPortNum(paPortId));
   }
 
-  bool removeDataWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry, forte::StringId paPortId) {
+  bool removeDataWatch(SFBMonitoringEntry &paFBMonitoringEntry, StringId paPortId) {
     auto &dataWatches = paFBMonitoringEntry.mWatchedDataPoints;
     auto it = std::lower_bound(dataWatches.begin(), dataWatches.end(), paPortId, watchEntryComparator);
 
@@ -62,9 +62,7 @@ namespace {
     return false;
   }
 
-  void addEventWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry,
-                     forte::StringId paPortId,
-                     TForteUInt32 &paEventData) {
+  void addEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, StringId paPortId, TForteUInt32 &paEventData) {
     auto &eventWatches = paFBMonitoringEntry.mWatchedEventPoints;
     auto it = std::lower_bound(eventWatches.begin(), eventWatches.end(), paPortId, watchEntryComparator);
 
@@ -76,7 +74,7 @@ namespace {
     eventWatches.emplace(it, paPortId, paEventData);
   }
 
-  bool removeEventWatch(internal::SFBMonitoringEntry &paFBMonitoringEntry, forte::StringId paPortId) {
+  bool removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, StringId paPortId) {
     auto &eventWatches = paFBMonitoringEntry.mWatchedEventPoints;
     auto it = std::lower_bound(eventWatches.begin(), eventWatches.end(), paPortId, watchEntryComparator);
 
@@ -87,13 +85,13 @@ namespace {
     return false;
   }
 
-  void appendPortTag(std::string &paResponse, forte::StringId paPortId) {
+  void appendPortTag(std::string &paResponse, StringId paPortId) {
     paResponse += "<Port name=\""s;
     paResponse += paPortId;
     paResponse += cgClosingXMLTag;
   }
 
-  void appendDataWatch(std::string &paResponse, internal::CDataWatchEntry &paDataWatchEntry) {
+  void appendDataWatch(std::string &paResponse, CDataWatchEntry &paDataWatchEntry) {
     appendPortTag(paResponse, paDataWatchEntry.getPortId());
     paResponse += "<Data value=\""s;
 
@@ -108,7 +106,7 @@ namespace {
         case CIEC_ANY::e_CHAR:
         case CIEC_ANY::e_WCHAR:
         case CIEC_ANY::e_ARRAY:
-        case CIEC_ANY::e_STRUCT: forte::util::transformNonEscapedToEscapedXMLText(paResponse, start); break;
+        case CIEC_ANY::e_STRUCT: util::transformNonEscapedToEscapedXMLText(paResponse, start); break;
         default: break;
       }
     }
@@ -117,7 +115,7 @@ namespace {
     paResponse += "\"/></Port>"s;
   }
 
-  void createFullFBName(std::string &paFullName, forte::TNameIdentifier &paNameList) {
+  void createFullFBName(std::string &paFullName, TNameIdentifier &paNameList) {
     for (const auto &runner : paNameList) {
       paFullName.append(runner);
       paFullName.append(".");
@@ -165,15 +163,15 @@ EMGMResponse CMonitoringHandler::executeMonitoringCommand(SManagementCMD &paComm
   return retVal;
 }
 
-CFunctionBlock *CMonitoringHandler::getFB(forte::TNameIdentifier &paNameList) {
+CFunctionBlock *CMonitoringHandler::getFB(TNameIdentifier &paNameList) {
   auto runner = paNameList.cbegin();
   return mResource.getFB(runner, paNameList.cend());
 }
 
-EMGMResponse CMonitoringHandler::addWatch(forte::TNameIdentifier &paNameList) {
+EMGMResponse CMonitoringHandler::addWatch(TNameIdentifier &paNameList) {
   EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
 
-  forte::StringId portName = paNameList.back();
+  StringId portName = paNameList.back();
   paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
 
@@ -202,8 +200,8 @@ EMGMResponse CMonitoringHandler::addWatch(forte::TNameIdentifier &paNameList) {
   return eRetVal;
 }
 
-EMGMResponse CMonitoringHandler::removeWatch(forte::TNameIdentifier &paNameList) {
-  forte::StringId portName = paNameList.back();
+EMGMResponse CMonitoringHandler::removeWatch(TNameIdentifier &paNameList) {
+  StringId portName = paNameList.back();
   paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
   if (nullptr != fB) {
@@ -240,8 +238,8 @@ EMGMResponse CMonitoringHandler::readWatches(std::string &paResponse) {
   return EMGMResponse::Ready;
 }
 
-EMGMResponse CMonitoringHandler::clearForce(forte::TNameIdentifier &paNameList) {
-  forte::StringId portName = paNameList.back();
+EMGMResponse CMonitoringHandler::clearForce(TNameIdentifier &paNameList) {
+  StringId portName = paNameList.back();
   paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
 
@@ -258,9 +256,9 @@ EMGMResponse CMonitoringHandler::clearForce(forte::TNameIdentifier &paNameList) 
   return EMGMResponse::Ready;
 }
 
-EMGMResponse CMonitoringHandler::triggerEvent(forte::TNameIdentifier &paNameList) {
+EMGMResponse CMonitoringHandler::triggerEvent(TNameIdentifier &paNameList) {
   EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
-  forte::StringId portName = paNameList.back();
+  StringId portName = paNameList.back();
   paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
   if (nullptr != fB) {
@@ -282,9 +280,9 @@ EMGMResponse CMonitoringHandler::triggerEvent(forte::TNameIdentifier &paNameList
   return eRetVal;
 }
 
-EMGMResponse CMonitoringHandler::resetEventCount(forte::TNameIdentifier &paNameList) {
+EMGMResponse CMonitoringHandler::resetEventCount(TNameIdentifier &paNameList) {
   EMGMResponse eRetVal = EMGMResponse::NoSuchObject;
-  forte::StringId portName = paNameList.back();
+  StringId portName = paNameList.back();
   paNameList.pop_back();
   CFunctionBlock *fB = getFB(paNameList);
   if (nullptr != fB) {
@@ -308,7 +306,7 @@ EMGMResponse CMonitoringHandler::resetEventCount(forte::TNameIdentifier &paNameL
 }
 
 SFBMonitoringEntry &CMonitoringHandler::findOrCreateFBMonitoringEntry(CFunctionBlock *paFB,
-                                                                      forte::TNameIdentifier &paNameList) {
+                                                                      TNameIdentifier &paNameList) {
   auto it = std::lower_bound(mFBMonitoringList.begin(), mFBMonitoringList.end(), paFB, monitoringEntryComparator);
 
   if (it != mFBMonitoringList.end() && &it->getFB() == paFB) {

@@ -26,5 +26,5 @@ class FORTE_IX final : public forte::io::CInputFB<CIEC_BOOL> {
     DECLARE_FIRMWARE_FB(FORTE_IX)
 
   public:
-    FORTE_IX(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    FORTE_IX(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 };

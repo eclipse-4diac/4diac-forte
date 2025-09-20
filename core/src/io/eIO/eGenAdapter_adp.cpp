@@ -25,11 +25,11 @@ namespace {
 DEFINE_ADAPTER_TYPE(FORTE_eGenAdapter, "eGenAdapter"_STRID)
 
 void FORTE_eGenAdapter::setInitialValues() {
-  forte::CAdapter::setInitialValues();
+  CAdapter::setInitialValues();
 }
 
 FORTE_eGenAdapter_Plug::FORTE_eGenAdapter_Plug(forte::StringId paInstanceNameId,
-                                               forte::CFBContainer &paContainer,
+                                               CFBContainer &paContainer,
                                                TForteUInt8 paParentAdapterlistID) :
     FORTE_eGenAdapter(paContainer, scmFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID) {
 }
@@ -67,7 +67,7 @@ FORTE_eGenAdapter_Socket *FORTE_eGenAdapter_Plug::getSocket() {
 }
 
 FORTE_eGenAdapter_Socket::FORTE_eGenAdapter_Socket(forte::StringId paInstanceNameId,
-                                                   forte::CFBContainer &paContainer,
+                                                   CFBContainer &paContainer,
                                                    TForteUInt8 paParentAdapterlistID) :
     FORTE_eGenAdapter(paContainer, scmFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID) {
 }

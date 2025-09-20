@@ -38,8 +38,7 @@ void CZephyrThread::threadFunction(void *arg1, void *arg2, void *arg3) {
   CThreadBase::runThread(static_cast<CZephyrThread *>(arg1));
 }
 
-forte::arch::CThreadBase<k_tid_t, nullptr, CZephyrThread>::TThreadHandleType
-CZephyrThread::createThread(long paStackSize) {
+CThreadBase<k_tid_t, nullptr, CZephyrThread>::TThreadHandleType CZephyrThread::createThread(long paStackSize) {
   if (thread == nullptr)
     return nullptr;
   auto thread_id =

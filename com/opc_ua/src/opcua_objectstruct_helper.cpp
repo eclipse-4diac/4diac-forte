@@ -263,12 +263,11 @@ bool COPC_UA_ObjectStruct_Helper::addOPCUAStructTypeObjectComponent(UA_Server *p
   return true;
 }
 
-forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::createObjectNode(CActionInfo &paActionInfo,
-                                                                             CIEC_STRUCT &paStructType) {
+EComResponse COPC_UA_ObjectStruct_Helper::createObjectNode(CActionInfo &paActionInfo, CIEC_STRUCT &paStructType) {
   return createObjectNode(paActionInfo, paStructType, mStructMemberActionInfos);
 }
 
-forte::com_infra::EComResponse
+EComResponse
 COPC_UA_ObjectStruct_Helper::createObjectNode(CActionInfo &paActionInfo,
                                               CIEC_STRUCT &paStructType,
                                               std::vector<std::shared_ptr<CActionInfo>> &paMemberActionInfos) {
@@ -304,7 +303,7 @@ CIEC_ANY const *COPC_UA_ObjectStruct_Helper::getStructMember(CActionInfo &paActi
   return nullptr;
 }
 
-forte::com_infra::EComResponse COPC_UA_ObjectStruct_Helper::executeStructAction() {
+EComResponse COPC_UA_ObjectStruct_Helper::executeStructAction() {
   COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(mHandler);
   if (!localHandler) {
     DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to get LocalHandler because LocalHandler is null!\n");
@@ -393,7 +392,7 @@ std::vector<std::unique_ptr<CIEC_ANY>> COPC_UA_ObjectStruct_Helper::initializeRD
   return RDBuffer;
 }
 
-void COPC_UA_ObjectStruct_Helper::deleteRDBufferEntries(forte::com_infra::CBaseCommFB &paCommFB,
+void COPC_UA_ObjectStruct_Helper::deleteRDBufferEntries(CBaseCommFB &paCommFB,
                                                         std::vector<std::unique_ptr<CIEC_ANY>> &paRDBuffer) {
   if (paCommFB.getComServiceType() == e_Subscriber) {
     paRDBuffer.clear();
@@ -427,7 +426,7 @@ std::shared_ptr<CActionInfo> COPC_UA_ObjectStruct_Helper::getCreateObjectActionI
   return actionInfo;
 }
 
-forte::com_infra::EComResponse
+EComResponse
 COPC_UA_ObjectStruct_Helper::initializeMemberAction(CActionInfo &paActionInfo,
                                                     std::string &paBrowsePath,
                                                     CIEC_STRUCT &paStructType,

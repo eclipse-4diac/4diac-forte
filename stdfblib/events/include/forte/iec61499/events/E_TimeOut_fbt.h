@@ -39,14 +39,14 @@ namespace forte::iec61499::events {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_E_TimeOut(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_TimeOut(StringId paInstanceNameId, CFBContainer &paContainer);
       bool initialize() override;
 
-      forte::CSocketPin<FORTE_ATimeOut_Socket> var_TimeOutSocket;
+      CSocketPin<FORTE_ATimeOut_Socket> var_TimeOutSocket;
 
       CIEC_ANY *getDI(size_t) override;
       CIEC_ANY *getDO(size_t) override;
-      forte::ISocketPin *getSocketPinUnchecked(size_t) override;
+      ISocketPin *getSocketPinUnchecked(size_t) override;
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;

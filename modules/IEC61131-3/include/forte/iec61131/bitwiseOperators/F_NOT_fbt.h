@@ -39,7 +39,7 @@ namespace forte::iec61131::bitwiseOperators {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_F_NOT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_NOT(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_ANY_BIT_VARIANT var_IN;
       CIEC_ANY_BIT_VARIANT var_OUT;

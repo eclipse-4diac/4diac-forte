@@ -56,10 +56,10 @@ namespace forte::eclipse4diac::convert {
 
     public:
       GEN_STRUCT_MUX(const GEN_STRUCT_MUX &paOther) = delete;
-      GEN_STRUCT_MUX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      GEN_STRUCT_MUX(const StringId paInstanceNameId, CFBContainer &paContainer);
       ~GEN_STRUCT_MUX() override = default;
 
-      static forte::StringId getStructNameId(std::string_view paConfigString);
+      static StringId getStructNameId(std::string_view paConfigString);
   };
 } // namespace forte::eclipse4diac::convert
 

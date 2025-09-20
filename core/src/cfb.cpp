@@ -50,7 +50,7 @@ namespace {
   }
 } // namespace
 
-CCompositeFB::CCompositeFB(forte::CFBContainer &paContainer,
+CCompositeFB::CCompositeFB(CFBContainer &paContainer,
                            const SFBInterfaceSpec &paInterfaceSpec,
                            forte::StringId paInstanceNameId,
                            const SCFB_FBNData &paFBNData) :
@@ -142,7 +142,7 @@ CIEC_ANY *CCompositeFB::getVar(forte::StringId *paNameList, unsigned int paNameL
   CIEC_ANY *retVal = nullptr;
 
   if (1 > paNameListSize) {
-    CFunctionBlock *child = forte::CFBContainer::getFB(*paNameList);
+    CFunctionBlock *child = getFB(*paNameList);
     if (child != nullptr) {
       paNameList++;
       paNameListSize--;
@@ -266,5 +266,5 @@ CFunctionBlock *CCompositeFB::getFunctionBlock(forte::StringId paFBNameId) {
   if (!paFBNameId) {
     return this;
   }
-  return forte::CFBContainer::getFB(paFBNameId);
+  return getFB(paFBNameId);
 }

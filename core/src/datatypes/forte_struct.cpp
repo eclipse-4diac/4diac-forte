@@ -162,7 +162,7 @@ void CIEC_STRUCT::findNextNonBlankSpace(const char **paRunner) {
 }
 
 bool CIEC_STRUCT::equals(const CIEC_ANY &paOther) const {
-  if (paOther.getDataTypeID() == CIEC_ANY::e_STRUCT) {
+  if (paOther.getDataTypeID() == e_STRUCT) {
     auto &otherStruct = static_cast<const CIEC_STRUCT &>(paOther);
     if (getStructTypeNameID() == otherStruct.getStructTypeNameID()) {
       for (size_t i = 0, structSize = getStructSize(); i < structSize; ++i) {

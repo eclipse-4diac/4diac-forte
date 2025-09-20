@@ -25,7 +25,7 @@ namespace {
   const auto cEventInputNames = std::array{"EI"_STRID};
 }
 
-GEN_E_SPLIT::GEN_E_SPLIT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+GEN_E_SPLIT::GEN_E_SPLIT(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {};
 
 void GEN_E_SPLIT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
@@ -52,16 +52,16 @@ bool GEN_E_SPLIT::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
   if (nullptr != acPos) {
     ++acPos; // move after underscore
     // we have an underscore
-    size_t numEOs = static_cast<TEventID>(forte::util::strtoul(acPos, nullptr, 10));
+    size_t numEOs = static_cast<TEventID>(util::strtoul(acPos, nullptr, 10));
 
-    if (numEOs < CFunctionBlock::scmMaxInterfaceEvents && numEOs >= 2) {
+    if (numEOs < scmMaxInterfaceEvents && numEOs >= 2) {
       generateGenericInterfacePointNameArray("EO", mEventOutputNames, numEOs);
 
       paInterfaceSpec.mEINames = cEventInputNames;
       paInterfaceSpec.mEONames = mEventOutputNames;
       return true;
     } else {
-      if (numEOs >= CFunctionBlock::scmMaxInterfaceEvents) {
+      if (numEOs >= scmMaxInterfaceEvents) {
         DEVLOG_ERROR("Cannot configure FB-Instance E_SPLIT_%d. Number of event outputs exceeds maximum of %d.\n",
                      numEOs, CFunctionBlock::scmMaxInterfaceEvents);
       } else {

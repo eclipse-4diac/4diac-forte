@@ -16,4 +16,4 @@ using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(STATE, "STATE"_STRID)
 
-const CIEC_STATE::TValueType CIEC_STATE::scmMaxVal = std::numeric_limits<CIEC_STATE::TValueType>::max();
+const CIEC_STATE::TValueType CIEC_STATE::scmMaxVal = std::numeric_limits<TValueType>::max();

@@ -27,7 +27,7 @@
 /*@{*/
 
 namespace forte {
-  using TNameIdentifier = util::inplace_vector<forte::StringId, cgMaxSupportedNameHierarchy>;
+  using TNameIdentifier = util::inplace_vector<StringId, cgMaxSupportedNameHierarchy>;
 }
 
 /*!\brief Type for the management command (e.g. create, delete ...)

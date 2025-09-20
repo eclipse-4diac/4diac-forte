@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_MUX_2::FORTE_F_MUX_2(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_F_MUX_2::FORTE_F_MUX_2(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_K(CIEC_ANY_INT_VARIANT()),
     var_IN1(CIEC_ANY_VARIANT()),

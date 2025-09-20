@@ -53,15 +53,15 @@ void FORTE_ATimeOut::setInitialValues() {
   var_DT = 0_TIME;
 }
 
-FORTE_ATimeOut::FORTE_ATimeOut(forte::CFBContainer &paContainer,
+FORTE_ATimeOut::FORTE_ATimeOut(CFBContainer &paContainer,
                                const SFBInterfaceSpec &paInterfaceSpec,
-                               const forte::StringId paInstanceNameId,
+                               const StringId paInstanceNameId,
                                TForteUInt8 paParentAdapterlistID) :
     CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID) {
 }
 
-FORTE_ATimeOut_Plug::FORTE_ATimeOut_Plug(forte::StringId paInstanceNameId,
-                                         forte::CFBContainer &paContainer,
+FORTE_ATimeOut_Plug::FORTE_ATimeOut_Plug(StringId paInstanceNameId,
+                                         CFBContainer &paContainer,
                                          TForteUInt8 paParentAdapterlistID) :
     FORTE_ATimeOut(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_TimeOUT(*this, 0) {
@@ -103,8 +103,8 @@ FORTE_ATimeOut_Socket *FORTE_ATimeOut_Plug::getSocket() {
   return static_cast<FORTE_ATimeOut_Socket *>(getPeer());
 }
 
-FORTE_ATimeOut_Socket::FORTE_ATimeOut_Socket(forte::StringId paInstanceNameId,
-                                             forte::CFBContainer &paContainer,
+FORTE_ATimeOut_Socket::FORTE_ATimeOut_Socket(StringId paInstanceNameId,
+                                             CFBContainer &paContainer,
                                              TForteUInt8 paParentAdapterlistID) :
     FORTE_ATimeOut(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_START(*this, 0),

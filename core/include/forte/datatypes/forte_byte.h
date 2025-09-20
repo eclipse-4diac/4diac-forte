@@ -84,7 +84,7 @@ class CIEC_BYTE : public CIEC_ANY_BIT {
     }
 
     EDataTypeID getDataTypeID() const override final {
-      return CIEC_ANY::e_BYTE;
+      return e_BYTE;
     }
 
     /*! \brief Partial access within a CIEC_BYTE (e.g. [BYTE].partial<CIEC_BOOL,1>())
@@ -136,7 +136,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_BYTE> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_BYTE;
-      static const forte::StringId scmDataTypeName;
+      static const StringId scmDataTypeName;
   };
 } // namespace forte
 

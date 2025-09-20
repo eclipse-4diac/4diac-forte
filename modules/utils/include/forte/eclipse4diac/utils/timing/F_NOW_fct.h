@@ -39,7 +39,7 @@ class FORTE_utils__timing__F_NOW final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_utils__timing__F_NOW(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    FORTE_utils__timing__F_NOW(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
     CIEC_DATE_AND_TIME var_;
 

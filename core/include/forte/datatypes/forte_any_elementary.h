@@ -31,7 +31,7 @@ class CIEC_ANY_ELEMENTARY : public CIEC_ANY {
     ~CIEC_ANY_ELEMENTARY() override = default;
 
     EDataTypeID getDataTypeID() const override {
-      return CIEC_ANY::e_ANY;
+      return e_ANY;
     }
 
     void toString(std::string &paTargetBuf) const override;

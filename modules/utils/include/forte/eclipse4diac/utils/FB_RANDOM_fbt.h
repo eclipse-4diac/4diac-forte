@@ -65,7 +65,7 @@ namespace forte::eclipse4diac::utils {
       std::uniform_real_distribution<float> mDistribution;
 
     public:
-      FORTE_FB_RANDOM(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_FB_RANDOM(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_UINT var_SEED;
 

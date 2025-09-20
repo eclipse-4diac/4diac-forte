@@ -27,7 +27,7 @@ namespace forte::iec61499::events {
       static const TEventID scmEventSTOPID = 2;
 
       // semaphore to ensure proper handling of STOP execution state change
-      forte::arch::CSemaphore mSuspendSemaphore;
+      arch::CSemaphore mSuspendSemaphore;
 
       TEventID mEventToSend;
 
@@ -37,7 +37,7 @@ namespace forte::iec61499::events {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_E_RESTART(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_RESTART(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CEventConnection conn_COLD;
       CEventConnection conn_WARM;

@@ -80,7 +80,7 @@ class CIEC_ANY_NUM_VARIANT : public CIEC_ANY_NUM, public TIecAnyNumVariantType {
       unwrap().reset();
     }
 
-    bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
+    bool setDefaultValue(EDataTypeID paDataTypeId);
 
     [[nodiscard]] CIEC_ANY_NUM &unwrap() override;
 

@@ -52,5 +52,5 @@ class CFakeTimerHandler : public CTimerHandler, public CThread {
     void startOutputEvent(CFunctionBlock *fb);
     CEventChainExecutionThread *getExecThread(CFunctionBlock *fakeSleepFb);
 
-    std::queue<CFakeTimerHandler::napinfo> sleepTimes;
+    std::queue<napinfo> sleepTimes;
 };

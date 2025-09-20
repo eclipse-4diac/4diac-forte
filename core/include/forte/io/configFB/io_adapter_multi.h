@@ -23,9 +23,9 @@ namespace forte::io {
   class IOConfigFBMultiAdapter : public CAdapter {
     public:
       IOConfigFBMultiAdapter(const std::span<const TForteUInt8> paSlaveConfigurationIO,
-                             forte::CFBContainer &paContainer,
+                             CFBContainer &paContainer,
                              const SFBInterfaceSpec &paInterfaceSpec,
-                             const forte::StringId paInstanceNameId,
+                             const StringId paInstanceNameId,
                              TForteUInt8 paParentAdapterlistID);
       ~IOConfigFBMultiAdapter() override;
 

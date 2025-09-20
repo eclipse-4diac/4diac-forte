@@ -22,7 +22,7 @@ class CSerialComLayerBase : public forte::com_infra::CComLayer {
   public:
     typedef TSerialHandle TSerialHandleType;
 
-    CSerialComLayerBase(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB);
+    CSerialComLayerBase(CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB);
     ~CSerialComLayerBase() override;
 
     forte::com_infra::EComResponse processInterrupt() override;
@@ -119,9 +119,9 @@ class CSerialComLayerBase : public forte::com_infra::CComLayer {
 };
 
 template<typename TThreadHandle, TThreadHandle nullHandle>
-CSerialComLayerBase<TThreadHandle, nullHandle>::CSerialComLayerBase(forte::com_infra::CComLayer *paUpperLayer,
+CSerialComLayerBase<TThreadHandle, nullHandle>::CSerialComLayerBase(CComLayer *paUpperLayer,
                                                                     forte::com_infra::CBaseCommFB *paFB) :
-    forte::com_infra::CComLayer(paUpperLayer, paFB),
+    CComLayer(paUpperLayer, paFB),
     mInterruptResp(forte::com_infra::e_Nothing),
     mBufFillSize(0),
     mSerialHandle(nullHandle) {
@@ -163,11 +163,10 @@ forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::o
   }
 
   SSerialParameters parsedParameters;
-  parsedParameters.interfaceName =
-      CIEC_STRING(parser[CSerialComLayerBase::eInterface], strlen(parser[CSerialComLayerBase::eInterface]));
+  parsedParameters.interfaceName = CIEC_STRING(parser[eInterface], strlen(parser[eInterface]));
 
   // Check baud rate setting
-  parsedParameters.baudRate = static_cast<EForteSerialBaudRate>(atoi(parser[CSerialComLayerBase::eBaudrate]));
+  parsedParameters.baudRate = static_cast<EForteSerialBaudRate>(atoi(parser[eBaudrate]));
   switch (parsedParameters.baudRate) {
       // These are ok baud rates
     case e50: break;
@@ -196,32 +195,32 @@ forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::o
   }
 
   // Check byte size setting
-  parsedParameters.byteSize = static_cast<EForteSerialByteSize>(atoi(parser[CSerialComLayerBase::eByteSize]));
+  parsedParameters.byteSize = static_cast<EForteSerialByteSize>(atoi(parser[eByteSize]));
   if (4 > parsedParameters.byteSize || 8 < parsedParameters.byteSize) {
     return forte::com_infra::e_InitInvalidId;
   }
 
   // Check stopbits setting
-  if (0 == strcmp(parser[CSerialComLayerBase::eStopBits], "1")) {
+  if (0 == strcmp(parser[eStopBits], "1")) {
     parsedParameters.stopBits = eOneBit;
-  } else if (0 == strcmp(parser[CSerialComLayerBase::eStopBits], "1.5")) {
+  } else if (0 == strcmp(parser[eStopBits], "1.5")) {
     parsedParameters.stopBits = eOne5Bits;
-  } else if (0 == strcmp(parser[CSerialComLayerBase::eStopBits], "2")) {
+  } else if (0 == strcmp(parser[eStopBits], "2")) {
     parsedParameters.stopBits = eTwoBits;
   } else {
     return forte::com_infra::e_InitInvalidId;
   }
 
   // Check parity setting
-  if (0 == strcmp(parser[CSerialComLayerBase::eParity], "NONE")) {
+  if (0 == strcmp(parser[eParity], "NONE")) {
     parsedParameters.parity = eNoParity;
-  } else if (0 == strcmp(parser[CSerialComLayerBase::eParity], "ODD")) {
+  } else if (0 == strcmp(parser[eParity], "ODD")) {
     parsedParameters.parity = eODD;
-  } else if (0 == strcmp(parser[CSerialComLayerBase::eParity], "EVEN")) {
+  } else if (0 == strcmp(parser[eParity], "EVEN")) {
     parsedParameters.parity = eEven;
-  } else if (0 == strcmp(parser[CSerialComLayerBase::eParity], "MARK")) {
+  } else if (0 == strcmp(parser[eParity], "MARK")) {
     parsedParameters.parity = eMark;
-  } else if (0 == strcmp(parser[CSerialComLayerBase::eParity], "SPACE")) {
+  } else if (0 == strcmp(parser[eParity], "SPACE")) {
     parsedParameters.parity = eSpace;
   } else {
     return forte::com_infra::e_InitInvalidId;
@@ -229,9 +228,9 @@ forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::o
 
   if (0 == strcmp("$n", parser[eTerminationSymbol])) {
     strcpy(mTerminationSymbol, "\n");
-  } else if (0 == strcmp("$r", parser[CSerialComLayerBase::eTerminationSymbol])) {
+  } else if (0 == strcmp("$r", parser[eTerminationSymbol])) {
     strcpy(mTerminationSymbol, "\r");
-  } else if (0 == strcmp("$r$n", parser[CSerialComLayerBase::eTerminationSymbol])) {
+  } else if (0 == strcmp("$r$n", parser[eTerminationSymbol])) {
     strcpy(mTerminationSymbol, "\r\n");
   } else {
     return forte::com_infra::e_InitInvalidId;

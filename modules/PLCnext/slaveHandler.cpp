@@ -20,7 +20,7 @@ const TForteUInt8 PLCnextSlaveHandler::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 PLCnextSlaveHandler::scmSlaveConfigurationIONum = 0;
 
 PLCnextSlaveHandler::PLCnextSlaveHandler(int paType,
-                                         forte::CFBContainer &paContainer,
+                                         CFBContainer &paContainer,
                                          const SFBInterfaceSpec *paInterfaceSpec,
                                          const forte::StringId paInstanceNameId) :
     IOConfigFBMultiSlave(
@@ -35,11 +35,11 @@ PLCnextSlaveHandler::~PLCnextSlaveHandler() {
 }
 
 int PLCnextSlaveHandler::update() {
-  if (slaveType == SlaveType::Input) {
+  if (slaveType == Input) {
     plcNextDevice.read(this->imageBuffer, this->imageSize);
-  } else if (slaveType == SlaveType::Output) {
+  } else if (slaveType == Output) {
     plcNextDevice.write(this->imageBuffer, this->imageSize);
-  } else if (slaveType == SlaveType::NoUsage) {
+  } else if (slaveType == NoUsage) {
     // PLCnext contains a "placeholder" module
     // for this module, nothing should happen
   } else {

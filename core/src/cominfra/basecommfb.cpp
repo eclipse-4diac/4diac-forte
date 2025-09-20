@@ -32,9 +32,9 @@ const char *const CBaseCommFB::scmResponseTexts[] = {
     "OK",        "INVALID_ID", "TERMINATED",  "INVALID_OBJECT", "DATA_TYPE_ERROR",
     "INHIBITED", "NO_SOCKET",  "SEND_FAILED", "RECV_FAILED"};
 
-CBaseCommFB::CBaseCommFB(const forte::StringId paInstanceNameId,
-                         forte::CFBContainer &paContainer,
-                         forte::com_infra::EComServiceType paCommServiceType) :
+CBaseCommFB::CBaseCommFB(const StringId paInstanceNameId,
+                         CFBContainer &paContainer,
+                         EComServiceType paCommServiceType) :
     CGenFunctionBlock<CEventSourceFB>(paContainer, paInstanceNameId),
     mCommServiceType(paCommServiceType),
     mTopOfComStack(nullptr) {
@@ -100,7 +100,7 @@ EComResponse CBaseCommFB::createComstack(char *commID) {
 
     if (nullptr != layerID && '\0' != *layerID) { // If well formated ID, keep going
       // Create the new layer
-      newLayer = ComLayerManager::create(forte::StringId::lookup(layerID), previousLayer, this).release();
+      newLayer = ComLayerManager::create(StringId::lookup(layerID), previousLayer, this).release();
       if (nullptr != newLayer) { // If the layer could be created, keep going
         if (nullptr == mTopOfComStack) {
           mTopOfComStack = newLayer; // Assign the newly created layer to the FB

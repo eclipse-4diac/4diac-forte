@@ -43,7 +43,7 @@ class FORTE_CFB_TEST final : public CCompositeFB {
     CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
   public:
-    FORTE_CFB_TEST(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    FORTE_CFB_TEST(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
     CEventConnection conn_CNF;
     CEventConnection conn_CHANGED;

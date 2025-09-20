@@ -20,9 +20,9 @@ namespace forte::io {
 
   class IOConfigFBBase : public CEventSourceFB {
     public:
-      IOConfigFBBase(forte::CFBContainer &paContainer,
+      IOConfigFBBase(CFBContainer &paContainer,
                      const SFBInterfaceSpec &paInterfaceSpec,
-                     const forte::StringId paInstanceNameId);
+                     const StringId paInstanceNameId);
       ~IOConfigFBBase() override;
   };
 

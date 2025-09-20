@@ -42,7 +42,7 @@ class FORTE_SPLIT_DWORD_INTO_WORDS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_SPLIT_DWORD_INTO_WORDS(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    FORTE_SPLIT_DWORD_INTO_WORDS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
     CIEC_DWORD var_IN;
 

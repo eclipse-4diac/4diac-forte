@@ -40,7 +40,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RT_E_SWITCH::FORTE_RT_E_SWITCH(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_RT_E_SWITCH::FORTE_RT_E_SWITCH(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_EO1(*this, 1),

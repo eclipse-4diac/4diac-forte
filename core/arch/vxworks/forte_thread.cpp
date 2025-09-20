@@ -13,14 +13,14 @@
 #include "forte/arch/forte_thread.h"
 #include <time.h>
 
-forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR>::TThreadHandleType CVxWorksThread::createThread(long paStackSize) {
+CThreadBase<TASK_ID, TASK_ID_ERROR>::TThreadHandleType CVxWorksThread::createThread(long paStackSize) {
   // TODO: Check if guarding the stack is necessary
   return taskSpawn(0, scmInitialTaskPriority, VX_FP_TASK /* Needed for C++*/, paStackSize, (FUNCPTR) threadFunction,
                    (_Vx_usr_arg_t) this, 0, 0, 0, 0, 0, 0, 0, 0, 0);
 }
 
 void CVxWorksThread::threadFunction(void *paArguments) {
-  forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR>::runThread(static_cast<CVxWorksThread *>(paArguments));
+  CThreadBase<TASK_ID, TASK_ID_ERROR>::runThread(static_cast<CVxWorksThread *>(paArguments));
 }
 
 CVxWorksThread::CVxWorksThread(long paStackSize) : forte::arch::CThreadBase<TASK_ID, TASK_ID_ERROR>(paStackSize) {

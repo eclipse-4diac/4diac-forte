@@ -134,7 +134,7 @@ void CFakeEventExecutionThread::run() {
       mBreakpointWasHit(nextEvent.value());
       continue;
     }
-    CEventChainExecutionThread::mainRun();
+    mainRun();
   }
 }
 

@@ -52,7 +52,7 @@ void CIEC_ANY_ELEMENTARY_VARIANT::setValue(const CIEC_ANY &paValue) {
   }
 }
 
-bool CIEC_ANY_ELEMENTARY_VARIANT::setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId) {
+bool CIEC_ANY_ELEMENTARY_VARIANT::setDefaultValue(EDataTypeID paDataTypeId) {
   switch (paDataTypeId) {
     case e_BOOL: operator=(false_BOOL); return true;
     case e_SINT: operator=(CIEC_SINT(0)); return true;
@@ -96,7 +96,7 @@ CIEC_ANY_ELEMENTARY &CIEC_ANY_ELEMENTARY_VARIANT::unwrap() {
           static_assert(always_false_v<T>, "non-exhaustive visitor");
         }
       },
-      static_cast<CIEC_ANY_ELEMENTARY_VARIANT::variant &>(*this));
+      static_cast<variant &>(*this));
 }
 
 const CIEC_ANY_ELEMENTARY &CIEC_ANY_ELEMENTARY_VARIANT::unwrap() const {
@@ -109,7 +109,7 @@ const CIEC_ANY_ELEMENTARY &CIEC_ANY_ELEMENTARY_VARIANT::unwrap() const {
           static_assert(always_false_v<T>, "non-exhaustive visitor");
         }
       },
-      static_cast<const CIEC_ANY_ELEMENTARY_VARIANT::variant &>(*this));
+      static_cast<const variant &>(*this));
 }
 
 int CIEC_ANY_ELEMENTARY_VARIANT::fromString(const char *paValue) {
@@ -117,7 +117,7 @@ int CIEC_ANY_ELEMENTARY_VARIANT::fromString(const char *paValue) {
   const char *hashPos = strchr(paValue, '#');
   if (nullptr != hashPos) {
     forte::StringId typeNameId = parseTypeName(paValue, hashPos);
-    CIEC_ANY::EDataTypeID dataTypeId = CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(typeNameId);
+    EDataTypeID dataTypeId = getElementaryDataTypeId(typeNameId);
     if (setDefaultValue(dataTypeId)) {
       CIEC_ANY &value = unwrap();
       nRetVal = value.fromString(paValue);
@@ -177,6 +177,5 @@ int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paVa
           return -1;
         }
       },
-      static_cast<const CIEC_ANY_ELEMENTARY_VARIANT::variant &>(paValue),
-      static_cast<const CIEC_ANY_ELEMENTARY_VARIANT::variant &>(paOther));
+      static_cast<const variant &>(paValue), static_cast<const variant &>(paOther));
 }

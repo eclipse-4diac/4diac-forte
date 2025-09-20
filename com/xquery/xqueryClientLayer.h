@@ -17,9 +17,9 @@
 
 using namespace forte::com_infra;
 
-class CXqueryClientLayer : public forte::com_infra::CComLayer {
+class CXqueryClientLayer : public CComLayer {
   public:
-    CXqueryClientLayer(forte::com_infra::CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paComFB);
+    CXqueryClientLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
     ~CXqueryClientLayer() override;
 
     EComResponse sendData(void *paData, unsigned int paSize) override;

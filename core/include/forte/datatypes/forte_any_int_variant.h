@@ -75,7 +75,7 @@ class CIEC_ANY_INT_VARIANT : public CIEC_ANY_INT, public TIecAnyIntVariantType {
       unwrap().reset();
     }
 
-    bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
+    bool setDefaultValue(EDataTypeID paDataTypeId);
 
     [[nodiscard]] CIEC_ANY_INT &unwrap() override;
 

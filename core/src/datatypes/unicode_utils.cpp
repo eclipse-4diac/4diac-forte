@@ -193,7 +193,7 @@ int CUnicodeUtilities::checkUTF8(const char *paValue, int paLength, unsigned int
     if (nRes < 0 || nRes + i > nRemLen) {
       return -1;
     }
-    if (nCodepoint != CUnicodeUtilities::scmBOMMarker) {
+    if (nCodepoint != scmBOMMarker) {
       if (nCodepoint >= 0x10000) {
         paMaxWidth = 21;
       } else if (nCodepoint >= 0x100 && paMaxWidth < 16) {

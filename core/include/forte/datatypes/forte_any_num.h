@@ -25,7 +25,7 @@ class CIEC_ANY_NUM : public CIEC_ANY_MAGNITUDE {
     ~CIEC_ANY_NUM() override = default;
 
     EDataTypeID getDataTypeID() const override {
-      return CIEC_ANY::e_ANY;
+      return e_ANY;
     }
 
   protected:

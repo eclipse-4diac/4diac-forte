@@ -42,7 +42,7 @@ CFakeTimerHandler::~CFakeTimerHandler() {
 void CFakeTimerHandler::run() {
   while (isAlive()) {
     if (!sleepTimes.empty()) {
-      CFakeTimerHandler::napinfo nap = sleepTimes.front();
+      napinfo nap = sleepTimes.front();
       sleepTimes.pop();
       if (nap.napDuration == 0 && nap.wakeupTime < (getNanoSecondsMonotonic() / cNanosecondsToMilliseconds)) {
         // We have to go back in time!

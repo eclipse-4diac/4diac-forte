@@ -50,7 +50,7 @@ namespace {
   };
 } // namespace
 
-FORTE_TIMESTAMP_NS::FORTE_TIMESTAMP_NS(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_TIMESTAMP_NS::FORTE_TIMESTAMP_NS(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_startDate(0_DATE_AND_TIME),
     conn_CNF(*this, 0),

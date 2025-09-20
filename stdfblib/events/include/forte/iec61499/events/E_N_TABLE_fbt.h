@@ -43,15 +43,15 @@ namespace forte::iec61499::events {
       static const TEventID scmEventSTARTID = 0;
       static const TEventID scmEventSTOPID = 1;
 
-      forte::CInternalFB<FORTE_E_TABLE> fb_E_TABLE;
-      forte::CInternalFB<FORTE_E_DEMUX> fb_E_DEMUX;
+      CInternalFB<FORTE_E_TABLE> fb_E_TABLE;
+      CInternalFB<FORTE_E_DEMUX> fb_E_DEMUX;
 
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;
       void setInitialValues() override;
 
     public:
-      FORTE_E_N_TABLE(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_N_TABLE(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CEventConnection conn_EO0;
       CEventConnection conn_EO1;

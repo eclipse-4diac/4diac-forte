@@ -34,7 +34,7 @@ void CFreeRTOSThread::threadFunction(void *paData) {
   vTaskDelete(nullptr);
 }
 
-forte::arch::CThreadBase<TaskHandle_t, TaskHandle_t(0), CFreeRTOSThread>::TThreadHandleType
+CThreadBase<TaskHandle_t, TaskHandle_t(0), CFreeRTOSThread>::TThreadHandleType
 CFreeRTOSThread::createThread(long paStackSize) {
   TaskHandle_t handle = 0;
 

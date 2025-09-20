@@ -79,5 +79,5 @@ void GPIOChipConfigFB::onStartup(CEventChainExecutionThread *const paECET) {
       VALUE().getValue(), TForteUInt16(ReadWriteMode()) ? forte::io::IOMapper::Out : forte::io::IOMapper::In);
   initHandle(&desc);
 
-  forte::io::IOConfigFBController::started(paECET);
+  started(paECET);
 }

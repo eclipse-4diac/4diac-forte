@@ -42,7 +42,7 @@ namespace forte::eclipse4diac::rtevents {
       void setInitialValues() override;
 
     public:
-      FORTE_RT_E_SELECT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_RT_E_SELECT(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_BOOL var_G;
       CIEC_TIME var_Tmin;

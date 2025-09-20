@@ -52,7 +52,7 @@ int CIEC_LREAL::fromString(const char *paValue) {
 void CIEC_LREAL::toString(std::string &paTargetBuf) const {
   auto startPos = paTargetBuf.size();
   std::format_to(std::back_inserter(paTargetBuf), "{:.{}g}", getTDFLOAT(),
-                 std::numeric_limits<CIEC_LREAL::TValueType>::max_digits10);
+                 std::numeric_limits<TValueType>::max_digits10);
   normalizeToStringRepresentation(paTargetBuf, startPos);
 }
 
@@ -67,41 +67,39 @@ void CIEC_LREAL::setValue(const CIEC_ANY &paValue) {
     case e_INT:
     case e_DINT:
     case e_LINT:
-      setTDFLOAT(
-          static_cast<CIEC_LREAL::TValueType>(static_cast<TForteInt64>(static_cast<const CIEC_LINT &>(paValue))));
+      setTDFLOAT(static_cast<TValueType>(static_cast<TForteInt64>(static_cast<const CIEC_LINT &>(paValue))));
       break;
-    case CIEC_ANY::e_BYTE:
-    case CIEC_ANY::e_WORD:
-    case CIEC_ANY::e_DWORD:
-    case CIEC_ANY::e_LWORD:
+    case e_BYTE:
+    case e_WORD:
+    case e_DWORD:
+    case e_LWORD:
       // bit string will cast to the binary representation of the real value
       setValueSimple(paValue);
       break;
     default: // UINT types
-      setTDFLOAT(
-          static_cast<CIEC_LREAL::TValueType>(static_cast<TForteUInt64>(static_cast<const CIEC_ULINT &>(paValue))));
+      setTDFLOAT(static_cast<TValueType>(static_cast<TForteUInt64>(static_cast<const CIEC_ULINT &>(paValue))));
       break;
   }
 }
 
 void CIEC_LREAL::castLRealData(const CIEC_LREAL &paSrcValue, CIEC_ANY &paDestValue) {
   switch (paDestValue.getDataTypeID()) {
-    case CIEC_ANY::e_REAL:
+    case e_REAL:
       static_cast<CIEC_REAL &>(paDestValue) =
-          CIEC_REAL(static_cast<CIEC_REAL::TValueType>(static_cast<CIEC_LREAL::TValueType>(paSrcValue)));
+          CIEC_REAL(static_cast<CIEC_REAL::TValueType>(static_cast<TValueType>(paSrcValue)));
       break;
-    case CIEC_ANY::e_LREAL: static_cast<CIEC_LREAL &>(paDestValue) = paSrcValue; break;
-    case CIEC_ANY::e_BYTE:
-    case CIEC_ANY::e_WORD:
-    case CIEC_ANY::e_DWORD:
-    case CIEC_ANY::e_LWORD:
+    case e_LREAL: static_cast<CIEC_LREAL &>(paDestValue) = paSrcValue; break;
+    case e_BYTE:
+    case e_WORD:
+    case e_DWORD:
+    case e_LWORD:
       // bit string will cast to the binary representation of the real value
       paDestValue.setValue(paSrcValue);
       break;
     default: {
-      CIEC_LREAL::TValueType doubleValue = static_cast<CIEC_LREAL::TValueType>(paSrcValue);
-      *(reinterpret_cast<CIEC_ANY::TLargestUIntValueType *>(paDestValue.getDataPtr())) =
-          static_cast<CIEC_ANY::TLargestUIntValueType>(std::llrint(doubleValue));
+      TValueType doubleValue = static_cast<TValueType>(paSrcValue);
+      *(reinterpret_cast<TLargestUIntValueType *>(paDestValue.getDataPtr())) =
+          static_cast<TLargestUIntValueType>(std::llrint(doubleValue));
       break;
     }
   }

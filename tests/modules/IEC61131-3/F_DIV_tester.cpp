@@ -20,7 +20,7 @@ struct F_DIV_TestFixture : public CFBTestFixtureBase {
     F_DIV_TestFixture() : CFBTestFixtureBase("iec61131::arithmetic::F_DIV"_STRID) {
       setInputData({&mIn1_DIV, &mIn2_DIV});
       setOutputData({&mOut_DIV});
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_INT mIn1_DIV; // DATA INPUT

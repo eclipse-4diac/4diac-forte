@@ -20,5 +20,5 @@ using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_QL, "QL"_STRID)
 
-FORTE_QL::FORTE_QL(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_QL::FORTE_QL(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     COutputFB<CIEC_LWORD>(paContainer, paInstanceNameId) {};

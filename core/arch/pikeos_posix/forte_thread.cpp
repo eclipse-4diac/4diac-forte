@@ -20,7 +20,7 @@
 #include <unistd.h>
 #include "forte/util/criticalregion.h"
 
-forte::arch::CThreadBase<pthread_t>::TThreadHandleType CPosixThread::createThread(long paStackSize) {
+CThreadBase<pthread_t>::TThreadHandleType CPosixThread::createThread(long paStackSize) {
   TThreadHandleType retVal = 0;
 
   if (paStackSize) {
@@ -64,7 +64,7 @@ forte::arch::CThreadBase<pthread_t>::TThreadHandleType CPosixThread::createThrea
 
 void *CPosixThread::threadFunction(void *paArguments) {
   // Get pointer to CThread object out of void pointer
-  CThreadBase<pthread_t>::runThread(static_cast<CPosixThread *>(paArguments));
+  runThread(static_cast<CPosixThread *>(paArguments));
   return 0;
 }
 

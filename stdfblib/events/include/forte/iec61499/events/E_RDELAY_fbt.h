@@ -23,7 +23,7 @@ namespace forte::iec61499::events {
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
     public:
-      FORTE_E_RDELAY(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_RDELAY(const StringId paInstanceNameId, CFBContainer &paContainer);
       ~FORTE_E_RDELAY() override = default;
   };
 } // namespace forte::iec61499::events

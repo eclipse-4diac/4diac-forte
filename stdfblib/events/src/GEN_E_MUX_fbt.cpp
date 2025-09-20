@@ -31,7 +31,7 @@ namespace {
   const auto cEventOutputNames = std::array{"EO"_STRID};
 } // namespace
 
-GEN_E_MUX::GEN_E_MUX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+GEN_E_MUX::GEN_E_MUX(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     var_K(0_UINT),
     conn_EO(*this, 0),
@@ -69,9 +69,9 @@ bool GEN_E_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     ++acPos;
     if ('M' != *acPos) {
       // we have an underscore and it is not the first underscore after E
-      size_t numEIs = static_cast<TEventID>(forte::util::strtoul(acPos, nullptr, 10));
+      size_t numEIs = static_cast<TEventID>(util::strtoul(acPos, nullptr, 10));
 
-      if (numEIs < CFunctionBlock::scmMaxInterfaceEvents && numEIs >= 2) {
+      if (numEIs < scmMaxInterfaceEvents && numEIs >= 2) {
         generateGenericInterfacePointNameArray("EI", mEventInputNames, numEIs);
 
         paInterfaceSpec.mEINames = mEventInputNames;
@@ -79,7 +79,7 @@ bool GEN_E_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
         paInterfaceSpec.mDONames = cDataOutputNames;
         return true;
       } else {
-        if (numEIs >= CFunctionBlock::scmMaxInterfaceEvents) {
+        if (numEIs >= scmMaxInterfaceEvents) {
           DEVLOG_ERROR("Cannot configure FB-Instance E_MUX_%d. Number of event inputs exceeds maximum of %d.\n", numEIs,
                        CFunctionBlock::scmMaxInterfaceEvents);
         } else {

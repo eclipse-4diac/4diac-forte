@@ -42,31 +42,30 @@ namespace forte {
    *    - UnsupportedType   The requested FB type is not known to the typelib
    *    - InvalidOperation The requested FB can not be created (e.g. out of memory)
    */
-  CFunctionBlock *createFB(forte::StringId paInstanceNameId,
-                           forte::StringId paFBTypeId,
+  CFunctionBlock *createFB(StringId paInstanceNameId,
+                           StringId paFBTypeId,
                            std::string_view paTypeHash,
-                           forte::CFBContainer &paContainer,
+                           CFBContainer &paContainer,
                            EMGMResponse &paErrorMSG);
 
-  CFunctionBlock *
-  createFB(forte::StringId paInstanceNameId, forte::StringId paFBTypeId, forte::CFBContainer &paContainer);
+  CFunctionBlock *createFB(StringId paInstanceNameId, StringId paFBTypeId, CFBContainer &paContainer);
 
   /*\brief Delete the given FB
    */
   bool deleteFB(CFunctionBlock *paFBToDelete);
 
-  forte::CAdapter *createAdapter(forte::StringId paInstanceNameId,
-                                 forte::StringId paAdapterTypeId,
-                                 forte::CFBContainer &paContainer,
-                                 bool paIsPlug,
-                                 TForteUInt8 paParentAdapterlistID,
-                                 EMGMResponse &paErrorMSG);
+  CAdapter *createAdapter(StringId paInstanceNameId,
+                          StringId paAdapterTypeId,
+                          CFBContainer &paContainer,
+                          bool paIsPlug,
+                          TForteUInt8 paParentAdapterlistID,
+                          EMGMResponse &paErrorMSG);
 
-  CIEC_ANY *createDataTypeInstance(forte::StringId paDTNameId, TForteByte *paDataBuf, EMGMResponse &paErrorMSG);
+  CIEC_ANY *createDataTypeInstance(StringId paDTNameId, TForteByte *paDataBuf, EMGMResponse &paErrorMSG);
 
-  CFBTypeEntry *getFBTypeEntry(forte::StringId paTypeNameId);
-  CAdapterTypeEntry *getAdapterTypeEntry(forte::StringId paTypeNameId);
-  CGlobalConstEntry *getGlobalConstTypeEntry(forte::StringId paTypeNameId);
+  CFBTypeEntry *getFBTypeEntry(StringId paTypeNameId);
+  CAdapterTypeEntry *getAdapterTypeEntry(StringId paTypeNameId);
+  CGlobalConstEntry *getGlobalConstTypeEntry(StringId paTypeNameId);
 
   const std::vector<CFBTypeEntry *> &getFBTypeEntries();
   const std::vector<CAdapterTypeEntry *> &getAdapterTypeEntries();

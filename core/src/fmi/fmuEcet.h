@@ -24,7 +24,7 @@ class CFMUEventChainExecutionThread : public CEventChainExecutionThread {
       mAllowedToRun = paAllowedToRun;
     }
 
-    void setStepSemaphore(forte::arch::CSemaphore *paStepSemaphore) {
+    void setStepSemaphore(CSemaphore *paStepSemaphore) {
       mStepSemaphore = paStepSemaphore;
     }
 
@@ -39,7 +39,7 @@ class CFMUEventChainExecutionThread : public CEventChainExecutionThread {
   private:
     virtual void run();
     bool *mAllowedToRun;
-    forte::arch::CSemaphore *mStepSemaphore;
+    CSemaphore *mStepSemaphore;
     bool mWaitingStep;
 };
 

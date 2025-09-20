@@ -381,7 +381,7 @@ class CFunctionBlock : public forte::CFBContainer {
      * \param paInterfaceSpec  const pointer to the interface spec
      * \param paInstanceNameId string id
      */
-    CFunctionBlock(forte::CFBContainer &paContainer,
+    CFunctionBlock(CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
                    forte::StringId paInstanceNameId);
 

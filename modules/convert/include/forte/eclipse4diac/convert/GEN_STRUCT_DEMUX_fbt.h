@@ -58,17 +58,17 @@ namespace forte::eclipse4diac::convert {
       void fillInterfaceSpec();
 
       std::vector<std::string_view> getConfiguredMemberNames(std::string_view paMemberNameString);
-      CIEC_ANY *getNestedMember(const forte::StringId paNameId, CIEC_STRUCT *paStructType);
+      CIEC_ANY *getNestedMember(const StringId paNameId, CIEC_STRUCT *paStructType);
 
       CEventConnection conn_CNF;
       std::unique_ptr<CIEC_STRUCT> var_IN;
       CDataConnection *conn_IN;
-      std::vector<forte::StringId> mDoNames;
+      std::vector<StringId> mDoNames;
       std::vector<CIEC_ANY *> mConfiguredDOPorts;
 
     public:
       GEN_STRUCT_DEMUX(const GEN_STRUCT_DEMUX &paOther) = delete;
-      GEN_STRUCT_DEMUX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      GEN_STRUCT_DEMUX(const StringId paInstanceNameId, CFBContainer &paContainer);
       ~GEN_STRUCT_DEMUX() override = default;
   };
 } // namespace forte::eclipse4diac::convert

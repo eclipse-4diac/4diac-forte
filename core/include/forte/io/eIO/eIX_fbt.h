@@ -20,9 +20,9 @@ using namespace forte::literals;
 /*! /brief generic class for eIX function blocks providing (event-triggerd) access to one boolean physical input
  *
  */
-class FORTE_eIX final : public forte::io::CeInputFB<CIEC_BOOL> {
+class FORTE_eIX final : public CeInputFB<CIEC_BOOL> {
     DECLARE_FIRMWARE_FB(FORTE_eIX)
 
   public:
-    FORTE_eIX(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    FORTE_eIX(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 };

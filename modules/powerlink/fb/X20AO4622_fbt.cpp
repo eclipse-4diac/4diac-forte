@@ -38,7 +38,7 @@ namespace {
   };
 } // namespace
 
-FORTE_X20AO4622::FORTE_X20AO4622(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_X20AO4622::FORTE_X20AO4622(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     PowerlinkFunctionBlockAO(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_CNF(*this, 1),

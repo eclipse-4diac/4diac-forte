@@ -40,7 +40,7 @@ namespace forte::iec61131::arithmetic {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_F_SUB_DATE_DATE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_SUB_DATE_DATE(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_DATE var_IN1;
       CIEC_DATE var_IN2;

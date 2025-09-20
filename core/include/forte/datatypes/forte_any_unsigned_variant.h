@@ -67,7 +67,7 @@ class CIEC_ANY_UNSIGNED_VARIANT : public CIEC_ANY_UNSIGNED, public TIecAnyUnsign
       unwrap().reset();
     }
 
-    bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
+    bool setDefaultValue(EDataTypeID paDataTypeId);
 
     [[nodiscard]] CIEC_ANY_UNSIGNED &unwrap() override;
 

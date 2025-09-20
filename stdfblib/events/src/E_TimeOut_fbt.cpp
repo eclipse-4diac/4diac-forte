@@ -34,7 +34,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TimeOut::FORTE_E_TimeOut(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_E_TimeOut::FORTE_E_TimeOut(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     mActive(false),
     var_TimeOutSocket("TimeOutSocket"_STRID, *this, 0) {};

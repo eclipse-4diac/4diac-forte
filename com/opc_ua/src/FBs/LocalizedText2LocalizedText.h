@@ -29,7 +29,7 @@ class FORTE_LocalizedText2LocalizedText : public CFunctionBlock {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_LocalizedText2LocalizedText(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    FORTE_LocalizedText2LocalizedText(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
     CIEC_LocalizedText var_IN;
     CIEC_LocalizedText var_OUT;

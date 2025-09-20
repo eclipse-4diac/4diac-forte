@@ -34,7 +34,7 @@ class CBaseFB : public CFunctionBlock {
 #endif
 
   protected:
-    CBaseFB(forte::CFBContainer &paContainer,
+    CBaseFB(CFBContainer &paContainer,
             const SFBInterfaceSpec &paInterfaceSpec,
             forte::StringId paInstanceNameId,
             std::span<const forte::StringId> paVarInternalNames);

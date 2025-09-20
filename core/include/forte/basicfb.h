@@ -31,7 +31,7 @@ class CBasicFB : public CBaseFB {
     CIEC_ANY *getVar(forte::StringId *paNameList, unsigned int paNameListSize) override;
 
   protected:
-    CBasicFB(forte::CFBContainer &paContainer,
+    CBasicFB(CFBContainer &paContainer,
              const SFBInterfaceSpec &paInterfaceSpec,
              forte::StringId paInstanceNameId,
              std::span<const forte::StringId> paVarInternalNames);

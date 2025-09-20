@@ -50,7 +50,7 @@ using namespace forte::iec61131::edgeDetection;
 
 DEFINE_FIRMWARE_FB(FORTE_FB_F_TRIG, "iec61131::edgeDetection::FB_F_TRIG"_STRID)
 
-FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
     var_MEM(true_BOOL),
     var_CLK(0_BOOL),

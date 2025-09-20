@@ -26,7 +26,7 @@ class EmbrickSlave : public forte::io::IOConfigFBMultiSlave, public EmbrickSlave
     EmbrickSlave(const TForteUInt8 *const paSlaveConfigurationIO,
                  const TForteUInt8 paSlaveConfigurationIO_num,
                  int paType,
-                 forte::CFBContainer &paContainer,
+                 CFBContainer &paContainer,
                  const SFBInterfaceSpec &paInterfaceSpec,
                  const forte::StringId paInstanceNameId);
     ~EmbrickSlave() override;

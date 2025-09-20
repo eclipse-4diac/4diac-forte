@@ -21,6 +21,6 @@ using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_QX, "QX"_STRID)
 
-FORTE_QX::FORTE_QX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_QX::FORTE_QX(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     COutputFB<CIEC_BOOL>(paContainer, paInstanceNameId) {
 }

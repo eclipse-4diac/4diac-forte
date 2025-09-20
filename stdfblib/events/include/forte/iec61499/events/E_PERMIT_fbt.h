@@ -44,7 +44,7 @@ namespace forte::iec61499::events {
       void setInitialValues() override;
 
     public:
-      FORTE_E_PERMIT(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_PERMIT(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_BOOL var_PERMIT;
 

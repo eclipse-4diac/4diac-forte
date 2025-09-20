@@ -22,7 +22,7 @@
 #include "MQTTClient.h"
 
 CSyncObject MQTTHandler::smMQTTMutex;
-forte::arch::CSemaphore MQTTHandler::mStateSemaphore;
+CSemaphore MQTTHandler::mStateSemaphore;
 bool MQTTHandler::mIsSemaphoreEmpty = true;
 
 MQTTHandler::MQTTHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
@@ -109,7 +109,7 @@ void MQTTHandler::run() {
     if (needSleep) {
       // sleep in case a subscribe fails while connected
       needSleep = false;
-      CThread::sleepThread(smSleepTime);
+      sleepThread(smSleepTime);
     }
   }
 }

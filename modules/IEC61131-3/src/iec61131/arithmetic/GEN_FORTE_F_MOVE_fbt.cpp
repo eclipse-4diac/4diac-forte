@@ -31,7 +31,7 @@ namespace {
   const auto cEventOutputNames = std::array{"CNF"_STRID};
 } // namespace
 
-GEN_FORTE_F_MOVE::GEN_FORTE_F_MOVE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+GEN_FORTE_F_MOVE::GEN_FORTE_F_MOVE(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr) {
@@ -60,8 +60,8 @@ bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterf
   if (strcmp(paConfigString, "F_MOVE") == 0) {
     mIn = std::make_unique<CIEC_ANY_VARIANT>();
   } else {
-    forte::StringId dataTypeID = getDataTypeNameId(paConfigString);
-    mIn = std::unique_ptr<CIEC_ANY>(forte::createDataTypeInstance(dataTypeID, nullptr));
+    StringId dataTypeID = getDataTypeNameId(paConfigString);
+    mIn = std::unique_ptr<CIEC_ANY>(createDataTypeInstance(dataTypeID, nullptr));
     if (!mIn) {
       return false;
     }
@@ -84,7 +84,7 @@ forte::StringId GEN_FORTE_F_MOVE::getDataTypeNameId(const char *paConfigString) 
     acPos = strchr(acPos, '_');
     if (nullptr != acPos) {
       acPos += 2; // put the position one after the separating number
-      return forte::StringId::lookup(acPos);
+      return StringId::lookup(acPos);
     }
   }
   return {};

@@ -100,15 +100,15 @@ bool CSysFsProcessInterface::valueGPIO(bool paIsInput) {
 
 bool CSysFsProcessInterface::initialise(bool paIsInput, CEventChainExecutionThread *const) {
   bool retVal = false;
-  if (CSysFsProcessInterface::exportGPIO()) {
+  if (exportGPIO()) {
     CThread::sleepThread(250);
-    if (CSysFsProcessInterface::setDirection(paIsInput)) {
+    if (setDirection(paIsInput)) {
       CThread::sleepThread(250);
-      if (CSysFsProcessInterface::valueGPIO(paIsInput)) {
+      if (valueGPIO(paIsInput)) {
         if (paIsInput) {
-          getExtEvHandler<CSysFsProcessInterface::CIOHandler>(*this).registerIXFB(this);
-          if (!getExtEvHandler<CSysFsProcessInterface::CIOHandler>(*this).isAlive()) {
-            getExtEvHandler<CSysFsProcessInterface::CIOHandler>(*this).start();
+          getExtEvHandler<CIOHandler>(*this).registerIXFB(this);
+          if (!getExtEvHandler<CIOHandler>(*this).isAlive()) {
+            getExtEvHandler<CIOHandler>(*this).start();
           }
         }
         DEVLOG_DEBUG("[CSysFsProcessInterface::initialise] Pin with PARAM() %s was properly initialized.\n",
@@ -146,7 +146,7 @@ bool CSysFsProcessInterface::unexportIO() {
 }
 
 bool CSysFsProcessInterface::deinitialise() {
-  getExtEvHandler<CSysFsProcessInterface::CIOHandler>(*this).unregisterIXFB(this);
+  getExtEvHandler<CIOHandler>(*this).unregisterIXFB(this);
   return unexportIO();
 }
 
@@ -224,7 +224,7 @@ void CSysFsProcessInterface::CIOHandler::unregisterIXFB(CSysFsProcessInterface *
 
 void CSysFsProcessInterface::CIOHandler::run() {
   while (isAlive()) {
-    CThread::sleepThread(10);
+    sleepThread(10);
     updateReadData();
   }
 }

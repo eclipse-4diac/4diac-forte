@@ -24,7 +24,7 @@
 
 using namespace forte::literals;
 
-TPortId forte::getPortId(forte::StringId paPortNameId, std::span<const forte::StringId> paPortNames) {
+TPortId forte::getPortId(StringId paPortNameId, std::span<const StringId> paPortNames) {
   auto it = std::find(paPortNames.begin(), paPortNames.end(), paPortNameId);
   if (it == paPortNames.end()) {
     return cgInvalidPortId;

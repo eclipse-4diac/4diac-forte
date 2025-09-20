@@ -46,7 +46,7 @@ using namespace forte::iec61131::timers;
 
 DEFINE_FIRMWARE_FB(FORTE_FB_TON, "iec61131::timers::FB_TON"_STRID)
 
-FORTE_FB_TON::FORTE_FB_TON(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_FB_TON::FORTE_FB_TON(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(0_BOOL),
     var_PT(0_TIME),

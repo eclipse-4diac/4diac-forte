@@ -29,7 +29,7 @@ using namespace forte::com_infra;
 using namespace forte::literals;
 
 namespace {
-  [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<COpcComLayer> entry("opc"_STRID);
+  [[maybe_unused]] const ComLayerManager::EntryImpl<COpcComLayer> entry("opc"_STRID);
 }
 
 COpcComLayer::COpcComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :

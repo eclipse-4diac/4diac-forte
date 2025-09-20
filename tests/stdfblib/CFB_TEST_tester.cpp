@@ -21,7 +21,7 @@ struct CFB_TEST_TestFixture : public CFBTestFixtureBase {
     CFB_TEST_TestFixture() : CFBTestFixtureBase("CFB_TEST"_STRID) {
       setInputData({&mInQI});
       setOutputData({&mOutSR});
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_BOOL mInQI;

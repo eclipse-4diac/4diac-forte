@@ -69,7 +69,7 @@ class CCompositeFB : public CFunctionBlock {
      * \param paInstanceNameId StringId of instance name
      * \param paFBNData        const reference to description of internal structure of FB (FBs, Connections, ...)
      */
-    CCompositeFB(forte::CFBContainer &paContainer,
+    CCompositeFB(CFBContainer &paContainer,
                  const SFBInterfaceSpec &paInterfaceSpec,
                  forte::StringId paInstanceNameId,
                  const SCFB_FBNData &paFBNData);

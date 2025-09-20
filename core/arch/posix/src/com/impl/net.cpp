@@ -34,18 +34,18 @@ int forte::com::impl::net::open(const std::string_view paConfigString, const add
   }
 
   for (const addrinfo *rp = result; rp != nullptr; rp = rp->ai_next) {
-    const int sock = ::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
+    const int sock = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
     if (sock < 0) {
       continue;
     }
 
-    if ((rp->ai_flags & AI_PASSIVE ? ::bind(sock, rp->ai_addr, rp->ai_addrlen)
-                                   : ::connect(sock, rp->ai_addr, rp->ai_addrlen)) == 0) {
+    if ((rp->ai_flags & AI_PASSIVE ? bind(sock, rp->ai_addr, rp->ai_addrlen)
+                                   : connect(sock, rp->ai_addr, rp->ai_addrlen)) == 0) {
       freeaddrinfo(result);
       return sock;
     }
 
-    ::close(sock);
+    close(sock);
   }
 
   freeaddrinfo(result);
@@ -53,7 +53,7 @@ int forte::com::impl::net::open(const std::string_view paConfigString, const add
 }
 
 int forte::com::impl::net::setNonBlocking(const int paSocket) {
-  const int flags = ::fcntl(paSocket, F_GETFL, 0);
+  const int flags = fcntl(paSocket, F_GETFL, 0);
   if (flags == -1) {
     return -1;
   }

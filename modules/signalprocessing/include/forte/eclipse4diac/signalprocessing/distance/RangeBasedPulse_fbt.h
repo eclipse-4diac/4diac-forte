@@ -49,7 +49,7 @@ namespace forte::eclipse4diac::signalprocessing::distance {
       void setInitialValues() override;
 
     public:
-      FORTE_RangeBasedPulse(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_RangeBasedPulse(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_UDINT var_DIST_IN;
       CIEC_UDINT var_DIST_OFF;

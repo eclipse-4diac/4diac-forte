@@ -37,5 +37,5 @@ class CFBContainerMock : public forte::CFBContainer {
     }
 
   private:
-    CFBContainerMock() : forte::CFBContainer({}, *this) {};
+    CFBContainerMock() : CFBContainer({}, *this) {};
 };

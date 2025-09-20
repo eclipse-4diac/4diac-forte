@@ -109,7 +109,7 @@ class CIEC_ANY_DURATION : public CIEC_ANY_MAGNITUDE {
     }
 
     EDataTypeID getDataTypeID() const override {
-      return CIEC_ANY::e_ANY;
+      return e_ANY;
     }
 
   protected:

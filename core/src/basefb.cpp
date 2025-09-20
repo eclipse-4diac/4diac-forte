@@ -23,7 +23,7 @@
 #include "resource_internal.h"
 #include "forte/util/string_utils.h"
 
-CBaseFB::CBaseFB(forte::CFBContainer &paContainer,
+CBaseFB::CBaseFB(CFBContainer &paContainer,
                  const SFBInterfaceSpec &paInterfaceSpec,
                  const forte::StringId paInstanceNameId,
                  std::span<const forte::StringId> paVarInternalNames) :

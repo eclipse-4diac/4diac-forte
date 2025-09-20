@@ -18,7 +18,7 @@ struct F_TIME_IN_MS_TO_LREAL_TestFixture : public CFBTestFixtureBase {
     F_TIME_IN_MS_TO_LREAL_TestFixture() : CFBTestFixtureBase("iec61131::conversion::F_TIME_IN_MS_TO_LREAL"_STRID) {
       setInputData({&mIn_F_TIME_IN_MS_TO_LREAL});
       setOutputData({&mOut_F_TIME_IN_MS_TO_LREAL});
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_TIME mIn_F_TIME_IN_MS_TO_LREAL; // DATA INPUT

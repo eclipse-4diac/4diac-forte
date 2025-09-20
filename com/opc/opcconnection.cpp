@@ -141,7 +141,7 @@ bool COpcConnection::ifInGroupList(const std::string &paGroupName) {
 int COpcConnection::send_connect(const std::string &paGroupName,
                                  unsigned long paReqUpdateRate,
                                  float paDeadBand,
-                                 forte::com_infra::CComLayer *paComCallback,
+                                 CComLayer *paComCallback,
                                  std::vector<COpcProcessVar *> paNewItems) {
   if (mConnectionState == e_Disconnected) {
     mEventHandler->enableHandler();

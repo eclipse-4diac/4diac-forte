@@ -19,7 +19,7 @@ PLCnextSlaveHandle::PLCnextSlaveHandle(forte::io::IODeviceController *paControll
                                        forte::io::IOMapper::Direction paDirection,
                                        CIEC_ANY::EDataTypeID paType,
                                        PLCnextSlaveHandler *paSlave) :
-    forte::io::IOHandle(paController, paDirection, paType),
+    IOHandle(paController, paDirection, paType),
     mSlave(paSlave),
     mOffset(paSlave->imageOffset) {
 }
@@ -29,10 +29,10 @@ PLCnextSlaveHandle::~PLCnextSlaveHandle() {
 
 void PLCnextSlaveHandle::onObserver(forte::io::IOObserver *paObserver) {
   reset();
-  forte::io::IOHandle::onObserver(paObserver);
+  IOHandle::onObserver(paObserver);
 }
 
 void PLCnextSlaveHandle::dropObserver() {
-  forte::io::IOHandle::dropObserver();
+  IOHandle::dropObserver();
   reset();
 }

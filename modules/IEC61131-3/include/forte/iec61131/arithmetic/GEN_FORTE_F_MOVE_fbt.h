@@ -50,7 +50,7 @@ namespace forte::iec61131::arithmetic {
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;
 
-      static forte::StringId getDataTypeNameId(const char *paConfigString);
+      static StringId getDataTypeNameId(const char *paConfigString);
 
       CEventConnection conn_CNF;
 
@@ -60,7 +60,7 @@ namespace forte::iec61131::arithmetic {
       std::unique_ptr<CGenDataConnection> conn_OUT;
 
     public:
-      GEN_FORTE_F_MOVE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      GEN_FORTE_F_MOVE(const StringId paInstanceNameId, CFBContainer &paContainer);
       ~GEN_FORTE_F_MOVE() override = default;
   };
 } // namespace forte::iec61131::arithmetic

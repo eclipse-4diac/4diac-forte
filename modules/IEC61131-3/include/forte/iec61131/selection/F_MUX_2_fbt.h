@@ -40,7 +40,7 @@ namespace forte::iec61131::selection {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_F_MUX_2(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_MUX_2(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_ANY_INT_VARIANT var_K;
       CIEC_ANY_VARIANT var_IN1;

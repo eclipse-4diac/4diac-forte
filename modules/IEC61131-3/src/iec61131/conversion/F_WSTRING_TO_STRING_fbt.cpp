@@ -46,8 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_WSTRING_TO_STRING::FORTE_F_WSTRING_TO_STRING(const forte::StringId paInstanceNameId,
-                                                     forte::CFBContainer &paContainer) :
+FORTE_F_WSTRING_TO_STRING::FORTE_F_WSTRING_TO_STRING(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(u""_WSTRING),
     var_OUT(""_STRING),

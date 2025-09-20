@@ -58,7 +58,7 @@ class CIEC_DATE final : public CIEC_ANY_DATE {
     }
 
     EDataTypeID getDataTypeID() const override {
-      return CIEC_ANY::e_DATE;
+      return e_DATE;
     }
 
     /*! \brief Converts string value to data type value
@@ -105,7 +105,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_DATE> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_DATE;
-      static const forte::StringId scmDataTypeName;
+      static const StringId scmDataTypeName;
   };
 } // namespace forte
 

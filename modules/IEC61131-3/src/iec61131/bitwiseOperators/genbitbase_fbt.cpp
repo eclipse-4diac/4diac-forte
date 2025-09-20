@@ -27,7 +27,7 @@ namespace {
   const auto cEventOutputNames = std::array{"CNF"_STRID};
 } // namespace
 
-CGenBitBase::CGenBitBase(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+CGenBitBase::CGenBitBase(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_OUT(*this, 0, var_OUT) {
@@ -49,7 +49,7 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
   if (nullptr != pcPos) {
     pcPos++;
     // we have an underscore and it is the first underscore after AND
-    numDIs = static_cast<TPortId>(forte::util::strtoul(pcPos, nullptr, 10));
+    numDIs = static_cast<TPortId>(util::strtoul(pcPos, nullptr, 10));
     DEVLOG_DEBUG("DIs: %d;\n", numDIs);
   } else {
     return false;
@@ -61,7 +61,7 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
 
   // now the number of needed eventInputs and dataOutputs are available in the integer array
   // create the eventInputs
-  if (numDIs < CFunctionBlock::scmMaxInterfaceEvents) {
+  if (numDIs < scmMaxInterfaceEvents) {
 
     // create the data inputs
     generateGenericInterfacePointNameArray("IN", mDataInputNames, numDIs);

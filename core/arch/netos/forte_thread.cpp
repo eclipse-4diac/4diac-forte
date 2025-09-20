@@ -21,7 +21,7 @@
 const int CTXThread::scmThreadListSize = 27;
 TCTXThreadPtr CTXThread::smThreadList[27] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
-forte::arch::CThreadBase<TX_THREAD>::TThreadHandleType CTXThread::createThread(long paStackSize) {
+CThreadBase<TX_THREAD>::TThreadHandleType CTXThread::createThread(long paStackSize) {
   memset((void *) &mThreadData, 0, sizeof(mThreadData));
 
   if (TX_SUCCESS == tx_thread_create(&mThreadData, mThreadName, threadFunction, (ULONG) (this), mStack, paStackSize,

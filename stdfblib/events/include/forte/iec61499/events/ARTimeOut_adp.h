@@ -21,7 +21,7 @@
 #include "forte/datatypes/forte_array_variable.h"
 
 namespace forte::iec61499::events {
-  class FORTE_ARTimeOut : public forte::CAdapter {
+  class FORTE_ARTimeOut : public CAdapter {
       DECLARE_ADAPTER_TYPE(FORTE_ARTimeOut)
 
     private:
@@ -55,17 +55,15 @@ namespace forte::iec61499::events {
       virtual ~FORTE_ARTimeOut() override = default;
 
     protected:
-      FORTE_ARTimeOut(forte::CFBContainer &paContainer,
+      FORTE_ARTimeOut(CFBContainer &paContainer,
                       const SFBInterfaceSpec &paInterfaceSpec,
-                      const forte::StringId paInstanceNameId,
+                      const StringId paInstanceNameId,
                       TForteUInt8 paParentAdapterlistID);
   };
 
   class FORTE_ARTimeOut_Plug final : public FORTE_ARTimeOut {
     public:
-      FORTE_ARTimeOut_Plug(forte::StringId paInstanceNameId,
-                           forte::CFBContainer &paContainer,
-                           TForteUInt8 paParentAdapterlistID);
+      FORTE_ARTimeOut_Plug(StringId paInstanceNameId, CFBContainer &paContainer, TForteUInt8 paParentAdapterlistID);
       ~FORTE_ARTimeOut_Plug() override = default;
 
       CEventConnection conn_TimeOut;
@@ -84,9 +82,7 @@ namespace forte::iec61499::events {
 
   class FORTE_ARTimeOut_Socket final : public FORTE_ARTimeOut {
     public:
-      FORTE_ARTimeOut_Socket(forte::StringId paInstanceNameId,
-                             forte::CFBContainer &paContainer,
-                             TForteUInt8 paParentAdapterlistID);
+      FORTE_ARTimeOut_Socket(StringId paInstanceNameId, CFBContainer &paContainer, TForteUInt8 paParentAdapterlistID);
       ~FORTE_ARTimeOut_Socket() override = default;
 
       CEventConnection conn_START;

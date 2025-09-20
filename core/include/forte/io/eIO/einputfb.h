@@ -32,17 +32,17 @@ namespace forte::io {
 
       using CInputFB<T>::scmDataInputNames;
       using CInputFB<T>::scmDataOutputNames;
-      static const std::array<const forte::StringId, 1> scmPlugs;
+      static const std::array<const StringId, 1> scmPlugs;
 
     protected:
       using CInputFB<T>::var_IN;
 
     public:
-      CeInputFB(forte::CFBContainer &paContainer, const forte::StringId paInstanceNameId) :
+      CeInputFB(CFBContainer &paContainer, const StringId paInstanceNameId) :
           CInputFB<T>(paContainer, scmFBInterfaceSpec, paInstanceNameId),
           var_eCONF("eCONF"_STRID, *this, 0) {};
 
-      forte::CPlugPin<FORTE_eGenAdapter_Plug> var_eCONF;
+      CPlugPin<FORTE_eGenAdapter_Plug> var_eCONF;
 
       CeConfigFB *mPeerFB;
 
@@ -106,7 +106,7 @@ namespace forte::io {
   };
 
   template<class T>
-  const std::array<const forte::StringId, 1> CeInputFB<T>::scmPlugs = {"eCONF"_STRID};
+  const std::array<const StringId, 1> CeInputFB<T>::scmPlugs = {"eCONF"_STRID};
 
   template<class T>
   const SFBInterfaceSpec CeInputFB<T>::scmFBInterfaceSpec = {

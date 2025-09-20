@@ -72,7 +72,7 @@ void fileReader::executeEvent(TEventID paEIID,
   }
 }
 
-fileReader::fileReader(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+fileReader::fileReader(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId) {
   mFile.rdbuf()->pubsetbuf(nullptr, 0); // disable buffer to avoid latency
 }

@@ -18,7 +18,7 @@ TCECOSThreadPtr CECOSThread::smThreadList[CECOSThread::scmThreadListSize] = {0, 
                                                                              0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 CSyncObject CECOSThread::smThreadListLock;
 
-forte::arch::CThreadBase<cyg_handle_t>::TThreadHandleType CECOSThread::createThread(long paStackSize) {
+CThreadBase<cyg_handle_t>::TThreadHandleType CECOSThread::createThread(long paStackSize) {
   TThreadHandleType handle = 0;
   char taskName[] = "Test Name"; // cyg_thread_create waits a char* instead of const char*, so this avoid a warning
   cyg_thread_create(scmThreadListSize + 2, // lowest priority in ecos

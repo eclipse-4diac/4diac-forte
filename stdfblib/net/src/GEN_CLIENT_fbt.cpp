@@ -19,6 +19,6 @@ using namespace forte::iec61499::net;
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_CLIENT, "iec61499::net::GEN_CLIENT"_STRID)
 
-GEN_CLIENT::GEN_CLIENT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
-    forte::com_infra::CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Client) {
+GEN_CLIENT::GEN_CLIENT(const StringId paInstanceNameId, CFBContainer &paContainer) :
+    CCommFB(paInstanceNameId, paContainer, com_infra::e_Client) {
 }

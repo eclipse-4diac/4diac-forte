@@ -18,6 +18,6 @@ using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_eIX, "eIX"_STRID)
 
-FORTE_eIX::FORTE_eIX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_eIX::FORTE_eIX(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     CeInputFB<CIEC_BOOL>(paContainer, paInstanceNameId) {
 }

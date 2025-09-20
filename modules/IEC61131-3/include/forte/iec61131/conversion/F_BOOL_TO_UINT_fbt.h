@@ -44,7 +44,7 @@ namespace forte::iec61131::conversion {
       void setInitialValues() override;
 
     public:
-      FORTE_F_BOOL_TO_UINT(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_BOOL_TO_UINT(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_BOOL var_IN;
 

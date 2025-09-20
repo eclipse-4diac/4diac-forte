@@ -67,7 +67,7 @@ class CIEC_ANY_SIGNED_VARIANT : public CIEC_ANY_SIGNED, public TIecAnySignedVari
       unwrap().reset();
     }
 
-    bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
+    bool setDefaultValue(EDataTypeID paDataTypeId);
 
     [[nodiscard]] CIEC_ANY_SIGNED &unwrap() override;
 

@@ -47,7 +47,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_SUB_DATE_DATE::FORTE_F_SUB_DATE_DATE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_F_SUB_DATE_DATE::FORTE_F_SUB_DATE_DATE(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_DATE(0)),
     var_IN2(CIEC_DATE(0)),

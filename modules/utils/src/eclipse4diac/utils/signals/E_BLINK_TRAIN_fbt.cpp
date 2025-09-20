@@ -73,7 +73,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_BLINK_TRAIN::FORTE_E_BLINK_TRAIN(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_E_BLINK_TRAIN::FORTE_E_BLINK_TRAIN(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_TP("E_TP"_STRID, *this),
     fb_E_TRAIN("E_TRAIN"_STRID, *this),

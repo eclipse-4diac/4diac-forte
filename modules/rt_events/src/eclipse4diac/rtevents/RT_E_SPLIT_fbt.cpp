@@ -39,7 +39,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RT_E_SPLIT::FORTE_RT_E_SPLIT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_RT_E_SPLIT::FORTE_RT_E_SPLIT(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_EO1(*this, 1),

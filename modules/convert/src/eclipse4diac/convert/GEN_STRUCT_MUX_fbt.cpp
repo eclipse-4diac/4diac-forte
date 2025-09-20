@@ -33,7 +33,7 @@ void GEN_STRUCT_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
   }
 }
 
-GEN_STRUCT_MUX::GEN_STRUCT_MUX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+GEN_STRUCT_MUX::GEN_STRUCT_MUX(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0) {
 }
@@ -56,7 +56,7 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
     return false;
   }
 
-  std::unique_ptr<CIEC_ANY> data(forte::createDataTypeInstance(structTypeNameId, nullptr));
+  std::unique_ptr<CIEC_ANY> data(createDataTypeInstance(structTypeNameId, nullptr));
 
   if (nullptr == data) {
     DEVLOG_ERROR("[GEN_STRUCT_MUX]: Couldn't create structure of type: %s\n", structTypeNameId.data());
@@ -95,7 +95,7 @@ forte::StringId GEN_STRUCT_MUX::getStructNameId(std::string_view paConfigString)
     index = nameId.find('_');
     if (index != std::string::npos) {
       nameId = nameId.substr(index + 2); // put the position one after the separating number
-      return forte::StringId::lookup(nameId);
+      return StringId::lookup(nameId);
     }
   }
   return {};

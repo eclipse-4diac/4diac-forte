@@ -42,7 +42,7 @@ namespace forte::iec61131::comparison {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_F_NE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_F_NE(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_ANY_ELEMENTARY_VARIANT var_IN1;
       CIEC_ANY_ELEMENTARY_VARIANT var_IN2;

@@ -46,8 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_UINT_TO_BCD_WORD::FORTE_F_UINT_TO_BCD_WORD(const forte::StringId paInstanceNameId,
-                                                   forte::CFBContainer &paContainer) :
+FORTE_F_UINT_TO_BCD_WORD::FORTE_F_UINT_TO_BCD_WORD(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_UINT),
     var_OUT(0_WORD),

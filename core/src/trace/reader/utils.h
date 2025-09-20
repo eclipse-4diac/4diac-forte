@@ -47,7 +47,7 @@ namespace forte::trace::reader::utils {
    * @return a pointer to the resource with the provided name, nullptr if a resource with the provided name does not
    * exist
    */
-  CFunctionBlock *getFB(forte::CFBContainer *paContainer, const std::string &paFunctionBlockName);
+  CFunctionBlock *getFB(CFBContainer *paContainer, const std::string &paFunctionBlockName);
 
   /**
    * @brief  Same as the previous function, but using other type of input parameter
@@ -57,7 +57,7 @@ namespace forte::trace::reader::utils {
    * @return a pointer to the resource with the provided name, nullptr if a resource with the provided name does not
    * exist
    */
-  CFunctionBlock *getFB(forte::CFBContainer *paContainer, forte::StringId paFunctionBlockName);
+  CFunctionBlock *getFB(CFBContainer *paContainer, StringId paFunctionBlockName);
 
   struct FactoriesSettings {
       StringId mEcet{"default"_STRID};
@@ -78,7 +78,7 @@ namespace forte::trace::reader::utils {
    * @param paContainer container where to look for the types
    * @return list of of service function block types
    */
-  std::set<forte::StringId> getServiceFunctionBlockTypes(forte::CFBContainer &paContainer);
+  std::set<StringId> getServiceFunctionBlockTypes(CFBContainer &paContainer);
 
   /**
    * @brief Get the list of message from a directory containing CTF traces separated by resource

@@ -20,9 +20,9 @@ using namespace forte::literals;
 /*! /brief generic class for eIW function blocks providing (event-triggerd) access to a physical input
  *
  */
-class FORTE_eIW final : public forte::io::CeInputFB<CIEC_WORD> {
+class FORTE_eIW final : public CeInputFB<CIEC_WORD> {
     DECLARE_FIRMWARE_FB(FORTE_eIW)
 
   public:
-    FORTE_eIW(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    FORTE_eIW(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 };

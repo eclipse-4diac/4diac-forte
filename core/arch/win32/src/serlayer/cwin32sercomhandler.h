@@ -47,7 +47,7 @@ class CWin32SerComHandler : public CExternalEventHandler,
     CSyncObject mSync;
 
     //! Sempahore for implementing a suspend feature similar to what we are doing in CEventChainExecutionThread
-    forte::arch::CSemaphore mSem;
+    CSemaphore mSem;
 };
 
 #endif /* CWIN32SERCOMLAYER_H_ */

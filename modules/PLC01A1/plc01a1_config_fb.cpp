@@ -47,7 +47,7 @@ namespace {
   };
 } // namespace
 
-PLC01A1ConfigFB::PLC01A1ConfigFB(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+PLC01A1ConfigFB::PLC01A1ConfigFB(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_IN1(u""_WSTRING),

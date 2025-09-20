@@ -41,7 +41,7 @@ namespace forte::eclipse4diac::utils {
       CSyncObject mFinalReportMutex;
 
     public:
-      FORTE_TEST_CONDITION(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_TEST_CONDITION(StringId paInstanceNameId, CFBContainer &paContainer);
       ~FORTE_TEST_CONDITION() override;
 
       CIEC_BOOL var_check;

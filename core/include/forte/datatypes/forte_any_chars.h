@@ -28,7 +28,7 @@ class CIEC_ANY_CHARS : public CIEC_ANY_ELEMENTARY {
     ~CIEC_ANY_CHARS() override = default;
 
     EDataTypeID getDataTypeID() const override {
-      return CIEC_ANY::e_ANY;
+      return e_ANY;
     }
 
   protected:

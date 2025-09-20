@@ -88,9 +88,8 @@ namespace forte::util {
     paResult.pop_back(); // remove extra delimiter at end
   }
 
-  void writeToStringNameValuePair(std::string &paTargetBuf,
-                                  const forte::StringId variableNameId,
-                                  const CIEC_ANY *const variable);
+  void
+  writeToStringNameValuePair(std::string &paTargetBuf, const StringId variableNameId, const CIEC_ANY *const variable);
 
 } // namespace forte::util
 

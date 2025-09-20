@@ -104,9 +104,8 @@ void CHTTP_Handler::clearAcceptedSockets() {
   mAcceptedSockets.clear();
 }
 
-forte::com_infra::EComResponse
-CHTTP_Handler::recvData(const void *paData,
-                        unsigned int) { // TODO: do something with the size parameter of the received data?
+EComResponse CHTTP_Handler::recvData(const void *paData,
+                                     unsigned int) { // TODO: do something with the size parameter of the received data?
   CIPComSocketHandler::TSocketDescriptor socket =
       *(static_cast<const CIPComSocketHandler::TSocketDescriptor *>(paData));
 
@@ -246,7 +245,7 @@ void CHTTP_Handler::handlerReceivedWrongPath(const CIPComSocketHandler::TSocketD
   removeAndCloseSocket(paSocket);
 }
 
-bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer *paLayer, const std::string &paToSend) {
+bool CHTTP_Handler::sendClientData(CHttpComLayer *paLayer, const std::string &paToSend) {
   CIPComSocketHandler::TSocketDescriptor newSocket =
       CIPComSocketHandler::openTCPClientConnection(paLayer->getHost().data(), paLayer->getPort());
   if (CIPComSocketHandler::scmInvalidSocketDescriptor != newSocket) {
@@ -274,7 +273,7 @@ bool CHTTP_Handler::sendClientData(forte::com_infra::CHttpComLayer *paLayer, con
   return false;
 }
 
-bool CHTTP_Handler::addServerPath(forte::com_infra::CHttpComLayer *paLayer, const std::string &paPath) {
+bool CHTTP_Handler::addServerPath(CHttpComLayer *paLayer, const std::string &paPath) {
   CCriticalRegion criticalRegion(mServerMutex);
 
   for (auto &serverLayer : mServerLayers) {
@@ -313,19 +312,19 @@ void CHTTP_Handler::removeServerPath(const std::string &paPath) {
   }
 }
 
-void CHTTP_Handler::sendServerAnswer(forte::com_infra::CHttpComLayer *paLayer, const std::string &paAnswer) {
+void CHTTP_Handler::sendServerAnswer(CHttpComLayer *paLayer, const std::string &paAnswer) {
   sendServerAnswerHelper(paLayer, paAnswer, false);
 }
 
-void CHTTP_Handler::sendServerAnswerFromRecv(forte::com_infra::CHttpComLayer *paLayer, const std::string &paAnswer) {
+void CHTTP_Handler::sendServerAnswerFromRecv(CHttpComLayer *paLayer, const std::string &paAnswer) {
   sendServerAnswerHelper(paLayer, paAnswer, true);
 }
 
-void CHTTP_Handler::forceClose(forte::com_infra::CHttpComLayer *paLayer) {
+void CHTTP_Handler::forceClose(CHttpComLayer *paLayer) {
   forceCloseHelper(paLayer, false);
 }
 
-void CHTTP_Handler::forceCloseFromRecv(forte::com_infra::CHttpComLayer *paLayer) {
+void CHTTP_Handler::forceCloseFromRecv(CHttpComLayer *paLayer) {
   forceCloseHelper(paLayer, true);
 }
 
@@ -432,9 +431,7 @@ void CHTTP_Handler::selfSuspend() {
   mSuspendSemaphore.waitIndefinitely();
 }
 
-void CHTTP_Handler::sendServerAnswerHelper(forte::com_infra::CHttpComLayer *paLayer,
-                                           const std::string &paAnswer,
-                                           bool paFromRecv) {
+void CHTTP_Handler::sendServerAnswerHelper(CHttpComLayer *paLayer, const std::string &paAnswer, bool paFromRecv) {
   if (!paFromRecv) {
     mServerMutex.lock();
   }
@@ -457,7 +454,7 @@ void CHTTP_Handler::sendServerAnswerHelper(forte::com_infra::CHttpComLayer *paLa
   }
 }
 
-void CHTTP_Handler::forceCloseHelper(forte::com_infra::CHttpComLayer *paLayer, bool paFromRecv) {
+void CHTTP_Handler::forceCloseHelper(CHttpComLayer *paLayer, bool paFromRecv) {
   if (!paFromRecv) {
     mServerMutex.lock();
   }

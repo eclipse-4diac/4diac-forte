@@ -26,9 +26,9 @@ const char *const IOConfigFBMultiSlave::scmIncorrectType("Module type is incorre
 IOConfigFBMultiSlave::IOConfigFBMultiSlave(const TForteUInt8 *const paSlaveConfigurationIO,
                                            const TForteUInt8 paSlaveConfigurationIONum,
                                            int paType,
-                                           forte::CFBContainer &paContainer,
+                                           CFBContainer &paContainer,
                                            const SFBInterfaceSpec &paInterfaceSpec,
-                                           const forte::StringId paInstanceNameId) :
+                                           const StringId paInstanceNameId) :
     IOConfigFBBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mIndex(static_cast<size_t>(-1)),
     mSlaveConfigurationIO(paSlaveConfigurationIO),

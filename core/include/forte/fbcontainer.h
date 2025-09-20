@@ -35,20 +35,20 @@ namespace forte {
       template<typename U>
       friend class CInternalFB;
 
-      friend class forte::CAnyAdapterPin;
+      friend class CAnyAdapterPin;
 
     protected:
-      using NameIterator = forte::TNameIdentifier::const_iterator;
+      using NameIterator = TNameIdentifier::const_iterator;
 
     public:
-      CFBContainer(forte::StringId paContInstanceName, CFBContainer &paParent);
+      CFBContainer(StringId paContInstanceName, CFBContainer &paParent);
 
       virtual bool initialize();
       virtual void deinitialize();
 
       virtual ~CFBContainer();
 
-      forte::StringId getInstanceNameId() const {
+      StringId getInstanceNameId() const {
         return mContInstanceName;
       }
 
@@ -62,7 +62,7 @@ namespace forte {
        * @param paTypeName      the type name of the FB to be created
        * @return response of the command execution as defined in IEC 61499
        */
-      EMGMResponse createFB(forte::StringId paInstanceNameId, forte::StringId paTypeName, std::string_view paTypeHash);
+      EMGMResponse createFB(StringId paInstanceNameId, StringId paTypeName, std::string_view paTypeHash);
 
       /*!\brief Gets a function block from the container or recursively from its subcontainers
        *
@@ -131,14 +131,14 @@ namespace forte {
        * @param paDstNameList array of the name hierarchy the requested connection destination
        * @return pointer to the requested connection, returns nullptr if there is no such destination
        */
-      virtual CConnection *getInputConnection(std::span<const forte::StringId> paDstNameList);
+      virtual CConnection *getInputConnection(std::span<const StringId> paDstNameList);
 
       /*!\brief get the connection object for the given source identifier
        *
        * @param paSrcNameList array of the name hierarchy the requested connection source
        * @return pointer to the requested connection, returns nullptr if there is no such source
        */
-      virtual CConnection::Wrapper getOutputConnection(std::span<const forte::StringId> paSrcNameList);
+      virtual CConnection::Wrapper getOutputConnection(std::span<const StringId> paSrcNameList);
 
     protected:
       /*!\brief Create a new FB instance of given type and name
@@ -147,24 +147,23 @@ namespace forte {
        * @param paTypeName      the type name of the FB to be created
        * @return response of the command execution as defined in IEC 61499
        */
-      EMGMResponse
-      createFB(std::span<const forte::StringId> paNameList, forte::StringId paTypeName, std::string_view paTypeHash);
+      EMGMResponse createFB(std::span<const StringId> paNameList, StringId paTypeName, std::string_view paTypeHash);
 
       /*!\brief Delete a FB instance with given name
        *
        * @param paNameList the name list for the FB to be deleted (e.g., SubApp1.SubApp2.FBName, FBName2)
        * @return response of the command execution as defined in IEC 61499
        */
-      EMGMResponse deleteFB(std::span<const forte::StringId> paNameList);
+      EMGMResponse deleteFB(std::span<const StringId> paNameList);
 
       /*! get fb contained in this fbcontainer
        *
        */
-      CFunctionBlock *getFB(forte::StringId paFBName);
+      CFunctionBlock *getFB(StringId paFBName);
 
-      CFBContainer *getChild(forte::StringId paName);
+      CFBContainer *getChild(StringId paName);
 
-      TFBContainerList::iterator getChildrenIterator(forte::StringId paName);
+      TFBContainerList::iterator getChildrenIterator(StringId paName);
 
     private:
       /*!\brief Adds a function block created via the typelib to the FB-List
@@ -182,7 +181,7 @@ namespace forte {
       /*!\brief Check if the given iterator points to a valid child with the provide name
        *
        */
-      bool isChild(TFBContainerList::iterator childIt, forte::StringId paName) {
+      bool isChild(TFBContainerList::iterator childIt, StringId paName) {
         return (childIt != mChildren.end() && (*childIt)->getInstanceNameId() == paName);
       }
 
@@ -191,9 +190,9 @@ namespace forte {
        * @param paContainerName name of the container
        * @return pointer to the container or 0 if an FB with the same name exists in this container
        */
-      CFBContainer *findOrCreateContainer(forte::StringId paContainerName);
+      CFBContainer *findOrCreateContainer(StringId paContainerName);
 
-      const forte::StringId mContInstanceName; //!< Instance name of the container
+      const StringId mContInstanceName; //!< Instance name of the container
       CFBContainer &mParent; //!< the parent FBContainer this FBContainer is contained in. The parent of a device is
                              //!< the device itself!
 
@@ -205,21 +204,19 @@ namespace forte {
       static_assert(std::is_base_of_v<CFunctionBlock, T>, "T must be a CFunctionBlock");
 
     public:
-      CInternalFB(forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+      CInternalFB(StringId paInstanceNameId, CFBContainer &paContainer) :
           mFB(std::make_unique<T>(paInstanceNameId, paContainer)) {
         paContainer.addFB(*mFB);
       }
 
-      CInternalFB(forte::StringId paInstanceNameId, const char *paConfigString, CFBContainer &paContainer) :
+      CInternalFB(StringId paInstanceNameId, const char *paConfigString, CFBContainer &paContainer) :
           mFB(std::make_unique<T>(paInstanceNameId, paContainer)) {
         mFB->configureFB(paConfigString);
         paContainer.addFB(*mFB);
       }
 
-      template<typename U = T, typename = typename std::enable_if<std::is_base_of<forte::CAdapter, U>::value>::type>
-      CInternalFB(forte::StringId paInstanceNameId,
-                  forte::CFBContainer &paContainer,
-                  TForteUInt8 paParentAdapterlistID) :
+      template<typename U = T, typename = typename std::enable_if<std::is_base_of<CAdapter, U>::value>::type>
+      CInternalFB(StringId paInstanceNameId, CFBContainer &paContainer, TForteUInt8 paParentAdapterlistID) :
           mFB(std::make_unique<T>(paInstanceNameId, paContainer, paParentAdapterlistID)) {
         paContainer.addFB(*mFB);
       }

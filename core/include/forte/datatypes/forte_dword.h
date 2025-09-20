@@ -106,7 +106,7 @@ class CIEC_DWORD : public CIEC_ANY_BIT {
     }
 
     EDataTypeID getDataTypeID() const override {
-      return CIEC_ANY::e_DWORD;
+      return e_DWORD;
     }
 
     /*! \brief Partial access within a CIEC_DWORD (e.g. [DWORD].partial<CIEC_BOOL>(1))
@@ -158,7 +158,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_DWORD> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_DWORD;
-      static const forte::StringId scmDataTypeName;
+      static const StringId scmDataTypeName;
   };
 } // namespace forte
 

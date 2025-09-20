@@ -43,7 +43,7 @@ namespace forte::eclipse4diac::convert {
       void setInitialValues() override;
 
     public:
-      FORTE_WSTRING2WSTRING(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_WSTRING2WSTRING(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_WSTRING var_IN;
 

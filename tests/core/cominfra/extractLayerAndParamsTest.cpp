@@ -17,7 +17,7 @@
 class CExtractLayerAndParamsCommFB : public forte::com_infra::CBaseCommFB {
   public:
     static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams) {
-      return forte::com_infra::CBaseCommFB::extractLayerIdAndParams(paRemainingID, paLayerParams);
+      return CBaseCommFB::extractLayerIdAndParams(paRemainingID, paLayerParams);
     }
 };
 

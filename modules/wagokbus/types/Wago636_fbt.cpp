@@ -55,7 +55,7 @@ namespace {
   };
 } // namespace
 
-FORTE_Wago636::FORTE_Wago636(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_Wago636::FORTE_Wago636(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     WagoSlaveBase(636, paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_Busy(""_STRING),

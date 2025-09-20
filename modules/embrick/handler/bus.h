@@ -62,7 +62,7 @@ class EmbrickBusHandler : public forte::io::IODeviceMultiController {
       Data = 10,
     };
 
-    struct Config : forte::io::IODeviceController::Config {
+    struct Config : IODeviceController::Config {
         unsigned int
             mBusInterface; //!< Selects the SPI interface for the brickBUS. The default value is 1 (selects SPI1).
         unsigned int mBusSelectPin; //!< Sets the pin, which is connect to the slave select pin of the brickBUS.
@@ -74,7 +74,7 @@ class EmbrickBusHandler : public forte::io::IODeviceMultiController {
 
     enum HandleType { Bit, Analog, Analog10 };
 
-    class HandleDescriptor : public forte::io::IODeviceMultiController::HandleDescriptor {
+    class HandleDescriptor : public IODeviceMultiController::HandleDescriptor {
       public:
         HandleType mType;
         uint8_t mOffset;
@@ -86,14 +86,14 @@ class EmbrickBusHandler : public forte::io::IODeviceMultiController {
                          HandleType paType,
                          uint8_t paOffset,
                          uint8_t paPosition) :
-            forte::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
+            IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
             mType(paType),
             mOffset(paOffset),
             mPosition(paPosition) {
         }
     };
 
-    void setConfig(struct forte::io::IODeviceController::Config *paConfig) override;
+    void setConfig(struct IODeviceController::Config *paConfig) override;
 
     EmbrickSlaveHandler *getSlave(size_t paIndex);
     void forceUpdate(size_t paIndex);
@@ -105,7 +105,7 @@ class EmbrickBusHandler : public forte::io::IODeviceMultiController {
     const char *init() override;
     void deInit() override;
 
-    forte::io::IOHandle *createIOHandle(forte::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
+    forte::io::IOHandle *createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
     void prepareLoop();
     void runLoop() override;

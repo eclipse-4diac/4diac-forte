@@ -54,7 +54,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RampLimitFS::FORTE_RampLimitFS(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_RampLimitFS::FORTE_RampLimitFS(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CNF(*this, 0),
     conn_PV(nullptr),

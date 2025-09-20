@@ -34,7 +34,7 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
     .mPlugNames = {},
 };
 
-FORTE_E_RESTART::FORTE_E_RESTART(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_E_RESTART::FORTE_E_RESTART(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     mEventToSend(cgInvalidEventID),
     conn_COLD(*this, 0),

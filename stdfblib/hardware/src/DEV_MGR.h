@@ -28,7 +28,7 @@ class DEV_MGR : public forte::com_infra::CCommFB {
     DECLARE_FIRMWARE_FB(DEV_MGR)
 
   public:
-    DEV_MGR(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+    DEV_MGR(forte::StringId paInstanceNameId, CFBContainer &paContainer);
     ~DEV_MGR() override;
 
     bool initialize() override;

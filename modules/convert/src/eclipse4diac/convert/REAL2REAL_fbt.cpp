@@ -45,7 +45,7 @@ namespace {
   };
 } // namespace
 
-FORTE_REAL2REAL::FORTE_REAL2REAL(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_REAL2REAL::FORTE_REAL2REAL(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_REAL),
     var_OUT(0_REAL),

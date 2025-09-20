@@ -58,7 +58,7 @@ namespace {
 } // namespace
 
 FORTE_ASSEMBLE_DWORD_FROM_BOOLS::FORTE_ASSEMBLE_DWORD_FROM_BOOLS(const forte::StringId paInstanceNameId,
-                                                                 forte::CFBContainer &paContainer) :
+                                                                 CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_BIT_00(nullptr),

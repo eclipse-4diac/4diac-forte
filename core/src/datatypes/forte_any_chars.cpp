@@ -20,14 +20,14 @@ using namespace std::literals::string_literals;
 void CIEC_ANY_CHARS::dollarEscapeChar(std::string &paTargetBuf, char paSymbol, const EDataTypeID paTypeID) {
   switch (paSymbol) {
     case '$': paTargetBuf += "$$"s; break;
-    case '\'': paTargetBuf += (paTypeID == CIEC_ANY::e_STRING) ? "$'"s : "'"s; break;
+    case '\'': paTargetBuf += (paTypeID == e_STRING) ? "$'"s : "'"s; break;
     case '\n': paTargetBuf += "$l"s; break;
     case '\f': paTargetBuf += "$p"s; break;
     case '\r': paTargetBuf += "$r"s; break;
     case '\t': paTargetBuf += "$t"s; break;
-    case '\"': paTargetBuf += (paTypeID == CIEC_ANY::e_WSTRING) ? "$\"" : "\""s; break;
+    case '\"': paTargetBuf += (paTypeID == e_WSTRING) ? "$\"" : "\""s; break;
     default:
-      if (!isprint(static_cast<unsigned char>(paSymbol)) && paTypeID == CIEC_ANY::e_STRING) {
+      if (!isprint(static_cast<unsigned char>(paSymbol)) && paTypeID == e_STRING) {
         std::format_to(std::back_inserter(paTargetBuf), "${:02X}", static_cast<unsigned char>(paSymbol));
       } else {
         paTargetBuf += paSymbol;

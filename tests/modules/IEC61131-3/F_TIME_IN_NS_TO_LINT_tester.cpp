@@ -19,7 +19,7 @@ struct F_TIME_IN_NS_TO_LINT_TestFixture : public CFBTestFixtureBase {
     F_TIME_IN_NS_TO_LINT_TestFixture() : CFBTestFixtureBase("iec61131::conversion::F_TIME_IN_NS_TO_LINT"_STRID) {
       setInputData({&mIn_F_TIME_IN_NS_TO_LINT});
       setOutputData({&mOut_F_TIME_IN_NS_TO_LINT});
-      CFBTestFixtureBase::setup();
+      setup();
     }
 
     CIEC_TIME mIn_F_TIME_IN_NS_TO_LINT; // DATA INPUT

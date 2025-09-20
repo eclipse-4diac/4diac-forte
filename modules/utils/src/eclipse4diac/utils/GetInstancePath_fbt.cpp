@@ -39,7 +39,7 @@ namespace {
   };
 } // namespace
 
-FORTE_GetInstancePath::FORTE_GetInstancePath(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_GetInstancePath::FORTE_GetInstancePath(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_Sep(0x2f_CHAR),
     conn_CNF(*this, 0),

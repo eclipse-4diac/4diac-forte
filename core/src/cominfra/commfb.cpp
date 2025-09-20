@@ -43,9 +43,7 @@ namespace {
   const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
 } // namespace
 
-CCommFB::CCommFB(const forte::StringId paInstanceNameId,
-                 forte::CFBContainer &paContainer,
-                 forte::com_infra::EComServiceType paCommServiceType) :
+CCommFB::CCommFB(const StringId paInstanceNameId, CFBContainer &paContainer, EComServiceType paCommServiceType) :
     CBaseCommFB(paInstanceNameId, paContainer, paCommServiceType),
     conn_INITO(*this, 0),
     conn_CNF_IND(*this, 1),
@@ -230,7 +228,7 @@ void CCommFB::configureDIs(const char *paDIConfigString, SFBInterfaceSpec &paInt
   mDiNames.emplace_back("ID"_STRID);
   if (e_DataInputs == (+e_DataInputs & mCommServiceType)) {
     // TODO: Check range of sParamA
-    size_t numGenDIs = static_cast<TPortId>(forte::util::strtol(paDIConfigString, nullptr, 10));
+    size_t numGenDIs = static_cast<TPortId>(util::strtol(paDIConfigString, nullptr, 10));
     generateGenericInterfacePointNameArray("SD_", mDiNames, numGenDIs);
   }
   paInterfaceSpec.mDINames = mDiNames;
@@ -242,7 +240,7 @@ void CCommFB::configureDOs(const char *paDOConfigString, SFBInterfaceSpec &paInt
 
   if (+e_DataOutputs == (+e_DataOutputs & mCommServiceType)) {
     // TODO: Check range of sParamA
-    size_t numGenDOs = static_cast<TPortId>(forte::util::strtol(paDOConfigString, nullptr, 10));
+    size_t numGenDOs = static_cast<TPortId>(util::strtol(paDOConfigString, nullptr, 10));
     generateGenericInterfacePointNameArray("RD_", mDoNames, numGenDOs);
   }
   paInterfaceSpec.mDONames = mDoNames;

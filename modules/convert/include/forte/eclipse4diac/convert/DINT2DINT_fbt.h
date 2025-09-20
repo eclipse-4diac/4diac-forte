@@ -43,7 +43,7 @@ namespace forte::eclipse4diac::convert {
       void setInitialValues() override;
 
     public:
-      FORTE_DINT2DINT(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_DINT2DINT(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_DINT var_IN;
 

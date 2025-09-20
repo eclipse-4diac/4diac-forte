@@ -46,8 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_GET_STRUCT_VALUE::FORTE_GET_STRUCT_VALUE(const forte::StringId paInstanceNameId,
-                                               forte::CFBContainer &paContainer) :
+FORTE_GET_STRUCT_VALUE::FORTE_GET_STRUCT_VALUE(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_in_struct(CIEC_ANY_VARIANT()),
     var_member("s"_STRING),

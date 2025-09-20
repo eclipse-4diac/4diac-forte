@@ -38,7 +38,7 @@ using namespace forte::iec61499::net;
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_SEND_RECV, "iec61499::net::GEN_SEND_RECV"_STRID)
 
-GEN_SEND_RECV::GEN_SEND_RECV(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+GEN_SEND_RECV::GEN_SEND_RECV(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CommunicationFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 1),
     conn_IND(*this, 2) {};
@@ -46,12 +46,12 @@ GEN_SEND_RECV::GEN_SEND_RECV(const forte::StringId paInstanceNameId, forte::CFBC
 void GEN_SEND_RECV::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventREQID:
-      if (send(mGenDIs) != forte::com::ComResult::Async) {
+      if (send(mGenDIs) != com::ComResult::Async) {
         sendOutputEvent(scmEventCNFID, paECET);
       }
       break;
     case scmEventRSPID:
-      if (poll() != forte::com::ComResult::Async) {
+      if (poll() != com::ComResult::Async) {
         sendOutputEvent(scmEventINDID, paECET);
       }
       break;

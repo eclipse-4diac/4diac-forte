@@ -59,10 +59,10 @@ namespace {
   };
 } // namespace
 
-FORTE_E_RTimeOut::FORTE_E_RTimeOut(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_E_RTimeOut::FORTE_E_RTimeOut(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_DLY("DLY"_STRID, *this),
-    var_TimeOutSocket("TimeOutSocket"_STRID, *this, forte::cgCFBParentAdapterlistIDMarker) {};
+    var_TimeOutSocket("TimeOutSocket"_STRID, *this, cgCFBParentAdapterlistIDMarker) {};
 
 void FORTE_E_RTimeOut::setInitialValues() {
   CCompositeFB::setInitialValues();

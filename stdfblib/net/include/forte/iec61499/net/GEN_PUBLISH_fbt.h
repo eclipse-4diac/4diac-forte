@@ -23,11 +23,11 @@
  */
 
 namespace forte::iec61499::net {
-  class GEN_PUBLISH : public forte::com_infra::CCommFB {
+  class GEN_PUBLISH : public com_infra::CCommFB {
       DECLARE_GENERIC_FIRMWARE_FB(GEN_PUBLISH)
 
     public:
-      GEN_PUBLISH(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      GEN_PUBLISH(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       ~GEN_PUBLISH() override = default;
 

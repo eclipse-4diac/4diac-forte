@@ -49,7 +49,7 @@ namespace forte::iec61499::events {
       void setInitialValues() override;
 
     public:
-      FORTE_E_REND(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_REND(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CEventConnection conn_EO;
 

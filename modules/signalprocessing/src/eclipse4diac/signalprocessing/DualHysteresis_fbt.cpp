@@ -51,7 +51,7 @@ namespace {
   };
 } // namespace
 
-FORTE_DualHysteresis::FORTE_DualHysteresis(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_DualHysteresis::FORTE_DualHysteresis(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_QI(0_BOOL),
     var_MI(0.5_REAL),

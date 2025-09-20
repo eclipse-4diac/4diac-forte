@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_LINT_TO_UDINT::FORTE_F_LINT_TO_UDINT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_F_LINT_TO_UDINT::FORTE_F_LINT_TO_UDINT(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_LINT),
     var_OUT(0_UDINT),

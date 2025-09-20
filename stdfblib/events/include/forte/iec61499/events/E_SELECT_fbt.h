@@ -45,7 +45,7 @@ namespace forte::iec61499::events {
       void setInitialValues() override;
 
     public:
-      FORTE_E_SELECT(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_SELECT(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_BOOL var_G;
 

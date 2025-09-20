@@ -48,7 +48,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_TRUNC::FORTE_F_TRUNC(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_F_TRUNC::FORTE_F_TRUNC(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_REAL_VARIANT()),
     var_OUT(CIEC_ANY_INT_VARIANT()),

@@ -55,7 +55,7 @@ namespace forte {
         CStructMemberLocalComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB);
 
       protected:
-        void setRDs(forte::com_infra::CBaseCommFB &paSubl, CIEC_ANY **paSDs, TPortId paNumSDs);
+        void setRDs(CBaseCommFB &paSubl, CIEC_ANY **paSDs, TPortId paNumSDs);
 
       private:
         using TTargetStructIndexList = std::vector<TForteInt16>;

@@ -30,7 +30,7 @@ bool CUA_ClientConfigFileParser::loadConfig(const std::string &paFileLocation,
 
   CConfigFileParser configFileParser(paFileLocation);
   bool endpointFound = false;
-  const std::string endpointKey = CUA_ClientConfigFileParser::mKeyNames[CUA_ClientConfigFileParser::eEndpoint];
+  const std::string endpointKey = mKeyNames[eEndpoint];
 
   if (CConfigFileParser::lookForKeyValueInFile(configFileParser, endpointKey, paEndpoint, endpointFound)) {
     if (endpointFound) {
@@ -48,14 +48,11 @@ bool CUA_ClientConfigFileParser::loadConfig(const std::string &paFileLocation,
 
         switch (configFileParser.parseNextLine(resultPair)) {
           case CConfigFileParser::eOk:
-            if (0 == resultPair.first.compare(
-                         CUA_ClientConfigFileParser::mKeyNames[CUA_ClientConfigFileParser::eEndpoint])) {
+            if (0 == resultPair.first.compare(mKeyNames[eEndpoint])) {
               moreLinesToRead = false;
-            } else if (0 == resultPair.first.compare(
-                                CUA_ClientConfigFileParser::mKeyNames[CUA_ClientConfigFileParser::eUsername])) {
+            } else if (0 == resultPair.first.compare(mKeyNames[eUsername])) {
               paResult.mUsername = resultPair.second;
-            } else if (0 == resultPair.first.compare(
-                                CUA_ClientConfigFileParser::mKeyNames[CUA_ClientConfigFileParser::ePassword])) {
+            } else if (0 == resultPair.first.compare(mKeyNames[ePassword])) {
               paResult.mPassword = resultPair.second;
             }
 #ifdef UA_ENABLE_ENCRYPTION

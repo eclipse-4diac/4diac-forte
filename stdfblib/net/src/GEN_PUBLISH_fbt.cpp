@@ -19,6 +19,6 @@ using namespace forte::iec61499::net;
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBLISH, "iec61499::net::GEN_PUBLISH"_STRID)
 
-GEN_PUBLISH::GEN_PUBLISH(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
-    forte::com_infra::CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Publisher) {
+GEN_PUBLISH::GEN_PUBLISH(const StringId paInstanceNameId, CFBContainer &paContainer) :
+    CCommFB(paInstanceNameId, paContainer, com_infra::e_Publisher) {
 }

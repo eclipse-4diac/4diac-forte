@@ -40,7 +40,7 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
     .mPlugNames = {},
 };
 
-FORTE_E_T_FF::FORTE_E_T_FF(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_E_T_FF::FORTE_E_T_FF(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO(*this, 0),
     conn_Q(*this, 0, var_Q) {

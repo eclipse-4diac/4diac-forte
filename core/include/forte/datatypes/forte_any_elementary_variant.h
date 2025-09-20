@@ -120,7 +120,7 @@ class CIEC_ANY_ELEMENTARY_VARIANT : public CIEC_ANY_ELEMENTARY, public TIecAnyEl
       unwrap().reset();
     }
 
-    bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
+    bool setDefaultValue(EDataTypeID paDataTypeId);
 
     [[nodiscard]] CIEC_ANY_ELEMENTARY &unwrap() override;
 

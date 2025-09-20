@@ -83,7 +83,7 @@ class CIEC_UINT final : public CIEC_ANY_UNSIGNED {
     }
 
     EDataTypeID getDataTypeID() const override {
-      return CIEC_ANY::e_UINT;
+      return e_UINT;
     }
 };
 
@@ -102,7 +102,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_UINT> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_UINT;
-      static const forte::StringId scmDataTypeName;
+      static const StringId scmDataTypeName;
   };
 } // namespace forte
 

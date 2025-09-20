@@ -24,10 +24,10 @@
  */
 
 namespace forte::iec61499::net {
-  class GEN_SERVER : public forte::com_infra::CCommFB {
+  class GEN_SERVER : public com_infra::CCommFB {
       DECLARE_GENERIC_FIRMWARE_FB(GEN_SERVER)
     public:
-      GEN_SERVER(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      GEN_SERVER(const StringId paInstanceNameId, CFBContainer &paContainer);
 
       ~GEN_SERVER() override = default;
 

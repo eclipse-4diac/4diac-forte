@@ -67,7 +67,7 @@ class CIEC_BOOL : public CIEC_ANY_BIT {
     }
 
     EDataTypeID getDataTypeID() const override final {
-      return CIEC_ANY::e_BOOL;
+      return e_BOOL;
     }
 
     /*! \brief Converts string value to data type value
@@ -110,7 +110,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_BOOL> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_BOOL;
-      static const forte::StringId scmDataTypeName;
+      static const StringId scmDataTypeName;
   };
 } // namespace forte
 

@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_INT_TO_BYTE::FORTE_F_INT_TO_BYTE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_F_INT_TO_BYTE::FORTE_F_INT_TO_BYTE(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(0_INT),
     var_OUT(0_BYTE),

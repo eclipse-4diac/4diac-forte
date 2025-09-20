@@ -55,7 +55,7 @@ namespace forte::iec61499::events {
       void setInitialValues() override;
 
     public:
-      FORTE_E_DEMUX(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_DEMUX(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_UINT var_K;
 

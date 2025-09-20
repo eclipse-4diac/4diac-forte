@@ -26,9 +26,9 @@ namespace forte::io {
       IOConfigFBMultiSlave(const TForteUInt8 *const paSlaveConfigurationIO,
                            const TForteUInt8 paSlaveConfigurationIONum,
                            int paType,
-                           forte::CFBContainer &paContainer,
+                           CFBContainer &paContainer,
                            const SFBInterfaceSpec &paInterfaceSpec,
-                           const forte::StringId paInstanceNameId);
+                           const StringId paInstanceNameId);
       ~IOConfigFBMultiSlave() override;
 
     protected:

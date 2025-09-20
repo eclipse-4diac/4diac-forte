@@ -18,9 +18,9 @@
 
 namespace forte {
 
-  CAdapter::CAdapter(forte::CFBContainer &paContainer,
+  CAdapter::CAdapter(CFBContainer &paContainer,
                      const SFBInterfaceSpec &paInterfaceSpec,
-                     const forte::StringId paInstanceNameId,
+                     const StringId paInstanceNameId,
                      TForteUInt8 paParentAdapterlistID) :
       CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
       mParentAdapterListEventID(static_cast<TForteUInt16>((paParentAdapterlistID + 1) << 8)),

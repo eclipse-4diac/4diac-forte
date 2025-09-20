@@ -40,7 +40,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ST_DEL_FB::FORTE_ST_DEL_FB(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+FORTE_ST_DEL_FB::FORTE_ST_DEL_FB(const StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_QI(nullptr),
@@ -72,17 +72,17 @@ void FORTE_ST_DEL_FB::executeEvent(TEventID paEIID, CEventChainExecutionThread *
 }
 
 void FORTE_ST_DEL_FB::executeRQST() {
-  forte::SManagementCMD theCommand;
+  SManagementCMD theCommand;
 
-  theCommand.mDestination = forte::StringId::lookup(var_DST.getValue());
-  theCommand.mFirstParam.push_back(forte::StringId::lookup(var_FB_NAME.getValue()));
+  theCommand.mDestination = StringId::lookup(var_DST.getValue());
+  theCommand.mFirstParam.push_back(StringId::lookup(var_FB_NAME.getValue()));
   theCommand.mCMD = EMGMCommandType::DeleteFBInstance;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   // calculate return value
   var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);
-  const std::string retVal(forte::mgm_cmd::getResponseText(resp));
+  const std::string retVal(mgm_cmd::getResponseText(resp));
   DEVLOG_DEBUG("%s\n", retVal.c_str());
   var_STATUS = CIEC_WSTRING(retVal.c_str());
 }

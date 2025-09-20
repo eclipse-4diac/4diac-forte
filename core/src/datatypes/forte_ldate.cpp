@@ -46,13 +46,13 @@ int CIEC_LDATE::fromString(const char *paValue) {
 
   if ('\0' != *acBuffer) {
     // TODO think of using any elementary fromString function instead of strtoul
-    tm.tm_year = static_cast<int>(::strtoul(acBuffer, &acBuffer, 10) - 1900);
+    tm.tm_year = static_cast<int>(strtoul(acBuffer, &acBuffer, 10) - 1900);
     if ('-' == *acBuffer) {
       ++acBuffer;
-      tm.tm_mon = static_cast<int>(::strtoul(acBuffer, &acBuffer, 10) - 1);
+      tm.tm_mon = static_cast<int>(strtoul(acBuffer, &acBuffer, 10) - 1);
       if ('-' == *acBuffer) {
         ++acBuffer;
-        tm.tm_mday = static_cast<int>(::strtoul(acBuffer, &acBuffer, 10));
+        tm.tm_mday = static_cast<int>(strtoul(acBuffer, &acBuffer, 10));
       } else {
         return -1;
       }

@@ -42,8 +42,8 @@ namespace {
   };
 } // namespace
 
-FORTE_EBMaster::FORTE_EBMaster(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
-    forte::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
+FORTE_EBMaster::FORTE_EBMaster(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+    IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_BusInterface(1_UINT),
     var_BusSelectPin(49_UINT),
     var_BusInitSpeed(300000_UDINT),
@@ -171,5 +171,5 @@ void FORTE_EBMaster::setConfig() {
 void FORTE_EBMaster::onStartup(CEventChainExecutionThread *const paECET) {
   var_BusAdapterOut->var_UpdateInterval = var_SlaveUpdateInterval;
 
-  forte::io::IOConfigFBMultiMaster::onStartup(paECET);
+  IOConfigFBMultiMaster::onStartup(paECET);
 }

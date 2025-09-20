@@ -126,7 +126,7 @@ void CIEC_LTIME::toString(std::string &paTargetBuf) const {
   TValueType timeValNano = static_cast<TValueType>(*this);
 
   //  generate the correct string for the min value
-  if (timeValNano == std::numeric_limits<CIEC_TIME::TValueType>::min()) {
+  if (timeValNano == std::numeric_limits<TValueType>::min()) {
     paTargetBuf += MIN_TIME_VALUE;
     return;
   }

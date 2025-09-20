@@ -65,7 +65,7 @@ class CIEC_ANY_BIT_VARIANT : public CIEC_ANY_BIT, public TIecAnyBitVariantType {
       unwrap().reset();
     }
 
-    bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
+    bool setDefaultValue(EDataTypeID paDataTypeId);
 
     [[nodiscard]] CIEC_ANY_BIT &unwrap() override;
 

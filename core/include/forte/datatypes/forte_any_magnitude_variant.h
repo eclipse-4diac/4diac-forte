@@ -85,7 +85,7 @@ class CIEC_ANY_MAGNITUDE_VARIANT : public CIEC_ANY_MAGNITUDE, public TIecAnyMagn
       unwrap().reset();
     }
 
-    bool setDefaultValue(CIEC_ANY::EDataTypeID paDataTypeId);
+    bool setDefaultValue(EDataTypeID paDataTypeId);
 
     [[nodiscard]] CIEC_ANY_MAGNITUDE &unwrap() override;
 

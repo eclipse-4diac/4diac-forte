@@ -32,7 +32,7 @@ class FORTE_ZephyrIOBase : public forte::io::IOConfigFBController {
     forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
 
   public:
-    FORTE_ZephyrIOBase(forte::CFBContainer &paContainer,
+    FORTE_ZephyrIOBase(CFBContainer &paContainer,
                        const SFBInterfaceSpec &paInterfaceSpec,
                        const forte::StringId paInstanceNameId);
     ~FORTE_ZephyrIOBase() override;

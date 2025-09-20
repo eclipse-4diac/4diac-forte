@@ -53,8 +53,8 @@ namespace {
   };
 } // namespace
 
-FORTE_PLCnextAXLSESC::FORTE_PLCnextAXLSESC(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
-    PLCnextSlaveHandler(PLCnextSlaveHandler::NoUsage, paContainer, cFBInterfaceSpec, paInstanceNameId),
+FORTE_PLCnextAXLSESC::FORTE_PLCnextAXLSESC(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+    PLCnextSlaveHandler(NoUsage, paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_QO(0_BOOL),
     var_STATUS(u""_WSTRING),

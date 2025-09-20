@@ -30,7 +30,7 @@ class CXqueryHandler : public CExternalEventHandler,
     using TXqueryFBContainer = std::vector<CXqueryClientLayer *>;
     TXqueryFBContainer mXqueryFBList;
     static CSyncObject smXqueryMutex;
-    static forte::arch::CSemaphore mStateSemaphore;
+    static CSemaphore mStateSemaphore;
     void resumeSuspend();
     void selfSuspend();
     char *result;

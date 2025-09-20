@@ -43,7 +43,7 @@ namespace forte::eclipse4diac::convert {
       void setInitialValues() override;
 
     public:
-      FORTE_BYTE2BYTE(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_BYTE2BYTE(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_BYTE var_IN;
 

@@ -24,9 +24,9 @@ const CIEC_WSTRING IOConfigFBController::scmInitializing("Waiting for initializa
 const CIEC_WSTRING IOConfigFBController::scmFailedToInit("Failed to initialize controller.");
 const CIEC_WSTRING IOConfigFBController::scmStopped("Stopped");
 
-IOConfigFBController::IOConfigFBController(forte::CFBContainer &paContainer,
+IOConfigFBController::IOConfigFBController(CFBContainer &paContainer,
                                            const SFBInterfaceSpec &paInterfaceSpec,
-                                           const forte::StringId paInstanceNameId) :
+                                           const StringId paInstanceNameId) :
     IOConfigFBBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mStarting(false),
     mErrorCounter(0),

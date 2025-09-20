@@ -68,7 +68,7 @@ namespace forte::eclipse4diac::utils::timing {
       void setInitialValues() override;
 
     public:
-      FORTE_E_STOPWATCH(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_STOPWATCH(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_TIME var_TD;
 

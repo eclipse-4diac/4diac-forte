@@ -38,7 +38,7 @@ namespace forte::iec61499::events {
       /*!\brief This function will trigger unconnected event ports of a certain EventType within a resource
        * \param paEventTypeId ID of event type to be triggered
        */
-      void triggerEventsInResource(forte::CFBContainer *paContainer,
+      void triggerEventsInResource(CFBContainer *paContainer,
                                    const TEventTypeID paEventType,
                                    CEventChainExecutionThread *const paECET);
 
@@ -51,7 +51,7 @@ namespace forte::iec61499::events {
       triggerEventsOfType(TEventTypeID paEventTypeId, CFunctionBlock *paFb, CEventChainExecutionThread *const paECET);
 
     public:
-      FORTE_E_TRIG(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
+      FORTE_E_TRIG(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_STRING var_EVENTTYPE;
 

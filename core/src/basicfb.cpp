@@ -19,7 +19,7 @@
 
 using namespace forte::literals;
 
-CBasicFB::CBasicFB(forte::CFBContainer &paContainer,
+CBasicFB::CBasicFB(CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
                    const forte::StringId paInstanceNameId,
                    std::span<const forte::StringId> paVarInternalNames) :
