@@ -22,7 +22,7 @@ class RMT_RES final : public CResource {
     DECLARE_FIRMWARE_FB(RMT_RES)
 
   public:
-    RMT_RES(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paDevice);
+    RMT_RES(forte::StringId paInstanceNameId, forte::CFBContainer &paDevice);
     ~RMT_RES() override;
 
     bool initialize() override;
@@ -38,12 +38,12 @@ class RMT_RES final : public CResource {
     CDataConnection *conn_MGR_ID;
     COutDataConnection<CIEC_WSTRING> conn_MGR_ID_int;
 
-    forte::core::CInternalFB<forte::iec61499::events::FORTE_E_RESTART> fb_START;
-    forte::core::CInternalFB<forte::iec61499::events::FORTE_E_SR> fb_MGR_FF;
-    forte::core::CInternalFB<DEV_MGR> fb_MGR;
+    forte::CInternalFB<forte::iec61499::events::FORTE_E_RESTART> fb_START;
+    forte::CInternalFB<forte::iec61499::events::FORTE_E_SR> fb_MGR_FF;
+    forte::CInternalFB<DEV_MGR> fb_MGR;
 
-    static const forte::core::StringId scmVarInputNameIds[];
-    static const forte::core::StringId scmDIDataTypeIds[];
+    static const forte::StringId scmVarInputNameIds[];
+    static const forte::StringId scmDIDataTypeIds[];
 };
 
 #endif // close the ifdef sequence from the beginning of the file

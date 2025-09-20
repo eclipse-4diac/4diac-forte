@@ -14,7 +14,7 @@
  *******************************************************************************/
 #include "forte/datatypes/forte_any_elementary_variant.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(ANY_ELEMENTARY_VARIANT, "ANY_ELEMENTARY"_STRID)
 
@@ -116,7 +116,7 @@ int CIEC_ANY_ELEMENTARY_VARIANT::fromString(const char *paValue) {
   int nRetVal = -1;
   const char *hashPos = strchr(paValue, '#');
   if (nullptr != hashPos) {
-    forte::core::StringId typeNameId = parseTypeName(paValue, hashPos);
+    forte::StringId typeNameId = parseTypeName(paValue, hashPos);
     CIEC_ANY::EDataTypeID dataTypeId = CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(typeNameId);
     if (setDefaultValue(dataTypeId)) {
       CIEC_ANY &value = unwrap();
@@ -156,7 +156,7 @@ int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paVa
         using T = std::decay_t<decltype(value)>;
         using U = std::decay_t<decltype(other)>;
         using commonType =
-            std::conditional_t<std::is_same_v<T, U>, T, typename forte::core::mpl::get_castable_type<T, U>::type>;
+            std::conditional_t<std::is_same_v<T, U>, T, typename forte::mpl::get_castable_type<T, U>::type>;
         if constexpr (std::is_base_of_v<CIEC_ANY_STRING, commonType>) {
           if constexpr (std::is_same_v<T, U> && std::is_same_v<T, CIEC_STRING>) {
             return static_cast<CIEC_STRING>(value).compare(static_cast<CIEC_STRING>(other));
@@ -167,7 +167,7 @@ int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paVa
                          other.getTypeNameID().data());
             return -1;
           }
-        } else if constexpr (!std::is_same_v<commonType, forte::core::mpl::NullType>) {
+        } else if constexpr (!std::is_same_v<commonType, forte::mpl::NullType>) {
           auto primitiveValue = static_cast<typename commonType::TValueType>(static_cast<commonType>(value));
           auto primitiveOther = static_cast<typename commonType::TValueType>(static_cast<commonType>(other));
           return (primitiveValue > primitiveOther) - (primitiveValue < primitiveOther);

@@ -12,7 +12,7 @@
 
 #include "EliteBoard_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "PortAdapter_adp.h"
 #include "forte/iec61131_functions.h"
@@ -48,8 +48,7 @@ namespace {
   };
 } // namespace
 
-FORTE_EliteBoard::FORTE_EliteBoard(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+FORTE_EliteBoard::FORTE_EliteBoard(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     IOConfigFBController(paContainer, cFBInterfaceSpec, paInstanceNameId),
     mEventHandler{getExtEvHandler<EliteBoardDeviceController>(*this)},
     var_PortA("PortA"_STRID, *this, 0),

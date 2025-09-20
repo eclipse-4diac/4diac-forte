@@ -12,7 +12,7 @@
 
 #include "fileWriter_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include <sstream>
 #include <ostream>
@@ -21,33 +21,31 @@ using namespace forte::core::literals;
 DEFINE_FIRMWARE_FB(fileWriter, "fileWriter"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{"QI"_STRID, "FILE_NAME"_STRID, "S1"_STRID,
-                                                                        "APPEND"_STRID, "APPCHAR"_STRID};
-  
-                                                                          "BOOL"_STRID, "STRING"_STRID};
-  
-  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
-  
-  
-  const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
-  
-  const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
-  
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-}
+  const auto cDataInputNames = std::array{"QI"_STRID, "FILE_NAME"_STRID, "S1"_STRID, "APPEND"_STRID, "APPCHAR"_STRID};
 
+  "BOOL"_STRID, "STRING"_STRID
+};
+
+const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+
+const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
+const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+
+const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID};
+const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
+
+const SFBInterfaceSpec cFBInterfaceSpec = {
+    .mEINames = cEventInputNames,
+    .mEITypeNames = cEventInputTypeIds,
+    .mEONames = cEventOutputNames,
+    .mEOTypeNames = cEventOutputTypeIds,
+    .mDINames = cDataInputNames,
+    .mDONames = cDataOutputNames,
+    .mDIONames = {},
+    .mSocketNames = {},
+    .mPlugNames = {},
+};
+}
 
 const char *const fileWriter::scmOK = "OK";
 const char *const fileWriter::scmNotInitialised = "Not initialized";
@@ -78,7 +76,7 @@ void fileWriter::executeEvent(TEventID paEIID,
   }
 }
 
-fileWriter::fileWriter(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+fileWriter::fileWriter(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId) {
   mFile.rdbuf()->pubsetbuf(nullptr, 0); // disable buffer to avoid latency
 }

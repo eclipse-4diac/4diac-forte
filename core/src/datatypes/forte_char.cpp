@@ -17,7 +17,7 @@
 #include "forte/datatypes/forte_char.h"
 #include "forte/util/string_utils.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace std::literals::string_literals;
 
@@ -73,12 +73,11 @@ int CIEC_CHAR::fromString(const char *paValue) {
       return bufferCount + 3; // $ + control symbol + '
     }
 
-    if (forte::core::util::isHexDigit(paValue[bufferCount + 1]) &&
-        forte::core::util::isHexDigit(paValue[bufferCount + 2]) &&
+    if (forte::util::isHexDigit(paValue[bufferCount + 1]) && forte::util::isHexDigit(paValue[bufferCount + 2]) &&
         '\'' == paValue[bufferCount + 3]) { // if there are two symbols it is a hex code
       const TForteChar codePoint =
-          static_cast<TForteChar>((forte::core::util::charHexDigitToInt(paValue[bufferCount + 1]) << 4) +
-                                  forte::core::util::charHexDigitToInt(paValue[bufferCount + 2]));
+          static_cast<TForteChar>((forte::util::charHexDigitToInt(paValue[bufferCount + 1]) << 4) +
+                                  forte::util::charHexDigitToInt(paValue[bufferCount + 2]));
       *this = CIEC_CHAR(codePoint);
       return bufferCount + 4; // Three symbols for code point and closing '
     }
@@ -87,4 +86,4 @@ int CIEC_CHAR::fromString(const char *paValue) {
   return -1; // no match so something must be wrong
 }
 
-const forte::core::StringId forte::CDataTypeTrait<CIEC_CHAR>::scmDataTypeName = "CHAR"_STRID;
+const forte::StringId forte::CDataTypeTrait<CIEC_CHAR>::scmDataTypeName = "CHAR"_STRID;

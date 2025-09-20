@@ -16,7 +16,7 @@
 
 #include "forte/eclipse4diac/signalprocessing/SCALE_LIM_fct.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_real.h"
 #include "forte/iec61131_functions.h"
@@ -50,8 +50,8 @@ namespace {
   };
 } // namespace
 
-FORTE_signalprocessing__SCALE_LIM::FORTE_signalprocessing__SCALE_LIM(const forte::core::StringId paInstanceNameId,
-                                                                     forte::core::CFBContainer &paContainer) :
+FORTE_signalprocessing__SCALE_LIM::FORTE_signalprocessing__SCALE_LIM(const forte::StringId paInstanceNameId,
+                                                                     forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),

@@ -15,10 +15,10 @@
 
 #include <windows.h>
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
-  [[maybe_unused]] const forte::core::TimerHandlerFactory::EntryImpl<CPCTimerHandler> entry("default"_STRID);
+  [[maybe_unused]] const forte::TimerHandlerFactory::EntryImpl<CPCTimerHandler> entry("default"_STRID);
 }
 
 constexpr TForteInt32 CPCTimerHandler::csmTicksPerSecond = 1000;

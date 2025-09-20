@@ -17,7 +17,7 @@
 #include "core/lua/luabfb.h"
 #include "core/lua/luatype.h"
 
-CLuaBFBTypeEntry::CLuaBFBTypeEntry(forte::core::StringId paTypeNameId,
+CLuaBFBTypeEntry::CLuaBFBTypeEntry(forte::StringId paTypeNameId,
                                    const std::string &paLuaScriptAsString,
                                    SFBInterfaceSpec &paInterfaceSpec,
                                    SInternalVarsInformation &paInternalVarsInformation) :
@@ -32,7 +32,7 @@ CLuaBFBTypeEntry::~CLuaBFBTypeEntry() {
   deleteInternalVarsInformation(m_internalVarsInformation);
 }
 
-CLuaBFBTypeEntry *CLuaBFBTypeEntry::createLuaFBTypeEntry(forte::core::StringId paTypeNameId,
+CLuaBFBTypeEntry *CLuaBFBTypeEntry::createLuaFBTypeEntry(forte::StringId paTypeNameId,
                                                          const std::string &paLuaScriptAsString) {
   CLuaEngine luaEngine;
   if (!luaEngine.loadString(paLuaScriptAsString)) {
@@ -64,8 +64,7 @@ CLuaBFBTypeEntry *CLuaBFBTypeEntry::createLuaFBTypeEntry(forte::core::StringId p
   return new CLuaBFBTypeEntry(paTypeNameId, paLuaScriptAsString, interfaceSpec, internalVarsInformation);
 }
 
-CFunctionBlock *CLuaBFBTypeEntry::createFBInstance(forte::core::StringId paInstanceNameId,
-                                                   forte::core::CFBContainer &paContainer) {
+CFunctionBlock *CLuaBFBTypeEntry::createFBInstance(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) {
   CLuaEngine *luaEngine = paContainer.getResource()->getLuaEngine();
   if (!luaEngine->load(this)) {
     if (!luaEngine->loadString(cmLuaScriptAsString)) {
@@ -83,7 +82,7 @@ bool CLuaBFBTypeEntry::initInterfaceSpec(SFBInterfaceSpec &paInterfaceSpec, CLua
   paInterfaceSpec.mNumEIs = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8>>(paIndex, "numEIs");
   size_t numEIs = paInterfaceSpec.mNumEIs;
   paInterfaceSpec.mEINames =
-      paLuaEngine->getArrayField<forte::core::StringId, &CLuaEngine::getStringId>(paIndex, "EINames", numEIs);
+      paLuaEngine->getArrayField<forte::StringId, &CLuaEngine::getStringId>(paIndex, "EINames", numEIs);
   size_t numEIWith = SIZE_MAX;
   paInterfaceSpec.mEIWith =
       paLuaEngine->getArrayField<TDataIOID, &CLuaEngine::getInteger<TDataIOID>>(paIndex, "EIWith", numEIWith);
@@ -93,7 +92,7 @@ bool CLuaBFBTypeEntry::initInterfaceSpec(SFBInterfaceSpec &paInterfaceSpec, CLua
   paInterfaceSpec.mNumEOs = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8>>(paIndex, "numEOs");
   size_t numEOs = paInterfaceSpec.mNumEOs;
   paInterfaceSpec.mEONames =
-      paLuaEngine->getArrayField<forte::core::StringId, &CLuaEngine::getStringId>(paIndex, "EONames", numEOs);
+      paLuaEngine->getArrayField<forte::StringId, &CLuaEngine::getStringId>(paIndex, "EONames", numEOs);
   size_t numEOWith = SIZE_MAX;
   paInterfaceSpec.mEOWith =
       paLuaEngine->getArrayField<TDataIOID, &CLuaEngine::getInteger<TDataIOID>>(paIndex, "EOWith", numEOWith);
@@ -103,17 +102,17 @@ bool CLuaBFBTypeEntry::initInterfaceSpec(SFBInterfaceSpec &paInterfaceSpec, CLua
   paInterfaceSpec.mNumDIs = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8>>(paIndex, "numDIs");
   size_t numDIs = paInterfaceSpec.mNumDIs;
   paInterfaceSpec.mDINames =
-      paLuaEngine->getArrayField<forte::core::StringId, &CLuaEngine::getStringId>(paIndex, "DINames", numDIs);
+      paLuaEngine->getArrayField<forte::StringId, &CLuaEngine::getStringId>(paIndex, "DINames", numDIs);
   size_t numDIDataTypeNames = SIZE_MAX;
-  paInterfaceSpec.mDIDataTypeNames = paLuaEngine->getCustomArrayField<forte::core::StringId, luatype::getTypeNameId>(
+  paInterfaceSpec.mDIDataTypeNames = paLuaEngine->getCustomArrayField<forte::StringId, luatype::getTypeNameId>(
       paIndex, "DIDataTypeNames", numDIDataTypeNames);
   // DO
   paInterfaceSpec.mNumDOs = paLuaEngine->getField<TForteUInt8, &CLuaEngine::getInteger<TForteUInt8>>(paIndex, "numDOs");
   size_t numDOs = paInterfaceSpec.mNumDOs;
   paInterfaceSpec.mDONames =
-      paLuaEngine->getArrayField<forte::core::StringId, &CLuaEngine::getStringId>(paIndex, "DONames", numDOs);
+      paLuaEngine->getArrayField<forte::StringId, &CLuaEngine::getStringId>(paIndex, "DONames", numDOs);
   size_t numDODataTypeNames = SIZE_MAX;
-  paInterfaceSpec.mDODataTypeNames = paLuaEngine->getCustomArrayField<forte::core::StringId, luatype::getTypeNameId>(
+  paInterfaceSpec.mDODataTypeNames = paLuaEngine->getCustomArrayField<forte::StringId, luatype::getTypeNameId>(
       paIndex, "DODataTypeNames", numDODataTypeNames);
   // Adapters
   paInterfaceSpec.mNumAdapters =
@@ -155,11 +154,11 @@ bool CLuaBFBTypeEntry::initInternalVarsInformation(SInternalVarsInformation &paI
       paLuaEngine->getField<TPortId, &CLuaEngine::getInteger<TPortId>>(paIndex, "numIntVars");
   size_t numIntVars = paInternalVarsInformation.mNumIntVars;
   paInternalVarsInformation.mIntVarsNames =
-      paLuaEngine->getArrayField<forte::core::StringId, &CLuaEngine::getStringId>(paIndex, "intVarsNames", numIntVars);
+      paLuaEngine->getArrayField<forte::StringId, &CLuaEngine::getStringId>(paIndex, "intVarsNames", numIntVars);
   size_t numIntVarTypes = SIZE_MAX;
   paInternalVarsInformation.mIntVarsDataTypeNames =
-      paLuaEngine->getCustomArrayField<forte::core::StringId, luatype::getTypeNameId>(paIndex, "intVarsDataTypeNames",
-                                                                                      numIntVarTypes);
+      paLuaEngine->getCustomArrayField<forte::StringId, luatype::getTypeNameId>(paIndex, "intVarsDataTypeNames",
+                                                                                numIntVarTypes);
   if (paInternalVarsInformation.mIntVarsNames == nullptr ||
       paInternalVarsInformation.mIntVarsDataTypeNames == nullptr) {
     return false;

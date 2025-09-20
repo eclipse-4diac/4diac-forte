@@ -17,7 +17,7 @@
 #include "forte/iec61131/arithmetic/F_SUB_TOD_TIME_fbt.h"
 #include "forte/datatypes/forte_time_of_day.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::arithmetic;
 
@@ -47,8 +47,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_SUB_TOD_TIME::FORTE_F_SUB_TOD_TIME(const forte::core::StringId paInstanceNameId,
-                                           forte::core::CFBContainer &paContainer) :
+FORTE_F_SUB_TOD_TIME::FORTE_F_SUB_TOD_TIME(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_TIME_OF_DAY(0)),
     var_IN2(CIEC_TIME(0)),

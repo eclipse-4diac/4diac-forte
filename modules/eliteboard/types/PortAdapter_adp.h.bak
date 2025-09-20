@@ -45,8 +45,8 @@ class FORTE_PortAdapter final : public CAdapter {
       return mParentAdapterListEventID + scmEventMAPID;
     }
 
-    FORTE_PortAdapter(forte::core::StringId paAdapterInstanceName,
-                      forte::core::CFBContainer &paContainer,
+    FORTE_PortAdapter(forte::StringId paAdapterInstanceName,
+                      forte::CFBContainer &paContainer,
                       bool paIsPlug) :
 
         virtual ~FORTE_PortAdapter() = default;

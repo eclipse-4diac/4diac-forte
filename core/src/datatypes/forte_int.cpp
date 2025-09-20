@@ -14,7 +14,7 @@
  *******************************************************************************/
 #include "forte/datatypes/forte_int.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(INT, "INT"_STRID)
 
@@ -22,4 +22,4 @@ template CIEC_INT &CIEC_INT::operator= <>(const CIEC_SINT &paValue);
 
 template CIEC_INT &CIEC_INT::operator= <>(const CIEC_USINT &paValue);
 
-const forte::core::StringId forte::CDataTypeTrait<CIEC_INT>::scmDataTypeName = "INT"_STRID;
+const forte::StringId forte::CDataTypeTrait<CIEC_INT>::scmDataTypeName = "INT"_STRID;

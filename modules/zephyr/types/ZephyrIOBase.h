@@ -16,11 +16,11 @@
 #include "forte/io/configFB/io_configFB_controller.h"
 #include "forte/util/extevhandlerhelper.h"
 
-class FORTE_ZephyrIOBase : public forte::core::io::IOConfigFBController {
+class FORTE_ZephyrIOBase : public forte::io::IOConfigFBController {
 
   protected:
-    using IOHandle = forte::core::io::IOHandle;
-    using IOMapper = forte::core::io::IOMapper;
+    using IOHandle = forte::io::IOHandle;
+    using IOMapper = forte::io::IOMapper;
 
     static constexpr size_t initialDIOffset = 1;
 
@@ -29,11 +29,11 @@ class FORTE_ZephyrIOBase : public forte::core::io::IOConfigFBController {
   private:
     static constexpr size_t numberOfIOs = 0;
 
-    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
+    forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
 
   public:
-    FORTE_ZephyrIOBase(forte::core::CFBContainer &paContainer,
+    FORTE_ZephyrIOBase(forte::CFBContainer &paContainer,
                        const SFBInterfaceSpec &paInterfaceSpec,
-                       const forte::core::StringId paInstanceNameId);
+                       const forte::StringId paInstanceNameId);
     ~FORTE_ZephyrIOBase() override;
 };

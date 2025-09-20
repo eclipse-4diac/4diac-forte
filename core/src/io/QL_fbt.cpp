@@ -14,11 +14,11 @@
  *******************************************************************************/
 
 #include "forte/io/QL_fbt.h"
-using namespace forte::core::literals;
+using namespace forte::literals;
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_QL, "QL"_STRID)
 
-FORTE_QL::FORTE_QL(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_QL::FORTE_QL(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     COutputFB<CIEC_LWORD>(paContainer, paInstanceNameId) {};

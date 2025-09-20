@@ -25,7 +25,7 @@
 #include "types/PLCnextBusAdapter.h"
 #include "plcNextDeviceInterface.h"
 
-class PLCnextSlaveHandler : public forte::core::io::IOConfigFBMultiSlave {
+class PLCnextSlaveHandler : public forte::io::IOConfigFBMultiSlave {
 
   public:
     enum SlaveType { UnknownSlave = -1, NoUsage = 0, Input = 1, Output = 2 };
@@ -49,9 +49,9 @@ class PLCnextSlaveHandler : public forte::core::io::IOConfigFBMultiSlave {
     CSyncObject handleMutex;
 
     PLCnextSlaveHandler(int paType,
-                        forte::core::CFBContainer &paContainer,
+                        forte::CFBContainer &paContainer,
                         const SFBInterfaceSpec *paInterfaceSpec,
-                        const forte::core::StringId paInstanceNameId);
+                        const forte::StringId paInstanceNameId);
 
     ~PLCnextSlaveHandler() override;
 

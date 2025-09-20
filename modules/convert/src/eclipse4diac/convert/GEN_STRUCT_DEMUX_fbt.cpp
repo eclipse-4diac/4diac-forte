@@ -15,7 +15,7 @@
  *******************************************************************************/
 #include "forte/eclipse4diac/convert/GEN_STRUCT_DEMUX_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/eclipse4diac/convert/GEN_STRUCT_MUX_fbt.h"
 #include <stdio.h>
@@ -40,8 +40,7 @@ void GEN_STRUCT_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread 
   }
 }
 
-GEN_STRUCT_DEMUX::GEN_STRUCT_DEMUX(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+GEN_STRUCT_DEMUX::GEN_STRUCT_DEMUX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr) {
@@ -72,7 +71,7 @@ bool GEN_STRUCT_DEMUX::createInterfaceSpec(const char *paConfigString, SFBInterf
     return false;
   }
 
-  std::unique_ptr<CIEC_ANY> data(forte::core::createDataTypeInstance(structTypeNameId, nullptr));
+  std::unique_ptr<CIEC_ANY> data(forte::createDataTypeInstance(structTypeNameId, nullptr));
 
   if (nullptr == data) {
     DEVLOG_ERROR("[GEN_STRUCT_DEMUX]: Couldn't create structure of type: %s\n", structTypeNameId.data());
@@ -117,7 +116,7 @@ void GEN_STRUCT_DEMUX::fillConfiguredInterfaceSpec(std::vector<std::string_view>
   mConfiguredDOPorts.reserve(paConfiguredMemberNames.size());
   mDoNames.reserve(paConfiguredMemberNames.size());
   for (size_t i = 0; i < paConfiguredMemberNames.size(); ++i) {
-    forte::core::StringId memberNameId = forte::core::StringId::insert(paConfiguredMemberNames[i]);
+    forte::StringId memberNameId = forte::StringId::insert(paConfiguredMemberNames[i]);
     mDoNames.emplace_back(memberNameId);
     CIEC_ANY *member = getNestedMember(memberNameId, var_IN.get());
     mConfiguredDOPorts.emplace_back(member);
@@ -149,18 +148,17 @@ std::vector<std::string_view> GEN_STRUCT_DEMUX::getConfiguredMemberNames(std::st
   return configuredMemberNames;
 }
 
-CIEC_ANY *GEN_STRUCT_DEMUX::getNestedMember(const forte::core::StringId paNameId, CIEC_STRUCT *paStructType) {
+CIEC_ANY *GEN_STRUCT_DEMUX::getNestedMember(const forte::StringId paNameId, CIEC_STRUCT *paStructType) {
   std::string_view memberName = paNameId;
   size_t index = memberName.find(NESTED_VAR_SEPARATOR);
   CIEC_STRUCT *structType = paStructType;
   while (index != std::string::npos) {
     std::string_view nestedStructName = memberName.substr(0, index);
-    structType =
-        static_cast<CIEC_STRUCT *>(structType->getMemberNamed(forte::core::StringId::lookup(nestedStructName)));
+    structType = static_cast<CIEC_STRUCT *>(structType->getMemberNamed(forte::StringId::lookup(nestedStructName)));
     memberName = memberName.substr(index + 1);
     index = memberName.find(NESTED_VAR_SEPARATOR);
   }
-  return structType->getMemberNamed(forte::core::StringId::lookup(memberName));
+  return structType->getMemberNamed(forte::StringId::lookup(memberName));
 }
 
 CEventConnection *GEN_STRUCT_DEMUX::getEOConUnchecked(TPortId paEONum) {

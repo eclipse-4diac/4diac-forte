@@ -13,7 +13,7 @@
 
 #include "forte/eclipse4diac/rtevents/RT_E_TRAIN_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::rtevents;
 
@@ -64,8 +64,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RT_E_TRAIN::FORTE_RT_E_TRAIN(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+FORTE_RT_E_TRAIN::FORTE_RT_E_TRAIN(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_RT_E_CYCLE("RT_E_CYCLE"_STRID, *this),
     fb_E_CTU("E_CTU"_STRID, *this),

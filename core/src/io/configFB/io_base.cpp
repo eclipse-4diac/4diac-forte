@@ -13,11 +13,11 @@
 
 #include "forte/io/configFB/io_base.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
-IOConfigFBBase::IOConfigFBBase(forte::core::CFBContainer &paContainer,
+IOConfigFBBase::IOConfigFBBase(forte::CFBContainer &paContainer,
                                const SFBInterfaceSpec &paInterfaceSpec,
-                               const forte::core::StringId paInstanceNameId) :
+                               const forte::StringId paInstanceNameId) :
     CEventSourceFB(paContainer, paInterfaceSpec, paInstanceNameId) {
 }
 

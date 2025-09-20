@@ -18,7 +18,7 @@
 #include "forte/datatypes/forte_any_magnitude.h"
 #include "forte/datatypes/forte_any_magnitude_variant.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::arithmetic;
 
@@ -48,7 +48,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_ADD::FORTE_F_ADD(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_ADD::FORTE_F_ADD(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_MAGNITUDE_VARIANT()),
     var_IN2(CIEC_ANY_MAGNITUDE_VARIANT()),
@@ -65,8 +65,8 @@ void FORTE_F_ADD::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
           [](auto &&paIN1, auto &&paIN2) -> CIEC_ANY_MAGNITUDE_VARIANT {
             using T = std::decay_t<decltype(paIN1)>;
             using U = std::decay_t<decltype(paIN2)>;
-            using deductedType = typename forte::core::mpl::get_add_operator_result_type<T, U>::type;
-            if constexpr (!std::is_same<deductedType, forte::core::mpl::NullType>::value) {
+            using deductedType = typename forte::mpl::get_add_operator_result_type<T, U>::type;
+            if constexpr (!std::is_same<deductedType, forte::mpl::NullType>::value) {
               return func_ADD(paIN1, paIN2);
             }
             DEVLOG_ERROR("Adding incompatible types %s and %s\n", paIN1.getTypeNameID().data(),

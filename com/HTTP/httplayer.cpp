@@ -27,7 +27,7 @@
 #include "forte/cominfra/comlayersmanager.h"
 
 using namespace forte::com_infra;
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace std::string_literals;
 
@@ -156,7 +156,7 @@ bool CHttpComLayer::handleAddress(const char *paAddress) {
     CParameterParser portParser(addressToParse.c_str(), ':', 2);
     if (2 == portParser.parseParameters()) {
       mHost = std::string(portParser[0]);
-      mPort = static_cast<TForteUInt16>(forte::core::util::strtoul(portParser[1], nullptr, 10));
+      mPort = static_cast<TForteUInt16>(forte::util::strtoul(portParser[1], nullptr, 10));
     } else {
       mHost = addressToParse;
       DEVLOG_INFO("[HTTP Layer] No port was found on the parameter, using default 80\n");

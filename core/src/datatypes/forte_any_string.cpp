@@ -140,22 +140,22 @@ bool CIEC_ANY_STRING::parseEscapedHexNum(const char **paSymbol, bool paWide, TFo
   bool bRetVal = false;
 
   paValue = 0;
-  if (forte::core::util::isHexDigit((*paSymbol)[0])) {
-    paValue = static_cast<TForteUInt16>(forte::core::util::charHexDigitToInt((*paSymbol)[0]) << 4);
-    if (forte::core::util::isHexDigit((*paSymbol)[1])) {
-      paValue = TForteUInt16(paValue | forte::core::util::charHexDigitToInt(
-                                           (*paSymbol)[1])); // operator | promotes operator uint16_t to int.
+  if (forte::util::isHexDigit((*paSymbol)[0])) {
+    paValue = static_cast<TForteUInt16>(forte::util::charHexDigitToInt((*paSymbol)[0]) << 4);
+    if (forte::util::isHexDigit((*paSymbol)[1])) {
+      paValue = TForteUInt16(
+          paValue | forte::util::charHexDigitToInt((*paSymbol)[1])); // operator | promotes operator uint16_t to int.
 
       if (paWide) {
         paValue = TForteUInt16(paValue << 8);
 
-        if (forte::core::util::isHexDigit((*paSymbol)[2])) {
-          paValue = TForteUInt16(paValue | forte::core::util::charHexDigitToInt((*paSymbol)[2]) << 4);
+        if (forte::util::isHexDigit((*paSymbol)[2])) {
+          paValue = TForteUInt16(paValue | forte::util::charHexDigitToInt((*paSymbol)[2]) << 4);
         } else {
           return false;
         }
-        if (forte::core::util::isHexDigit((*paSymbol)[3])) {
-          paValue = TForteUInt16(paValue | forte::core::util::charHexDigitToInt((*paSymbol)[3]));
+        if (forte::util::isHexDigit((*paSymbol)[3])) {
+          paValue = TForteUInt16(paValue | forte::util::charHexDigitToInt((*paSymbol)[3]));
         } else {
           return false;
         }

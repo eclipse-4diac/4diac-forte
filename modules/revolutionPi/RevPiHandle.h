@@ -16,11 +16,11 @@
 #include "forte/io/mapper/io_handle.h"
 #include "RevPiController.h"
 
-class RevPiHandle : public forte::core::io::IOHandle {
+class RevPiHandle : public forte::io::IOHandle {
   public:
     RevPiHandle(RevPiController *controller,
                 CIEC_ANY::EDataTypeID type,
-                forte::core::io::IOMapper::Direction direction,
+                forte::io::IOMapper::Direction direction,
                 uint16_t offset,
                 uint8_t position);
 

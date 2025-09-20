@@ -16,7 +16,7 @@
 
 #include "forte/iec61131/charString/F_MID_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::charString;
 
@@ -40,7 +40,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_MID::FORTE_F_MID(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_MID::FORTE_F_MID(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_STRING_VARIANT()),
     var_L(CIEC_ANY_INT_VARIANT()),

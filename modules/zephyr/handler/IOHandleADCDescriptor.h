@@ -19,7 +19,7 @@
 class IOHandleADCDescriptor : public IOHandleDescriptor {
   public:
     IOHandleADCDescriptor(std::string const &paId, const adc_dt_spec *paAdcSpec) :
-        IOHandleDescriptor(paId, forte::core::io::IOMapper::In, Adc),
+        IOHandleDescriptor(paId, forte::io::IOMapper::In, Adc),
         mAdcSpec(paAdcSpec) {
     }
 

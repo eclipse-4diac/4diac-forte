@@ -16,8 +16,8 @@
 #include "forte/datatypes/forte_dword.h"
 #include "forte/util/criticalregion.h"
 
-EmbrickAnalog10SlaveHandle::EmbrickAnalog10SlaveHandle(forte::core::io::IODeviceController *paController,
-                                                       forte::core::io::IOMapper::Direction paDirection,
+EmbrickAnalog10SlaveHandle::EmbrickAnalog10SlaveHandle(forte::io::IODeviceController *paController,
+                                                       forte::io::IOMapper::Direction paDirection,
                                                        uint8_t paOffset,
                                                        EmbrickSlaveHandler *paSlave) :
     EmbrickSlaveHandle(paController, paDirection, CIEC_ANY::e_DWORD, paOffset, paSlave) {

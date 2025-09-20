@@ -73,9 +73,8 @@ class CIEC_INT final : public CIEC_ANY_SIGNED {
       return *this;
     }
 
-    template<
-        typename T,
-        std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_INT>, CIEC_INT>, int> = 0>
+    template<typename T,
+             std::enable_if_t<std::is_same_v<typename forte::mpl::implicit_cast_t<T, CIEC_INT>, CIEC_INT>, int> = 0>
     CIEC_INT &operator=(const T &paValue) {
       setValueSimple(paValue);
       return *this;
@@ -113,7 +112,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_INT> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_INT;
-      static const forte::core::StringId scmDataTypeName;
+      static const forte::StringId scmDataTypeName;
   };
 } // namespace forte
 

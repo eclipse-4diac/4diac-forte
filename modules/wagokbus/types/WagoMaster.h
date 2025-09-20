@@ -12,11 +12,11 @@
 #include "WagoBusAdapter.h"
 #include "forte/io/configFB/io_master_multi.h"
 
-class FORTE_WagoMaster : public forte::core::io::IOConfigFBMultiMaster {
+class FORTE_WagoMaster : public forte::io::IOConfigFBMultiMaster {
     DECLARE_FIRMWARE_FB(FORTE_WagoMaster)
 
   public:
-    FORTE_WagoMaster(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_WagoMaster(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
     ~FORTE_WagoMaster() override = default;
 
     CIEC_BOOL var_QI;
@@ -67,6 +67,6 @@ class FORTE_WagoMaster : public forte::core::io::IOConfigFBMultiMaster {
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
 
-    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
+    forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
     void setConfig() override;
 };

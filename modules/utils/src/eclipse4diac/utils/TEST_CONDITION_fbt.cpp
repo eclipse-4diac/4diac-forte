@@ -15,7 +15,7 @@
 
 #include "forte/eclipse4diac/utils/TEST_CONDITION_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/util/devlog.h"
 #include "forte/resource.h"
@@ -46,8 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_TEST_CONDITION::FORTE_TEST_CONDITION(const forte::core::StringId paInstanceNameId,
-                                           forte::core::CFBContainer &paContainer) :
+FORTE_TEST_CONDITION::FORTE_TEST_CONDITION(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_check(nullptr) {};

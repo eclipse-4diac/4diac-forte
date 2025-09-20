@@ -13,7 +13,7 @@
 
 #include "IORevPiCore.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "../RevPiController.h"
 
@@ -40,9 +40,8 @@ namespace {
   };
 } // namespace
 
-FORTE_IORevPiCore::FORTE_IORevPiCore(const forte::core::StringId paInstanceNameId,
-                                     forte::core::CFBContainer &paContainer) :
-    forte::core::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
+FORTE_IORevPiCore::FORTE_IORevPiCore(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+    forte::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_UpdateInterval(25_UINT),
     conn_INITO(*this, 0),
     conn_IND(*this, 1),
@@ -66,7 +65,7 @@ void FORTE_IORevPiCore::setConfig() {
   getDeviceController()->setConfig(&config);
 }
 
-forte::core::io::IODeviceController *FORTE_IORevPiCore::createDeviceController(CDeviceExecution &paDeviceExecution) {
+forte::io::IODeviceController *FORTE_IORevPiCore::createDeviceController(CDeviceExecution &paDeviceExecution) {
   return new RevPiController(paDeviceExecution);
 }
 

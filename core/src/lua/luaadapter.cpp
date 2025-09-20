@@ -13,10 +13,10 @@
 
 #include "core/lua/luaadapter.h"
 
-CLuaAdapter::CLuaAdapter(forte::core::StringId paInstanceNameId,
+CLuaAdapter::CLuaAdapter(forte::StringId paInstanceNameId,
                          const CLuaAdapterTypeEntry *paTypeEntry,
                          bool paIsPlug,
-                         forte::core::CFBContainer &paContainer) :
+                         forte::CFBContainer &paContainer) :
     CAdapter(paContainer,
              paTypeEntry->getSocketInterfaceSpec(),
              paInstanceNameId,

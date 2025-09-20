@@ -22,7 +22,7 @@
 #include "forte/arch/forte_architecture_time.h"
 #include "forte/util/string_utils.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(TIME_OF_DAY, "TIME_OF_DAY"_STRID)
 
@@ -51,18 +51,18 @@ int CIEC_TIME_OF_DAY::fromString(const char *paValue) {
   }
 
   if ('\0' != *acBuffer) {
-    tm.tm_hour = static_cast<int>(forte::core::util::strtoul(acBuffer, &acBuffer, 10));
+    tm.tm_hour = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
     if (':' == *acBuffer) {
       ++acBuffer;
-      tm.tm_min = static_cast<int>(forte::core::util::strtoul(acBuffer, &acBuffer, 10));
+      tm.tm_min = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
       if (':' == *acBuffer) {
         ++acBuffer;
-        tm.tm_sec = static_cast<int>(forte::core::util::strtoul(acBuffer, &acBuffer, 10));
+        tm.tm_sec = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
         if ('.' == *acBuffer) {
           unsigned int nNums = 0;
           ++acBuffer;
           while (isdigit(*acBuffer)) {
-            msec = 10 * msec + forte::core::util::charDigitToInt(*acBuffer);
+            msec = 10 * msec + forte::util::charDigitToInt(*acBuffer);
             ++acBuffer;
             ++nNums;
           }
@@ -101,4 +101,4 @@ void CIEC_TIME_OF_DAY::toString(std::string &paTargetBuf) const {
                  static_cast<int>((ntoStingBuffer / 1000000) % 1000));
 }
 
-const forte::core::StringId forte::CDataTypeTrait<CIEC_TIME_OF_DAY>::scmDataTypeName = "TIME_OF_DAY"_STRID;
+const forte::StringId forte::CDataTypeTrait<CIEC_TIME_OF_DAY>::scmDataTypeName = "TIME_OF_DAY"_STRID;

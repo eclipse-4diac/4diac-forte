@@ -19,8 +19,8 @@
 
 class EmbrickAnalogSlaveHandle : public EmbrickSlaveHandle {
   public:
-    EmbrickAnalogSlaveHandle(forte::core::io::IODeviceController *paController,
-                             forte::core::io::IOMapper::Direction paDirection,
+    EmbrickAnalogSlaveHandle(forte::io::IODeviceController *paController,
+                             forte::io::IOMapper::Direction paDirection,
                              uint8_t paOffset,
                              EmbrickSlaveHandler *paSlave);
 

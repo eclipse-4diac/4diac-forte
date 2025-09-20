@@ -31,7 +31,7 @@ class FORTE_eIXconfig final : public CeConfigFB {
     void setInitialValues() override;
 
   public:
-    FORTE_eIXconfig(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_eIXconfig(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_BOOL var_FE;
     CIEC_BOOL var_RE;

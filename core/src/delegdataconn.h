@@ -14,7 +14,7 @@
 
 #include "forte/dataconn.h"
 
-namespace forte::core::internal {
+namespace forte::internal {
 
   template<typename T>
   class CDelegatingDataConnection : public CDataConnection {
@@ -45,4 +45,4 @@ namespace forte::core::internal {
       T &mValue;
   };
 
-} // namespace forte::core::internal
+} // namespace forte::internal

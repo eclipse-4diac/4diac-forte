@@ -16,7 +16,7 @@
  *******************************************************************************/
 #include "forte/datatypes/forte_wstring.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/util/devlog.h"
 
@@ -289,4 +289,4 @@ void CIEC_WSTRING::fromCharString(const char *const paValue) {
   }
 }
 
-const forte::core::StringId forte::CDataTypeTrait<CIEC_WSTRING>::scmDataTypeName = "WSTRING"_STRID;
+const forte::StringId forte::CDataTypeTrait<CIEC_WSTRING>::scmDataTypeName = "WSTRING"_STRID;

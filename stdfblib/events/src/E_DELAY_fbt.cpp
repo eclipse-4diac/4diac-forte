@@ -14,7 +14,7 @@
  *******************************************************************************/
 #include "forte/iec61499/events/E_DELAY_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/timerha.h"
 
@@ -22,7 +22,7 @@ using namespace forte::iec61499::events;
 
 DEFINE_FIRMWARE_FB(FORTE_E_DELAY, "iec61499::events::E_DELAY"_STRID)
 
-FORTE_E_DELAY::FORTE_E_DELAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_DELAY::FORTE_E_DELAY(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CTimedFB(paInstanceNameId, paContainer) {
 }
 

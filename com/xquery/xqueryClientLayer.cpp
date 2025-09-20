@@ -19,7 +19,7 @@ extern "C" {
 }
 
 using namespace forte::com_infra;
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace std::literals::string_literals;
 

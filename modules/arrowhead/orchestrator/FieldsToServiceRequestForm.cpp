@@ -12,50 +12,43 @@
 
 #include "FieldsToServiceRequestForm.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceRequestForm, "FieldsToServiceRequestForm"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{
-      "requesterSystem"_STRID,    "requesterCloud"_STRID,     "requestedService"_STRID,
-      "orchestrationFlags"_STRID, "preferredProviders"_STRID, "requestedQoS"_STRID};
-  
-                                                                                                "ArrowheadCloud"_STRID,
-                                                                                                "ArrowheadService"_STRID,
-                                                                                                "ARRAY"_STRID,
-                                                                                                10,
-                                                                                                "WSTRING"_STRID,
-                                                                                                "ARRAY"_STRID,
-                                                                                                10,
-                                                                                                "PreferredProvider"_STRID,
-                                                                                                "ARRAY"_STRID,
-                                                                                                10,
-                                                                                                "WSTRING"_STRID};
-  
-  const auto cDataOutputNames = std::array{"serviceRequestForm"_STRID};
-  
-      "ServiceRequestForm"_STRID};
-  
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-}
+  const auto cDataInputNames =
+      std::array{"requesterSystem"_STRID,    "requesterCloud"_STRID,     "requestedService"_STRID,
+                 "orchestrationFlags"_STRID, "preferredProviders"_STRID, "requestedQoS"_STRID};
 
+  "ArrowheadCloud"_STRID, "ArrowheadService"_STRID, "ARRAY"_STRID, 10, "WSTRING"_STRID, "ARRAY"_STRID, 10,
+      "PreferredProvider"_STRID, "ARRAY"_STRID, 10, "WSTRING"_STRID
+};
+
+const auto cDataOutputNames = std::array{"serviceRequestForm"_STRID};
+
+"ServiceRequestForm"_STRID
+}
+;
+
+const auto cEventInputNames = std::array{"REQ"_STRID};
+const auto cEventInputTypeIds = std::array{"Event"_STRID};
+
+const auto cEventOutputNames = std::array{"CNF"_STRID};
+const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+
+const SFBInterfaceSpec cFBInterfaceSpec = {
+    .mEINames = cEventInputNames,
+    .mEITypeNames = cEventInputTypeIds,
+    .mEONames = cEventOutputNames,
+    .mEOTypeNames = cEventOutputTypeIds,
+    .mDINames = cDataInputNames,
+    .mDONames = cDataOutputNames,
+    .mDIONames = {},
+    .mSocketNames = {},
+    .mPlugNames = {},
+};
+}
 
 void FORTE_FieldsToServiceRequestForm::alg_REQ() {
   CIEC_INT i;

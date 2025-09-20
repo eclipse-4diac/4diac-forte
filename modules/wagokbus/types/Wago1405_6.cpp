@@ -9,7 +9,7 @@
 
 #include "Wago1405_6.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_Wago1405_6, "Wago1405_6"_STRID)
 
@@ -50,8 +50,7 @@ namespace {
   };
 } // namespace
 
-FORTE_Wago1405_6::FORTE_Wago1405_6(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+FORTE_Wago1405_6::FORTE_Wago1405_6(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     WagoSlaveBase(36865, paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_DigitalInput_1(""_STRING),

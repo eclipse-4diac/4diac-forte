@@ -48,16 +48,16 @@ class FORTE_PortAdapter : public forte::CAdapter {
     ~FORTE_PortAdapter() override = default;
 
   protected:
-    FORTE_PortAdapter(forte::core::CFBContainer &paContainer,
+    FORTE_PortAdapter(forte::CFBContainer &paContainer,
                       const SFBInterfaceSpec &paInterfaceSpec,
-                      const forte::core::StringId paInstanceNameId,
+                      const forte::StringId paInstanceNameId,
                       TForteUInt8 paParentAdapterlistID);
 };
 
 class FORTE_PortAdapter_Plug final : public FORTE_PortAdapter {
   public:
-    FORTE_PortAdapter_Plug(forte::core::StringId paInstanceNameId,
-                           forte::core::CFBContainer &paContainer,
+    FORTE_PortAdapter_Plug(forte::StringId paInstanceNameId,
+                           forte::CFBContainer &paContainer,
                            TForteUInt8 paParentAdapterlistID);
     ~FORTE_PortAdapter_Plug() override = default;
 
@@ -77,8 +77,8 @@ class FORTE_PortAdapter_Plug final : public FORTE_PortAdapter {
 
 class FORTE_PortAdapter_Socket final : public FORTE_PortAdapter {
   public:
-    FORTE_PortAdapter_Socket(forte::core::StringId paInstanceNameId,
-                             forte::core::CFBContainer &paContainer,
+    FORTE_PortAdapter_Socket(forte::StringId paInstanceNameId,
+                             forte::CFBContainer &paContainer,
                              TForteUInt8 paParentAdapterlistID);
     ~FORTE_PortAdapter_Socket() override = default;
 

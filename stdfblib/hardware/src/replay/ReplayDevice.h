@@ -27,7 +27,7 @@ class ReplayDevice : public RMT_DEV {
 
     int startDevice() override;
 
-    EMGMResponse executeMGMCommand(forte::core::SManagementCMD &paCommand) override;
+    EMGMResponse executeMGMCommand(forte::SManagementCMD &paCommand) override;
 
     void startControlling();
 

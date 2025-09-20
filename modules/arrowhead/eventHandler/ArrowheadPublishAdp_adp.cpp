@@ -12,44 +12,22 @@
 
 #include "ArrowheadPublishAdp_adp.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_ADAPTER_TYPE(FORTE_ArrowheadPublishAdp, "ArrowheadPublishAdp"_STRID)
 
-const auto cDataOutputNames = std::array{"publishEvent"_STRID,
-                                                                                      "endpoint"_STRID};
+const auto cDataOutputNames = std::array{"publishEvent"_STRID, "endpoint"_STRID};
 
-                                                                                        "WSTRING"_STRID};
+"WSTRING"_STRID
+}
+;
 
 const auto cEventInputNames = std::array{"published"_STRID};
 
 const auto cEventOutputNames = std::array{"publish"_STRID};
 
-const SFBInterfaceSpec FORTE_ArrowheadPublishAdp::scmFBInterfaceSpecSocket = {1,
-                                                                              scmEventInputNames,
-                                                                              scmEventInputTypeIds,
-                                                                              0,
-                                                                              1,
-                                                                              scmEventOutputNames,
-                                                                              0,
-                                                                              0,
-                                                                              0,
-                                                                              2,
-                                                                              scmDataOutputNames,
-                                                                              0,
-                                                                              0};
+const SFBInterfaceSpec FORTE_ArrowheadPublishAdp::scmFBInterfaceSpecSocket = {
+    1, scmEventInputNames, scmEventInputTypeIds, 0, 1, scmEventOutputNames, 0, 0, 0, 2, scmDataOutputNames, 0, 0};
 
-const SFBInterfaceSpec FORTE_ArrowheadPublishAdp::scmFBInterfaceSpecPlug = {1,
-                                                                            scmEventOutputNames,
-                                                                            1,
-                                                                            scmEventInputNames,
-                                                                            scmEventInputTypeIds,
-                                                                            0,
-                                                                            0,
-                                                                            2,
-                                                                            scmDataOutputNames,
-                                                                            0,
-                                                                            0,
-                                                                            0,
-                                                                            0,
-                                                                            0};
+const SFBInterfaceSpec FORTE_ArrowheadPublishAdp::scmFBInterfaceSpecPlug = {
+    1, scmEventOutputNames, 1, scmEventInputNames, scmEventInputTypeIds, 0, 0, 2, scmDataOutputNames, 0, 0, 0, 0, 0};

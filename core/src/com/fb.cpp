@@ -18,7 +18,7 @@
 
 #include <charconv>
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::com;
 
@@ -35,7 +35,7 @@ namespace {
 
 CommunicationFB::CommunicationFB(CFBContainer &paContainer,
                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                 forte::core::StringId paInstanceNameId) :
+                                 forte::StringId paInstanceNameId) :
     CGenFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_QI(nullptr),

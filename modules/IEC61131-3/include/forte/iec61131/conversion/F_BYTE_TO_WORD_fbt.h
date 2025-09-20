@@ -44,7 +44,7 @@ namespace forte::iec61131::conversion {
       void setInitialValues() override;
 
     public:
-      FORTE_F_BYTE_TO_WORD(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      FORTE_F_BYTE_TO_WORD(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       CIEC_BYTE var_IN;
 

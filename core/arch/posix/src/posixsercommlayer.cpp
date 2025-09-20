@@ -22,7 +22,7 @@
 #include "forte/util/criticalregion.h"
 #include "forte/cominfra/comlayersmanager.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CPosixSerCommLayer> entry("ser"_STRID);

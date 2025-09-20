@@ -14,7 +14,7 @@
 
 #include <array>
 
-namespace forte::core::util {
+namespace forte::util {
 
   template<typename T, std::size_t size>
   class CRingBuffer {
@@ -58,4 +58,4 @@ namespace forte::core::util {
       std::size_t mPushIndex{0};
       std::array<T, size> mData;
   };
-} // namespace forte::core::util
+} // namespace forte::util

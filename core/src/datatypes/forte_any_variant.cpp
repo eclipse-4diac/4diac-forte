@@ -14,7 +14,7 @@
  *******************************************************************************/
 #include "forte/datatypes/forte_any_variant.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(ANY_VARIANT, "ANY"_STRID)
 
@@ -128,13 +128,13 @@ int CIEC_ANY_VARIANT::fromString(const char *paValue) {
   int retVal = -1;
   const char *hashPos = strchr(paValue, '#');
   if (nullptr != hashPos) {
-    forte::core::StringId typeNameId = parseTypeName(paValue, hashPos);
+    forte::StringId typeNameId = parseTypeName(paValue, hashPos);
     CIEC_ANY::EDataTypeID dataTypeId = CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(typeNameId);
     if (setDefaultValue(dataTypeId)) {
       CIEC_ANY &value = unwrap();
       retVal = value.fromString(paValue);
     } else {
-      CIEC_ANY *value = forte::core::createDataTypeInstance(typeNameId, nullptr);
+      CIEC_ANY *value = forte::createDataTypeInstance(typeNameId, nullptr);
       if (value) {
         retVal = value->fromString(hashPos + 1); // start after '#'
         if (retVal < 0) {

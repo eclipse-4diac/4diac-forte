@@ -12,7 +12,7 @@
 
 #include "QueryService.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_QueryService, "QueryService"_STRID)
 

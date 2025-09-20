@@ -23,36 +23,34 @@
 #include <string_view>
 #include "forte/util/string_utils.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace std::string_literals;
 
 namespace {
-  std::vector<forte::core::CFBTypeEntry *> &getFBTypeLib() {
-    static std::vector<forte::core::CFBTypeEntry *> *fbTypeLib = new std::vector<forte::core::CFBTypeEntry *>();
+  std::vector<forte::CFBTypeEntry *> &getFBTypeLib() {
+    static std::vector<forte::CFBTypeEntry *> *fbTypeLib = new std::vector<forte::CFBTypeEntry *>();
     return *fbTypeLib;
   }
 
-  std::vector<forte::core::CAdapterTypeEntry *> &getAdapterTypeLib() {
-    static std::vector<forte::core::CAdapterTypeEntry *> *adapterTypeLib =
-        new std::vector<forte::core::CAdapterTypeEntry *>();
+  std::vector<forte::CAdapterTypeEntry *> &getAdapterTypeLib() {
+    static std::vector<forte::CAdapterTypeEntry *> *adapterTypeLib = new std::vector<forte::CAdapterTypeEntry *>();
     return *adapterTypeLib;
   }
 
-  std::vector<forte::core::CDataTypeEntry *> &getDataTypeLib() {
-    static std::vector<forte::core::CDataTypeEntry *> *dataTypeLib = new std::vector<forte::core::CDataTypeEntry *>();
+  std::vector<forte::CDataTypeEntry *> &getDataTypeLib() {
+    static std::vector<forte::CDataTypeEntry *> *dataTypeLib = new std::vector<forte::CDataTypeEntry *>();
     return *dataTypeLib;
   }
 
-  std::vector<forte::core::CGlobalConstEntry *> &getGlobalConstTypeLib() {
-    static std::vector<forte::core::CGlobalConstEntry *> *globalConstTypeLib =
-        new std::vector<forte::core::CGlobalConstEntry *>();
+  std::vector<forte::CGlobalConstEntry *> &getGlobalConstTypeLib() {
+    static std::vector<forte::CGlobalConstEntry *> *globalConstTypeLib = new std::vector<forte::CGlobalConstEntry *>();
     return *globalConstTypeLib;
   }
 
-  CFunctionBlock *createGenericFB(forte::core::StringId paInstanceNameId,
-                                  forte::core::StringId paFBTypeId,
-                                  forte::core::CFBContainer &paContainer,
+  CFunctionBlock *createGenericFB(forte::StringId paInstanceNameId,
+                                  forte::StringId paFBTypeId,
+                                  forte::CFBContainer &paContainer,
                                   EMGMResponse &paErrorMSG);
 
   //! find the position of the first underscore that marks the end of the type name and the beginning of the generic
@@ -61,68 +59,68 @@ namespace {
 
   /*!\brief add a Firmware FB type to the type lib (is mainly used by the corresponding entry class).
    */
-  void addFBType(forte::core::CFBTypeEntry *paFBTypeEntry);
+  void addFBType(forte::CFBTypeEntry *paFBTypeEntry);
 
   /*!\brief add a Firmware Adapter type to the type lib (is mainly used by the corresponding entry class).
    */
-  void addAdapterType(forte::core::CAdapterTypeEntry *paAdapterTypeEntry);
+  void addAdapterType(forte::CAdapterTypeEntry *paAdapterTypeEntry);
 
   /*!\brief add a Firmware data type to the type lib (is mainly used by the corresponding entry class).
    */
-  void addDataType(forte::core::CDataTypeEntry *paDTEntry);
+  void addDataType(forte::CDataTypeEntry *paDTEntry);
 
-  void addGlobalConstType(forte::core::CGlobalConstEntry *paGlobalConstTypeEntry);
-
-  template<typename T>
-  T *findTypeEntry(std::vector<T *> &vec, forte::core::StringId paTypeNameId);
+  void addGlobalConstType(forte::CGlobalConstEntry *paGlobalConstTypeEntry);
 
   template<typename T>
-  T *findGenericTypeEntry(std::vector<T *> &vec, forte::core::StringId paTypeNameId);
+  T *findTypeEntry(std::vector<T *> &vec, forte::StringId paTypeNameId);
+
+  template<typename T>
+  T *findGenericTypeEntry(std::vector<T *> &vec, forte::StringId paTypeNameId);
 
 }; // namespace
 
-constexpr forte::core::CTypeEntry::CTypeEntry(forte::core::StringId paTypeNameId, std::string_view paTypeHash) :
+constexpr forte::CTypeEntry::CTypeEntry(forte::StringId paTypeNameId, std::string_view paTypeHash) :
     mTypeNameId(paTypeNameId),
     mTypeHash(paTypeHash) {
 }
 
-forte::core::CFBTypeEntry::CFBTypeEntry(forte::core::StringId paTypeNameId,
-                                        std::string_view paTypeHash,
-                                        TFunctionBlockCreateFunc paCreateFB) :
+forte::CFBTypeEntry::CFBTypeEntry(forte::StringId paTypeNameId,
+                                  std::string_view paTypeHash,
+                                  TFunctionBlockCreateFunc paCreateFB) :
     CTypeEntry(paTypeNameId, paTypeHash),
     mFBCreationFunc(paCreateFB) {
   addFBType(this);
 }
 
-forte::core::CAdapterTypeEntry::CAdapterTypeEntry(forte::core::StringId paTypeNameId,
-                                                  std::string_view paTypeHash,
-                                                  TAdapterCreateFunc paCreateAdapter) :
+forte::CAdapterTypeEntry::CAdapterTypeEntry(forte::StringId paTypeNameId,
+                                            std::string_view paTypeHash,
+                                            TAdapterCreateFunc paCreateAdapter) :
     CTypeEntry(paTypeNameId, paTypeHash),
     mAdapterCreationFunc(paCreateAdapter) {
   addAdapterType(this);
 }
 
-forte::core::CDataTypeEntry::CDataTypeEntry(forte::core::StringId paTypeNameId,
-                                            std::string_view paTypeHash,
-                                            TDataTypeCreateFunc paCreateDT,
-                                            size_t paSize) :
+forte::CDataTypeEntry::CDataTypeEntry(forte::StringId paTypeNameId,
+                                      std::string_view paTypeHash,
+                                      TDataTypeCreateFunc paCreateDT,
+                                      size_t paSize) :
     CTypeEntry(paTypeNameId, paTypeHash),
     mDTCreateFunc(paCreateDT),
     mSize(paSize) {
   addDataType(this);
 }
 
-forte::core::CGlobalConstEntry::CGlobalConstEntry(forte::core::StringId paTypeNameId, std::string_view paTypeHash) :
+forte::CGlobalConstEntry::CGlobalConstEntry(forte::StringId paTypeNameId, std::string_view paTypeHash) :
     CTypeEntry(paTypeNameId, paTypeHash) {
   addGlobalConstType(this);
 }
 
-forte::CAdapter *forte::core::createAdapter(forte::core::StringId paInstanceNameId,
-                                            forte::core::StringId paAdapterTypeId,
-                                            forte::core::CFBContainer &paContainer,
-                                            bool paIsPlug,
-                                            TForteUInt8 paParentAdapterlistID,
-                                            EMGMResponse &paErrorMSG) {
+forte::CAdapter *forte::createAdapter(forte::StringId paInstanceNameId,
+                                      forte::StringId paAdapterTypeId,
+                                      forte::CFBContainer &paContainer,
+                                      bool paIsPlug,
+                                      TForteUInt8 paParentAdapterlistID,
+                                      EMGMResponse &paErrorMSG) {
   CAdapterTypeEntry *poToCreate = getAdapterTypeEntry(paAdapterTypeId);
   if (poToCreate == nullptr) {
     paErrorMSG = EMGMResponse::UnsupportedType;
@@ -145,11 +143,11 @@ forte::CAdapter *forte::core::createAdapter(forte::core::StringId paInstanceName
   return newAdapter;
 }
 
-CFunctionBlock *forte::core::createFB(forte::core::StringId paInstanceNameId,
-                                      forte::core::StringId paFBTypeId,
-                                      std::string_view paTypeHash,
-                                      forte::core::CFBContainer &paContainer,
-                                      EMGMResponse &paErrorMSG) {
+CFunctionBlock *forte::createFB(forte::StringId paInstanceNameId,
+                                forte::StringId paFBTypeId,
+                                std::string_view paTypeHash,
+                                forte::CFBContainer &paContainer,
+                                EMGMResponse &paErrorMSG) {
   CFunctionBlock *newFB = nullptr;
   CFBTypeEntry *typeEntry = findTypeEntry(getFBTypeLib(), paFBTypeId);
   // TODO: Avoid that the user can create generic blocks.
@@ -176,21 +174,19 @@ CFunctionBlock *forte::core::createFB(forte::core::StringId paInstanceNameId,
   return newFB;
 }
 
-CFunctionBlock *forte::core::createFB(forte::core::StringId paInstanceNameId,
-                                      forte::core::StringId paFBTypeId,
-                                      forte::core::CFBContainer &paContainer) {
+CFunctionBlock *
+forte::createFB(forte::StringId paInstanceNameId, forte::StringId paFBTypeId, forte::CFBContainer &paContainer) {
   EMGMResponse errorMSG;
-  return forte::core::createFB(paInstanceNameId, paFBTypeId, std::string_view{}, paContainer, errorMSG);
+  return forte::createFB(paInstanceNameId, paFBTypeId, std::string_view{}, paContainer, errorMSG);
 }
 
-bool forte::core::deleteFB(CFunctionBlock *paFBToDelete) {
+bool forte::deleteFB(CFunctionBlock *paFBToDelete) {
   paFBToDelete->deinitialize();
   delete paFBToDelete;
   return true;
 }
 
-CIEC_ANY *
-forte::core::createDataTypeInstance(forte::core::StringId paDTNameId, TForteByte *paDataBuf, EMGMResponse &paErrorMSG) {
+CIEC_ANY *forte::createDataTypeInstance(forte::StringId paDTNameId, TForteByte *paDataBuf, EMGMResponse &paErrorMSG) {
   CIEC_ANY *poNewDT = nullptr;
   CDataTypeEntry *poToCreate = getDataTypeEntry(paDTNameId);
   if (nullptr != poToCreate) {
@@ -205,7 +201,7 @@ forte::core::createDataTypeInstance(forte::core::StringId paDTNameId, TForteByte
   return poNewDT;
 }
 
-CIEC_ANY *forte::core::createDataTypeInstance(forte::core::StringId paDTNameId, TForteByte *paDataBuf) {
+CIEC_ANY *forte::createDataTypeInstance(forte::StringId paDTNameId, TForteByte *paDataBuf) {
   EMGMResponse errorMSG;
   return createDataTypeInstance(paDTNameId, paDataBuf, errorMSG);
 }
@@ -213,11 +209,10 @@ CIEC_ANY *forte::core::createDataTypeInstance(forte::core::StringId paDTNameId, 
 namespace {
 
   template<typename T>
-  T *findTypeEntry(std::vector<T *> &vec, const forte::core::StringId paTypeNameId) {
-    auto it =
-        std::lower_bound(vec.begin(), vec.end(), paTypeNameId, [](T *paTypeEnry, const forte::core::StringId paId) {
-          return paTypeEnry->getTypeNameId() < paId;
-        });
+  T *findTypeEntry(std::vector<T *> &vec, const forte::StringId paTypeNameId) {
+    auto it = std::lower_bound(vec.begin(), vec.end(), paTypeNameId, [](T *paTypeEnry, const forte::StringId paId) {
+      return paTypeEnry->getTypeNameId() < paId;
+    });
     if (it != vec.end() && (*it)->getTypeNameId() == paTypeNameId) {
       return *it;
     }
@@ -225,7 +220,7 @@ namespace {
   }
 
   template<typename T>
-  T *findGenericTypeEntry(std::vector<T *> &vec, const forte::core::StringId paTypeNameId) {
+  T *findGenericTypeEntry(std::vector<T *> &vec, const forte::StringId paTypeNameId) {
     const std::size_t underScore = getFirstNonTypeNameUnderscorePos(paTypeNameId);
     if (underScore == std::string_view::npos) {
       // We found no underscore in the type name, so it can't be a generic type
@@ -244,53 +239,53 @@ namespace {
       genFBName.append(paTypeNameId, 0, underScore);
     }
 
-    return findTypeEntry(vec, forte::core::StringId::lookup(genFBName));
+    return findTypeEntry(vec, forte::StringId::lookup(genFBName));
   }
 
 } // namespace
 
-forte::core::CFBTypeEntry *forte::core::getFBTypeEntry(const forte::core::StringId paTypeNameId) {
+forte::CFBTypeEntry *forte::getFBTypeEntry(const forte::StringId paTypeNameId) {
   if (const auto entry = findTypeEntry(getFBTypeLib(), paTypeNameId); entry != nullptr) {
     return entry;
   }
   return findGenericTypeEntry(getFBTypeLib(), paTypeNameId);
 }
 
-forte::core::CAdapterTypeEntry *forte::core::getAdapterTypeEntry(const forte::core::StringId paTypeNameId) {
+forte::CAdapterTypeEntry *forte::getAdapterTypeEntry(const forte::StringId paTypeNameId) {
   return findTypeEntry(getAdapterTypeLib(), paTypeNameId);
 }
 
-forte::core::CDataTypeEntry *forte::core::getDataTypeEntry(const forte::core::StringId paTypeNameId) {
+forte::CDataTypeEntry *forte::getDataTypeEntry(const forte::StringId paTypeNameId) {
   return findTypeEntry(getDataTypeLib(), paTypeNameId);
 }
 
-forte::core::CGlobalConstEntry *forte::core::getGlobalConstTypeEntry(const forte::core::StringId paTypeNameId) {
+forte::CGlobalConstEntry *forte::getGlobalConstTypeEntry(const forte::StringId paTypeNameId) {
   return findTypeEntry(getGlobalConstTypeLib(), paTypeNameId);
 }
 
-const std::vector<forte::core::CFBTypeEntry *> &forte::core::getFBTypeEntries() {
+const std::vector<forte::CFBTypeEntry *> &forte::getFBTypeEntries() {
   return getFBTypeLib();
 }
 
-const std::vector<forte::core::CAdapterTypeEntry *> &forte::core::getAdapterTypeEntries() {
+const std::vector<forte::CAdapterTypeEntry *> &forte::getAdapterTypeEntries() {
   return getAdapterTypeLib();
 }
 
-const std::vector<forte::core::CDataTypeEntry *> &forte::core::getDataTypeEntries() {
+const std::vector<forte::CDataTypeEntry *> &forte::getDataTypeEntries() {
   return getDataTypeLib();
 }
 
-const std::vector<forte::core::CGlobalConstEntry *> &forte::core::getGlobalConstEntries() {
+const std::vector<forte::CGlobalConstEntry *> &forte::getGlobalConstEntries() {
   return getGlobalConstTypeLib();
 }
 
 namespace {
 
-  CFunctionBlock *createGenericFB(const forte::core::StringId paInstanceNameId,
-                                  const forte::core::StringId paFBTypeId,
-                                  forte::core::CFBContainer &paContainer,
+  CFunctionBlock *createGenericFB(const forte::StringId paInstanceNameId,
+                                  const forte::StringId paFBTypeId,
+                                  forte::CFBContainer &paContainer,
                                   EMGMResponse &paErrorMSG) {
-    forte::core::CFBTypeEntry *typeEntry = findGenericTypeEntry(getFBTypeLib(), paFBTypeId);
+    forte::CFBTypeEntry *typeEntry = findGenericTypeEntry(getFBTypeLib(), paFBTypeId);
     if (typeEntry == nullptr) {
       paErrorMSG = EMGMResponse::UnsupportedType;
       return nullptr;
@@ -315,7 +310,7 @@ namespace {
 
     do {
       result = paTypeName.find('_', result + 1);
-      if (result != std::string_view::npos && forte::core::util::isDigit(paTypeName[result + 1])) {
+      if (result != std::string_view::npos && forte::util::isDigit(paTypeName[result + 1])) {
         // only when the element after the underscore is a digit it is a correct type name
         break;
       }
@@ -338,19 +333,19 @@ namespace {
     paTypeLib.insert(pos, paTypeEntry);
   }
 
-  void addFBType(forte::core::CFBTypeEntry *paFBTypeEntry) {
+  void addFBType(forte::CFBTypeEntry *paFBTypeEntry) {
     sortedTypeEntryInsert(getFBTypeLib(), paFBTypeEntry);
   }
 
-  void addAdapterType(forte::core::CAdapterTypeEntry *paAdapterTypeEntry) {
+  void addAdapterType(forte::CAdapterTypeEntry *paAdapterTypeEntry) {
     sortedTypeEntryInsert(getAdapterTypeLib(), paAdapterTypeEntry);
   }
 
-  void addDataType(forte::core::CDataTypeEntry *paDTEntry) {
+  void addDataType(forte::CDataTypeEntry *paDTEntry) {
     sortedTypeEntryInsert(getDataTypeLib(), paDTEntry);
   }
 
-  void addGlobalConstType(forte::core::CGlobalConstEntry *paGlobalConstTypeEntry) {
+  void addGlobalConstType(forte::CGlobalConstEntry *paGlobalConstTypeEntry) {
     sortedTypeEntryInsert(getGlobalConstTypeLib(), paGlobalConstTypeEntry);
   }
 

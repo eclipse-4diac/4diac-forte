@@ -26,7 +26,7 @@
 #include "forte/datatypes/forte_array_variable.h"
 
 using namespace std::literals;
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   const auto cEventInputNames = std::array{"START"_STRID, "STOP"_STRID};
@@ -72,7 +72,7 @@ using namespace forte::iec61499::events;
 
 DEFINE_FIRMWARE_FB(FORTE_E_N_TABLE, "iec61499::events::E_N_TABLE"_STRID)
 
-FORTE_E_N_TABLE::FORTE_E_N_TABLE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_N_TABLE::FORTE_E_N_TABLE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_TABLE("E_TABLE"_STRID, *this),
     fb_E_DEMUX("E_DEMUX"_STRID, *this),

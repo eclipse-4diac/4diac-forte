@@ -17,7 +17,7 @@
 
 #include "forte/eclipse4diac/signalprocessing/RampLimitFS_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_any_elementary_variant.h"
 #include "forte/datatypes/forte_any_num_variant.h"
@@ -54,8 +54,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RampLimitFS::FORTE_RampLimitFS(const forte::core::StringId paInstanceNameId,
-                                     forte::core::CFBContainer &paContainer) :
+FORTE_RampLimitFS::FORTE_RampLimitFS(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CNF(*this, 0),
     conn_PV(nullptr),

@@ -16,7 +16,7 @@
 #include "forte/stringid.h"
 #include "forte/devicefactory.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   const auto cDataInputNames = std::array{"MGR_ID"_STRID};
@@ -33,7 +33,7 @@ namespace {
       .mPlugNames = {},
   };
 
-  [[maybe_unused]] const forte::core::DeviceFactory::EntryImpl<RMT_DEV> entry("RMT_DEV"_STRID);
+  [[maybe_unused]] const forte::DeviceFactory::EntryImpl<RMT_DEV> entry("RMT_DEV"_STRID);
 } // namespace
 
 RMT_DEV::RMT_DEV(const std::string_view paMGR_ID) :

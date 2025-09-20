@@ -26,7 +26,7 @@
 #include "forte/device.h"
 #include "forte/util/string_utils.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(DEV_MGR, "iec61499::hardware::DEV_MGR"_STRID)
 
@@ -89,7 +89,7 @@ void DEV_MGR::executeRQST() {
   delete[] (request);
 }
 
-DEV_MGR::DEV_MGR(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+DEV_MGR::DEV_MGR(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Server),
     mDevice(*paContainer.getDevice()),
     mCommandParser(mDevice) {

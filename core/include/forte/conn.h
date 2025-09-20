@@ -95,13 +95,13 @@ class CConnection {
      *     - NoSuchObject... The destination is not a valid input.
      *     - InvalidState... The specified connection already exists.
      */
-    virtual EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::core::StringId> paDstPortNameId) = 0;
+    virtual EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) = 0;
 
     /*!\brief establish an event connection of a CFB to an event output of the CFB.
      *
      */
     virtual EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
-                                               std::span<const forte::core::StringId> paDstPortNameId) = 0;
+                                               std::span<const forte::StringId> paDstPortNameId) = 0;
 
     /*! \brief Disconnects the connection.
      *
@@ -118,8 +118,7 @@ class CConnection {
      *     - NoSuchObject... The destination is not a valid input.
      *     - InvalidState... this connection is not connected to the destination
      */
-    virtual EMGMResponse disconnect(CFunctionBlock &paDstFB,
-                                    std::span<const forte::core::StringId> paDstPortNameId) = 0;
+    virtual EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) = 0;
 
     /*!
      * \brief Get a delegating connection for the given name
@@ -127,7 +126,7 @@ class CConnection {
      * @return a delegating connection for the name, an empty wrapper if there is no such delegating connection,
      *          or this if the name list was empty
      */
-    virtual Wrapper getDelegatingConnection(const std::span<const forte::core::StringId> paSrcNameList) {
+    virtual Wrapper getDelegatingConnection(const std::span<const forte::StringId> paSrcNameList) {
       if (paSrcNameList.empty()) {
         return Wrapper(this);
       }
@@ -144,7 +143,7 @@ class CConnection {
      * \brief Get the full-qualified source port name
      * @param paResult The result to append the source port name into
      */
-    virtual void getSourcePortName(forte::core::TNameIdentifier &paResult) const = 0;
+    virtual void getSourcePortName(forte::TNameIdentifier &paResult) const = 0;
 
     virtual bool isDelegating() const {
       return false;

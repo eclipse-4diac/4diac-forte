@@ -34,7 +34,7 @@ class CFlexibleTracer final {
 
     using TracerVariant = std::variant<std::monostate, BarectfPlatformFORTE, CInternalTracer>;
 
-    CFlexibleTracer(forte::core::StringId instanceName, size_t bufferSize);
+    CFlexibleTracer(forte::StringId instanceName, size_t bufferSize);
 
     ~CFlexibleTracer() = default;
 

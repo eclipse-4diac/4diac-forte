@@ -16,12 +16,12 @@
 
 #include "forte/io/QD_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_QD, "QD"_STRID)
 
-FORTE_QD::FORTE_QD(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_QD::FORTE_QD(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     COutputFB<CIEC_DWORD>(paContainer, paInstanceNameId) {
 }

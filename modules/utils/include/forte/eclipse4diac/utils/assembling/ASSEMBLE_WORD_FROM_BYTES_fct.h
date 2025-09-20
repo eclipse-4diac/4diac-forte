@@ -42,7 +42,7 @@ class FORTE_ASSEMBLE_WORD_FROM_BYTES final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_ASSEMBLE_WORD_FROM_BYTES(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_ASSEMBLE_WORD_FROM_BYTES(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_BYTE var_BYTE_00;
     CIEC_BYTE var_BYTE_01;

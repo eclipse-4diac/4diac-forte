@@ -15,12 +15,12 @@
  *******************************************************************************/
 #include "forte/io/QX_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_QX, "QX"_STRID)
 
-FORTE_QX::FORTE_QX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_QX::FORTE_QX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     COutputFB<CIEC_BOOL>(paContainer, paInstanceNameId) {
 }

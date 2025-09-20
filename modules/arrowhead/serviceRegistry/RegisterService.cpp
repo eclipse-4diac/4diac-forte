@@ -12,7 +12,7 @@
 
 #include "RegisterService.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_RegisterService, "RegisterService"_STRID)
 
@@ -46,8 +46,7 @@ namespace {
   });
 
   const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
-      {{}, "serviceRegistryEntry"_STRID, "registerService"_STRID,
-       "serviceRegistryEntry"_STRID},
+      {{}, "serviceRegistryEntry"_STRID, "registerService"_STRID, "serviceRegistryEntry"_STRID},
       {{}, "endpoint"_STRID, "registerService"_STRID, "endpoint"_STRID},
   });
 } // namespace

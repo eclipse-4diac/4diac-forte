@@ -26,7 +26,7 @@
 #include <boost/lexical_cast.hpp>
 
 using namespace forte::com_infra;
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<COpcComLayer> entry("opc"_STRID);

@@ -23,7 +23,7 @@
 #include <concepts>
 #include <string_view>
 
-namespace forte::core::util {
+namespace forte::util {
   class CommandLineParser {
     public:
       class Option {
@@ -115,4 +115,4 @@ namespace forte::core::util {
     private:
       static void registerOption(Option *paOption);
   };
-} // namespace forte::core::util
+} // namespace forte::util

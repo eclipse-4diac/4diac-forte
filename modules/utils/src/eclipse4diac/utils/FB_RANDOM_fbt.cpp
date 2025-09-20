@@ -21,7 +21,7 @@
 
 #include "forte/eclipse4diac/utils/FB_RANDOM_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_uint.h"
@@ -55,7 +55,7 @@ namespace {
   };
 } // namespace
 
-FORTE_FB_RANDOM::FORTE_FB_RANDOM(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_FB_RANDOM::FORTE_FB_RANDOM(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_SEED(0_UINT),
     var_VAL(0_REAL),

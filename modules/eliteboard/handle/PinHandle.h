@@ -22,10 +22,10 @@
 
 class EliteBoardDeviceController;
 
-class IOHandleGPIO : public forte::core::io::IOHandle {
-    using IOObserver = forte::core::io::IOObserver;
-    using IOHandle = forte::core::io::IOHandle;
-    using IOMapper = forte::core::io::IOMapper;
+class IOHandleGPIO : public forte::io::IOHandle {
+    using IOObserver = forte::io::IOObserver;
+    using IOHandle = forte::io::IOHandle;
+    using IOMapper = forte::io::IOMapper;
 
   public:
     IOHandleGPIO(EliteBoardDeviceController *paDeviceCtrl, EliteBoardDeviceController::GPIODescriptor desc);

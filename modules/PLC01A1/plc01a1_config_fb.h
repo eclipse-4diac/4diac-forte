@@ -24,7 +24,7 @@
 #include "forte/datatypes/forte_array_variable.h"
 #include "forte/io/configFB/io_configFB_controller.h"
 
-class PLC01A1ConfigFB : public forte::core::io::IOConfigFBController {
+class PLC01A1ConfigFB : public forte::io::IOConfigFBController {
     DECLARE_FIRMWARE_FB(PLC01A1ConfigFB)
 
   private:
@@ -113,7 +113,7 @@ class PLC01A1ConfigFB : public forte::core::io::IOConfigFBController {
     virtual void setInitialValues();
 
   protected:
-    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution);
+    forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution);
 
     void setConfig();
 
@@ -125,7 +125,7 @@ class PLC01A1ConfigFB : public forte::core::io::IOConfigFBController {
     void setInitialValues() override;
 
   public:
-    PLC01A1ConfigFB(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    PLC01A1ConfigFB(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
 }
 
 CIEC_BOOL var_QI;

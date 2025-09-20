@@ -18,7 +18,7 @@
 #include "IORevPiBusAdapter.h"
 #include "forte/adapter.h"
 
-class FORTE_IORevPiCore : public forte::core::io::IOConfigFBMultiMaster {
+class FORTE_IORevPiCore : public forte::io::IOConfigFBMultiMaster {
     DECLARE_FIRMWARE_FB(FORTE_IORevPiCore)
 
   private:
@@ -31,11 +31,11 @@ class FORTE_IORevPiCore : public forte::core::io::IOConfigFBMultiMaster {
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
 
-    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
+    forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
     void setConfig() override;
 
   public:
-    FORTE_IORevPiCore(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IORevPiCore(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     ~FORTE_IORevPiCore() override = default;
 

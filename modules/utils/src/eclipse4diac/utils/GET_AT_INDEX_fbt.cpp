@@ -17,7 +17,7 @@
 #include "forte/eclipse4diac/utils/GET_AT_INDEX_fbt.h"
 #include "forte/datatypes/forte_bool.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::utils;
 
@@ -47,8 +47,7 @@ namespace {
   };
 } // namespace
 
-FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const forte::core::StringId paInstanceNameId,
-                                       forte::core::CFBContainer &paContainer) :
+FORTE_GET_AT_INDEX::FORTE_GET_AT_INDEX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN_ARRAY(CIEC_ANY_VARIANT()),
     var_INDEX(0_UINT),

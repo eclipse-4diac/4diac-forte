@@ -18,7 +18,7 @@
 
 #include "forte/iec61499/events/E_PULSE_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61499::events;
 
@@ -64,7 +64,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_PULSE::FORTE_E_PULSE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_PULSE::FORTE_E_PULSE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_DELAY("E_DELAY"_STRID, *this),
     fb_E_SR("E_SR"_STRID, *this),

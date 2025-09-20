@@ -165,7 +165,7 @@ void GPIOChipController::runLoop() {
   }
 }
 
-void GPIOChipController::handleChangeEvent(forte::core::io::IOHandle *) {
+void GPIOChipController::handleChangeEvent(forte::io::IOHandle *) {
   struct gpiohandle_data data{};
   data.values[0] = mValue;
   if (ioctl(mFd, GPIOHANDLE_SET_LINE_VALUES_IOCTL, &data) == -1) {
@@ -175,7 +175,7 @@ void GPIOChipController::handleChangeEvent(forte::core::io::IOHandle *) {
   }
 }
 
-forte::core::io::IOHandle *
-GPIOChipController::initHandle(forte::core::io::IODeviceController::HandleDescriptor *paHandleDescriptor) {
-  return new forte::core::io::IOHandleBit(this, paHandleDescriptor->mDirection, 0, 0, &mValue);
+forte::io::IOHandle *
+GPIOChipController::initHandle(forte::io::IODeviceController::HandleDescriptor *paHandleDescriptor) {
+  return new forte::io::IOHandleBit(this, paHandleDescriptor->mDirection, 0, 0, &mValue);
 }

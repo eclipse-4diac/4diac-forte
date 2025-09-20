@@ -20,7 +20,7 @@
 
 #include "forte/iec61499/events/E_TRAIN_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/iec61131_functions.h"
 #include "forte/datatypes/forte_array_common.h"
@@ -73,7 +73,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TRAIN::FORTE_E_TRAIN(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_TRAIN::FORTE_E_TRAIN(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_CTR("CTR"_STRID, *this),
     fb_GATE("GATE"_STRID, *this),

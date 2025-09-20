@@ -21,7 +21,7 @@
 #define PA_POLL_INTERVAL_MS 1000 / POLL_FREQUENCY_Hz
 
 EliteBoardDeviceController::EliteBoardDeviceController(CDeviceExecution &paDeviceExecution) :
-    forte::core::io::IODevicePollController(paDeviceExecution, PA_POLL_INTERVAL_MS) {
+    forte::io::IODevicePollController(paDeviceExecution, PA_POLL_INTERVAL_MS) {
 }
 
 EliteBoardDeviceController::~EliteBoardDeviceController() {

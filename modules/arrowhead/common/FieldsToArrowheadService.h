@@ -62,7 +62,7 @@ class FORTE_FieldsToArrowheadService : public CBasicFB {
     virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_FieldsToArrowheadService(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_FieldsToArrowheadService(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
 
         ~FORTE_FieldsToArrowheadService() override = default;
 };

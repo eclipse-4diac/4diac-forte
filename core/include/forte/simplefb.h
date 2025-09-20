@@ -22,10 +22,10 @@
 
 class CSimpleFB : public CBaseFB {
   protected:
-    CSimpleFB(forte::core::CFBContainer &paContainer,
+    CSimpleFB(forte::CFBContainer &paContainer,
               const SFBInterfaceSpec &paInterfaceSpec,
-              forte::core::StringId paInstanceNameId,
-              std::span<const forte::core::StringId> paVarInternalNames) :
+              forte::StringId paInstanceNameId,
+              std::span<const forte::StringId> paVarInternalNames) :
         CBaseFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternalNames) {
     }
 

@@ -14,7 +14,7 @@
 #include "forte/eventconn.h"
 #include "forte/iec61499/events/E_N_TABLE_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 using namespace forte::iec61499::events;
 
 namespace {
@@ -53,15 +53,15 @@ void FORTE_ATimeOut::setInitialValues() {
   var_DT = 0_TIME;
 }
 
-FORTE_ATimeOut::FORTE_ATimeOut(forte::core::CFBContainer &paContainer,
+FORTE_ATimeOut::FORTE_ATimeOut(forte::CFBContainer &paContainer,
                                const SFBInterfaceSpec &paInterfaceSpec,
-                               const forte::core::StringId paInstanceNameId,
+                               const forte::StringId paInstanceNameId,
                                TForteUInt8 paParentAdapterlistID) :
     CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID) {
 }
 
-FORTE_ATimeOut_Plug::FORTE_ATimeOut_Plug(forte::core::StringId paInstanceNameId,
-                                         forte::core::CFBContainer &paContainer,
+FORTE_ATimeOut_Plug::FORTE_ATimeOut_Plug(forte::StringId paInstanceNameId,
+                                         forte::CFBContainer &paContainer,
                                          TForteUInt8 paParentAdapterlistID) :
     FORTE_ATimeOut(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_TimeOUT(*this, 0) {
@@ -103,8 +103,8 @@ FORTE_ATimeOut_Socket *FORTE_ATimeOut_Plug::getSocket() {
   return static_cast<FORTE_ATimeOut_Socket *>(getPeer());
 }
 
-FORTE_ATimeOut_Socket::FORTE_ATimeOut_Socket(forte::core::StringId paInstanceNameId,
-                                             forte::core::CFBContainer &paContainer,
+FORTE_ATimeOut_Socket::FORTE_ATimeOut_Socket(forte::StringId paInstanceNameId,
+                                             forte::CFBContainer &paContainer,
                                              TForteUInt8 paParentAdapterlistID) :
     FORTE_ATimeOut(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_START(*this, 0),

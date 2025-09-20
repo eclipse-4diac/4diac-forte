@@ -19,63 +19,59 @@
 
 #include "forte/io/mapper/io_mapper.h"
 
-namespace forte {
-  namespace core {
-    namespace io {
+namespace forte::io {
 
-      class IODeviceController;
+  class IODeviceController;
 
-      class IOHandle {
-          friend class IOMapper;
+  class IOHandle {
+      friend class IOMapper;
 
-        public:
-          IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType);
-          virtual ~IOHandle();
+    public:
+      IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType);
+      virtual ~IOHandle();
 
-          bool hasObserver() const {
-            return !!mObserver;
-          }
+      bool hasObserver() const {
+        return !!mObserver;
+      }
 
-          IOObserver *getObserver() {
-            return mObserver;
-          }
+      IOObserver *getObserver() {
+        return mObserver;
+      }
 
-          CIEC_ANY::EDataTypeID getIOHandleDataType() const {
-            return mType;
-          }
+      CIEC_ANY::EDataTypeID getIOHandleDataType() const {
+        return mType;
+      }
 
-          IOMapper::Direction getDirection() const {
-            return mDirection;
-          }
+      IOMapper::Direction getDirection() const {
+        return mDirection;
+      }
 
-          bool isInput() const {
-            return mDirection == IOMapper::In;
-          }
+      bool isInput() const {
+        return mDirection == IOMapper::In;
+      }
 
-          bool isOutput() const {
-            return mDirection == IOMapper::Out;
-          }
+      bool isOutput() const {
+        return mDirection == IOMapper::Out;
+      }
 
-          virtual void set(const CIEC_ANY &) = 0;
-          virtual void get(CIEC_ANY &) = 0;
+      virtual void set(const CIEC_ANY &) = 0;
+      virtual void get(CIEC_ANY &) = 0;
 
-          void onChange();
+      void onChange();
 
-        protected:
-          IODeviceController *mController;
-          CIEC_ANY::EDataTypeID mType;
+    protected:
+      IODeviceController *mController;
+      CIEC_ANY::EDataTypeID mType;
 
-          IOMapper::Direction mDirection;
+      IOMapper::Direction mDirection;
 
-          virtual void onObserver(IOObserver *paObserver);
-          virtual void dropObserver();
+      virtual void onObserver(IOObserver *paObserver);
+      virtual void dropObserver();
 
-        private:
-          IOObserver *mObserver;
-      };
+    private:
+      IOObserver *mObserver;
+  };
 
-    } // namespace io
-  } // namespace core
-} // namespace forte
+} // namespace forte::io
 
 #endif /* SRC_CORE_IO_MAPPER_HANDLE_H_ */

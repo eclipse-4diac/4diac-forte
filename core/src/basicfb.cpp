@@ -17,12 +17,12 @@
 #include <string.h>
 #include "forte/basicfb.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
-CBasicFB::CBasicFB(forte::core::CFBContainer &paContainer,
+CBasicFB::CBasicFB(forte::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
-                   const forte::core::StringId paInstanceNameId,
-                   std::span<const forte::core::StringId> paVarInternalNames) :
+                   const forte::StringId paInstanceNameId,
+                   std::span<const forte::StringId> paVarInternalNames) :
     CBaseFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternalNames),
     mECCState(0) {
 }
@@ -32,7 +32,7 @@ void CBasicFB::setInitialValues() {
   mECCState = CIEC_STATE(0);
 }
 
-CIEC_ANY *CBasicFB::getVar(forte::core::StringId *paNameList, unsigned int paNameListSize) {
+CIEC_ANY *CBasicFB::getVar(forte::StringId *paNameList, unsigned int paNameListSize) {
   CIEC_ANY *poRetVal = CBaseFB::getVar(paNameList, paNameListSize);
   if ((nullptr == poRetVal) && (1 == paNameListSize) && *paNameList == "!ECC"_STRID) {
     poRetVal = &mECCState;

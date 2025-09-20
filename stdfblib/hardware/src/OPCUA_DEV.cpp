@@ -15,10 +15,10 @@
 
 #include "forte/devicefactory.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
-  [[maybe_unused]] const forte::core::DeviceFactory::EntryImpl<OPCUA_DEV> entry("OPCUA_DEV"_STRID);
+  [[maybe_unused]] const forte::DeviceFactory::EntryImpl<OPCUA_DEV> entry("OPCUA_DEV"_STRID);
 } // namespace
 
 OPCUA_DEV::OPCUA_DEV(const std::string_view paMGRID) : RMT_DEV(paMGRID), mOPCUAMgr(*this) {

@@ -27,51 +27,51 @@
 
 namespace forte::trace::reader::utils {
 
-  CFunctionBlock *getFB(forte::core::CFBContainer *paContainer, const std::string &paFunctionBlockName) {
+  CFunctionBlock *getFB(forte::CFBContainer *paContainer, const std::string &paFunctionBlockName) {
     if (paContainer == nullptr) {
       return nullptr;
     }
 
-    forte::core::TNameIdentifier id;
+    forte::TNameIdentifier id;
 
     // copy from OPCUA_MGR with some modifications
     std::string fbNamePart(paFunctionBlockName);
     size_t index = fbNamePart.find_first_of(".");
     while (index != std::string::npos) {
-      id.push_back(forte::core::StringId::insert(fbNamePart.substr(0, index)));
+      id.push_back(forte::StringId::insert(fbNamePart.substr(0, index)));
       fbNamePart = fbNamePart.substr(index + 1);
       index = fbNamePart.find_first_of(".");
     }
-    id.push_back(forte::core::StringId::insert(fbNamePart.substr(0, index)));
+    id.push_back(forte::StringId::insert(fbNamePart.substr(0, index)));
 
     auto it = id.cbegin();
     return paContainer->getFB(it, id.cend());
   }
 
-  CFunctionBlock *getFB(forte::core::CFBContainer *paContainer, forte::core::StringId paFunctionBlockName) {
+  CFunctionBlock *getFB(forte::CFBContainer *paContainer, forte::StringId paFunctionBlockName) {
     if (paContainer == nullptr) {
       return nullptr;
     }
-    forte::core::TNameIdentifier id;
+    forte::TNameIdentifier id;
     id.push_back(paFunctionBlockName);
     auto it = id.cbegin();
     return paContainer->getFB(it, id.cend());
   }
 
   void setFactoriesSettings(FactoriesSettings paFactoriesSettings) {
-    core::EcetFactory::setDefaultImpl(paFactoriesSettings.mEcet);
-    core::TimerHandlerFactory::setDefaultImpl(paFactoriesSettings.mTimer);
+    EcetFactory::setDefaultImpl(paFactoriesSettings.mEcet);
+    TimerHandlerFactory::setDefaultImpl(paFactoriesSettings.mTimer);
     CFlexibleTracer::setTracer(paFactoriesSettings.mTracer);
   }
 
-  std::set<forte::core::StringId> getServiceFunctionBlockTypes(forte::core::CFBContainer &paContainer) {
+  std::set<forte::StringId> getServiceFunctionBlockTypes(forte::CFBContainer &paContainer) {
 
-    std::set<forte::core::StringId> result;
+    std::set<forte::StringId> result;
 
     // Get a list of all types that are not service FB (either Composite or Basic)
-    std::function<void(forte::core::CFBContainer *)> iterateContainers;
+    std::function<void(forte::CFBContainer *)> iterateContainers;
 
-    iterateContainers = [&iterateContainers, &result](forte::core::CFBContainer *paSubcontainer) {
+    iterateContainers = [&iterateContainers, &result](forte::CFBContainer *paSubcontainer) {
       for (const auto child : paSubcontainer->getChildren()) {
         if (child == nullptr) {
           continue;
@@ -227,7 +227,7 @@ namespace forte::trace::reader::utils {
       if (paMessage.getEventType() != "sendOutputEvent") {
         return false;
       }
-      auto type = forte::core::StringId::lookup(paMessage.getPayload<AbstractPayload>()->getTypeName());
+      auto type = forte::StringId::lookup(paMessage.getPayload<AbstractPayload>()->getTypeName());
       return validTypes.find(type) != validTypes.end();
     };
 

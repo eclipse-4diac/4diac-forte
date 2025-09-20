@@ -35,7 +35,7 @@ namespace forte::hardware {
       mCommand.mSecondParam.clear();
       mCommand.mMonitorResponse.clear();
 
-      mCommand.mDestination = (strlen(paDest) != 0) ? forte::core::StringId::insert(paDest) : forte::core::StringId{};
+      mCommand.mDestination = (strlen(paDest) != 0) ? forte::StringId::insert(paDest) : forte::StringId{};
       if (255 <= mCommand.mAdditionalParams.capacity()) {
         mCommand.mAdditionalParams.reserve(255);
       }
@@ -191,7 +191,7 @@ namespace forte::hardware {
         paRequestPartLeft++;
         char *endOfRequest = strchr(paRequestPartLeft, '<');
         *endOfRequest = '\0';
-        forte::core::util::transformEscapedXMLToNonEscapedText(paRequestPartLeft);
+        forte::util::transformEscapedXMLToNonEscapedText(paRequestPartLeft);
         mCommand.mAdditionalParams = paRequestPartLeft;
         retVal = true;
       }
@@ -235,18 +235,18 @@ namespace forte::hardware {
     return retVal;
   }
 
-  int CommandParser::parseIdentifier(char *paIdentifierStart, forte::core::TNameIdentifier &paIdentifier) {
+  int CommandParser::parseIdentifier(char *paIdentifierStart, forte::TNameIdentifier &paIdentifier) {
     for (char *runner = paIdentifierStart, *start = paIdentifierStart; '\0' != *runner; ++runner) {
       if ('.' == *runner) {
         *runner = '\0';
-        if (!paIdentifier.push_back(forte::core::StringId::insert(start))) {
+        if (!paIdentifier.push_back(forte::StringId::insert(start))) {
           return -1;
         }
         *runner = '.';
         start = runner + 1;
       } else if ('"' == *runner) {
         *runner = '\0';
-        if (!paIdentifier.push_back(forte::core::StringId::insert(start))) {
+        if (!paIdentifier.push_back(forte::StringId::insert(start))) {
           return -1;
         }
         *runner = '"';
@@ -257,7 +257,7 @@ namespace forte::hardware {
   }
 
   int CommandParser::parseTypeName(const std::string_view paCmdString,
-                                   forte::core::TNameIdentifier &paIdentifier,
+                                   forte::TNameIdentifier &paIdentifier,
                                    std::string &paTypeHash) {
     size_t endIndex = paCmdString.find('"');
     if (endIndex == std::string::npos) {
@@ -271,7 +271,7 @@ namespace forte::hardware {
       fbTypeName = fbTypeName.substr(0, typeHashSeparator);
     }
 
-    if (!paIdentifier.push_back(forte::core::StringId::insert(fbTypeName))) {
+    if (!paIdentifier.push_back(forte::StringId::insert(fbTypeName))) {
       return -1;
     }
     return static_cast<int>(endIndex + 1);
@@ -304,7 +304,7 @@ namespace forte::hardware {
       *endOfSource = '\0';
       char *addParams = new char[strlen(paRequestPartLeft) + 1]();
       strcpy(addParams, paRequestPartLeft);
-      forte::core::util::transformEscapedXMLToNonEscapedText(addParams);
+      forte::util::transformEscapedXMLToNonEscapedText(addParams);
       mCommand.mAdditionalParams = addParams;
       delete[] (addParams);
       *endOfSource = '"'; // restore the string
@@ -534,7 +534,7 @@ namespace forte::hardware {
     }
   }
 
-  void CommandParser::appendIdentifierName(CIEC_STRING &paDest, forte::core::TNameIdentifier &paIdentifier) {
+  void CommandParser::appendIdentifierName(CIEC_STRING &paDest, forte::TNameIdentifier &paIdentifier) {
     if (!paIdentifier.empty()) {
       for (const auto &runner : paIdentifier) {
         paDest.append(runner.data());

@@ -19,24 +19,24 @@
 
 #include <handler/IOHandleDescriptor.h>
 
-class IODeviceController : public forte::core::io::IODeviceController,
+class IODeviceController : public forte::io::IODeviceController,
                            public RegisterExternalEventHandler<IODeviceController> {
   public:
-    using HandleDescriptor = forte::core::io::IODeviceController::HandleDescriptor;
-    using IOMapper = forte::core::io::IOMapper;
-    using IOHandle = forte::core::io::IOHandle;
+    using HandleDescriptor = forte::io::IODeviceController::HandleDescriptor;
+    using IOMapper = forte::io::IOMapper;
+    using IOHandle = forte::io::IOHandle;
 
   public:
     explicit IODeviceController(CDeviceExecution &paDeviceExecution);
     ~IODeviceController() override;
 
-    struct Config : forte::core::io::IODeviceController::Config {
+    struct Config : forte::io::IODeviceController::Config {
         unsigned int updateInterval = 0; // Sets the period for the data update cycle, default 0 means infinite.
     };
 
     IOHandle *createIOHandle(HandleDescriptor &paHandleDescriptor) override;
 
-    void setConfig(struct forte::core::io::IODeviceController::Config *paConfig) override;
+    void setConfig(struct forte::io::IODeviceController::Config *paConfig) override;
 
     void handleChangeEvent(IOHandle *paHandle) override;
 

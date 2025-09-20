@@ -14,7 +14,7 @@
 #include "RevPiHandle.h"
 #include "forte/datatypes/forte_word.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 RevPiHandle::RevPiHandle(RevPiController *paController,
                          CIEC_ANY::EDataTypeID paType,

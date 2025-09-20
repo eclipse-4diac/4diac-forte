@@ -15,7 +15,7 @@
 
 #include "@FORTE_DEVICE_FIXED_INCLUDE@"
 
-namespace forte::core {
+namespace forte {
   using FixedDeviceImpl = @FORTE_DEVICE_FIXED_IMPL@;
   constexpr util::fixed_string DefaultDeviceImpl = "@FORTE_DEVICE_DEFAULT_IMPL@";
 }

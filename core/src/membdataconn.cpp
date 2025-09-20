@@ -13,7 +13,7 @@
 
 #include "membdataconn.h"
 
-using namespace forte::core::internal;
+using namespace forte::internal;
 
 void CMemberDataConnection::getSourcePortName(TNameIdentifier &paResult) const {
   CDataConnection::getSourcePortName(paResult);

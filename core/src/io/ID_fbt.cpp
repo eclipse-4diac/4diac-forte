@@ -16,11 +16,11 @@
 
 #include "forte/io/ID_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_ID, "ID"_STRID)
 
-FORTE_ID::FORTE_ID(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_ID::FORTE_ID(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CInputFB<CIEC_DWORD>(paContainer, paInstanceNameId) {};

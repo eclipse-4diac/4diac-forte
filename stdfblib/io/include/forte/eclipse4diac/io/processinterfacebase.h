@@ -18,9 +18,9 @@
 
 class CProcessInterfaceBase : public CEventSourceFB {
   public:
-    CProcessInterfaceBase(forte::core::CFBContainer &paContainer,
+    CProcessInterfaceBase(forte::CFBContainer &paContainer,
                           const SFBInterfaceSpec &paInterfaceSpec,
-                          const forte::core::StringId paInstanceNameId) :
+                          const forte::StringId paInstanceNameId) :
         CEventSourceFB(paContainer, paInterfaceSpec, paInstanceNameId) {
       setEventChainExecutor(getResource()->getResourceEventExecution());
     }

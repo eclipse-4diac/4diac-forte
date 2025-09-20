@@ -19,7 +19,7 @@
 #include <format>
 #include "forte/util/string_utils.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace std::literals::string_literals;
 
@@ -95,16 +95,14 @@ int CIEC_WCHAR::fromString(const char *paValue) {
       return bufferCount + 3; // $ + control symbol + '
     }
 
-    if (forte::core::util::isHexDigit(paValue[bufferCount + 1]) &&
-        forte::core::util::isHexDigit(paValue[bufferCount + 2]) &&
-        forte::core::util::isHexDigit(paValue[bufferCount + 3]) &&
-        forte::core::util::isHexDigit(paValue[bufferCount + 4]) &&
+    if (forte::util::isHexDigit(paValue[bufferCount + 1]) && forte::util::isHexDigit(paValue[bufferCount + 2]) &&
+        forte::util::isHexDigit(paValue[bufferCount + 3]) && forte::util::isHexDigit(paValue[bufferCount + 4]) &&
         '"' == paValue[bufferCount + 5]) { // if there are two symbols it is a hex code
       TForteWChar codePoint =
-          static_cast<TForteWChar>((forte::core::util::charHexDigitToInt(paValue[bufferCount + 1]) << 12) +
-                                   (forte::core::util::charHexDigitToInt(paValue[bufferCount + 2]) << 8) +
-                                   (forte::core::util::charHexDigitToInt(paValue[bufferCount + 3]) << 4) +
-                                   (forte::core::util::charHexDigitToInt(paValue[bufferCount + 4])));
+          static_cast<TForteWChar>((forte::util::charHexDigitToInt(paValue[bufferCount + 1]) << 12) +
+                                   (forte::util::charHexDigitToInt(paValue[bufferCount + 2]) << 8) +
+                                   (forte::util::charHexDigitToInt(paValue[bufferCount + 3]) << 4) +
+                                   (forte::util::charHexDigitToInt(paValue[bufferCount + 4])));
       *this = CIEC_WCHAR(codePoint);
       return bufferCount + 6; // Three symbols for code point and closing '
     }
@@ -113,4 +111,4 @@ int CIEC_WCHAR::fromString(const char *paValue) {
   return -1; // no match so something must be wrong
 }
 
-const forte::core::StringId forte::CDataTypeTrait<CIEC_WCHAR>::scmDataTypeName = "WCHAR"_STRID;
+const forte::StringId forte::CDataTypeTrait<CIEC_WCHAR>::scmDataTypeName = "WCHAR"_STRID;

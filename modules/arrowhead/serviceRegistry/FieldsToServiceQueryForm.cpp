@@ -12,38 +12,37 @@
 
 #include "FieldsToServiceQueryForm.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceQueryForm, "FieldsToServiceQueryForm"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{
-      "service"_STRID, "metadataSearch"_STRID, "pingProviders"_STRID, "version"_STRID};
-  
-      "ArrowheadService"_STRID, "BOOL"_STRID, "BOOL"_STRID, "DINT"_STRID};
-  
-  const auto cDataOutputNames = std::array{"serviceQueryForm"_STRID};
-  
-  
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-}
+  const auto cDataInputNames =
+      std::array{"service"_STRID, "metadataSearch"_STRID, "pingProviders"_STRID, "version"_STRID};
 
+  "ArrowheadService"_STRID, "BOOL"_STRID, "BOOL"_STRID, "DINT"_STRID
+};
+
+const auto cDataOutputNames = std::array{"serviceQueryForm"_STRID};
+
+const auto cEventInputNames = std::array{"REQ"_STRID};
+const auto cEventInputTypeIds = std::array{"Event"_STRID};
+
+const auto cEventOutputNames = std::array{"CNF"_STRID};
+const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+
+const SFBInterfaceSpec cFBInterfaceSpec = {
+    .mEINames = cEventInputNames,
+    .mEITypeNames = cEventInputTypeIds,
+    .mEONames = cEventOutputNames,
+    .mEOTypeNames = cEventOutputTypeIds,
+    .mDINames = cDataInputNames,
+    .mDONames = cDataOutputNames,
+    .mDIONames = {},
+    .mSocketNames = {},
+    .mPlugNames = {},
+};
+}
 
 void FORTE_FieldsToServiceQueryForm::alg_REQ() {
   serviceQueryForm().service() = service();

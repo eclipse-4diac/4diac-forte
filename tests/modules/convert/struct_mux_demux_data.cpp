@@ -11,33 +11,31 @@
  *******************************************************************************/
 #include "struct_mux_demux_data.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_1, "Struct_Muxer_Test_Struct_1"_STRID)
-const forte::core::StringId CIEC_Struct_Muxer_Test_Struct_1::scmElementNames[] = {"Var1"_STRID, "Var2"_STRID,
-                                                                                  "Var3"_STRID};
+const forte::StringId CIEC_Struct_Muxer_Test_Struct_1::scmElementNames[] = {"Var1"_STRID, "Var2"_STRID, "Var3"_STRID};
 
-forte::core::StringId CIEC_Struct_Muxer_Test_Struct_1::getStructTypeNameID() const {
+forte::StringId CIEC_Struct_Muxer_Test_Struct_1::getStructTypeNameID() const {
   return "Struct_Muxer_Test_Struct_1"_STRID;
 };
 
 DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_2, "Struct_Muxer_Test_Struct_2"_STRID)
-const forte::core::StringId CIEC_Struct_Muxer_Test_Struct_2::scmElementNames[] = {"Var1"_STRID, "Var2"_STRID,
-                                                                                  "Var3"_STRID};
+const forte::StringId CIEC_Struct_Muxer_Test_Struct_2::scmElementNames[] = {"Var1"_STRID, "Var2"_STRID, "Var3"_STRID};
 
-forte::core::StringId CIEC_Struct_Muxer_Test_Struct_2::getStructTypeNameID() const {
+forte::StringId CIEC_Struct_Muxer_Test_Struct_2::getStructTypeNameID() const {
   return "Struct_Muxer_Test_Struct_2"_STRID;
 };
 
 DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_3, "Struct_Muxer_Test_Struct_3"_STRID)
-const forte::core::StringId CIEC_Struct_Muxer_Test_Struct_3::scmElementNames[] = {{}};
+const forte::StringId CIEC_Struct_Muxer_Test_Struct_3::scmElementNames[] = {{}};
 
-forte::core::StringId CIEC_Struct_Muxer_Test_Struct_3::getStructTypeNameID() const {
+forte::StringId CIEC_Struct_Muxer_Test_Struct_3::getStructTypeNameID() const {
   return "Struct_Muxer_Test_Struct_3"_STRID;
 };
 
 DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_4, "Struct_Muxer_Test_Struct_4"_STRID)
-const forte::core::StringId CIEC_Struct_Muxer_Test_Struct_4::scmElementNames[] = {
+const forte::StringId CIEC_Struct_Muxer_Test_Struct_4::scmElementNames[] = {
     "Var0"_STRID,   "Var1"_STRID,   "Var2"_STRID,   "Var3"_STRID,   "Var4"_STRID,   "Var5"_STRID,   "Var6"_STRID,
     "Var7"_STRID,   "Var8"_STRID,   "Var9"_STRID,   "Var10"_STRID,  "Var11"_STRID,  "Var12"_STRID,  "Var13"_STRID,
     "Var14"_STRID,  "Var15"_STRID,  "Var16"_STRID,  "Var17"_STRID,  "Var18"_STRID,  "Var19"_STRID,  "Var20"_STRID,
@@ -76,14 +74,13 @@ const forte::core::StringId CIEC_Struct_Muxer_Test_Struct_4::scmElementNames[] =
     "Var245"_STRID, "Var246"_STRID, "Var247"_STRID, "Var248"_STRID, "Var249"_STRID, "Var250"_STRID, "Var251"_STRID,
     "Var252"_STRID, "Var253"_STRID, "Var254"_STRID, "Var255"_STRID};
 
-forte::core::StringId CIEC_Struct_Muxer_Test_Struct_4::getStructTypeNameID() const {
+forte::StringId CIEC_Struct_Muxer_Test_Struct_4::getStructTypeNameID() const {
   return "Struct_Muxer_Test_Struct_4"_STRID;
 };
 
 DEFINE_FIRMWARE_DATATYPE(Struct_Muxer_Test_Struct_5, "Struct_Muxer_Test_Struct_5"_STRID)
-const forte::core::StringId CIEC_Struct_Muxer_Test_Struct_5::scmElementNames[] = {"Var1"_STRID, "Var2"_STRID,
-                                                                                  "Var3"_STRID};
+const forte::StringId CIEC_Struct_Muxer_Test_Struct_5::scmElementNames[] = {"Var1"_STRID, "Var2"_STRID, "Var3"_STRID};
 
-forte::core::StringId CIEC_Struct_Muxer_Test_Struct_5::getStructTypeNameID() const {
+forte::StringId CIEC_Struct_Muxer_Test_Struct_5::getStructTypeNameID() const {
   return "Struct_Muxer_Test_Struct_5"_STRID;
 };

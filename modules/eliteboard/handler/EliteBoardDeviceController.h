@@ -30,8 +30,8 @@ class EliteBoardDeviceController : public IODevicePollController,
     ~EliteBoardDeviceController() override;
 
     using HandleDescriptor = HandleDescriptor;
-    using IOMapper = forte::core::io::IOMapper;
-    using IOHandle = forte::core::io::IOHandle;
+    using IOMapper = forte::io::IOMapper;
+    using IOHandle = forte::io::IOHandle;
 
     enum EIOType { GPIO = 10, ADC = 20, DAC = 30 };
 

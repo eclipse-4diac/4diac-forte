@@ -25,9 +25,9 @@ const char *const CMLPIFaceProcessInterface::scmCallToApiFailed = "Call to API F
 
 MLPIHANDLE CMLPIFaceProcessInterface::smConnection = MLPI_INVALIDHANDLE;
 
-CMLPIFaceProcessInterface::CMLPIFaceProcessInterface(forte::core::CFBContainer &paContainer,
+CMLPIFaceProcessInterface::CMLPIFaceProcessInterface(forte::CFBContainer &paContainer,
                                                      const SFBInterfaceSpec &paInterfaceSpec,
-                                                     const forte::core::StringId paInstanceNameId) :
+                                                     const forte::StringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mVariableName(0) {
 }

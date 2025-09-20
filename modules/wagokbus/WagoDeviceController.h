@@ -23,43 +23,42 @@ extern "C" {
 #include <ldkc_kbus_register_communication.h>
 }
 
-class WagoDeviceController : public forte::core::io::IODeviceMultiController {
+class WagoDeviceController : public forte::io::IODeviceMultiController {
   public:
     explicit WagoDeviceController(CDeviceExecution &paDeviceExecution);
 
     ~WagoDeviceController() override;
 
-    struct WagoConfig : forte::core::io::IODeviceController::Config {
+    struct WagoConfig : forte::io::IODeviceController::Config {
         unsigned int updateInterval; //!< Sets the frequency for the data update cycle. The default value is 25 Hz.
     };
 
-    class WagoHandleDescriptor : public forte::core::io::IODeviceMultiController::HandleDescriptor {
+    class WagoHandleDescriptor : public forte::io::IODeviceMultiController::HandleDescriptor {
       public:
         CIEC_ANY::EDataTypeID mType;
         TForteUInt32 mChannel;
 
         WagoHandleDescriptor(std::string const &paId,
-                             forte::core::io::IOMapper::Direction paDirection,
+                             forte::io::IOMapper::Direction paDirection,
                              size_t paSlaveIndex,
                              CIEC_ANY::EDataTypeID paType,
                              TForteUInt32 paChannel) :
-            forte::core::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
+            forte::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
             mType(paType),
             mChannel(paChannel) {
         }
     };
 
-    void setConfig(struct forte::core::io::IODeviceController::Config *paConfig) override;
+    void setConfig(struct forte::io::IODeviceController::Config *paConfig) override;
 
-    void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) override;
+    void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::io::IOHandle> paHandle) override;
 
     void dropSlaveHandles(size_t paIndex) override;
 
   protected:
     const char *init();
 
-    forte::core::io::IOHandle *
-    createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
+    forte::io::IOHandle *createIOHandle(forte::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
     void deInit() override;
 
@@ -81,7 +80,7 @@ class WagoDeviceController : public forte::core::io::IODeviceMultiController {
      * @param handle Handle which should be compared to the previous IO state
      * @return True if the current state is equal to the previous IO state. In case it has changed, return false.
      */
-    virtual bool isHandleValueEqual(forte::core::io::IOHandle &paHandle) override;
+    virtual bool isHandleValueEqual(forte::io::IOHandle &paHandle) override;
 
   private:
     /*! @brief Checks if a slave exists at the given index

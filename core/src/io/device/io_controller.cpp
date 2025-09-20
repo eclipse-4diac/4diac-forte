@@ -18,7 +18,7 @@
 #include "forte/io/configFB/io_configFB_controller.h"
 #include "forte/util/criticalregion.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 IODeviceController::IODeviceController(CDeviceExecution &paDeviceExecution) :
     CExternalEventHandler(paDeviceExecution),

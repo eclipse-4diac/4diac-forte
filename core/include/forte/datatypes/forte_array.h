@@ -65,7 +65,7 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED {
 
     [[nodiscard]] virtual CIEC_ANY::EDataTypeID getElementDataTypeID() const = 0;
 
-    [[nodiscard]] virtual forte::core::StringId getElementTypeNameID() const = 0;
+    [[nodiscard]] virtual forte::StringId getElementTypeNameID() const = 0;
 
     [[nodiscard]] virtual reference at(intmax_t index) = 0;
 
@@ -112,7 +112,7 @@ class CIEC_ARRAY : public CIEC_ANY_DERIVED {
       return CIEC_ANY::e_ARRAY;
     }
 
-    forte::core::StringId getTypeNameID() const override;
+    forte::StringId getTypeNameID() const override;
 
     void setValue(const CIEC_ANY &paValue) override;
 
@@ -170,6 +170,6 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_ARRAY> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_ARRAY;
-      static constexpr forte::core::StringId scmDataTypeName{};
+      static constexpr forte::StringId scmDataTypeName{};
   };
 } // namespace forte

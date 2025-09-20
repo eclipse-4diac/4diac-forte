@@ -12,7 +12,7 @@
  *******************************************************************************/
 #include "forte/datatypes/forte_state.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(STATE, "STATE"_STRID)
 

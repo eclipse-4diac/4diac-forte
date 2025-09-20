@@ -19,7 +19,7 @@
 #include "forte/datatypes/forte_any.h"
 #include "forte/datatypes/forte_string.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<forte::com_infra::CRawDataComLayer>

@@ -45,7 +45,7 @@ namespace forte::eclipse4diac::rtevents {
       void setInitialValues() override;
 
     public:
-      FORTE_RT_E_SWITCH(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      FORTE_RT_E_SWITCH(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       CIEC_BOOL var_QI;
       CIEC_BOOL var_G;

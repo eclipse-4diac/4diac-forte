@@ -20,6 +20,5 @@
 namespace forte::com {
 
   template<typename T>
-  using ComChannelFactory =
-      core::util::factory::Factory<core::util::factory::DynamicImpl, "", ComChannel<T>, ComObserver<T> &>;
+  using ComChannelFactory = util::factory::Factory<util::factory::DynamicImpl, "", ComChannel<T>, ComObserver<T> &>;
 } // namespace forte::com

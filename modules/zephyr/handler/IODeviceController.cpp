@@ -16,7 +16,7 @@
 #include <handle/IOHandlePWM.h>
 
 IODeviceController::IODeviceController(CDeviceExecution &paDeviceExecution) :
-    forte::core::io::IODeviceController(paDeviceExecution) {
+    forte::io::IODeviceController(paDeviceExecution) {
 }
 
 IODeviceController::~IODeviceController() {
@@ -50,7 +50,7 @@ IODeviceController::IOHandle *IODeviceController::createIOHandle(HandleDescripto
   return handle;
 }
 
-void IODeviceController::setConfig(struct forte::core::io::IODeviceController::Config *paConfig) {
+void IODeviceController::setConfig(struct forte::io::IODeviceController::Config *paConfig) {
   DEVLOG_INFO("IODeviceController::setConfig\n");
   if (isAlive()) {
     DEVLOG_ERROR("IODeviceController::setConfig: Cannot change configuration while running.\n");

@@ -21,7 +21,7 @@ class Config_EMB_RES final : public CResource {
     DECLARE_FIRMWARE_FB(Config_EMB_RES);
 
   public:
-    Config_EMB_RES(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paDevice);
+    Config_EMB_RES(forte::StringId paInstanceNameId, forte::CFBContainer &paDevice);
     ~Config_EMB_RES() override;
 
     bool initialize() override;
@@ -33,11 +33,11 @@ class Config_EMB_RES final : public CResource {
 
     CConnection *getResIf2InConnectionUnchecked(TPortId) override;
 
-    forte::core::CInternalFB<forte::iec61499::events::FORTE_E_RESTART> fb_START;
+    forte::CInternalFB<forte::iec61499::events::FORTE_E_RESTART> fb_START;
 
     CDataConnection *conn_opcua_namespace;
     COutDataConnection<CIEC_WSTRING> conn_opcua_namespace_int;
 
-    static const forte::core::StringId scmVarInputNameIds[];
-    static const forte::core::StringId scmDIDataTypeIds[];
+    static const forte::StringId scmVarInputNameIds[];
+    static const forte::StringId scmDIDataTypeIds[];
 };

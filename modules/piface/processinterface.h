@@ -22,9 +22,9 @@
 
 class CPiFaceProcessInterface : public CProcessInterfaceBase {
   public:
-    CPiFaceProcessInterface(forte::core::CFBContainer &paContainer,
+    CPiFaceProcessInterface(forte::CFBContainer &paContainer,
                             const SFBInterfaceSpec &paInterfaceSpec,
-                            const forte::core::StringId paInstanceNameId);
+                            const forte::StringId paInstanceNameId);
 
     ~CPiFaceProcessInterface() override;
 

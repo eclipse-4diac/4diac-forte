@@ -39,9 +39,9 @@ CConmeleonC1ProcessInterface::EIOState CConmeleonC1ProcessInterface::smDOUsage[4
     CConmeleonC1ProcessInterface::enFree, CConmeleonC1ProcessInterface::enFree, CConmeleonC1ProcessInterface::enFree,
     CConmeleonC1ProcessInterface::enFree};
 
-CConmeleonC1ProcessInterface::CConmeleonC1ProcessInterface(forte::core::CFBContainer &paContainer,
+CConmeleonC1ProcessInterface::CConmeleonC1ProcessInterface(forte::CFBContainer &paContainer,
                                                            const SFBInterfaceSpec &paInterfaceSpec,
-                                                           const forte::core::StringId paInstanceNameId) :
+                                                           const forte::StringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mChannelNr(-1),
     mCallingFB(enUnsupported) {

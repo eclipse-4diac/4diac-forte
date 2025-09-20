@@ -65,7 +65,7 @@ namespace forte::eclipse4diac::utils {
       COutDataConnection<CIEC_ARRAY_DYNAMIC> conn_OUT;
 
     public:
-      GEN_ARRAY2ARRAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      GEN_ARRAY2ARRAY(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
       ~GEN_ARRAY2ARRAY() override = default;
   };
 } // namespace forte::eclipse4diac::utils

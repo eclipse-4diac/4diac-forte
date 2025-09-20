@@ -26,5 +26,5 @@ namespace {
     }
   }
 
-  [[maybe_unused]] const forte::core::StartupHookRegistry::EntryImpl<rosStartupHook> entry;
+  [[maybe_unused]] const forte::StartupHookRegistry::EntryImpl<rosStartupHook> entry;
 } // namespace

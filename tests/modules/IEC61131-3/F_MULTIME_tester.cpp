@@ -12,7 +12,7 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 struct F_MULTIME_TestFixture : public CFBTestFixtureBase {
 

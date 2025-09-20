@@ -17,7 +17,7 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_bool.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace std::string_literals;
 

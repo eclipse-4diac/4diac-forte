@@ -41,7 +41,7 @@ class FORTE_X20DO9321 final : public PowerlinkFunctionBlockDO {
     void setInitialValues() override;
 
   public:
-    FORTE_X20DO9321(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_X20DO9321(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_USINT var_CNID;

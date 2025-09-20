@@ -24,7 +24,7 @@
 #include "../handler/EliteBoardDeviceController.h"
 #include "forte/io/configFB/io_configFB_controller.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 class FORTE_EliteBoard final : public IOConfigFBController {
     DECLARE_FIRMWARE_FB(FORTE_EliteBoard)
@@ -64,7 +64,7 @@ class FORTE_EliteBoard final : public IOConfigFBController {
     }
 
   public:
-    FORTE_EliteBoard(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_EliteBoard(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortA;
     forte::CPlugPin<FORTE_PortAdapter_Plug> var_PortB;

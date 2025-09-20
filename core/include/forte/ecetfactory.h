@@ -19,6 +19,6 @@
 
 #include <string_view>
 
-namespace forte::core {
+namespace forte {
   using EcetFactory = util::factory::Factory<FixedEcetImpl, DefaultEcetImpl, CEventChainExecutionThread>;
-} // namespace forte::core
+} // namespace forte

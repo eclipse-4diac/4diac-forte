@@ -13,7 +13,7 @@
 
 #include "X20DI9372_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_X20DI9372, "X20DI9372"_STRID)
 
@@ -39,7 +39,7 @@ namespace {
   };
 } // namespace
 
-FORTE_X20DI9372::FORTE_X20DI9372(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_X20DI9372::FORTE_X20DI9372(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     PowerlinkFunctionBlockDI(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_CNF(*this, 1),

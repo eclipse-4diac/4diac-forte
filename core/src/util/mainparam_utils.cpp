@@ -25,7 +25,7 @@
 #include <algorithm>
 #include <format>
 
-using namespace forte::core::util;
+using namespace forte::util;
 using namespace std::string_literals;
 
 namespace {

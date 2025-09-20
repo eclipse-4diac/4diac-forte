@@ -26,11 +26,11 @@ class CInOutDataConnection : public CDataConnection {
         mValue(paValue) {
     }
 
-    EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::core::StringId> paDstPortNameId) override;
+    EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
 
-    EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::core::StringId> paDstPortNameId) override;
+    EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
 
-    void getSourcePortName(forte::core::TNameIdentifier &paResult) const override;
+    void getSourcePortName(forte::TNameIdentifier &paResult) const override;
 
     void writeData(const CIEC_ANY &paValue) override {
       if (mValue) {

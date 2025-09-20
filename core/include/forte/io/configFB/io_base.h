@@ -16,16 +16,16 @@
 
 #include "forte/esfb.h"
 
-namespace forte::core::io {
+namespace forte::io {
 
   class IOConfigFBBase : public CEventSourceFB {
     public:
-      IOConfigFBBase(forte::core::CFBContainer &paContainer,
+      IOConfigFBBase(forte::CFBContainer &paContainer,
                      const SFBInterfaceSpec &paInterfaceSpec,
-                     const forte::core::StringId paInstanceNameId);
+                     const forte::StringId paInstanceNameId);
       ~IOConfigFBBase() override;
   };
 
-} // namespace forte::core::io
+} // namespace forte::io
 
 #endif /* SRC_CORE_IO_CONFIGFB_BASE_H_ */

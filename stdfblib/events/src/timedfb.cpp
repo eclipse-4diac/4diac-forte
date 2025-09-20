@@ -15,7 +15,7 @@
  *******************************************************************************/
 #include "forte/iec61499/events/timedfb.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   const auto cEINameIds = std::array{"START"_STRID, "STOP"_STRID};
@@ -35,7 +35,7 @@ namespace {
   };
 } // namespace
 
-CTimedFB::CTimedFB(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+CTimedFB::CTimedFB(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_DT(0_TIME),
     conn_DT(nullptr),

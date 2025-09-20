@@ -12,12 +12,12 @@
 
 #include "forte/io/eIO/eIX_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_eIX, "eIX"_STRID)
 
-FORTE_eIX::FORTE_eIX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_eIX::FORTE_eIX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CeInputFB<CIEC_BOOL>(paContainer, paInstanceNameId) {
 }

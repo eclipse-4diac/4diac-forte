@@ -47,9 +47,9 @@ namespace forte {
         class CLocalCommGroup {
           public:
             using TLocalComLayerList = std::vector<CLocalComLayer *>;
-            using TLocalComDataTypeList = std::vector<forte::core::StringId>;
+            using TLocalComDataTypeList = std::vector<forte::StringId>;
 
-            explicit CLocalCommGroup(forte::core::StringId paGroupName, TLocalComDataTypeList paDataTypes) :
+            explicit CLocalCommGroup(forte::StringId paGroupName, TLocalComDataTypeList paDataTypes) :
                 mGroupName(paGroupName),
                 mPublList(),
                 mSublList(),
@@ -65,7 +65,7 @@ namespace forte {
 
             ~CLocalCommGroup() = default;
 
-            forte::core::StringId mGroupName;
+            forte::StringId mGroupName;
             TLocalComLayerList mPublList;
             TLocalComLayerList mSublList;
             TLocalComDataTypeList mDataTypes;
@@ -74,30 +74,30 @@ namespace forte {
         class CLocalCommGroupsManager {
 
           public:
-            bool registerPubl(const forte::core::StringId paGroupID, CLocalComLayer *paLayer);
-            bool registerPubl(const forte::core::StringId paGroupID,
+            bool registerPubl(const forte::StringId paGroupID, CLocalComLayer *paLayer);
+            bool registerPubl(const forte::StringId paGroupID,
                               CLocalComLayer *paLayer,
                               CIEC_ANY **paDataPins,
                               TPortId paNumDataPins);
-            void unregisterPubl(const forte::core::StringId paGroupID, CLocalComLayer *paLayer);
+            void unregisterPubl(const forte::StringId paGroupID, CLocalComLayer *paLayer);
 
-            bool registerSubl(const forte::core::StringId paGroupID, CLocalComLayer *paLayer);
-            void unregisterSubl(const forte::core::StringId paGroupID, CLocalComLayer *paLayer);
+            bool registerSubl(const forte::StringId paGroupID, CLocalComLayer *paLayer);
+            void unregisterSubl(const forte::StringId paGroupID, CLocalComLayer *paLayer);
 
-            CLocalCommGroup *getComGroup(const forte::core::StringId paGroupID);
+            CLocalCommGroup *getComGroup(const forte::StringId paGroupID);
 
           private:
             using TLocalCommGroupList = std::vector<CLocalCommGroup>;
 
             CLocalCommGroupsManager() = default;
 
-            TLocalCommGroupList::iterator getLocalCommGroupIterator(forte::core::StringId paID);
+            TLocalCommGroupList::iterator getLocalCommGroupIterator(forte::StringId paID);
 
             CLocalCommGroup *
-            findOrCreateLocalCommGroup(forte::core::StringId paID, CIEC_ANY **paDataPins, TPortId paNumDataPins);
+            findOrCreateLocalCommGroup(forte::StringId paID, CIEC_ANY **paDataPins, TPortId paNumDataPins);
             void checkForGroupRemoval(TLocalCommGroupList::iterator comGroupIt);
 
-            bool isGroupIteratorForGroup(TLocalCommGroupList::iterator iter, forte::core::StringId paID) {
+            bool isGroupIteratorForGroup(TLocalCommGroupList::iterator iter, forte::StringId paID) {
               return (iter != mLocalCommGroups.end() && iter->mGroupName == paID);
             }
 
@@ -123,7 +123,7 @@ namespace forte {
           return smLocalCommGroupsManager;
         }
 
-        forte::core::StringId mGroupID;
+        forte::StringId mGroupID;
 
       private:
         static CLocalCommGroupsManager smLocalCommGroupsManager;

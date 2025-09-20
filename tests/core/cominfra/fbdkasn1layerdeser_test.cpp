@@ -62,7 +62,7 @@
 #include "../../core/src/typelib_internal.h"
 #include "forte/datatypes/forte_array_fixed.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace std::string_literals;
 
@@ -104,7 +104,7 @@ class CDeserTestMockCommFB : public forte::com_infra::CCommFB {
     }
 
   private:
-    std::vector<forte::core::StringId> mDONames;
+    std::vector<forte::StringId> mDONames;
 };
 
 BOOST_AUTO_TEST_SUITE(fbdkasn1layer_deserialize_test)

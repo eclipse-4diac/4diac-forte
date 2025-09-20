@@ -83,7 +83,7 @@ class FORTE_FieldsToServiceRequestForm : public CBasicFB {
     virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_FieldsToServiceRequestForm(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_FieldsToServiceRequestForm(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
 
         ~FORTE_FieldsToServiceRequestForm() override = default;
 };

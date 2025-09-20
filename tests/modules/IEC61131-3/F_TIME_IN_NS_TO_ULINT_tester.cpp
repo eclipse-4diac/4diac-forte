@@ -12,7 +12,7 @@
 #include "../../core/fbtests/fbtestfixture.h"
 #include "forte/datatypes/forte_ulint.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 struct F_TIME_IN_NS_TO_ULINT_TestFixture : public CFBTestFixtureBase {
 

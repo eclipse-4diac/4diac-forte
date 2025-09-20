@@ -12,49 +12,39 @@
 
 #include "FieldsToEventFilter.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToEventFilter, "FieldsToEventFilter"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{
-      "eventType"_STRID, "consumer"_STRID,       "sources"_STRID,   "startDate"_STRID,
-      "endDate"_STRID,   "filterMetadata"_STRID, "notifyUri"_STRID, "matchMetadata"_STRID};
-  
-                                                                                         "ArrowheadSystem"_STRID,
-                                                                                         "ARRAY"_STRID,
-                                                                                         10,
-                                                                                         "ArrowheadSystem"_STRID,
-                                                                                         "DATE_AND_TIME"_STRID,
-                                                                                         "DATE_AND_TIME"_STRID,
-                                                                                         "ARRAY"_STRID,
-                                                                                         10,
-                                                                                         "WSTRING"_STRID,
-                                                                                         "WSTRING"_STRID,
-                                                                                         "BOOL"_STRID};
-  
-  const auto cDataOutputNames = std::array{"eventFilter"_STRID};
-  
-  
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-}
+  const auto cDataInputNames =
+      std::array{"eventType"_STRID, "consumer"_STRID,       "sources"_STRID,   "startDate"_STRID,
+                 "endDate"_STRID,   "filterMetadata"_STRID, "notifyUri"_STRID, "matchMetadata"_STRID};
 
+  "ArrowheadSystem"_STRID, "ARRAY"_STRID, 10, "ArrowheadSystem"_STRID, "DATE_AND_TIME"_STRID, "DATE_AND_TIME"_STRID,
+      "ARRAY"_STRID, 10, "WSTRING"_STRID, "WSTRING"_STRID, "BOOL"_STRID
+};
+
+const auto cDataOutputNames = std::array{"eventFilter"_STRID};
+
+const auto cEventInputNames = std::array{"REQ"_STRID};
+const auto cEventInputTypeIds = std::array{"Event"_STRID};
+
+const auto cEventOutputNames = std::array{"CNF"_STRID};
+const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+
+const SFBInterfaceSpec cFBInterfaceSpec = {
+    .mEINames = cEventInputNames,
+    .mEITypeNames = cEventInputTypeIds,
+    .mEONames = cEventOutputNames,
+    .mEOTypeNames = cEventOutputTypeIds,
+    .mDINames = cDataInputNames,
+    .mDONames = cDataOutputNames,
+    .mDIONames = {},
+    .mSocketNames = {},
+    .mPlugNames = {},
+};
+}
 
 void FORTE_FieldsToEventFilter::alg_REQ() {
   CIEC_INT i;

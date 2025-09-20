@@ -27,8 +27,7 @@ class FORTE_RequestOrchestrationHTTP : public CCompositeFB {
     static const int scm_nrequestOrchestrationAdpNum = 0;
 
   public:
-    FORTE_RequestOrchestrationHTTP(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+    FORTE_RequestOrchestrationHTTP(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
 
         ~FORTE_RequestOrchestrationHTTP() override = default;
 };

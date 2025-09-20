@@ -11,7 +11,7 @@
  *******************************************************************************/
 #include "QueryServiceOpcUa.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_QueryServiceOpcUa, "QueryServiceOpcUa"_STRID)
 

@@ -18,9 +18,9 @@
 #include "forte/io/inputfb.h"
 #include "forte/datatypes/forte_byte.h"
 
-class FORTE_IB final : public forte::core::io::CInputFB<CIEC_BYTE> {
+class FORTE_IB final : public forte::io::CInputFB<CIEC_BYTE> {
     DECLARE_FIRMWARE_FB(FORTE_IB)
 
   public:
-    FORTE_IB(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IB(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 };

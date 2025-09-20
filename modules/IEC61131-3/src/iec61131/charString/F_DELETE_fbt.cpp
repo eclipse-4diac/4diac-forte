@@ -16,7 +16,7 @@
 
 #include "forte/iec61131/charString/F_DELETE_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::charString;
 
@@ -40,7 +40,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_DELETE::FORTE_F_DELETE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_DELETE::FORTE_F_DELETE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_STRING_VARIANT()),
     var_L(CIEC_ANY_INT_VARIANT()),

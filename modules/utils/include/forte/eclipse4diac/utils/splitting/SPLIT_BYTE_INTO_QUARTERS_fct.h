@@ -41,7 +41,7 @@ class FORTE_SPLIT_BYTE_INTO_QUARTERS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_SPLIT_BYTE_INTO_QUARTERS(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_SPLIT_BYTE_INTO_QUARTERS(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_BYTE var_IN;
 

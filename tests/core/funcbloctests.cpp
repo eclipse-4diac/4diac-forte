@@ -18,7 +18,7 @@
 #include "forte/iec61499/events/E_CTUD_fbt.h"
 #include "forte/basicfb.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "fbcontainermock.h"
 
@@ -41,7 +41,7 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
       const SFBInterfaceSpec gcEmptyInterface = {};
 
     public:
-      CInternalVarTestFB(std::span<const forte::core::StringId> paVarInternalNames) :
+      CInternalVarTestFB(std::span<const forte::StringId> paVarInternalNames) :
           CBasicFB(CFBContainerMock::smDefaultFBContMock, gcEmptyInterface, {}, paVarInternalNames) {
       }
 
@@ -54,7 +54,7 @@ BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
         return nullptr;
       }
 
-      forte::core::StringId getFBTypeId() const override {
+      forte::StringId getFBTypeId() const override {
         return {};
       }
 

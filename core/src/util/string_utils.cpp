@@ -35,16 +35,16 @@ const std::map<char, std::tuple<const char *, size_t>> scEscapeMap = {
     {'<', {scCharacters2Escape[3], std::char_traits<char>::length(scCharacters2Escape[3])}},
     {'>', {scCharacters2Escape[4], std::char_traits<char>::length(scCharacters2Escape[4])}}};
 
-bool forte::core::util::isAtoFChar(char paValue) {
+bool forte::util::isAtoFChar(char paValue) {
   paValue = static_cast<char>(toupper(paValue));
   return ((paValue >= 'A') && (paValue <= 'F'));
 }
 
-TForteInt8 forte::core::util::charAtoFToInt(char paValue) {
+TForteInt8 forte::util::charAtoFToInt(char paValue) {
   return static_cast<TForteInt8>((toupper(paValue) - 'A') + 10);
 }
 
-long int forte::core::util::strtol(const char *nptr, char **endptr, int base) {
+long int forte::util::strtol(const char *nptr, char **endptr, int base) {
   long int nRetVal = 0;
   bool bNegativeNumber = false;
   errno = 0;
@@ -95,7 +95,7 @@ long int forte::core::util::strtol(const char *nptr, char **endptr, int base) {
   return nRetVal;
 }
 
-unsigned long int forte::core::util::strtoul(const char *nptr, char **endptr, int base) {
+unsigned long int forte::util::strtoul(const char *nptr, char **endptr, int base) {
   unsigned long int unRetVal = 0;
   unsigned long int unLimit1 = (std::numeric_limits<CIEC_UDINT::TValueType>::max() / base);
   unsigned long int unLimit2 = (std::numeric_limits<CIEC_UDINT::TValueType>::max() % base);
@@ -127,7 +127,7 @@ unsigned long int forte::core::util::strtoul(const char *nptr, char **endptr, in
   return unRetVal;
 }
 
-long long int forte::core::util::strtoll(const char *nptr, char **endptr, int base) {
+long long int forte::util::strtoll(const char *nptr, char **endptr, int base) {
   long long int nRetVal = 0;
   bool bNegativeNumber = false;
   errno = 0;
@@ -187,7 +187,7 @@ long long int forte::core::util::strtoll(const char *nptr, char **endptr, int ba
   return nRetVal;
 }
 
-unsigned long long int forte::core::util::strtoull(const char *nptr, char **endptr, int base) {
+unsigned long long int forte::util::strtoull(const char *nptr, char **endptr, int base) {
   unsigned long long int unRetVal = 0;
   unsigned long long int unLimit1 = (std::numeric_limits<CIEC_ULINT::TValueType>::max() / base);
   unsigned long long int unLimit2 = (std::numeric_limits<CIEC_ULINT::TValueType>::max() % base);
@@ -218,7 +218,7 @@ unsigned long long int forte::core::util::strtoull(const char *nptr, char **endp
   return unRetVal;
 }
 
-size_t forte::core::util::getExtraSizeForXMLEscapedChars(const char *paString) {
+size_t forte::util::getExtraSizeForXMLEscapedChars(const char *paString) {
   size_t retVal = 0;
   while (0 != *paString) {
     auto escapeChar = scEscapeMap.find(*paString);
@@ -230,7 +230,7 @@ size_t forte::core::util::getExtraSizeForXMLEscapedChars(const char *paString) {
   return retVal;
 }
 
-void forte::core::util::transformNonEscapedToEscapedXMLText(std::string &paString, size_t paStart) {
+void forte::util::transformNonEscapedToEscapedXMLText(std::string &paString, size_t paStart) {
   if (paString.size() == 0) {
     return;
   }
@@ -244,7 +244,7 @@ void forte::core::util::transformNonEscapedToEscapedXMLText(std::string &paStrin
   }
 }
 
-size_t forte::core::util::transformEscapedXMLToNonEscapedText(char *const paString) {
+size_t forte::util::transformEscapedXMLToNonEscapedText(char *const paString) {
   char *runner = paString;
   char *endRunner = strchr(paString, '\0');
   size_t retVal = 0;
@@ -278,7 +278,7 @@ size_t forte::core::util::transformEscapedXMLToNonEscapedText(char *const paStri
   return retVal;
 }
 
-char *forte::core::util::lookForNonEscapedChar(char **paString, char paChar, char paEscapingChar) {
+char *forte::util::lookForNonEscapedChar(char **paString, char paChar, char paEscapingChar) {
   char *foundChar = nullptr;
   char *initialPosition = *paString;
   while (!foundChar && '\0' != **paString) {
@@ -303,7 +303,7 @@ char *forte::core::util::lookForNonEscapedChar(char **paString, char paChar, cha
   return foundChar;
 }
 
-bool forte::core::util::isEscaped(char *paChar, char *paBeginLimit, char paEscapingChar) {
+bool forte::util::isEscaped(char *paChar, char *paBeginLimit, char paEscapingChar) {
   size_t noOfScapingSigns = 0;
   while (paBeginLimit != paChar) { // count the amount of \ signs before paChar to know if the \ signs was also escaped.
     paChar--;
@@ -317,7 +317,7 @@ bool forte::core::util::isEscaped(char *paChar, char *paBeginLimit, char paEscap
   return (noOfScapingSigns % 2); // an even number of \ (or zero) means paChar was not escaped
 }
 
-void forte::core::util::removeEscapedSigns(char **paString, char paEscapingChar) {
+void forte::util::removeEscapedSigns(char **paString, char paEscapingChar) {
   char *runner = *paString;
   while ('\0' != *runner) {
     if (paEscapingChar == *runner && paEscapingChar == *(runner + 1)) {
@@ -332,9 +332,9 @@ void forte::core::util::removeEscapedSigns(char **paString, char paEscapingChar)
   }
 }
 
-void forte::core::util::writeToStringNameValuePair(std::string &paTargetBuf,
-                                                   const forte::core::StringId variableNameId,
-                                                   const CIEC_ANY *const variable) {
+void forte::util::writeToStringNameValuePair(std::string &paTargetBuf,
+                                             const forte::StringId variableNameId,
+                                             const CIEC_ANY *const variable) {
   paTargetBuf += variableNameId;
   paTargetBuf += ":="s;
   variable->toString(paTargetBuf);

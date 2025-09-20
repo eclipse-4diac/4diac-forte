@@ -18,7 +18,7 @@
 #include <memory>
 #include "forte/util/string_utils.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 using namespace forte::iec61131::bitwiseOperators;
 
 namespace {
@@ -27,7 +27,7 @@ namespace {
   const auto cEventOutputNames = std::array{"CNF"_STRID};
 } // namespace
 
-CGenBitBase::CGenBitBase(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+CGenBitBase::CGenBitBase(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_OUT(*this, 0, var_OUT) {
@@ -49,7 +49,7 @@ bool CGenBitBase::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
   if (nullptr != pcPos) {
     pcPos++;
     // we have an underscore and it is the first underscore after AND
-    numDIs = static_cast<TPortId>(forte::core::util::strtoul(pcPos, nullptr, 10));
+    numDIs = static_cast<TPortId>(forte::util::strtoul(pcPos, nullptr, 10));
     DEVLOG_DEBUG("DIs: %d;\n", numDIs);
   } else {
     return false;

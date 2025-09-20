@@ -25,7 +25,7 @@
 #include "forte/datatypes/forte_struct.h"
 
 using namespace forte::com_infra;
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CFBDKASN1ComLayer> entry("fbdk"_STRID);

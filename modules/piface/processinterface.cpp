@@ -12,9 +12,9 @@
 #include "core/fmi/processinterface.h"
 #include "forte/util/extevhandlerhelper.h"
 
-CPiFaceProcessInterface::CPiFaceProcessInterface(forte::core::CFBContainer &paContainer,
+CPiFaceProcessInterface::CPiFaceProcessInterface(forte::CFBContainer &paContainer,
                                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                                 const forte::core::StringId paInstanceNameId) :
+                                                 const forte::StringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mPin(0) {
 }

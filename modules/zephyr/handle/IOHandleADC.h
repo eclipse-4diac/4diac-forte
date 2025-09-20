@@ -20,10 +20,10 @@
 
 class IODeviceController;
 
-class IOHandleADC : public forte::core::io::IOHandle {
-    using IOObserver = forte::core::io::IOObserver;
-    using IOHandle = forte::core::io::IOHandle;
-    using IOMapper = forte::core::io::IOMapper;
+class IOHandleADC : public forte::io::IOHandle {
+    using IOObserver = forte::io::IOObserver;
+    using IOHandle = forte::io::IOHandle;
+    using IOMapper = forte::io::IOMapper;
 
   public:
     IOHandleADC(IODeviceController *paDeviceCtrl, const adc_dt_spec *paADCSpec);

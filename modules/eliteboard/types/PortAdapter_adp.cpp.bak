@@ -12,7 +12,7 @@
 
 #include "PortAdapter_adp.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/iec61131_functions.h"
 #include "forte/datatypes/forte_array_common.h"

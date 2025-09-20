@@ -24,7 +24,7 @@
 
 using namespace std::literals;
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   const auto cEventInputNames = std::array{"REQ"_STRID};
@@ -46,8 +46,7 @@ using namespace forte::iec61131::counters;
 
 DEFINE_FIRMWARE_FB(FORTE_FB_CTD_UDINT, "iec61131::counters::FB_CTD_UDINT"_STRID)
 
-FORTE_FB_CTD_UDINT::FORTE_FB_CTD_UDINT(const forte::core::StringId paInstanceNameId,
-                                       forte::core::CFBContainer &paContainer) :
+FORTE_FB_CTD_UDINT::FORTE_FB_CTD_UDINT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_CD(0_BOOL),
     var_LD(0_BOOL),

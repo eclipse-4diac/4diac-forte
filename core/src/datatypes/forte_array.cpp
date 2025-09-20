@@ -27,9 +27,9 @@
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_ulint.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
-forte::core::StringId CIEC_ARRAY::getTypeNameID() const {
+forte::StringId CIEC_ARRAY::getTypeNameID() const {
   return "ARRAY"_STRID;
 }
 

@@ -14,7 +14,7 @@
 #include "forte/eclipse4diac/utils/STEST_END_fbt.h"
 #include "forte/device.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::utils;
 
@@ -35,7 +35,7 @@ namespace {
   };
 } // namespace
 
-FORTE_STEST_END::FORTE_STEST_END(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_STEST_END::FORTE_STEST_END(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId) {};
 
 void FORTE_STEST_END::executeEvent(TEventID paEIID, CEventChainExecutionThread *const) {

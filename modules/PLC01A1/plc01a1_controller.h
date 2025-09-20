@@ -16,34 +16,34 @@
 #include "forte/io/device/io_controller_poll.h"
 #include <linux/spi/spidev.h>
 
-class PLC01A1Controller : public forte::core::io::IODevicePollController {
+class PLC01A1Controller : public forte::io::IODevicePollController {
   public:
     explicit PLC01A1Controller(CDeviceExecution &paDeviceExecution);
 
-    struct Config : forte::core::io::IODeviceController::Config {
+    struct Config : forte::io::IODeviceController::Config {
         unsigned int mUpdateInterval; //!< Sets the frequency for the data update cycle. The default value is 25 Hz.
     };
 
-    class HandleDescriptor : public forte::core::io::IODeviceController::HandleDescriptor {
+    class HandleDescriptor : public forte::io::IODeviceController::HandleDescriptor {
       public:
         uint8_t mOffset;
         uint8_t mPosition;
 
         HandleDescriptor(CIEC_WSTRING const &paId,
-                         forte::core::io::IOMapper::Direction paDirection,
+                         forte::io::IOMapper::Direction paDirection,
                          uint8_t paOffset,
                          uint8_t paPosition) :
-            forte::core::io::IODeviceController::HandleDescriptor(paId, paDirection),
+            forte::io::IODeviceController::HandleDescriptor(paId, paDirection),
             mOffset(paOffset),
             mPosition(paPosition) {
         }
     };
 
-    void setConfig(struct forte::core::io::IODeviceController::Config *paConfig);
+    void setConfig(struct forte::io::IODeviceController::Config *paConfig);
 
-    virtual bool isHandleValueEqual(forte::core::io::IOHandle &paHandle);
+    virtual bool isHandleValueEqual(forte::io::IOHandle &paHandle);
 
-    forte::core::io::IOHandle *initHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor);
+    forte::io::IOHandle *initHandle(forte::io::IODeviceController::HandleDescriptor &paHandleDescriptor);
 
   protected:
     const char *init();

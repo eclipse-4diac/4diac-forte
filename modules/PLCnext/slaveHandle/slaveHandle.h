@@ -23,10 +23,10 @@
 
 class PLCnextSlaveHandler;
 
-class PLCnextSlaveHandle : public forte::core::io::IOHandle {
+class PLCnextSlaveHandle : public forte::io::IOHandle {
   public:
-    PLCnextSlaveHandle(forte::core::io::IODeviceController *paController,
-                       forte::core::io::IOMapper::Direction paDirection,
+    PLCnextSlaveHandle(forte::io::IODeviceController *paController,
+                       forte::io::IOMapper::Direction paDirection,
                        CIEC_ANY::EDataTypeID type,
                        PLCnextSlaveHandler *paSlave);
     ~PLCnextSlaveHandle();
@@ -38,7 +38,7 @@ class PLCnextSlaveHandle : public forte::core::io::IOHandle {
     virtual void reset() {
     }
 
-    virtual void onObserver(forte::core::io::IOObserver *paObserver);
+    virtual void onObserver(forte::io::IOObserver *paObserver);
     virtual void dropObserver();
 
     const uint8_t mOffset;

@@ -15,7 +15,7 @@
 #include "forte/iec61499/events/GEN_E_SPLIT_fbt.h"
 #include "forte/util/string_utils.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61499::events;
 
@@ -25,7 +25,7 @@ namespace {
   const auto cEventInputNames = std::array{"EI"_STRID};
 }
 
-GEN_E_SPLIT::GEN_E_SPLIT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_E_SPLIT::GEN_E_SPLIT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId) {};
 
 void GEN_E_SPLIT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
@@ -52,7 +52,7 @@ bool GEN_E_SPLIT::createInterfaceSpec(const char *paConfigString, SFBInterfaceSp
   if (nullptr != acPos) {
     ++acPos; // move after underscore
     // we have an underscore
-    size_t numEOs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
+    size_t numEOs = static_cast<TEventID>(forte::util::strtoul(acPos, nullptr, 10));
 
     if (numEOs < CFunctionBlock::scmMaxInterfaceEvents && numEOs >= 2) {
       generateGenericInterfacePointNameArray("EO", mEventOutputNames, numEOs);

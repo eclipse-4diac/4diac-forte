@@ -29,7 +29,7 @@ bool C4diacFORTEInstance::startupNewDevice(const std::string &paMGRID) {
     awaitDeviceShutdown();
     mActiveDevice->deinitialize();
   }
-  mActiveDevice = forte::core::DeviceFactory::create(paMGRID);
+  mActiveDevice = forte::DeviceFactory::create(paMGRID);
   if (mActiveDevice) {
     mActiveDevice->initialize();
     mActiveDevice->startDevice();

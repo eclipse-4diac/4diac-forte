@@ -43,8 +43,8 @@ class CIEC_ServiceQueryForm : public CIEC_STRUCT {
     }
 
   private:
-    static const forte::core::StringId scmElementTypes[];
-    static const forte::core::StringId scmElementNames[];
+    static const forte::StringId scmElementTypes[];
+    static const forte::StringId scmElementNames[];
 };
 
 #endif //_FORTE_SERVICEQUERYFORM_H_

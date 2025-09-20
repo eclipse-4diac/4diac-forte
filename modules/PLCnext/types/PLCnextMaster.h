@@ -25,7 +25,7 @@
 #include "forte/io/configFB/io_master_multi.h"
 #include "PLCnextBusAdapter.h"
 
-class FORTE_PLCnextMaster final : public forte::core::io::IOConfigFBMultiMaster {
+class FORTE_PLCnextMaster final : public forte::io::IOConfigFBMultiMaster {
     DECLARE_FIRMWARE_FB(FORTE_PLCnextMaster)
 
   private:
@@ -40,11 +40,11 @@ class FORTE_PLCnextMaster final : public forte::core::io::IOConfigFBMultiMaster 
     void writeOutputData(TEventID paEIID) override;
     void setInitialValues() override;
 
-    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
+    forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
     void setConfig() override;
 
   public:
-    FORTE_PLCnextMaster(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_PLCnextMaster(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_UINT var_SlaveUpdateInterval;

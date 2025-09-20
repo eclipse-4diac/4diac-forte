@@ -46,7 +46,7 @@ namespace forte::hardware {
       void generateResponse(CIEC_STRING &aResponse);
 
     private:
-      forte::core::SManagementCMD mCommand;
+      forte::SManagementCMD mCommand;
 
       EMGMResponse mLastResponse{EMGMResponse::InvalidObject};
 
@@ -110,7 +110,7 @@ namespace forte::hardware {
        * @param paIdentifier identifier vector where to write the parsed identifiers to
        * @return number of bytes used from the character array or -1 if the identifier could not be parsed
        */
-      int parseIdentifier(char *paIdentifierStart, forte::core::TNameIdentifier &paIdentifier);
+      int parseIdentifier(char *paIdentifierStart, forte::TNameIdentifier &paIdentifier);
 
       /*! \brief Parse the name of the type
        *
@@ -119,9 +119,8 @@ namespace forte::hardware {
        * @param paTypeHash  buffer for storing the type hash if present
        * @return number of bytes used from the character array or -1 if the identifier could not be parsed
        */
-      int parseTypeName(const std::string_view paCmdString,
-                        forte::core::TNameIdentifier &paIdentifier,
-                        std::string &paTypeHash);
+      int
+      parseTypeName(const std::string_view paCmdString, forte::TNameIdentifier &paIdentifier, std::string &paTypeHash);
 
       bool parseMonitoringData(char *paRequestPartLeft);
       void generateMonitorResponse(CIEC_STRING &paResponse);
@@ -138,7 +137,7 @@ namespace forte::hardware {
        */
       void generateLongResponse(CIEC_STRING &paResponse);
 
-      void appendIdentifierName(CIEC_STRING &paDest, forte::core::TNameIdentifier &paIdentifier);
+      void appendIdentifierName(CIEC_STRING &paDest, forte::TNameIdentifier &paIdentifier);
   };
 
 } // namespace forte::hardware

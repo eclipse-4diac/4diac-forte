@@ -19,7 +19,7 @@
 #include "forte/datatypes/forte_wstring.h"
 #include "IORevPiBusAdapter.h"
 
-class FORTE_IORevPiAIO : public forte::core::io::IOConfigFBMultiSlave {
+class FORTE_IORevPiAIO : public forte::io::IOConfigFBMultiSlave {
     DECLARE_FIRMWARE_FB(FORTE_IORevPiAIO)
 
   private:
@@ -37,7 +37,7 @@ class FORTE_IORevPiAIO : public forte::core::io::IOConfigFBMultiSlave {
     void setInitialValues() override;
 
   public:
-    FORTE_IORevPiAIO(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IORevPiAIO(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     virtual ~FORTE_IORevPiAIO() {};
 

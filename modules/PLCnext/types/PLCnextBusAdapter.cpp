@@ -19,7 +19,7 @@
 
 #include "PLCnextBusAdapter.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_ADAPTER_TYPE(FORTE_PLCnextBusAdapter, "PLCnextBusAdapter"_STRID)
 
@@ -56,9 +56,9 @@ namespace {
   };
 } // namespace
 
-FORTE_PLCnextBusAdapter::FORTE_PLCnextBusAdapter(forte::core::CFBContainer &paContainer,
+FORTE_PLCnextBusAdapter::FORTE_PLCnextBusAdapter(forte::CFBContainer &paContainer,
                                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                                 const forte::core::StringId paInstanceNameId,
+                                                 const forte::StringId paInstanceNameId,
                                                  TForteUInt8 paParentAdapterlistID) :
     IOConfigFBMultiAdapter({}, paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     var_QO(0_BOOL),
@@ -77,8 +77,8 @@ void FORTE_PLCnextBusAdapter::setInitialValues() {
   var_UpdateInterval = 0_UINT;
 }
 
-FORTE_PLCnextBusAdapter_Plug::FORTE_PLCnextBusAdapter_Plug(forte::core::StringId paInstanceNameId,
-                                                           forte::core::CFBContainer &paContainer,
+FORTE_PLCnextBusAdapter_Plug::FORTE_PLCnextBusAdapter_Plug(forte::StringId paInstanceNameId,
+                                                           forte::CFBContainer &paContainer,
                                                            TForteUInt8 paParentAdapterlistID) :
     FORTE_PLCnextBusAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_INITO(*this, 0),
@@ -158,8 +158,8 @@ CDataConnection *FORTE_PLCnextBusAdapter_Plug::getDOConUnchecked(const TPortId p
   return nullptr;
 }
 
-FORTE_PLCnextBusAdapter_Socket::FORTE_PLCnextBusAdapter_Socket(forte::core::StringId paInstanceNameId,
-                                                               forte::core::CFBContainer &paContainer,
+FORTE_PLCnextBusAdapter_Socket::FORTE_PLCnextBusAdapter_Socket(forte::StringId paInstanceNameId,
+                                                               forte::CFBContainer &paContainer,
                                                                TForteUInt8 paParentAdapterlistID) :
     FORTE_PLCnextBusAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_INIT(*this, 0),

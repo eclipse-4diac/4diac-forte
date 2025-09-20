@@ -17,13 +17,13 @@
     initHandlesBase(noOfBoolInputs, noOfBoolOutputs, noOfAnalogInputs, noOfAnalogOutputs);                             \
   };
 
-class WagoSlaveBase : public forte::core::io::IOConfigFBMultiSlave {
+class WagoSlaveBase : public forte::io::IOConfigFBMultiSlave {
 
   public:
     WagoSlaveBase(int paType,
-                  forte::core::CFBContainer &paContainer,
+                  forte::CFBContainer &paContainer,
                   const SFBInterfaceSpec &paInterfaceSpec,
-                  const forte::core::StringId paInstanceNameId);
+                  const forte::StringId paInstanceNameId);
     ~WagoSlaveBase() override = default;
 
     forte::CPlugPin<FORTE_WagoBusAdapter_Plug> var_BusAdapterOut;
@@ -38,7 +38,7 @@ class WagoSlaveBase : public forte::core::io::IOConfigFBMultiSlave {
     void initWagoHandle(int paDIIndex,
                         int paIOIndex,
                         CIEC_ANY::EDataTypeID paType,
-                        forte::core::io::IOMapper::Direction paDirection);
+                        forte::io::IOMapper::Direction paDirection);
 
     forte::IPlugPin *getPlugPinUnchecked(size_t) override;
     forte::ISocketPin *getSocketPinUnchecked(size_t) override;

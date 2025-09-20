@@ -11,7 +11,7 @@
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 struct F_TIME_IN_MS_TO_LREAL_TestFixture : public CFBTestFixtureBase {
 

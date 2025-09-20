@@ -18,10 +18,10 @@
 #include "forte/ecetfactory.h"
 #include "../../../../core/src/trace/internal/flexibleTracer.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
-  [[maybe_unused]] const forte::core::DeviceFactory::EntryImpl<ReplayDevice> entry("Replay"_STRID);
+  [[maybe_unused]] const forte::DeviceFactory::EntryImpl<ReplayDevice> entry("Replay"_STRID);
 }
 
 ReplayDevice::ReplayDevice(const std::string_view paMGRID) :
@@ -46,7 +46,7 @@ void ReplayDevice::startControlling() {
   mAlreadyControlled = true;
 }
 
-EMGMResponse ReplayDevice::executeMGMCommand(forte::core::SManagementCMD &paCommand) {
+EMGMResponse ReplayDevice::executeMGMCommand(forte::SManagementCMD &paCommand) {
   // the kill command is the only one that we let through before
   // the replay algorithm starts controlling the device
   // this is meant to not receive the Start command from the IDE which should be
@@ -58,8 +58,8 @@ EMGMResponse ReplayDevice::executeMGMCommand(forte::core::SManagementCMD &paComm
 }
 
 const std::string_view ReplayDevice::setInitialState(const std::string_view paMGRID) {
-  forte::core::TimerHandlerFactory::setDefaultImpl("FakeTime"_STRID);
-  forte::core::EcetFactory::setDefaultImpl("Fake"_STRID);
+  forte::TimerHandlerFactory::setDefaultImpl("FakeTime"_STRID);
+  forte::EcetFactory::setDefaultImpl("Fake"_STRID);
   CFlexibleTracer::setTracer(CFlexibleTracer::AvailableTracers::Internal);
   return paMGRID;
 }

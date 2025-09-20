@@ -16,15 +16,15 @@
 #include "forte/util/mainparam_utils.h"
 
 namespace {
-  class DeviceOption final : public forte::core::util::CommandLineParser::
-                                 OptionImpl<"d", "device", "<device>", "Set the device to be used"> {
+  class DeviceOption final
+      : public forte::util::CommandLineParser::OptionImpl<"d", "device", "<device>", "Set the device to be used"> {
     public:
       bool parseOption(const std::string_view paArgument) override {
-        if (forte::core::DeviceFactory::setDefaultImpl(forte::core::StringId::lookup(paArgument))) {
+        if (forte::DeviceFactory::setDefaultImpl(forte::StringId::lookup(paArgument))) {
           return true;
         }
         printf("The selected device '%s' is not valid. Select one of the following:\n", paArgument.data());
-        for (const auto name : forte::core::DeviceFactory::getNames()) {
+        for (const auto name : forte::DeviceFactory::getNames()) {
           printf("  %s\n", name.data());
         }
         return false;

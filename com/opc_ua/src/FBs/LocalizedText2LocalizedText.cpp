@@ -13,7 +13,7 @@
 
 #include "LocalizedText2LocalizedText.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_LocalizedText2LocalizedText, "LocalizedText2LocalizedText"_STRID)
 
@@ -41,8 +41,8 @@ namespace {
   };
 } // namespace
 
-FORTE_LocalizedText2LocalizedText::FORTE_LocalizedText2LocalizedText(forte::core::StringId paInstanceNameId,
-                                                                     forte::core::CFBContainer &paContainer) :
+FORTE_LocalizedText2LocalizedText::FORTE_LocalizedText2LocalizedText(forte::StringId paInstanceNameId,
+                                                                     forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_LocalizedText()),
     var_OUT(CIEC_LocalizedText()),

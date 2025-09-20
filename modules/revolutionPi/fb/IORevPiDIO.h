@@ -20,7 +20,7 @@
 #include "IORevPiBusAdapter.h"
 #include "forte/io/configFB/io_slave_multi.h"
 
-class FORTE_IORevPiDIO : public forte::core::io::IOConfigFBMultiSlave {
+class FORTE_IORevPiDIO : public forte::io::IOConfigFBMultiSlave {
     DECLARE_FIRMWARE_FB(FORTE_IORevPiDIO)
 
   private:
@@ -38,7 +38,7 @@ class FORTE_IORevPiDIO : public forte::core::io::IOConfigFBMultiSlave {
     static const TForteUInt8 scmSlaveConfigurationIONum;
 
   public:
-    FORTE_IORevPiDIO(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IORevPiDIO(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     virtual ~FORTE_IORevPiDIO() {};
 

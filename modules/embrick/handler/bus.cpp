@@ -26,7 +26,7 @@ const char *const EmbrickBusHandler::scmSlaveUpdateFailed = "Update of slave fai
 const char *const EmbrickBusHandler::scmNoSlavesFound = "No slave modules found.";
 
 EmbrickBusHandler::EmbrickBusHandler(CDeviceExecution &paDeviceExecution) :
-    forte::core::io::IODeviceMultiController(paDeviceExecution),
+    forte::io::IODeviceMultiController(paDeviceExecution),
     mSpi(nullptr),
     mSlaveSelect(nullptr),
     mLoopActive(false),
@@ -46,7 +46,7 @@ EmbrickBusHandler::EmbrickBusHandler(CDeviceExecution &paDeviceExecution) :
   mConfig.mBusLoopSpeed = EmbrickSPIHandler::scmMaxSpiSpeed;
 }
 
-void EmbrickBusHandler::setConfig(struct forte::core::io::IODeviceController::Config *paConfig) {
+void EmbrickBusHandler::setConfig(struct forte::io::IODeviceController::Config *paConfig) {
   // Check if BusHandler is active -> configuration changes are not allowed
   if (isAlive()) {
     DEVLOG_ERROR("emBrick[BusHandler]: Cannot change configuration while running.\n");
@@ -124,8 +124,8 @@ void EmbrickBusHandler::deInit() {
   delete mSlaveSelect;
 }
 
-forte::core::io::IOHandle *
-EmbrickBusHandler::createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
+forte::io::IOHandle *
+EmbrickBusHandler::createIOHandle(forte::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
   HandleDescriptor &desc = static_cast<HandleDescriptor &>(paHandleDescriptor);
 
   EmbrickSlaveHandler *slave = getSlave(desc.mSlaveIndex);
@@ -290,7 +290,7 @@ void EmbrickBusHandler::forceUpdate(size_t paIndex) {
   mSyncObject.unlock();
 }
 
-void EmbrickBusHandler::addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
+void EmbrickBusHandler::addSlaveHandle(size_t paIndex, std::unique_ptr<forte::io::IOHandle> paHandle) {
   EmbrickSlaveHandler *slave = getSlave(paIndex);
   if (slave == nullptr) {
     return;

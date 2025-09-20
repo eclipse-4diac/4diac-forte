@@ -13,8 +13,8 @@
  *******************************************************************************/
 #include "forte/datatypes/forte_usint.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(USINT, "USINT"_STRID)
 
-const forte::core::StringId forte::CDataTypeTrait<CIEC_USINT>::scmDataTypeName = "USINT"_STRID;
+const forte::StringId forte::CDataTypeTrait<CIEC_USINT>::scmDataTypeName = "USINT"_STRID;

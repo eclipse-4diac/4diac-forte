@@ -12,42 +12,43 @@
 
 #include "FieldsToServiceRegistryEntry.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToServiceRegistryEntry, "FieldsToServiceRegistryEntry"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{
-      "providedService"_STRID, "provider"_STRID, "serviceURI"_STRID, "version"_STRID, "udp"_STRID, "ttl"_STRID,
-      "metadata"_STRID};
-  
-      "ArrowheadService"_STRID, "ArrowheadSystem"_STRID, "WSTRING"_STRID, "DINT"_STRID, "BOOL"_STRID, "DINT"_STRID,
-      "WSTRING"_STRID};
-  
-  const auto cDataOutputNames = std::array{
-      "serviceRegistryEntry"_STRID};
-  
-      "ServiceRegistryEntry"_STRID};
-  
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-}
+  const auto cDataInputNames = std::array{"providedService"_STRID, "provider"_STRID, "serviceURI"_STRID,
+                                          "version"_STRID,         "udp"_STRID,      "ttl"_STRID,
+                                          "metadata"_STRID};
 
+  "ArrowheadService"_STRID, "ArrowheadSystem"_STRID, "WSTRING"_STRID, "DINT"_STRID, "BOOL"_STRID, "DINT"_STRID,
+      "WSTRING"_STRID
+};
+
+const auto cDataOutputNames = std::array{"serviceRegistryEntry"_STRID};
+
+"ServiceRegistryEntry"_STRID
+}
+;
+
+const auto cEventInputNames = std::array{"REQ"_STRID};
+const auto cEventInputTypeIds = std::array{"Event"_STRID};
+
+const auto cEventOutputNames = std::array{"CNF"_STRID};
+const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+
+const SFBInterfaceSpec cFBInterfaceSpec = {
+    .mEINames = cEventInputNames,
+    .mEITypeNames = cEventInputTypeIds,
+    .mEONames = cEventOutputNames,
+    .mEOTypeNames = cEventOutputTypeIds,
+    .mDINames = cDataInputNames,
+    .mDONames = cDataOutputNames,
+    .mDIONames = {},
+    .mSocketNames = {},
+    .mPlugNames = {},
+};
+}
 
 void FORTE_FieldsToServiceRegistryEntry::alg_REQ() {
   serviceRegistryEntry().providedService() = providedService();

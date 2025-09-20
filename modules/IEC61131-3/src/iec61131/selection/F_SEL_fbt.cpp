@@ -16,7 +16,7 @@
 
 #include "forte/iec61131/selection/F_SEL_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::selection;
 
@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_SEL::FORTE_F_SEL(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_SEL::FORTE_F_SEL(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_G(false_BOOL),
     var_IN0(CIEC_ANY_VARIANT()),

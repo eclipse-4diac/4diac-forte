@@ -12,7 +12,7 @@
 
 #include "plc01a1_config_fb.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_uint.h"
 #include "forte/iec61131_functions.h"
@@ -47,7 +47,7 @@ namespace {
   };
 } // namespace
 
-PLC01A1ConfigFB::PLC01A1ConfigFB(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+PLC01A1ConfigFB::PLC01A1ConfigFB(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_IN1(u""_WSTRING),
@@ -124,7 +124,7 @@ void PLC01A1ConfigFB::executeEvent(const TEventID paEIID, CEventChainExecutionTh
   }
 }
 
-forte::core::io::IODeviceController *PLC01A1ConfigFB::createDeviceController(CDeviceExecution &paDeviceExecution) {
+forte::io::IODeviceController *PLC01A1ConfigFB::createDeviceController(CDeviceExecution &paDeviceExecution) {
   return new PLC01A1Controller(paDeviceExecution);
 }
 
@@ -142,14 +142,14 @@ void PLC01A1ConfigFB::onStartup() {
 
   for (size_t i = 0; i < numberOfInputs; i++) {
     PLC01A1Controller::HandleDescriptor desc = PLC01A1Controller::HandleDescriptor(
-        *static_cast<CIEC_WSTRING *>(getDI(initialDIOffset + i)), forte::core::io::IOMapper::In,
-        0 /*offset is always 0 */, static_cast<uint8_t>(i));
+        *static_cast<CIEC_WSTRING *>(getDI(initialDIOffset + i)), forte::io::IOMapper::In, 0 /*offset is always 0 */,
+        static_cast<uint8_t>(i));
     initHandle(desc);
   }
 
   for (size_t i = 0; i < numberOfOutputs; i++) {
     PLC01A1Controller::HandleDescriptor desc = PLC01A1Controller::HandleDescriptor(
-        *static_cast<CIEC_WSTRING *>(getDI(initialDIOffset + numberOfInputs + i)), forte::core::io::IOMapper::Out,
+        *static_cast<CIEC_WSTRING *>(getDI(initialDIOffset + numberOfInputs + i)), forte::io::IOMapper::Out,
         0 /*offset is always 0 */, static_cast<uint8_t>(numberOfOutputs - i - 1));
     initHandle(desc);
   }

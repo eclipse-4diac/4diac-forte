@@ -20,7 +20,7 @@
 #include <ctype.h>
 #include "forte/datatypes/forte_ldate.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/arch/forte_architecture_time.h"
 
@@ -78,4 +78,4 @@ void CIEC_LDATE::toString(std::string &paTargetBuf) const {
   }
 }
 
-const forte::core::StringId forte::CDataTypeTrait<CIEC_LDATE>::scmDataTypeName = "LDATE"_STRID;
+const forte::StringId forte::CDataTypeTrait<CIEC_LDATE>::scmDataTypeName = "LDATE"_STRID;

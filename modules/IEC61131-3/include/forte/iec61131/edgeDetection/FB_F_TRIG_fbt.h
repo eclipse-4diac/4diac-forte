@@ -45,7 +45,7 @@ namespace forte::iec61131::edgeDetection {
       void setInitialValues() override;
 
     public:
-      FORTE_FB_F_TRIG(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      FORTE_FB_F_TRIG(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       CIEC_BOOL var_CLK;
 

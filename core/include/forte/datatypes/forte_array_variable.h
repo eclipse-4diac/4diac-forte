@@ -323,7 +323,7 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
       return data[0].getDataTypeID();
     }
 
-    [[nodiscard]] forte::core::StringId getElementTypeNameID() const override {
+    [[nodiscard]] forte::StringId getElementTypeNameID() const override {
       return data[0].getTypeNameID();
     }
 

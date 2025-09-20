@@ -19,7 +19,7 @@
 
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_LWORD_FROM_QUARTERS_fct.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_byte.h"
 #include "forte/datatypes/forte_any_int_variant.h"
@@ -64,8 +64,8 @@ namespace {
   };
 } // namespace
 
-FORTE_ASSEMBLE_LWORD_FROM_QUARTERS::FORTE_ASSEMBLE_LWORD_FROM_QUARTERS(const forte::core::StringId paInstanceNameId,
-                                                                       forte::core::CFBContainer &paContainer) :
+FORTE_ASSEMBLE_LWORD_FROM_QUARTERS::FORTE_ASSEMBLE_LWORD_FROM_QUARTERS(const forte::StringId paInstanceNameId,
+                                                                       forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_QUARTER_BYTE_00(nullptr),

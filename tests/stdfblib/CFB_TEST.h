@@ -30,12 +30,12 @@ class FORTE_CFB_TEST final : public CCompositeFB {
     static const TEventID scmEventCNFID = 0;
     static const TEventID scmEventCHANGEDID = 1;
 
-    forte::core::CInternalFB<forte::iec61499::events::FORTE_E_PERMIT> fb_PERMIT_OP;
-    forte::core::CInternalFB<forte::iec61499::events::FORTE_E_SR> fb_E_SR;
-    forte::core::CInternalFB<forte::iec61499::events::FORTE_E_SWITCH> fb_SET_CHANGED;
-    forte::core::CInternalFB<forte::iec61499::events::GEN_E_DEMUX> fb_E_DEMUX_2;
-    forte::core::CInternalFB<forte::iec61499::events::GEN_E_MUX> fb_E_MUX_2;
-    forte::core::CInternalFB<forte::iec61499::events::FORTE_E_SWITCH> fb_RESET_CHANGED;
+    forte::CInternalFB<forte::iec61499::events::FORTE_E_PERMIT> fb_PERMIT_OP;
+    forte::CInternalFB<forte::iec61499::events::FORTE_E_SR> fb_E_SR;
+    forte::CInternalFB<forte::iec61499::events::FORTE_E_SWITCH> fb_SET_CHANGED;
+    forte::CInternalFB<forte::iec61499::events::GEN_E_DEMUX> fb_E_DEMUX_2;
+    forte::CInternalFB<forte::iec61499::events::GEN_E_MUX> fb_E_MUX_2;
+    forte::CInternalFB<forte::iec61499::events::FORTE_E_SWITCH> fb_RESET_CHANGED;
 
     void readInputData(TEventID paEIID) override;
     void writeOutputData(TEventID paEIID) override;
@@ -43,7 +43,7 @@ class FORTE_CFB_TEST final : public CCompositeFB {
     CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
   public:
-    FORTE_CFB_TEST(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_CFB_TEST(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CEventConnection conn_CNF;
     CEventConnection conn_CHANGED;

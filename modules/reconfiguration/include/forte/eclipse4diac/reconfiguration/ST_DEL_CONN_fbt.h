@@ -37,7 +37,7 @@ namespace forte::eclipse4diac::reconfiguration {
       void setInitialValues() override;
 
     public:
-      FORTE_ST_DEL_CONN(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      FORTE_ST_DEL_CONN(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       CIEC_BOOL var_QI;
       CIEC_WSTRING var_SRC_FB;

@@ -61,7 +61,7 @@ class fileWriter : public CFunctionBlock {
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    fileWriter(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    fileWriter(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
     ~fileWriter() override = default;
 
   private:

@@ -22,7 +22,7 @@
 
 using namespace std::literals;
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   const auto cEventInputNames = std::array{"REQ"_STRID};
@@ -45,7 +45,7 @@ using namespace forte::iec61131::timers;
 
 DEFINE_FIRMWARE_FB(FORTE_FB_TOF, "iec61131::timers::FB_TOF"_STRID)
 
-FORTE_FB_TOF::FORTE_FB_TOF(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_FB_TOF::FORTE_FB_TOF(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(0_BOOL),
     var_PT(0_TIME),

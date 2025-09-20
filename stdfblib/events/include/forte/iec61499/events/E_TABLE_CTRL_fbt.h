@@ -58,7 +58,7 @@ namespace forte::iec61499::events {
       void setInitialValues() override;
 
     public:
-      FORTE_E_TABLE_CTRL(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      FORTE_E_TABLE_CTRL(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3> var_DT;
       CIEC_UINT var_N;

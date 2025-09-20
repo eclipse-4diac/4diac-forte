@@ -13,14 +13,13 @@
 
 #include "forte/iec61499/net/SUBSCRIBE_1_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61499::net;
 
 DEFINE_GENERIC_FIRMWARE_FB(FORTE_SUBSCRIBE_1, "iec61499::net::SUBSCRIBE_1"_STRID)
 
-FORTE_SUBSCRIBE_1::FORTE_SUBSCRIBE_1(const forte::core::StringId paInstanceNameId,
-                                     forte::core::CFBContainer &paContainer) :
+FORTE_SUBSCRIBE_1::FORTE_SUBSCRIBE_1(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     GEN_SUBSCRIBE(paInstanceNameId, paContainer) {
   configureFB("SUBSCRIBE_1");
 }

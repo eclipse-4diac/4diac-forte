@@ -12,41 +12,40 @@
 
 #include "ServiceRegistryEntry2ServiceRegistryEntry_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_ServiceRegistryEntry2ServiceRegistryEntry, "ServiceRegistryEntry2ServiceRegistryEntry"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"IN"_STRID};
-  
-      "ServiceRegistryEntry"_STRID};
-  
-  const auto cDataOutputNames = std::array{"OUT"_STRID};
-  
-      "ServiceRegistryEntry"_STRID};
-  
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{
-      "Event"_STRID};
-  
-  const auto cEventOutputNames = std::array{
-      "CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{
-      "Event"_STRID};
-  
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-}
 
+  "ServiceRegistryEntry"_STRID
+};
+
+const auto cDataOutputNames = std::array{"OUT"_STRID};
+
+"ServiceRegistryEntry"_STRID
+}
+;
+
+const auto cEventInputNames = std::array{"REQ"_STRID};
+const auto cEventInputTypeIds = std::array{"Event"_STRID};
+
+const auto cEventOutputNames = std::array{"CNF"_STRID};
+const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+
+const SFBInterfaceSpec cFBInterfaceSpec = {
+    .mEINames = cEventInputNames,
+    .mEITypeNames = cEventInputTypeIds,
+    .mEONames = cEventOutputNames,
+    .mEOTypeNames = cEventOutputTypeIds,
+    .mDINames = cDataInputNames,
+    .mDONames = cDataOutputNames,
+    .mDIONames = {},
+    .mSocketNames = {},
+    .mPlugNames = {},
+};
+}
 
 void FORTE_ServiceRegistryEntry2ServiceRegistryEntry::executeEvent(TEventID paEIID,
                                                                    CEventChainExecutionThread *const paECET) {

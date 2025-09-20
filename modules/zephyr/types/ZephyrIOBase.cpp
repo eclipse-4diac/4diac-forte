@@ -13,16 +13,16 @@
 #include "ZephyrIOBase.h"
 #include "handler/IODeviceController.h"
 
-FORTE_ZephyrIOBase::FORTE_ZephyrIOBase(forte::core::CFBContainer &paContainer,
+FORTE_ZephyrIOBase::FORTE_ZephyrIOBase(forte::CFBContainer &paContainer,
                                        const SFBInterfaceSpec &paInterfaceSpec,
-                                       const forte::core::StringId paInstanceNameId) :
-    forte::core::io::IOConfigFBController(paContainer, paInterfaceSpec, paInstanceNameId) {};
+                                       const forte::StringId paInstanceNameId) :
+    forte::io::IOConfigFBController(paContainer, paInterfaceSpec, paInstanceNameId) {};
 
 FORTE_ZephyrIOBase::~FORTE_ZephyrIOBase() {
   DEVLOG_INFO("FORTE_ZephyrIOBase dtor\n");
 }
 
-forte::core::io::IODeviceController *FORTE_ZephyrIOBase::createDeviceController(CDeviceExecution &paDeviceExecution) {
+forte::io::IODeviceController *FORTE_ZephyrIOBase::createDeviceController(CDeviceExecution &paDeviceExecution) {
   return new IODeviceController(paDeviceExecution);
 }
 

@@ -18,7 +18,7 @@
 #include "forte/eclipse4diac/utils/OUT_ANY_CONSOLE_fbt.h"
 #include "forte/datatypes/forte_bool.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::utils;
 
@@ -45,8 +45,7 @@ namespace {
   };
 } // namespace
 
-FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const forte::core::StringId paInstanceNameId,
-                                             forte::core::CFBContainer &paContainer) :
+FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(false_BOOL),
     var_LABEL(""_STRING),

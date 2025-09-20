@@ -36,7 +36,7 @@ class FORTE_ANYToJSON : public CFunctionBlock {
     void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_ANYToJSON(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_ANYToJSON(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
 
         ~FORTE_ANYToJSON() override = default;
 };

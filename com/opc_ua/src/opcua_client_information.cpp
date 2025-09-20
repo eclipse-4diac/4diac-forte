@@ -24,7 +24,7 @@
 
 namespace {
   class OpcuaClientConfigFile final
-      : public forte::core::util::CommandLineParser::
+      : public forte::util::CommandLineParser::
             OptionImpl<"oc", "opc_ua-config-file", "<file>", "Set the configuration file for the OPC UA clients"> {
     public:
       bool parseOption(const std::string_view paArgument) override {

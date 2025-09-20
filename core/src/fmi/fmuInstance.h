@@ -117,7 +117,7 @@ class fmuInstance : public CDevice {
     std::vector<CFunctionBlock *> mCommFBs;
     std::map<CDataConnection *, CIEC_ANY *> mParameters;
 
-    void populateInputsOutputs(forte::core::CFBContainer *paResource);
+    void populateInputsOutputs(forte::CFBContainer *paResource);
     void populateInputsAndOutputsCore(CFunctionBlock *paFB);
 
     CIEC_ANY::EDataTypeID getConnectedDataType(unsigned int paPortIndex, bool paIsInput, CFunctionBlock *paFB);

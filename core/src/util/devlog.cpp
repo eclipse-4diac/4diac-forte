@@ -54,7 +54,7 @@ static const char *scLogLevel[] = {"INFO", "WARNING", "ERROR", "DEBUG", "TRACE"}
  */
 void printLogMessage(E_MsgLevel paLevel, const char *paMessage);
 
-static char sMsgBuf[forte::core::cgLogMsgBufSize]; //!< Buffer for the messages created by the variable addMsg function
+static char sMsgBuf[forte::cgLogMsgBufSize]; //!< Buffer for the messages created by the variable addMsg function
 
 static CSyncObject sMessageLock;
 
@@ -75,7 +75,7 @@ void logMessage(E_MsgLevel paLevel, const char *paMessage, ...) {
   va_list pstArgPtr;
 
   va_start(pstArgPtr, paMessage);
-  forte_vsnprintf(sMsgBuf, forte::core::cgLogMsgBufSize, paMessage, pstArgPtr);
+  forte_vsnprintf(sMsgBuf, forte::cgLogMsgBufSize, paMessage, pstArgPtr);
   va_end(pstArgPtr);
 
   printLogMessage(paLevel, sMsgBuf);

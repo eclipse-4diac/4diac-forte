@@ -13,7 +13,7 @@
 
 #include "IORevPiBusAdapter.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_ADAPTER_TYPE(FORTE_IORevPiBusAdapter, "IORevPiBusAdapter"_STRID)
 
@@ -52,9 +52,9 @@ namespace {
 
 } // namespace
 
-FORTE_IORevPiBusAdapter::FORTE_IORevPiBusAdapter(forte::core::CFBContainer &paContainer,
+FORTE_IORevPiBusAdapter::FORTE_IORevPiBusAdapter(forte::CFBContainer &paContainer,
                                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                                 const forte::core::StringId paInstanceNameId,
+                                                 const forte::StringId paInstanceNameId,
                                                  TForteUInt8 paParentAdapterlistID) :
     IOConfigFBMultiAdapter({}, paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     var_QO(0_BOOL),
@@ -71,8 +71,8 @@ void FORTE_IORevPiBusAdapter::setInitialValues() {
   var_Index = 0_UINT;
 }
 
-FORTE_IORevPiBusAdapter_Plug::FORTE_IORevPiBusAdapter_Plug(forte::core::StringId paInstanceNameId,
-                                                           forte::core::CFBContainer &paContainer,
+FORTE_IORevPiBusAdapter_Plug::FORTE_IORevPiBusAdapter_Plug(forte::StringId paInstanceNameId,
+                                                           forte::CFBContainer &paContainer,
                                                            TForteUInt8 paParentAdapterlistID) :
     FORTE_IORevPiBusAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_INITO(*this, 0),
@@ -147,8 +147,8 @@ CDataConnection *FORTE_IORevPiBusAdapter_Plug::getDOConUnchecked(const TPortId p
   return nullptr;
 }
 
-FORTE_IORevPiBusAdapter_Socket::FORTE_IORevPiBusAdapter_Socket(forte::core::StringId paInstanceNameId,
-                                                               forte::core::CFBContainer &paContainer,
+FORTE_IORevPiBusAdapter_Socket::FORTE_IORevPiBusAdapter_Socket(forte::StringId paInstanceNameId,
+                                                               forte::CFBContainer &paContainer,
                                                                TForteUInt8 paParentAdapterlistID) :
     FORTE_IORevPiBusAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_INIT(*this, 0),

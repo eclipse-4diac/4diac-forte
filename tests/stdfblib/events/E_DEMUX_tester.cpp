@@ -15,7 +15,7 @@
 #include "forte/datatypes/forte_bool.h"
 #include <E_DEMUX.h>
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 class E_DEMUX_tester : public CFBTester {
     DECLARE_FB_TESTER(E_DEMUX_tester);

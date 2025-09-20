@@ -19,9 +19,9 @@ class FORTE_eGenAdapter : public forte::CAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_eGenAdapter)
 
   public:
-    FORTE_eGenAdapter(forte::core::CFBContainer &paContainer,
+    FORTE_eGenAdapter(forte::CFBContainer &paContainer,
                       const SFBInterfaceSpec &paInterfaceSpec,
-                      const forte::core::StringId paInstanceNameId,
+                      const forte::StringId paInstanceNameId,
                       TForteUInt8 paParentAdapterlistID) :
         forte::CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID) {};
 
@@ -34,8 +34,8 @@ class FORTE_eGenAdapter_Socket;
 
 class FORTE_eGenAdapter_Plug final : public FORTE_eGenAdapter {
   public:
-    FORTE_eGenAdapter_Plug(forte::core::StringId paInstanceNameId,
-                           forte::core::CFBContainer &paContainer,
+    FORTE_eGenAdapter_Plug(forte::StringId paInstanceNameId,
+                           forte::CFBContainer &paContainer,
                            TForteUInt8 paParentAdapterlistID);
     ~FORTE_eGenAdapter_Plug() override = default;
 
@@ -55,8 +55,8 @@ class FORTE_eGenAdapter_Plug final : public FORTE_eGenAdapter {
 
 class FORTE_eGenAdapter_Socket final : public FORTE_eGenAdapter {
   public:
-    FORTE_eGenAdapter_Socket(forte::core::StringId paInstanceNameId,
-                             forte::core::CFBContainer &paContainer,
+    FORTE_eGenAdapter_Socket(forte::StringId paInstanceNameId,
+                             forte::CFBContainer &paContainer,
                              TForteUInt8 paParentAdapterlistID);
     ~FORTE_eGenAdapter_Socket() override = default;
 

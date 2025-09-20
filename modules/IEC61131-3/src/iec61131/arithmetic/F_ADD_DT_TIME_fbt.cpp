@@ -18,7 +18,7 @@
 #include "forte/datatypes/forte_date_and_time.h"
 #include "forte/datatypes/forte_time.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::arithmetic;
 
@@ -48,8 +48,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_ADD_DT_TIME::FORTE_F_ADD_DT_TIME(const forte::core::StringId paInstanceNameId,
-                                         forte::core::CFBContainer &paContainer) :
+FORTE_F_ADD_DT_TIME::FORTE_F_ADD_DT_TIME(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_DATE_AND_TIME(0)),
     var_IN2(CIEC_TIME(0)),

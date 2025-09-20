@@ -32,7 +32,7 @@
 class BarectfPlatformFORTE final {
   public:
     BarectfPlatformFORTE(std::filesystem::path filename, size_t bufferSize);
-    BarectfPlatformFORTE(forte::core::StringId instanceName, size_t bufferSize);
+    BarectfPlatformFORTE(forte::StringId instanceName, size_t bufferSize);
     ~BarectfPlatformFORTE();
 
     BarectfPlatformFORTE(const BarectfPlatformFORTE &) = delete;

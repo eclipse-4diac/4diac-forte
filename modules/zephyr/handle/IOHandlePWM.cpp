@@ -12,10 +12,10 @@
 
 #include "IOHandlePWM.h"
 
-class IOHandlePWMPeriod : public forte::core::io::IOHandle {
-    using IOObserver = forte::core::io::IOObserver;
-    using IOHandle = forte::core::io::IOHandle;
-    using IOMapper = forte::core::io::IOMapper;
+class IOHandlePWMPeriod : public forte::io::IOHandle {
+    using IOObserver = forte::io::IOObserver;
+    using IOHandle = forte::io::IOHandle;
+    using IOMapper = forte::io::IOMapper;
 
   public:
     IOHandlePWMPeriod(IODeviceController *paDeviceCtrl, IOHandlePWM *paMasterHandle) :

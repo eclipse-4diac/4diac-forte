@@ -20,7 +20,7 @@
 
 #include "forte/io/processinterfacefb.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 using namespace std::string_literals;
 
 const CIEC_STRING CProcessInterfaceFB::scmOK("OK"_STRING);
@@ -32,9 +32,9 @@ const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDirectionInput(
     "Mapped invalid direction. An I block requires an input handle."_STRING);
 const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDataType("Mapped invalid data type."_STRING);
 
-CProcessInterfaceFB::CProcessInterfaceFB(forte::core::CFBContainer &paContainer,
+CProcessInterfaceFB::CProcessInterfaceFB(forte::CFBContainer &paContainer,
                                          const SFBInterfaceSpec &paInterfaceSpec,
-                                         const forte::core::StringId paInstanceNameId) :
+                                         const forte::StringId paInstanceNameId) :
     CEventSourceFB(paContainer, paInterfaceSpec, paInstanceNameId),
     IOObserver(),
     var_QI(0_BOOL),

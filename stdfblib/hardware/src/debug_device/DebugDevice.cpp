@@ -15,7 +15,7 @@
 
 #include "forte/devicefactory.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   const SFBInterfaceSpec cFBInterfaceSpec = {
@@ -30,7 +30,7 @@ namespace {
       .mPlugNames = {},
   };
 
-  [[maybe_unused]] const forte::core::DeviceFactory::EntryImpl<DebugDevice> entry("Debug"_STRID);
+  [[maybe_unused]] const forte::DeviceFactory::EntryImpl<DebugDevice> entry("Debug"_STRID);
 } // namespace
 
 DebugDevice::DebugDevice(const std::string_view) :

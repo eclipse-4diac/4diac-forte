@@ -159,12 +159,12 @@ class CLuaEngine {
       return lua_tostring(luaState, index);
     }
 
-    void pushStringId(forte::core::StringId value) {
+    void pushStringId(forte::StringId value) {
       pushString(value.data());
     }
 
-    forte::core::StringId getStringId(int index) {
-      return forte::core::StringId::insert(lua_tostring(luaState, index));
+    forte::StringId getStringId(int index) {
+      return forte::StringId::insert(lua_tostring(luaState, index));
     }
 
     template<class T, T (CLuaEngine::*F)(int)>

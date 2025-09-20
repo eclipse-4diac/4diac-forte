@@ -13,7 +13,7 @@
 #include "core/fmi/fmuInstance.h"
 #include "forte/device.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/device.h"
 #include "core/fmi/comm/fmuHandler.h"
@@ -121,8 +121,8 @@ bool fmuInstance::loadFBs() {
   return true;
 }
 
-void fmuInstance::populateInputsOutputs(forte::core::CFBContainer *resource) {
-  for (forte::core::CFBContainer::TFunctionBlockList::Iterator itRunner = resource->getFBList().begin();
+void fmuInstance::populateInputsOutputs(forte::CFBContainer *resource) {
+  for (forte::CFBContainer::TFunctionBlockList::Iterator itRunner = resource->getFBList().begin();
        itRunner != resource->getFBList().end(); ++itRunner) {
     populateInputsAndOutputsCore(*itRunner);
   }
@@ -130,7 +130,7 @@ void fmuInstance::populateInputsOutputs(forte::core::CFBContainer *resource) {
 
 void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock *paFB) {
 
-  forte::core::StringId functionBlockType = paFB->getFBTypeId();
+  forte::StringId functionBlockType = paFB->getFBTypeId();
   if ("EMB_RES"_STRID == functionBlockType) {
     populateInputsOutputs(static_cast<CResource *>(paFB));
     return;
@@ -199,7 +199,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock *paFB) {
       // store internal variables
       if (0 != testBasic->cmVarInternals) {
         for (TPortId i = 0; i < testBasic->cmVarInternals->mNumIntVars; i++) {
-          forte::core::StringId varId = testBasic->cmVarInternals->mIntVarsNames[i];
+          forte::StringId varId = testBasic->cmVarInternals->mIntVarsNames[i];
           CIEC_ANY *var = testBasic->getVar(&varId, 1);
           if (0 != var) {
             fmuValueContainer *newValue =
@@ -216,7 +216,7 @@ void fmuInstance::populateInputsAndOutputsCore(CFunctionBlock *paFB) {
       }
       // store state of ECC
       fmuValueContainer *newValue = new fmuValueContainer(fmuValueContainer::INTEGER, true);
-      forte::core::StringId eccId = "$ECC"_STRID;
+      forte::StringId eccId = "$ECC"_STRID;
       newValue->setValuePointer(testBasic->getVar(&eccId, 1));
       mOutputsAndInputs.push_back(newValue);
       FMU_DEBUG_LOG(this, "VARIABLES: INTERNAL: " << testBasic->getInstanceName() << ".ECC ADDED SUCCESSFULLY\n")

@@ -42,7 +42,7 @@ namespace {
       return std::string_view::npos;
     }
     paResult = {
-        .mChannel = forte::core::StringId::lookup(paID.substr(paStart, openingBracket - paStart)),
+        .mChannel = forte::StringId::lookup(paID.substr(paStart, openingBracket - paStart)),
         .mConfigString = paID.substr(openingBracket + 1, closingBracket - openingBracket - 1),
     };
     return closingBracket + 1;

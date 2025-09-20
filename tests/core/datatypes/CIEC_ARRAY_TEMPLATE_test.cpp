@@ -23,7 +23,7 @@
 #include "forte/typelib.h"
 #include "forte/datatypes/forte_array_dynamic.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_TEMPLATE_function_test)
 

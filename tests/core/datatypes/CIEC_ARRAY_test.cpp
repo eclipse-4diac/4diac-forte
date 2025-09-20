@@ -28,7 +28,7 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_struct.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace std::string_literals;
 
@@ -52,11 +52,11 @@ class CIEC_ArrayOfStructTest : public CIEC_STRUCT {
       return 3;
     }
 
-    const forte::core::StringId *elementNames() const override {
+    const forte::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    forte::core::StringId getStructTypeNameID() const override {
+    forte::StringId getStructTypeNameID() const override {
       return "ArrayOfStructTest"_STRID;
     }
 
@@ -79,10 +79,10 @@ class CIEC_ArrayOfStructTest : public CIEC_STRUCT {
     }
 
   private:
-    static const forte::core::StringId scmElementNames[];
+    static const forte::StringId scmElementNames[];
 };
 
-const forte::core::StringId CIEC_ArrayOfStructTest::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID};
+const forte::StringId CIEC_ArrayOfStructTest::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID};
 
 DEFINE_FIRMWARE_DATATYPE(ArrayOfStructTest, "ArrayOfStructTest"_STRID);
 
@@ -333,8 +333,7 @@ BOOST_AUTO_TEST_CASE(Array_equality_test) {
 }
 
 BOOST_AUTO_TEST_CASE(Configure_test) {
-  CIEC_ARRAY_DYNAMIC *pTest =
-      static_cast<CIEC_ARRAY_DYNAMIC *>(forte::core::createDataTypeInstance("ARRAY"_STRID, nullptr));
+  CIEC_ARRAY_DYNAMIC *pTest = static_cast<CIEC_ARRAY_DYNAMIC *>(forte::createDataTypeInstance("ARRAY"_STRID, nullptr));
 
   pTest->setup(8, "INT"_STRID);
 

@@ -13,7 +13,7 @@
 
 #include "forte/iec61131/conversion/F_ANY_AS_STRING_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/iec61131_functions.h"
 #include "forte/datatypes/forte_array_common.h"
@@ -45,8 +45,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_ANY_AS_STRING::FORTE_F_ANY_AS_STRING(const forte::core::StringId paInstanceNameId,
-                                             forte::core::CFBContainer &paContainer) :
+FORTE_F_ANY_AS_STRING::FORTE_F_ANY_AS_STRING(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CNF(*this, 0),
     conn_IN(nullptr),

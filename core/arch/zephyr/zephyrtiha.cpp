@@ -49,7 +49,7 @@ void CZephyrTimerHandler::enableHandler() {
   if (thread == nullptr) {
     return;
   }
-  const auto period = K_NSEC(forte::core::constants::cNanosecondsPerSecond / getTicksPerSecond());
+  const auto period = K_NSEC(forte::constants::cNanosecondsPerSecond / getTicksPerSecond());
   k_timer_start(&timer, period, period);
   k_thread_start(thread_id);
 }

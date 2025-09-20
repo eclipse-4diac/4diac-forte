@@ -36,7 +36,7 @@ class FakeTimeDev : public CDevice {
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
     EMGMResponse
-    writeValue(forte::core::TNameIdentifier &paNameList, const std::string &paValue, bool paForce = false) override;
+    writeValue(forte::TNameIdentifier &paNameList, const std::string &paValue, bool paForce = false) override;
 
   private:
     CDataConnection *conn_MGR_ID;
@@ -53,5 +53,5 @@ class FakeTimeDev : public CDevice {
 
     // allows to set the fake timer before calling the parent CDevice which
     // will create the timer already at construction
-    forte::core::StringId initializeTimer();
+    forte::StringId initializeTimer();
 };

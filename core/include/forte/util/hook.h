@@ -15,7 +15,7 @@
 
 #include <vector>
 
-namespace forte::core::util::hook {
+namespace forte::util::hook {
 
   template<typename T, typename... Args>
   class Registry final {
@@ -69,4 +69,4 @@ namespace forte::core::util::hook {
 
   template<typename T, typename... Args>
   constinit std::vector<typename Registry<T, Args...>::Entry *> Registry<T, Args...>::entries;
-} // namespace forte::core::util::hook
+} // namespace forte::util::hook

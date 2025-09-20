@@ -38,7 +38,7 @@ class FORTE_SCALE final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_SCALE(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_SCALE(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_REAL var_IN;
     CIEC_REAL var_MAX_IN;

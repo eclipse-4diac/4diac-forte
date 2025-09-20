@@ -18,9 +18,9 @@
 #include "forte/io/outputfb.h"
 #include "forte/datatypes/forte_lword.h"
 
-class FORTE_QL final : public forte::core::io::COutputFB<CIEC_LWORD> {
+class FORTE_QL final : public forte::io::COutputFB<CIEC_LWORD> {
     DECLARE_FIRMWARE_FB(FORTE_QL)
 
   public:
-    FORTE_QL(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_QL(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 };

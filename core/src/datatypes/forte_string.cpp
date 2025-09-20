@@ -34,7 +34,7 @@
 
 #include "unicode_utils.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace std::string_literals;
 
@@ -71,7 +71,7 @@ int CIEC_STRING::fromString(const char *paValue) {
 
   for (size_t i = openingQuote + 1; i < inputString.length(); ++i) {
     if (inputString[i] == '$') {
-      if (forte::core::util::isHexDigit(inputString[i + 1]) && forte::core::util::isHexDigit(inputString[i + 2])) {
+      if (forte::util::isHexDigit(inputString[i + 1]) && forte::util::isHexDigit(inputString[i + 2])) {
         uint8_t hexNumber;
         auto result = std::from_chars(inputString.data() + (i + 1), inputString.data() + (i + 3), hexNumber, 16);
         if (result.ec == std::errc()) {
@@ -182,4 +182,4 @@ void CIEC_STRING::toUTF8(std::string &paBuffer, bool paEscape) const {
   }
 }
 
-const forte::core::StringId forte::CDataTypeTrait<CIEC_STRING>::scmDataTypeName = "STRING"_STRID;
+const forte::StringId forte::CDataTypeTrait<CIEC_STRING>::scmDataTypeName = "STRING"_STRID;

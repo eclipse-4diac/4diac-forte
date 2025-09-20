@@ -16,7 +16,7 @@
  *******************************************************************************/
 #include "forte/datatypes/forte_bool.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include <stdlib.h>
 
@@ -63,4 +63,4 @@ void CIEC_BOOL::toString(std::string &paTargetBuf) const {
   paTargetBuf += getTBOOL8() ? "TRUE"s : "FALSE"s;
 }
 
-const forte::core::StringId forte::CDataTypeTrait<CIEC_BOOL>::scmDataTypeName = "BOOL"_STRID;
+const forte::StringId forte::CDataTypeTrait<CIEC_BOOL>::scmDataTypeName = "BOOL"_STRID;

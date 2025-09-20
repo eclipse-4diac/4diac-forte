@@ -28,14 +28,14 @@ namespace forte {
       CAdapterConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, IPlugPin &paPlug);
       ~CAdapterConnection() override;
 
-      EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::core::StringId> paDstPortNameId) override;
+      EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
 
       EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
-                                         std::span<const forte::core::StringId> paDstPortNameId) override;
+                                         std::span<const forte::StringId> paDstPortNameId) override;
 
-      EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::core::StringId> paDstPortNameId) override;
+      EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
 
-      void getSourcePortName(forte::core::TNameIdentifier &paResult) const override;
+      void getSourcePortName(forte::TNameIdentifier &paResult) const override;
 
       IPlugPin &getPlug() {
         return mPlug;
@@ -65,7 +65,7 @@ namespace forte {
     public:
       virtual CAdapter *getAdapterBlock() = 0;
       virtual bool isCompatible(IAdapterPin &paPeer) = 0;
-      virtual forte::core::StringId getAdapterTypeId() const = 0;
+      virtual forte::StringId getAdapterTypeId() const = 0;
   };
 
   class IPlugPin : public IAdapterPin {

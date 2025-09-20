@@ -12,7 +12,7 @@
 
 #include "forte/iec61499/events/E_TimeOut_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61499::events;
 
@@ -34,7 +34,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TimeOut::FORTE_E_TimeOut(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_TimeOut::FORTE_E_TimeOut(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     mActive(false),
     var_TimeOutSocket("TimeOutSocket"_STRID, *this, 0) {};

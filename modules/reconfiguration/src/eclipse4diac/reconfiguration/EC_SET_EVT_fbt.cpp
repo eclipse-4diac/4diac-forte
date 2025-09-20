@@ -11,7 +11,7 @@
  *******************************************************************************/
 #include "forte/eclipse4diac/reconfiguration/EC_SET_EVT_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/device.h"
 #include "forte/mgmcmdstruct.h"
@@ -40,8 +40,7 @@ namespace {
   };
 } // namespace
 
-FORTE_EC_SET_EVT::FORTE_EC_SET_EVT(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+FORTE_EC_SET_EVT::FORTE_EC_SET_EVT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_QI(nullptr),
@@ -75,10 +74,10 @@ void FORTE_EC_SET_EVT::executeEvent(TEventID paEIID, CEventChainExecutionThread 
 }
 
 void FORTE_EC_SET_EVT::executeRQST() {
-  forte::core::SManagementCMD theCommand;
-  theCommand.mDestination = forte::core::StringId::lookup(var_DST.getValue());
-  theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_FB_NAME.getValue()));
-  theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_FB_EVENT_IO.getValue()));
+  forte::SManagementCMD theCommand;
+  theCommand.mDestination = forte::StringId::lookup(var_DST.getValue());
+  theCommand.mFirstParam.push_back(forte::StringId::lookup(var_FB_NAME.getValue()));
+  theCommand.mFirstParam.push_back(forte::StringId::lookup(var_FB_EVENT_IO.getValue()));
   theCommand.mCMD = EMGMCommandType::MonitoringTriggerEvent;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);

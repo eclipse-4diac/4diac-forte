@@ -12,7 +12,7 @@
 
 #include "Port_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "PortAdapter_adp.h"
 #include "forte/iec61131_functions.h"
@@ -26,7 +26,7 @@ using namespace forte::core::literals;
 #include <handle/PinHandle.h>
 #include "forte/util/extevhandlerhelper.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_Port, "Port"_STRID)
 
@@ -50,7 +50,7 @@ namespace {
   };
 } // namespace
 
-FORTE_Port::FORTE_Port(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_Port::FORTE_Port(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_Pin0(""_STRING),
     var_Pin1(""_STRING),

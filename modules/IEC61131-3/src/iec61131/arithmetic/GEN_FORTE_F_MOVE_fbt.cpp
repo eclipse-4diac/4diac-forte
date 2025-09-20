@@ -18,7 +18,7 @@
 #include "forte/datatypes/forte_any_variant.h"
 #include "forte/stringid.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::arithmetic;
 
@@ -31,8 +31,7 @@ namespace {
   const auto cEventOutputNames = std::array{"CNF"_STRID};
 } // namespace
 
-GEN_FORTE_F_MOVE::GEN_FORTE_F_MOVE(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+GEN_FORTE_F_MOVE::GEN_FORTE_F_MOVE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr) {
@@ -61,8 +60,8 @@ bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterf
   if (strcmp(paConfigString, "F_MOVE") == 0) {
     mIn = std::make_unique<CIEC_ANY_VARIANT>();
   } else {
-    forte::core::StringId dataTypeID = getDataTypeNameId(paConfigString);
-    mIn = std::unique_ptr<CIEC_ANY>(forte::core::createDataTypeInstance(dataTypeID, nullptr));
+    forte::StringId dataTypeID = getDataTypeNameId(paConfigString);
+    mIn = std::unique_ptr<CIEC_ANY>(forte::createDataTypeInstance(dataTypeID, nullptr));
     if (!mIn) {
       return false;
     }
@@ -78,14 +77,14 @@ bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterf
   return true;
 }
 
-forte::core::StringId GEN_FORTE_F_MOVE::getDataTypeNameId(const char *paConfigString) {
+forte::StringId GEN_FORTE_F_MOVE::getDataTypeNameId(const char *paConfigString) {
   const char *acPos = strchr(paConfigString, '_');
   if (nullptr != acPos) {
     acPos++;
     acPos = strchr(acPos, '_');
     if (nullptr != acPos) {
       acPos += 2; // put the position one after the separating number
-      return forte::core::StringId::lookup(acPos);
+      return forte::StringId::lookup(acPos);
     }
   }
   return {};

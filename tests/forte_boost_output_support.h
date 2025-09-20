@@ -37,12 +37,12 @@
 #include "forte/mgmcmd.h"
 #include "forte/stringid.h"
 
-namespace forte::core {
+namespace forte {
   inline std::ostream &boost_test_print_type(std::ostream &out, const StringId &variable) {
     out << static_cast<std::string_view>(variable);
     return out;
   }
-} // namespace forte::core
+} // namespace forte
 
 inline std::ostream &boost_test_print_type(std::ostream &out, const CIEC_LREAL &variable) {
   std::string outputString;

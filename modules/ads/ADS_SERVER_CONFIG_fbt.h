@@ -73,7 +73,7 @@ class FORTE_ADS_SERVER_CONFIG final : public CFunctionBlock {
   public:
     ~FORTE_ADS_SERVER_CONFIG() override = default;
 
-    FORTE_ADS_SERVER_CONFIG(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_ADS_SERVER_CONFIG(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_WSTRING var_FRIENDLY_NAME;

@@ -56,9 +56,9 @@ const char CLuaBFB::LUA_NAME[] = "FORTE_CLuaFB";
 const luaL_Reg CLuaBFB::LUA_FUNCS[] = {
     {"__index", CLuaFB_index}, {"__newindex", CLuaFB_newindex}, {"__call", CLuaFB_call}, {nullptr, nullptr}};
 
-CLuaBFB::CLuaBFB(forte::core::StringId paInstanceNameId,
+CLuaBFB::CLuaBFB(forte::StringId paInstanceNameId,
                  const CLuaBFBTypeEntry *paTypeEntry,
-                 forte::core::CFBContainer &paContainer) :
+                 forte::CFBContainer &paContainer) :
     CGenFunctionBlock<CBasicFB>(
         paContainer, paTypeEntry->getInterfaceSpec(), paInstanceNameId, paTypeEntry->getInternalVarsInformation()),
     mTypeEntry(paTypeEntry) {
@@ -94,7 +94,7 @@ void CLuaBFB::createVarInternals() {
     auto *internalVarsData = reinterpret_cast<TForteByte *>(mInternalVarsData);
     mInternals = reinterpret_cast<CIEC_ANY **>(internalVarsData);
     internalVarsData += cmVarInternals->mNumIntVars * sizeof(CIEC_ANY *);
-    const forte::core::StringId *pnDataIds = cmVarInternals->mIntVarsDataTypeNames;
+    const forte::StringId *pnDataIds = cmVarInternals->mIntVarsDataTypeNames;
     for (TPortId i = 0; i < cmVarInternals->mNumIntVars; ++i) {
       mInternals[i] = createDataPoint(pnDataIds, internalVarsData);
     }
@@ -160,7 +160,7 @@ void CLuaBFB::writeOutputData(TEventID paEO) {
 
 size_t CLuaBFB::calculateInternalVarsDataSize(const SInternalVarsInformation &paVarInternals) {
   size_t result = 0;
-  const forte::core::StringId *pnDataIds;
+  const forte::StringId *pnDataIds;
 
   result += paVarInternals.mNumIntVars * sizeof(CIEC_ANY *);
   pnDataIds = paVarInternals.mIntVarsDataTypeNames;

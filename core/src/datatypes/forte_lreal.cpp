@@ -26,7 +26,7 @@
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(LREAL, "LREAL"_STRID)
 
@@ -107,4 +107,4 @@ void CIEC_LREAL::castLRealData(const CIEC_LREAL &paSrcValue, CIEC_ANY &paDestVal
   }
 }
 
-const forte::core::StringId forte::CDataTypeTrait<CIEC_LREAL>::scmDataTypeName = "LREAL"_STRID;
+const forte::StringId forte::CDataTypeTrait<CIEC_LREAL>::scmDataTypeName = "LREAL"_STRID;

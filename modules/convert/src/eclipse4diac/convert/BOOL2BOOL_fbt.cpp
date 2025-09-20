@@ -21,7 +21,7 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::convert;
 
@@ -45,7 +45,7 @@ namespace {
   };
 } // namespace
 
-FORTE_BOOL2BOOL::FORTE_BOOL2BOOL(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_BOOL2BOOL::FORTE_BOOL2BOOL(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(false_BOOL),
     var_OUT(false_BOOL),

@@ -21,7 +21,7 @@ namespace forte {
 
   class CAnyAdapterPin : public IAdapterPin {
     public:
-      CAnyAdapterPin(forte::core::StringId paInstanceNameId);
+      CAnyAdapterPin(forte::StringId paInstanceNameId);
       ~CAnyAdapterPin();
 
     protected:
@@ -31,20 +31,18 @@ namespace forte {
                                    TForteUInt8 paParentAdapterlistID);
       void removeConfiguredAdapter();
 
-      forte::core::StringId mInstanceNameId;
+      forte::StringId mInstanceNameId;
       std::unique_ptr<CAdapter> mConfiguredAdapter;
   };
 
   class CAnyPlugPin final : public CAnyAdapterPin, public IPlugPin {
 
     public:
-      CAnyPlugPin(forte::core::StringId paInstanceNameId,
-                  CFunctionBlock &paParentFB,
-                  TForteUInt8 paParentAdapterlistID);
+      CAnyPlugPin(forte::StringId paInstanceNameId, CFunctionBlock &paParentFB, TForteUInt8 paParentAdapterlistID);
 
       CAdapter *getAdapterBlock() override;
 
-      forte::core::StringId getAdapterTypeId() const override;
+      forte::StringId getAdapterTypeId() const override;
 
       bool isCompatible(IAdapterPin &paPeer) override;
 
@@ -61,13 +59,11 @@ namespace forte {
   class CAnySocketPin final : public CAnyAdapterPin, public ISocketPin {
 
     public:
-      CAnySocketPin(forte::core::StringId paInstanceNameId,
-                    CFunctionBlock &paParentFB,
-                    TForteUInt8 paParentAdapterlistID);
+      CAnySocketPin(forte::StringId paInstanceNameId, CFunctionBlock &paParentFB, TForteUInt8 paParentAdapterlistID);
 
       CAdapter *getAdapterBlock() override;
 
-      forte::core::StringId getAdapterTypeId() const override;
+      forte::StringId getAdapterTypeId() const override;
 
       bool isCompatible(IAdapterPin &paPeer) override;
 

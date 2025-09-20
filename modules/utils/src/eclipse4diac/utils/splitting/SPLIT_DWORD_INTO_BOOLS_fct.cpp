@@ -19,7 +19,7 @@
 
 #include "forte/eclipse4diac/utils/splitting/SPLIT_DWORD_INTO_BOOLS_fct.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_dword.h"
 #include "forte/datatypes/forte_bool.h"
@@ -56,8 +56,8 @@ namespace {
   };
 } // namespace
 
-FORTE_SPLIT_DWORD_INTO_BOOLS::FORTE_SPLIT_DWORD_INTO_BOOLS(const forte::core::StringId paInstanceNameId,
-                                                           forte::core::CFBContainer &paContainer) :
+FORTE_SPLIT_DWORD_INTO_BOOLS::FORTE_SPLIT_DWORD_INTO_BOOLS(const forte::StringId paInstanceNameId,
+                                                           forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),

@@ -102,7 +102,7 @@ namespace forte::com {
   };
 
   struct ComChannelDescriptor {
-      forte::core::StringId mChannel{};
+      forte::StringId mChannel{};
       std::string_view mConfigString;
   };
 

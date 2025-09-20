@@ -21,14 +21,14 @@
 #include "../slave/handle.h"
 #include "forte/io/configFB/io_slave_multi.h"
 
-class EmbrickSlave : public forte::core::io::IOConfigFBMultiSlave, public EmbrickSlaveHandler::Delegate {
+class EmbrickSlave : public forte::io::IOConfigFBMultiSlave, public EmbrickSlaveHandler::Delegate {
   public:
     EmbrickSlave(const TForteUInt8 *const paSlaveConfigurationIO,
                  const TForteUInt8 paSlaveConfigurationIO_num,
                  int paType,
-                 forte::core::CFBContainer &paContainer,
+                 forte::CFBContainer &paContainer,
                  const SFBInterfaceSpec &paInterfaceSpec,
-                 const forte::core::StringId paInstanceNameId);
+                 const forte::StringId paInstanceNameId);
     ~EmbrickSlave() override;
 
     forte::CSocketPin<FORTE_EBBusAdapter_Socket> var_BusAdapterIn;

@@ -18,7 +18,7 @@
 #include <string>
 #include <unordered_set>
 
-using namespace forte::core;
+using namespace forte;
 
 namespace {
   std::mutex internMutex;

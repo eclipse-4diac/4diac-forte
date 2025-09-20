@@ -41,7 +41,7 @@ namespace forte::eclipse4diac::io {
       void setInitialValues() override;
 
     public:
-      FORTE_QB(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      FORTE_QB(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       CIEC_BOOL var_QI;
       CIEC_STRING var_PARAMS;

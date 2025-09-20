@@ -27,7 +27,7 @@ class FORTE_RegisterServiceHTTP : public CCompositeFB {
     static const int scm_nregisterServiceAdpNum = 0;
 
   public:
-    FORTE_RegisterServiceHTTP(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_RegisterServiceHTTP(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
 
         ~FORTE_RegisterServiceHTTP() override = default;
 };

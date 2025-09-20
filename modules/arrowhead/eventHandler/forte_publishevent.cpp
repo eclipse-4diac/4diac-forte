@@ -12,7 +12,7 @@
 
 #include "forte_publishevent.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(PublishEvent, "PublishEvent"_STRID);
 
@@ -20,7 +20,7 @@ CIEC_PublishEvent::CIEC_PublishEvent() :
     CIEC_STRUCT("PublishEvent"_STRID, 3, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const forte::core::StringId CIEC_PublishEvent::scmElementTypes[] = {"ArrowheadSystem"_STRID,
-                                                                           "ArrowheadEvent"_STRID, "WSTRING"_STRID};
-const forte::core::StringId CIEC_PublishEvent::scmElementNames[] = {"source"_STRID, "event"_STRID,
-                                                                           "deliveryCompleteUri"_STRID};
+const forte::StringId CIEC_PublishEvent::scmElementTypes[] = {"ArrowheadSystem"_STRID, "ArrowheadEvent"_STRID,
+                                                              "WSTRING"_STRID};
+const forte::StringId CIEC_PublishEvent::scmElementNames[] = {"source"_STRID, "event"_STRID,
+                                                              "deliveryCompleteUri"_STRID};

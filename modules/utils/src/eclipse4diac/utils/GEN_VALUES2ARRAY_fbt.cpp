@@ -21,7 +21,7 @@
 #include "forte/arch/forte_printer.h"
 #include "forte/util/string_utils.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::utils;
 
@@ -33,8 +33,7 @@ namespace {
   const auto cEventOutputNames = std::array{"CNF"_STRID};
 } // namespace
 
-GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_OUT(*this, 0, var_OUT) {
@@ -76,8 +75,8 @@ bool GEN_VALUES2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterf
     return false;
   }
   // there is a number and a data type of inputs within the typename
-  unsigned int numDIs = static_cast<unsigned int>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
-  auto arrayValueTypeId = forte::core::StringId::lookup(++dTypePos);
+  unsigned int numDIs = static_cast<unsigned int>(forte::util::strtoul(dNumberPos, nullptr, 10));
+  auto arrayValueTypeId = forte::StringId::lookup(++dTypePos);
 
   if (numDIs < 2) {
     return false;

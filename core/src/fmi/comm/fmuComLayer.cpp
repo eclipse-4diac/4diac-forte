@@ -18,7 +18,7 @@
 #include "core/fmi/fmuInstance.h" //just for logging?
 
 using namespace forte::com_infra;
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<fmuComLayer> entry("fmu"_STRID);

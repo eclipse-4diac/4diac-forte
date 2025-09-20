@@ -12,7 +12,7 @@
 
 #include "ArrowheadJSONHelper.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_bool.h"
 #include "forte/util/parameterParser.h"
@@ -99,7 +99,7 @@ void ArrowheadJSONHelper::transformJSONToStruct(char *paToChange) {
 void ArrowheadJSONHelper::transformStructToJSON(const CIEC_STRUCT &paSource, CIEC_STRING &paResult) {
 
   TForteUInt16 unSize = paSource.getStructSize();
-  const forte::core::StringId *punMemberNameIds = paSource.elementNames();
+  const forte::StringId *punMemberNameIds = paSource.elementNames();
   const CIEC_ANY *poMembers = paSource.getMembers();
 
   paResult.append("{");

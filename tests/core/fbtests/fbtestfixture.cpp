@@ -59,10 +59,10 @@ class CFBTestInputDataConn final : public CDataConnection {
     CIEC_ANY &mValue;
 };
 
-CFBTestFixtureBase::CFBTestFixtureBase(forte::core::StringId paTypeId) :
+CFBTestFixtureBase::CFBTestFixtureBase(forte::StringId paTypeId) :
     CGenFunctionBlock<CFunctionBlock>(CFBTestDataGlobalFixture::getResource(), {}),
     mTypeId(paTypeId) {
-  mFBUnderTest = forte::core::createFB(paTypeId, paTypeId, CFBTestDataGlobalFixture::getResource());
+  mFBUnderTest = forte::createFB(paTypeId, paTypeId, CFBTestDataGlobalFixture::getResource());
 }
 
 bool CFBTestFixtureBase::initialize() {
@@ -119,7 +119,7 @@ void CFBTestFixtureBase::performFBResetTests() {
   BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeExecutionState(EMGMCommandType::Stop));
   BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeExecutionState(EMGMCommandType::Reset));
 
-  CFunctionBlock *freshInstance = forte::core::createFB(mTypeId, mTypeId, *getResource());
+  CFunctionBlock *freshInstance = forte::createFB(mTypeId, mTypeId, *getResource());
   BOOST_REQUIRE(freshInstance != nullptr);
 
   if (!mConfigString.empty()) {
@@ -134,7 +134,7 @@ void CFBTestFixtureBase::performFBResetTests() {
     checkVars(*mFBUnderTest->getDO(i), *freshInstance->getDO(i));
   }
 
-  BOOST_CHECK(forte::core::deleteFB(freshInstance));
+  BOOST_CHECK(forte::deleteFB(freshInstance));
 
   BOOST_CHECK_EQUAL(EMGMResponse::Ready, mFBUnderTest->changeExecutionState(EMGMCommandType::Start));
 }
@@ -146,7 +146,7 @@ void CFBTestFixtureBase::performFBDeleteTests() {
 
   BOOST_CHECK(mFBUnderTest->isCurrentlyDeleteable());
 
-  BOOST_CHECK(forte::core::deleteFB(mFBUnderTest));
+  BOOST_CHECK(forte::deleteFB(mFBUnderTest));
   mFBUnderTest = nullptr;
 }
 
@@ -262,7 +262,7 @@ void CFBTestFixtureBase::performDataInterfaceTests() {
                   (CIEC_ANY::e_ANY == val->getDataTypeID()));
 
     BOOST_CHECK_EQUAL(val, mFBUnderTest->getDIFromPortId(i));
-    forte::core::StringId stringIdBuf = interfaceSpec.mDINames[i];
+    forte::StringId stringIdBuf = interfaceSpec.mDINames[i];
     BOOST_CHECK_EQUAL(val, mFBUnderTest->getVar(&stringIdBuf, 1));
 
     BOOST_CHECK_EQUAL(i, interfaceSpec.getDIID(interfaceSpec.mDINames[i]));
@@ -288,7 +288,7 @@ void CFBTestFixtureBase::performDataInterfaceTests() {
     BOOST_REQUIRE((mOutputDataBuffers[i]->getDataTypeID() == val->getDataTypeID()) ||
                   (CIEC_ANY::e_ANY == val->getDataTypeID()));
 
-    forte::core::StringId stringIdBuf = interfaceSpec.mDONames[i];
+    forte::StringId stringIdBuf = interfaceSpec.mDONames[i];
     BOOST_CHECK_EQUAL(val, mFBUnderTest->getVar(&stringIdBuf, 1));
 
     BOOST_CHECK_EQUAL(i, interfaceSpec.getDOID(interfaceSpec.mDONames[i]));

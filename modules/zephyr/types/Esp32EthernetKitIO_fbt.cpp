@@ -19,7 +19,7 @@
 
 #include "Esp32EthernetKitIO_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_time.h"
 #include "forte/iec61131_functions.h"
@@ -57,8 +57,8 @@ namespace {
   };
 } // namespace
 
-FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const forte::core::StringId paInstanceNameId,
-                                                   forte::core::CFBContainer &paContainer) :
+FORTE_Esp32EthernetKitIO::FORTE_Esp32EthernetKitIO(const forte::StringId paInstanceNameId,
+                                                   forte::CFBContainer &paContainer) :
 #pragma region base class spec
     FORTE_ZephyrIOBase(paContainer, cFBInterfaceSpec, paInstanceNameId),
 #pragma endregion base class spec

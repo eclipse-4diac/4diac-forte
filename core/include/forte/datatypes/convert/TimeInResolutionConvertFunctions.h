@@ -44,7 +44,7 @@ inline T func_TIME_IN_S_TO(const U &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
   if (std::is_base_of_v<CIEC_ANY_REAL, T>) {
     return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()) /
-             static_cast<typename T::TValueType>(forte::core::constants::cNanosecondsPerSecond));
+             static_cast<typename T::TValueType>(forte::constants::cNanosecondsPerSecond));
   } else {
     return T(static_cast<typename T::TValueType>(paValue.getInSeconds()));
   }
@@ -66,8 +66,8 @@ inline T func_TIME_IN_MS_TO(const U &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
   if (std::is_base_of_v<CIEC_ANY_REAL, T>) {
     return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()) *
-             (static_cast<typename T::TValueType>(forte::core::constants::cMillisecondsPerSecond) /
-              static_cast<typename T::TValueType>(forte::core::constants::cNanosecondsPerSecond)));
+             (static_cast<typename T::TValueType>(forte::constants::cMillisecondsPerSecond) /
+              static_cast<typename T::TValueType>(forte::constants::cNanosecondsPerSecond)));
   } else {
     return T(static_cast<typename T::TValueType>(paValue.getInMilliSeconds()));
   }
@@ -89,8 +89,8 @@ inline T func_TIME_IN_US_TO(const U &paValue) {
   static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
   if (std::is_base_of_v<CIEC_ANY_REAL, T>) {
     return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()) *
-             (static_cast<typename T::TValueType>(forte::core::constants::cMicrosecondsPerSecond) /
-              static_cast<typename T::TValueType>(forte::core::constants::cNanosecondsPerSecond)));
+             (static_cast<typename T::TValueType>(forte::constants::cMicrosecondsPerSecond) /
+              static_cast<typename T::TValueType>(forte::constants::cNanosecondsPerSecond)));
   } else {
     return T(static_cast<typename T::TValueType>(paValue.getInMicroSeconds()));
   }

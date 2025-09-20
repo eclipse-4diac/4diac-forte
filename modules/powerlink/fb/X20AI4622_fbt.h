@@ -42,7 +42,7 @@ class FORTE_X20AI4622 final : public PowerlinkFunctionBlockAI {
     void setInitialValues() override;
 
   public:
-    FORTE_X20AI4622(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_X20AI4622(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_USINT var_CNID;

@@ -23,10 +23,7 @@
 
 namespace forte {
   class ResourceInternal;
-
-  namespace core {
-    struct SManagementCMD;
-  }
+  struct SManagementCMD;
 } // namespace forte
 
 /*! \ingroup CORE\brief Base class for all resources handling the reconfiguration management within this
@@ -46,9 +43,7 @@ class CResource : public CFunctionBlock {
      *  \param paObjectHandler    reference to object handler
      *  \param paFBData           Byte-array for resource-specific data
      */
-    CResource(forte::core::CFBContainer &paDevice,
-              const SFBInterfaceSpec &paInterfaceSpec,
-              forte::core::StringId paInstanceNameId);
+    CResource(forte::CFBContainer &paDevice, const SFBInterfaceSpec &paInterfaceSpec, forte::StringId paInstanceNameId);
 
     ~CResource() override;
 
@@ -60,7 +55,7 @@ class CResource : public CFunctionBlock {
      * \param paCommand internal representation of the management command
      * \return response of the MGMCommand execution as defined in IEC 61499
      */
-    virtual EMGMResponse executeMGMCommand(forte::core::SManagementCMD &paCommand);
+    virtual EMGMResponse executeMGMCommand(forte::SManagementCMD &paCommand);
 
     CResource *getResource() override {
       return this;
@@ -83,7 +78,7 @@ class CResource : public CFunctionBlock {
       return std::string();
     }
 
-    void getFullQualifiedApplicationInstanceName(forte::core::TNameIdentifier &) const override {
+    void getFullQualifiedApplicationInstanceName(forte::TNameIdentifier &) const override {
       // we don't want to add anything here as the resource name should be excluded
     }
 
@@ -100,20 +95,20 @@ class CResource : public CFunctionBlock {
      * @return response of the command execution as defined in IEC 61499
      */
     virtual EMGMResponse
-    writeValue(forte::core::TNameIdentifier &paNameList, const std::string &paValue, bool paForce = false);
+    writeValue(forte::TNameIdentifier &paNameList, const std::string &paValue, bool paForce = false);
 
     bool isDynamicContainer() override {
       return true;
     }
 
-    CConnection::Wrapper getOutputConnection(std::span<const forte::core::StringId> paSrcNameList) override;
+    CConnection::Wrapper getOutputConnection(std::span<const forte::StringId> paSrcNameList) override;
 
     [[nodiscard]] forte::ResourceInternal &getInternal() const {
       return *mInternal;
     }
 
   protected:
-    CResource(const SFBInterfaceSpec &paInterfaceSpec, forte::core::StringId paInstanceNameId);
+    CResource(const SFBInterfaceSpec &paInterfaceSpec, forte::StringId paInstanceNameId);
 
     void executeEvent(TEventID, CEventChainExecutionThread *const) override {
       // nothing to do here for a resource
@@ -167,7 +162,7 @@ class CResource : public CFunctionBlock {
     /*! Wrapper for simplifying connection creation in resources
      *
      */
-    EMGMResponse createConnection(forte::core::SManagementCMD &paCommand);
+    EMGMResponse createConnection(forte::SManagementCMD &paCommand);
 
   private:
     /*!\brief Create a new connection between source and destination
@@ -177,8 +172,7 @@ class CResource : public CFunctionBlock {
      * @param  padstNameList identifier name list for the destination of the connection
      * @return response of the command execution as defined in IEC 61499
      */
-    EMGMResponse createConnection(forte::core::TNameIdentifier &paSrcNameList,
-                                  forte::core::TNameIdentifier &paDstNameList);
+    EMGMResponse createConnection(forte::TNameIdentifier &paSrcNameList, forte::TNameIdentifier &paDstNameList);
 
     /*! Handle and perform the actions required for an execution state change
      * command (i.e., START, STOP, KILL, RESET)
@@ -187,7 +181,7 @@ class CResource : public CFunctionBlock {
      * @param paTarget identifier which is the target for this request if empty the target is the resource
      * @return response of the command execution as defined in IEC 61499
      */
-    EMGMResponse handleExecutionStateCmd(EMGMCommandType paCMD, forte::core::TNameIdentifier &paTarget);
+    EMGMResponse handleExecutionStateCmd(EMGMCommandType paCMD, forte::TNameIdentifier &paTarget);
 
     /*!\brief Create a new connection between source and destination
      *
@@ -195,8 +189,7 @@ class CResource : public CFunctionBlock {
      * @param  padstNameList identifier name list for the destination of the connection
      * @return response of the command execution as defined in IEC 61499
      */
-    EMGMResponse deleteConnection(forte::core::TNameIdentifier &paSrcNameList,
-                                  forte::core::TNameIdentifier &paDstNameList);
+    EMGMResponse deleteConnection(forte::TNameIdentifier &paSrcNameList, forte::TNameIdentifier &paDstNameList);
 
     /*!\brief Read a parameter value from a given FB
      *
@@ -204,16 +197,16 @@ class CResource : public CFunctionBlock {
      * @param paValue the destination for the value to be read
      * @return response of the command execution as defined in IEC 61499
      */
-    EMGMResponse readValue(forte::core::TNameIdentifier &paNameList, std::string &paValue);
+    EMGMResponse readValue(forte::TNameIdentifier &paNameList, std::string &paValue);
 
     /*!\brief get the variable with the given name identifier
      *
      * @param paNameList the identifier name list of the variable to be retrieved
      * @return the pointer to the variable or 0 if the variable with the given identifier name list does not exist
      */
-    CIEC_ANY *getVariable(forte::core::TNameIdentifier &paNameList);
+    CIEC_ANY *getVariable(forte::TNameIdentifier &paNameList);
 
-    CConnection *getResIf2InConnection(forte::core::StringId paResInput);
+    CConnection *getResIf2InConnection(forte::StringId paResInput);
 
     virtual CConnection *getResIf2InConnectionUnchecked(TPortId) {
       return nullptr;

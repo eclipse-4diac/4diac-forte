@@ -25,10 +25,10 @@
  */
 class CTimedFB : public CEventSourceFB {
   protected:
-    static const forte::core::StringId scmEINameIds[];
-    static const forte::core::StringId scmEONameIds[];
-    static const forte::core::StringId scmDINameIds[];
-    static const forte::core::StringId scmDIDataTypeNameIds[];
+    static const forte::StringId scmEINameIds[];
+    static const forte::StringId scmEONameIds[];
+    static const forte::StringId scmDINameIds[];
+    static const forte::StringId scmDIDataTypeNameIds[];
 
     static const TEventID csmEventSTARTID = 0;
     static const TEventID csmEventSTOPID = 1;
@@ -37,7 +37,7 @@ class CTimedFB : public CEventSourceFB {
 
     bool mActive; //!> flag to indicate that the timed fb is currently active
 
-    CTimedFB(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    CTimedFB(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     /*!\brief execute the input events of timed FBs as far it is possible
      *

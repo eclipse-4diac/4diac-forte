@@ -15,7 +15,7 @@
 #include "forte/device.h"
 #include "forte/io/configFB/io_configFB_controller.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 int IOConfigFBController::smMaxErrors = 5;
 
@@ -24,9 +24,9 @@ const CIEC_WSTRING IOConfigFBController::scmInitializing("Waiting for initializa
 const CIEC_WSTRING IOConfigFBController::scmFailedToInit("Failed to initialize controller.");
 const CIEC_WSTRING IOConfigFBController::scmStopped("Stopped");
 
-IOConfigFBController::IOConfigFBController(forte::core::CFBContainer &paContainer,
+IOConfigFBController::IOConfigFBController(forte::CFBContainer &paContainer,
                                            const SFBInterfaceSpec &paInterfaceSpec,
-                                           const forte::core::StringId paInstanceNameId) :
+                                           const forte::StringId paInstanceNameId) :
     IOConfigFBBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mStarting(false),
     mErrorCounter(0),

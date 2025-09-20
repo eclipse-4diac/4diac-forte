@@ -19,7 +19,7 @@
 
 namespace {
   class MqttClientConfigFileOption final
-      : public forte::core::util::CommandLineParser::
+      : public forte::util::CommandLineParser::
             OptionImpl<"mc", "mqtt-client-config-file", "<file>", "Set the configuration file for the MQTT clients"> {
     public:
       bool parseOption(const std::string_view paArgument) override {

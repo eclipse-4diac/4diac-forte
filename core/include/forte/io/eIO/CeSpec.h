@@ -26,7 +26,7 @@
 #include "forte/io/mapper/io_handle.h"
 #include "forte/io/processinterfacefb.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 enum EeIOTypes {
   eIO_RISING_EDGE = 10,

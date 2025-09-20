@@ -16,7 +16,7 @@
 
 #include "forte/arch/forte_architecture_time.h"
 
-CInternalTracer::CInternalTracer(forte::core::StringId, size_t) {
+CInternalTracer::CInternalTracer(forte::StringId, size_t) {
 }
 
 void CInternalTracer::traceInstanceData(const char *const paTypeName,

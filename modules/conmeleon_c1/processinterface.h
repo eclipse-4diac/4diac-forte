@@ -21,9 +21,9 @@
 class CConmeleonC1ProcessInterface : public CProcessInterfaceBase {
 
   public:
-    CConmeleonC1ProcessInterface(forte::core::CFBContainer &paContainer,
+    CConmeleonC1ProcessInterface(forte::CFBContainer &paContainer,
                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                 const forte::core::StringId paInstanceNameId);
+                                 const forte::StringId paInstanceNameId);
     ~CConmeleonC1ProcessInterface() override;
 
   protected:

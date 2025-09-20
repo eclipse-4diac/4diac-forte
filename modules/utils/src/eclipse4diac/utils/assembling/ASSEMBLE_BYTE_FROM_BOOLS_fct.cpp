@@ -19,7 +19,7 @@
 
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_BYTE_FROM_BOOLS_fct.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_byte.h"
 #include "forte/datatypes/forte_bool.h"
@@ -53,8 +53,8 @@ namespace {
   };
 } // namespace
 
-FORTE_ASSEMBLE_BYTE_FROM_BOOLS::FORTE_ASSEMBLE_BYTE_FROM_BOOLS(const forte::core::StringId paInstanceNameId,
-                                                               forte::core::CFBContainer &paContainer) :
+FORTE_ASSEMBLE_BYTE_FROM_BOOLS::FORTE_ASSEMBLE_BYTE_FROM_BOOLS(const forte::StringId paInstanceNameId,
+                                                               forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_BIT_00(nullptr),

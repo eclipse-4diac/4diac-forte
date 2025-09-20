@@ -15,7 +15,7 @@
 #include "Slave.h"
 #include "../handler/bus.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 const CIEC_WSTRING EmbrickSlave::scmSlow("Slow");
 const CIEC_WSTRING EmbrickSlave::scmInterrupted("Interrupted");
@@ -25,10 +25,10 @@ const CIEC_WSTRING EmbrickSlave::scmUnknown("Invalid status code");
 EmbrickSlave::EmbrickSlave(const TForteUInt8 *const paSlaveConfigurationIO,
                            const TForteUInt8 paSlaveConfigurationIO_num,
                            int paType,
-                           forte::core::CFBContainer &paContainer,
+                           forte::CFBContainer &paContainer,
                            const SFBInterfaceSpec &paInterfaceSpec,
-                           const forte::core::StringId paInstanceNameId) :
-    forte::core::io::IOConfigFBMultiSlave(
+                           const forte::StringId paInstanceNameId) :
+    forte::io::IOConfigFBMultiSlave(
         paSlaveConfigurationIO, paSlaveConfigurationIO_num, paType, paContainer, paInterfaceSpec, paInstanceNameId),
     var_BusAdapterIn("BusAdapterIn"_STRID, *this, 0),
     var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0),

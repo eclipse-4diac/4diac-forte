@@ -19,7 +19,7 @@
 class IOHandlePWMDescriptor : public IOHandleDescriptor {
   public:
     IOHandlePWMDescriptor(std::string const &paId, const pwm_dt_spec *paPwmSpec) :
-        IOHandleDescriptor(paId, forte::core::io::IOMapper::In, Pwm),
+        IOHandleDescriptor(paId, forte::io::IOMapper::In, Pwm),
         mPwmSpec(paPwmSpec) {
     }
 

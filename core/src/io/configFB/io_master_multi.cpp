@@ -13,7 +13,7 @@
 
 #include "forte/io/configFB/io_master_multi.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 const char *const IOConfigFBMultiMaster::scmFailedToInitSlaves =
     "Failed to initialize slaves. Check if the configuration matches the hardware setup.";
@@ -21,9 +21,9 @@ const char *const IOConfigFBMultiMaster::scmFailedToInitSlaves =
 std::vector<IOConfigFBMultiMaster *> IOConfigFBMultiMaster::mInstances;
 TForteUInt16 IOConfigFBMultiMaster::mInstancesIncrement = 0;
 
-IOConfigFBMultiMaster::IOConfigFBMultiMaster(forte::core::CFBContainer &paContainer,
+IOConfigFBMultiMaster::IOConfigFBMultiMaster(forte::CFBContainer &paContainer,
                                              const SFBInterfaceSpec &paInterfaceSpec,
-                                             const forte::core::StringId paInstanceNameId) :
+                                             const forte::StringId paInstanceNameId) :
     IOConfigFBController(paContainer, paInterfaceSpec, paInstanceNameId) {
   mId = mInstancesIncrement++;
   mInstances.push_back(this);

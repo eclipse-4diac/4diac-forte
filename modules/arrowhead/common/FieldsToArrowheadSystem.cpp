@@ -12,38 +12,37 @@
 
 #include "FieldsToArrowheadSystem.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToArrowheadSystem, "FieldsToArrowheadSystem"_STRID)
 
 namespace {
-  const auto cDataInputNames = std::array{
-      "systemName"_STRID, "address"_STRID, "port"_STRID, "authenticationInfo"_STRID};
-  
-      "WSTRING"_STRID, "WSTRING"_STRID, "DINT"_STRID, "WSTRING"_STRID};
-  
-  const auto cDataOutputNames = std::array{"arrowheadSystem"_STRID};
-  
-  
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-}
+  const auto cDataInputNames =
+      std::array{"systemName"_STRID, "address"_STRID, "port"_STRID, "authenticationInfo"_STRID};
 
+  "WSTRING"_STRID, "WSTRING"_STRID, "DINT"_STRID, "WSTRING"_STRID
+};
+
+const auto cDataOutputNames = std::array{"arrowheadSystem"_STRID};
+
+const auto cEventInputNames = std::array{"REQ"_STRID};
+const auto cEventInputTypeIds = std::array{"Event"_STRID};
+
+const auto cEventOutputNames = std::array{"CNF"_STRID};
+const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+
+const SFBInterfaceSpec cFBInterfaceSpec = {
+    .mEINames = cEventInputNames,
+    .mEITypeNames = cEventInputTypeIds,
+    .mEONames = cEventOutputNames,
+    .mEOTypeNames = cEventOutputTypeIds,
+    .mDINames = cDataInputNames,
+    .mDONames = cDataOutputNames,
+    .mDIONames = {},
+    .mSocketNames = {},
+    .mPlugNames = {},
+};
+}
 
 void FORTE_FieldsToArrowheadSystem::alg_REQ() {
   arrowheadSystem().systemName() = systemName();

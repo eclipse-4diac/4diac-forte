@@ -17,7 +17,7 @@
 
 #include "forte/eclipse4diac/signalprocessing/distance/RangeBasedPulse_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_udint.h"
@@ -51,8 +51,7 @@ namespace {
   const auto cInternalsNames = std::array{"DIST_REMAINDER"_STRID};
 } // namespace
 
-FORTE_RangeBasedPulse::FORTE_RangeBasedPulse(const forte::core::StringId paInstanceNameId,
-                                             forte::core::CFBContainer &paContainer) :
+FORTE_RangeBasedPulse::FORTE_RangeBasedPulse(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
     conn_CNF(*this, 0),
     conn_DIST_IN(nullptr),

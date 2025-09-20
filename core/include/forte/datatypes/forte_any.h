@@ -89,7 +89,7 @@ class CIEC_ANY {
     typedef TForteInt64 TLargestIntValueType;
 
     template<typename U, typename T>
-    static auto cast(const T paFromCast) -> typename forte::core::mpl::implicit_or_explicit_cast_t<T, U> {
+    static auto cast(const T paFromCast) -> typename forte::mpl::implicit_or_explicit_cast_t<T, U> {
       U oToCast;
       // If interacting with integers, add or remove sign extension
       if constexpr (std::is_base_of_v<CIEC_ANY_BIT, T> && std::is_base_of_v<CIEC_ANY_INT, U>) {
@@ -174,7 +174,7 @@ class CIEC_ANY {
       return CIEC_ANY::e_ANY;
     }
 
-    virtual forte::core::StringId getTypeNameID() const;
+    virtual forte::StringId getTypeNameID() const;
 
     /*! \brief Get the pointer to the union char array
      *
@@ -469,7 +469,7 @@ class CIEC_ANY {
       mAnyData.mGenData = paGenData;
     }
 
-    static forte::core::StringId parseTypeName(const char *paValue, const char *paHashPos);
+    static forte::StringId parseTypeName(const char *paValue, const char *paHashPos);
 
   public:
     CIEC_ANY(const CIEC_ANY &) = delete;
@@ -594,7 +594,7 @@ namespace forte {
   template<typename T, typename = typename std::enable_if_t<std::is_base_of_v<CIEC_ANY, T>>>
   struct CDataTypeTrait {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_Max;
-      static constexpr forte::core::StringId scmDataTypeName{};
+      static constexpr forte::StringId scmDataTypeName{};
   };
 
 } // namespace forte

@@ -22,7 +22,7 @@ CEventConnection::CEventConnection(CFunctionBlock &paSrcFB, const TPortId paSrcP
 CEventConnection::~CEventConnection() = default;
 
 EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB,
-                                       const std::span<const forte::core::StringId> paDstPortNameId) {
+                                       const std::span<const forte::StringId> paDstPortNameId) {
   if (paDstPortNameId.size() != 1) {
     return EMGMResponse::NoSuchObject;
   }
@@ -38,7 +38,7 @@ EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB,
 }
 
 EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
-                                                     const std::span<const forte::core::StringId> paDstPortNameId) {
+                                                     const std::span<const forte::StringId> paDstPortNameId) {
   if (paDstPortNameId.size() != 1) {
     return EMGMResponse::NoSuchObject;
   }
@@ -52,7 +52,7 @@ EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
 }
 
 EMGMResponse CEventConnection::disconnect(CFunctionBlock &paDstFB,
-                                          const std::span<const forte::core::StringId> paDstPortNameId) {
+                                          const std::span<const forte::StringId> paDstPortNameId) {
   if (paDstPortNameId.size() != 1) {
     return EMGMResponse::NoSuchObject;
   }
@@ -92,6 +92,6 @@ EMGMResponse CEventConnection::removeDestination(const CConnectionPoint &paDestP
   return EMGMResponse::Ready;
 }
 
-void CEventConnection::getSourcePortName(forte::core::TNameIdentifier &paResult) const {
+void CEventConnection::getSourcePortName(forte::TNameIdentifier &paResult) const {
   paResult.push_back(getSourceId().getFB().getFBInterfaceSpec().mEONames[getSourceId().getPortId()]);
 }

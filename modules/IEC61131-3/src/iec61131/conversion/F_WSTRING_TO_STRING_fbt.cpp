@@ -22,7 +22,7 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::conversion;
 
@@ -46,8 +46,8 @@ namespace {
   };
 } // namespace
 
-FORTE_F_WSTRING_TO_STRING::FORTE_F_WSTRING_TO_STRING(const forte::core::StringId paInstanceNameId,
-                                                     forte::core::CFBContainer &paContainer) :
+FORTE_F_WSTRING_TO_STRING::FORTE_F_WSTRING_TO_STRING(const forte::StringId paInstanceNameId,
+                                                     forte::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_IN(u""_WSTRING),
     var_OUT(""_STRING),

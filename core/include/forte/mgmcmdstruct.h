@@ -18,63 +18,60 @@
 #include <string>
 
 namespace forte {
-  namespace core {
 
-    /**  \ingroup CORE \defgroup MGMCommands Management Command Exchange Representation
-     * \brief In this section the FORTE-internal data-exchange-structure for management command passing is described.
-     */
-    /*@{*/
+  /**  \ingroup CORE \defgroup MGMCommands Management Command Exchange Representation
+   * \brief In this section the FORTE-internal data-exchange-structure for management command passing is described.
+   */
+  /*@{*/
 
-    /*!\brief All the data necessary for processing a management command.
-     *
-     * The data of this structure is the internal FORTE representation of an IEC 61499 management command.
-     * e.g. create \<FB name="START" type="E_RESTART"\> will result in the following data values:
-     *    - mCMD = 0x30
-     *    - mDestination = ""
-     *    - mFistParam = "START"
-     *    - mSecondParam = "E_RESTART"
-     *    - mAdditionalParams = ""
-     */
-    struct SManagementCMD {
-        /*!\brief An identification number for the requested command based on the definitons in the standard.
-         *
-         * See the constants in devadmin.h for the available commands
-         */
-        EMGMCommandType mCMD;
+  /*!\brief All the data necessary for processing a management command.
+   *
+   * The data of this structure is the internal FORTE representation of an IEC 61499 management command.
+   * e.g. create \<FB name="START" type="E_RESTART"\> will result in the following data values:
+   *    - mCMD = 0x30
+   *    - mDestination = ""
+   *    - mFistParam = "START"
+   *    - mSecondParam = "E_RESTART"
+   *    - mAdditionalParams = ""
+   */
+  struct SManagementCMD {
+      /*!\brief An identification number for the requested command based on the definitons in the standard.
+       *
+       * See the constants in devadmin.h for the available commands
+       */
+      EMGMCommandType mCMD;
 
-        /*!\brief The destination of the command.
-         *
-         * if the destination is scmInvalidStringID device is the target.
-         * Otherwise a the TStringId of the resource's name the command
-         * should be exectued in is the target.
-         * FIXME if more than the resource should be supported (e.g. composite FBs) the type needs to be changed .
-         */
-        forte::core::StringId mDestination;
+      /*!\brief The destination of the command.
+       *
+       * if the destination is scmInvalidStringID device is the target.
+       * Otherwise a the TStringId of the resource's name the command
+       * should be exectued in is the target.
+       * FIXME if more than the resource should be supported (e.g. composite FBs) the type needs to be changed .
+       */
+      forte::StringId mDestination;
 
-        /*!\brief The first parameter of the command e.g. the FB name to create or the src of an connection.
-         *
-         * The data is stored as an array TStringIds for the hierarchical FB name identifier (e.g., SubApp1.FB, CFB.FB,
-         * FB.Port) Each level is stored as one entry in the vector. Top hierarchy is the first entry.
-         */
-        TNameIdentifier mFirstParam;
+      /*!\brief The first parameter of the command e.g. the FB name to create or the src of an connection.
+       *
+       * The data is stored as an array TStringIds for the hierarchical FB name identifier (e.g., SubApp1.FB, CFB.FB,
+       * FB.Port) Each level is stored as one entry in the vector. Top hierarchy is the first entry.
+       */
+      TNameIdentifier mFirstParam;
 
-        /*!\brief The second parameter of the command e.g. the FB name to create or the src of an connection.
-         *
-         * The data is stored as an array TStringIds for the hierarchical FB name identifier (e.g., SubApp1.FB, CFB.FB,
-         * FB.Port) Each level is stored as one entry in the vector. Top hierarchy is the first entry.
-         */
-        TNameIdentifier mSecondParam;
+      /*!\brief The second parameter of the command e.g. the FB name to create or the src of an connection.
+       *
+       * The data is stored as an array TStringIds for the hierarchical FB name identifier (e.g., SubApp1.FB, CFB.FB,
+       * FB.Port) Each level is stored as one entry in the vector. Top hierarchy is the first entry.
+       */
+      TNameIdentifier mSecondParam;
 
-        /*!\brief Additional params needed by a MGM command (e.g., to return results of query commands)
-         */
-        std::string mAdditionalParams;
+      /*!\brief Additional params needed by a MGM command (e.g., to return results of query commands)
+       */
+      std::string mAdditionalParams;
 
-        /*\brief pointer to the ID to generate the correct response */
-        char *mID;
+      /*\brief pointer to the ID to generate the correct response */
+      char *mID;
 
-        /*\brief pointer to the response to generate the correct response */
-        std::string mMonitorResponse;
-    };
-
-  } // namespace core
+      /*\brief pointer to the response to generate the correct response */
+      std::string mMonitorResponse;
+  };
 } // namespace forte

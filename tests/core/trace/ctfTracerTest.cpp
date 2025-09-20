@@ -26,7 +26,7 @@
 #include "forte/mgmcmdstruct.h"
 #include "../../../../core/src/trace/barectf_platform_forte.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 // ******************************* //
 // * Helper Methods Declarations * //
@@ -42,8 +42,8 @@ namespace {
    *
    * @return the created device wuth the network of FB in it
    */
-  std::unique_ptr<CDevice> createExampleDevice(forte::core::StringId paResourceName,
-                                               forte::core::StringId paDeviceName = "MyDevice"_STRID);
+  std::unique_ptr<CDevice> createExampleDevice(forte::StringId paResourceName,
+                                               forte::StringId paDeviceName = "MyDevice"_STRID);
 } // namespace
 
 BOOST_AUTO_TEST_SUITE(tracer_test)
@@ -193,8 +193,7 @@ BOOST_AUTO_TEST_SUITE_END()
 
 namespace {
 
-  std::unique_ptr<CDevice> createExampleDevice(forte::core::StringId paResourceName,
-                                               forte::core::StringId paDeviceName) {
+  std::unique_ptr<CDevice> createExampleDevice(forte::StringId paResourceName, forte::StringId paDeviceName) {
     auto device = std::make_unique<CTesterDevice>(paDeviceName);
 
     BOOST_TEST_INFO("Create Resource");
@@ -215,7 +214,7 @@ namespace {
     BOOST_TEST_INFO("Create E_SWITCH");
     BOOST_CHECK(EMGMResponse::Ready == resource->createFB(switchInstanceName, "iec61499::events::E_SWITCH"_STRID, ""));
 
-    forte::core::SManagementCMD command;
+    forte::SManagementCMD command;
     command.mCMD = EMGMCommandType::CreateConnection;
     command.mDestination = {};
 

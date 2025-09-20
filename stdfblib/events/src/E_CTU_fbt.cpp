@@ -13,7 +13,7 @@
 
 #include "forte/iec61499/events/E_CTU_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_uint.h"
 #include "forte/datatypes/forte_bool.h"
@@ -47,7 +47,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_CTU::FORTE_E_CTU(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_CTU::FORTE_E_CTU(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CUO(*this, 0),
     conn_RO(*this, 1),

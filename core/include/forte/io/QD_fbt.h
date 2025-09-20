@@ -21,9 +21,9 @@
 
 /*! /brief generic class for QD function blocks providing access to one double word physical output
  */
-class FORTE_QD final : public forte::core::io::COutputFB<CIEC_DWORD> {
+class FORTE_QD final : public forte::io::COutputFB<CIEC_DWORD> {
     DECLARE_FIRMWARE_FB(FORTE_QD)
 
   public:
-    FORTE_QD(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_QD(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 };

@@ -19,7 +19,7 @@
 
 #include "PLCnextAXLSESC.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "PLCnextBusAdapter.h"
 #include "forte/iec61131_functions.h"
@@ -53,8 +53,7 @@ namespace {
   };
 } // namespace
 
-FORTE_PLCnextAXLSESC::FORTE_PLCnextAXLSESC(const forte::core::StringId paInstanceNameId,
-                                           forte::core::CFBContainer &paContainer) :
+FORTE_PLCnextAXLSESC::FORTE_PLCnextAXLSESC(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     PLCnextSlaveHandler(PLCnextSlaveHandler::NoUsage, paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_QO(0_BOOL),

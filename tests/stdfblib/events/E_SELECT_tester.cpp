@@ -15,7 +15,7 @@
 #include "forte/iec61131_functions.h"
 #include "forte/datatypes/forte_bool.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 struct E_SELECT_TestFixture : public CFBTestFixtureBase {
 

@@ -14,7 +14,7 @@
 #include "forte/device.h"
 #include "forte/mgmcmdstruct.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::reconfiguration;
 
@@ -42,8 +42,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ST_REC_CONN::FORTE_ST_REC_CONN(const forte::core::StringId paInstanceNameId,
-                                     forte::core::CFBContainer &paContainer) :
+FORTE_ST_REC_CONN::FORTE_ST_REC_CONN(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_QI(nullptr),
@@ -89,25 +88,25 @@ void FORTE_ST_REC_CONN::executeEvent(TEventID paEIID, CEventChainExecutionThread
 }
 
 void FORTE_ST_REC_CONN::executeRQST() {
-  forte::core::SManagementCMD theCommand;
+  forte::SManagementCMD theCommand;
   // delete old connection
-  theCommand.mDestination = forte::core::StringId::lookup(var_DST.getValue());
-  theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_OLD_SRC_FB.getValue()));
-  theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_OLD_SRC_FB_OUT.getValue()));
-  theCommand.mSecondParam.push_back(forte::core::StringId::lookup(var_OLD_DST_FB.getValue()));
-  theCommand.mSecondParam.push_back(forte::core::StringId::lookup(var_OLD_DST_FB_IN.getValue()));
+  theCommand.mDestination = forte::StringId::lookup(var_DST.getValue());
+  theCommand.mFirstParam.push_back(forte::StringId::lookup(var_OLD_SRC_FB.getValue()));
+  theCommand.mFirstParam.push_back(forte::StringId::lookup(var_OLD_SRC_FB_OUT.getValue()));
+  theCommand.mSecondParam.push_back(forte::StringId::lookup(var_OLD_DST_FB.getValue()));
+  theCommand.mSecondParam.push_back(forte::StringId::lookup(var_OLD_DST_FB_IN.getValue()));
   theCommand.mCMD = EMGMCommandType::DeleteConnection;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
   if (resp == EMGMResponse::Ready) {
     // create new connection
-    theCommand.mDestination = forte::core::StringId::lookup(var_DST.getValue());
+    theCommand.mDestination = forte::StringId::lookup(var_DST.getValue());
     theCommand.mFirstParam.clear();
-    theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_NEW_SRC_FB.getValue()));
-    theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_NEW_SRC_FB_OUT.getValue()));
-    theCommand.mSecondParam.push_back(forte::core::StringId::lookup(var_NEW_DST_FB.getValue()));
-    theCommand.mSecondParam.push_back(forte::core::StringId::lookup(var_NEW_DST_FB_IN.getValue()));
+    theCommand.mFirstParam.push_back(forte::StringId::lookup(var_NEW_SRC_FB.getValue()));
+    theCommand.mFirstParam.push_back(forte::StringId::lookup(var_NEW_SRC_FB_OUT.getValue()));
+    theCommand.mSecondParam.push_back(forte::StringId::lookup(var_NEW_DST_FB.getValue()));
+    theCommand.mSecondParam.push_back(forte::StringId::lookup(var_NEW_DST_FB_IN.getValue()));
     theCommand.mCMD = EMGMCommandType::CreateConnection;
     resp = getDevice()->executeMGMCommand(theCommand);
   }

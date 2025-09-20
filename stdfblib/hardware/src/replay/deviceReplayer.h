@@ -27,7 +27,7 @@ class CFunctionBlock;
 class CDevice;
 class CResource;
 
-namespace forte::core {
+namespace forte {
   class CFBContainer;
 }
 

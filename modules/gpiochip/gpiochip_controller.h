@@ -14,12 +14,12 @@
 
 #include "forte/io/device/io_controller.h"
 
-class GPIOChipController : public forte::core::io::IODeviceController {
+class GPIOChipController : public forte::io::IODeviceController {
   public:
     explicit GPIOChipController(CDeviceExecution &paDeviceExecution) :
-        forte::core::io::IODeviceController(paDeviceExecution) {};
+        forte::io::IODeviceController(paDeviceExecution) {};
 
-    struct Config : forte::core::io::IODeviceController::Config {
+    struct Config : forte::io::IODeviceController::Config {
         unsigned int mChipNumber = 0;
         unsigned int mLineNumber = 0;
         enum ReadWriteMode { Input, PushPull, OpenDrain, OpenSource } mReadWriteMode = Input;
@@ -27,19 +27,18 @@ class GPIOChipController : public forte::core::io::IODeviceController {
         bool mActiveLow = false;
     };
 
-    using forte::core::io::IODeviceController::HandleDescriptor;
+    using forte::io::IODeviceController::HandleDescriptor;
 
-    void setConfig(struct forte::core::io::IODeviceController::Config *paConfig) override {
+    void setConfig(struct forte::io::IODeviceController::Config *paConfig) override {
       mConfig = *static_cast<Config *>(paConfig);
     }
 
-    bool isHandleValueEqual(forte::core::io::IOHandle &) override {
+    bool isHandleValueEqual(forte::io::IOHandle &) override {
       return false;
     }
 
-    void handleChangeEvent(forte::core::io::IOHandle *paHandle) override;
-    forte::core::io::IOHandle *
-    initHandle(forte::core::io::IODeviceController::HandleDescriptor *paHandleDescriptor) override;
+    void handleChangeEvent(forte::io::IOHandle *paHandle) override;
+    forte::io::IOHandle *initHandle(forte::io::IODeviceController::HandleDescriptor *paHandleDescriptor) override;
 
   protected:
     const char *init() override;

@@ -24,7 +24,7 @@ namespace forte::iec61499::net {
   class GEN_SUBL : public GEN_SUBSCRIBE {
       DECLARE_GENERIC_FIRMWARE_FB(GEN_SUBL)
     public:
-      GEN_SUBL(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      GEN_SUBL(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       bool configureFB(const char *paConfigString) override;
 

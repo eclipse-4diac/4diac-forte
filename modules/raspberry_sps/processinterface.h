@@ -21,9 +21,9 @@
 class CProcessInterface : public CI2CProcessInterface {
 
   public:
-    CProcessInterface(forte::core::CFBContainer &paContainer,
+    CProcessInterface(forte::CFBContainer &paContainer,
                       const SFBInterfaceSpec &paInterfaceSpec,
-                      const forte::core::StringId paInstanceNameId);
+                      const forte::StringId paInstanceNameId);
     ~CProcessInterface() override;
 
   protected:

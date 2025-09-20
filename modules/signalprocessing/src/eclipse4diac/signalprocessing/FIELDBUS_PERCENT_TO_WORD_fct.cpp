@@ -17,7 +17,7 @@
 
 #include "forte/eclipse4diac/signalprocessing/FIELDBUS_PERCENT_TO_WORD_fct.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_real.h"
 #include "forte/datatypes/forte_udint.h"
@@ -54,7 +54,7 @@ namespace {
 } // namespace
 
 FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD::FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD(
-    const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_RI(nullptr),

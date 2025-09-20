@@ -18,7 +18,7 @@
 #include "forte/datatypes/forte_wstring.h"
 #include "forte/io/configFB/io_configFB_controller.h"
 
-class GPIOChipConfigFB : public forte::core::io::IOConfigFBController {
+class GPIOChipConfigFB : public forte::io::IOConfigFBController {
     DECLARE_FIRMWARE_FB(GPIOChipConfigFB)
 
   private:
@@ -68,14 +68,14 @@ class GPIOChipConfigFB : public forte::core::io::IOConfigFBController {
     void writeOutputData(TEventID paEIID) override;
 
   protected:
-    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution);
+    forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution);
 
     void setConfig();
 
     void onStartup(CEventChainExecutionThread *const paECET) override;
 
   public:
-    GPIOChipConfigFB(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    GPIOChipConfigFB(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
 }
 }
 ;

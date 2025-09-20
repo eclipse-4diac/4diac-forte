@@ -53,7 +53,7 @@ class FORTE_FieldsToPublishEvent : public CBasicFB {
     virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_FieldsToPublishEvent(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_FieldsToPublishEvent(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
 
         ~FORTE_FieldsToPublishEvent() override = default;
 };

@@ -33,11 +33,11 @@ using namespace std::string_literals;
 
 namespace {
   class HTTP_ServerPortOption final
-      : public forte::core::util::CommandLineParser::IntOptionImpl<TForteUInt16,
-                                                                   "Hp",
-                                                                   "http-listen-port",
-                                                                   "<port>",
-                                                                   "Set the listening port for the HTTP server"> {
+      : public forte::util::CommandLineParser::IntOptionImpl<TForteUInt16,
+                                                             "Hp",
+                                                             "http-listen-port",
+                                                             "<port>",
+                                                             "Set the listening port for the HTTP server"> {
     public:
       bool setOption(const TForteUInt16 paArgument) override {
         mArgument = paArgument;

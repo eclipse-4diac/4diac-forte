@@ -19,7 +19,7 @@
 
 #include "forte/eclipse4diac/utils/signals/E_BLINK_TRAIN_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/iec61131_functions.h"
 #include "forte/datatypes/forte_array_common.h"
@@ -73,8 +73,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_BLINK_TRAIN::FORTE_E_BLINK_TRAIN(const forte::core::StringId paInstanceNameId,
-                                         forte::core::CFBContainer &paContainer) :
+FORTE_E_BLINK_TRAIN::FORTE_E_BLINK_TRAIN(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_TP("E_TP"_STRID, *this),
     fb_E_TRAIN("E_TRAIN"_STRID, *this),

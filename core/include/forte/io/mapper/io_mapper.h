@@ -22,38 +22,34 @@
 #include <string>
 #include "forte/arch/forte_sync.h"
 
-namespace forte {
-  namespace core {
-    namespace io {
+namespace forte::io {
 
-      class IOHandle;
-      class IOObserver;
+  class IOHandle;
+  class IOObserver;
 
-      class IOMapper {
-          DECLARE_SINGLETON(IOMapper)
+  class IOMapper {
+      DECLARE_SINGLETON(IOMapper)
 
-        public:
-          enum Direction { UnknownDirection, In, Out, InOut };
+    public:
+      enum Direction { UnknownDirection, In, Out, InOut };
 
-          bool registerHandle(std::string const &paId, IOHandle &paHandle);
-          void deregisterHandle(IOHandle &paHandle);
-          void deregisterHandle(std::string const &paId);
+      bool registerHandle(std::string const &paId, IOHandle &paHandle);
+      void deregisterHandle(IOHandle &paHandle);
+      void deregisterHandle(std::string const &paId);
 
-          bool registerObserver(std::string const &paId, IOObserver *paObserver);
-          void deregisterObserver(IOObserver *paObserver);
+      bool registerObserver(std::string const &paId, IOObserver *paObserver);
+      void deregisterObserver(IOObserver *paObserver);
 
-        private:
-          typedef std::map<std::string, IOHandle *> THandleMap;
-          THandleMap mHandles;
+    private:
+      typedef std::map<std::string, IOHandle *> THandleMap;
+      THandleMap mHandles;
 
-          typedef std::map<std::string, IOObserver *> TObserverMap;
-          TObserverMap mObservers;
+      typedef std::map<std::string, IOObserver *> TObserverMap;
+      TObserverMap mObservers;
 
-          CSyncObject mSyncMutex;
-      };
+      CSyncObject mSyncMutex;
+  };
 
-    } // namespace io
-  } // namespace core
-} // namespace forte
+} // namespace forte::io
 
 #endif /* SRC_CORE_IO_MAPPER_MAPPER_H_ */

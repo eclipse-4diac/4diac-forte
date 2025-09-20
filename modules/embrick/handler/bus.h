@@ -31,7 +31,7 @@ const unsigned int TransferBufferLength = 150;
 const unsigned int SyncGapMultiplicator = 15;
 const unsigned int SyncGapDuration = (SyncGapMultiplicator - 1) * 36 + 10;
 
-class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
+class EmbrickBusHandler : public forte::io::IODeviceMultiController {
     friend class EmbrickSlaveHandler;
 
   public:
@@ -62,7 +62,7 @@ class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
       Data = 10,
     };
 
-    struct Config : forte::core::io::IODeviceController::Config {
+    struct Config : forte::io::IODeviceController::Config {
         unsigned int
             mBusInterface; //!< Selects the SPI interface for the brickBUS. The default value is 1 (selects SPI1).
         unsigned int mBusSelectPin; //!< Sets the pin, which is connect to the slave select pin of the brickBUS.
@@ -74,39 +74,38 @@ class EmbrickBusHandler : public forte::core::io::IODeviceMultiController {
 
     enum HandleType { Bit, Analog, Analog10 };
 
-    class HandleDescriptor : public forte::core::io::IODeviceMultiController::HandleDescriptor {
+    class HandleDescriptor : public forte::io::IODeviceMultiController::HandleDescriptor {
       public:
         HandleType mType;
         uint8_t mOffset;
         uint8_t mPosition;
 
         HandleDescriptor(std::string const &paId,
-                         forte::core::io::IOMapper::Direction paDirection,
+                         forte::io::IOMapper::Direction paDirection,
                          size_t paSlaveIndex,
                          HandleType paType,
                          uint8_t paOffset,
                          uint8_t paPosition) :
-            forte::core::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
+            forte::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
             mType(paType),
             mOffset(paOffset),
             mPosition(paPosition) {
         }
     };
 
-    void setConfig(struct forte::core::io::IODeviceController::Config *paConfig) override;
+    void setConfig(struct forte::io::IODeviceController::Config *paConfig) override;
 
     EmbrickSlaveHandler *getSlave(size_t paIndex);
     void forceUpdate(size_t paIndex);
 
-    void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) override;
+    void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::io::IOHandle> paHandle) override;
     void dropSlaveHandles(size_t paIndex) override;
 
   protected:
     const char *init() override;
     void deInit() override;
 
-    forte::core::io::IOHandle *
-    createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
+    forte::io::IOHandle *createIOHandle(forte::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
     void prepareLoop();
     void runLoop() override;

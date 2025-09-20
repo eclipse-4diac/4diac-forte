@@ -33,7 +33,7 @@ using namespace Arp::Device::Interface::Services;
 using namespace Arp::System::Commons::Diagnostics::Logging;
 
 namespace {
-  [[maybe_unused]] const forte::core::StartupHookRegistry::EntryImpl<DeviceStatus::startup> entry;
+  [[maybe_unused]] const forte::StartupHookRegistry::EntryImpl<DeviceStatus::startup> entry;
 }
 
 volatile bool DeviceStatus::started = false;

@@ -23,7 +23,7 @@ namespace forte::iec61499::events {
   class FORTE_E_CYCLE : public CTimedFB {
       DECLARE_FIRMWARE_FB(FORTE_E_CYCLE)
     public:
-      FORTE_E_CYCLE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+      FORTE_E_CYCLE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
           CTimedFB(paInstanceNameId, paContainer) {
       }
 

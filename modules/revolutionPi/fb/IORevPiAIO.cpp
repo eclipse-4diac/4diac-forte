@@ -13,18 +13,18 @@
 
 #include "IORevPiAIO.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "../RevPiController.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_IORevPiAIO, "IORevPiAIO"_STRID)
 
 namespace {
-  const auto cDataInputNames =
-      std::array{"QI"_STRID,    "AnalogInput_1"_STRID, "AnalogInput_2"_STRID,  "AnalogInput_3"_STRID, "AnalogInput_4"_STRID,
-                 "RTD_1"_STRID, "RTD_2"_STRID,         "AnalogOutput_1"_STRID, "AnalogOutput_2"_STRID};
+  const auto cDataInputNames = std::array{
+      "QI"_STRID,    "AnalogInput_1"_STRID, "AnalogInput_2"_STRID,  "AnalogInput_3"_STRID, "AnalogInput_4"_STRID,
+      "RTD_1"_STRID, "RTD_2"_STRID,         "AnalogOutput_1"_STRID, "AnalogOutput_2"_STRID};
   const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
   const auto cEventInputNames = std::array{"MAP"_STRID};
   const auto cEventOutputNames = std::array{"MAPO"_STRID, "IND"_STRID};
@@ -47,8 +47,7 @@ namespace {
 const TForteUInt8 FORTE_IORevPiAIO::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 FORTE_IORevPiAIO::scmSlaveConfigurationIONum = 0;
 
-FORTE_IORevPiAIO::FORTE_IORevPiAIO(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+FORTE_IORevPiAIO::FORTE_IORevPiAIO(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     IOConfigFBMultiSlave(
         scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 103, paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_MAPO(*this, 0),

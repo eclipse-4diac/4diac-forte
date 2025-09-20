@@ -16,7 +16,7 @@
 
 #include "forte/iec61131/charString/F_REPLACE_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::charString;
 
@@ -40,7 +40,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_REPLACE::FORTE_F_REPLACE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_REPLACE::FORTE_F_REPLACE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_STRING_VARIANT()),
     var_IN2(CIEC_ANY_STRING_VARIANT()),

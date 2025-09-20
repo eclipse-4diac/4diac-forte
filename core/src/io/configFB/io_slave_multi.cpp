@@ -15,7 +15,7 @@
 
 #include "forte/iec61131_functions.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 const CIEC_WSTRING IOConfigFBMultiSlave::scmOK("OK");
 const CIEC_WSTRING IOConfigFBMultiSlave::scmStopped("Stopped");
@@ -26,9 +26,9 @@ const char *const IOConfigFBMultiSlave::scmIncorrectType("Module type is incorre
 IOConfigFBMultiSlave::IOConfigFBMultiSlave(const TForteUInt8 *const paSlaveConfigurationIO,
                                            const TForteUInt8 paSlaveConfigurationIONum,
                                            int paType,
-                                           forte::core::CFBContainer &paContainer,
+                                           forte::CFBContainer &paContainer,
                                            const SFBInterfaceSpec &paInterfaceSpec,
-                                           const forte::core::StringId paInstanceNameId) :
+                                           const forte::StringId paInstanceNameId) :
     IOConfigFBBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mIndex(static_cast<size_t>(-1)),
     mSlaveConfigurationIO(paSlaveConfigurationIO),

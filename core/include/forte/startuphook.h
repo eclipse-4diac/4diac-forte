@@ -15,6 +15,6 @@
 
 #include "forte/util/hook.h"
 
-namespace forte::core {
+namespace forte {
   using StartupHookRegistry = util::hook::Registry<void, int, char **>;
 }

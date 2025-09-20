@@ -19,33 +19,33 @@
 
 class RevPiHandle;
 
-class RevPiController : public forte::core::io::IODeviceMultiController {
+class RevPiController : public forte::io::IODeviceMultiController {
   public:
     RevPiController(CDeviceExecution &paDeviceExecution);
 
-    struct Config : forte::core::io::IODeviceController::Config {
+    struct Config : forte::io::IODeviceController::Config {
         unsigned int updateInterval; //!< Sets the frequency for the data update cycle. The default value is 25 Hz.
     };
 
-    struct HandleDescriptor : forte::core::io::IODeviceMultiController::HandleDescriptor {
+    struct HandleDescriptor : forte::io::IODeviceMultiController::HandleDescriptor {
         CIEC_ANY::EDataTypeID mType;
         uint8_t mOffset;
         uint8_t mPosition;
 
         HandleDescriptor(std::string const &paID,
-                         forte::core::io::IOMapper::Direction paDirection,
+                         forte::io::IOMapper::Direction paDirection,
                          size_t paSlaveIndex,
                          CIEC_ANY::EDataTypeID paType,
                          uint8_t paOffset,
                          uint8_t paPosition) :
-            forte::core::io::IODeviceMultiController::HandleDescriptor(paID, paDirection, paSlaveIndex),
+            forte::io::IODeviceMultiController::HandleDescriptor(paID, paDirection, paSlaveIndex),
             mType(paType),
             mOffset(paOffset),
             mPosition(paPosition) {
         }
     };
 
-    void setConfig(struct forte::core::io::IODeviceController::Config *config);
+    void setConfig(struct forte::io::IODeviceController::Config *config);
 
     /*! @brief Adds a handle for a slave
      *
@@ -55,7 +55,7 @@ class RevPiController : public forte::core::io::IODeviceMultiController {
      * @param index Index/Position of the modular slave
      * @param handle Handle object which should be updated by the controller.
      */
-    void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> handle) override;
+    void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::io::IOHandle> handle) override;
 
     /*! @brief Drop all handles of a specific slave
      *
@@ -69,8 +69,7 @@ class RevPiController : public forte::core::io::IODeviceMultiController {
   protected:
     const char *init();
 
-    forte::core::io::IOHandle *
-    createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &handleDescriptor) override;
+    forte::io::IOHandle *createIOHandle(forte::io::IODeviceController::HandleDescriptor &handleDescriptor) override;
 
     void deInit();
 
@@ -98,7 +97,7 @@ class RevPiController : public forte::core::io::IODeviceMultiController {
      * @param handle Handle which should be compared to the previous IO state
      * @return True if the current state is equal to the previous IO state. In case it has changed, return false.
      */
-    virtual bool isHandleValueEqual(forte::core::io::IOHandle &handle);
+    virtual bool isHandleValueEqual(forte::io::IOHandle &handle);
 
   private:
     /*! @brief Checks if a slave exists at the given index

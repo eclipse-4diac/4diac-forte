@@ -12,7 +12,7 @@
  *******************************************************************************/
 #include "forte/eclipse4diac/rtevents/RT_E_CYCLE_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::rtevents;
 
@@ -38,8 +38,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_EO(*this, 0),
     conn_DT(nullptr),

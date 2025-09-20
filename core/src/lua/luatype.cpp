@@ -16,9 +16,8 @@
 
 namespace luatype {
   bool getAdapterInstanceDefinition(SAdapterInstanceDef &def, CLuaEngine *luaEngine, int index) {
-    def.mAdapterNameID = luaEngine->getField<forte::core::StringId, &CLuaEngine::getStringId>(index, "adapterNameID");
-    def.mAdapterTypeNameID =
-        luaEngine->getField<forte::core::StringId, &CLuaEngine::getStringId>(index, "adapterTypeNameID");
+    def.mAdapterNameID = luaEngine->getField<forte::StringId, &CLuaEngine::getStringId>(index, "adapterNameID");
+    def.mAdapterTypeNameID = luaEngine->getField<forte::StringId, &CLuaEngine::getStringId>(index, "adapterTypeNameID");
     def.mIsPlug = luaEngine->getField<bool, &CLuaEngine::getBoolean>(index, "isPlug");
     if (!def.mAdapterNameID || !def.mAdapterTypeNameID) {
       return false;
@@ -26,9 +25,9 @@ namespace luatype {
     return true;
   }
 
-  bool getTypeNameId(forte::core::StringId &id, CLuaEngine *luaEngine, int index) {
+  bool getTypeNameId(forte::StringId &id, CLuaEngine *luaEngine, int index) {
     switch (luaEngine->type(index)) {
-      case CLuaEngine::TNUMBER: id = luaEngine->getInteger<forte::core::StringId>(index); break;
+      case CLuaEngine::TNUMBER: id = luaEngine->getInteger<forte::StringId>(index); break;
       case CLuaEngine::TSTRING: id = luaEngine->getStringId(index); break;
       default: return false;
     }

@@ -12,7 +12,7 @@
 
 #include "forte/io/IB_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/iec61131_functions.h"
 #include "forte/datatypes/forte_array_common.h"
@@ -44,7 +44,7 @@ namespace {
   };
 } // namespace
 
-FORTE_IB::FORTE_IB(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_IB::FORTE_IB(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CProcessInterface(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_PARAMS(""_STRING),

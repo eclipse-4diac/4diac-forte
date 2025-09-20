@@ -35,7 +35,7 @@ namespace forte {
       {
       }
 
-      forte::core::CMonitoringHandler &getMonitoringHandler() {
+      forte::CMonitoringHandler &getMonitoringHandler() {
         return mMonitoringHandler;
       }
 
@@ -52,7 +52,7 @@ namespace forte {
 #endif
 
     private:
-      forte::core::CMonitoringHandler mMonitoringHandler;
+      forte::CMonitoringHandler mMonitoringHandler;
 
 #ifdef FORTE_TRACE_CTF
       CForteTracer mTracer;

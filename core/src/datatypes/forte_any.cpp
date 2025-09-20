@@ -17,18 +17,18 @@
  *******************************************************************************/
 #include "forte/datatypes/forte_any.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_real.h"
 #include "forte/datatypes/forte_lreal.h"
 #include "forte/util/devlog.h"
 
-forte::core::StringId CIEC_ANY::getTypeNameID() const {
+forte::StringId CIEC_ANY::getTypeNameID() const {
   return "ANY"_STRID;
 }
 
-forte::core::StringId CIEC_ANY::parseTypeName(const char *paValue, const char *paHashPos) {
-  return forte::core::StringId::lookup({paValue, static_cast<size_t>(paHashPos - paValue)});
+forte::StringId CIEC_ANY::parseTypeName(const char *paValue, const char *paHashPos) {
+  return forte::StringId::lookup({paValue, static_cast<size_t>(paHashPos - paValue)});
 }
 
 bool CIEC_ANY::isCastable(EDataTypeID paSource, EDataTypeID paDestination, bool &paUpCast, bool &paDownCast) {

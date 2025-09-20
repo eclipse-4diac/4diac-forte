@@ -18,7 +18,7 @@
 #include "forte/cominfra/comlayersmanager.h"
 
 using namespace forte::com_infra;
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 char COPC_UA_Event_Layer::smEmptyString[] = "";
 

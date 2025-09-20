@@ -17,7 +17,7 @@
 
 #include "forte/iec61131/conversion/F_TIME_IN_MS_TO_DINT_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_dint.h"
 #include "forte/datatypes/forte_lint.h"
@@ -53,8 +53,8 @@ namespace {
   };
 } // namespace
 
-FORTE_F_TIME_IN_MS_TO_DINT::FORTE_F_TIME_IN_MS_TO_DINT(const forte::core::StringId paInstanceNameId,
-                                                       forte::core::CFBContainer &paContainer) :
+FORTE_F_TIME_IN_MS_TO_DINT::FORTE_F_TIME_IN_MS_TO_DINT(const forte::StringId paInstanceNameId,
+                                                       forte::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_CNF(*this, 0),
     conn_IN(nullptr),

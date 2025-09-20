@@ -15,7 +15,7 @@
 #include "EBSlave2301.h"
 #include "../handler/bus.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_EBSlave2301, "EBSlave2301"_STRID)
 
@@ -41,8 +41,7 @@ namespace {
   };
 } // namespace
 
-FORTE_EBSlave2301::FORTE_EBSlave2301(const forte::core::StringId paInstanceNameId,
-                                     forte::core::CFBContainer &paContainer) :
+FORTE_EBSlave2301::FORTE_EBSlave2301(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     EmbrickSlave(scmSlaveConfigurationIO,
                  scmSlaveConfigurationIONum,
                  EmbrickSlaveHandler::G_2RelNo4RelCo,
@@ -170,7 +169,7 @@ void FORTE_EBSlave2301::initHandles() {
 
   for (int i = 0; i < oCount; i++) {
     EmbrickBusHandler::HandleDescriptor desc = EmbrickBusHandler::HandleDescriptor(
-        static_cast<CIEC_WSTRING *>(getDI(oOffset + i))->getValue(), forte::core::io::IOMapper::Out, mIndex,
+        static_cast<CIEC_WSTRING *>(getDI(oOffset + i))->getValue(), forte::io::IOMapper::Out, mIndex,
         EmbrickBusHandler::Bit, (uint8_t) (i / 8), (uint8_t) (i % 8));
     initHandle(desc);
   }

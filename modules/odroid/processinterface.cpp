@@ -12,9 +12,9 @@
 
 #include "core/fmi/processinterface.h"
 
-COdroidProcessInterface::COdroidProcessInterface(forte::core::CFBContainer &paContainer,
+COdroidProcessInterface::COdroidProcessInterface(forte::CFBContainer &paContainer,
                                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                                 const forte::core::StringId paInstanceNameId) :
+                                                 const forte::StringId paInstanceNameId) :
     CSysFsProcessInterface(paContainer, paInterfaceSpec, paInstanceNameId) {
 }
 

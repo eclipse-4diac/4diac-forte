@@ -12,7 +12,7 @@
  *******************************************************************************/
 #include "forte/eclipse4diac/rtevents/RT_E_SPLIT_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::rtevents;
 
@@ -39,8 +39,7 @@ namespace {
   };
 } // namespace
 
-FORTE_RT_E_SPLIT::FORTE_RT_E_SPLIT(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+FORTE_RT_E_SPLIT::FORTE_RT_E_SPLIT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_EO1(*this, 1),

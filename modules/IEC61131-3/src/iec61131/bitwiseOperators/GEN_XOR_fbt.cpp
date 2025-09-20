@@ -20,13 +20,13 @@
 
 #include "forte/iec61131_functions.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::bitwiseOperators;
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_XOR, "iec61131::bitwiseOperators::GEN_XOR"_STRID)
 
-GEN_XOR::GEN_XOR(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_XOR::GEN_XOR(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CGenBitBase(paInstanceNameId, paContainer) {
 }
 

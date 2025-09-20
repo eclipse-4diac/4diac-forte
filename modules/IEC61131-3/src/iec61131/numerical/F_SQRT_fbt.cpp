@@ -16,7 +16,7 @@
 
 #include "forte/iec61131/numerical/F_SQRT_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::numerical;
 
@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_SQRT::FORTE_F_SQRT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_SQRT::FORTE_F_SQRT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_REAL_VARIANT()),
     var_OUT(CIEC_ANY_REAL_VARIANT()),

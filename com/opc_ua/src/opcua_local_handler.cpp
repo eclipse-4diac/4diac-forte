@@ -47,11 +47,11 @@ using namespace std::string_literals;
 
 namespace {
   class OpcuaServerPortOption final
-      : public forte::core::util::CommandLineParser::IntOptionImpl<TForteUInt16,
-                                                                   "op",
-                                                                   "opc_ua-listen-port",
-                                                                   "<port>",
-                                                                   "Set the listening port for the OPC UA connection"> {
+      : public forte::util::CommandLineParser::IntOptionImpl<TForteUInt16,
+                                                             "op",
+                                                             "opc_ua-listen-port",
+                                                             "<port>",
+                                                             "Set the listening port for the OPC UA connection"> {
     public:
       bool setOption(const TForteUInt16 paArgument) override {
         mArgument = paArgument;

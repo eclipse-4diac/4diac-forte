@@ -13,7 +13,7 @@
 #include "forte/io/eIO/eIWconfig_fbt.h"
 #include "forte/io/eIO/eIW_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   const auto cEventInputNames = std::array{"CONF"_STRID};
@@ -37,7 +37,7 @@ namespace {
 
 DEFINE_FIRMWARE_FB(FORTE_eIWconfig, "eIWconfig"_STRID)
 
-FORTE_eIWconfig::FORTE_eIWconfig(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_eIWconfig::FORTE_eIWconfig(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CeConfigFB(paInstanceNameId, cFBInterfaceSpec, paContainer),
     var_ST(0_WORD),
     var_BT(0_WORD),

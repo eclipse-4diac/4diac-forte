@@ -18,11 +18,11 @@
 #include "forte/funcbloc.h"
 #include "typelib_internal.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte;
 
-CAnyAdapterPin::CAnyAdapterPin(forte::core::StringId paInstanceNameId) : mInstanceNameId(paInstanceNameId) {
+CAnyAdapterPin::CAnyAdapterPin(forte::StringId paInstanceNameId) : mInstanceNameId(paInstanceNameId) {
 }
 
 CAnyAdapterPin::~CAnyAdapterPin() {
@@ -35,8 +35,8 @@ void CAnyAdapterPin::createConfiguredAdapter(CAdapter *paPeer,
                                              TForteUInt8 paParentAdapterlistID) {
   removeConfiguredAdapter();
   EMGMResponse errorMSG;
-  mConfiguredAdapter = std::unique_ptr<CAdapter>(forte::core::createAdapter(
-      mInstanceNameId, paPeer->getFBTypeId(), paParent, paIsPlug, paParentAdapterlistID, errorMSG));
+  mConfiguredAdapter = std::unique_ptr<CAdapter>(forte::createAdapter(mInstanceNameId, paPeer->getFBTypeId(), paParent,
+                                                                      paIsPlug, paParentAdapterlistID, errorMSG));
 
   if (mConfiguredAdapter) {
     paParent.addFB(*mConfiguredAdapter);
@@ -50,7 +50,7 @@ void CAnyAdapterPin::removeConfiguredAdapter() {
   }
 }
 
-CAnyPlugPin::CAnyPlugPin(forte::core::StringId paInstanceNameId,
+CAnyPlugPin::CAnyPlugPin(forte::StringId paInstanceNameId,
                          CFunctionBlock &paParentFB,
                          TForteUInt8 paParentAdapterlistID) :
     CAnyAdapterPin(paInstanceNameId),
@@ -61,7 +61,7 @@ forte::CAdapter *CAnyPlugPin::getAdapterBlock() {
   return mConfiguredAdapter.get();
 }
 
-forte::core::StringId CAnyPlugPin::getAdapterTypeId() const {
+forte::StringId CAnyPlugPin::getAdapterTypeId() const {
   return (mConfiguredAdapter) ? mConfiguredAdapter->getFBTypeId() : "ANY_ADAPTER"_STRID;
 }
 
@@ -80,7 +80,7 @@ void CAnyPlugPin::setPeer(CAdapter *paPeer) {
   }
 }
 
-CAnySocketPin::CAnySocketPin(forte::core::StringId paInstanceNameId,
+CAnySocketPin::CAnySocketPin(forte::StringId paInstanceNameId,
                              CFunctionBlock &paParentFB,
                              TForteUInt8 paParentAdapterlistID) :
     CAnyAdapterPin(paInstanceNameId),
@@ -92,7 +92,7 @@ forte::CAdapter *CAnySocketPin::getAdapterBlock() {
   return mConfiguredAdapter.get();
 }
 
-forte::core::StringId CAnySocketPin::getAdapterTypeId() const {
+forte::StringId CAnySocketPin::getAdapterTypeId() const {
   return (mConfiguredAdapter) ? mConfiguredAdapter->getFBTypeId() : "ANY_ADAPTER"_STRID;
 }
 

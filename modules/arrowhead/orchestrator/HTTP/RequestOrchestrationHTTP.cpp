@@ -12,7 +12,7 @@
 
 #include "RequestOrchestrationHTTP.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_RequestOrchestrationHTTP, "RequestOrchestrationHTTP"_STRID)
 

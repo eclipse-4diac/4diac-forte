@@ -42,7 +42,7 @@ namespace forte::eclipse4diac::utils {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_OUT_ANY_CONSOLE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      FORTE_OUT_ANY_CONSOLE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       CIEC_BOOL var_QI;
       CIEC_STRING var_LABEL;

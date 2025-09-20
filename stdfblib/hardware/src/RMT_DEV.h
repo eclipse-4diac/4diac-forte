@@ -40,8 +40,8 @@ class RMT_DEV : public CDevice {
     void setMGR_ID(std::string_view paVal);
 
   private:
-    static const forte::core::StringId scmDINameIds[];
-    static const forte::core::StringId scmDIDataTypeIds[];
+    static const forte::StringId scmDINameIds[];
+    static const forte::StringId scmDIDataTypeIds[];
 
     CIEC_ANY *getDI(size_t) override;
     CDataConnection **getDIConUnchecked(TPortId) override;

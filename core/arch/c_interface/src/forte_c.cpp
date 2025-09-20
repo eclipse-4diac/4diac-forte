@@ -70,9 +70,9 @@ FORTE_STATUS forteStartInstanceGeneric(int argc, char *argv[], TForteInstance *p
     return FORTE_ARCHITECTURE_NOT_READY;
   }
 
-  const std::string ipPort = forte::core::util::CommandLineParser::parseCommandLineArguments(argc, argv);
+  const std::string ipPort = forte::util::CommandLineParser::parseCommandLineArguments(argc, argv);
   if (ipPort.empty() || ipPort.find(':') == std::string::npos) {
-    forte::core::util::CommandLineParser::listHelp();
+    forte::util::CommandLineParser::listHelp();
     return FORTE_WRONG_PARAMETERS;
   }
 

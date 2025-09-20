@@ -22,7 +22,7 @@
 
 class CTesterDevice : public CDevice {
   public:
-    CTesterDevice(const forte::core::StringId paInstanceNameId = {});
+    CTesterDevice(const forte::StringId paInstanceNameId = {});
 
     void awaitShutdown() override {
       // nothing to be done to join
@@ -41,7 +41,7 @@ class CTesterDevice : public CDevice {
     }
 
   private:
-    forte::core::CInternalFB<EMB_RES> mResource;
+    forte::CInternalFB<EMB_RES> mResource;
 
     constexpr static SFBInterfaceSpec scTestDevSpec = {};
 };

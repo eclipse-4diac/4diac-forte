@@ -21,12 +21,12 @@
 #include "forte/util/string_utils.h"
 #include "forte/iec61131_functions.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
-  static const forte::core::StringId eventInputNames[] = {"REQ"_STRID};
-  static const forte::core::StringId eventOutputNames[] = {"CNF"_STRID};
-  static const forte::core::StringId dataOutputNames[] = {"OUT"_STRID};
+  static const forte::StringId eventInputNames[] = {"REQ"_STRID};
+  static const forte::StringId eventOutputNames[] = {"CNF"_STRID};
+  static const forte::StringId dataOutputNames[] = {"OUT"_STRID};
 
 } // namespace
 
@@ -34,7 +34,7 @@ using namespace forte::iec61131::arithmetic;
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_ADD, "iec61131::arithmetic::GEN_ADD"_STRID)
 
-GEN_ADD::GEN_ADD(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_ADD::GEN_ADD(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_OUT(*this, 0, var_OUT) {
@@ -48,8 +48,8 @@ void GEN_ADD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const pa
           [](auto &&paOUT, auto &&paIN) -> CIEC_ANY_MAGNITUDE_VARIANT {
             using T = std::decay_t<decltype(paOUT)>;
             using U = std::decay_t<decltype(paIN)>;
-            using deductedType = typename forte::core::mpl::get_add_operator_result_type<T, U>::type;
-            if constexpr (!std::is_same<deductedType, forte::core::mpl::NullType>::value) {
+            using deductedType = typename forte::mpl::get_add_operator_result_type<T, U>::type;
+            if constexpr (!std::is_same<deductedType, forte::mpl::NullType>::value) {
               return func_ADD(paOUT, paIN);
             }
             DEVLOG_ERROR("Adding incompatible types %s and %s\n", paOUT.getTypeNameID().data(),
@@ -81,7 +81,7 @@ bool GEN_ADD::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &
 
   pcPos++;
   // we have an underscore and it is the first underscore after ADD
-  unsigned int numDIs = static_cast<unsigned int>(forte::core::util::strtoul(pcPos, nullptr, 10));
+  unsigned int numDIs = static_cast<unsigned int>(forte::util::strtoul(pcPos, nullptr, 10));
   DEVLOG_DEBUG("DIs: %d;\n", numDIs);
 
   if (numDIs < 2) {

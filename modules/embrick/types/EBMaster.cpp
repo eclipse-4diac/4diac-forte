@@ -15,7 +15,7 @@
 #include "EBMaster.h"
 #include "../handler/bus.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_EBMaster, "EBMaster"_STRID)
 
@@ -42,9 +42,8 @@ namespace {
   };
 } // namespace
 
-FORTE_EBMaster::FORTE_EBMaster(const forte::core::StringId paInstanceNameId,
-                               forte::core::CFBContainer &paContainer) :
-    forte::core::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
+FORTE_EBMaster::FORTE_EBMaster(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+    forte::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_BusInterface(1_UINT),
     var_BusSelectPin(49_UINT),
     var_BusInitSpeed(300000_UDINT),
@@ -156,7 +155,7 @@ forte::IPlugPin *FORTE_EBMaster::getPlugPinUnchecked(size_t paIndex) {
   return (paIndex == 0) ? &var_BusAdapterOut : nullptr;
 }
 
-forte::core::io::IODeviceController *FORTE_EBMaster::createDeviceController(CDeviceExecution &paDeviceExecution) {
+forte::io::IODeviceController *FORTE_EBMaster::createDeviceController(CDeviceExecution &paDeviceExecution) {
   return new EmbrickBusHandler(paDeviceExecution);
 }
 
@@ -172,5 +171,5 @@ void FORTE_EBMaster::setConfig() {
 void FORTE_EBMaster::onStartup(CEventChainExecutionThread *const paECET) {
   var_BusAdapterOut->var_UpdateInterval = var_SlaveUpdateInterval;
 
-  forte::core::io::IOConfigFBMultiMaster::onStartup(paECET);
+  forte::io::IOConfigFBMultiMaster::onStartup(paECET);
 }

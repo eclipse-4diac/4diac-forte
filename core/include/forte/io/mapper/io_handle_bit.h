@@ -17,41 +17,37 @@
 #include "forte/io/mapper/io_handle.h"
 #include "forte/io/device/io_controller.h"
 
-namespace forte {
-  namespace core {
-    namespace io {
+namespace forte::io {
 
-      class IOHandleBit : public IOHandle {
-        public:
-          IOHandleBit(IODeviceController *paController,
-                      IOMapper::Direction paDirection,
-                      uint8_t paOffset,
-                      uint8_t paPosition,
-                      uint8_t *paImage);
+  class IOHandleBit : public IOHandle {
+    public:
+      IOHandleBit(IODeviceController *paController,
+                  IOMapper::Direction paDirection,
+                  uint8_t paOffset,
+                  uint8_t paPosition,
+                  uint8_t *paImage);
 
-          void set(const CIEC_ANY &) override;
-          void get(CIEC_ANY &) override;
+      void set(const CIEC_ANY &) override;
+      void get(CIEC_ANY &) override;
 
-          bool equal(unsigned char *paOldImage) const;
+      bool equal(unsigned char *paOldImage) const;
 
-        protected:
-          void onObserver(IOObserver *paObserver) override;
+    protected:
+      void onObserver(IOObserver *paObserver) override;
 
-          void dropObserver() override;
+      void dropObserver() override;
 
-          virtual void reset() {
-            set(CIEC_BOOL());
-          }
+      virtual void reset() {
+        set(CIEC_BOOL());
+      }
 
-          const uint8_t mOffset;
-          const uint8_t mMask;
+      const uint8_t mOffset;
+      const uint8_t mMask;
 
-        private:
-          uint8_t *mImage;
-      };
+    private:
+      uint8_t *mImage;
+  };
 
-    } // namespace io
-  } // namespace core
-} // namespace forte
+} // namespace forte::io
 
 #endif /* SRC_CORE_IO_HANDLES_IO_HANDLE_BIT_H_ */

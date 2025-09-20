@@ -9,7 +9,7 @@
 
 #include "WagoBusAdapter.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_ADAPTER_TYPE(FORTE_WagoBusAdapter, "WagoBusAdapter"_STRID)
 
@@ -47,9 +47,9 @@ namespace {
 
 } // namespace
 
-FORTE_WagoBusAdapter::FORTE_WagoBusAdapter(forte::core::CFBContainer &paContainer,
+FORTE_WagoBusAdapter::FORTE_WagoBusAdapter(forte::CFBContainer &paContainer,
                                            const SFBInterfaceSpec &paInterfaceSpec,
-                                           const forte::core::StringId paInstanceNameId,
+                                           const forte::StringId paInstanceNameId,
                                            TForteUInt8 paParentAdapterlistID) :
     IOConfigFBMultiAdapter({}, paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     var_QO(0_BOOL),
@@ -66,8 +66,8 @@ void FORTE_WagoBusAdapter::setInitialValues() {
   var_Index = 0_UINT;
 }
 
-FORTE_WagoBusAdapter_Plug::FORTE_WagoBusAdapter_Plug(forte::core::StringId paInstanceNameId,
-                                                     forte::core::CFBContainer &paContainer,
+FORTE_WagoBusAdapter_Plug::FORTE_WagoBusAdapter_Plug(forte::StringId paInstanceNameId,
+                                                     forte::CFBContainer &paContainer,
                                                      TForteUInt8 paParentAdapterlistID) :
     FORTE_WagoBusAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_INITO(*this, 0),
@@ -142,8 +142,8 @@ CDataConnection *FORTE_WagoBusAdapter_Plug::getDOConUnchecked(const TPortId paIn
   return nullptr;
 }
 
-FORTE_WagoBusAdapter_Socket::FORTE_WagoBusAdapter_Socket(forte::core::StringId paInstanceNameId,
-                                                         forte::core::CFBContainer &paContainer,
+FORTE_WagoBusAdapter_Socket::FORTE_WagoBusAdapter_Socket(forte::StringId paInstanceNameId,
+                                                         forte::CFBContainer &paContainer,
                                                          TForteUInt8 paParentAdapterlistID) :
     FORTE_WagoBusAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_INIT(*this, 0),

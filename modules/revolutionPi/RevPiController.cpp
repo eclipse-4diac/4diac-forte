@@ -14,7 +14,7 @@
 #include "RevPiController.h"
 #include "RevPiHandle.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 const char *const RevPiController::scmFailedToOpenControlFile = "Failed to open control file.";
 const char *const RevPiController::scmFailedToResetControllerFile = "Failed to reset control file";
@@ -88,7 +88,7 @@ void RevPiController::runLoop() {
   }
 }
 
-void RevPiController::addSlaveHandle(size_t, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
+void RevPiController::addSlaveHandle(size_t, std::unique_ptr<forte::io::IOHandle> paHandle) {
   CCriticalRegion criticalRegion(mHandleMutex);
   paHandle->isInput() ? mInputHandles.push_back(std::move(paHandle)) : mOutputHandles.push_back(std::move(paHandle));
 }

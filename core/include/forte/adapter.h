@@ -42,9 +42,9 @@ namespace forte {
       }
 
     protected:
-      CAdapter(forte::core::CFBContainer &paContainer,
+      CAdapter(forte::CFBContainer &paContainer,
                const SFBInterfaceSpec &paInterfaceSpec,
-               const forte::core::StringId paInstanceNameId,
+               const forte::StringId paInstanceNameId,
                TForteUInt8 paParentAdapterlistID);
 
       TForteUInt16 getParentAdapterListEventID() const {
@@ -60,24 +60,24 @@ namespace forte {
   };
 
   template<typename T>
-  class CPlugPin final : public core::CInternalFB<T>, public IPlugPin {
+  class CPlugPin final : public CInternalFB<T>, public IPlugPin {
       static_assert(std::is_base_of_v<CAdapter, T>, "T must be a CAdapter");
 
     public:
-      CPlugPin(forte::core::StringId paInstanceNameId, CFunctionBlock &paParentFB, TForteUInt8 paParentAdapterlistID) :
-          core::CInternalFB<T>(paInstanceNameId, paParentFB, paParentAdapterlistID),
+      CPlugPin(forte::StringId paInstanceNameId, CFunctionBlock &paParentFB, TForteUInt8 paParentAdapterlistID) :
+          CInternalFB<T>(paInstanceNameId, paParentFB, paParentAdapterlistID),
           mAdapterCon(paParentFB, paParentAdapterlistID, *this) {
       }
 
       T *getAdapterBlock() override {
-        return core::CInternalFB<T>::get();
+        return CInternalFB<T>::get();
       }
 
       const T *getAdapterBlock() const {
         return const_cast<CPlugPin<T> *>(this)->getAdapterBlock();
       }
 
-      forte::core::StringId getAdapterTypeId() const override {
+      forte::StringId getAdapterTypeId() const override {
         return getAdapterBlock()->getFBTypeId();
       }
 
@@ -98,26 +98,24 @@ namespace forte {
   };
 
   template<typename T>
-  class CSocketPin final : public core::CInternalFB<T>, public ISocketPin {
+  class CSocketPin final : public CInternalFB<T>, public ISocketPin {
       static_assert(std::is_base_of_v<CAdapter, T>, "T must be a CAdapter");
 
     public:
-      CSocketPin(forte::core::StringId paInstanceNameId,
-                 CFunctionBlock &paParentFB,
-                 TForteUInt8 paParentAdapterlistID) :
-          core::CInternalFB<T>(paInstanceNameId, paParentFB, paParentAdapterlistID),
+      CSocketPin(forte::StringId paInstanceNameId, CFunctionBlock &paParentFB, TForteUInt8 paParentAdapterlistID) :
+          CInternalFB<T>(paInstanceNameId, paParentFB, paParentAdapterlistID),
           mAdapterCon(nullptr) {
       }
 
       T *getAdapterBlock() override {
-        return core::CInternalFB<T>::get();
+        return CInternalFB<T>::get();
       }
 
       const T *getAdapterBlock() const {
         return const_cast<CSocketPin<T> *>(this)->getAdapterBlock();
       }
 
-      forte::core::StringId getAdapterTypeId() const override {
+      forte::StringId getAdapterTypeId() const override {
         return getAdapterBlock()->getFBTypeId();
       }
 

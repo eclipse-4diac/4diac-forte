@@ -42,7 +42,7 @@ class FORTE_SPLIT_WORD_INTO_BYTES final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_SPLIT_WORD_INTO_BYTES(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_SPLIT_WORD_INTO_BYTES(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_WORD var_IN;
 

@@ -22,183 +22,183 @@ BOOST_AUTO_TEST_SUITE(CIEC_ARRAY_function_test)
 BOOST_AUTO_TEST_CASE(isDigit_Test) {
 
   for (char i = 0; i < '0'; i++) {
-    BOOST_CHECK(!forte::core::util::isDigit(i));
+    BOOST_CHECK(!forte::util::isDigit(i));
   }
 
-  BOOST_CHECK(forte::core::util::isDigit('0'));
-  BOOST_CHECK(forte::core::util::isDigit('1'));
-  BOOST_CHECK(forte::core::util::isDigit('2'));
-  BOOST_CHECK(forte::core::util::isDigit('3'));
-  BOOST_CHECK(forte::core::util::isDigit('4'));
-  BOOST_CHECK(forte::core::util::isDigit('5'));
-  BOOST_CHECK(forte::core::util::isDigit('6'));
-  BOOST_CHECK(forte::core::util::isDigit('7'));
-  BOOST_CHECK(forte::core::util::isDigit('8'));
-  BOOST_CHECK(forte::core::util::isDigit('9'));
+  BOOST_CHECK(forte::util::isDigit('0'));
+  BOOST_CHECK(forte::util::isDigit('1'));
+  BOOST_CHECK(forte::util::isDigit('2'));
+  BOOST_CHECK(forte::util::isDigit('3'));
+  BOOST_CHECK(forte::util::isDigit('4'));
+  BOOST_CHECK(forte::util::isDigit('5'));
+  BOOST_CHECK(forte::util::isDigit('6'));
+  BOOST_CHECK(forte::util::isDigit('7'));
+  BOOST_CHECK(forte::util::isDigit('8'));
+  BOOST_CHECK(forte::util::isDigit('9'));
 
   for (int i = '9' + 1; i <= 255; i++) {
-    BOOST_CHECK(!forte::core::util::isDigit((char) i));
+    BOOST_CHECK(!forte::util::isDigit((char) i));
   }
 }
 
 BOOST_AUTO_TEST_CASE(isAtoFChar) {
-  BOOST_CHECK(forte::core::util::isAtoFChar('a'));
-  BOOST_CHECK(forte::core::util::isAtoFChar('b'));
-  BOOST_CHECK(forte::core::util::isAtoFChar('c'));
-  BOOST_CHECK(forte::core::util::isAtoFChar('d'));
-  BOOST_CHECK(forte::core::util::isAtoFChar('e'));
-  BOOST_CHECK(forte::core::util::isAtoFChar('f'));
+  BOOST_CHECK(forte::util::isAtoFChar('a'));
+  BOOST_CHECK(forte::util::isAtoFChar('b'));
+  BOOST_CHECK(forte::util::isAtoFChar('c'));
+  BOOST_CHECK(forte::util::isAtoFChar('d'));
+  BOOST_CHECK(forte::util::isAtoFChar('e'));
+  BOOST_CHECK(forte::util::isAtoFChar('f'));
 
-  BOOST_CHECK(forte::core::util::isAtoFChar('A'));
-  BOOST_CHECK(forte::core::util::isAtoFChar('B'));
-  BOOST_CHECK(forte::core::util::isAtoFChar('C'));
-  BOOST_CHECK(forte::core::util::isAtoFChar('D'));
-  BOOST_CHECK(forte::core::util::isAtoFChar('E'));
-  BOOST_CHECK(forte::core::util::isAtoFChar('F'));
+  BOOST_CHECK(forte::util::isAtoFChar('A'));
+  BOOST_CHECK(forte::util::isAtoFChar('B'));
+  BOOST_CHECK(forte::util::isAtoFChar('C'));
+  BOOST_CHECK(forte::util::isAtoFChar('D'));
+  BOOST_CHECK(forte::util::isAtoFChar('E'));
+  BOOST_CHECK(forte::util::isAtoFChar('F'));
 
-  BOOST_CHECK(!forte::core::util::isAtoFChar('g'));
-  BOOST_CHECK(!forte::core::util::isAtoFChar('a' - 1));
+  BOOST_CHECK(!forte::util::isAtoFChar('g'));
+  BOOST_CHECK(!forte::util::isAtoFChar('a' - 1));
 
-  BOOST_CHECK(!forte::core::util::isAtoFChar('G'));
-  BOOST_CHECK(!forte::core::util::isAtoFChar('A' - 1));
+  BOOST_CHECK(!forte::util::isAtoFChar('G'));
+  BOOST_CHECK(!forte::util::isAtoFChar('A' - 1));
 
-  BOOST_CHECK(!forte::core::util::isAtoFChar(0));
-  BOOST_CHECK(!forte::core::util::isAtoFChar('\0'));
-  BOOST_CHECK(!forte::core::util::isAtoFChar('\n'));
-  BOOST_CHECK(!forte::core::util::isAtoFChar('\r'));
-  BOOST_CHECK(!forte::core::util::isAtoFChar('\t'));
-  BOOST_CHECK(!forte::core::util::isAtoFChar('-'));
-  BOOST_CHECK(!forte::core::util::isAtoFChar('x'));
-  BOOST_CHECK(!forte::core::util::isAtoFChar('X'));
-  BOOST_CHECK(!forte::core::util::isAtoFChar('/'));
-  BOOST_CHECK(!forte::core::util::isAtoFChar('<'));
-  BOOST_CHECK(!forte::core::util::isAtoFChar('>'));
+  BOOST_CHECK(!forte::util::isAtoFChar(0));
+  BOOST_CHECK(!forte::util::isAtoFChar('\0'));
+  BOOST_CHECK(!forte::util::isAtoFChar('\n'));
+  BOOST_CHECK(!forte::util::isAtoFChar('\r'));
+  BOOST_CHECK(!forte::util::isAtoFChar('\t'));
+  BOOST_CHECK(!forte::util::isAtoFChar('-'));
+  BOOST_CHECK(!forte::util::isAtoFChar('x'));
+  BOOST_CHECK(!forte::util::isAtoFChar('X'));
+  BOOST_CHECK(!forte::util::isAtoFChar('/'));
+  BOOST_CHECK(!forte::util::isAtoFChar('<'));
+  BOOST_CHECK(!forte::util::isAtoFChar('>'));
 
-  BOOST_CHECK(!forte::core::util::isAtoFChar((char) 255));
+  BOOST_CHECK(!forte::util::isAtoFChar((char) 255));
 }
 
 BOOST_AUTO_TEST_CASE(isHexDigit) {
-  BOOST_CHECK(forte::core::util::isHexDigit('0'));
-  BOOST_CHECK(forte::core::util::isHexDigit('1'));
-  BOOST_CHECK(forte::core::util::isHexDigit('2'));
-  BOOST_CHECK(forte::core::util::isHexDigit('3'));
-  BOOST_CHECK(forte::core::util::isHexDigit('4'));
-  BOOST_CHECK(forte::core::util::isHexDigit('5'));
-  BOOST_CHECK(forte::core::util::isHexDigit('6'));
-  BOOST_CHECK(forte::core::util::isHexDigit('7'));
-  BOOST_CHECK(forte::core::util::isHexDigit('8'));
-  BOOST_CHECK(forte::core::util::isHexDigit('9'));
+  BOOST_CHECK(forte::util::isHexDigit('0'));
+  BOOST_CHECK(forte::util::isHexDigit('1'));
+  BOOST_CHECK(forte::util::isHexDigit('2'));
+  BOOST_CHECK(forte::util::isHexDigit('3'));
+  BOOST_CHECK(forte::util::isHexDigit('4'));
+  BOOST_CHECK(forte::util::isHexDigit('5'));
+  BOOST_CHECK(forte::util::isHexDigit('6'));
+  BOOST_CHECK(forte::util::isHexDigit('7'));
+  BOOST_CHECK(forte::util::isHexDigit('8'));
+  BOOST_CHECK(forte::util::isHexDigit('9'));
 
-  BOOST_CHECK(forte::core::util::isHexDigit('a'));
-  BOOST_CHECK(forte::core::util::isHexDigit('b'));
-  BOOST_CHECK(forte::core::util::isHexDigit('c'));
-  BOOST_CHECK(forte::core::util::isHexDigit('d'));
-  BOOST_CHECK(forte::core::util::isHexDigit('e'));
-  BOOST_CHECK(forte::core::util::isHexDigit('f'));
+  BOOST_CHECK(forte::util::isHexDigit('a'));
+  BOOST_CHECK(forte::util::isHexDigit('b'));
+  BOOST_CHECK(forte::util::isHexDigit('c'));
+  BOOST_CHECK(forte::util::isHexDigit('d'));
+  BOOST_CHECK(forte::util::isHexDigit('e'));
+  BOOST_CHECK(forte::util::isHexDigit('f'));
 
-  BOOST_CHECK(forte::core::util::isHexDigit('A'));
-  BOOST_CHECK(forte::core::util::isHexDigit('B'));
-  BOOST_CHECK(forte::core::util::isHexDigit('C'));
-  BOOST_CHECK(forte::core::util::isHexDigit('D'));
-  BOOST_CHECK(forte::core::util::isHexDigit('E'));
-  BOOST_CHECK(forte::core::util::isHexDigit('F'));
+  BOOST_CHECK(forte::util::isHexDigit('A'));
+  BOOST_CHECK(forte::util::isHexDigit('B'));
+  BOOST_CHECK(forte::util::isHexDigit('C'));
+  BOOST_CHECK(forte::util::isHexDigit('D'));
+  BOOST_CHECK(forte::util::isHexDigit('E'));
+  BOOST_CHECK(forte::util::isHexDigit('F'));
 
   // some significant negative test cases
 
-  BOOST_CHECK(!forte::core::util::isHexDigit('g'));
-  BOOST_CHECK(!forte::core::util::isHexDigit('a' - 1));
+  BOOST_CHECK(!forte::util::isHexDigit('g'));
+  BOOST_CHECK(!forte::util::isHexDigit('a' - 1));
 
-  BOOST_CHECK(!forte::core::util::isHexDigit('G'));
-  BOOST_CHECK(!forte::core::util::isHexDigit('A' - 1));
+  BOOST_CHECK(!forte::util::isHexDigit('G'));
+  BOOST_CHECK(!forte::util::isHexDigit('A' - 1));
 
-  BOOST_CHECK(!forte::core::util::isHexDigit('0' - 1));
-  BOOST_CHECK(!forte::core::util::isHexDigit('9' + 1));
+  BOOST_CHECK(!forte::util::isHexDigit('0' - 1));
+  BOOST_CHECK(!forte::util::isHexDigit('9' + 1));
 
-  BOOST_CHECK(!forte::core::util::isHexDigit(0));
-  BOOST_CHECK(!forte::core::util::isHexDigit('\0'));
-  BOOST_CHECK(!forte::core::util::isHexDigit('\n'));
-  BOOST_CHECK(!forte::core::util::isHexDigit('\r'));
-  BOOST_CHECK(!forte::core::util::isHexDigit('\t'));
-  BOOST_CHECK(!forte::core::util::isHexDigit('-'));
-  BOOST_CHECK(!forte::core::util::isHexDigit('x'));
-  BOOST_CHECK(!forte::core::util::isHexDigit('X'));
-  BOOST_CHECK(!forte::core::util::isHexDigit('/'));
-  BOOST_CHECK(!forte::core::util::isHexDigit('<'));
-  BOOST_CHECK(!forte::core::util::isHexDigit('>'));
+  BOOST_CHECK(!forte::util::isHexDigit(0));
+  BOOST_CHECK(!forte::util::isHexDigit('\0'));
+  BOOST_CHECK(!forte::util::isHexDigit('\n'));
+  BOOST_CHECK(!forte::util::isHexDigit('\r'));
+  BOOST_CHECK(!forte::util::isHexDigit('\t'));
+  BOOST_CHECK(!forte::util::isHexDigit('-'));
+  BOOST_CHECK(!forte::util::isHexDigit('x'));
+  BOOST_CHECK(!forte::util::isHexDigit('X'));
+  BOOST_CHECK(!forte::util::isHexDigit('/'));
+  BOOST_CHECK(!forte::util::isHexDigit('<'));
+  BOOST_CHECK(!forte::util::isHexDigit('>'));
 
-  BOOST_CHECK(!forte::core::util::isHexDigit((char) 255));
+  BOOST_CHECK(!forte::util::isHexDigit((char) 255));
 }
 
 BOOST_AUTO_TEST_CASE(charDigitToInt) {
 
-  BOOST_CHECK_EQUAL(0, forte::core::util::charDigitToInt('0'));
-  BOOST_CHECK_EQUAL(1, forte::core::util::charDigitToInt('1'));
-  BOOST_CHECK_EQUAL(2, forte::core::util::charDigitToInt('2'));
-  BOOST_CHECK_EQUAL(3, forte::core::util::charDigitToInt('3'));
-  BOOST_CHECK_EQUAL(4, forte::core::util::charDigitToInt('4'));
-  BOOST_CHECK_EQUAL(5, forte::core::util::charDigitToInt('5'));
-  BOOST_CHECK_EQUAL(6, forte::core::util::charDigitToInt('6'));
-  BOOST_CHECK_EQUAL(7, forte::core::util::charDigitToInt('7'));
-  BOOST_CHECK_EQUAL(8, forte::core::util::charDigitToInt('8'));
-  BOOST_CHECK_EQUAL(9, forte::core::util::charDigitToInt('9'));
+  BOOST_CHECK_EQUAL(0, forte::util::charDigitToInt('0'));
+  BOOST_CHECK_EQUAL(1, forte::util::charDigitToInt('1'));
+  BOOST_CHECK_EQUAL(2, forte::util::charDigitToInt('2'));
+  BOOST_CHECK_EQUAL(3, forte::util::charDigitToInt('3'));
+  BOOST_CHECK_EQUAL(4, forte::util::charDigitToInt('4'));
+  BOOST_CHECK_EQUAL(5, forte::util::charDigitToInt('5'));
+  BOOST_CHECK_EQUAL(6, forte::util::charDigitToInt('6'));
+  BOOST_CHECK_EQUAL(7, forte::util::charDigitToInt('7'));
+  BOOST_CHECK_EQUAL(8, forte::util::charDigitToInt('8'));
+  BOOST_CHECK_EQUAL(9, forte::util::charDigitToInt('9'));
 }
 
 BOOST_AUTO_TEST_CASE(charAtoFToInt) {
 
-  BOOST_CHECK_EQUAL(10, forte::core::util::charAtoFToInt('a'));
-  BOOST_CHECK_EQUAL(10, forte::core::util::charAtoFToInt('A'));
+  BOOST_CHECK_EQUAL(10, forte::util::charAtoFToInt('a'));
+  BOOST_CHECK_EQUAL(10, forte::util::charAtoFToInt('A'));
 
-  BOOST_CHECK_EQUAL(11, forte::core::util::charAtoFToInt('b'));
-  BOOST_CHECK_EQUAL(11, forte::core::util::charAtoFToInt('B'));
+  BOOST_CHECK_EQUAL(11, forte::util::charAtoFToInt('b'));
+  BOOST_CHECK_EQUAL(11, forte::util::charAtoFToInt('B'));
 
-  BOOST_CHECK_EQUAL(12, forte::core::util::charAtoFToInt('c'));
-  BOOST_CHECK_EQUAL(12, forte::core::util::charAtoFToInt('C'));
+  BOOST_CHECK_EQUAL(12, forte::util::charAtoFToInt('c'));
+  BOOST_CHECK_EQUAL(12, forte::util::charAtoFToInt('C'));
 
-  BOOST_CHECK_EQUAL(13, forte::core::util::charAtoFToInt('d'));
-  BOOST_CHECK_EQUAL(13, forte::core::util::charAtoFToInt('D'));
+  BOOST_CHECK_EQUAL(13, forte::util::charAtoFToInt('d'));
+  BOOST_CHECK_EQUAL(13, forte::util::charAtoFToInt('D'));
 
-  BOOST_CHECK_EQUAL(14, forte::core::util::charAtoFToInt('e'));
-  BOOST_CHECK_EQUAL(14, forte::core::util::charAtoFToInt('E'));
+  BOOST_CHECK_EQUAL(14, forte::util::charAtoFToInt('e'));
+  BOOST_CHECK_EQUAL(14, forte::util::charAtoFToInt('E'));
 
-  BOOST_CHECK_EQUAL(15, forte::core::util::charAtoFToInt('f'));
-  BOOST_CHECK_EQUAL(15, forte::core::util::charAtoFToInt('F'));
+  BOOST_CHECK_EQUAL(15, forte::util::charAtoFToInt('f'));
+  BOOST_CHECK_EQUAL(15, forte::util::charAtoFToInt('F'));
 }
 
 BOOST_AUTO_TEST_CASE(charHexDigitToInt) {
 
-  BOOST_CHECK_EQUAL(0, forte::core::util::charHexDigitToInt('0'));
-  BOOST_CHECK_EQUAL(1, forte::core::util::charHexDigitToInt('1'));
-  BOOST_CHECK_EQUAL(2, forte::core::util::charHexDigitToInt('2'));
-  BOOST_CHECK_EQUAL(3, forte::core::util::charHexDigitToInt('3'));
-  BOOST_CHECK_EQUAL(4, forte::core::util::charHexDigitToInt('4'));
-  BOOST_CHECK_EQUAL(5, forte::core::util::charHexDigitToInt('5'));
-  BOOST_CHECK_EQUAL(6, forte::core::util::charHexDigitToInt('6'));
-  BOOST_CHECK_EQUAL(7, forte::core::util::charHexDigitToInt('7'));
-  BOOST_CHECK_EQUAL(8, forte::core::util::charHexDigitToInt('8'));
-  BOOST_CHECK_EQUAL(9, forte::core::util::charHexDigitToInt('9'));
+  BOOST_CHECK_EQUAL(0, forte::util::charHexDigitToInt('0'));
+  BOOST_CHECK_EQUAL(1, forte::util::charHexDigitToInt('1'));
+  BOOST_CHECK_EQUAL(2, forte::util::charHexDigitToInt('2'));
+  BOOST_CHECK_EQUAL(3, forte::util::charHexDigitToInt('3'));
+  BOOST_CHECK_EQUAL(4, forte::util::charHexDigitToInt('4'));
+  BOOST_CHECK_EQUAL(5, forte::util::charHexDigitToInt('5'));
+  BOOST_CHECK_EQUAL(6, forte::util::charHexDigitToInt('6'));
+  BOOST_CHECK_EQUAL(7, forte::util::charHexDigitToInt('7'));
+  BOOST_CHECK_EQUAL(8, forte::util::charHexDigitToInt('8'));
+  BOOST_CHECK_EQUAL(9, forte::util::charHexDigitToInt('9'));
 
-  BOOST_CHECK_EQUAL(10, forte::core::util::charHexDigitToInt('a'));
-  BOOST_CHECK_EQUAL(10, forte::core::util::charHexDigitToInt('A'));
+  BOOST_CHECK_EQUAL(10, forte::util::charHexDigitToInt('a'));
+  BOOST_CHECK_EQUAL(10, forte::util::charHexDigitToInt('A'));
 
-  BOOST_CHECK_EQUAL(11, forte::core::util::charHexDigitToInt('b'));
-  BOOST_CHECK_EQUAL(11, forte::core::util::charHexDigitToInt('B'));
+  BOOST_CHECK_EQUAL(11, forte::util::charHexDigitToInt('b'));
+  BOOST_CHECK_EQUAL(11, forte::util::charHexDigitToInt('B'));
 
-  BOOST_CHECK_EQUAL(12, forte::core::util::charHexDigitToInt('c'));
-  BOOST_CHECK_EQUAL(12, forte::core::util::charHexDigitToInt('C'));
+  BOOST_CHECK_EQUAL(12, forte::util::charHexDigitToInt('c'));
+  BOOST_CHECK_EQUAL(12, forte::util::charHexDigitToInt('C'));
 
-  BOOST_CHECK_EQUAL(13, forte::core::util::charHexDigitToInt('d'));
-  BOOST_CHECK_EQUAL(13, forte::core::util::charHexDigitToInt('D'));
+  BOOST_CHECK_EQUAL(13, forte::util::charHexDigitToInt('d'));
+  BOOST_CHECK_EQUAL(13, forte::util::charHexDigitToInt('D'));
 
-  BOOST_CHECK_EQUAL(14, forte::core::util::charHexDigitToInt('e'));
-  BOOST_CHECK_EQUAL(14, forte::core::util::charHexDigitToInt('E'));
+  BOOST_CHECK_EQUAL(14, forte::util::charHexDigitToInt('e'));
+  BOOST_CHECK_EQUAL(14, forte::util::charHexDigitToInt('E'));
 
-  BOOST_CHECK_EQUAL(15, forte::core::util::charHexDigitToInt('f'));
-  BOOST_CHECK_EQUAL(15, forte::core::util::charHexDigitToInt('F'));
+  BOOST_CHECK_EQUAL(15, forte::util::charHexDigitToInt('f'));
+  BOOST_CHECK_EQUAL(15, forte::util::charHexDigitToInt('F'));
 }
 
 void strtolWrongInputCheck(const char *paString, long int paResult, unsigned int paErrorPos) {
   char *pacEndptr;
-  BOOST_CHECK_EQUAL(paResult, forte::core::util::strtol(paString, &pacEndptr, 10));
+  BOOST_CHECK_EQUAL(paResult, forte::util::strtol(paString, &pacEndptr, 10));
   BOOST_CHECK_EQUAL(paString[paErrorPos], *pacEndptr);
 }
 
@@ -219,7 +219,7 @@ BOOST_AUTO_TEST_CASE(strtol) {
                                           -255, -256, -257, -65536, -65537, -2147483648};
 
   for (unsigned int i = 0; i < unTestData; i++) {
-    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtol(sTestData10[i].c_str(), &pacEndptr, 10));
+    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::util::strtol(sTestData10[i].c_str(), &pacEndptr, 10));
     BOOST_CHECK(nullptr != pacEndptr);
     if (nullptr != pacEndptr) {
       BOOST_CHECK_EQUAL('\0', *pacEndptr);
@@ -227,7 +227,7 @@ BOOST_AUTO_TEST_CASE(strtol) {
   }
 
   for (unsigned int i = 0; i < unTestData; i++) {
-    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtol(sTestData16[i].c_str(), &pacEndptr, 16));
+    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::util::strtol(sTestData16[i].c_str(), &pacEndptr, 16));
     BOOST_CHECK(nullptr != pacEndptr);
     if (nullptr != pacEndptr) {
       BOOST_CHECK_EQUAL('\0', *pacEndptr);
@@ -263,7 +263,7 @@ BOOST_AUTO_TEST_CASE(strtol) {
 
 void strtoulWrongInputCheck(const char *paString, unsigned long int paResult, unsigned int paErrorPos, int base) {
   char *pacEndptr;
-  BOOST_CHECK_EQUAL(paResult, forte::core::util::strtoul(paString, &pacEndptr, base));
+  BOOST_CHECK_EQUAL(paResult, forte::util::strtoul(paString, &pacEndptr, base));
   BOOST_CHECK_EQUAL(paString[paErrorPos], *pacEndptr);
 }
 
@@ -281,7 +281,7 @@ BOOST_AUTO_TEST_CASE(strtoul) {
   unsigned long int sTestDataResult[unTestData] = {0, 255, 256, 65535, 65536, 2147483647, 4294967295};
 
   for (unsigned int i = 0; i < unTestData; i++) {
-    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoul(sTestData10[i].c_str(), &pacEndptr, 10));
+    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::util::strtoul(sTestData10[i].c_str(), &pacEndptr, 10));
     BOOST_CHECK(nullptr != pacEndptr);
     if (nullptr != pacEndptr) {
       BOOST_CHECK_EQUAL('\0', *pacEndptr);
@@ -289,7 +289,7 @@ BOOST_AUTO_TEST_CASE(strtoul) {
   }
 
   for (unsigned int i = 0; i < unTestData; i++) {
-    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoul(sTestData16[i].c_str(), &pacEndptr, 16));
+    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::util::strtoul(sTestData16[i].c_str(), &pacEndptr, 16));
     BOOST_CHECK(nullptr != pacEndptr);
     if (nullptr != pacEndptr) {
       BOOST_CHECK_EQUAL('\0', *pacEndptr);
@@ -314,7 +314,7 @@ BOOST_AUTO_TEST_CASE(strtoul) {
 
 void strtollWrongInputCheck(const char *paString, long long int paResult, unsigned int paErrorPos) {
   char *pacEndptr;
-  BOOST_CHECK_EQUAL(paResult, forte::core::util::strtoll(paString, &pacEndptr, 10));
+  BOOST_CHECK_EQUAL(paResult, forte::util::strtoll(paString, &pacEndptr, 10));
   BOOST_CHECK_EQUAL(paString[paErrorPos], *pacEndptr);
 }
 
@@ -386,7 +386,7 @@ BOOST_AUTO_TEST_CASE(strtoll) {
                                                -9223372036854775807LL - 1LL};
 
   for (unsigned int i = 0; i < unTestData; i++) {
-    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoll(sTestData10[i].c_str(), &pacEndptr, 10));
+    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::util::strtoll(sTestData10[i].c_str(), &pacEndptr, 10));
     BOOST_CHECK(nullptr != pacEndptr);
     if (nullptr != pacEndptr) {
       BOOST_CHECK_EQUAL('\0', *pacEndptr);
@@ -394,7 +394,7 @@ BOOST_AUTO_TEST_CASE(strtoll) {
   }
 
   for (unsigned int i = 0; i < unTestData; i++) {
-    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoll(sTestData16[i].c_str(), &pacEndptr, 16));
+    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::util::strtoll(sTestData16[i].c_str(), &pacEndptr, 16));
     BOOST_CHECK(nullptr != pacEndptr);
     if (nullptr != pacEndptr) {
       BOOST_CHECK_EQUAL('\0', *pacEndptr);
@@ -418,7 +418,7 @@ BOOST_AUTO_TEST_CASE(strtoll) {
 
 void strtoullWrongInputCheck(const char *paString, unsigned long long int paResult, unsigned int paErrorPos) {
   char *pacEndptr;
-  BOOST_CHECK_EQUAL(paResult, forte::core::util::strtoull(paString, &pacEndptr, 10));
+  BOOST_CHECK_EQUAL(paResult, forte::util::strtoull(paString, &pacEndptr, 10));
   BOOST_CHECK_EQUAL(paString[paErrorPos], *pacEndptr);
 }
 
@@ -466,7 +466,7 @@ BOOST_AUTO_TEST_CASE(strtoull) {
                                                         18446744073709551615ULL};
 
   for (unsigned int i = 0; i < unTestData; i++) {
-    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoull(sTestData10[i].c_str(), &pacEndptr, 10));
+    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::util::strtoull(sTestData10[i].c_str(), &pacEndptr, 10));
     BOOST_CHECK(nullptr != pacEndptr);
     if (nullptr != pacEndptr) {
       BOOST_CHECK_EQUAL('\0', *pacEndptr);
@@ -474,7 +474,7 @@ BOOST_AUTO_TEST_CASE(strtoull) {
   }
 
   for (unsigned int i = 0; i < unTestData; i++) {
-    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::core::util::strtoull(sTestData16[i].c_str(), &pacEndptr, 16));
+    BOOST_CHECK_EQUAL(sTestDataResult[i], forte::util::strtoull(sTestData16[i].c_str(), &pacEndptr, 16));
     BOOST_CHECK(nullptr != pacEndptr);
     if (nullptr != pacEndptr) {
       BOOST_CHECK_EQUAL('\0', *pacEndptr);
@@ -555,7 +555,7 @@ const auto sEscapedData = std::array<std::string, sNonEscapedData.size()>{
 
 BOOST_AUTO_TEST_CASE(getExtraSizeForEscapedChars) {
   for (size_t i = 0; i < sizeof(sNonEscapedData) / sizeof(const char *); i++) {
-    BOOST_CHECK_EQUAL(forte::core::util::getExtraSizeForXMLEscapedChars(sNonEscapedData[i]), sExtraSize[i]);
+    BOOST_CHECK_EQUAL(forte::util::getExtraSizeForXMLEscapedChars(sNonEscapedData[i]), sExtraSize[i]);
   }
 }
 
@@ -563,7 +563,7 @@ BOOST_AUTO_TEST_CASE(transformNonEscapedToEscapedXMLText) {
   std::string toTest;
   for (size_t i = 0; i < sNonEscapedData.size(); i++) {
     toTest = sNonEscapedData[i];
-    forte::core::util::transformNonEscapedToEscapedXMLText(toTest, 0);
+    forte::util::transformNonEscapedToEscapedXMLText(toTest, 0);
     BOOST_CHECK_EQUAL(toTest, sEscapedData[i]);
   }
 }
@@ -573,7 +573,7 @@ BOOST_AUTO_TEST_CASE(transformEscapedXMLToNonEscapedText) {
   for (size_t i = 0; i < sNonEscapedData.size(); i++) {
     memset(toTest, 0, 50);
     memcpy(toTest, sEscapedData[i].c_str(), sEscapedData[i].length());
-    BOOST_CHECK_EQUAL(forte::core::util::transformEscapedXMLToNonEscapedText(toTest), sExtraSize[i]);
+    BOOST_CHECK_EQUAL(forte::util::transformEscapedXMLToNonEscapedText(toTest), sExtraSize[i]);
     BOOST_CHECK_EQUAL(0, strcmp(toTest, sNonEscapedData[i]));
   }
 }

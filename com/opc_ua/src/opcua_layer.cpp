@@ -33,7 +33,7 @@
 #include "forte/cominfra/comlayersmanager.h"
 
 using namespace forte::com_infra;
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<COPC_UA_Layer> entry("opc_ua"_STRID);
@@ -227,7 +227,7 @@ void COPC_UA_Layer::setDataAlreadyPresentRead(bool paDataRead) {
   mDataAlreadyPresent = paDataRead;
 }
 
-forte::core::StringId COPC_UA_Layer::getLocalPortNameId(size_t paPortIndex, bool paIsSD) const {
+forte::StringId COPC_UA_Layer::getLocalPortNameId(size_t paPortIndex, bool paIsSD) const {
   const SFBInterfaceSpec &localInterfaceSpec(getCommFB()->getFBInterfaceSpec());
   return paIsSD ? localInterfaceSpec.mDINames[paPortIndex] : localInterfaceSpec.mDONames[paPortIndex];
 }

@@ -15,7 +15,7 @@
 #include "EBSlave2181.h"
 #include "../handler/bus.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_EBSlave2181, "EBSlave2181"_STRID)
 
@@ -57,8 +57,7 @@ namespace {
   };
 } // namespace
 
-FORTE_EBSlave2181::FORTE_EBSlave2181(const forte::core::StringId paInstanceNameId,
-                                     forte::core::CFBContainer &paContainer) :
+FORTE_EBSlave2181::FORTE_EBSlave2181(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     EmbrickSlave(scmSlaveConfigurationIO,
                  scmSlaveConfigurationIONum,
                  EmbrickSlaveHandler::G_8Di8Do,
@@ -236,14 +235,14 @@ void FORTE_EBSlave2181::initHandles() {
 
   for (int i = 0; i < iCount; i++) {
     EmbrickBusHandler::HandleDescriptor desc = EmbrickBusHandler::HandleDescriptor(
-        static_cast<CIEC_WSTRING *>(getDI(iOffset + i))->getValue(), forte::core::io::IOMapper::In, mIndex,
+        static_cast<CIEC_WSTRING *>(getDI(iOffset + i))->getValue(), forte::io::IOMapper::In, mIndex,
         EmbrickBusHandler::Bit, (uint8_t) (i / 8), (uint8_t) (i % 8));
     initHandle(desc);
   }
 
   for (int i = 0; i < oCount; i++) {
     EmbrickBusHandler::HandleDescriptor desc = EmbrickBusHandler::HandleDescriptor(
-        static_cast<CIEC_WSTRING *>(getDI(oOffset + i))->getValue(), forte::core::io::IOMapper::Out, mIndex,
+        static_cast<CIEC_WSTRING *>(getDI(oOffset + i))->getValue(), forte::io::IOMapper::Out, mIndex,
         EmbrickBusHandler::Bit, (uint8_t) (i / 8), (uint8_t) (i % 8));
     initHandle(desc);
   }

@@ -18,7 +18,7 @@
 
 #include "forte/iec61499/events/E_TABLE_CTRL_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_any_elementary_variant.h"
 #include "forte/datatypes/forte_bool.h"
@@ -53,8 +53,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TABLE_CTRL::FORTE_E_TABLE_CTRL(const forte::core::StringId paInstanceNameId,
-                                       forte::core::CFBContainer &paContainer) :
+FORTE_E_TABLE_CTRL::FORTE_E_TABLE_CTRL(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_DT(CIEC_ARRAY_FIXED<CIEC_TIME, 0, 3>{}),
     var_N(0_UINT),

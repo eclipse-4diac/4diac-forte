@@ -15,8 +15,8 @@
 #include "bit.h"
 #include "forte/util/criticalregion.h"
 
-EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(forte::core::io::IODeviceController *paController,
-                                             forte::core::io::IOMapper::Direction paDirection,
+EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(forte::io::IODeviceController *paController,
+                                             forte::io::IOMapper::Direction paDirection,
                                              uint8_t paOffset,
                                              uint8_t paPosition,
                                              EmbrickSlaveHandler *paSlave) :

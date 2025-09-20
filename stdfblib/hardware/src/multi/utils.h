@@ -17,7 +17,7 @@
 #include "generated/ecetfactory.h"
 #include "generated/timerhandlerfactory.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 class OPCUA_MGR;
 class CDevice;
@@ -34,8 +34,8 @@ namespace forte::hardware::multi::utils {
   OPCUA_MGR *getOpcuaMgr(CDevice &paDevice);
 
   struct FactoriesSettings {
-      core::StringId mEcet{"default"_STRID};
-      core::StringId mTimer{"default"_STRID};
+      StringId mEcet{"default"_STRID};
+      StringId mTimer{"default"_STRID};
   };
 
   /**

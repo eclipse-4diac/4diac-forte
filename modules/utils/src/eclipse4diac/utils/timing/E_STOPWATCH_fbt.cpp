@@ -20,7 +20,7 @@
 
 #include "forte/eclipse4diac/utils/timing/E_STOPWATCH_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_time.h"
@@ -55,8 +55,7 @@ namespace {
   const auto cInternalsNames = std::array{"startTime"_STRID};
 } // namespace
 
-FORTE_E_STOPWATCH::FORTE_E_STOPWATCH(const forte::core::StringId paInstanceNameId,
-                                     forte::core::CFBContainer &paContainer) :
+FORTE_E_STOPWATCH::FORTE_E_STOPWATCH(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
     conn_EO(*this, 0),
     conn_ETO(*this, 1),

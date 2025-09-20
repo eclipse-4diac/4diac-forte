@@ -19,7 +19,7 @@
 class IOHandleGPIODescriptor : public IOHandleDescriptor {
   public:
     IOHandleGPIODescriptor(std::string const &paId,
-                           forte::core::io::IOMapper::Direction paDirection,
+                           forte::io::IOMapper::Direction paDirection,
                            const gpio_dt_spec *paGpioSpec,
                            gpio_flags_t paFlags) :
         IOHandleDescriptor(paId, paDirection, Gpio),

@@ -16,7 +16,7 @@
 #include "forte/com/opc_ua/opcua_types.h"
 #include "generated/ua_types_fordiacNamespace_generated.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   [[maybe_unused]] const forte::com::opc_ua::OPC_UA_External_Types::Entry
@@ -28,7 +28,7 @@ DEFINE_FIRMWARE_DATATYPE(DataTypeTest, "DataTypeTest"_STRID);
 CIEC_DataTypeTest::CIEC_DataTypeTest() : CIEC_STRUCT(), var_Name(""_STRING), var_Age(0), var_IsRegistered(false) {
 }
 
-forte::core::StringId CIEC_DataTypeTest::getStructTypeNameID() const {
+forte::StringId CIEC_DataTypeTest::getStructTypeNameID() const {
   return "DataTypeTest"_STRID;
 }
 
@@ -50,4 +50,4 @@ const CIEC_ANY *CIEC_DataTypeTest::getMember(size_t paMemberIndex) const {
   return nullptr;
 }
 
-const forte::core::StringId CIEC_DataTypeTest::scmElementNames[] = {"Name"_STRID, "Age"_STRID, "IsRegistered"_STRID};
+const forte::StringId CIEC_DataTypeTest::scmElementNames[] = {"Name"_STRID, "Age"_STRID, "IsRegistered"_STRID};

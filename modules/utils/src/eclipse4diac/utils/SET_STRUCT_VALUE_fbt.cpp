@@ -16,7 +16,7 @@
 
 #include "forte/eclipse4diac/utils/SET_STRUCT_VALUE_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::utils;
 
@@ -43,8 +43,8 @@ namespace {
   };
 } // namespace
 
-FORTE_SET_STRUCT_VALUE::FORTE_SET_STRUCT_VALUE(const forte::core::StringId paInstanceNameId,
-                                               forte::core::CFBContainer &paContainer) :
+FORTE_SET_STRUCT_VALUE::FORTE_SET_STRUCT_VALUE(const forte::StringId paInstanceNameId,
+                                               forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_in_struct(CIEC_ANY_VARIANT()),
     var_member(""_STRING),

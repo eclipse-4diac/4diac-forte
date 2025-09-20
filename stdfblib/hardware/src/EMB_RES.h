@@ -20,14 +20,14 @@ class EMB_RES : public CResource {
     DECLARE_FIRMWARE_FB(EMB_RES);
 
   public:
-    EMB_RES(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paDevice);
+    EMB_RES(forte::StringId paInstanceNameId, forte::CFBContainer &paDevice);
     ~EMB_RES() override;
 
     CIEC_ANY *getDI(size_t) override;
     CDataConnection **getDIConUnchecked(TPortId) override;
 
   private:
-    forte::core::CInternalFB<forte::iec61499::events::FORTE_E_RESTART> fb_START;
+    forte::CInternalFB<forte::iec61499::events::FORTE_E_RESTART> fb_START;
 };
 
 #endif // close the ifdef sequence from the beginning of the file

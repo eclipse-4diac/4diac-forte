@@ -19,13 +19,13 @@
 
 class CLuaAdapter : public CAdapter {
   public:
-    CLuaAdapter(forte::core::StringId paInstanceNameId,
+    CLuaAdapter(forte::StringId paInstanceNameId,
                 const CLuaAdapterTypeEntry *paTypeEntry,
                 bool paIsPlug,
-                forte::core::CFBContainer &paContainer);
+                forte::CFBContainer &paContainer);
     ~CLuaAdapter() override;
 
-    forte::core::StringId getFBTypeId() const override {
+    forte::StringId getFBTypeId() const override {
       return mTypeEntry->getTypeNameId();
     }
 

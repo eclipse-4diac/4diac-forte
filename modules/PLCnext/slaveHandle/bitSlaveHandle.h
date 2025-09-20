@@ -18,8 +18,8 @@
 
 class PLCnextBitSlaveHandle : public PLCnextSlaveHandle {
   public:
-    PLCnextBitSlaveHandle(forte::core::io::IODeviceController *paController,
-                          forte::core::io::IOMapper::Direction paDirection,
+    PLCnextBitSlaveHandle(forte::io::IODeviceController *paController,
+                          forte::io::IOMapper::Direction paDirection,
                           uint16_t paPosition,
                           PLCnextSlaveHandler *paSlave);
 

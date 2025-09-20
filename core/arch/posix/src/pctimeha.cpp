@@ -17,10 +17,10 @@
 #include "../../common/src/utils/timespec_utils.h"
 #include "forte/timerhandlerfactory.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
-  [[maybe_unused]] const forte::core::TimerHandlerFactory::EntryImpl<CPCTimerHandler> entry("default"_STRID);
+  [[maybe_unused]] const forte::TimerHandlerFactory::EntryImpl<CPCTimerHandler> entry("default"_STRID);
 }
 
 CPCTimerHandler::CPCTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {

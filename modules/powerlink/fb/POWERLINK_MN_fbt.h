@@ -38,7 +38,7 @@ class FORTE_POWERLINK_MN final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_POWERLINK_MN(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_POWERLINK_MN(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_STRING var_CDC_CFG;

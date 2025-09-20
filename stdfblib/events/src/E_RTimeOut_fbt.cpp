@@ -21,7 +21,7 @@
 
 using namespace std::literals;
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61499::events;
 
@@ -59,8 +59,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_RTimeOut::FORTE_E_RTimeOut(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+FORTE_E_RTimeOut::FORTE_E_RTimeOut(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_DLY("DLY"_STRID, *this),
     var_TimeOutSocket("TimeOutSocket"_STRID, *this, forte::cgCFBParentAdapterlistIDMarker) {};

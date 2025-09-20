@@ -17,7 +17,7 @@
 
 #include "forte/eclipse4diac/signalprocessing/DualHysteresis_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_real.h"
@@ -51,8 +51,7 @@ namespace {
   };
 } // namespace
 
-FORTE_DualHysteresis::FORTE_DualHysteresis(const forte::core::StringId paInstanceNameId,
-                                           forte::core::CFBContainer &paContainer) :
+FORTE_DualHysteresis::FORTE_DualHysteresis(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_QI(0_BOOL),
     var_MI(0.5_REAL),

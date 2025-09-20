@@ -21,7 +21,7 @@
 
 #include "forte/timerhandlerfactory.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   const auto cDataInputNames = std::array{"MGR_ID"_STRID, "FakeTime"_STRID};
@@ -38,7 +38,7 @@ namespace {
       .mPlugNames = {},
   };
 
-  [[maybe_unused]] const forte::core::DeviceFactory::EntryImpl<FakeTimeDev> entry("FakeTime"_STRID);
+  [[maybe_unused]] const forte::DeviceFactory::EntryImpl<FakeTimeDev> entry("FakeTime"_STRID);
 } // namespace
 
 FakeTimeDev::FakeTimeDev(const std::string_view paMGR_ID) :
@@ -109,10 +109,9 @@ CConnection *FakeTimeDev::getResIf2InConnectionUnchecked(const TPortId paIndex) 
   return nullptr;
 }
 
-EMGMResponse
-FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, const std::string &paValue, bool paForce) {
+EMGMResponse FakeTimeDev::writeValue(forte::TNameIdentifier &paNameList, const std::string &paValue, bool paForce) {
   // parent writeValue is modifying the name list so we need to get the name as backup here
-  forte::core::StringId portName = paNameList.back();
+  forte::StringId portName = paNameList.back();
   EMGMResponse eRetVal = CDevice::writeValue(paNameList, paValue, paForce);
   if ((EMGMResponse::Ready == eRetVal) && ("FakeTime"_STRID == portName)) {
     // fake time was written, update CFakeTimerHandler
@@ -121,7 +120,7 @@ FakeTimeDev::writeValue(forte::core::TNameIdentifier &paNameList, const std::str
   return eRetVal;
 }
 
-forte::core::StringId FakeTimeDev::initializeTimer() {
-  forte::core::TimerHandlerFactory::setDefaultImpl("FakeTime"_STRID);
+forte::StringId FakeTimeDev::initializeTimer() {
+  forte::TimerHandlerFactory::setDefaultImpl("FakeTime"_STRID);
   return {};
 }

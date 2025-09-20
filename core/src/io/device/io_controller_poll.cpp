@@ -13,7 +13,7 @@
 
 #include "forte/io/device/io_controller_poll.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 IODevicePollController::IODevicePollController(CDeviceExecution &paDeviceExecution, float paPollInterval) :
     IODeviceController(paDeviceExecution),

@@ -19,7 +19,7 @@
 
 #include "forte/iec61499/events/E_T_FF_SR_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_bool.h"
 #include "forte/iec61131_functions.h"
@@ -47,7 +47,7 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
     .mPlugNames = {},
 };
 
-FORTE_E_T_FF_SR::FORTE_E_T_FF_SR(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_T_FF_SR::FORTE_E_T_FF_SR(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     var_Q(0_BOOL),
     conn_EO(*this, 0),

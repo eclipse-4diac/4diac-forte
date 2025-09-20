@@ -16,7 +16,7 @@
 
 #include "forte/eclipse4diac/utils/timing/TIMESTAMP_NS_fct.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_any_duration_variant.h"
 #include "forte/datatypes/forte_date_and_time.h"
@@ -50,8 +50,7 @@ namespace {
   };
 } // namespace
 
-FORTE_TIMESTAMP_NS::FORTE_TIMESTAMP_NS(const forte::core::StringId paInstanceNameId,
-                                       forte::core::CFBContainer &paContainer) :
+FORTE_TIMESTAMP_NS::FORTE_TIMESTAMP_NS(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_startDate(0_DATE_AND_TIME),
     conn_CNF(*this, 0),

@@ -10,17 +10,17 @@
 #include "WagoSlaveBase.h"
 #include "../WagoDeviceController.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 const TForteUInt8 WagoSlaveBase::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 WagoSlaveBase::scmSlaveConfigurationIONum = 0;
 
 WagoSlaveBase::WagoSlaveBase(int paType,
-                             forte::core::CFBContainer &paContainer,
+                             forte::CFBContainer &paContainer,
                              const SFBInterfaceSpec &paInterfaceSpec,
-                             const forte::core::StringId paInstanceNameId) :
+                             const forte::StringId paInstanceNameId) :
     IOConfigFBMultiSlave(
         scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec, paInstanceNameId),
     var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0),
@@ -30,7 +30,7 @@ WagoSlaveBase::WagoSlaveBase(int paType,
 void WagoSlaveBase::initWagoHandle(int paDIIndex,
                                    int paIOIndex,
                                    CIEC_ANY::EDataTypeID paType,
-                                   forte::core::io::IOMapper::Direction paDirection) {
+                                   forte::io::IOMapper::Direction paDirection) {
   WagoDeviceController::WagoHandleDescriptor desc(static_cast<CIEC_STRING *>(getDI(paDIIndex))->getStorage(),
                                                   paDirection, mIndex, paType, static_cast<TForteUInt32>(paIOIndex));
   initHandle(desc);

@@ -69,8 +69,8 @@ class CIEC_EventFilter : public CIEC_STRUCT {
     }
 
   private:
-    static const forte::core::StringId scmElementTypes[];
-    static const forte::core::StringId scmElementNames[];
+    static const forte::StringId scmElementTypes[];
+    static const forte::StringId scmElementNames[];
 };
 
 #endif //_FORTE_EVENTFILTER_H_

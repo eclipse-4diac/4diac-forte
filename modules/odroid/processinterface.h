@@ -16,9 +16,9 @@
 
 class COdroidProcessInterface : public CSysFsProcessInterface {
   public:
-    COdroidProcessInterface(forte::core::CFBContainer &paContainer,
+    COdroidProcessInterface(forte::CFBContainer &paContainer,
                             const SFBInterfaceSpec &paInterfaceSpec,
-                            const forte::core::StringId paInstanceNameId);
+                            const forte::StringId paInstanceNameId);
     ~COdroidProcessInterface() override;
 
   protected:

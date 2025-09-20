@@ -102,7 +102,7 @@ class FORTE_EXECUTE_ACTION_SERVER : public CEventSourceFB {
     void ActionExecuteCB(const ExecuteGoalConstPtr &pa_goal, CEventChainExecutionThread *const paECET);
 
   public:
-    FORTE_EXECUTE_ACTION_SERVER(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_EXECUTE_ACTION_SERVER(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
         m_nh(0),
         m_RosNamespace(""),
         m_RosMsgName(""),

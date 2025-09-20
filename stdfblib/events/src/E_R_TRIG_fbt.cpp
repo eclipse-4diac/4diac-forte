@@ -13,7 +13,7 @@
 
 #include "forte/iec61499/events/E_R_TRIG_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61499::events;
 
@@ -53,7 +53,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_R_TRIG::FORTE_E_R_TRIG(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_R_TRIG::FORTE_E_R_TRIG(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_D_FF("E_D_FF"_STRID, *this),
     fb_E_SWITCH("E_SWITCH"_STRID, *this),

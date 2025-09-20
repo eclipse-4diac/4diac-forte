@@ -9,13 +9,13 @@
 
 #include "Wago459.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_Wago459, "Wago459"_STRID)
 
 namespace {
-  const auto cDataInputNames =
-      std::array{"QI"_STRID, "AnalogInput_1"_STRID, "AnalogInput_2"_STRID, "AnalogInput_3"_STRID, "AnalogInput_4"_STRID};
+  const auto cDataInputNames = std::array{"QI"_STRID, "AnalogInput_1"_STRID, "AnalogInput_2"_STRID,
+                                          "AnalogInput_3"_STRID, "AnalogInput_4"_STRID};
   const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
   const auto cEventInputNames = std::array{"MAP"_STRID};
   const auto cEventInputTypeIds = std::array{"Event"_STRID};
@@ -37,8 +37,7 @@ namespace {
   };
 } // namespace
 
-FORTE_Wago459::FORTE_Wago459(const forte::core::StringId paInstanceNameId,
-                             forte::core::CFBContainer &paContainer) :
+FORTE_Wago459::FORTE_Wago459(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     WagoSlaveBase(459, paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_AnalogInput_1(""_STRING),

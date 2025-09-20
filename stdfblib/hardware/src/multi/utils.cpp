@@ -29,12 +29,12 @@
 #include "../replay/ReplayDevice.h"
 #endif // FORTE_REPLAY_DEVICE
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace forte::hardware::multi::utils {
 
   OPCUA_MGR *getOpcuaMgr(CDevice &paDevice) {
-    auto currentDevice = core::DeviceFactory::getDefaultImpl();
+    auto currentDevice = DeviceFactory::getDefaultImpl();
 #ifdef FORTE_DEBUG_DEVICE
     if (currentDevice == "Debug"_STRID) {
       return &static_cast<DebugDevice *>(&paDevice)->mOpcuaMgr;
@@ -55,8 +55,8 @@ namespace forte::hardware::multi::utils {
   }
 
   void setFactoriesSettings(FactoriesSettings paFactoriesSettings) {
-    core::EcetFactory::setDefaultImpl(paFactoriesSettings.mEcet);
-    core::TimerHandlerFactory::setDefaultImpl(paFactoriesSettings.mTimer);
+    EcetFactory::setDefaultImpl(paFactoriesSettings.mEcet);
+    TimerHandlerFactory::setDefaultImpl(paFactoriesSettings.mTimer);
   }
 
 } // namespace forte::hardware::multi::utils

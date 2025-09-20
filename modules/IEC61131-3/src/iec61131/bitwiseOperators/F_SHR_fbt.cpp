@@ -16,7 +16,7 @@
 
 #include "forte/iec61131/bitwiseOperators/F_SHR_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::bitwiseOperators;
 
@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_SHR::FORTE_F_SHR(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_SHR::FORTE_F_SHR(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_BIT_VARIANT()),
     var_N(CIEC_ANY_INT_VARIANT()),

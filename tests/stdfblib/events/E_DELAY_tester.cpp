@@ -14,7 +14,7 @@
 #include "forte/datatypes/forte_time.h"
 #include <E_DELAY.h>
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #ifdef WIN32
 #include <windows.h>

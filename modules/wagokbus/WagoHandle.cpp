@@ -16,13 +16,13 @@
 
 WagoHandle::WagoHandle(WagoDeviceController *paController,
                        CIEC_ANY::EDataTypeID paType,
-                       forte::core::io::IOMapper::Direction paDirection,
+                       forte::io::IOMapper::Direction paDirection,
                        tApplicationDeviceInterface *paAppDevInterface,
                        uint32_t paTaskId,
                        tDeviceId paKBusDeviceId,
                        TForteUInt32 paOutputOffset,
                        TForteUInt32 paInputOffset) :
-    forte::core::io::IOHandle(paController, paDirection, paType),
+    forte::io::IOHandle(paController, paDirection, paType),
     mAppDevInterface(paAppDevInterface),
     mTaskId(paTaskId),
     mKBusDeviceId(paKBusDeviceId),
@@ -81,7 +81,7 @@ bool WagoHandle::check() {
 
 void WagoHandle::dropObserver() {
   set(CIEC_WORD(0));
-  forte::core::io::IOHandle::dropObserver();
+  forte::io::IOHandle::dropObserver();
 }
 
 void WagoHandle::getBoolean(CIEC_BOOL &paState) {

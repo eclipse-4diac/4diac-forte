@@ -32,7 +32,7 @@ namespace forte::iec61499::net {
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *paECET) override;
 
-      GEN_SEND_RECV(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      GEN_SEND_RECV(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       ~GEN_SEND_RECV() override = default;
 

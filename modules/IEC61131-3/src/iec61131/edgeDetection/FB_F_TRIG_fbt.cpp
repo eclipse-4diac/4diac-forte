@@ -23,7 +23,7 @@
 
 using namespace std::literals;
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   const auto cEventInputNames = std::array{"REQ"_STRID};
@@ -50,7 +50,7 @@ using namespace forte::iec61131::edgeDetection;
 
 DEFINE_FIRMWARE_FB(FORTE_FB_F_TRIG, "iec61131::edgeDetection::FB_F_TRIG"_STRID)
 
-FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_FB_F_TRIG::FORTE_FB_F_TRIG(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
     var_MEM(true_BOOL),
     var_CLK(0_BOOL),

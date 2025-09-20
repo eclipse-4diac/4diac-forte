@@ -27,7 +27,7 @@ class FORTE_QueryServiceOpcUa : public CCompositeFB {
     static const int scm_nqueryServicesAdpNum = 0;
 
   public:
-    FORTE_QueryServiceOpcUa(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_QueryServiceOpcUa(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
 
         ~FORTE_QueryServiceOpcUa() override = default;
 };

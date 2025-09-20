@@ -12,7 +12,7 @@
 
 #include "fileReader_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include <sstream>
 #include <ostream>
@@ -22,17 +22,15 @@ DEFINE_FIRMWARE_FB(fileReader, "fileReader"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"QI"_STRID, "FILE_NAME"_STRID};
-  
-  
+
   const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID, "S1"_STRID};
-  
-  
+
   const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
   const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
-  
+
   const auto cEventOutputNames = std::array{"INITO"_STRID, "CNF"_STRID};
   const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -44,8 +42,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 const char *const fileReader::scmOK = "OK";
 const char *const fileReader::scmNotInitialised = "Not initialized";
@@ -75,7 +72,7 @@ void fileReader::executeEvent(TEventID paEIID,
   }
 }
 
-fileReader::fileReader(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+fileReader::fileReader(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId) {
   mFile.rdbuf()->pubsetbuf(nullptr, 0); // disable buffer to avoid latency
 }

@@ -22,9 +22,9 @@
 /*! /brief generic class for IX function blocks providing access to one boolean physical input
  *
  */
-class FORTE_IX final : public forte::core::io::CInputFB<CIEC_BOOL> {
+class FORTE_IX final : public forte::io::CInputFB<CIEC_BOOL> {
     DECLARE_FIRMWARE_FB(FORTE_IX)
 
   public:
-    FORTE_IX(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IX(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 };

@@ -27,7 +27,7 @@ class FORTE_PublishEventHTTP : public CCompositeFB {
     static const int scm_npublishEventAdpNum = 0;
 
   public:
-    FORTE_PublishEventHTTP(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_PublishEventHTTP(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
 
         ~FORTE_PublishEventHTTP() override = default;
 };

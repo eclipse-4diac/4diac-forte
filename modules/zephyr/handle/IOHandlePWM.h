@@ -21,10 +21,10 @@
 
 class IODeviceController;
 
-class IOHandlePWM : public forte::core::io::IOHandle {
-    using IOObserver = forte::core::io::IOObserver;
-    using IOHandle = forte::core::io::IOHandle;
-    using IOMapper = forte::core::io::IOMapper;
+class IOHandlePWM : public forte::io::IOHandle {
+    using IOObserver = forte::io::IOObserver;
+    using IOHandle = forte::io::IOHandle;
+    using IOMapper = forte::io::IOMapper;
 
   public:
     IOHandlePWM(IODeviceController *paDeviceCtrl, std::string const &paId, const pwm_dt_spec *paPWMSpec);

@@ -16,7 +16,7 @@
 
 #include "forte/iec61131/comparison/F_GT_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::comparison;
 
@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_GT::FORTE_F_GT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_GT::FORTE_F_GT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_ELEMENTARY_VARIANT()),
     var_IN2(CIEC_ANY_ELEMENTARY_VARIANT()),

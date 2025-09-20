@@ -26,9 +26,9 @@ class CEventSourceFB : public CFunctionBlock {
     TEventEntry mEventSourceEventEntry; //! the event entry to start the event chain
 
   public:
-    CEventSourceFB(forte::core::CFBContainer &paContainer,
+    CEventSourceFB(forte::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
-                   forte::core::StringId paInstanceNameId) :
+                   forte::StringId paInstanceNameId) :
         CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
         mEventChainExecutor(nullptr),
         mEventSourceEventEntry(*this, cgExternalEventID) {

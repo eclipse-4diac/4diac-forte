@@ -269,7 +269,7 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
      * @param paStructNameId NameId of the Struct
      */
-    std::string getStructBrowsePath(const std::string &paPathPrefix, forte::core::StringId paStructNameId);
+    std::string getStructBrowsePath(const std::string &paPathPrefix, forte::StringId paStructNameId);
 
     /**
      * @param paIsPublisher True if the FB is a Publisher, false othewise
@@ -282,7 +282,7 @@ class COPC_UA_ObjectStruct_Helper {
      * @param structMemberNameId Name Id of Object Node Struct member
      */
     std::string getStructMemberBrowsePathWithNSIndex(const std::string &paBrowsePathPrefix,
-                                                     const forte::core::StringId structMemberNameId);
+                                                     const forte::StringId structMemberNameId);
 
     /**
      * Creates an OPC UA namespace with the given name and assigns the
@@ -313,7 +313,7 @@ class COPC_UA_ObjectStruct_Helper {
      * @param paStructMemberNameId The id of the Struct Member name
      */
     bool addOPCUAStructTypeComponents(
-        UA_Server *paServer, UA_NodeId &paParentNodeId, CIEC_STRUCT &paStructType, const std::string &paStructTypeName /*UA_Server *paServer, UA_NodeId &paParentNodeId, const std::string &paStructName, CIEC_ANY *paStructMember, const forte::core::StringId paStructMemberNameId*/);
+        UA_Server *paServer, UA_NodeId &paParentNodeId, CIEC_STRUCT &paStructType, const std::string &paStructTypeName /*UA_Server *paServer, UA_NodeId &paParentNodeId, const std::string &paStructName, CIEC_ANY *paStructMember, const forte::StringId paStructMemberNameId*/);
 
     /**
      * Creates the member variable for the OPC UA Struct Type Object Node with the given Struct Member Name
@@ -327,7 +327,7 @@ class COPC_UA_ObjectStruct_Helper {
                                              UA_NodeId &paParentNodeId,
                                              const std::string &paStructName,
                                              CIEC_ANY *paStructMember,
-                                             const forte::core::StringId paStructMemberNameId);
+                                             const forte::StringId paStructMemberNameId);
 
     /**
      * Creates the member object for the OPC UA Struct Type Object Node with the given Struct Member Name
@@ -342,7 +342,7 @@ class COPC_UA_ObjectStruct_Helper {
                                            UA_NodeId &paParentNodeId,
                                            const std::string &paStructName,
                                            CIEC_STRUCT &paStructMember,
-                                           const forte::core::StringId paStructMemberNameId,
+                                           const forte::StringId paStructMemberNameId,
                                            UA_NodeId &paMemberTypeNodeId);
 
     /**

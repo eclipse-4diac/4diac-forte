@@ -21,7 +21,7 @@
 #include <string>
 
 using namespace forte::com_infra;
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<MQTTComLayer> entry("mqtt"_STRID);

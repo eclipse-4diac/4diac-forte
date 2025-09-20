@@ -22,10 +22,10 @@
 #include "forte/util/criticalregion.h"
 #include "forte/util/devlog.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
-  [[maybe_unused]] const forte::core::EcetFactory::EntryImpl<CEventChainExecutionThread> entry("default"_STRID);
+  [[maybe_unused]] const forte::EcetFactory::EntryImpl<CEventChainExecutionThread> entry("default"_STRID);
 }
 
 CEventChainExecutionThread::CEventChainExecutionThread() : CThread() {

@@ -77,8 +77,8 @@ namespace forte {
         }
 
       protected:
-        CBaseCommFB(const forte::core::StringId paInstanceNameId,
-                    forte::core::CFBContainer &paContainer,
+        CBaseCommFB(const forte::StringId paInstanceNameId,
+                    forte::CFBContainer &paContainer,
                     forte::com_infra::EComServiceType paCommServiceType);
 
         /*!\brief Extract the id and the parameter and the ID. The format is ID[PARAMS] where the opening and closing

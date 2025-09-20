@@ -11,7 +11,7 @@
 
 #include "forte/iec61499/events/E_TRIG_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/iec61131_functions.h"
 #include "forte/datatypes/forte_array_common.h"
@@ -42,7 +42,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TRIG::FORTE_E_TRIG(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_TRIG::FORTE_E_TRIG(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_EVENTTYPE("EInit"_STRING),
     conn_CNF(*this, 0),
@@ -55,7 +55,7 @@ void FORTE_E_TRIG::setInitialValues() {
 void FORTE_E_TRIG::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   switch (paEIID) {
     case scmEventREQID:
-      const TEventTypeID eventTypeId = forte::core::StringId::lookup(var_EVENTTYPE.c_str());
+      const TEventTypeID eventTypeId = forte::StringId::lookup(var_EVENTTYPE.c_str());
       if (eventTypeId) {
         triggerEventsInResource(getResource(), eventTypeId, paECET);
         sendOutputEvent(scmEventCNFID, paECET);
@@ -107,7 +107,7 @@ CDataConnection *FORTE_E_TRIG::getDOConUnchecked(TPortId) {
   return nullptr;
 }
 
-void FORTE_E_TRIG::triggerEventsInResource(forte::core::CFBContainer *paContainer,
+void FORTE_E_TRIG::triggerEventsInResource(forte::CFBContainer *paContainer,
                                            const TEventTypeID paEventType,
                                            CEventChainExecutionThread *const paECET) {
   if (paContainer != nullptr) {

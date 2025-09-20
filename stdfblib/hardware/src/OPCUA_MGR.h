@@ -297,7 +297,7 @@ class OPCUA_MGR {
 
     COPC_UA_Local_Handler &mUaHandler;
 
-    forte::core::SManagementCMD mCommand;
+    forte::SManagementCMD mCommand;
 
     UA_NodeId mMgmtTypeId;
 
@@ -751,13 +751,13 @@ class OPCUA_MGR {
     void clearMGMCommand();
 
     void setMGMCommand(EMGMCommandType paCMD,
-                       forte::core::StringId paDestination,
+                       forte::StringId paDestination,
                        const char *paAdditionalParams,
                        const char *paFirstParam,
                        const char *paSecondParam);
 
     void setMGMCommand(EMGMCommandType paCMD,
-                       forte::core::StringId paDestination,
+                       forte::StringId paDestination,
                        const char *paAdditionalParams,
                        std::vector<std::string> &paFirstParam,
                        std::vector<std::string> paSecondParam = std::vector<std::string>());

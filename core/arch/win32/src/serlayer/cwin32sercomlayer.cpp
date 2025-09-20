@@ -14,7 +14,7 @@
 #include "forte/cominfra/commfb.h"
 #include "forte/cominfra/comlayersmanager.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CWin32SerComLayer> entry("ser"_STRID);

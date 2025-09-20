@@ -13,7 +13,7 @@
 #include "forte/io/eIO/eIXconfig_fbt.h"
 #include "forte/io/eIO/eIX_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   const auto cEventInputNames = std::array{"CONF"_STRID};
@@ -37,7 +37,7 @@ namespace {
 
 DEFINE_FIRMWARE_FB(FORTE_eIXconfig, "eIXconfig"_STRID)
 
-FORTE_eIXconfig::FORTE_eIXconfig(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_eIXconfig::FORTE_eIXconfig(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CeConfigFB(paInstanceNameId, cFBInterfaceSpec, paContainer),
     var_FE(0_BOOL),
     var_RE(0_BOOL),

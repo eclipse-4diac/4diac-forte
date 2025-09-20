@@ -19,90 +19,86 @@
 #include "forte/io/configFB/io_adapter_multi.h"
 #include "forte/io/configFB/io_master_multi.h"
 
-namespace forte {
-  namespace core {
-    namespace io {
+namespace forte::io {
 
-      class IOConfigFBMultiSlave : public IOConfigFBBase {
-        public:
-          IOConfigFBMultiSlave(const TForteUInt8 *const paSlaveConfigurationIO,
-                               const TForteUInt8 paSlaveConfigurationIONum,
-                               int paType,
-                               forte::core::CFBContainer &paContainer,
-                               const SFBInterfaceSpec &paInterfaceSpec,
-                               const forte::core::StringId paInstanceNameId);
-          ~IOConfigFBMultiSlave() override;
+  class IOConfigFBMultiSlave : public IOConfigFBBase {
+    public:
+      IOConfigFBMultiSlave(const TForteUInt8 *const paSlaveConfigurationIO,
+                           const TForteUInt8 paSlaveConfigurationIONum,
+                           int paType,
+                           forte::CFBContainer &paContainer,
+                           const SFBInterfaceSpec &paInterfaceSpec,
+                           const forte::StringId paInstanceNameId);
+      ~IOConfigFBMultiSlave() override;
 
-        protected:
-          CIEC_BOOL &QI() {
-            return *static_cast<CIEC_BOOL *>(getDI(0));
-          }
+    protected:
+      CIEC_BOOL &QI() {
+        return *static_cast<CIEC_BOOL *>(getDI(0));
+      }
 
-          CIEC_BOOL &QO() {
-            return *static_cast<CIEC_BOOL *>(getDO(0));
-          }
+      CIEC_BOOL &QO() {
+        return *static_cast<CIEC_BOOL *>(getDO(0));
+      }
 
-          CIEC_WSTRING &STATUS() {
-            return *static_cast<CIEC_WSTRING *>(getDO(1));
-          }
+      CIEC_WSTRING &STATUS() {
+        return *static_cast<CIEC_WSTRING *>(getDO(1));
+      }
 
-          static const TEventID scmEventMAPID = 0;
+      static const TEventID scmEventMAPID = 0;
 
-          static const TEventID scmEventMAPOID = 0;
-          static const TEventID scmEventINDID = 1;
+      static const TEventID scmEventMAPOID = 0;
+      static const TEventID scmEventINDID = 1;
 
-          IOConfigFBMultiAdapter &BusAdapterOut() {
-            return (*static_cast<IOConfigFBMultiAdapter *>(getPlugPinUnchecked(0)->getAdapterBlock()));
-          }
+      IOConfigFBMultiAdapter &BusAdapterOut() {
+        return (*static_cast<IOConfigFBMultiAdapter *>(getPlugPinUnchecked(0)->getAdapterBlock()));
+      }
 
-          IOConfigFBMultiAdapter &BusAdapterIn() {
-            return (*static_cast<IOConfigFBMultiAdapter *>(getSocketPinUnchecked(0)->getAdapterBlock()));
-          }
+      IOConfigFBMultiAdapter &BusAdapterIn() {
+        return (*static_cast<IOConfigFBMultiAdapter *>(getSocketPinUnchecked(0)->getAdapterBlock()));
+      }
 
-          void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-          IODeviceMultiController &getController() {
-            return (*static_cast<IODeviceMultiController *>(mMaster->getDeviceController()));
-          }
+      IODeviceMultiController &getController() {
+        return (*static_cast<IODeviceMultiController *>(mMaster->getDeviceController()));
+      }
 
-          virtual const char *init() {
-            return nullptr;
-          }
+      virtual const char *init() {
+        return nullptr;
+      }
 
-          virtual void deInit() {
-            // do nothing
-          }
+      virtual void deInit() {
+        // do nothing
+      }
 
-          virtual void initHandles() = 0;
+      virtual void initHandles() = 0;
 
-          void initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor);
+      void initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor);
 
-          static const CIEC_WSTRING scmOK;
-          static const char *const scmMasterNotFound;
+      static const CIEC_WSTRING scmOK;
+      static const char *const scmMasterNotFound;
 
-          size_t mIndex;
+      size_t mIndex;
 
-          const TForteUInt8 *mSlaveConfigurationIO;
+      const TForteUInt8 *mSlaveConfigurationIO;
 
-        private:
-          IOConfigFBMultiMaster *mMaster;
+    private:
+      IOConfigFBMultiMaster *mMaster;
 
-          int mType;
+      int mType;
 
-          bool mInitialized;
+      bool mInitialized;
 
-          TForteUInt8 mSlaveConfigurationIONum;
-          bool *mSlaveConfigurationIOIsDefault;
+      TForteUInt8 mSlaveConfigurationIONum;
+      bool *mSlaveConfigurationIOIsDefault;
 
-          const char *handleInitEvent();
+      const char *handleInitEvent();
 
-          static const CIEC_WSTRING scmStopped;
-          static const char *const scmNotFound;
-          static const char *const scmIncorrectType;
-      };
+      static const CIEC_WSTRING scmStopped;
+      static const char *const scmNotFound;
+      static const char *const scmIncorrectType;
+  };
 
-    } // namespace io
-  } // namespace core
-} // namespace forte
+} // namespace forte::io
 
 #endif /* SRC_CORE_IO_CONFIGFB_SLAVE_MULTI_H_ */

@@ -18,9 +18,9 @@
 
 #include "forte/io/IE_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 namespace {
   const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID};
@@ -45,7 +45,7 @@ namespace {
 
 DEFINE_FIRMWARE_FB(FORTE_IE, "IE"_STRID)
 
-FORTE_IE::FORTE_IE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_IE::FORTE_IE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CProcessInterfaceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_IND(*this, 2) {};
 

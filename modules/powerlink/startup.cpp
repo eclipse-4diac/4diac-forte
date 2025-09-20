@@ -19,5 +19,5 @@ namespace {
     CEplStackWrapper::eplMainInit();
   }
 
-  [[maybe_unused]] const forte::core::StartupHookRegistry::EntryImpl<powerlinkStartupHook> entry;
+  [[maybe_unused]] const forte::StartupHookRegistry::EntryImpl<powerlinkStartupHook> entry;
 } // namespace

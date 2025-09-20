@@ -33,17 +33,17 @@ class CIEC_DataTypeTest : public CIEC_STRUCT {
       return 3;
     }
 
-    const forte::core::StringId *elementNames() const override {
+    const forte::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    forte::core::StringId getStructTypeNameID() const override;
+    forte::StringId getStructTypeNameID() const override;
 
     CIEC_ANY *getMember(size_t paMemberIndex) override;
     const CIEC_ANY *getMember(size_t paMemberIndex) const override;
 
   private:
-    static const forte::core::StringId scmElementNames[];
+    static const forte::StringId scmElementNames[];
 };
 
 #endif //_FORTE_DATATYPETEST_H_

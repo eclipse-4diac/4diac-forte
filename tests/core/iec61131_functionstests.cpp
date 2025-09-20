@@ -38,7 +38,7 @@
 
 using namespace std::string_literals;
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 /*** STRUCT for tests *********/
 class CIEC_EndianessTestStruct : public CIEC_STRUCT {
@@ -61,11 +61,11 @@ class CIEC_EndianessTestStruct : public CIEC_STRUCT {
       return 3;
     }
 
-    const forte::core::StringId *elementNames() const override {
+    const forte::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    forte::core::StringId getStructTypeNameID() const override {
+    forte::StringId getStructTypeNameID() const override {
       return "EndianessTestStruct"_STRID;
     }
 
@@ -88,10 +88,10 @@ class CIEC_EndianessTestStruct : public CIEC_STRUCT {
     }
 
   private:
-    static const forte::core::StringId scmElementNames[];
+    static const forte::StringId scmElementNames[];
 };
 
-const forte::core::StringId CIEC_EndianessTestStruct::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID};
+const forte::StringId CIEC_EndianessTestStruct::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID};
 
 DEFINE_FIRMWARE_DATATYPE(EndianessTestStruct, "EndianessTestStruct"_STRID)
 
@@ -613,15 +613,15 @@ BOOST_AUTO_TEST_CASE(ne_struct) {
 }
 
 BOOST_AUTO_TEST_CASE(implicit_bool_casts) {
-  bool bSame = std::is_same<CIEC_BOOL, forte::core::mpl::implicit_cast<CIEC_BOOL, CIEC_BOOL>::type>::value;
+  bool bSame = std::is_same<CIEC_BOOL, forte::mpl::implicit_cast<CIEC_BOOL, CIEC_BOOL>::type>::value;
   BOOST_TEST(bSame);
-  bSame = std::is_same<CIEC_BYTE, forte::core::mpl::implicit_cast<CIEC_BOOL, CIEC_BYTE>::type>::value;
+  bSame = std::is_same<CIEC_BYTE, forte::mpl::implicit_cast<CIEC_BOOL, CIEC_BYTE>::type>::value;
   BOOST_TEST(bSame);
-  bSame = std::is_same<CIEC_WORD, forte::core::mpl::implicit_cast<CIEC_BOOL, CIEC_WORD>::type>::value;
+  bSame = std::is_same<CIEC_WORD, forte::mpl::implicit_cast<CIEC_BOOL, CIEC_WORD>::type>::value;
   BOOST_TEST(bSame);
-  bSame = std::is_same<CIEC_DWORD, forte::core::mpl::implicit_cast<CIEC_BOOL, CIEC_DWORD>::type>::value;
+  bSame = std::is_same<CIEC_DWORD, forte::mpl::implicit_cast<CIEC_BOOL, CIEC_DWORD>::type>::value;
   BOOST_TEST(bSame);
-  bSame = std::is_same<CIEC_LWORD, forte::core::mpl::implicit_cast<CIEC_BOOL, CIEC_LWORD>::type>::value;
+  bSame = std::is_same<CIEC_LWORD, forte::mpl::implicit_cast<CIEC_BOOL, CIEC_LWORD>::type>::value;
   BOOST_TEST(bSame);
 }
 

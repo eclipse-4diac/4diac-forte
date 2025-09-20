@@ -16,7 +16,7 @@
 
 #include "forte/iec61131/selection/F_LIMIT_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::selection;
 
@@ -41,7 +41,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_LIMIT::FORTE_F_LIMIT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_LIMIT::FORTE_F_LIMIT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_MN(CIEC_ANY_ELEMENTARY_VARIANT()),
     var_IN(CIEC_ANY_ELEMENTARY_VARIANT()),

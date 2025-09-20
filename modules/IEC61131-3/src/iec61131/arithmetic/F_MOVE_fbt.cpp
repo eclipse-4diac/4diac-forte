@@ -16,7 +16,7 @@
 
 #include "forte/iec61131/arithmetic/F_MOVE_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::arithmetic;
 
@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_MOVE::FORTE_F_MOVE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_MOVE::FORTE_F_MOVE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN(CIEC_ANY_VARIANT()),
     var_OUT(CIEC_ANY_VARIANT()),

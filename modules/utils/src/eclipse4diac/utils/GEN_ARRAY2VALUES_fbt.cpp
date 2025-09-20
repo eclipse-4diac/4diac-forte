@@ -20,7 +20,7 @@
 #include <memory>
 #include "forte/util/string_utils.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::utils;
 
@@ -32,8 +32,7 @@ namespace {
   const auto cEventOutputNames = std::array{"CNF"_STRID};
 } // namespace
 
-GEN_ARRAY2VALUES::GEN_ARRAY2VALUES(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+GEN_ARRAY2VALUES::GEN_ARRAY2VALUES(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr) {
@@ -79,8 +78,8 @@ bool GEN_ARRAY2VALUES::createInterfaceSpec(const char *paConfigString, SFBInterf
   }
 
   // there is a number and a data type of inputs within the typename
-  size_t numDOs = static_cast<size_t>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
-  forte::core::StringId arrayValueTypeId = forte::core::StringId::lookup(++dTypePos);
+  size_t numDOs = static_cast<size_t>(forte::util::strtoul(dNumberPos, nullptr, 10));
+  forte::StringId arrayValueTypeId = forte::StringId::lookup(++dTypePos);
 
   if (numDOs < 2) {
     return false;

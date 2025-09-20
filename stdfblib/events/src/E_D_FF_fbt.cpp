@@ -13,7 +13,7 @@
 
 #include "forte/iec61499/events/E_D_FF_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_bool.h"
 #include "forte/iec61131_functions.h"
@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_D_FF::FORTE_E_D_FF(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_D_FF::FORTE_E_D_FF(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO(*this, 0),
     conn_D(nullptr),

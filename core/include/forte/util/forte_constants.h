@@ -16,14 +16,10 @@
 
 #include "forte/datatypes/forte_time.h"
 
-namespace forte {
-  namespace core {
-    namespace constants {
-      const CIEC_TIME::TValueType cMillisecondsPerSecond = 1000 /* 1E3 */;
-      const CIEC_TIME::TValueType cMicrosecondsPerSecond = 1000000 /* 1E6 */;
-      const CIEC_TIME::TValueType cNanosecondsPerSecond = 1000000000 /* 1E9 */;
-    } /* namespace constants */
-  } /* namespace core */
-} /* namespace forte */
+namespace forte::constants {
+  const CIEC_TIME::TValueType cMillisecondsPerSecond = 1000 /* 1E3 */;
+  const CIEC_TIME::TValueType cMicrosecondsPerSecond = 1000000 /* 1E6 */;
+  const CIEC_TIME::TValueType cNanosecondsPerSecond = 1000000000 /* 1E9 */;
+} // namespace forte::constants
 
 #endif /* SRC_CORE_UTILS_FORTE_CONSTANTS_H_ */

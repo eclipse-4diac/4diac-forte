@@ -37,7 +37,7 @@ namespace forte::iec61499::events {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_E_RESTART(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      FORTE_E_RESTART(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       CEventConnection conn_COLD;
       CEventConnection conn_WARM;

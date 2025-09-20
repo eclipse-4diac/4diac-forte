@@ -35,7 +35,7 @@ CResourceReplayer::CResourceReplayer(CResource &paResource, std::vector<EventMes
   auto processOneEvent = [validTypes = forte::trace::reader::utils::getServiceFunctionBlockTypes(mResource),
                           &ecet = this->mEcet](TEventEntry paEvent) {
     // pass through non interesting events
-    if (auto type = forte::core::StringId::lookup(paEvent.getFB().getFBTypeName());
+    if (auto type = forte::StringId::lookup(paEvent.getFB().getFBTypeName());
         validTypes.find(type) == validTypes.end()) {
 
       paEvent.getFB().receiveInputEvent(paEvent.getPortId(), &ecet);

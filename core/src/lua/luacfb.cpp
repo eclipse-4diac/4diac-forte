@@ -16,10 +16,10 @@
 
 #include "core/lua/luacfb.h"
 
-CLuaCFB::CLuaCFB(forte::core::StringId paInstanceNameId,
+CLuaCFB::CLuaCFB(forte::StringId paInstanceNameId,
                  const CLuaCFBTypeEntry *paTypeEntry,
                  SCFB_FBNData &paFbnData,
-                 forte::core::CFBContainer &paContainer) :
+                 forte::CFBContainer &paContainer) :
     CGenFunctionBlock<CCompositeFB>(paContainer, paTypeEntry->getInterfaceSpec(), paInstanceNameId, paFbnData),
     mTypeEntry(paTypeEntry) {
 }

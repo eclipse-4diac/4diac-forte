@@ -12,7 +12,7 @@
 
 #include "forte_servicerequestform.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(ServiceRequestForm, "ServiceRequestForm"_STRID);
 
@@ -20,18 +20,18 @@ CIEC_ServiceRequestForm::CIEC_ServiceRequestForm() :
     CIEC_STRUCT("ServiceRequestForm"_STRID, 6, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const forte::core::StringId CIEC_ServiceRequestForm::scmElementTypes[] = {"ArrowheadSystem"_STRID,
-                                                                                 "ArrowheadCloud"_STRID,
-                                                                                 "ArrowheadService"_STRID,
-                                                                                 "ARRAY"_STRID,
-                                                                                 10,
-                                                                                 "WSTRING"_STRID,
-                                                                                 "ARRAY"_STRID,
-                                                                                 10,
-                                                                                 "PreferredProvider"_STRID,
-                                                                                 "ARRAY"_STRID,
-                                                                                 10,
-                                                                                 "WSTRING"_STRID};
-const forte::core::StringId CIEC_ServiceRequestForm::scmElementNames[] = {
+const forte::StringId CIEC_ServiceRequestForm::scmElementTypes[] = {"ArrowheadSystem"_STRID,
+                                                                    "ArrowheadCloud"_STRID,
+                                                                    "ArrowheadService"_STRID,
+                                                                    "ARRAY"_STRID,
+                                                                    10,
+                                                                    "WSTRING"_STRID,
+                                                                    "ARRAY"_STRID,
+                                                                    10,
+                                                                    "PreferredProvider"_STRID,
+                                                                    "ARRAY"_STRID,
+                                                                    10,
+                                                                    "WSTRING"_STRID};
+const forte::StringId CIEC_ServiceRequestForm::scmElementNames[] = {
     "requesterSystem"_STRID,    "requesterCloud"_STRID,     "requestedService"_STRID,
     "orchestrationFlags"_STRID, "preferredProviders"_STRID, "requestedQoS"_STRID};

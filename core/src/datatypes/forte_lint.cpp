@@ -13,7 +13,7 @@
  *******************************************************************************/
 #include "forte/datatypes/forte_lint.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(LINT, "LINT"_STRID);
 
@@ -29,4 +29,4 @@ template CIEC_LINT &CIEC_LINT::operator= <>(const CIEC_UINT &paValue);
 
 template CIEC_LINT &CIEC_LINT::operator= <>(const CIEC_UDINT &paValue);
 
-const forte::core::StringId forte::CDataTypeTrait<CIEC_LINT>::scmDataTypeName = "LINT"_STRID;
+const forte::StringId forte::CDataTypeTrait<CIEC_LINT>::scmDataTypeName = "LINT"_STRID;

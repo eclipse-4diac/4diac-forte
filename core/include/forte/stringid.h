@@ -19,7 +19,7 @@
 
 #include "forte/util/fixed_string.h"
 
-namespace forte::core {
+namespace forte {
   class StringId {
       template<util::fixed_string A>
       struct Register {
@@ -92,11 +92,11 @@ namespace forte::core {
       return StringId::fixed<A>();
     }
   } // namespace literals
-} // namespace forte::core
+} // namespace forte
 
 template<>
-struct std::hash<forte::core::StringId> {
-    [[nodiscard]] std::size_t operator()(const forte::core::StringId &paStringId) const noexcept {
+struct std::hash<forte::StringId> {
+    [[nodiscard]] std::size_t operator()(const forte::StringId &paStringId) const noexcept {
       return std::hash<const char *>{}(paStringId.data());
     }
 };

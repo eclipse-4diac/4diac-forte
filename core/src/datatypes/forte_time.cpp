@@ -22,7 +22,7 @@
 #include "forte/util/forte_constants.h"
 #include "forte/util/string_utils.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace std::literals::string_literals;
 
@@ -56,13 +56,13 @@ int CIEC_TIME::fromString(const char *paValue) {
       TValueType nTimeFactor = 1;
       bool bEnd = false;
       do {
-        TValueType nBuf = forte::core::util::strtol(paValue, &pcEnd, 10);
+        TValueType nBuf = forte::util::strtol(paValue, &pcEnd, 10);
         switch (tolower(*pcEnd)) {
           case 'd': nTimeFactor = 24 * 60 * 60 * csmForteTimeBaseUnitsPerSecond; break;
           case 'h': nTimeFactor = 60 * 60 * csmForteTimeBaseUnitsPerSecond; break;
           case 'm':
             if ('s' == tolower(*(pcEnd + 1))) {
-              nTimeFactor = csmForteTimeBaseUnitsPerSecond / forte::core::constants::cMillisecondsPerSecond;
+              nTimeFactor = csmForteTimeBaseUnitsPerSecond / forte::constants::cMillisecondsPerSecond;
               ++pcEnd;
             } else {
               nTimeFactor = 60 * csmForteTimeBaseUnitsPerSecond;
@@ -70,7 +70,7 @@ int CIEC_TIME::fromString(const char *paValue) {
             break;
           case 'n':
             if ('s' == tolower(*(pcEnd + 1))) {
-              nTimeFactor = csmForteTimeBaseUnitsPerSecond / forte::core::constants::cNanosecondsPerSecond;
+              nTimeFactor = csmForteTimeBaseUnitsPerSecond / forte::constants::cNanosecondsPerSecond;
               ++pcEnd;
             } else {
               return -1;
@@ -79,7 +79,7 @@ int CIEC_TIME::fromString(const char *paValue) {
           case 's': nTimeFactor = csmForteTimeBaseUnitsPerSecond; break;
           case 'u':
             if ('s' == tolower(*(pcEnd + 1))) {
-              nTimeFactor = csmForteTimeBaseUnitsPerSecond / forte::core::constants::cMicrosecondsPerSecond;
+              nTimeFactor = csmForteTimeBaseUnitsPerSecond / forte::constants::cMicrosecondsPerSecond;
               ++pcEnd;
             } else {
               return -1;
@@ -110,7 +110,7 @@ int CIEC_TIME::fromString(const char *paValue) {
       return -1;
     }
   } else {
-    nIntVal = forte::core::util::strtol(paValue, &pcEnd, 10);
+    nIntVal = forte::util::strtol(paValue, &pcEnd, 10);
     nRetVal = static_cast<int>(pcEnd - paValue);
   }
 
@@ -180,27 +180,27 @@ CIEC_TIME::TValueType CIEC_TIME::getInSeconds() const {
 }
 
 CIEC_TIME::TValueType CIEC_TIME::getInMilliSeconds() const {
-  return (forte::core::constants::cMillisecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
-             ? static_cast<TValueType>(*this) / (static_cast<TValueType>(csmForteTimeBaseUnitsPerSecond) /
-                                                 forte::core::constants::cMillisecondsPerSecond)
+  return (forte::constants::cMillisecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
+             ? static_cast<TValueType>(*this) /
+                   (static_cast<TValueType>(csmForteTimeBaseUnitsPerSecond) / forte::constants::cMillisecondsPerSecond)
              : static_cast<TValueType>(*this) *
-                   (forte::core::constants::cMillisecondsPerSecond / csmForteTimeBaseUnitsPerSecond);
+                   (forte::constants::cMillisecondsPerSecond / csmForteTimeBaseUnitsPerSecond);
 }
 
 CIEC_TIME::TValueType CIEC_TIME::getInMicroSeconds() const {
-  return (forte::core::constants::cMicrosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
-             ? static_cast<TValueType>(*this) / (static_cast<TValueType>(csmForteTimeBaseUnitsPerSecond) /
-                                                 forte::core::constants::cMicrosecondsPerSecond)
+  return (forte::constants::cMicrosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
+             ? static_cast<TValueType>(*this) /
+                   (static_cast<TValueType>(csmForteTimeBaseUnitsPerSecond) / forte::constants::cMicrosecondsPerSecond)
              : static_cast<TValueType>(*this) *
-                   (forte::core::constants::cMicrosecondsPerSecond / csmForteTimeBaseUnitsPerSecond);
+                   (forte::constants::cMicrosecondsPerSecond / csmForteTimeBaseUnitsPerSecond);
 }
 
 CIEC_TIME::TValueType CIEC_TIME::getInNanoSeconds() const {
-  return (forte::core::constants::cNanosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
-             ? static_cast<TValueType>(*this) / (static_cast<TValueType>(csmForteTimeBaseUnitsPerSecond) /
-                                                 forte::core::constants::cNanosecondsPerSecond)
+  return (forte::constants::cNanosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
+             ? static_cast<TValueType>(*this) /
+                   (static_cast<TValueType>(csmForteTimeBaseUnitsPerSecond) / forte::constants::cNanosecondsPerSecond)
              : static_cast<TValueType>(*this) *
-                   (forte::core::constants::cNanosecondsPerSecond / csmForteTimeBaseUnitsPerSecond);
+                   (forte::constants::cNanosecondsPerSecond / csmForteTimeBaseUnitsPerSecond);
 }
 
 void CIEC_TIME::setFromSeconds(TValueType paValue) {
@@ -208,21 +208,21 @@ void CIEC_TIME::setFromSeconds(TValueType paValue) {
 }
 
 void CIEC_TIME::setFromMilliSeconds(TValueType paValue) {
-  setLargestInt((forte::core::constants::cMillisecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
-                    ? paValue * (csmForteTimeBaseUnitsPerSecond / forte::core::constants::cMillisecondsPerSecond)
-                    : paValue / (forte::core::constants::cMillisecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
+  setLargestInt((forte::constants::cMillisecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
+                    ? paValue * (csmForteTimeBaseUnitsPerSecond / forte::constants::cMillisecondsPerSecond)
+                    : paValue / (forte::constants::cMillisecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
 }
 
 void CIEC_TIME::setFromMicroSeconds(TValueType paValue) {
-  setLargestInt((forte::core::constants::cMicrosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
-                    ? paValue * (csmForteTimeBaseUnitsPerSecond / forte::core::constants::cMicrosecondsPerSecond)
-                    : paValue / (forte::core::constants::cMicrosecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
+  setLargestInt((forte::constants::cMicrosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
+                    ? paValue * (csmForteTimeBaseUnitsPerSecond / forte::constants::cMicrosecondsPerSecond)
+                    : paValue / (forte::constants::cMicrosecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
 }
 
 void CIEC_TIME::setFromNanoSeconds(TValueType paValue) {
-  setLargestInt((forte::core::constants::cNanosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
-                    ? paValue * (csmForteTimeBaseUnitsPerSecond / forte::core::constants::cNanosecondsPerSecond)
-                    : paValue / (forte::core::constants::cNanosecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
+  setLargestInt((forte::constants::cNanosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
+                    ? paValue * (csmForteTimeBaseUnitsPerSecond / forte::constants::cNanosecondsPerSecond)
+                    : paValue / (forte::constants::cNanosecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
 }
 
-const forte::core::StringId forte::CDataTypeTrait<CIEC_TIME>::scmDataTypeName = "TIME"_STRID;
+const forte::StringId forte::CDataTypeTrait<CIEC_TIME>::scmDataTypeName = "TIME"_STRID;

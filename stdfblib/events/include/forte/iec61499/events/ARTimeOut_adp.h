@@ -55,16 +55,16 @@ namespace forte::iec61499::events {
       virtual ~FORTE_ARTimeOut() override = default;
 
     protected:
-      FORTE_ARTimeOut(forte::core::CFBContainer &paContainer,
+      FORTE_ARTimeOut(forte::CFBContainer &paContainer,
                       const SFBInterfaceSpec &paInterfaceSpec,
-                      const forte::core::StringId paInstanceNameId,
+                      const forte::StringId paInstanceNameId,
                       TForteUInt8 paParentAdapterlistID);
   };
 
   class FORTE_ARTimeOut_Plug final : public FORTE_ARTimeOut {
     public:
-      FORTE_ARTimeOut_Plug(forte::core::StringId paInstanceNameId,
-                           forte::core::CFBContainer &paContainer,
+      FORTE_ARTimeOut_Plug(forte::StringId paInstanceNameId,
+                           forte::CFBContainer &paContainer,
                            TForteUInt8 paParentAdapterlistID);
       ~FORTE_ARTimeOut_Plug() override = default;
 
@@ -84,8 +84,8 @@ namespace forte::iec61499::events {
 
   class FORTE_ARTimeOut_Socket final : public FORTE_ARTimeOut {
     public:
-      FORTE_ARTimeOut_Socket(forte::core::StringId paInstanceNameId,
-                             forte::core::CFBContainer &paContainer,
+      FORTE_ARTimeOut_Socket(forte::StringId paInstanceNameId,
+                             forte::CFBContainer &paContainer,
                              TForteUInt8 paParentAdapterlistID);
       ~FORTE_ARTimeOut_Socket() override = default;
 

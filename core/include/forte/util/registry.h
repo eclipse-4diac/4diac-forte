@@ -17,7 +17,7 @@
 
 #include <unordered_map>
 
-namespace forte::core::util {
+namespace forte::util {
 
   template<fixed_string Default, typename T>
   class Registry final {
@@ -80,4 +80,4 @@ namespace forte::core::util {
 
   template<fixed_string Default, typename T>
   constinit StringId Registry<Default, T>::defaultName = StringId::fixed<Default>();
-} // namespace forte::core::util
+} // namespace forte::util

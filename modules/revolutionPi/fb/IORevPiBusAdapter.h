@@ -18,7 +18,7 @@
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_uint.h"
 
-class FORTE_IORevPiBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
+class FORTE_IORevPiBusAdapter : public forte::io::IOConfigFBMultiAdapter {
     DECLARE_ADAPTER_TYPE(FORTE_IORevPiBusAdapter)
 
   protected:
@@ -45,16 +45,16 @@ class FORTE_IORevPiBusAdapter : public forte::core::io::IOConfigFBMultiAdapter {
     ~FORTE_IORevPiBusAdapter() override = default;
 
   protected:
-    FORTE_IORevPiBusAdapter(forte::core::CFBContainer &paContainer,
+    FORTE_IORevPiBusAdapter(forte::CFBContainer &paContainer,
                             const SFBInterfaceSpec &paInterfaceSpec,
-                            const forte::core::StringId paInstanceNameId,
+                            const forte::StringId paInstanceNameId,
                             TForteUInt8 paParentAdapterlistID);
 };
 
 class FORTE_IORevPiBusAdapter_Plug final : public FORTE_IORevPiBusAdapter {
   public:
-    FORTE_IORevPiBusAdapter_Plug(forte::core::StringId paInstanceNameId,
-                                 forte::core::CFBContainer &paContainer,
+    FORTE_IORevPiBusAdapter_Plug(forte::StringId paInstanceNameId,
+                                 forte::CFBContainer &paContainer,
                                  TForteUInt8 paParentAdapterlistID);
     ~FORTE_IORevPiBusAdapter_Plug() override = default;
 
@@ -78,8 +78,8 @@ class FORTE_IORevPiBusAdapter_Plug final : public FORTE_IORevPiBusAdapter {
 
 class FORTE_IORevPiBusAdapter_Socket final : public FORTE_IORevPiBusAdapter {
   public:
-    FORTE_IORevPiBusAdapter_Socket(forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer,
+    FORTE_IORevPiBusAdapter_Socket(forte::StringId paInstanceNameId,
+                                   forte::CFBContainer &paContainer,
                                    TForteUInt8 paParentAdapterlistID);
     ~FORTE_IORevPiBusAdapter_Socket() override = default;
 

@@ -69,7 +69,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED {
      *   \param - No parameters necessary.
      *   \return - pointer to array of StringIds.
      */
-    virtual const forte::core::StringId *elementNames() const = 0;
+    virtual const forte::StringId *elementNames() const = 0;
 
     /*! \brief Get the Struct's type name
      *
@@ -78,7 +78,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED {
      *   \param - No parameters necessary.
      *   \return - StringId of Struct's type name.
      */
-    virtual forte::core::StringId getStructTypeNameID() const = 0;
+    virtual forte::StringId getStructTypeNameID() const = 0;
 
     void setValue(const CIEC_ANY &paValue) override;
 
@@ -125,7 +125,7 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED {
      * \param paMemberNameId the string id of the member name
      * \return on a valid member name id a pointer to the member var otherwise 0
      */
-    CIEC_ANY *getMemberNamed(forte::core::StringId paMemberNameId);
+    CIEC_ANY *getMemberNamed(forte::StringId paMemberNameId);
 
     /*! \brief Get the struct's member var with the given name
      *
@@ -139,9 +139,9 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED {
      * \param paMemberNameId the string id of the member name
      * \return on a valid member name id a pointer to the member var otherwise 0
      */
-    CIEC_ANY *getMemberNamed(std::span<const forte::core::StringId> paMemberNameId);
+    CIEC_ANY *getMemberNamed(std::span<const forte::StringId> paMemberNameId);
 
-    size_t getMemberIndex(forte::core::StringId paMemberNameId);
+    size_t getMemberIndex(forte::StringId paMemberNameId);
 
   protected:
     enum EASN1Tags { e_UNIVERSAL = 0, e_APPLICATION = 64, e_CONTEXT = 128, e_PRIVATE = 192 };
@@ -164,14 +164,14 @@ class CIEC_STRUCT : public CIEC_ANY_DERIVED {
 
     int initializeFromString(const char *paValue);
 
-    static forte::core::StringId parseNextElementId(const char *&paRunner);
+    static forte::StringId parseNextElementId(const char *&paRunner);
 };
 
 namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_STRUCT> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_STRUCT;
-      static constexpr forte::core::StringId scmDataTypeName{};
+      static constexpr forte::StringId scmDataTypeName{};
   };
 } // namespace forte
 

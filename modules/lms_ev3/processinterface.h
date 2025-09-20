@@ -50,9 +50,9 @@ enum ETypeOfIO {
 class CLMSEV3ProcessInterface : public CProcessInterfaceBase {
 
   public:
-    CLMSEV3ProcessInterface(forte::core::CFBContainer &paContainer,
+    CLMSEV3ProcessInterface(forte::CFBContainer &paContainer,
                             const SFBInterfaceSpec &paInterfaceSpec,
-                            const forte::core::StringId paInstanceNameId);
+                            const forte::StringId paInstanceNameId);
     ~CLMSEV3ProcessInterface() override;
 
   protected:

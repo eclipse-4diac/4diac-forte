@@ -28,7 +28,7 @@ namespace forte::iec61499::net {
       DECLARE_GENERIC_FIRMWARE_FB(GEN_CLIENT)
 
     public:
-      GEN_CLIENT(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      GEN_CLIENT(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       ~GEN_CLIENT() override = default;
 

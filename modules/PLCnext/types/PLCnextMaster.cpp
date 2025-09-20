@@ -20,7 +20,7 @@
 #include "PLCnextMaster.h"
 #include "../deviceController.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_PLCnextMaster, "PLCnextMaster"_STRID)
 
@@ -45,9 +45,8 @@ namespace {
   };
 } // namespace
 
-FORTE_PLCnextMaster::FORTE_PLCnextMaster(const forte::core::StringId paInstanceNameId,
-                                         forte::core::CFBContainer &paContainer) :
-    forte::core::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
+FORTE_PLCnextMaster::FORTE_PLCnextMaster(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
+    forte::io::IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_SlaveUpdateInterval(25_UINT),
     var_QO(0_BOOL),
@@ -138,7 +137,7 @@ CDataConnection *FORTE_PLCnextMaster::getDOConUnchecked(const TPortId paIndex) {
   return nullptr;
 }
 
-forte::core::io::IODeviceController *FORTE_PLCnextMaster::createDeviceController(CDeviceExecution &paDeviceExecution) {
+forte::io::IODeviceController *FORTE_PLCnextMaster::createDeviceController(CDeviceExecution &paDeviceExecution) {
   return new PLCnextDeviceController(paDeviceExecution);
 }
 

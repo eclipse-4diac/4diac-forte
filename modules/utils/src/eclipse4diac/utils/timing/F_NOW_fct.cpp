@@ -17,7 +17,7 @@
 
 #include "forte/eclipse4diac/utils/timing/F_NOW_fct.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_date_and_time.h"
 #include "forte/iec61131_functions.h"
@@ -46,8 +46,8 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
     .mPlugNames = {},
 };
 
-FORTE_utils__timing__F_NOW::FORTE_utils__timing__F_NOW(const forte::core::StringId paInstanceNameId,
-                                                       forte::core::CFBContainer &paContainer) :
+FORTE_utils__timing__F_NOW::FORTE_utils__timing__F_NOW(const forte::StringId paInstanceNameId,
+                                                       forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_(*this, 0, var_) {

@@ -44,7 +44,7 @@ namespace forte::iec61131::conversion {
       void setInitialValues() override;
 
     public:
-      FORTE_F_UDINT_AS_WSTRING(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      FORTE_F_UDINT_AS_WSTRING(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       CIEC_UDINT var_IN;
 

@@ -75,5 +75,5 @@ class CIEC_ANY_BIT_PARTIAL final : public PartialType {
 
     static_assert(std::is_base_of_v<CIEC_ANY_BIT, PartialType>);
     static_assert(std::is_base_of_v<CIEC_ANY_BIT, SourceType>);
-    static_assert(forte::core::mpl::is_implicitly_castable_v<PartialType, SourceType>);
+    static_assert(forte::mpl::is_implicitly_castable_v<PartialType, SourceType>);
 };

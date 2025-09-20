@@ -13,7 +13,7 @@
  *******************************************************************************/
 #include "RMT_RES.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/ecet.h"
 
@@ -35,7 +35,7 @@ namespace {
   };
 } // namespace
 
-RMT_RES::RMT_RES(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
+RMT_RES::RMT_RES(forte::StringId paInstanceNameId, forte::CFBContainer &paDevice) :
     CResource(paDevice, cFBInterfaceSpec, paInstanceNameId),
     conn_MGR_ID(nullptr),
     conn_MGR_ID_int(*this, 0, u""_WSTRING),
@@ -49,7 +49,7 @@ bool RMT_RES::initialize() {
     return false;
   }
 
-  forte::core::SManagementCMD command;
+  forte::SManagementCMD command;
 
   command.mFirstParam.push_back("START"_STRID);
   command.mFirstParam.push_back("COLD"_STRID);

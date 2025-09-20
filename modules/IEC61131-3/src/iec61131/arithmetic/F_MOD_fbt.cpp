@@ -16,7 +16,7 @@
 
 #include "forte/iec61131/arithmetic/F_MOD_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::arithmetic;
 
@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_MOD::FORTE_F_MOD(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_MOD::FORTE_F_MOD(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_ANY_INT_VARIANT()),
     var_IN2(CIEC_ANY_INT_VARIANT()),
@@ -63,8 +63,8 @@ void FORTE_F_MOD::executeEvent(TEventID paEIID, CEventChainExecutionThread *cons
           [](auto &&paIN1, auto &&paIN2) -> CIEC_ANY_NUM_VARIANT {
             using T = std::decay_t<decltype(paIN1)>;
             using U = std::decay_t<decltype(paIN2)>;
-            using deductedType = typename forte::core::mpl::get_castable_type<T, U>::type;
-            if constexpr (!std::is_same<deductedType, forte::core::mpl::NullType>::value) {
+            using deductedType = typename forte::mpl::get_castable_type<T, U>::type;
+            if constexpr (!std::is_same<deductedType, forte::mpl::NullType>::value) {
               return func_MOD(paIN1, paIN2);
             }
             DEVLOG_ERROR("Remainder of incompatible types %s and %s\n", paIN1.getTypeNameID().data(),

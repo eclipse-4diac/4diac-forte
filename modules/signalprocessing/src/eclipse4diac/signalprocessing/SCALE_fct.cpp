@@ -16,7 +16,7 @@
 
 #include "forte/eclipse4diac/signalprocessing/SCALE_fct.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_real.h"
 #include "forte/iec61131_functions.h"
@@ -48,7 +48,7 @@ namespace {
   };
 } // namespace
 
-FORTE_SCALE::FORTE_SCALE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_SCALE::FORTE_SCALE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),

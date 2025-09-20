@@ -27,7 +27,7 @@
 #include "../../../stdfblib/hardware/src/ForteBootFileLoader.h"
 #include "../../../stdfblib/hardware/src/CommandParser.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 // ******************************* //
 // * Helper Methods Declarations * //
@@ -44,9 +44,9 @@ namespace {
    * @param paDeviceName name of the device
    * @return the created device with the network of FBs in it
    */
-  std::unique_ptr<CDevice> createNonDeterministicExample(forte::core::StringId paResourceName1,
-                                                         forte::core::StringId paResourceName2,
-                                                         forte::core::StringId paDeviceName = "MyDevice"_STRID);
+  std::unique_ptr<CDevice> createNonDeterministicExample(forte::StringId paResourceName1,
+                                                         forte::StringId paResourceName2,
+                                                         forte::StringId paDeviceName = "MyDevice"_STRID);
 
   /**
    * @brief Create a device from file path
@@ -55,7 +55,7 @@ namespace {
    * @param paFilePath path to the boot file of the device
    * @return the created device
    */
-  std::unique_ptr<CDevice> createDeviceFromFile(forte::core::StringId paDeviceName, const std::string &paFilePath);
+  std::unique_ptr<CDevice> createDeviceFromFile(forte::StringId paDeviceName, const std::string &paFilePath);
 
   void testAlgorithm(std::function<std::unique_ptr<CDevice>(void)> paCreateDevice, const std::size_t milliSeconds);
 
@@ -95,9 +95,9 @@ BOOST_AUTO_TEST_SUITE_END()
 
 namespace {
 
-  std::unique_ptr<CDevice> createNonDeterministicExample(forte::core::StringId paResourceName1,
-                                                         forte::core::StringId paResourceName2,
-                                                         forte::core::StringId paDeviceName) {
+  std::unique_ptr<CDevice> createNonDeterministicExample(forte::StringId paResourceName1,
+                                                         forte::StringId paResourceName2,
+                                                         forte::StringId paDeviceName) {
     auto device = std::make_unique<CTesterDevice>(paDeviceName);
 
     BOOST_TEST_INFO("Create Resource 1");
@@ -128,7 +128,7 @@ namespace {
       BOOST_TEST_INFO("Create FB Publish");
       BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(publishName, "iec61499::net::PUBLISH_1"_STRID, ""));
 
-      forte::core::SManagementCMD command;
+      forte::SManagementCMD command;
       command.mCMD = EMGMCommandType::CreateConnection;
       command.mDestination = {};
 
@@ -251,7 +251,7 @@ namespace {
       BOOST_REQUIRE(EMGMResponse::Ready ==
                     resource->createFB(uint2uintThird, "eclipse4diac::convert::UINT2UINT"_STRID, ""));
 
-      forte::core::SManagementCMD command;
+      forte::SManagementCMD command;
       command.mCMD = EMGMCommandType::CreateConnection;
       command.mDestination = {};
 
@@ -432,7 +432,7 @@ namespace {
     return device;
   }
 
-  std::unique_ptr<CDevice> createDeviceFromFile(forte::core::StringId paDeviceName, const std::string &paFilePath) {
+  std::unique_ptr<CDevice> createDeviceFromFile(forte::StringId paDeviceName, const std::string &paFilePath) {
     auto device = std::make_unique<CTesterDevice>(paDeviceName);
     device->initialize();
     forte::hardware::CommandParser commandParser(*device);

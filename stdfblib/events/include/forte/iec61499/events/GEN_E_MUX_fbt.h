@@ -48,10 +48,10 @@ namespace forte::iec61499::events {
 
       bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-      std::vector<forte::core::StringId> mEventInputNames;
+      std::vector<forte::StringId> mEventInputNames;
 
     public:
-      GEN_E_MUX(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      GEN_E_MUX(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       CIEC_UINT var_K;
 

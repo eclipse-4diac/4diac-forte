@@ -71,7 +71,7 @@ class FORTE_FieldsToServiceRegistryEntry : public CBasicFB {
     virtual void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_FieldsToServiceRegistryEntry(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_FieldsToServiceRegistryEntry(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
 
         ~FORTE_FieldsToServiceRegistryEntry() override = default;
 };

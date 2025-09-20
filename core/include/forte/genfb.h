@@ -21,7 +21,7 @@
 #include "forte/eventconn.h"
 #include "forte/funcbloc.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 template<class T>
 class CGenFunctionBlock : public T {
@@ -32,7 +32,7 @@ class CGenFunctionBlock : public T {
      * "CLIENT_3_2")
      * \return pointer to typename string
      */
-    forte::core::StringId getFBTypeId() const override {
+    forte::StringId getFBTypeId() const override {
       return mConfiguredFBTypeNameId;
     }
 
@@ -48,16 +48,14 @@ class CGenFunctionBlock : public T {
 
   protected:
     template<typename... Args>
-    CGenFunctionBlock(forte::core::CFBContainer &paContainer,
-                      const forte::core::StringId paInstanceNameId,
-                      Args &&...args) :
+    CGenFunctionBlock(forte::CFBContainer &paContainer, const forte::StringId paInstanceNameId, Args &&...args) :
         T(paContainer, mGenInterfaceSpec, paInstanceNameId, std::forward<Args>(args)...) {
     }
 
     template<typename... Args>
-    CGenFunctionBlock(forte::core::CFBContainer &paContainer,
+    CGenFunctionBlock(forte::CFBContainer &paContainer,
                       const SFBInterfaceSpec &paInterfaceSpec,
-                      const forte::core::StringId paInstanceNameId,
+                      const forte::StringId paInstanceNameId,
                       Args &&...args) :
         T(paContainer, mGenInterfaceSpec, paInstanceNameId, std::forward<Args>(args)...),
         mGenInterfaceSpec(paInterfaceSpec) {
@@ -131,7 +129,7 @@ class CGenFunctionBlock : public T {
     }
 
     static void generateGenericInterfacePointNameArray(const char *const paPrefix,
-                                                       std::vector<forte::core::StringId> &paNamesArayStart,
+                                                       std::vector<forte::StringId> &paNamesArayStart,
                                                        size_t paNumGenericDataPoints);
 
     void setupFBInterface();
@@ -232,11 +230,11 @@ class CGenFunctionBlock : public T {
      */
     virtual bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) = 0;
 
-    void setConfiguredTypeNameId(forte::core::StringId paTypeNameId) {
+    void setConfiguredTypeNameId(forte::StringId paTypeNameId) {
       mConfiguredFBTypeNameId = paTypeNameId;
     }
 
-    forte::core::StringId mConfiguredFBTypeNameId;
+    forte::StringId mConfiguredFBTypeNameId;
     SFBInterfaceSpec mGenInterfaceSpec; //!< the interface spec for this specific instance of generic FB
 };
 
@@ -253,7 +251,7 @@ bool CGenFunctionBlock<T>::initialize() {
 
 template<class T>
 bool CGenFunctionBlock<T>::configureFB(const char *paConfigString) {
-  setConfiguredTypeNameId(forte::core::StringId::insert(paConfigString));
+  setConfiguredTypeNameId(forte::StringId::insert(paConfigString));
   if (createInterfaceSpec(paConfigString, mGenInterfaceSpec)) {
     setupFBInterface();
     return true;
@@ -285,7 +283,7 @@ void CGenFunctionBlock<T>::setInitialValues() {
 
 template<class T>
 void CGenFunctionBlock<T>::generateGenericInterfacePointNameArray(const char *const paPrefix,
-                                                                  std::vector<forte::core::StringId> &paNamesArayStart,
+                                                                  std::vector<forte::StringId> &paNamesArayStart,
                                                                   size_t paNumGenericDataPoints) {
   size_t len = strlen(paPrefix);
 
@@ -323,7 +321,7 @@ void CGenFunctionBlock<T>::generateGenericInterfacePointNameArray(const char *co
         }
         acBuffer[len + 2] = static_cast<char>(0x30 + i % 10);
       }
-      paNamesArayStart.emplace_back(forte::core::StringId::insert(acBuffer));
+      paNamesArayStart.emplace_back(forte::StringId::insert(acBuffer));
     }
   } else {
     DEVLOG_ERROR("CFunctionBlock::generateGenericInterfacePointNameArray won't be able to create all the generics "

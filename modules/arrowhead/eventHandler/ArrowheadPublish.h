@@ -41,7 +41,7 @@ class FORTE_ArrowheadPublish : public CCompositeFB {
     static const int scmArrowheadPublishAdpAdpNum = 0;
 
   public:
-    FORTE_ArrowheadPublish(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_ArrowheadPublish(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
 
         ~FORTE_ArrowheadPublish() override = default;
 };

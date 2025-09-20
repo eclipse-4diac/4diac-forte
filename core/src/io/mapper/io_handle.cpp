@@ -16,7 +16,7 @@
 
 #include "forte/io/device/io_controller.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 IOHandle::IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType) :
     mController(paController),

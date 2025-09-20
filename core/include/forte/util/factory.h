@@ -20,7 +20,7 @@
 #include <concepts>
 #include <ranges>
 
-namespace forte::core::util::factory {
+namespace forte::util::factory {
 
   template<typename Impl, typename T, typename... Args>
   concept Constructible = requires(Impl impl) {
@@ -153,4 +153,4 @@ namespace forte::core::util::factory {
         return defaultImpl;
       }
   };
-} // namespace forte::core::util::factory
+} // namespace forte::util::factory

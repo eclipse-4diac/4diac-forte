@@ -29,10 +29,10 @@
 #include "forte/util/devlog.h"
 #include <map>
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
-  const std::map<forte::core::StringId, CIEC_ANY::EDataTypeID> scm_StringToTypeId = {
+  const std::map<forte::StringId, CIEC_ANY::EDataTypeID> scm_StringToTypeId = {
       {"ANY"_STRID, CIEC_ANY::e_ANY},
       {"BOOL"_STRID, CIEC_ANY::e_BOOL},
       {"SINT"_STRID, CIEC_ANY::e_SINT},
@@ -162,7 +162,7 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue) {
     const char *acHashPos = strchr(paValue, '#');
     int nMultiplier = 10;
     bool bSigned = true;
-    if ((nullptr != acHashPos) && (!forte::core::util::isDigit(*paValue))) {
+    if ((nullptr != acHashPos) && (!forte::util::isDigit(*paValue))) {
       // if we have a hash and the first character is not a digit it has to be a type identifier
       if (!isTypeSpecifier(paValue, acHashPos)) {
         return -1;
@@ -248,7 +248,7 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue) {
     errno = 0; // erno is not cleared by the strto* functions
 
     if (true == bSigned) {
-      TForteInt64 nValue = forte::core::util::strtoll(pacRunner, &pacEndPtr, nMultiplier);
+      TForteInt64 nValue = forte::util::strtoll(pacRunner, &pacEndPtr, nMultiplier);
       if ((ERANGE != errno) && (nValue <= nSUpperBound) && (nValue >= nSLowerBound)) {
         setLargestInt(nValue);
         nRetVal = static_cast<int>(pacEndPtr - paValue);
@@ -256,7 +256,7 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue) {
     } else {
       if ('-' != *pacRunner) {
         // The strtou* functions will correctly parse also negative numbers and provide their two complement as value
-        TForteUInt64 nValue = forte::core::util::strtoull(pacRunner, &pacEndPtr, nMultiplier);
+        TForteUInt64 nValue = forte::util::strtoull(pacRunner, &pacEndPtr, nMultiplier);
         if ((ERANGE != errno) && (nValue <= nUUpperBound)) {
           setLargestUInt(nValue);
           nRetVal = static_cast<int>(pacEndPtr - paValue);
@@ -272,7 +272,7 @@ int CIEC_ANY_ELEMENTARY::fromString(const char *paValue) {
 }
 
 bool CIEC_ANY_ELEMENTARY::isTypeSpecifier(const char *paValue, const char *paHashPosition) const {
-  forte::core::StringId nTypeNameId = parseTypeName(paValue, paHashPosition);
+  forte::StringId nTypeNameId = parseTypeName(paValue, paHashPosition);
 
   if (nTypeNameId &&
       ((scm_StringToTypeId.find(nTypeNameId) != scm_StringToTypeId.end()) || (isCastable(nTypeNameId)))) {
@@ -281,14 +281,14 @@ bool CIEC_ANY_ELEMENTARY::isTypeSpecifier(const char *paValue, const char *paHas
   return false;
 }
 
-bool CIEC_ANY_ELEMENTARY::isCastable(forte::core::StringId paTypeNameId) const {
+bool CIEC_ANY_ELEMENTARY::isCastable(forte::StringId paTypeNameId) const {
   EDataTypeID literalID = getElementaryDataTypeId(paTypeNameId);
   bool upCast;
   bool downCast;
   return CIEC_ANY::isCastable(literalID, getDataTypeID(), upCast, downCast) && upCast;
 }
 
-CIEC_ANY::EDataTypeID CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(const forte::core::StringId paTypeNameId) {
+CIEC_ANY::EDataTypeID CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(const forte::StringId paTypeNameId) {
   if (scm_StringToTypeId.find(paTypeNameId) != scm_StringToTypeId.end()) {
     return scm_StringToTypeId.at(paTypeNameId);
   }

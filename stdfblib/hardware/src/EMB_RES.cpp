@@ -13,7 +13,7 @@
 #include "forte/stringid.h"
 #include "EMB_RES.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(EMB_RES, "iec61499::hardware::EMB_RES"_STRID);
 
@@ -29,7 +29,7 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
     .mPlugNames = {},
 };
 
-EMB_RES::EMB_RES(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paDevice) :
+EMB_RES::EMB_RES(forte::StringId paInstanceNameId, forte::CFBContainer &paDevice) :
     CResource(paDevice, cFBInterfaceSpec, paInstanceNameId),
     fb_START("START"_STRID, *this) {
 }

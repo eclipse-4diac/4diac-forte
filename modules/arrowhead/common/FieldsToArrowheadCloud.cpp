@@ -12,7 +12,7 @@
 
 #include "FieldsToArrowheadCloud.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_FieldsToArrowheadCloud, "FieldsToArrowheadCloud"_STRID)
 
@@ -20,31 +20,30 @@ namespace {
   const auto cDataInputNames = std::array{
       "Operator"_STRID,           "cloudName"_STRID, "address"_STRID, "port"_STRID, "gatekeeperServiceURI"_STRID,
       "authenticationInfo"_STRID, "secure"_STRID};
-  
-      "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "DINT"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "BOOL"_STRID};
-  
-  const auto cDataOutputNames = std::array{"arrowheadCloud"_STRID};
-  
-  
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-}
 
+  "WSTRING"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "DINT"_STRID, "WSTRING"_STRID, "WSTRING"_STRID, "BOOL"_STRID
+};
+
+const auto cDataOutputNames = std::array{"arrowheadCloud"_STRID};
+
+const auto cEventInputNames = std::array{"REQ"_STRID};
+const auto cEventInputTypeIds = std::array{"Event"_STRID};
+
+const auto cEventOutputNames = std::array{"CNF"_STRID};
+const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+
+const SFBInterfaceSpec cFBInterfaceSpec = {
+    .mEINames = cEventInputNames,
+    .mEITypeNames = cEventInputTypeIds,
+    .mEONames = cEventOutputNames,
+    .mEOTypeNames = cEventOutputTypeIds,
+    .mDINames = cDataInputNames,
+    .mDONames = cDataOutputNames,
+    .mDIONames = {},
+    .mSocketNames = {},
+    .mPlugNames = {},
+};
+}
 
 void FORTE_FieldsToArrowheadCloud::alg_REQ() {
   arrowheadCloud().Operator() = Operator();

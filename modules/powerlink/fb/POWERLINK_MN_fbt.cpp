@@ -13,7 +13,7 @@
 
 #include "POWERLINK_MN_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_POWERLINK_MN, "POWERLINK_MN"_STRID)
 
@@ -37,8 +37,7 @@ namespace {
   };
 } // namespace
 
-FORTE_POWERLINK_MN::FORTE_POWERLINK_MN(const forte::core::StringId paInstanceNameId,
-                                       forte::core::CFBContainer &paContainer) :
+FORTE_POWERLINK_MN::FORTE_POWERLINK_MN(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_QI(nullptr),

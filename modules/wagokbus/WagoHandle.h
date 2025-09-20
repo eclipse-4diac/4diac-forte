@@ -18,11 +18,11 @@
 #include "forte/io/mapper/io_handle.h"
 #include "WagoDeviceController.h"
 
-class WagoHandle : public forte::core::io::IOHandle {
+class WagoHandle : public forte::io::IOHandle {
   public:
     WagoHandle(WagoDeviceController *paController,
                CIEC_ANY::EDataTypeID paType,
-               forte::core::io::IOMapper::Direction paDirection,
+               forte::io::IOMapper::Direction paDirection,
                tApplicationDeviceInterface *paAppDevInterface,
                uint32_t paTaskId,
                tDeviceId paKBusDeviceId,

@@ -27,14 +27,14 @@
 
 #include <string>
 
-namespace forte::core::io {
+namespace forte::io {
 
   class CProcessInterfaceFB : public CEventSourceFB, public IOObserver {
 
     public:
-      CProcessInterfaceFB(forte::core::CFBContainer &paContainer,
+      CProcessInterfaceFB(forte::CFBContainer &paContainer,
                           const SFBInterfaceSpec &paInterfaceSpec,
-                          const forte::core::StringId paInstanceNameId);
+                          const forte::StringId paInstanceNameId);
       ~CProcessInterfaceFB() override;
 
       bool onChange() override;
@@ -105,4 +105,4 @@ namespace forte::core::io {
       static const CIEC_STRING scmMappedWrongDataType;
   };
 
-} // namespace forte::core::io
+} // namespace forte::io

@@ -14,7 +14,7 @@
  *******************************************************************************/
 #include "forte/iec61499/events/E_CYCLE_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61499::events;
 

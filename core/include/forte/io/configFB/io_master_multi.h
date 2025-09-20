@@ -17,45 +17,41 @@
 #include "forte/io/configFB/io_configFB_controller.h"
 #include "forte/io/configFB/io_adapter_multi.h"
 
-namespace forte {
-  namespace core {
-    namespace io {
+namespace forte::io {
 
-      class IOConfigFBMultiMaster;
+  class IOConfigFBMultiMaster;
 
-      class IOConfigFBMultiMaster : public IOConfigFBController {
-        public:
-          IOConfigFBMultiMaster(forte::core::CFBContainer &paContainer,
-                                const SFBInterfaceSpec &paInterfaceSpec,
-                                const forte::core::StringId paInstanceNameId);
+  class IOConfigFBMultiMaster : public IOConfigFBController {
+    public:
+      IOConfigFBMultiMaster(forte::CFBContainer &paContainer,
+                            const SFBInterfaceSpec &paInterfaceSpec,
+                            const forte::StringId paInstanceNameId);
 
-          static IOConfigFBMultiMaster *getMasterById(TForteUInt16 paId);
+      static IOConfigFBMultiMaster *getMasterById(TForteUInt16 paId);
 
-          using IOConfigFBController::initHandle;
+      using IOConfigFBController::initHandle;
 
-        protected:
-          IOConfigFBMultiAdapter &BusAdapterOut() {
-            return (*static_cast<IOConfigFBMultiAdapter *>(getPlugPinUnchecked(0)->getAdapterBlock()));
-          }
+    protected:
+      IOConfigFBMultiAdapter &BusAdapterOut() {
+        return (*static_cast<IOConfigFBMultiAdapter *>(getPlugPinUnchecked(0)->getAdapterBlock()));
+      }
 
-          void onStartup(CEventChainExecutionThread *const paECET) override;
+      void onStartup(CEventChainExecutionThread *const paECET) override;
 
-          void onStop(CEventChainExecutionThread *const paECET) override;
+      void onStop(CEventChainExecutionThread *const paECET) override;
 
-          void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-        private:
-          static std::vector<IOConfigFBMultiMaster *> mInstances;
+    private:
+      static std::vector<IOConfigFBMultiMaster *> mInstances;
 
-          static TForteUInt16 mInstancesIncrement;
+      static TForteUInt16 mInstancesIncrement;
 
-          TForteUInt16 mId;
+      TForteUInt16 mId;
 
-          static const char *const scmFailedToInitSlaves;
-      };
+      static const char *const scmFailedToInitSlaves;
+  };
 
-    } // namespace io
-  } // namespace core
-} // namespace forte
+} // namespace forte::io
 
 #endif /* SRC_CORE_IO_CONFIGFB_MASTER_MULTI_H_ */

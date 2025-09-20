@@ -364,7 +364,7 @@ UA_NodeId *CActionInfo::CActionParser::parseNodeId(const char *paNodeIdString) {
 
 bool CActionInfo::CActionParser::parseNamespace(const char *paNamespace, UA_NodeId &paResult) {
   paResult.namespaceIndex = static_cast<UA_UInt16>(
-      forte::core::util::strtoul(paNamespace, nullptr, 10)); // TODO: should we check for return value here?
+      forte::util::strtoul(paNamespace, nullptr, 10)); // TODO: should we check for return value here?
   return true;
 }
 
@@ -374,8 +374,8 @@ bool CActionInfo::CActionParser::parseIdentifier(const char *paIdentifier, UA_No
     if (0 == strcmp(identifierParser[CActionParser::eIdenfierType], "i")) { // numeric
       paResult.identifierType = UA_NODEIDTYPE_NUMERIC;
       paResult.identifier.numeric =
-          static_cast<UA_UInt32>(forte::core::util::strtoul(identifierParser[CActionParser::eIdenfierValue], nullptr,
-                                                            10)); // TODO: should we check for return value here?
+          static_cast<UA_UInt32>(forte::util::strtoul(identifierParser[CActionParser::eIdenfierValue], nullptr,
+                                                      10)); // TODO: should we check for return value here?
     } else if (0 == strcmp(identifierParser[CActionParser::eIdenfierType], "s")) { // string
       paResult.identifierType = UA_NODEIDTYPE_STRING;
       paResult.identifier.string = UA_String_fromChars(identifierParser[CActionParser::eIdenfierValue]);

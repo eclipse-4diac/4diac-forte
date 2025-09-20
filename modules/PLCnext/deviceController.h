@@ -21,7 +21,7 @@
 
 class PLCnextSlaveHandler;
 
-class PLCnextDeviceController : public forte::core::io::IODeviceMultiController {
+class PLCnextDeviceController : public forte::io::IODeviceMultiController {
   public:
     enum HandleType {
       Bit = 1, // Digital
@@ -29,44 +29,43 @@ class PLCnextDeviceController : public forte::core::io::IODeviceMultiController 
     };
 
     PLCnextDeviceController(CDeviceExecution &paDeviceExecution) :
-        forte::core::io::IODeviceMultiController(paDeviceExecution) {
+        forte::io::IODeviceMultiController(paDeviceExecution) {
       mConfig.updateInterval = 25; // set default
     };
 
     ~PLCnextDeviceController() override = default;
 
-    struct PLCnextConfig : forte::core::io::IODeviceController::Config {
+    struct PLCnextConfig : forte::io::IODeviceController::Config {
         unsigned int updateInterval;
     };
 
-    class HandleDescriptor : public forte::core::io::IODeviceMultiController::HandleDescriptor {
+    class HandleDescriptor : public forte::io::IODeviceMultiController::HandleDescriptor {
       public:
         HandleType mType;
         uint16_t mPosition;
 
         HandleDescriptor(CIEC_WSTRING const &paId,
-                         forte::core::io::IOMapper::Direction paDirection,
+                         forte::io::IOMapper::Direction paDirection,
                          size_t paSlaveIndex,
                          uint16_t position,
                          HandleType paType) :
-            forte::core::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
+            forte::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
             mType(paType),
             mPosition(position) {
         }
     };
 
-    void setConfig(struct forte::core::io::IODeviceController::Config *paConfig) override;
+    void setConfig(struct forte::io::IODeviceController::Config *paConfig) override;
     void registerSlaveHandler(PLCnextSlaveHandler *slave);
 
     PLCnextSlaveHandler *getSlave(size_t paIndex);
-    void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) override;
+    void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::io::IOHandle> paHandle) override;
     void dropSlaveHandles(size_t paIndex) override;
 
   protected:
     const char *init() override;
 
-    forte::core::io::IOHandle *
-    createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
+    forte::io::IOHandle *createIOHandle(forte::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
     void deInit() override;
     void runLoop() override;

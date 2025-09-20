@@ -21,7 +21,7 @@ class CLuaEngine;
 
 namespace luatype {
   bool getAdapterInstanceDefinition(SAdapterInstanceDef &def, CLuaEngine *luaEngine, int index);
-  bool getTypeNameId(forte::core::StringId &id, CLuaEngine *luaEngine, int index);
+  bool getTypeNameId(forte::StringId &id, CLuaEngine *luaEngine, int index);
 } // namespace luatype
 
 #endif /* SRC_CORE_LUA_LUATYPE_H_ */

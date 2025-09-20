@@ -19,7 +19,7 @@
 #include "forte/util/devlog.h"
 #include "forte/util/criticalregion.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 DEFINE_SINGLETON(IOMapper)
 

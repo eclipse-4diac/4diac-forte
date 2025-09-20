@@ -21,9 +21,9 @@
 /*! /brief generic class for IW function blocks providing access to one word physical input
  *
  */
-class FORTE_IW final : public forte::core::io::CInputFB<CIEC_WORD> {
+class FORTE_IW final : public forte::io::CInputFB<CIEC_WORD> {
     DECLARE_FIRMWARE_FB(FORTE_IW)
 
   public:
-    FORTE_IW(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IW(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 };

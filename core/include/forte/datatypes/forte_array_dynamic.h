@@ -290,7 +290,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
      * @param paLength The array length
      * @param paArrayType The element type
      */
-    CIEC_ARRAY_DYNAMIC(TForteUInt16 paLength, forte::core::StringId paArrayType) :
+    CIEC_ARRAY_DYNAMIC(TForteUInt16 paLength, forte::StringId paArrayType) :
         mSize(0),
         mElementSize(0),
         mLowerBound(0),
@@ -306,7 +306,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
      * @param paUpperBound The upper bound
      * @param paArrayType The element type
      */
-    CIEC_ARRAY_DYNAMIC(intmax_t paLowerBound, intmax_t paUpperBound, forte::core::StringId paArrayType) :
+    CIEC_ARRAY_DYNAMIC(intmax_t paLowerBound, intmax_t paUpperBound, forte::StringId paArrayType) :
         mSize(0),
         mElementSize(0),
         mLowerBound(paLowerBound),
@@ -355,7 +355,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
         mLowerBound(paSource.getLowerBound()),
         mUpperBound(paSource.getUpperBound()),
         mData(nullptr) {
-      mElementDataTypeEntry = forte::core::getDataTypeEntry(paSource.getElementTypeNameID());
+      mElementDataTypeEntry = forte::getDataTypeEntry(paSource.getElementTypeNameID());
       setup(paSource);
     }
 
@@ -371,7 +371,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
         mLowerBound(paSource.getLowerBound()),
         mUpperBound(paSource.getUpperBound()),
         mData(nullptr) {
-      mElementDataTypeEntry = forte::core::getDataTypeEntry(paSource.getElementTypeNameID());
+      mElementDataTypeEntry = forte::getDataTypeEntry(paSource.getElementTypeNameID());
       setup(paSource);
     }
 
@@ -387,7 +387,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
         mLowerBound(paSource.getLowerBound()),
         mUpperBound(paSource.getUpperBound()),
         mData(nullptr) {
-      mElementDataTypeEntry = forte::core::getDataTypeEntry(paSource.getElementTypeNameID());
+      mElementDataTypeEntry = forte::getDataTypeEntry(paSource.getElementTypeNameID());
       setup(paSource);
     }
 
@@ -405,7 +405,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
         mLowerBound(lowerBound),
         mUpperBound(upperBound),
         mData(nullptr) {
-      mElementDataTypeEntry = forte::core::getDataTypeEntry(paSource.getElementTypeNameID());
+      mElementDataTypeEntry = forte::getDataTypeEntry(paSource.getElementTypeNameID());
       setup(paSource);
     }
 
@@ -467,10 +467,10 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
     }
 
     //! Function to configure the array if it is created via the typelib
-    void setup(TForteUInt16 paLength, forte::core::StringId paArrayType);
+    void setup(TForteUInt16 paLength, forte::StringId paArrayType);
 
     //! Function to configure the array if it is created via the typelib
-    void setup(intmax_t paLowerBound, intmax_t paUpperBound, forte::core::StringId paArrayType);
+    void setup(intmax_t paLowerBound, intmax_t paUpperBound, forte::StringId paArrayType);
 
     [[nodiscard]] size_t size() const override {
       return mSize;
@@ -562,8 +562,8 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
       return mData != nullptr ? reinterpret_cast<CIEC_ANY *>(mData)->getDataTypeID() : CIEC_ANY::e_ANY;
     }
 
-    [[nodiscard]] forte::core::StringId getElementTypeNameID() const override {
-      return mElementDataTypeEntry != nullptr ? mElementDataTypeEntry->getTypeNameId() : forte::core::StringId{};
+    [[nodiscard]] forte::StringId getElementTypeNameID() const override {
+      return mElementDataTypeEntry != nullptr ? mElementDataTypeEntry->getTypeNameId() : forte::StringId{};
     }
 
     [[nodiscard]] int fromString(const char *paValue) override;
@@ -625,7 +625,7 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
     intmax_t mLowerBound; ///< The lower bound of the array
     intmax_t mUpperBound; ///< The upper bound of the array
     void *mData; ///< The data pointer (with mSize * mElementSize bytes capacity)
-    forte::core::CDataTypeEntry *mElementDataTypeEntry; ///< The element data type entry
+    forte::CDataTypeEntry *mElementDataTypeEntry; ///< The element data type entry
 };
 
 static_assert(std::is_copy_constructible_v<CIEC_ARRAY_DYNAMIC>);

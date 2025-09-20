@@ -20,7 +20,7 @@
 
 #include "forte/io/processinterfacefb.h"
 
-class FORTE_IE final : public forte::core::io::CProcessInterfaceFB {
+class FORTE_IE final : public forte::io::CProcessInterfaceFB {
     DECLARE_FIRMWARE_FB(FORTE_IE)
 
   private:
@@ -31,7 +31,7 @@ class FORTE_IE final : public forte::core::io::CProcessInterfaceFB {
     void writeOutputData(TEventID paEIID) override;
 
   public:
-    FORTE_IE(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_IE(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CEventConnection conn_IND;
 
@@ -41,8 +41,8 @@ class FORTE_IE final : public forte::core::io::CProcessInterfaceFB {
       return CIEC_ANY::e_Max;
     }
 
-    forte::core::io::IOMapper::Direction getDirection() override {
-      return forte::core::io::IOMapper::In;
+    forte::io::IOMapper::Direction getDirection() override {
+      return forte::io::IOMapper::In;
     }
 
     void evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {

@@ -57,12 +57,12 @@ namespace forte::iec61131::arithmetic {
 
       CEventConnection conn_CNF;
       std::unique_ptr<CIEC_ANY_MAGNITUDE_VARIANT[]> mGenDIs;
-      std::vector<forte::core::StringId> mDINames;
+      std::vector<forte::StringId> mDINames;
       CIEC_ANY_MAGNITUDE_VARIANT var_OUT;
       COutDataConnection<CIEC_ANY_MAGNITUDE_VARIANT> conn_OUT;
 
     public:
-      GEN_ADD(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      GEN_ADD(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
       ~GEN_ADD() override = default;
   };
 } // namespace forte::iec61131::arithmetic

@@ -14,7 +14,7 @@
 #include "slaveHandle/bitSlaveHandle.h"
 #include "slaveHandle/slaveHandle.h"
 
-void PLCnextDeviceController::setConfig(struct forte::core::io::IODeviceController::Config *paConfig) {
+void PLCnextDeviceController::setConfig(struct forte::io::IODeviceController::Config *paConfig) {
   if (isAlive()) {
     DEVLOG_ERROR("PLCnext[PLCnextDeviceController]: Cannot change configuration while running.\n");
     return;
@@ -38,8 +38,8 @@ void PLCnextDeviceController::registerSlaveHandler(PLCnextSlaveHandler *slave) {
   mDevices.push_back(slave);
 }
 
-forte::core::io::IOHandle *
-PLCnextDeviceController::createIOHandle(forte::core::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
+forte::io::IOHandle *
+PLCnextDeviceController::createIOHandle(forte::io::IODeviceController::HandleDescriptor &paHandleDescriptor) {
   HandleDescriptor &desc = static_cast<HandleDescriptor &>(paHandleDescriptor);
   PLCnextSlaveHandler *device = getSlave(desc.mSlaveIndex);
 
@@ -74,7 +74,7 @@ PLCnextSlaveHandler *PLCnextDeviceController::getSlave(size_t paIndex) {
   return mDevices[paIndex];
 }
 
-void PLCnextDeviceController::addSlaveHandle(size_t paIndex, std::unique_ptr<forte::core::io::IOHandle> paHandle) {
+void PLCnextDeviceController::addSlaveHandle(size_t paIndex, std::unique_ptr<forte::io::IOHandle> paHandle) {
   PLCnextSlaveHandler *device = getSlave(paIndex);
   if (device == nullptr) {
     DEVLOG_ERROR("no devices registered.");

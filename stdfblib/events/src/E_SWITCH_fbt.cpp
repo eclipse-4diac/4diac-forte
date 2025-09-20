@@ -13,7 +13,7 @@
 
 #include "forte/iec61499/events/E_SWITCH_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_bool.h"
 #include "forte/iec61131_functions.h"
@@ -43,7 +43,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_SWITCH::FORTE_E_SWITCH(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_SWITCH::FORTE_E_SWITCH(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
     conn_EO0(*this, 0),
     conn_EO1(*this, 1),

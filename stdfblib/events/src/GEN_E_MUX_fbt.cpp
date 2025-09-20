@@ -20,7 +20,7 @@
 #include "forte/iec61499/events/GEN_E_MUX_fbt.h"
 #include "forte/util/string_utils.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61499::events;
 
@@ -31,7 +31,7 @@ namespace {
   const auto cEventOutputNames = std::array{"EO"_STRID};
 } // namespace
 
-GEN_E_MUX::GEN_E_MUX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_E_MUX::GEN_E_MUX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     var_K(0_UINT),
     conn_EO(*this, 0),
@@ -69,7 +69,7 @@ bool GEN_E_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec
     ++acPos;
     if ('M' != *acPos) {
       // we have an underscore and it is not the first underscore after E
-      size_t numEIs = static_cast<TEventID>(forte::core::util::strtoul(acPos, nullptr, 10));
+      size_t numEIs = static_cast<TEventID>(forte::util::strtoul(acPos, nullptr, 10));
 
       if (numEIs < CFunctionBlock::scmMaxInterfaceEvents && numEIs >= 2) {
         generateGenericInterfacePointNameArray("EI", mEventInputNames, numEIs);

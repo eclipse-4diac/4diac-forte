@@ -15,7 +15,7 @@
 #include "forte/fbcontainer.h"
 #include <functional>
 
-class CFBContainerMock : public forte::core::CFBContainer {
+class CFBContainerMock : public forte::CFBContainer {
 
   public:
     static CFBContainerMock smDefaultFBContMock;
@@ -37,5 +37,5 @@ class CFBContainerMock : public forte::core::CFBContainer {
     }
 
   private:
-    CFBContainerMock() : forte::core::CFBContainer({}, *this) {};
+    CFBContainerMock() : forte::CFBContainer({}, *this) {};
 };

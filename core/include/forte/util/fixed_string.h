@@ -21,7 +21,7 @@
 #include <type_traits>
 #include <stdexcept>
 
-namespace forte::core::util {
+namespace forte::util {
   /*!\brief A fixed string for use as a non-type template paramater.
    *
    * This is intended to be a drop-in replacement for the upcoming
@@ -212,7 +212,7 @@ namespace forte::core::util {
   constexpr void swap(fixed_string<N> &x, fixed_string<N> &y) noexcept {
     x.swap(y);
   }
-} // namespace forte::core::util
+} // namespace forte::util
 
 template<size_t N>
-struct std::hash<forte::core::util::fixed_string<N>> : hash<std::string_view> {};
+struct std::hash<forte::util::fixed_string<N>> : hash<std::string_view> {};

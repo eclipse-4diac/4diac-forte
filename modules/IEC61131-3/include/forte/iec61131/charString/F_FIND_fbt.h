@@ -40,7 +40,7 @@ namespace forte::iec61131::charString {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_F_FIND(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      FORTE_F_FIND(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       CIEC_ANY_STRING_VARIANT var_IN1;
       CIEC_ANY_STRING_VARIANT var_IN2;

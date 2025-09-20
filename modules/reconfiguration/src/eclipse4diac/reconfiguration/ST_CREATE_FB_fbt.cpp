@@ -11,7 +11,7 @@
  *******************************************************************************/
 #include "forte/eclipse4diac/reconfiguration/ST_CREATE_FB_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/device.h"
 #include "forte/mgmcmdstruct.h"
@@ -40,8 +40,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ST_CREATE_FB::FORTE_ST_CREATE_FB(const forte::core::StringId paInstanceNameId,
-                                       forte::core::CFBContainer &paContainer) :
+FORTE_ST_CREATE_FB::FORTE_ST_CREATE_FB(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_QI(nullptr),
@@ -75,11 +74,11 @@ void FORTE_ST_CREATE_FB::executeEvent(TEventID paEIID, CEventChainExecutionThrea
 }
 
 void FORTE_ST_CREATE_FB::executeRQST() {
-  forte::core::SManagementCMD theCommand;
+  forte::SManagementCMD theCommand;
 
-  theCommand.mDestination = forte::core::StringId::lookup(var_DST.getValue());
-  theCommand.mFirstParam.push_back(forte::core::StringId::insert(var_FB_NAME.getValue()));
-  theCommand.mSecondParam.push_back(forte::core::StringId::lookup(var_FB_TYPE.getValue()));
+  theCommand.mDestination = forte::StringId::lookup(var_DST.getValue());
+  theCommand.mFirstParam.push_back(forte::StringId::insert(var_FB_NAME.getValue()));
+  theCommand.mSecondParam.push_back(forte::StringId::lookup(var_FB_TYPE.getValue()));
   theCommand.mCMD = EMGMCommandType::CreateFBInstance;
 
   EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);

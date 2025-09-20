@@ -18,7 +18,7 @@
 #include "forte/eclipse4diac/utils/GEN_ARRAY2ARRAY_fbt.h"
 #include "forte/util/string_utils.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::utils;
 
@@ -31,7 +31,7 @@ namespace {
   const auto cEventOutputNames = std::array{"CNF"_STRID};
 } // namespace
 
-GEN_ARRAY2ARRAY::GEN_ARRAY2ARRAY(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_ARRAY2ARRAY::GEN_ARRAY2ARRAY(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
@@ -67,8 +67,8 @@ bool GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfa
   }
 
   // there is a number and a data type of inputs within the typename
-  TForteUInt16 arrayLength = static_cast<TForteUInt16>(forte::core::util::strtoul(dNumberPos, nullptr, 10));
-  auto valueTypeID = forte::core::StringId::lookup(++dTypePos);
+  TForteUInt16 arrayLength = static_cast<TForteUInt16>(forte::util::strtoul(dNumberPos, nullptr, 10));
+  auto valueTypeID = forte::StringId::lookup(++dTypePos);
 
   if (arrayLength == 0) {
     return false;

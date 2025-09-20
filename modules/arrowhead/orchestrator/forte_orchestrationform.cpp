@@ -12,7 +12,7 @@
 
 #include "forte_orchestrationform.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(OrchestrationForm, "OrchestrationForm"_STRID);
 
@@ -20,10 +20,10 @@ CIEC_OrchestrationForm::CIEC_OrchestrationForm() :
     CIEC_STRUCT("OrchestrationForm"_STRID, 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const forte::core::StringId CIEC_OrchestrationForm::scmElementTypes[] = {
+const forte::StringId CIEC_OrchestrationForm::scmElementTypes[] = {
     "ArrowheadService"_STRID, "ArrowheadSystem"_STRID, "WSTRING"_STRID, "WSTRING"_STRID,
     "WSTRING"_STRID,          "WSTRING"_STRID,         "ARRAY"_STRID,   10,
     "WSTRING"_STRID};
-const forte::core::StringId CIEC_OrchestrationForm::scmElementNames[] = {
+const forte::StringId CIEC_OrchestrationForm::scmElementNames[] = {
     "service"_STRID,   "provider"_STRID, "serviceURI"_STRID, "instruction"_STRID, "authorizationToken"_STRID,
     "signature"_STRID, "warnings"_STRID};

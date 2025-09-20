@@ -59,7 +59,7 @@ class FORTE_ZephyrIO final : public FORTE_ZephyrIOBase {
 #pragma endregion define IOs
 
   public:
-    FORTE_ZephyrIO(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_ZephyrIO(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_TIME var_UpdateInterval;

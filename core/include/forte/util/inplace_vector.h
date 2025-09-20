@@ -23,7 +23,7 @@
 #include <cassert>
 #include <algorithm>
 
-namespace forte::core::util {
+namespace forte::util {
 
   /*!\brief A vector having a fixed size array as data storage.
    *
@@ -210,4 +210,4 @@ namespace forte::core::util {
   bool operator!=(const inplace_vector<T, U> &paFirst, const inplace_vector<T, V> &paSecond) {
     return !(paFirst == paSecond);
   }
-} // namespace forte::core::util
+} // namespace forte::util

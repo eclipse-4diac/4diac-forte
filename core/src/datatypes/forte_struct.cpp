@@ -22,7 +22,7 @@
 
 using namespace std::string_literals;
 
-CIEC_ANY *CIEC_STRUCT::getMemberNamed(forte::core::StringId paMemberNameId) {
+CIEC_ANY *CIEC_STRUCT::getMemberNamed(forte::StringId paMemberNameId) {
   size_t index = getMemberIndex(paMemberNameId);
   if (index != csmNIndex) {
     return getMember(static_cast<size_t>(index));
@@ -31,13 +31,13 @@ CIEC_ANY *CIEC_STRUCT::getMemberNamed(forte::core::StringId paMemberNameId) {
 }
 
 CIEC_ANY *CIEC_STRUCT::getMemberNamed(const char *paMemberName) {
-  if (forte::core::StringId elementNameId = forte::core::StringId::lookup(paMemberName)) {
+  if (forte::StringId elementNameId = forte::StringId::lookup(paMemberName)) {
     return getMemberNamed(elementNameId);
   }
   return nullptr;
 }
 
-CIEC_ANY *CIEC_STRUCT::getMemberNamed(const std::span<const forte::core::StringId> paMemberName) {
+CIEC_ANY *CIEC_STRUCT::getMemberNamed(const std::span<const forte::StringId> paMemberName) {
   if (paMemberName.empty()) {
     return nullptr;
   }
@@ -54,8 +54,8 @@ CIEC_ANY *CIEC_STRUCT::getMemberNamed(const std::span<const forte::core::StringI
   return static_cast<CIEC_STRUCT *>(member)->getMemberNamed(paMemberName.subspan(1));
 }
 
-size_t CIEC_STRUCT::getMemberIndex(forte::core::StringId paMemberNameId) {
-  const forte::core::StringId *punMemberNameIds = elementNames();
+size_t CIEC_STRUCT::getMemberIndex(forte::StringId paMemberNameId) {
+  const forte::StringId *punMemberNameIds = elementNames();
   for (size_t i = 0, structSize = getStructSize(); i < structSize; ++i) {
     if (punMemberNameIds[i] == paMemberNameId) {
       return i;
@@ -113,7 +113,7 @@ int CIEC_STRUCT::initializeFromString(const char *paValue) {
   int nRetVal = -1;
   const char *pcRunner = paValue;
   // first extract the element name
-  if (forte::core::StringId elementNameId = parseNextElementId(pcRunner)) {
+  if (forte::StringId elementNameId = parseNextElementId(pcRunner)) {
     findNextNonBlankSpace(&pcRunner);
     if (':' == *(pcRunner++) && '=' == *(pcRunner++)) { // parse ":="
       findNextNonBlankSpace(&pcRunner);
@@ -130,13 +130,13 @@ int CIEC_STRUCT::initializeFromString(const char *paValue) {
   return nRetVal;
 }
 
-forte::core::StringId CIEC_STRUCT::parseNextElementId(const char *&paRunner) {
-  forte::core::StringId result = {};
+forte::StringId CIEC_STRUCT::parseNextElementId(const char *&paRunner) {
+  forte::StringId result = {};
   const char *identifierStart = paRunner;
   const char *identifierEnd = std::strpbrk(paRunner, " :)");
   if (identifierEnd) {
     paRunner = identifierEnd;
-    result = forte::core::StringId::lookup({identifierStart, static_cast<size_t>(identifierEnd - identifierStart)});
+    result = forte::StringId::lookup({identifierStart, static_cast<size_t>(identifierEnd - identifierStart)});
   }
   return result;
 }
@@ -144,10 +144,10 @@ forte::core::StringId CIEC_STRUCT::parseNextElementId(const char *&paRunner) {
 void CIEC_STRUCT::toString(std::string &paTargetBuf) const {
   paTargetBuf += '(';
   size_t structSize = getStructSize();
-  const forte::core::StringId *memberNameIds = elementNames();
+  const forte::StringId *memberNameIds = elementNames();
 
   for (size_t i = 0; i < structSize; ++i) {
-    forte::core::util::writeToStringNameValuePair(paTargetBuf, memberNameIds[i], getMember(i));
+    forte::util::writeToStringNameValuePair(paTargetBuf, memberNameIds[i], getMember(i));
     if (i != structSize - 1) {
       paTargetBuf += ',';
     }

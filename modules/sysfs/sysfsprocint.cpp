@@ -25,9 +25,9 @@ const CIEC_STRING CSysFsProcessInterface::scmError("Error"_STRING);
 const CIEC_STRING CSysFsProcessInterface::scmCouldNotRead("Could not read"_STRING);
 const CIEC_STRING CSysFsProcessInterface::scmCouldNotWrite("Could not write"_STRING);
 
-CSysFsProcessInterface::CSysFsProcessInterface(forte::core::CFBContainer &paContainer,
+CSysFsProcessInterface::CSysFsProcessInterface(forte::CFBContainer &paContainer,
                                                const SFBInterfaceSpec &paInterfaceSpec,
-                                               const forte::core::StringId paInstanceNameId) :
+                                               const forte::StringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId) {
   mFile.rdbuf()->pubsetbuf(nullptr, 0); // disable buffer to avoid latency
   STATUS() = scmNotInitialised;

@@ -23,13 +23,13 @@
 
 class CLuaCFB : public CGenFunctionBlock<CCompositeFB> {
   public:
-    CLuaCFB(forte::core::StringId paInstanceNameId,
+    CLuaCFB(forte::StringId paInstanceNameId,
             const CLuaCFBTypeEntry *paTypeEntry,
             SCFB_FBNData &paFbnData,
-            forte::core::CFBContainer &paContainer);
+            forte::CFBContainer &paContainer);
     ~CLuaCFB() override;
 
-    forte::core::StringId getFBTypeId() const override {
+    forte::StringId getFBTypeId() const override {
       return mTypeEntry->getTypeNameId();
     }
 

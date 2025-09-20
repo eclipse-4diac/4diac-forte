@@ -17,7 +17,7 @@
 
 #include "TRIGGER_SERVICE_CLIENT.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_TRIGGER_SERVICE_CLIENT, "TRIGGER_SERVICE_CLIENT"_STRID)
 

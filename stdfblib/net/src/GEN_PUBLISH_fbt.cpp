@@ -13,12 +13,12 @@
  *******************************************************************************/
 #include "forte/iec61499/net/GEN_PUBLISH_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61499::net;
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBLISH, "iec61499::net::GEN_PUBLISH"_STRID)
 
-GEN_PUBLISH::GEN_PUBLISH(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_PUBLISH::GEN_PUBLISH(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     forte::com_infra::CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Publisher) {
 }

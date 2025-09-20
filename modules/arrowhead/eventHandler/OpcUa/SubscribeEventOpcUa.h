@@ -27,7 +27,7 @@ class FORTE_SubscribeEventOpcUa : public CCompositeFB {
     static const int scmSubscribeEventAdpAdpNum = 0;
 
   public:
-    FORTE_SubscribeEventOpcUa(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_SubscribeEventOpcUa(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
 
         ~FORTE_SubscribeEventOpcUa() override = default;
 };

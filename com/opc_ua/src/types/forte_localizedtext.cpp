@@ -15,7 +15,7 @@
 
 #include "forte/com/opc_ua/opcua_types.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace std::string_literals;
 
@@ -29,7 +29,7 @@ DEFINE_FIRMWARE_DATATYPE(LocalizedText, "LocalizedText"_STRID);
 CIEC_LocalizedText::CIEC_LocalizedText() : CIEC_STRUCT(), var_locale(""s), var_text(""s) {
 }
 
-forte::core::StringId CIEC_LocalizedText::getStructTypeNameID() const {
+forte::StringId CIEC_LocalizedText::getStructTypeNameID() const {
   return "LocalizedText"_STRID;
 }
 
@@ -49,4 +49,4 @@ const CIEC_ANY *CIEC_LocalizedText::getMember(size_t paMemberIndex) const {
   return nullptr;
 }
 
-const forte::core::StringId CIEC_LocalizedText::scmElementNames[] = {"locale"_STRID, "text"_STRID};
+const forte::StringId CIEC_LocalizedText::scmElementNames[] = {"locale"_STRID, "text"_STRID};

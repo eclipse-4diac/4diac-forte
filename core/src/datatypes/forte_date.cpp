@@ -20,7 +20,7 @@
 #include "forte/datatypes/forte_date.h"
 #include <format>
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(DATE, "DATE"_STRID)
 
@@ -76,4 +76,4 @@ void CIEC_DATE::toString(std::string &paTargetBuf) const {
   }
 }
 
-const forte::core::StringId forte::CDataTypeTrait<CIEC_DATE>::scmDataTypeName = "DATE"_STRID;
+const forte::StringId forte::CDataTypeTrait<CIEC_DATE>::scmDataTypeName = "DATE"_STRID;

@@ -27,7 +27,7 @@ namespace forte::iec61499::net {
       DECLARE_GENERIC_FIRMWARE_FB(GEN_SUBSCRIBE)
 
     public:
-      GEN_SUBSCRIBE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      GEN_SUBSCRIBE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       ~GEN_SUBSCRIBE() override = default;
 

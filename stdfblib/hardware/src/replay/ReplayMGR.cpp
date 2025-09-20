@@ -103,7 +103,7 @@ UA_StatusCode ReplayMGR::onReadTraces(UA_Server *,
     // the application cannot be stopped in the iddle state
     // but we don't care about it, since the start command later
     // can still start everything, the device and the application
-    forte::core::SManagementCMD command;
+    forte::SManagementCMD command;
     command.mCMD = EMGMCommandType::Stop;
     command.mDestination = {};
     replayMgr->mDevice.executeMGMCommand(command);

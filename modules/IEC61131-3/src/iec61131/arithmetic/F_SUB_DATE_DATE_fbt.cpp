@@ -17,7 +17,7 @@
 #include "forte/iec61131/arithmetic/F_SUB_DATE_DATE_fbt.h"
 #include "forte/datatypes/forte_date.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::arithmetic;
 
@@ -47,8 +47,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_SUB_DATE_DATE::FORTE_F_SUB_DATE_DATE(const forte::core::StringId paInstanceNameId,
-                                             forte::core::CFBContainer &paContainer) :
+FORTE_F_SUB_DATE_DATE::FORTE_F_SUB_DATE_DATE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_DATE(0)),
     var_IN2(CIEC_DATE(0)),

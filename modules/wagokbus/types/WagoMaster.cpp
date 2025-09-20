@@ -9,11 +9,11 @@
 
 #include "WagoMaster.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "../WagoDeviceController.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_WagoMaster, "WagoMaster"_STRID)
 
@@ -39,8 +39,7 @@ namespace {
   };
 } // namespace
 
-FORTE_WagoMaster::FORTE_WagoMaster(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+FORTE_WagoMaster::FORTE_WagoMaster(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     IOConfigFBMultiMaster(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_UpdateInterval(25_UINT),
@@ -67,7 +66,7 @@ void FORTE_WagoMaster::setConfig() {
   getDeviceController()->setConfig(&config);
 }
 
-forte::core::io::IODeviceController *FORTE_WagoMaster::createDeviceController(CDeviceExecution &paDeviceExecution) {
+forte::io::IODeviceController *FORTE_WagoMaster::createDeviceController(CDeviceExecution &paDeviceExecution) {
   return new WagoDeviceController(paDeviceExecution);
 }
 

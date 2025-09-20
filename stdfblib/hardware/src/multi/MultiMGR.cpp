@@ -17,7 +17,7 @@
 #include "OPCUA_MGR.h"
 #include "forte/devicefactory.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 MultiMGR::MultiMGR(MultiDevice &paDevice, OPCUA_MGR &paOpcuaMgr) : mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {
 }
@@ -57,7 +57,7 @@ void MultiMGR::addSetDefaultDeviceMethod() {
   newMethod.mInArguments.push_back(UA_Argument());
 
   std::string listOfDevices;
-  for (const auto name : forte::core::DeviceFactory::getNames()) {
+  for (const auto name : forte::DeviceFactory::getNames()) {
     if (name == "Multi"_STRID) {
       continue;
     }
@@ -106,11 +106,11 @@ UA_StatusCode MultiMGR::onSetDefaultDevice(UA_Server *,
 
   auto uaStringInput = static_cast<UA_String *>(input[0].data);
   const auto newDefaultDevice =
-      forte::core::StringId::lookup({reinterpret_cast<const char *>(uaStringInput->data), uaStringInput->length});
+      forte::StringId::lookup({reinterpret_cast<const char *>(uaStringInput->data), uaStringInput->length});
   if (newDefaultDevice == "Multi"_STRID) {
     return UA_STATUSCODE_BADNOTSUPPORTED;
   }
-  if (!forte::core::DeviceFactory::setDefaultImpl(newDefaultDevice)) {
+  if (!forte::DeviceFactory::setDefaultImpl(newDefaultDevice)) {
     return UA_STATUSCODE_BADINVALIDARGUMENT;
   }
   return UA_STATUSCODE_GOOD;

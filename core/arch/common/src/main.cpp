@@ -42,10 +42,10 @@ int main(int argc, char *arg[]) {
 
   hookSignals();
 
-  const std::string ipPort = forte::core::util::CommandLineParser::parseCommandLineArguments(argc, arg);
+  const std::string ipPort = forte::util::CommandLineParser::parseCommandLineArguments(argc, arg);
   if (ipPort.empty() || ipPort.find(':') == std::string::npos) {
     //! Lists the help for FORTE
-    forte::core::util::CommandLineParser::listHelp();
+    forte::util::CommandLineParser::listHelp();
     return -1;
   }
 

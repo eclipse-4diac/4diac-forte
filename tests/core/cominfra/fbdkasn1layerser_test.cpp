@@ -52,7 +52,7 @@
 #include "forte/datatypes/forte_ulint.h"
 #include "forte/datatypes/forte_lreal.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 class CFBDKASN1ComLayerTestMock : public forte::com_infra::CFBDKASN1ComLayer {
   public:

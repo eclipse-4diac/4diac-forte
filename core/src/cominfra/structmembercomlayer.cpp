@@ -27,7 +27,7 @@
 #include "forte/util/string_utils.h"
 
 using namespace forte::com_infra;
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CStructMemberLocalComLayer>
@@ -73,7 +73,7 @@ bool CStructMemberLocalComLayer::parseArrayIndexFromString(const char *paNestedS
   }
 
   const char *indexString = str.substr(startIndex, stopIndex - startIndex).data();
-  TForteInt16 index = static_cast<TForteInt16>(forte::core::util::strtol(indexString, nullptr, 10));
+  TForteInt16 index = static_cast<TForteInt16>(forte::util::strtol(indexString, nullptr, 10));
 
   if (errno == ERANGE) {
     return false;
@@ -90,16 +90,16 @@ CStructMemberLocalComLayer::buildIndexList(CIEC_ANY *paRoot, const char *paNeste
   TTargetStructIndexList resultList;
 
   for (size_t i = 0; i < numNestedStructs; i++) {
-    forte::core::StringId id;
+    forte::StringId id;
     CIEC_INT arrayIndex;
     bool containsIndex = CStructMemberLocalComLayer::parseArrayIndexFromString(parser[i], arrayIndex);
 
     if (!containsIndex) {
-      id = forte::core::StringId::insert(parser[i]);
+      id = forte::StringId::insert(parser[i]);
     } else {
       std::string sub = parser[i];
       sub.erase(sub.find('['), std::string::npos);
-      id = forte::core::StringId::insert(sub.data());
+      id = forte::StringId::insert(sub.data());
     }
 
     size_t memberIndex = static_cast<CIEC_STRUCT *>(paRoot)->getMemberIndex(id);
@@ -147,11 +147,10 @@ EComResponse CStructMemberLocalComLayer::openConnection(char *paLayerParameter) 
     return e_InitInvalidId;
   }
 
-  forte::core::StringId groupNameID = mGroupID =
-      forte::core::StringId::insert(parser[EComStringIndex::e_LOCALGROUPNAME]);
-  forte::core::StringId dataTypeNameID = forte::core::StringId::insert(parser[EComStringIndex::e_STRUCTTYPE]);
+  forte::StringId groupNameID = mGroupID = forte::StringId::insert(parser[EComStringIndex::e_LOCALGROUPNAME]);
+  forte::StringId dataTypeNameID = forte::StringId::insert(parser[EComStringIndex::e_STRUCTTYPE]);
 
-  CIEC_STRUCT *const dummy = static_cast<CIEC_STRUCT *>(forte::core::createDataTypeInstance(dataTypeNameID, nullptr));
+  CIEC_STRUCT *const dummy = static_cast<CIEC_STRUCT *>(forte::createDataTypeInstance(dataTypeNameID, nullptr));
 
   if (nullptr == dummy) {
     DEVLOG_ERROR("[StructMemberLayer] The struct is not available in the data type lib: %s!\r\n",

@@ -14,15 +14,15 @@
 #include "deviceController.h"
 #include "forte/io/mapper/io_mapper.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 const TForteUInt8 PLCnextSlaveHandler::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 PLCnextSlaveHandler::scmSlaveConfigurationIONum = 0;
 
 PLCnextSlaveHandler::PLCnextSlaveHandler(int paType,
-                                         forte::core::CFBContainer &paContainer,
+                                         forte::CFBContainer &paContainer,
                                          const SFBInterfaceSpec *paInterfaceSpec,
-                                         const forte::core::StringId paInstanceNameId) :
+                                         const forte::StringId paInstanceNameId) :
     IOConfigFBMultiSlave(
         scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec, paInstanceNameId),
     slaveType(SlaveType(paType)),

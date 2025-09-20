@@ -39,6 +39,5 @@ namespace forte::com_infra {
    * function. The returned pointer has to be deleted by the upper layer. A smart-pointer like design
    * is desirable.
    */
-  using ComLayerManager =
-      core::util::factory::Factory<core::util::factory::DynamicImpl, "", CComLayer, CComLayer *, CBaseCommFB *>;
+  using ComLayerManager = util::factory::Factory<util::factory::DynamicImpl, "", CComLayer, CComLayer *, CBaseCommFB *>;
 } // namespace forte::com_infra

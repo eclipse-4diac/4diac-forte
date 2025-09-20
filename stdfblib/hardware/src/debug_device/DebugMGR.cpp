@@ -18,11 +18,11 @@
 #include "forte/ecetfactory.h"
 #include "forte/stringid.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DebugMGR::DebugMGR(CDevice &paDevice, OPCUA_MGR &paOpcuaMgr) : mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {
   // we need the fake ecet to debug control the device remotely
-  forte::core::EcetFactory::setDefaultImpl("Fake"_STRID);
+  forte::EcetFactory::setDefaultImpl("Fake"_STRID);
 }
 
 bool DebugMGR::initialize() {
@@ -49,17 +49,17 @@ void DebugMGR::iterateResources(ResourceIteratorCallback paCallback) {
 }
 
 std::optional<TEventEntry> DebugMGR::getEventEntry(CResource *paResource, std::string paDestination) {
-  forte::core::TNameIdentifier fullName;
+  forte::TNameIdentifier fullName;
 
   // fill out the TNameIdentifier
   size_t index = paDestination.find_first_of(".");
   while (index != std::string::npos) {
     auto currentPart = paDestination.substr(0, index);
-    fullName.push_back(forte::core::StringId::insert(currentPart));
+    fullName.push_back(forte::StringId::insert(currentPart));
     paDestination = paDestination.substr(currentPart.length() + 1);
     index = paDestination.find_first_of(".");
   }
-  fullName.push_back(forte::core::StringId::insert(paDestination.substr(0, index)));
+  fullName.push_back(forte::StringId::insert(paDestination.substr(0, index)));
 
   if (fullName.size() < 2) { // at least the FB and the event port must be present
     return std::nullopt;

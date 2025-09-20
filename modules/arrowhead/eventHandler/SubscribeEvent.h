@@ -43,7 +43,7 @@ class FORTE_SubscribeEvent : public CCompositeFB {
     static const int scmSubscribeEventAdpAdpNum = 0;
 
   public:
-    FORTE_SubscribeEvent(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+    FORTE_SubscribeEvent(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
 
         ~FORTE_SubscribeEvent() override = default;
 };

@@ -16,7 +16,7 @@
 #include "forte/io/mapper/io_observer.h"
 #include "forte/util/devlog.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 IOObserver::IOObserver() : mHandle(nullptr) {
 }

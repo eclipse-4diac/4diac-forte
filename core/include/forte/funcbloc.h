@@ -38,10 +38,7 @@ class CDevice;
 namespace forte {
   class IPlugPin;
   class ISocketPin;
-
-  namespace core {
-    class CMonitoringHandler;
-  }
+  class CMonitoringHandler;
 } // namespace forte
 
 //! Datatype for indicating an absolut port num
@@ -49,11 +46,11 @@ using TAbsDataPortNum = size_t;
 
 constexpr TAbsDataPortNum INVALID_ABS_DATA_PORT_ID = static_cast<TAbsDataPortNum>(-1);
 
-typedef forte::core::StringId TEventTypeID;
+typedef forte::StringId TEventTypeID;
 
 /*!\ingroup CORE\brief Base class for all function blocks.
  */
-class CFunctionBlock : public forte::core::CFBContainer {
+class CFunctionBlock : public forte::CFBContainer {
   public:
     /*!\brief Possible states of a runable object.
      *
@@ -85,7 +82,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     /*!\brief Returns the stringId for type name of this FB instance
      */
-    virtual forte::core::StringId getFBTypeId() const = 0;
+    virtual forte::StringId getFBTypeId() const = 0;
 
     /*!\brief Returns the type name of this FB instance
      */
@@ -96,9 +93,9 @@ class CFunctionBlock : public forte::core::CFBContainer {
       return "";
     }
 
-    CEventConnection *getEOConnection(forte::core::StringId paEONameId);
+    CEventConnection *getEOConnection(forte::StringId paEONameId);
 
-    const CEventConnection *getEOConnection(forte::core::StringId paEONameId) const {
+    const CEventConnection *getEOConnection(forte::StringId paEONameId) const {
       return const_cast<CFunctionBlock *>(this)->getEOConnection(paEONameId);
     }
 
@@ -122,7 +119,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paDINameId ID of the data input name.
      * \return Pointer to the data input or 0. If 0 is returned DataInput is ANY
      */
-    CIEC_ANY *getDataInput(forte::core::StringId paDINameId);
+    CIEC_ANY *getDataInput(forte::StringId paDINameId);
 
     /*!\brief get the pointer to a data input using the portId as identifier
      */
@@ -134,27 +131,27 @@ class CFunctionBlock : public forte::core::CFBContainer {
 
     CIEC_ANY *getDIOFromPortId(TPortId paDIPortId);
 
-    CDataConnection *getDIConnection(forte::core::StringId paDINameId);
+    CDataConnection *getDIConnection(forte::StringId paDINameId);
 
-    const CDataConnection *getDIConnection(forte::core::StringId paDINameId) const {
+    const CDataConnection *getDIConnection(forte::StringId paDINameId) const {
       return const_cast<CFunctionBlock *>(this)->getDIConnection(paDINameId);
     }
 
-    CDataConnection *getDOConnection(forte::core::StringId paDONameId);
+    CDataConnection *getDOConnection(forte::StringId paDONameId);
 
-    const CDataConnection *getDOConnection(forte::core::StringId paDONameId) const {
+    const CDataConnection *getDOConnection(forte::StringId paDONameId) const {
       return const_cast<CFunctionBlock *>(this)->getDOConnection(paDONameId);
     }
 
-    CInOutDataConnection *getDIOInConnection(forte::core::StringId paDIONameId);
+    CInOutDataConnection *getDIOInConnection(forte::StringId paDIONameId);
 
-    const CInOutDataConnection *getDIOInConnection(forte::core::StringId paDIONameId) const {
+    const CInOutDataConnection *getDIOInConnection(forte::StringId paDIONameId) const {
       return const_cast<CFunctionBlock *>(this)->getDIOInConnection(paDIONameId);
     }
 
-    CInOutDataConnection *getDIOOutConnection(forte::core::StringId paDIONameId);
+    CInOutDataConnection *getDIOOutConnection(forte::StringId paDIONameId);
 
-    const CInOutDataConnection *getDIOOutConnection(forte::core::StringId paDIONameId) const {
+    const CInOutDataConnection *getDIOOutConnection(forte::StringId paDIONameId) const {
       return const_cast<CFunctionBlock *>(this)->getDIOOutConnection(paDIONameId);
     }
 
@@ -178,7 +175,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paDONameId StringID of the data output name.
      * \return Pointer to the data output or 0. If 0 is returned DataOutput is ANY
      */
-    CIEC_ANY *getDataOutput(forte::core::StringId paDONameId);
+    CIEC_ANY *getDataOutput(forte::StringId paDONameId);
 
     /*!\brief Get the pointer to a variable of the FB.
      *
@@ -187,23 +184,23 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \return Pointer to the variable or 0.
      *  The variable may be input, output or in the case of a BFB an internal var.
      */
-    virtual CIEC_ANY *getVar(forte::core::StringId *paNameList, unsigned int paNameListSize);
+    virtual CIEC_ANY *getVar(forte::StringId *paNameList, unsigned int paNameListSize);
 
     /*!\brief Get the pointer to the plub pin of the FB.
      *
      * \param pasocketNameId  StringId of the socket name.
      * \return Pointer to the socket or nullptr.
      */
-    forte::IPlugPin *getPlugPin(forte::core::StringId paPlugNameId);
+    forte::IPlugPin *getPlugPin(forte::StringId paPlugNameId);
 
     /*!\brief Get the pointer to the socket pin of the FB.
      *
      * \param paSocketNameId  StringId of the socket name.
      * \return Pointer to the socket or nullptr.
      */
-    forte::ISocketPin *getSocketPin(forte::core::StringId paSocketNameId);
+    forte::ISocketPin *getSocketPin(forte::StringId paSocketNameId);
 
-    const forte::ISocketPin *getSocketPin(forte::core::StringId paSocketNameId) const {
+    const forte::ISocketPin *getSocketPin(forte::StringId paSocketNameId) const {
       return const_cast<CFunctionBlock *>(this)->getSocketPin(paSocketNameId);
     }
 
@@ -319,20 +316,20 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * @param paDstNameList array of the name hierarchy the requested connection destination
      * @return pointer to the requested connection, returns nullptr if there is no such destination
      */
-    CConnection *getInputConnection(std::span<const forte::core::StringId> paDstNameList) override;
+    CConnection *getInputConnection(std::span<const forte::StringId> paDstNameList) override;
 
     /*!\brief get the connection object for the given source identifier
      *
      * @param paSrcNameList array of the name hierarchy the requested connection source
      * @return pointer to the requested connection, returns nullptr if there is no such source
      */
-    CConnection::Wrapper getOutputConnection(std::span<const forte::core::StringId> paSrcNameList) override;
+    CConnection::Wrapper getOutputConnection(std::span<const forte::StringId> paSrcNameList) override;
 
     TForteUInt32 &getEIMonitorData(TEventID paEIID);
 
     TForteUInt32 &getEOMonitorData(TEventID paEOID);
 
-    TAbsDataPortNum getAbsDataPortNum(forte::core::StringId paPortNameId) const;
+    TAbsDataPortNum getAbsDataPortNum(forte::StringId paPortNameId) const;
 
     void setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue);
 
@@ -384,9 +381,9 @@ class CFunctionBlock : public forte::core::CFBContainer {
      * \param paInterfaceSpec  const pointer to the interface spec
      * \param paInstanceNameId string id
      */
-    CFunctionBlock(forte::core::CFBContainer &paContainer,
+    CFunctionBlock(forte::CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
-                   forte::core::StringId paInstanceNameId);
+                   forte::StringId paInstanceNameId);
 
     /*!\brief Function to send an output event of the FB.
      *
@@ -591,7 +588,7 @@ class CFunctionBlock : public forte::core::CFBContainer {
      */
     bool mDeletable;
 
-    friend class forte::core::CMonitoringHandler;
+    friend class forte::CMonitoringHandler;
 
 #ifdef FORTE_FMU
     friend class fmuInstance;

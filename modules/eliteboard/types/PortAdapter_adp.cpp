@@ -20,7 +20,7 @@
 
 using namespace std::literals;
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   const auto cEventInputNames = std::array{"MAPO"_STRID};
@@ -54,9 +54,9 @@ namespace {
 
 DEFINE_ADAPTER_TYPE(FORTE_PortAdapter, "PortAdapter"_STRID)
 
-FORTE_PortAdapter::FORTE_PortAdapter(forte::core::CFBContainer &paContainer,
+FORTE_PortAdapter::FORTE_PortAdapter(forte::CFBContainer &paContainer,
                                      const SFBInterfaceSpec &paInterfaceSpec,
-                                     const forte::core::StringId paInstanceNameId,
+                                     const forte::StringId paInstanceNameId,
                                      TForteUInt8 paParentAdapterlistID) :
     CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     var_GPIO_Port_Addr(0_DWORD) {
@@ -67,8 +67,8 @@ void FORTE_PortAdapter::setInitialValues() {
   var_GPIO_Port_Addr = 0_DWORD;
 }
 
-FORTE_PortAdapter_Plug::FORTE_PortAdapter_Plug(forte::core::StringId paInstanceNameId,
-                                               forte::core::CFBContainer &paContainer,
+FORTE_PortAdapter_Plug::FORTE_PortAdapter_Plug(forte::StringId paInstanceNameId,
+                                               forte::CFBContainer &paContainer,
                                                TForteUInt8 paParentAdapterlistID) :
     FORTE_PortAdapter(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_MAPO(*this, 0),
@@ -120,8 +120,8 @@ CDataConnection *FORTE_PortAdapter_Plug::getDOConUnchecked(TPortId) {
   return nullptr;
 }
 
-FORTE_PortAdapter_Socket::FORTE_PortAdapter_Socket(forte::core::StringId paInstanceNameId,
-                                                   forte::core::CFBContainer &paContainer,
+FORTE_PortAdapter_Socket::FORTE_PortAdapter_Socket(forte::StringId paInstanceNameId,
+                                                   forte::CFBContainer &paContainer,
                                                    TForteUInt8 paParentAdapterlistID) :
     FORTE_PortAdapter(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_MAP(*this, 0),

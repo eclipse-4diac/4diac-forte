@@ -78,8 +78,8 @@ class EmbrickSlaveHandler {
     void addHandle(EmbrickSlaveHandle *paHandle) {
 
       switch (paHandle->getDirection()) {
-        case forte::core::io::IOMapper::In: addHandle(mInputs, paHandle); break;
-        case forte::core::io::IOMapper::Out: addHandle(mOutputs, paHandle); break;
+        case forte::io::IOMapper::In: addHandle(mInputs, paHandle); break;
+        case forte::io::IOMapper::Out: addHandle(mOutputs, paHandle); break;
         default: break;
       }
     }

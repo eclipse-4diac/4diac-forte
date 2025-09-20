@@ -64,9 +64,9 @@ namespace forte::eclipse4diac::rtevents {
       }
 
     public:
-      CRTEventSingle(forte::core::CFBContainer &paContainer,
+      CRTEventSingle(forte::CFBContainer &paContainer,
                      const SFBInterfaceSpec &paInterfaceSpec,
-                     const forte::core::StringId paInstanceNameId) :
+                     const forte::StringId paInstanceNameId) :
           CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId) {};
 
       CIEC_BOOL var_QI;

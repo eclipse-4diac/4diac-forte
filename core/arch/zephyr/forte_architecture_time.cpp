@@ -19,12 +19,12 @@
 #include <zephyr/kernel.h>
 
 uint_fast64_t getNanoSecondsMonotonicArch() {
-  return static_cast<uint_fast64_t>(k_uptime_ticks() * (forte::core::constants::cNanosecondsPerSecond /
+  return static_cast<uint_fast64_t>(k_uptime_ticks() * (forte::constants::cNanosecondsPerSecond /
                                                         static_cast<uint_fast64_t>(CONFIG_SYS_CLOCK_TICKS_PER_SEC)));
 }
 
 uint_fast64_t getNanoSecondsRealtimeArch() {
-  return static_cast<uint_fast64_t>(k_uptime_ticks() * (forte::core::constants::cNanosecondsPerSecond /
+  return static_cast<uint_fast64_t>(k_uptime_ticks() * (forte::constants::cNanosecondsPerSecond /
                                                         static_cast<uint_fast64_t>(CONFIG_SYS_CLOCK_TICKS_PER_SEC)));
 }
 

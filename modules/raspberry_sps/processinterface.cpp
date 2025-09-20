@@ -15,9 +15,9 @@
 #include "core/fmi/processinterface.h"
 #include <unistd.h>
 
-CProcessInterface::CProcessInterface(forte::core::CFBContainer &paContainer,
+CProcessInterface::CProcessInterface(forte::CFBContainer &paContainer,
                                      const SFBInterfaceSpec &paInterfaceSpec,
-                                     const forte::core::StringId paInstanceNameId) :
+                                     const forte::StringId paInstanceNameId) :
     CI2CProcessInterface(paContainer, paInterfaceSpec, paInstanceNameId) {
 }
 

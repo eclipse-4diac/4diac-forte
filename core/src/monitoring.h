@@ -24,12 +24,12 @@
 class CFunctionBlock;
 class CResource;
 
-namespace forte::core {
+namespace forte {
   namespace internal {
 
     class CWatchEntry {
       public:
-        forte::core::StringId getPortId() const {
+        forte::StringId getPortId() const {
           return mPortId;
         }
 
@@ -37,19 +37,19 @@ namespace forte::core {
         CWatchEntry &operator=(const CWatchEntry &) = delete;
 
       protected:
-        CWatchEntry(forte::core::StringId paPortId) : mPortId(paPortId) {
+        CWatchEntry(forte::StringId paPortId) : mPortId(paPortId) {
         }
 
         CWatchEntry(CWatchEntry &&) = default;
         CWatchEntry &operator=(CWatchEntry &&) = default;
 
       private:
-        forte::core::StringId mPortId;
+        forte::StringId mPortId;
     };
 
     class CDataWatchEntry : public CWatchEntry {
       public:
-        CDataWatchEntry(forte::core::StringId paPortId, CIEC_ANY &paDataValue, TAbsDataPortNum paForceIndex) :
+        CDataWatchEntry(forte::StringId paPortId, CIEC_ANY &paDataValue, TAbsDataPortNum paForceIndex) :
             CWatchEntry(paPortId),
             mDataBuffer(paDataValue.clone(nullptr)),
             mForceIndex(paForceIndex),
@@ -73,7 +73,7 @@ namespace forte::core {
 
     class CEventWatchEntry : public CWatchEntry {
       public:
-        CEventWatchEntry(forte::core::StringId paPortId, TForteUInt32 &paEventData) :
+        CEventWatchEntry(forte::StringId paPortId, TForteUInt32 &paEventData) :
             CWatchEntry(paPortId),
             mEventDataRef(paEventData) {
         }
@@ -128,17 +128,17 @@ namespace forte::core {
       EMGMResponse executeMonitoringCommand(SManagementCMD &paCommand);
 
     private:
-      CFunctionBlock *getFB(forte::core::TNameIdentifier &paNameList);
+      CFunctionBlock *getFB(forte::TNameIdentifier &paNameList);
 
-      EMGMResponse addWatch(forte::core::TNameIdentifier &paNameList);
-      EMGMResponse removeWatch(forte::core::TNameIdentifier &paNameList);
+      EMGMResponse addWatch(forte::TNameIdentifier &paNameList);
+      EMGMResponse removeWatch(forte::TNameIdentifier &paNameList);
       EMGMResponse readWatches(std::string &paResponse);
-      EMGMResponse clearForce(forte::core::TNameIdentifier &paNameList);
-      EMGMResponse triggerEvent(forte::core::TNameIdentifier &paNameList);
-      EMGMResponse resetEventCount(forte::core::TNameIdentifier &paNameList);
+      EMGMResponse clearForce(forte::TNameIdentifier &paNameList);
+      EMGMResponse triggerEvent(forte::TNameIdentifier &paNameList);
+      EMGMResponse resetEventCount(forte::TNameIdentifier &paNameList);
 
       internal::SFBMonitoringEntry &findOrCreateFBMonitoringEntry(CFunctionBlock *paFB,
-                                                                  forte::core::TNameIdentifier &paNameList);
+                                                                  forte::TNameIdentifier &paNameList);
       void readResourceWatches(std::string &paResponse);
 
       void updateMonitoringData();
@@ -152,6 +152,6 @@ namespace forte::core {
       CMonitoringHandler &operator=(const CMonitoringHandler &) = delete;
   };
 
-} // namespace forte::core
+} // namespace forte
 
 #endif /* MONITORING_H_ */

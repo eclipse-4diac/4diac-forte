@@ -19,7 +19,7 @@
 
 #include "PLCnextAXLSEDO16.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "PLCnextBusAdapter.h"
 #include "forte/datatypes/forte_string.h"
@@ -57,8 +57,8 @@ namespace {
   };
 } // namespace
 
-FORTE_PLCnextAXLSEDO16::FORTE_PLCnextAXLSEDO16(const forte::core::StringId paInstanceNameId,
-                                               forte::core::CFBContainer &paContainer) :
+FORTE_PLCnextAXLSEDO16::FORTE_PLCnextAXLSEDO16(const forte::StringId paInstanceNameId,
+                                               forte::CFBContainer &paContainer) :
     PLCnextSlaveHandler(PLCnextSlaveHandler::Output, paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_DO_1(""_STRING),
@@ -238,9 +238,9 @@ CDataConnection *FORTE_PLCnextAXLSEDO16::getDOConUnchecked(const TPortId paIndex
 void FORTE_PLCnextAXLSEDO16::initHandles() {
   // Initialize handles
   for (int i = 0; i < 16; i++) {
-    PLCnextDeviceController::HandleDescriptor desc = PLCnextDeviceController::HandleDescriptor(
-        *static_cast<CIEC_WSTRING *>(getDI(i + 1)), forte::core::io::IOMapper::Out, mIndex, (uint16_t) i,
-        PLCnextDeviceController::Bit);
+    PLCnextDeviceController::HandleDescriptor desc =
+        PLCnextDeviceController::HandleDescriptor(*static_cast<CIEC_WSTRING *>(getDI(i + 1)), forte::io::IOMapper::Out,
+                                                  mIndex, (uint16_t) i, PLCnextDeviceController::Bit);
 
     initHandle(desc);
   }

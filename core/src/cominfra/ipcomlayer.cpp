@@ -23,7 +23,7 @@
 #include "forte/util/string_utils.h"
 
 using namespace forte::com_infra;
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CIPComLayer> entry("ip"_STRID);
@@ -131,7 +131,7 @@ EComResponse CIPComLayer::openConnection(char *paLayerParameter) {
     *acPort = '\0';
     ++acPort;
 
-    TForteUInt16 nPort = static_cast<TForteUInt16>(forte::core::util::strtoul(acPort, nullptr, 10));
+    TForteUInt16 nPort = static_cast<TForteUInt16>(forte::util::strtoul(acPort, nullptr, 10));
 
     CIPComSocketHandler::TSocketDescriptor nSockDes = CIPComSocketHandler::scmInvalidSocketDescriptor;
     mConnectionState = e_Connected;

@@ -29,7 +29,7 @@ class CFunctionBlockMock : public CFunctionBlock {
       return true;
     }
 
-    forte::core::StringId getFBTypeId() const override {
+    forte::StringId getFBTypeId() const override {
       return {};
     }
 

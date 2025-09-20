@@ -19,7 +19,7 @@
 
 #include "forte/eclipse4diac/utils/splitting/SPLIT_LWORD_INTO_QUARTERS_fct.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_byte.h"
 #include "forte/datatypes/forte_any_int_variant.h"
@@ -62,8 +62,8 @@ namespace {
   };
 } // namespace
 
-FORTE_SPLIT_LWORD_INTO_QUARTERS::FORTE_SPLIT_LWORD_INTO_QUARTERS(const forte::core::StringId paInstanceNameId,
-                                                                 forte::core::CFBContainer &paContainer) :
+FORTE_SPLIT_LWORD_INTO_QUARTERS::FORTE_SPLIT_LWORD_INTO_QUARTERS(const forte::StringId paInstanceNameId,
+                                                                 forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),

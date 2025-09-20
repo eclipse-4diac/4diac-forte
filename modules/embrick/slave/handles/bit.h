@@ -19,8 +19,8 @@
 
 class EmbrickBitSlaveHandle : public EmbrickSlaveHandle {
   public:
-    EmbrickBitSlaveHandle(forte::core::io::IODeviceController *paController,
-                          forte::core::io::IOMapper::Direction paDirection,
+    EmbrickBitSlaveHandle(forte::io::IODeviceController *paController,
+                          forte::io::IOMapper::Direction paDirection,
                           uint8_t paOffset,
                           uint8_t paPosition,
                           EmbrickSlaveHandler *paSlave);

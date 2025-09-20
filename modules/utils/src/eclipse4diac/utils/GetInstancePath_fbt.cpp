@@ -13,7 +13,7 @@
 
 #include "forte/eclipse4diac/utils/GetInstancePath_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::utils;
 
@@ -39,8 +39,7 @@ namespace {
   };
 } // namespace
 
-FORTE_GetInstancePath::FORTE_GetInstancePath(const forte::core::StringId paInstanceNameId,
-                                             forte::core::CFBContainer &paContainer) :
+FORTE_GetInstancePath::FORTE_GetInstancePath(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_Sep(0x2f_CHAR),
     conn_CNF(*this, 0),

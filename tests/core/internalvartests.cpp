@@ -19,14 +19,14 @@
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_uint.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 const SFBInterfaceSpec gcEmptyInterface = {};
 
 class CInternalVarTestFB : public CBasicFB {
 
   public:
-    CInternalVarTestFB(std::span<const forte::core::StringId> paVarInternalNames) :
+    CInternalVarTestFB(std::span<const forte::StringId> paVarInternalNames) :
         CBasicFB(CFBContainerMock::smDefaultFBContMock, gcEmptyInterface, {}, paVarInternalNames),
         var_QU(false_BOOL),
         var_QD(false_BOOL),
@@ -42,7 +42,7 @@ class CInternalVarTestFB : public CBasicFB {
       return nullptr;
     }
 
-    forte::core::StringId getFBTypeId() const override {
+    forte::StringId getFBTypeId() const override {
       return {};
     }
 
@@ -90,12 +90,12 @@ BOOST_AUTO_TEST_SUITE(internal_vars)
 
 BOOST_AUTO_TEST_CASE(checkEmptyInternalVarsAreAllowed) {
   // check that we can create an FB where we have a var internal struct which has all parts set to zero
-  forte::core::StringId namelist[1] = {"DT"_STRID};
+  forte::StringId namelist[1] = {"DT"_STRID};
 
   CInternalVarTestFB testFB({});
   BOOST_CHECK(nullptr == testFB.getVar(namelist, 1));
   // check that we should at least get the ECC variable
-  namelist[0] = forte::core::StringId::insert("!ECC");
+  namelist[0] = forte::StringId::insert("!ECC");
   BOOST_CHECK(nullptr != testFB.getVar(namelist, 1));
 }
 

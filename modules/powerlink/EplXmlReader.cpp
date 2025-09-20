@@ -78,24 +78,24 @@ void CEplXmlReader::createProcImageOut(TiXmlNode *paProcessImage) {
 
     // Get CN ID
     char *pch = strtok(nameStr, ".CN");
-    int cnId = forte::core::util::strtol(pch, 0, 10);
+    int cnId = forte::util::strtol(pch, 0, 10);
 
     // Get module ID
     char *modId = strtok(nullptr, ".");
 
     // Get dataSize
     const char *temp = channel->ToElement()->Attribute("dataSize");
-    int dSize = forte::core::util::strtoul(temp, 0, 10);
+    int dSize = forte::util::strtoul(temp, 0, 10);
 
     // Get PIOffset
     temp = channel->ToElement()->Attribute("PIOffset");
-    long piOffset = forte::core::util::strtol(temp, nullptr, 16);
+    long piOffset = forte::util::strtol(temp, nullptr, 16);
 
     // Get BitOffset
     long bitOffset = 0;
     temp = channel->ToElement()->Attribute("BitOffset");
     if (temp != nullptr) {
-      bitOffset = forte::core::util::strtol(temp, nullptr, 16);
+      bitOffset = forte::util::strtol(temp, nullptr, 16);
     }
 
     // Check CN id, module number and add new IO
@@ -155,24 +155,24 @@ void CEplXmlReader::createProcImageIn(TiXmlNode *paProcessImage) {
 
     // Get CN ID
     char *pch = strtok(nameStr, ".CN");
-    int cnId = forte::core::util::strtoul(pch, 0, 10);
+    int cnId = forte::util::strtoul(pch, 0, 10);
 
     // Get module ID
     char *modId = strtok(nullptr, ".");
 
     // Get dataSize
     const char *temp = channel->ToElement()->Attribute("dataSize");
-    int dSize = forte::core::util::strtoul(temp, 0, 10);
+    int dSize = forte::util::strtoul(temp, 0, 10);
 
     // Get PIOffset
     temp = channel->ToElement()->Attribute("PIOffset");
-    long piOffset = forte::core::util::strtol(temp, nullptr, 16);
+    long piOffset = forte::util::strtol(temp, nullptr, 16);
 
     // Get BitOffset
     long bitOffset = 0;
     temp = channel->ToElement()->Attribute("BitOffset");
     if (temp != nullptr) {
-      bitOffset = forte::core::util::strtol(temp, nullptr, 16);
+      bitOffset = forte::util::strtol(temp, nullptr, 16);
     }
 
     // Check CN id, module number and add new IO

@@ -29,7 +29,7 @@
  */
 class CInternalTracer final {
   public:
-    CInternalTracer(forte::core::StringId, size_t);
+    CInternalTracer(forte::StringId, size_t);
 
     virtual ~CInternalTracer() = default;
 

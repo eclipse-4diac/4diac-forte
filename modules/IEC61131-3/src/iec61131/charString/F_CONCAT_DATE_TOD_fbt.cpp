@@ -18,7 +18,7 @@
 #include "forte/datatypes/forte_date_and_time.h"
 #include "forte/datatypes/forte_time_of_day.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::charString;
 
@@ -48,8 +48,8 @@ namespace {
   };
 } // namespace
 
-FORTE_F_CONCAT_DATE_TOD::FORTE_F_CONCAT_DATE_TOD(const forte::core::StringId paInstanceNameId,
-                                                 forte::core::CFBContainer &paContainer) :
+FORTE_F_CONCAT_DATE_TOD::FORTE_F_CONCAT_DATE_TOD(const forte::StringId paInstanceNameId,
+                                                 forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_IN1(CIEC_DATE(0)),
     var_IN2(CIEC_TIME_OF_DAY(0)),

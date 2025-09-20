@@ -15,7 +15,7 @@
 #include "forte/datatypes/forte_uint.h"
 #include "forte/datatypes/forte_bool.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 struct E_CTD_TestFixture : public CFBTestFixtureBase {
 

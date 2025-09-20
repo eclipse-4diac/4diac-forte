@@ -15,12 +15,12 @@
  *******************************************************************************/
 #include "forte/io/IX_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_IX, "IX"_STRID)
 
-FORTE_IX::FORTE_IX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_IX::FORTE_IX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CInputFB<CIEC_BOOL>(paContainer, paInstanceNameId) {
 }

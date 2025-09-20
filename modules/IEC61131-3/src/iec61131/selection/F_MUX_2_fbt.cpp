@@ -16,7 +16,7 @@
 
 #include "forte/iec61131/selection/F_MUX_2_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::iec61131::selection;
 
@@ -46,7 +46,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_MUX_2::FORTE_F_MUX_2(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_MUX_2::FORTE_F_MUX_2(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_K(CIEC_ANY_INT_VARIANT()),
     var_IN1(CIEC_ANY_VARIANT()),

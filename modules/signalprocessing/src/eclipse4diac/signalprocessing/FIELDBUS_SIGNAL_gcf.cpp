@@ -24,7 +24,7 @@
 
 using namespace std::literals;
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   constexpr std::string_view TypeHash =

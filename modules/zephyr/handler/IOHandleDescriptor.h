@@ -17,7 +17,7 @@
 #include "forte/io/mapper/io_handle.h"
 #include "forte/extevhan.h"
 
-class IOHandleDescriptor : public forte::core::io::IODeviceController::HandleDescriptor {
+class IOHandleDescriptor : public forte::io::IODeviceController::HandleDescriptor {
   public:
     enum HandleType {
       Gpio,
@@ -27,7 +27,7 @@ class IOHandleDescriptor : public forte::core::io::IODeviceController::HandleDes
 
     HandleType mType;
 
-    IOHandleDescriptor(std::string const &paId, forte::core::io::IOMapper::Direction paDirection, HandleType paType) :
+    IOHandleDescriptor(std::string const &paId, forte::io::IOMapper::Direction paDirection, HandleType paType) :
         HandleDescriptor(paId, paDirection),
         mType(paType) {
     }

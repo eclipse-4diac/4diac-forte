@@ -16,7 +16,7 @@
 #include "delegdataconn.h"
 #include "forte/datatypes/forte_struct.h"
 
-namespace forte::core::internal {
+namespace forte::internal {
 
   class CGatheringDataConnection final : public CDelegatingDataConnection<CIEC_STRUCT> {
     public:
@@ -24,21 +24,20 @@ namespace forte::core::internal {
           CDelegatingDataConnection(paSrcFB, paSrcPortId, paValue) {
       }
 
-      EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::core::StringId> paDstPortNameId) override;
+      EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
 
       EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
-                                         std::span<const forte::core::StringId> paDstPortNameId) override;
+                                         std::span<const forte::StringId> paDstPortNameId) override;
 
-      EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::core::StringId> paDstPortNameId) override;
+      EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
 
       void readData(CIEC_ANY &paValue) const override;
 
-      EMGMResponse addMemberConnection(std::span<const forte::core::StringId> paMemberName,
-                                       CDataConnection &paConnection);
+      EMGMResponse addMemberConnection(std::span<const forte::StringId> paMemberName, CDataConnection &paConnection);
 
-      EMGMResponse removeMemberConnection(std::span<const forte::core::StringId> paMemberName);
+      EMGMResponse removeMemberConnection(std::span<const forte::StringId> paMemberName);
 
-      CDataConnection *getMemberConnection(std::span<const forte::core::StringId> paMemberName) override;
+      CDataConnection *getMemberConnection(std::span<const forte::StringId> paMemberName) override;
 
       [[nodiscard]] bool isGathering() const override {
         return true;
@@ -51,7 +50,7 @@ namespace forte::core::internal {
     private:
       EMGMResponse addMemberConnection(CIEC_ANY *paMember,
                                        CDataConnection *paConnection,
-                                       std::span<const forte::core::StringId> paMemberName);
+                                       std::span<const forte::StringId> paMemberName);
 
       EMGMResponse removeMemberConnection(const CIEC_ANY *paMember);
 
@@ -65,4 +64,4 @@ namespace forte::core::internal {
 
       std::vector<SGatheringData> mGatheringData;
   };
-} // namespace forte::core::internal
+} // namespace forte::internal

@@ -32,10 +32,10 @@ namespace forte::iec61499::events {
 
       bool createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) override;
 
-      std::vector<forte::core::StringId> mEventOutputNames;
+      std::vector<forte::StringId> mEventOutputNames;
 
     public:
-      GEN_E_SPLIT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      GEN_E_SPLIT(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       CIEC_ANY *getDI(size_t) override;
       CIEC_ANY *getDO(size_t) override;

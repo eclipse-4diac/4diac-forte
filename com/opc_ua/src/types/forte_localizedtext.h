@@ -30,17 +30,17 @@ class CIEC_LocalizedText : public CIEC_STRUCT {
       return 2;
     }
 
-    const forte::core::StringId *elementNames() const override {
+    const forte::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    forte::core::StringId getStructTypeNameID() const override;
+    forte::StringId getStructTypeNameID() const override;
 
     CIEC_ANY *getMember(size_t paMemberIndex) override;
     const CIEC_ANY *getMember(size_t paMemberIndex) const override;
 
   private:
-    static const forte::core::StringId scmElementNames[];
+    static const forte::StringId scmElementNames[];
 };
 
 #endif //_FORTE_LOCALIZEDTEXT_H_

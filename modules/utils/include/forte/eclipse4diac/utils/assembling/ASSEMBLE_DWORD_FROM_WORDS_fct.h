@@ -42,7 +42,7 @@ class FORTE_ASSEMBLE_DWORD_FROM_WORDS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_ASSEMBLE_DWORD_FROM_WORDS(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_ASSEMBLE_DWORD_FROM_WORDS(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_WORD var_WORD_00;
     CIEC_WORD var_WORD_01;

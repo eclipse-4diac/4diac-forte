@@ -12,12 +12,12 @@
 
 #include "forte/io/eIO/eIW_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_eIW, "eIW"_STRID)
 
-FORTE_eIW::FORTE_eIW(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_eIW::FORTE_eIW(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CeInputFB<CIEC_WORD>(paContainer, paInstanceNameId) {
 }

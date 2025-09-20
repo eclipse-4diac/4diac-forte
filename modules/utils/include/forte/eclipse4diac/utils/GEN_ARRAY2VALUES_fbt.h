@@ -47,7 +47,7 @@ namespace forte::eclipse4diac::utils {
       CDataConnection **getDIConUnchecked(const TPortId paIndex) override;
 
     private:
-      std::vector<forte::core::StringId> mDataOutputNames;
+      std::vector<forte::StringId> mDataOutputNames;
 
       static const TEventID scmEventREQID = 0;
 
@@ -70,7 +70,7 @@ namespace forte::eclipse4diac::utils {
       std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDOs;
 
     public:
-      GEN_ARRAY2VALUES(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      GEN_ARRAY2VALUES(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
       ~GEN_ARRAY2VALUES() override = default;
   };
 } // namespace forte::eclipse4diac::utils

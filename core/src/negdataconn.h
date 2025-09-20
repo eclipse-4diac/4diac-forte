@@ -16,7 +16,7 @@
 #include "forte/datatypes/forte_bool.h"
 #include "forte/iec61131_functions.h"
 
-namespace forte::core::internal {
+namespace forte::internal {
 
   class CNegatingDataConnection : public CDelegatingDataConnection<CIEC_BOOL> {
 
@@ -31,4 +31,4 @@ namespace forte::core::internal {
 
       void getSourcePortName(TNameIdentifier &paResult) const override;
   };
-} // namespace forte::core::internal
+} // namespace forte::internal

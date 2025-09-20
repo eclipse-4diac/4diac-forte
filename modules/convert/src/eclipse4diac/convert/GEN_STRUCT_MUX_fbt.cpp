@@ -14,7 +14,7 @@
  *******************************************************************************/
 #include "forte/eclipse4diac/convert/GEN_STRUCT_MUX_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::convert;
 
@@ -33,7 +33,7 @@ void GEN_STRUCT_MUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *c
   }
 }
 
-GEN_STRUCT_MUX::GEN_STRUCT_MUX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_STRUCT_MUX::GEN_STRUCT_MUX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
     conn_CNF(*this, 0) {
 }
@@ -56,7 +56,7 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
     return false;
   }
 
-  std::unique_ptr<CIEC_ANY> data(forte::core::createDataTypeInstance(structTypeNameId, nullptr));
+  std::unique_ptr<CIEC_ANY> data(forte::createDataTypeInstance(structTypeNameId, nullptr));
 
   if (nullptr == data) {
     DEVLOG_ERROR("[GEN_STRUCT_MUX]: Couldn't create structure of type: %s\n", structTypeNameId.data());
@@ -88,14 +88,14 @@ bool GEN_STRUCT_MUX::createInterfaceSpec(const char *paConfigString, SFBInterfac
   return true;
 }
 
-forte::core::StringId GEN_STRUCT_MUX::getStructNameId(std::string_view paConfigString) {
+forte::StringId GEN_STRUCT_MUX::getStructNameId(std::string_view paConfigString) {
   size_t index = paConfigString.find('_');
   if (index != std::string::npos) {
     std::string_view nameId = paConfigString.substr(index + 1);
     index = nameId.find('_');
     if (index != std::string::npos) {
       nameId = nameId.substr(index + 2); // put the position one after the separating number
-      return forte::core::StringId::lookup(nameId);
+      return forte::StringId::lookup(nameId);
     }
   }
   return {};

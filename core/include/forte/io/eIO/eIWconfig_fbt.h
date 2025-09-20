@@ -31,7 +31,7 @@ class FORTE_eIWconfig final : public CeConfigFB {
     void setInitialValues() override;
 
   public:
-    FORTE_eIWconfig(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_eIWconfig(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_WORD var_ST;
     CIEC_WORD var_BT;

@@ -16,7 +16,7 @@
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_struct.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 class CIEC_GET_STRUCT_VALUE_Struct_test1 : public CIEC_STRUCT {
     DECLARE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test1)
@@ -37,11 +37,11 @@ class CIEC_GET_STRUCT_VALUE_Struct_test1 : public CIEC_STRUCT {
       return 2;
     }
 
-    const forte::core::StringId *elementNames() const override {
+    const forte::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    forte::core::StringId getStructTypeNameID() const override {
+    forte::StringId getStructTypeNameID() const override {
       return "GET_STRUCT_VALUE_Struct_test1"_STRID;
     }
 
@@ -64,10 +64,10 @@ class CIEC_GET_STRUCT_VALUE_Struct_test1 : public CIEC_STRUCT {
     static const unsigned int sizeOfFirstArray = 2;
 
   private:
-    static const forte::core::StringId scmElementNames[];
+    static const forte::StringId scmElementNames[];
 };
 
-const forte::core::StringId CIEC_GET_STRUCT_VALUE_Struct_test1::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID};
+const forte::StringId CIEC_GET_STRUCT_VALUE_Struct_test1::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID};
 
 DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test1, "GET_STRUCT_VALUE_Struct_test1"_STRID)
 
@@ -89,11 +89,11 @@ class CIEC_GET_STRUCT_VALUE_Struct_test2 : public CIEC_STRUCT {
       return 2;
     }
 
-    const forte::core::StringId *elementNames() const override {
+    const forte::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    forte::core::StringId getStructTypeNameID() const override {
+    forte::StringId getStructTypeNameID() const override {
       return "GET_STRUCT_VALUE_Struct_test2"_STRID;
     }
 
@@ -114,10 +114,10 @@ class CIEC_GET_STRUCT_VALUE_Struct_test2 : public CIEC_STRUCT {
     }
 
   private:
-    static const forte::core::StringId scmElementNames[];
+    static const forte::StringId scmElementNames[];
 };
 
-const forte::core::StringId CIEC_GET_STRUCT_VALUE_Struct_test2::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID};
+const forte::StringId CIEC_GET_STRUCT_VALUE_Struct_test2::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID};
 
 DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test2, "GET_STRUCT_VALUE_Struct_test2"_STRID)
 

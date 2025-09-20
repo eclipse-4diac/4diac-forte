@@ -13,9 +13,9 @@
 
 #include "negdataconn.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
-using namespace forte::core::internal;
+using namespace forte::internal;
 using namespace std::string_literals;
 
 void CNegatingDataConnection::getSourcePortName(TNameIdentifier &paResult) const {

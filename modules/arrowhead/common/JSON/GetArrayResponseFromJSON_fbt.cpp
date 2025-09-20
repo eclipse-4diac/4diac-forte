@@ -12,7 +12,7 @@
 
 #include "GetArrayResponseFromJSON_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "ArrowheadJSONHelper.h"
 
@@ -20,17 +20,15 @@ DEFINE_FIRMWARE_FB(FORTE_GetArrayResponseFromJSON, "GetArrayResponseFromJSON"_ST
 
 namespace {
   const auto cDataInputNames = std::array{"response"_STRID};
-  
-  
+
   const auto cDataOutputNames = std::array{"output"_STRID};
-  
-  
+
   const auto cEventInputNames = std::array{"REQ"_STRID};
   const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  
+
   const auto cEventOutputNames = std::array{"CNF"_STRID};
   const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  
+
   const SFBInterfaceSpec cFBInterfaceSpec = {
       .mEINames = cEventInputNames,
       .mEITypeNames = cEventInputTypeIds,
@@ -42,8 +40,7 @@ namespace {
       .mSocketNames = {},
       .mPlugNames = {},
   };
-}
-
+} // namespace
 
 bool FORTE_GetArrayResponseFromJSON::isResponseEmpty(char *paText) {
   while (']' != *paText) {

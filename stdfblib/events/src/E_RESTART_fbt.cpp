@@ -13,7 +13,7 @@
  *******************************************************************************/
 #include "forte/iec61499/events/E_RESTART_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/device.h"
 
@@ -34,7 +34,7 @@ const SFBInterfaceSpec cFBInterfaceSpec = {
     .mPlugNames = {},
 };
 
-FORTE_E_RESTART::FORTE_E_RESTART(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_RESTART::FORTE_E_RESTART(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     mEventToSend(cgInvalidEventID),
     conn_COLD(*this, 0),

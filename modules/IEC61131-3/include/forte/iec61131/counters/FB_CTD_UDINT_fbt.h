@@ -44,7 +44,7 @@ namespace forte::iec61131::counters {
       void setInitialValues() override;
 
     public:
-      FORTE_FB_CTD_UDINT(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      FORTE_FB_CTD_UDINT(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       CIEC_BOOL var_CD;
       CIEC_BOOL var_LD;

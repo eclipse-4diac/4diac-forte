@@ -9,12 +9,12 @@
 
 #include "Wago636_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "WagoSlaveBase.h"
 #include "../WagoDeviceController.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_Wago636, "Wago636"_STRID)
 
@@ -55,8 +55,7 @@ namespace {
   };
 } // namespace
 
-FORTE_Wago636::FORTE_Wago636(const forte::core::StringId paInstanceNameId,
-                             forte::core::CFBContainer &paContainer) :
+FORTE_Wago636::FORTE_Wago636(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     WagoSlaveBase(636, paContainer, cFBInterfaceSpec, paInstanceNameId),
     var_QI(0_BOOL),
     var_Busy(""_STRING),

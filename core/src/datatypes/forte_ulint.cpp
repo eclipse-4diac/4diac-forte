@@ -13,7 +13,7 @@
  *******************************************************************************/
 #include "forte/datatypes/forte_ulint.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(ULINT, "ULINT"_STRID)
 
@@ -23,4 +23,4 @@ template CIEC_ULINT &CIEC_ULINT::operator= <>(const CIEC_UINT &paValue);
 
 template CIEC_ULINT &CIEC_ULINT::operator= <>(const CIEC_UDINT &paValue);
 
-const forte::core::StringId forte::CDataTypeTrait<CIEC_ULINT>::scmDataTypeName = "ULINT"_STRID;
+const forte::StringId forte::CDataTypeTrait<CIEC_ULINT>::scmDataTypeName = "ULINT"_STRID;

@@ -13,7 +13,7 @@
 
 #include "forte/io/mapper/io_handle_bit.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 IOHandleBit::IOHandleBit(IODeviceController *paController,
                          IOMapper::Direction paDirection,

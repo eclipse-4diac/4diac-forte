@@ -22,7 +22,7 @@
 
 CDeviceExecution::CDeviceExecution(CDevice &paDevice) : mDevice(paDevice) {
   mRegisteredEventHandlers.reserve(CExternalEventHandler::getFactories().size() + 1);
-  mRegisteredEventHandlers.push_back(forte::core::TimerHandlerFactory::create(*this));
+  mRegisteredEventHandlers.push_back(forte::TimerHandlerFactory::create(*this));
   for (auto &factory : CExternalEventHandler::getFactories()) {
     mRegisteredEventHandlers.push_back(factory(*this));
   }

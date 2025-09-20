@@ -52,7 +52,7 @@ class CDevice : public CResource {
      */
     virtual void awaitShutdown() = 0;
 
-    forte::core::StringId getFBTypeId() const override {
+    forte::StringId getFBTypeId() const override {
       return {};
     }
 
@@ -63,7 +63,7 @@ class CDevice : public CResource {
      * \param paCommand FORTE internal representation of the management command
      * \return response of the MGMCommand execution as defined in IEC 61499
      */
-    EMGMResponse executeMGMCommand(forte::core::SManagementCMD &paCommand) override;
+    EMGMResponse executeMGMCommand(forte::SManagementCMD &paCommand) override;
 
     EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
@@ -88,7 +88,7 @@ class CDevice : public CResource {
     /*! \brief Sets up all the necessary data and classes necessary for execution.
      *
      */
-    CDevice(const SFBInterfaceSpec &paInterfaceSpec, const forte::core::StringId paInstanceNameId) :
+    CDevice(const SFBInterfaceSpec &paInterfaceSpec, const forte::StringId paInstanceNameId) :
         CResource(paInterfaceSpec, paInstanceNameId),
         mDeviceExecution(*this) {
     }

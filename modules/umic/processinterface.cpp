@@ -38,9 +38,9 @@ const char *const CUMICProcessInterface::scmError = "Error";
 const char *const CUMICProcessInterface::scmCouldNotRead = "Could not read";
 const char *const CUMICProcessInterface::scmCouldNotWrite = "Could not write";
 
-CUMICProcessInterface::CUMICProcessInterface(forte::core::CFBContainer &paContainer,
+CUMICProcessInterface::CUMICProcessInterface(forte::CFBContainer &paContainer,
                                              const SFBInterfaceSpec &paInterfaceSpec,
-                                             const forte::core::StringId paInstanceNameId) :
+                                             const forte::StringId paInstanceNameId) :
     CProcessInterfaceBase(paContainer, paInterfaceSpec, paInstanceNameId),
     mIOType(UNDEFINED),
     mNumber(0) {

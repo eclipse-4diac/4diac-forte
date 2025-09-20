@@ -14,8 +14,8 @@
 #include "forte/util/criticalregion.h"
 #include "../slaveHandler.h"
 
-PLCnextBitSlaveHandle::PLCnextBitSlaveHandle(forte::core::io::IODeviceController *paController,
-                                             forte::core::io::IOMapper::Direction paDirection,
+PLCnextBitSlaveHandle::PLCnextBitSlaveHandle(forte::io::IODeviceController *paController,
+                                             forte::io::IOMapper::Direction paDirection,
                                              uint16_t paBitPosition,
                                              PLCnextSlaveHandler *paSlave) :
     PLCnextSlaveHandle(paController, paDirection, mType = CIEC_ANY::e_BOOL, paSlave),
@@ -23,7 +23,7 @@ PLCnextBitSlaveHandle::PLCnextBitSlaveHandle(forte::core::io::IODeviceController
 }
 
 void PLCnextBitSlaveHandle::set(const CIEC_ANY &paState) {
-  if (mDirection == forte::core::io::IOMapper::In) {
+  if (mDirection == forte::io::IOMapper::In) {
     DEVLOG_ERROR("SET operation not allowed for type INPUT\n");
     return;
   }
@@ -39,7 +39,7 @@ void PLCnextBitSlaveHandle::set(const CIEC_ANY &paState) {
 }
 
 void PLCnextBitSlaveHandle::get(CIEC_ANY &paState) {
-  if (mDirection == forte::core::io::IOMapper::Out) {
+  if (mDirection == forte::io::IOMapper::Out) {
     DEVLOG_ERROR("GET operation not allowed for type OUTPUT\n");
     return;
   }

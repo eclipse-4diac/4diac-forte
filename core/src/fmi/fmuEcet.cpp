@@ -18,10 +18,10 @@
 #include "core/fmi/fmuInstance.h"
 #include <assert.h>
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
-  [[maybe_unused]] const forte::core::EcetFactory::EntryImpl<CFMUEventChainExecutionThread> entry("fmu"_STRID);
+  [[maybe_unused]] const forte::EcetFactory::EntryImpl<CFMUEventChainExecutionThread> entry("fmu"_STRID);
 }
 
 CFMUEventChainExecutionThread::CFMUEventChainExecutionThread() :

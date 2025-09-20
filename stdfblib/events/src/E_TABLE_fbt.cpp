@@ -18,7 +18,7 @@
 
 #include "forte/iec61499/events/E_TABLE_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/iec61131_functions.h"
 #include "forte/datatypes/forte_array_common.h"
@@ -69,7 +69,7 @@ namespace {
   };
 } // namespace
 
-FORTE_E_TABLE::FORTE_E_TABLE(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_E_TABLE::FORTE_E_TABLE(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
     fb_E_TABLE_CTRL("E_TABLE_CTRL"_STRID, *this),
     fb_E_DELAY("E_DELAY"_STRID, *this),

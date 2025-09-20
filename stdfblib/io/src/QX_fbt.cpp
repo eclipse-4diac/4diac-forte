@@ -11,7 +11,7 @@
  *******************************************************************************/
 #include "forte/io/QX_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::io;
 
@@ -37,7 +37,7 @@ namespace {
   };
 } // namespace
 
-FORTE_QX::FORTE_QX(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_QX::FORTE_QX(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CProcessInterface(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_INITO(*this, 0),
     conn_CNF(*this, 1),

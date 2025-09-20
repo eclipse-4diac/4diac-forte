@@ -71,8 +71,7 @@ class CIEC_UDINT final : public CIEC_ANY_UNSIGNED {
     }
 
     template<typename T,
-             std::enable_if_t<std::is_same_v<typename forte::core::mpl::implicit_cast_t<T, CIEC_UDINT>, CIEC_UDINT>,
-                              int> = 0>
+             std::enable_if_t<std::is_same_v<typename forte::mpl::implicit_cast_t<T, CIEC_UDINT>, CIEC_UDINT>, int> = 0>
     CIEC_UDINT &operator=(const T &paValue) {
       setValueSimple(paValue);
       return *this;
@@ -106,7 +105,7 @@ namespace forte {
   template<>
   struct CDataTypeTrait<CIEC_UDINT> {
       static constexpr CIEC_ANY::EDataTypeID scmDataTypeId = CIEC_ANY::e_UDINT;
-      static const forte::core::StringId scmDataTypeName;
+      static const forte::StringId scmDataTypeName;
   };
 } // namespace forte
 

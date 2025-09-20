@@ -28,7 +28,7 @@ class CLuaAdapterTypeEntry : public CTypeLib::CAdapterTypeEntry {
     SFBInterfaceSpec mSocketInterfaceSpec;
     SFBInterfaceSpec mPlugInterfaceSpec;
 
-    CLuaAdapterTypeEntry(forte::core::StringId typeNameId,
+    CLuaAdapterTypeEntry(forte::StringId typeNameId,
                          const std::string &paLuaScriptAsString,
                          SFBInterfaceSpec &interfaceSpec);
 
@@ -39,12 +39,11 @@ class CLuaAdapterTypeEntry : public CTypeLib::CAdapterTypeEntry {
     static void deleteInterfaceSpec(SFBInterfaceSpec &interfaceSpec);
 
   public:
-    static CLuaAdapterTypeEntry *createLuaAdapterTypeEntry(forte::core::StringId typeNameId,
+    static CLuaAdapterTypeEntry *createLuaAdapterTypeEntry(forte::StringId typeNameId,
                                                            const std::string &paLuaScriptAsString);
 
-    CAdapter *createAdapterInstance(forte::core::StringId paInstanceNameId,
-                                    forte::core::CFBContainer &paContainer,
-                                    bool paIsPlug) override;
+    CAdapter *
+    createAdapterInstance(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer, bool paIsPlug) override;
 
     const SFBInterfaceSpec &getSocketInterfaceSpec() const {
       return mSocketInterfaceSpec;

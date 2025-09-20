@@ -12,7 +12,7 @@
 
 #include "QueryServiceHTTP.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_FB(FORTE_QueryServiceHTTP, "QueryServiceHTTP"_STRID)
 

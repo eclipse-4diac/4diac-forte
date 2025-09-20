@@ -12,7 +12,7 @@
 
 #include "forte_arrowheadservice.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(ArrowheadService, "ArrowheadService"_STRID);
 
@@ -20,7 +20,7 @@ CIEC_ArrowheadService::CIEC_ArrowheadService() :
     CIEC_STRUCT("ArrowheadService"_STRID, 3, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const forte::core::StringId CIEC_ArrowheadService::scmElementTypes[] = {
+const forte::StringId CIEC_ArrowheadService::scmElementTypes[] = {
     "WSTRING"_STRID, "ARRAY"_STRID, 10, "WSTRING"_STRID, "ARRAY"_STRID, 10, "WSTRING"_STRID};
-const forte::core::StringId CIEC_ArrowheadService::scmElementNames[] = {
-    "serviceDefinition"_STRID, "interfaces"_STRID, "serviceMetadata"_STRID};
+const forte::StringId CIEC_ArrowheadService::scmElementNames[] = {"serviceDefinition"_STRID, "interfaces"_STRID,
+                                                                  "serviceMetadata"_STRID};

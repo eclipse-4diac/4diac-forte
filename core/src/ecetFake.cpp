@@ -16,10 +16,10 @@
 #include "forte/ecetfactory.h"
 #include "forte/funcbloc.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
-  [[maybe_unused]] const forte::core::EcetFactory::EntryImpl<CFakeEventExecutionThread> entry("Fake"_STRID);
+  [[maybe_unused]] const forte::EcetFactory::EntryImpl<CFakeEventExecutionThread> entry("Fake"_STRID);
 }
 
 CFakeEventExecutionThread::CFakeEventExecutionThread() : CEventChainExecutionThread() {

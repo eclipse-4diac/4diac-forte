@@ -42,7 +42,7 @@ class FORTE_ASSEMBLE_BYTE_FROM_BOOLS final : public CFunctionBlock {
     void setInitialValues() override;
 
   public:
-    FORTE_ASSEMBLE_BYTE_FROM_BOOLS(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_ASSEMBLE_BYTE_FROM_BOOLS(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_BOOL var_BIT_00;
     CIEC_BOOL var_BIT_01;

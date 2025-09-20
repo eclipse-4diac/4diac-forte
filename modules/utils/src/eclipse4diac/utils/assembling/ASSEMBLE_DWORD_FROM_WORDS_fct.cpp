@@ -19,7 +19,7 @@
 
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_DWORD_FROM_WORDS_fct.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_dword.h"
 #include "forte/datatypes/forte_word.h"
@@ -52,8 +52,8 @@ namespace {
   };
 } // namespace
 
-FORTE_ASSEMBLE_DWORD_FROM_WORDS::FORTE_ASSEMBLE_DWORD_FROM_WORDS(const forte::core::StringId paInstanceNameId,
-                                                                 forte::core::CFBContainer &paContainer) :
+FORTE_ASSEMBLE_DWORD_FROM_WORDS::FORTE_ASSEMBLE_DWORD_FROM_WORDS(const forte::StringId paInstanceNameId,
+                                                                 forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_WORD_00(nullptr),

@@ -26,13 +26,13 @@
 #include <functional>
 #include <optional>
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 class CFunctionBlock;
 class CDevice;
 class bt_port_output;
 
-namespace forte::core {
+namespace forte {
   class CFBContainer;
 }
 
@@ -47,7 +47,7 @@ namespace forte::trace::reader::utils {
    * @return a pointer to the resource with the provided name, nullptr if a resource with the provided name does not
    * exist
    */
-  CFunctionBlock *getFB(forte::core::CFBContainer *paContainer, const std::string &paFunctionBlockName);
+  CFunctionBlock *getFB(forte::CFBContainer *paContainer, const std::string &paFunctionBlockName);
 
   /**
    * @brief  Same as the previous function, but using other type of input parameter
@@ -57,11 +57,11 @@ namespace forte::trace::reader::utils {
    * @return a pointer to the resource with the provided name, nullptr if a resource with the provided name does not
    * exist
    */
-  CFunctionBlock *getFB(forte::core::CFBContainer *paContainer, forte::core::StringId paFunctionBlockName);
+  CFunctionBlock *getFB(forte::CFBContainer *paContainer, forte::StringId paFunctionBlockName);
 
   struct FactoriesSettings {
-      core::StringId mEcet{"default"_STRID};
-      core::StringId mTimer{"default"_STRID};
+      StringId mEcet{"default"_STRID};
+      StringId mTimer{"default"_STRID};
       CFlexibleTracer::AvailableTracers mTracer{CFlexibleTracer::AvailableTracers::BareCtf};
   };
 
@@ -78,7 +78,7 @@ namespace forte::trace::reader::utils {
    * @param paContainer container where to look for the types
    * @return list of of service function block types
    */
-  std::set<forte::core::StringId> getServiceFunctionBlockTypes(forte::core::CFBContainer &paContainer);
+  std::set<forte::StringId> getServiceFunctionBlockTypes(forte::CFBContainer &paContainer);
 
   /**
    * @brief Get the list of message from a directory containing CTF traces separated by resource

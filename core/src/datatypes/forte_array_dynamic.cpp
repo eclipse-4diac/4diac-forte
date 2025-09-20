@@ -17,20 +17,20 @@
  *******************************************************************************/
 #include "forte/datatypes/forte_array_dynamic.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "forte/datatypes/forte_ulint.h"
 
 DEFINE_FIRMWARE_DATATYPE(ARRAY_DYNAMIC, "ARRAY"_STRID)
 
 //! Function to configure the array if it is created via the typelib
-void CIEC_ARRAY_DYNAMIC::setup(TForteUInt16 paLength, forte::core::StringId paArrayType) {
+void CIEC_ARRAY_DYNAMIC::setup(TForteUInt16 paLength, forte::StringId paArrayType) {
   clear();
   if (paLength) {
     mLowerBound = 0;
     mUpperBound = paLength - 1;
 
-    mElementDataTypeEntry = forte::core::getDataTypeEntry(paArrayType);
+    mElementDataTypeEntry = forte::getDataTypeEntry(paArrayType);
     if (mElementDataTypeEntry) {
       mElementSize = mElementDataTypeEntry->getSize();
       mData = operator new(paLength * mElementSize);
@@ -44,12 +44,12 @@ void CIEC_ARRAY_DYNAMIC::setup(TForteUInt16 paLength, forte::core::StringId paAr
 }
 
 //! Function to configure the array if it is created via the typelib
-void CIEC_ARRAY_DYNAMIC::setup(intmax_t paLowerBound, intmax_t paUpperBound, forte::core::StringId paArrayType) {
+void CIEC_ARRAY_DYNAMIC::setup(intmax_t paLowerBound, intmax_t paUpperBound, forte::StringId paArrayType) {
   clear();
   mLowerBound = paLowerBound;
   mUpperBound = paUpperBound;
 
-  mElementDataTypeEntry = forte::core::getDataTypeEntry(paArrayType);
+  mElementDataTypeEntry = forte::getDataTypeEntry(paArrayType);
   if (mElementDataTypeEntry) {
     auto size = static_cast<size_t>(paUpperBound - paLowerBound + 1);
     mElementSize = mElementDataTypeEntry->getSize();

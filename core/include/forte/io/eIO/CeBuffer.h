@@ -16,7 +16,7 @@
 
 #include <array>
 
-namespace forte::core::io {
+namespace forte::io {
 
   template<typename T, std::size_t size>
   class CeBuffer {
@@ -58,4 +58,4 @@ namespace forte::core::io {
       std::array<T, size> mData;
       std::array<T, size> mSnapshot;
   };
-} // namespace forte::core::io
+} // namespace forte::io

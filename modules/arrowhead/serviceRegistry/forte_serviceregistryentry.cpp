@@ -12,7 +12,7 @@
 
 #include "forte_serviceregistryentry.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 DEFINE_FIRMWARE_DATATYPE(ServiceRegistryEntry, "ServiceRegistryEntry"_STRID);
 
@@ -20,9 +20,9 @@ CIEC_ServiceRegistryEntry::CIEC_ServiceRegistryEntry() :
     CIEC_STRUCT("ServiceRegistryEntry"_STRID, 7, scmElementTypes, scmElementNames, e_APPLICATION + e_CONSTRUCTED + 1) {
 }
 
-const forte::core::StringId CIEC_ServiceRegistryEntry::scmElementTypes[] = {
+const forte::StringId CIEC_ServiceRegistryEntry::scmElementTypes[] = {
     "ArrowheadService"_STRID, "ArrowheadSystem"_STRID, "WSTRING"_STRID, "DINT"_STRID, "BOOL"_STRID, "DINT"_STRID,
     "WSTRING"_STRID};
-const forte::core::StringId CIEC_ServiceRegistryEntry::scmElementNames[] = {
+const forte::StringId CIEC_ServiceRegistryEntry::scmElementNames[] = {
     "providedService"_STRID, "provider"_STRID, "serviceURI"_STRID, "version"_STRID, "udp"_STRID, "ttl"_STRID,
     "metadata"_STRID};

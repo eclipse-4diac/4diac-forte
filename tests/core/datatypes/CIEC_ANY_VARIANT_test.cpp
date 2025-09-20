@@ -15,7 +15,7 @@
 #include "forte_boost_output_support.h"
 #include "forte/datatypes/forte_any_variant.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 class CIEC_AnyTestStruct : public CIEC_STRUCT {
     DECLARE_FIRMWARE_DATATYPE(AnyTestStruct)
@@ -30,11 +30,11 @@ class CIEC_AnyTestStruct : public CIEC_STRUCT {
       return 3;
     }
 
-    const forte::core::StringId *elementNames() const override {
+    const forte::StringId *elementNames() const override {
       return scmElementNames;
     }
 
-    forte::core::StringId getStructTypeNameID() const override {
+    forte::StringId getStructTypeNameID() const override {
       return "AnyTestStruct"_STRID;
     }
 
@@ -57,10 +57,10 @@ class CIEC_AnyTestStruct : public CIEC_STRUCT {
     }
 
   private:
-    static const forte::core::StringId scmElementNames[];
+    static const forte::StringId scmElementNames[];
 };
 
-const forte::core::StringId CIEC_AnyTestStruct::scmElementNames[] = {"Var1"_STRID, "Var2"_STRID, "Var3"_STRID};
+const forte::StringId CIEC_AnyTestStruct::scmElementNames[] = {"Var1"_STRID, "Var2"_STRID, "Var3"_STRID};
 
 DEFINE_FIRMWARE_DATATYPE(AnyTestStruct, "AnyTestStruct"_STRID)
 

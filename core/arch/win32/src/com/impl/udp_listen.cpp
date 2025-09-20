@@ -19,7 +19,7 @@
 
 #include <ws2tcpip.h>
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::com;
 using namespace forte::com::impl;

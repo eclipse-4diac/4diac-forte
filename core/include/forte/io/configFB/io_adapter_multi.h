@@ -18,46 +18,42 @@
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_uint.h"
 
-namespace forte {
-  namespace core {
-    namespace io {
+namespace forte::io {
 
-      class IOConfigFBMultiAdapter : public CAdapter {
-        public:
-          IOConfigFBMultiAdapter(const std::span<const TForteUInt8> paSlaveConfigurationIO,
-                                 forte::core::CFBContainer &paContainer,
-                                 const SFBInterfaceSpec &paInterfaceSpec,
-                                 const forte::core::StringId paInstanceNameId,
-                                 TForteUInt8 paParentAdapterlistID);
-          ~IOConfigFBMultiAdapter() override;
+  class IOConfigFBMultiAdapter : public CAdapter {
+    public:
+      IOConfigFBMultiAdapter(const std::span<const TForteUInt8> paSlaveConfigurationIO,
+                             forte::CFBContainer &paContainer,
+                             const SFBInterfaceSpec &paInterfaceSpec,
+                             const forte::StringId paInstanceNameId,
+                             TForteUInt8 paParentAdapterlistID);
+      ~IOConfigFBMultiAdapter() override;
 
-          void setInitialValues() override;
+      void setInitialValues() override;
 
-          CIEC_BOOL var_QO;
+      CIEC_BOOL var_QO;
 
-          CIEC_BOOL var_QI;
+      CIEC_BOOL var_QI;
 
-          CIEC_UINT var_MasterId;
+      CIEC_UINT var_MasterId;
 
-          CIEC_UINT var_Index;
+      CIEC_UINT var_Index;
 
-          static const TEventID scmEventINITID = 0;
-          TEventID INIT() const {
-            return getParentAdapterListEventID() + scmEventINITID;
-          }
+      static const TEventID scmEventINITID = 0;
+      TEventID INIT() const {
+        return getParentAdapterListEventID() + scmEventINITID;
+      }
 
-          static const TEventID scmEventINITOID = 0;
-          TEventID INITO() const {
-            return getParentAdapterListEventID() + scmEventINITOID;
-          }
+      static const TEventID scmEventINITOID = 0;
+      TEventID INITO() const {
+        return getParentAdapterListEventID() + scmEventINITOID;
+      }
 
-          const std::span<const TForteUInt8> cmSlaveConfigurationIO;
+      const std::span<const TForteUInt8> cmSlaveConfigurationIO;
 
-          virtual CIEC_ANY *getDeviceConfigPin(int paIndex) = 0;
-      };
+      virtual CIEC_ANY *getDeviceConfigPin(int paIndex) = 0;
+  };
 
-    } // namespace io
-  } // namespace core
-} // namespace forte
+} // namespace forte::io
 
 #endif /* SRC_CORE_IO_CONFIGFB_ADAPTER_MULTI_H_ */

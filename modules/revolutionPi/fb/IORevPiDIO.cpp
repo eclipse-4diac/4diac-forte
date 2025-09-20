@@ -13,11 +13,11 @@
 
 #include "IORevPiDIO.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "../RevPiController.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 DEFINE_FIRMWARE_FB(FORTE_IORevPiDIO, "IORevPiDIO"_STRID)
 
@@ -73,8 +73,7 @@ namespace {
 const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIO[] = {};
 const TForteUInt8 FORTE_IORevPiDIO::scmSlaveConfigurationIONum = 0;
 
-FORTE_IORevPiDIO::FORTE_IORevPiDIO(const forte::core::StringId paInstanceNameId,
-                                   forte::core::CFBContainer &paContainer) :
+FORTE_IORevPiDIO::FORTE_IORevPiDIO(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     IOConfigFBMultiSlave(
         scmSlaveConfigurationIO, scmSlaveConfigurationIONum, 96, paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_MAPO(*this, 0),

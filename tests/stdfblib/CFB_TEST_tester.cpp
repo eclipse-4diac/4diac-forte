@@ -14,7 +14,7 @@
 #include "../../core/fbtests/fbtestfixture.h"
 #include "forte/datatypes/forte_bool.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 struct CFB_TEST_TestFixture : public CFBTestFixtureBase {
 

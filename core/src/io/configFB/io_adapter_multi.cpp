@@ -14,12 +14,12 @@
 #include "forte/io/configFB/io_adapter_multi.h"
 #include "forte/datatypes/forte_bool.h"
 
-using namespace forte::core::io;
+using namespace forte::io;
 
 IOConfigFBMultiAdapter::IOConfigFBMultiAdapter(const std::span<const TForteUInt8> paSlaveConfigurationIO,
-                                               forte::core::CFBContainer &paContainer,
+                                               forte::CFBContainer &paContainer,
                                                const SFBInterfaceSpec &paInterfaceSpec,
-                                               const forte::core::StringId paInstanceNameId,
+                                               const forte::StringId paInstanceNameId,
                                                TForteUInt8 paParentAdapterlistID) :
     CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     cmSlaveConfigurationIO(paSlaveConfigurationIO) {

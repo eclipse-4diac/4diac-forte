@@ -18,7 +18,7 @@
 #include "forte/io/mapper/io_handle.h"
 #include "forte/io/mapper/io_mapper.h"
 
-namespace forte::core::io {
+namespace forte::io {
 
   class IOObserver {
       friend class IOMapper;
@@ -44,4 +44,4 @@ namespace forte::core::io {
       IOHandle *mHandle;
   };
 
-} // namespace forte::core::io
+} // namespace forte::io

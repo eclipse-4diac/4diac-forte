@@ -43,7 +43,7 @@ namespace forte::iec61131::bistableElements {
       void setInitialValues() override;
 
     public:
-      FORTE_FB_SR(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+      FORTE_FB_SR(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
       CIEC_BOOL var_S1;
       CIEC_BOOL var_R;

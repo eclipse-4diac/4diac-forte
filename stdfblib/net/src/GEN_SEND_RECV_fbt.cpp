@@ -13,7 +13,7 @@
 
 #include "forte/iec61499/net/GEN_SEND_RECV_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 namespace {
   const auto cEventInputNames = std::array{"INIT"_STRID, "REQ"_STRID, "RSP"_STRID};
@@ -38,7 +38,7 @@ using namespace forte::iec61499::net;
 
 DEFINE_GENERIC_FIRMWARE_FB(GEN_SEND_RECV, "iec61499::net::GEN_SEND_RECV"_STRID)
 
-GEN_SEND_RECV::GEN_SEND_RECV(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+GEN_SEND_RECV::GEN_SEND_RECV(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CommunicationFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 1),
     conn_IND(*this, 2) {};

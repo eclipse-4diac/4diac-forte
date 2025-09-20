@@ -17,8 +17,8 @@
 
 #include <boost/test/unit_test.hpp>
 
-using namespace forte::core;
-using namespace forte::core::literals;
+using namespace forte;
+using namespace forte::literals;
 
 BOOST_AUTO_TEST_SUITE(StringIdTests)
 

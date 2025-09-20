@@ -14,7 +14,7 @@
 #include "forte/device.h"
 #include "forte/mgmcmdstruct.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::reconfiguration;
 
@@ -41,8 +41,7 @@ namespace {
   };
 } // namespace
 
-FORTE_ST_SET_PARM::FORTE_ST_SET_PARM(const forte::core::StringId paInstanceNameId,
-                                     forte::core::CFBContainer &paContainer) :
+FORTE_ST_SET_PARM::FORTE_ST_SET_PARM(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_QI(nullptr),
@@ -78,10 +77,10 @@ void FORTE_ST_SET_PARM::executeEvent(TEventID paEIID, CEventChainExecutionThread
 }
 
 void FORTE_ST_SET_PARM::executeRQST() {
-  forte::core::SManagementCMD theCommand;
-  theCommand.mDestination = forte::core::StringId::lookup(var_DST.getValue());
-  theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_ELEM_NAME.getValue()));
-  theCommand.mFirstParam.push_back(forte::core::StringId::lookup(var_ELEM_DATA_IN.getValue()));
+  forte::SManagementCMD theCommand;
+  theCommand.mDestination = forte::StringId::lookup(var_DST.getValue());
+  theCommand.mFirstParam.push_back(forte::StringId::lookup(var_ELEM_NAME.getValue()));
+  theCommand.mFirstParam.push_back(forte::StringId::lookup(var_ELEM_DATA_IN.getValue()));
   theCommand.mAdditionalParams = func_WSTRING_TO_STRING(var_PARM_VAL).getStorage();
   theCommand.mCMD = EMGMCommandType::Write;
 

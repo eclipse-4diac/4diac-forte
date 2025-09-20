@@ -12,7 +12,7 @@
 
 #include "gpiochip_config_fb.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 #include "gpiochip_controller.h"
 
@@ -60,7 +60,7 @@ void GPIOChipConfigFB::writeOutputData(const TEventID paEIID) {
   }
 }
 
-forte::core::io::IODeviceController *GPIOChipConfigFB::createDeviceController(CDeviceExecution &paDeviceExecution) {
+forte::io::IODeviceController *GPIOChipConfigFB::createDeviceController(CDeviceExecution &paDeviceExecution) {
   return new GPIOChipController(paDeviceExecution);
 }
 
@@ -76,9 +76,8 @@ void GPIOChipConfigFB::setConfig() {
 
 void GPIOChipConfigFB::onStartup(CEventChainExecutionThread *const paECET) {
   GPIOChipController::HandleDescriptor desc = GPIOChipController::HandleDescriptor(
-      VALUE().getValue(),
-      TForteUInt16(ReadWriteMode()) ? forte::core::io::IOMapper::Out : forte::core::io::IOMapper::In);
+      VALUE().getValue(), TForteUInt16(ReadWriteMode()) ? forte::io::IOMapper::Out : forte::io::IOMapper::In);
   initHandle(&desc);
 
-  forte::core::io::IOConfigFBController::started(paECET);
+  forte::io::IOConfigFBController::started(paECET);
 }

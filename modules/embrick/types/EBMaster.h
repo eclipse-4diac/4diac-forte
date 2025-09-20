@@ -21,7 +21,7 @@
 #include "forte/datatypes/forte_wstring.h"
 #include "EBBusAdapter.h"
 
-class FORTE_EBMaster final : public forte::core::io::IOConfigFBMultiMaster {
+class FORTE_EBMaster final : public forte::io::IOConfigFBMultiMaster {
     DECLARE_FIRMWARE_FB(FORTE_EBMaster)
 
   private:
@@ -35,14 +35,14 @@ class FORTE_EBMaster final : public forte::core::io::IOConfigFBMultiMaster {
     void setInitialValues() override;
 
   protected:
-    forte::core::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
+    forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
 
     void setConfig() override;
 
     void onStartup(CEventChainExecutionThread *const paECET) override;
 
   public:
-    FORTE_EBMaster(forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer);
+    FORTE_EBMaster(forte::StringId paInstanceNameId, forte::CFBContainer &paContainer);
 
     CIEC_BOOL var_QI;
     CIEC_UINT var_BusInterface;

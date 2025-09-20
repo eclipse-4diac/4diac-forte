@@ -20,7 +20,7 @@
 
 using namespace std::literals;
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 using namespace forte::iec61499::events;
 
 DEFINE_ADAPTER_TYPE(FORTE_ARTimeOut, "iec61499::events::ARTimeOut"_STRID)
@@ -56,9 +56,9 @@ namespace {
 
 } // namespace
 
-FORTE_ARTimeOut::FORTE_ARTimeOut(forte::core::CFBContainer &paContainer,
+FORTE_ARTimeOut::FORTE_ARTimeOut(forte::CFBContainer &paContainer,
                                  const SFBInterfaceSpec &paInterfaceSpec,
-                                 const forte::core::StringId paInstanceNameId,
+                                 const forte::StringId paInstanceNameId,
                                  TForteUInt8 paParentAdapterlistID) :
     CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
     var_DT(0_TIME) {
@@ -69,8 +69,8 @@ void FORTE_ARTimeOut::setInitialValues() {
   var_DT = 0_TIME;
 }
 
-FORTE_ARTimeOut_Plug::FORTE_ARTimeOut_Plug(forte::core::StringId paInstanceNameId,
-                                           forte::core::CFBContainer &paContainer,
+FORTE_ARTimeOut_Plug::FORTE_ARTimeOut_Plug(forte::StringId paInstanceNameId,
+                                           forte::CFBContainer &paContainer,
                                            TForteUInt8 paParentAdapterlistID) :
     FORTE_ARTimeOut(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
     conn_TimeOut(*this, 0),
@@ -122,8 +122,8 @@ CDataConnection *FORTE_ARTimeOut_Plug::getDOConUnchecked(TPortId) {
   return nullptr;
 }
 
-FORTE_ARTimeOut_Socket::FORTE_ARTimeOut_Socket(forte::core::StringId paInstanceNameId,
-                                               forte::core::CFBContainer &paContainer,
+FORTE_ARTimeOut_Socket::FORTE_ARTimeOut_Socket(forte::StringId paInstanceNameId,
+                                               forte::CFBContainer &paContainer,
                                                TForteUInt8 paParentAdapterlistID) :
     FORTE_ARTimeOut(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
     conn_START(*this, 0),

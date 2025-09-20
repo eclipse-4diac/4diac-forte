@@ -17,7 +17,7 @@
 
 #include "forte/eclipse4diac/utils/selection/F_SEL_E_2_fbt.h"
 
-using namespace forte::core::literals;
+using namespace forte::literals;
 
 using namespace forte::eclipse4diac::utils::selection;
 
@@ -43,7 +43,7 @@ namespace {
   };
 } // namespace
 
-FORTE_F_SEL_E_2::FORTE_F_SEL_E_2(const forte::core::StringId paInstanceNameId, forte::core::CFBContainer &paContainer) :
+FORTE_F_SEL_E_2::FORTE_F_SEL_E_2(const forte::StringId paInstanceNameId, forte::CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN0(nullptr),
