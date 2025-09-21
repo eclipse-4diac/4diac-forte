@@ -26,50 +26,52 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT)
+namespace forte::eclipse4diac::signalprocessing {
+  class FORTE_FIELDBUS_WORD_TO_PERCENT final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_FIELDBUS_WORD_TO_PERCENT)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_signalprocessing__FIELDBUS_WORD_TO_PERCENT(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    public:
+      FORTE_FIELDBUS_WORD_TO_PERCENT(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_WORD var_WI;
+      CIEC_WORD var_WI;
 
-    CIEC_REAL var_;
-    CIEC_WORD var_WO;
+      CIEC_REAL var_;
+      CIEC_WORD var_WO;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_WI;
+      CDataConnection *conn_WI;
 
-    COutDataConnection<CIEC_REAL> conn_;
-    COutDataConnection<CIEC_WORD> conn_WO;
+      COutDataConnection<CIEC_REAL> conn_;
+      COutDataConnection<CIEC_WORD> conn_WO;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_WORD &paWI, CIEC_REAL &pa, CIEC_WORD &paWO) {
-      var_WI = paWI;
-      executeEvent(scmEventREQID, nullptr);
-      pa = var_;
-      paWO = var_WO;
-    }
+      void evt_REQ(const CIEC_WORD &paWI, CIEC_REAL &pa, CIEC_WORD &paWO) {
+        var_WI = paWI;
+        executeEvent(scmEventREQID, nullptr);
+        pa = var_;
+        paWO = var_WO;
+      }
 
-    void operator()(const CIEC_WORD &paWI, CIEC_REAL &pa, CIEC_WORD &paWO) {
-      evt_REQ(paWI, pa, paWO);
-    }
-};
+      void operator()(const CIEC_WORD &paWI, CIEC_REAL &pa, CIEC_WORD &paWO) {
+        evt_REQ(paWI, pa, paWO);
+      }
+  };
 
-CIEC_REAL func_FIELDBUS_WORD_TO_PERCENT(CIEC_WORD st_lv_WI, CIEC_WORD &st_lv_WO);
+  CIEC_REAL func_FIELDBUS_WORD_TO_PERCENT(CIEC_WORD st_lv_WI, CIEC_WORD &st_lv_WO);
+} // namespace forte::eclipse4diac::signalprocessing

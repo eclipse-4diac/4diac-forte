@@ -18,6 +18,7 @@
 #include "forte/eclipse4diac/signalprocessing/FIELDBUS_PERCENT_TO_WORD_fct.h"
 
 using namespace forte::literals;
+using namespace forte::eclipse4diac::signalprocessing;
 
 #include "forte/datatypes/forte_real.h"
 #include "forte/datatypes/forte_udint.h"
@@ -30,8 +31,7 @@ using namespace forte::literals;
 #include "forte/eclipse4diac/signalprocessing/FIELDBUS_PERCENT_TO_WORD_fct.h"
 #include "forte/eclipse4diac/signalprocessing/FIELDBUS_SIGNAL_gcf.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD,
-                   "eclipse4diac::signalprocessing::FIELDBUS_PERCENT_TO_WORD"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_FIELDBUS_PERCENT_TO_WORD, "eclipse4diac::signalprocessing::FIELDBUS_PERCENT_TO_WORD"_STRID)
 
 namespace {
   const auto cDataInputNames = std::array{"RI"_STRID};
@@ -53,20 +53,20 @@ namespace {
   };
 } // namespace
 
-FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD::FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD(
-    const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+FORTE_FIELDBUS_PERCENT_TO_WORD::FORTE_FIELDBUS_PERCENT_TO_WORD(const forte::StringId paInstanceNameId,
+                                                               CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_RI(nullptr),
     conn_(*this, 0, var_) {
 }
 
-void FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD::setInitialValues() {
+void FORTE_FIELDBUS_PERCENT_TO_WORD::setInitialValues() {
   var_RI = 0_REAL;
   var_ = 0_WORD;
 }
 
-void FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD::readInputData(const TEventID paEIID) {
+void FORTE_FIELDBUS_PERCENT_TO_WORD::readInputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_RI, conn_RI);
@@ -76,7 +76,7 @@ void FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD::readInputData(const TEven
   }
 }
 
-void FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD::writeOutputData(const TEventID paEIID) {
+void FORTE_FIELDBUS_PERCENT_TO_WORD::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
       writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
@@ -86,53 +86,52 @@ void FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD::writeOutputData(const TEv
   }
 }
 
-CIEC_ANY *FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD::getDI(const size_t paIndex) {
+CIEC_ANY *FORTE_FIELDBUS_PERCENT_TO_WORD::getDI(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_RI;
   }
   return nullptr;
 }
 
-CIEC_ANY *FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD::getDO(const size_t paIndex) {
+CIEC_ANY *FORTE_FIELDBUS_PERCENT_TO_WORD::getDO(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_;
   }
   return nullptr;
 }
 
-CEventConnection *FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD::getEOConUnchecked(const TPortId paIndex) {
+CEventConnection *FORTE_FIELDBUS_PERCENT_TO_WORD::getEOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
-CDataConnection **FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD::getDIConUnchecked(const TPortId paIndex) {
+CDataConnection **FORTE_FIELDBUS_PERCENT_TO_WORD::getDIConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_RI;
   }
   return nullptr;
 }
 
-CDataConnection *FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD::getDOConUnchecked(const TPortId paIndex) {
+CDataConnection *FORTE_FIELDBUS_PERCENT_TO_WORD::getDOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_;
   }
   return nullptr;
 }
 
-void FORTE_signalprocessing__FIELDBUS_PERCENT_TO_WORD::executeEvent(const TEventID,
-                                                                    CEventChainExecutionThread *const paECET) {
+void FORTE_FIELDBUS_PERCENT_TO_WORD::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
   var_ = func_FIELDBUS_PERCENT_TO_WORD(var_RI);
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-CIEC_WORD func_FIELDBUS_PERCENT_TO_WORD(CIEC_REAL st_lv_RI) {
+CIEC_WORD forte::eclipse4diac::signalprocessing::func_FIELDBUS_PERCENT_TO_WORD(CIEC_REAL st_lv_RI) {
   CIEC_WORD st_ret_val = 0_WORD;
 
 #line 9 "FIELDBUS_PERCENT_TO_WORD.fct"
   st_ret_val = func_UDINT_TO_WORD(func_REAL_TO_UDINT(func_MUL<CIEC_REAL>(
-      st_lv_RI, func_UDINT_TO_REAL(func_WORD_TO_UDINT(FORTE_signalprocessing__FIELDBUS_SIGNAL::var_VALID_SIGNAL_W)))));
+      st_lv_RI, func_UDINT_TO_REAL(func_WORD_TO_UDINT(FORTE_FIELDBUS_SIGNAL::var_VALID_SIGNAL_W)))));
 
   return st_ret_val;
 }

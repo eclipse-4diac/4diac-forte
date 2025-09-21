@@ -17,6 +17,7 @@
 #include "forte/eclipse4diac/signalprocessing/SCALE_LIM_fct.h"
 
 using namespace forte::literals;
+using namespace forte::eclipse4diac::signalprocessing;
 
 #include "forte/datatypes/forte_real.h"
 #include "forte/iec61131_functions.h"
@@ -26,7 +27,7 @@ using namespace forte::literals;
 #include "forte/datatypes/forte_array_variable.h"
 #include "forte/eclipse4diac/signalprocessing/SCALE_LIM_fct.h"
 
-DEFINE_FIRMWARE_FB(FORTE_signalprocessing__SCALE_LIM, "eclipse4diac::signalprocessing::SCALE_LIM"_STRID)
+DEFINE_FIRMWARE_FB(FORTE_SCALE_LIM, "eclipse4diac::signalprocessing::SCALE_LIM"_STRID)
 
 namespace {
   const auto cDataInputNames =
@@ -50,8 +51,7 @@ namespace {
   };
 } // namespace
 
-FORTE_signalprocessing__SCALE_LIM::FORTE_signalprocessing__SCALE_LIM(const forte::StringId paInstanceNameId,
-                                                                     CFBContainer &paContainer) :
+FORTE_SCALE_LIM::FORTE_SCALE_LIM(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
     CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
     conn_CNF(*this, 0),
     conn_IN(nullptr),
@@ -66,7 +66,7 @@ FORTE_signalprocessing__SCALE_LIM::FORTE_signalprocessing__SCALE_LIM(const forte
     conn_(*this, 0, var_) {
 }
 
-void FORTE_signalprocessing__SCALE_LIM::setInitialValues() {
+void FORTE_SCALE_LIM::setInitialValues() {
   var_IN = 0_REAL;
   var_MAX_IN = 0_REAL;
   var_MIN_IN = 0_REAL;
@@ -79,7 +79,7 @@ void FORTE_signalprocessing__SCALE_LIM::setInitialValues() {
   var_ = 0_REAL;
 }
 
-void FORTE_signalprocessing__SCALE_LIM::readInputData(const TEventID paEIID) {
+void FORTE_SCALE_LIM::readInputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventREQID: {
       readData(0, var_IN, conn_IN);
@@ -97,7 +97,7 @@ void FORTE_signalprocessing__SCALE_LIM::readInputData(const TEventID paEIID) {
   }
 }
 
-void FORTE_signalprocessing__SCALE_LIM::writeOutputData(const TEventID paEIID) {
+void FORTE_SCALE_LIM::writeOutputData(const TEventID paEIID) {
   switch (paEIID) {
     case scmEventCNFID: {
       writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
@@ -107,7 +107,7 @@ void FORTE_signalprocessing__SCALE_LIM::writeOutputData(const TEventID paEIID) {
   }
 }
 
-CIEC_ANY *FORTE_signalprocessing__SCALE_LIM::getDI(const size_t paIndex) {
+CIEC_ANY *FORTE_SCALE_LIM::getDI(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_IN;
     case 1: return &var_MAX_IN;
@@ -122,21 +122,21 @@ CIEC_ANY *FORTE_signalprocessing__SCALE_LIM::getDI(const size_t paIndex) {
   return nullptr;
 }
 
-CIEC_ANY *FORTE_signalprocessing__SCALE_LIM::getDO(const size_t paIndex) {
+CIEC_ANY *FORTE_SCALE_LIM::getDO(const size_t paIndex) {
   switch (paIndex) {
     case 0: return &var_;
   }
   return nullptr;
 }
 
-CEventConnection *FORTE_signalprocessing__SCALE_LIM::getEOConUnchecked(const TPortId paIndex) {
+CEventConnection *FORTE_SCALE_LIM::getEOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_CNF;
   }
   return nullptr;
 }
 
-CDataConnection **FORTE_signalprocessing__SCALE_LIM::getDIConUnchecked(const TPortId paIndex) {
+CDataConnection **FORTE_SCALE_LIM::getDIConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_IN;
     case 1: return &conn_MAX_IN;
@@ -151,28 +151,28 @@ CDataConnection **FORTE_signalprocessing__SCALE_LIM::getDIConUnchecked(const TPo
   return nullptr;
 }
 
-CDataConnection *FORTE_signalprocessing__SCALE_LIM::getDOConUnchecked(const TPortId paIndex) {
+CDataConnection *FORTE_SCALE_LIM::getDOConUnchecked(const TPortId paIndex) {
   switch (paIndex) {
     case 0: return &conn_;
   }
   return nullptr;
 }
 
-void FORTE_signalprocessing__SCALE_LIM::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
+void FORTE_SCALE_LIM::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
   var_ = func_SCALE_LIM(var_IN, var_MAX_IN, var_MIN_IN, var_MAX_IN_LIM, var_MIN_IN_LIM, var_MAX_OUT, var_MIN_OUT,
                         var_MAX_OUT_FIX, var_MIN_OUT_FIX);
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-CIEC_REAL func_SCALE_LIM(CIEC_REAL st_lv_IN,
-                         CIEC_REAL st_lv_MAX_IN,
-                         CIEC_REAL st_lv_MIN_IN,
-                         CIEC_REAL st_lv_MAX_IN_LIM,
-                         CIEC_REAL st_lv_MIN_IN_LIM,
-                         CIEC_REAL st_lv_MAX_OUT,
-                         CIEC_REAL st_lv_MIN_OUT,
-                         CIEC_REAL st_lv_MAX_OUT_FIX,
-                         CIEC_REAL st_lv_MIN_OUT_FIX) {
+CIEC_REAL forte::eclipse4diac::signalprocessing::func_SCALE_LIM(CIEC_REAL st_lv_IN,
+                                                                CIEC_REAL st_lv_MAX_IN,
+                                                                CIEC_REAL st_lv_MIN_IN,
+                                                                CIEC_REAL st_lv_MAX_IN_LIM,
+                                                                CIEC_REAL st_lv_MIN_IN_LIM,
+                                                                CIEC_REAL st_lv_MAX_OUT,
+                                                                CIEC_REAL st_lv_MIN_OUT,
+                                                                CIEC_REAL st_lv_MAX_OUT_FIX,
+                                                                CIEC_REAL st_lv_MIN_OUT_FIX) {
   CIEC_REAL st_ret_val = 0_REAL;
 
 #line 17 "SCALE_LIM.fct"

@@ -26,6 +26,8 @@ using namespace forte::literals;
 #include "forte/datatypes/forte_array_variable.h"
 #include "forte/eclipse4diac/signalprocessing/SCALE_fct.h"
 
+using namespace forte::eclipse4diac::signalprocessing;
+
 DEFINE_FIRMWARE_FB(FORTE_SCALE, "eclipse4diac::signalprocessing::SCALE"_STRID)
 
 namespace {
@@ -140,11 +142,11 @@ void FORTE_SCALE::executeEvent(const TEventID, CEventChainExecutionThread *const
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-CIEC_REAL func_SCALE(CIEC_REAL st_lv_IN,
-                     CIEC_REAL st_lv_MAX_IN,
-                     CIEC_REAL st_lv_MIN_IN,
-                     CIEC_REAL st_lv_MAX_OUT,
-                     CIEC_REAL st_lv_MIN_OUT) {
+CIEC_REAL forte::eclipse4diac::signalprocessing::func_SCALE(CIEC_REAL st_lv_IN,
+                                                            CIEC_REAL st_lv_MAX_IN,
+                                                            CIEC_REAL st_lv_MIN_IN,
+                                                            CIEC_REAL st_lv_MAX_OUT,
+                                                            CIEC_REAL st_lv_MIN_OUT) {
   CIEC_REAL st_ret_val = 0_REAL;
 
 #line 13 "SCALE.fct"
