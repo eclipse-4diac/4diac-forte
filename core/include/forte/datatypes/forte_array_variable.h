@@ -36,8 +36,8 @@ class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
     using const_pointer = const value_type *;
     using reference = value_type &;
     using const_reference = const value_type &;
-    using iterator = typename std::vector<T>::iterator;
-    using const_iterator = typename std::vector<T>::const_iterator;
+    using iterator = std::vector<T>::iterator;
+    using const_iterator = std::vector<T>::const_iterator;
 
     using CIEC_ARRAY_COMMON<T>::at;
     using CIEC_ARRAY_COMMON<T>::operator[];

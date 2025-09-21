@@ -48,11 +48,11 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
     DECLARE_FIRMWARE_DATATYPE(ARRAY_DYNAMIC)
   public:
     using difference_type = std::ptrdiff_t;
-    using value_type = value_type;
-    using pointer = pointer;
-    using const_pointer = const_pointer;
-    using reference = reference;
-    using const_reference = const_reference;
+    using CIEC_ARRAY::const_pointer;
+    using CIEC_ARRAY::const_reference;
+    using CIEC_ARRAY::pointer;
+    using CIEC_ARRAY::reference;
+    using CIEC_ARRAY::value_type;
 
     using CIEC_ARRAY::at;
     using CIEC_ARRAY::operator[];
@@ -61,9 +61,9 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
     class iterator {
       public:
         using difference_type = std::ptrdiff_t;
-        using value_type = value_type;
-        using pointer = pointer;
-        using reference = reference;
+        using value_type = CIEC_ARRAY_DYNAMIC::value_type;
+        using pointer = CIEC_ARRAY_DYNAMIC::pointer;
+        using reference = CIEC_ARRAY_DYNAMIC::reference;
         using iterator_category = std::random_access_iterator_tag;
 
         constexpr iterator(size_t paElementSize, void *paData) : mElementSize(paElementSize), mData(paData) {
@@ -173,9 +173,9 @@ class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
     class const_iterator {
       public:
         using difference_type = std::ptrdiff_t;
-        using value_type = value_type;
-        using pointer = const_pointer;
-        using reference = const_reference;
+        using value_type = CIEC_ARRAY_DYNAMIC::value_type;
+        using pointer = CIEC_ARRAY_DYNAMIC::const_pointer;
+        using reference = CIEC_ARRAY_DYNAMIC::const_reference;
         using iterator_category = std::random_access_iterator_tag;
 
         constexpr const_iterator(size_t paElementSize, const void *paData) :
