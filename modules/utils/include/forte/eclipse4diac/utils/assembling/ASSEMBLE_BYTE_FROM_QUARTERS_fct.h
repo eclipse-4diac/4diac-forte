@@ -27,68 +27,69 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_ASSEMBLE_BYTE_FROM_QUARTERS final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_QUARTERS)
+namespace forte::eclipse4diac::utils::assembling {
+  class FORTE_ASSEMBLE_BYTE_FROM_QUARTERS final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_QUARTERS)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_ASSEMBLE_BYTE_FROM_QUARTERS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    public:
+      FORTE_ASSEMBLE_BYTE_FROM_QUARTERS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_BYTE var_QUARTER_BYTE_00;
-    CIEC_BYTE var_QUARTER_BYTE_01;
-    CIEC_BYTE var_QUARTER_BYTE_02;
-    CIEC_BYTE var_QUARTER_BYTE_03;
+      CIEC_BYTE var_QUARTER_BYTE_00;
+      CIEC_BYTE var_QUARTER_BYTE_01;
+      CIEC_BYTE var_QUARTER_BYTE_02;
+      CIEC_BYTE var_QUARTER_BYTE_03;
 
-    CIEC_BYTE var_;
+      CIEC_BYTE var_;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_QUARTER_BYTE_00;
-    CDataConnection *conn_QUARTER_BYTE_01;
-    CDataConnection *conn_QUARTER_BYTE_02;
-    CDataConnection *conn_QUARTER_BYTE_03;
+      CDataConnection *conn_QUARTER_BYTE_00;
+      CDataConnection *conn_QUARTER_BYTE_01;
+      CDataConnection *conn_QUARTER_BYTE_02;
+      CDataConnection *conn_QUARTER_BYTE_03;
 
-    COutDataConnection<CIEC_BYTE> conn_;
+      COutDataConnection<CIEC_BYTE> conn_;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BYTE &paQUARTER_BYTE_00,
-                 const CIEC_BYTE &paQUARTER_BYTE_01,
-                 const CIEC_BYTE &paQUARTER_BYTE_02,
-                 const CIEC_BYTE &paQUARTER_BYTE_03,
-                 CIEC_BYTE &pa) {
-      var_QUARTER_BYTE_00 = paQUARTER_BYTE_00;
-      var_QUARTER_BYTE_01 = paQUARTER_BYTE_01;
-      var_QUARTER_BYTE_02 = paQUARTER_BYTE_02;
-      var_QUARTER_BYTE_03 = paQUARTER_BYTE_03;
-      executeEvent(scmEventREQID, nullptr);
-      pa = var_;
-    }
+      void evt_REQ(const CIEC_BYTE &paQUARTER_BYTE_00,
+                   const CIEC_BYTE &paQUARTER_BYTE_01,
+                   const CIEC_BYTE &paQUARTER_BYTE_02,
+                   const CIEC_BYTE &paQUARTER_BYTE_03,
+                   CIEC_BYTE &pa) {
+        var_QUARTER_BYTE_00 = paQUARTER_BYTE_00;
+        var_QUARTER_BYTE_01 = paQUARTER_BYTE_01;
+        var_QUARTER_BYTE_02 = paQUARTER_BYTE_02;
+        var_QUARTER_BYTE_03 = paQUARTER_BYTE_03;
+        executeEvent(scmEventREQID, nullptr);
+        pa = var_;
+      }
 
-    void operator()(const CIEC_BYTE &paQUARTER_BYTE_00,
-                    const CIEC_BYTE &paQUARTER_BYTE_01,
-                    const CIEC_BYTE &paQUARTER_BYTE_02,
-                    const CIEC_BYTE &paQUARTER_BYTE_03,
-                    CIEC_BYTE &pa) {
-      evt_REQ(paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03, pa);
-    }
-};
-}
+      void operator()(const CIEC_BYTE &paQUARTER_BYTE_00,
+                      const CIEC_BYTE &paQUARTER_BYTE_01,
+                      const CIEC_BYTE &paQUARTER_BYTE_02,
+                      const CIEC_BYTE &paQUARTER_BYTE_03,
+                      CIEC_BYTE &pa) {
+        evt_REQ(paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03, pa);
+      }
+  };
 
-CIEC_BYTE func_ASSEMBLE_BYTE_FROM_QUARTERS(CIEC_BYTE st_lv_QUARTER_BYTE_00,
-                                           CIEC_BYTE st_lv_QUARTER_BYTE_01,
-                                           CIEC_BYTE st_lv_QUARTER_BYTE_02,
-                                           CIEC_BYTE st_lv_QUARTER_BYTE_03);
+  CIEC_BYTE func_ASSEMBLE_BYTE_FROM_QUARTERS(CIEC_BYTE st_lv_QUARTER_BYTE_00,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_01,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_02,
+                                             CIEC_BYTE st_lv_QUARTER_BYTE_03);
+} // namespace forte::eclipse4diac::utils::assembling

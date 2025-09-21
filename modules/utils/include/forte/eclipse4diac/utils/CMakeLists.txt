@@ -30,3 +30,10 @@ target_sources(forte-utils PUBLIC
         STEST_END_fbt.h
         TEST_CONDITION_fbt.h
 )
+
+add_subdirectory(assembling)
+add_subdirectory(const)
+add_subdirectory(selection)
+add_subdirectory(signals)
+add_subdirectory(splitting)
+add_subdirectory(timing)

@@ -30,8 +30,10 @@ using namespace forte::literals;
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
-#include "quarterconst_gcf.h"
+#include "forte/eclipse4diac/utils/const/quarterconst_gcf.h"
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_LWORD_FROM_QUARTERS_fct.h"
+
+using namespace forte::eclipse4diac::utils::assembling;
 
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_LWORD_FROM_QUARTERS,
                    "eclipse4diac::utils::assembling::ASSEMBLE_LWORD_FROM_QUARTERS"_STRID)
@@ -299,138 +301,170 @@ void FORTE_ASSEMBLE_LWORD_FROM_QUARTERS::executeEvent(const TEventID, CEventChai
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-CIEC_LWORD func_ASSEMBLE_LWORD_FROM_QUARTERS(CIEC_BYTE st_lv_QUARTER_BYTE_00,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_01,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_02,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_03,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_04,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_05,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_06,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_07,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_08,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_09,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_10,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_11,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_12,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_13,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_14,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_15,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_16,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_17,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_18,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_19,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_20,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_21,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_22,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_23,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_24,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_25,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_26,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_27,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_28,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_29,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_30,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_31) {
+CIEC_LWORD forte::eclipse4diac::utils::assembling::func_ASSEMBLE_LWORD_FROM_QUARTERS(CIEC_BYTE st_lv_QUARTER_BYTE_00,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_01,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_02,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_03,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_04,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_05,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_06,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_07,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_08,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_09,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_10,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_11,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_12,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_13,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_14,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_15,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_16,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_17,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_18,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_19,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_20,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_21,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_22,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_23,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_24,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_25,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_26,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_27,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_28,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_29,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_30,
+                                                                                     CIEC_BYTE st_lv_QUARTER_BYTE_31) {
   CIEC_LWORD st_ret_val = 0_LWORD;
 
 #line 39 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
-  st_ret_val = FORTE_quarterconst::var_LWORD_QUARTER_ZZ;
+  st_ret_val = forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_LWORD_QUARTER_ZZ;
 #line 40 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_31), FORTE_quarterconst::var_SHIFT_QUARTER_31));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_31),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_31));
 #line 41 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_30), FORTE_quarterconst::var_SHIFT_QUARTER_30));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_30),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_30));
 #line 42 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_29), FORTE_quarterconst::var_SHIFT_QUARTER_29));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_29),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_29));
 #line 43 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_28), FORTE_quarterconst::var_SHIFT_QUARTER_28));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_28),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_28));
 #line 44 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_27), FORTE_quarterconst::var_SHIFT_QUARTER_27));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_27),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_27));
 #line 45 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_26), FORTE_quarterconst::var_SHIFT_QUARTER_26));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_26),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_26));
 #line 46 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_25), FORTE_quarterconst::var_SHIFT_QUARTER_25));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_25),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_25));
 #line 47 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_24), FORTE_quarterconst::var_SHIFT_QUARTER_24));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_24),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_24));
 #line 48 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_23), FORTE_quarterconst::var_SHIFT_QUARTER_23));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_23),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_23));
 #line 49 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_22), FORTE_quarterconst::var_SHIFT_QUARTER_22));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_22),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_22));
 #line 50 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_21), FORTE_quarterconst::var_SHIFT_QUARTER_21));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_21),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_21));
 #line 51 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_20), FORTE_quarterconst::var_SHIFT_QUARTER_20));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_20),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_20));
 #line 52 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_19), FORTE_quarterconst::var_SHIFT_QUARTER_19));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_19),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_19));
 #line 53 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_18), FORTE_quarterconst::var_SHIFT_QUARTER_18));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_18),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_18));
 #line 54 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_17), FORTE_quarterconst::var_SHIFT_QUARTER_17));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_17),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_17));
 #line 55 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_16), FORTE_quarterconst::var_SHIFT_QUARTER_16));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_16),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_16));
 #line 56 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_15), FORTE_quarterconst::var_SHIFT_QUARTER_15));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_15),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_15));
 #line 57 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_14), FORTE_quarterconst::var_SHIFT_QUARTER_14));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_14),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_14));
 #line 58 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_13), FORTE_quarterconst::var_SHIFT_QUARTER_13));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_13),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_13));
 #line 59 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_12), FORTE_quarterconst::var_SHIFT_QUARTER_12));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_12),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_12));
 #line 60 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_11), FORTE_quarterconst::var_SHIFT_QUARTER_11));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_11),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_11));
 #line 61 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_10), FORTE_quarterconst::var_SHIFT_QUARTER_10));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_10),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_10));
 #line 62 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_09), FORTE_quarterconst::var_SHIFT_QUARTER_09));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_09),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_09));
 #line 63 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_08), FORTE_quarterconst::var_SHIFT_QUARTER_08));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_08),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_08));
 #line 64 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_07), FORTE_quarterconst::var_SHIFT_QUARTER_07));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_07),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_07));
 #line 65 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_06), FORTE_quarterconst::var_SHIFT_QUARTER_06));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_06),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_06));
 #line 66 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_05), FORTE_quarterconst::var_SHIFT_QUARTER_05));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_05),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_05));
 #line 67 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_04), FORTE_quarterconst::var_SHIFT_QUARTER_04));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_04),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_04));
 #line 68 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_03), FORTE_quarterconst::var_SHIFT_QUARTER_03));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_03),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_03));
 #line 69 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_02), FORTE_quarterconst::var_SHIFT_QUARTER_02));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_02),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_02));
 #line 70 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_01), FORTE_quarterconst::var_SHIFT_QUARTER_01));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_01),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_01));
 #line 71 "ASSEMBLE_LWORD_FROM_QUARTERS.fct"
   st_ret_val = func_OR<CIEC_LWORD>(
-      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_00), FORTE_quarterconst::var_SHIFT_QUARTER_00));
+      st_ret_val, func_SHL(func_BYTE_TO_LWORD(st_lv_QUARTER_BYTE_00),
+                           forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_00));
 
   return st_ret_val;
 }

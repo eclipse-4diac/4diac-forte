@@ -30,6 +30,8 @@ using namespace forte::literals;
 #include "forte/datatypes/forte_array_variable.h"
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_DWORD_FROM_BOOLS_fct.h"
 
+using namespace forte::eclipse4diac::utils::assembling;
+
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_BOOLS, "eclipse4diac::utils::assembling::ASSEMBLE_DWORD_FROM_BOOLS"_STRID)
 
 namespace {
@@ -289,38 +291,38 @@ void FORTE_ASSEMBLE_DWORD_FROM_BOOLS::executeEvent(const TEventID, CEventChainEx
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-CIEC_DWORD func_ASSEMBLE_DWORD_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00,
-                                          CIEC_BOOL st_lv_BIT_01,
-                                          CIEC_BOOL st_lv_BIT_02,
-                                          CIEC_BOOL st_lv_BIT_03,
-                                          CIEC_BOOL st_lv_BIT_04,
-                                          CIEC_BOOL st_lv_BIT_05,
-                                          CIEC_BOOL st_lv_BIT_06,
-                                          CIEC_BOOL st_lv_BIT_07,
-                                          CIEC_BOOL st_lv_BIT_08,
-                                          CIEC_BOOL st_lv_BIT_09,
-                                          CIEC_BOOL st_lv_BIT_10,
-                                          CIEC_BOOL st_lv_BIT_11,
-                                          CIEC_BOOL st_lv_BIT_12,
-                                          CIEC_BOOL st_lv_BIT_13,
-                                          CIEC_BOOL st_lv_BIT_14,
-                                          CIEC_BOOL st_lv_BIT_15,
-                                          CIEC_BOOL st_lv_BIT_16,
-                                          CIEC_BOOL st_lv_BIT_17,
-                                          CIEC_BOOL st_lv_BIT_18,
-                                          CIEC_BOOL st_lv_BIT_19,
-                                          CIEC_BOOL st_lv_BIT_20,
-                                          CIEC_BOOL st_lv_BIT_21,
-                                          CIEC_BOOL st_lv_BIT_22,
-                                          CIEC_BOOL st_lv_BIT_23,
-                                          CIEC_BOOL st_lv_BIT_24,
-                                          CIEC_BOOL st_lv_BIT_25,
-                                          CIEC_BOOL st_lv_BIT_26,
-                                          CIEC_BOOL st_lv_BIT_27,
-                                          CIEC_BOOL st_lv_BIT_28,
-                                          CIEC_BOOL st_lv_BIT_29,
-                                          CIEC_BOOL st_lv_BIT_30,
-                                          CIEC_BOOL st_lv_BIT_31) {
+CIEC_DWORD forte::eclipse4diac::utils::assembling::func_ASSEMBLE_DWORD_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00,
+                                                                                  CIEC_BOOL st_lv_BIT_01,
+                                                                                  CIEC_BOOL st_lv_BIT_02,
+                                                                                  CIEC_BOOL st_lv_BIT_03,
+                                                                                  CIEC_BOOL st_lv_BIT_04,
+                                                                                  CIEC_BOOL st_lv_BIT_05,
+                                                                                  CIEC_BOOL st_lv_BIT_06,
+                                                                                  CIEC_BOOL st_lv_BIT_07,
+                                                                                  CIEC_BOOL st_lv_BIT_08,
+                                                                                  CIEC_BOOL st_lv_BIT_09,
+                                                                                  CIEC_BOOL st_lv_BIT_10,
+                                                                                  CIEC_BOOL st_lv_BIT_11,
+                                                                                  CIEC_BOOL st_lv_BIT_12,
+                                                                                  CIEC_BOOL st_lv_BIT_13,
+                                                                                  CIEC_BOOL st_lv_BIT_14,
+                                                                                  CIEC_BOOL st_lv_BIT_15,
+                                                                                  CIEC_BOOL st_lv_BIT_16,
+                                                                                  CIEC_BOOL st_lv_BIT_17,
+                                                                                  CIEC_BOOL st_lv_BIT_18,
+                                                                                  CIEC_BOOL st_lv_BIT_19,
+                                                                                  CIEC_BOOL st_lv_BIT_20,
+                                                                                  CIEC_BOOL st_lv_BIT_21,
+                                                                                  CIEC_BOOL st_lv_BIT_22,
+                                                                                  CIEC_BOOL st_lv_BIT_23,
+                                                                                  CIEC_BOOL st_lv_BIT_24,
+                                                                                  CIEC_BOOL st_lv_BIT_25,
+                                                                                  CIEC_BOOL st_lv_BIT_26,
+                                                                                  CIEC_BOOL st_lv_BIT_27,
+                                                                                  CIEC_BOOL st_lv_BIT_28,
+                                                                                  CIEC_BOOL st_lv_BIT_29,
+                                                                                  CIEC_BOOL st_lv_BIT_30,
+                                                                                  CIEC_BOOL st_lv_BIT_31) {
   CIEC_DWORD st_ret_val = 0_DWORD;
 
 #line 39 "ASSEMBLE_DWORD_FROM_BOOLS.fct"

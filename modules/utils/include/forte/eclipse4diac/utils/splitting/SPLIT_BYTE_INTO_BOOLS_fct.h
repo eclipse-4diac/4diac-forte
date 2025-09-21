@@ -28,93 +28,94 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_SPLIT_BYTE_INTO_BOOLS final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_SPLIT_BYTE_INTO_BOOLS)
+namespace forte::eclipse4diac::utils::splitting {
+  class FORTE_SPLIT_BYTE_INTO_BOOLS final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_SPLIT_BYTE_INTO_BOOLS)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_SPLIT_BYTE_INTO_BOOLS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    public:
+      FORTE_SPLIT_BYTE_INTO_BOOLS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_BYTE var_IN;
+      CIEC_BYTE var_IN;
 
-    CIEC_BOOL var_BIT_00;
-    CIEC_BOOL var_BIT_01;
-    CIEC_BOOL var_BIT_02;
-    CIEC_BOOL var_BIT_03;
-    CIEC_BOOL var_BIT_04;
-    CIEC_BOOL var_BIT_05;
-    CIEC_BOOL var_BIT_06;
-    CIEC_BOOL var_BIT_07;
+      CIEC_BOOL var_BIT_00;
+      CIEC_BOOL var_BIT_01;
+      CIEC_BOOL var_BIT_02;
+      CIEC_BOOL var_BIT_03;
+      CIEC_BOOL var_BIT_04;
+      CIEC_BOOL var_BIT_05;
+      CIEC_BOOL var_BIT_06;
+      CIEC_BOOL var_BIT_07;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_IN;
+      CDataConnection *conn_IN;
 
-    COutDataConnection<CIEC_BOOL> conn_BIT_00;
-    COutDataConnection<CIEC_BOOL> conn_BIT_01;
-    COutDataConnection<CIEC_BOOL> conn_BIT_02;
-    COutDataConnection<CIEC_BOOL> conn_BIT_03;
-    COutDataConnection<CIEC_BOOL> conn_BIT_04;
-    COutDataConnection<CIEC_BOOL> conn_BIT_05;
-    COutDataConnection<CIEC_BOOL> conn_BIT_06;
-    COutDataConnection<CIEC_BOOL> conn_BIT_07;
+      COutDataConnection<CIEC_BOOL> conn_BIT_00;
+      COutDataConnection<CIEC_BOOL> conn_BIT_01;
+      COutDataConnection<CIEC_BOOL> conn_BIT_02;
+      COutDataConnection<CIEC_BOOL> conn_BIT_03;
+      COutDataConnection<CIEC_BOOL> conn_BIT_04;
+      COutDataConnection<CIEC_BOOL> conn_BIT_05;
+      COutDataConnection<CIEC_BOOL> conn_BIT_06;
+      COutDataConnection<CIEC_BOOL> conn_BIT_07;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BYTE &paIN,
-                 CIEC_BOOL &paBIT_00,
-                 CIEC_BOOL &paBIT_01,
-                 CIEC_BOOL &paBIT_02,
-                 CIEC_BOOL &paBIT_03,
-                 CIEC_BOOL &paBIT_04,
-                 CIEC_BOOL &paBIT_05,
-                 CIEC_BOOL &paBIT_06,
-                 CIEC_BOOL &paBIT_07) {
-      var_IN = paIN;
-      executeEvent(scmEventREQID, nullptr);
-      paBIT_00 = var_BIT_00;
-      paBIT_01 = var_BIT_01;
-      paBIT_02 = var_BIT_02;
-      paBIT_03 = var_BIT_03;
-      paBIT_04 = var_BIT_04;
-      paBIT_05 = var_BIT_05;
-      paBIT_06 = var_BIT_06;
-      paBIT_07 = var_BIT_07;
-    }
+      void evt_REQ(const CIEC_BYTE &paIN,
+                   CIEC_BOOL &paBIT_00,
+                   CIEC_BOOL &paBIT_01,
+                   CIEC_BOOL &paBIT_02,
+                   CIEC_BOOL &paBIT_03,
+                   CIEC_BOOL &paBIT_04,
+                   CIEC_BOOL &paBIT_05,
+                   CIEC_BOOL &paBIT_06,
+                   CIEC_BOOL &paBIT_07) {
+        var_IN = paIN;
+        executeEvent(scmEventREQID, nullptr);
+        paBIT_00 = var_BIT_00;
+        paBIT_01 = var_BIT_01;
+        paBIT_02 = var_BIT_02;
+        paBIT_03 = var_BIT_03;
+        paBIT_04 = var_BIT_04;
+        paBIT_05 = var_BIT_05;
+        paBIT_06 = var_BIT_06;
+        paBIT_07 = var_BIT_07;
+      }
 
-    void operator()(const CIEC_BYTE &paIN,
-                    CIEC_BOOL &paBIT_00,
-                    CIEC_BOOL &paBIT_01,
-                    CIEC_BOOL &paBIT_02,
-                    CIEC_BOOL &paBIT_03,
-                    CIEC_BOOL &paBIT_04,
-                    CIEC_BOOL &paBIT_05,
-                    CIEC_BOOL &paBIT_06,
-                    CIEC_BOOL &paBIT_07) {
-      evt_REQ(paIN, paBIT_00, paBIT_01, paBIT_02, paBIT_03, paBIT_04, paBIT_05, paBIT_06, paBIT_07);
-    }
-};
-}
+      void operator()(const CIEC_BYTE &paIN,
+                      CIEC_BOOL &paBIT_00,
+                      CIEC_BOOL &paBIT_01,
+                      CIEC_BOOL &paBIT_02,
+                      CIEC_BOOL &paBIT_03,
+                      CIEC_BOOL &paBIT_04,
+                      CIEC_BOOL &paBIT_05,
+                      CIEC_BOOL &paBIT_06,
+                      CIEC_BOOL &paBIT_07) {
+        evt_REQ(paIN, paBIT_00, paBIT_01, paBIT_02, paBIT_03, paBIT_04, paBIT_05, paBIT_06, paBIT_07);
+      }
+  };
 
-void func_SPLIT_BYTE_INTO_BOOLS(CIEC_BYTE st_lv_IN,
-                                CIEC_BOOL &st_lv_BIT_00,
-                                CIEC_BOOL &st_lv_BIT_01,
-                                CIEC_BOOL &st_lv_BIT_02,
-                                CIEC_BOOL &st_lv_BIT_03,
-                                CIEC_BOOL &st_lv_BIT_04,
-                                CIEC_BOOL &st_lv_BIT_05,
-                                CIEC_BOOL &st_lv_BIT_06,
-                                CIEC_BOOL &st_lv_BIT_07);
+  void func_SPLIT_BYTE_INTO_BOOLS(CIEC_BYTE st_lv_IN,
+                                  CIEC_BOOL &st_lv_BIT_00,
+                                  CIEC_BOOL &st_lv_BIT_01,
+                                  CIEC_BOOL &st_lv_BIT_02,
+                                  CIEC_BOOL &st_lv_BIT_03,
+                                  CIEC_BOOL &st_lv_BIT_04,
+                                  CIEC_BOOL &st_lv_BIT_05,
+                                  CIEC_BOOL &st_lv_BIT_06,
+                                  CIEC_BOOL &st_lv_BIT_07);
+} // namespace forte::eclipse4diac::utils::splitting

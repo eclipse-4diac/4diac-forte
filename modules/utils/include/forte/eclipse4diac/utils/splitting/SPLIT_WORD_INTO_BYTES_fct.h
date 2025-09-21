@@ -28,51 +28,52 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_SPLIT_WORD_INTO_BYTES final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_BYTES)
+namespace forte::eclipse4diac::utils::splitting {
+  class FORTE_SPLIT_WORD_INTO_BYTES final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_BYTES)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_SPLIT_WORD_INTO_BYTES(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    public:
+      FORTE_SPLIT_WORD_INTO_BYTES(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_WORD var_IN;
+      CIEC_WORD var_IN;
 
-    CIEC_BYTE var_BYTE_00;
-    CIEC_BYTE var_BYTE_01;
+      CIEC_BYTE var_BYTE_00;
+      CIEC_BYTE var_BYTE_01;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_IN;
+      CDataConnection *conn_IN;
 
-    COutDataConnection<CIEC_BYTE> conn_BYTE_00;
-    COutDataConnection<CIEC_BYTE> conn_BYTE_01;
+      COutDataConnection<CIEC_BYTE> conn_BYTE_00;
+      COutDataConnection<CIEC_BYTE> conn_BYTE_01;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_WORD &paIN, CIEC_BYTE &paBYTE_00, CIEC_BYTE &paBYTE_01) {
-      var_IN = paIN;
-      executeEvent(scmEventREQID, nullptr);
-      paBYTE_00 = var_BYTE_00;
-      paBYTE_01 = var_BYTE_01;
-    }
+      void evt_REQ(const CIEC_WORD &paIN, CIEC_BYTE &paBYTE_00, CIEC_BYTE &paBYTE_01) {
+        var_IN = paIN;
+        executeEvent(scmEventREQID, nullptr);
+        paBYTE_00 = var_BYTE_00;
+        paBYTE_01 = var_BYTE_01;
+      }
 
-    void operator()(const CIEC_WORD &paIN, CIEC_BYTE &paBYTE_00, CIEC_BYTE &paBYTE_01) {
-      evt_REQ(paIN, paBYTE_00, paBYTE_01);
-    }
-};
-}
+      void operator()(const CIEC_WORD &paIN, CIEC_BYTE &paBYTE_00, CIEC_BYTE &paBYTE_01) {
+        evt_REQ(paIN, paBYTE_00, paBYTE_01);
+      }
+  };
 
-void func_SPLIT_WORD_INTO_BYTES(CIEC_WORD st_lv_IN, CIEC_BYTE &st_lv_BYTE_00, CIEC_BYTE &st_lv_BYTE_01);
+  void func_SPLIT_WORD_INTO_BYTES(CIEC_WORD st_lv_IN, CIEC_BYTE &st_lv_BYTE_00, CIEC_BYTE &st_lv_BYTE_01);
+} // namespace forte::eclipse4diac::utils::splitting

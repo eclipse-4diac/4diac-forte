@@ -28,92 +28,93 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_ASSEMBLE_BYTE_FROM_BOOLS final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_BOOLS)
+namespace forte::eclipse4diac::utils::assembling {
+  class FORTE_ASSEMBLE_BYTE_FROM_BOOLS final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_BOOLS)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_ASSEMBLE_BYTE_FROM_BOOLS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    public:
+      FORTE_ASSEMBLE_BYTE_FROM_BOOLS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_BOOL var_BIT_00;
-    CIEC_BOOL var_BIT_01;
-    CIEC_BOOL var_BIT_02;
-    CIEC_BOOL var_BIT_03;
-    CIEC_BOOL var_BIT_04;
-    CIEC_BOOL var_BIT_05;
-    CIEC_BOOL var_BIT_06;
-    CIEC_BOOL var_BIT_07;
+      CIEC_BOOL var_BIT_00;
+      CIEC_BOOL var_BIT_01;
+      CIEC_BOOL var_BIT_02;
+      CIEC_BOOL var_BIT_03;
+      CIEC_BOOL var_BIT_04;
+      CIEC_BOOL var_BIT_05;
+      CIEC_BOOL var_BIT_06;
+      CIEC_BOOL var_BIT_07;
 
-    CIEC_BYTE var_;
+      CIEC_BYTE var_;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_BIT_00;
-    CDataConnection *conn_BIT_01;
-    CDataConnection *conn_BIT_02;
-    CDataConnection *conn_BIT_03;
-    CDataConnection *conn_BIT_04;
-    CDataConnection *conn_BIT_05;
-    CDataConnection *conn_BIT_06;
-    CDataConnection *conn_BIT_07;
+      CDataConnection *conn_BIT_00;
+      CDataConnection *conn_BIT_01;
+      CDataConnection *conn_BIT_02;
+      CDataConnection *conn_BIT_03;
+      CDataConnection *conn_BIT_04;
+      CDataConnection *conn_BIT_05;
+      CDataConnection *conn_BIT_06;
+      CDataConnection *conn_BIT_07;
 
-    COutDataConnection<CIEC_BYTE> conn_;
+      COutDataConnection<CIEC_BYTE> conn_;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BOOL &paBIT_00,
-                 const CIEC_BOOL &paBIT_01,
-                 const CIEC_BOOL &paBIT_02,
-                 const CIEC_BOOL &paBIT_03,
-                 const CIEC_BOOL &paBIT_04,
-                 const CIEC_BOOL &paBIT_05,
-                 const CIEC_BOOL &paBIT_06,
-                 const CIEC_BOOL &paBIT_07,
-                 CIEC_BYTE &pa) {
-      var_BIT_00 = paBIT_00;
-      var_BIT_01 = paBIT_01;
-      var_BIT_02 = paBIT_02;
-      var_BIT_03 = paBIT_03;
-      var_BIT_04 = paBIT_04;
-      var_BIT_05 = paBIT_05;
-      var_BIT_06 = paBIT_06;
-      var_BIT_07 = paBIT_07;
-      executeEvent(scmEventREQID, nullptr);
-      pa = var_;
-    }
+      void evt_REQ(const CIEC_BOOL &paBIT_00,
+                   const CIEC_BOOL &paBIT_01,
+                   const CIEC_BOOL &paBIT_02,
+                   const CIEC_BOOL &paBIT_03,
+                   const CIEC_BOOL &paBIT_04,
+                   const CIEC_BOOL &paBIT_05,
+                   const CIEC_BOOL &paBIT_06,
+                   const CIEC_BOOL &paBIT_07,
+                   CIEC_BYTE &pa) {
+        var_BIT_00 = paBIT_00;
+        var_BIT_01 = paBIT_01;
+        var_BIT_02 = paBIT_02;
+        var_BIT_03 = paBIT_03;
+        var_BIT_04 = paBIT_04;
+        var_BIT_05 = paBIT_05;
+        var_BIT_06 = paBIT_06;
+        var_BIT_07 = paBIT_07;
+        executeEvent(scmEventREQID, nullptr);
+        pa = var_;
+      }
 
-    void operator()(const CIEC_BOOL &paBIT_00,
-                    const CIEC_BOOL &paBIT_01,
-                    const CIEC_BOOL &paBIT_02,
-                    const CIEC_BOOL &paBIT_03,
-                    const CIEC_BOOL &paBIT_04,
-                    const CIEC_BOOL &paBIT_05,
-                    const CIEC_BOOL &paBIT_06,
-                    const CIEC_BOOL &paBIT_07,
-                    CIEC_BYTE &pa) {
-      evt_REQ(paBIT_00, paBIT_01, paBIT_02, paBIT_03, paBIT_04, paBIT_05, paBIT_06, paBIT_07, pa);
-    }
-};
-}
+      void operator()(const CIEC_BOOL &paBIT_00,
+                      const CIEC_BOOL &paBIT_01,
+                      const CIEC_BOOL &paBIT_02,
+                      const CIEC_BOOL &paBIT_03,
+                      const CIEC_BOOL &paBIT_04,
+                      const CIEC_BOOL &paBIT_05,
+                      const CIEC_BOOL &paBIT_06,
+                      const CIEC_BOOL &paBIT_07,
+                      CIEC_BYTE &pa) {
+        evt_REQ(paBIT_00, paBIT_01, paBIT_02, paBIT_03, paBIT_04, paBIT_05, paBIT_06, paBIT_07, pa);
+      }
+  };
 
-CIEC_BYTE func_ASSEMBLE_BYTE_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00,
-                                        CIEC_BOOL st_lv_BIT_01,
-                                        CIEC_BOOL st_lv_BIT_02,
-                                        CIEC_BOOL st_lv_BIT_03,
-                                        CIEC_BOOL st_lv_BIT_04,
-                                        CIEC_BOOL st_lv_BIT_05,
-                                        CIEC_BOOL st_lv_BIT_06,
-                                        CIEC_BOOL st_lv_BIT_07);
+  CIEC_BYTE func_ASSEMBLE_BYTE_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00,
+                                          CIEC_BOOL st_lv_BIT_01,
+                                          CIEC_BOOL st_lv_BIT_02,
+                                          CIEC_BOOL st_lv_BIT_03,
+                                          CIEC_BOOL st_lv_BIT_04,
+                                          CIEC_BOOL st_lv_BIT_05,
+                                          CIEC_BOOL st_lv_BIT_06,
+                                          CIEC_BOOL st_lv_BIT_07);
+} // namespace forte::eclipse4diac::utils::assembling

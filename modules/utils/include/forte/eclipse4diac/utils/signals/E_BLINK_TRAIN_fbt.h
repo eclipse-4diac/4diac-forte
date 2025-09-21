@@ -32,7 +32,7 @@
 #include "forte/datatypes/forte_array_variable.h"
 #include "forte/iec61499/events/E_PULSE_fbt.h"
 #include "forte/iec61499/events/E_TRAIN_fbt.h"
-#include "GEN_ADD_fbt.h"
+#include "forte/iec61131/arithmetic/GEN_ADD_fbt.h"
 
 namespace forte::eclipse4diac::utils::signals {
   class FORTE_E_BLINK_TRAIN final : public CCompositeFB {
@@ -43,9 +43,9 @@ namespace forte::eclipse4diac::utils::signals {
       static const TEventID scmEventSTOPID = 1;
       static const TEventID scmEventCNFID = 0;
 
-      forte::CInternalFB<FORTE_E_PULSE> fb_E_TP;
-      forte::CInternalFB<FORTE_E_TRAIN> fb_E_TRAIN;
-      forte::CInternalFB<GEN_ADD> fb_ADD_2;
+      forte::CInternalFB<iec61499::events::FORTE_E_PULSE> fb_E_TP;
+      forte::CInternalFB<iec61499::events::FORTE_E_TRAIN> fb_E_TRAIN;
+      forte::CInternalFB<iec61131::arithmetic::GEN_ADD> fb_ADD_2;
 
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;

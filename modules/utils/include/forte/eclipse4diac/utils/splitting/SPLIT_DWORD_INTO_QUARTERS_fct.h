@@ -28,144 +28,145 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_SPLIT_DWORD_INTO_QUARTERS final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_QUARTERS)
+namespace forte::eclipse4diac::utils::splitting {
+  class FORTE_SPLIT_DWORD_INTO_QUARTERS final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_QUARTERS)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_SPLIT_DWORD_INTO_QUARTERS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    public:
+      FORTE_SPLIT_DWORD_INTO_QUARTERS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_DWORD var_IN;
+      CIEC_DWORD var_IN;
 
-    CIEC_BYTE var_QUARTER_BYTE_00;
-    CIEC_BYTE var_QUARTER_BYTE_01;
-    CIEC_BYTE var_QUARTER_BYTE_02;
-    CIEC_BYTE var_QUARTER_BYTE_03;
-    CIEC_BYTE var_QUARTER_BYTE_04;
-    CIEC_BYTE var_QUARTER_BYTE_05;
-    CIEC_BYTE var_QUARTER_BYTE_06;
-    CIEC_BYTE var_QUARTER_BYTE_07;
-    CIEC_BYTE var_QUARTER_BYTE_08;
-    CIEC_BYTE var_QUARTER_BYTE_09;
-    CIEC_BYTE var_QUARTER_BYTE_10;
-    CIEC_BYTE var_QUARTER_BYTE_11;
-    CIEC_BYTE var_QUARTER_BYTE_12;
-    CIEC_BYTE var_QUARTER_BYTE_13;
-    CIEC_BYTE var_QUARTER_BYTE_14;
-    CIEC_BYTE var_QUARTER_BYTE_15;
+      CIEC_BYTE var_QUARTER_BYTE_00;
+      CIEC_BYTE var_QUARTER_BYTE_01;
+      CIEC_BYTE var_QUARTER_BYTE_02;
+      CIEC_BYTE var_QUARTER_BYTE_03;
+      CIEC_BYTE var_QUARTER_BYTE_04;
+      CIEC_BYTE var_QUARTER_BYTE_05;
+      CIEC_BYTE var_QUARTER_BYTE_06;
+      CIEC_BYTE var_QUARTER_BYTE_07;
+      CIEC_BYTE var_QUARTER_BYTE_08;
+      CIEC_BYTE var_QUARTER_BYTE_09;
+      CIEC_BYTE var_QUARTER_BYTE_10;
+      CIEC_BYTE var_QUARTER_BYTE_11;
+      CIEC_BYTE var_QUARTER_BYTE_12;
+      CIEC_BYTE var_QUARTER_BYTE_13;
+      CIEC_BYTE var_QUARTER_BYTE_14;
+      CIEC_BYTE var_QUARTER_BYTE_15;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_IN;
+      CDataConnection *conn_IN;
 
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_00;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_01;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_02;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_03;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_04;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_05;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_06;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_07;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_08;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_09;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_10;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_11;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_12;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_13;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_14;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_15;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_00;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_01;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_02;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_03;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_04;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_05;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_06;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_07;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_08;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_09;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_10;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_11;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_12;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_13;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_14;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_15;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_DWORD &paIN,
-                 CIEC_BYTE &paQUARTER_BYTE_00,
-                 CIEC_BYTE &paQUARTER_BYTE_01,
-                 CIEC_BYTE &paQUARTER_BYTE_02,
-                 CIEC_BYTE &paQUARTER_BYTE_03,
-                 CIEC_BYTE &paQUARTER_BYTE_04,
-                 CIEC_BYTE &paQUARTER_BYTE_05,
-                 CIEC_BYTE &paQUARTER_BYTE_06,
-                 CIEC_BYTE &paQUARTER_BYTE_07,
-                 CIEC_BYTE &paQUARTER_BYTE_08,
-                 CIEC_BYTE &paQUARTER_BYTE_09,
-                 CIEC_BYTE &paQUARTER_BYTE_10,
-                 CIEC_BYTE &paQUARTER_BYTE_11,
-                 CIEC_BYTE &paQUARTER_BYTE_12,
-                 CIEC_BYTE &paQUARTER_BYTE_13,
-                 CIEC_BYTE &paQUARTER_BYTE_14,
-                 CIEC_BYTE &paQUARTER_BYTE_15) {
-      var_IN = paIN;
-      executeEvent(scmEventREQID, nullptr);
-      paQUARTER_BYTE_00 = var_QUARTER_BYTE_00;
-      paQUARTER_BYTE_01 = var_QUARTER_BYTE_01;
-      paQUARTER_BYTE_02 = var_QUARTER_BYTE_02;
-      paQUARTER_BYTE_03 = var_QUARTER_BYTE_03;
-      paQUARTER_BYTE_04 = var_QUARTER_BYTE_04;
-      paQUARTER_BYTE_05 = var_QUARTER_BYTE_05;
-      paQUARTER_BYTE_06 = var_QUARTER_BYTE_06;
-      paQUARTER_BYTE_07 = var_QUARTER_BYTE_07;
-      paQUARTER_BYTE_08 = var_QUARTER_BYTE_08;
-      paQUARTER_BYTE_09 = var_QUARTER_BYTE_09;
-      paQUARTER_BYTE_10 = var_QUARTER_BYTE_10;
-      paQUARTER_BYTE_11 = var_QUARTER_BYTE_11;
-      paQUARTER_BYTE_12 = var_QUARTER_BYTE_12;
-      paQUARTER_BYTE_13 = var_QUARTER_BYTE_13;
-      paQUARTER_BYTE_14 = var_QUARTER_BYTE_14;
-      paQUARTER_BYTE_15 = var_QUARTER_BYTE_15;
-    }
+      void evt_REQ(const CIEC_DWORD &paIN,
+                   CIEC_BYTE &paQUARTER_BYTE_00,
+                   CIEC_BYTE &paQUARTER_BYTE_01,
+                   CIEC_BYTE &paQUARTER_BYTE_02,
+                   CIEC_BYTE &paQUARTER_BYTE_03,
+                   CIEC_BYTE &paQUARTER_BYTE_04,
+                   CIEC_BYTE &paQUARTER_BYTE_05,
+                   CIEC_BYTE &paQUARTER_BYTE_06,
+                   CIEC_BYTE &paQUARTER_BYTE_07,
+                   CIEC_BYTE &paQUARTER_BYTE_08,
+                   CIEC_BYTE &paQUARTER_BYTE_09,
+                   CIEC_BYTE &paQUARTER_BYTE_10,
+                   CIEC_BYTE &paQUARTER_BYTE_11,
+                   CIEC_BYTE &paQUARTER_BYTE_12,
+                   CIEC_BYTE &paQUARTER_BYTE_13,
+                   CIEC_BYTE &paQUARTER_BYTE_14,
+                   CIEC_BYTE &paQUARTER_BYTE_15) {
+        var_IN = paIN;
+        executeEvent(scmEventREQID, nullptr);
+        paQUARTER_BYTE_00 = var_QUARTER_BYTE_00;
+        paQUARTER_BYTE_01 = var_QUARTER_BYTE_01;
+        paQUARTER_BYTE_02 = var_QUARTER_BYTE_02;
+        paQUARTER_BYTE_03 = var_QUARTER_BYTE_03;
+        paQUARTER_BYTE_04 = var_QUARTER_BYTE_04;
+        paQUARTER_BYTE_05 = var_QUARTER_BYTE_05;
+        paQUARTER_BYTE_06 = var_QUARTER_BYTE_06;
+        paQUARTER_BYTE_07 = var_QUARTER_BYTE_07;
+        paQUARTER_BYTE_08 = var_QUARTER_BYTE_08;
+        paQUARTER_BYTE_09 = var_QUARTER_BYTE_09;
+        paQUARTER_BYTE_10 = var_QUARTER_BYTE_10;
+        paQUARTER_BYTE_11 = var_QUARTER_BYTE_11;
+        paQUARTER_BYTE_12 = var_QUARTER_BYTE_12;
+        paQUARTER_BYTE_13 = var_QUARTER_BYTE_13;
+        paQUARTER_BYTE_14 = var_QUARTER_BYTE_14;
+        paQUARTER_BYTE_15 = var_QUARTER_BYTE_15;
+      }
 
-    void operator()(const CIEC_DWORD &paIN,
-                    CIEC_BYTE &paQUARTER_BYTE_00,
-                    CIEC_BYTE &paQUARTER_BYTE_01,
-                    CIEC_BYTE &paQUARTER_BYTE_02,
-                    CIEC_BYTE &paQUARTER_BYTE_03,
-                    CIEC_BYTE &paQUARTER_BYTE_04,
-                    CIEC_BYTE &paQUARTER_BYTE_05,
-                    CIEC_BYTE &paQUARTER_BYTE_06,
-                    CIEC_BYTE &paQUARTER_BYTE_07,
-                    CIEC_BYTE &paQUARTER_BYTE_08,
-                    CIEC_BYTE &paQUARTER_BYTE_09,
-                    CIEC_BYTE &paQUARTER_BYTE_10,
-                    CIEC_BYTE &paQUARTER_BYTE_11,
-                    CIEC_BYTE &paQUARTER_BYTE_12,
-                    CIEC_BYTE &paQUARTER_BYTE_13,
-                    CIEC_BYTE &paQUARTER_BYTE_14,
-                    CIEC_BYTE &paQUARTER_BYTE_15) {
-      evt_REQ(paIN, paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03, paQUARTER_BYTE_04,
-              paQUARTER_BYTE_05, paQUARTER_BYTE_06, paQUARTER_BYTE_07, paQUARTER_BYTE_08, paQUARTER_BYTE_09,
-              paQUARTER_BYTE_10, paQUARTER_BYTE_11, paQUARTER_BYTE_12, paQUARTER_BYTE_13, paQUARTER_BYTE_14,
-              paQUARTER_BYTE_15);
-    }
-};
-}
+      void operator()(const CIEC_DWORD &paIN,
+                      CIEC_BYTE &paQUARTER_BYTE_00,
+                      CIEC_BYTE &paQUARTER_BYTE_01,
+                      CIEC_BYTE &paQUARTER_BYTE_02,
+                      CIEC_BYTE &paQUARTER_BYTE_03,
+                      CIEC_BYTE &paQUARTER_BYTE_04,
+                      CIEC_BYTE &paQUARTER_BYTE_05,
+                      CIEC_BYTE &paQUARTER_BYTE_06,
+                      CIEC_BYTE &paQUARTER_BYTE_07,
+                      CIEC_BYTE &paQUARTER_BYTE_08,
+                      CIEC_BYTE &paQUARTER_BYTE_09,
+                      CIEC_BYTE &paQUARTER_BYTE_10,
+                      CIEC_BYTE &paQUARTER_BYTE_11,
+                      CIEC_BYTE &paQUARTER_BYTE_12,
+                      CIEC_BYTE &paQUARTER_BYTE_13,
+                      CIEC_BYTE &paQUARTER_BYTE_14,
+                      CIEC_BYTE &paQUARTER_BYTE_15) {
+        evt_REQ(paIN, paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03, paQUARTER_BYTE_04,
+                paQUARTER_BYTE_05, paQUARTER_BYTE_06, paQUARTER_BYTE_07, paQUARTER_BYTE_08, paQUARTER_BYTE_09,
+                paQUARTER_BYTE_10, paQUARTER_BYTE_11, paQUARTER_BYTE_12, paQUARTER_BYTE_13, paQUARTER_BYTE_14,
+                paQUARTER_BYTE_15);
+      }
+  };
 
-void func_SPLIT_DWORD_INTO_QUARTERS(CIEC_DWORD st_lv_IN,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_00,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_01,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_02,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_03,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_04,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_05,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_06,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_07,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_08,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_09,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_10,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_11,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_12,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_13,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_14,
-                                    CIEC_BYTE &st_lv_QUARTER_BYTE_15);
+  void func_SPLIT_DWORD_INTO_QUARTERS(CIEC_DWORD st_lv_IN,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_00,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_01,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_02,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_03,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_04,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_05,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_06,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_07,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_08,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_09,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_10,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_11,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_12,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_13,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_14,
+                                      CIEC_BYTE &st_lv_QUARTER_BYTE_15);
+} // namespace forte::eclipse4diac::utils::splitting

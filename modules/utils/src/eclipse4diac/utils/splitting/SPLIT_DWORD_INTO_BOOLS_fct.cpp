@@ -29,6 +29,8 @@ using namespace forte::literals;
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
+using namespace forte::eclipse4diac::utils::splitting;
+
 DEFINE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_BOOLS, "eclipse4diac::utils::splitting::SPLIT_DWORD_INTO_BOOLS"_STRID)
 
 namespace {
@@ -288,39 +290,39 @@ void FORTE_SPLIT_DWORD_INTO_BOOLS::executeEvent(const TEventID, CEventChainExecu
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void func_SPLIT_DWORD_INTO_BOOLS(CIEC_DWORD st_lv_IN,
-                                 CIEC_BOOL &st_lv_BIT_00,
-                                 CIEC_BOOL &st_lv_BIT_01,
-                                 CIEC_BOOL &st_lv_BIT_02,
-                                 CIEC_BOOL &st_lv_BIT_03,
-                                 CIEC_BOOL &st_lv_BIT_04,
-                                 CIEC_BOOL &st_lv_BIT_05,
-                                 CIEC_BOOL &st_lv_BIT_06,
-                                 CIEC_BOOL &st_lv_BIT_07,
-                                 CIEC_BOOL &st_lv_BIT_08,
-                                 CIEC_BOOL &st_lv_BIT_09,
-                                 CIEC_BOOL &st_lv_BIT_10,
-                                 CIEC_BOOL &st_lv_BIT_11,
-                                 CIEC_BOOL &st_lv_BIT_12,
-                                 CIEC_BOOL &st_lv_BIT_13,
-                                 CIEC_BOOL &st_lv_BIT_14,
-                                 CIEC_BOOL &st_lv_BIT_15,
-                                 CIEC_BOOL &st_lv_BIT_16,
-                                 CIEC_BOOL &st_lv_BIT_17,
-                                 CIEC_BOOL &st_lv_BIT_18,
-                                 CIEC_BOOL &st_lv_BIT_19,
-                                 CIEC_BOOL &st_lv_BIT_20,
-                                 CIEC_BOOL &st_lv_BIT_21,
-                                 CIEC_BOOL &st_lv_BIT_22,
-                                 CIEC_BOOL &st_lv_BIT_23,
-                                 CIEC_BOOL &st_lv_BIT_24,
-                                 CIEC_BOOL &st_lv_BIT_25,
-                                 CIEC_BOOL &st_lv_BIT_26,
-                                 CIEC_BOOL &st_lv_BIT_27,
-                                 CIEC_BOOL &st_lv_BIT_28,
-                                 CIEC_BOOL &st_lv_BIT_29,
-                                 CIEC_BOOL &st_lv_BIT_30,
-                                 CIEC_BOOL &st_lv_BIT_31) {
+void forte::eclipse4diac::utils::splitting::func_SPLIT_DWORD_INTO_BOOLS(CIEC_DWORD st_lv_IN,
+                                                                        CIEC_BOOL &st_lv_BIT_00,
+                                                                        CIEC_BOOL &st_lv_BIT_01,
+                                                                        CIEC_BOOL &st_lv_BIT_02,
+                                                                        CIEC_BOOL &st_lv_BIT_03,
+                                                                        CIEC_BOOL &st_lv_BIT_04,
+                                                                        CIEC_BOOL &st_lv_BIT_05,
+                                                                        CIEC_BOOL &st_lv_BIT_06,
+                                                                        CIEC_BOOL &st_lv_BIT_07,
+                                                                        CIEC_BOOL &st_lv_BIT_08,
+                                                                        CIEC_BOOL &st_lv_BIT_09,
+                                                                        CIEC_BOOL &st_lv_BIT_10,
+                                                                        CIEC_BOOL &st_lv_BIT_11,
+                                                                        CIEC_BOOL &st_lv_BIT_12,
+                                                                        CIEC_BOOL &st_lv_BIT_13,
+                                                                        CIEC_BOOL &st_lv_BIT_14,
+                                                                        CIEC_BOOL &st_lv_BIT_15,
+                                                                        CIEC_BOOL &st_lv_BIT_16,
+                                                                        CIEC_BOOL &st_lv_BIT_17,
+                                                                        CIEC_BOOL &st_lv_BIT_18,
+                                                                        CIEC_BOOL &st_lv_BIT_19,
+                                                                        CIEC_BOOL &st_lv_BIT_20,
+                                                                        CIEC_BOOL &st_lv_BIT_21,
+                                                                        CIEC_BOOL &st_lv_BIT_22,
+                                                                        CIEC_BOOL &st_lv_BIT_23,
+                                                                        CIEC_BOOL &st_lv_BIT_24,
+                                                                        CIEC_BOOL &st_lv_BIT_25,
+                                                                        CIEC_BOOL &st_lv_BIT_26,
+                                                                        CIEC_BOOL &st_lv_BIT_27,
+                                                                        CIEC_BOOL &st_lv_BIT_28,
+                                                                        CIEC_BOOL &st_lv_BIT_29,
+                                                                        CIEC_BOOL &st_lv_BIT_30,
+                                                                        CIEC_BOOL &st_lv_BIT_31) {
   st_lv_BIT_00 = 0_BOOL;
   st_lv_BIT_01 = 0_BOOL;
   st_lv_BIT_02 = 0_BOOL;

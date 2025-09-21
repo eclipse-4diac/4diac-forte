@@ -27,69 +27,70 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_SPLIT_BYTE_INTO_QUARTERS final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_SPLIT_BYTE_INTO_QUARTERS)
+namespace forte::eclipse4diac::utils::splitting {
+  class FORTE_SPLIT_BYTE_INTO_QUARTERS final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_SPLIT_BYTE_INTO_QUARTERS)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_SPLIT_BYTE_INTO_QUARTERS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    public:
+      FORTE_SPLIT_BYTE_INTO_QUARTERS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_BYTE var_IN;
+      CIEC_BYTE var_IN;
 
-    CIEC_BYTE var_QUARTER_BYTE_00;
-    CIEC_BYTE var_QUARTER_BYTE_01;
-    CIEC_BYTE var_QUARTER_BYTE_02;
-    CIEC_BYTE var_QUARTER_BYTE_03;
+      CIEC_BYTE var_QUARTER_BYTE_00;
+      CIEC_BYTE var_QUARTER_BYTE_01;
+      CIEC_BYTE var_QUARTER_BYTE_02;
+      CIEC_BYTE var_QUARTER_BYTE_03;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_IN;
+      CDataConnection *conn_IN;
 
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_00;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_01;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_02;
-    COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_03;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_00;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_01;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_02;
+      COutDataConnection<CIEC_BYTE> conn_QUARTER_BYTE_03;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BYTE &paIN,
-                 CIEC_BYTE &paQUARTER_BYTE_00,
-                 CIEC_BYTE &paQUARTER_BYTE_01,
-                 CIEC_BYTE &paQUARTER_BYTE_02,
-                 CIEC_BYTE &paQUARTER_BYTE_03) {
-      var_IN = paIN;
-      executeEvent(scmEventREQID, nullptr);
-      paQUARTER_BYTE_00 = var_QUARTER_BYTE_00;
-      paQUARTER_BYTE_01 = var_QUARTER_BYTE_01;
-      paQUARTER_BYTE_02 = var_QUARTER_BYTE_02;
-      paQUARTER_BYTE_03 = var_QUARTER_BYTE_03;
-    }
+      void evt_REQ(const CIEC_BYTE &paIN,
+                   CIEC_BYTE &paQUARTER_BYTE_00,
+                   CIEC_BYTE &paQUARTER_BYTE_01,
+                   CIEC_BYTE &paQUARTER_BYTE_02,
+                   CIEC_BYTE &paQUARTER_BYTE_03) {
+        var_IN = paIN;
+        executeEvent(scmEventREQID, nullptr);
+        paQUARTER_BYTE_00 = var_QUARTER_BYTE_00;
+        paQUARTER_BYTE_01 = var_QUARTER_BYTE_01;
+        paQUARTER_BYTE_02 = var_QUARTER_BYTE_02;
+        paQUARTER_BYTE_03 = var_QUARTER_BYTE_03;
+      }
 
-    void operator()(const CIEC_BYTE &paIN,
-                    CIEC_BYTE &paQUARTER_BYTE_00,
-                    CIEC_BYTE &paQUARTER_BYTE_01,
-                    CIEC_BYTE &paQUARTER_BYTE_02,
-                    CIEC_BYTE &paQUARTER_BYTE_03) {
-      evt_REQ(paIN, paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03);
-    }
-};
-}
+      void operator()(const CIEC_BYTE &paIN,
+                      CIEC_BYTE &paQUARTER_BYTE_00,
+                      CIEC_BYTE &paQUARTER_BYTE_01,
+                      CIEC_BYTE &paQUARTER_BYTE_02,
+                      CIEC_BYTE &paQUARTER_BYTE_03) {
+        evt_REQ(paIN, paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03);
+      }
+  };
 
-void func_SPLIT_BYTE_INTO_QUARTERS(CIEC_BYTE st_lv_IN,
-                                   CIEC_BYTE &st_lv_QUARTER_BYTE_00,
-                                   CIEC_BYTE &st_lv_QUARTER_BYTE_01,
-                                   CIEC_BYTE &st_lv_QUARTER_BYTE_02,
-                                   CIEC_BYTE &st_lv_QUARTER_BYTE_03);
+  void func_SPLIT_BYTE_INTO_QUARTERS(CIEC_BYTE st_lv_IN,
+                                     CIEC_BYTE &st_lv_QUARTER_BYTE_00,
+                                     CIEC_BYTE &st_lv_QUARTER_BYTE_01,
+                                     CIEC_BYTE &st_lv_QUARTER_BYTE_02,
+                                     CIEC_BYTE &st_lv_QUARTER_BYTE_03);
+} // namespace forte::eclipse4diac::utils::splitting

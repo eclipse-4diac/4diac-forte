@@ -28,240 +28,241 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_SPLIT_DWORD_INTO_BOOLS final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_BOOLS)
+namespace forte::eclipse4diac::utils::splitting {
+  class FORTE_SPLIT_DWORD_INTO_BOOLS final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_BOOLS)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_SPLIT_DWORD_INTO_BOOLS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    public:
+      FORTE_SPLIT_DWORD_INTO_BOOLS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_DWORD var_IN;
+      CIEC_DWORD var_IN;
 
-    CIEC_BOOL var_BIT_00;
-    CIEC_BOOL var_BIT_01;
-    CIEC_BOOL var_BIT_02;
-    CIEC_BOOL var_BIT_03;
-    CIEC_BOOL var_BIT_04;
-    CIEC_BOOL var_BIT_05;
-    CIEC_BOOL var_BIT_06;
-    CIEC_BOOL var_BIT_07;
-    CIEC_BOOL var_BIT_08;
-    CIEC_BOOL var_BIT_09;
-    CIEC_BOOL var_BIT_10;
-    CIEC_BOOL var_BIT_11;
-    CIEC_BOOL var_BIT_12;
-    CIEC_BOOL var_BIT_13;
-    CIEC_BOOL var_BIT_14;
-    CIEC_BOOL var_BIT_15;
-    CIEC_BOOL var_BIT_16;
-    CIEC_BOOL var_BIT_17;
-    CIEC_BOOL var_BIT_18;
-    CIEC_BOOL var_BIT_19;
-    CIEC_BOOL var_BIT_20;
-    CIEC_BOOL var_BIT_21;
-    CIEC_BOOL var_BIT_22;
-    CIEC_BOOL var_BIT_23;
-    CIEC_BOOL var_BIT_24;
-    CIEC_BOOL var_BIT_25;
-    CIEC_BOOL var_BIT_26;
-    CIEC_BOOL var_BIT_27;
-    CIEC_BOOL var_BIT_28;
-    CIEC_BOOL var_BIT_29;
-    CIEC_BOOL var_BIT_30;
-    CIEC_BOOL var_BIT_31;
+      CIEC_BOOL var_BIT_00;
+      CIEC_BOOL var_BIT_01;
+      CIEC_BOOL var_BIT_02;
+      CIEC_BOOL var_BIT_03;
+      CIEC_BOOL var_BIT_04;
+      CIEC_BOOL var_BIT_05;
+      CIEC_BOOL var_BIT_06;
+      CIEC_BOOL var_BIT_07;
+      CIEC_BOOL var_BIT_08;
+      CIEC_BOOL var_BIT_09;
+      CIEC_BOOL var_BIT_10;
+      CIEC_BOOL var_BIT_11;
+      CIEC_BOOL var_BIT_12;
+      CIEC_BOOL var_BIT_13;
+      CIEC_BOOL var_BIT_14;
+      CIEC_BOOL var_BIT_15;
+      CIEC_BOOL var_BIT_16;
+      CIEC_BOOL var_BIT_17;
+      CIEC_BOOL var_BIT_18;
+      CIEC_BOOL var_BIT_19;
+      CIEC_BOOL var_BIT_20;
+      CIEC_BOOL var_BIT_21;
+      CIEC_BOOL var_BIT_22;
+      CIEC_BOOL var_BIT_23;
+      CIEC_BOOL var_BIT_24;
+      CIEC_BOOL var_BIT_25;
+      CIEC_BOOL var_BIT_26;
+      CIEC_BOOL var_BIT_27;
+      CIEC_BOOL var_BIT_28;
+      CIEC_BOOL var_BIT_29;
+      CIEC_BOOL var_BIT_30;
+      CIEC_BOOL var_BIT_31;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_IN;
+      CDataConnection *conn_IN;
 
-    COutDataConnection<CIEC_BOOL> conn_BIT_00;
-    COutDataConnection<CIEC_BOOL> conn_BIT_01;
-    COutDataConnection<CIEC_BOOL> conn_BIT_02;
-    COutDataConnection<CIEC_BOOL> conn_BIT_03;
-    COutDataConnection<CIEC_BOOL> conn_BIT_04;
-    COutDataConnection<CIEC_BOOL> conn_BIT_05;
-    COutDataConnection<CIEC_BOOL> conn_BIT_06;
-    COutDataConnection<CIEC_BOOL> conn_BIT_07;
-    COutDataConnection<CIEC_BOOL> conn_BIT_08;
-    COutDataConnection<CIEC_BOOL> conn_BIT_09;
-    COutDataConnection<CIEC_BOOL> conn_BIT_10;
-    COutDataConnection<CIEC_BOOL> conn_BIT_11;
-    COutDataConnection<CIEC_BOOL> conn_BIT_12;
-    COutDataConnection<CIEC_BOOL> conn_BIT_13;
-    COutDataConnection<CIEC_BOOL> conn_BIT_14;
-    COutDataConnection<CIEC_BOOL> conn_BIT_15;
-    COutDataConnection<CIEC_BOOL> conn_BIT_16;
-    COutDataConnection<CIEC_BOOL> conn_BIT_17;
-    COutDataConnection<CIEC_BOOL> conn_BIT_18;
-    COutDataConnection<CIEC_BOOL> conn_BIT_19;
-    COutDataConnection<CIEC_BOOL> conn_BIT_20;
-    COutDataConnection<CIEC_BOOL> conn_BIT_21;
-    COutDataConnection<CIEC_BOOL> conn_BIT_22;
-    COutDataConnection<CIEC_BOOL> conn_BIT_23;
-    COutDataConnection<CIEC_BOOL> conn_BIT_24;
-    COutDataConnection<CIEC_BOOL> conn_BIT_25;
-    COutDataConnection<CIEC_BOOL> conn_BIT_26;
-    COutDataConnection<CIEC_BOOL> conn_BIT_27;
-    COutDataConnection<CIEC_BOOL> conn_BIT_28;
-    COutDataConnection<CIEC_BOOL> conn_BIT_29;
-    COutDataConnection<CIEC_BOOL> conn_BIT_30;
-    COutDataConnection<CIEC_BOOL> conn_BIT_31;
+      COutDataConnection<CIEC_BOOL> conn_BIT_00;
+      COutDataConnection<CIEC_BOOL> conn_BIT_01;
+      COutDataConnection<CIEC_BOOL> conn_BIT_02;
+      COutDataConnection<CIEC_BOOL> conn_BIT_03;
+      COutDataConnection<CIEC_BOOL> conn_BIT_04;
+      COutDataConnection<CIEC_BOOL> conn_BIT_05;
+      COutDataConnection<CIEC_BOOL> conn_BIT_06;
+      COutDataConnection<CIEC_BOOL> conn_BIT_07;
+      COutDataConnection<CIEC_BOOL> conn_BIT_08;
+      COutDataConnection<CIEC_BOOL> conn_BIT_09;
+      COutDataConnection<CIEC_BOOL> conn_BIT_10;
+      COutDataConnection<CIEC_BOOL> conn_BIT_11;
+      COutDataConnection<CIEC_BOOL> conn_BIT_12;
+      COutDataConnection<CIEC_BOOL> conn_BIT_13;
+      COutDataConnection<CIEC_BOOL> conn_BIT_14;
+      COutDataConnection<CIEC_BOOL> conn_BIT_15;
+      COutDataConnection<CIEC_BOOL> conn_BIT_16;
+      COutDataConnection<CIEC_BOOL> conn_BIT_17;
+      COutDataConnection<CIEC_BOOL> conn_BIT_18;
+      COutDataConnection<CIEC_BOOL> conn_BIT_19;
+      COutDataConnection<CIEC_BOOL> conn_BIT_20;
+      COutDataConnection<CIEC_BOOL> conn_BIT_21;
+      COutDataConnection<CIEC_BOOL> conn_BIT_22;
+      COutDataConnection<CIEC_BOOL> conn_BIT_23;
+      COutDataConnection<CIEC_BOOL> conn_BIT_24;
+      COutDataConnection<CIEC_BOOL> conn_BIT_25;
+      COutDataConnection<CIEC_BOOL> conn_BIT_26;
+      COutDataConnection<CIEC_BOOL> conn_BIT_27;
+      COutDataConnection<CIEC_BOOL> conn_BIT_28;
+      COutDataConnection<CIEC_BOOL> conn_BIT_29;
+      COutDataConnection<CIEC_BOOL> conn_BIT_30;
+      COutDataConnection<CIEC_BOOL> conn_BIT_31;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_DWORD &paIN,
-                 CIEC_BOOL &paBIT_00,
-                 CIEC_BOOL &paBIT_01,
-                 CIEC_BOOL &paBIT_02,
-                 CIEC_BOOL &paBIT_03,
-                 CIEC_BOOL &paBIT_04,
-                 CIEC_BOOL &paBIT_05,
-                 CIEC_BOOL &paBIT_06,
-                 CIEC_BOOL &paBIT_07,
-                 CIEC_BOOL &paBIT_08,
-                 CIEC_BOOL &paBIT_09,
-                 CIEC_BOOL &paBIT_10,
-                 CIEC_BOOL &paBIT_11,
-                 CIEC_BOOL &paBIT_12,
-                 CIEC_BOOL &paBIT_13,
-                 CIEC_BOOL &paBIT_14,
-                 CIEC_BOOL &paBIT_15,
-                 CIEC_BOOL &paBIT_16,
-                 CIEC_BOOL &paBIT_17,
-                 CIEC_BOOL &paBIT_18,
-                 CIEC_BOOL &paBIT_19,
-                 CIEC_BOOL &paBIT_20,
-                 CIEC_BOOL &paBIT_21,
-                 CIEC_BOOL &paBIT_22,
-                 CIEC_BOOL &paBIT_23,
-                 CIEC_BOOL &paBIT_24,
-                 CIEC_BOOL &paBIT_25,
-                 CIEC_BOOL &paBIT_26,
-                 CIEC_BOOL &paBIT_27,
-                 CIEC_BOOL &paBIT_28,
-                 CIEC_BOOL &paBIT_29,
-                 CIEC_BOOL &paBIT_30,
-                 CIEC_BOOL &paBIT_31) {
-      var_IN = paIN;
-      executeEvent(scmEventREQID, nullptr);
-      paBIT_00 = var_BIT_00;
-      paBIT_01 = var_BIT_01;
-      paBIT_02 = var_BIT_02;
-      paBIT_03 = var_BIT_03;
-      paBIT_04 = var_BIT_04;
-      paBIT_05 = var_BIT_05;
-      paBIT_06 = var_BIT_06;
-      paBIT_07 = var_BIT_07;
-      paBIT_08 = var_BIT_08;
-      paBIT_09 = var_BIT_09;
-      paBIT_10 = var_BIT_10;
-      paBIT_11 = var_BIT_11;
-      paBIT_12 = var_BIT_12;
-      paBIT_13 = var_BIT_13;
-      paBIT_14 = var_BIT_14;
-      paBIT_15 = var_BIT_15;
-      paBIT_16 = var_BIT_16;
-      paBIT_17 = var_BIT_17;
-      paBIT_18 = var_BIT_18;
-      paBIT_19 = var_BIT_19;
-      paBIT_20 = var_BIT_20;
-      paBIT_21 = var_BIT_21;
-      paBIT_22 = var_BIT_22;
-      paBIT_23 = var_BIT_23;
-      paBIT_24 = var_BIT_24;
-      paBIT_25 = var_BIT_25;
-      paBIT_26 = var_BIT_26;
-      paBIT_27 = var_BIT_27;
-      paBIT_28 = var_BIT_28;
-      paBIT_29 = var_BIT_29;
-      paBIT_30 = var_BIT_30;
-      paBIT_31 = var_BIT_31;
-    }
+      void evt_REQ(const CIEC_DWORD &paIN,
+                   CIEC_BOOL &paBIT_00,
+                   CIEC_BOOL &paBIT_01,
+                   CIEC_BOOL &paBIT_02,
+                   CIEC_BOOL &paBIT_03,
+                   CIEC_BOOL &paBIT_04,
+                   CIEC_BOOL &paBIT_05,
+                   CIEC_BOOL &paBIT_06,
+                   CIEC_BOOL &paBIT_07,
+                   CIEC_BOOL &paBIT_08,
+                   CIEC_BOOL &paBIT_09,
+                   CIEC_BOOL &paBIT_10,
+                   CIEC_BOOL &paBIT_11,
+                   CIEC_BOOL &paBIT_12,
+                   CIEC_BOOL &paBIT_13,
+                   CIEC_BOOL &paBIT_14,
+                   CIEC_BOOL &paBIT_15,
+                   CIEC_BOOL &paBIT_16,
+                   CIEC_BOOL &paBIT_17,
+                   CIEC_BOOL &paBIT_18,
+                   CIEC_BOOL &paBIT_19,
+                   CIEC_BOOL &paBIT_20,
+                   CIEC_BOOL &paBIT_21,
+                   CIEC_BOOL &paBIT_22,
+                   CIEC_BOOL &paBIT_23,
+                   CIEC_BOOL &paBIT_24,
+                   CIEC_BOOL &paBIT_25,
+                   CIEC_BOOL &paBIT_26,
+                   CIEC_BOOL &paBIT_27,
+                   CIEC_BOOL &paBIT_28,
+                   CIEC_BOOL &paBIT_29,
+                   CIEC_BOOL &paBIT_30,
+                   CIEC_BOOL &paBIT_31) {
+        var_IN = paIN;
+        executeEvent(scmEventREQID, nullptr);
+        paBIT_00 = var_BIT_00;
+        paBIT_01 = var_BIT_01;
+        paBIT_02 = var_BIT_02;
+        paBIT_03 = var_BIT_03;
+        paBIT_04 = var_BIT_04;
+        paBIT_05 = var_BIT_05;
+        paBIT_06 = var_BIT_06;
+        paBIT_07 = var_BIT_07;
+        paBIT_08 = var_BIT_08;
+        paBIT_09 = var_BIT_09;
+        paBIT_10 = var_BIT_10;
+        paBIT_11 = var_BIT_11;
+        paBIT_12 = var_BIT_12;
+        paBIT_13 = var_BIT_13;
+        paBIT_14 = var_BIT_14;
+        paBIT_15 = var_BIT_15;
+        paBIT_16 = var_BIT_16;
+        paBIT_17 = var_BIT_17;
+        paBIT_18 = var_BIT_18;
+        paBIT_19 = var_BIT_19;
+        paBIT_20 = var_BIT_20;
+        paBIT_21 = var_BIT_21;
+        paBIT_22 = var_BIT_22;
+        paBIT_23 = var_BIT_23;
+        paBIT_24 = var_BIT_24;
+        paBIT_25 = var_BIT_25;
+        paBIT_26 = var_BIT_26;
+        paBIT_27 = var_BIT_27;
+        paBIT_28 = var_BIT_28;
+        paBIT_29 = var_BIT_29;
+        paBIT_30 = var_BIT_30;
+        paBIT_31 = var_BIT_31;
+      }
 
-    void operator()(const CIEC_DWORD &paIN,
-                    CIEC_BOOL &paBIT_00,
-                    CIEC_BOOL &paBIT_01,
-                    CIEC_BOOL &paBIT_02,
-                    CIEC_BOOL &paBIT_03,
-                    CIEC_BOOL &paBIT_04,
-                    CIEC_BOOL &paBIT_05,
-                    CIEC_BOOL &paBIT_06,
-                    CIEC_BOOL &paBIT_07,
-                    CIEC_BOOL &paBIT_08,
-                    CIEC_BOOL &paBIT_09,
-                    CIEC_BOOL &paBIT_10,
-                    CIEC_BOOL &paBIT_11,
-                    CIEC_BOOL &paBIT_12,
-                    CIEC_BOOL &paBIT_13,
-                    CIEC_BOOL &paBIT_14,
-                    CIEC_BOOL &paBIT_15,
-                    CIEC_BOOL &paBIT_16,
-                    CIEC_BOOL &paBIT_17,
-                    CIEC_BOOL &paBIT_18,
-                    CIEC_BOOL &paBIT_19,
-                    CIEC_BOOL &paBIT_20,
-                    CIEC_BOOL &paBIT_21,
-                    CIEC_BOOL &paBIT_22,
-                    CIEC_BOOL &paBIT_23,
-                    CIEC_BOOL &paBIT_24,
-                    CIEC_BOOL &paBIT_25,
-                    CIEC_BOOL &paBIT_26,
-                    CIEC_BOOL &paBIT_27,
-                    CIEC_BOOL &paBIT_28,
-                    CIEC_BOOL &paBIT_29,
-                    CIEC_BOOL &paBIT_30,
-                    CIEC_BOOL &paBIT_31) {
-      evt_REQ(paIN, paBIT_00, paBIT_01, paBIT_02, paBIT_03, paBIT_04, paBIT_05, paBIT_06, paBIT_07, paBIT_08, paBIT_09,
-              paBIT_10, paBIT_11, paBIT_12, paBIT_13, paBIT_14, paBIT_15, paBIT_16, paBIT_17, paBIT_18, paBIT_19,
-              paBIT_20, paBIT_21, paBIT_22, paBIT_23, paBIT_24, paBIT_25, paBIT_26, paBIT_27, paBIT_28, paBIT_29,
-              paBIT_30, paBIT_31);
-    }
-};
-}
+      void operator()(const CIEC_DWORD &paIN,
+                      CIEC_BOOL &paBIT_00,
+                      CIEC_BOOL &paBIT_01,
+                      CIEC_BOOL &paBIT_02,
+                      CIEC_BOOL &paBIT_03,
+                      CIEC_BOOL &paBIT_04,
+                      CIEC_BOOL &paBIT_05,
+                      CIEC_BOOL &paBIT_06,
+                      CIEC_BOOL &paBIT_07,
+                      CIEC_BOOL &paBIT_08,
+                      CIEC_BOOL &paBIT_09,
+                      CIEC_BOOL &paBIT_10,
+                      CIEC_BOOL &paBIT_11,
+                      CIEC_BOOL &paBIT_12,
+                      CIEC_BOOL &paBIT_13,
+                      CIEC_BOOL &paBIT_14,
+                      CIEC_BOOL &paBIT_15,
+                      CIEC_BOOL &paBIT_16,
+                      CIEC_BOOL &paBIT_17,
+                      CIEC_BOOL &paBIT_18,
+                      CIEC_BOOL &paBIT_19,
+                      CIEC_BOOL &paBIT_20,
+                      CIEC_BOOL &paBIT_21,
+                      CIEC_BOOL &paBIT_22,
+                      CIEC_BOOL &paBIT_23,
+                      CIEC_BOOL &paBIT_24,
+                      CIEC_BOOL &paBIT_25,
+                      CIEC_BOOL &paBIT_26,
+                      CIEC_BOOL &paBIT_27,
+                      CIEC_BOOL &paBIT_28,
+                      CIEC_BOOL &paBIT_29,
+                      CIEC_BOOL &paBIT_30,
+                      CIEC_BOOL &paBIT_31) {
+        evt_REQ(paIN, paBIT_00, paBIT_01, paBIT_02, paBIT_03, paBIT_04, paBIT_05, paBIT_06, paBIT_07, paBIT_08,
+                paBIT_09, paBIT_10, paBIT_11, paBIT_12, paBIT_13, paBIT_14, paBIT_15, paBIT_16, paBIT_17, paBIT_18,
+                paBIT_19, paBIT_20, paBIT_21, paBIT_22, paBIT_23, paBIT_24, paBIT_25, paBIT_26, paBIT_27, paBIT_28,
+                paBIT_29, paBIT_30, paBIT_31);
+      }
+  };
 
-void func_SPLIT_DWORD_INTO_BOOLS(CIEC_DWORD st_lv_IN,
-                                 CIEC_BOOL &st_lv_BIT_00,
-                                 CIEC_BOOL &st_lv_BIT_01,
-                                 CIEC_BOOL &st_lv_BIT_02,
-                                 CIEC_BOOL &st_lv_BIT_03,
-                                 CIEC_BOOL &st_lv_BIT_04,
-                                 CIEC_BOOL &st_lv_BIT_05,
-                                 CIEC_BOOL &st_lv_BIT_06,
-                                 CIEC_BOOL &st_lv_BIT_07,
-                                 CIEC_BOOL &st_lv_BIT_08,
-                                 CIEC_BOOL &st_lv_BIT_09,
-                                 CIEC_BOOL &st_lv_BIT_10,
-                                 CIEC_BOOL &st_lv_BIT_11,
-                                 CIEC_BOOL &st_lv_BIT_12,
-                                 CIEC_BOOL &st_lv_BIT_13,
-                                 CIEC_BOOL &st_lv_BIT_14,
-                                 CIEC_BOOL &st_lv_BIT_15,
-                                 CIEC_BOOL &st_lv_BIT_16,
-                                 CIEC_BOOL &st_lv_BIT_17,
-                                 CIEC_BOOL &st_lv_BIT_18,
-                                 CIEC_BOOL &st_lv_BIT_19,
-                                 CIEC_BOOL &st_lv_BIT_20,
-                                 CIEC_BOOL &st_lv_BIT_21,
-                                 CIEC_BOOL &st_lv_BIT_22,
-                                 CIEC_BOOL &st_lv_BIT_23,
-                                 CIEC_BOOL &st_lv_BIT_24,
-                                 CIEC_BOOL &st_lv_BIT_25,
-                                 CIEC_BOOL &st_lv_BIT_26,
-                                 CIEC_BOOL &st_lv_BIT_27,
-                                 CIEC_BOOL &st_lv_BIT_28,
-                                 CIEC_BOOL &st_lv_BIT_29,
-                                 CIEC_BOOL &st_lv_BIT_30,
-                                 CIEC_BOOL &st_lv_BIT_31);
+  void func_SPLIT_DWORD_INTO_BOOLS(CIEC_DWORD st_lv_IN,
+                                   CIEC_BOOL &st_lv_BIT_00,
+                                   CIEC_BOOL &st_lv_BIT_01,
+                                   CIEC_BOOL &st_lv_BIT_02,
+                                   CIEC_BOOL &st_lv_BIT_03,
+                                   CIEC_BOOL &st_lv_BIT_04,
+                                   CIEC_BOOL &st_lv_BIT_05,
+                                   CIEC_BOOL &st_lv_BIT_06,
+                                   CIEC_BOOL &st_lv_BIT_07,
+                                   CIEC_BOOL &st_lv_BIT_08,
+                                   CIEC_BOOL &st_lv_BIT_09,
+                                   CIEC_BOOL &st_lv_BIT_10,
+                                   CIEC_BOOL &st_lv_BIT_11,
+                                   CIEC_BOOL &st_lv_BIT_12,
+                                   CIEC_BOOL &st_lv_BIT_13,
+                                   CIEC_BOOL &st_lv_BIT_14,
+                                   CIEC_BOOL &st_lv_BIT_15,
+                                   CIEC_BOOL &st_lv_BIT_16,
+                                   CIEC_BOOL &st_lv_BIT_17,
+                                   CIEC_BOOL &st_lv_BIT_18,
+                                   CIEC_BOOL &st_lv_BIT_19,
+                                   CIEC_BOOL &st_lv_BIT_20,
+                                   CIEC_BOOL &st_lv_BIT_21,
+                                   CIEC_BOOL &st_lv_BIT_22,
+                                   CIEC_BOOL &st_lv_BIT_23,
+                                   CIEC_BOOL &st_lv_BIT_24,
+                                   CIEC_BOOL &st_lv_BIT_25,
+                                   CIEC_BOOL &st_lv_BIT_26,
+                                   CIEC_BOOL &st_lv_BIT_27,
+                                   CIEC_BOOL &st_lv_BIT_28,
+                                   CIEC_BOOL &st_lv_BIT_29,
+                                   CIEC_BOOL &st_lv_BIT_30,
+                                   CIEC_BOOL &st_lv_BIT_31);
+} // namespace forte::eclipse4diac::utils::splitting

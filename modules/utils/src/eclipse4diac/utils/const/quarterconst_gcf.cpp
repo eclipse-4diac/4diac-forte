@@ -26,9 +26,12 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
+#include <forte/eclipse4diac/utils/assembling/ASSEMBLE_BYTE_FROM_BOOLS_fct.h>
+
 using namespace std::literals;
 
 using namespace forte::literals;
+using namespace forte::eclipse4diac::utils::const_;
 
 namespace {
   constexpr std::string_view TypeHash =

@@ -28,51 +28,52 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_SPLIT_DWORD_INTO_WORDS final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_WORDS)
+namespace forte::eclipse4diac::utils::splitting {
+  class FORTE_SPLIT_DWORD_INTO_WORDS final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_WORDS)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_SPLIT_DWORD_INTO_WORDS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    public:
+      FORTE_SPLIT_DWORD_INTO_WORDS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_DWORD var_IN;
+      CIEC_DWORD var_IN;
 
-    CIEC_WORD var_WORD_00;
-    CIEC_WORD var_WORD_01;
+      CIEC_WORD var_WORD_00;
+      CIEC_WORD var_WORD_01;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_IN;
+      CDataConnection *conn_IN;
 
-    COutDataConnection<CIEC_WORD> conn_WORD_00;
-    COutDataConnection<CIEC_WORD> conn_WORD_01;
+      COutDataConnection<CIEC_WORD> conn_WORD_00;
+      COutDataConnection<CIEC_WORD> conn_WORD_01;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_DWORD &paIN, CIEC_WORD &paWORD_00, CIEC_WORD &paWORD_01) {
-      var_IN = paIN;
-      executeEvent(scmEventREQID, nullptr);
-      paWORD_00 = var_WORD_00;
-      paWORD_01 = var_WORD_01;
-    }
+      void evt_REQ(const CIEC_DWORD &paIN, CIEC_WORD &paWORD_00, CIEC_WORD &paWORD_01) {
+        var_IN = paIN;
+        executeEvent(scmEventREQID, nullptr);
+        paWORD_00 = var_WORD_00;
+        paWORD_01 = var_WORD_01;
+      }
 
-    void operator()(const CIEC_DWORD &paIN, CIEC_WORD &paWORD_00, CIEC_WORD &paWORD_01) {
-      evt_REQ(paIN, paWORD_00, paWORD_01);
-    }
-};
-}
+      void operator()(const CIEC_DWORD &paIN, CIEC_WORD &paWORD_00, CIEC_WORD &paWORD_01) {
+        evt_REQ(paIN, paWORD_00, paWORD_01);
+      }
+  };
 
-void func_SPLIT_DWORD_INTO_WORDS(CIEC_DWORD st_lv_IN, CIEC_WORD &st_lv_WORD_00, CIEC_WORD &st_lv_WORD_01);
+  void func_SPLIT_DWORD_INTO_WORDS(CIEC_DWORD st_lv_IN, CIEC_WORD &st_lv_WORD_00, CIEC_WORD &st_lv_WORD_01);
+} // namespace forte::eclipse4diac::utils::splitting

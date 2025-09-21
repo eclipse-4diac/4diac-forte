@@ -30,6 +30,8 @@ using namespace forte::literals;
 #include "forte/datatypes/forte_array_variable.h"
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_BYTE_FROM_BOOLS_fct.h"
 
+using namespace forte::eclipse4diac::utils::assembling;
+
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_BOOLS, "eclipse4diac::utils::assembling::ASSEMBLE_BYTE_FROM_BOOLS"_STRID)
 
 namespace {
@@ -162,14 +164,14 @@ void FORTE_ASSEMBLE_BYTE_FROM_BOOLS::executeEvent(const TEventID, CEventChainExe
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-CIEC_BYTE func_ASSEMBLE_BYTE_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00,
-                                        CIEC_BOOL st_lv_BIT_01,
-                                        CIEC_BOOL st_lv_BIT_02,
-                                        CIEC_BOOL st_lv_BIT_03,
-                                        CIEC_BOOL st_lv_BIT_04,
-                                        CIEC_BOOL st_lv_BIT_05,
-                                        CIEC_BOOL st_lv_BIT_06,
-                                        CIEC_BOOL st_lv_BIT_07) {
+CIEC_BYTE forte::eclipse4diac::utils::assembling::func_ASSEMBLE_BYTE_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00,
+                                                                                CIEC_BOOL st_lv_BIT_01,
+                                                                                CIEC_BOOL st_lv_BIT_02,
+                                                                                CIEC_BOOL st_lv_BIT_03,
+                                                                                CIEC_BOOL st_lv_BIT_04,
+                                                                                CIEC_BOOL st_lv_BIT_05,
+                                                                                CIEC_BOOL st_lv_BIT_06,
+                                                                                CIEC_BOOL st_lv_BIT_07) {
   CIEC_BYTE st_ret_val = 0_BYTE;
 
 #line 15 "ASSEMBLE_BYTE_FROM_BOOLS.fct"

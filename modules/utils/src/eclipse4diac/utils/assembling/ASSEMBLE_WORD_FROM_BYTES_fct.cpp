@@ -30,6 +30,8 @@ using namespace forte::literals;
 #include "forte/datatypes/forte_array_variable.h"
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_WORD_FROM_BYTES_fct.h"
 
+using namespace forte::eclipse4diac::utils::assembling;
+
 DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_WORD_FROM_BYTES, "eclipse4diac::utils::assembling::ASSEMBLE_WORD_FROM_BYTES"_STRID)
 
 namespace {
@@ -130,7 +132,8 @@ void FORTE_ASSEMBLE_WORD_FROM_BYTES::executeEvent(const TEventID, CEventChainExe
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-CIEC_WORD func_ASSEMBLE_WORD_FROM_BYTES(CIEC_BYTE st_lv_BYTE_00, CIEC_BYTE st_lv_BYTE_01) {
+CIEC_WORD forte::eclipse4diac::utils::assembling::func_ASSEMBLE_WORD_FROM_BYTES(CIEC_BYTE st_lv_BYTE_00,
+                                                                                CIEC_BYTE st_lv_BYTE_01) {
   CIEC_WORD st_ret_val = 0_WORD;
 
 #line 9 "ASSEMBLE_WORD_FROM_BYTES.fct"

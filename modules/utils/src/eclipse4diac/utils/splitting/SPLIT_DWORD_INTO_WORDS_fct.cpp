@@ -29,6 +29,8 @@ using namespace forte::literals;
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
+using namespace forte::eclipse4diac::utils::splitting;
+
 DEFINE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_WORDS, "eclipse4diac::utils::splitting::SPLIT_DWORD_INTO_WORDS"_STRID)
 
 namespace {
@@ -129,7 +131,9 @@ void FORTE_SPLIT_DWORD_INTO_WORDS::executeEvent(const TEventID, CEventChainExecu
   sendOutputEvent(scmEventCNFID, paECET);
 }
 
-void func_SPLIT_DWORD_INTO_WORDS(CIEC_DWORD st_lv_IN, CIEC_WORD &st_lv_WORD_00, CIEC_WORD &st_lv_WORD_01) {
+void forte::eclipse4diac::utils::splitting::func_SPLIT_DWORD_INTO_WORDS(CIEC_DWORD st_lv_IN,
+                                                                        CIEC_WORD &st_lv_WORD_00,
+                                                                        CIEC_WORD &st_lv_WORD_01) {
   st_lv_WORD_00 = 0_WORD;
   st_lv_WORD_01 = 0_WORD;
 

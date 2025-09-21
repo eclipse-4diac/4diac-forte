@@ -28,68 +28,69 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_ASSEMBLE_DWORD_FROM_BYTES final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_BYTES)
+namespace forte::eclipse4diac::utils::assembling {
+  class FORTE_ASSEMBLE_DWORD_FROM_BYTES final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_BYTES)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_ASSEMBLE_DWORD_FROM_BYTES(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    public:
+      FORTE_ASSEMBLE_DWORD_FROM_BYTES(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_BYTE var_BYTE_00;
-    CIEC_BYTE var_BYTE_01;
-    CIEC_BYTE var_BYTE_02;
-    CIEC_BYTE var_BYTE_03;
+      CIEC_BYTE var_BYTE_00;
+      CIEC_BYTE var_BYTE_01;
+      CIEC_BYTE var_BYTE_02;
+      CIEC_BYTE var_BYTE_03;
 
-    CIEC_DWORD var_;
+      CIEC_DWORD var_;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_BYTE_00;
-    CDataConnection *conn_BYTE_01;
-    CDataConnection *conn_BYTE_02;
-    CDataConnection *conn_BYTE_03;
+      CDataConnection *conn_BYTE_00;
+      CDataConnection *conn_BYTE_01;
+      CDataConnection *conn_BYTE_02;
+      CDataConnection *conn_BYTE_03;
 
-    COutDataConnection<CIEC_DWORD> conn_;
+      COutDataConnection<CIEC_DWORD> conn_;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_BYTE &paBYTE_00,
-                 const CIEC_BYTE &paBYTE_01,
-                 const CIEC_BYTE &paBYTE_02,
-                 const CIEC_BYTE &paBYTE_03,
-                 CIEC_DWORD &pa) {
-      var_BYTE_00 = paBYTE_00;
-      var_BYTE_01 = paBYTE_01;
-      var_BYTE_02 = paBYTE_02;
-      var_BYTE_03 = paBYTE_03;
-      executeEvent(scmEventREQID, nullptr);
-      pa = var_;
-    }
+      void evt_REQ(const CIEC_BYTE &paBYTE_00,
+                   const CIEC_BYTE &paBYTE_01,
+                   const CIEC_BYTE &paBYTE_02,
+                   const CIEC_BYTE &paBYTE_03,
+                   CIEC_DWORD &pa) {
+        var_BYTE_00 = paBYTE_00;
+        var_BYTE_01 = paBYTE_01;
+        var_BYTE_02 = paBYTE_02;
+        var_BYTE_03 = paBYTE_03;
+        executeEvent(scmEventREQID, nullptr);
+        pa = var_;
+      }
 
-    void operator()(const CIEC_BYTE &paBYTE_00,
-                    const CIEC_BYTE &paBYTE_01,
-                    const CIEC_BYTE &paBYTE_02,
-                    const CIEC_BYTE &paBYTE_03,
-                    CIEC_DWORD &pa) {
-      evt_REQ(paBYTE_00, paBYTE_01, paBYTE_02, paBYTE_03, pa);
-    }
-};
-}
+      void operator()(const CIEC_BYTE &paBYTE_00,
+                      const CIEC_BYTE &paBYTE_01,
+                      const CIEC_BYTE &paBYTE_02,
+                      const CIEC_BYTE &paBYTE_03,
+                      CIEC_DWORD &pa) {
+        evt_REQ(paBYTE_00, paBYTE_01, paBYTE_02, paBYTE_03, pa);
+      }
+  };
 
-CIEC_DWORD func_ASSEMBLE_DWORD_FROM_BYTES(CIEC_BYTE st_lv_BYTE_00,
-                                          CIEC_BYTE st_lv_BYTE_01,
-                                          CIEC_BYTE st_lv_BYTE_02,
-                                          CIEC_BYTE st_lv_BYTE_03);
+  CIEC_DWORD func_ASSEMBLE_DWORD_FROM_BYTES(CIEC_BYTE st_lv_BYTE_00,
+                                            CIEC_BYTE st_lv_BYTE_01,
+                                            CIEC_BYTE st_lv_BYTE_02,
+                                            CIEC_BYTE st_lv_BYTE_03);
+} // namespace forte::eclipse4diac::utils::assembling

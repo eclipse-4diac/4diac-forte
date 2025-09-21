@@ -28,3 +28,10 @@ target_sources(forte-utils PRIVATE
         STEST_END_fbt.cpp
         TEST_CONDITION_fbt.cpp
 )
+
+add_subdirectory(assembling)
+add_subdirectory(const)
+add_subdirectory(selection)
+add_subdirectory(signals)
+add_subdirectory(splitting)
+add_subdirectory(timing)

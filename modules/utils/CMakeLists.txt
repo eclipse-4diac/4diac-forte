@@ -19,7 +19,7 @@ if (NOT FORTE_MODULE_UTILS)
 endif ()
 
 add_library(forte-utils)
-target_link_libraries(forte-utils PUBLIC forte-core forte-events)
+target_link_libraries(forte-utils PUBLIC forte-core forte-events forte-iec61131-3)
 target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-utils,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-utils>>)
 
 add_subdirectory(include)
