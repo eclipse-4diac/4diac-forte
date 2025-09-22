@@ -23,86 +23,87 @@ using namespace std::literals;
 
 using namespace forte::literals;
 
-using namespace forte::iec61499::events;
+namespace forte::iec61499::events {
+  namespace {
+    const auto cSocketNameIds = std::array{"TimeOutSocket"_STRID};
 
-DEFINE_FIRMWARE_FB(FORTE_E_RTimeOut, "iec61499::events::E_RTimeOut"_STRID)
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = {},
+        .mEITypeNames = {},
+        .mEONames = {},
+        .mEOTypeNames = {},
+        .mDINames = {},
+        .mDONames = {},
+        .mDIONames = {},
+        .mSocketNames = cSocketNameIds,
+        .mPlugNames = {},
+    };
 
-namespace {
-  const auto cSocketNameIds = std::array{"TimeOutSocket"_STRID};
+    const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
+        {"TimeOutSocket"_STRID, "START"_STRID, "DLY"_STRID, "START"_STRID},
+        {"TimeOutSocket"_STRID, "STOP"_STRID, "DLY"_STRID, "STOP"_STRID},
+        {"DLY"_STRID, "EO"_STRID, "TimeOutSocket"_STRID, "TimeOut"_STRID},
+    });
 
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = {},
-      .mEITypeNames = {},
-      .mEONames = {},
-      .mEOTypeNames = {},
-      .mDINames = {},
-      .mDONames = {},
-      .mDIONames = {},
-      .mSocketNames = cSocketNameIds,
-      .mPlugNames = {},
-  };
+    const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
+        {"TimeOutSocket"_STRID, "DT"_STRID, "DLY"_STRID, "DT"_STRID},
+    });
 
-  const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
-      {"TimeOutSocket"_STRID, "START"_STRID, "DLY"_STRID, "START"_STRID},
-      {"TimeOutSocket"_STRID, "STOP"_STRID, "DLY"_STRID, "STOP"_STRID},
-      {"DLY"_STRID, "EO"_STRID, "TimeOutSocket"_STRID, "TimeOut"_STRID},
-  });
+    const SCFB_FBNData cFBNData = {
+        .mEventConnections = cEventConnections,
+        .mDataConnections = cDataConnections,
+        .mAdapterConnections = {},
+    };
+  } // namespace
 
-  const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
-      {"TimeOutSocket"_STRID, "DT"_STRID, "DLY"_STRID, "DT"_STRID},
-  });
+  DEFINE_FIRMWARE_FB(FORTE_E_RTimeOut, "iec61499::events::E_RTimeOut"_STRID)
 
-  const SCFB_FBNData cFBNData = {
-      .mEventConnections = cEventConnections,
-      .mDataConnections = cDataConnections,
-      .mAdapterConnections = {},
-  };
-} // namespace
+  FORTE_E_RTimeOut::FORTE_E_RTimeOut(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
+      fb_DLY("DLY"_STRID, *this),
+      var_TimeOutSocket("TimeOutSocket"_STRID, *this, cgCFBParentAdapterlistIDMarker) {};
 
-FORTE_E_RTimeOut::FORTE_E_RTimeOut(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
-    fb_DLY("DLY"_STRID, *this),
-    var_TimeOutSocket("TimeOutSocket"_STRID, *this, cgCFBParentAdapterlistIDMarker) {};
-
-void FORTE_E_RTimeOut::setInitialValues() {
-  CCompositeFB::setInitialValues();
-}
-
-void FORTE_E_RTimeOut::readInputData(TEventID) {
-  // nothing to do
-}
-
-void FORTE_E_RTimeOut::writeOutputData(TEventID) {
-  // nothing to do
-}
-
-CIEC_ANY *FORTE_E_RTimeOut::getDI(size_t) {
-  return nullptr;
-}
-
-CIEC_ANY *FORTE_E_RTimeOut::getDO(size_t) {
-  return nullptr;
-}
-
-forte::ISocketPin *FORTE_E_RTimeOut::getSocketPinUnchecked(const size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_TimeOutSocket;
+  void FORTE_E_RTimeOut::setInitialValues() {
+    CCompositeFB::setInitialValues();
   }
-  return nullptr;
-}
 
-CEventConnection *FORTE_E_RTimeOut::getEOConUnchecked(TPortId) {
-  return nullptr;
-}
+  void FORTE_E_RTimeOut::readInputData(TEventID) {
+    // nothing to do
+  }
 
-CDataConnection **FORTE_E_RTimeOut::getDIConUnchecked(TPortId) {
-  return nullptr;
-}
+  void FORTE_E_RTimeOut::writeOutputData(TEventID) {
+    // nothing to do
+  }
 
-CDataConnection *FORTE_E_RTimeOut::getDOConUnchecked(TPortId) {
-  return nullptr;
-}
+  CIEC_ANY *FORTE_E_RTimeOut::getDI(size_t) {
+    return nullptr;
+  }
 
-CDataConnection *FORTE_E_RTimeOut::getIf2InConUnchecked(TPortId) {
-  return nullptr;
-}
+  CIEC_ANY *FORTE_E_RTimeOut::getDO(size_t) {
+    return nullptr;
+  }
+
+  forte::ISocketPin *FORTE_E_RTimeOut::getSocketPinUnchecked(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_TimeOutSocket;
+    }
+    return nullptr;
+  }
+
+  CEventConnection *FORTE_E_RTimeOut::getEOConUnchecked(TPortId) {
+    return nullptr;
+  }
+
+  CDataConnection **FORTE_E_RTimeOut::getDIConUnchecked(TPortId) {
+    return nullptr;
+  }
+
+  CDataConnection *FORTE_E_RTimeOut::getDOConUnchecked(TPortId) {
+    return nullptr;
+  }
+
+  CDataConnection *FORTE_E_RTimeOut::getIf2InConUnchecked(TPortId) {
+    return nullptr;
+  }
+
+} // namespace forte::iec61499::events

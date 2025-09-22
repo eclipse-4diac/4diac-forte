@@ -22,123 +22,124 @@ using namespace forte::literals;
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-using namespace forte::iec61499::events;
+namespace forte::iec61499::events {
+  namespace {
+    const auto cDataInputNames = std::array{"G"_STRID};
+    const auto cEventInputNames = std::array{"EI0"_STRID, "EI1"_STRID};
+    const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
+    const auto cEventOutputNames = std::array{"EO"_STRID};
+    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = cEventInputTypeIds,
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = cEventOutputTypeIds,
+        .mDINames = cDataInputNames,
+        .mDONames = {},
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_E_SELECT, "iec61499::events::E_SELECT"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_E_SELECT, "iec61499::events::E_SELECT"_STRID)
 
-namespace {
-  const auto cDataInputNames = std::array{"G"_STRID};
-  const auto cEventInputNames = std::array{"EI0"_STRID, "EI1"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
-  const auto cEventOutputNames = std::array{"EO"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = {},
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
+  FORTE_E_SELECT::FORTE_E_SELECT(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
+      conn_EO(*this, 0),
+      conn_G(nullptr) {
+  }
 
-FORTE_E_SELECT::FORTE_E_SELECT(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
-    conn_EO(*this, 0),
-    conn_G(nullptr) {
-}
+  void FORTE_E_SELECT::setInitialValues() {
+    CBasicFB::setInitialValues();
+    var_G = 0_BOOL;
+  }
 
-void FORTE_E_SELECT::setInitialValues() {
-  CBasicFB::setInitialValues();
-  var_G = 0_BOOL;
-}
+  void FORTE_E_SELECT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    do {
+      switch (mECCState) {
+        case scmStateSTART:
+          if ((scmEventEI0ID == paEIID) && (func_NOT<CIEC_BOOL>(var_G)))
+            enterStateEO(paECET);
+          else if ((scmEventEI1ID == paEIID) && (var_G))
+            enterStateEO(paECET);
+          else
+            return; // no transition cleared
+          break;
+        case scmStateEO:
+          if (1)
+            enterStateSTART(paECET);
+          else
+            return; // no transition cleared
+          break;
+        default:
+          DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 2.",
+                       mECCState.operator TForteUInt16());
+          mECCState = 0; // 0 is always the initial state
+          return;
+      }
+      paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
+    } while (true);
+  }
 
-void FORTE_E_SELECT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  do {
-    switch (mECCState) {
-      case scmStateSTART:
-        if ((scmEventEI0ID == paEIID) && (func_NOT<CIEC_BOOL>(var_G)))
-          enterStateEO(paECET);
-        else if ((scmEventEI1ID == paEIID) && (var_G))
-          enterStateEO(paECET);
-        else
-          return; // no transition cleared
+  void FORTE_E_SELECT::enterStateSTART(CEventChainExecutionThread *const) {
+    mECCState = scmStateSTART;
+  }
+
+  void FORTE_E_SELECT::enterStateEO(CEventChainExecutionThread *const paECET) {
+    mECCState = scmStateEO;
+    sendOutputEvent(scmEventEOID, paECET);
+  }
+
+  void FORTE_E_SELECT::readInputData(const TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventEI0ID: {
+        readData(0, var_G, conn_G);
         break;
-      case scmStateEO:
-        if (1)
-          enterStateSTART(paECET);
-        else
-          return; // no transition cleared
+      }
+      case scmEventEI1ID: {
+        readData(0, var_G, conn_G);
         break;
-      default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 2.",
-                     mECCState.operator TForteUInt16());
-        mECCState = 0; // 0 is always the initial state
-        return;
+      }
+      default: break;
     }
-    paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
-  } while (true);
-}
+  }
 
-void FORTE_E_SELECT::enterStateSTART(CEventChainExecutionThread *const) {
-  mECCState = scmStateSTART;
-}
+  void FORTE_E_SELECT::writeOutputData(TEventID) {
+    // nothing to do
+  }
 
-void FORTE_E_SELECT::enterStateEO(CEventChainExecutionThread *const paECET) {
-  mECCState = scmStateEO;
-  sendOutputEvent(scmEventEOID, paECET);
-}
-
-void FORTE_E_SELECT::readInputData(const TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventEI0ID: {
-      readData(0, var_G, conn_G);
-      break;
+  CIEC_ANY *FORTE_E_SELECT::getDI(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_G;
     }
-    case scmEventEI1ID: {
-      readData(0, var_G, conn_G);
-      break;
+    return nullptr;
+  }
+
+  CIEC_ANY *FORTE_E_SELECT::getDO(size_t) {
+    return nullptr;
+  }
+
+  CEventConnection *FORTE_E_SELECT::getEOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_EO;
     }
-    default: break;
+    return nullptr;
   }
-}
 
-void FORTE_E_SELECT::writeOutputData(TEventID) {
-  // nothing to do
-}
-
-CIEC_ANY *FORTE_E_SELECT::getDI(const size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_G;
+  CDataConnection **FORTE_E_SELECT::getDIConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_G;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_E_SELECT::getDO(size_t) {
-  return nullptr;
-}
-
-CEventConnection *FORTE_E_SELECT::getEOConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_EO;
+  CDataConnection *FORTE_E_SELECT::getDOConUnchecked(TPortId) {
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_E_SELECT::getDIConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_G;
+  CIEC_ANY *FORTE_E_SELECT::getVarInternal(size_t) {
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection *FORTE_E_SELECT::getDOConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CIEC_ANY *FORTE_E_SELECT::getVarInternal(size_t) {
-  return nullptr;
-}
+} // namespace forte::iec61499::events

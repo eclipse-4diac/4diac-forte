@@ -17,8 +17,6 @@
 
 #include "forte/eclipse4diac/signalprocessing/RampLimitFS_fbt.h"
 
-using namespace forte::literals;
-
 #include "forte/datatypes/forte_any_elementary_variant.h"
 #include "forte/datatypes/forte_any_num_variant.h"
 #include "forte/datatypes/forte_dint.h"
@@ -28,215 +26,218 @@ using namespace forte::literals;
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-using namespace forte::eclipse4diac::signalprocessing;
+using namespace forte::literals;
 
-DEFINE_FIRMWARE_FB(FORTE_RampLimitFS, "eclipse4diac::signalprocessing::RampLimitFS"_STRID)
+namespace forte::eclipse4diac::signalprocessing {
+  namespace {
+    const auto cDataInputNames = std::array{"PV"_STRID, "VAL_ZERO"_STRID, "SLOW"_STRID, "FAST"_STRID, "VAL_FULL"_STRID};
+    const auto cDataOutputNames = std::array{"OUT"_STRID};
+    const auto cEventInputNames = std::array{"ZERO"_STRID,      "UP_SLOW"_STRID, "UP_FAST"_STRID, "DOWN_SLOW"_STRID,
+                                             "DOWN_FAST"_STRID, "FULL"_STRID,    "LOAD"_STRID};
+    const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID,
+                                               "Event"_STRID, "Event"_STRID, "Event"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
+    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = cEventInputTypeIds,
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = cEventOutputTypeIds,
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-namespace {
-  const auto cDataInputNames = std::array{"PV"_STRID, "VAL_ZERO"_STRID, "SLOW"_STRID, "FAST"_STRID, "VAL_FULL"_STRID};
-  const auto cDataOutputNames = std::array{"OUT"_STRID};
-  const auto cEventInputNames = std::array{"ZERO"_STRID,      "UP_SLOW"_STRID, "UP_FAST"_STRID, "DOWN_SLOW"_STRID,
-                                           "DOWN_FAST"_STRID, "FULL"_STRID,    "LOAD"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID,
-                                             "Event"_STRID, "Event"_STRID, "Event"_STRID};
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
+  DEFINE_FIRMWARE_FB(FORTE_RampLimitFS, "eclipse4diac::signalprocessing::RampLimitFS"_STRID)
 
-FORTE_RampLimitFS::FORTE_RampLimitFS(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
-    conn_CNF(*this, 0),
-    conn_PV(nullptr),
-    conn_VAL_ZERO(nullptr),
-    conn_SLOW(nullptr),
-    conn_FAST(nullptr),
-    conn_VAL_FULL(nullptr),
-    conn_OUT(*this, 0, var_OUT) {
-}
-
-void FORTE_RampLimitFS::setInitialValues() {
-  var_PV = 0_DINT;
-  var_VAL_ZERO = 0_DINT;
-  var_SLOW = 0_DINT;
-  var_FAST = 0_DINT;
-  var_VAL_FULL = 0_DINT;
-  var_OUT = 0_DINT;
-}
-
-void FORTE_RampLimitFS::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventZEROID: alg_ZERO(); break;
-    case scmEventUP_SLOWID: alg_UP_SLOW(); break;
-    case scmEventUP_FASTID: alg_UP_FAST(); break;
-    case scmEventDOWN_SLOWID: alg_DOWN_SLOW(); break;
-    case scmEventDOWN_FASTID: alg_DOWN_FAST(); break;
-    case scmEventFULLID: alg_FULL(); break;
-    case scmEventLOADID: alg_LOAD(); break;
-    default: break;
+  FORTE_RampLimitFS::FORTE_RampLimitFS(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
+      conn_CNF(*this, 0),
+      conn_PV(nullptr),
+      conn_VAL_ZERO(nullptr),
+      conn_SLOW(nullptr),
+      conn_FAST(nullptr),
+      conn_VAL_FULL(nullptr),
+      conn_OUT(*this, 0, var_OUT) {
   }
-  sendOutputEvent(scmEventCNFID, paECET);
-}
 
-void FORTE_RampLimitFS::readInputData(const TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventZEROID: {
-      readData(1, var_VAL_ZERO, conn_VAL_ZERO);
-      break;
-    }
-    case scmEventUP_SLOWID: {
-      readData(2, var_SLOW, conn_SLOW);
-      break;
-    }
-    case scmEventUP_FASTID: {
-      readData(3, var_FAST, conn_FAST);
-      break;
-    }
-    case scmEventDOWN_SLOWID: {
-      readData(2, var_SLOW, conn_SLOW);
-      break;
-    }
-    case scmEventDOWN_FASTID: {
-      readData(3, var_FAST, conn_FAST);
-      break;
-    }
-    case scmEventFULLID: {
-      readData(4, var_VAL_FULL, conn_VAL_FULL);
-      break;
-    }
-    case scmEventLOADID: {
-      readData(0, var_PV, conn_PV);
-      break;
-    }
-    default: break;
+  void FORTE_RampLimitFS::setInitialValues() {
+    var_PV = 0_DINT;
+    var_VAL_ZERO = 0_DINT;
+    var_SLOW = 0_DINT;
+    var_FAST = 0_DINT;
+    var_VAL_FULL = 0_DINT;
+    var_OUT = 0_DINT;
   }
-}
 
-void FORTE_RampLimitFS::writeOutputData(const TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventCNFID: {
-      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
-      break;
+  void FORTE_RampLimitFS::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case scmEventZEROID: alg_ZERO(); break;
+      case scmEventUP_SLOWID: alg_UP_SLOW(); break;
+      case scmEventUP_FASTID: alg_UP_FAST(); break;
+      case scmEventDOWN_SLOWID: alg_DOWN_SLOW(); break;
+      case scmEventDOWN_FASTID: alg_DOWN_FAST(); break;
+      case scmEventFULLID: alg_FULL(); break;
+      case scmEventLOADID: alg_LOAD(); break;
+      default: break;
     }
-    default: break;
+    sendOutputEvent(scmEventCNFID, paECET);
   }
-}
 
-CIEC_ANY *FORTE_RampLimitFS::getDI(const size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_PV;
-    case 1: return &var_VAL_ZERO;
-    case 2: return &var_SLOW;
-    case 3: return &var_FAST;
-    case 4: return &var_VAL_FULL;
+  void FORTE_RampLimitFS::readInputData(const TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventZEROID: {
+        readData(1, var_VAL_ZERO, conn_VAL_ZERO);
+        break;
+      }
+      case scmEventUP_SLOWID: {
+        readData(2, var_SLOW, conn_SLOW);
+        break;
+      }
+      case scmEventUP_FASTID: {
+        readData(3, var_FAST, conn_FAST);
+        break;
+      }
+      case scmEventDOWN_SLOWID: {
+        readData(2, var_SLOW, conn_SLOW);
+        break;
+      }
+      case scmEventDOWN_FASTID: {
+        readData(3, var_FAST, conn_FAST);
+        break;
+      }
+      case scmEventFULLID: {
+        readData(4, var_VAL_FULL, conn_VAL_FULL);
+        break;
+      }
+      case scmEventLOADID: {
+        readData(0, var_PV, conn_PV);
+        break;
+      }
+      default: break;
+    }
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_RampLimitFS::getDO(const size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_OUT;
+  void FORTE_RampLimitFS::writeOutputData(const TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventCNFID: {
+        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
+        break;
+      }
+      default: break;
+    }
   }
-  return nullptr;
-}
 
-CEventConnection *FORTE_RampLimitFS::getEOConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_CNF;
+  CIEC_ANY *FORTE_RampLimitFS::getDI(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_PV;
+      case 1: return &var_VAL_ZERO;
+      case 2: return &var_SLOW;
+      case 3: return &var_FAST;
+      case 4: return &var_VAL_FULL;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_RampLimitFS::getDIConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_PV;
-    case 1: return &conn_VAL_ZERO;
-    case 2: return &conn_SLOW;
-    case 3: return &conn_FAST;
-    case 4: return &conn_VAL_FULL;
+  CIEC_ANY *FORTE_RampLimitFS::getDO(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_OUT;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection *FORTE_RampLimitFS::getDOConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_OUT;
+  CEventConnection *FORTE_RampLimitFS::getEOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_CNF;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_RampLimitFS::getVarInternal(size_t) {
-  return nullptr;
-}
+  CDataConnection **FORTE_RampLimitFS::getDIConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_PV;
+      case 1: return &conn_VAL_ZERO;
+      case 2: return &conn_SLOW;
+      case 3: return &conn_FAST;
+      case 4: return &conn_VAL_FULL;
+    }
+    return nullptr;
+  }
 
-void FORTE_RampLimitFS::alg_ZERO(void) {
+  CDataConnection *FORTE_RampLimitFS::getDOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_OUT;
+    }
+    return nullptr;
+  }
+
+  CIEC_ANY *FORTE_RampLimitFS::getVarInternal(size_t) {
+    return nullptr;
+  }
+
+  void FORTE_RampLimitFS::alg_ZERO(void) {
 
 #line 2 "RampLimitFS.fbt"
-  var_OUT = var_VAL_ZERO;
-}
+    var_OUT = var_VAL_ZERO;
+  }
 
-void FORTE_RampLimitFS::alg_UP_SLOW(void) {
+  void FORTE_RampLimitFS::alg_UP_SLOW(void) {
 
 #line 6 "RampLimitFS.fbt"
-  var_OUT = func_ADD(var_OUT, var_SLOW);
+    var_OUT = func_ADD(var_OUT, var_SLOW);
 #line 7 "RampLimitFS.fbt"
-  if (func_GT(var_OUT, var_VAL_FULL)) {
+    if (func_GT(var_OUT, var_VAL_FULL)) {
 #line 8 "RampLimitFS.fbt"
-    var_OUT = var_VAL_FULL;
+      var_OUT = var_VAL_FULL;
+    }
   }
-}
 
-void FORTE_RampLimitFS::alg_UP_FAST(void) {
+  void FORTE_RampLimitFS::alg_UP_FAST(void) {
 
 #line 13 "RampLimitFS.fbt"
-  var_OUT = func_ADD(var_OUT, var_FAST);
+    var_OUT = func_ADD(var_OUT, var_FAST);
 #line 14 "RampLimitFS.fbt"
-  if (func_GT(var_OUT, var_VAL_FULL)) {
+    if (func_GT(var_OUT, var_VAL_FULL)) {
 #line 15 "RampLimitFS.fbt"
-    var_OUT = var_VAL_FULL;
+      var_OUT = var_VAL_FULL;
+    }
   }
-}
 
-void FORTE_RampLimitFS::alg_DOWN_SLOW(void) {
+  void FORTE_RampLimitFS::alg_DOWN_SLOW(void) {
 
 #line 20 "RampLimitFS.fbt"
-  var_OUT = func_SUB(var_OUT, var_SLOW);
+    var_OUT = func_SUB(var_OUT, var_SLOW);
 #line 21 "RampLimitFS.fbt"
-  if (func_LT(var_OUT, var_VAL_ZERO)) {
+    if (func_LT(var_OUT, var_VAL_ZERO)) {
 #line 22 "RampLimitFS.fbt"
-    var_OUT = var_VAL_ZERO;
+      var_OUT = var_VAL_ZERO;
+    }
   }
-}
 
-void FORTE_RampLimitFS::alg_DOWN_FAST(void) {
+  void FORTE_RampLimitFS::alg_DOWN_FAST(void) {
 
 #line 27 "RampLimitFS.fbt"
-  var_OUT = func_SUB(var_OUT, var_FAST);
+    var_OUT = func_SUB(var_OUT, var_FAST);
 #line 28 "RampLimitFS.fbt"
-  if (func_LT(var_OUT, var_VAL_ZERO)) {
+    if (func_LT(var_OUT, var_VAL_ZERO)) {
 #line 29 "RampLimitFS.fbt"
-    var_OUT = var_VAL_ZERO;
+      var_OUT = var_VAL_ZERO;
+    }
   }
-}
 
-void FORTE_RampLimitFS::alg_FULL(void) {
+  void FORTE_RampLimitFS::alg_FULL(void) {
 
 #line 34 "RampLimitFS.fbt"
-  var_OUT = var_VAL_FULL;
-}
+    var_OUT = var_VAL_FULL;
+  }
 
-void FORTE_RampLimitFS::alg_LOAD(void) {
+  void FORTE_RampLimitFS::alg_LOAD(void) {
 
 #line 38 "RampLimitFS.fbt"
-  var_OUT = var_PV;
-}
+    var_OUT = var_PV;
+  }
+
+} // namespace forte::eclipse4diac::signalprocessing

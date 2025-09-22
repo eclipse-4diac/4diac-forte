@@ -29,122 +29,123 @@ using namespace forte::literals;
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-using namespace forte::iec61131::conversion;
+namespace forte::iec61131::conversion {
+  namespace {
+    const auto cDataInputNames = std::array{"IN"_STRID};
+    const auto cDataOutputNames = std::array{"OUT"_STRID};
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventInputTypeIds = std::array{"Event"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
+    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = {},
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = {},
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_F_TIME_IN_NS_TO_DINT, "iec61131::conversion::F_TIME_IN_NS_TO_DINT"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_F_TIME_IN_NS_TO_DINT, "iec61131::conversion::F_TIME_IN_NS_TO_DINT"_STRID)
 
-namespace {
-  const auto cDataInputNames = std::array{"IN"_STRID};
-  const auto cDataOutputNames = std::array{"OUT"_STRID};
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = {},
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = {},
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
-
-FORTE_F_TIME_IN_NS_TO_DINT::FORTE_F_TIME_IN_NS_TO_DINT(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
-    conn_CNF(*this, 0),
-    conn_IN(nullptr),
-    conn_OUT(*this, 0, var_OUT) {
-}
-
-void FORTE_F_TIME_IN_NS_TO_DINT::setInitialValues() {
-  var_IN = 0_TIME;
-  var_OUT = 0_DINT;
-}
-
-void FORTE_F_TIME_IN_NS_TO_DINT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID: alg_REQ(); break;
-    default: break;
+  FORTE_F_TIME_IN_NS_TO_DINT::FORTE_F_TIME_IN_NS_TO_DINT(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
+      conn_CNF(*this, 0),
+      conn_IN(nullptr),
+      conn_OUT(*this, 0, var_OUT) {
   }
-  sendOutputEvent(scmEventCNFID, paECET);
-}
 
-void FORTE_F_TIME_IN_NS_TO_DINT::readInputData(const TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventREQID: {
-      readData(0, var_IN, conn_IN);
-      break;
+  void FORTE_F_TIME_IN_NS_TO_DINT::setInitialValues() {
+    var_IN = 0_TIME;
+    var_OUT = 0_DINT;
+  }
+
+  void FORTE_F_TIME_IN_NS_TO_DINT::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case scmEventREQID: alg_REQ(); break;
+      default: break;
     }
-    default: break;
+    sendOutputEvent(scmEventCNFID, paECET);
   }
-}
 
-void FORTE_F_TIME_IN_NS_TO_DINT::writeOutputData(const TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventCNFID: {
-      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
-      break;
+  void FORTE_F_TIME_IN_NS_TO_DINT::readInputData(const TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventREQID: {
+        readData(0, var_IN, conn_IN);
+        break;
+      }
+      default: break;
     }
-    default: break;
   }
-}
 
-CIEC_ANY *FORTE_F_TIME_IN_NS_TO_DINT::getDI(const size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_IN;
+  void FORTE_F_TIME_IN_NS_TO_DINT::writeOutputData(const TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventCNFID: {
+        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
+        break;
+      }
+      default: break;
+    }
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_F_TIME_IN_NS_TO_DINT::getDO(const size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_OUT;
+  CIEC_ANY *FORTE_F_TIME_IN_NS_TO_DINT::getDI(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_IN;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_F_TIME_IN_NS_TO_DINT::getDIO(size_t) {
-  return nullptr;
-}
-
-CEventConnection *FORTE_F_TIME_IN_NS_TO_DINT::getEOConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_CNF;
+  CIEC_ANY *FORTE_F_TIME_IN_NS_TO_DINT::getDO(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_OUT;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_F_TIME_IN_NS_TO_DINT::getDIConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_IN;
+  CIEC_ANY *FORTE_F_TIME_IN_NS_TO_DINT::getDIO(size_t) {
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection *FORTE_F_TIME_IN_NS_TO_DINT::getDOConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_OUT;
+  CEventConnection *FORTE_F_TIME_IN_NS_TO_DINT::getEOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_CNF;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CInOutDataConnection **FORTE_F_TIME_IN_NS_TO_DINT::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
+  CDataConnection **FORTE_F_TIME_IN_NS_TO_DINT::getDIConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_IN;
+    }
+    return nullptr;
+  }
 
-CInOutDataConnection *FORTE_F_TIME_IN_NS_TO_DINT::getDIOOutConUnchecked(TPortId) {
-  return nullptr;
-}
+  CDataConnection *FORTE_F_TIME_IN_NS_TO_DINT::getDOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_OUT;
+    }
+    return nullptr;
+  }
 
-CIEC_ANY *FORTE_F_TIME_IN_NS_TO_DINT::getVarInternal(size_t) {
-  return nullptr;
-}
+  CInOutDataConnection **FORTE_F_TIME_IN_NS_TO_DINT::getDIOInConUnchecked(TPortId) {
+    return nullptr;
+  }
 
-void FORTE_F_TIME_IN_NS_TO_DINT::alg_REQ(void) {
+  CInOutDataConnection *FORTE_F_TIME_IN_NS_TO_DINT::getDIOOutConUnchecked(TPortId) {
+    return nullptr;
+  }
 
-  var_OUT = func_TIME_IN_NS_TO_DINT(var_IN);
-}
+  CIEC_ANY *FORTE_F_TIME_IN_NS_TO_DINT::getVarInternal(size_t) {
+    return nullptr;
+  }
+
+  void FORTE_F_TIME_IN_NS_TO_DINT::alg_REQ(void) {
+
+    var_OUT = func_TIME_IN_NS_TO_DINT(var_IN);
+  }
+
+} // namespace forte::iec61131::conversion

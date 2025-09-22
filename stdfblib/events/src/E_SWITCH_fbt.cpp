@@ -22,130 +22,131 @@ using namespace forte::literals;
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-using namespace forte::iec61499::events;
+namespace forte::iec61499::events {
+  namespace {
+    const auto cDataInputNames = std::array{"G"_STRID};
+    const auto cEventInputNames = std::array{"EI"_STRID};
+    const auto cEventOutputNames = std::array{"EO0"_STRID, "EO1"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = {},
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = {},
+        .mDINames = cDataInputNames,
+        .mDONames = {},
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_E_SWITCH, "iec61499::events::E_SWITCH"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_E_SWITCH, "iec61499::events::E_SWITCH"_STRID)
 
-namespace {
-  const auto cDataInputNames = std::array{"G"_STRID};
-  const auto cEventInputNames = std::array{"EI"_STRID};
-  const auto cEventOutputNames = std::array{"EO0"_STRID, "EO1"_STRID};
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = {},
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = {},
-      .mDINames = cDataInputNames,
-      .mDONames = {},
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
+  FORTE_E_SWITCH::FORTE_E_SWITCH(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
+      conn_EO0(*this, 0),
+      conn_EO1(*this, 1),
+      conn_G(nullptr) {
+  }
 
-FORTE_E_SWITCH::FORTE_E_SWITCH(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CBasicFB(paContainer, cFBInterfaceSpec, paInstanceNameId, {}),
-    conn_EO0(*this, 0),
-    conn_EO1(*this, 1),
-    conn_G(nullptr) {
-}
+  void FORTE_E_SWITCH::setInitialValues() {
+    CBasicFB::setInitialValues();
+    var_G = 0_BOOL;
+  }
 
-void FORTE_E_SWITCH::setInitialValues() {
-  CBasicFB::setInitialValues();
-  var_G = 0_BOOL;
-}
+  void FORTE_E_SWITCH::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    do {
+      switch (mECCState) {
+        case scmStateSTART:
+          if ((scmEventEIID == paEIID) && (func_NOT<CIEC_BOOL>(var_G)))
+            enterStateG0(paECET);
+          else if ((scmEventEIID == paEIID) && (var_G))
+            enterStateG1(paECET);
+          else
+            return; // no transition cleared
+          break;
+        case scmStateG0:
+          if (1)
+            enterStateSTART(paECET);
+          else
+            return; // no transition cleared
+          break;
+        case scmStateG1:
+          if (1)
+            enterStateSTART(paECET);
+          else
+            return; // no transition cleared
+          break;
+        default:
+          DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.",
+                       mECCState.operator TForteUInt16());
+          mECCState = 0; // 0 is always the initial state
+          return;
+      }
+      paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
+    } while (true);
+  }
 
-void FORTE_E_SWITCH::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  do {
-    switch (mECCState) {
-      case scmStateSTART:
-        if ((scmEventEIID == paEIID) && (func_NOT<CIEC_BOOL>(var_G)))
-          enterStateG0(paECET);
-        else if ((scmEventEIID == paEIID) && (var_G))
-          enterStateG1(paECET);
-        else
-          return; // no transition cleared
+  void FORTE_E_SWITCH::enterStateSTART(CEventChainExecutionThread *const) {
+    mECCState = scmStateSTART;
+  }
+
+  void FORTE_E_SWITCH::enterStateG0(CEventChainExecutionThread *const paECET) {
+    mECCState = scmStateG0;
+    sendOutputEvent(scmEventEO0ID, paECET);
+  }
+
+  void FORTE_E_SWITCH::enterStateG1(CEventChainExecutionThread *const paECET) {
+    mECCState = scmStateG1;
+    sendOutputEvent(scmEventEO1ID, paECET);
+  }
+
+  void FORTE_E_SWITCH::readInputData(const TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventEIID: {
+        readData(0, var_G, conn_G);
         break;
-      case scmStateG0:
-        if (1)
-          enterStateSTART(paECET);
-        else
-          return; // no transition cleared
-        break;
-      case scmStateG1:
-        if (1)
-          enterStateSTART(paECET);
-        else
-          return; // no transition cleared
-        break;
-      default:
-        DEVLOG_ERROR("The state is not in the valid range! The state value is: %d. The max value can be: 3.",
-                     mECCState.operator TForteUInt16());
-        mECCState = 0; // 0 is always the initial state
-        return;
+      }
+      default: break;
     }
-    paEIID = cgInvalidEventID; // we have to clear the event after the first check in order to ensure correct behavior
-  } while (true);
-}
+  }
 
-void FORTE_E_SWITCH::enterStateSTART(CEventChainExecutionThread *const) {
-  mECCState = scmStateSTART;
-}
+  void FORTE_E_SWITCH::writeOutputData(TEventID) {
+    // nothing to do
+  }
 
-void FORTE_E_SWITCH::enterStateG0(CEventChainExecutionThread *const paECET) {
-  mECCState = scmStateG0;
-  sendOutputEvent(scmEventEO0ID, paECET);
-}
-
-void FORTE_E_SWITCH::enterStateG1(CEventChainExecutionThread *const paECET) {
-  mECCState = scmStateG1;
-  sendOutputEvent(scmEventEO1ID, paECET);
-}
-
-void FORTE_E_SWITCH::readInputData(const TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventEIID: {
-      readData(0, var_G, conn_G);
-      break;
+  CIEC_ANY *FORTE_E_SWITCH::getDI(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_G;
     }
-    default: break;
+    return nullptr;
   }
-}
 
-void FORTE_E_SWITCH::writeOutputData(TEventID) {
-  // nothing to do
-}
-
-CIEC_ANY *FORTE_E_SWITCH::getDI(const size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_G;
+  CIEC_ANY *FORTE_E_SWITCH::getDO(size_t) {
+    return nullptr;
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_E_SWITCH::getDO(size_t) {
-  return nullptr;
-}
-
-CEventConnection *FORTE_E_SWITCH::getEOConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_EO0;
-    case 1: return &conn_EO1;
+  CEventConnection *FORTE_E_SWITCH::getEOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_EO0;
+      case 1: return &conn_EO1;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_E_SWITCH::getDIConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_G;
+  CDataConnection **FORTE_E_SWITCH::getDIConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_G;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection *FORTE_E_SWITCH::getDOConUnchecked(TPortId) {
-  return nullptr;
-}
+  CDataConnection *FORTE_E_SWITCH::getDOConUnchecked(TPortId) {
+    return nullptr;
+  }
 
-CIEC_ANY *FORTE_E_SWITCH::getVarInternal(size_t) {
-  return nullptr;
-}
+  CIEC_ANY *FORTE_E_SWITCH::getVarInternal(size_t) {
+    return nullptr;
+  }
+
+} // namespace forte::iec61499::events

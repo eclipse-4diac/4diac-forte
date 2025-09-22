@@ -15,11 +15,11 @@
 
 using namespace forte::literals;
 
-using namespace forte::iec61499::net;
+namespace forte::iec61499::net {
+  DEFINE_GENERIC_FIRMWARE_FB(FORTE_PUBLISH_1, "iec61499::net::PUBLISH_1"_STRID)
 
-DEFINE_GENERIC_FIRMWARE_FB(FORTE_PUBLISH_1, "iec61499::net::PUBLISH_1"_STRID)
-
-FORTE_PUBLISH_1::FORTE_PUBLISH_1(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    GEN_PUBLISH(paInstanceNameId, paContainer) {
-  configureFB("PUBLISH_1");
-}
+  FORTE_PUBLISH_1::FORTE_PUBLISH_1(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      GEN_PUBLISH(paInstanceNameId, paContainer) {
+    configureFB("PUBLISH_1");
+  }
+} // namespace forte::iec61499::net

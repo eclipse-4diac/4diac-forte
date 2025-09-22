@@ -15,100 +15,101 @@
 
 using namespace forte::literals;
 
-using namespace forte::eclipse4diac::utils;
+namespace forte::eclipse4diac::utils {
+  namespace {
+    const auto cDataInputNames = std::array{"Sep"_STRID};
+    const auto cDataOutputNames = std::array{"Path"_STRID};
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventInputTypeIds = std::array{"Event"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
+    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = cEventInputTypeIds,
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = cEventOutputTypeIds,
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_GetInstancePath, "eclipse4diac::utils::GetInstancePath"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_GetInstancePath, "eclipse4diac::utils::GetInstancePath"_STRID)
 
-namespace {
-  const auto cDataInputNames = std::array{"Sep"_STRID};
-  const auto cDataOutputNames = std::array{"Path"_STRID};
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
+  FORTE_GetInstancePath::FORTE_GetInstancePath(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      var_Sep(0x2f_CHAR),
+      conn_CNF(*this, 0),
+      conn_Sep(nullptr),
+      conn_Path(*this, 0, var_Path) {};
 
-FORTE_GetInstancePath::FORTE_GetInstancePath(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
-    var_Sep(0x2f_CHAR),
-    conn_CNF(*this, 0),
-    conn_Sep(nullptr),
-    conn_Path(*this, 0, var_Path) {};
-
-void FORTE_GetInstancePath::setInitialValues() {
-  var_Sep = 0x2f_CHAR;
-  var_Path = ""_STRING;
-}
-
-void FORTE_GetInstancePath::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  if (paEIID == scmEventREQID) {
-    var_Path = CIEC_STRING(getFullQualifiedApplicationInstanceName(var_Sep.operator TForteChar()));
-    sendOutputEvent(scmEventCNFID, paECET);
+  void FORTE_GetInstancePath::setInitialValues() {
+    var_Sep = 0x2f_CHAR;
+    var_Path = ""_STRING;
   }
-}
 
-void FORTE_GetInstancePath::readInputData(const TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventREQID: {
-      readData(0, var_Sep, conn_Sep);
-      break;
+  void FORTE_GetInstancePath::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    if (paEIID == scmEventREQID) {
+      var_Path = CIEC_STRING(getFullQualifiedApplicationInstanceName(var_Sep.operator TForteChar()));
+      sendOutputEvent(scmEventCNFID, paECET);
     }
-    default: break;
   }
-}
 
-void FORTE_GetInstancePath::writeOutputData(const TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventCNFID: {
-      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_Path, conn_Path);
-      break;
+  void FORTE_GetInstancePath::readInputData(const TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventREQID: {
+        readData(0, var_Sep, conn_Sep);
+        break;
+      }
+      default: break;
     }
-    default: break;
   }
-}
 
-CIEC_ANY *FORTE_GetInstancePath::getDI(const size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_Sep;
+  void FORTE_GetInstancePath::writeOutputData(const TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventCNFID: {
+        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_Path, conn_Path);
+        break;
+      }
+      default: break;
+    }
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_GetInstancePath::getDO(const size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_Path;
+  CIEC_ANY *FORTE_GetInstancePath::getDI(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_Sep;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CEventConnection *FORTE_GetInstancePath::getEOConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_CNF;
+  CIEC_ANY *FORTE_GetInstancePath::getDO(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_Path;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_GetInstancePath::getDIConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_Sep;
+  CEventConnection *FORTE_GetInstancePath::getEOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_CNF;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection *FORTE_GetInstancePath::getDOConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_Path;
+  CDataConnection **FORTE_GetInstancePath::getDIConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_Sep;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
+
+  CDataConnection *FORTE_GetInstancePath::getDOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_Path;
+    }
+    return nullptr;
+  }
+
+} // namespace forte::eclipse4diac::utils

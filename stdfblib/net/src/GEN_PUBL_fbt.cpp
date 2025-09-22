@@ -16,24 +16,24 @@
 
 using namespace forte::literals;
 
-using namespace forte::iec61499::net;
+namespace forte::iec61499::net {
+  DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBL, "iec61499::net::GEN_PUBL"_STRID)
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_PUBL, "iec61499::net::GEN_PUBL"_STRID)
+  const char *const GEN_PUBL::scmLocalIDPrefix = "loc[";
+  const char *const GEN_PUBL::scmLocalIDSuffix = "]";
 
-const char *const GEN_PUBL::scmLocalIDPrefix = "loc[";
-const char *const GEN_PUBL::scmLocalIDSuffix = "]";
+  GEN_PUBL::GEN_PUBL(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      GEN_PUBLISH(paInstanceNameId, paContainer) {
+  }
 
-GEN_PUBL::GEN_PUBL(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    GEN_PUBLISH(paInstanceNameId, paContainer) {
-}
+  bool GEN_PUBL::configureFB(const char *paConfigString) {
+    bool bRetVal = GEN_PUBLISH::configureFB(paConfigString);
+    // publs normally don't show the QI in the tool
+    QI() = true_BOOL;
+    return bRetVal;
+  }
 
-bool GEN_PUBL::configureFB(const char *paConfigString) {
-  bool bRetVal = GEN_PUBLISH::configureFB(paConfigString);
-  // publs normally don't show the QI in the tool
-  QI() = true_BOOL;
-  return bRetVal;
-}
-
-char *GEN_PUBL::getDefaultIDString(const char *paID) {
-  return buildIDString(scmLocalIDPrefix, paID, scmLocalIDSuffix);
-}
+  char *GEN_PUBL::getDefaultIDString(const char *paID) {
+    return buildIDString(scmLocalIDPrefix, paID, scmLocalIDSuffix);
+  }
+} // namespace forte::iec61499::net

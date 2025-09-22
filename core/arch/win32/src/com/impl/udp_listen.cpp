@@ -21,39 +21,38 @@
 
 using namespace forte::literals;
 
-using namespace forte::com;
-using namespace forte::com::impl;
-
-namespace {
-  [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<UDPListenChannel> entry("udp_listen"_STRID);
-}
-
-SOCKET UDPListenChannel::socket(const std::string_view paConfigString) {
-  ADDRINFOEXA hints{};
-  hints.ai_family = AF_UNSPEC;
-  hints.ai_socktype = SOCK_DGRAM;
-  hints.ai_protocol = IPPROTO_UDP;
-  hints.ai_flags = AI_PASSIVE;
-  return net::open(paConfigString, hints);
-}
-
-std::size_t UDPListenChannel::recv() {
-  DWORD flags = 0;
-  DWORD bytesReceived = 0;
-  sockaddr_storage remoteAddr{};
-  socklen_t remoteAddrLen = sizeof(remoteAddr);
-  WSABUF buffer{.len = static_cast<ULONG>(getMaxReceiveSize() - getBuffer().size()),
-                .buf = reinterpret_cast<CHAR *>(getBuffer().data() + getBuffer().size())};
-  if (WSARecvFrom(getSocket(), &buffer, 1, &bytesReceived, &flags, reinterpret_cast<sockaddr *>(&remoteAddr),
-                  &remoteAddrLen, nullptr, nullptr)) {
-    return static_cast<std::size_t>(-1);
+namespace forte::com::impl {
+  namespace {
+    [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<UDPListenChannel> entry("udp_listen"_STRID);
   }
-  if (bytesReceived > 0 && !mConnected) {
-    if (WSAConnect(getSocket(), reinterpret_cast<sockaddr *>(&remoteAddr), remoteAddrLen, nullptr, nullptr, nullptr,
-                   nullptr)) {
-      return -1;
-    };
-    mConnected = true;
+
+  SOCKET UDPListenChannel::socket(const std::string_view paConfigString) {
+    ADDRINFOEXA hints{};
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_DGRAM;
+    hints.ai_protocol = IPPROTO_UDP;
+    hints.ai_flags = AI_PASSIVE;
+    return net::open(paConfigString, hints);
   }
-  return static_cast<std::size_t>(bytesReceived);
-}
+
+  std::size_t UDPListenChannel::recv() {
+    DWORD flags = 0;
+    DWORD bytesReceived = 0;
+    sockaddr_storage remoteAddr{};
+    socklen_t remoteAddrLen = sizeof(remoteAddr);
+    WSABUF buffer{.len = static_cast<ULONG>(getMaxReceiveSize() - getBuffer().size()),
+                  .buf = reinterpret_cast<CHAR *>(getBuffer().data() + getBuffer().size())};
+    if (WSARecvFrom(getSocket(), &buffer, 1, &bytesReceived, &flags, reinterpret_cast<sockaddr *>(&remoteAddr),
+                    &remoteAddrLen, nullptr, nullptr)) {
+      return static_cast<std::size_t>(-1);
+    }
+    if (bytesReceived > 0 && !mConnected) {
+      if (WSAConnect(getSocket(), reinterpret_cast<sockaddr *>(&remoteAddr), remoteAddrLen, nullptr, nullptr, nullptr,
+                     nullptr)) {
+        return -1;
+      };
+      mConnected = true;
+    }
+    return static_cast<std::size_t>(bytesReceived);
+  }
+} // namespace forte::com::impl

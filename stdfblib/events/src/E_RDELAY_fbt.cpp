@@ -15,29 +15,30 @@ using namespace forte::literals;
 
 #include "forte/timerha.h"
 
-using namespace forte::iec61499::events;
+namespace forte::iec61499::events {
+  DEFINE_FIRMWARE_FB(FORTE_E_RDELAY, "iec61499::events::E_RDELAY"_STRID)
 
-DEFINE_FIRMWARE_FB(FORTE_E_RDELAY, "iec61499::events::E_RDELAY"_STRID)
-
-FORTE_E_RDELAY::FORTE_E_RDELAY(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CTimedFB(paInstanceNameId, paContainer) {
-}
-
-void FORTE_E_RDELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case cgExternalEventID:
-      sendOutputEvent(csmEOID, paECET);
-      mActive = false;
-      break;
-    case csmEventSTARTID:
-      if (mActive) {
-        // remove from the list as we want to be added with a new delay
-        getTimer().unregisterTimedFB(this);
-      }
-      setEventChainExecutor(paECET); // E_RDELAY will execute in the same thread on as from where it has been triggered.
-      getTimer().registerOneShotTimedFB(this, var_DT);
-      mActive = true;
-      break;
-    default: CTimedFB::executeEvent(paEIID, paECET); break;
+  FORTE_E_RDELAY::FORTE_E_RDELAY(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CTimedFB(paInstanceNameId, paContainer) {
   }
-}
+
+  void FORTE_E_RDELAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case cgExternalEventID:
+        sendOutputEvent(csmEOID, paECET);
+        mActive = false;
+        break;
+      case csmEventSTARTID:
+        if (mActive) {
+          // remove from the list as we want to be added with a new delay
+          getTimer().unregisterTimedFB(this);
+        }
+        setEventChainExecutor(
+            paECET); // E_RDELAY will execute in the same thread on as from where it has been triggered.
+        getTimer().registerOneShotTimedFB(this, var_DT);
+        mActive = true;
+        break;
+      default: CTimedFB::executeEvent(paEIID, paECET); break;
+    }
+  }
+} // namespace forte::iec61499::events

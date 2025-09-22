@@ -15,10 +15,10 @@
 
 using namespace forte::literals;
 
-using namespace forte::iec61499::net;
+namespace forte::iec61499::net {
+  DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBSCRIBE, "iec61499::net::GEN_SUBSCRIBE"_STRID)
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBSCRIBE, "iec61499::net::GEN_SUBSCRIBE"_STRID)
-
-GEN_SUBSCRIBE::GEN_SUBSCRIBE(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CCommFB(paInstanceNameId, paContainer, com_infra::e_Subscriber) {
-}
+  GEN_SUBSCRIBE::GEN_SUBSCRIBE(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CCommFB(paInstanceNameId, paContainer, com_infra::e_Subscriber) {
+  }
+} // namespace forte::iec61499::net

@@ -14,115 +14,116 @@
 
 using namespace forte::literals;
 
-using namespace forte::eclipse4diac::rtevents;
+namespace forte::eclipse4diac::rtevents {
+  namespace {
+    const auto cDataInputNames = std::array{"QI"_STRID, "Tmin"_STRID, "Deadline"_STRID, "WCET"_STRID};
+    const auto cDataOutputNames = std::array{"QO"_STRID};
+    const auto cEventInputNames = std::array{"INIT"_STRID, "EI"_STRID};
+    const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+    const auto cEventOutputNames = std::array{"INITO"_STRID, "EO"_STRID};
+    const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = cEventInputTypeIds,
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = cEventOutputTypeIds,
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_RT_E_EC_COUPLER, "eclipse4diac::rtevents::RT_E_EC_COUPLER"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_RT_E_EC_COUPLER, "eclipse4diac::rtevents::RT_E_EC_COUPLER"_STRID)
 
-namespace {
-  const auto cDataInputNames = std::array{"QI"_STRID, "Tmin"_STRID, "Deadline"_STRID, "WCET"_STRID};
-  const auto cDataOutputNames = std::array{"QO"_STRID};
-  const auto cEventInputNames = std::array{"INIT"_STRID, "EI"_STRID};
-  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
-  const auto cEventOutputNames = std::array{"INITO"_STRID, "EO"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
+  FORTE_RT_E_EC_COUPLER::FORTE_RT_E_EC_COUPLER(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CRTEventSingle(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      conn_INITO(*this, 0),
+      conn_EO(*this, 1),
+      conn_QI(nullptr),
+      conn_Tmin(nullptr),
+      conn_Deadline(nullptr),
+      conn_WCET(nullptr),
+      conn_QO(*this, 0, var_QO) {};
 
-FORTE_RT_E_EC_COUPLER::FORTE_RT_E_EC_COUPLER(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CRTEventSingle(paContainer, cFBInterfaceSpec, paInstanceNameId),
-    conn_INITO(*this, 0),
-    conn_EO(*this, 1),
-    conn_QI(nullptr),
-    conn_Tmin(nullptr),
-    conn_Deadline(nullptr),
-    conn_WCET(nullptr),
-    conn_QO(*this, 0, var_QO) {};
+  void FORTE_RT_E_EC_COUPLER::setInitialValues() {
+    var_QI = 0_BOOL;
+    var_Tmin = 0_TIME;
+    var_Deadline = 0_TIME;
+    var_WCET = 0_TIME;
+    var_QO = 0_BOOL;
+  }
 
-void FORTE_RT_E_EC_COUPLER::setInitialValues() {
-  var_QI = 0_BOOL;
-  var_Tmin = 0_TIME;
-  var_Deadline = 0_TIME;
-  var_WCET = 0_TIME;
-  var_QO = 0_BOOL;
-}
-
-void FORTE_RT_E_EC_COUPLER::readInputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventINITID: {
-      readData(0, var_QI, conn_QI);
-      readData(1, var_Tmin, conn_Tmin);
-      readData(2, var_Deadline, conn_Deadline);
-      readData(3, var_WCET, conn_WCET);
-      break;
+  void FORTE_RT_E_EC_COUPLER::readInputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventINITID: {
+        readData(0, var_QI, conn_QI);
+        readData(1, var_Tmin, conn_Tmin);
+        readData(2, var_Deadline, conn_Deadline);
+        readData(3, var_WCET, conn_WCET);
+        break;
+      }
+      case scmEventEIID: {
+        break;
+      }
+      default: break;
     }
-    case scmEventEIID: {
-      break;
+  }
+
+  void FORTE_RT_E_EC_COUPLER::writeOutputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventINITOID: {
+        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+        break;
+      }
+      case scmEventEOID: {
+        break;
+      }
+      default: break;
     }
-    default: break;
   }
-}
 
-void FORTE_RT_E_EC_COUPLER::writeOutputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventINITOID: {
-      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
-      break;
+  CIEC_ANY *FORTE_RT_E_EC_COUPLER::getDI(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_QI;
+      case 1: return &var_Tmin;
+      case 2: return &var_Deadline;
+      case 3: return &var_WCET;
     }
-    case scmEventEOID: {
-      break;
+    return nullptr;
+  }
+
+  CIEC_ANY *FORTE_RT_E_EC_COUPLER::getDO(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_QO;
     }
-    default: break;
+    return nullptr;
   }
-}
 
-CIEC_ANY *FORTE_RT_E_EC_COUPLER::getDI(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_QI;
-    case 1: return &var_Tmin;
-    case 2: return &var_Deadline;
-    case 3: return &var_WCET;
+  CEventConnection *FORTE_RT_E_EC_COUPLER::getEOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_INITO;
+      case 1: return &conn_EO;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_RT_E_EC_COUPLER::getDO(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_QO;
+  CDataConnection **FORTE_RT_E_EC_COUPLER::getDIConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_QI;
+      case 1: return &conn_Tmin;
+      case 2: return &conn_Deadline;
+      case 3: return &conn_WCET;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CEventConnection *FORTE_RT_E_EC_COUPLER::getEOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_INITO;
-    case 1: return &conn_EO;
+  CDataConnection *FORTE_RT_E_EC_COUPLER::getDOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_QO;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_RT_E_EC_COUPLER::getDIConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_QI;
-    case 1: return &conn_Tmin;
-    case 2: return &conn_Deadline;
-    case 3: return &conn_WCET;
-  }
-  return nullptr;
-}
-
-CDataConnection *FORTE_RT_E_EC_COUPLER::getDOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_QO;
-  }
-  return nullptr;
-}
+} // namespace forte::eclipse4diac::rtevents

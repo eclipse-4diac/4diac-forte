@@ -19,108 +19,109 @@
 
 using namespace forte::literals;
 
-using namespace forte::iec61131::arithmetic;
+namespace forte::iec61131::arithmetic {
+  namespace {
+    const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};
+    const auto cDataOutputNames = std::array{"OUT"_STRID};
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
 
-DEFINE_FIRMWARE_FB(FORTE_F_SUB_TOD_TOD, "iec61131::arithmetic::F_SUB_TOD_TOD"_STRID)
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = {},
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = {},
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-namespace {
-  const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};
-  const auto cDataOutputNames = std::array{"OUT"_STRID};
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
+  DEFINE_FIRMWARE_FB(FORTE_F_SUB_TOD_TOD, "iec61131::arithmetic::F_SUB_TOD_TOD"_STRID)
 
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = {},
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = {},
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
+  FORTE_F_SUB_TOD_TOD::FORTE_F_SUB_TOD_TOD(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      var_IN1(CIEC_TIME_OF_DAY(0)),
+      var_IN2(CIEC_TIME_OF_DAY(0)),
+      var_OUT(CIEC_TIME(0)),
+      conn_CNF(*this, 0),
+      conn_IN1(nullptr),
+      conn_IN2(nullptr),
+      conn_OUT(*this, 0, var_OUT) {};
 
-FORTE_F_SUB_TOD_TOD::FORTE_F_SUB_TOD_TOD(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
-    var_IN1(CIEC_TIME_OF_DAY(0)),
-    var_IN2(CIEC_TIME_OF_DAY(0)),
-    var_OUT(CIEC_TIME(0)),
-    conn_CNF(*this, 0),
-    conn_IN1(nullptr),
-    conn_IN2(nullptr),
-    conn_OUT(*this, 0, var_OUT) {};
-
-void FORTE_F_SUB_TOD_TOD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID:
-      var_OUT = func_SUB_TOD_TOD(var_IN1, var_IN2);
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
-  }
-}
-
-void FORTE_F_SUB_TOD_TOD::readInputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventREQID: {
-      readData(0, var_IN1, conn_IN1);
-      readData(1, var_IN2, conn_IN2);
-      break;
+  void FORTE_F_SUB_TOD_TOD::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case scmEventREQID:
+        var_OUT = func_SUB_TOD_TOD(var_IN1, var_IN2);
+        sendOutputEvent(scmEventCNFID, paECET);
+        break;
     }
-    default: break;
   }
-}
 
-void FORTE_F_SUB_TOD_TOD::writeOutputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventCNFID: {
-      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
-      break;
+  void FORTE_F_SUB_TOD_TOD::readInputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventREQID: {
+        readData(0, var_IN1, conn_IN1);
+        readData(1, var_IN2, conn_IN2);
+        break;
+      }
+      default: break;
     }
-    default: break;
   }
-}
 
-CIEC_ANY *FORTE_F_SUB_TOD_TOD::getDI(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_IN1;
-    case 1: return &var_IN2;
+  void FORTE_F_SUB_TOD_TOD::writeOutputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventCNFID: {
+        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
+        break;
+      }
+      default: break;
+    }
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_F_SUB_TOD_TOD::getDO(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_OUT;
+  CIEC_ANY *FORTE_F_SUB_TOD_TOD::getDI(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_IN1;
+      case 1: return &var_IN2;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CEventConnection *FORTE_F_SUB_TOD_TOD::getEOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_CNF;
+  CIEC_ANY *FORTE_F_SUB_TOD_TOD::getDO(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_OUT;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_F_SUB_TOD_TOD::getDIConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_IN1;
-    case 1: return &conn_IN2;
+  CEventConnection *FORTE_F_SUB_TOD_TOD::getEOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_CNF;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection *FORTE_F_SUB_TOD_TOD::getDOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_OUT;
+  CDataConnection **FORTE_F_SUB_TOD_TOD::getDIConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_IN1;
+      case 1: return &conn_IN2;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-void FORTE_F_SUB_TOD_TOD::setInitialValues() {
-  var_IN1 = CIEC_TIME_OF_DAY();
-  var_IN2 = CIEC_TIME_OF_DAY();
-  var_OUT = CIEC_TIME();
-}
+  CDataConnection *FORTE_F_SUB_TOD_TOD::getDOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_OUT;
+    }
+    return nullptr;
+  }
+
+  void FORTE_F_SUB_TOD_TOD::setInitialValues() {
+    var_IN1 = CIEC_TIME_OF_DAY();
+    var_IN2 = CIEC_TIME_OF_DAY();
+    var_OUT = CIEC_TIME();
+  }
+
+} // namespace forte::iec61131::arithmetic

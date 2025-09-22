@@ -16,189 +16,197 @@
 
 using namespace forte::literals;
 
-using namespace forte::eclipse4diac::reconfiguration;
+namespace forte::eclipse4diac::reconfiguration {
+  namespace {
+    const auto cDataInputNames = std::array{"QI"_STRID,
+                                            "OLD_SRC_FB"_STRID,
+                                            "OLD_SRC_FB_OUT"_STRID,
+                                            "OLD_DST_FB"_STRID,
+                                            "OLD_DST_FB_IN"_STRID,
+                                            "NEW_SRC_FB"_STRID,
+                                            "NEW_SRC_FB_OUT"_STRID,
+                                            "NEW_DST_FB"_STRID,
+                                            "NEW_DST_FB_IN"_STRID,
+                                            "DST"_STRID};
+    const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventInputTypeIds = std::array{"Event"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
+    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = cEventInputTypeIds,
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = cEventOutputTypeIds,
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_ST_REC_CONN, "eclipse4diac::reconfiguration::ST_REC_CONN"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_ST_REC_CONN, "eclipse4diac::reconfiguration::ST_REC_CONN"_STRID)
 
-namespace {
-  const auto cDataInputNames = std::array{
-      "QI"_STRID,         "OLD_SRC_FB"_STRID,     "OLD_SRC_FB_OUT"_STRID, "OLD_DST_FB"_STRID,    "OLD_DST_FB_IN"_STRID,
-      "NEW_SRC_FB"_STRID, "NEW_SRC_FB_OUT"_STRID, "NEW_DST_FB"_STRID,     "NEW_DST_FB_IN"_STRID, "DST"_STRID};
-  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
+  FORTE_ST_REC_CONN::FORTE_ST_REC_CONN(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      conn_CNF(*this, 0),
+      conn_QI(nullptr),
+      conn_OLD_SRC_FB(nullptr),
+      conn_OLD_SRC_FB_OUT(nullptr),
+      conn_OLD_DST_FB(nullptr),
+      conn_OLD_DST_FB_IN(nullptr),
+      conn_NEW_SRC_FB(nullptr),
+      conn_NEW_SRC_FB_OUT(nullptr),
+      conn_NEW_DST_FB(nullptr),
+      conn_NEW_DST_FB_IN(nullptr),
+      conn_DST(nullptr),
+      conn_QO(*this, 0, var_QO),
+      conn_STATUS(*this, 1, var_STATUS) {};
 
-FORTE_ST_REC_CONN::FORTE_ST_REC_CONN(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
-    conn_CNF(*this, 0),
-    conn_QI(nullptr),
-    conn_OLD_SRC_FB(nullptr),
-    conn_OLD_SRC_FB_OUT(nullptr),
-    conn_OLD_DST_FB(nullptr),
-    conn_OLD_DST_FB_IN(nullptr),
-    conn_NEW_SRC_FB(nullptr),
-    conn_NEW_SRC_FB_OUT(nullptr),
-    conn_NEW_DST_FB(nullptr),
-    conn_NEW_DST_FB_IN(nullptr),
-    conn_DST(nullptr),
-    conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {};
-
-void FORTE_ST_REC_CONN::setInitialValues() {
-  var_QI = 0_BOOL;
-  var_OLD_SRC_FB = u""_WSTRING;
-  var_OLD_SRC_FB_OUT = u""_WSTRING;
-  var_OLD_DST_FB = u""_WSTRING;
-  var_OLD_DST_FB_IN = u""_WSTRING;
-  var_NEW_SRC_FB = u""_WSTRING;
-  var_NEW_SRC_FB_OUT = u""_WSTRING;
-  var_NEW_DST_FB = u""_WSTRING;
-  var_NEW_DST_FB_IN = u""_WSTRING;
-  var_DST = u""_WSTRING;
-  var_QO = 0_BOOL;
-  var_STATUS = u""_WSTRING;
-}
-
-void FORTE_ST_REC_CONN::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID:
-      var_QO = var_QI;
-      if (var_QI) {
-        executeRQST();
-      } else {
-        var_STATUS = u"Not Ready"_WSTRING;
-      }
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
+  void FORTE_ST_REC_CONN::setInitialValues() {
+    var_QI = 0_BOOL;
+    var_OLD_SRC_FB = u""_WSTRING;
+    var_OLD_SRC_FB_OUT = u""_WSTRING;
+    var_OLD_DST_FB = u""_WSTRING;
+    var_OLD_DST_FB_IN = u""_WSTRING;
+    var_NEW_SRC_FB = u""_WSTRING;
+    var_NEW_SRC_FB_OUT = u""_WSTRING;
+    var_NEW_DST_FB = u""_WSTRING;
+    var_NEW_DST_FB_IN = u""_WSTRING;
+    var_DST = u""_WSTRING;
+    var_QO = 0_BOOL;
+    var_STATUS = u""_WSTRING;
   }
-}
 
-void FORTE_ST_REC_CONN::executeRQST() {
-  SManagementCMD theCommand;
-  // delete old connection
-  theCommand.mDestination = StringId::lookup(var_DST.getValue());
-  theCommand.mFirstParam.push_back(StringId::lookup(var_OLD_SRC_FB.getValue()));
-  theCommand.mFirstParam.push_back(StringId::lookup(var_OLD_SRC_FB_OUT.getValue()));
-  theCommand.mSecondParam.push_back(StringId::lookup(var_OLD_DST_FB.getValue()));
-  theCommand.mSecondParam.push_back(StringId::lookup(var_OLD_DST_FB_IN.getValue()));
-  theCommand.mCMD = EMGMCommandType::DeleteConnection;
+  void FORTE_ST_REC_CONN::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case scmEventREQID:
+        var_QO = var_QI;
+        if (var_QI) {
+          executeRQST();
+        } else {
+          var_STATUS = u"Not Ready"_WSTRING;
+        }
+        sendOutputEvent(scmEventCNFID, paECET);
+        break;
+    }
+  }
 
-  EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
-
-  if (resp == EMGMResponse::Ready) {
-    // create new connection
+  void FORTE_ST_REC_CONN::executeRQST() {
+    SManagementCMD theCommand;
+    // delete old connection
     theCommand.mDestination = StringId::lookup(var_DST.getValue());
-    theCommand.mFirstParam.clear();
-    theCommand.mFirstParam.push_back(StringId::lookup(var_NEW_SRC_FB.getValue()));
-    theCommand.mFirstParam.push_back(StringId::lookup(var_NEW_SRC_FB_OUT.getValue()));
-    theCommand.mSecondParam.push_back(StringId::lookup(var_NEW_DST_FB.getValue()));
-    theCommand.mSecondParam.push_back(StringId::lookup(var_NEW_DST_FB_IN.getValue()));
-    theCommand.mCMD = EMGMCommandType::CreateConnection;
-    resp = getDevice()->executeMGMCommand(theCommand);
-  }
+    theCommand.mFirstParam.push_back(StringId::lookup(var_OLD_SRC_FB.getValue()));
+    theCommand.mFirstParam.push_back(StringId::lookup(var_OLD_SRC_FB_OUT.getValue()));
+    theCommand.mSecondParam.push_back(StringId::lookup(var_OLD_DST_FB.getValue()));
+    theCommand.mSecondParam.push_back(StringId::lookup(var_OLD_DST_FB_IN.getValue()));
+    theCommand.mCMD = EMGMCommandType::DeleteConnection;
 
-  // calculate return value
-  var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);
-  const std::string retVal(mgm_cmd::getResponseText(resp));
-  DEVLOG_DEBUG("%s\n", retVal.c_str());
-  var_STATUS = CIEC_WSTRING(retVal.c_str());
-}
+    EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
 
-void FORTE_ST_REC_CONN::readInputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventREQID: {
-      readData(1, var_OLD_SRC_FB, conn_OLD_SRC_FB);
-      readData(2, var_OLD_SRC_FB_OUT, conn_OLD_SRC_FB_OUT);
-      readData(3, var_OLD_DST_FB, conn_OLD_DST_FB);
-      readData(4, var_OLD_DST_FB_IN, conn_OLD_DST_FB_IN);
-      readData(9, var_DST, conn_DST);
-      readData(5, var_NEW_SRC_FB, conn_NEW_SRC_FB);
-      readData(6, var_NEW_SRC_FB_OUT, conn_NEW_SRC_FB_OUT);
-      readData(7, var_NEW_DST_FB, conn_NEW_DST_FB);
-      readData(8, var_NEW_DST_FB_IN, conn_NEW_DST_FB_IN);
-      readData(0, var_QI, conn_QI);
-      break;
+    if (resp == EMGMResponse::Ready) {
+      // create new connection
+      theCommand.mDestination = StringId::lookup(var_DST.getValue());
+      theCommand.mFirstParam.clear();
+      theCommand.mFirstParam.push_back(StringId::lookup(var_NEW_SRC_FB.getValue()));
+      theCommand.mFirstParam.push_back(StringId::lookup(var_NEW_SRC_FB_OUT.getValue()));
+      theCommand.mSecondParam.push_back(StringId::lookup(var_NEW_DST_FB.getValue()));
+      theCommand.mSecondParam.push_back(StringId::lookup(var_NEW_DST_FB_IN.getValue()));
+      theCommand.mCMD = EMGMCommandType::CreateConnection;
+      resp = getDevice()->executeMGMCommand(theCommand);
     }
-    default: break;
-  }
-}
 
-void FORTE_ST_REC_CONN::writeOutputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventCNFID: {
-      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
-      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
-      break;
+    // calculate return value
+    var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);
+    const std::string retVal(mgm_cmd::getResponseText(resp));
+    DEVLOG_DEBUG("%s\n", retVal.c_str());
+    var_STATUS = CIEC_WSTRING(retVal.c_str());
+  }
+
+  void FORTE_ST_REC_CONN::readInputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventREQID: {
+        readData(1, var_OLD_SRC_FB, conn_OLD_SRC_FB);
+        readData(2, var_OLD_SRC_FB_OUT, conn_OLD_SRC_FB_OUT);
+        readData(3, var_OLD_DST_FB, conn_OLD_DST_FB);
+        readData(4, var_OLD_DST_FB_IN, conn_OLD_DST_FB_IN);
+        readData(9, var_DST, conn_DST);
+        readData(5, var_NEW_SRC_FB, conn_NEW_SRC_FB);
+        readData(6, var_NEW_SRC_FB_OUT, conn_NEW_SRC_FB_OUT);
+        readData(7, var_NEW_DST_FB, conn_NEW_DST_FB);
+        readData(8, var_NEW_DST_FB_IN, conn_NEW_DST_FB_IN);
+        readData(0, var_QI, conn_QI);
+        break;
+      }
+      default: break;
     }
-    default: break;
   }
-}
 
-CIEC_ANY *FORTE_ST_REC_CONN::getDI(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_QI;
-    case 1: return &var_OLD_SRC_FB;
-    case 2: return &var_OLD_SRC_FB_OUT;
-    case 3: return &var_OLD_DST_FB;
-    case 4: return &var_OLD_DST_FB_IN;
-    case 5: return &var_NEW_SRC_FB;
-    case 6: return &var_NEW_SRC_FB_OUT;
-    case 7: return &var_NEW_DST_FB;
-    case 8: return &var_NEW_DST_FB_IN;
-    case 9: return &var_DST;
+  void FORTE_ST_REC_CONN::writeOutputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventCNFID: {
+        writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
+        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+        break;
+      }
+      default: break;
+    }
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_ST_REC_CONN::getDO(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_QO;
-    case 1: return &var_STATUS;
+  CIEC_ANY *FORTE_ST_REC_CONN::getDI(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_QI;
+      case 1: return &var_OLD_SRC_FB;
+      case 2: return &var_OLD_SRC_FB_OUT;
+      case 3: return &var_OLD_DST_FB;
+      case 4: return &var_OLD_DST_FB_IN;
+      case 5: return &var_NEW_SRC_FB;
+      case 6: return &var_NEW_SRC_FB_OUT;
+      case 7: return &var_NEW_DST_FB;
+      case 8: return &var_NEW_DST_FB_IN;
+      case 9: return &var_DST;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CEventConnection *FORTE_ST_REC_CONN::getEOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_CNF;
+  CIEC_ANY *FORTE_ST_REC_CONN::getDO(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_QO;
+      case 1: return &var_STATUS;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_ST_REC_CONN::getDIConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_QI;
-    case 1: return &conn_OLD_SRC_FB;
-    case 2: return &conn_OLD_SRC_FB_OUT;
-    case 3: return &conn_OLD_DST_FB;
-    case 4: return &conn_OLD_DST_FB_IN;
-    case 5: return &conn_NEW_SRC_FB;
-    case 6: return &conn_NEW_SRC_FB_OUT;
-    case 7: return &conn_NEW_DST_FB;
-    case 8: return &conn_NEW_DST_FB_IN;
-    case 9: return &conn_DST;
+  CEventConnection *FORTE_ST_REC_CONN::getEOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_CNF;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection *FORTE_ST_REC_CONN::getDOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_QO;
-    case 1: return &conn_STATUS;
+  CDataConnection **FORTE_ST_REC_CONN::getDIConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_QI;
+      case 1: return &conn_OLD_SRC_FB;
+      case 2: return &conn_OLD_SRC_FB_OUT;
+      case 3: return &conn_OLD_DST_FB;
+      case 4: return &conn_OLD_DST_FB_IN;
+      case 5: return &conn_NEW_SRC_FB;
+      case 6: return &conn_NEW_SRC_FB_OUT;
+      case 7: return &conn_NEW_DST_FB;
+      case 8: return &conn_NEW_DST_FB_IN;
+      case 9: return &conn_DST;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
+
+  CDataConnection *FORTE_ST_REC_CONN::getDOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_QO;
+      case 1: return &conn_STATUS;
+    }
+    return nullptr;
+  }
+
+} // namespace forte::eclipse4diac::reconfiguration

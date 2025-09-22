@@ -19,154 +19,154 @@
 
 using namespace forte::literals;
 
-using namespace forte::eclipse4diac::utils::selection;
+namespace forte::eclipse4diac::utils::selection {
+  namespace {
+    const auto cDataInputNames = std::array{"IN0"_STRID, "IN1"_STRID, "IN2"_STRID, "IN3"_STRID};
+    const auto cDataOutputNames = std::array{"OUT"_STRID};
+    const auto cEventInputNames = std::array{"REQ0"_STRID, "REQ1"_STRID, "REQ2"_STRID, "REQ3"_STRID};
+    const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
+    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = cEventInputTypeIds,
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = cEventOutputTypeIds,
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_F_SEL_E_4, "eclipse4diac::utils::selection::F_SEL_E_4"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_F_SEL_E_4, "eclipse4diac::utils::selection::F_SEL_E_4"_STRID)
 
-namespace {
-  const auto cDataInputNames = std::array{"IN0"_STRID, "IN1"_STRID, "IN2"_STRID, "IN3"_STRID};
-  const auto cDataOutputNames = std::array{"OUT"_STRID};
-  const auto cEventInputNames = std::array{"REQ0"_STRID, "REQ1"_STRID, "REQ2"_STRID, "REQ3"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID, "Event"_STRID, "Event"_STRID};
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
+  FORTE_F_SEL_E_4::FORTE_F_SEL_E_4(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      conn_CNF(*this, 0),
+      conn_IN0(nullptr),
+      conn_IN1(nullptr),
+      conn_IN2(nullptr),
+      conn_IN3(nullptr),
+      conn_OUT(*this, 0, var_OUT) {};
 
-FORTE_F_SEL_E_4::FORTE_F_SEL_E_4(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
-    conn_CNF(*this, 0),
-    conn_IN0(nullptr),
-    conn_IN1(nullptr),
-    conn_IN2(nullptr),
-    conn_IN3(nullptr),
-    conn_OUT(*this, 0, var_OUT) {};
-
-void FORTE_F_SEL_E_4::setInitialValues() {
-  var_IN0.reset();
-  var_IN1.reset();
-  var_IN2.reset();
-  var_IN3.reset();
-  var_OUT.reset();
-}
-
-void FORTE_F_SEL_E_4::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQ0ID:
-      var_OUT = var_IN0;
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
-    case scmEventREQ1ID:
-      var_OUT = var_IN1;
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
-    case scmEventREQ2ID:
-      var_OUT = var_IN2;
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
-    case scmEventREQ3ID:
-      var_OUT = var_IN3;
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
+  void FORTE_F_SEL_E_4::setInitialValues() {
+    var_IN0.reset();
+    var_IN1.reset();
+    var_IN2.reset();
+    var_IN3.reset();
+    var_OUT.reset();
   }
-}
 
-void FORTE_F_SEL_E_4::readInputData(const TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventREQ0ID: {
-
-      readData(0, var_IN0, conn_IN0);
-      break;
+  void FORTE_F_SEL_E_4::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case scmEventREQ0ID:
+        var_OUT = var_IN0;
+        sendOutputEvent(scmEventCNFID, paECET);
+        break;
+      case scmEventREQ1ID:
+        var_OUT = var_IN1;
+        sendOutputEvent(scmEventCNFID, paECET);
+        break;
+      case scmEventREQ2ID:
+        var_OUT = var_IN2;
+        sendOutputEvent(scmEventCNFID, paECET);
+        break;
+      case scmEventREQ3ID:
+        var_OUT = var_IN3;
+        sendOutputEvent(scmEventCNFID, paECET);
+        break;
     }
-    case scmEventREQ1ID: {
+  }
 
-      readData(1, var_IN1, conn_IN1);
-      break;
+  void FORTE_F_SEL_E_4::readInputData(const TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventREQ0ID: {
+
+        readData(0, var_IN0, conn_IN0);
+        break;
+      }
+      case scmEventREQ1ID: {
+
+        readData(1, var_IN1, conn_IN1);
+        break;
+      }
+      case scmEventREQ2ID: {
+
+        readData(2, var_IN2, conn_IN2);
+        break;
+      }
+      case scmEventREQ3ID: {
+
+        readData(3, var_IN3, conn_IN3);
+        break;
+      }
+      default: break;
     }
-    case scmEventREQ2ID: {
+  }
 
-      readData(2, var_IN2, conn_IN2);
-      break;
+  void FORTE_F_SEL_E_4::writeOutputData(const TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventCNFID: {
+
+        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
+        break;
+      }
+      default: break;
     }
-    case scmEventREQ3ID: {
+  }
 
-      readData(3, var_IN3, conn_IN3);
-      break;
+  CIEC_ANY *FORTE_F_SEL_E_4::getDI(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_IN0;
+      case 1: return &var_IN1;
+      case 2: return &var_IN2;
+      case 3: return &var_IN3;
     }
-    default: break;
+    return nullptr;
   }
-}
 
-void FORTE_F_SEL_E_4::writeOutputData(const TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventCNFID: {
-
-      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
-      break;
+  CIEC_ANY *FORTE_F_SEL_E_4::getDO(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_OUT;
     }
-    default: break;
+    return nullptr;
   }
-}
 
-CIEC_ANY *FORTE_F_SEL_E_4::getDI(const size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_IN0;
-    case 1: return &var_IN1;
-    case 2: return &var_IN2;
-    case 3: return &var_IN3;
+  CIEC_ANY *FORTE_F_SEL_E_4::getDIO(size_t) {
+    return nullptr;
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_F_SEL_E_4::getDO(const size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_OUT;
+  CEventConnection *FORTE_F_SEL_E_4::getEOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_CNF;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_F_SEL_E_4::getDIO(size_t) {
-  return nullptr;
-}
-
-CEventConnection *FORTE_F_SEL_E_4::getEOConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_CNF;
+  CDataConnection **FORTE_F_SEL_E_4::getDIConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_IN0;
+      case 1: return &conn_IN1;
+      case 2: return &conn_IN2;
+      case 3: return &conn_IN3;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_F_SEL_E_4::getDIConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_IN0;
-    case 1: return &conn_IN1;
-    case 2: return &conn_IN2;
-    case 3: return &conn_IN3;
+  CDataConnection *FORTE_F_SEL_E_4::getDOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_OUT;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection *FORTE_F_SEL_E_4::getDOConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_OUT;
+  CInOutDataConnection **FORTE_F_SEL_E_4::getDIOInConUnchecked(TPortId) {
+    return nullptr;
   }
-  return nullptr;
-}
 
-CInOutDataConnection **FORTE_F_SEL_E_4::getDIOInConUnchecked(TPortId) {
-  return nullptr;
-}
-
-CInOutDataConnection *FORTE_F_SEL_E_4::getDIOOutConUnchecked(TPortId) {
-  return nullptr;
-}
+  CInOutDataConnection *FORTE_F_SEL_E_4::getDIOOutConUnchecked(TPortId) {
+    return nullptr;
+  }
+} // namespace forte::eclipse4diac::utils::selection

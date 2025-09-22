@@ -34,48 +34,48 @@ namespace {
   };
 } // namespace
 
-using namespace forte::iec61499::net;
+namespace forte::iec61499::net {
+  DEFINE_GENERIC_FIRMWARE_FB(GEN_SEND_RECV, "iec61499::net::GEN_SEND_RECV"_STRID)
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_SEND_RECV, "iec61499::net::GEN_SEND_RECV"_STRID)
+  GEN_SEND_RECV::GEN_SEND_RECV(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CommunicationFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      conn_CNF(*this, 1),
+      conn_IND(*this, 2) {};
 
-GEN_SEND_RECV::GEN_SEND_RECV(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CommunicationFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
-    conn_CNF(*this, 1),
-    conn_IND(*this, 2) {};
-
-void GEN_SEND_RECV::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID:
-      if (send(mGenDIs) != com::ComResult::Async) {
-        sendOutputEvent(scmEventCNFID, paECET);
-      }
-      break;
-    case scmEventRSPID:
-      if (poll() != com::ComResult::Async) {
-        sendOutputEvent(scmEventINDID, paECET);
-      }
-      break;
-    case scmEventSentID: sendOutputEvent(scmEventCNFID, paECET); break;
-    case scmEventReceiveID: sendOutputEvent(scmEventINDID, paECET); break;
-    default: CommunicationFB::executeEvent(paEIID, paECET); break;
-  }
-}
-
-bool GEN_SEND_RECV::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
-  auto [numGenDIs, numGenDOs] = parseConfigString(paConfigString);
-  if (numGenDIs == cgInvalidPortId || numGenDOs == cgInvalidPortId) {
-    return false;
+  void GEN_SEND_RECV::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case scmEventREQID:
+        if (send(mGenDIs) != com::ComResult::Async) {
+          sendOutputEvent(scmEventCNFID, paECET);
+        }
+        break;
+      case scmEventRSPID:
+        if (poll() != com::ComResult::Async) {
+          sendOutputEvent(scmEventINDID, paECET);
+        }
+        break;
+      case scmEventSentID: sendOutputEvent(scmEventCNFID, paECET); break;
+      case scmEventReceiveID: sendOutputEvent(scmEventINDID, paECET); break;
+      default: CommunicationFB::executeEvent(paEIID, paECET); break;
+    }
   }
 
-  configureDIs(numGenDIs, paInterfaceSpec);
-  configureDOs(numGenDOs, paInterfaceSpec);
-  return true;
-}
+  bool GEN_SEND_RECV::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
+    auto [numGenDIs, numGenDOs] = parseConfigString(paConfigString);
+    if (numGenDIs == cgInvalidPortId || numGenDOs == cgInvalidPortId) {
+      return false;
+    }
 
-CEventConnection *GEN_SEND_RECV::getEOConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 1: return &conn_CNF;
-    case 2: return &conn_IND;
-    default: return CommunicationFB::getEOConUnchecked(paIndex);
+    configureDIs(numGenDIs, paInterfaceSpec);
+    configureDOs(numGenDOs, paInterfaceSpec);
+    return true;
   }
-}
+
+  CEventConnection *GEN_SEND_RECV::getEOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 1: return &conn_CNF;
+      case 2: return &conn_IND;
+      default: return CommunicationFB::getEOConUnchecked(paIndex);
+    }
+  }
+} // namespace forte::iec61499::net

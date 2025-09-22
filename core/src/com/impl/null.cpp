@@ -18,31 +18,30 @@
 
 using namespace forte::literals;
 
-using namespace forte::com;
-using namespace forte::com::impl;
+namespace forte::com::impl {
+  namespace {
+    [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<NullChannel> entry("null"_STRID);
+  }
 
-namespace {
-  [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<NullChannel> entry("null"_STRID);
-}
+  ComResult NullChannel::open(const std::string_view paConfigString,
+                              const std::span<ComChannelDescriptor> paDescriptors) {
+    return paConfigString.empty() && paDescriptors.empty() ? ComResult::Ok : ComResult::InvalidId;
+  }
 
-ComResult NullChannel::open(const std::string_view paConfigString,
-                            const std::span<ComChannelDescriptor> paDescriptors) {
-  return paConfigString.empty() && paDescriptors.empty() ? ComResult::Ok : ComResult::InvalidId;
-}
+  ComResult NullChannel::send(ComBuffer) {
+    return ComResult::Ok;
+  }
 
-ComResult NullChannel::send(ComBuffer) {
-  return ComResult::Ok;
-}
+  ComResult NullChannel::poll() {
+    getObserver().receive({nullptr, 0}, *this);
+    return ComResult::Async;
+  }
 
-ComResult NullChannel::poll() {
-  getObserver().receive({nullptr, 0}, *this);
-  return ComResult::Async;
-}
+  ComResult NullChannel::close() {
+    return ComResult::Ok;
+  }
 
-ComResult NullChannel::close() {
-  return ComResult::Ok;
-}
-
-ComResult NullChannel::setMinReceiveSize(const std::size_t paSize) {
-  return paSize ? ComResult::Overflow : ComChannel::setMinReceiveSize(paSize);
-}
+  ComResult NullChannel::setMinReceiveSize(const std::size_t paSize) {
+    return paSize ? ComResult::Overflow : ComChannel::setMinReceiveSize(paSize);
+  }
+} // namespace forte::com::impl

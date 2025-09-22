@@ -16,137 +16,138 @@
 
 using namespace forte::literals;
 
-using namespace forte::eclipse4diac::reconfiguration;
+namespace forte::eclipse4diac::reconfiguration {
+  namespace {
+    const auto cDataInputNames = std::array{"QI"_STRID, "ELEM_NAME"_STRID, "DST"_STRID};
+    const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventInputTypeIds = std::array{"Event"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
+    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = cEventInputTypeIds,
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = cEventOutputTypeIds,
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_EC_STOP_ELEM, "eclipse4diac::reconfiguration::EC_STOP_ELEM"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_EC_STOP_ELEM, "eclipse4diac::reconfiguration::EC_STOP_ELEM"_STRID)
 
-namespace {
-  const auto cDataInputNames = std::array{"QI"_STRID, "ELEM_NAME"_STRID, "DST"_STRID};
-  const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
+  FORTE_EC_STOP_ELEM::FORTE_EC_STOP_ELEM(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      conn_CNF(*this, 0),
+      conn_QI(nullptr),
+      conn_ELEM_NAME(nullptr),
+      conn_DST(nullptr),
+      conn_QO(*this, 0, var_QO),
+      conn_STATUS(*this, 1, var_STATUS) {};
 
-FORTE_EC_STOP_ELEM::FORTE_EC_STOP_ELEM(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
-    conn_CNF(*this, 0),
-    conn_QI(nullptr),
-    conn_ELEM_NAME(nullptr),
-    conn_DST(nullptr),
-    conn_QO(*this, 0, var_QO),
-    conn_STATUS(*this, 1, var_STATUS) {};
+  void FORTE_EC_STOP_ELEM::setInitialValues() {
+    var_QI = 0_BOOL;
+    var_ELEM_NAME = u""_WSTRING;
+    var_DST = u""_WSTRING;
+    var_QO = 0_BOOL;
+    var_STATUS = u""_WSTRING;
+  }
 
-void FORTE_EC_STOP_ELEM::setInitialValues() {
-  var_QI = 0_BOOL;
-  var_ELEM_NAME = u""_WSTRING;
-  var_DST = u""_WSTRING;
-  var_QO = 0_BOOL;
-  var_STATUS = u""_WSTRING;
-}
+  void FORTE_EC_STOP_ELEM::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case scmEventREQID:
+        var_QO = var_QI;
+        if (var_QI) {
+          executeRQST();
+        } else {
+          var_STATUS = u"Not Ready"_WSTRING;
+        }
+        sendOutputEvent(scmEventCNFID, paECET);
+        break;
+    }
+  }
 
-void FORTE_EC_STOP_ELEM::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID:
-      var_QO = var_QI;
-      if (var_QI) {
-        executeRQST();
-      } else {
-        var_STATUS = u"Not Ready"_WSTRING;
+  void FORTE_EC_STOP_ELEM::executeRQST() {
+    SManagementCMD theCommand;
+
+    theCommand.mDestination = StringId::lookup(var_DST.getValue());
+    theCommand.mFirstParam.push_back(StringId::lookup(var_ELEM_NAME.getValue()));
+    theCommand.mCMD = EMGMCommandType::Stop;
+
+    EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
+
+    // calculate return value
+    var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);
+    const std::string retVal(mgm_cmd::getResponseText(resp));
+    DEVLOG_DEBUG("%s\n", retVal.c_str());
+    var_STATUS = CIEC_WSTRING(retVal.c_str());
+  }
+
+  void FORTE_EC_STOP_ELEM::readInputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventREQID: {
+        readData(1, var_ELEM_NAME, conn_ELEM_NAME);
+        readData(2, var_DST, conn_DST);
+        readData(0, var_QI, conn_QI);
+        break;
       }
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
-  }
-}
-
-void FORTE_EC_STOP_ELEM::executeRQST() {
-  SManagementCMD theCommand;
-
-  theCommand.mDestination = StringId::lookup(var_DST.getValue());
-  theCommand.mFirstParam.push_back(StringId::lookup(var_ELEM_NAME.getValue()));
-  theCommand.mCMD = EMGMCommandType::Stop;
-
-  EMGMResponse resp = getDevice()->executeMGMCommand(theCommand);
-
-  // calculate return value
-  var_QO = CIEC_BOOL(resp == EMGMResponse::Ready);
-  const std::string retVal(mgm_cmd::getResponseText(resp));
-  DEVLOG_DEBUG("%s\n", retVal.c_str());
-  var_STATUS = CIEC_WSTRING(retVal.c_str());
-}
-
-void FORTE_EC_STOP_ELEM::readInputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventREQID: {
-      readData(1, var_ELEM_NAME, conn_ELEM_NAME);
-      readData(2, var_DST, conn_DST);
-      readData(0, var_QI, conn_QI);
-      break;
+      default: break;
     }
-    default: break;
   }
-}
 
-void FORTE_EC_STOP_ELEM::writeOutputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventCNFID: {
-      writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
-      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
-      break;
+  void FORTE_EC_STOP_ELEM::writeOutputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventCNFID: {
+        writeData(cFBInterfaceSpec.getNumDIs() + 1, var_STATUS, conn_STATUS);
+        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+        break;
+      }
+      default: break;
     }
-    default: break;
   }
-}
 
-CIEC_ANY *FORTE_EC_STOP_ELEM::getDI(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_QI;
-    case 1: return &var_ELEM_NAME;
-    case 2: return &var_DST;
+  CIEC_ANY *FORTE_EC_STOP_ELEM::getDI(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_QI;
+      case 1: return &var_ELEM_NAME;
+      case 2: return &var_DST;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_EC_STOP_ELEM::getDO(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_QO;
-    case 1: return &var_STATUS;
+  CIEC_ANY *FORTE_EC_STOP_ELEM::getDO(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_QO;
+      case 1: return &var_STATUS;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CEventConnection *FORTE_EC_STOP_ELEM::getEOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_CNF;
+  CEventConnection *FORTE_EC_STOP_ELEM::getEOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_CNF;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_EC_STOP_ELEM::getDIConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_QI;
-    case 1: return &conn_ELEM_NAME;
-    case 2: return &conn_DST;
+  CDataConnection **FORTE_EC_STOP_ELEM::getDIConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_QI;
+      case 1: return &conn_ELEM_NAME;
+      case 2: return &conn_DST;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection *FORTE_EC_STOP_ELEM::getDOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_QO;
-    case 1: return &conn_STATUS;
+  CDataConnection *FORTE_EC_STOP_ELEM::getDOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_QO;
+      case 1: return &conn_STATUS;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
+
+} // namespace forte::eclipse4diac::reconfiguration

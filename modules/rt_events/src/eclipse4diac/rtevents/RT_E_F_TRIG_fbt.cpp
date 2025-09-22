@@ -14,126 +14,127 @@
 
 using namespace forte::literals;
 
-using namespace forte::eclipse4diac::rtevents;
+namespace forte::eclipse4diac::rtevents {
+  namespace {
+    const auto cDataInputNames = std::array{"QI"_STRID, "Tmin"_STRID, "Deadline"_STRID, "WCET"_STRID};
+    const auto cDataOutputNames = std::array{"QO"_STRID};
+    const auto cEventInputNames = std::array{"INIT"_STRID, "EI"_STRID};
+    const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
+    const auto cEventOutputNames = std::array{"INITO"_STRID, "EO"_STRID};
+    const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = cEventInputTypeIds,
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = cEventOutputTypeIds,
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_RT_E_F_TRIG, "eclipse4diac::rtevents::RT_E_F_TRIG"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_RT_E_F_TRIG, "eclipse4diac::rtevents::RT_E_F_TRIG"_STRID)
 
-namespace {
-  const auto cDataInputNames = std::array{"QI"_STRID, "Tmin"_STRID, "Deadline"_STRID, "WCET"_STRID};
-  const auto cDataOutputNames = std::array{"QO"_STRID};
-  const auto cEventInputNames = std::array{"INIT"_STRID, "EI"_STRID};
-  const auto cEventInputTypeIds = std::array{"EInit"_STRID, "Event"_STRID};
-  const auto cEventOutputNames = std::array{"INITO"_STRID, "EO"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
+  FORTE_RT_E_F_TRIG::FORTE_RT_E_F_TRIG(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CRTEventSingle(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      conn_INITO(*this, 0),
+      conn_EO(*this, 1),
+      conn_QI(nullptr),
+      conn_Tmin(nullptr),
+      conn_Deadline(nullptr),
+      conn_WCET(nullptr),
+      conn_QO(*this, 0, var_QO) {};
 
-FORTE_RT_E_F_TRIG::FORTE_RT_E_F_TRIG(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CRTEventSingle(paContainer, cFBInterfaceSpec, paInstanceNameId),
-    conn_INITO(*this, 0),
-    conn_EO(*this, 1),
-    conn_QI(nullptr),
-    conn_Tmin(nullptr),
-    conn_Deadline(nullptr),
-    conn_WCET(nullptr),
-    conn_QO(*this, 0, var_QO) {};
-
-void FORTE_RT_E_F_TRIG::setInitialValues() {
-  var_QI = 0_BOOL;
-  var_Tmin = 0_TIME;
-  var_Deadline = 0_TIME;
-  var_WCET = 0_TIME;
-  var_QO = 0_BOOL;
-}
-
-bool FORTE_RT_E_F_TRIG::checkActivation(TEventID) {
-  bool bRetval = false;
-
-  if (!var_QI && mWasHigh) {
-    bRetval = true;
+  void FORTE_RT_E_F_TRIG::setInitialValues() {
+    var_QI = 0_BOOL;
+    var_Tmin = 0_TIME;
+    var_Deadline = 0_TIME;
+    var_WCET = 0_TIME;
+    var_QO = 0_BOOL;
   }
-  mWasHigh = var_QI;
-  return bRetval;
-}
 
-void FORTE_RT_E_F_TRIG::readInputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventINITID: {
-      readData(0, var_QI, conn_QI);
-      readData(1, var_Tmin, conn_Tmin);
-      readData(2, var_Deadline, conn_Deadline);
-      readData(3, var_WCET, conn_WCET);
-      break;
+  bool FORTE_RT_E_F_TRIG::checkActivation(TEventID) {
+    bool bRetval = false;
+
+    if (!var_QI && mWasHigh) {
+      bRetval = true;
     }
-    case scmEventEIID: {
-      readData(0, var_QI, conn_QI);
-      break;
+    mWasHigh = var_QI;
+    return bRetval;
+  }
+
+  void FORTE_RT_E_F_TRIG::readInputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventINITID: {
+        readData(0, var_QI, conn_QI);
+        readData(1, var_Tmin, conn_Tmin);
+        readData(2, var_Deadline, conn_Deadline);
+        readData(3, var_WCET, conn_WCET);
+        break;
+      }
+      case scmEventEIID: {
+        readData(0, var_QI, conn_QI);
+        break;
+      }
+      default: break;
     }
-    default: break;
   }
-}
 
-void FORTE_RT_E_F_TRIG::writeOutputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventINITOID: {
-      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
-      break;
+  void FORTE_RT_E_F_TRIG::writeOutputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventINITOID: {
+        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+        break;
+      }
+      case scmEventEOID: {
+        break;
+      }
+      default: break;
     }
-    case scmEventEOID: {
-      break;
+  }
+
+  CIEC_ANY *FORTE_RT_E_F_TRIG::getDI(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_QI;
+      case 1: return &var_Tmin;
+      case 2: return &var_Deadline;
+      case 3: return &var_WCET;
     }
-    default: break;
+    return nullptr;
   }
-}
 
-CIEC_ANY *FORTE_RT_E_F_TRIG::getDI(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_QI;
-    case 1: return &var_Tmin;
-    case 2: return &var_Deadline;
-    case 3: return &var_WCET;
+  CIEC_ANY *FORTE_RT_E_F_TRIG::getDO(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_QO;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_RT_E_F_TRIG::getDO(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_QO;
+  CEventConnection *FORTE_RT_E_F_TRIG::getEOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_INITO;
+      case 1: return &conn_EO;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CEventConnection *FORTE_RT_E_F_TRIG::getEOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_INITO;
-    case 1: return &conn_EO;
+  CDataConnection **FORTE_RT_E_F_TRIG::getDIConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_QI;
+      case 1: return &conn_Tmin;
+      case 2: return &conn_Deadline;
+      case 3: return &conn_WCET;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_RT_E_F_TRIG::getDIConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_QI;
-    case 1: return &conn_Tmin;
-    case 2: return &conn_Deadline;
-    case 3: return &conn_WCET;
+  CDataConnection *FORTE_RT_E_F_TRIG::getDOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_QO;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection *FORTE_RT_E_F_TRIG::getDOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_QO;
-  }
-  return nullptr;
-}
+} // namespace forte::eclipse4diac::rtevents

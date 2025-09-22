@@ -18,129 +18,130 @@
 
 using namespace forte::literals;
 
-using namespace forte::iec61131::charString;
+namespace forte::iec61131::charString {
+  namespace {
+    const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};
 
-DEFINE_FIRMWARE_FB(FORTE_F_FIND, "iec61131::charString::F_FIND"_STRID)
+    const auto cDataOutputNames = std::array{"OUT"_STRID};
 
-namespace {
-  const auto cDataInputNames = std::array{"IN1"_STRID, "IN2"_STRID};
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventInputTypeIds = std::array{"Event"_STRID};
 
-  const auto cDataOutputNames = std::array{"OUT"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
+    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
 
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = {},
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = {},
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+  DEFINE_FIRMWARE_FB(FORTE_F_FIND, "iec61131::charString::F_FIND"_STRID)
 
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = {},
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = {},
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
+  FORTE_F_FIND::FORTE_F_FIND(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      var_IN1(CIEC_ANY_STRING_VARIANT()),
+      var_IN2(CIEC_ANY_STRING_VARIANT()),
+      var_OUT(CIEC_ANY_INT_VARIANT()),
+      conn_CNF(*this, 0),
+      conn_IN1(nullptr),
+      conn_IN2(nullptr),
+      conn_OUT(*this, 0, var_OUT) {};
 
-FORTE_F_FIND::FORTE_F_FIND(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
-    var_IN1(CIEC_ANY_STRING_VARIANT()),
-    var_IN2(CIEC_ANY_STRING_VARIANT()),
-    var_OUT(CIEC_ANY_INT_VARIANT()),
-    conn_CNF(*this, 0),
-    conn_IN1(nullptr),
-    conn_IN2(nullptr),
-    conn_OUT(*this, 0, var_OUT) {};
-
-void FORTE_F_FIND::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID:
-      std::visit(
-          [](auto &&paIN1, auto &&paIN2, auto &&paOUT) -> void {
-            using T = std::decay_t<decltype(paIN1)>;
-            using U = std::decay_t<decltype(paIN2)>;
-            if constexpr ((std::is_same_v<T, CIEC_STRING> &&
-                           (std::is_same_v<U, CIEC_STRING> || std::is_same_v<U, CIEC_CHAR>) ) ||
-                          (std::is_same_v<T, CIEC_WSTRING> &&
-                           (std::is_same_v<U, CIEC_WSTRING> || std::is_same_v<U, CIEC_WCHAR>) )) {
-              paOUT = func_FIND<std::remove_reference_t<decltype(paOUT)>>(paIN1, paIN2);
-            } else {
-              DEVLOG_ERROR("Incompatible types IN1:%s and IN2:%s for FIND\n", paIN1.getTypeNameID().data(),
-                           paIN2.getTypeNameID().data());
-            }
-          },
-          static_cast<CIEC_ANY_STRING_VARIANT::variant &>(var_IN1),
-          static_cast<CIEC_ANY_STRING_VARIANT::variant &>(var_IN2),
-          static_cast<CIEC_ANY_INT_VARIANT::variant &>(var_OUT));
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
-  }
-}
-
-void FORTE_F_FIND::readInputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventREQID: {
-      readData(0, var_IN1, conn_IN1);
-      readData(1, var_IN2, conn_IN2);
-      break;
+  void FORTE_F_FIND::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case scmEventREQID:
+        std::visit(
+            [](auto &&paIN1, auto &&paIN2, auto &&paOUT) -> void {
+              using T = std::decay_t<decltype(paIN1)>;
+              using U = std::decay_t<decltype(paIN2)>;
+              if constexpr ((std::is_same_v<T, CIEC_STRING> &&
+                             (std::is_same_v<U, CIEC_STRING> || std::is_same_v<U, CIEC_CHAR>) ) ||
+                            (std::is_same_v<T, CIEC_WSTRING> &&
+                             (std::is_same_v<U, CIEC_WSTRING> || std::is_same_v<U, CIEC_WCHAR>) )) {
+                paOUT = func_FIND<std::remove_reference_t<decltype(paOUT)>>(paIN1, paIN2);
+              } else {
+                DEVLOG_ERROR("Incompatible types IN1:%s and IN2:%s for FIND\n", paIN1.getTypeNameID().data(),
+                             paIN2.getTypeNameID().data());
+              }
+            },
+            static_cast<CIEC_ANY_STRING_VARIANT::variant &>(var_IN1),
+            static_cast<CIEC_ANY_STRING_VARIANT::variant &>(var_IN2),
+            static_cast<CIEC_ANY_INT_VARIANT::variant &>(var_OUT));
+        sendOutputEvent(scmEventCNFID, paECET);
+        break;
     }
-    default: break;
   }
-}
 
-void FORTE_F_FIND::writeOutputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventCNFID: {
-      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
-      break;
+  void FORTE_F_FIND::readInputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventREQID: {
+        readData(0, var_IN1, conn_IN1);
+        readData(1, var_IN2, conn_IN2);
+        break;
+      }
+      default: break;
     }
-    default: break;
   }
-}
 
-CIEC_ANY *FORTE_F_FIND::getDI(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_IN1;
-    case 1: return &var_IN2;
+  void FORTE_F_FIND::writeOutputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventCNFID: {
+        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_OUT, conn_OUT);
+        break;
+      }
+      default: break;
+    }
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_F_FIND::getDO(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_OUT;
+  CIEC_ANY *FORTE_F_FIND::getDI(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_IN1;
+      case 1: return &var_IN2;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CEventConnection *FORTE_F_FIND::getEOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_CNF;
+  CIEC_ANY *FORTE_F_FIND::getDO(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_OUT;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_F_FIND::getDIConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_IN1;
-    case 1: return &conn_IN2;
+  CEventConnection *FORTE_F_FIND::getEOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_CNF;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection *FORTE_F_FIND::getDOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_OUT;
+  CDataConnection **FORTE_F_FIND::getDIConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_IN1;
+      case 1: return &conn_IN2;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-void FORTE_F_FIND::setInitialValues() {
-  var_IN1.reset();
-  var_IN2.reset();
-  var_OUT.reset();
-}
+  CDataConnection *FORTE_F_FIND::getDOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_OUT;
+    }
+    return nullptr;
+  }
+
+  void FORTE_F_FIND::setInitialValues() {
+    var_IN1.reset();
+    var_IN2.reset();
+    var_OUT.reset();
+  }
+
+} // namespace forte::iec61131::charString

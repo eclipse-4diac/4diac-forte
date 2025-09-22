@@ -20,89 +20,89 @@
 
 using namespace forte::literals;
 
-using namespace forte::eclipse4diac::utils;
+namespace forte::eclipse4diac::utils {
+  namespace {
+    const auto cDataInputNames = std::array{"IN"_STRID};
+    const auto cDataOutputNames = std::array{"OUT"_STRID};
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
+  } // namespace
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY, "eclipse4diac::utils::GEN_ARRAY2ARRAY"_STRID)
+  DEFINE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY, "eclipse4diac::utils::GEN_ARRAY2ARRAY"_STRID)
 
-namespace {
-  const auto cDataInputNames = std::array{"IN"_STRID};
-  const auto cDataOutputNames = std::array{"OUT"_STRID};
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-} // namespace
-
-GEN_ARRAY2ARRAY::GEN_ARRAY2ARRAY(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
-    conn_CNF(*this, 0),
-    conn_IN(nullptr),
-    conn_OUT(*this, 0, var_IN) {
-}
-
-void GEN_ARRAY2ARRAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID: sendOutputEvent(scmEventCNFID, paECET); break;
-  }
-}
-
-void GEN_ARRAY2ARRAY::readInputData(TEventID) {
-  readData(0, var_IN, conn_IN);
-}
-
-void GEN_ARRAY2ARRAY::writeOutputData(TEventID) {
-  writeData(1 + 0, var_IN, conn_OUT);
-}
-
-bool GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
-  const char *dNumberPos = strchr(paConfigString, '_');
-
-  if (dNumberPos == nullptr) {
-    return false;
-  }
-  ++dNumberPos;
-  // get position of a second underscore
-  const char *dTypePos = strchr(dNumberPos, '_');
-
-  if (dTypePos == nullptr) {
-    return false;
+  GEN_ARRAY2ARRAY::GEN_ARRAY2ARRAY(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
+      conn_CNF(*this, 0),
+      conn_IN(nullptr),
+      conn_OUT(*this, 0, var_IN) {
   }
 
-  // there is a number and a data type of inputs within the typename
-  TForteUInt16 arrayLength = static_cast<TForteUInt16>(util::strtoul(dNumberPos, nullptr, 10));
-  auto valueTypeID = StringId::lookup(++dTypePos);
-
-  if (arrayLength == 0) {
-    return false;
+  void GEN_ARRAY2ARRAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case scmEventREQID: sendOutputEvent(scmEventCNFID, paECET); break;
+    }
   }
 
-  // create data input type
-  var_IN.setup(arrayLength, valueTypeID);
+  void GEN_ARRAY2ARRAY::readInputData(TEventID) {
+    readData(0, var_IN, conn_IN);
+  }
 
-  conn_OUT.getValue().setup(arrayLength, valueTypeID);
+  void GEN_ARRAY2ARRAY::writeOutputData(TEventID) {
+    writeData(1 + 0, var_IN, conn_OUT);
+  }
 
-  // create the interface Specification
-  paInterfaceSpec.mEINames = cEventInputNames;
-  paInterfaceSpec.mEONames = cEventOutputNames;
-  paInterfaceSpec.mDINames = cDataInputNames;
-  paInterfaceSpec.mDONames = cDataOutputNames;
-  return true;
-}
+  bool GEN_ARRAY2ARRAY::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
+    const char *dNumberPos = strchr(paConfigString, '_');
 
-CEventConnection *GEN_ARRAY2ARRAY::getEOConUnchecked(TPortId paEONum) {
-  return (paEONum == 0) ? &conn_CNF : nullptr;
-}
+    if (dNumberPos == nullptr) {
+      return false;
+    }
+    ++dNumberPos;
+    // get position of a second underscore
+    const char *dTypePos = strchr(dNumberPos, '_');
 
-CIEC_ANY *GEN_ARRAY2ARRAY::getDI(size_t paIndex) {
-  return (paIndex == 0) ? &var_IN : nullptr;
-}
+    if (dTypePos == nullptr) {
+      return false;
+    }
 
-CIEC_ANY *GEN_ARRAY2ARRAY::getDO(size_t paIndex) {
-  return (paIndex == 0) ? &var_IN : nullptr;
-}
+    // there is a number and a data type of inputs within the typename
+    TForteUInt16 arrayLength = static_cast<TForteUInt16>(util::strtoul(dNumberPos, nullptr, 10));
+    auto valueTypeID = StringId::lookup(++dTypePos);
 
-CDataConnection **GEN_ARRAY2ARRAY::getDIConUnchecked(const TPortId paIndex) {
-  return (paIndex == 0) ? &conn_IN : nullptr;
-}
+    if (arrayLength == 0) {
+      return false;
+    }
 
-CDataConnection *GEN_ARRAY2ARRAY::getDOConUnchecked(TPortId paDONum) {
-  return (paDONum == 0) ? &conn_OUT : nullptr;
-}
+    // create data input type
+    var_IN.setup(arrayLength, valueTypeID);
+
+    conn_OUT.getValue().setup(arrayLength, valueTypeID);
+
+    // create the interface Specification
+    paInterfaceSpec.mEINames = cEventInputNames;
+    paInterfaceSpec.mEONames = cEventOutputNames;
+    paInterfaceSpec.mDINames = cDataInputNames;
+    paInterfaceSpec.mDONames = cDataOutputNames;
+    return true;
+  }
+
+  CEventConnection *GEN_ARRAY2ARRAY::getEOConUnchecked(TPortId paEONum) {
+    return (paEONum == 0) ? &conn_CNF : nullptr;
+  }
+
+  CIEC_ANY *GEN_ARRAY2ARRAY::getDI(size_t paIndex) {
+    return (paIndex == 0) ? &var_IN : nullptr;
+  }
+
+  CIEC_ANY *GEN_ARRAY2ARRAY::getDO(size_t paIndex) {
+    return (paIndex == 0) ? &var_IN : nullptr;
+  }
+
+  CDataConnection **GEN_ARRAY2ARRAY::getDIConUnchecked(const TPortId paIndex) {
+    return (paIndex == 0) ? &conn_IN : nullptr;
+  }
+
+  CDataConnection *GEN_ARRAY2ARRAY::getDOConUnchecked(TPortId paDONum) {
+    return (paDONum == 0) ? &conn_OUT : nullptr;
+  }
+} // namespace forte::eclipse4diac::utils

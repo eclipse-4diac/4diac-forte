@@ -20,122 +20,123 @@
 
 using namespace forte::literals;
 
-using namespace forte::eclipse4diac::utils;
+namespace forte::eclipse4diac::utils {
+  namespace {
+    const auto cDataInputNames = std::array{"QI"_STRID, "LABEL"_STRID, "IN"_STRID};
+    const auto cDataOutputNames = std::array{"QO"_STRID};
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventInputTypeIds = std::array{"Event"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
+    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
 
-DEFINE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE, "eclipse4diac::utils::OUT_ANY_CONSOLE"_STRID)
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = cEventInputTypeIds,
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = cEventOutputTypeIds,
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-namespace {
-  const auto cDataInputNames = std::array{"QI"_STRID, "LABEL"_STRID, "IN"_STRID};
-  const auto cDataOutputNames = std::array{"QO"_STRID};
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+  DEFINE_FIRMWARE_FB(FORTE_OUT_ANY_CONSOLE, "eclipse4diac::utils::OUT_ANY_CONSOLE"_STRID)
 
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
+  FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      var_QI(false_BOOL),
+      var_LABEL(""_STRING),
+      var_IN(CIEC_ANY_VARIANT()),
+      var_QO(false_BOOL),
+      conn_CNF(*this, 0),
+      conn_QI(nullptr),
+      conn_LABEL(nullptr),
+      conn_IN(nullptr),
+      conn_QO(*this, 0, var_QO) {};
 
-FORTE_OUT_ANY_CONSOLE::FORTE_OUT_ANY_CONSOLE(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
-    var_QI(false_BOOL),
-    var_LABEL(""_STRING),
-    var_IN(CIEC_ANY_VARIANT()),
-    var_QO(false_BOOL),
-    conn_CNF(*this, 0),
-    conn_QI(nullptr),
-    conn_LABEL(nullptr),
-    conn_IN(nullptr),
-    conn_QO(*this, 0, var_QO) {};
+  void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case scmEventREQID:
+        var_QO = var_QI;
+        if (var_QI) {
+          DEVLOG_INFO(" %s = ", var_LABEL.getStorage().c_str());
+          var_IN.toString(mDataOutPutBuffer);
+          DEVLOG_INFO("%s\n", mDataOutPutBuffer.c_str());
+          mDataOutPutBuffer.clear();
+        }
+        sendOutputEvent(scmEventCNFID, paECET);
+        break;
+    }
+  }
 
-void FORTE_OUT_ANY_CONSOLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID:
-      var_QO = var_QI;
-      if (var_QI) {
-        DEVLOG_INFO(" %s = ", var_LABEL.getStorage().c_str());
-        var_IN.toString(mDataOutPutBuffer);
-        DEVLOG_INFO("%s\n", mDataOutPutBuffer.c_str());
-        mDataOutPutBuffer.clear();
+  void FORTE_OUT_ANY_CONSOLE::readInputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventREQID: {
+        readData(0, var_QI, conn_QI);
+        readData(2, var_IN, conn_IN);
+        readData(1, var_LABEL, conn_LABEL);
+        break;
       }
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
-  }
-}
-
-void FORTE_OUT_ANY_CONSOLE::readInputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventREQID: {
-      readData(0, var_QI, conn_QI);
-      readData(2, var_IN, conn_IN);
-      readData(1, var_LABEL, conn_LABEL);
-      break;
+      default: break;
     }
-    default: break;
   }
-}
 
-void FORTE_OUT_ANY_CONSOLE::writeOutputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventCNFID: {
-      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
-      break;
+  void FORTE_OUT_ANY_CONSOLE::writeOutputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventCNFID: {
+        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
+        break;
+      }
+      default: break;
     }
-    default: break;
   }
-}
 
-CIEC_ANY *FORTE_OUT_ANY_CONSOLE::getDI(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_QI;
-    case 1: return &var_LABEL;
-    case 2: return &var_IN;
+  CIEC_ANY *FORTE_OUT_ANY_CONSOLE::getDI(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_QI;
+      case 1: return &var_LABEL;
+      case 2: return &var_IN;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_OUT_ANY_CONSOLE::getDO(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_QO;
+  CIEC_ANY *FORTE_OUT_ANY_CONSOLE::getDO(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_QO;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CEventConnection *FORTE_OUT_ANY_CONSOLE::getEOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_CNF;
+  CEventConnection *FORTE_OUT_ANY_CONSOLE::getEOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_CNF;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_OUT_ANY_CONSOLE::getDIConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_QI;
-    case 1: return &conn_LABEL;
-    case 2: return &conn_IN;
+  CDataConnection **FORTE_OUT_ANY_CONSOLE::getDIConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_QI;
+      case 1: return &conn_LABEL;
+      case 2: return &conn_IN;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection *FORTE_OUT_ANY_CONSOLE::getDOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_QO;
+  CDataConnection *FORTE_OUT_ANY_CONSOLE::getDOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_QO;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-void FORTE_OUT_ANY_CONSOLE::setInitialValues() {
-  var_QI = false_BOOL;
-  var_LABEL = ""_STRING;
-  var_IN.reset();
-  var_QO = false_BOOL;
-}
+  void FORTE_OUT_ANY_CONSOLE::setInitialValues() {
+    var_QI = false_BOOL;
+    var_LABEL = ""_STRING;
+    var_IN.reset();
+    var_QO = false_BOOL;
+  }
+
+} // namespace forte::eclipse4diac::utils

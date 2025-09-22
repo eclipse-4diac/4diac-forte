@@ -30,116 +30,116 @@ using namespace forte::literals;
 #include "forte/datatypes/forte_array_variable.h"
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_DWORD_FROM_WORDS_fct.h"
 
-using namespace forte::eclipse4diac::utils::assembling;
+namespace forte::eclipse4diac::utils::assembling {
+  namespace {
+    const auto cDataInputNames = std::array{"WORD_00"_STRID, "WORD_01"_STRID};
+    const auto cDataOutputNames = std::array{""_STRID};
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventInputTypeIds = std::array{"Event"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
+    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = cEventInputTypeIds,
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = cEventOutputTypeIds,
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_WORDS, "eclipse4diac::utils::assembling::ASSEMBLE_DWORD_FROM_WORDS"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_WORDS,
+                     "eclipse4diac::utils::assembling::ASSEMBLE_DWORD_FROM_WORDS"_STRID)
 
-namespace {
-  const auto cDataInputNames = std::array{"WORD_00"_STRID, "WORD_01"_STRID};
-  const auto cDataOutputNames = std::array{""_STRID};
-  const auto cEventInputNames = std::array{"REQ"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID};
-  const auto cEventOutputNames = std::array{"CNF"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
-} // namespace
+  FORTE_ASSEMBLE_DWORD_FROM_WORDS::FORTE_ASSEMBLE_DWORD_FROM_WORDS(const forte::StringId paInstanceNameId,
+                                                                   CFBContainer &paContainer) :
+      CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      conn_CNF(*this, 0),
+      conn_WORD_00(nullptr),
+      conn_WORD_01(nullptr),
+      conn_(*this, 0, var_) {
+  }
 
-FORTE_ASSEMBLE_DWORD_FROM_WORDS::FORTE_ASSEMBLE_DWORD_FROM_WORDS(const forte::StringId paInstanceNameId,
-                                                                 CFBContainer &paContainer) :
-    CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
-    conn_CNF(*this, 0),
-    conn_WORD_00(nullptr),
-    conn_WORD_01(nullptr),
-    conn_(*this, 0, var_) {
-}
+  void FORTE_ASSEMBLE_DWORD_FROM_WORDS::setInitialValues() {
+    var_WORD_00 = 0_WORD;
+    var_WORD_01 = 0_WORD;
+    var_ = 0_DWORD;
+  }
 
-void FORTE_ASSEMBLE_DWORD_FROM_WORDS::setInitialValues() {
-  var_WORD_00 = 0_WORD;
-  var_WORD_01 = 0_WORD;
-  var_ = 0_DWORD;
-}
-
-void FORTE_ASSEMBLE_DWORD_FROM_WORDS::readInputData(const TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventREQID: {
-      readData(0, var_WORD_00, conn_WORD_00);
-      readData(1, var_WORD_01, conn_WORD_01);
-      break;
+  void FORTE_ASSEMBLE_DWORD_FROM_WORDS::readInputData(const TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventREQID: {
+        readData(0, var_WORD_00, conn_WORD_00);
+        readData(1, var_WORD_01, conn_WORD_01);
+        break;
+      }
+      default: break;
     }
-    default: break;
   }
-}
 
-void FORTE_ASSEMBLE_DWORD_FROM_WORDS::writeOutputData(const TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventCNFID: {
-      writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
-      break;
+  void FORTE_ASSEMBLE_DWORD_FROM_WORDS::writeOutputData(const TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventCNFID: {
+        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
+        break;
+      }
+      default: break;
     }
-    default: break;
   }
-}
 
-CIEC_ANY *FORTE_ASSEMBLE_DWORD_FROM_WORDS::getDI(const size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_WORD_00;
-    case 1: return &var_WORD_01;
+  CIEC_ANY *FORTE_ASSEMBLE_DWORD_FROM_WORDS::getDI(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_WORD_00;
+      case 1: return &var_WORD_01;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_ASSEMBLE_DWORD_FROM_WORDS::getDO(const size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_;
+  CIEC_ANY *FORTE_ASSEMBLE_DWORD_FROM_WORDS::getDO(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CEventConnection *FORTE_ASSEMBLE_DWORD_FROM_WORDS::getEOConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_CNF;
+  CEventConnection *FORTE_ASSEMBLE_DWORD_FROM_WORDS::getEOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_CNF;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_ASSEMBLE_DWORD_FROM_WORDS::getDIConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_WORD_00;
-    case 1: return &conn_WORD_01;
+  CDataConnection **FORTE_ASSEMBLE_DWORD_FROM_WORDS::getDIConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_WORD_00;
+      case 1: return &conn_WORD_01;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection *FORTE_ASSEMBLE_DWORD_FROM_WORDS::getDOConUnchecked(const TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_;
+  CDataConnection *FORTE_ASSEMBLE_DWORD_FROM_WORDS::getDOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-void FORTE_ASSEMBLE_DWORD_FROM_WORDS::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-  var_ = func_ASSEMBLE_DWORD_FROM_WORDS(var_WORD_00, var_WORD_01);
-  sendOutputEvent(scmEventCNFID, paECET);
-}
+  void FORTE_ASSEMBLE_DWORD_FROM_WORDS::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
+    var_ = func_ASSEMBLE_DWORD_FROM_WORDS(var_WORD_00, var_WORD_01);
+    sendOutputEvent(scmEventCNFID, paECET);
+  }
 
-CIEC_DWORD forte::eclipse4diac::utils::assembling::func_ASSEMBLE_DWORD_FROM_WORDS(CIEC_WORD st_lv_WORD_00,
-                                                                                  CIEC_WORD st_lv_WORD_01) {
-  CIEC_DWORD st_ret_val = 0_DWORD;
+  CIEC_DWORD func_ASSEMBLE_DWORD_FROM_WORDS(CIEC_WORD st_lv_WORD_00, CIEC_WORD st_lv_WORD_01) {
+    CIEC_DWORD st_ret_val = 0_DWORD;
 
 #line 9 "ASSEMBLE_DWORD_FROM_WORDS.fct"
-  st_ret_val.partial<CIEC_WORD>(0) = st_lv_WORD_00;
+    st_ret_val.partial<CIEC_WORD>(0) = st_lv_WORD_00;
 #line 10 "ASSEMBLE_DWORD_FROM_WORDS.fct"
-  st_ret_val.partial<CIEC_WORD>(1) = st_lv_WORD_01;
+    st_ret_val.partial<CIEC_WORD>(1) = st_lv_WORD_01;
 
-  return st_ret_val;
-}
+    return st_ret_val;
+  }
+} // namespace forte::eclipse4diac::utils::assembling

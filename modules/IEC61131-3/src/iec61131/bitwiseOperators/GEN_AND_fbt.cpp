@@ -22,26 +22,27 @@
 
 using namespace forte::literals;
 
-using namespace forte::iec61131::bitwiseOperators;
+namespace forte::iec61131::bitwiseOperators {
+  DEFINE_GENERIC_FIRMWARE_FB(GEN_AND, "iec61131::bitwiseOperators::GEN_AND"_STRID)
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_AND, "iec61131::bitwiseOperators::GEN_AND"_STRID)
-
-GEN_AND::GEN_AND(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CGenBitBase(paInstanceNameId, paContainer) {
-}
-
-void GEN_AND::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID:
-      if (getFBInterfaceSpec().getNumDIs()) {
-        var_OUT = var_IN(0);
-        for (size_t i = 1; i < getFBInterfaceSpec().getNumDIs(); ++i) {
-          var_OUT = std::visit([](auto &&paOUT, auto &&paIN) -> CIEC_ANY_BIT_VARIANT { return func_AND(paOUT, paIN); },
-                               static_cast<CIEC_ANY_BIT_VARIANT::variant &>(var_OUT),
-                               static_cast<CIEC_ANY_BIT_VARIANT::variant &>(var_IN(i)));
-        }
-      }
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
+  GEN_AND::GEN_AND(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CGenBitBase(paInstanceNameId, paContainer) {
   }
-}
+
+  void GEN_AND::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case scmEventREQID:
+        if (getFBInterfaceSpec().getNumDIs()) {
+          var_OUT = var_IN(0);
+          for (size_t i = 1; i < getFBInterfaceSpec().getNumDIs(); ++i) {
+            var_OUT =
+                std::visit([](auto &&paOUT, auto &&paIN) -> CIEC_ANY_BIT_VARIANT { return func_AND(paOUT, paIN); },
+                           static_cast<CIEC_ANY_BIT_VARIANT::variant &>(var_OUT),
+                           static_cast<CIEC_ANY_BIT_VARIANT::variant &>(var_IN(i)));
+          }
+        }
+        sendOutputEvent(scmEventCNFID, paECET);
+        break;
+    }
+  }
+} // namespace forte::iec61131::bitwiseOperators

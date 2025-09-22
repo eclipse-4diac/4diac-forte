@@ -16,24 +16,24 @@
 
 using namespace forte::literals;
 
-using namespace forte::iec61499::net;
+namespace forte::iec61499::net {
+  DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBL, "iec61499::net::GEN_SUBL"_STRID)
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_SUBL, "iec61499::net::GEN_SUBL"_STRID)
+  const char *const GEN_SUBL::scmLocalIDPrefix = "loc[";
+  const char *const GEN_SUBL::scmLocalIDSuffix = "]";
 
-const char *const GEN_SUBL::scmLocalIDPrefix = "loc[";
-const char *const GEN_SUBL::scmLocalIDSuffix = "]";
+  GEN_SUBL::GEN_SUBL(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      GEN_SUBSCRIBE(paInstanceNameId, paContainer) {
+  }
 
-GEN_SUBL::GEN_SUBL(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    GEN_SUBSCRIBE(paInstanceNameId, paContainer) {
-}
+  bool GEN_SUBL::configureFB(const char *paConfigString) {
+    bool bRetVal = GEN_SUBSCRIBE::configureFB(paConfigString);
+    // subls normally don't show the QI in the tool
+    QI() = true_BOOL;
+    return bRetVal;
+  }
 
-bool GEN_SUBL::configureFB(const char *paConfigString) {
-  bool bRetVal = GEN_SUBSCRIBE::configureFB(paConfigString);
-  // subls normally don't show the QI in the tool
-  QI() = true_BOOL;
-  return bRetVal;
-}
-
-char *GEN_SUBL::getDefaultIDString(const char *paID) {
-  return buildIDString(scmLocalIDPrefix, paID, scmLocalIDSuffix);
-}
+  char *GEN_SUBL::getDefaultIDString(const char *paID) {
+    return buildIDString(scmLocalIDPrefix, paID, scmLocalIDSuffix);
+  }
+} // namespace forte::iec61499::net

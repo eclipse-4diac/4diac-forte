@@ -22,26 +22,27 @@
 
 using namespace forte::literals;
 
-using namespace forte::iec61131::bitwiseOperators;
+namespace forte::iec61131::bitwiseOperators {
+  DEFINE_GENERIC_FIRMWARE_FB(GEN_XOR, "iec61131::bitwiseOperators::GEN_XOR"_STRID)
 
-DEFINE_GENERIC_FIRMWARE_FB(GEN_XOR, "iec61131::bitwiseOperators::GEN_XOR"_STRID)
-
-GEN_XOR::GEN_XOR(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CGenBitBase(paInstanceNameId, paContainer) {
-}
-
-void GEN_XOR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case scmEventREQID:
-      if (getFBInterfaceSpec().getNumDIs()) {
-        var_OUT = var_IN(0);
-        for (size_t i = 1; i < getFBInterfaceSpec().getNumDIs(); ++i) {
-          var_OUT = std::visit([](auto &&paOUT, auto &&paIN) -> CIEC_ANY_BIT_VARIANT { return func_XOR(paOUT, paIN); },
-                               static_cast<CIEC_ANY_BIT_VARIANT::variant &>(var_OUT),
-                               static_cast<CIEC_ANY_BIT_VARIANT::variant &>(var_IN(i)));
-        }
-      }
-      sendOutputEvent(scmEventCNFID, paECET);
-      break;
+  GEN_XOR::GEN_XOR(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CGenBitBase(paInstanceNameId, paContainer) {
   }
-}
+
+  void GEN_XOR::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case scmEventREQID:
+        if (getFBInterfaceSpec().getNumDIs()) {
+          var_OUT = var_IN(0);
+          for (size_t i = 1; i < getFBInterfaceSpec().getNumDIs(); ++i) {
+            var_OUT =
+                std::visit([](auto &&paOUT, auto &&paIN) -> CIEC_ANY_BIT_VARIANT { return func_XOR(paOUT, paIN); },
+                           static_cast<CIEC_ANY_BIT_VARIANT::variant &>(var_OUT),
+                           static_cast<CIEC_ANY_BIT_VARIANT::variant &>(var_IN(i)));
+          }
+        }
+        sendOutputEvent(scmEventCNFID, paECET);
+        break;
+    }
+  }
+} // namespace forte::iec61131::bitwiseOperators

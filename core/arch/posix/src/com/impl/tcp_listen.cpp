@@ -22,46 +22,45 @@
 
 using namespace forte::literals;
 
-using namespace forte::com;
-using namespace forte::com::impl;
-
-namespace {
-  [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<TCPListenChannel> entry("tcp_listen"_STRID);
-}
-
-int TCPListenChannel::socket(const std::string_view paConfigString) {
-  addrinfo hints{};
-  hints.ai_family = AF_UNSPEC;
-  hints.ai_socktype = SOCK_STREAM;
-  hints.ai_protocol = IPPROTO_TCP;
-  hints.ai_flags = AI_PASSIVE;
-  const int sock = net::open(paConfigString, hints);
-  if (sock < 0) {
-    return -1;
+namespace forte::com::impl {
+  namespace {
+    [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<TCPListenChannel> entry("tcp_listen"_STRID);
   }
 
-  if (listen(sock, 1)) {
-    ::close(sock);
-    return -1;
-  }
-  return sock;
-}
-
-ComResult TCPListenChannel::send(ComBuffer paData) {
-  const ssize_t bytesSent = ::send(mConnectionSocket, paData.data(), paData.size(), MSG_NOSIGNAL);
-  if (bytesSent < 0 || static_cast<std::size_t>(bytesSent) != paData.size()) {
-    return ComResult::SendFailed;
-  }
-  return ComResult::Ok;
-}
-
-ssize_t TCPListenChannel::recv() {
-  if (mConnectionSocket < 0) {
-    mConnectionSocket = accept(getSocket(), nullptr, nullptr);
-    if (mConnectionSocket < 0 || net::setNonBlocking(mConnectionSocket)) {
+  int TCPListenChannel::socket(const std::string_view paConfigString) {
+    addrinfo hints{};
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_STREAM;
+    hints.ai_protocol = IPPROTO_TCP;
+    hints.ai_flags = AI_PASSIVE;
+    const int sock = net::open(paConfigString, hints);
+    if (sock < 0) {
       return -1;
     }
+
+    if (listen(sock, 1)) {
+      ::close(sock);
+      return -1;
+    }
+    return sock;
   }
-  return ::recv(mConnectionSocket, getBuffer().data() + getBuffer().size(), getMaxReceiveSize() - getBuffer().size(),
-                0);
-}
+
+  ComResult TCPListenChannel::send(ComBuffer paData) {
+    const ssize_t bytesSent = ::send(mConnectionSocket, paData.data(), paData.size(), MSG_NOSIGNAL);
+    if (bytesSent < 0 || static_cast<std::size_t>(bytesSent) != paData.size()) {
+      return ComResult::SendFailed;
+    }
+    return ComResult::Ok;
+  }
+
+  ssize_t TCPListenChannel::recv() {
+    if (mConnectionSocket < 0) {
+      mConnectionSocket = accept(getSocket(), nullptr, nullptr);
+      if (mConnectionSocket < 0 || net::setNonBlocking(mConnectionSocket)) {
+        return -1;
+      }
+    }
+    return ::recv(mConnectionSocket, getBuffer().data() + getBuffer().size(), getMaxReceiveSize() - getBuffer().size(),
+                  0);
+  }
+} // namespace forte::com::impl

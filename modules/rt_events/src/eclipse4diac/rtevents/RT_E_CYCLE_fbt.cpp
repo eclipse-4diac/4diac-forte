@@ -14,131 +14,132 @@
 
 using namespace forte::literals;
 
-using namespace forte::eclipse4diac::rtevents;
+namespace forte::eclipse4diac::rtevents {
+  namespace {
+    const auto cDataInputNames = std::array{"DT"_STRID, "Deadline"_STRID, "WCET"_STRID};
+    const auto cDataOutputNames = std::array{"QO"_STRID};
+    const auto cEventInputNames = std::array{"START"_STRID, "STOP"_STRID};
+    const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
+    const auto cEventOutputNames = std::array{"EO"_STRID};
+    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = cEventInputTypeIds,
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = cEventOutputTypeIds,
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  } // namespace
 
-DEFINE_FIRMWARE_FB(FORTE_RT_E_CYCLE, "eclipse4diac::rtevents::RT_E_CYCLE"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_RT_E_CYCLE, "eclipse4diac::rtevents::RT_E_CYCLE"_STRID)
 
-namespace {
-  const auto cDataInputNames = std::array{"DT"_STRID, "Deadline"_STRID, "WCET"_STRID};
-  const auto cDataOutputNames = std::array{"QO"_STRID};
-  const auto cEventInputNames = std::array{"START"_STRID, "STOP"_STRID};
-  const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
-  const auto cEventOutputNames = std::array{"EO"_STRID};
-  const auto cEventOutputTypeIds = std::array{"Event"_STRID};
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = cEventInputNames,
-      .mEITypeNames = cEventInputTypeIds,
-      .mEONames = cEventOutputNames,
-      .mEOTypeNames = cEventOutputTypeIds,
-      .mDINames = cDataInputNames,
-      .mDONames = cDataOutputNames,
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
+  FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      conn_EO(*this, 0),
+      conn_DT(nullptr),
+      conn_Deadline(nullptr),
+      conn_WCET(nullptr),
+      conn_QO(*this, 0, var_QO) {
+    setEventChainExecutor(&mECEO);
   };
-} // namespace
 
-FORTE_RT_E_CYCLE::FORTE_RT_E_CYCLE(const StringId paInstanceNameId, CFBContainer &paContainer) :
-    CEventSourceFB(paContainer, cFBInterfaceSpec, paInstanceNameId),
-    conn_EO(*this, 0),
-    conn_DT(nullptr),
-    conn_Deadline(nullptr),
-    conn_WCET(nullptr),
-    conn_QO(*this, 0, var_QO) {
-  setEventChainExecutor(&mECEO);
-};
-
-void FORTE_RT_E_CYCLE::setInitialValues() {
-  var_DT = 0_TIME;
-  var_Deadline = 0_TIME;
-  var_WCET = 0_TIME;
-  var_QO = 0_BOOL;
-}
-
-void FORTE_RT_E_CYCLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
-  switch (paEIID) {
-    case cgExternalEventID: sendOutputEvent(scmEventEOID, paECET); break;
-    case scmEventSTOPID:
-      if (mActive) {
-        mECEO.setDeadline(CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0)));
-        getTimer().unregisterTimedFB(this);
-        mActive = false;
-      }
-      break;
-    case scmEventSTARTID:
-      if (!mActive) {
-        mECEO.setDeadline(var_Deadline);
-        getTimer().registerPeriodicTimedFB(this, var_DT);
-        mActive = true;
-      }
-      break;
+  void FORTE_RT_E_CYCLE::setInitialValues() {
+    var_DT = 0_TIME;
+    var_Deadline = 0_TIME;
+    var_WCET = 0_TIME;
+    var_QO = 0_BOOL;
   }
-}
 
-EMGMResponse FORTE_RT_E_CYCLE::changeExecutionState(EMGMCommandType paCommand) {
-  mECEO.changeExecutionState(paCommand);
-  EMGMResponse eRetVal = CFunctionBlock::changeExecutionState(paCommand);
-  if ((EMGMResponse::Ready == eRetVal) &&
-      ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand)) && mActive) {
-    getTimer().unregisterTimedFB(this);
-    mActive = false;
-  }
-  return eRetVal;
-}
-
-void FORTE_RT_E_CYCLE::readInputData(TEventID paEIID) {
-  switch (paEIID) {
-    case scmEventSTARTID: {
-      readData(0, var_DT, conn_DT);
-      readData(1, var_Deadline, conn_Deadline);
-      readData(2, var_WCET, conn_WCET);
-      break;
+  void FORTE_RT_E_CYCLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case cgExternalEventID: sendOutputEvent(scmEventEOID, paECET); break;
+      case scmEventSTOPID:
+        if (mActive) {
+          mECEO.setDeadline(CIEC_TIME(static_cast<CIEC_TIME::TValueType>(0)));
+          getTimer().unregisterTimedFB(this);
+          mActive = false;
+        }
+        break;
+      case scmEventSTARTID:
+        if (!mActive) {
+          mECEO.setDeadline(var_Deadline);
+          getTimer().registerPeriodicTimedFB(this, var_DT);
+          mActive = true;
+        }
+        break;
     }
-    case scmEventSTOPID: {
-      break;
+  }
+
+  EMGMResponse FORTE_RT_E_CYCLE::changeExecutionState(EMGMCommandType paCommand) {
+    mECEO.changeExecutionState(paCommand);
+    EMGMResponse eRetVal = CFunctionBlock::changeExecutionState(paCommand);
+    if ((EMGMResponse::Ready == eRetVal) &&
+        ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand)) && mActive) {
+      getTimer().unregisterTimedFB(this);
+      mActive = false;
     }
-    default: break;
+    return eRetVal;
   }
-}
 
-void FORTE_RT_E_CYCLE::writeOutputData(TEventID) {
-}
-
-CIEC_ANY *FORTE_RT_E_CYCLE::getDI(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_DT;
-    case 1: return &var_Deadline;
-    case 2: return &var_WCET;
+  void FORTE_RT_E_CYCLE::readInputData(TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventSTARTID: {
+        readData(0, var_DT, conn_DT);
+        readData(1, var_Deadline, conn_Deadline);
+        readData(2, var_WCET, conn_WCET);
+        break;
+      }
+      case scmEventSTOPID: {
+        break;
+      }
+      default: break;
+    }
   }
-  return nullptr;
-}
 
-CIEC_ANY *FORTE_RT_E_CYCLE::getDO(size_t paIndex) {
-  switch (paIndex) {
-    case 0: return &var_QO;
+  void FORTE_RT_E_CYCLE::writeOutputData(TEventID) {
   }
-  return nullptr;
-}
 
-CEventConnection *FORTE_RT_E_CYCLE::getEOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_EO;
+  CIEC_ANY *FORTE_RT_E_CYCLE::getDI(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_DT;
+      case 1: return &var_Deadline;
+      case 2: return &var_WCET;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection **FORTE_RT_E_CYCLE::getDIConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_DT;
-    case 1: return &conn_Deadline;
-    case 2: return &conn_WCET;
+  CIEC_ANY *FORTE_RT_E_CYCLE::getDO(size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_QO;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
 
-CDataConnection *FORTE_RT_E_CYCLE::getDOConUnchecked(TPortId paIndex) {
-  switch (paIndex) {
-    case 0: return &conn_QO;
+  CEventConnection *FORTE_RT_E_CYCLE::getEOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_EO;
+    }
+    return nullptr;
   }
-  return nullptr;
-}
+
+  CDataConnection **FORTE_RT_E_CYCLE::getDIConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_DT;
+      case 1: return &conn_Deadline;
+      case 2: return &conn_WCET;
+    }
+    return nullptr;
+  }
+
+  CDataConnection *FORTE_RT_E_CYCLE::getDOConUnchecked(TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_QO;
+    }
+    return nullptr;
+  }
+
+} // namespace forte::eclipse4diac::rtevents

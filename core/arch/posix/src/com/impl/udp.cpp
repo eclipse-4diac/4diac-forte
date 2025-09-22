@@ -22,17 +22,16 @@
 
 using namespace forte::literals;
 
-using namespace forte::com;
-using namespace forte::com::impl;
+namespace forte::com::impl {
+  namespace {
+    [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<UDPChannel> entry("udp"_STRID);
+  }
 
-namespace {
-  [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<UDPChannel> entry("udp"_STRID);
-}
-
-int UDPChannel::socket(const std::string_view paConfigString) {
-  addrinfo hints{};
-  hints.ai_family = AF_UNSPEC;
-  hints.ai_socktype = SOCK_DGRAM;
-  hints.ai_protocol = IPPROTO_UDP;
-  return net::open(paConfigString, hints);
-}
+  int UDPChannel::socket(const std::string_view paConfigString) {
+    addrinfo hints{};
+    hints.ai_family = AF_UNSPEC;
+    hints.ai_socktype = SOCK_DGRAM;
+    hints.ai_protocol = IPPROTO_UDP;
+    return net::open(paConfigString, hints);
+  }
+} // namespace forte::com::impl
