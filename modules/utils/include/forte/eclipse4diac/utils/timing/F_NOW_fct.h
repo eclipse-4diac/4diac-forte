@@ -25,42 +25,44 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_utils__timing__F_NOW final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_utils__timing__F_NOW)
+namespace forte::eclipse4diac::utils::timing {
+  class FORTE_F_NOW final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_F_NOW)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_utils__timing__F_NOW(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    public:
+      FORTE_F_NOW(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_DATE_AND_TIME var_;
+      CIEC_DATE_AND_TIME var_;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    COutDataConnection<CIEC_DATE_AND_TIME> conn_;
+      COutDataConnection<CIEC_DATE_AND_TIME> conn_;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(CIEC_DATE_AND_TIME &pa) {
-      executeEvent(scmEventREQID, nullptr);
-      pa = var_;
-    }
+      void evt_REQ(CIEC_DATE_AND_TIME &pa) {
+        executeEvent(scmEventREQID, nullptr);
+        pa = var_;
+      }
 
-    void operator()(CIEC_DATE_AND_TIME &pa) {
-      evt_REQ(pa);
-    }
-};
+      void operator()(CIEC_DATE_AND_TIME &pa) {
+        evt_REQ(pa);
+      }
+  };
 
-CIEC_DATE_AND_TIME func_F_NOW();
+  CIEC_DATE_AND_TIME func_F_NOW();
+} // namespace forte::eclipse4diac::utils::timing

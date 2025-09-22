@@ -25,46 +25,48 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-class FORTE_TIMESTAMP_NS final : public CFunctionBlock {
-    DECLARE_FIRMWARE_FB(FORTE_TIMESTAMP_NS)
+namespace forte::eclipse4diac::utils::timing {
+  class FORTE_TIMESTAMP_NS final : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_TIMESTAMP_NS)
 
-  private:
-    static const TEventID scmEventREQID = 0;
-    static const TEventID scmEventCNFID = 0;
+    private:
+      static const TEventID scmEventREQID = 0;
+      static const TEventID scmEventCNFID = 0;
 
-    void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_TIMESTAMP_NS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+    public:
+      FORTE_TIMESTAMP_NS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_DATE_AND_TIME var_startDate;
+      CIEC_DATE_AND_TIME var_startDate;
 
-    CIEC_ULINT var_;
+      CIEC_ULINT var_;
 
-    CEventConnection conn_CNF;
+      CEventConnection conn_CNF;
 
-    CDataConnection *conn_startDate;
+      CDataConnection *conn_startDate;
 
-    COutDataConnection<CIEC_ULINT> conn_;
+      COutDataConnection<CIEC_ULINT> conn_;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void evt_REQ(const CIEC_DATE_AND_TIME &pastartDate) {
-      var_startDate = pastartDate;
-      executeEvent(scmEventREQID, nullptr);
-    }
+      void evt_REQ(const CIEC_DATE_AND_TIME &pastartDate) {
+        var_startDate = pastartDate;
+        executeEvent(scmEventREQID, nullptr);
+      }
 
-    void operator()(const CIEC_DATE_AND_TIME &pastartDate) {
-      evt_REQ(pastartDate);
-    }
-};
+      void operator()(const CIEC_DATE_AND_TIME &pastartDate) {
+        evt_REQ(pastartDate);
+      }
+  };
 
-CIEC_ULINT func_TIMESTAMP_NS(CIEC_DATE_AND_TIME st_lv_startDate);
+  CIEC_ULINT func_TIMESTAMP_NS(CIEC_DATE_AND_TIME st_lv_startDate);
+} // namespace forte::eclipse4diac::utils::timing
