@@ -36,8 +36,7 @@ namespace forte::iec61499::hardware {
 
       EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
-      EMGMResponse
-      writeValue(forte::TNameIdentifier &paNameList, const std::string &paValue, bool paForce = false) override;
+      EMGMResponse writeValue(TNameIdentifier &paNameList, const std::string &paValue, bool paForce = false) override;
 
     private:
       CDataConnection *conn_MGR_ID;
@@ -54,6 +53,6 @@ namespace forte::iec61499::hardware {
 
       // allows to set the fake timer before calling the parent CDevice which
       // will create the timer already at construction
-      forte::StringId initializeTimer();
+      StringId initializeTimer();
   };
 } // namespace forte::iec61499::hardware

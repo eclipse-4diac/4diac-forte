@@ -28,7 +28,7 @@ namespace forte::iec61499::hardware {
 
       int startDevice() override;
 
-      EMGMResponse executeMGMCommand(forte::SManagementCMD &paCommand) override;
+      EMGMResponse executeMGMCommand(SManagementCMD &paCommand) override;
 
       void startControlling();
 

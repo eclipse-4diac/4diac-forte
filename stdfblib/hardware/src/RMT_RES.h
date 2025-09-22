@@ -23,7 +23,7 @@ namespace forte::iec61499::hardware {
       DECLARE_FIRMWARE_FB(RMT_RES)
 
     public:
-      RMT_RES(forte::StringId paInstanceNameId, CFBContainer &paDevice);
+      RMT_RES(StringId paInstanceNameId, CFBContainer &paDevice);
       ~RMT_RES() override;
 
       bool initialize() override;
@@ -39,11 +39,11 @@ namespace forte::iec61499::hardware {
       CDataConnection *conn_MGR_ID;
       COutDataConnection<CIEC_WSTRING> conn_MGR_ID_int;
 
-      forte::CInternalFB<forte::iec61499::events::FORTE_E_RESTART> fb_START;
-      forte::CInternalFB<forte::iec61499::events::FORTE_E_SR> fb_MGR_FF;
-      forte::CInternalFB<DEV_MGR> fb_MGR;
+      CInternalFB<events::FORTE_E_RESTART> fb_START;
+      CInternalFB<events::FORTE_E_SR> fb_MGR_FF;
+      CInternalFB<DEV_MGR> fb_MGR;
 
-      static const forte::StringId scmVarInputNameIds[];
-      static const forte::StringId scmDIDataTypeIds[];
+      static const StringId scmVarInputNameIds[];
+      static const StringId scmDIDataTypeIds[];
   };
 } // namespace forte::iec61499::hardware

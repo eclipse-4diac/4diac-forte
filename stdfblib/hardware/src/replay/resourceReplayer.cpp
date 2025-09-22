@@ -33,11 +33,10 @@ namespace forte::iec61499::hardware {
     // Otherwise, we read the inputs and trace the event, but don't trigger the event itself, meaning
     // that we absorv the event
     // capturing "this" into the lambda created some issues for some reason
-    auto processOneEvent = [validTypes = forte::trace::reader::utils::getServiceFunctionBlockTypes(mResource),
+    auto processOneEvent = [validTypes = trace::reader::utils::getServiceFunctionBlockTypes(mResource),
                             &ecet = this->mEcet](TEventEntry paEvent) {
       // pass through non interesting events
-      if (auto type = forte::StringId::lookup(paEvent.getFB().getFBTypeName());
-          validTypes.find(type) == validTypes.end()) {
+      if (auto type = StringId::lookup(paEvent.getFB().getFBTypeName()); validTypes.find(type) == validTypes.end()) {
 
         paEvent.getFB().receiveInputEvent(paEvent.getPortId(), &ecet);
         return;
@@ -106,7 +105,7 @@ namespace forte::iec61499::hardware {
         return toReturn;
       }
 
-      auto functionBlock = forte::trace::reader::utils::getFB(&mResource, payload->getInstanceName());
+      auto functionBlock = trace::reader::utils::getFB(&mResource, payload->getInstanceName());
 
       if (functionBlock == nullptr) {
         std::cout << "Could not find the FB " << payload->getInstanceName() << " -> aborting..." << std::endl;

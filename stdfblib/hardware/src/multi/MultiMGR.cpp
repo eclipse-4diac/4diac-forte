@@ -58,7 +58,7 @@ namespace forte::iec61499::hardware {
     newMethod.mInArguments.push_back(UA_Argument());
 
     std::string listOfDevices;
-    for (const auto name : forte::DeviceFactory::getNames()) {
+    for (const auto name : DeviceFactory::getNames()) {
       if (name == "Multi"_STRID) {
         continue;
       }
@@ -107,11 +107,11 @@ namespace forte::iec61499::hardware {
 
     auto uaStringInput = static_cast<UA_String *>(input[0].data);
     const auto newDefaultDevice =
-        forte::StringId::lookup({reinterpret_cast<const char *>(uaStringInput->data), uaStringInput->length});
+        StringId::lookup({reinterpret_cast<const char *>(uaStringInput->data), uaStringInput->length});
     if (newDefaultDevice == "Multi"_STRID) {
       return UA_STATUSCODE_BADNOTSUPPORTED;
     }
-    if (!forte::DeviceFactory::setDefaultImpl(newDefaultDevice)) {
+    if (!DeviceFactory::setDefaultImpl(newDefaultDevice)) {
       return UA_STATUSCODE_BADINVALIDARGUMENT;
     }
     return UA_STATUSCODE_GOOD;

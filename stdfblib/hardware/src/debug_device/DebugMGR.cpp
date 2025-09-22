@@ -23,7 +23,7 @@ using namespace forte::literals;
 namespace forte::iec61499::hardware {
   DebugMGR::DebugMGR(CDevice &paDevice, OPCUA_MGR &paOpcuaMgr) : mDevice(paDevice), mOpcuaMgr(paOpcuaMgr) {
     // we need the fake ecet to debug control the device remotely
-    forte::EcetFactory::setDefaultImpl("Fake"_STRID);
+    EcetFactory::setDefaultImpl("Fake"_STRID);
   }
 
   bool DebugMGR::initialize() {
@@ -50,17 +50,17 @@ namespace forte::iec61499::hardware {
   }
 
   std::optional<TEventEntry> DebugMGR::getEventEntry(CResource *paResource, std::string paDestination) {
-    forte::TNameIdentifier fullName;
+    TNameIdentifier fullName;
 
     // fill out the TNameIdentifier
     size_t index = paDestination.find_first_of(".");
     while (index != std::string::npos) {
       auto currentPart = paDestination.substr(0, index);
-      fullName.push_back(forte::StringId::insert(currentPart));
+      fullName.push_back(StringId::insert(currentPart));
       paDestination = paDestination.substr(currentPart.length() + 1);
       index = paDestination.find_first_of(".");
     }
-    fullName.push_back(forte::StringId::insert(paDestination.substr(0, index)));
+    fullName.push_back(StringId::insert(paDestination.substr(0, index)));
 
     if (fullName.size() < 2) { // at least the FB and the event port must be present
       return std::nullopt;

@@ -36,7 +36,7 @@ namespace forte::iec61499::hardware {
 
   DEFINE_FIRMWARE_FB(RMT_RES, "iec61499::hardware::RMT_RES"_STRID);
 
-  RMT_RES::RMT_RES(forte::StringId paInstanceNameId, CFBContainer &paDevice) :
+  RMT_RES::RMT_RES(StringId paInstanceNameId, CFBContainer &paDevice) :
       CResource(paDevice, cFBInterfaceSpec, paInstanceNameId),
       conn_MGR_ID(nullptr),
       conn_MGR_ID_int(*this, 0, u""_WSTRING),
@@ -50,7 +50,7 @@ namespace forte::iec61499::hardware {
       return false;
     }
 
-    forte::SManagementCMD command;
+    SManagementCMD command;
 
     command.mFirstParam.push_back("START"_STRID);
     command.mFirstParam.push_back("COLD"_STRID);

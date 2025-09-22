@@ -34,14 +34,14 @@ namespace forte::iec61499::hardware {
         .mPlugNames = {},
     };
 
-    [[maybe_unused]] const forte::DeviceFactory::EntryImpl<MultiDevice> entry("Multi"_STRID);
+    [[maybe_unused]] const DeviceFactory::EntryImpl<MultiDevice> entry("Multi"_STRID);
   } // namespace
 
   MultiDevice::MultiDevice(const std::string_view paMGRID) : CDevice(cFBInterfaceSpec, {}), mMGRID(paMGRID) {
 
     // avoid creating another MultiDevice in case it was set to it in cmake
-    if (forte::DeviceFactory::getDefaultImpl() == "Multi"_STRID) {
-      forte::DeviceFactory::setDefaultImpl("RMT_DEV"_STRID);
+    if (DeviceFactory::getDefaultImpl() == "Multi"_STRID) {
+      DeviceFactory::setDefaultImpl("RMT_DEV"_STRID);
     }
 
     DEVLOG_INFO("Starting a Multi device\n");
@@ -88,7 +88,7 @@ namespace forte::iec61499::hardware {
 
     DEVLOG_INFO("The controlled device is a %s\n", forte::DeviceFactory::getDefaultImpl().data());
 
-    mControlledDevice = forte::DeviceFactory::create(mMGRID);
+    mControlledDevice = DeviceFactory::create(mMGRID);
 
     // destroy before creating a new one
     mOpcuaMgr = nullptr;

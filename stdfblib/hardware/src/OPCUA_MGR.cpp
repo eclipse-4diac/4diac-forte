@@ -543,7 +543,7 @@ namespace forte::iec61499::hardware {
 
     const char *resourceName = static_cast<const char *>(objectContext);
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::CreateFBInstance, forte::StringId::insert(resourceName), nullptr, fullFbName,
+    uaMGR->setMGMCommand(EMGMCommandType::CreateFBInstance, StringId::insert(resourceName), nullptr, fullFbName,
                          fbType);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
@@ -584,8 +584,8 @@ namespace forte::iec61499::hardware {
 
     const char *resourceName = static_cast<const char *>(objectContext);
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::CreateConnection, forte::StringId::insert(resourceName), nullptr,
-                         sourceFullName, destinationFullName);
+    uaMGR->setMGMCommand(EMGMCommandType::CreateConnection, StringId::insert(resourceName), nullptr, sourceFullName,
+                         destinationFullName);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -651,8 +651,7 @@ namespace forte::iec61499::hardware {
     const std::string writeValue(getInputValue(*static_cast<UA_String *>(input[1].data)));
 
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Write, forte::StringId::insert(resourceName), writeValue.c_str(), nullptr,
-                         nullptr);
+    uaMGR->setMGMCommand(EMGMCommandType::Write, StringId::insert(resourceName), writeValue.c_str(), nullptr, nullptr);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -689,8 +688,7 @@ namespace forte::iec61499::hardware {
 
     const char *resourceName = static_cast<const char *>(objectContext);
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Write, forte::StringId::insert(resourceName), writeValue.c_str(),
-                         writeDestination);
+    uaMGR->setMGMCommand(EMGMCommandType::Write, StringId::insert(resourceName), writeValue.c_str(), writeDestination);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -748,7 +746,7 @@ namespace forte::iec61499::hardware {
     EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
     const std::string resourceName(getInputValue(*static_cast<UA_String *>(input[0].data)));
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Start, forte::StringId::insert(resourceName), nullptr, nullptr, nullptr);
+    uaMGR->setMGMCommand(EMGMCommandType::Start, StringId::insert(resourceName), nullptr, nullptr, nullptr);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -783,7 +781,7 @@ namespace forte::iec61499::hardware {
 
     const char *resourceName = static_cast<const char *>(objectContext);
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Start, forte::StringId::insert(resourceName), nullptr, fullFbName);
+    uaMGR->setMGMCommand(EMGMCommandType::Start, StringId::insert(resourceName), nullptr, fullFbName);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -876,7 +874,7 @@ namespace forte::iec61499::hardware {
 
     const char *resourceName = static_cast<const char *>(objectContext);
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Stop, forte::StringId::insert(resourceName), nullptr, fullFbName);
+    uaMGR->setMGMCommand(EMGMCommandType::Stop, StringId::insert(resourceName), nullptr, fullFbName);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -969,7 +967,7 @@ namespace forte::iec61499::hardware {
 
     const char *resourceName = static_cast<const char *>(objectContext);
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Reset, forte::StringId::insert(resourceName), nullptr, fullFbName);
+    uaMGR->setMGMCommand(EMGMCommandType::Reset, StringId::insert(resourceName), nullptr, fullFbName);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -1062,7 +1060,7 @@ namespace forte::iec61499::hardware {
 
     const char *resourceName = static_cast<const char *>(objectContext);
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::Kill, forte::StringId::insert(resourceName), nullptr, fullFbName);
+    uaMGR->setMGMCommand(EMGMCommandType::Kill, StringId::insert(resourceName), nullptr, fullFbName);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -1138,7 +1136,7 @@ namespace forte::iec61499::hardware {
     const char *resourceName = static_cast<const char *>(objectContext);
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
 
-    uaMGR->setMGMCommand(EMGMCommandType::DeleteFBInstance, forte::StringId::insert(resourceName), nullptr, fullFbName);
+    uaMGR->setMGMCommand(EMGMCommandType::DeleteFBInstance, StringId::insert(resourceName), nullptr, fullFbName);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -1177,8 +1175,8 @@ namespace forte::iec61499::hardware {
 
     const char *resourceName = static_cast<const char *>(objectContext);
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::DeleteConnection, forte::StringId::insert(resourceName), nullptr,
-                         sourceFullName, destinationFullName);
+    uaMGR->setMGMCommand(EMGMCommandType::DeleteConnection, StringId::insert(resourceName), nullptr, sourceFullName,
+                         destinationFullName);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -1381,8 +1379,7 @@ namespace forte::iec61499::hardware {
 
     const char *resourceName = static_cast<const char *>(objectContext);
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::MonitoringAddWatch, forte::StringId::insert(resourceName), nullptr,
-                         fullFbName);
+    uaMGR->setMGMCommand(EMGMCommandType::MonitoringAddWatch, StringId::insert(resourceName), nullptr, fullFbName);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -1453,8 +1450,7 @@ namespace forte::iec61499::hardware {
 
     const char *resourceName = static_cast<const char *>(objectContext);
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::MonitoringRemoveWatch, forte::StringId::insert(resourceName), nullptr,
-                         fullFbName);
+    uaMGR->setMGMCommand(EMGMCommandType::MonitoringRemoveWatch, StringId::insert(resourceName), nullptr, fullFbName);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -1490,8 +1486,8 @@ namespace forte::iec61499::hardware {
 
     const char *resourceName = static_cast<const char *>(objectContext);
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::MonitoringTriggerEvent, forte::StringId::insert(resourceName),
-                         scmTriggerEventParam, fullFbName);
+    uaMGR->setMGMCommand(EMGMCommandType::MonitoringTriggerEvent, StringId::insert(resourceName), scmTriggerEventParam,
+                         fullFbName);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -1528,7 +1524,7 @@ namespace forte::iec61499::hardware {
 
     const char *resourceName = static_cast<const char *>(objectContext);
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::MonitoringForce, forte::StringId::insert(resourceName), writeValue.c_str(),
+    uaMGR->setMGMCommand(EMGMCommandType::MonitoringForce, StringId::insert(resourceName), writeValue.c_str(),
                          writeDestination);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
@@ -1564,8 +1560,7 @@ namespace forte::iec61499::hardware {
 
     const char *resourceName = static_cast<const char *>(objectContext);
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::MonitoringClearForce, forte::StringId::insert(resourceName), nullptr,
-                         fullFbName);
+    uaMGR->setMGMCommand(EMGMCommandType::MonitoringClearForce, StringId::insert(resourceName), nullptr, fullFbName);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     return scResponseMap.find(eRetVal)->second;
   }
@@ -1630,7 +1625,7 @@ namespace forte::iec61499::hardware {
   }
 
   void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD,
-                                forte::StringId paDestination,
+                                StringId paDestination,
                                 const char *paAdditionalParams,
                                 const char *paFirstParam,
                                 const char *paSecondParam) {
@@ -1638,10 +1633,10 @@ namespace forte::iec61499::hardware {
     mCommand.mCMD = paCMD;
     mCommand.mDestination = paDestination;
     if (paFirstParam != nullptr) {
-      mCommand.mFirstParam.push_back(forte::StringId::insert(paFirstParam));
+      mCommand.mFirstParam.push_back(StringId::insert(paFirstParam));
     }
     if (paSecondParam != nullptr) {
-      mCommand.mSecondParam.push_back(forte::StringId::insert(paSecondParam));
+      mCommand.mSecondParam.push_back(StringId::insert(paSecondParam));
     }
     if (paAdditionalParams != nullptr) {
       mCommand.mAdditionalParams = paAdditionalParams;
@@ -1649,7 +1644,7 @@ namespace forte::iec61499::hardware {
   }
 
   void OPCUA_MGR::setMGMCommand(EMGMCommandType paCMD,
-                                forte::StringId paDestination,
+                                StringId paDestination,
                                 const char *paAdditionalParams,
                                 std::vector<std::string> &paFirstParam,
                                 std::vector<std::string> paSecondParam) {
@@ -1658,12 +1653,12 @@ namespace forte::iec61499::hardware {
     mCommand.mDestination = paDestination;
     if (!paFirstParam.empty()) {
       for (std::string param : paFirstParam) {
-        mCommand.mFirstParam.push_back(forte::StringId::insert(param));
+        mCommand.mFirstParam.push_back(StringId::insert(param));
       }
     }
     if (!paSecondParam.empty()) {
       for (std::string param : paSecondParam) {
-        mCommand.mSecondParam.push_back(forte::StringId::insert(param));
+        mCommand.mSecondParam.push_back(StringId::insert(param));
       }
     }
     if (paAdditionalParams != nullptr) {

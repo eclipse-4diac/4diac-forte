@@ -34,7 +34,7 @@ namespace forte::iec61499::hardware {
 
   DEFINE_FIRMWARE_FB(Config_EMB_RES, "iec61499::hardware::Config_EMB_RES"_STRID);
 
-  Config_EMB_RES::Config_EMB_RES(forte::StringId paInstanceNameId, CFBContainer &paDevice) :
+  Config_EMB_RES::Config_EMB_RES(StringId paInstanceNameId, CFBContainer &paDevice) :
       CResource(paDevice, cFBInterfaceSpec, paInstanceNameId),
       fb_START("START"_STRID, *this),
       conn_opcua_namespace(nullptr),

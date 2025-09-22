@@ -83,13 +83,12 @@ namespace forte::iec61499::hardware {
     auto uaStringInput = static_cast<UA_String *>(input[0].data);
     auto path = std::string((const char *) uaStringInput->data, uaStringInput->length);
 
-    auto events = forte::trace::reader::utils::getEventMessages(path);
+    auto events = trace::reader::utils::getEventMessages(path);
     if (!events.has_value()) {
       return UA_STATUSCODE_BADINVALIDARGUMENT;
     }
 
-    auto replayAlgorithmEvents =
-        forte::trace::reader::utils::filterEventsForReplayDevice(events.value(), replayMgr->mDevice);
+    auto replayAlgorithmEvents = trace::reader::utils::filterEventsForReplayDevice(events.value(), replayMgr->mDevice);
 
     replayMgr->mDeviceReplayer =
         std::make_unique<CDeviceReplayer>(replayMgr->mDevice, std::move(replayAlgorithmEvents));
@@ -105,7 +104,7 @@ namespace forte::iec61499::hardware {
       // the application cannot be stopped in the iddle state
       // but we don't care about it, since the start command later
       // can still start everything, the device and the application
-      forte::SManagementCMD command;
+      SManagementCMD command;
       command.mCMD = EMGMCommandType::Stop;
       command.mDestination = {};
       replayMgr->mDevice.executeMGMCommand(command);

@@ -41,8 +41,8 @@ namespace forte::iec61499::hardware {
       void setMGR_ID(std::string_view paVal);
 
     private:
-      static const forte::StringId scmDINameIds[];
-      static const forte::StringId scmDIDataTypeIds[];
+      static const StringId scmDINameIds[];
+      static const StringId scmDIDataTypeIds[];
 
       CIEC_ANY *getDI(size_t) override;
       CDataConnection **getDIConUnchecked(TPortId) override;

@@ -21,13 +21,13 @@ namespace forte::iec61499::hardware {
       DECLARE_FIRMWARE_FB(EMB_RES);
 
     public:
-      EMB_RES(forte::StringId paInstanceNameId, CFBContainer &paDevice);
+      EMB_RES(StringId paInstanceNameId, CFBContainer &paDevice);
       ~EMB_RES() override;
 
       CIEC_ANY *getDI(size_t) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
 
     private:
-      forte::CInternalFB<forte::iec61499::events::FORTE_E_RESTART> fb_START;
+      CInternalFB<events::FORTE_E_RESTART> fb_START;
   };
 } // namespace forte::iec61499::hardware

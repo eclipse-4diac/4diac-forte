@@ -25,11 +25,11 @@ class CDevice;
 namespace forte::iec61499::hardware {
   /*! \brief Implementation of the DEV_MGR FB.
    */
-  class DEV_MGR : public forte::com_infra::CCommFB {
+  class DEV_MGR : public com_infra::CCommFB {
       DECLARE_FIRMWARE_FB(DEV_MGR)
 
     public:
-      DEV_MGR(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      DEV_MGR(StringId paInstanceNameId, CFBContainer &paContainer);
       ~DEV_MGR() override;
 
       bool initialize() override;

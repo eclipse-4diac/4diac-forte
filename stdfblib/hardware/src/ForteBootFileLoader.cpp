@@ -27,7 +27,7 @@
 namespace forte::iec61499::hardware {
   namespace {
     class BootFileOption final
-        : public forte::util::CommandLineParser::OptionImpl<"f", "bootfile", "<file>", "Set the boot-file path"> {
+        : public util::CommandLineParser::OptionImpl<"f", "bootfile", "<file>", "Set the boot-file path"> {
       public:
         bool parseOption(const std::string_view paArgument) override {
           mArgument = paArgument;

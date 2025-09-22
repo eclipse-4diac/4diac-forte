@@ -22,7 +22,7 @@ using namespace forte::literals;
 
 namespace forte::iec61499::hardware {
   namespace {
-    [[maybe_unused]] const forte::DeviceFactory::EntryImpl<ReplayDevice> entry("Replay"_STRID);
+    [[maybe_unused]] const DeviceFactory::EntryImpl<ReplayDevice> entry("Replay"_STRID);
   }
 
   ReplayDevice::ReplayDevice(const std::string_view paMGRID) :
@@ -47,7 +47,7 @@ namespace forte::iec61499::hardware {
     mAlreadyControlled = true;
   }
 
-  EMGMResponse ReplayDevice::executeMGMCommand(forte::SManagementCMD &paCommand) {
+  EMGMResponse ReplayDevice::executeMGMCommand(SManagementCMD &paCommand) {
     // the kill command is the only one that we let through before
     // the replay algorithm starts controlling the device
     // this is meant to not receive the Start command from the IDE which should be
@@ -59,8 +59,8 @@ namespace forte::iec61499::hardware {
   }
 
   const std::string_view ReplayDevice::setInitialState(const std::string_view paMGRID) {
-    forte::TimerHandlerFactory::setDefaultImpl("FakeTime"_STRID);
-    forte::EcetFactory::setDefaultImpl("Fake"_STRID);
+    TimerHandlerFactory::setDefaultImpl("FakeTime"_STRID);
+    EcetFactory::setDefaultImpl("Fake"_STRID);
     CFlexibleTracer::setTracer(CFlexibleTracer::AvailableTracers::Internal);
     return paMGRID;
   }

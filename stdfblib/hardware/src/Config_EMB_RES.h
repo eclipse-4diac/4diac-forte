@@ -22,7 +22,7 @@ namespace forte::iec61499::hardware {
       DECLARE_FIRMWARE_FB(Config_EMB_RES);
 
     public:
-      Config_EMB_RES(forte::StringId paInstanceNameId, CFBContainer &paDevice);
+      Config_EMB_RES(StringId paInstanceNameId, CFBContainer &paDevice);
       ~Config_EMB_RES() override;
 
       bool initialize() override;
@@ -34,12 +34,12 @@ namespace forte::iec61499::hardware {
 
       CConnection *getResIf2InConnectionUnchecked(TPortId) override;
 
-      forte::CInternalFB<forte::iec61499::events::FORTE_E_RESTART> fb_START;
+      CInternalFB<events::FORTE_E_RESTART> fb_START;
 
       CDataConnection *conn_opcua_namespace;
       COutDataConnection<CIEC_WSTRING> conn_opcua_namespace_int;
 
-      static const forte::StringId scmVarInputNameIds[];
-      static const forte::StringId scmDIDataTypeIds[];
+      static const StringId scmVarInputNameIds[];
+      static const StringId scmDIDataTypeIds[];
   };
 } // namespace forte::iec61499::hardware

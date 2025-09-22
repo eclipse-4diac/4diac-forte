@@ -298,7 +298,7 @@ namespace forte::iec61499::hardware {
 
       COPC_UA_Local_Handler &mUaHandler;
 
-      forte::SManagementCMD mCommand;
+      SManagementCMD mCommand;
 
       UA_NodeId mMgmtTypeId;
 
@@ -752,13 +752,13 @@ namespace forte::iec61499::hardware {
       void clearMGMCommand();
 
       void setMGMCommand(EMGMCommandType paCMD,
-                         forte::StringId paDestination,
+                         StringId paDestination,
                          const char *paAdditionalParams,
                          const char *paFirstParam,
                          const char *paSecondParam);
 
       void setMGMCommand(EMGMCommandType paCMD,
-                         forte::StringId paDestination,
+                         StringId paDestination,
                          const char *paAdditionalParams,
                          std::vector<std::string> &paFirstParam,
                          std::vector<std::string> paSecondParam = std::vector<std::string>());

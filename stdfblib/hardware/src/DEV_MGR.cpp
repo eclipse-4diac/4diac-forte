@@ -72,7 +72,7 @@ namespace forte::iec61499::hardware {
       CCommFB::executeEvent(paEIID, paECET); // initialize the underlying server FB
     } else {
       if (cgExternalEventID == paEIID && // we received a message on the network let the server correctly handle it
-          forte::com_infra::e_ProcessDataOk == CCommFB::receiveData()) { // the message was correctly received
+          com_infra::e_ProcessDataOk == CCommFB::receiveData()) { // the message was correctly received
         executeRQST();
         // send response
         CCommFB::sendData();
@@ -90,8 +90,8 @@ namespace forte::iec61499::hardware {
     delete[] (request);
   }
 
-  DEV_MGR::DEV_MGR(forte::StringId paInstanceNameId, CFBContainer &paContainer) :
-      CCommFB(paInstanceNameId, paContainer, forte::com_infra::e_Server),
+  DEV_MGR::DEV_MGR(StringId paInstanceNameId, CFBContainer &paContainer) :
+      CCommFB(paInstanceNameId, paContainer, com_infra::e_Server),
       mDevice(*paContainer.getDevice()),
       mCommandParser(mDevice) {
     getGenInterfaceSpec() = cFBInterfaceSpec;

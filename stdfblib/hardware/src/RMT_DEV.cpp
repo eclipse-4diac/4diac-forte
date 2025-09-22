@@ -34,7 +34,7 @@ namespace forte::iec61499::hardware {
         .mPlugNames = {},
     };
 
-    [[maybe_unused]] const forte::DeviceFactory::EntryImpl<RMT_DEV> entry("RMT_DEV"_STRID);
+    [[maybe_unused]] const DeviceFactory::EntryImpl<RMT_DEV> entry("RMT_DEV"_STRID);
   } // namespace
 
   RMT_DEV::RMT_DEV(const std::string_view paMGR_ID) :

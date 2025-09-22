@@ -31,7 +31,7 @@ namespace forte::iec61499::hardware {
         .mPlugNames = {},
     };
 
-    [[maybe_unused]] const forte::DeviceFactory::EntryImpl<DebugDevice> entry("Debug"_STRID);
+    [[maybe_unused]] const DeviceFactory::EntryImpl<DebugDevice> entry("Debug"_STRID);
   } // namespace
 
   DebugDevice::DebugDevice(const std::string_view) :

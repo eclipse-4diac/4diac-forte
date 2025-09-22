@@ -19,7 +19,7 @@ using namespace forte::literals;
 
 namespace forte::iec61499::hardware {
   namespace {
-    [[maybe_unused]] const forte::DeviceFactory::EntryImpl<OPCUA_DEV> entry("OPCUA_DEV"_STRID);
+    [[maybe_unused]] const DeviceFactory::EntryImpl<OPCUA_DEV> entry("OPCUA_DEV"_STRID);
   } // namespace
 
   OPCUA_DEV::OPCUA_DEV(const std::string_view paMGRID) : RMT_DEV(paMGRID), mOPCUAMgr(*this) {
