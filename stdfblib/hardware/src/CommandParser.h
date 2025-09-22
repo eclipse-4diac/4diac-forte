@@ -11,8 +11,7 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef _COMMAND_PARSER_H
-#define _COMMAND_PARSER_H
+#pragma once
 
 #include "forte/mgmcmd.h"
 #include "forte/mgmcmdstruct.h"
@@ -22,7 +21,7 @@
 
 class CDevice;
 
-namespace forte::hardware {
+namespace forte::iec61499::hardware {
 
   class CommandParser {
 
@@ -139,6 +138,4 @@ namespace forte::hardware {
       void appendIdentifierName(CIEC_STRING &paDest, TNameIdentifier &paIdentifier);
   };
 
-} // namespace forte::hardware
-
-#endif /*_COMMAND_PARSER_H*/
+} // namespace forte::iec61499::hardware

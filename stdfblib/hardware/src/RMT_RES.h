@@ -10,40 +10,40 @@
  *   Alois Zoitl, Gerhard Ebenhofer, Thomas Strasser,
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _RMT_RES_H_
-#define _RMT_RES_H_
+
+#pragma once
 
 #include "forte/resource.h"
 #include "DEV_MGR.h"
 #include "forte/iec61499/events/E_RESTART_fbt.h"
 #include "forte/iec61499/events/E_SR_fbt.h"
 
-class RMT_RES final : public CResource {
-    DECLARE_FIRMWARE_FB(RMT_RES)
+namespace forte::iec61499::hardware {
+  class RMT_RES final : public CResource {
+      DECLARE_FIRMWARE_FB(RMT_RES)
 
-  public:
-    RMT_RES(forte::StringId paInstanceNameId, CFBContainer &paDevice);
-    ~RMT_RES() override;
+    public:
+      RMT_RES(forte::StringId paInstanceNameId, CFBContainer &paDevice);
+      ~RMT_RES() override;
 
-    bool initialize() override;
+      bool initialize() override;
 
-    void joinResourceThread() const;
+      void joinResourceThread() const;
 
-    CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDI(size_t) override;
 
-  private:
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CConnection *getResIf2InConnectionUnchecked(TPortId) override;
+    private:
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CConnection *getResIf2InConnectionUnchecked(TPortId) override;
 
-    CDataConnection *conn_MGR_ID;
-    COutDataConnection<CIEC_WSTRING> conn_MGR_ID_int;
+      CDataConnection *conn_MGR_ID;
+      COutDataConnection<CIEC_WSTRING> conn_MGR_ID_int;
 
-    forte::CInternalFB<forte::iec61499::events::FORTE_E_RESTART> fb_START;
-    forte::CInternalFB<forte::iec61499::events::FORTE_E_SR> fb_MGR_FF;
-    forte::CInternalFB<DEV_MGR> fb_MGR;
+      forte::CInternalFB<forte::iec61499::events::FORTE_E_RESTART> fb_START;
+      forte::CInternalFB<forte::iec61499::events::FORTE_E_SR> fb_MGR_FF;
+      forte::CInternalFB<DEV_MGR> fb_MGR;
 
-    static const forte::StringId scmVarInputNameIds[];
-    static const forte::StringId scmDIDataTypeIds[];
-};
-
-#endif // close the ifdef sequence from the beginning of the file
+      static const forte::StringId scmVarInputNameIds[];
+      static const forte::StringId scmDIDataTypeIds[];
+  };
+} // namespace forte::iec61499::hardware

@@ -19,8 +19,7 @@
 #include "forte/util/string_utils.h"
 #include "forte/device.h"
 
-namespace forte::hardware {
-
+namespace forte::iec61499::hardware {
   CommandParser::CommandParser(CDevice &paDevice) : mDevice{paDevice} {
     mCommand.mAdditionalParams.reserve(255);
   }
@@ -576,5 +575,4 @@ namespace forte::hardware {
       paResponse.append("\n</Response>");
     }
   }
-
-} // namespace forte::hardware
+} // namespace forte::iec61499::hardware

@@ -16,12 +16,14 @@
 #include "RMT_DEV.h"
 #include "OPCUA_MGR.h"
 
-class OPCUA_DEV : public RMT_DEV {
-  public:
-    OPCUA_MGR mOPCUAMgr;
+namespace forte::iec61499::hardware {
+  class OPCUA_DEV : public RMT_DEV {
+    public:
+      OPCUA_MGR mOPCUAMgr;
 
-    explicit OPCUA_DEV(std::string_view paMGRID = "localhost:61499");
-    ~OPCUA_DEV() override = default;
+      explicit OPCUA_DEV(std::string_view paMGRID = "localhost:61499");
+      ~OPCUA_DEV() override = default;
 
-    int startDevice() override;
-};
+      int startDevice() override;
+  };
+} // namespace forte::iec61499::hardware

@@ -69,7 +69,7 @@ using namespace std::string_literals;
 namespace {
   const auto scmInputTypes = std::array{"BOOL"_STRID, "BOOL"_STRID};
 
-  EMB_RES resource({}, resource);
+  forte::iec61499::hardware::EMB_RES resource({}, resource);
 } // namespace
 
 template<typename... RD>

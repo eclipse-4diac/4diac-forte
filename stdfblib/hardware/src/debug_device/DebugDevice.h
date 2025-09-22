@@ -19,32 +19,34 @@
 // std includes
 #include <future>
 
-/**
- * @brief Device that adds debug commands to the device. The commands are defined in DebugMGR
- *
- */
-class DebugDevice : public CDevice {
-  public:
-    explicit DebugDevice(std::string_view paMGRID = "localhost:61499");
-    ~DebugDevice() override = default;
+namespace forte::iec61499::hardware {
+  /**
+   * @brief Device that adds debug commands to the device. The commands are defined in DebugMGR
+   *
+   */
+  class DebugDevice : public CDevice {
+    public:
+      explicit DebugDevice(std::string_view paMGRID = "localhost:61499");
+      ~DebugDevice() override = default;
 
-    int startDevice() override;
+      int startDevice() override;
 
-    OPCUA_MGR mOpcuaMgr;
+      OPCUA_MGR mOpcuaMgr;
 
-    DebugMGR mDebugMgr;
+      DebugMGR mDebugMgr;
 
-  private:
-    // the kill signal sent by main is handled by this promise
-    // which is used just as a inter-thread communication
-    // to avoid condition variables and such
-    std::promise<void> mKillSignal;
+    private:
+      // the kill signal sent by main is handled by this promise
+      // which is used just as a inter-thread communication
+      // to avoid condition variables and such
+      std::promise<void> mKillSignal;
 
-    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
+      EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
-    void awaitShutdown() override;
+      void awaitShutdown() override;
 
-    // needed as these are abstract in the parent
-    CIEC_ANY *getDI(size_t) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-};
+      // needed as these are abstract in the parent
+      CIEC_ANY *getDI(size_t) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+  };
+} // namespace forte::iec61499::hardware

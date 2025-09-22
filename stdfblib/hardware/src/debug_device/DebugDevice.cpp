@@ -17,57 +17,59 @@
 
 using namespace forte::literals;
 
-namespace {
-  const SFBInterfaceSpec cFBInterfaceSpec = {
-      .mEINames = {},
-      .mEITypeNames = {},
-      .mEONames = {},
-      .mEOTypeNames = {},
-      .mDINames = {},
-      .mDONames = {},
-      .mDIONames = {},
-      .mSocketNames = {},
-      .mPlugNames = {},
-  };
+namespace forte::iec61499::hardware {
+  namespace {
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = {},
+        .mEITypeNames = {},
+        .mEONames = {},
+        .mEOTypeNames = {},
+        .mDINames = {},
+        .mDONames = {},
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
 
-  [[maybe_unused]] const forte::DeviceFactory::EntryImpl<DebugDevice> entry("Debug"_STRID);
-} // namespace
+    [[maybe_unused]] const forte::DeviceFactory::EntryImpl<DebugDevice> entry("Debug"_STRID);
+  } // namespace
 
-DebugDevice::DebugDevice(const std::string_view) :
-    CDevice(cFBInterfaceSpec, {}),
-    mOpcuaMgr(*this),
-    mDebugMgr(*this, mOpcuaMgr) {
-}
-
-int DebugDevice::startDevice() {
-  CDevice::startDevice();
-  if (!mDebugMgr.initialize()) {
-    return -1;
+  DebugDevice::DebugDevice(const std::string_view) :
+      CDevice(cFBInterfaceSpec, {}),
+      mOpcuaMgr(*this),
+      mDebugMgr(*this, mOpcuaMgr) {
   }
 
-  if (mOpcuaMgr.initialize() != EMGMResponse::Ready) {
-    return -2;
+  int DebugDevice::startDevice() {
+    CDevice::startDevice();
+    if (!mDebugMgr.initialize()) {
+      return -1;
+    }
+
+    if (mOpcuaMgr.initialize() != EMGMResponse::Ready) {
+      return -2;
+    }
+    return 0;
   }
-  return 0;
-}
 
-EMGMResponse DebugDevice::changeExecutionState(EMGMCommandType paCommand) {
-  EMGMResponse eRetVal = CDevice::changeExecutionState(paCommand);
-  if (EMGMCommandType::Kill == paCommand) {
-    mKillSignal.set_value();
+  EMGMResponse DebugDevice::changeExecutionState(EMGMCommandType paCommand) {
+    EMGMResponse eRetVal = CDevice::changeExecutionState(paCommand);
+    if (EMGMCommandType::Kill == paCommand) {
+      mKillSignal.set_value();
+    }
+    return eRetVal;
   }
-  return eRetVal;
-}
 
-void DebugDevice::awaitShutdown() {
-  // wait for the kill signal to arrive
-  mKillSignal.get_future().wait();
-}
+  void DebugDevice::awaitShutdown() {
+    // wait for the kill signal to arrive
+    mKillSignal.get_future().wait();
+  }
 
-CIEC_ANY *DebugDevice::getDI(size_t) {
-  return nullptr;
-}
+  CIEC_ANY *DebugDevice::getDI(size_t) {
+    return nullptr;
+  }
 
-CDataConnection **DebugDevice::getDIConUnchecked(TPortId) {
-  return nullptr;
-}
+  CDataConnection **DebugDevice::getDIConUnchecked(TPortId) {
+    return nullptr;
+  }
+} // namespace forte::iec61499::hardware

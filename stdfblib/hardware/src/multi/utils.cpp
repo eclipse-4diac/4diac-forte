@@ -31,7 +31,7 @@
 
 using namespace forte::literals;
 
-namespace forte::hardware::multi::utils {
+namespace forte::iec61499::hardware {
 
   OPCUA_MGR *getOpcuaMgr(CDevice &paDevice) {
     auto currentDevice = DeviceFactory::getDefaultImpl();
@@ -59,4 +59,4 @@ namespace forte::hardware::multi::utils {
     TimerHandlerFactory::setDefaultImpl(paFactoriesSettings.mTimer);
   }
 
-} // namespace forte::hardware::multi::utils
+} // namespace forte::iec61499::hardware

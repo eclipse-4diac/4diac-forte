@@ -41,7 +41,7 @@ class CTesterDevice : public CDevice {
     }
 
   private:
-    forte::CInternalFB<EMB_RES> mResource;
+    forte::CInternalFB<forte::iec61499::hardware::EMB_RES> mResource;
 
     constexpr static SFBInterfaceSpec scTestDevSpec = {};
 };

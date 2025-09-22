@@ -18,40 +18,42 @@
 #include "forte/dataconn.h"
 #include "RMT_RES.h"
 
-class FakeTimeDev : public CDevice {
-  public:
-    explicit FakeTimeDev(std::string_view paMGR_ID = "localhost:61499");
-    ~FakeTimeDev() override;
+namespace forte::iec61499::hardware {
+  class FakeTimeDev : public CDevice {
+    public:
+      explicit FakeTimeDev(std::string_view paMGR_ID = "localhost:61499");
+      ~FakeTimeDev() override;
 
-    bool initialize() override;
+      bool initialize() override;
 
-    /*! \brief Adds additional functionality to the originals execute func of the device.
-     *
-     * This is that it waits till the thread of the MGR resource has anded
-     */
-    int startDevice() override;
+      /*! \brief Adds additional functionality to the originals execute func of the device.
+       *
+       * This is that it waits till the thread of the MGR resource has anded
+       */
+      int startDevice() override;
 
-    void awaitShutdown() override;
+      void awaitShutdown() override;
 
-    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
+      EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
-    EMGMResponse
-    writeValue(forte::TNameIdentifier &paNameList, const std::string &paValue, bool paForce = false) override;
+      EMGMResponse
+      writeValue(forte::TNameIdentifier &paNameList, const std::string &paValue, bool paForce = false) override;
 
-  private:
-    CDataConnection *conn_MGR_ID;
-    CDataConnection *conn_FakeTime;
+    private:
+      CDataConnection *conn_MGR_ID;
+      CDataConnection *conn_FakeTime;
 
-    COutDataConnection<CIEC_WSTRING> conn_MGR_ID_int;
-    COutDataConnection<CIEC_TIME> conn_FakeTime_int;
+      COutDataConnection<CIEC_WSTRING> conn_MGR_ID_int;
+      COutDataConnection<CIEC_TIME> conn_FakeTime_int;
 
-    CIEC_ANY *getDI(size_t) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CConnection *getResIf2InConnectionUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CConnection *getResIf2InConnectionUnchecked(TPortId) override;
 
-    RMT_RES MGR;
+      RMT_RES MGR;
 
-    // allows to set the fake timer before calling the parent CDevice which
-    // will create the timer already at construction
-    forte::StringId initializeTimer();
-};
+      // allows to set the fake timer before calling the parent CDevice which
+      // will create the timer already at construction
+      forte::StringId initializeTimer();
+  };
+} // namespace forte::iec61499::hardware

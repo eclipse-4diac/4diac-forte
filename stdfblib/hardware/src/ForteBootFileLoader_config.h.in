@@ -15,7 +15,7 @@
 
 #include <string_view>
 
-namespace forte::stdfblib::ita {
+namespace forte::iec61499::hardware {
 #cmakedefine01 FORTE_SUPPORT_BOOT_FILE
   constexpr bool cgSupportBootFile = FORTE_SUPPORT_BOOT_FILE;
 #undef FORTE_SUPPORT_BOOT_FILE

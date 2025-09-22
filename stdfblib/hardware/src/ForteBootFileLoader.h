@@ -19,42 +19,44 @@
 #include <functional>
 #include <optional>
 
-enum LoadBootResult {
-  LOAD_RESULT_OK,
-  MISSING_COLON,
-  FILE_NOT_OPENED,
-  EXTERNAL_ERROR,
-};
+namespace forte::iec61499::hardware {
+  enum LoadBootResult {
+    LOAD_RESULT_OK,
+    MISSING_COLON,
+    FILE_NOT_OPENED,
+    EXTERNAL_ERROR,
+  };
 
-class ForteBootFileLoader {
-  public:
-    using BootFileCallback = std::function<bool(const char *, char *)>;
+  class ForteBootFileLoader {
+    public:
+      using BootFileCallback = std::function<bool(const char *, char *)>;
 
-    /**
-     * Constructor which uses the the default values for the boot file location
-     * @param paCallback Object to be called for each command
-     */
-    explicit ForteBootFileLoader(BootFileCallback paCallback,
-                                 const std::optional<std::string> &paPathToFile = std::nullopt);
+      /**
+       * Constructor which uses the the default values for the boot file location
+       * @param paCallback Object to be called for each command
+       */
+      explicit ForteBootFileLoader(BootFileCallback paCallback,
+                                   const std::optional<std::string> &paPathToFile = std::nullopt);
 
-    ~ForteBootFileLoader();
+      ~ForteBootFileLoader();
 
-    [[nodiscard]] LoadBootResult loadBootFile() const;
+      [[nodiscard]] LoadBootResult loadBootFile() const;
 
-    [[nodiscard]] bool isOpen() const {
-      return (nullptr != mBootfile);
-    }
+      [[nodiscard]] bool isOpen() const {
+        return (nullptr != mBootfile);
+      }
 
-    [[nodiscard]] bool needsExit() const {
-      return mNeedsExit;
-    }
+      [[nodiscard]] bool needsExit() const {
+        return mNeedsExit;
+      }
 
-  private:
-    decltype(forte_fopen(nullptr, nullptr)) mBootfile{nullptr};
-    BootFileCallback mCallback; // for now with one callback is enough for all cases
-    bool mNeedsExit{false};
+    private:
+      decltype(forte_fopen(nullptr, nullptr)) mBootfile{nullptr};
+      BootFileCallback mCallback; // for now with one callback is enough for all cases
+      bool mNeedsExit{false};
 
-    bool openBootFile(const std::optional<std::string> &paPathToFile);
-    bool readLine(std::string &line) const;
-    static bool hasCommandEnded(const std::string &line);
-};
+      bool openBootFile(const std::optional<std::string> &paPathToFile);
+      bool readLine(std::string &line) const;
+      static bool hasCommandEnded(const std::string &line);
+  };
+} // namespace forte::iec61499::hardware

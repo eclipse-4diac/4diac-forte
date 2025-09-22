@@ -20,46 +20,48 @@
 
 using namespace forte::literals;
 
-namespace {
-  [[maybe_unused]] const forte::DeviceFactory::EntryImpl<ReplayDevice> entry("Replay"_STRID);
-}
-
-ReplayDevice::ReplayDevice(const std::string_view paMGRID) :
-    RMT_DEV(setInitialState(paMGRID)),
-    mOpcuaMgr(*this),
-    mReplayMgr(*this, mOpcuaMgr) {
-}
-
-int ReplayDevice::startDevice() {
-  RMT_DEV::startDevice();
-  if (!mReplayMgr.initialize()) {
-    return -1;
+namespace forte::iec61499::hardware {
+  namespace {
+    [[maybe_unused]] const forte::DeviceFactory::EntryImpl<ReplayDevice> entry("Replay"_STRID);
   }
 
-  if (mOpcuaMgr.initialize() != EMGMResponse::Ready) {
-    return -2;
+  ReplayDevice::ReplayDevice(const std::string_view paMGRID) :
+      RMT_DEV(setInitialState(paMGRID)),
+      mOpcuaMgr(*this),
+      mReplayMgr(*this, mOpcuaMgr) {
   }
-  return 0;
-}
 
-void ReplayDevice::startControlling() {
-  mAlreadyControlled = true;
-}
+  int ReplayDevice::startDevice() {
+    RMT_DEV::startDevice();
+    if (!mReplayMgr.initialize()) {
+      return -1;
+    }
 
-EMGMResponse ReplayDevice::executeMGMCommand(forte::SManagementCMD &paCommand) {
-  // the kill command is the only one that we let through before
-  // the replay algorithm starts controlling the device
-  // this is meant to not receive the Start command from the IDE which should be
-  // handle only after the deviceReplayer was created
-  if (paCommand.mCMD == EMGMCommandType::Start && !mAlreadyControlled) {
-    return EMGMResponse::Ready;
+    if (mOpcuaMgr.initialize() != EMGMResponse::Ready) {
+      return -2;
+    }
+    return 0;
   }
-  return CDevice::executeMGMCommand(paCommand);
-}
 
-const std::string_view ReplayDevice::setInitialState(const std::string_view paMGRID) {
-  forte::TimerHandlerFactory::setDefaultImpl("FakeTime"_STRID);
-  forte::EcetFactory::setDefaultImpl("Fake"_STRID);
-  CFlexibleTracer::setTracer(CFlexibleTracer::AvailableTracers::Internal);
-  return paMGRID;
-}
+  void ReplayDevice::startControlling() {
+    mAlreadyControlled = true;
+  }
+
+  EMGMResponse ReplayDevice::executeMGMCommand(forte::SManagementCMD &paCommand) {
+    // the kill command is the only one that we let through before
+    // the replay algorithm starts controlling the device
+    // this is meant to not receive the Start command from the IDE which should be
+    // handle only after the deviceReplayer was created
+    if (paCommand.mCMD == EMGMCommandType::Start && !mAlreadyControlled) {
+      return EMGMResponse::Ready;
+    }
+    return CDevice::executeMGMCommand(paCommand);
+  }
+
+  const std::string_view ReplayDevice::setInitialState(const std::string_view paMGRID) {
+    forte::TimerHandlerFactory::setDefaultImpl("FakeTime"_STRID);
+    forte::EcetFactory::setDefaultImpl("Fake"_STRID);
+    CFlexibleTracer::setTracer(CFlexibleTracer::AvailableTracers::Internal);
+    return paMGRID;
+  }
+} // namespace forte::iec61499::hardware

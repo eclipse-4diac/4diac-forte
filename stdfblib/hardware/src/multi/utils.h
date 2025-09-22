@@ -14,15 +14,15 @@
 #pragma once
 
 #include "forte/stringid.h"
-#include "generated/ecetfactory.h"
-#include "generated/timerhandlerfactory.h"
+#include "forte/ecetfactory.h"
+#include "forte/timerhandlerfactory.h"
 
 using namespace forte::literals;
 
-class OPCUA_MGR;
 class CDevice;
 
-namespace forte::hardware::multi::utils {
+namespace forte::iec61499::hardware {
+  class OPCUA_MGR;
 
   /**
    * @brief Get the OpcuaMgr of the device if it has any
@@ -45,4 +45,4 @@ namespace forte::hardware::multi::utils {
    */
   void setFactoriesSettings(FactoriesSettings paFactoriesSettings);
 
-} // namespace forte::hardware::multi::utils
+} // namespace forte::iec61499::hardware

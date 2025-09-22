@@ -16,32 +16,34 @@
 #include "../RMT_DEV.h"
 #include "ReplayMGR.h"
 
-/**
- * @brief Device that adds replay commands to the device. The commands are defined in ReplayMGR
- *
- */
-class ReplayDevice : public RMT_DEV {
-  public:
-    explicit ReplayDevice(std::string_view paMGRID = "localhost:61499");
-    ~ReplayDevice() override = default;
+namespace forte::iec61499::hardware {
+  /**
+   * @brief Device that adds replay commands to the device. The commands are defined in ReplayMGR
+   *
+   */
+  class ReplayDevice : public RMT_DEV {
+    public:
+      explicit ReplayDevice(std::string_view paMGRID = "localhost:61499");
+      ~ReplayDevice() override = default;
 
-    int startDevice() override;
+      int startDevice() override;
 
-    EMGMResponse executeMGMCommand(forte::SManagementCMD &paCommand) override;
+      EMGMResponse executeMGMCommand(forte::SManagementCMD &paCommand) override;
 
-    void startControlling();
+      void startControlling();
 
-    OPCUA_MGR mOpcuaMgr;
+      OPCUA_MGR mOpcuaMgr;
 
-    ReplayMGR mReplayMgr;
+      ReplayMGR mReplayMgr;
 
-  private:
-    bool mAlreadyControlled{false};
+    private:
+      bool mAlreadyControlled{false};
 
-    // the timer factory has to be set to the fake one, which needs to be done before the
-    // parent class is constructed, since the timer is created in the device execution,
-    // a member of the CDevice, so in the constructor of this class it's already too late.
-    // this method then is executed before calling the parent, giving the chance to set
-    // the timer to the fake one.
-    const std::string_view setInitialState(std::string_view paMGRID);
-};
+      // the timer factory has to be set to the fake one, which needs to be done before the
+      // parent class is constructed, since the timer is created in the device execution,
+      // a member of the CDevice, so in the constructor of this class it's already too late.
+      // this method then is executed before calling the parent, giving the chance to set
+      // the timer to the fake one.
+      const std::string_view setInitialState(std::string_view paMGRID);
+  };
+} // namespace forte::iec61499::hardware

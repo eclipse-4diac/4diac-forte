@@ -41,6 +41,12 @@ namespace forte {
   class CMonitoringHandler;
 } // namespace forte
 
+#ifdef FORTE_REPLAY_DEVICE
+namespace forte::iec61499::hardware {
+  class CResourceReplayer;
+}
+#endif // FORTE_REPLAY_DEVICE
+
 //! Datatype for indicating an absolut port num
 using TAbsDataPortNum = size_t;
 
@@ -595,7 +601,7 @@ class CFunctionBlock : public forte::CFBContainer {
 #endif // FORTE_FMU
 
 #ifdef FORTE_REPLAY_DEVICE
-    friend class CResourceReplayer;
+    friend class forte::iec61499::hardware::CResourceReplayer;
 #endif // FORTE_REPLAY_DEVICE
 };
 

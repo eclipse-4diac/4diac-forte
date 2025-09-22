@@ -17,18 +17,20 @@
 
 using namespace forte::literals;
 
-namespace {
-  [[maybe_unused]] const forte::DeviceFactory::EntryImpl<OPCUA_DEV> entry("OPCUA_DEV"_STRID);
-} // namespace
+namespace forte::iec61499::hardware {
+  namespace {
+    [[maybe_unused]] const forte::DeviceFactory::EntryImpl<OPCUA_DEV> entry("OPCUA_DEV"_STRID);
+  } // namespace
 
-OPCUA_DEV::OPCUA_DEV(const std::string_view paMGRID) : RMT_DEV(paMGRID), mOPCUAMgr(*this) {
-  RMT_DEV::changeExecutionState(EMGMCommandType::Reset);
-}
-
-int OPCUA_DEV::startDevice() {
-  RMT_DEV::startDevice();
-  if (mOPCUAMgr.initialize() != EMGMResponse::Ready) {
-    return -1;
+  OPCUA_DEV::OPCUA_DEV(const std::string_view paMGRID) : RMT_DEV(paMGRID), mOPCUAMgr(*this) {
+    RMT_DEV::changeExecutionState(EMGMCommandType::Reset);
   }
-  return 0;
-}
+
+  int OPCUA_DEV::startDevice() {
+    RMT_DEV::startDevice();
+    if (mOPCUAMgr.initialize() != EMGMResponse::Ready) {
+      return -1;
+    }
+    return 0;
+  }
+} // namespace forte::iec61499::hardware

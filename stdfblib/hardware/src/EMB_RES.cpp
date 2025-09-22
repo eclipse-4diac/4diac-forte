@@ -15,31 +15,33 @@
 
 using namespace forte::literals;
 
-DEFINE_FIRMWARE_FB(EMB_RES, "iec61499::hardware::EMB_RES"_STRID);
+namespace forte::iec61499::hardware {
+  const SFBInterfaceSpec cFBInterfaceSpec = {
+      .mEINames = {},
+      .mEITypeNames = {},
+      .mEONames = {},
+      .mEOTypeNames = {},
+      .mDINames = {},
+      .mDONames = {},
+      .mDIONames = {},
+      .mSocketNames = {},
+      .mPlugNames = {},
+  };
 
-const SFBInterfaceSpec cFBInterfaceSpec = {
-    .mEINames = {},
-    .mEITypeNames = {},
-    .mEONames = {},
-    .mEOTypeNames = {},
-    .mDINames = {},
-    .mDONames = {},
-    .mDIONames = {},
-    .mSocketNames = {},
-    .mPlugNames = {},
-};
+  DEFINE_FIRMWARE_FB(EMB_RES, "iec61499::hardware::EMB_RES"_STRID);
 
-EMB_RES::EMB_RES(forte::StringId paInstanceNameId, CFBContainer &paDevice) :
-    CResource(paDevice, cFBInterfaceSpec, paInstanceNameId),
-    fb_START("START"_STRID, *this) {
-}
+  EMB_RES::EMB_RES(forte::StringId paInstanceNameId, CFBContainer &paDevice) :
+      CResource(paDevice, cFBInterfaceSpec, paInstanceNameId),
+      fb_START("START"_STRID, *this) {
+  }
 
-EMB_RES::~EMB_RES() = default;
+  EMB_RES::~EMB_RES() = default;
 
-CIEC_ANY *EMB_RES::getDI(const size_t) {
-  return nullptr;
-}
+  CIEC_ANY *EMB_RES::getDI(const size_t) {
+    return nullptr;
+  }
 
-CDataConnection **EMB_RES::getDIConUnchecked(const TPortId) {
-  return nullptr;
-}
+  CDataConnection **EMB_RES::getDIConUnchecked(const TPortId) {
+    return nullptr;
+  }
+} // namespace forte::iec61499::hardware

@@ -28,6 +28,7 @@
 #include "../../../stdfblib/hardware/src/CommandParser.h"
 
 using namespace forte::literals;
+using namespace forte::iec61499::hardware;
 
 // ******************************* //
 // * Helper Methods Declarations * //
@@ -435,7 +436,7 @@ namespace {
   std::unique_ptr<CDevice> createDeviceFromFile(forte::StringId paDeviceName, const std::string &paFilePath) {
     auto device = std::make_unique<CTesterDevice>(paDeviceName);
     device->initialize();
-    forte::hardware::CommandParser commandParser(*device);
+    CommandParser commandParser(*device);
 
     ForteBootFileLoader fileLoader(
         [&commandParser](const char *paDest, char *paCommand) -> bool {

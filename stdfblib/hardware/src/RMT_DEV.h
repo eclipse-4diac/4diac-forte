@@ -11,46 +11,46 @@
  *   Alois Zoitl, Thomas Strasser, Gerhard Ebenhofer, Rene Smodic, Ingo Hegny
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _RMT_DEV_H_
-#define _RMT_DEV_H_
+
+#pragma once
 
 #include "forte/device.h"
 #include "RMT_RES.h"
 
-/*! \brief Implementation of the RMT_DEV.
- */
+namespace forte::iec61499::hardware {
+  /*! \brief Implementation of the RMT_DEV.
+   */
 
-class RMT_DEV : public CDevice {
-  public:
-    explicit RMT_DEV(std::string_view paMGR_ID = "localhost:61499");
-    ~RMT_DEV() override;
+  class RMT_DEV : public CDevice {
+    public:
+      explicit RMT_DEV(std::string_view paMGR_ID = "localhost:61499");
+      ~RMT_DEV() override;
 
-    bool initialize() override;
+      bool initialize() override;
 
-    /*! \brief Adds additional functionality to the originals execute func of the device.
-     *
-     * This is that it waits till the thread of the MGR resource has anded
-     */
-    int startDevice() override;
+      /*! \brief Adds additional functionality to the originals execute func of the device.
+       *
+       * This is that it waits till the thread of the MGR resource has anded
+       */
+      int startDevice() override;
 
-    void awaitShutdown() override;
+      void awaitShutdown() override;
 
-    EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
+      EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
-    void setMGR_ID(std::string_view paVal);
+      void setMGR_ID(std::string_view paVal);
 
-  private:
-    static const forte::StringId scmDINameIds[];
-    static const forte::StringId scmDIDataTypeIds[];
+    private:
+      static const forte::StringId scmDINameIds[];
+      static const forte::StringId scmDIDataTypeIds[];
 
-    CIEC_ANY *getDI(size_t) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CConnection *getResIf2InConnectionUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CConnection *getResIf2InConnectionUnchecked(TPortId) override;
 
-    COutDataConnection<CIEC_WSTRING> conn_MGR_ID_int;
-    CDataConnection *conn_MGR_ID;
+      COutDataConnection<CIEC_WSTRING> conn_MGR_ID_int;
+      CDataConnection *conn_MGR_ID;
 
-    RMT_RES MGR;
-};
-
-#endif /*RMT_DEV_H_*/
+      RMT_RES MGR;
+  };
+} // namespace forte::iec61499::hardware
