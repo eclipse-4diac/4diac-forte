@@ -105,10 +105,8 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
     forte::com_infra::EComResponse
     createOPCUAObject(UA_Server *paServer, const std::string &paPathToInstance, bool paIsPublisher);
 
-    UA_StatusCode createOPCUAObjectNode(UA_Server *paServer,
-                                        const std::string &paPathToInstance,
-                                        std::string &paBrowsePath,
-                                        bool paIsPublisher);
+    UA_StatusCode
+    createOPCUAObjectNode(UA_Server *paServer, const std::string &paPathToInstance, std::string &paBrowsePath);
 
     UA_StatusCode addOPCUACondition(UA_Server *paServer, std::string &paBrowsePath);
 
@@ -139,9 +137,7 @@ class COPC_UA_AC_Layer : public COPC_UA_Layer {
 
     bool isOPCUAObjectPresent(std::string &paBrowsePath, UA_NodeId *paNewNodeId);
 
-    std::string getPortNameFromConnection(forte::StringId paPortNameId);
-
-    std::string getFBNameFromConnection(bool paIsPublisher);
+    const SFBInterfaceSpec &getParentInterfaceSpec();
 
     char *getNameFromString(const std::string &paName);
 
