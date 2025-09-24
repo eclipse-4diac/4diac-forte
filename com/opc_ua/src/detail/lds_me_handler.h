@@ -20,7 +20,7 @@
 #include <string>
 #include <vector>
 
-namespace forte::com::opc_ua::detail {
+namespace forte::com_infra::opc_ua::detail {
 
   /**
    * @brief Handles all things related to LDS-ME
@@ -95,6 +95,6 @@ namespace forte::com::opc_ua::detail {
       /// List of discovery servers where this instance is already registered
       std::vector<UA_StringRAII> mRegisteredServers;
   };
-} // namespace forte::com::opc_ua::detail
+} // namespace forte::com_infra::opc_ua::detail
 
 #endif // SRC_COM_OPC_UA_DETAIL_LDSMEHANDLER_H_

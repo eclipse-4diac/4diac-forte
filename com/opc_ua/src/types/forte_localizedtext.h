@@ -17,30 +17,31 @@
 #include "forte/datatypes/forte_struct.h"
 #include "forte/datatypes/forte_string.h"
 
-class CIEC_LocalizedText : public CIEC_STRUCT {
-    DECLARE_FIRMWARE_DATATYPE(LocalizedText)
+namespace forte::com_infra::opc_ua {
+  class CIEC_LocalizedText : public CIEC_STRUCT {
+      DECLARE_FIRMWARE_DATATYPE(LocalizedText)
 
-  public:
-    CIEC_LocalizedText();
+    public:
+      CIEC_LocalizedText();
 
-    CIEC_STRING var_locale;
-    CIEC_STRING var_text;
+      CIEC_STRING var_locale;
+      CIEC_STRING var_text;
 
-    size_t getStructSize() const override {
-      return 2;
-    }
+      size_t getStructSize() const override {
+        return 2;
+      }
 
-    const forte::StringId *elementNames() const override {
-      return scmElementNames;
-    }
+      const forte::StringId *elementNames() const override {
+        return scmElementNames;
+      }
 
-    forte::StringId getStructTypeNameID() const override;
+      forte::StringId getStructTypeNameID() const override;
 
-    CIEC_ANY *getMember(size_t paMemberIndex) override;
-    const CIEC_ANY *getMember(size_t paMemberIndex) const override;
+      CIEC_ANY *getMember(size_t paMemberIndex) override;
+      const CIEC_ANY *getMember(size_t paMemberIndex) const override;
 
-  private:
-    static const forte::StringId scmElementNames[];
-};
-
+    private:
+      static const forte::StringId scmElementNames[];
+  };
+} // namespace forte::com_infra::opc_ua
 #endif //_FORTE_LOCALIZEDTEXT_H_

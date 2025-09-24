@@ -296,7 +296,7 @@ namespace forte::iec61499::hardware {
 
       CDevice &mUaDevice;
 
-      COPC_UA_Local_Handler &mUaHandler;
+      com_infra::opc_ua::COPC_UA_Local_Handler &mUaHandler;
 
       SManagementCMD mCommand;
 

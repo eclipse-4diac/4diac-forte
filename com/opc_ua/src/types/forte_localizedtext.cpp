@@ -16,37 +16,38 @@
 #include "forte/com/opc_ua/opcua_types.h"
 
 using namespace forte::literals;
-
 using namespace std::string_literals;
 
-namespace {
-  [[maybe_unused]] const forte::com::opc_ua::OPC_UA_External_Types::Entry entry("LocalizedText"_STRID,
-                                                                                &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
-}
-
-DEFINE_FIRMWARE_DATATYPE(LocalizedText, "LocalizedText"_STRID);
-
-CIEC_LocalizedText::CIEC_LocalizedText() : CIEC_STRUCT(), var_locale(""s), var_text(""s) {
-}
-
-forte::StringId CIEC_LocalizedText::getStructTypeNameID() const {
-  return "LocalizedText"_STRID;
-}
-
-CIEC_ANY *CIEC_LocalizedText::getMember(size_t paMemberIndex) {
-  switch (paMemberIndex) {
-    case 0: return &var_locale;
-    case 1: return &var_text;
+namespace forte::com_infra::opc_ua {
+  namespace {
+    [[maybe_unused]] const forte::com_infra::opc_ua::OPC_UA_External_Types::Entry
+        entry("LocalizedText"_STRID, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
   }
-  return nullptr;
-}
 
-const CIEC_ANY *CIEC_LocalizedText::getMember(size_t paMemberIndex) const {
-  switch (paMemberIndex) {
-    case 0: return &var_locale;
-    case 1: return &var_text;
+  DEFINE_FIRMWARE_DATATYPE(LocalizedText, "LocalizedText"_STRID);
+
+  CIEC_LocalizedText::CIEC_LocalizedText() : CIEC_STRUCT(), var_locale(""s), var_text(""s) {
   }
-  return nullptr;
-}
 
-const forte::StringId CIEC_LocalizedText::scmElementNames[] = {"locale"_STRID, "text"_STRID};
+  forte::StringId CIEC_LocalizedText::getStructTypeNameID() const {
+    return "LocalizedText"_STRID;
+  }
+
+  CIEC_ANY *CIEC_LocalizedText::getMember(size_t paMemberIndex) {
+    switch (paMemberIndex) {
+      case 0: return &var_locale;
+      case 1: return &var_text;
+    }
+    return nullptr;
+  }
+
+  const CIEC_ANY *CIEC_LocalizedText::getMember(size_t paMemberIndex) const {
+    switch (paMemberIndex) {
+      case 0: return &var_locale;
+      case 1: return &var_text;
+    }
+    return nullptr;
+  }
+
+  const forte::StringId CIEC_LocalizedText::scmElementNames[] = {"locale"_STRID, "text"_STRID};
+} // namespace forte::com_infra::opc_ua

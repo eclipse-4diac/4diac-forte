@@ -275,7 +275,7 @@ namespace forte::iec61499::hardware {
 
   OPCUA_MGR::OPCUA_MGR(CDevice &paUaDevice) :
       mUaDevice(paUaDevice),
-      mUaHandler(paUaDevice.getDeviceExecution().getExtEvHandler<COPC_UA_Local_Handler>()) {
+      mUaHandler(paUaDevice.getDeviceExecution().getExtEvHandler<com_infra::opc_ua::COPC_UA_Local_Handler>()) {
   }
 
   OPCUA_MGR::~OPCUA_MGR() {

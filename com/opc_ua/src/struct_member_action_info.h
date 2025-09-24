@@ -17,23 +17,25 @@
 #include "opcua_layer.h"
 #include "opcua_objectstruct_helper.h"
 
-class CStructMemberActionInfo : public CActionInfo {
-  public:
-    explicit CStructMemberActionInfo(COPC_UA_ObjectStruct_Helper &paStructHelper,
-                                     COPC_UA_Layer &paLayer,
-                                     UA_ActionType paAction,
-                                     const std::string &paEndpoint) :
-        CActionInfo(paLayer, paAction, paEndpoint),
-        mStructHelper(paStructHelper) {
-    }
+namespace forte::com_infra::opc_ua {
+  class CStructMemberActionInfo : public CActionInfo {
+    public:
+      explicit CStructMemberActionInfo(COPC_UA_ObjectStruct_Helper &paStructHelper,
+                                       COPC_UA_Layer &paLayer,
+                                       UA_ActionType paAction,
+                                       const std::string &paEndpoint) :
+          CActionInfo(paLayer, paAction, paEndpoint),
+          mStructHelper(paStructHelper) {
+      }
 
-    const CIEC_ANY *const *getDataToSend() override {
-      mMemberArr[0] = mStructHelper.getStructMember(*this, true);
-      return mMemberArr;
-    }
+      const CIEC_ANY *const *getDataToSend() override {
+        mMemberArr[0] = mStructHelper.getStructMember(*this, true);
+        return mMemberArr;
+      }
 
-  private:
-    CIEC_ANY const *mMemberArr[1];
+    private:
+      CIEC_ANY const *mMemberArr[1];
 
-    COPC_UA_ObjectStruct_Helper &mStructHelper;
-};
+      COPC_UA_ObjectStruct_Helper &mStructHelper;
+  };
+} // namespace forte::com_infra::opc_ua

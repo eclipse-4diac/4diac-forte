@@ -16,63 +16,65 @@
 #include "forte/util/parameterParser.h"
 #include <unordered_map>
 
-// we tried to use the logLevelNames and logCategoryNames as extern from open62541 but it failed when using with shared
-// libray
-const std::unordered_map<size_t, const char *> LogLevelNames{
-    {100, "trace"}, {200, "debug"}, {300, "info"}, {400, "warning"}, {500, "error"}, {600, "fatal"},
-};
+namespace forte::com_infra::opc_ua {
+  // we tried to use the logLevelNames and logCategoryNames as extern from open62541 but it failed when using with
+  // shared libray
+  const std::unordered_map<size_t, const char *> LogLevelNames{
+      {100, "trace"}, {200, "debug"}, {300, "info"}, {400, "warning"}, {500, "error"}, {600, "fatal"},
+  };
 
-const char *const LogCategoryNames[10] = {"network",  "channel",        "session",   "server", "client",
-                                          "userland", "securitypolicy", "eventloop", "pubsub", "discovery"};
+  const char *const LogCategoryNames[10] = {"network",  "channel",        "session",   "server", "client",
+                                            "userland", "securitypolicy", "eventloop", "pubsub", "discovery"};
 
-UA_Logger COPC_UA_HandlerAbstract::UA_Forte_logger = {UA_Log_Forte, nullptr, UA_Log_Forte_clear};
+  UA_Logger COPC_UA_HandlerAbstract::UA_Forte_logger = {UA_Log_Forte, nullptr, UA_Log_Forte_clear};
 
-COPC_UA_HandlerAbstract::COPC_UA_HandlerAbstract(CDeviceExecution &paDeviceExecution) :
-    CExternalEventHandler(paDeviceExecution) {
-}
-
-COPC_UA_HandlerAbstract::~COPC_UA_HandlerAbstract() = default;
-
-void COPC_UA_HandlerAbstract::triggerNewEvent(CEventSourceFB &paLayer) {
-  startNewEventChain(&paLayer);
-}
-
-UA_Logger &COPC_UA_HandlerAbstract::getLogger() {
-  return UA_Forte_logger;
-}
-
-void COPC_UA_HandlerAbstract::UA_Log_Forte( // We omit SONAR only for the parameters
-    void *,
-    UA_LogLevel paLevel,
-    UA_LogCategory paCategory,
-    const char *paMsg,
-    va_list paArgs // NOSONAR
-) {
-
-  char tmpStr[mMaxLogLength];
-  forte_snprintf(tmpStr, mMaxLogLength, "[OPC UA LOGGER] %s/%s\t", LogLevelNames.at(paLevel),
-                 LogCategoryNames[paCategory]);
-  char *start = &tmpStr[strlen(tmpStr)];
-
-  forte_vsnprintf(start, mMaxLogLength, paMsg, paArgs);
-
-  size_t len = strlen(tmpStr);
-  tmpStr[len] = '\n';
-  tmpStr[len + 1] = '\0';
-
-  switch (paLevel) {
-    case UA_LOGLEVEL_TRACE:
-    case UA_LOGLEVEL_DEBUG: DEVLOG_DEBUG(tmpStr); break;
-    case UA_LOGLEVEL_INFO: DEVLOG_INFO(tmpStr); break;
-    case UA_LOGLEVEL_WARNING: DEVLOG_WARNING(tmpStr); break;
-    case UA_LOGLEVEL_ERROR:
-    case UA_LOGLEVEL_FATAL: DEVLOG_ERROR(tmpStr); break;
-    default: break;
+  COPC_UA_HandlerAbstract::COPC_UA_HandlerAbstract(CDeviceExecution &paDeviceExecution) :
+      CExternalEventHandler(paDeviceExecution) {
   }
-}
 
-void COPC_UA_HandlerAbstract::UA_Log_Forte_clear( // We omit SONAR only for the parameters
-    UA_Logger * // NOSONAR
-) {
-  // do nothing
-}
+  COPC_UA_HandlerAbstract::~COPC_UA_HandlerAbstract() = default;
+
+  void COPC_UA_HandlerAbstract::triggerNewEvent(CEventSourceFB &paLayer) {
+    startNewEventChain(&paLayer);
+  }
+
+  UA_Logger &COPC_UA_HandlerAbstract::getLogger() {
+    return UA_Forte_logger;
+  }
+
+  void COPC_UA_HandlerAbstract::UA_Log_Forte( // We omit SONAR only for the parameters
+      void *,
+      UA_LogLevel paLevel,
+      UA_LogCategory paCategory,
+      const char *paMsg,
+      va_list paArgs // NOSONAR
+  ) {
+
+    char tmpStr[mMaxLogLength];
+    forte_snprintf(tmpStr, mMaxLogLength, "[OPC UA LOGGER] %s/%s\t", LogLevelNames.at(paLevel),
+                   LogCategoryNames[paCategory]);
+    char *start = &tmpStr[strlen(tmpStr)];
+
+    forte_vsnprintf(start, mMaxLogLength, paMsg, paArgs);
+
+    size_t len = strlen(tmpStr);
+    tmpStr[len] = '\n';
+    tmpStr[len + 1] = '\0';
+
+    switch (paLevel) {
+      case UA_LOGLEVEL_TRACE:
+      case UA_LOGLEVEL_DEBUG: DEVLOG_DEBUG(tmpStr); break;
+      case UA_LOGLEVEL_INFO: DEVLOG_INFO(tmpStr); break;
+      case UA_LOGLEVEL_WARNING: DEVLOG_WARNING(tmpStr); break;
+      case UA_LOGLEVEL_ERROR:
+      case UA_LOGLEVEL_FATAL: DEVLOG_ERROR(tmpStr); break;
+      default: break;
+    }
+  }
+
+  void COPC_UA_HandlerAbstract::UA_Log_Forte_clear( // We omit SONAR only for the parameters
+      UA_Logger * // NOSONAR
+  ) {
+    // do nothing
+  }
+} // namespace forte::com_infra::opc_ua

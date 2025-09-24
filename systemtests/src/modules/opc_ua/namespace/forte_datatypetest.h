@@ -19,19 +19,20 @@
 #include "forte/datatypes/forte_sint.h"
 #include "forte/datatypes/forte_bool.h"
 
-class CIEC_DataTypeTest : public CIEC_STRUCT {
-    DECLARE_FIRMWARE_DATATYPE(DataTypeTest)
+namespace forte::com_infra::opc_ua::test {
+  class CIEC_DataTypeTest : public CIEC_STRUCT {
+      DECLARE_FIRMWARE_DATATYPE(DataTypeTest)
 
-  public:
-    CIEC_DataTypeTest();
+    public:
+      CIEC_DataTypeTest();
 
-    CIEC_STRING var_Name;
-    CIEC_SINT var_Age;
-    CIEC_BOOL var_IsRegistered;
+      CIEC_STRING var_Name;
+      CIEC_SINT var_Age;
+      CIEC_BOOL var_IsRegistered;
 
-    size_t getStructSize() const override {
-      return 3;
-    }
+      size_t getStructSize() const override {
+        return 3;
+      }
 
     const forte::StringId *elementNames() const override {
       return scmElementNames;
@@ -44,6 +45,6 @@ class CIEC_DataTypeTest : public CIEC_STRUCT {
 
   private:
     static const forte::StringId scmElementNames[];
-};
-
+  };
+} // namespace forte::com_infra::opc_ua::test
 #endif //_FORTE_DATATYPETEST_H_
