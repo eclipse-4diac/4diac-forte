@@ -30,7 +30,7 @@ namespace forte {
       awaitDeviceShutdown();
       mActiveDevice->deinitialize();
     }
-    mActiveDevice = forte::DeviceFactory::create(paMGRID);
+    mActiveDevice = DeviceFactory::create(paMGRID);
     if (mActiveDevice) {
       mActiveDevice->initialize();
       mActiveDevice->startDevice();

@@ -107,5 +107,5 @@ namespace forte {
     }
   }
 
-  const forte::StringId forte::CDataTypeTrait<CIEC_REAL>::scmDataTypeName = "REAL"_STRID;
+  const StringId CDataTypeTrait<CIEC_REAL>::scmDataTypeName = "REAL"_STRID;
 } // namespace forte

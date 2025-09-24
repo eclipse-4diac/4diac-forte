@@ -38,13 +38,13 @@ namespace forte {
       void toString(std::string &paTargetBuf) const override;
       int fromString(const char *paValue) override;
 
-      static EDataTypeID getElementaryDataTypeId(forte::StringId paTypeNameId);
+      static EDataTypeID getElementaryDataTypeId(StringId paTypeNameId);
 
     protected:
       CIEC_ANY_ELEMENTARY() = default;
 
     private:
       bool isTypeSpecifier(const char *paValue, const char *paHashPosition) const;
-      bool isCastable(forte::StringId paTypeNameId) const;
+      bool isCastable(StringId paTypeNameId) const;
   };
 } // namespace forte

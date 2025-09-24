@@ -21,6 +21,6 @@ using namespace forte::literals;
 namespace forte::io {
   DEFINE_FIRMWARE_FB(FORTE_ID, "ID"_STRID)
 
-  FORTE_ID::FORTE_ID(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+  FORTE_ID::FORTE_ID(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CInputFB<CIEC_DWORD>(paContainer, paInstanceNameId) {};
 } // namespace forte::io

@@ -29,14 +29,13 @@ namespace forte {
 
       ~CEventConnection() override;
 
-      EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
+      EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) override;
 
-      EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
-                                         std::span<const forte::StringId> paDstPortNameId) override;
+      EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) override;
 
-      EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
+      EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) override;
 
-      void getSourcePortName(forte::TNameIdentifier &paResult) const override;
+      void getSourcePortName(TNameIdentifier &paResult) const override;
 
       /*! \brief Triggers the event connection and all destinations are notified.
        *

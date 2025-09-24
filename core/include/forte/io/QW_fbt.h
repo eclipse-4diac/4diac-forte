@@ -22,10 +22,10 @@ namespace forte::io {
   /*! /brief generic class for QW function blocks providing access to one word physical output
    *
    */
-  class FORTE_QW final : public forte::io::COutputFB<CIEC_WORD> {
+  class FORTE_QW final : public COutputFB<CIEC_WORD> {
       DECLARE_FIRMWARE_FB(FORTE_QW)
 
     public:
-      FORTE_QW(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_QW(StringId paInstanceNameId, CFBContainer &paContainer);
   };
 } // namespace forte::io

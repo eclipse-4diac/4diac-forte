@@ -72,7 +72,7 @@ namespace forte {
 
     for (size_t i = openingQuote + 1; i < inputString.length(); ++i) {
       if (inputString[i] == '$') {
-        if (forte::util::isHexDigit(inputString[i + 1]) && forte::util::isHexDigit(inputString[i + 2])) {
+        if (util::isHexDigit(inputString[i + 1]) && util::isHexDigit(inputString[i + 2])) {
           uint8_t hexNumber;
           auto result = std::from_chars(inputString.data() + (i + 1), inputString.data() + (i + 3), hexNumber, 16);
           if (result.ec == std::errc()) {
@@ -183,5 +183,5 @@ namespace forte {
     }
   }
 
-  const forte::StringId forte::CDataTypeTrait<CIEC_STRING>::scmDataTypeName = "STRING"_STRID;
+  const StringId CDataTypeTrait<CIEC_STRING>::scmDataTypeName = "STRING"_STRID;
 } // namespace forte

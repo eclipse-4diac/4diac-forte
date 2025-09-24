@@ -30,7 +30,7 @@ namespace forte::trace {
    */
   class CInternalTracer final {
     public:
-      CInternalTracer(forte::StringId, size_t);
+      CInternalTracer(StringId, size_t);
 
       virtual ~CInternalTracer() = default;
 

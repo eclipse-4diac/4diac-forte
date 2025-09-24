@@ -23,10 +23,10 @@
 
 namespace forte {
   struct SCFB_FBConnectionData {
-      forte::StringId mSrcFBNameId;
-      forte::StringId mSrcId;
-      forte::StringId mDstFBNameId;
-      forte::StringId mDstId;
+      StringId mSrcFBNameId;
+      StringId mSrcId;
+      StringId mDstFBNameId;
+      StringId mDstId;
   };
 
   struct SCFB_FBNData {
@@ -57,7 +57,7 @@ namespace forte {
       bool configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY &paRefValue) override;
       bool configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue) override;
       //! implement improved version of get Var for CFBs, allowing to read and write to internal elements
-      CIEC_ANY *getVar(forte::StringId *paNameList, unsigned int paNameListSize) override;
+      CIEC_ANY *getVar(StringId *paNameList, unsigned int paNameListSize) override;
 
       EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
@@ -72,7 +72,7 @@ namespace forte {
        */
       CCompositeFB(CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
-                   forte::StringId paInstanceNameId,
+                   StringId paInstanceNameId,
                    const SCFB_FBNData &paFBNData);
       void setInitialValues() override = 0;
 
@@ -90,16 +90,15 @@ namespace forte {
       void createEventConnections();
       void prepareIf2InEventCons();
 
-      void
-      establishConnection(CConnection *paCon, CFunctionBlock &paDstFb, std::span<const forte::StringId> paDstNameId);
+      void establishConnection(CConnection *paCon, CFunctionBlock &paDstFb, std::span<const StringId> paDstNameId);
       void createDataConnections();
-      CDataConnection *getDataConn(CFunctionBlock *paSrcFB, forte::StringId paSrcNameId);
+      CDataConnection *getDataConn(CFunctionBlock *paSrcFB, StringId paSrcNameId);
       void createAdapterConnections();
       virtual void setFBNetworkInitialValues();
 
       //! Acquire the function block for a given function block instance name id this may be a contained fb, an adapter,
       //! or the composite itself.
-      CFunctionBlock *getFunctionBlock(forte::StringId paFBNameId);
+      CFunctionBlock *getFunctionBlock(StringId paFBNameId);
 
       virtual CDataConnection *getIf2InConUnchecked(TPortId) = 0;
       virtual CInOutDataConnection *getDIOOutConInternalUnchecked(TPortId) {

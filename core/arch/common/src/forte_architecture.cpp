@@ -28,7 +28,7 @@ namespace forte::arch {
     if (auto result = CForteSpecificArchitecture::initialize(argc, argv); result != 0) {
       return result;
     }
-    forte::StartupHookRegistry::invoke(argc, argv);
+    StartupHookRegistry::invoke(argc, argv);
     mInitialized = true;
     return 0;
   }

@@ -291,7 +291,7 @@ namespace forte {
        * @param paLength The array length
        * @param paArrayType The element type
        */
-      CIEC_ARRAY_DYNAMIC(TForteUInt16 paLength, forte::StringId paArrayType) :
+      CIEC_ARRAY_DYNAMIC(TForteUInt16 paLength, StringId paArrayType) :
           mSize(0),
           mElementSize(0),
           mLowerBound(0),
@@ -307,7 +307,7 @@ namespace forte {
        * @param paUpperBound The upper bound
        * @param paArrayType The element type
        */
-      CIEC_ARRAY_DYNAMIC(intmax_t paLowerBound, intmax_t paUpperBound, forte::StringId paArrayType) :
+      CIEC_ARRAY_DYNAMIC(intmax_t paLowerBound, intmax_t paUpperBound, StringId paArrayType) :
           mSize(0),
           mElementSize(0),
           mLowerBound(paLowerBound),
@@ -356,7 +356,7 @@ namespace forte {
           mLowerBound(paSource.getLowerBound()),
           mUpperBound(paSource.getUpperBound()),
           mData(nullptr) {
-        mElementDataTypeEntry = forte::getDataTypeEntry(paSource.getElementTypeNameID());
+        mElementDataTypeEntry = getDataTypeEntry(paSource.getElementTypeNameID());
         setup(paSource);
       }
 
@@ -468,10 +468,10 @@ namespace forte {
       }
 
       //! Function to configure the array if it is created via the typelib
-      void setup(TForteUInt16 paLength, forte::StringId paArrayType);
+      void setup(TForteUInt16 paLength, StringId paArrayType);
 
       //! Function to configure the array if it is created via the typelib
-      void setup(intmax_t paLowerBound, intmax_t paUpperBound, forte::StringId paArrayType);
+      void setup(intmax_t paLowerBound, intmax_t paUpperBound, StringId paArrayType);
 
       [[nodiscard]] size_t size() const override {
         return mSize;
@@ -563,8 +563,8 @@ namespace forte {
         return mData != nullptr ? reinterpret_cast<CIEC_ANY *>(mData)->getDataTypeID() : e_ANY;
       }
 
-      [[nodiscard]] forte::StringId getElementTypeNameID() const override {
-        return mElementDataTypeEntry != nullptr ? mElementDataTypeEntry->getTypeNameId() : forte::StringId{};
+      [[nodiscard]] StringId getElementTypeNameID() const override {
+        return mElementDataTypeEntry != nullptr ? mElementDataTypeEntry->getTypeNameId() : StringId{};
       }
 
       [[nodiscard]] int fromString(const char *paValue) override;
@@ -626,7 +626,7 @@ namespace forte {
       intmax_t mLowerBound; ///< The lower bound of the array
       intmax_t mUpperBound; ///< The upper bound of the array
       void *mData; ///< The data pointer (with mSize * mElementSize bytes capacity)
-      forte::CDataTypeEntry *mElementDataTypeEntry; ///< The element data type entry
+      CDataTypeEntry *mElementDataTypeEntry; ///< The element data type entry
   };
 
   static_assert(std::is_copy_constructible_v<CIEC_ARRAY_DYNAMIC>);

@@ -26,8 +26,8 @@
 namespace forte {
   CBaseFB::CBaseFB(CFBContainer &paContainer,
                    const SFBInterfaceSpec &paInterfaceSpec,
-                   const forte::StringId paInstanceNameId,
-                   std::span<const forte::StringId> paVarInternalNames) :
+                   const StringId paInstanceNameId,
+                   std::span<const StringId> paVarInternalNames) :
       CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
       cmVarInternalNames(paVarInternalNames) {
   }
@@ -36,7 +36,7 @@ namespace forte {
     CFunctionBlock::setInitialValues();
   }
 
-  CIEC_ANY *CBaseFB::getVar(forte::StringId *paNameList, unsigned int paNameListSize) {
+  CIEC_ANY *CBaseFB::getVar(StringId *paNameList, unsigned int paNameListSize) {
     CIEC_ANY *poRetVal = CFunctionBlock::getVar(paNameList, paNameListSize);
     if ((nullptr == poRetVal) && (1 == paNameListSize)) {
       poRetVal = getInternalVar(*paNameList);
@@ -44,8 +44,8 @@ namespace forte {
     return poRetVal;
   }
 
-  CIEC_ANY *CBaseFB::getInternalVar(forte::StringId paInternalName) {
-    TPortId unVarId = forte::getPortId(paInternalName, cmVarInternalNames);
+  CIEC_ANY *CBaseFB::getInternalVar(StringId paInternalName) {
+    TPortId unVarId = getPortId(paInternalName, cmVarInternalNames);
 
     if (unVarId != cgInvalidPortId) {
       return getVarInternal(unVarId);
@@ -67,7 +67,7 @@ namespace forte {
     }
 
     for (size_t i = 0; i < cmVarInternalNames.size(); ++i) {
-      forte::util::writeToStringNameValuePair(paTargetBuf, cmVarInternalNames[i], getVarInternal(i));
+      util::writeToStringNameValuePair(paTargetBuf, cmVarInternalNames[i], getVarInternal(i));
       if (i != cmVarInternalNames.size() - 1) {
         paTargetBuf += csmToStringSeparator;
       }

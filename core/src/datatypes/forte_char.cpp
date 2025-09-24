@@ -75,11 +75,10 @@ namespace forte {
         return bufferCount + 3; // $ + control symbol + '
       }
 
-      if (forte::util::isHexDigit(paValue[bufferCount + 1]) && forte::util::isHexDigit(paValue[bufferCount + 2]) &&
+      if (util::isHexDigit(paValue[bufferCount + 1]) && util::isHexDigit(paValue[bufferCount + 2]) &&
           '\'' == paValue[bufferCount + 3]) { // if there are two symbols it is a hex code
-        const TForteChar codePoint =
-            static_cast<TForteChar>((forte::util::charHexDigitToInt(paValue[bufferCount + 1]) << 4) +
-                                    forte::util::charHexDigitToInt(paValue[bufferCount + 2]));
+        const TForteChar codePoint = static_cast<TForteChar>((util::charHexDigitToInt(paValue[bufferCount + 1]) << 4) +
+                                                             util::charHexDigitToInt(paValue[bufferCount + 2]));
         *this = CIEC_CHAR(codePoint);
         return bufferCount + 4; // Three symbols for code point and closing '
       }
@@ -88,5 +87,5 @@ namespace forte {
     return -1; // no match so something must be wrong
   }
 
-  const forte::StringId forte::CDataTypeTrait<CIEC_CHAR>::scmDataTypeName = "CHAR"_STRID;
+  const StringId CDataTypeTrait<CIEC_CHAR>::scmDataTypeName = "CHAR"_STRID;
 } // namespace forte

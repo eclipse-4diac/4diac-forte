@@ -19,10 +19,10 @@
 #include "forte/datatypes/forte_lword.h"
 
 namespace forte::io {
-  class FORTE_IL final : public forte::io::CInputFB<CIEC_LWORD> {
+  class FORTE_IL final : public CInputFB<CIEC_LWORD> {
       DECLARE_FIRMWARE_FB(FORTE_IL)
 
     public:
-      FORTE_IL(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_IL(StringId paInstanceNameId, CFBContainer &paContainer);
   };
 } // namespace forte::io

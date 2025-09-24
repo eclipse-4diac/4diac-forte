@@ -41,7 +41,7 @@ namespace forte {
             TFileDescriptor; //!< General type definition for a file descriptor. To be used by the callback classes.
         static const TFileDescriptor scmInvalidFileDescriptor = FORTE_INVALID_SOCKET;
 
-        void addComCallback(TFileDescriptor paFD, forte::com_infra::CComCallback *paComLayer);
+        void addComCallback(TFileDescriptor paFD, com_infra::CComCallback *paComLayer);
         void removeComCallback(TFileDescriptor paFD);
 
         /* functions needed for the external event handler interface */
@@ -59,7 +59,7 @@ namespace forte {
       private:
         struct TConnContType {
             TFileDescriptor mSockDes;
-            forte::com_infra::CComCallback *mCallee;
+            com_infra::CComCallback *mCallee;
         };
 
         typedef CSinglyLinkedList<TConnContType> TConnectionContainer;

@@ -61,7 +61,7 @@ namespace forte::arch {
       //! The posix thread mutex handle of the operating system.
       pthread_mutex_t mMutex;
 
-      friend class forte::arch::CPThreadSemaphore;
+      friend class CPThreadSemaphore;
   };
 
   typedef CPThreadSyncObject CSyncObject; // allows that doxygen can generate better documenation

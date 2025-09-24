@@ -23,7 +23,7 @@ namespace forte::trace {
     return mTracer;
   }
 
-  CFlexibleTracer::CFlexibleTracer(forte::StringId instanceName, size_t bufferSize) {
+  CFlexibleTracer::CFlexibleTracer(StringId instanceName, size_t bufferSize) {
     if (mCurrentTracer == AvailableTracers::BareCtf) {
       mTracer.emplace<BarectfPlatformFORTE>(instanceName, bufferSize);
     } else if (mCurrentTracer == AvailableTracers::Internal) {

@@ -71,9 +71,8 @@ namespace forte {
         return *this;
       }
 
-      template<
-          typename T,
-          std::enable_if_t<std::is_same_v<typename forte::mpl::implicit_cast_t<T, CIEC_UDINT>, CIEC_UDINT>, int> = 0>
+      template<typename T,
+               std::enable_if_t<std::is_same_v<typename mpl::implicit_cast_t<T, CIEC_UDINT>, CIEC_UDINT>, int> = 0>
       CIEC_UDINT &operator=(const T &paValue) {
         setValueSimple(paValue);
         return *this;

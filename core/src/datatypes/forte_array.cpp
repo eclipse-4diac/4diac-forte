@@ -30,7 +30,7 @@
 using namespace forte::literals;
 
 namespace forte {
-  forte::StringId CIEC_ARRAY::getTypeNameID() const {
+  StringId CIEC_ARRAY::getTypeNameID() const {
     return "ARRAY"_STRID;
   }
 

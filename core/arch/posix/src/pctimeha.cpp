@@ -21,7 +21,7 @@ using namespace forte::literals;
 
 namespace forte::arch {
   namespace {
-    [[maybe_unused]] const forte::TimerHandlerFactory::EntryImpl<CPCTimerHandler> entry("default"_STRID);
+    [[maybe_unused]] const TimerHandlerFactory::EntryImpl<CPCTimerHandler> entry("default"_STRID);
   }
 
   CPCTimerHandler::CPCTimerHandler(CDeviceExecution &paDeviceExecution) : CTimerHandler(paDeviceExecution) {

@@ -26,5 +26,5 @@ namespace forte {
 
   template CIEC_DINT &CIEC_DINT::operator= <>(const CIEC_UINT &paValue);
 
-  const forte::StringId forte::CDataTypeTrait<CIEC_DINT>::scmDataTypeName = "DINT"_STRID;
+  const StringId CDataTypeTrait<CIEC_DINT>::scmDataTypeName = "DINT"_STRID;
 } // namespace forte

@@ -48,7 +48,7 @@ namespace forte::io {
         }
       }
 
-      bool setIOPeer(forte::CAdapter *paAdapter) {
+      bool setIOPeer(CAdapter *paAdapter) {
         /* connecting to adapter peer */
         if (auto *peerAdapter = paAdapter->getPeer(); peerAdapter != nullptr) {
           mPeer = &static_cast<CProcessInterfaceFB &>(peerAdapter->getParent());
@@ -63,7 +63,7 @@ namespace forte::io {
         return true;
       }
 
-      CProcessInterfaceFB *getIOPeer(forte::CAdapter *paAdapter) {
+      CProcessInterfaceFB *getIOPeer(CAdapter *paAdapter) {
         if (mPeer == nullptr) {
           setIOPeer(paAdapter);
         }

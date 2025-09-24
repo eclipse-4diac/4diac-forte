@@ -77,5 +77,5 @@ namespace forte {
     }
   }
 
-  const forte::StringId forte::CDataTypeTrait<CIEC_DATE>::scmDataTypeName = "DATE"_STRID;
+  const StringId CDataTypeTrait<CIEC_DATE>::scmDataTypeName = "DATE"_STRID;
 } // namespace forte

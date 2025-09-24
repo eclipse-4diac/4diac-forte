@@ -22,8 +22,8 @@ using namespace forte::literals;
 namespace forte {
   CBasicFB::CBasicFB(CFBContainer &paContainer,
                      const SFBInterfaceSpec &paInterfaceSpec,
-                     const forte::StringId paInstanceNameId,
-                     std::span<const forte::StringId> paVarInternalNames) :
+                     const StringId paInstanceNameId,
+                     std::span<const StringId> paVarInternalNames) :
       CBaseFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternalNames),
       mECCState(0) {
   }
@@ -33,7 +33,7 @@ namespace forte {
     mECCState = CIEC_STATE(0);
   }
 
-  CIEC_ANY *CBasicFB::getVar(forte::StringId *paNameList, unsigned int paNameListSize) {
+  CIEC_ANY *CBasicFB::getVar(StringId *paNameList, unsigned int paNameListSize) {
     CIEC_ANY *poRetVal = CBaseFB::getVar(paNameList, paNameListSize);
     if ((nullptr == poRetVal) && (1 == paNameListSize) && *paNameList == "!ECC"_STRID) {
       poRetVal = &mECCState;

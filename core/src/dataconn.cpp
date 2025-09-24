@@ -28,8 +28,7 @@ namespace forte {
       CConnection(paSrcFB, paSrcPortId) {
   }
 
-  EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB,
-                                        const std::span<const forte::StringId> paDstPortNameId) {
+  EMGMResponse CDataConnection::connect(CFunctionBlock &paDstFB, const std::span<const StringId> paDstPortNameId) {
     if (paDstPortNameId.empty()) {
       return EMGMResponse::NoSuchObject;
     }
@@ -52,7 +51,7 @@ namespace forte {
   }
 
   EMGMResponse CDataConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
-                                                      const std::span<const forte::StringId> paDstPortNameId) {
+                                                      const std::span<const StringId> paDstPortNameId) {
     if (paDstPortNameId.empty()) {
       return EMGMResponse::NoSuchObject;
     }
@@ -76,8 +75,7 @@ namespace forte {
     }
   }
 
-  EMGMResponse CDataConnection::disconnect(CFunctionBlock &paDstFB,
-                                           const std::span<const forte::StringId> paDstPortNameId) {
+  EMGMResponse CDataConnection::disconnect(CFunctionBlock &paDstFB, const std::span<const StringId> paDstPortNameId) {
     if (paDstPortNameId.empty()) {
       return EMGMResponse::NoSuchObject;
     }
@@ -98,7 +96,7 @@ namespace forte {
       }
       paDstFB.connectDI(dstPortId, nullptr);
     } else if (dstConnection->isGathering()) {
-      const auto dstGatheringConnection = static_cast<forte::internal::CGatheringDataConnection *>(dstConnection);
+      const auto dstGatheringConnection = static_cast<internal::CGatheringDataConnection *>(dstConnection);
       EMGMResponse retVal = dstGatheringConnection->removeMemberConnection(paDstPortNameId.subspan(1));
       if (retVal != EMGMResponse::Ready) {
         return retVal;
@@ -150,7 +148,7 @@ namespace forte {
   EMGMResponse CDataConnection::establishGatheringConnection(CFunctionBlock &paDstFB,
                                                              const TPortId paDstPortId,
                                                              CIEC_ANY &paDstDataPoint,
-                                                             const std::span<const forte::StringId> paDstPortNameId) {
+                                                             const std::span<const StringId> paDstPortNameId) {
     if (paDstDataPoint.getDataTypeID() != CIEC_ANY::e_STRUCT) {
       return EMGMResponse::NoSuchObject;
     }
@@ -169,7 +167,7 @@ namespace forte {
 
     CDataConnection *dstConnection = paDstFB.getDIConnection(paDstPortNameId.front());
     if (!dstConnection) {
-      dstConnection = new forte::internal::CGatheringDataConnection(paDstFB, paDstPortId, dstStruct);
+      dstConnection = new internal::CGatheringDataConnection(paDstFB, paDstPortId, dstStruct);
       if (!paDstFB.connectDI(paDstPortId, dstConnection)) {
         delete dstConnection;
         return EMGMResponse::InvalidState;
@@ -178,22 +176,22 @@ namespace forte {
       return EMGMResponse::InvalidState;
     }
 
-    auto dstGatheringConnection = static_cast<forte::internal::CGatheringDataConnection *>(dstConnection);
+    auto dstGatheringConnection = static_cast<internal::CGatheringDataConnection *>(dstConnection);
     return dstGatheringConnection->addMemberConnection(paDstPortNameId.subspan(1), *this);
   }
 
-  CConnection::Wrapper CDataConnection::getDelegatingConnection(const std::span<const forte::StringId> paSrcNameList) {
+  CConnection::Wrapper CDataConnection::getDelegatingConnection(const std::span<const StringId> paSrcNameList) {
     switch (getValue().getDataTypeID()) {
       case CIEC_ANY::e_BOOL:
         if (paSrcNameList.size() == 1 && paSrcNameList.front() == "NOT"_STRID) {
-          return make_delegating<forte::internal::CNegatingDataConnection>(
-              getSourceId().getFB(), getSourceId().getPortId(), static_cast<CIEC_BOOL &>(getValue()));
+          return make_delegating<internal::CNegatingDataConnection>(getSourceId().getFB(), getSourceId().getPortId(),
+                                                                    static_cast<CIEC_BOOL &>(getValue()));
         }
         break;
       case CIEC_ANY::e_STRUCT:
         if (CIEC_ANY *member = static_cast<CIEC_STRUCT &>(getValue()).getMemberNamed(paSrcNameList); member) {
-          return make_delegating<forte::internal::CMemberDataConnection>(
-              getSourceId().getFB(), getSourceId().getPortId(), *member, paSrcNameList);
+          return make_delegating<internal::CMemberDataConnection>(getSourceId().getFB(), getSourceId().getPortId(),
+                                                                  *member, paSrcNameList);
         }
         break;
       default: break;
@@ -201,7 +199,7 @@ namespace forte {
     return CConnection::getDelegatingConnection(paSrcNameList);
   }
 
-  void CDataConnection::getSourcePortName(forte::TNameIdentifier &paResult) const {
+  void CDataConnection::getSourcePortName(TNameIdentifier &paResult) const {
     paResult.push_back(getSourceId().getFB().getFBInterfaceSpec().mDONames[getSourceId().getPortId()]);
   }
 } // namespace forte

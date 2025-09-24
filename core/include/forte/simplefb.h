@@ -25,8 +25,8 @@ namespace forte {
     protected:
       CSimpleFB(CFBContainer &paContainer,
                 const SFBInterfaceSpec &paInterfaceSpec,
-                forte::StringId paInstanceNameId,
-                std::span<const forte::StringId> paVarInternalNames) :
+                StringId paInstanceNameId,
+                std::span<const StringId> paVarInternalNames) :
           CBaseFB(paContainer, paInterfaceSpec, paInstanceNameId, paVarInternalNames) {
       }
 

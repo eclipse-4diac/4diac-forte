@@ -61,5 +61,5 @@ namespace forte {
     paTargetBuf += getTBOOL8() ? "TRUE"s : "FALSE"s;
   }
 
-  const forte::StringId forte::CDataTypeTrait<CIEC_BOOL>::scmDataTypeName = "BOOL"_STRID;
+  const StringId CDataTypeTrait<CIEC_BOOL>::scmDataTypeName = "BOOL"_STRID;
 } // namespace forte

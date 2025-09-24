@@ -17,8 +17,7 @@
 #include "forte/funcbloc.h"
 
 namespace forte {
-  EMGMResponse CInOutDataConnection::connect(CFunctionBlock &paDstFB,
-                                             const std::span<const forte::StringId> paDstPortNameId) {
+  EMGMResponse CInOutDataConnection::connect(CFunctionBlock &paDstFB, const std::span<const StringId> paDstPortNameId) {
     // Check if the superclass connect is working (connection with plain IN)
     EMGMResponse retVal = CDataConnection::connect(paDstFB, paDstPortNameId);
     if (retVal != EMGMResponse::NoSuchObject) {
@@ -46,7 +45,7 @@ namespace forte {
   }
 
   EMGMResponse CInOutDataConnection::disconnect(CFunctionBlock &paDstFB,
-                                                const std::span<const forte::StringId> paDstPortNameId) {
+                                                const std::span<const StringId> paDstPortNameId) {
     EMGMResponse retVal = CDataConnection::disconnect(paDstFB, paDstPortNameId);
     if (retVal != EMGMResponse::NoSuchObject) {
       return retVal; // we already have a connection
@@ -100,7 +99,7 @@ namespace forte {
     return EMGMResponse::Ready;
   }
 
-  void CInOutDataConnection::getSourcePortName(forte::TNameIdentifier &paResult) const {
+  void CInOutDataConnection::getSourcePortName(TNameIdentifier &paResult) const {
     paResult.push_back(getSourceId().getFB().getFBInterfaceSpec().mDIONames[getSourceId().getPortId()]);
   }
 } // namespace forte

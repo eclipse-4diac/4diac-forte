@@ -33,7 +33,7 @@ using namespace forte::literals;
 
 namespace forte {
   namespace {
-    const std::map<forte::StringId, CIEC_ANY::EDataTypeID> scm_StringToTypeId = {
+    const std::map<StringId, CIEC_ANY::EDataTypeID> scm_StringToTypeId = {
         {"ANY"_STRID, CIEC_ANY::e_ANY},
         {"BOOL"_STRID, CIEC_ANY::e_BOOL},
         {"SINT"_STRID, CIEC_ANY::e_SINT},
@@ -163,7 +163,7 @@ namespace forte {
       const char *acHashPos = strchr(paValue, '#');
       int nMultiplier = 10;
       bool bSigned = true;
-      if ((nullptr != acHashPos) && (!forte::util::isDigit(*paValue))) {
+      if ((nullptr != acHashPos) && (!util::isDigit(*paValue))) {
         // if we have a hash and the first character is not a digit it has to be a type identifier
         if (!isTypeSpecifier(paValue, acHashPos)) {
           return -1;
@@ -249,7 +249,7 @@ namespace forte {
       errno = 0; // erno is not cleared by the strto* functions
 
       if (true == bSigned) {
-        TForteInt64 nValue = forte::util::strtoll(pacRunner, &pacEndPtr, nMultiplier);
+        TForteInt64 nValue = util::strtoll(pacRunner, &pacEndPtr, nMultiplier);
         if ((ERANGE != errno) && (nValue <= nSUpperBound) && (nValue >= nSLowerBound)) {
           setLargestInt(nValue);
           nRetVal = static_cast<int>(pacEndPtr - paValue);
@@ -257,7 +257,7 @@ namespace forte {
       } else {
         if ('-' != *pacRunner) {
           // The strtou* functions will correctly parse also negative numbers and provide their two complement as value
-          TForteUInt64 nValue = forte::util::strtoull(pacRunner, &pacEndPtr, nMultiplier);
+          TForteUInt64 nValue = util::strtoull(pacRunner, &pacEndPtr, nMultiplier);
           if ((ERANGE != errno) && (nValue <= nUUpperBound)) {
             setLargestUInt(nValue);
             nRetVal = static_cast<int>(pacEndPtr - paValue);
@@ -273,7 +273,7 @@ namespace forte {
   }
 
   bool CIEC_ANY_ELEMENTARY::isTypeSpecifier(const char *paValue, const char *paHashPosition) const {
-    forte::StringId nTypeNameId = parseTypeName(paValue, paHashPosition);
+    StringId nTypeNameId = parseTypeName(paValue, paHashPosition);
 
     if (nTypeNameId &&
         ((scm_StringToTypeId.find(nTypeNameId) != scm_StringToTypeId.end()) || (isCastable(nTypeNameId)))) {
@@ -282,14 +282,14 @@ namespace forte {
     return false;
   }
 
-  bool CIEC_ANY_ELEMENTARY::isCastable(forte::StringId paTypeNameId) const {
+  bool CIEC_ANY_ELEMENTARY::isCastable(StringId paTypeNameId) const {
     EDataTypeID literalID = getElementaryDataTypeId(paTypeNameId);
     bool upCast;
     bool downCast;
     return CIEC_ANY::isCastable(literalID, getDataTypeID(), upCast, downCast) && upCast;
   }
 
-  CIEC_ANY::EDataTypeID CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(const forte::StringId paTypeNameId) {
+  CIEC_ANY::EDataTypeID CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(const StringId paTypeNameId) {
     if (scm_StringToTypeId.find(paTypeNameId) != scm_StringToTypeId.end()) {
       return scm_StringToTypeId.at(paTypeNameId);
     }

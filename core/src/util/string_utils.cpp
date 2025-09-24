@@ -36,16 +36,16 @@ namespace forte {
       {'<', {scCharacters2Escape[3], std::char_traits<char>::length(scCharacters2Escape[3])}},
       {'>', {scCharacters2Escape[4], std::char_traits<char>::length(scCharacters2Escape[4])}}};
 
-  bool forte::util::isAtoFChar(char paValue) {
+  bool util::isAtoFChar(char paValue) {
     paValue = static_cast<char>(toupper(paValue));
     return ((paValue >= 'A') && (paValue <= 'F'));
   }
 
-  TForteInt8 forte::util::charAtoFToInt(char paValue) {
+  TForteInt8 util::charAtoFToInt(char paValue) {
     return static_cast<TForteInt8>((toupper(paValue) - 'A') + 10);
   }
 
-  long int forte::util::strtol(const char *nptr, char **endptr, int base) {
+  long int util::strtol(const char *nptr, char **endptr, int base) {
     long int nRetVal = 0;
     bool bNegativeNumber = false;
     errno = 0;
@@ -96,7 +96,7 @@ namespace forte {
     return nRetVal;
   }
 
-  unsigned long int forte::util::strtoul(const char *nptr, char **endptr, int base) {
+  unsigned long int util::strtoul(const char *nptr, char **endptr, int base) {
     unsigned long int unRetVal = 0;
     unsigned long int unLimit1 = (std::numeric_limits<CIEC_UDINT::TValueType>::max() / base);
     unsigned long int unLimit2 = (std::numeric_limits<CIEC_UDINT::TValueType>::max() % base);
@@ -128,7 +128,7 @@ namespace forte {
     return unRetVal;
   }
 
-  long long int forte::util::strtoll(const char *nptr, char **endptr, int base) {
+  long long int util::strtoll(const char *nptr, char **endptr, int base) {
     long long int nRetVal = 0;
     bool bNegativeNumber = false;
     errno = 0;
@@ -188,7 +188,7 @@ namespace forte {
     return nRetVal;
   }
 
-  unsigned long long int forte::util::strtoull(const char *nptr, char **endptr, int base) {
+  unsigned long long int util::strtoull(const char *nptr, char **endptr, int base) {
     unsigned long long int unRetVal = 0;
     unsigned long long int unLimit1 = (std::numeric_limits<CIEC_ULINT::TValueType>::max() / base);
     unsigned long long int unLimit2 = (std::numeric_limits<CIEC_ULINT::TValueType>::max() % base);
@@ -219,7 +219,7 @@ namespace forte {
     return unRetVal;
   }
 
-  size_t forte::util::getExtraSizeForXMLEscapedChars(const char *paString) {
+  size_t util::getExtraSizeForXMLEscapedChars(const char *paString) {
     size_t retVal = 0;
     while (0 != *paString) {
       auto escapeChar = scEscapeMap.find(*paString);
@@ -231,7 +231,7 @@ namespace forte {
     return retVal;
   }
 
-  void forte::util::transformNonEscapedToEscapedXMLText(std::string &paString, size_t paStart) {
+  void util::transformNonEscapedToEscapedXMLText(std::string &paString, size_t paStart) {
     if (paString.size() == 0) {
       return;
     }
@@ -245,7 +245,7 @@ namespace forte {
     }
   }
 
-  size_t forte::util::transformEscapedXMLToNonEscapedText(char *const paString) {
+  size_t util::transformEscapedXMLToNonEscapedText(char *const paString) {
     char *runner = paString;
     char *endRunner = strchr(paString, '\0');
     size_t retVal = 0;
@@ -279,7 +279,7 @@ namespace forte {
     return retVal;
   }
 
-  char *forte::util::lookForNonEscapedChar(char **paString, char paChar, char paEscapingChar) {
+  char *util::lookForNonEscapedChar(char **paString, char paChar, char paEscapingChar) {
     char *foundChar = nullptr;
     char *initialPosition = *paString;
     while (!foundChar && '\0' != **paString) {
@@ -304,7 +304,7 @@ namespace forte {
     return foundChar;
   }
 
-  bool forte::util::isEscaped(char *paChar, char *paBeginLimit, char paEscapingChar) {
+  bool util::isEscaped(char *paChar, char *paBeginLimit, char paEscapingChar) {
     size_t noOfScapingSigns = 0;
     while (paBeginLimit !=
            paChar) { // count the amount of \ signs before paChar to know if the \ signs was also escaped.
@@ -319,7 +319,7 @@ namespace forte {
     return (noOfScapingSigns % 2); // an even number of \ (or zero) means paChar was not escaped
   }
 
-  void forte::util::removeEscapedSigns(char **paString, char paEscapingChar) {
+  void util::removeEscapedSigns(char **paString, char paEscapingChar) {
     char *runner = *paString;
     while ('\0' != *runner) {
       if (paEscapingChar == *runner && paEscapingChar == *(runner + 1)) {
@@ -334,9 +334,9 @@ namespace forte {
     }
   }
 
-  void forte::util::writeToStringNameValuePair(std::string &paTargetBuf,
-                                               const StringId variableNameId,
-                                               const CIEC_ANY *const variable) {
+  void util::writeToStringNameValuePair(std::string &paTargetBuf,
+                                        const StringId variableNameId,
+                                        const CIEC_ANY *const variable) {
     paTargetBuf += variableNameId;
     paTargetBuf += ":="s;
     variable->toString(paTargetBuf);

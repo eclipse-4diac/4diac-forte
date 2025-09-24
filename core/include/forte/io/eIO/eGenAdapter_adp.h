@@ -16,13 +16,13 @@
 #include "forte/typelib.h"
 
 namespace forte::io {
-  class FORTE_eGenAdapter : public forte::CAdapter {
+  class FORTE_eGenAdapter : public CAdapter {
       DECLARE_ADAPTER_TYPE(FORTE_eGenAdapter)
 
     public:
       FORTE_eGenAdapter(CFBContainer &paContainer,
                         const SFBInterfaceSpec &paInterfaceSpec,
-                        const forte::StringId paInstanceNameId,
+                        const StringId paInstanceNameId,
                         TForteUInt8 paParentAdapterlistID) :
           CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID) {};
 
@@ -35,9 +35,7 @@ namespace forte::io {
 
   class FORTE_eGenAdapter_Plug final : public FORTE_eGenAdapter {
     public:
-      FORTE_eGenAdapter_Plug(forte::StringId paInstanceNameId,
-                             CFBContainer &paContainer,
-                             TForteUInt8 paParentAdapterlistID);
+      FORTE_eGenAdapter_Plug(StringId paInstanceNameId, CFBContainer &paContainer, TForteUInt8 paParentAdapterlistID);
       ~FORTE_eGenAdapter_Plug() override = default;
 
       void readInputData(TEventID paEIID) override;
@@ -56,9 +54,7 @@ namespace forte::io {
 
   class FORTE_eGenAdapter_Socket final : public FORTE_eGenAdapter {
     public:
-      FORTE_eGenAdapter_Socket(forte::StringId paInstanceNameId,
-                               CFBContainer &paContainer,
-                               TForteUInt8 paParentAdapterlistID);
+      FORTE_eGenAdapter_Socket(StringId paInstanceNameId, CFBContainer &paContainer, TForteUInt8 paParentAdapterlistID);
       ~FORTE_eGenAdapter_Socket() override = default;
 
       void readInputData(TEventID paEIID) override;

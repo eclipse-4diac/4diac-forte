@@ -20,7 +20,7 @@ using namespace forte::literals;
 
 namespace forte {
   namespace {
-    [[maybe_unused]] const forte::EcetFactory::EntryImpl<CFakeEventExecutionThread> entry("Fake"_STRID);
+    [[maybe_unused]] const EcetFactory::EntryImpl<CFakeEventExecutionThread> entry("Fake"_STRID);
   }
 
   CFakeEventExecutionThread::CFakeEventExecutionThread() : CEventChainExecutionThread() {

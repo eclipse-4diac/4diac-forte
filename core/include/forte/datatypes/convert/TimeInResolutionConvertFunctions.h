@@ -45,7 +45,7 @@ namespace forte {
     static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
     if (std::is_base_of_v<CIEC_ANY_REAL, T>) {
       return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()) /
-               static_cast<typename T::TValueType>(forte::util::constants::cNanosecondsPerSecond));
+               static_cast<typename T::TValueType>(util::constants::cNanosecondsPerSecond));
     } else {
       return T(static_cast<typename T::TValueType>(paValue.getInSeconds()));
     }
@@ -67,8 +67,8 @@ namespace forte {
     static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
     if (std::is_base_of_v<CIEC_ANY_REAL, T>) {
       return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()) *
-               (static_cast<typename T::TValueType>(forte::util::constants::cMillisecondsPerSecond) /
-                static_cast<typename T::TValueType>(forte::util::constants::cNanosecondsPerSecond)));
+               (static_cast<typename T::TValueType>(util::constants::cMillisecondsPerSecond) /
+                static_cast<typename T::TValueType>(util::constants::cNanosecondsPerSecond)));
     } else {
       return T(static_cast<typename T::TValueType>(paValue.getInMilliSeconds()));
     }
@@ -90,8 +90,8 @@ namespace forte {
     static_assert((std::is_base_of_v<CIEC_ANY_DURATION, U>), "U not of ANY_DURATION");
     if (std::is_base_of_v<CIEC_ANY_REAL, T>) {
       return T(static_cast<typename T::TValueType>(paValue.getInNanoSeconds()) *
-               (static_cast<typename T::TValueType>(forte::util::constants::cMicrosecondsPerSecond) /
-                static_cast<typename T::TValueType>(forte::util::constants::cNanosecondsPerSecond)));
+               (static_cast<typename T::TValueType>(util::constants::cMicrosecondsPerSecond) /
+                static_cast<typename T::TValueType>(util::constants::cNanosecondsPerSecond)));
     } else {
       return T(static_cast<typename T::TValueType>(paValue.getInMicroSeconds()));
     }

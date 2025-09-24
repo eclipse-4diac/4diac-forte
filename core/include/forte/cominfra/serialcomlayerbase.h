@@ -19,14 +19,14 @@
 
 namespace forte::arch {
   template<typename TSerialHandle, TSerialHandle nullHandle = static_cast<TSerialHandle>(0)>
-  class CSerialComLayerBase : public forte::com_infra::CComLayer {
+  class CSerialComLayerBase : public com_infra::CComLayer {
     public:
       typedef TSerialHandle TSerialHandleType;
 
-      CSerialComLayerBase(CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB);
+      CSerialComLayerBase(CComLayer *paUpperLayer, com_infra::CBaseCommFB *paFB);
       ~CSerialComLayerBase() override;
 
-      forte::com_infra::EComResponse processInterrupt() override;
+      com_infra::EComResponse processInterrupt() override;
 
       /*! \brief Perform send to serial interface
        *   \param paData Sendable payload
@@ -34,13 +34,13 @@ namespace forte::arch {
        *
        *   \return ComLayer response
        */
-      forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize) override = 0;
+      com_infra::EComResponse sendData(void *paData, unsigned int paSize) override = 0;
 
       /*! \brief Perform reading from serial interface
        *
        * @return if not e_Nothing something was read and the FB should get an external event
        */
-      forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize) override = 0;
+      com_infra::EComResponse recvData(const void *paData, unsigned int paSize) override = 0;
 
       void closeConnection() override = 0;
 
@@ -90,12 +90,12 @@ namespace forte::arch {
       };
 
       char mTerminationSymbol[3]; //**< Space for CR, LF, or CR/LF + Terminating \0
-      forte::com_infra::EComResponse openConnection(char *paLayerParameter) override;
-      virtual forte::com_infra::EComResponse openSerialConnection(const SSerialParameters &paSerialParameters,
-                                                                  TSerialHandle *paHandleResult) = 0;
+      com_infra::EComResponse openConnection(char *paLayerParameter) override;
+      virtual com_infra::EComResponse openSerialConnection(const SSerialParameters &paSerialParameters,
+                                                           TSerialHandle *paHandleResult) = 0;
       static const unsigned int mMaxRecvBuffer = 1000;
 
-      forte::com_infra::EComResponse mInterruptResp;
+      com_infra::EComResponse mInterruptResp;
       char mRecvBuffer[mMaxRecvBuffer];
       unsigned int mBufFillSize;
       CSyncObject mRecvLock;
@@ -121,9 +121,9 @@ namespace forte::arch {
 
   template<typename TThreadHandle, TThreadHandle nullHandle>
   CSerialComLayerBase<TThreadHandle, nullHandle>::CSerialComLayerBase(CComLayer *paUpperLayer,
-                                                                      forte::com_infra::CBaseCommFB *paFB) :
+                                                                      com_infra::CBaseCommFB *paFB) :
       CComLayer(paUpperLayer, paFB),
-      mInterruptResp(forte::com_infra::e_Nothing),
+      mInterruptResp(com_infra::e_Nothing),
       mBufFillSize(0),
       mSerialHandle(nullHandle) {
     memset(
@@ -137,19 +137,19 @@ namespace forte::arch {
   CSerialComLayerBase<TThreadHandle, nullHandle>::~CSerialComLayerBase() = default;
 
   template<typename TThreadHandle, TThreadHandle nullHandle>
-  forte::com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::processInterrupt() {
-    if (forte::com_infra::e_ProcessDataOk == mInterruptResp) {
+  com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::processInterrupt() {
+    if (com_infra::e_ProcessDataOk == mInterruptResp) {
       util::CCriticalRegion lock(mRecvLock);
       switch (mConnectionState) {
-        case forte::com_infra::e_Connected:
+        case com_infra::e_Connected:
           if (nullptr != mTopLayer) {
             mInterruptResp = mTopLayer->recvData(mRecvBuffer, mBufFillSize);
             mBufFillSize = 0;
           }
           break;
-        case forte::com_infra::e_Disconnected:
-        case forte::com_infra::e_Listening:
-        case forte::com_infra::e_ConnectedAndListening:
+        case com_infra::e_Disconnected:
+        case com_infra::e_Listening:
+        case com_infra::e_ConnectedAndListening:
         default: break;
       }
     }
@@ -157,12 +157,11 @@ namespace forte::arch {
   }
 
   template<typename TThreadHandle, TThreadHandle nullHandle>
-  forte::com_infra::EComResponse
-  CSerialComLayerBase<TThreadHandle, nullHandle>::openConnection(char *paLayerParameter) {
+  com_infra::EComResponse CSerialComLayerBase<TThreadHandle, nullHandle>::openConnection(char *paLayerParameter) {
     // Create Serial Com Handle
     util::CParameterParser parser(paLayerParameter, ',', mNoOfParameters);
     if (mNoOfParameters != parser.parseParameters()) {
-      return forte::com_infra::e_InitInvalidId;
+      return com_infra::e_InitInvalidId;
     }
 
     SSerialParameters parsedParameters;
@@ -195,13 +194,13 @@ namespace forte::arch {
       case e1000000:
         break;
         // all other numbers are invalid!
-      default: return forte::com_infra::e_InitInvalidId; break;
+      default: return com_infra::e_InitInvalidId; break;
     }
 
     // Check byte size setting
     parsedParameters.byteSize = static_cast<EForteSerialByteSize>(atoi(parser[eByteSize]));
     if (4 > parsedParameters.byteSize || 8 < parsedParameters.byteSize) {
-      return forte::com_infra::e_InitInvalidId;
+      return com_infra::e_InitInvalidId;
     }
 
     // Check stopbits setting
@@ -212,7 +211,7 @@ namespace forte::arch {
     } else if (0 == strcmp(parser[eStopBits], "2")) {
       parsedParameters.stopBits = eTwoBits;
     } else {
-      return forte::com_infra::e_InitInvalidId;
+      return com_infra::e_InitInvalidId;
     }
 
     // Check parity setting
@@ -227,7 +226,7 @@ namespace forte::arch {
     } else if (0 == strcmp(parser[eParity], "SPACE")) {
       parsedParameters.parity = eSpace;
     } else {
-      return forte::com_infra::e_InitInvalidId;
+      return com_infra::e_InitInvalidId;
     }
 
     if (0 == strcmp("$n", parser[eTerminationSymbol])) {
@@ -237,12 +236,12 @@ namespace forte::arch {
     } else if (0 == strcmp("$r$n", parser[eTerminationSymbol])) {
       strcpy(mTerminationSymbol, "\r\n");
     } else {
-      return forte::com_infra::e_InitInvalidId;
+      return com_infra::e_InitInvalidId;
     }
 
-    forte::com_infra::EComResponse resp = openSerialConnection(parsedParameters, &mSerialHandle);
-    if (forte::com_infra::e_InitOk == resp) {
-      mConnectionState = forte::com_infra::e_Connected;
+    com_infra::EComResponse resp = openSerialConnection(parsedParameters, &mSerialHandle);
+    if (com_infra::e_InitOk == resp) {
+      mConnectionState = com_infra::e_Connected;
     }
     return resp;
   }

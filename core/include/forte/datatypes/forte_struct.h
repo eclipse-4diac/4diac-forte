@@ -70,7 +70,7 @@ namespace forte {
        *   \param - No parameters necessary.
        *   \return - pointer to array of StringIds.
        */
-      virtual const forte::StringId *elementNames() const = 0;
+      virtual const StringId *elementNames() const = 0;
 
       /*! \brief Get the Struct's type name
        *
@@ -79,7 +79,7 @@ namespace forte {
        *   \param - No parameters necessary.
        *   \return - StringId of Struct's type name.
        */
-      virtual forte::StringId getStructTypeNameID() const = 0;
+      virtual StringId getStructTypeNameID() const = 0;
 
       void setValue(const CIEC_ANY &paValue) override;
 
@@ -126,7 +126,7 @@ namespace forte {
        * \param paMemberNameId the string id of the member name
        * \return on a valid member name id a pointer to the member var otherwise 0
        */
-      CIEC_ANY *getMemberNamed(forte::StringId paMemberNameId);
+      CIEC_ANY *getMemberNamed(StringId paMemberNameId);
 
       /*! \brief Get the struct's member var with the given name
        *
@@ -140,9 +140,9 @@ namespace forte {
        * \param paMemberNameId the string id of the member name
        * \return on a valid member name id a pointer to the member var otherwise 0
        */
-      CIEC_ANY *getMemberNamed(std::span<const forte::StringId> paMemberNameId);
+      CIEC_ANY *getMemberNamed(std::span<const StringId> paMemberNameId);
 
-      size_t getMemberIndex(forte::StringId paMemberNameId);
+      size_t getMemberIndex(StringId paMemberNameId);
 
     protected:
       enum EASN1Tags { e_UNIVERSAL = 0, e_APPLICATION = 64, e_CONTEXT = 128, e_PRIVATE = 192 };
@@ -165,7 +165,7 @@ namespace forte {
 
       int initializeFromString(const char *paValue);
 
-      static forte::StringId parseNextElementId(const char *&paRunner);
+      static StringId parseNextElementId(const char *&paRunner);
   };
 
   template<>

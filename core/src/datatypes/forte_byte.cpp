@@ -19,5 +19,5 @@ using namespace forte::literals;
 namespace forte {
   DEFINE_FIRMWARE_DATATYPE(BYTE, "BYTE"_STRID)
 
-  const forte::StringId forte::CDataTypeTrait<CIEC_BYTE>::scmDataTypeName = "BYTE"_STRID;
+  const StringId CDataTypeTrait<CIEC_BYTE>::scmDataTypeName = "BYTE"_STRID;
 } // namespace forte

@@ -78,7 +78,7 @@ namespace forte {
        *
        * This list stores the necessary information for all events to deliver that occurred within this event chain.
        */
-      forte::util::CRingBuffer<TEventEntry, cgEventChainEventListSize> mEventList;
+      util::CRingBuffer<TEventEntry, cgEventChainEventListSize> mEventList;
 
       void selfSuspend() {
         mSuspendSemaphore.waitIndefinitely();
@@ -121,7 +121,7 @@ namespace forte {
        * Event-Chain execution was sleeping. with this second list we omit the need for a mutex protection of the event
        * list. This is a great performance gain.
        */
-      forte::util::CRingBuffer<TEventEntry, cgEventChainExternalEventListSize> mExternalEventList;
+      util::CRingBuffer<TEventEntry, cgEventChainExternalEventListSize> mExternalEventList;
 
       //! SyncObject for protecting the list in regard to several accesses
       arch::CSyncObject mExternalEventListSync;

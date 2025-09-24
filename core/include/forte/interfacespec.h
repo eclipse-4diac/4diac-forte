@@ -30,15 +30,15 @@ namespace forte {
   /*!\ingroup CORE\brief Structure to hold all the data for specifying a function block interface.
    */
   struct SFBInterfaceSpec {
-      std::span<const forte::StringId> mEINames; //!< List of the event input names
-      std::span<const forte::StringId> mEITypeNames; //!< List of the event input types
-      std::span<const forte::StringId> mEONames; //!< List of the event output names
-      std::span<const forte::StringId> mEOTypeNames; //!< List of the event output types
-      std::span<const forte::StringId> mDINames; //!< List of the data input names
-      std::span<const forte::StringId> mDONames; //!< List of the data output names
-      std::span<const forte::StringId> mDIONames; //!< List of the data inout names
-      std::span<const forte::StringId> mSocketNames;
-      std::span<const forte::StringId> mPlugNames;
+      std::span<const StringId> mEINames; //!< List of the event input names
+      std::span<const StringId> mEITypeNames; //!< List of the event input types
+      std::span<const StringId> mEONames; //!< List of the event output names
+      std::span<const StringId> mEOTypeNames; //!< List of the event output types
+      std::span<const StringId> mDINames; //!< List of the data input names
+      std::span<const StringId> mDONames; //!< List of the data output names
+      std::span<const StringId> mDIONames; //!< List of the data inout names
+      std::span<const StringId> mSocketNames;
+      std::span<const StringId> mPlugNames;
 
       size_t getNumEIs() const {
         return mEINames.size();
@@ -73,49 +73,49 @@ namespace forte {
        * \param paEINameId   StringId to the event input name.
        * \return The ID of the event input or cgInvalidEventID.
        */
-      TEventID getEIID(forte::StringId paEINameId) const;
+      TEventID getEIID(StringId paEINameId) const;
 
       /*!\brief Get the ID of a specific event output of the FB.
        *
        * \param paEONameId string id to the event output name.
        * \return The ID of the event output or cgInvalidEventID.
        */
-      TEventID getEOID(forte::StringId paEONameId) const;
+      TEventID getEOID(StringId paEONameId) const;
 
       /*! \brief Gets the EventTypeID of a specific input event
        * \param paEIID  StringId of the event name.
        * \return Returns the EventTypeID of a specific input event
        */
-      forte::StringId getEIType(TEventID paEIID) const;
+      StringId getEIType(TEventID paEIID) const;
 
       /*! \brief Gets the EventTypeID of a specific output event
        * \param paEOID  StringId of the event name.
        * \return Returns the EventTypeID of a specific output event
        */
-      forte::StringId getEOType(TEventID paEOID) const;
+      StringId getEOType(TEventID paEOID) const;
 
       /*! \brief Gets the index of the mDINames array of a specific data output of a FB
        *
        * \param paDINameId  StringId of the data input name.
        * \return Returns index of the Data Input Array of a FB
        */
-      TPortId getDIID(forte::StringId paDINameId) const;
+      TPortId getDIID(StringId paDINameId) const;
 
       /*! \brief Gets the index of the mDONames array of a specific data output of a FB
        * \param paDONameId  StringId of the data input name.
        * \return Returns index of the Data Output Array of a FB
        */
-      TPortId getDOID(forte::StringId paDONameId) const;
+      TPortId getDOID(StringId paDONameId) const;
 
       /*! \brief Gets the index of the mDONames array of a specific data output of a FB
        * \param paDONameId  StringId of the data input name.
        * \return Returns index of the Data Output Array of a FB
        */
-      TPortId getDIOID(forte::StringId paDIONameId) const;
+      TPortId getDIOID(StringId paDIONameId) const;
 
-      TPortId getPlugID(forte::StringId paPlugNameId) const;
+      TPortId getPlugID(StringId paPlugNameId) const;
 
-      TPortId getSocketID(forte::StringId paSocketNameId) const;
+      TPortId getSocketID(StringId paSocketNameId) const;
   };
 
   TPortId getPortId(StringId paPortNameId, std::span<const StringId> paPortNames);

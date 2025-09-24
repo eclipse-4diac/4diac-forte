@@ -23,6 +23,6 @@ namespace forte::io {
       DECLARE_FIRMWARE_FB(FORTE_eIX)
 
     public:
-      FORTE_eIX(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_eIX(StringId paInstanceNameId, CFBContainer &paContainer);
   };
 } // namespace forte::io

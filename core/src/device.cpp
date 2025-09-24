@@ -17,7 +17,7 @@
 #include "forte/mgmcmdstruct.h"
 
 namespace forte {
-  EMGMResponse CDevice::executeMGMCommand(forte::SManagementCMD &paCommand) {
+  EMGMResponse CDevice::executeMGMCommand(SManagementCMD &paCommand) {
     EMGMResponse retval = EMGMResponse::InvalidDst;
 
     if (paCommand.mDestination.empty()) {

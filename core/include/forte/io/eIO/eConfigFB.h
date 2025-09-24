@@ -19,9 +19,7 @@
 namespace forte::io {
   class CeConfigFB : public CFunctionBlock, public CeConfig {
     public:
-      CeConfigFB(const forte::StringId paInstanceNameId,
-                 const SFBInterfaceSpec &paInterfaceSpec,
-                 CFBContainer &paContainer) :
+      CeConfigFB(const StringId paInstanceNameId, const SFBInterfaceSpec &paInterfaceSpec, CFBContainer &paContainer) :
           CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId) {
       }
 

@@ -33,45 +33,45 @@ namespace forte {
     return static_cast<TPortId>(it - paPortNames.begin());
   }
 
-  TEventID SFBInterfaceSpec::getEIID(forte::StringId paEINameId) const {
-    return static_cast<TEventID>(forte::getPortId(paEINameId, mEINames));
+  TEventID SFBInterfaceSpec::getEIID(StringId paEINameId) const {
+    return static_cast<TEventID>(getPortId(paEINameId, mEINames));
   }
 
-  TEventID SFBInterfaceSpec::getEOID(forte::StringId paEONameId) const {
-    return static_cast<TEventID>(forte::getPortId(paEONameId, mEONames));
+  TEventID SFBInterfaceSpec::getEOID(StringId paEONameId) const {
+    return static_cast<TEventID>(getPortId(paEONameId, mEONames));
   }
 
-  forte::StringId SFBInterfaceSpec::getEIType(TEventID paEIID) const {
+  StringId SFBInterfaceSpec::getEIType(TEventID paEIID) const {
     if (!mEITypeNames.empty()) {
       return mEITypeNames[paEIID];
     }
     return "Event"_STRID;
   }
 
-  forte::StringId SFBInterfaceSpec::getEOType(TEventID paEOID) const {
+  StringId SFBInterfaceSpec::getEOType(TEventID paEOID) const {
     if (!mEOTypeNames.empty()) {
       return mEOTypeNames[paEOID];
     }
     return "Event"_STRID;
   }
 
-  TPortId SFBInterfaceSpec::getDIID(forte::StringId paDINameId) const {
-    return forte::getPortId(paDINameId, mDINames);
+  TPortId SFBInterfaceSpec::getDIID(StringId paDINameId) const {
+    return getPortId(paDINameId, mDINames);
   }
 
-  TPortId SFBInterfaceSpec::getDOID(forte::StringId paDONameId) const {
-    return forte::getPortId(paDONameId, mDONames);
+  TPortId SFBInterfaceSpec::getDOID(StringId paDONameId) const {
+    return getPortId(paDONameId, mDONames);
   }
 
-  TPortId SFBInterfaceSpec::getDIOID(forte::StringId paDIONameId) const {
-    return forte::getPortId(paDIONameId, mDIONames);
+  TPortId SFBInterfaceSpec::getDIOID(StringId paDIONameId) const {
+    return getPortId(paDIONameId, mDIONames);
   }
 
-  TPortId SFBInterfaceSpec::getPlugID(forte::StringId paPlugNameId) const {
-    return forte::getPortId(paPlugNameId, mPlugNames);
+  TPortId SFBInterfaceSpec::getPlugID(StringId paPlugNameId) const {
+    return getPortId(paPlugNameId, mPlugNames);
   }
 
-  TPortId SFBInterfaceSpec::getSocketID(forte::StringId paSocketNameId) const {
-    return forte::getPortId(paSocketNameId, mSocketNames);
+  TPortId SFBInterfaceSpec::getSocketID(StringId paSocketNameId) const {
+    return getPortId(paSocketNameId, mSocketNames);
   }
 } // namespace forte

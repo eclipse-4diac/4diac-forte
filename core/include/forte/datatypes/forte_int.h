@@ -75,7 +75,7 @@ namespace forte {
       }
 
       template<typename T,
-               std::enable_if_t<std::is_same_v<typename forte::mpl::implicit_cast_t<T, CIEC_INT>, CIEC_INT>, int> = 0>
+               std::enable_if_t<std::is_same_v<typename mpl::implicit_cast_t<T, CIEC_INT>, CIEC_INT>, int> = 0>
       CIEC_INT &operator=(const T &paValue) {
         setValueSimple(paValue);
         return *this;

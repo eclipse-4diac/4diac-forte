@@ -27,9 +27,7 @@ namespace forte {
       TEventEntry mEventSourceEventEntry; //! the event entry to start the event chain
 
     public:
-      CEventSourceFB(CFBContainer &paContainer,
-                     const SFBInterfaceSpec &paInterfaceSpec,
-                     forte::StringId paInstanceNameId) :
+      CEventSourceFB(CFBContainer &paContainer, const SFBInterfaceSpec &paInterfaceSpec, StringId paInstanceNameId) :
           CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
           mEventChainExecutor(nullptr),
           mEventSourceEventEntry(*this, cgExternalEventID) {

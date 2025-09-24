@@ -19,15 +19,15 @@
 namespace forte::arch {
   class CPosixSerCommLayer : public CSerialComLayerBase<FORTE_SOCKET_TYPE, FORTE_INVALID_SOCKET> {
     public:
-      CPosixSerCommLayer(CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB);
+      CPosixSerCommLayer(CComLayer *paUpperLayer, com_infra::CBaseCommFB *paFB);
       ~CPosixSerCommLayer() override;
 
-      forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize) override;
-      forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize) override;
+      com_infra::EComResponse sendData(void *paData, unsigned int paSize) override;
+      com_infra::EComResponse recvData(const void *paData, unsigned int paSize) override;
 
     protected:
     private:
-      forte::com_infra::EComResponse openSerialConnection(
+      com_infra::EComResponse openSerialConnection(
           const SSerialParameters &paSerialParameters,
           CSerialComLayerBase<FORTE_SOCKET_TYPE, FORTE_INVALID_SOCKET>::TSerialHandleType *paHandleResult) override;
       void closeConnection() override;

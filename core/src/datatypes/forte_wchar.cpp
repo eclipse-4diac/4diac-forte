@@ -95,14 +95,13 @@ namespace forte {
         return bufferCount + 3; // $ + control symbol + '
       }
 
-      if (forte::util::isHexDigit(paValue[bufferCount + 1]) && forte::util::isHexDigit(paValue[bufferCount + 2]) &&
-          forte::util::isHexDigit(paValue[bufferCount + 3]) && forte::util::isHexDigit(paValue[bufferCount + 4]) &&
+      if (util::isHexDigit(paValue[bufferCount + 1]) && util::isHexDigit(paValue[bufferCount + 2]) &&
+          util::isHexDigit(paValue[bufferCount + 3]) && util::isHexDigit(paValue[bufferCount + 4]) &&
           '"' == paValue[bufferCount + 5]) { // if there are two symbols it is a hex code
-        TForteWChar codePoint =
-            static_cast<TForteWChar>((forte::util::charHexDigitToInt(paValue[bufferCount + 1]) << 12) +
-                                     (forte::util::charHexDigitToInt(paValue[bufferCount + 2]) << 8) +
-                                     (forte::util::charHexDigitToInt(paValue[bufferCount + 3]) << 4) +
-                                     (forte::util::charHexDigitToInt(paValue[bufferCount + 4])));
+        TForteWChar codePoint = static_cast<TForteWChar>((util::charHexDigitToInt(paValue[bufferCount + 1]) << 12) +
+                                                         (util::charHexDigitToInt(paValue[bufferCount + 2]) << 8) +
+                                                         (util::charHexDigitToInt(paValue[bufferCount + 3]) << 4) +
+                                                         (util::charHexDigitToInt(paValue[bufferCount + 4])));
         *this = CIEC_WCHAR(codePoint);
         return bufferCount + 6; // Three symbols for code point and closing '
       }
@@ -111,5 +110,5 @@ namespace forte {
     return -1; // no match so something must be wrong
   }
 
-  const forte::StringId forte::CDataTypeTrait<CIEC_WCHAR>::scmDataTypeName = "WCHAR"_STRID;
+  const StringId CDataTypeTrait<CIEC_WCHAR>::scmDataTypeName = "WCHAR"_STRID;
 } // namespace forte

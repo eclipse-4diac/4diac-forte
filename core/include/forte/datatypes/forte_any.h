@@ -471,7 +471,7 @@ namespace forte {
         mAnyData.mGenData = paGenData;
       }
 
-      static forte::StringId parseTypeName(const char *paValue, const char *paHashPos);
+      static StringId parseTypeName(const char *paValue, const char *paHashPos);
 
     public:
       CIEC_ANY(const CIEC_ANY &) = delete;

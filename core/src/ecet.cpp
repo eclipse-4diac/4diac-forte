@@ -26,7 +26,7 @@ using namespace forte::literals;
 
 namespace forte {
   namespace {
-    [[maybe_unused]] const forte::EcetFactory::EntryImpl<CEventChainExecutionThread> entry("default"_STRID);
+    [[maybe_unused]] const EcetFactory::EntryImpl<CEventChainExecutionThread> entry("default"_STRID);
   }
 
   CEventChainExecutionThread::CEventChainExecutionThread() : arch::CThread() {

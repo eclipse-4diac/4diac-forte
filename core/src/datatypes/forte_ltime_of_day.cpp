@@ -51,18 +51,18 @@ namespace forte {
     }
 
     if ('\0' != *acBuffer) {
-      tm.tm_hour = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
+      tm.tm_hour = static_cast<int>(util::strtoul(acBuffer, &acBuffer, 10));
       if (':' == *acBuffer) {
         ++acBuffer;
-        tm.tm_min = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
+        tm.tm_min = static_cast<int>(util::strtoul(acBuffer, &acBuffer, 10));
         if (':' == *acBuffer) {
           ++acBuffer;
-          tm.tm_sec = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
+          tm.tm_sec = static_cast<int>(util::strtoul(acBuffer, &acBuffer, 10));
           if ('.' == *acBuffer) {
             unsigned int nNums = 0;
             ++acBuffer;
             while (isdigit(*acBuffer)) {
-              msec = 10 * msec + forte::util::charDigitToInt(*acBuffer);
+              msec = 10 * msec + util::charDigitToInt(*acBuffer);
               ++acBuffer;
               ++nNums;
             }
@@ -101,5 +101,5 @@ namespace forte {
                    (int) ((ntoStingBuffer / 1000000) % 1000));
   }
 
-  const forte::StringId forte::CDataTypeTrait<CIEC_LTIME_OF_DAY>::scmDataTypeName = "LTIME_OF_DAY"_STRID;
+  const StringId CDataTypeTrait<CIEC_LTIME_OF_DAY>::scmDataTypeName = "LTIME_OF_DAY"_STRID;
 } // namespace forte

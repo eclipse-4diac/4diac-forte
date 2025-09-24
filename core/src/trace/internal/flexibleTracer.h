@@ -35,7 +35,7 @@ namespace forte::trace {
 
       using TracerVariant = std::variant<std::monostate, BarectfPlatformFORTE, CInternalTracer>;
 
-      CFlexibleTracer(forte::StringId instanceName, size_t bufferSize);
+      CFlexibleTracer(StringId instanceName, size_t bufferSize);
 
       ~CFlexibleTracer() = default;
 

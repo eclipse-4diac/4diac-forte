@@ -40,7 +40,7 @@ namespace forte::util {
         if (0 == strcmp(lineBuf, "\n")) {
           retVal = eEmptyLine;
         } else {
-          forte::util::CParameterParser lineParser(lineBuf, scmSeparator, scmNumberOfElementsInLine);
+          CParameterParser lineParser(lineBuf, scmSeparator, scmNumberOfElementsInLine);
           if (scmNumberOfElementsInLine == lineParser.parseParameters()) {
             paResult.first = lineParser[0];
             paResult.second = lineParser[1];

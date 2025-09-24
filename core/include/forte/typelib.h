@@ -32,14 +32,13 @@ namespace forte {
   class CIEC_ANY;
 
   //!\ingroup CORE Type for a function pointer which allows to create a functionblock instance
-  typedef CFunctionBlock *(*TFunctionBlockCreateFunc)(forte::StringId paInstanceNameId,
-                                                      forte::CFBContainer &paContainer);
+  typedef CFunctionBlock *(*TFunctionBlockCreateFunc)(StringId paInstanceNameId, CFBContainer &paContainer);
 
   //!\ingroup CORE Type for a function pointer which allows to create an adapter instance
-  typedef forte::CAdapter *(*TAdapterCreateFunc)(forte::StringId paInstanceNameId,
-                                                 forte::CFBContainer &paContainer,
-                                                 bool paIsPlug,
-                                                 TForteUInt8 paParentAdapterlistID);
+  typedef CAdapter *(*TAdapterCreateFunc)(StringId paInstanceNameId,
+                                          CFBContainer &paContainer,
+                                          bool paIsPlug,
+                                          TForteUInt8 paParentAdapterlistID);
 
   //!\ingroup CORE Type for a function pointer which allows to create a data type instance
   typedef CIEC_ANY *(*TDataTypeCreateFunc)(TForteByte *paDataBuf);

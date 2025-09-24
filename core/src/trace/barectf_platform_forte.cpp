@@ -25,7 +25,7 @@
 namespace forte::trace {
   namespace {
     class OutputDirectoryOption final
-        : public forte::util::CommandLineParser::
+        : public util::CommandLineParser::
               OptionImpl<"t", "trace", "<directory>", "Set the output directory for CTF traces"> {
       public:
         bool parseOption(const std::string_view paArgument) override {
@@ -117,7 +117,7 @@ namespace forte::trace {
     }
   }
 
-  BarectfPlatformFORTE::BarectfPlatformFORTE(forte::StringId instanceName, size_t bufferSize) :
+  BarectfPlatformFORTE::BarectfPlatformFORTE(StringId instanceName, size_t bufferSize) :
       BarectfPlatformFORTE(std::filesystem::path{traceDirectory} /
                                (std::string("trace_") + (instanceName.data() ? instanceName.data() : "null") + "_" +
                                 dateCapture() + ".ctf"),

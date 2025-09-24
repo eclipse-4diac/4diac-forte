@@ -24,12 +24,12 @@ using namespace forte::literals;
 #include "forte/util/devlog.h"
 
 namespace forte {
-  forte::StringId CIEC_ANY::getTypeNameID() const {
+  StringId CIEC_ANY::getTypeNameID() const {
     return "ANY"_STRID;
   }
 
-  forte::StringId CIEC_ANY::parseTypeName(const char *paValue, const char *paHashPos) {
-    return forte::StringId::lookup({paValue, static_cast<size_t>(paHashPos - paValue)});
+  StringId CIEC_ANY::parseTypeName(const char *paValue, const char *paHashPos) {
+    return StringId::lookup({paValue, static_cast<size_t>(paHashPos - paValue)});
   }
 
   bool CIEC_ANY::isCastable(EDataTypeID paSource, EDataTypeID paDestination, bool &paUpCast, bool &paDownCast) {

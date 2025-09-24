@@ -19,10 +19,10 @@
 #include "forte/datatypes/forte_byte.h"
 
 namespace forte::io {
-  class FORTE_IB final : public forte::io::CInputFB<CIEC_BYTE> {
+  class FORTE_IB final : public CInputFB<CIEC_BYTE> {
       DECLARE_FIRMWARE_FB(FORTE_IB)
 
     public:
-      FORTE_IB(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_IB(StringId paInstanceNameId, CFBContainer &paContainer);
   };
 } // namespace forte::io

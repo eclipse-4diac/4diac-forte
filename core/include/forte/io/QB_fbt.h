@@ -19,10 +19,10 @@
 #include "forte/datatypes/forte_byte.h"
 
 namespace forte::io {
-  class FORTE_QB final : public forte::io::COutputFB<CIEC_BYTE> {
+  class FORTE_QB final : public COutputFB<CIEC_BYTE> {
       DECLARE_FIRMWARE_FB(FORTE_QB)
 
     public:
-      FORTE_QB(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_QB(StringId paInstanceNameId, CFBContainer &paContainer);
   };
 } // namespace forte::io

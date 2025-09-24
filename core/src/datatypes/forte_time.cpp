@@ -56,13 +56,13 @@ namespace forte {
         TValueType nTimeFactor = 1;
         bool bEnd = false;
         do {
-          TValueType nBuf = forte::util::strtol(paValue, &pcEnd, 10);
+          TValueType nBuf = util::strtol(paValue, &pcEnd, 10);
           switch (tolower(*pcEnd)) {
             case 'd': nTimeFactor = 24 * 60 * 60 * csmForteTimeBaseUnitsPerSecond; break;
             case 'h': nTimeFactor = 60 * 60 * csmForteTimeBaseUnitsPerSecond; break;
             case 'm':
               if ('s' == tolower(*(pcEnd + 1))) {
-                nTimeFactor = csmForteTimeBaseUnitsPerSecond / forte::util::constants::cMillisecondsPerSecond;
+                nTimeFactor = csmForteTimeBaseUnitsPerSecond / util::constants::cMillisecondsPerSecond;
                 ++pcEnd;
               } else {
                 nTimeFactor = 60 * csmForteTimeBaseUnitsPerSecond;
@@ -70,7 +70,7 @@ namespace forte {
               break;
             case 'n':
               if ('s' == tolower(*(pcEnd + 1))) {
-                nTimeFactor = csmForteTimeBaseUnitsPerSecond / forte::util::constants::cNanosecondsPerSecond;
+                nTimeFactor = csmForteTimeBaseUnitsPerSecond / util::constants::cNanosecondsPerSecond;
                 ++pcEnd;
               } else {
                 return -1;
@@ -79,7 +79,7 @@ namespace forte {
             case 's': nTimeFactor = csmForteTimeBaseUnitsPerSecond; break;
             case 'u':
               if ('s' == tolower(*(pcEnd + 1))) {
-                nTimeFactor = csmForteTimeBaseUnitsPerSecond / forte::util::constants::cMicrosecondsPerSecond;
+                nTimeFactor = csmForteTimeBaseUnitsPerSecond / util::constants::cMicrosecondsPerSecond;
                 ++pcEnd;
               } else {
                 return -1;
@@ -110,7 +110,7 @@ namespace forte {
         return -1;
       }
     } else {
-      nIntVal = forte::util::strtol(paValue, &pcEnd, 10);
+      nIntVal = util::strtol(paValue, &pcEnd, 10);
       nRetVal = static_cast<int>(pcEnd - paValue);
     }
 
@@ -180,27 +180,27 @@ namespace forte {
   }
 
   CIEC_TIME::TValueType CIEC_TIME::getInMilliSeconds() const {
-    return (forte::util::constants::cMillisecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
-               ? static_cast<TValueType>(*this) / (static_cast<TValueType>(csmForteTimeBaseUnitsPerSecond) /
-                                                   forte::util::constants::cMillisecondsPerSecond)
+    return (util::constants::cMillisecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
+               ? static_cast<TValueType>(*this) /
+                     (static_cast<TValueType>(csmForteTimeBaseUnitsPerSecond) / util::constants::cMillisecondsPerSecond)
                : static_cast<TValueType>(*this) *
-                     (forte::util::constants::cMillisecondsPerSecond / csmForteTimeBaseUnitsPerSecond);
+                     (util::constants::cMillisecondsPerSecond / csmForteTimeBaseUnitsPerSecond);
   }
 
   CIEC_TIME::TValueType CIEC_TIME::getInMicroSeconds() const {
-    return (forte::util::constants::cMicrosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
-               ? static_cast<TValueType>(*this) / (static_cast<TValueType>(csmForteTimeBaseUnitsPerSecond) /
-                                                   forte::util::constants::cMicrosecondsPerSecond)
+    return (util::constants::cMicrosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
+               ? static_cast<TValueType>(*this) /
+                     (static_cast<TValueType>(csmForteTimeBaseUnitsPerSecond) / util::constants::cMicrosecondsPerSecond)
                : static_cast<TValueType>(*this) *
-                     (forte::util::constants::cMicrosecondsPerSecond / csmForteTimeBaseUnitsPerSecond);
+                     (util::constants::cMicrosecondsPerSecond / csmForteTimeBaseUnitsPerSecond);
   }
 
   CIEC_TIME::TValueType CIEC_TIME::getInNanoSeconds() const {
-    return (forte::util::constants::cNanosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
-               ? static_cast<TValueType>(*this) / (static_cast<TValueType>(csmForteTimeBaseUnitsPerSecond) /
-                                                   forte::util::constants::cNanosecondsPerSecond)
+    return (util::constants::cNanosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
+               ? static_cast<TValueType>(*this) /
+                     (static_cast<TValueType>(csmForteTimeBaseUnitsPerSecond) / util::constants::cNanosecondsPerSecond)
                : static_cast<TValueType>(*this) *
-                     (forte::util::constants::cNanosecondsPerSecond / csmForteTimeBaseUnitsPerSecond);
+                     (util::constants::cNanosecondsPerSecond / csmForteTimeBaseUnitsPerSecond);
   }
 
   void CIEC_TIME::setFromSeconds(TValueType paValue) {
@@ -208,22 +208,22 @@ namespace forte {
   }
 
   void CIEC_TIME::setFromMilliSeconds(TValueType paValue) {
-    setLargestInt((forte::util::constants::cMillisecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
-                      ? paValue * (csmForteTimeBaseUnitsPerSecond / forte::util::constants::cMillisecondsPerSecond)
-                      : paValue / (forte::util::constants::cMillisecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
+    setLargestInt((util::constants::cMillisecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
+                      ? paValue * (csmForteTimeBaseUnitsPerSecond / util::constants::cMillisecondsPerSecond)
+                      : paValue / (util::constants::cMillisecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
   }
 
   void CIEC_TIME::setFromMicroSeconds(TValueType paValue) {
-    setLargestInt((forte::util::constants::cMicrosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
-                      ? paValue * (csmForteTimeBaseUnitsPerSecond / forte::util::constants::cMicrosecondsPerSecond)
-                      : paValue / (forte::util::constants::cMicrosecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
+    setLargestInt((util::constants::cMicrosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
+                      ? paValue * (csmForteTimeBaseUnitsPerSecond / util::constants::cMicrosecondsPerSecond)
+                      : paValue / (util::constants::cMicrosecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
   }
 
   void CIEC_TIME::setFromNanoSeconds(TValueType paValue) {
-    setLargestInt((forte::util::constants::cNanosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
-                      ? paValue * (csmForteTimeBaseUnitsPerSecond / forte::util::constants::cNanosecondsPerSecond)
-                      : paValue / (forte::util::constants::cNanosecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
+    setLargestInt((util::constants::cNanosecondsPerSecond < csmForteTimeBaseUnitsPerSecond)
+                      ? paValue * (csmForteTimeBaseUnitsPerSecond / util::constants::cNanosecondsPerSecond)
+                      : paValue / (util::constants::cNanosecondsPerSecond / csmForteTimeBaseUnitsPerSecond));
   }
 
-  const forte::StringId forte::CDataTypeTrait<CIEC_TIME>::scmDataTypeName = "TIME"_STRID;
+  const StringId CDataTypeTrait<CIEC_TIME>::scmDataTypeName = "TIME"_STRID;
 } // namespace forte

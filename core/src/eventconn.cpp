@@ -22,8 +22,7 @@ namespace forte {
 
   CEventConnection::~CEventConnection() = default;
 
-  EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB,
-                                         const std::span<const forte::StringId> paDstPortNameId) {
+  EMGMResponse CEventConnection::connect(CFunctionBlock &paDstFB, const std::span<const StringId> paDstPortNameId) {
     if (paDstPortNameId.size() != 1) {
       return EMGMResponse::NoSuchObject;
     }
@@ -39,7 +38,7 @@ namespace forte {
   }
 
   EMGMResponse CEventConnection::connectToCFBInterface(CFunctionBlock &paDstFB,
-                                                       const std::span<const forte::StringId> paDstPortNameId) {
+                                                       const std::span<const StringId> paDstPortNameId) {
     if (paDstPortNameId.size() != 1) {
       return EMGMResponse::NoSuchObject;
     }
@@ -52,8 +51,7 @@ namespace forte {
     return addDestination(CConnectionPoint(paDstFB, dstPortId | cgInternal2InterfaceMarker));
   }
 
-  EMGMResponse CEventConnection::disconnect(CFunctionBlock &paDstFB,
-                                            const std::span<const forte::StringId> paDstPortNameId) {
+  EMGMResponse CEventConnection::disconnect(CFunctionBlock &paDstFB, const std::span<const StringId> paDstPortNameId) {
     if (paDstPortNameId.size() != 1) {
       return EMGMResponse::NoSuchObject;
     }
@@ -93,7 +91,7 @@ namespace forte {
     return EMGMResponse::Ready;
   }
 
-  void CEventConnection::getSourcePortName(forte::TNameIdentifier &paResult) const {
+  void CEventConnection::getSourcePortName(TNameIdentifier &paResult) const {
     paResult.push_back(getSourceId().getFB().getFBInterfaceSpec().mEONames[getSourceId().getPortId()]);
   }
 } // namespace forte

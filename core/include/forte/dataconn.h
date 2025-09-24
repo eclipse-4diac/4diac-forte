@@ -29,18 +29,17 @@ namespace forte {
     public:
       CDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId);
 
-      EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
+      EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) override;
 
-      EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB,
-                                         std::span<const forte::StringId> paDstPortNameId) override;
+      EMGMResponse connectToCFBInterface(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) override;
 
-      EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const forte::StringId> paDstPortNameId) override;
+      EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) override;
 
-      Wrapper getDelegatingConnection(std::span<const forte::StringId> paSrcNameList) override;
+      Wrapper getDelegatingConnection(std::span<const StringId> paSrcNameList) override;
 
       void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
 
-      void getSourcePortName(forte::TNameIdentifier &paResult) const override;
+      void getSourcePortName(TNameIdentifier &paResult) const override;
 
       /*! \brief Write connection data value.
        *
@@ -76,7 +75,7 @@ namespace forte {
        * @return a member connection for the name, nullptr if there is no such member connection,
        *          or this if the name list was empty
        */
-      virtual CDataConnection *getMemberConnection(const std::span<const forte::StringId> paMemberName) {
+      virtual CDataConnection *getMemberConnection(const std::span<const StringId> paMemberName) {
         if (paMemberName.empty()) {
           return this;
         }
@@ -99,7 +98,7 @@ namespace forte {
       EMGMResponse establishGatheringConnection(CFunctionBlock &paDstFB,
                                                 TPortId paDstPortId,
                                                 CIEC_ANY &paDstDataPoint,
-                                                std::span<const forte::StringId> paDstPortNameId);
+                                                std::span<const StringId> paDstPortNameId);
   };
 
   template<typename T>

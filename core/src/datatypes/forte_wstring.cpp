@@ -290,5 +290,5 @@ namespace forte {
     }
   }
 
-  const forte::StringId forte::CDataTypeTrait<CIEC_WSTRING>::scmDataTypeName = "WSTRING"_STRID;
+  const StringId CDataTypeTrait<CIEC_WSTRING>::scmDataTypeName = "WSTRING"_STRID;
 } // namespace forte

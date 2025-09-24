@@ -75,7 +75,7 @@ namespace forte {
     int nRetVal = -1;
     const char *hashPos = strchr(paValue, '#');
     if (nullptr != hashPos) {
-      forte::StringId typeNameId = parseTypeName(paValue, hashPos);
+      StringId typeNameId = parseTypeName(paValue, hashPos);
       EDataTypeID dataTypeId = getElementaryDataTypeId(typeNameId);
       if (setDefaultValue(dataTypeId)) {
         CIEC_ANY &value = unwrap();

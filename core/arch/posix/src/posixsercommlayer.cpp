@@ -26,10 +26,10 @@ using namespace forte::literals;
 
 namespace forte::arch {
   namespace {
-    [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<CPosixSerCommLayer> entry("ser"_STRID);
+    [[maybe_unused]] const com_infra::ComLayerManager::EntryImpl<CPosixSerCommLayer> entry("ser"_STRID);
   }
 
-  CPosixSerCommLayer::CPosixSerCommLayer(CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paFB) :
+  CPosixSerCommLayer::CPosixSerCommLayer(CComLayer *paUpperLayer, com_infra::CBaseCommFB *paFB) :
       CSerialComLayerBase(paUpperLayer, paFB) {
   }
 
@@ -37,41 +37,41 @@ namespace forte::arch {
     closeConnection();
   }
 
-  forte::com_infra::EComResponse CPosixSerCommLayer::sendData(void *paData, unsigned int paSize) {
+  com_infra::EComResponse CPosixSerCommLayer::sendData(void *paData, unsigned int paSize) {
     if (CFDSelectHandler::scmInvalidFileDescriptor != getSerialHandler()) {
       ssize_t nToSend = paSize;
       while (0 < nToSend) {
         ssize_t nSentBytes = write(getSerialHandler(), paData, nToSend);
         if (nSentBytes <= 0) {
           DEVLOG_ERROR("CSerCommLayer: Send failed: %s\n", strerror(errno));
-          return forte::com_infra::e_ProcessDataSendFailed;
+          return com_infra::e_ProcessDataSendFailed;
         }
         nToSend -= nSentBytes;
         paData = static_cast<char *>(paData) + nSentBytes;
       }
     }
 
-    return forte::com_infra::e_ProcessDataOk;
+    return com_infra::e_ProcessDataOk;
   }
 
-  forte::com_infra::EComResponse CPosixSerCommLayer::recvData(const void *, unsigned int) {
+  com_infra::EComResponse CPosixSerCommLayer::recvData(const void *, unsigned int) {
     util::CCriticalRegion lock(mRecvLock);
     ssize_t nReadCount = read(getSerialHandler(), &mRecvBuffer[mBufFillSize], cgIPLayerRecvBufferSize - mBufFillSize);
 
     switch (nReadCount) {
       case 0:
         DEVLOG_INFO("Connection closed by peer\n");
-        mInterruptResp = forte::com_infra::e_InitTerminated;
+        mInterruptResp = com_infra::e_InitTerminated;
         closeConnection();
         break;
       case -1:
         DEVLOG_ERROR("CSerCommLayer: read failed: %s\n", strerror(errno));
-        mInterruptResp = forte::com_infra::e_ProcessDataRecvFaild;
+        mInterruptResp = com_infra::e_ProcessDataRecvFaild;
         break;
       default:
         // we successfully received data
         mBufFillSize += unsigned(nReadCount);
-        mInterruptResp = forte::com_infra::e_ProcessDataOk;
+        mInterruptResp = com_infra::e_ProcessDataOk;
         break;
     }
 
@@ -79,10 +79,10 @@ namespace forte::arch {
     return mInterruptResp;
   }
 
-  forte::com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(
+  com_infra::EComResponse CPosixSerCommLayer::openSerialConnection(
       const SSerialParameters &paSerialParameters,
       CSerialComLayerBase<FORTE_SOCKET_TYPE, FORTE_INVALID_SOCKET>::TSerialHandleType *paHandleResult) {
-    forte::com_infra::EComResponse eRetVal = forte::com_infra::e_ProcessDataNoSocket;
+    com_infra::EComResponse eRetVal = com_infra::e_ProcessDataNoSocket;
 
     // as first shot take the serial interface device as param (e.g., /dev/ttyS0 )
     CFDSelectHandler::TFileDescriptor fileDescriptor =
@@ -114,7 +114,7 @@ namespace forte::arch {
         case e57600: stNewTIO.c_cflag |= B57600; break;
         case e115200: stNewTIO.c_cflag |= B115200; break;
         case e1000000: stNewTIO.c_cflag |= B1000000; break;
-        default: return forte::com_infra::e_InitInvalidId; break;
+        default: return com_infra::e_InitInvalidId; break;
       }
 
       cfsetispeed(&stNewTIO, cfgetispeed(&mOldTIO));
@@ -125,13 +125,13 @@ namespace forte::arch {
         case e6: stNewTIO.c_cflag |= CS6; break;
         case e7: stNewTIO.c_cflag |= CS7; break;
         case e8: stNewTIO.c_cflag |= CS8; break;
-        default: return forte::com_infra::e_InitInvalidId; break;
+        default: return com_infra::e_InitInvalidId; break;
       }
 
       switch (paSerialParameters.stopBits) {
         case eOneBit: stNewTIO.c_cflag &= ~CSTOPB; break;
         case eTwoBits: stNewTIO.c_cflag |= CSTOPB; break;
-        default: return forte::com_infra::e_InitInvalidId; break;
+        default: return com_infra::e_InitInvalidId; break;
       }
 
       switch (paSerialParameters.parity) {
@@ -141,7 +141,7 @@ namespace forte::arch {
           stNewTIO.c_cflag |= PARENB;
           stNewTIO.c_cflag &= ~PARODD;
           break;
-        default: return forte::com_infra::e_InitInvalidId; break;
+        default: return com_infra::e_InitInvalidId; break;
       }
 
       stNewTIO.c_cflag &= ~CRTSCTS; // no hardware flow control
@@ -185,10 +185,10 @@ namespace forte::arch {
 
       getExtEvHandler<CFDSelectHandler>().addComCallback(fileDescriptor, this);
       *paHandleResult = fileDescriptor;
-      eRetVal = forte::com_infra::e_InitOk;
+      eRetVal = com_infra::e_InitOk;
 
     } else {
-      eRetVal = forte::com_infra::e_ProcessDataInvalidObject;
+      eRetVal = com_infra::e_ProcessDataInvalidObject;
       DEVLOG_ERROR("CSerCommLayer: open failed: %s\n", strerror(errno));
     }
 

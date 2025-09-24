@@ -38,7 +38,7 @@ namespace forte::io {
 
   DEFINE_FIRMWARE_FB(FORTE_eIWconfig, "eIWconfig"_STRID)
 
-  FORTE_eIWconfig::FORTE_eIWconfig(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+  FORTE_eIWconfig::FORTE_eIWconfig(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CeConfigFB(paInstanceNameId, cFBInterfaceSpec, paContainer),
       var_ST(0_WORD),
       var_BT(0_WORD),
@@ -107,7 +107,7 @@ namespace forte::io {
     return nullptr;
   }
 
-  forte::ISocketPin *FORTE_eIWconfig::getSocketPinUnchecked(const size_t paIndex) {
+  ISocketPin *FORTE_eIWconfig::getSocketPinUnchecked(const size_t paIndex) {
     switch (paIndex) {
       case 0: return &var_eIW;
     }

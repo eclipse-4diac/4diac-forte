@@ -55,29 +55,29 @@ namespace forte {
 
     // Duplicate code the same as in forte date
     if ('\0' != *acBuffer) {
-      tm.tm_year = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10) - 1900);
+      tm.tm_year = static_cast<int>(util::strtoul(acBuffer, &acBuffer, 10) - 1900);
       if ('-' == *acBuffer) {
         ++acBuffer;
-        tm.tm_mon = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10) - 1);
+        tm.tm_mon = static_cast<int>(util::strtoul(acBuffer, &acBuffer, 10) - 1);
         if ('-' == *acBuffer) {
           ++acBuffer;
-          tm.tm_mday = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
+          tm.tm_mday = static_cast<int>(util::strtoul(acBuffer, &acBuffer, 10));
 
           if ('-' == *acBuffer) {
             ++acBuffer;
             // duplicate code this one can be find in time of day
-            tm.tm_hour = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
+            tm.tm_hour = static_cast<int>(util::strtoul(acBuffer, &acBuffer, 10));
             if (':' == *acBuffer) {
               ++acBuffer;
-              tm.tm_min = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
+              tm.tm_min = static_cast<int>(util::strtoul(acBuffer, &acBuffer, 10));
               if (':' == *acBuffer) {
                 ++acBuffer;
-                tm.tm_sec = static_cast<int>(forte::util::strtoul(acBuffer, &acBuffer, 10));
+                tm.tm_sec = static_cast<int>(util::strtoul(acBuffer, &acBuffer, 10));
                 if ('.' == *acBuffer) {
                   unsigned int nNums = 0;
                   ++acBuffer;
                   while (isdigit(*acBuffer)) {
-                    msec = 10 * msec + forte::util::charDigitToInt(*acBuffer);
+                    msec = 10 * msec + util::charDigitToInt(*acBuffer);
                     ++acBuffer;
                     ++nNums;
                   }
@@ -120,5 +120,5 @@ namespace forte {
     toString(paTargetBuf);
   }
 
-  const forte::StringId forte::CDataTypeTrait<CIEC_LDATE_AND_TIME>::scmDataTypeName = "LDATE_AND_TIME"_STRID;
+  const StringId CDataTypeTrait<CIEC_LDATE_AND_TIME>::scmDataTypeName = "LDATE_AND_TIME"_STRID;
 } // namespace forte

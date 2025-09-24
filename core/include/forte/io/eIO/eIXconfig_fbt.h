@@ -32,14 +32,14 @@ namespace forte::io {
       void setInitialValues() override;
 
     public:
-      FORTE_eIXconfig(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_eIXconfig(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_BOOL var_FE;
       CIEC_BOOL var_RE;
 
       CIEC_WSTRING var_STATUS;
 
-      forte::CSocketPin<FORTE_eGenAdapter_Socket> var_eIX;
+      CSocketPin<FORTE_eGenAdapter_Socket> var_eIX;
 
       CEventConnection conn_CNF;
 
@@ -50,7 +50,7 @@ namespace forte::io {
 
       CIEC_ANY *getDI(size_t) override;
       CIEC_ANY *getDO(size_t) override;
-      forte::ISocketPin *getSocketPinUnchecked(size_t) override;
+      ISocketPin *getSocketPinUnchecked(size_t) override;
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;

@@ -131,13 +131,13 @@ namespace forte {
     int retVal = -1;
     const char *hashPos = strchr(paValue, '#');
     if (nullptr != hashPos) {
-      forte::StringId typeNameId = parseTypeName(paValue, hashPos);
+      StringId typeNameId = parseTypeName(paValue, hashPos);
       EDataTypeID dataTypeId = CIEC_ANY_ELEMENTARY::getElementaryDataTypeId(typeNameId);
       if (setDefaultValue(dataTypeId)) {
         CIEC_ANY &value = unwrap();
         retVal = value.fromString(paValue);
       } else {
-        CIEC_ANY *value = forte::createDataTypeInstance(typeNameId, nullptr);
+        CIEC_ANY *value = createDataTypeInstance(typeNameId, nullptr);
         if (value) {
           retVal = value->fromString(hashPos + 1); // start after '#'
           if (retVal < 0) {

@@ -284,7 +284,7 @@ namespace forte {
         return data[0].getDataTypeID();
       }
 
-      [[nodiscard]] forte::StringId getElementTypeNameID() const override {
+      [[nodiscard]] StringId getElementTypeNameID() const override {
         return data[0].getTypeNameID();
       }
 

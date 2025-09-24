@@ -26,7 +26,7 @@ namespace forte {
     public:
       ~CBaseFB() override = default;
 
-      CIEC_ANY *getVar(forte::StringId *paNameList, unsigned int paNameListSize) override;
+      CIEC_ANY *getVar(StringId *paNameList, unsigned int paNameListSize) override;
 
       void toString(std::string &paTargetBuf) const override;
 
@@ -37,8 +37,8 @@ namespace forte {
     protected:
       CBaseFB(CFBContainer &paContainer,
               const SFBInterfaceSpec &paInterfaceSpec,
-              forte::StringId paInstanceNameId,
-              std::span<const forte::StringId> paVarInternalNames);
+              StringId paInstanceNameId,
+              std::span<const StringId> paVarInternalNames);
 
       /*! \brief Get the internal variable with given number
        *
@@ -60,8 +60,8 @@ namespace forte {
        * \param paInternalName StringId of the internal variable name.
        * \return Pointer to the internal variable or 0.
        */
-      CIEC_ANY *getInternalVar(forte::StringId paInternalName);
+      CIEC_ANY *getInternalVar(StringId paInternalName);
 
-      const std::span<const forte::StringId> cmVarInternalNames;
+      const std::span<const StringId> cmVarInternalNames;
   };
 } // namespace forte

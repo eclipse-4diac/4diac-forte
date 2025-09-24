@@ -58,15 +58,15 @@ namespace forte::util {
      */
     void printLogMessage(E_MsgLevel paLevel, const char *paMessage) {
       (paLevel == E_MsgLevel::Error ? std::cerr : std::cout)
-          << scLogLevel[static_cast<int>(paLevel)] << ": " << forte::arch::getRealtimeString() << ": " << paMessage;
+          << scLogLevel[static_cast<int>(paLevel)] << ": " << arch::getRealtimeString() << ": " << paMessage;
 #ifdef WIN32
       (paLevel == E_MsgLevel::Error ? std::cerr : std::cout) << std::flush;
 #endif
     }
 
-    char sMsgBuf[forte::cgLogMsgBufSize]; //!< Buffer for the messages created by the variable addMsg function
+    char sMsgBuf[cgLogMsgBufSize]; //!< Buffer for the messages created by the variable addMsg function
 
-    forte::arch::CSyncObject sMessageLock;
+    arch::CSyncObject sMessageLock;
 
 #ifdef FORTE_STACKTRACE_BOOST
     void printStacktrace() {
@@ -86,7 +86,7 @@ namespace forte::util {
     va_list pstArgPtr;
 
     va_start(pstArgPtr, paMessage);
-    forte_vsnprintf(sMsgBuf, forte::cgLogMsgBufSize, paMessage, pstArgPtr);
+    forte_vsnprintf(sMsgBuf, cgLogMsgBufSize, paMessage, pstArgPtr);
     va_end(pstArgPtr);
 
     printLogMessage(paLevel, sMsgBuf);

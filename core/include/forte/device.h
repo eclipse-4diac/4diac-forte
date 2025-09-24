@@ -53,7 +53,7 @@ namespace forte {
        */
       virtual void awaitShutdown() = 0;
 
-      forte::StringId getFBTypeId() const override {
+      StringId getFBTypeId() const override {
         return {};
       }
 
@@ -64,7 +64,7 @@ namespace forte {
        * \param paCommand FORTE internal representation of the management command
        * \return response of the MGMCommand execution as defined in IEC 61499
        */
-      EMGMResponse executeMGMCommand(forte::SManagementCMD &paCommand) override;
+      EMGMResponse executeMGMCommand(SManagementCMD &paCommand) override;
 
       EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
@@ -89,7 +89,7 @@ namespace forte {
       /*! \brief Sets up all the necessary data and classes necessary for execution.
        *
        */
-      CDevice(const SFBInterfaceSpec &paInterfaceSpec, const forte::StringId paInstanceNameId) :
+      CDevice(const SFBInterfaceSpec &paInterfaceSpec, const StringId paInstanceNameId) :
           CResource(paInterfaceSpec, paInstanceNameId),
           mDeviceExecution(*this) {
       }

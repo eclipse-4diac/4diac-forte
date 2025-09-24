@@ -29,13 +29,13 @@ namespace forte {
     public:
       ~CBasicFB() override = default;
 
-      CIEC_ANY *getVar(forte::StringId *paNameList, unsigned int paNameListSize) override;
+      CIEC_ANY *getVar(StringId *paNameList, unsigned int paNameListSize) override;
 
     protected:
       CBasicFB(CFBContainer &paContainer,
                const SFBInterfaceSpec &paInterfaceSpec,
-               forte::StringId paInstanceNameId,
-               std::span<const forte::StringId> paVarInternalNames);
+               StringId paInstanceNameId,
+               std::span<const StringId> paVarInternalNames);
 
       void setInitialValues() override = 0;
 

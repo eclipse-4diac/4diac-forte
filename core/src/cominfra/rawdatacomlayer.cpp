@@ -23,8 +23,7 @@ using namespace forte::literals;
 
 namespace forte::com_infra {
   namespace {
-    [[maybe_unused]] const forte::com_infra::ComLayerManager::EntryImpl<forte::com_infra::CRawDataComLayer>
-        entry("raw"_STRID);
+    [[maybe_unused]] const ComLayerManager::EntryImpl<CRawDataComLayer> entry("raw"_STRID);
   }
 
   CRawDataComLayer::CRawDataComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB) : CComLayer(paUpperLayer, paFB) {

@@ -66,7 +66,7 @@ namespace forte {
 
       [[nodiscard]] virtual EDataTypeID getElementDataTypeID() const = 0;
 
-      [[nodiscard]] virtual forte::StringId getElementTypeNameID() const = 0;
+      [[nodiscard]] virtual StringId getElementTypeNameID() const = 0;
 
       [[nodiscard]] virtual reference at(intmax_t index) = 0;
 
@@ -113,7 +113,7 @@ namespace forte {
         return e_ARRAY;
       }
 
-      forte::StringId getTypeNameID() const override;
+      StringId getTypeNameID() const override;
 
       void setValue(const CIEC_ANY &paValue) override;
 

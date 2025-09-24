@@ -67,13 +67,13 @@ namespace forte::arch {
         for (TConnectionContainer::Iterator itRunner = mConnectionsList.begin(); itRunner != itEnd;) {
           // need to retrieve the callee as the iterator may get invalid in the recvDat function below in case of
           // connection closing
-          forte::com_infra::CComCallback *callee = itRunner->mCallee;
+          com_infra::CComCallback *callee = itRunner->mCallee;
           TFileDescriptor sockDes = itRunner->mSockDes;
           ++itRunner;
 
           if ((0 != FD_ISSET(sockDes, &anFDSet)) && (nullptr != callee)) {
             mSync.unlock();
-            if (forte::com_infra::e_Nothing != callee->recvData(&sockDes, 0)) {
+            if (com_infra::e_Nothing != callee->recvData(&sockDes, 0)) {
               startNewEventChain(callee->getCommFB());
             }
             mSync.lock();
@@ -92,7 +92,7 @@ namespace forte::arch {
     }
   }
 
-  void CFDSelectHandler::addComCallback(TFileDescriptor paFD, forte::com_infra::CComCallback *paComCallback) {
+  void CFDSelectHandler::addComCallback(TFileDescriptor paFD, com_infra::CComCallback *paComCallback) {
     {
       util::CCriticalRegion criticalRegion(mSync);
       TConnContType stNewNode = {paFD, paComCallback};

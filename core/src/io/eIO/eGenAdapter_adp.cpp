@@ -29,7 +29,7 @@ namespace forte::io {
     CAdapter::setInitialValues();
   }
 
-  FORTE_eGenAdapter_Plug::FORTE_eGenAdapter_Plug(forte::StringId paInstanceNameId,
+  FORTE_eGenAdapter_Plug::FORTE_eGenAdapter_Plug(StringId paInstanceNameId,
                                                  CFBContainer &paContainer,
                                                  TForteUInt8 paParentAdapterlistID) :
       FORTE_eGenAdapter(paContainer, scmFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID) {
@@ -67,7 +67,7 @@ namespace forte::io {
     return static_cast<FORTE_eGenAdapter_Socket *>(getPeer());
   }
 
-  FORTE_eGenAdapter_Socket::FORTE_eGenAdapter_Socket(forte::StringId paInstanceNameId,
+  FORTE_eGenAdapter_Socket::FORTE_eGenAdapter_Socket(StringId paInstanceNameId,
                                                      CFBContainer &paContainer,
                                                      TForteUInt8 paParentAdapterlistID) :
       FORTE_eGenAdapter(paContainer, scmFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID) {
