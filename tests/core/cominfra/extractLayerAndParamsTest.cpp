@@ -15,7 +15,7 @@
 #include "forte/cominfra/basecommfb.h"
 
 namespace forte::com_infra::test {
-  class CExtractLayerAndParamsCommFB : public forte::com_infra::CBaseCommFB {
+  class CExtractLayerAndParamsCommFB : public CBaseCommFB {
     public:
       static char *extractLayerIdAndParams(char **paRemainingID, char **paLayerParams) {
         return CBaseCommFB::extractLayerIdAndParams(paRemainingID, paLayerParams);

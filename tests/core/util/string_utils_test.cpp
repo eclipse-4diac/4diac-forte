@@ -564,7 +564,7 @@ namespace forte::util::test {
     std::string toTest;
     for (size_t i = 0; i < sNonEscapedData.size(); i++) {
       toTest = sNonEscapedData[i];
-      forte::util::transformNonEscapedToEscapedXMLText(toTest, 0);
+      util::transformNonEscapedToEscapedXMLText(toTest, 0);
       BOOST_CHECK_EQUAL(toTest, sEscapedData[i]);
     }
   }

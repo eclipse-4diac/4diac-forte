@@ -43,14 +43,13 @@ namespace forte::trace::test {
      *
      * @return the created device wuth the network of FB in it
      */
-    std::unique_ptr<CDevice> createExampleDevice(forte::StringId paResourceName,
-                                                 forte::StringId paDeviceName = "MyDevice"_STRID);
+    std::unique_ptr<CDevice> createExampleDevice(StringId paResourceName, StringId paDeviceName = "MyDevice"_STRID);
   } // namespace
 
   BOOST_AUTO_TEST_SUITE(tracer_test)
 
   BOOST_AUTO_TEST_CASE(sequential_events_test) {
-    forte::trace::test::prepareTraceTest("metadata");
+    prepareTraceTest("metadata");
 
     auto resourceName = "MyResource"_STRID;
     auto deviceName = "MyDevice"_STRID;
@@ -60,7 +59,7 @@ namespace forte::trace::test {
     {
       auto device = createExampleDevice(resourceName, deviceName);
 
-      auto resource = dynamic_cast<CResource *>(forte::trace::reader::utils::getFB(device.get(), resourceName));
+      auto resource = dynamic_cast<CResource *>(reader::utils::getFB(device.get(), resourceName));
 
       device->startDevice();
       // wait for all events to be triggered
@@ -182,9 +181,9 @@ namespace forte::trace::test {
 
     addInitiaOrFinalEvent(resourceMessages, false);
 
-    auto ctfMessages = forte::trace::reader::utils::getEventMessages(cgCTFOutputDir).value();
+    auto ctfMessages = reader::utils::getEventMessages(cgCTFOutputDir).value();
 
-    forte::trace::test::checkMessages(expectedMessages, ctfMessages);
+    checkMessages(expectedMessages, ctfMessages);
   }
 
   BOOST_AUTO_TEST_SUITE_END()
@@ -195,7 +194,7 @@ namespace forte::trace::test {
 
   namespace {
 
-    std::unique_ptr<CDevice> createExampleDevice(forte::StringId paResourceName, forte::StringId paDeviceName) {
+    std::unique_ptr<CDevice> createExampleDevice(StringId paResourceName, StringId paDeviceName) {
       auto device = std::make_unique<forte::test::CTesterDevice>(paDeviceName);
 
       BOOST_TEST_INFO("Create Resource");
@@ -204,7 +203,7 @@ namespace forte::trace::test {
       BOOST_TEST_INFO("Start Device");
       BOOST_CHECK(device->initialize());
 
-      auto resource = dynamic_cast<CResource *>(forte::trace::reader::utils::getFB(device.get(), paResourceName));
+      auto resource = dynamic_cast<CResource *>(reader::utils::getFB(device.get(), paResourceName));
 
       auto startInstanceName = "START"_STRID;
       auto counterInstanceName = "Counter"_STRID;
@@ -217,7 +216,7 @@ namespace forte::trace::test {
       BOOST_CHECK(EMGMResponse::Ready ==
                   resource->createFB(switchInstanceName, "iec61499::events::E_SWITCH"_STRID, ""));
 
-      forte::SManagementCMD command;
+      SManagementCMD command;
       command.mCMD = EMGMCommandType::CreateConnection;
       command.mDestination = {};
 

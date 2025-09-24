@@ -31,12 +31,12 @@ namespace forte::test {
       static const TEventID scmEventCNFID = 0;
       static const TEventID scmEventCHANGEDID = 1;
 
-      forte::CInternalFB<forte::iec61499::events::FORTE_E_PERMIT> fb_PERMIT_OP;
-      forte::CInternalFB<forte::iec61499::events::FORTE_E_SR> fb_E_SR;
-      forte::CInternalFB<forte::iec61499::events::FORTE_E_SWITCH> fb_SET_CHANGED;
-      forte::CInternalFB<forte::iec61499::events::GEN_E_DEMUX> fb_E_DEMUX_2;
-      forte::CInternalFB<forte::iec61499::events::GEN_E_MUX> fb_E_MUX_2;
-      forte::CInternalFB<forte::iec61499::events::FORTE_E_SWITCH> fb_RESET_CHANGED;
+      CInternalFB<iec61499::events::FORTE_E_PERMIT> fb_PERMIT_OP;
+      CInternalFB<iec61499::events::FORTE_E_SR> fb_E_SR;
+      CInternalFB<iec61499::events::FORTE_E_SWITCH> fb_SET_CHANGED;
+      CInternalFB<iec61499::events::GEN_E_DEMUX> fb_E_DEMUX_2;
+      CInternalFB<iec61499::events::GEN_E_MUX> fb_E_MUX_2;
+      CInternalFB<iec61499::events::FORTE_E_SWITCH> fb_RESET_CHANGED;
 
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;
@@ -44,7 +44,7 @@ namespace forte::test {
       CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
     public:
-      FORTE_CFB_TEST(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_CFB_TEST(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CEventConnection conn_CNF;
       CEventConnection conn_CHANGED;

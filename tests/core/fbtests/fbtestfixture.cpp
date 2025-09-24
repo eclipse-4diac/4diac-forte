@@ -60,7 +60,7 @@ namespace forte::test {
       CIEC_ANY &mValue;
   };
 
-  CFBTestFixtureBase::CFBTestFixtureBase(forte::StringId paTypeId) :
+  CFBTestFixtureBase::CFBTestFixtureBase(StringId paTypeId) :
       CGenFunctionBlock<CFunctionBlock>(CFBTestDataGlobalFixture::getResource(), {}),
       mTypeId(paTypeId) {
     mFBUnderTest = forte::createFB(paTypeId, paTypeId, CFBTestDataGlobalFixture::getResource());
@@ -263,7 +263,7 @@ namespace forte::test {
                     (CIEC_ANY::e_ANY == val->getDataTypeID()));
 
       BOOST_CHECK_EQUAL(val, mFBUnderTest->getDIFromPortId(i));
-      forte::StringId stringIdBuf = interfaceSpec.mDINames[i];
+      StringId stringIdBuf = interfaceSpec.mDINames[i];
       BOOST_CHECK_EQUAL(val, mFBUnderTest->getVar(&stringIdBuf, 1));
 
       BOOST_CHECK_EQUAL(i, interfaceSpec.getDIID(interfaceSpec.mDINames[i]));
@@ -289,7 +289,7 @@ namespace forte::test {
       BOOST_REQUIRE((mOutputDataBuffers[i]->getDataTypeID() == val->getDataTypeID()) ||
                     (CIEC_ANY::e_ANY == val->getDataTypeID()));
 
-      forte::StringId stringIdBuf = interfaceSpec.mDONames[i];
+      StringId stringIdBuf = interfaceSpec.mDONames[i];
       BOOST_CHECK_EQUAL(val, mFBUnderTest->getVar(&stringIdBuf, 1));
 
       BOOST_CHECK_EQUAL(i, interfaceSpec.getDOID(interfaceSpec.mDONames[i]));

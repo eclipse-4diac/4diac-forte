@@ -23,7 +23,7 @@
 namespace forte::test {
   class CTesterDevice : public CDevice {
     public:
-      CTesterDevice(const forte::StringId paInstanceNameId = {});
+      CTesterDevice(const StringId paInstanceNameId = {});
 
       void awaitShutdown() override {
         // nothing to be done to join
@@ -42,7 +42,7 @@ namespace forte::test {
       }
 
     private:
-      forte::CInternalFB<forte::iec61499::hardware::EMB_RES> mResource;
+      CInternalFB<iec61499::hardware::EMB_RES> mResource;
 
       constexpr static SFBInterfaceSpec scTestDevSpec = {};
   };

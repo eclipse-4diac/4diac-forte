@@ -133,32 +133,32 @@ namespace forte::eclipse4diac::convert::test {
   BOOST_AUTO_TEST_SUITE(STRUCT_DEMUX_FailedCreationTest)
 
   BOOST_AUTO_TEST_CASE(missingDataType) {
-    CFunctionBlock *fb = forte::createFB("InstanceName"_STRID, "eclipse4diac::convert::STRUCT_DEMUX_1UnknownType"_STRID,
-                                         forte::test::CFBContainerMock::smDefaultFBContMock);
+    CFunctionBlock *fb = createFB("InstanceName"_STRID, "eclipse4diac::convert::STRUCT_DEMUX_1UnknownType"_STRID,
+                                  forte::test::CFBContainerMock::smDefaultFBContMock);
     BOOST_CHECK(nullptr == fb);
   }
 
   BOOST_AUTO_TEST_CASE(wrongDataType) {
-    CFunctionBlock *fb = forte::createFB("InstanceName"_STRID, "eclipse4diac::convert::STRUCT_DEMUX_1STRING"_STRID,
-                                         forte::test::CFBContainerMock::smDefaultFBContMock);
+    CFunctionBlock *fb = createFB("InstanceName"_STRID, "eclipse4diac::convert::STRUCT_DEMUX_1STRING"_STRID,
+                                  forte::test::CFBContainerMock::smDefaultFBContMock);
     BOOST_CHECK(nullptr == fb);
 
-    fb = forte::createFB("InstanceName"_STRID, "eclipse4diac::convert::STRUCT_DEMUX_1REAL"_STRID,
-                         forte::test::CFBContainerMock::smDefaultFBContMock);
+    fb = createFB("InstanceName"_STRID, "eclipse4diac::convert::STRUCT_DEMUX_1REAL"_STRID,
+                  forte::test::CFBContainerMock::smDefaultFBContMock);
     BOOST_CHECK(nullptr == fb);
   }
 
   BOOST_AUTO_TEST_CASE(emptyStruct) {
     CFunctionBlock *fb =
-        forte::createFB("InstanceName"_STRID, "eclipse4diac::convert::STRUCT_DEMUX_1Struct_Muxer_Test_Struct_3"_STRID,
-                        forte::test::CFBContainerMock::smDefaultFBContMock);
+        createFB("InstanceName"_STRID, "eclipse4diac::convert::STRUCT_DEMUX_1Struct_Muxer_Test_Struct_3"_STRID,
+                 forte::test::CFBContainerMock::smDefaultFBContMock);
     BOOST_CHECK(nullptr == fb);
   }
 
   BOOST_AUTO_TEST_CASE(bigStruct) {
     CFunctionBlock *fb =
-        forte::createFB("InstanceName"_STRID, "eclipse4diac::convert::STRUCT_DEMUX_1Struct_Muxer_Test_Struct_4"_STRID,
-                        forte::test::CFBContainerMock::smDefaultFBContMock);
+        createFB("InstanceName"_STRID, "eclipse4diac::convert::STRUCT_DEMUX_1Struct_Muxer_Test_Struct_4"_STRID,
+                 forte::test::CFBContainerMock::smDefaultFBContMock);
     BOOST_CHECK(nullptr != fb);
     delete fb;
   }

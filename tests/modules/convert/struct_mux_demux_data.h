@@ -34,11 +34,11 @@ namespace forte::eclipse4diac::convert::test {
         return 3;
       }
 
-      const forte::StringId *elementNames() const override {
+      const StringId *elementNames() const override {
         return scmElementNames;
       }
 
-      forte::StringId getStructTypeNameID() const override;
+      StringId getStructTypeNameID() const override;
 
       CIEC_ANY *getMember(size_t paMemberIndex) override {
         switch (paMemberIndex) {
@@ -59,7 +59,7 @@ namespace forte::eclipse4diac::convert::test {
       }
 
     private:
-      static const forte::StringId scmElementNames[];
+      static const StringId scmElementNames[];
   };
 
   class CIEC_Struct_Muxer_Test_Struct_2 : public CIEC_STRUCT {
@@ -76,11 +76,11 @@ namespace forte::eclipse4diac::convert::test {
         return 3;
       }
 
-      const forte::StringId *elementNames() const override {
+      const StringId *elementNames() const override {
         return scmElementNames;
       }
 
-      forte::StringId getStructTypeNameID() const override;
+      StringId getStructTypeNameID() const override;
 
       CIEC_ANY *getMember(size_t paMemberIndex) override {
         switch (paMemberIndex) {
@@ -101,7 +101,7 @@ namespace forte::eclipse4diac::convert::test {
       }
 
     private:
-      static const forte::StringId scmElementNames[];
+      static const StringId scmElementNames[];
   };
 
   class CIEC_Struct_Muxer_Test_Struct_3 : public CIEC_STRUCT {
@@ -114,11 +114,11 @@ namespace forte::eclipse4diac::convert::test {
         return 0;
       }
 
-      const forte::StringId *elementNames() const override {
+      const StringId *elementNames() const override {
         return scmElementNames;
       }
 
-      forte::StringId getStructTypeNameID() const override;
+      StringId getStructTypeNameID() const override;
 
       CIEC_ANY *getMember(size_t) override {
         return nullptr;
@@ -129,7 +129,7 @@ namespace forte::eclipse4diac::convert::test {
       }
 
     private:
-      static const forte::StringId scmElementNames[];
+      static const StringId scmElementNames[];
   };
 
   class CIEC_Struct_Muxer_Test_Struct_4 : public CIEC_STRUCT {
@@ -144,11 +144,11 @@ namespace forte::eclipse4diac::convert::test {
         return 256;
       }
 
-      const forte::StringId *elementNames() const override {
+      const StringId *elementNames() const override {
         return scmElementNames;
       }
 
-      forte::StringId getStructTypeNameID() const override;
+      StringId getStructTypeNameID() const override;
 
       CIEC_ANY *getMember(size_t paMemberIndex) override {
         if (paMemberIndex < 256) {
@@ -165,7 +165,7 @@ namespace forte::eclipse4diac::convert::test {
       }
 
     private:
-      static const forte::StringId scmElementNames[];
+      static const StringId scmElementNames[];
   };
 
   class CIEC_Struct_Muxer_Test_Struct_5 : public CIEC_STRUCT {
@@ -182,11 +182,11 @@ namespace forte::eclipse4diac::convert::test {
         return 3;
       }
 
-      const forte::StringId *elementNames() const override {
+      const StringId *elementNames() const override {
         return scmElementNames;
       }
 
-      forte::StringId getStructTypeNameID() const override;
+      StringId getStructTypeNameID() const override;
 
       CIEC_ANY *getMember(size_t paMemberIndex) override {
         switch (paMemberIndex) {
@@ -207,7 +207,7 @@ namespace forte::eclipse4diac::convert::test {
       }
 
     private:
-      static const forte::StringId scmElementNames[];
+      static const StringId scmElementNames[];
   };
 } // namespace forte::eclipse4diac::convert::test
 #endif /* TESTS_MODULES_CONVERT_STRUCT_MUX_DEMUX_DATA_H_ */

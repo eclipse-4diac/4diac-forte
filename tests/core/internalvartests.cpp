@@ -28,7 +28,7 @@ namespace forte::test {
   class CInternalVarTestFB : public CBasicFB {
 
     public:
-      CInternalVarTestFB(std::span<const forte::StringId> paVarInternalNames) :
+      CInternalVarTestFB(std::span<const StringId> paVarInternalNames) :
           CBasicFB(CFBContainerMock::smDefaultFBContMock, gcEmptyInterface, {}, paVarInternalNames),
           var_QU(false_BOOL),
           var_QD(false_BOOL),
@@ -44,7 +44,7 @@ namespace forte::test {
         return nullptr;
       }
 
-      forte::StringId getFBTypeId() const override {
+      StringId getFBTypeId() const override {
         return {};
       }
 
@@ -92,12 +92,12 @@ namespace forte::test {
 
   BOOST_AUTO_TEST_CASE(checkEmptyInternalVarsAreAllowed) {
     // check that we can create an FB where we have a var internal struct which has all parts set to zero
-    forte::StringId namelist[1] = {"DT"_STRID};
+    StringId namelist[1] = {"DT"_STRID};
 
     CInternalVarTestFB testFB({});
     BOOST_CHECK(nullptr == testFB.getVar(namelist, 1));
     // check that we should at least get the ECC variable
-    namelist[0] = forte::StringId::insert("!ECC");
+    namelist[0] = StringId::insert("!ECC");
     BOOST_CHECK(nullptr != testFB.getVar(namelist, 1));
   }
 

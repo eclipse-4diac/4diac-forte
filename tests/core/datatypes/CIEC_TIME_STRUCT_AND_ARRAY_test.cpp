@@ -46,11 +46,11 @@ namespace forte::test {
         return 3;
       }
 
-      const forte::StringId *elementNames() const override {
+      const StringId *elementNames() const override {
         return scmElementNames;
       }
 
-      forte::StringId getStructTypeNameID() const override {
+      StringId getStructTypeNameID() const override {
         return "TestStruct"_STRID;
       }
 
@@ -73,12 +73,12 @@ namespace forte::test {
       }
 
     private:
-      static const forte::StringId scmElementTypes[];
-      static const forte::StringId scmElementNames[];
+      static const StringId scmElementTypes[];
+      static const StringId scmElementNames[];
   };
 
-  const forte::StringId CIEC_TestStruct::scmElementTypes[] = {"BOOL"_STRID, "INT"_STRID, "TIME"_STRID};
-  const forte::StringId CIEC_TestStruct::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID};
+  const StringId CIEC_TestStruct::scmElementTypes[] = {"BOOL"_STRID, "INT"_STRID, "TIME"_STRID};
+  const StringId CIEC_TestStruct::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID};
 
   DEFINE_FIRMWARE_DATATYPE(TestStruct, "TestStruct"_STRID)
 

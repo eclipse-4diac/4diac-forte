@@ -45,9 +45,9 @@ namespace forte::trace::test {
      * @param paDeviceName name of the device
      * @return the created device with the network of FBs in it
      */
-    std::unique_ptr<CDevice> createNonDeterministicExample(forte::StringId paResourceName1,
-                                                           forte::StringId paResourceName2,
-                                                           forte::StringId paDeviceName = "MyDevice"_STRID);
+    std::unique_ptr<CDevice> createNonDeterministicExample(StringId paResourceName1,
+                                                           StringId paResourceName2,
+                                                           StringId paDeviceName = "MyDevice"_STRID);
 
     /**
      * @brief Create a device from file path
@@ -56,7 +56,7 @@ namespace forte::trace::test {
      * @param paFilePath path to the boot file of the device
      * @return the created device
      */
-    std::unique_ptr<CDevice> createDeviceFromFile(forte::StringId paDeviceName, const std::string &paFilePath);
+    std::unique_ptr<CDevice> createDeviceFromFile(StringId paDeviceName, const std::string &paFilePath);
 
     void testAlgorithm(std::function<std::unique_ptr<CDevice>(void)> paCreateDevice, const std::size_t milliSeconds);
 
@@ -96,9 +96,8 @@ namespace forte::trace::test {
 
   namespace {
 
-    std::unique_ptr<CDevice> createNonDeterministicExample(forte::StringId paResourceName1,
-                                                           forte::StringId paResourceName2,
-                                                           forte::StringId paDeviceName) {
+    std::unique_ptr<CDevice>
+    createNonDeterministicExample(StringId paResourceName1, StringId paResourceName2, StringId paDeviceName) {
       auto device = std::make_unique<forte::test::CTesterDevice>(paDeviceName);
 
       BOOST_TEST_INFO("Create Resource 1");
@@ -112,7 +111,7 @@ namespace forte::trace::test {
 
       // resource 1
       {
-        auto resource = dynamic_cast<CResource *>(forte::trace::reader::utils::getFB(device.get(), paResourceName1));
+        auto resource = dynamic_cast<CResource *>(reader::utils::getFB(device.get(), paResourceName1));
 
         auto cycleName = "E_CYCLE"_STRID;
         auto ctuName = "E_CTU"_STRID;
@@ -129,7 +128,7 @@ namespace forte::trace::test {
         BOOST_TEST_INFO("Create FB Publish");
         BOOST_REQUIRE(EMGMResponse::Ready == resource->createFB(publishName, "iec61499::net::PUBLISH_1"_STRID, ""));
 
-        forte::SManagementCMD command;
+        SManagementCMD command;
         command.mCMD = EMGMCommandType::CreateConnection;
         command.mDestination = {};
 
@@ -212,7 +211,7 @@ namespace forte::trace::test {
 
       // resource 2
       {
-        auto resource = dynamic_cast<CResource *>(forte::trace::reader::utils::getFB(device.get(), paResourceName2));
+        auto resource = dynamic_cast<CResource *>(reader::utils::getFB(device.get(), paResourceName2));
 
         auto cycleName = "E_CYCLE"_STRID;
         auto ctuName = "E_CTU"_STRID;
@@ -252,7 +251,7 @@ namespace forte::trace::test {
         BOOST_REQUIRE(EMGMResponse::Ready ==
                       resource->createFB(uint2uintThird, "eclipse4diac::convert::UINT2UINT"_STRID, ""));
 
-        forte::SManagementCMD command;
+        SManagementCMD command;
         command.mCMD = EMGMCommandType::CreateConnection;
         command.mDestination = {};
 
@@ -433,7 +432,7 @@ namespace forte::trace::test {
       return device;
     }
 
-    std::unique_ptr<CDevice> createDeviceFromFile(forte::StringId paDeviceName, const std::string &paFilePath) {
+    std::unique_ptr<CDevice> createDeviceFromFile(StringId paDeviceName, const std::string &paFilePath) {
       auto device = std::make_unique<forte::test::CTesterDevice>(paDeviceName);
       device->initialize();
       iec61499::hardware::CommandParser commandParser(*device);
@@ -448,9 +447,9 @@ namespace forte::trace::test {
     }
 
     void testAlgorithm(std::function<std::unique_ptr<CDevice>(void)> paCreateDevice, const std::size_t milliSeconds) {
-      forte::trace::test::prepareTraceTest("metadata");
+      prepareTraceTest("metadata");
 
-      forte::trace::reader::utils::setFactoriesSettings({});
+      reader::utils::setFactoriesSettings({});
 
       auto killDevice = [](CDevice &paDevice, std::size_t paMillisecondsToSleepBeforeKilling = 1000) {
         // wait for all events to be triggered
@@ -469,17 +468,16 @@ namespace forte::trace::test {
       // disable logging
       BarectfPlatformFORTE::setup("");
 
-      auto allTracedEvents = forte::trace::reader::utils::getEventMessages(cgCTFOutputDir).value();
+      auto allTracedEvents = reader::utils::getEventMessages(cgCTFOutputDir).value();
 
-      forte::trace::reader::utils::setFactoriesSettings(
+      reader::utils::setFactoriesSettings(
           {"Fake"_STRID, "FakeTime"_STRID, CFlexibleTracer::AvailableTracers::Internal});
 
       // test with reproduce all
       {
         auto device = paCreateDevice();
 
-        auto allTracedExternalEvents =
-            forte::trace::reader::utils::filterEventsForReplayDevice(allTracedEvents, *device);
+        auto allTracedExternalEvents = reader::utils::filterEventsForReplayDevice(allTracedEvents, *device);
 
         std::unordered_map<std::string, std::vector<EventMessage>> reproducedEvents;
 
@@ -498,8 +496,7 @@ namespace forte::trace::test {
       {
         auto device = paCreateDevice();
 
-        auto allTracedExternalEvents =
-            forte::trace::reader::utils::filterEventsForReplayDevice(allTracedEvents, *device);
+        auto allTracedExternalEvents = reader::utils::filterEventsForReplayDevice(allTracedEvents, *device);
 
         auto deviceReplayer = iec61499::hardware::CDeviceReplayer(*device, allTracedExternalEvents);
 
@@ -529,14 +526,13 @@ namespace forte::trace::test {
         return messageType == "sendOutputEvent";
       };
 
-      auto allInterestingEvents = forte::trace::reader::utils::filterEvents(paAllTracedEvents, isInteretingType);
+      auto allInterestingEvents = reader::utils::filterEvents(paAllTracedEvents, isInteretingType);
 
       allInterestingEvents.erase(paDevice.getInstanceName());
 
-      auto interestingGeneratedMessages =
-          forte::trace::reader::utils::filterEvents(paAllGeneratedEvents, isInteretingType);
+      auto interestingGeneratedMessages = reader::utils::filterEvents(paAllGeneratedEvents, isInteretingType);
 
-      forte::trace::test::checkMessages(allInterestingEvents, interestingGeneratedMessages);
+      checkMessages(allInterestingEvents, interestingGeneratedMessages);
     }
 
   } // namespace

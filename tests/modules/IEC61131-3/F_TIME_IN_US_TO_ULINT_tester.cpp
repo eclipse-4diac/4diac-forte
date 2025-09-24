@@ -15,7 +15,7 @@
 using namespace forte::literals;
 
 namespace forte::iec61131::arithmetic {
-  struct F_TIME_IN_US_TO_ULINT_TestFixture : public forte::test::CFBTestFixtureBase {
+  struct F_TIME_IN_US_TO_ULINT_TestFixture : public test::CFBTestFixtureBase {
 
       F_TIME_IN_US_TO_ULINT_TestFixture() : CFBTestFixtureBase("iec61131::conversion::F_TIME_IN_US_TO_ULINT"_STRID) {
         setInputData({&mIn_F_TIME_IN_US_TO_ULINT});

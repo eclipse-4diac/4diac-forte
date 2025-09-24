@@ -15,7 +15,7 @@
 using namespace forte::literals;
 
 namespace forte::iec61131::arithmetic {
-  struct F_DIVTIME_TestFixture : public forte::test::CFBTestFixtureBase {
+  struct F_DIVTIME_TestFixture : public test::CFBTestFixtureBase {
 
       F_DIVTIME_TestFixture() : CFBTestFixtureBase("iec61131::arithmetic::F_DIVTIME"_STRID) {
         setInputData({&mIn_TIME_DIVTIME, &mIn_REAL_DIVTIME});

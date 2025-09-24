@@ -55,7 +55,7 @@
 using namespace forte::literals;
 
 namespace forte::com_infra::test {
-  class CFBDKASN1ComLayerTestMock : public forte::com_infra::CFBDKASN1ComLayer {
+  class CFBDKASN1ComLayerTestMock : public CFBDKASN1ComLayer {
     public:
       CFBDKASN1ComLayerTestMock() : CFBDKASN1ComLayer(nullptr, nullptr) {
         mBottomLayer = &mTestLayer;
@@ -87,7 +87,7 @@ namespace forte::com_infra::test {
             }
           }
 
-          forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize) {
+          EComResponse sendData(void *paData, unsigned int paSize) {
             if (nullptr != mAllocData) {
               delete[] mAllocData;
             }
@@ -97,19 +97,19 @@ namespace forte::com_infra::test {
               memcpy(mData, paData, paSize);
               // mData = paData;
               mSize = paSize;
-              return forte::com_infra::e_ProcessDataOk;
+              return e_ProcessDataOk;
             } else {
-              return forte::com_infra::e_ProcessDataSendFailed;
+              return e_ProcessDataSendFailed;
             }
           }
 
           virtual void closeConnection() {
           }
-          virtual forte::com_infra::EComResponse recvData(const void *, unsigned int) {
-            return forte::com_infra::e_ProcessDataOk;
+          virtual EComResponse recvData(const void *, unsigned int) {
+            return e_ProcessDataOk;
           }
-          virtual forte::com_infra::EComResponse openConnection(char *) {
-            return forte::com_infra::e_ProcessDataOk;
+          virtual EComResponse openConnection(char *) {
+            return e_ProcessDataOk;
           }
 
           TForteByte *mData;

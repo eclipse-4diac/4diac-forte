@@ -46,11 +46,11 @@ namespace forte::test {
         return 3;
       }
 
-      const forte::StringId *elementNames() const override {
+      const StringId *elementNames() const override {
         return scmElementNames;
       }
 
-      forte::StringId getStructTypeNameID() const override {
+      StringId getStructTypeNameID() const override {
         return "TestStruct1"_STRID;
       }
 
@@ -73,10 +73,10 @@ namespace forte::test {
       }
 
     private:
-      static const forte::StringId scmElementNames[];
+      static const StringId scmElementNames[];
   };
 
-  const forte::StringId CIEC_TestStruct1::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID};
+  const StringId CIEC_TestStruct1::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID};
 
   DEFINE_FIRMWARE_DATATYPE(TestStruct1, "TestStruct1"_STRID)
 
@@ -96,11 +96,11 @@ namespace forte::test {
         return 4;
       }
 
-      const forte::StringId *elementNames() const override {
+      const StringId *elementNames() const override {
         return scmElementNames;
       }
 
-      forte::StringId getStructTypeNameID() const override {
+      StringId getStructTypeNameID() const override {
         return "TestStruct2"_STRID;
       }
 
@@ -125,10 +125,10 @@ namespace forte::test {
       }
 
     private:
-      static const forte::StringId scmElementNames[];
+      static const StringId scmElementNames[];
   };
 
-  const forte::StringId CIEC_TestStruct2::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID, "Val4"_STRID};
+  const StringId CIEC_TestStruct2::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID, "Val4"_STRID};
   DEFINE_FIRMWARE_DATATYPE(TestStruct2, "TestStruct2"_STRID)
   /***********************************************************/
   class CIEC_TestStruct3 : public CIEC_STRUCT {
@@ -153,11 +153,11 @@ namespace forte::test {
         return 3;
       }
 
-      const forte::StringId *elementNames() const override {
+      const StringId *elementNames() const override {
         return scmElementNames;
       }
 
-      forte::StringId getStructTypeNameID() const override {
+      StringId getStructTypeNameID() const override {
         return "TestStruct3"_STRID;
       }
 
@@ -183,10 +183,10 @@ namespace forte::test {
       static const unsigned int sizeOfSecondArray = 1;
 
     private:
-      static const forte::StringId scmElementNames[];
+      static const StringId scmElementNames[];
   };
 
-  const forte::StringId CIEC_TestStruct3::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID};
+  const StringId CIEC_TestStruct3::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID};
   DEFINE_FIRMWARE_DATATYPE(TestStruct3, "TestStruct3"_STRID)
 
   BOOST_AUTO_TEST_SUITE(CIEC_STRUCT_function_test)
@@ -776,7 +776,7 @@ namespace forte::test {
     BOOST_CHECK_EQUAL(stStruct1.getASN1StructType(),
                       64 + 32 + 1); // CIEC_STRUCT::e_APPLICATION + CIEC_STRUCT::e_CONSTRUCTED + 1
     BOOST_CHECK_EQUAL(stStruct1.getStructSize(), 3);
-    const forte::StringId *names = stStruct1.elementNames();
+    const StringId *names = stStruct1.elementNames();
     BOOST_CHECK_EQUAL(names[0], "Val1"_STRID);
     BOOST_CHECK_EQUAL(names[1], "Val2"_STRID);
     BOOST_CHECK_EQUAL(names[2], "Val3"_STRID);

@@ -38,11 +38,11 @@ namespace forte::eclipse4diac::utils::test {
         return 2;
       }
 
-      const forte::StringId *elementNames() const override {
+      const StringId *elementNames() const override {
         return scmElementNames;
       }
 
-      forte::StringId getStructTypeNameID() const override {
+      StringId getStructTypeNameID() const override {
         return "GET_STRUCT_VALUE_Struct_test1"_STRID;
       }
 
@@ -65,10 +65,10 @@ namespace forte::eclipse4diac::utils::test {
       static const unsigned int sizeOfFirstArray = 2;
 
     private:
-      static const forte::StringId scmElementNames[];
+      static const StringId scmElementNames[];
   };
 
-  const forte::StringId CIEC_GET_STRUCT_VALUE_Struct_test1::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID};
+  const StringId CIEC_GET_STRUCT_VALUE_Struct_test1::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID};
 
   DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test1, "GET_STRUCT_VALUE_Struct_test1"_STRID)
 
@@ -90,11 +90,11 @@ namespace forte::eclipse4diac::utils::test {
         return 2;
       }
 
-      const forte::StringId *elementNames() const override {
+      const StringId *elementNames() const override {
         return scmElementNames;
       }
 
-      forte::StringId getStructTypeNameID() const override {
+      StringId getStructTypeNameID() const override {
         return "GET_STRUCT_VALUE_Struct_test2"_STRID;
       }
 
@@ -115,10 +115,10 @@ namespace forte::eclipse4diac::utils::test {
       }
 
     private:
-      static const forte::StringId scmElementNames[];
+      static const StringId scmElementNames[];
   };
 
-  const forte::StringId CIEC_GET_STRUCT_VALUE_Struct_test2::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID};
+  const StringId CIEC_GET_STRUCT_VALUE_Struct_test2::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID};
 
   DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test2, "GET_STRUCT_VALUE_Struct_test2"_STRID)
 

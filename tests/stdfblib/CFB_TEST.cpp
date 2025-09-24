@@ -64,7 +64,7 @@ namespace forte::test {
 
   DEFINE_FIRMWARE_FB(FORTE_CFB_TEST, "CFB_TEST"_STRID)
 
-  FORTE_CFB_TEST::FORTE_CFB_TEST(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+  FORTE_CFB_TEST::FORTE_CFB_TEST(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
       fb_PERMIT_OP("PERMIT_OP"_STRID, *this),
       fb_E_SR("E_SR"_STRID, *this),

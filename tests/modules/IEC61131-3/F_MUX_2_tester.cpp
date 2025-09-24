@@ -16,7 +16,7 @@
 using namespace forte::literals;
 
 namespace forte::iec61131::arithmetic {
-  struct F_MUX_2_TestFixture : public forte::test::CFBTestFixtureBase {
+  struct F_MUX_2_TestFixture : public test::CFBTestFixtureBase {
 
       F_MUX_2_TestFixture() : CFBTestFixtureBase("iec61131::selection::F_MUX_2"_STRID) {
         setInputData({&mK_MUX_2, &mIn0_MUX_2, &mIn1_MUX_2});

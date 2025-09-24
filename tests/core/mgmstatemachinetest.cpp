@@ -30,7 +30,7 @@ namespace forte::test {
         return true;
       }
 
-      forte::StringId getFBTypeId() const override {
+      StringId getFBTypeId() const override {
         return {};
       }
 

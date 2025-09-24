@@ -33,12 +33,12 @@ namespace forte::test {
 
       bool initialize() override;
 
-      forte::StringId getFBTypeId() const override {
+      StringId getFBTypeId() const override {
         return mTypeId;
       }
 
     protected:
-      explicit CFBTestFixtureBase(forte::StringId paTypeId);
+      explicit CFBTestFixtureBase(StringId paTypeId);
 
       void setup();
 
@@ -96,7 +96,7 @@ namespace forte::test {
       void createDataInputConnections();
       void createDataOutputConnections();
 
-      forte::StringId mTypeId;
+      StringId mTypeId;
       std::string mConfigString;
       CFunctionBlock *mFBUnderTest;
       std::vector<std::unique_ptr<CDataConnection>> mDIConnections;

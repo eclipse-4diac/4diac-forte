@@ -153,17 +153,17 @@ namespace forte::com_infra::http::test {
     std::string body;
     std::string responseCode;
 
-    BOOST_TEST(true == forte::com_infra::CHttpParser::parseResponse(body, responseCode, validReponse.data()));
+    BOOST_TEST(true == CHttpParser::parseResponse(body, responseCode, validReponse.data()));
     BOOST_TEST(body == "key1=val1;key2=val2"s);
     BOOST_TEST(responseCode == "200"s);
 
     responseCode.clear();
-    BOOST_TEST(true == forte::com_infra::CHttpParser::parseResponse(body, responseCode, validReponseNoBody.data()));
+    BOOST_TEST(true == CHttpParser::parseResponse(body, responseCode, validReponseNoBody.data()));
     BOOST_TEST(body == ""s);
     BOOST_TEST(responseCode == "200"s);
 
-    BOOST_TEST(false == forte::com_infra::CHttpParser::parseResponse(body, responseCode, worngFirstLine.data()));
-    BOOST_TEST(false == forte::com_infra::CHttpParser::parseResponse(body, responseCode, worngStatusLine.data()));
+    BOOST_TEST(false == CHttpParser::parseResponse(body, responseCode, worngFirstLine.data()));
+    BOOST_TEST(false == CHttpParser::parseResponse(body, responseCode, worngStatusLine.data()));
   }
 
   BOOST_AUTO_TEST_CASE(createResponse_test) {
@@ -198,20 +198,19 @@ namespace forte::com_infra::http::test {
     std::vector<std::string> parameterNames;
     std::vector<std::string> parameterValues;
 
-    BOOST_TEST(true == forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues,
-                                                                      resultValidNoParameters.data()));
+    BOOST_TEST(true ==
+               CHttpParser::parseGetRequest(path, parameterNames, parameterValues, resultValidNoParameters.data()));
     BOOST_TEST(path == "/"s);
     BOOST_TEST(true == parameterNames.empty());
     BOOST_TEST(true == parameterValues.empty());
 
-    BOOST_TEST(true == forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues,
-                                                                      resultValidNoParameters2.data()));
+    BOOST_TEST(true ==
+               CHttpParser::parseGetRequest(path, parameterNames, parameterValues, resultValidNoParameters2.data()));
     BOOST_TEST(path == "/path/to/look"s);
     BOOST_TEST(true == parameterNames.empty());
     BOOST_TEST(true == parameterValues.empty());
 
-    BOOST_TEST(true == forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues,
-                                                                      resultValidParam.data()));
+    BOOST_TEST(true == CHttpParser::parseGetRequest(path, parameterNames, parameterValues, resultValidParam.data()));
     BOOST_TEST(path == "/"s);
 
     BOOST_TEST(parameterNames[0] == "key1"s);
@@ -220,8 +219,7 @@ namespace forte::com_infra::http::test {
     parameterNames.clear();
     parameterValues.clear();
 
-    BOOST_TEST(true, forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues,
-                                                                    resultValidParams.data()));
+    BOOST_TEST(true, CHttpParser::parseGetRequest(path, parameterNames, parameterValues, resultValidParams.data()));
     BOOST_TEST(path == "/");
 
     BOOST_TEST(parameterNames[0] == "key1"s);
@@ -232,8 +230,7 @@ namespace forte::com_infra::http::test {
     parameterNames.clear();
     parameterValues.clear();
 
-    BOOST_TEST(true == forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues,
-                                                                      resultValidParam2.data()));
+    BOOST_TEST(true == CHttpParser::parseGetRequest(path, parameterNames, parameterValues, resultValidParam2.data()));
     BOOST_TEST(path == "/path/to/look"s);
 
     BOOST_TEST(parameterNames[0] == "key1"s);
@@ -242,8 +239,7 @@ namespace forte::com_infra::http::test {
     parameterNames.clear();
     parameterValues.clear();
 
-    BOOST_TEST(true == forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues,
-                                                                      resultValidParams2.data()));
+    BOOST_TEST(true == CHttpParser::parseGetRequest(path, parameterNames, parameterValues, resultValidParams2.data()));
     BOOST_TEST(path == "/path/to/look"s);
 
     BOOST_TEST(parameterNames[0] == "key1"s);
@@ -251,10 +247,8 @@ namespace forte::com_infra::http::test {
     BOOST_TEST(parameterNames[1] == "key2"s);
     BOOST_TEST(parameterValues[1] == "val2"s);
 
-    BOOST_TEST(false == forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues,
-                                                                       invalidGET.data()));
-    BOOST_TEST(false == forte::com_infra::CHttpParser::parseGetRequest(path, parameterNames, parameterValues,
-                                                                       invalidPath.data()));
+    BOOST_TEST(false == CHttpParser::parseGetRequest(path, parameterNames, parameterValues, invalidGET.data()));
+    BOOST_TEST(false == CHttpParser::parseGetRequest(path, parameterNames, parameterValues, invalidPath.data()));
   }
 
   BOOST_AUTO_TEST_SUITE_END()

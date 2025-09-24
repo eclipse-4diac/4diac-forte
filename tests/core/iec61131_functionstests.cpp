@@ -63,11 +63,11 @@ namespace forte::test {
         return 3;
       }
 
-      const forte::StringId *elementNames() const override {
+      const StringId *elementNames() const override {
         return scmElementNames;
       }
 
-      forte::StringId getStructTypeNameID() const override {
+      StringId getStructTypeNameID() const override {
         return "EndianessTestStruct"_STRID;
       }
 
@@ -90,10 +90,10 @@ namespace forte::test {
       }
 
     private:
-      static const forte::StringId scmElementNames[];
+      static const StringId scmElementNames[];
   };
 
-  const forte::StringId CIEC_EndianessTestStruct::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID};
+  const StringId CIEC_EndianessTestStruct::scmElementNames[] = {"Val1"_STRID, "Val2"_STRID, "Val3"_STRID};
 
   DEFINE_FIRMWARE_DATATYPE(EndianessTestStruct, "EndianessTestStruct"_STRID)
 
@@ -615,15 +615,15 @@ namespace forte::test {
   }
 
   BOOST_AUTO_TEST_CASE(implicit_bool_casts) {
-    bool bSame = std::is_same<CIEC_BOOL, forte::mpl::implicit_cast<CIEC_BOOL, CIEC_BOOL>::type>::value;
+    bool bSame = std::is_same<CIEC_BOOL, mpl::implicit_cast<CIEC_BOOL, CIEC_BOOL>::type>::value;
     BOOST_TEST(bSame);
-    bSame = std::is_same<CIEC_BYTE, forte::mpl::implicit_cast<CIEC_BOOL, CIEC_BYTE>::type>::value;
+    bSame = std::is_same<CIEC_BYTE, mpl::implicit_cast<CIEC_BOOL, CIEC_BYTE>::type>::value;
     BOOST_TEST(bSame);
-    bSame = std::is_same<CIEC_WORD, forte::mpl::implicit_cast<CIEC_BOOL, CIEC_WORD>::type>::value;
+    bSame = std::is_same<CIEC_WORD, mpl::implicit_cast<CIEC_BOOL, CIEC_WORD>::type>::value;
     BOOST_TEST(bSame);
-    bSame = std::is_same<CIEC_DWORD, forte::mpl::implicit_cast<CIEC_BOOL, CIEC_DWORD>::type>::value;
+    bSame = std::is_same<CIEC_DWORD, mpl::implicit_cast<CIEC_BOOL, CIEC_DWORD>::type>::value;
     BOOST_TEST(bSame);
-    bSame = std::is_same<CIEC_LWORD, forte::mpl::implicit_cast<CIEC_BOOL, CIEC_LWORD>::type>::value;
+    bSame = std::is_same<CIEC_LWORD, mpl::implicit_cast<CIEC_BOOL, CIEC_LWORD>::type>::value;
     BOOST_TEST(bSame);
   }
 

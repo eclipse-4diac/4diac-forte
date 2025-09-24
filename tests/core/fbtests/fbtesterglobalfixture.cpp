@@ -22,7 +22,7 @@ using namespace forte::literals;
 namespace forte::test {
   std::unique_ptr<CTesterDevice> CFBTestDataGlobalFixture::smTestDev;
 
-  CTesterDevice::CTesterDevice(const forte::StringId paInstanceNameId) :
+  CTesterDevice::CTesterDevice(const StringId paInstanceNameId) :
       CDevice(scTestDevSpec, paInstanceNameId),
       mResource("EMB_RES"_STRID, *this) {
   }

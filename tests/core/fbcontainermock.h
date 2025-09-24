@@ -16,7 +16,7 @@
 #include <functional>
 
 namespace forte::test {
-  class CFBContainerMock : public forte::CFBContainer {
+  class CFBContainerMock : public CFBContainer {
 
     public:
       static CFBContainerMock smDefaultFBContMock;

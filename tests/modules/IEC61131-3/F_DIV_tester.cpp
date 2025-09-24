@@ -16,7 +16,7 @@
 using namespace forte::literals;
 
 namespace forte::iec61131::arithmetic {
-  struct F_DIV_TestFixture : public forte::test::CFBTestFixtureBase {
+  struct F_DIV_TestFixture : public test::CFBTestFixtureBase {
 
       F_DIV_TestFixture() : CFBTestFixtureBase("iec61131::arithmetic::F_DIV"_STRID) {
         setInputData({&mIn1_DIV, &mIn2_DIV});
