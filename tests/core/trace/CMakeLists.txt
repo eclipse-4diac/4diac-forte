@@ -31,8 +31,8 @@ if(FORTE_TRACE_CTF_TEST)
   SET(CTF_OUTPUT_DIR ${CMAKE_CURRENT_BINARY_DIR}/ctfOutput)
   SET(REFERENCE_SYSTEMS_FILE ${CMAKE_CURRENT_SOURCE_DIR}/referenceSystem.fboot)
 
-  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.cpp.in ${CMAKE_CURRENT_BINARY_DIR}/tests/core/trace/config.cpp)
-  forte_test_add_sourcefile_with_path_cpp(${CMAKE_CURRENT_BINARY_DIR}/tests/core/trace/config.cpp) # created file
+  configure_file(${CMAKE_CURRENT_SOURCE_DIR}/trace_test_config.h.in ${CMAKE_CURRENT_BINARY_DIR}/trace_test_config.h)
+  forte_test_add_inc_directories(${CMAKE_CURRENT_BINARY_DIR})
 
   # reference systems tests requires the extra function blocks to be compiled
   set(FORTE_REPLAY_ALGORITHM_REFERENCE_TESTS FALSE CACHE BOOL "Compile the replay algorithm tests that uses the reference systems")

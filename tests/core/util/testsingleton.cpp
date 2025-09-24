@@ -11,13 +11,17 @@
  *******************************************************************************/
 #include "testsingleton.h"
 
-DEFINE_SINGLETON(TestSingleton);
+namespace forte::util::test {
 
-unsigned int TestSingleton::smInstanceCount = 0;
+  DEFINE_SINGLETON(TestSingleton);
 
-TestSingleton::TestSingleton() {
-  smInstanceCount++;
-  mSingletonID = smInstanceCount;
-}
+  unsigned int TestSingleton::smInstanceCount = 0;
 
-TestSingleton::~TestSingleton() = default;
+  TestSingleton::TestSingleton() {
+    smInstanceCount++;
+    mSingletonID = smInstanceCount;
+  }
+
+  TestSingleton::~TestSingleton() = default;
+
+} // namespace forte::util::test

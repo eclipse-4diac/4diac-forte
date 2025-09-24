@@ -14,27 +14,30 @@
 
 using namespace forte::literals;
 
-struct F_TIME_IN_S_TO_LINT_TestFixture : public CFBTestFixtureBase {
+namespace forte::iec61131::arithmetic {
+  struct F_TIME_IN_S_TO_LINT_TestFixture : public forte::test::CFBTestFixtureBase {
 
-    F_TIME_IN_S_TO_LINT_TestFixture() : CFBTestFixtureBase("iec61131::conversion::F_TIME_IN_S_TO_LINT"_STRID) {
-      setInputData({&mIn_F_TIME_IN_S_TO_LINT});
-      setOutputData({&mOut_F_TIME_IN_S_TO_LINT});
-      setup();
-    }
+      F_TIME_IN_S_TO_LINT_TestFixture() : CFBTestFixtureBase("iec61131::conversion::F_TIME_IN_S_TO_LINT"_STRID) {
+        setInputData({&mIn_F_TIME_IN_S_TO_LINT});
+        setOutputData({&mOut_F_TIME_IN_S_TO_LINT});
+        setup();
+      }
 
-    CIEC_TIME mIn_F_TIME_IN_S_TO_LINT; // DATA INPUT
-    CIEC_LINT mOut_F_TIME_IN_S_TO_LINT; // DATA OUTPUT
-};
+      CIEC_TIME mIn_F_TIME_IN_S_TO_LINT; // DATA INPUT
+      CIEC_LINT mOut_F_TIME_IN_S_TO_LINT; // DATA OUTPUT
+  };
 
-BOOST_FIXTURE_TEST_SUITE(F_TIME_IN_S_TO_LINT_Tests, F_TIME_IN_S_TO_LINT_TestFixture)
+  BOOST_FIXTURE_TEST_SUITE(F_TIME_IN_S_TO_LINT_Tests, F_TIME_IN_S_TO_LINT_TestFixture)
 
-BOOST_AUTO_TEST_CASE(timeConversion) {
-  mIn_F_TIME_IN_S_TO_LINT.fromString("T#2d5h43m12s");
-  /* trigger the inputevent */
-  triggerEvent(0);
-  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-  BOOST_CHECK_EQUAL(INT64_C(172800) + INT64_C(18000) + INT64_C(2580) + INT64_C(12),
-                    static_cast<CIEC_LINT::TValueType>(mOut_F_TIME_IN_S_TO_LINT));
-}
+  BOOST_AUTO_TEST_CASE(timeConversion) {
+    mIn_F_TIME_IN_S_TO_LINT.fromString("T#2d5h43m12s");
+    /* trigger the inputevent */
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(INT64_C(172800) + INT64_C(18000) + INT64_C(2580) + INT64_C(12),
+                      static_cast<CIEC_LINT::TValueType>(mOut_F_TIME_IN_S_TO_LINT));
+  }
 
-BOOST_AUTO_TEST_SUITE_END()
+  BOOST_AUTO_TEST_SUITE_END()
+
+} // namespace forte::iec61131::arithmetic

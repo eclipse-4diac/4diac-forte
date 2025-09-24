@@ -12,20 +12,24 @@
 #include <boost/test/unit_test.hpp>
 #include "testsingleton.h"
 
-BOOST_AUTO_TEST_SUITE(Singleton_Test)
+namespace forte::util::test {
 
-BOOST_AUTO_TEST_CASE(singleton_SingleInstanceTest) {
+  BOOST_AUTO_TEST_SUITE(Singleton_Test)
 
-  TestSingleton *pSingleton1 = &(TestSingleton::getInstance());
-  TestSingleton *pSingleton2 = &(TestSingleton::getInstance());
+  BOOST_AUTO_TEST_CASE(singleton_SingleInstanceTest) {
 
-  BOOST_CHECK_EQUAL(pSingleton1, pSingleton2);
+    TestSingleton *pSingleton1 = &(TestSingleton::getInstance());
+    TestSingleton *pSingleton2 = &(TestSingleton::getInstance());
 
-  BOOST_CHECK_EQUAL(1, TestSingleton::getInstance().getSingletonID());
-}
+    BOOST_CHECK_EQUAL(pSingleton1, pSingleton2);
 
-BOOST_AUTO_TEST_CASE(singleton_DifferentFunctionTest) {
-  BOOST_CHECK_EQUAL(1, TestSingleton::getInstance().getSingletonID());
-}
+    BOOST_CHECK_EQUAL(1, TestSingleton::getInstance().getSingletonID());
+  }
 
-BOOST_AUTO_TEST_SUITE_END()
+  BOOST_AUTO_TEST_CASE(singleton_DifferentFunctionTest) {
+    BOOST_CHECK_EQUAL(1, TestSingleton::getInstance().getSingletonID());
+  }
+
+  BOOST_AUTO_TEST_SUITE_END()
+
+} // namespace forte::util::test

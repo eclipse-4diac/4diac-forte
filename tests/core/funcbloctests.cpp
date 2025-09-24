@@ -22,85 +22,89 @@ using namespace forte::literals;
 
 #include "fbcontainermock.h"
 
-BOOST_AUTO_TEST_SUITE(FUNCBLOC)
+namespace forte::test {
 
-BOOST_AUTO_TEST_CASE(FB_TO_STRING_TEST) {
-  forte::iec61499::events::FORTE_E_CTUD testFb(
-      {}, CFBContainerMock::smDefaultFBContMock); // Dummy FB, do not use for anything else than testing toString
-  constexpr char result[] = "(PV:=0, QU:=FALSE, QD:=FALSE, CV:=0)";
-  std::string buffer;
-  testFb.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, result);
-}
+  BOOST_AUTO_TEST_SUITE(FUNCBLOC)
 
-BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
+  BOOST_AUTO_TEST_CASE(FB_TO_STRING_TEST) {
+    forte::iec61499::events::FORTE_E_CTUD testFb(
+        {}, CFBContainerMock::smDefaultFBContMock); // Dummy FB, do not use for anything else than testing toString
+    constexpr char result[] = "(PV:=0, QU:=FALSE, QD:=FALSE, CV:=0)";
+    std::string buffer;
+    testFb.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, result);
+  }
 
-  // Test for FB with internal vars
+  BOOST_AUTO_TEST_CASE(FB_TO_STRING_BUFFER_SIZE_TEST_WITH_INRENAL_VAR) {
 
-  class CInternalVarTestFB : public CBasicFB {
-      const SFBInterfaceSpec gcEmptyInterface = {};
+    // Test for FB with internal vars
 
-    public:
-      CInternalVarTestFB(std::span<const forte::StringId> paVarInternalNames) :
-          CBasicFB(CFBContainerMock::smDefaultFBContMock, gcEmptyInterface, {}, paVarInternalNames) {
-      }
+    class CInternalVarTestFB : public CBasicFB {
+        const SFBInterfaceSpec gcEmptyInterface = {};
 
-      CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
-        switch (paVarIntNum) {
-          case 0: return &var_QU;
-          case 1: return &var_QD;
-          case 2: return &var_CV;
+      public:
+        CInternalVarTestFB(std::span<const forte::StringId> paVarInternalNames) :
+            CBasicFB(CFBContainerMock::smDefaultFBContMock, gcEmptyInterface, {}, paVarInternalNames) {
         }
-        return nullptr;
-      }
 
-      forte::StringId getFBTypeId() const override {
-        return {};
-      }
+        CIEC_ANY *getVarInternal(size_t paVarIntNum) override {
+          switch (paVarIntNum) {
+            case 0: return &var_QU;
+            case 1: return &var_QD;
+            case 2: return &var_CV;
+          }
+          return nullptr;
+        }
 
-      void executeEvent(TEventID, CEventChainExecutionThread *const) override {
-        // nothiing to do here
-      }
+        forte::StringId getFBTypeId() const override {
+          return {};
+        }
 
-      void readInputData(TEventID) override {
-      }
+        void executeEvent(TEventID, CEventChainExecutionThread *const) override {
+          // nothiing to do here
+        }
 
-      void writeOutputData(TEventID) override {
-      }
+        void readInputData(TEventID) override {
+        }
 
-      void setInitialValues() override {
-        CBasicFB::setInitialValues();
-      }
+        void writeOutputData(TEventID) override {
+        }
 
-      CIEC_ANY *getDI(size_t) override {
-        return nullptr;
-      }
+        void setInitialValues() override {
+          CBasicFB::setInitialValues();
+        }
 
-      CIEC_ANY *getDO(size_t) override {
-        return nullptr;
-      }
+        CIEC_ANY *getDI(size_t) override {
+          return nullptr;
+        }
 
-      CEventConnection *getEOConUnchecked(TPortId) override {
-        return nullptr;
-      }
+        CIEC_ANY *getDO(size_t) override {
+          return nullptr;
+        }
 
-      CDataConnection **getDIConUnchecked(TPortId) override {
-        return nullptr;
-      }
+        CEventConnection *getEOConUnchecked(TPortId) override {
+          return nullptr;
+        }
 
-      CDataConnection *getDOConUnchecked(TPortId) override {
-        return nullptr;
-      }
+        CDataConnection **getDIConUnchecked(TPortId) override {
+          return nullptr;
+        }
 
-    private:
-      CIEC_BOOL var_QU;
-      CIEC_BOOL var_QD;
-      CIEC_UINT var_CV;
-  };
+        CDataConnection *getDOConUnchecked(TPortId) override {
+          return nullptr;
+        }
 
-  const auto cInternalsNames = std::array{"QU"_STRID, "QD"_STRID, "CV"_STRID};
-  CInternalVarTestFB testFb(cInternalsNames);
-  BOOST_REQUIRE(testFb.initialize());
-}
+      private:
+        CIEC_BOOL var_QU;
+        CIEC_BOOL var_QD;
+        CIEC_UINT var_CV;
+    };
 
-BOOST_AUTO_TEST_SUITE_END()
+    const auto cInternalsNames = std::array{"QU"_STRID, "QD"_STRID, "CV"_STRID};
+    CInternalVarTestFB testFb(cInternalsNames);
+    BOOST_REQUIRE(testFb.initialize());
+  }
+
+  BOOST_AUTO_TEST_SUITE_END()
+
+} // namespace forte::test

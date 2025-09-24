@@ -13,8 +13,7 @@
  *documentation Ernst Blecha - Adds partial access tests Martin Melik Merkumians - Updates test for changes in partial
  *******************************************************************************/
 
-#ifndef CIEC_ANY_BIT_PARTIAL_TEST
-#define CIEC_ANY_BIT_PARTIAL_TEST
+#pragma once
 
 #define test4X(var, offset, b3, b2, b1, b0)                                                                            \
   BOOST_CHECK_EQUAL((var.partial<CIEC_BOOL>(0 + offset)), b0);                                                         \
@@ -61,5 +60,3 @@
 #define set4X_D(var, offset) set4X(var, offset, 1, 1, 0, 1)
 #define set4X_E(var, offset) set4X(var, offset, 1, 1, 1, 0)
 #define set4X_F(var, offset) set4X(var, offset, 1, 1, 1, 1)
-
-#endif

@@ -14,119 +14,123 @@
 
 using namespace forte::literals;
 
-/*!Tests for the TNameIdentifier class used to store name identifier lists
- *
- * Although it officially holds CstringDicitionalry::TStringIds we can use for most tests normal strings
- * as there exists an own test for StringDict and TSringIds are just ints.
- *
- */
-BOOST_AUTO_TEST_SUITE(TNameIdentifierTests)
+namespace forte::test {
 
-BOOST_AUTO_TEST_CASE(newEmptyNameList) {
-  forte::TNameIdentifier identifier;
+  /*!Tests for the TNameIdentifier class used to store name identifier lists
+   *
+   * Although it officially holds CstringDicitionalry::TStringIds we can use for most tests normal strings
+   * as there exists an own test for StringDict and TSringIds are just ints.
+   *
+   */
+  BOOST_AUTO_TEST_SUITE(TNameIdentifierTests)
 
-  BOOST_CHECK(identifier.empty());
+  BOOST_AUTO_TEST_CASE(newEmptyNameList) {
+    forte::TNameIdentifier identifier;
 
-  BOOST_CHECK_EQUAL(0, identifier.size());
-}
+    BOOST_CHECK(identifier.empty());
 
-BOOST_AUTO_TEST_CASE(newListInitializedNameList) {
-  forte::TNameIdentifier identifier{"17"_STRID, "4"_STRID, "21"_STRID};
-
-  BOOST_TEST(identifier.size() == 3);
-  BOOST_TEST(identifier[0] == "17"_STRID);
-  BOOST_TEST(identifier[1] == "4"_STRID);
-  BOOST_TEST(identifier[2] == "21"_STRID);
-}
-
-BOOST_AUTO_TEST_CASE(newIteratorInitializedNameList) {
-  auto values = std::array{"17"_STRID, "4"_STRID, "21"_STRID};
-  forte::TNameIdentifier identifier(values.begin(), values.end());
-
-  BOOST_TEST(identifier.size() == 3);
-  BOOST_TEST(identifier[0] == "17"_STRID);
-  BOOST_TEST(identifier[1] == "4"_STRID);
-  BOOST_TEST(identifier[2] == "21"_STRID);
-}
-
-BOOST_AUTO_TEST_CASE(capacity) {
-  // check that we have the capacity as configured in cmake
-  forte::TNameIdentifier identifier;
-
-  for (size_t i = 0; i < cgMaxSupportedNameHierarchy; i++) {
-    BOOST_CHECK(identifier.push_back(forte::StringId::insert(std::to_string(i))));
-    BOOST_CHECK_EQUAL(false, identifier.empty());
+    BOOST_CHECK_EQUAL(0, identifier.size());
   }
 
-  BOOST_CHECK_EQUAL(nullptr, identifier.try_push_back("10"_STRID));
+  BOOST_AUTO_TEST_CASE(newListInitializedNameList) {
+    forte::TNameIdentifier identifier{"17"_STRID, "4"_STRID, "21"_STRID};
 
-  identifier.clear();
-  BOOST_CHECK(identifier.empty());
-}
-
-BOOST_AUTO_TEST_CASE(push_back) {
-  forte::TNameIdentifier identifier;
-
-  identifier.push_back("5"_STRID);
-  BOOST_CHECK_EQUAL(1, identifier.size());
-  BOOST_CHECK_EQUAL("5"_STRID, identifier[0]);
-  BOOST_CHECK_EQUAL("5"_STRID, identifier.back());
-  BOOST_CHECK_EQUAL("5"_STRID, identifier.front());
-
-  identifier.push_back("10"_STRID);
-  BOOST_CHECK_EQUAL(2, identifier.size());
-  BOOST_CHECK_EQUAL("5"_STRID, identifier[0]);
-  BOOST_CHECK_EQUAL("10"_STRID, identifier[1]);
-  BOOST_CHECK_EQUAL("10"_STRID, identifier.back());
-  BOOST_CHECK_EQUAL("5"_STRID, identifier.front());
-
-  identifier.push_back("215"_STRID);
-  BOOST_CHECK_EQUAL(3, identifier.size());
-  BOOST_CHECK_EQUAL("5"_STRID, identifier[0]);
-  BOOST_CHECK_EQUAL("10"_STRID, identifier[1]);
-  BOOST_CHECK_EQUAL("215"_STRID, identifier[2]);
-  BOOST_CHECK_EQUAL("215"_STRID, identifier.back());
-  BOOST_CHECK_EQUAL("5"_STRID, identifier.front());
-
-  identifier.push_back("3564"_STRID);
-  BOOST_CHECK_EQUAL(4, identifier.size());
-  BOOST_CHECK_EQUAL("5"_STRID, identifier[0]);
-  BOOST_CHECK_EQUAL("10"_STRID, identifier[1]);
-  BOOST_CHECK_EQUAL("215"_STRID, identifier[2]);
-  BOOST_CHECK_EQUAL("3564"_STRID, identifier[3]);
-  BOOST_CHECK_EQUAL("3564"_STRID, identifier.back());
-  BOOST_CHECK_EQUAL("5"_STRID, identifier.front());
-}
-
-BOOST_AUTO_TEST_CASE(pop_back) {
-  forte::TNameIdentifier identifier;
-  // fill with testdata
-  for (size_t i = 0; i < cgMaxSupportedNameHierarchy; i++) {
-    identifier.push_back(forte::StringId::insert(std::to_string(i)));
+    BOOST_TEST(identifier.size() == 3);
+    BOOST_TEST(identifier[0] == "17"_STRID);
+    BOOST_TEST(identifier[1] == "4"_STRID);
+    BOOST_TEST(identifier[2] == "21"_STRID);
   }
 
-  for (size_t i = 0; i < cgMaxSupportedNameHierarchy; i++) {
-    BOOST_TEST(std::to_string(cgMaxSupportedNameHierarchy - 1 - i) == identifier.back().get());
-    BOOST_TEST(cgMaxSupportedNameHierarchy - i == identifier.size());
-    identifier.pop_back();
-    BOOST_TEST(cgMaxSupportedNameHierarchy - 1 - i == identifier.size());
-  }
-  BOOST_CHECK(identifier.empty());
-}
+  BOOST_AUTO_TEST_CASE(newIteratorInitializedNameList) {
+    auto values = std::array{"17"_STRID, "4"_STRID, "21"_STRID};
+    forte::TNameIdentifier identifier(values.begin(), values.end());
 
-BOOST_AUTO_TEST_CASE(iterator) {
-  forte::TNameIdentifier identifier;
-  // fill with testdata
-  for (size_t i = 0; i < cgMaxSupportedNameHierarchy; i++) {
-    identifier.push_back(forte::StringId::insert(std::to_string(i)));
+    BOOST_TEST(identifier.size() == 3);
+    BOOST_TEST(identifier[0] == "17"_STRID);
+    BOOST_TEST(identifier[1] == "4"_STRID);
+    BOOST_TEST(identifier[2] == "21"_STRID);
   }
 
-  int i = 0;
-  for (const auto &it : identifier) {
-    BOOST_CHECK_EQUAL(forte::StringId::insert(std::to_string(i++)), it);
-  }
-  BOOST_CHECK_EQUAL(cgMaxSupportedNameHierarchy,
-                    i); // we should have exactly visited each element once but started at zero
-}
+  BOOST_AUTO_TEST_CASE(capacity) {
+    // check that we have the capacity as configured in cmake
+    forte::TNameIdentifier identifier;
 
-BOOST_AUTO_TEST_SUITE_END()
+    for (size_t i = 0; i < cgMaxSupportedNameHierarchy; i++) {
+      BOOST_CHECK(identifier.push_back(forte::StringId::insert(std::to_string(i))));
+      BOOST_CHECK_EQUAL(false, identifier.empty());
+    }
+
+    BOOST_CHECK_EQUAL(nullptr, identifier.try_push_back("10"_STRID));
+
+    identifier.clear();
+    BOOST_CHECK(identifier.empty());
+  }
+
+  BOOST_AUTO_TEST_CASE(push_back) {
+    forte::TNameIdentifier identifier;
+
+    identifier.push_back("5"_STRID);
+    BOOST_CHECK_EQUAL(1, identifier.size());
+    BOOST_CHECK_EQUAL("5"_STRID, identifier[0]);
+    BOOST_CHECK_EQUAL("5"_STRID, identifier.back());
+    BOOST_CHECK_EQUAL("5"_STRID, identifier.front());
+
+    identifier.push_back("10"_STRID);
+    BOOST_CHECK_EQUAL(2, identifier.size());
+    BOOST_CHECK_EQUAL("5"_STRID, identifier[0]);
+    BOOST_CHECK_EQUAL("10"_STRID, identifier[1]);
+    BOOST_CHECK_EQUAL("10"_STRID, identifier.back());
+    BOOST_CHECK_EQUAL("5"_STRID, identifier.front());
+
+    identifier.push_back("215"_STRID);
+    BOOST_CHECK_EQUAL(3, identifier.size());
+    BOOST_CHECK_EQUAL("5"_STRID, identifier[0]);
+    BOOST_CHECK_EQUAL("10"_STRID, identifier[1]);
+    BOOST_CHECK_EQUAL("215"_STRID, identifier[2]);
+    BOOST_CHECK_EQUAL("215"_STRID, identifier.back());
+    BOOST_CHECK_EQUAL("5"_STRID, identifier.front());
+
+    identifier.push_back("3564"_STRID);
+    BOOST_CHECK_EQUAL(4, identifier.size());
+    BOOST_CHECK_EQUAL("5"_STRID, identifier[0]);
+    BOOST_CHECK_EQUAL("10"_STRID, identifier[1]);
+    BOOST_CHECK_EQUAL("215"_STRID, identifier[2]);
+    BOOST_CHECK_EQUAL("3564"_STRID, identifier[3]);
+    BOOST_CHECK_EQUAL("3564"_STRID, identifier.back());
+    BOOST_CHECK_EQUAL("5"_STRID, identifier.front());
+  }
+
+  BOOST_AUTO_TEST_CASE(pop_back) {
+    forte::TNameIdentifier identifier;
+    // fill with testdata
+    for (size_t i = 0; i < cgMaxSupportedNameHierarchy; i++) {
+      identifier.push_back(forte::StringId::insert(std::to_string(i)));
+    }
+
+    for (size_t i = 0; i < cgMaxSupportedNameHierarchy; i++) {
+      BOOST_TEST(std::to_string(cgMaxSupportedNameHierarchy - 1 - i) == identifier.back().get());
+      BOOST_TEST(cgMaxSupportedNameHierarchy - i == identifier.size());
+      identifier.pop_back();
+      BOOST_TEST(cgMaxSupportedNameHierarchy - 1 - i == identifier.size());
+    }
+    BOOST_CHECK(identifier.empty());
+  }
+
+  BOOST_AUTO_TEST_CASE(iterator) {
+    forte::TNameIdentifier identifier;
+    // fill with testdata
+    for (size_t i = 0; i < cgMaxSupportedNameHierarchy; i++) {
+      identifier.push_back(forte::StringId::insert(std::to_string(i)));
+    }
+
+    int i = 0;
+    for (const auto &it : identifier) {
+      BOOST_CHECK_EQUAL(forte::StringId::insert(std::to_string(i++)), it);
+    }
+    BOOST_CHECK_EQUAL(cgMaxSupportedNameHierarchy,
+                      i); // we should have exactly visited each element once but started at zero
+  }
+
+  BOOST_AUTO_TEST_SUITE_END()
+
+} // namespace forte::test

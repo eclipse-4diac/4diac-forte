@@ -19,195 +19,197 @@
 
 #include "forte/datatypes/forte_time_of_day.h"
 
-BOOST_AUTO_TEST_SUITE(CIEC_TIME_OF_DAY_function_test)
-BOOST_AUTO_TEST_CASE(Type_test) {
-  CIEC_TIME_OF_DAY nTest;
-  // check type information
-  BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_TIME_OF_DAY);
-  // check operator bool data type size
-  BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteUInt64()), sizeof(TForteUInt64));
-}
+namespace forte::test {
+  BOOST_AUTO_TEST_SUITE(CIEC_TIME_OF_DAY_function_test)
+  BOOST_AUTO_TEST_CASE(Type_test) {
+    CIEC_TIME_OF_DAY nTest;
+    // check type information
+    BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_TIME_OF_DAY);
+    // check operator bool data type size
+    BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteUInt64()), sizeof(TForteUInt64));
+  }
 
-BOOST_AUTO_TEST_CASE(Literal_test) {
-  CIEC_TIME_OF_DAY test1 = 0_TIME_OF_DAY;
-  BOOST_TEST(static_cast<CIEC_TIME_OF_DAY::TValueType>(test1) == 0);
+  BOOST_AUTO_TEST_CASE(Literal_test) {
+    CIEC_TIME_OF_DAY test1 = 0_TIME_OF_DAY;
+    BOOST_TEST(static_cast<CIEC_TIME_OF_DAY::TValueType>(test1) == 0);
 
-  CIEC_TIME_OF_DAY test2 = 18446744073709551615_TIME_OF_DAY;
-  BOOST_TEST(static_cast<CIEC_TIME_OF_DAY::TValueType>(test2) == std::numeric_limits<TForteUInt64>::max());
-}
+    CIEC_TIME_OF_DAY test2 = 18446744073709551615_TIME_OF_DAY;
+    BOOST_TEST(static_cast<CIEC_TIME_OF_DAY::TValueType>(test2) == std::numeric_limits<TForteUInt64>::max());
+  }
 
-BOOST_AUTO_TEST_CASE(Representation_test) {
-  CIEC_TIME_OF_DAY interalRepSet(56215360000000ULL); // "15:36:55.36"
-  CIEC_TIME_OF_DAY stringSet; // "15:36:55.36"
-  stringSet.fromString("15:36:55.360");
-  BOOST_TEST(stringSet == interalRepSet);
-}
+  BOOST_AUTO_TEST_CASE(Representation_test) {
+    CIEC_TIME_OF_DAY interalRepSet(56215360000000ULL); // "15:36:55.36"
+    CIEC_TIME_OF_DAY stringSet; // "15:36:55.36"
+    stringSet.fromString("15:36:55.360");
+    BOOST_TEST(stringSet == interalRepSet);
+  }
 
-BOOST_AUTO_TEST_CASE(Operator_test) {
-  CIEC_TIME_OF_DAY nTest1;
-  CIEC_TIME_OF_DAY nTest2;
+  BOOST_AUTO_TEST_CASE(Operator_test) {
+    CIEC_TIME_OF_DAY nTest1;
+    CIEC_TIME_OF_DAY nTest2;
 
-  // check if data type is initialized with value of zero
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1), 0ULL);
+    // check if data type is initialized with value of zero
+    BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1), 0ULL);
 
-  nTest1 = CIEC_TIME_OF_DAY(std::numeric_limits<TForteUInt64>::min());
-  nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1), std::numeric_limits<TForteUInt64>::min());
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest2), std::numeric_limits<TForteUInt64>::min());
+    nTest1 = CIEC_TIME_OF_DAY(std::numeric_limits<TForteUInt64>::min());
+    nTest2 = nTest1;
+    BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1), std::numeric_limits<TForteUInt64>::min());
+    BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest2), std::numeric_limits<TForteUInt64>::min());
 
-  nTest1 = CIEC_TIME_OF_DAY(123894391ULL);
-  nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1), 123894391ULL);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest2), 123894391ULL);
+    nTest1 = CIEC_TIME_OF_DAY(123894391ULL);
+    nTest2 = nTest1;
+    BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1), 123894391ULL);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest2), 123894391ULL);
 
-  nTest1 = CIEC_TIME_OF_DAY(std::numeric_limits<TForteUInt64>::max());
-  nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1), std::numeric_limits<TForteUInt64>::max());
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest2), std::numeric_limits<TForteUInt64>::max());
+    nTest1 = CIEC_TIME_OF_DAY(std::numeric_limits<TForteUInt64>::max());
+    nTest2 = nTest1;
+    BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1), std::numeric_limits<TForteUInt64>::max());
+    BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest2), std::numeric_limits<TForteUInt64>::max());
 
-  nTest2 = CIEC_TIME_OF_DAY(2145729524ULL);
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1), std::numeric_limits<TForteUInt64>::max());
-  BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest2), 2145729524ULL);
-}
+    nTest2 = CIEC_TIME_OF_DAY(2145729524ULL);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest1), std::numeric_limits<TForteUInt64>::max());
+    BOOST_CHECK_EQUAL(static_cast<CIEC_TIME_OF_DAY::TValueType>(nTest2), 2145729524ULL);
+  }
 
-BOOST_AUTO_TEST_CASE(Conversion_test) {
-  CIEC_TIME_OF_DAY nTest;
+  BOOST_AUTO_TEST_CASE(Conversion_test) {
+    CIEC_TIME_OF_DAY nTest;
 
-  std::string buffer;
+    std::string buffer;
 
-  // check cast operator
-  nTest = CIEC_TIME_OF_DAY(0);
+    // check cast operator
+    nTest = CIEC_TIME_OF_DAY(0);
 
-  BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), 0ULL);
+    BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), 0ULL);
 
-  nTest = CIEC_TIME_OF_DAY(std::numeric_limits<TForteUInt64>::min());
-  BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), std::numeric_limits<TForteUInt64>::min());
+    nTest = CIEC_TIME_OF_DAY(std::numeric_limits<TForteUInt64>::min());
+    BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), std::numeric_limits<TForteUInt64>::min());
 
-  nTest = CIEC_TIME_OF_DAY(-21654147L);
-  BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), 18446744073687897469ULL);
+    nTest = CIEC_TIME_OF_DAY(-21654147L);
+    BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), 18446744073687897469ULL);
 
-  nTest = CIEC_TIME_OF_DAY(std::numeric_limits<TForteUInt64>::max());
-  BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), std::numeric_limits<TForteUInt64>::max());
+    nTest = CIEC_TIME_OF_DAY(std::numeric_limits<TForteUInt64>::max());
+    BOOST_CHECK_EQUAL(nTest.operator TForteUInt64(), std::numeric_limits<TForteUInt64>::max());
 
-  // check toString and fromString
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.36"), 11);
-  nTest.toString(buffer);
-  BOOST_TEST(buffer == "TOD#15:36:55.360");
-  buffer.clear();
+    // check toString and fromString
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.36"), 11);
+    nTest.toString(buffer);
+    BOOST_TEST(buffer == "TOD#15:36:55.360");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("15:36:55"), 8);
-  nTest.toString(buffer);
-  BOOST_TEST(buffer == "TOD#15:36:55.000");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("15:36:55"), 8);
+    nTest.toString(buffer);
+    BOOST_TEST(buffer == "TOD#15:36:55.000");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("15:36:55."), 9);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.000");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("15:36:55."), 9);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.000");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.0"), 10);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.000");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.0"), 10);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.000");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.1"), 10);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.100");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.1"), 10);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.100");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.10"), 11);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.100");
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.10"), 11);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.100");
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  buffer.clear();
-  BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.100"), 12);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.100");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    buffer.clear();
+    BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.100"), 12);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.100");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.12"), 11);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.120");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.12"), 11);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.120");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.120"), 12);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.120");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.120"), 12);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.120");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.123"), 12);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.123");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.123"), 12);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.123");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.1234"), 13);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.123");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("15:36:55.1234"), 13);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.123");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("TIME_OF_DAY#15:36:55.36"), 23);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.360");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("TIME_OF_DAY#15:36:55.36"), 23);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.360");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("time_of_day#15:36:55.36"), 23);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.360");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("time_of_day#15:36:55.36"), 23);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.360");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("TOD#15:36:55.36"), 15);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.360");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("TOD#15:36:55.36"), 15);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.360");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("tod#15:36:55.36"), 15);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.360");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("tod#15:36:55.36"), 15);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#15:36:55.360");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("8:6:5.6"), 7);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#08:06:05.600");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("8:6:5.6"), 7);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#08:06:05.600");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("TIME_OF_DAY#8:6:5.6"), 19);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#08:06:05.600");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("TIME_OF_DAY#8:6:5.6"), 19);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#08:06:05.600");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("time_of_day#8:6:5.6"), 19);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#08:06:05.600");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("time_of_day#8:6:5.6"), 19);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#08:06:05.600");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("TOD#8:6:5.6"), 11);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#08:06:05.600");
-  buffer.clear();
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("TOD#8:6:5.6"), 11);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#08:06:05.600");
+    buffer.clear();
 
-  nTest = CIEC_TIME_OF_DAY(0);
-  BOOST_CHECK_EQUAL(nTest.fromString("tod#8:6:5.6"), 11);
-  nTest.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "TOD#08:06:05.600");
-  buffer.clear();
-}
-BOOST_AUTO_TEST_SUITE_END()
+    nTest = CIEC_TIME_OF_DAY(0);
+    BOOST_CHECK_EQUAL(nTest.fromString("tod#8:6:5.6"), 11);
+    nTest.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "TOD#08:06:05.600");
+    buffer.clear();
+  }
+  BOOST_AUTO_TEST_SUITE_END()
+} // namespace forte::test

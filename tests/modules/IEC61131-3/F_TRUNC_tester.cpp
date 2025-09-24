@@ -15,27 +15,30 @@
 
 using namespace forte::literals;
 
-struct F_TRUNC_TestFixture : public CFBTestFixtureBase {
+namespace forte::iec61131::arithmetic {
+  struct F_TRUNC_TestFixture : public forte::test::CFBTestFixtureBase {
 
-    F_TRUNC_TestFixture() : CFBTestFixtureBase("iec61131::arithmetic::F_TRUNC"_STRID) {
-      setInputData({&mIn_TRUNC});
-      setOutputData({&mOut_TRUNC});
-      setup();
-    }
+      F_TRUNC_TestFixture() : CFBTestFixtureBase("iec61131::arithmetic::F_TRUNC"_STRID) {
+        setInputData({&mIn_TRUNC});
+        setOutputData({&mOut_TRUNC});
+        setup();
+      }
 
-    CIEC_REAL mIn_TRUNC; // DATA INPUT
+      CIEC_REAL mIn_TRUNC; // DATA INPUT
 
-    CIEC_INT mOut_TRUNC;
-};
+      CIEC_INT mOut_TRUNC;
+  };
 
-BOOST_FIXTURE_TEST_SUITE(F_TRUNC_Tests, F_TRUNC_TestFixture)
+  BOOST_FIXTURE_TEST_SUITE(F_TRUNC_Tests, F_TRUNC_TestFixture)
 
-BOOST_AUTO_TEST_CASE(validTruncationFromRealToInt) {
-  mIn_TRUNC = CIEC_REAL(30.45343f);
-  /* trigger the inputevent */
-  triggerEvent(0);
-  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-  BOOST_CHECK_EQUAL(30, static_cast<CIEC_INT::TValueType>(mOut_TRUNC));
-}
+  BOOST_AUTO_TEST_CASE(validTruncationFromRealToInt) {
+    mIn_TRUNC = CIEC_REAL(30.45343f);
+    /* trigger the inputevent */
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(30, static_cast<CIEC_INT::TValueType>(mOut_TRUNC));
+  }
 
-BOOST_AUTO_TEST_SUITE_END()
+  BOOST_AUTO_TEST_SUITE_END()
+
+} // namespace forte::iec61131::arithmetic

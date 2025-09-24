@@ -15,85 +15,89 @@
 #include "forte_boost_output_support.h"
 #include "forte/datatypes/forte_any_signed_variant.h"
 
-BOOST_AUTO_TEST_SUITE(CIEC_ANY_SIGNED_VARIANT_function_test)
+namespace forte::test {
+  BOOST_AUTO_TEST_SUITE(CIEC_ANY_SIGNED_VARIANT_function_test)
 
-BOOST_AUTO_TEST_CASE(Type_test) {
-  CIEC_ANY_SIGNED_VARIANT test;
-  // check type information
-  BOOST_CHECK_EQUAL(test.getDataTypeID(), CIEC_ANY::e_ANY);
-}
+  BOOST_AUTO_TEST_CASE(Type_test) {
+    CIEC_ANY_SIGNED_VARIANT test;
+    // check type information
+    BOOST_CHECK_EQUAL(test.getDataTypeID(), CIEC_ANY::e_ANY);
+  }
 
-BOOST_AUTO_TEST_CASE(Initialization_test) {
-  // assign value
-  CIEC_ANY_SIGNED_VARIANT test1 = CIEC_DINT(17);
-  BOOST_TEST(17 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test1)));
+  BOOST_AUTO_TEST_CASE(Initialization_test) {
+    // assign value
+    CIEC_ANY_SIGNED_VARIANT test1 = CIEC_DINT(17);
+    BOOST_TEST(17 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test1)));
 
-  // assign generic value
-  CIEC_DINT test3 = CIEC_DINT(4);
-  CIEC_ANY_SIGNED &test4 = test3;
-  CIEC_ANY_SIGNED_VARIANT test2 = test4;
-  BOOST_TEST(4 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test2)));
+    // assign generic value
+    CIEC_DINT test3 = CIEC_DINT(4);
+    CIEC_ANY_SIGNED &test4 = test3;
+    CIEC_ANY_SIGNED_VARIANT test2 = test4;
+    BOOST_TEST(4 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test2)));
 
-  // assign each other
-  CIEC_ANY_SIGNED_VARIANT test5 = test1;
-  BOOST_TEST(17 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test5)));
-}
+    // assign each other
+    CIEC_ANY_SIGNED_VARIANT test5 = test1;
+    BOOST_TEST(17 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test5)));
+  }
 
-BOOST_AUTO_TEST_CASE(Assignment_test) {
-  CIEC_ANY_SIGNED_VARIANT test1;
-  CIEC_ANY_SIGNED_VARIANT test2;
+  BOOST_AUTO_TEST_CASE(Assignment_test) {
+    CIEC_ANY_SIGNED_VARIANT test1;
+    CIEC_ANY_SIGNED_VARIANT test2;
 
-  // initial value must be 0
-  BOOST_TEST(0 == static_cast<CIEC_SINT::TValueType>(std::get<CIEC_SINT>(test1)));
-  BOOST_TEST(0 == static_cast<CIEC_SINT::TValueType>(std::get<CIEC_SINT>(test2)));
+    // initial value must be 0
+    BOOST_TEST(0 == static_cast<CIEC_SINT::TValueType>(std::get<CIEC_SINT>(test1)));
+    BOOST_TEST(0 == static_cast<CIEC_SINT::TValueType>(std::get<CIEC_SINT>(test2)));
 
-  // assign value
-  test1 = CIEC_DINT(17);
-  BOOST_TEST(17 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test1)));
+    // assign value
+    test1 = CIEC_DINT(17);
+    BOOST_TEST(17 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test1)));
 
-  // assign generic value
-  CIEC_DINT test3 = CIEC_DINT(4);
-  CIEC_ANY_SIGNED &test4 = test3;
-  test2 = test4;
-  BOOST_TEST(4 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test2)));
+    // assign generic value
+    CIEC_DINT test3 = CIEC_DINT(4);
+    CIEC_ANY_SIGNED &test4 = test3;
+    test2 = test4;
+    BOOST_TEST(4 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test2)));
 
-  // assign each other
-  test2.setValue(test1);
-  BOOST_TEST(17 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test2)));
+    // assign each other
+    test2.setValue(test1);
+    BOOST_TEST(17 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test2)));
 
-  // assign dynamic value
-  test2.setValue(CIEC_INT(4));
-  BOOST_TEST(4 == static_cast<CIEC_INT::TValueType>(std::get<CIEC_INT>(test2)));
-}
+    // assign dynamic value
+    test2.setValue(CIEC_INT(4));
+    BOOST_TEST(4 == static_cast<CIEC_INT::TValueType>(std::get<CIEC_INT>(test2)));
+  }
 
-void checkStringConversion(CIEC_ANY_SIGNED_VARIANT &paValue, const char *paString, CIEC_ANY::EDataTypeID paDataTypeId) {
-  std::string buf;
-  BOOST_CHECK_EQUAL(paValue.fromString(paString), strlen(paString));
-  BOOST_CHECK_EQUAL(paValue.getDataTypeID(), CIEC_ANY::e_ANY);
-  BOOST_CHECK_EQUAL(paValue.unwrap().getDataTypeID(), paDataTypeId);
-  paValue.toString(buf);
-  BOOST_CHECK_EQUAL(paString, buf);
-}
+  void
+  checkStringConversion(CIEC_ANY_SIGNED_VARIANT &paValue, const char *paString, CIEC_ANY::EDataTypeID paDataTypeId) {
+    std::string buf;
+    BOOST_CHECK_EQUAL(paValue.fromString(paString), strlen(paString));
+    BOOST_CHECK_EQUAL(paValue.getDataTypeID(), CIEC_ANY::e_ANY);
+    BOOST_CHECK_EQUAL(paValue.unwrap().getDataTypeID(), paDataTypeId);
+    paValue.toString(buf);
+    BOOST_CHECK_EQUAL(paString, buf);
+  }
 
-BOOST_AUTO_TEST_CASE(String_Conversion_test) {
-  CIEC_ANY_SIGNED_VARIANT test;
-  checkStringConversion(test, "SINT#123", CIEC_ANY::e_SINT);
-  checkStringConversion(test, "INT#5754", CIEC_ANY::e_INT);
-  checkStringConversion(test, "DINT#112323", CIEC_ANY::e_DINT);
-  checkStringConversion(test, "LINT#123123123123", CIEC_ANY::e_LINT);
-}
+  BOOST_AUTO_TEST_CASE(String_Conversion_test) {
+    CIEC_ANY_SIGNED_VARIANT test;
+    checkStringConversion(test, "SINT#123", CIEC_ANY::e_SINT);
+    checkStringConversion(test, "INT#5754", CIEC_ANY::e_INT);
+    checkStringConversion(test, "DINT#112323", CIEC_ANY::e_DINT);
+    checkStringConversion(test, "LINT#123123123123", CIEC_ANY::e_LINT);
+  }
 
-BOOST_AUTO_TEST_CASE(Equality_test) {
-  CIEC_ANY_SIGNED_VARIANT test1;
-  CIEC_ANY_SIGNED_VARIANT test2;
+  BOOST_AUTO_TEST_CASE(Equality_test) {
+    CIEC_ANY_SIGNED_VARIANT test1;
+    CIEC_ANY_SIGNED_VARIANT test2;
 
-  BOOST_TEST(test1.equals(test2));
-  test1 = CIEC_DINT(17);
-  BOOST_TEST(!test1.equals(test2));
-  test2.setValue(test1);
-  BOOST_TEST(test1.equals(test2));
-  test2.setValue(CIEC_INT(4));
-  BOOST_TEST(!test1.equals(test2));
-}
+    BOOST_TEST(test1.equals(test2));
+    test1 = CIEC_DINT(17);
+    BOOST_TEST(!test1.equals(test2));
+    test2.setValue(test1);
+    BOOST_TEST(test1.equals(test2));
+    test2.setValue(CIEC_INT(4));
+    BOOST_TEST(!test1.equals(test2));
+  }
 
-BOOST_AUTO_TEST_SUITE_END()
+  BOOST_AUTO_TEST_SUITE_END()
+
+} // namespace forte::test

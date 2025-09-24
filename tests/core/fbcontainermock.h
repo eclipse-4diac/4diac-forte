@@ -15,27 +15,29 @@
 #include "forte/fbcontainer.h"
 #include <functional>
 
-class CFBContainerMock : public forte::CFBContainer {
+namespace forte::test {
+  class CFBContainerMock : public forte::CFBContainer {
 
-  public:
-    static CFBContainerMock smDefaultFBContMock;
+    public:
+      static CFBContainerMock smDefaultFBContMock;
 
-    CResource *getResource() override {
-      throw new std::bad_function_call();
-    }
+      CResource *getResource() override {
+        throw new std::bad_function_call();
+      }
 
-    CResource *getResource() const override {
-      throw new std::bad_function_call();
-    }
+      CResource *getResource() const override {
+        throw new std::bad_function_call();
+      }
 
-    CDevice *getDevice() override {
-      throw new std::bad_function_call();
-    }
+      CDevice *getDevice() override {
+        throw new std::bad_function_call();
+      }
 
-    CDevice *getDevice() const override {
-      throw new std::bad_function_call();
-    }
+      CDevice *getDevice() const override {
+        throw new std::bad_function_call();
+      }
 
-  private:
-    CFBContainerMock() : CFBContainer({}, *this) {};
-};
+    private:
+      CFBContainerMock() : CFBContainer({}, *this) {};
+  };
+} // namespace forte::test

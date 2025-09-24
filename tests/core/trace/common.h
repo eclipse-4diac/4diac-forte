@@ -19,7 +19,7 @@
 
 #include "../../../core/src/trace/internal/EventMessage.h"
 
-namespace forte::tests::traces {
+namespace forte::trace::test {
 
   /**
    * @brief Cleanup the output directory of traces, copy the metadata file to it and setups the bareCTF tracer to it
@@ -37,7 +37,7 @@ namespace forte::tests::traces {
   void checkMessages(std::unordered_map<std::string, std::vector<EventMessage>> &paExpected,
                      std::unordered_map<std::string, std::vector<EventMessage>> &paActual);
 
-} // namespace forte::tests::traces
+} // namespace forte::trace::test
 
 /**
  * @brief Helper operator for BOOST_TEST to print

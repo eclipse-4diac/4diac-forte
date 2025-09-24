@@ -16,82 +16,84 @@
 
 using namespace forte::literals;
 
-struct CFB_TEST_TestFixture : public CFBTestFixtureBase {
+namespace forte::test {
+  struct CFB_TEST_TestFixture : public CFBTestFixtureBase {
 
-    CFB_TEST_TestFixture() : CFBTestFixtureBase("CFB_TEST"_STRID) {
-      setInputData({&mInQI});
-      setOutputData({&mOutSR});
-      setup();
+      CFB_TEST_TestFixture() : CFBTestFixtureBase("CFB_TEST"_STRID) {
+        setInputData({&mInQI});
+        setOutputData({&mOutSR});
+        setup();
+      }
+
+      CIEC_BOOL mInQI;
+      CIEC_BOOL mOutSR;
+
+      bool checkBothOutputEvents() {
+        bool bResult = true;
+        if (0 != pullFirstChainEventID()) {
+          bResult = false;
+        }
+        if (1 != pullFirstChainEventID()) {
+          bResult = false;
+        }
+        if (!eventChainEmpty()) {
+          bResult = false;
+        }
+        return bResult;
+      }
+  };
+
+  BOOST_FIXTURE_TEST_SUITE(PermitTests, CFB_TEST_TestFixture)
+
+  BOOST_AUTO_TEST_CASE(inhibitTest) {
+    mInQI = false_BOOL;
+    for (unsigned int i = 0; i < 100; ++i) {
+      triggerEvent(0);
+      BOOST_CHECK(eventChainEmpty());
+      BOOST_CHECK_EQUAL(false, mOutSR);
+      triggerEvent(1);
+      BOOST_CHECK(eventChainEmpty());
+      BOOST_CHECK_EQUAL(false, mOutSR);
     }
-
-    CIEC_BOOL mInQI;
-    CIEC_BOOL mOutSR;
-
-    bool checkBothOutputEvents() {
-      bool bResult = true;
-      if (0 != pullFirstChainEventID()) {
-        bResult = false;
-      }
-      if (1 != pullFirstChainEventID()) {
-        bResult = false;
-      }
-      if (!eventChainEmpty()) {
-        bResult = false;
-      }
-      return bResult;
-    }
-};
-
-BOOST_FIXTURE_TEST_SUITE(PermitTests, CFB_TEST_TestFixture)
-
-BOOST_AUTO_TEST_CASE(inhibitTest) {
-  mInQI = false_BOOL;
-  for (unsigned int i = 0; i < 100; ++i) {
-    triggerEvent(0);
-    BOOST_CHECK(eventChainEmpty());
-    BOOST_CHECK_EQUAL(false, mOutSR);
-    triggerEvent(1);
-    BOOST_CHECK(eventChainEmpty());
-    BOOST_CHECK_EQUAL(false, mOutSR);
   }
-}
 
-BOOST_AUTO_TEST_CASE(setTest) {
-  mInQI = true_BOOL;
-  triggerEvent(0);
-  BOOST_CHECK(checkBothOutputEvents());
-  BOOST_CHECK_EQUAL(true, mOutSR);
-  for (unsigned int i = 0; i < 100; ++i) {
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    BOOST_CHECK_EQUAL(true, mOutSR);
-  }
-}
-
-BOOST_AUTO_TEST_CASE(resetTest) {
-  mInQI = true_BOOL;
-  triggerEvent(0);
-  clearEventChain();
-  triggerEvent(1);
-  BOOST_CHECK(checkBothOutputEvents());
-  BOOST_CHECK_EQUAL(false, mOutSR);
-  for (unsigned int i = 0; i < 100; ++i) {
-    triggerEvent(1);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    BOOST_CHECK_EQUAL(false, mOutSR);
-  }
-}
-
-BOOST_AUTO_TEST_CASE(toggleTest) {
-  mInQI = true_BOOL;
-  for (int i = 0; i < 1000; ++i) {
+  BOOST_AUTO_TEST_CASE(setTest) {
+    mInQI = true_BOOL;
     triggerEvent(0);
     BOOST_CHECK(checkBothOutputEvents());
     BOOST_CHECK_EQUAL(true, mOutSR);
+    for (unsigned int i = 0; i < 100; ++i) {
+      triggerEvent(0);
+      BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+      BOOST_CHECK_EQUAL(true, mOutSR);
+    }
+  }
+
+  BOOST_AUTO_TEST_CASE(resetTest) {
+    mInQI = true_BOOL;
+    triggerEvent(0);
+    clearEventChain();
     triggerEvent(1);
     BOOST_CHECK(checkBothOutputEvents());
     BOOST_CHECK_EQUAL(false, mOutSR);
+    for (unsigned int i = 0; i < 100; ++i) {
+      triggerEvent(1);
+      BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+      BOOST_CHECK_EQUAL(false, mOutSR);
+    }
   }
-}
 
-BOOST_AUTO_TEST_SUITE_END()
+  BOOST_AUTO_TEST_CASE(toggleTest) {
+    mInQI = true_BOOL;
+    for (int i = 0; i < 1000; ++i) {
+      triggerEvent(0);
+      BOOST_CHECK(checkBothOutputEvents());
+      BOOST_CHECK_EQUAL(true, mOutSR);
+      triggerEvent(1);
+      BOOST_CHECK(checkBothOutputEvents());
+      BOOST_CHECK_EQUAL(false, mOutSR);
+    }
+  }
+
+  BOOST_AUTO_TEST_SUITE_END()
+} // namespace forte::test

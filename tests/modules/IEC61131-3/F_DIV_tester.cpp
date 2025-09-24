@@ -15,37 +15,39 @@
 
 using namespace forte::literals;
 
-struct F_DIV_TestFixture : public CFBTestFixtureBase {
+namespace forte::iec61131::arithmetic {
+  struct F_DIV_TestFixture : public forte::test::CFBTestFixtureBase {
 
-    F_DIV_TestFixture() : CFBTestFixtureBase("iec61131::arithmetic::F_DIV"_STRID) {
-      setInputData({&mIn1_DIV, &mIn2_DIV});
-      setOutputData({&mOut_DIV});
-      setup();
-    }
+      F_DIV_TestFixture() : CFBTestFixtureBase("iec61131::arithmetic::F_DIV"_STRID) {
+        setInputData({&mIn1_DIV, &mIn2_DIV});
+        setOutputData({&mOut_DIV});
+        setup();
+      }
 
-    CIEC_INT mIn1_DIV; // DATA INPUT
-    CIEC_INT mIn2_DIV; // DATA INPUT
+      CIEC_INT mIn1_DIV; // DATA INPUT
+      CIEC_INT mIn2_DIV; // DATA INPUT
 
-    CIEC_INT mOut_DIV;
-};
+      CIEC_INT mOut_DIV;
+  };
 
-BOOST_FIXTURE_TEST_SUITE(F_DIV_Tests, F_DIV_TestFixture)
+  BOOST_FIXTURE_TEST_SUITE(F_DIV_Tests, F_DIV_TestFixture)
 
-BOOST_AUTO_TEST_CASE(validDivision) {
-  mIn1_DIV = CIEC_INT(30);
-  mIn2_DIV = CIEC_INT(5);
-  /* trigger the inputevent */
-  triggerEvent(0);
-  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-  BOOST_CHECK_EQUAL(6, static_cast<CIEC_INT::TValueType>(mOut_DIV));
-}
+  BOOST_AUTO_TEST_CASE(validDivision) {
+    mIn1_DIV = CIEC_INT(30);
+    mIn2_DIV = CIEC_INT(5);
+    /* trigger the inputevent */
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(6, static_cast<CIEC_INT::TValueType>(mOut_DIV));
+  }
 
-BOOST_AUTO_TEST_CASE(divisionByZero) {
-  mIn1_DIV = CIEC_INT(30);
-  mIn2_DIV = CIEC_INT(0);
-  /* trigger the inputevent */
-  triggerEvent(0);
-  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-}
+  BOOST_AUTO_TEST_CASE(divisionByZero) {
+    mIn1_DIV = CIEC_INT(30);
+    mIn2_DIV = CIEC_INT(0);
+    /* trigger the inputevent */
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+  }
 
-BOOST_AUTO_TEST_SUITE_END()
+  BOOST_AUTO_TEST_SUITE_END()
+} // namespace forte::iec61131::arithmetic

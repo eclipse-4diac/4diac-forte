@@ -20,47 +20,48 @@
 
 #include <memory>
 
-class CTesterDevice : public CDevice {
-  public:
-    CTesterDevice(const forte::StringId paInstanceNameId = {});
+namespace forte::test {
+  class CTesterDevice : public CDevice {
+    public:
+      CTesterDevice(const forte::StringId paInstanceNameId = {});
 
-    void awaitShutdown() override {
-      // nothing to be done to join
-    }
+      void awaitShutdown() override {
+        // nothing to be done to join
+      }
 
-    CIEC_ANY *getDI(size_t) override {
-      return nullptr;
-    }
+      CIEC_ANY *getDI(size_t) override {
+        return nullptr;
+      }
 
-    CDataConnection **getDIConUnchecked(TPortId) override {
-      return nullptr;
-    }
+      CDataConnection **getDIConUnchecked(TPortId) override {
+        return nullptr;
+      }
 
-    CResource &getTestResource() {
-      return *mResource;
-    }
+      CResource &getTestResource() {
+        return *mResource;
+      }
 
-  private:
-    forte::CInternalFB<forte::iec61499::hardware::EMB_RES> mResource;
+    private:
+      forte::CInternalFB<forte::iec61499::hardware::EMB_RES> mResource;
 
-    constexpr static SFBInterfaceSpec scTestDevSpec = {};
-};
+      constexpr static SFBInterfaceSpec scTestDevSpec = {};
+  };
 
-/**Global fixture for providing the resource and device needed for fb testing
- *
- */
-class CFBTestDataGlobalFixture {
+  /**Global fixture for providing the resource and device needed for fb testing
+   *
+   */
+  class CFBTestDataGlobalFixture {
 
-  public:
-    CFBTestDataGlobalFixture();
-    ~CFBTestDataGlobalFixture();
+    public:
+      CFBTestDataGlobalFixture();
+      ~CFBTestDataGlobalFixture();
 
-    static CResource &getResource() {
-      return smTestDev->getTestResource();
-    }
+      static CResource &getResource() {
+        return smTestDev->getTestResource();
+      }
 
-  private:
-    static std::unique_ptr<CTesterDevice> smTestDev;
-};
-
+    private:
+      static std::unique_ptr<CTesterDevice> smTestDev;
+  };
+} // namespace forte::test
 #endif

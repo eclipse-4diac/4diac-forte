@@ -11,21 +11,22 @@
  *******************************************************************************/
 #include "forte/util/singlet.h"
 
-#ifndef TESTSINGLETON_H_
-#define TESTSINGLETON_H_
+#pragma once
 
-class TestSingleton {
-    DECLARE_SINGLETON(TestSingleton);
+namespace forte::util::test {
 
-  public:
-    int getSingletonID() {
-      return mSingletonID;
-    }
+  class TestSingleton {
+      DECLARE_SINGLETON(TestSingleton);
 
-  private:
-    static unsigned int smInstanceCount;
+    public:
+      int getSingletonID() {
+        return mSingletonID;
+      }
 
-    unsigned int mSingletonID;
-};
+    private:
+      static unsigned int smInstanceCount;
 
-#endif /* TESTSINGLETON_H_ */
+      unsigned int mSingletonID;
+  };
+
+} // namespace forte::util::test

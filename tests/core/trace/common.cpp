@@ -19,18 +19,18 @@
 #include "config.h"
 #include "../../../core/src/trace/barectf_platform_forte.h"
 
-namespace forte::tests::traces {
+namespace forte::trace::test {
 
   void prepareTraceTest(std::string paDestMetadata) {
-    std::filesystem::path destMetadata(CTF_OUTPUT_DIR);
+    std::filesystem::path destMetadata(cgCTFOutputDir);
 
     // remove previous trace files
     std::filesystem::remove_all(destMetadata);
     std::filesystem::create_directory(destMetadata);
 
-    std::filesystem::copy_file(METADATA_FILE, destMetadata / std::move(paDestMetadata));
+    std::filesystem::copy_file(cgMetadataFile, destMetadata / std::move(paDestMetadata));
 
-    BarectfPlatformFORTE::setup(CTF_OUTPUT_DIR);
+    BarectfPlatformFORTE::setup(cgCTFOutputDir);
   }
 
   void checkMessages(std::unordered_map<std::string, std::vector<EventMessage>> &paExpected,
@@ -63,7 +63,7 @@ namespace forte::tests::traces {
     }
   }
 
-} // namespace forte::tests::traces
+} // namespace forte::trace::test
 
 std::ostream &operator<<(std::ostream &paOs, const EventMessage &paEventMessage) {
   paOs << paEventMessage.getPayloadString();

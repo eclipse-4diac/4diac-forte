@@ -23,6 +23,6 @@ void boost::throw_exception(std::exception const &) {
 }
 #endif
 
-// BOOST_TEST_GLOBAL_FIXTURE(MyGlobalFixture)();
-// fix for a problem in BOOST_TEST_GLOBAL_FIXTURE, revert when fixed, issue seams to be in BOOST_JOIN
-static boost::unit_test::ut_detail::global_fixture_impl<CFBTestDataGlobalFixture> gfCFBTestDataGlobalFixture;
+namespace forte::test {
+  BOOST_TEST_GLOBAL_FIXTURE(CFBTestDataGlobalFixture);
+} // namespace forte::test

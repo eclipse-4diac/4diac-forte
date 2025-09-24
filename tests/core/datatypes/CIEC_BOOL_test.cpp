@@ -21,107 +21,109 @@
 
 using namespace boost::unit_test;
 
-BOOST_AUTO_TEST_SUITE(CIEC_BOOL_function_test)
+namespace forte::test {
+  BOOST_AUTO_TEST_SUITE(CIEC_BOOL_function_test)
 
-BOOST_AUTO_TEST_CASE(Type_test) {
-  CIEC_BOOL bTest;
-  // check type information
-  BOOST_CHECK_EQUAL(bTest.getDataTypeID(), CIEC_ANY::e_BOOL);
-  // check operator bool data type size
-  BOOST_CHECK_EQUAL(sizeof(bTest.operator bool()), sizeof(bool));
-}
+  BOOST_AUTO_TEST_CASE(Type_test) {
+    CIEC_BOOL bTest;
+    // check type information
+    BOOST_CHECK_EQUAL(bTest.getDataTypeID(), CIEC_ANY::e_BOOL);
+    // check operator bool data type size
+    BOOST_CHECK_EQUAL(sizeof(bTest.operator bool()), sizeof(bool));
+  }
 
-BOOST_AUTO_TEST_CASE(Literal_test) {
-  CIEC_BOOL test1 = 0_BOOL;
-  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(test1) == false);
+  BOOST_AUTO_TEST_CASE(Literal_test) {
+    CIEC_BOOL test1 = 0_BOOL;
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(test1) == false);
 
-  CIEC_BOOL test2 = 1_BOOL;
-  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(test2) == true);
+    CIEC_BOOL test2 = 1_BOOL;
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(test2) == true);
 
-  CIEC_BOOL test3 = false_BOOL;
-  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(test3) == false);
+    CIEC_BOOL test3 = false_BOOL;
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(test3) == false);
 
-  CIEC_BOOL test4 = true_BOOL;
-  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(test4) == true);
-}
+    CIEC_BOOL test4 = true_BOOL;
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(test4) == true);
+  }
 
-BOOST_AUTO_TEST_CASE(Assignment_test) {
-  CIEC_BOOL bTest1;
-  CIEC_BOOL bTest2;
+  BOOST_AUTO_TEST_CASE(Assignment_test) {
+    CIEC_BOOL bTest1;
+    CIEC_BOOL bTest2;
 
-  // initial value must be 0 = false
-  BOOST_CHECK_EQUAL(bTest1, false);
+    // initial value must be 0 = false
+    BOOST_CHECK_EQUAL(bTest1, false);
 
-  bTest1 = true_BOOL;
-  bTest2 = bTest1;
-  BOOST_CHECK_EQUAL(bTest1, true);
-  BOOST_CHECK_EQUAL(bTest2, true);
+    bTest1 = true_BOOL;
+    bTest2 = bTest1;
+    BOOST_CHECK_EQUAL(bTest1, true);
+    BOOST_CHECK_EQUAL(bTest2, true);
 
-  bTest1 = false_BOOL;
-  bTest2 = bTest1;
-  BOOST_CHECK_EQUAL(bTest1, false);
-  BOOST_CHECK_EQUAL(bTest2, false);
+    bTest1 = false_BOOL;
+    bTest2 = bTest1;
+    BOOST_CHECK_EQUAL(bTest1, false);
+    BOOST_CHECK_EQUAL(bTest2, false);
 
-  // check that assignment operator does not intertwine objects
-  bTest2 = true_BOOL;
-  BOOST_CHECK_EQUAL(bTest1, false);
-  BOOST_CHECK_EQUAL(bTest2, true);
-}
+    // check that assignment operator does not intertwine objects
+    bTest2 = true_BOOL;
+    BOOST_CHECK_EQUAL(bTest1, false);
+    BOOST_CHECK_EQUAL(bTest2, true);
+  }
 
-BOOST_AUTO_TEST_CASE(Conversion_test) {
-  CIEC_BOOL bTest;
-  std::string cBuffer1;
-  std::string cBuffer2;
+  BOOST_AUTO_TEST_CASE(Conversion_test) {
+    CIEC_BOOL bTest;
+    std::string cBuffer1;
+    std::string cBuffer2;
 
-  // check cast operator
-  bTest = true_BOOL;
-  BOOST_CHECK_EQUAL(bTest.operator bool(), true);
+    // check cast operator
+    bTest = true_BOOL;
+    BOOST_CHECK_EQUAL(bTest.operator bool(), true);
 
-  bTest = false_BOOL;
-  BOOST_CHECK_EQUAL(bTest.operator bool(), false);
+    bTest = false_BOOL;
+    BOOST_CHECK_EQUAL(bTest.operator bool(), false);
 
-  // check toString and fromString
-  BOOST_CHECK_EQUAL(bTest.fromString("true"), 4);
-  BOOST_CHECK_EQUAL(bTest, true);
+    // check toString and fromString
+    BOOST_CHECK_EQUAL(bTest.fromString("true"), 4);
+    BOOST_CHECK_EQUAL(bTest, true);
 
-  BOOST_CHECK_EQUAL(bTest.fromString("1"), 1);
-  BOOST_CHECK_EQUAL(bTest, true);
+    BOOST_CHECK_EQUAL(bTest.fromString("1"), 1);
+    BOOST_CHECK_EQUAL(bTest, true);
 
-  BOOST_CHECK_EQUAL(bTest.fromString("TRUE"), 4);
-  BOOST_CHECK_EQUAL(bTest, true);
+    BOOST_CHECK_EQUAL(bTest.fromString("TRUE"), 4);
+    BOOST_CHECK_EQUAL(bTest, true);
 
-  BOOST_CHECK_EQUAL(bTest.fromString("BOOL#FALSE"), strlen("BOOL#FALSE"));
-  BOOST_CHECK_EQUAL(bTest, false);
+    BOOST_CHECK_EQUAL(bTest.fromString("BOOL#FALSE"), strlen("BOOL#FALSE"));
+    BOOST_CHECK_EQUAL(bTest, false);
 
-  BOOST_CHECK_EQUAL(bTest.fromString("BOOL#TRUE"), strlen("BOOL#TRUE"));
-  BOOST_CHECK_EQUAL(bTest, true);
+    BOOST_CHECK_EQUAL(bTest.fromString("BOOL#TRUE"), strlen("BOOL#TRUE"));
+    BOOST_CHECK_EQUAL(bTest, true);
 
-  bTest.toString(cBuffer1);
-  bTest.toString(cBuffer2);
+    bTest.toString(cBuffer1);
+    bTest.toString(cBuffer2);
 
-  BOOST_CHECK_EQUAL(cBuffer1, "TRUE");
-  BOOST_CHECK_EQUAL(cBuffer2, "TRUE");
+    BOOST_CHECK_EQUAL(cBuffer1, "TRUE");
+    BOOST_CHECK_EQUAL(cBuffer2, "TRUE");
 
-  cBuffer1.clear();
-  cBuffer2.clear();
+    cBuffer1.clear();
+    cBuffer2.clear();
 
-  BOOST_CHECK_EQUAL(bTest.fromString("FALSE"), 5);
-  BOOST_CHECK_EQUAL(bTest, false);
+    BOOST_CHECK_EQUAL(bTest.fromString("FALSE"), 5);
+    BOOST_CHECK_EQUAL(bTest, false);
 
-  BOOST_CHECK_EQUAL(bTest.fromString("0"), 1);
-  BOOST_CHECK_EQUAL(bTest, false);
+    BOOST_CHECK_EQUAL(bTest.fromString("0"), 1);
+    BOOST_CHECK_EQUAL(bTest, false);
 
-  BOOST_CHECK_EQUAL(bTest.fromString("false"), 5);
-  BOOST_CHECK_EQUAL(bTest, false);
+    BOOST_CHECK_EQUAL(bTest.fromString("false"), 5);
+    BOOST_CHECK_EQUAL(bTest, false);
 
-  bTest.toString(cBuffer1);
-  bTest.toString(cBuffer2);
+    bTest.toString(cBuffer1);
+    bTest.toString(cBuffer2);
 
-  BOOST_CHECK_EQUAL(cBuffer1, "FALSE");
-  BOOST_CHECK_EQUAL(cBuffer2, "FALSE");
+    BOOST_CHECK_EQUAL(cBuffer1, "FALSE");
+    BOOST_CHECK_EQUAL(cBuffer2, "FALSE");
 
-  // check invalid fromString string
+    // check invalid fromString string
 
-  BOOST_CHECK_EQUAL(bTest.fromString("NOT A VALID STRING"), -1);
-}
-BOOST_AUTO_TEST_SUITE_END()
+    BOOST_CHECK_EQUAL(bTest.fromString("NOT A VALID STRING"), -1);
+  }
+  BOOST_AUTO_TEST_SUITE_END()
+} // namespace forte::test

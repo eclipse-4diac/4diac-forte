@@ -19,170 +19,172 @@
 
 #include "forte/datatypes/forte_word.h"
 
-BOOST_AUTO_TEST_SUITE(CIEC_WORD_function_test)
+namespace forte::test {
+  BOOST_AUTO_TEST_SUITE(CIEC_WORD_function_test)
 
-BOOST_AUTO_TEST_CASE(Type_test) {
-  CIEC_WORD nTest;
-  // check type information
-  BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_WORD);
-  // check operator bool data type size
-  BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteWord()), sizeof(TForteWord));
-}
+  BOOST_AUTO_TEST_CASE(Type_test) {
+    CIEC_WORD nTest;
+    // check type information
+    BOOST_CHECK_EQUAL(nTest.getDataTypeID(), CIEC_ANY::e_WORD);
+    // check operator bool data type size
+    BOOST_CHECK_EQUAL(sizeof(nTest.operator TForteWord()), sizeof(TForteWord));
+  }
 
-BOOST_AUTO_TEST_CASE(Literal_test) {
-  CIEC_WORD test1 = 0x0_WORD;
-  BOOST_TEST(static_cast<CIEC_WORD::TValueType>(test1) == 0);
+  BOOST_AUTO_TEST_CASE(Literal_test) {
+    CIEC_WORD test1 = 0x0_WORD;
+    BOOST_TEST(static_cast<CIEC_WORD::TValueType>(test1) == 0);
 
-  CIEC_WORD test2 = 0xFFFF_WORD;
-  BOOST_TEST(static_cast<CIEC_WORD::TValueType>(test2) == std::numeric_limits<CIEC_WORD>::max());
-}
+    CIEC_WORD test2 = 0xFFFF_WORD;
+    BOOST_TEST(static_cast<CIEC_WORD::TValueType>(test2) == std::numeric_limits<CIEC_WORD>::max());
+  }
 
-BOOST_AUTO_TEST_CASE(Assignment_test) {
-  CIEC_WORD nTest1;
-  CIEC_WORD nTest2;
+  BOOST_AUTO_TEST_CASE(Assignment_test) {
+    CIEC_WORD nTest1;
+    CIEC_WORD nTest2;
 
-  // initial value must be 0
-  BOOST_CHECK_EQUAL(nTest1, 0);
+    // initial value must be 0
+    BOOST_CHECK_EQUAL(nTest1, 0);
 
-  nTest1 = CIEC_WORD(0);
-  nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, 0);
-  BOOST_CHECK_EQUAL(nTest2, 0);
+    nTest1 = CIEC_WORD(0);
+    nTest2 = nTest1;
+    BOOST_CHECK_EQUAL(nTest1, 0);
+    BOOST_CHECK_EQUAL(nTest2, 0);
 
-  nTest1 = CIEC_WORD(523);
-  nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, 523);
-  BOOST_CHECK_EQUAL(nTest2, 523);
+    nTest1 = CIEC_WORD(523);
+    nTest2 = nTest1;
+    BOOST_CHECK_EQUAL(nTest1, 523);
+    BOOST_CHECK_EQUAL(nTest2, 523);
 
-  nTest1 = CIEC_WORD(65535);
-  nTest2 = nTest1;
-  BOOST_CHECK_EQUAL(nTest1, 65535);
-  BOOST_CHECK_EQUAL(nTest2, 65535);
+    nTest1 = CIEC_WORD(65535);
+    nTest2 = nTest1;
+    BOOST_CHECK_EQUAL(nTest1, 65535);
+    BOOST_CHECK_EQUAL(nTest2, 65535);
 
-  // check that assignment operator does not intertwine objects
-  nTest2 = CIEC_WORD(40396);
-  BOOST_CHECK_EQUAL(nTest1, 65535);
-  BOOST_CHECK_EQUAL(nTest2, 40396);
-}
+    // check that assignment operator does not intertwine objects
+    nTest2 = CIEC_WORD(40396);
+    BOOST_CHECK_EQUAL(nTest1, 65535);
+    BOOST_CHECK_EQUAL(nTest2, 40396);
+  }
 
-BOOST_AUTO_TEST_CASE(Conversion_test) {
-  CIEC_WORD testVal;
+  BOOST_AUTO_TEST_CASE(Conversion_test) {
+    CIEC_WORD testVal;
 
-  std::string buffer;
+    std::string buffer;
 
-  // check cast operator
-  testVal = CIEC_WORD(0);
+    // check cast operator
+    testVal = CIEC_WORD(0);
 
-  BOOST_CHECK_EQUAL(testVal.operator TForteWord(), 0);
+    BOOST_CHECK_EQUAL(testVal.operator TForteWord(), 0);
 
-  testVal = CIEC_WORD(8756);
-  BOOST_CHECK_EQUAL(testVal.operator TForteWord(), 8756);
+    testVal = CIEC_WORD(8756);
+    BOOST_CHECK_EQUAL(testVal.operator TForteWord(), 8756);
 
-  testVal = CIEC_WORD(65535);
-  BOOST_CHECK_EQUAL(testVal.operator TForteWord(), 65535);
+    testVal = CIEC_WORD(65535);
+    BOOST_CHECK_EQUAL(testVal.operator TForteWord(), 65535);
 
-  // check toString and fromString
-  BOOST_CHECK_EQUAL(testVal.fromString("0"), 1);
-  BOOST_CHECK_EQUAL(testVal, 0);
-  testVal.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "0");
+    // check toString and fromString
+    BOOST_CHECK_EQUAL(testVal.fromString("0"), 1);
+    BOOST_CHECK_EQUAL(testVal, 0);
+    testVal.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "0");
 
-  buffer.clear();
+    buffer.clear();
 
-  BOOST_CHECK_EQUAL(testVal.fromString("2#0"), 3);
-  BOOST_CHECK_EQUAL(testVal, 0);
-  testVal.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "0");
+    BOOST_CHECK_EQUAL(testVal.fromString("2#0"), 3);
+    BOOST_CHECK_EQUAL(testVal, 0);
+    testVal.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "0");
 
-  buffer.clear();
+    buffer.clear();
 
-  BOOST_CHECK_EQUAL(testVal.fromString("8#0"), 3);
-  BOOST_CHECK_EQUAL(testVal, 0);
-  testVal.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "0");
+    BOOST_CHECK_EQUAL(testVal.fromString("8#0"), 3);
+    BOOST_CHECK_EQUAL(testVal, 0);
+    testVal.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "0");
 
-  buffer.clear();
+    buffer.clear();
 
-  BOOST_CHECK_EQUAL(testVal.fromString("16#0"), 4);
-  BOOST_CHECK_EQUAL(testVal, 0);
-  testVal.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "0");
+    BOOST_CHECK_EQUAL(testVal.fromString("16#0"), 4);
+    BOOST_CHECK_EQUAL(testVal, 0);
+    testVal.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "0");
 
-  buffer.clear();
+    buffer.clear();
 
-  BOOST_CHECK_EQUAL(testVal.fromString("79"), 2);
-  BOOST_CHECK_EQUAL(testVal, 79);
-  testVal.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "79");
+    BOOST_CHECK_EQUAL(testVal.fromString("79"), 2);
+    BOOST_CHECK_EQUAL(testVal, 79);
+    testVal.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "79");
 
-  buffer.clear();
-  testVal = CIEC_WORD(0);
+    buffer.clear();
+    testVal = CIEC_WORD(0);
 
-  BOOST_CHECK_EQUAL(testVal.fromString("2#1001111"), 9);
-  BOOST_CHECK_EQUAL(testVal, 79);
-  testVal.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "79");
+    BOOST_CHECK_EQUAL(testVal.fromString("2#1001111"), 9);
+    BOOST_CHECK_EQUAL(testVal, 79);
+    testVal.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "79");
 
-  buffer.clear();
-  testVal = CIEC_WORD(0);
+    buffer.clear();
+    testVal = CIEC_WORD(0);
 
-  BOOST_CHECK_EQUAL(testVal.fromString("8#117"), 5);
-  BOOST_CHECK_EQUAL(testVal, 79);
-  testVal.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "79");
+    BOOST_CHECK_EQUAL(testVal.fromString("8#117"), 5);
+    BOOST_CHECK_EQUAL(testVal, 79);
+    testVal.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "79");
 
-  buffer.clear();
-  testVal = CIEC_WORD(0);
+    buffer.clear();
+    testVal = CIEC_WORD(0);
 
-  BOOST_CHECK_EQUAL(testVal.fromString("16#4F"), 5);
-  BOOST_CHECK_EQUAL(testVal, 79);
-  testVal.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "79");
+    BOOST_CHECK_EQUAL(testVal.fromString("16#4F"), 5);
+    BOOST_CHECK_EQUAL(testVal, 79);
+    testVal.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "79");
 
-  buffer.clear();
-  testVal = CIEC_WORD(0);
+    buffer.clear();
+    testVal = CIEC_WORD(0);
 
-  BOOST_CHECK_EQUAL(testVal.fromString("65535"), 5);
-  BOOST_CHECK_EQUAL(testVal, 65535);
-  testVal.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "65535");
+    BOOST_CHECK_EQUAL(testVal.fromString("65535"), 5);
+    BOOST_CHECK_EQUAL(testVal, 65535);
+    testVal.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "65535");
 
-  buffer.clear();
-  testVal = CIEC_WORD(0);
+    buffer.clear();
+    testVal = CIEC_WORD(0);
 
-  BOOST_CHECK_EQUAL(testVal.fromString("2#1111111111111111"), 18);
-  BOOST_CHECK_EQUAL(testVal, 65535);
-  testVal.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "65535");
+    BOOST_CHECK_EQUAL(testVal.fromString("2#1111111111111111"), 18);
+    BOOST_CHECK_EQUAL(testVal, 65535);
+    testVal.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "65535");
 
-  buffer.clear();
-  testVal = CIEC_WORD(0);
+    buffer.clear();
+    testVal = CIEC_WORD(0);
 
-  BOOST_CHECK_EQUAL(testVal.fromString("8#177777"), 8);
-  BOOST_CHECK_EQUAL(testVal, 65535);
-  testVal.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "65535");
+    BOOST_CHECK_EQUAL(testVal.fromString("8#177777"), 8);
+    BOOST_CHECK_EQUAL(testVal, 65535);
+    testVal.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "65535");
 
-  buffer.clear();
-  testVal = CIEC_WORD(0);
+    buffer.clear();
+    testVal = CIEC_WORD(0);
 
-  BOOST_CHECK_EQUAL(testVal.fromString("16#FFFF"), 7);
-  BOOST_CHECK_EQUAL(testVal, 65535);
-  testVal.toString(buffer);
-  BOOST_CHECK_EQUAL(buffer, "65535");
+    BOOST_CHECK_EQUAL(testVal.fromString("16#FFFF"), 7);
+    BOOST_CHECK_EQUAL(testVal, 65535);
+    testVal.toString(buffer);
+    BOOST_CHECK_EQUAL(buffer, "65535");
 
-  buffer.clear();
-  testVal = CIEC_WORD(0);
+    buffer.clear();
+    testVal = CIEC_WORD(0);
 
-  // testing values outside of allowed range
-  BOOST_CHECK_EQUAL(testVal.fromString("70000"), -1);
-  BOOST_CHECK_EQUAL(testVal.fromString("2#10001000101110000"), -1);
-  BOOST_CHECK_EQUAL(testVal.fromString("8#210560"), -1);
-  BOOST_CHECK_EQUAL(testVal.fromString("10#70000"), -1);
-  BOOST_CHECK_EQUAL(testVal.fromString("16#11170"), -1);
-  BOOST_CHECK_EQUAL(testVal.fromString("-130"), -1);
+    // testing values outside of allowed range
+    BOOST_CHECK_EQUAL(testVal.fromString("70000"), -1);
+    BOOST_CHECK_EQUAL(testVal.fromString("2#10001000101110000"), -1);
+    BOOST_CHECK_EQUAL(testVal.fromString("8#210560"), -1);
+    BOOST_CHECK_EQUAL(testVal.fromString("10#70000"), -1);
+    BOOST_CHECK_EQUAL(testVal.fromString("16#11170"), -1);
+    BOOST_CHECK_EQUAL(testVal.fromString("-130"), -1);
 
-  // check invalid fromString string
-  BOOST_CHECK_EQUAL(testVal.fromString("NOT A VALID STRING"), -1);
-}
-BOOST_AUTO_TEST_SUITE_END()
+    // check invalid fromString string
+    BOOST_CHECK_EQUAL(testVal.fromString("NOT A VALID STRING"), -1);
+  }
+  BOOST_AUTO_TEST_SUITE_END()
+} // namespace forte::test

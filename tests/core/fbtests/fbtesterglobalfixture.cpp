@@ -19,24 +19,26 @@ using namespace forte::literals;
 
 #include <boost/test/unit_test.hpp>
 
-std::unique_ptr<CTesterDevice> CFBTestDataGlobalFixture::smTestDev;
+namespace forte::test {
+  std::unique_ptr<CTesterDevice> CFBTestDataGlobalFixture::smTestDev;
 
-CTesterDevice::CTesterDevice(const forte::StringId paInstanceNameId) :
-    CDevice(scTestDevSpec, paInstanceNameId),
-    mResource("EMB_RES"_STRID, *this) {
-}
+  CTesterDevice::CTesterDevice(const forte::StringId paInstanceNameId) :
+      CDevice(scTestDevSpec, paInstanceNameId),
+      mResource("EMB_RES"_STRID, *this) {
+  }
 
-CFBTestDataGlobalFixture::CFBTestDataGlobalFixture() {
-  // setup is done in the setup so that boost_test can throw exceptions
-  smTestDev = std::make_unique<CTesterDevice>();
-  // mimick the behavior provided by typelib
-  smTestDev->initialize();
-  smTestDev->changeExecutionState(EMGMCommandType::Reset);
-  smTestDev->startDevice();
-}
+  CFBTestDataGlobalFixture::CFBTestDataGlobalFixture() {
+    // setup is done in the setup so that boost_test can throw exceptions
+    smTestDev = std::make_unique<CTesterDevice>();
+    // mimick the behavior provided by typelib
+    smTestDev->initialize();
+    smTestDev->changeExecutionState(EMGMCommandType::Reset);
+    smTestDev->startDevice();
+  }
 
-CFBTestDataGlobalFixture::~CFBTestDataGlobalFixture() {
-  smTestDev->changeExecutionState(EMGMCommandType::Stop);
-  smTestDev.reset();
-  // we don't need to delete the res here as the res is deletes in the destructor of the device
-}
+  CFBTestDataGlobalFixture::~CFBTestDataGlobalFixture() {
+    smTestDev->changeExecutionState(EMGMCommandType::Stop);
+    smTestDev.reset();
+    // we don't need to delete the res here as the res is deletes in the destructor of the device
+  }
+} // namespace forte::test

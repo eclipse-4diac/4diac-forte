@@ -16,57 +16,59 @@
 
 using namespace forte::literals;
 
-struct E_SR_TestFixture : public CFBTestFixtureBase {
+namespace forte::iec61499::events::test {
+  struct E_SR_TestFixture : public forte::test::CFBTestFixtureBase {
 
-    E_SR_TestFixture() : CFBTestFixtureBase("iec61499::events::E_SR"_STRID) {
-      setOutputData({&mOutQ});
-      setup();
-    }
+      E_SR_TestFixture() : CFBTestFixtureBase("iec61499::events::E_SR"_STRID) {
+        setOutputData({&mOutQ});
+        setup();
+      }
 
-    CIEC_BOOL mOutQ; // DATA OUTPUT
+      CIEC_BOOL mOutQ; // DATA OUTPUT
 
-    /*\brief Check if the E_SR changed to the given target state
-     */
-    bool checkStateChange(bool paTargetState) {
-      return checkForSingleOutputEventOccurence(0) && (paTargetState == mOutQ);
-    }
-};
+      /*\brief Check if the E_SR changed to the given target state
+       */
+      bool checkStateChange(bool paTargetState) {
+        return checkForSingleOutputEventOccurence(0) && (paTargetState == mOutQ);
+      }
+  };
 
-BOOST_FIXTURE_TEST_SUITE(SRTests, E_SR_TestFixture)
+  BOOST_FIXTURE_TEST_SUITE(SRTests, E_SR_TestFixture)
 
-BOOST_AUTO_TEST_CASE(EventS) {
-  // Send event
-  triggerEvent(0);
-  BOOST_CHECK(checkStateChange(true));
-
-  for (unsigned int i = 0; i < 100; ++i) {
-    triggerEvent(0);
-    BOOST_CHECK(eventChainEmpty());
-    BOOST_CHECK(mOutQ);
-  }
-}
-
-BOOST_AUTO_TEST_CASE(EventR) {
-  triggerEvent(0); // initially SR is reset, requires a set before reset
-  BOOST_CHECK(checkStateChange(true));
-  triggerEvent(1);
-  // Test correct order of outgoing events
-  BOOST_CHECK(checkStateChange(false));
-
-  for (unsigned int i = 0; i < 100; ++i) {
-    triggerEvent(1);
-    BOOST_CHECK(eventChainEmpty());
-    BOOST_CHECK_EQUAL(false, mOutQ);
-  }
-}
-
-BOOST_AUTO_TEST_CASE(Toggle) {
-  for (unsigned int i = 0; i < 100; ++i) {
+  BOOST_AUTO_TEST_CASE(EventS) {
+    // Send event
     triggerEvent(0);
     BOOST_CHECK(checkStateChange(true));
-    triggerEvent(1);
-    BOOST_CHECK(checkStateChange(false));
-  }
-}
 
-BOOST_AUTO_TEST_SUITE_END()
+    for (unsigned int i = 0; i < 100; ++i) {
+      triggerEvent(0);
+      BOOST_CHECK(eventChainEmpty());
+      BOOST_CHECK(mOutQ);
+    }
+  }
+
+  BOOST_AUTO_TEST_CASE(EventR) {
+    triggerEvent(0); // initially SR is reset, requires a set before reset
+    BOOST_CHECK(checkStateChange(true));
+    triggerEvent(1);
+    // Test correct order of outgoing events
+    BOOST_CHECK(checkStateChange(false));
+
+    for (unsigned int i = 0; i < 100; ++i) {
+      triggerEvent(1);
+      BOOST_CHECK(eventChainEmpty());
+      BOOST_CHECK_EQUAL(false, mOutQ);
+    }
+  }
+
+  BOOST_AUTO_TEST_CASE(Toggle) {
+    for (unsigned int i = 0; i < 100; ++i) {
+      triggerEvent(0);
+      BOOST_CHECK(checkStateChange(true));
+      triggerEvent(1);
+      BOOST_CHECK(checkStateChange(false));
+    }
+  }
+
+  BOOST_AUTO_TEST_SUITE_END()
+} // namespace forte::iec61499::events::test

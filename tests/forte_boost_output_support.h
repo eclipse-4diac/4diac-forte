@@ -15,9 +15,6 @@
 
 #pragma once
 
-#ifndef _FORTE_BOOST_OUTPUT_SUPPORT_H_
-#define _FORTE_BOOST_OUTPUT_SUPPORT_H_
-
 #include <iostream>
 #include "forte/datatypes/forte_lreal.h"
 #include "forte/datatypes/forte_char.h"
@@ -148,5 +145,3 @@ inline std::ostream &boost_test_print_type(std::ostream &out, const CFunctionBlo
   out << static_cast<std::underlying_type_t<CFunctionBlock::E_FBStates>>(variable);
   return out;
 }
-
-#endif

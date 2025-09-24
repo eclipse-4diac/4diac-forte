@@ -26,71 +26,73 @@ using namespace forte::literals;
 /***********************************************************************************/
 /***********************************************************************************/
 
-class E_DELAY_tester : public CFBTester {
-    DECLARE_FB_TESTER(E_DELAY_tester);
+namespace forte::iec61499::events::test {
+  class E_DELAY_tester : public CFBTester {
+      DECLARE_FB_TESTER(E_DELAY_tester);
 
-  public:
-    E_DELAY_tester(CResource *mTestResource) : CFBTester(mTestResource) {
-      setInputData({&mDT});
-    }
-
-    virtual ~E_DELAY_tester() {
-    }
-
-  private:
-    virtual void executeAllTests() {
-      evaluateTestResult(testCase_NormalDelay(), "Normal Delay");
-      evaluateTestResult(testCase_AbortedDelay(), "Aborted Delay");
-      evaluateTestResult(testCase_MultipleStarts(), "Multiple Starts");
-    }
-
-    bool testCase_NormalDelay() {
-      mDT.setFromMilliSeconds(500);
-      triggerEvent(0);
-      usleep(500000);
-      return checkForSingleOutputEventOccurence(0);
-    }
-    bool testCase_AbortedDelay() {
-      bool retVal = true;
-      mDT.setFromMilliSeconds(1000);
-      triggerEvent(0);
-      if (!eventChainEmpty()) {
-        retVal = false_BOOL;
+    public:
+      E_DELAY_tester(CResource *mTestResource) : CFBTester(mTestResource) {
+        setInputData({&mDT});
       }
-      triggerEvent(1);
-      if (!eventChainEmpty()) {
-        retVal = false_BOOL;
-      }
-      usleep(1000000);
-      if (!eventChainEmpty()) {
-        retVal = false_BOOL;
-      }
-      return retVal;
-    }
-    bool testCase_MultipleStarts() {
-      bool retVal = true;
-      mDT.setFromMilliSeconds(200);
-      triggerEvent(0);
-      usleep(50000);
-      if (!eventChainEmpty()) {
-        retVal = false_BOOL;
-      }
-      triggerEvent(0);
-      usleep(150000);
-      if (!checkForSingleOutputEventOccurence(0)) {
-        retVal = false_BOOL;
-      }
-      usleep(50000);
-      if (!eventChainEmpty()) {
-        retVal = false_BOOL;
-      }
-      return retVal;
-    }
 
-    CIEC_TIME mDT; // DT data input
-};
+      virtual ~E_DELAY_tester() {
+      }
 
-/***********************************************************************************/
-/***********************************************************************************/
+    private:
+      virtual void executeAllTests() {
+        evaluateTestResult(testCase_NormalDelay(), "Normal Delay");
+        evaluateTestResult(testCase_AbortedDelay(), "Aborted Delay");
+        evaluateTestResult(testCase_MultipleStarts(), "Multiple Starts");
+      }
 
-DEFINE_FB_TESTER(E_DELAY_tester, "E_DELAY"_STRID)
+      bool testCase_NormalDelay() {
+        mDT.setFromMilliSeconds(500);
+        triggerEvent(0);
+        usleep(500000);
+        return checkForSingleOutputEventOccurence(0);
+      }
+      bool testCase_AbortedDelay() {
+        bool retVal = true;
+        mDT.setFromMilliSeconds(1000);
+        triggerEvent(0);
+        if (!eventChainEmpty()) {
+          retVal = false_BOOL;
+        }
+        triggerEvent(1);
+        if (!eventChainEmpty()) {
+          retVal = false_BOOL;
+        }
+        usleep(1000000);
+        if (!eventChainEmpty()) {
+          retVal = false_BOOL;
+        }
+        return retVal;
+      }
+      bool testCase_MultipleStarts() {
+        bool retVal = true;
+        mDT.setFromMilliSeconds(200);
+        triggerEvent(0);
+        usleep(50000);
+        if (!eventChainEmpty()) {
+          retVal = false_BOOL;
+        }
+        triggerEvent(0);
+        usleep(150000);
+        if (!checkForSingleOutputEventOccurence(0)) {
+          retVal = false_BOOL;
+        }
+        usleep(50000);
+        if (!eventChainEmpty()) {
+          retVal = false_BOOL;
+        }
+        return retVal;
+      }
+
+      CIEC_TIME mDT; // DT data input
+  };
+
+  /***********************************************************************************/
+  /***********************************************************************************/
+
+  DEFINE_FB_TESTER(E_DELAY_tester, "E_DELAY"_STRID)
+} // namespace forte::iec61499::events::test

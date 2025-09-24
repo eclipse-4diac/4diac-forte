@@ -17,65 +17,67 @@
 
 using namespace forte::literals;
 
-class E_DEMUX_tester : public CFBTester {
-    DECLARE_FB_TESTER(E_DEMUX_tester);
+namespace forte::iec61499::events::test {
+  class E_DEMUX_tester : public CFBTester {
+      DECLARE_FB_TESTER(E_DEMUX_tester);
 
-  public:
-  private:
-    E_DEMUX_tester(CResource *mTestResource) : CFBTester(mTestResource) {
-      setInputData({&mIn_K});
-    }
-    virtual ~E_DEMUX_tester() {
-    }
+    public:
+    private:
+      E_DEMUX_tester(CResource *mTestResource) : CFBTester(mTestResource) {
+        setInputData({&mIn_K});
+      }
+      virtual ~E_DEMUX_tester() {
+      }
 
-    virtual void executeAllTests() {
-      evaluateTestResult(testCase_K0(), "K0");
-      evaluateTestResult(testCase_K1(), "K1");
-      evaluateTestResult(testCase_K2(), "K2");
-      evaluateTestResult(testCase_K3(), "K3");
-      evaluateTestResult(testCase_K_GT_3(), "K_GT_3");
-    }
+      virtual void executeAllTests() {
+        evaluateTestResult(testCase_K0(), "K0");
+        evaluateTestResult(testCase_K1(), "K1");
+        evaluateTestResult(testCase_K2(), "K2");
+        evaluateTestResult(testCase_K3(), "K3");
+        evaluateTestResult(testCase_K_GT_3(), "K_GT_3");
+      }
 
-    /***********************************************************************************/
-    bool testCase_K0() {
-      /* prepare inputparameters */
-      mIn_K = 0;
-      /* trigger the inputevent */
-      triggerEvent(0);
-      return checkForSingleOutputEventOccurence(0);
-    }
-    bool testCase_K1() {
-      /* prepare inputparameters */
-      mIn_K = 1;
-      /* trigger the inputevent */
-      triggerEvent(0);
-      return checkForSingleOutputEventOccurence(1);
-    }
-    bool testCase_K2() {
-      /* prepare inputparameters */
-      mIn_K = 2;
-      /* trigger the inputevent */
-      triggerEvent(0);
-      return checkForSingleOutputEventOccurence(2);
-    }
-    bool testCase_K3() {
-      /* prepare inputparameters */
-      mIn_K = 3;
-      /* trigger the inputevent */
-      triggerEvent(0);
-      return checkForSingleOutputEventOccurence(3);
-    }
-    bool testCase_K_GT_3() {
-      /* prepare inputparameters */
-      mIn_K = 4;
-      /* trigger the inputevent */
-      triggerEvent(0);
-      return eventChainEmpty();
-    }
+      /***********************************************************************************/
+      bool testCase_K0() {
+        /* prepare inputparameters */
+        mIn_K = 0;
+        /* trigger the inputevent */
+        triggerEvent(0);
+        return checkForSingleOutputEventOccurence(0);
+      }
+      bool testCase_K1() {
+        /* prepare inputparameters */
+        mIn_K = 1;
+        /* trigger the inputevent */
+        triggerEvent(0);
+        return checkForSingleOutputEventOccurence(1);
+      }
+      bool testCase_K2() {
+        /* prepare inputparameters */
+        mIn_K = 2;
+        /* trigger the inputevent */
+        triggerEvent(0);
+        return checkForSingleOutputEventOccurence(2);
+      }
+      bool testCase_K3() {
+        /* prepare inputparameters */
+        mIn_K = 3;
+        /* trigger the inputevent */
+        triggerEvent(0);
+        return checkForSingleOutputEventOccurence(3);
+      }
+      bool testCase_K_GT_3() {
+        /* prepare inputparameters */
+        mIn_K = 4;
+        /* trigger the inputevent */
+        triggerEvent(0);
+        return eventChainEmpty();
+      }
 
-    CIEC_UINT mIn_K; // DATA INPUT
-};
+      CIEC_UINT mIn_K; // DATA INPUT
+  };
 
-/***********************************************************************************/
+  /***********************************************************************************/
 
-DEFINE_FB_TESTER(E_DEMUX_tester, "E_DEMUX"_STRID);
+  DEFINE_FB_TESTER(E_DEMUX_tester, "E_DEMUX"_STRID);
+} // namespace forte::iec61499::events::test

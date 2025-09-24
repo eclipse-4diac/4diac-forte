@@ -26,187 +26,189 @@
 
 using namespace boost::unit_test;
 
-BOOST_AUTO_TEST_SUITE(ANY_BIT_PARTIAL)
-BOOST_AUTO_TEST_SUITE(CIEC_ANY_BIT_PARTIAL_BYTE)
+namespace forte::test {
+  BOOST_AUTO_TEST_SUITE(ANY_BIT_PARTIAL)
+  BOOST_AUTO_TEST_SUITE(CIEC_ANY_BIT_PARTIAL_BYTE)
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_INITVALUES) {
-  CIEC_BYTE nTestByte;
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_INITVALUES) {
+    CIEC_BYTE nTestByte;
 
-  test4X_0(nTestByte, 4);
-  test4X_0(nTestByte, 0);
-}
+    test4X_0(nTestByte, 4);
+    test4X_0(nTestByte, 0);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_INITVALUES_CONST) {
-  const CIEC_BYTE nTestByte;
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_INITVALUES_CONST) {
+    const CIEC_BYTE nTestByte;
 
-  test4X_0(nTestByte, 4);
-  test4X_0(nTestByte, 0);
-}
+    test4X_0(nTestByte, 4);
+    test4X_0(nTestByte, 0);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_CONST_INIT) {
-  const CIEC_BOOL nTestBool(true);
-  CIEC_BYTE mTestByte;
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_CONST_INIT) {
+    const CIEC_BOOL nTestBool(true);
+    CIEC_BYTE mTestByte;
 
-  mTestByte.partial<CIEC_BOOL>(4) = nTestBool;
+    mTestByte.partial<CIEC_BOOL>(4) = nTestBool;
 
-  BOOST_CHECK_EQUAL(mTestByte, 16);
-}
+    BOOST_CHECK_EQUAL(mTestByte, 16);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE1_CHECK_BYTE) {
-  CIEC_BYTE nTestByte(0xBE);
-  BOOST_CHECK_EQUAL(nTestByte, 0xBEU);
-}
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE1_CHECK_BYTE) {
+    CIEC_BYTE nTestByte(0xBE);
+    BOOST_CHECK_EQUAL(nTestByte, 0xBEU);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE2_CHECK_BYTE) {
-  CIEC_BYTE nTestByte(0xBA);
-  BOOST_CHECK_EQUAL(nTestByte, 0xBAU);
-}
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE2_CHECK_BYTE) {
+    CIEC_BYTE nTestByte(0xBA);
+    BOOST_CHECK_EQUAL(nTestByte, 0xBAU);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE1_CHECK_BIT) {
-  CIEC_BYTE nTestByte(0xBE);
-  test4X_B(nTestByte, 4);
-  test4X_E(nTestByte, 0);
-}
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE1_CHECK_BIT) {
+    CIEC_BYTE nTestByte(0xBE);
+    test4X_B(nTestByte, 4);
+    test4X_E(nTestByte, 0);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE1_CHECK_BIT_CONST) {
-  const CIEC_BYTE nTestByte(0xBE);
-  test4X_B(nTestByte, 4);
-  test4X_E(nTestByte, 0);
-}
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE1_CHECK_BIT_CONST) {
+    const CIEC_BYTE nTestByte(0xBE);
+    test4X_B(nTestByte, 4);
+    test4X_E(nTestByte, 0);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE2_CHECK_BIT) {
-  CIEC_BYTE nTestByte(0xBA);
-  test4X_B(nTestByte, 4);
-  test4X_A(nTestByte, 0);
-}
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE2_CHECK_BIT) {
+    CIEC_BYTE nTestByte(0xBA);
+    test4X_B(nTestByte, 4);
+    test4X_A(nTestByte, 0);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE2_CHECK_BIT_CONST) {
-  const CIEC_BYTE nTestByte(0xBA);
-  test4X_B(nTestByte, 4);
-  test4X_A(nTestByte, 0);
-}
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE2_CHECK_BIT_CONST) {
+    const CIEC_BYTE nTestByte(0xBA);
+    test4X_B(nTestByte, 4);
+    test4X_A(nTestByte, 0);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE_CHANGE_CHECK_BYTE) {
-  CIEC_BYTE nTestByte(0xBE);
-  nTestByte = CIEC_BYTE(0xBA);
-  BOOST_CHECK_EQUAL(nTestByte, 0xBAU);
-}
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE_CHANGE_CHECK_BYTE) {
+    CIEC_BYTE nTestByte(0xBE);
+    nTestByte = CIEC_BYTE(0xBA);
+    BOOST_CHECK_EQUAL(nTestByte, 0xBAU);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE_CHANGE_CHECK_BIT) {
-  CIEC_BYTE nTestByte(0xBE);
-  nTestByte = CIEC_BYTE(0xBA);
-  test4X_B(nTestByte, 4);
-  test4X_A(nTestByte, 0);
-}
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_VALUE_CHANGE_CHECK_BIT) {
+    CIEC_BYTE nTestByte(0xBE);
+    nTestByte = CIEC_BYTE(0xBA);
+    test4X_B(nTestByte, 4);
+    test4X_A(nTestByte, 0);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHANGE_BYTE_CHECK_BYTE_A) {
-  CIEC_BYTE nTestByte;
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHANGE_BYTE_CHECK_BYTE_A) {
+    CIEC_BYTE nTestByte;
 
-  set4X_0(nTestByte, 4);
-  set4X_D(nTestByte, 0);
+    set4X_0(nTestByte, 4);
+    set4X_D(nTestByte, 0);
 
-  nTestByte = CIEC_BYTE(0xFE);
+    nTestByte = CIEC_BYTE(0xFE);
 
-  BOOST_CHECK_EQUAL(nTestByte, 0xFEU);
-}
+    BOOST_CHECK_EQUAL(nTestByte, 0xFEU);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHANGE_BYTE_CHECK_BYTE_B) {
-  CIEC_BYTE nTestByte;
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHANGE_BYTE_CHECK_BYTE_B) {
+    CIEC_BYTE nTestByte;
 
-  set4X_0(nTestByte, 4);
-  set4X_D(nTestByte, 0);
+    set4X_0(nTestByte, 4);
+    set4X_D(nTestByte, 0);
 
-  nTestByte = CIEC_BYTE(0xFE);
+    nTestByte = CIEC_BYTE(0xFE);
 
-  nTestByte = CIEC_BYTE(0x22);
+    nTestByte = CIEC_BYTE(0x22);
 
-  BOOST_CHECK_EQUAL(nTestByte, 0x22U);
-}
+    BOOST_CHECK_EQUAL(nTestByte, 0x22U);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHECK_BIT) {
-  CIEC_BYTE nTestByte;
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHECK_BIT) {
+    CIEC_BYTE nTestByte;
 
-  set4X_0(nTestByte, 4);
-  set4X_D(nTestByte, 0);
+    set4X_0(nTestByte, 4);
+    set4X_D(nTestByte, 0);
 
-  test4X_0(nTestByte, 4);
-  test4X_D(nTestByte, 0);
-}
+    test4X_0(nTestByte, 4);
+    test4X_D(nTestByte, 0);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHANGE_BYTE_CHECK_BIT_A) {
-  CIEC_BYTE nTestByte;
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHANGE_BYTE_CHECK_BIT_A) {
+    CIEC_BYTE nTestByte;
 
-  set4X_0(nTestByte, 4);
-  set4X_D(nTestByte, 0);
+    set4X_0(nTestByte, 4);
+    set4X_D(nTestByte, 0);
 
-  nTestByte = CIEC_BYTE(0xFE);
+    nTestByte = CIEC_BYTE(0xFE);
 
-  test4X_F(nTestByte, 4);
-  test4X_E(nTestByte, 0);
-}
+    test4X_F(nTestByte, 4);
+    test4X_E(nTestByte, 0);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHANGE_BYTE_CHECK_BIT_B) {
-  CIEC_BYTE nTestByte;
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_BIT_CHANGE_BYTE_CHECK_BIT_B) {
+    CIEC_BYTE nTestByte;
 
-  set4X_0(nTestByte, 4);
-  set4X_D(nTestByte, 0);
+    set4X_0(nTestByte, 4);
+    set4X_D(nTestByte, 0);
 
-  nTestByte = CIEC_BYTE(0xFE);
+    nTestByte = CIEC_BYTE(0xFE);
 
-  nTestByte = CIEC_BYTE(0x22);
+    nTestByte = CIEC_BYTE(0x22);
 
-  test4X_2(nTestByte, 4);
-  test4X_2(nTestByte, 0);
-}
+    test4X_2(nTestByte, 4);
+    test4X_2(nTestByte, 0);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_FROM_CONST) {
-  const CIEC_BOOL nTestBool(true);
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_BYTE_ASSIGN_FROM_CONST) {
+    const CIEC_BOOL nTestBool(true);
 
-  CIEC_BYTE mTestByte;
+    CIEC_BYTE mTestByte;
 
-  mTestByte.partial<CIEC_BOOL>(3) = nTestBool;
+    mTestByte.partial<CIEC_BOOL>(3) = nTestBool;
 
-  BOOST_CHECK_EQUAL(mTestByte, 8);
-}
+    BOOST_CHECK_EQUAL(mTestByte, 8);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_READ_WITH_IEC_TYPE_INDEX) {
-  CIEC_BYTE nByte(0xBE);
-  CIEC_BOOL bBool;
-  bBool = nByte.partial<CIEC_BOOL>(CIEC_SINT(0));
-  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(bBool) == false);
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_READ_WITH_IEC_TYPE_INDEX) {
+    CIEC_BYTE nByte(0xBE);
+    CIEC_BOOL bBool;
+    bBool = nByte.partial<CIEC_BOOL>(CIEC_SINT(0));
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(bBool) == false);
 
-  bBool = nByte.partial<CIEC_BOOL>(CIEC_SINT(1));
-  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(bBool) == true);
-}
+    bBool = nByte.partial<CIEC_BOOL>(CIEC_SINT(1));
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(bBool) == true);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WRITE_WITH_IEC_TYPE_INDEX) {
-  CIEC_BYTE nByte;
-  nByte.partial<CIEC_BOOL>(CIEC_SINT(0)) = true_BOOL;
-  BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(nByte) == 1U);
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESS_WRITE_WITH_IEC_TYPE_INDEX) {
+    CIEC_BYTE nByte;
+    nByte.partial<CIEC_BOOL>(CIEC_SINT(0)) = true_BOOL;
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(nByte) == 1U);
 
-  nByte.partial<CIEC_BOOL>(CIEC_SINT(1)) = true_BOOL;
-  BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(nByte) == 3U);
-}
+    nByte.partial<CIEC_BOOL>(CIEC_SINT(1)) = true_BOOL;
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(nByte) == 3U);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_ACCESSOUT_OF_INDEX_ACCESS) {
-  CIEC_BYTE nByte(0xFFU);
-  nByte.partial<CIEC_BOOL>(CIEC_SINT(8)) = false_BOOL;
-  BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(nByte) == 0xFFU);
+  BOOST_AUTO_TEST_CASE(PARTIAL_ACCESSOUT_OF_INDEX_ACCESS) {
+    CIEC_BYTE nByte(0xFFU);
+    nByte.partial<CIEC_BOOL>(CIEC_SINT(8)) = false_BOOL;
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(nByte) == 0xFFU);
 
-  BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(nByte.partial<CIEC_BOOL>(CIEC_SINT(8))) == false);
-}
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(nByte.partial<CIEC_BOOL>(CIEC_SINT(8))) == false);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_COPY_PARTIAL_TO_SAME_PARTIAL) {
-  CIEC_BYTE nByte(0x02U);
-  nByte.partial<CIEC_BOOL>(CIEC_SINT(0)) = CIEC_BOOL(nByte.cpartial<CIEC_BOOL>(CIEC_SINT(0)) || true);
-  BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(nByte) == 0x03U);
-}
+  BOOST_AUTO_TEST_CASE(PARTIAL_COPY_PARTIAL_TO_SAME_PARTIAL) {
+    CIEC_BYTE nByte(0x02U);
+    nByte.partial<CIEC_BOOL>(CIEC_SINT(0)) = CIEC_BOOL(nByte.cpartial<CIEC_BOOL>(CIEC_SINT(0)) || true);
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(nByte) == 0x03U);
+  }
 
-BOOST_AUTO_TEST_CASE(PARTIAL_COPY_PARTIAL_TO_OTHER_PARTIAL) {
-  CIEC_BYTE nByte(0x01U);
-  nByte.partial<CIEC_BOOL>(CIEC_SINT(1)) = nByte.partial<CIEC_BOOL>(CIEC_SINT(0));
-  BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(nByte) == 0x03U);
-}
+  BOOST_AUTO_TEST_CASE(PARTIAL_COPY_PARTIAL_TO_OTHER_PARTIAL) {
+    CIEC_BYTE nByte(0x01U);
+    nByte.partial<CIEC_BOOL>(CIEC_SINT(1)) = nByte.partial<CIEC_BOOL>(CIEC_SINT(0));
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(nByte) == 0x03U);
+  }
 
-BOOST_AUTO_TEST_SUITE_END()
-BOOST_AUTO_TEST_SUITE_END()
+  BOOST_AUTO_TEST_SUITE_END()
+  BOOST_AUTO_TEST_SUITE_END()
+} // namespace forte::test

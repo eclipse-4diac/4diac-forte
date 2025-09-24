@@ -14,47 +14,49 @@
 
 using namespace forte::literals;
 
-struct F_MULTIME_TestFixture : public CFBTestFixtureBase {
+namespace forte::iec61131::arithmetic {
+  struct F_MULTIME_TestFixture : public forte::test::CFBTestFixtureBase {
 
-    F_MULTIME_TestFixture() : CFBTestFixtureBase("iec61131::arithmetic::F_MULTIME"_STRID) {
-      setInputData({&mIn_TIME_MULTIME, &mIn_REAL_MULTIME});
-      setOutputData({&mOut_TIME_MULTIME});
-      setup();
-    }
+      F_MULTIME_TestFixture() : CFBTestFixtureBase("iec61131::arithmetic::F_MULTIME"_STRID) {
+        setInputData({&mIn_TIME_MULTIME, &mIn_REAL_MULTIME});
+        setOutputData({&mOut_TIME_MULTIME});
+        setup();
+      }
 
-    CIEC_TIME mIn_TIME_MULTIME; // DATA INPUT
-    CIEC_REAL mIn_REAL_MULTIME; // DATA INPUT
+      CIEC_TIME mIn_TIME_MULTIME; // DATA INPUT
+      CIEC_REAL mIn_REAL_MULTIME; // DATA INPUT
 
-    CIEC_TIME mOut_TIME_MULTIME;
-};
+      CIEC_TIME mOut_TIME_MULTIME;
+  };
 
-BOOST_FIXTURE_TEST_SUITE(F_MULTIME_Tests, F_MULTIME_TestFixture)
+  BOOST_FIXTURE_TEST_SUITE(F_MULTIME_Tests, F_MULTIME_TestFixture)
 
-BOOST_AUTO_TEST_CASE(mulWithRealWithOne) {
-  mIn_TIME_MULTIME = CIEC_TIME(30000000);
-  mIn_REAL_MULTIME = CIEC_REAL(1.0);
-  /* trigger the inputevent */
-  triggerEvent(0);
-  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-  BOOST_CHECK_EQUAL(CIEC_TIME(30000000), mOut_TIME_MULTIME);
-}
+  BOOST_AUTO_TEST_CASE(mulWithRealWithOne) {
+    mIn_TIME_MULTIME = CIEC_TIME(30000000);
+    mIn_REAL_MULTIME = CIEC_REAL(1.0);
+    /* trigger the inputevent */
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(CIEC_TIME(30000000), mOut_TIME_MULTIME);
+  }
 
-BOOST_AUTO_TEST_CASE(mulWithRealWithDecimal) {
-  mIn_TIME_MULTIME = CIEC_TIME(30000000);
-  mIn_REAL_MULTIME = CIEC_REAL(0.5);
-  /* trigger the inputevent */
-  triggerEvent(0);
-  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-  BOOST_CHECK_EQUAL(CIEC_TIME(15000000), mOut_TIME_MULTIME);
-}
+  BOOST_AUTO_TEST_CASE(mulWithRealWithDecimal) {
+    mIn_TIME_MULTIME = CIEC_TIME(30000000);
+    mIn_REAL_MULTIME = CIEC_REAL(0.5);
+    /* trigger the inputevent */
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(CIEC_TIME(15000000), mOut_TIME_MULTIME);
+  }
 
-BOOST_AUTO_TEST_CASE(mulWithRealWitGreaterThanOne) {
-  mIn_TIME_MULTIME = CIEC_TIME(30000000);
-  mIn_REAL_MULTIME = CIEC_REAL(2.0);
-  /* trigger the inputevent */
-  triggerEvent(0);
-  BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-  BOOST_CHECK_EQUAL(CIEC_TIME(60000000), mOut_TIME_MULTIME);
-}
+  BOOST_AUTO_TEST_CASE(mulWithRealWitGreaterThanOne) {
+    mIn_TIME_MULTIME = CIEC_TIME(30000000);
+    mIn_REAL_MULTIME = CIEC_REAL(2.0);
+    /* trigger the inputevent */
+    triggerEvent(0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    BOOST_CHECK_EQUAL(CIEC_TIME(60000000), mOut_TIME_MULTIME);
+  }
 
-BOOST_AUTO_TEST_SUITE_END()
+  BOOST_AUTO_TEST_SUITE_END()
+} // namespace forte::iec61131::arithmetic
