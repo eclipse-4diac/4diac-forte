@@ -25,101 +25,98 @@
 
 #include <vector>
 
-namespace forte {
+namespace forte::com_infra::http {
 
-  namespace com_infra {
+  class CHttpComLayer : public CComLayer {
+    public:
+      CHttpComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
+      ~CHttpComLayer() override;
 
-    class CHttpComLayer : public CComLayer {
-      public:
-        CHttpComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
-        ~CHttpComLayer() override;
+      EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
+      EComResponse recvData(const void *paData, unsigned int paSize) override;
 
-        EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
-        EComResponse recvData(const void *paData, unsigned int paSize) override;
+      EComResponse recvServerData(std::vector<std::string> &paParameterNames,
+                                  std::vector<std::string> &paParameterValues);
 
-        EComResponse recvServerData(std::vector<std::string> &paParameterNames,
-                                    std::vector<std::string> &paParameterValues);
+      EComResponse openConnection(char *paLayerParameter) override;
 
-        EComResponse openConnection(char *paLayerParameter) override;
+      EComResponse startServer(char *paLayerParameter);
 
-        EComResponse startServer(char *paLayerParameter);
+      void closeConnection() override;
 
-        void closeConnection() override;
+      EComResponse processInterrupt() override;
 
-        EComResponse processInterrupt() override;
+      /** enum representing the HTTP request type */
+      enum ERequestType {
+        /** HTTP GET */
+        e_GET,
+        /** HTTP PUT */
+        e_PUT,
+        /** HTTP PUT */
+        e_POST,
+        /** not ready */
+        e_NOTSET,
+      };
 
-        /** enum representing the HTTP request type */
-        enum ERequestType {
-          /** HTTP GET */
-          e_GET,
-          /** HTTP PUT */
-          e_PUT,
-          /** HTTP PUT */
-          e_POST,
-          /** not ready */
-          e_NOTSET,
-        };
+      std::string &getHost();
 
-        std::string &getHost();
+      TForteUInt16 getPort() const;
 
-        TForteUInt16 getPort() const;
+    private:
+      /**
+       * Parse the HTTP response and checks the returned code
+       * @param paData buffer with the HTTP response
+       * @return OK if return code is as expected
+       */
+      EComResponse handleHTTPResponse(char *paData);
 
-      private:
-        /**
-         * Parse the HTTP response and checks the returned code
-         * @param paData buffer with the HTTP response
-         * @return OK if return code is as expected
-         */
-        EComResponse handleHTTPResponse(char *paData);
+      /** Serializes the data to a char* */
+      void serializeData(const CIEC_ANY &paSDx, std::string &paMember);
 
-        /** Serializes the data to a char* */
-        void serializeData(const CIEC_ANY &paSDx, std::string &paMember);
+      void sendDataAsServer(void *paData);
 
-        void sendDataAsServer(void *paData);
+      void sendDataAsClient(void *paData);
 
-        void sendDataAsClient(void *paData);
+      EComResponse openClientConnection(char *paLayerParameter);
 
-        EComResponse openClientConnection(char *paLayerParameter);
+      bool checkSDsAndRDsType() const;
 
-        bool checkSDsAndRDsType() const;
+      bool handleAddress(const char *paAddress);
 
-        bool handleAddress(const char *paAddress);
+      bool handleContentAndRequestType(CParameterParser &paParser, size_t paNoOfParameters);
 
-        bool handleContentAndRequestType(CParameterParser &paParser, size_t paNoOfParameters);
+      bool storeRequestType(const char *paType);
 
-        bool storeRequestType(const char *paType);
+      void createRequest();
+      EComResponse startServer(EComResponse eRetVal, char *paLayerParameter);
 
-        void createRequest();
-        EComResponse startServer(EComResponse eRetVal, char *paLayerParameter);
+      EComResponse mInterruptResp;
 
-        EComResponse mInterruptResp;
+      /** Represents the HTTP request type (0 = GET, 1 = PUT). */
+      ERequestType mRequestType;
+      /** HTTP Host */
+      std::string mHost;
+      /** Path in host */
+      std::string mPath;
+      /** Parameters */
+      std::string mParams;
+      /** Data to be sent */
+      std::string mBody;
+      /** Port of the host */
+      TForteUInt16 mPort;
+      /** Authentication */
+      std::string mAuth;
+      /** Request  to be sent to Host */
+      std::string mRequest;
 
-        /** Represents the HTTP request type (0 = GET, 1 = PUT). */
-        ERequestType mRequestType;
-        /** HTTP Host */
-        std::string mHost;
-        /** Path in host */
-        std::string mPath;
-        /** Parameters */
-        std::string mParams;
-        /** Data to be sent */
-        std::string mBody;
-        /** Port of the host */
-        TForteUInt16 mPort;
-        /** Authentication */
-        std::string mAuth;
-        /** Request  to be sent to Host */
-        std::string mRequest;
+      char mRecvBuffer[cgIPLayerRecvBufferSize];
+      unsigned int mBufFillSize;
 
-        char mRecvBuffer[cgIPLayerRecvBufferSize];
-        unsigned int mBufFillSize;
+      std::string mContentType;
 
-        std::string mContentType;
+      bool mCorrectlyInitialized;
+  };
 
-        bool mCorrectlyInitialized;
-    };
-
-  } // namespace com_infra
-} // namespace forte
+} // namespace forte::com_infra::http
 
 #endif /* _HTTPCOMLAYER_H_ */

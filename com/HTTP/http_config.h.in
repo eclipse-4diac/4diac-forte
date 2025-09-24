@@ -15,6 +15,6 @@
 
 #include "forte/datatype.h"
 
-namespace forte::com::http {
+namespace forte::com_infra::http {
   constexpr TForteUInt16 cgDefaultHttpListenPort = @FORTE_COM_HTTP_LISTENING_PORT@;
 }
