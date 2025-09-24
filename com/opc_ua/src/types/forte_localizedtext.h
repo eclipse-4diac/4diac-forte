@@ -31,17 +31,17 @@ namespace forte::com_infra::opc_ua {
         return 2;
       }
 
-      const forte::StringId *elementNames() const override {
+      const StringId *elementNames() const override {
         return scmElementNames;
       }
 
-      forte::StringId getStructTypeNameID() const override;
+      StringId getStructTypeNameID() const override;
 
       CIEC_ANY *getMember(size_t paMemberIndex) override;
       const CIEC_ANY *getMember(size_t paMemberIndex) const override;
 
     private:
-      static const forte::StringId scmElementNames[];
+      static const StringId scmElementNames[];
   };
 } // namespace forte::com_infra::opc_ua
 #endif //_FORTE_LOCALIZEDTEXT_H_

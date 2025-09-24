@@ -380,7 +380,7 @@ namespace forte::com_infra::opc_ua {
 
   bool COPC_UA_AC_Layer::checkFBOutputNames() {
     const SFBInterfaceSpec &interfaceSpec = getParentInterfaceSpec();
-    std::span<const forte::StringId> portNameIds = interfaceSpec.mDONames;
+    std::span<const StringId> portNameIds = interfaceSpec.mDONames;
     size_t foundProperties = 0;
     for (TPortId portId = 0; portId < interfaceSpec.getNumDOs(); portId++) {
       const char *portName = portNameIds[portId].data();
@@ -435,7 +435,7 @@ namespace forte::com_infra::opc_ua {
   EComResponse COPC_UA_AC_Layer::initializeMemberActions(const std::string &paParentBrowsePath) {
     mMemberActionInfo.reset(new CActionInfo(*this, CActionInfo::UA_ActionType::eWrite, std::string()));
     size_t numPorts = getCommFB()->getNumSD();
-    const std::span<const forte::StringId> dataPortNameIds = getParentInterfaceSpec().mDINames;
+    const std::span<const StringId> dataPortNameIds = getParentInterfaceSpec().mDINames;
     auto portIt = dataPortNameIds.begin()++;
     for (size_t i = 0; i < numPorts; i++) {
       std::string dataPortName{(*portIt++).data()};
@@ -499,7 +499,7 @@ namespace forte::com_infra::opc_ua {
   EComResponse COPC_UA_AC_Layer::addOPCUATypeProperties(UA_Server *paServer, const std::string &paTypeName) {
     CIEC_ANY **apoDataPorts = getCommFB()->getSDs();
     size_t numDataPorts = getCommFB()->getNumSD();
-    const std::span<const forte::StringId> dataPortNameIds = getParentInterfaceSpec().mDINames;
+    const std::span<const StringId> dataPortNameIds = getParentInterfaceSpec().mDINames;
     auto portIt = dataPortNameIds.begin()++;
     for (size_t i = 0; i < numDataPorts; i++) {
       std::string dataPortName{(*portIt++).data()};

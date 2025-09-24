@@ -20,8 +20,7 @@ using namespace std::string_literals;
 
 namespace forte::com_infra::opc_ua {
   namespace {
-    [[maybe_unused]] const forte::com_infra::opc_ua::OPC_UA_External_Types::Entry
-        entry("LocalizedText"_STRID, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
+    [[maybe_unused]] const OPC_UA_External_Types::Entry entry("LocalizedText"_STRID, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
   }
 
   DEFINE_FIRMWARE_DATATYPE(LocalizedText, "LocalizedText"_STRID);
@@ -29,7 +28,7 @@ namespace forte::com_infra::opc_ua {
   CIEC_LocalizedText::CIEC_LocalizedText() : CIEC_STRUCT(), var_locale(""s), var_text(""s) {
   }
 
-  forte::StringId CIEC_LocalizedText::getStructTypeNameID() const {
+  StringId CIEC_LocalizedText::getStructTypeNameID() const {
     return "LocalizedText"_STRID;
   }
 
@@ -49,5 +48,5 @@ namespace forte::com_infra::opc_ua {
     return nullptr;
   }
 
-  const forte::StringId CIEC_LocalizedText::scmElementNames[] = {"locale"_STRID, "text"_STRID};
+  const StringId CIEC_LocalizedText::scmElementNames[] = {"locale"_STRID, "text"_STRID};
 } // namespace forte::com_infra::opc_ua

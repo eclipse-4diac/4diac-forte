@@ -47,11 +47,11 @@ using namespace std::string_literals;
 namespace forte::com_infra::opc_ua {
   namespace {
     class OpcuaServerPortOption final
-        : public forte::util::CommandLineParser::IntOptionImpl<TForteUInt16,
-                                                               "op",
-                                                               "opc_ua-listen-port",
-                                                               "<port>",
-                                                               "Set the listening port for the OPC UA connection"> {
+        : public util::CommandLineParser::IntOptionImpl<TForteUInt16,
+                                                        "op",
+                                                        "opc_ua-listen-port",
+                                                        "<port>",
+                                                        "Set the listening port for the OPC UA connection"> {
       public:
         bool setOption(const TForteUInt16 paArgument) override {
           mArgument = paArgument;
@@ -1616,7 +1616,7 @@ namespace forte::com_infra::opc_ua {
   }
 
   bool COPC_UA_Local_Handler::initializeNodesets(UA_Server &paUaServer) {
-    return forte::com_infra::opc_ua::OPC_UA_Nodesets::invoke(&paUaServer) == UA_STATUSCODE_GOOD;
+    return OPC_UA_Nodesets::invoke(&paUaServer) == UA_STATUSCODE_GOOD;
   }
 
   void COPC_UA_Local_Handler::onAlarmStateChanged(const void *paData, unsigned int paSize, COPC_UA_Layer *paLayer) {

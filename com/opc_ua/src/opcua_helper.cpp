@@ -441,7 +441,7 @@ namespace forte::com_infra::opc_ua {
     CParameterParser browseNameParser(paNodeName, ':');
     size_t parsingResult = browseNameParser.parseParameters();
     if (scmMaxNoOfParametersInBrowseName == parsingResult) {
-      browsenameNamespace = static_cast<UA_UInt16>(forte::util::strtol(browseNameParser[0], nullptr, 10));
+      browsenameNamespace = static_cast<UA_UInt16>(util::strtol(browseNameParser[0], nullptr, 10));
       targetName = std::string(browseNameParser[1]);
     } else if (1 == parsingResult) {
       targetName = std::string(browseNameParser[0]);
@@ -487,8 +487,8 @@ namespace forte::com_infra::opc_ua {
   const UA_DataType *COPC_UA_Helper::getExternalOPCUATypeFromAny(const CIEC_ANY &paAnyType) {
     CIEC_ANY::EDataTypeID typeId = paAnyType.getDataTypeID();
     if (CIEC_ANY::e_STRUCT == typeId) {
-      const forte::StringId typeOfStructure = static_cast<const CIEC_STRUCT &>(paAnyType).getStructTypeNameID();
-      return forte::com_infra::opc_ua::OPC_UA_External_Types::get(typeOfStructure);
+      const StringId typeOfStructure = static_cast<const CIEC_STRUCT &>(paAnyType).getStructTypeNameID();
+      return OPC_UA_External_Types::get(typeOfStructure);
     }
     return nullptr;
   }

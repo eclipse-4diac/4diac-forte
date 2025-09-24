@@ -22,7 +22,7 @@ namespace forte::com_infra::opc_ua {
 
   class COPC_UA_AC_Layer : public COPC_UA_Layer {
     public:
-      COPC_UA_AC_Layer(CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paComFB);
+      COPC_UA_AC_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
 
       ~COPC_UA_AC_Layer() override;
 
@@ -32,7 +32,7 @@ namespace forte::com_infra::opc_ua {
        * @param paSize not used
        * @return
        */
-      forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize) override;
+      EComResponse recvData(const void *paData, unsigned int paSize) override;
 
       /**
        * Executes the action in the handler
@@ -40,13 +40,13 @@ namespace forte::com_infra::opc_ua {
        * @param paSize not used
        * @return
        */
-      forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize) override;
+      EComResponse sendData(void *paData, unsigned int paSize) override;
 
       /**
        * Function called when the external event (triggered when data is received) is executed in the FB
        * @return
        */
-      forte::com_infra::EComResponse processInterrupt() override;
+      EComResponse processInterrupt() override;
 
     private:
       enum Parameters { TypeName, PathToInstance };
@@ -82,7 +82,7 @@ namespace forte::com_infra::opc_ua {
        * @param paLayerParameter String conatained between the square brackets in the ID data input (opc_ua[...])
        * @return e_InitOk is initialization was ok, e_InitTerminated otherwise
        */
-      forte::com_infra::EComResponse openConnection(char *paLayerParameter) override;
+      EComResponse openConnection(char *paLayerParameter) override;
 
       /**
        * Called when INIT is triggered in the FB and QI is set to false
@@ -102,11 +102,9 @@ namespace forte::com_infra::opc_ua {
                                                       void *dataValue,
                                                       UA_DataType *paDataType);
 
-      forte::com_infra::EComResponse
-      initOPCUAType(UA_Server *paServer, const std::string &paTypeName, bool paIsPublisher);
+      EComResponse initOPCUAType(UA_Server *paServer, const std::string &paTypeName, bool paIsPublisher);
 
-      forte::com_infra::EComResponse
-      createOPCUAObject(UA_Server *paServer, const std::string &paPathToInstance, bool paIsPublisher);
+      EComResponse createOPCUAObject(UA_Server *paServer, const std::string &paPathToInstance, bool paIsPublisher);
 
       UA_StatusCode
       createOPCUAObjectNode(UA_Server *paServer, const std::string &paPathToInstance, std::string &paBrowsePath);
@@ -121,20 +119,20 @@ namespace forte::com_infra::opc_ua {
 
       bool checkFBOutputNames();
 
-      forte::com_infra::EComResponse setConditionCallbacks(UA_Server *paServer);
+      EComResponse setConditionCallbacks(UA_Server *paServer);
 
-      forte::com_infra::EComResponse createAlarmType(UA_Server *paServer, const std::string &paTypeName);
+      EComResponse createAlarmType(UA_Server *paServer, const std::string &paTypeName);
 
-      forte::com_infra::EComResponse addOPCUATypeProperties(UA_Server *paServer, const std::string &paTypeName);
+      EComResponse addOPCUATypeProperties(UA_Server *paServer, const std::string &paTypeName);
 
-      forte::com_infra::EComResponse addOPCUATypeEnableStateProperty(UA_Server *paServer);
+      EComResponse addOPCUATypeEnableStateProperty(UA_Server *paServer);
 
       UA_StatusCode addVariableNode(UA_Server *paServer,
                                     const std::string &paParentTypeName,
                                     char *paVariableName,
                                     CIEC_ANY &paVariableType);
 
-      forte::com_infra::EComResponse initializeMemberActions(const std::string &paParentBrowsePath);
+      EComResponse initializeMemberActions(const std::string &paParentBrowsePath);
 
       void addNewNodeId(UA_NodeId *paNodeIdToAdd);
 

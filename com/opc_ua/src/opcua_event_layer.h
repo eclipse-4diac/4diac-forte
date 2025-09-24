@@ -19,9 +19,9 @@
 namespace forte::com_infra::opc_ua {
   class COPC_UA_HandlerAbstract;
 
-  class COPC_UA_Event_Layer : public forte::com_infra::CComLayer {
+  class COPC_UA_Event_Layer : public CComLayer {
     public:
-      COPC_UA_Event_Layer(CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paComFB);
+      COPC_UA_Event_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
 
       ~COPC_UA_Event_Layer() override;
 
@@ -31,7 +31,7 @@ namespace forte::com_infra::opc_ua {
        * @param paSize not used
        * @return
        */
-      forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize) override;
+      EComResponse recvData(const void *paData, unsigned int paSize) override;
 
       /**
        * Executes the action in the handler
@@ -39,13 +39,13 @@ namespace forte::com_infra::opc_ua {
        * @param paSize not used
        * @return
        */
-      forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize) override;
+      EComResponse sendData(void *paData, unsigned int paSize) override;
 
       /**
        * Function called when the external event (triggered when data is received) is executed in the FB
        * @return
        */
-      forte::com_infra::EComResponse processInterrupt() override;
+      EComResponse processInterrupt() override;
 
     private:
       static const size_t scmNumberOfParameters = 1;
@@ -73,21 +73,19 @@ namespace forte::com_infra::opc_ua {
        * @param paLayerParameter String conatained between the square brackets in the ID data input (opc_ua[...])
        * @return e_InitOk is initialization was ok, e_InitTerminated otherwise
        */
-      forte::com_infra::EComResponse openConnection(char *paLayerParameter) override;
+      EComResponse openConnection(char *paLayerParameter) override;
 
       /**
        * Called when INIT is triggered in the FB and QI is set to false
        */
       void closeConnection() override;
 
-      forte::com_infra::EComResponse createOPCUAEvent(UA_Server *paServer);
+      EComResponse createOPCUAEvent(UA_Server *paServer);
 
       static UA_StatusCode addNewEventType(UA_Server *paServer, UA_NodeId &paEventType, std::string paEventTypeName);
 
-      static UA_StatusCode addNewEventInstance(UA_Server *paServer,
-                                               UA_NodeId &paEventType,
-                                               UA_NodeId &paNodeId,
-                                               forte::com_infra::CBaseCommFB *paFb);
+      static UA_StatusCode
+      addNewEventInstance(UA_Server *paServer, UA_NodeId &paEventType, UA_NodeId &paNodeId, CBaseCommFB *paFb);
 
       static UA_StatusCode writeTimeAndSourceProperty(UA_Server *paServer, UA_NodeId &paNodeId);
 

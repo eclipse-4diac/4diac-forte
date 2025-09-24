@@ -227,7 +227,7 @@ namespace forte::com_infra::opc_ua {
     mDataAlreadyPresent = paDataRead;
   }
 
-  forte::StringId COPC_UA_Layer::getLocalPortNameId(size_t paPortIndex, bool paIsSD) const {
+  StringId COPC_UA_Layer::getLocalPortNameId(size_t paPortIndex, bool paIsSD) const {
     const SFBInterfaceSpec &localInterfaceSpec(getCommFB()->getFBInterfaceSpec());
     return paIsSD ? localInterfaceSpec.mDINames[paPortIndex] : localInterfaceSpec.mDONames[paPortIndex];
   }

@@ -188,12 +188,12 @@ namespace forte::com_infra::opc_ua {
       };
       class UA_TypeConvert_external {
         public:
-          UA_TypeConvert_external(const UA_DataType *paType, const forte::StringId paStringId) :
+          UA_TypeConvert_external(const UA_DataType *paType, const StringId paStringId) :
               mType(paType),
               mStringId(paStringId) {
           }
           const UA_DataType *mType;
-          const forte::StringId mStringId;
+          const StringId mStringId;
       };
 
       /**

@@ -25,7 +25,7 @@
 namespace forte::com_infra::opc_ua {
   namespace {
     class OpcuaClientConfigFile final
-        : public forte::util::CommandLineParser::
+        : public util::CommandLineParser::
               OptionImpl<"oc", "opc_ua-config-file", "<file>", "Set the configuration file for the OPC UA clients"> {
       public:
         bool parseOption(const std::string_view paArgument) override {
@@ -751,10 +751,10 @@ namespace forte::com_infra::opc_ua {
       handleRecv.mData.emplace_back(&paData->value);
       handleRecv.mOffset = variableContextHandle->mPortIndex;
 
-      forte::com_infra::EComResponse retVal =
+      EComResponse retVal =
           variableContextHandle->mActionInfo->getLayer().recvData(static_cast<const void *>(&handleRecv), 0);
 
-      if (forte::com_infra::e_Nothing != retVal) {
+      if (e_Nothing != retVal) {
         variableContextHandle->mActionInfo->getLayer().getCommFB()->interruptCommFB(
             &variableContextHandle->mActionInfo->getLayer());
         variableContextHandle->mActionInfo->getLayer().triggerNewEvent();

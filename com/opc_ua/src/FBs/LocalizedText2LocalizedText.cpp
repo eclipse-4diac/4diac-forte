@@ -42,7 +42,7 @@ namespace forte::com_infra::opc_ua {
 
   DEFINE_FIRMWARE_FB(FORTE_LocalizedText2LocalizedText, "LocalizedText2LocalizedText"_STRID)
 
-  FORTE_LocalizedText2LocalizedText::FORTE_LocalizedText2LocalizedText(forte::StringId paInstanceNameId,
+  FORTE_LocalizedText2LocalizedText::FORTE_LocalizedText2LocalizedText(StringId paInstanceNameId,
                                                                        CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
       var_IN(CIEC_LocalizedText()),

@@ -30,7 +30,7 @@ namespace forte::com_infra::opc_ua {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_LocalizedText2LocalizedText(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_LocalizedText2LocalizedText(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_LocalizedText var_IN;
       CIEC_LocalizedText var_OUT;

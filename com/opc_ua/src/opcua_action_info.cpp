@@ -98,7 +98,7 @@ namespace forte::com_infra::opc_ua {
     bool retVal = false;
     if (checkNodePairInfo()) {
 
-      forte::com_infra::EComServiceType fbType = mLayer.getCommFB()->getComServiceType();
+      EComServiceType fbType = mLayer.getCommFB()->getComServiceType();
       TPortId noOfRDs = mLayer.getCommFB()->getNumRD();
       TPortId noOfSDs = mLayer.getCommFB()->getNumSD();
 
@@ -133,11 +133,10 @@ namespace forte::com_infra::opc_ua {
     return retVal;
   }
 
-  bool
-  CActionInfo::checkReadAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const {
+  bool CActionInfo::checkReadAction(EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const {
     bool retVal = false;
     if (mEndpoint.empty()) {
-      if (forte::com_infra::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
+      if (e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
         retVal = true;
       } else {
         DEVLOG_ERROR(
@@ -146,7 +145,7 @@ namespace forte::com_infra::opc_ua {
             mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead]);
       }
     } else {
-      if (paFbType != forte::com_infra::e_Client) {
+      if (paFbType != e_Client) {
         DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Remote %s action is only allowed using a Client FB\n",
                      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead]);
       } else if (getNoOfNodePairs() != paNoOfRDs) {
@@ -164,12 +163,10 @@ namespace forte::com_infra::opc_ua {
     return retVal;
   }
 
-  bool CActionInfo::checkWriteAction(forte::com_infra::EComServiceType paFbType,
-                                     TPortId paNoOfRDs,
-                                     TPortId paNoOfSDs) const {
+  bool CActionInfo::checkWriteAction(EComServiceType paFbType, TPortId paNoOfRDs, TPortId paNoOfSDs) const {
     bool retVal = false;
     if (mEndpoint.empty()) {
-      if (forte::com_infra::e_Publisher == paFbType && paNoOfSDs == getNoOfNodePairs()) {
+      if (e_Publisher == paFbType && paNoOfSDs == getNoOfNodePairs()) {
         retVal = true;
       } else {
         DEVLOG_ERROR(
@@ -178,7 +175,7 @@ namespace forte::com_infra::opc_ua {
             mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eWrite]);
       }
     } else {
-      if (forte::com_infra::e_Client == paFbType && paNoOfSDs == getNoOfNodePairs() && 0 == paNoOfRDs) {
+      if (e_Client == paFbType && paNoOfSDs == getNoOfNodePairs() && 0 == paNoOfRDs) {
         retVal = true;
       } else {
         DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Remote action %s is only allowed using a Client FB, the amount of "
@@ -189,9 +186,9 @@ namespace forte::com_infra::opc_ua {
     return retVal;
   }
 
-  bool CActionInfo::checkCreateMethodAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId) const {
+  bool CActionInfo::checkCreateMethodAction(EComServiceType paFbType, TPortId, TPortId) const {
     bool retVal = false;
-    if (forte::com_infra::e_Server == paFbType && 1 == getNoOfNodePairs()) {
+    if (e_Server == paFbType && 1 == getNoOfNodePairs()) {
       retVal = true;
     } else {
       DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Server FB, the amount of "
@@ -201,9 +198,9 @@ namespace forte::com_infra::opc_ua {
     return retVal;
   }
 
-  bool CActionInfo::checkCallMethodAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId) const {
+  bool CActionInfo::checkCallMethodAction(EComServiceType paFbType, TPortId, TPortId) const {
     bool retVal = false;
-    if (paFbType != forte::com_infra::e_Client) {
+    if (paFbType != e_Client) {
       DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Client FB\n",
                    mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod]);
     } else if (getNoOfNodePairs() != 1) {
@@ -219,9 +216,9 @@ namespace forte::com_infra::opc_ua {
     return retVal;
   }
 
-  bool CActionInfo::checkSubscribeAction(forte::com_infra::EComServiceType paFbType, TPortId paNoOfRDs, TPortId) const {
+  bool CActionInfo::checkSubscribeAction(EComServiceType paFbType, TPortId paNoOfRDs, TPortId) const {
     bool retVal = false;
-    if (forte::com_infra::e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
+    if (e_Subscriber == paFbType && paNoOfRDs == getNoOfNodePairs()) {
       retVal = true;
     } else {
       DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Subscribe FB, the amount of "
@@ -231,10 +228,9 @@ namespace forte::com_infra::opc_ua {
     return retVal;
   }
 
-  bool
-  CActionInfo::checkCreateObjectAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId paNoOfSDs) const {
+  bool CActionInfo::checkCreateObjectAction(EComServiceType paFbType, TPortId, TPortId paNoOfSDs) const {
     bool retVal = false;
-    if (forte::com_infra::e_Publisher == paFbType && 2 == getNoOfNodePairs() && 0 == paNoOfSDs) {
+    if (e_Publisher == paFbType && 2 == getNoOfNodePairs() && 0 == paNoOfSDs) {
       retVal = true;
     } else {
       DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Publish FB, the amount of "
@@ -244,10 +240,9 @@ namespace forte::com_infra::opc_ua {
     return retVal;
   }
 
-  bool
-  CActionInfo::checkCreateVariableAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId paNoOfSDs) const {
+  bool CActionInfo::checkCreateVariableAction(EComServiceType paFbType, TPortId, TPortId paNoOfSDs) const {
     bool retVal = false;
-    if (forte::com_infra::e_Publisher == paFbType && 3 == getNoOfNodePairs() && 0 == paNoOfSDs) {
+    if (e_Publisher == paFbType && 3 == getNoOfNodePairs() && 0 == paNoOfSDs) {
       retVal = true;
     } else {
       DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Publish FB, the amount of "
@@ -257,10 +252,9 @@ namespace forte::com_infra::opc_ua {
     return retVal;
   }
 
-  bool
-  CActionInfo::checkDeleteNodeAction(forte::com_infra::EComServiceType paFbType, TPortId, TPortId paNoOfSDs) const {
+  bool CActionInfo::checkDeleteNodeAction(EComServiceType paFbType, TPortId, TPortId paNoOfSDs) const {
     bool retVal = false;
-    if (forte::com_infra::e_Publisher == paFbType && 1 == getNoOfNodePairs() && 0 == paNoOfSDs) {
+    if (e_Publisher == paFbType && 1 == getNoOfNodePairs() && 0 == paNoOfSDs) {
       retVal = true;
     } else {
       DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Publish FB, the amount of "
@@ -365,8 +359,8 @@ namespace forte::com_infra::opc_ua {
   }
 
   bool CActionInfo::CActionParser::parseNamespace(const char *paNamespace, UA_NodeId &paResult) {
-    paResult.namespaceIndex = static_cast<UA_UInt16>(
-        forte::util::strtoul(paNamespace, nullptr, 10)); // TODO: should we check for return value here?
+    paResult.namespaceIndex =
+        static_cast<UA_UInt16>(util::strtoul(paNamespace, nullptr, 10)); // TODO: should we check for return value here?
     return true;
   }
 
@@ -376,8 +370,8 @@ namespace forte::com_infra::opc_ua {
       if (0 == strcmp(identifierParser[eIdenfierType], "i")) { // numeric
         paResult.identifierType = UA_NODEIDTYPE_NUMERIC;
         paResult.identifier.numeric =
-            static_cast<UA_UInt32>(forte::util::strtoul(identifierParser[eIdenfierValue], nullptr,
-                                                        10)); // TODO: should we check for return value here?
+            static_cast<UA_UInt32>(util::strtoul(identifierParser[eIdenfierValue], nullptr,
+                                                 10)); // TODO: should we check for return value here?
       } else if (0 == strcmp(identifierParser[eIdenfierType], "s")) { // string
         paResult.identifierType = UA_NODEIDTYPE_STRING;
         paResult.identifier.string = UA_String_fromChars(identifierParser[eIdenfierValue]);

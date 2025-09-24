@@ -48,7 +48,7 @@ namespace forte::com_infra {
          * @param paStructType The Struct Type
          * @return e_InitOk if Object Node was created successfully, e_InitTerminated otherwise
          */
-        forte::com_infra::EComResponse createObjectNode(CActionInfo &paActionInfo, CIEC_STRUCT &paStructType);
+        EComResponse createObjectNode(CActionInfo &paActionInfo, CIEC_STRUCT &paStructType);
 
         /**
          * Get Object Struct member from ActionInfo browsepath
@@ -62,7 +62,7 @@ namespace forte::com_infra {
          * Execute the action for a Object Node Struct
          * @return e_ProcessDataOK if no problem occurred, other value otherwise
          */
-        forte::com_infra::EComResponse executeStructAction();
+        EComResponse executeStructAction();
 
         /**
          * Get index to the corresponding Object Struct RDBuffer entry from the Node ID
@@ -104,8 +104,7 @@ namespace forte::com_infra {
          * @param paCommFB   The comm fb for which the rdbuffer was created
          * @param paRDBuffer The buffer to be uninitialized
          */
-        static void deleteRDBufferEntries(forte::com_infra::CBaseCommFB &paCommFB,
-                                          std::vector<std::unique_ptr<CIEC_ANY>> &paRDBuffer);
+        static void deleteRDBufferEntries(CBaseCommFB &paCommFB, std::vector<std::unique_ptr<CIEC_ANY>> &paRDBuffer);
 
         /**
          * Check if Data Connection is a Struct Type
@@ -215,9 +214,9 @@ namespace forte::com_infra {
          * is provided, the default vector is used
          * @return e_InitOk if Object Node was created successfully, e_InitTerminated otherwise
          */
-        forte::com_infra::EComResponse createObjectNode(CActionInfo &paActionInfo,
-                                                        CIEC_STRUCT &paStructType,
-                                                        std::vector<std::shared_ptr<CActionInfo>> &paMemberActionInfos);
+        EComResponse createObjectNode(CActionInfo &paActionInfo,
+                                      CIEC_STRUCT &paStructType,
+                                      std::vector<std::shared_ptr<CActionInfo>> &paMemberActionInfos);
 
         /**
          * Perform initialization for Object Struct Members
@@ -227,11 +226,10 @@ namespace forte::com_infra {
          * @param paMemberActionInfos The vector in which the ActionInfos of the members should be added.
          * @return e_InitOk if initialization was successful, e_InitTerminated otherwise
          */
-        forte::com_infra::EComResponse
-        initializeMemberAction(CActionInfo &paActionInfo,
-                               std::string &paBrowsePath,
-                               CIEC_STRUCT &paStructType,
-                               std::vector<std::shared_ptr<CActionInfo>> &paMemberActionInfos);
+        EComResponse initializeMemberAction(CActionInfo &paActionInfo,
+                                            std::string &paBrowsePath,
+                                            CIEC_STRUCT &paStructType,
+                                            std::vector<std::shared_ptr<CActionInfo>> &paMemberActionInfos);
 
         /**
          * Get index to the corresponding Object Struct RDBuffer entry from the Node ID
@@ -268,7 +266,7 @@ namespace forte::com_infra {
          * @param paPathPrefix The BrowsePath directory with namespace (e.g. /Objects/1:)
          * @param paStructNameId NameId of the Struct
          */
-        std::string getStructBrowsePath(const std::string &paPathPrefix, forte::StringId paStructNameId);
+        std::string getStructBrowsePath(const std::string &paPathPrefix, StringId paStructNameId);
 
         /**
          * @param paIsPublisher True if the FB is a Publisher, false othewise
@@ -281,7 +279,7 @@ namespace forte::com_infra {
          * @param structMemberNameId Name Id of Object Node Struct member
          */
         std::string getStructMemberBrowsePathWithNSIndex(const std::string &paBrowsePathPrefix,
-                                                         const forte::StringId structMemberNameId);
+                                                         const StringId structMemberNameId);
 
         /**
          * Creates an OPC UA namespace with the given name and assigns the
@@ -327,7 +325,7 @@ namespace forte::com_infra {
                                                  UA_NodeId &paParentNodeId,
                                                  const std::string &paStructName,
                                                  CIEC_ANY *paStructMember,
-                                                 const forte::StringId paStructMemberNameId);
+                                                 const StringId paStructMemberNameId);
 
         /**
          * Creates the member object for the OPC UA Struct Type Object Node with the given Struct Member Name
@@ -342,7 +340,7 @@ namespace forte::com_infra {
                                                UA_NodeId &paParentNodeId,
                                                const std::string &paStructName,
                                                CIEC_STRUCT &paStructMember,
-                                               const forte::StringId paStructMemberNameId,
+                                               const StringId paStructMemberNameId,
                                                UA_NodeId &paMemberTypeNodeId);
 
         /**

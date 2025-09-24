@@ -36,14 +36,14 @@ namespace forte::com_infra::opc_ua {
    * creating an action out of its parameter, and calling the local/remote handler when the action is to be executed
    and
    */
-  class COPC_UA_Layer : public forte::com_infra::CComLayer {
+  class COPC_UA_Layer : public CComLayer {
     public:
       /**
        * Class constructor
        * @param paUpperLayer
        * @param paComFB
        */
-      COPC_UA_Layer(CComLayer *paUpperLayer, forte::com_infra::CBaseCommFB *paComFB);
+      COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
 
       /**
        * Class destructor
@@ -56,7 +56,7 @@ namespace forte::com_infra::opc_ua {
        * @param paSize not used
        * @return
        */
-      forte::com_infra::EComResponse recvData(const void *paData, unsigned int paSize) override;
+      EComResponse recvData(const void *paData, unsigned int paSize) override;
 
       /**
        * Executes the action in the handler
@@ -64,13 +64,13 @@ namespace forte::com_infra::opc_ua {
        * @param paSize not used
        * @return
        */
-      forte::com_infra::EComResponse sendData(void *paData, unsigned int paSize) override;
+      EComResponse sendData(void *paData, unsigned int paSize) override;
 
       /**
        * Function called when the external event (triggered when data is received) is executed in the FB
        * @return
        */
-      forte::com_infra::EComResponse processInterrupt() override;
+      EComResponse processInterrupt() override;
 
       /**
        * Trigger a new incoming event. This is needed here because the CUA_ClientInformation needs to trigger, but it
@@ -82,7 +82,7 @@ namespace forte::com_infra::opc_ua {
       /**
        * Response for the processInterrupt() method
        */
-      forte::com_infra::EComResponse mInterruptResp;
+      EComResponse mInterruptResp;
 
       /**
        * Pointer to the base class of the OPC UA handlers. Depending on the action, the local or remote will be set, and
@@ -101,7 +101,7 @@ namespace forte::com_infra::opc_ua {
        * @param paLayerParameter String conatained between the square brackets in the ID data input (opc_ua[...])
        * @return e_InitOk is initialization was ok, e_InitTerminated otherwise
        */
-      forte::com_infra::EComResponse openConnection(char *paLayerParameter) override;
+      EComResponse openConnection(char *paLayerParameter) override;
 
       /**
        * Called when INIT is triggered in the FB and QI is set to false
@@ -144,7 +144,7 @@ namespace forte::com_infra::opc_ua {
        * @param paIsSD True if the port to get is an SD, false othewise
        * @return The pointer to the local port connection
        */
-      forte::StringId getLocalPortNameId(size_t paPortIndex, bool paIsSD) const;
+      StringId getLocalPortNameId(size_t paPortIndex, bool paIsSD) const;
 
       /**
        * List of ANY pointers used as buffer to store the received data

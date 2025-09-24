@@ -16,6 +16,6 @@
 
 namespace forte::com_infra::opc_ua::test {
   namespace {
-    [[maybe_unused]] const forte::com_infra::opc_ua::OPC_UA_Nodesets::EntryImpl<ua_namespace_fordiacNamespace> entry;
+    [[maybe_unused]] const OPC_UA_Nodesets::EntryImpl<ua_namespace_fordiacNamespace> entry;
   }
 } // namespace forte::com_infra::opc_ua::test

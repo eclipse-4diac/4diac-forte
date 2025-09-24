@@ -20,7 +20,7 @@ using namespace forte::literals;
 
 namespace forte::com_infra::opc_ua::test {
   namespace {
-    [[maybe_unused]] const forte::com_infra::opc_ua::OPC_UA_External_Types::Entry
+    [[maybe_unused]] const OPC_UA_External_Types::Entry
         entry("DataTypeTest"_STRID, &UA_UA_TYPES_FORDIACNAMESPACE[UA_UA_TYPES_FORDIACNAMESPACE_DATATYPETEST]);
   }
 
@@ -29,7 +29,7 @@ namespace forte::com_infra::opc_ua::test {
   CIEC_DataTypeTest::CIEC_DataTypeTest() : CIEC_STRUCT(), var_Name(""_STRING), var_Age(0), var_IsRegistered(false) {
   }
 
-  forte::StringId CIEC_DataTypeTest::getStructTypeNameID() const {
+  StringId CIEC_DataTypeTest::getStructTypeNameID() const {
     return "DataTypeTest"_STRID;
   }
 
@@ -51,5 +51,5 @@ namespace forte::com_infra::opc_ua::test {
     return nullptr;
   }
 
-  const forte::StringId CIEC_DataTypeTest::scmElementNames[] = {"Name"_STRID, "Age"_STRID, "IsRegistered"_STRID};
+  const StringId CIEC_DataTypeTest::scmElementNames[] = {"Name"_STRID, "Age"_STRID, "IsRegistered"_STRID};
 } // namespace forte::com_infra::opc_ua::test

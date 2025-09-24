@@ -161,7 +161,7 @@ namespace forte::com_infra::opc_ua {
                                                                  UA_NodeId &paParentNodeId,
                                                                  CIEC_STRUCT &paStructType,
                                                                  const std::string &paStructTypeName) {
-    const forte::StringId *structMemberNames = paStructType.elementNames();
+    const StringId *structMemberNames = paStructType.elementNames();
     for (size_t i = 0; i < paStructType.getStructSize(); i++) {
       CIEC_ANY *structMember = paStructType.getMember(i);
       if (structMember->getDataTypeID() == CIEC_ANY::e_STRUCT) {
@@ -197,7 +197,7 @@ namespace forte::com_infra::opc_ua {
                                                                         UA_NodeId &paParentNodeId,
                                                                         const std::string &paStructName,
                                                                         CIEC_ANY *paStructMember,
-                                                                        const forte::StringId paStructMemberNameId) {
+                                                                        const StringId paStructMemberNameId) {
     std::string structMemberName(paStructMemberNameId);
     UA_VariableAttributes vAttr = UA_VariableAttributes_default;
     vAttr.displayName = UA_LOCALIZEDTEXT(smEmptyString, &structMemberName[0]);
@@ -233,7 +233,7 @@ namespace forte::com_infra::opc_ua {
                                                                       UA_NodeId &paParentNodeId,
                                                                       const std::string &paStructName,
                                                                       CIEC_STRUCT &paStructMember,
-                                                                      const forte::StringId paStructMemberNameId,
+                                                                      const StringId paStructMemberNameId,
                                                                       UA_NodeId &paMemberTypeNodeId) {
     std::string structMemberName(paStructMemberNameId);
     UA_ObjectAttributes oAttr = UA_ObjectAttributes_default;
@@ -439,7 +439,7 @@ namespace forte::com_infra::opc_ua {
       DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Failed to get LocalHandler because LocalHandler is null!\n");
       return e_InitTerminated;
     }
-    const forte::StringId *structMemberNames = paStructType.elementNames();
+    const StringId *structMemberNames = paStructType.elementNames();
     bool isNodeIdPresent = paActionInfo.getNodePairInfo().begin()->getNodeId() != nullptr;
 
     for (size_t i = 0; i < paStructType.getStructSize(); i++) {
@@ -523,7 +523,7 @@ namespace forte::com_infra::opc_ua {
       CParameterParser nsIndexParser(objectName.c_str(), ':');
       parsingResult = nsIndexParser.parseParameters();
       if (parsingResult > 1) {
-        return static_cast<UA_UInt16>(forte::util::strtoul(nsIndexParser[0], nullptr, 10));
+        return static_cast<UA_UInt16>(util::strtoul(nsIndexParser[0], nullptr, 10));
       }
     } else {
       DEVLOG_ERROR("[OPC UA HELPER]: Error while parsing FB browse path %s\n", paBrowsePath.c_str());
@@ -548,7 +548,7 @@ namespace forte::com_infra::opc_ua {
   }
 
   std::string COPC_UA_ObjectStruct_Helper::getStructBrowsePath(const std::string &paPathPrefix,
-                                                               forte::StringId paStructNameId) {
+                                                               StringId paStructNameId) {
     return getBrowsePath(paPathPrefix, std::string(paStructNameId), mOpcuaTypeNamespaceIndex);
   }
 
@@ -565,9 +565,8 @@ namespace forte::com_infra::opc_ua {
     return ss.str();
   }
 
-  std::string
-  COPC_UA_ObjectStruct_Helper::getStructMemberBrowsePathWithNSIndex(const std::string &paBrowsePathPrefix,
-                                                                    const forte::StringId structMemberNameId) {
+  std::string COPC_UA_ObjectStruct_Helper::getStructMemberBrowsePathWithNSIndex(const std::string &paBrowsePathPrefix,
+                                                                                const StringId structMemberNameId) {
     std::stringstream ss;
     char buf[100];
     snprintf(buf, sizeof(buf), smMemberNamespaceIndex.c_str(), mOpcuaObjectNamespaceIndex);
