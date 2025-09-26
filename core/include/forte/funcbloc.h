@@ -31,6 +31,8 @@
 #include "forte/util/devlog.h"
 #include "forte/stringid.h"
 
+#include <bitset>
+
 namespace forte {
   class CEventChainExecutionThread;
   class CTimerHandler;
@@ -343,8 +345,8 @@ namespace forte {
 
       bool setForce(std::span<const StringId> paNameList, bool paForce) override;
 
-      bool getForce(TAbsDataPortNum paAbsDataPortNum) const {
-        return mForces[paAbsDataPortNum];
+      [[nodiscard]] constexpr bool getForce(const TAbsDataPortNum paAbsDataPortNum) const {
+        return paAbsDataPortNum < mForces.size() && mForces[paAbsDataPortNum];
       }
 
       virtual void toString(std::string &paTargetBuf) const;
@@ -423,11 +425,11 @@ namespace forte {
        * \param paValue Variable to read into.
        * \param paConn Connection to read from.
        */
-      void readData(TPortId paAbsDataPortNum, CIEC_ANY &paValue, const CDataConnection *const paConn) {
+      void readData(const TPortId paAbsDataPortNum, CIEC_ANY &paValue, const CDataConnection *const paConn) {
         if (!paConn) {
           return;
         }
-        if (!mForces[paAbsDataPortNum]) {
+        if (!getForce(paAbsDataPortNum)) [[likely]] {
           paConn->readData(paValue);
         }
 #ifdef FORTE_TRACE_CTF
@@ -442,8 +444,8 @@ namespace forte {
        * \param paConn Connection to write into.
        */
       template<typename T, typename U>
-      void writeData(TAbsDataPortNum paAbsDataPortNum, T &paValue, U &paConn) {
-        if (!mForces[paAbsDataPortNum]) {
+      void writeData(const TAbsDataPortNum paAbsDataPortNum, T &paValue, U &paConn) {
+        if (!getForce(paAbsDataPortNum)) [[likely]] {
           paConn.writeData(paValue);
         } else {
           // when forcing we write back the value from the connection to keep the forced value on the output
@@ -557,7 +559,7 @@ namespace forte {
        */
       virtual void writeOutputData(TEventID paEO) = 0;
 
-      void setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue);
+      bool setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue);
 
     public:
       CFunctionBlock(const CFunctionBlock &) = delete;
@@ -569,7 +571,7 @@ namespace forte {
       //! vector for storing the event counts for input and output events together, first inputs then outputs
       std::vector<TForteUInt32> mEventMonitorCount;
       //! vector of bools for determining force state of data inputs, data outputs, and var in outs in that order
-      std::vector<bool> mForces;
+      std::bitset<cgMaxSupportedForceIndex> mForces;
 
 #ifdef FORTE_TRACE_CTF
       void traceInputEvent(TEventID paEIID);

@@ -13,38 +13,38 @@
 #############################################################################
 
 set(FORTE_TicksPerSecond
-    "1000"
-    CACHE STRING "FORTE ticks per second"
+        "1000"
+        CACHE STRING "FORTE ticks per second"
 )
 mark_as_advanced(FORTE_TicksPerSecond)
 
 set(FORTE_EventChainEventListSize
-    "256"
-    CACHE STRING "FORTE eventchain event list size"
+        "256"
+        CACHE STRING "FORTE eventchain event list size"
 )
 mark_as_advanced(FORTE_EventChainEventListSize)
 
 set(FORTE_EventChainExternalEventListSize
-    "16"
-    CACHE STRING "FORTE eventchain external event list size"
+        "16"
+        CACHE STRING "FORTE eventchain external event list size"
 )
 mark_as_advanced(FORTE_EventChainExternalEventListSize)
 
 set(FORTE_CommunicationInterruptQueueSize
-    "10"
-    CACHE STRING "FORTE Communication interrupt queue size"
+        "10"
+        CACHE STRING "FORTE Communication interrupt queue size"
 )
 mark_as_advanced(FORTE_CommunicationInterruptQueueSize)
 
 if (FORTE_DYNAMIC_TYPE_LOAD)
     set(FORTE_IPLayerRecvBufferSize
-        "20000"
-        CACHE STRING "FORTE IP layer recv buffer size"
+            "20000"
+            CACHE STRING "FORTE IP layer recv buffer size"
     )
 else ()
     set(FORTE_IPLayerRecvBufferSize
-        "1500"
-        CACHE STRING "FORTE IP layer recv buffer size"
+            "1500"
+            CACHE STRING "FORTE IP layer recv buffer size"
     )
 endif ()
 mark_as_advanced(FORTE_IPLayerRecvBufferSize)
@@ -60,6 +60,13 @@ set(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY
         "Max supported hierarchy that can be provided in a management commands"
 )
 mark_as_advanced(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY)
+
+set(FORTE_MGM_MAX_SUPPORTED_FORCE_INDEX
+        "64"
+        CACHE STRING
+        "Max supported absolute port index for forcing data pins (multiples of 64 recommended)"
+)
+mark_as_advanced(FORTE_MGM_MAX_SUPPORTED_FORCE_INDEX)
 
 configure_file(forte_config.h.in
         "${CMAKE_CURRENT_BINARY_DIR}/forte_config.h"

@@ -34,6 +34,9 @@ namespace forte {
 
   //! Maximum supported depth of the name hierarchy.
   constexpr std::size_t cgMaxSupportedNameHierarchy = ${FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY};
+
+  //! Maximum supported absolute port index for forcing data pins.
+  constexpr std::size_t cgMaxSupportedForceIndex = ${FORTE_MGM_MAX_SUPPORTED_FORCE_INDEX};
 }
 
 //! Support custom serializable data types

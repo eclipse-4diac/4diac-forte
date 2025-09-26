@@ -396,13 +396,10 @@ CConnection::Wrapper CFunctionBlock::getOutputConnection(const std::span<const S
 void CFunctionBlock::setupEventMonitoringData() {
   freeEventMonitoringData();
   mEventMonitorCount.resize(getFBInterfaceSpec().getNumEIs() + getFBInterfaceSpec().getNumEOs());
-  mForces.resize(getFBInterfaceSpec().getNumDIs() + getFBInterfaceSpec().getNumDOs() +
-                 getFBInterfaceSpec().getNumDIOs());
 }
 
 void CFunctionBlock::freeEventMonitoringData() {
   mEventMonitorCount.clear();
-  mForces.clear();
 }
 
 TForteUInt32 &CFunctionBlock::getEIMonitorData(TEventID paEIID) {
@@ -446,7 +443,11 @@ bool CFunctionBlock::setForce(const std::span<const StringId> paNameList, const 
   return CFBContainer::setForce(paNameList, paForce);
 }
 
-void CFunctionBlock::setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue) {
+bool CFunctionBlock::setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue) {
+  if (paAbsDataPortNum >= mForces.size()) {
+    return false;
+  }
+
   mForces[paAbsDataPortNum] = paForceValue;
 
   if (paForceValue) {
@@ -460,6 +461,7 @@ void CFunctionBlock::setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValu
       con->writeData(*getDO(doPortId));
     }
   }
+  return true;
 }
 
 void CFunctionBlock::toString(std::string &paTargetBuf) const {
