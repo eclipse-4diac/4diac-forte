@@ -21,46 +21,50 @@
 #include "forte/arch/sockhand.h"
 #include "forte/extevhan.h"
 
-class CCANHandler : public CExternalEventHandler, public RegisterExternalEventHandler<CCANHandler>, private CThread {
-  public:
-    explicit CCANHandler(CDeviceExecution &paDeviceExecution);
-    ~CCANHandler() override;
-    void addComCallback(CFDSelectHandler::TFileDescriptor paFD, forte::com_infra::CComCallback *paCanLayer);
-    void removeComCallback(CFDSelectHandler::TFileDescriptor paFD);
+using namespace forte::arch;
 
-    void enableHandler() override {
-      start();
-    }
+namespace forte::com_infra {
+  class CCANHandler : public CExternalEventHandler, public RegisterExternalEventHandler<CCANHandler>, private CThread {
+    public:
+      explicit CCANHandler(CDeviceExecution &paDeviceExecution);
+      ~CCANHandler() override;
+      void addComCallback(CFDSelectHandler::TFileDescriptor paFD, CComCallback *paCanLayer);
+      void removeComCallback(CFDSelectHandler::TFileDescriptor paFD);
 
-    void disableHandler() override {
-      end();
-    }
+      void enableHandler() override {
+        start();
+      }
 
-    void setPriority(int) {
-    }
+      void disableHandler() override {
+        end();
+      }
 
-    int getPriority() const {
-      return 0;
-    }
+      void setPriority(int) {
+      }
 
-  protected:
-    void run() override;
+      int getPriority() const {
+        return 0;
+      }
 
-  private:
-    struct TConnContType {
-        CFDSelectHandler::TFileDescriptor mSockDes;
-        forte::com_infra::CComCallback *mCalled;
-    };
+    protected:
+      void run() override;
 
-    struct can_frame frame;
+    private:
+      struct TConnContType {
+          CFDSelectHandler::TFileDescriptor mSockDes;
+          CComCallback *mCalled;
+      };
 
-    typedef std::vector<TConnContType> TConnectionContainer;
+      struct can_frame frame;
 
-    CFDSelectHandler::TFileDescriptor createFDSet(fd_set *m_panFDSet);
+      typedef std::vector<TConnContType> TConnectionContainer;
 
-    TConnectionContainer mConnectionsList;
-    CSyncObject mSync;
-    bool mConnectionListChanged;
-};
+      CFDSelectHandler::TFileDescriptor createFDSet(fd_set *m_panFDSet);
+
+      TConnectionContainer mConnectionsList;
+      CSyncObject mSync;
+      bool mConnectionListChanged;
+  };
+} // namespace forte::com_infra
 
 #endif

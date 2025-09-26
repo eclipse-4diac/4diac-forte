@@ -24,7 +24,11 @@
 #include "forte/datatype.h"
 #include "forte/util/parameterParser.h"
 
+using namespace forte::arch;
+using namespace forte::util;
+
 namespace forte::com_infra {
+
   class CCANComLayer : public CComLayer {
     public:
       typedef FORTE_SOCKET_TYPE TCANSocketHandle;
@@ -38,25 +42,28 @@ namespace forte::com_infra {
       EComResponse processInterrupt() override;
 
     private:
-      struct SCANParameters {
-          std::string interfaceName;
-          TForteUInt32 CANId;
-      };
-
-      enum ECANCommunicationParameter { eInterface = 0, eCANId = 1, eCANComParamterAmount = 2 };
-
-      CFDSelectHandler::TFileDescriptor mCANSocket = CFDSelectHandler::scmInvalidFileDescriptor;
-
-      EComResponse m_eInterruptResp;
-
       struct sockaddr_can mAddr;
       struct ifreq mIfr;
       struct can_frame mFrame;
       struct can_filter rfilter;
 
+      CFDSelectHandler::TFileDescriptor mCANSocket = CFDSelectHandler::scmInvalidFileDescriptor;
+
+      EComResponse m_eInterruptResp;
+
       EComResponse openConnection(char *paLayerParameter) override;
       void closeConnection() override;
-
-      SCANParameters setupCANInternals(CParameterParser &parser);
   };
+
+  namespace {
+    enum ECANCommunicationParameter { eInterface = 0, eCANId = 1, eCANComParamterAmount = 2 };
+
+    struct SCANParameters {
+        std::string interfaceName;
+        TForteUInt32 CANId;
+    };
+    SCANParameters setupCANInternals(CParameterParser &parser);
+
+  } // namespace
+
 } // namespace forte::com_infra
