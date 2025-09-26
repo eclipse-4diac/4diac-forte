@@ -31,9 +31,11 @@ endif ()
 # ESP32 Ethernet Kit FBs
 # ############################################################################
 
-forte_register_io(ESP32ETHERNETKIT OFF
-                  "Support for the Esp32EthernetKit board"
-)
+option(FORTE_MODULE_ESP32ETHERNETKIT "Support for the Esp32EthernetKit board" OFF)
+
+if (NOT FORTE_MODULE_ESP32ETHERNETKIT)
+    return()
+endif ()
 
 # ############################################################################
 add_library(forte-zephyr
