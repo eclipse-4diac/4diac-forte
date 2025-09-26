@@ -13,9 +13,11 @@ if (NOT FORTE_ARCHITECTURE STREQUAL "FreeRTOSLwIP")
     return()
 endif ()
 
-forte_register_io(ELITEBOARD OFF
-                  "Support for the eLITe-Board development board"
-)
+option(FORTE_MODULE_ELITEBOARD "Support for the eLITe-Board development board" OFF)
+
+if (NOT FORTE_MODULE_ELITEBOARD)
+    return()
+endif ()
 
 add_library(forte-eliteboard)
 target_link_libraries(forte-eliteboard PUBLIC forte-core)
