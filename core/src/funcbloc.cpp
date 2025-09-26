@@ -464,6 +464,17 @@ bool CFunctionBlock::setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValu
   return true;
 }
 
+void CFunctionBlock::resetForcedOutputs() {
+  const std::size_t numDIs = getFBInterfaceSpec().getNumDIs();
+  const std::size_t numDOs = getFBInterfaceSpec().getNumDOs();
+  for (TPortId index = 0; index < numDOs; ++index) {
+    if (getForce(numDIs + index)) {
+      // when forcing we write back the value from the connection to keep the forced value on the output
+      getDOConUnchecked(index)->readData(*getDO(index));
+    }
+  }
+}
+
 void CFunctionBlock::toString(std::string &paTargetBuf) const {
   paTargetBuf += '(';
 

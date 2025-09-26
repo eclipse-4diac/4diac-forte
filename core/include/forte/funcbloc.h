@@ -235,6 +235,9 @@ namespace forte {
             mEventMonitorCount[paEIID]++;
           }
           executeEvent(paEIID, paExecEnv);
+          if (mForces.any()) [[unlikely]] {
+            resetForcedOutputs();
+          }
         }
       }
 
@@ -447,9 +450,6 @@ namespace forte {
       void writeData(const TAbsDataPortNum paAbsDataPortNum, T &paValue, U &paConn) {
         if (!getForce(paAbsDataPortNum)) [[likely]] {
           paConn.writeData(paValue);
-        } else {
-          // when forcing we write back the value from the connection to keep the forced value on the output
-          paConn.readData(paValue);
         }
 #ifdef FORTE_TRACE_CTF
         traceWriteData(paAbsDataPortNum - mInterfaceSpec.getNumDIs(), paValue);
@@ -541,7 +541,8 @@ namespace forte {
        *
        * \param paECET the event chain execution thread this FB was invoked from
        * \param paEIID Event input ID where event occurred.
-       * \param paExecEnv Event chain execution environment the FB will be executed in (used for adding output events).
+       * \param paExecEnv Event chain execution environment the FB will be executed in (used for adding output
+       * events).
        *
        *
        */
@@ -560,6 +561,10 @@ namespace forte {
       virtual void writeOutputData(TEventID paEO) = 0;
 
       bool setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue);
+
+      /*!\brief Function resetting the values of forced outputs to the value from the output connection.
+       */
+      void resetForcedOutputs();
 
     public:
       CFunctionBlock(const CFunctionBlock &) = delete;
