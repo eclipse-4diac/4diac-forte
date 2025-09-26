@@ -12,8 +12,8 @@
  *  Martin Jobst - add high-resolution realtime clock fallback
  *******************************************************************************/
 
-#include <FreeRTOS.h>
-#include <task.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
 #include "forte/arch/forte_architecture_time.h"
 #include "forte/util/forte_constants.h"

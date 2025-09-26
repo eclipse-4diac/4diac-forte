@@ -13,8 +13,8 @@
 #ifndef SRC_ARCH_FREERTOS_FREERTOSTIHA_H_
 #define SRC_ARCH_FREERTOS_FREERTOSTIHA_H_
 
-#include <FreeRTOS.h>
-#include <timers.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/timers.h>
 
 #include "forte/timerha.h"
 

@@ -14,8 +14,8 @@
 #ifndef SRC_ARCH_FREERTOS_THREAD_H_
 #define SRC_ARCH_FREERTOS_THREAD_H_
 
-#include <FreeRTOS.h>
-#include <task.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
 #include "forte/datatype.h"
 #include "forte/util/devlog.h"

@@ -12,8 +12,8 @@
 #ifndef _SYNC_H_
 #define _SYNC_H_
 
-#include <FreeRTOS.h>
-#include <semphr.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>
 
 #define CSyncObject CFreeRTOSSyncObject // allows that doxygen can generate better documenation
 

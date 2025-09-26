@@ -13,8 +13,8 @@
 #ifndef SRC_ARCH_FREERTOS_SEMAPHORE_H_
 #define SRC_ARCH_FREERTOS_SEMAPHORE_H_
 
-#include <FreeRTOS.h>
-#include <semphr.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>
 #include "forte/datatype.h"
 
 namespace forte {

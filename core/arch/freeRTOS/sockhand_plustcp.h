@@ -36,7 +36,7 @@
 #undef FD_ISSET
 
 // base headers
-#include <FreeRTOS.h>
+#include <freertos/FreeRTOS.h>
 #include <FreeRTOS_Sockets.h>
 #include <FreeRTOS_IP.h>
 #include <FreeRTOS_TCP_IP.h>
