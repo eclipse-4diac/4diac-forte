@@ -61,6 +61,7 @@ namespace forte::com_infra::opc_ua {
       std::vector<UA_NodeId> mTypePropertyNodes;
       std::unique_ptr<CAlarmActionInfo> mMemberActionInfo;
 
+      bool mIsStateActive;
       bool mHasSeverityProperty = false;
       int mMessageTextPortIndex = -1;
       std::unordered_map<std::string, UA_NodeId> mUAPropertyMap = {
@@ -91,7 +92,7 @@ namespace forte::com_infra::opc_ua {
 
       void initializeRDBuffer();
 
-      UA_StatusCode triggerAlarm();
+      UA_StatusCode triggerAlarm(bool paActivate);
 
       UA_StatusCode setConditionField(UA_Server *paServer,
                                       UA_QualifiedName paQualifiedName,
@@ -120,6 +121,8 @@ namespace forte::com_infra::opc_ua {
       bool checkFBOutputNames();
 
       bool checkFirstDataPinType();
+
+      bool getTriggerValue();
 
       EComResponse setConditionCallbacks(UA_Server *paServer);
 

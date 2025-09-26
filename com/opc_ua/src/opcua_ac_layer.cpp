@@ -61,7 +61,8 @@ namespace forte::com_infra::opc_ua {
   COPC_UA_AC_Layer::COPC_UA_AC_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
       COPC_UA_Layer(paUpperLayer, paComFB),
       mHandler(nullptr),
-      mMemberActionInfo(nullptr) {
+      mMemberActionInfo(nullptr),
+      mIsStateActive(false) {
   }
 
   COPC_UA_AC_Layer::~COPC_UA_AC_Layer() {
@@ -134,13 +135,17 @@ namespace forte::com_infra::opc_ua {
   }
 
   EComResponse COPC_UA_AC_Layer::sendData(void *, unsigned int) {
+    bool activate = getTriggerValue();
+    if ((mIsStateActive && activate) || (!mIsStateActive && !activate)) {
+      return e_ProcessDataOk;
+    }
     if (mMemberActionInfo) {
       if (mHandler->executeAction(*mMemberActionInfo) != UA_STATUSCODE_GOOD) {
-        DEVLOG_ERROR("[OPC UA A&C LAYER]: Sending Alarm Data failed for FB %s!\n", getCommFB()->getInstanceName());
+        DEVLOG_ERROR("[OPC UA A&C LAYER]: Sending FB Data failed for FB %s!\n", getCommFB()->getInstanceName());
         return e_ProcessDataSendFailed;
       }
     }
-    if (triggerAlarm() != UA_STATUSCODE_GOOD) {
+    if (triggerAlarm(activate) != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Sending Alarm Data failed for FB %s!\n", getCommFB()->getInstanceName());
       return e_ProcessDataSendFailed;
     }
@@ -161,36 +166,50 @@ namespace forte::com_infra::opc_ua {
     }
   }
 
-  UA_StatusCode COPC_UA_AC_Layer::triggerAlarm() {
+  UA_StatusCode COPC_UA_AC_Layer::triggerAlarm(bool paActivate) {
     COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(mHandler);
     UA_Server *server = localHandler->getUAServer();
     UA_StatusCode status = UA_STATUSCODE_GOOD;
+    UA_Boolean activeState = paActivate;
+    if (paActivate) {
+      if (!mHasSeverityProperty) {
+        UA_UInt16 *severityValue = &smSeverityValue;
+        status |= setConditionField(server, UA_QUALIFIEDNAME(0, smSeverity), severityValue, &UA_TYPES[UA_TYPES_UINT16]);
+      }
+      if (mMessageTextPortIndex >= 0) {
+        CIEC_STRING &messagePort = static_cast<CIEC_STRING &>(getCommFB()->getDI(mMessageTextPortIndex)->unwrap());
+        UA_LocalizedText messageValue = UA_LOCALIZEDTEXT(smEmptyString, getNameFromString(messagePort.c_str()));
+        status |=
+            setConditionField(server, UA_QUALIFIEDNAME(0, smMessage), &messageValue, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
+      }
+      UA_Boolean retainValue = true;
+      status |= setConditionField(server, UA_QUALIFIEDNAME(0, smRetain), &retainValue, &UA_TYPES[UA_TYPES_BOOLEAN]);
+      status |= setConditionVariableFieldProperty(server, UA_QUALIFIEDNAME(0, smActiveState), &activeState,
+                                                  &UA_TYPES[UA_TYPES_BOOLEAN]);
+      UA_DateTime alarmTime = UA_DateTime_now();
+      status |= UA_Server_writeObjectProperty_scalar(server, mConditionInstanceId, UA_QUALIFIEDNAME(0, smTime),
+                                                     &alarmTime, &UA_TYPES[UA_TYPES_DATETIME]);
 
-    if (!mHasSeverityProperty) {
-      UA_UInt16 *severityValue = &smSeverityValue;
-      status |= setConditionField(server, UA_QUALIFIEDNAME(0, smSeverity), severityValue, &UA_TYPES[UA_TYPES_UINT16]);
-    }
-    if (mMessageTextPortIndex >= 0) {
-      CIEC_STRING &messagePort = static_cast<CIEC_STRING &>(getCommFB()->getDI(mMessageTextPortIndex)->unwrap());
-      UA_LocalizedText messageValue = UA_LOCALIZEDTEXT(smEmptyString, getNameFromString(messagePort.c_str()));
-      status |=
-          setConditionField(server, UA_QUALIFIEDNAME(0, smMessage), &messageValue, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
-    }
-
-    UA_Boolean retainValue = true;
-    status |= setConditionField(server, UA_QUALIFIEDNAME(0, smRetain), &retainValue, &UA_TYPES[UA_TYPES_BOOLEAN]);
-
-    UA_Boolean activeState = true;
-    status |= setConditionVariableFieldProperty(server, UA_QUALIFIEDNAME(0, smActiveState), &activeState,
-                                                &UA_TYPES[UA_TYPES_BOOLEAN]);
-
-    UA_DateTime alarmTime = UA_DateTime_now();
-    status |= UA_Server_writeObjectProperty_scalar(server, mConditionInstanceId, UA_QUALIFIEDNAME(0, smTime),
-                                                   &alarmTime, &UA_TYPES[UA_TYPES_DATETIME]);
-
-    if (status != UA_STATUSCODE_GOOD) {
-      DEVLOG_ERROR("[OPC UA A&C LAYER]: Triggering Alarm failed for FB %s, StatusCode: %s\n",
-                   getCommFB()->getInstanceName(), UA_StatusCode_name(status));
+      if (status != UA_STATUSCODE_GOOD) {
+        DEVLOG_ERROR("[OPC UA A&C LAYER]: Triggering Alarm failed for FB %s, StatusCode: %s\n",
+                     getCommFB()->getInstanceName(), UA_StatusCode_name(status));
+        return status;
+      }
+      mIsStateActive = true;
+    } else {
+      status |= setConditionVariableFieldProperty(server, UA_QUALIFIEDNAME(0, smActiveState), &activeState,
+                                                  &UA_TYPES[UA_TYPES_BOOLEAN]);
+      /* Alarm time needs to be set prior to triggering condition. Otherwise time is not displayed correctly */
+      UA_DateTime alarmTime = UA_DateTime_now();
+      status |= UA_Server_writeObjectProperty_scalar(server, mConditionInstanceId, UA_QUALIFIEDNAME(0, smTime),
+                                                     &alarmTime, &UA_TYPES[UA_TYPES_DATETIME]);
+      status |= UA_Server_triggerConditionEvent(server, mConditionInstanceId, mConditionSourceId, nullptr);
+      if (status != UA_STATUSCODE_GOOD) {
+        DEVLOG_ERROR("[OPC UA A&C LAYER]: Resetting Alarm failed for FB %s, StatusCode: %s\n",
+                     getCommFB()->getInstanceName(), UA_StatusCode_name(status));
+        return e_ProcessDataSendFailed;
+      }
+      mIsStateActive = false;
     }
     return status;
   }
@@ -424,6 +443,11 @@ namespace forte::com_infra::opc_ua {
     return parent.getDI(0)->getDataTypeID() == CIEC_ANY::e_BOOL;
   }
 
+  bool COPC_UA_AC_Layer::getTriggerValue() {
+    CIEC_BOOL &dataPort = static_cast<CIEC_BOOL &>(getCommFB()->getSDs()[0]->unwrap());
+    return static_cast<bool>(dataPort);
+  }
+
   EComResponse COPC_UA_AC_Layer::setConditionCallbacks(UA_Server *paServer) {
     UA_TwoStateVariableChangeCallback callback = onEnabled;
     UA_StatusCode status = UA_Server_setConditionTwoStateVariableCallback(
@@ -614,9 +638,12 @@ namespace forte::com_infra::opc_ua {
     UA_Server_getNodeContext(server, *condition, (void **) &layer);
     COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(layer->mHandler);
     if (layer->getCommFB()->getComServiceType() == e_Subscriber) {
-      std::pair<TPortId, const CIEC_BOOL> data = std::make_pair(layer->mFBOutputMap[smActive], true_BOOL);
+      const CIEC_BOOL &value = layer->mIsStateActive ? false_BOOL : true_BOOL;
+      std::pair<TPortId, const CIEC_BOOL> data = std::make_pair(layer->mFBOutputMap[smActive], value);
       localHandler->onAlarmStateChanged(static_cast<const void *>(&data), 0, layer);
     }
+    layer->mIsStateActive = !layer->mIsStateActive;
+
     UA_DateTime dateTime = UA_DateTime_now();
     UA_StatusCode status = UA_Server_writeObjectProperty_scalar(server, *condition, UA_QUALIFIEDNAME(0, smTime),
                                                                 &dateTime, &UA_TYPES[UA_TYPES_DATETIME]);
