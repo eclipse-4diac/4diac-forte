@@ -18,7 +18,7 @@
 
 namespace forte::com_infra::opc_ua {
   class COPC_UA_HandlerAbstract;
-  class CActionInfo;
+  class CAlarmActionInfo;
 
   class COPC_UA_AC_Layer : public COPC_UA_Layer {
     public:
@@ -59,7 +59,7 @@ namespace forte::com_infra::opc_ua {
 
       std::vector<char *> mNames;
       std::vector<UA_NodeId> mTypePropertyNodes;
-      std::unique_ptr<CActionInfo> mMemberActionInfo;
+      std::unique_ptr<CAlarmActionInfo> mMemberActionInfo;
 
       bool mHasSeverityProperty = false;
       int mMessageTextPortIndex = -1;
@@ -118,6 +118,8 @@ namespace forte::com_infra::opc_ua {
       bool isFullyInitialized(const std::string &paTypeName);
 
       bool checkFBOutputNames();
+
+      bool checkFirstDataPinType();
 
       EComResponse setConditionCallbacks(UA_Server *paServer);
 

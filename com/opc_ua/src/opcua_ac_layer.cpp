@@ -16,7 +16,7 @@
 #include "forte/cominfra/basecommfb.h"
 #include "opcua_local_handler.h"
 #include "opcua_objectstruct_helper.h"
-#include "opcua_action_info.h"
+#include "alarm_action_info.h"
 #include "forte/cominfra/comlayersmanager.h"
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
@@ -93,6 +93,11 @@ namespace forte::com_infra::opc_ua {
         DEVLOG_ERROR("[OPC UA A&C LAYER]: Wrong CommFB used for FB %s! Expected: Publish/Subscribe\n",
                      getCommFB()->getInstanceName());
         return eRetVal;
+    }
+    if (!checkFirstDataPinType()) {
+      DEVLOG_ERROR("[OPC UA A&C Layer]: First Input of FB %s must be of type BOOL!\n",
+                   getCommFB()->getParent().getInstanceName());
+      return eRetVal;
     }
     mHandler = static_cast<COPC_UA_HandlerAbstract *>(&getExtEvHandler<COPC_UA_Local_Handler>());
     COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(mHandler);
@@ -414,6 +419,11 @@ namespace forte::com_infra::opc_ua {
     return retVal;
   }
 
+  bool COPC_UA_AC_Layer::checkFirstDataPinType() {
+    CFunctionBlock &parent = static_cast<CFunctionBlock &>(getCommFB()->getParent());
+    return parent.getDI(0)->getDataTypeID() == CIEC_ANY::e_BOOL;
+  }
+
   EComResponse COPC_UA_AC_Layer::setConditionCallbacks(UA_Server *paServer) {
     UA_TwoStateVariableChangeCallback callback = onEnabled;
     UA_StatusCode status = UA_Server_setConditionTwoStateVariableCallback(
@@ -433,12 +443,12 @@ namespace forte::com_infra::opc_ua {
   }
 
   EComResponse COPC_UA_AC_Layer::initializeMemberActions(const std::string &paParentBrowsePath) {
-    mMemberActionInfo.reset(new CActionInfo(*this, CActionInfo::UA_ActionType::eWrite, std::string()));
+    mMemberActionInfo.reset(
+        new CAlarmActionInfo(*this, CActionInfo::UA_ActionType::eWrite, std::string(), smFirstDataIndex));
     size_t numPorts = getCommFB()->getNumSD();
     const std::span<const StringId> dataPortNameIds = getParentInterfaceSpec().mDINames;
-    auto portIt = dataPortNameIds.begin()++;
-    for (size_t i = 0; i < numPorts; i++) {
-      std::string dataPortName{(*portIt++).data()};
+    for (size_t i = smFirstDataIndex; i < numPorts; i++) {
+      std::string dataPortName{dataPortNameIds[i].data()};
       auto propertyKeyIt = sm1499ToUAMap.find(dataPortName);
       if (propertyKeyIt != sm1499ToUAMap.end()) {
         addNewNodeId(&mUAPropertyMap[propertyKeyIt->second]);
@@ -500,9 +510,8 @@ namespace forte::com_infra::opc_ua {
     CIEC_ANY **apoDataPorts = getCommFB()->getSDs();
     size_t numDataPorts = getCommFB()->getNumSD();
     const std::span<const StringId> dataPortNameIds = getParentInterfaceSpec().mDINames;
-    auto portIt = dataPortNameIds.begin()++;
-    for (size_t i = 0; i < numDataPorts; i++) {
-      std::string dataPortName{(*portIt++).data()};
+    for (size_t i = smFirstDataIndex; i < numDataPorts; i++) {
+      std::string dataPortName{dataPortNameIds[i].data()};
       char *propertyName = getNameFromString(dataPortName);
       UA_StatusCode status = addVariableNode(paServer, paTypeName, propertyName, apoDataPorts[i]->unwrap());
       if (status != UA_STATUSCODE_GOOD) {
