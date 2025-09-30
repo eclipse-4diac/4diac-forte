@@ -24,11 +24,11 @@ namespace {
 } // namespace
 
 int forteGlobalInitialize(int argc, char *argv[]) {
-  return CForteArchitecture::initialize(argc, argv);
+  return forte::arch::CForteArchitecture::initialize(argc, argv);
 }
 
 int forteGlobalDeinitialize() {
-  return CForteArchitecture::deinitialize();
+  return forte::arch::CForteArchitecture::deinitialize();
 }
 
 FORTE_STATUS forteStartInstance(unsigned int paPort, TForteInstance *paResultInstance) {
@@ -65,7 +65,7 @@ FORTE_STATUS forteStartInstanceGeneric(int argc, char *argv[], TForteInstance *p
     return FORTE_DEVICE_ALREADY_STARTED;
   }
 
-  if (!CForteArchitecture::isInitialized()) {
+  if (!forte::arch::CForteArchitecture::isInitialized()) {
     DEVLOG_ERROR("The low level platform should be initialized before starting a forte instance\n");
     return FORTE_ARCHITECTURE_NOT_READY;
   }
@@ -76,7 +76,7 @@ FORTE_STATUS forteStartInstanceGeneric(int argc, char *argv[], TForteInstance *p
     return FORTE_WRONG_PARAMETERS;
   }
 
-  C4diacFORTEInstance *instance = new C4diacFORTEInstance();
+  forte::C4diacFORTEInstance *instance = new forte::C4diacFORTEInstance();
   if (!instance->startupNewDevice(ipPort)) {
     delete instance;
     return FORTE_COULD_NOT_CREATE_DEVICE;
@@ -87,18 +87,18 @@ FORTE_STATUS forteStartInstanceGeneric(int argc, char *argv[], TForteInstance *p
 }
 
 void forteRequestStopInstance(TForteInstance paInstance) {
-  if (!CForteArchitecture::isInitialized() || paInstance == nullptr) {
+  if (!forte::arch::CForteArchitecture::isInitialized() || paInstance == nullptr) {
     return;
   }
-  auto *instance = static_cast<C4diacFORTEInstance *>(paInstance);
+  auto *instance = static_cast<forte::C4diacFORTEInstance *>(paInstance);
   instance->triggerDeviceShutdown();
 }
 
 void forteWaitForInstanceToStop(TForteInstance paInstance) {
-  if (!CForteArchitecture::isInitialized() || paInstance == nullptr) {
+  if (!forte::arch::CForteArchitecture::isInitialized() || paInstance == nullptr) {
     return;
   }
-  auto *instance = static_cast<C4diacFORTEInstance *>(paInstance);
+  auto *instance = static_cast<forte::C4diacFORTEInstance *>(paInstance);
   instance->awaitDeviceShutdown();
   delete instance;
 }
