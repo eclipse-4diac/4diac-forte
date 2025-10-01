@@ -451,14 +451,16 @@ namespace forte {
       }
     }
     if (getState() == E_FBStates::Idle) {
-      mInitialValues.emplace_back(*var, paValue);
+      mInitialValues.emplace(paNameList, paValue);
     }
     return EMGMResponse::Ready;
   }
 
   void CResource::setInitialValues() {
-    for (auto it : mInitialValues) {
-      it.getIECVariable().fromString(it.getInitString().c_str());
+    for (const auto &[name, value] : mInitialValues) {
+      if (CIEC_ANY *var = getVar(name)) {
+        var->fromString(value.c_str());
+      }
     }
   }
 

@@ -21,6 +21,8 @@
 #include "forte/fbcontainer.h"
 #include "forte/funcbloc.h"
 
+#include <unordered_map>
+
 namespace forte {
   class ResourceInternal;
   struct SManagementCMD;
@@ -132,28 +134,7 @@ namespace forte {
         return nullptr;
       }
 
-      class CInitialValue {
-        private:
-          CIEC_ANY &mIECVariable;
-          const std::string mInitString;
-
-        public:
-          CInitialValue(CIEC_ANY &paVariable, std::string paInitString) :
-              mIECVariable(paVariable),
-              mInitString(std::move(paInitString)) {
-          }
-
-          [[nodiscard]]
-          const std::string &getInitString() const {
-            return mInitString;
-          }
-
-          CIEC_ANY &getIECVariable() {
-            return mIECVariable;
-          }
-      };
-
-      std::vector<CInitialValue> mInitialValues;
+      std::unordered_map<TNameIdentifier, std::string> mInitialValues;
 
       void setInitialValues() override;
 

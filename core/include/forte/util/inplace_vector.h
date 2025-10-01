@@ -22,6 +22,7 @@
 #include <array>
 #include <cassert>
 #include <algorithm>
+#include <functional>
 
 namespace forte::util {
 
@@ -211,3 +212,14 @@ namespace forte::util {
     return !(paFirst == paSecond);
   }
 } // namespace forte::util
+
+template<typename T, std::size_t Capacity>
+struct std::hash<forte::util::inplace_vector<T, Capacity>> {
+    std::size_t operator()(const forte::util::inplace_vector<T, Capacity> &vec) const noexcept {
+      std::size_t seed = vec.size();
+      for (const auto &element : vec) {
+        seed ^= std::hash<T>{}(element) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+      }
+      return seed;
+    }
+};
