@@ -60,21 +60,21 @@ namespace forte::internal {
 
   EMGMResponse CGatheringDataConnection::addMemberConnection(const std::span<const StringId> paMemberName,
                                                              CDataConnection &paConnection) {
-    if (CIEC_ANY *member = getValue().getMemberNamed(paMemberName)) {
+    if (CIEC_ANY *member = getValue().getVar(paMemberName)) {
       return addMemberConnection(member, &paConnection, paMemberName);
     }
     return EMGMResponse::NoSuchObject;
   }
 
   EMGMResponse CGatheringDataConnection::removeMemberConnection(const std::span<const StringId> paMemberName) {
-    if (const CIEC_ANY *member = getValue().getMemberNamed(paMemberName)) {
+    if (const CIEC_ANY *member = getValue().getVar(paMemberName)) {
       return removeMemberConnection(member);
     }
     return EMGMResponse::NoSuchObject;
   }
 
   CDataConnection *CGatheringDataConnection::getMemberConnection(const std::span<const StringId> paMemberName) {
-    if (const CIEC_ANY *member = getValue().getMemberNamed(paMemberName)) {
+    if (const CIEC_ANY *member = getValue().getVar(paMemberName)) {
       return getMemberConnection(member);
     }
     return CDataConnection::getMemberConnection(paMemberName);

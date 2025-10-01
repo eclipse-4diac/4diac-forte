@@ -178,7 +178,7 @@ namespace forte {
     if (nullptr != fB) {
       internal::SFBMonitoringEntry &fbMonitoringEntry(findOrCreateFBMonitoringEntry(fB, paNameList));
 
-      CIEC_ANY *dataVal = fB->getVar(&portName, 1);
+      CIEC_ANY *dataVal = fB->getVar(std::array{portName});
       if (nullptr != dataVal) {
         internal::addDataWatch(fbMonitoringEntry, portName, *dataVal);
         eRetVal = EMGMResponse::Ready;
@@ -241,20 +241,9 @@ namespace forte {
   }
 
   EMGMResponse CMonitoringHandler::clearForce(TNameIdentifier &paNameList) {
-    StringId portName = paNameList.back();
-    paNameList.pop_back();
-    CFunctionBlock *fB = getFB(paNameList);
-
-    if (fB == nullptr) {
+    if (!mResource.setForce(paNameList, false)) {
       return EMGMResponse::NoSuchObject;
     }
-
-    auto absDataPortId = fB->getAbsDataPortNum(portName);
-    if (absDataPortId == INVALID_ABS_DATA_PORT_ID) {
-      return EMGMResponse::NoSuchObject;
-    }
-
-    fB->setForce(absDataPortId, false);
     return EMGMResponse::Ready;
   }
 

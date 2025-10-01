@@ -56,8 +56,6 @@ namespace forte {
       bool configureGenericDI(TPortId paDIPortId, const CIEC_ANY &paRefValue) override;
       bool configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY &paRefValue) override;
       bool configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue) override;
-      //! implement improved version of get Var for CFBs, allowing to read and write to internal elements
-      CIEC_ANY *getVar(StringId *paNameList, unsigned int paNameListSize) override;
 
       EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 

@@ -38,21 +38,15 @@ CIEC_ANY *CIEC_STRUCT::getMemberNamed(const char *paMemberName) {
   return nullptr;
 }
 
-CIEC_ANY *CIEC_STRUCT::getMemberNamed(const std::span<const StringId> paMemberName) {
-  if (paMemberName.empty()) {
-    return nullptr;
+CIEC_ANY *CIEC_STRUCT::getVar(const std::span<const StringId> paNameList) {
+  if (paNameList.empty()) {
+    return this;
   }
-  CIEC_ANY *member = getMemberNamed(paMemberName.front());
-  if (!member) {
-    return nullptr;
-  }
-  if (paMemberName.size() == 1) {
-    return member;
-  }
-  if (member->getDataTypeID() != e_STRUCT) {
-    return nullptr;
-  }
-  return static_cast<CIEC_STRUCT *>(member)->getMemberNamed(paMemberName.subspan(1));
+  const StringId name = paNameList.front();
+  if (const auto var = getMemberNamed(name)) {
+    return var->getVar(paNameList.subspan(1));
+  };
+  return nullptr;
 }
 
 size_t CIEC_STRUCT::getMemberIndex(StringId paMemberNameId) {

@@ -139,23 +139,6 @@ namespace forte {
     // currently nothing to do
   }
 
-  CIEC_ANY *CCompositeFB::getVar(StringId *paNameList, unsigned int paNameListSize) {
-    CIEC_ANY *retVal = nullptr;
-
-    if (1 > paNameListSize) {
-      CFunctionBlock *child = getFB(*paNameList);
-      if (child != nullptr) {
-        paNameList++;
-        paNameListSize--;
-        retVal = child->getVar(paNameList, paNameListSize);
-      }
-    } else {
-      retVal = CFunctionBlock::getVar(paNameList, paNameListSize);
-    }
-
-    return retVal;
-  }
-
   void CCompositeFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
     if (cgInternal2InterfaceMarker & paEIID) {
       TEventID internalEvent = static_cast<TEventID>(paEIID & cgInternal2InterfaceRemovalMask);

@@ -23,6 +23,7 @@
 #include <memory>
 
 namespace forte {
+  class CIEC_ANY;
 
   class CAdapter;
   class CAnyAdapterPin;
@@ -124,6 +125,20 @@ namespace forte {
       virtual bool isDynamicContainer() {
         return true;
       }
+
+      /*!\brief Get the pointer to a variable of the FB container.
+       *
+       * @param paNameList the name hierarchy the requested variable
+       * \return Pointer to the variable or 0.
+       */
+      virtual CIEC_ANY *getVar(std::span<const StringId> paNameList);
+
+      /*!\brief Set the force flag for a variable of the FB container.
+       *
+       * @param paNameList the name hierarchy the requested variable
+       * \return true on success, false otherwise.
+       */
+      virtual bool setForce(std::span<const StringId> paNameList, bool paForce);
 
       /*!\brief get the connection object for the given destination identifier
        *

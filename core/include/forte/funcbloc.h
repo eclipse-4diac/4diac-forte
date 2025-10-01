@@ -121,9 +121,31 @@ namespace forte {
       /*!\brief Get the pointer to a data input of the FB.
        *
        * \param paDINameId ID of the data input name.
-       * \return Pointer to the data input or 0. If 0 is returned DataInput is ANY
+       * \return Pointer to the data input or 0.
        */
       CIEC_ANY *getDataInput(StringId paDINameId);
+
+      /*!\brief Get the pointer to a data in-out of the FB.
+       *
+       * \param paDIONameId ID of the data in-out name.
+       * \return Pointer to the data input or 0.
+       */
+      CIEC_ANY *getDataInOut(StringId paDIONameId);
+
+      /*!\brief Get the pointer to a data output of the FB.
+       *
+       * \param paDONameId StringID of the data output name.
+       * \return Pointer to the data output or 0. If 0 is returned DataOutput is ANY
+       */
+      CIEC_ANY *getDataOutput(StringId paDONameId);
+
+      /*!\brief Get the pointer to a variable of the FB.
+       *
+       * @param paNameList the name hierarchy the requested variable
+       * \return Pointer to the variable or 0.
+       *  The variable may be an input, in-out, output or in the case of a BFB an internal var.
+       */
+      CIEC_ANY *getVar(std::span<const StringId> paNameList) override;
 
       /*!\brief get the pointer to a data input using the portId as identifier
        */
@@ -173,22 +195,6 @@ namespace forte {
        * the DO with the specific type coming from the other end of the connection
        */
       virtual bool configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRefValue);
-
-      /*!\brief Get the pointer to a data output of the FB.
-       *
-       * \param paDONameId StringID of the data output name.
-       * \return Pointer to the data output or 0. If 0 is returned DataOutput is ANY
-       */
-      CIEC_ANY *getDataOutput(StringId paDONameId);
-
-      /*!\brief Get the pointer to a variable of the FB.
-       *
-       * @param paNameList array of the name hierarchy the requested variable
-       * @param paNameListSize length of the array
-       * \return Pointer to the variable or 0.
-       *  The variable may be input, output or in the case of a BFB an internal var.
-       */
-      virtual CIEC_ANY *getVar(StringId *paNameList, unsigned int paNameListSize);
 
       /*!\brief Get the pointer to the plub pin of the FB.
        *
@@ -335,7 +341,7 @@ namespace forte {
 
       TAbsDataPortNum getAbsDataPortNum(StringId paPortNameId) const;
 
-      void setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue);
+      bool setForce(std::span<const StringId> paNameList, bool paForce) override;
 
       bool getForce(TAbsDataPortNum paAbsDataPortNum) const {
         return mForces[paAbsDataPortNum];
@@ -550,6 +556,8 @@ namespace forte {
        * \param paEIID Event output ID where event occurred.
        */
       virtual void writeOutputData(TEventID paEO) = 0;
+
+      void setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue);
 
     public:
       CFunctionBlock(const CFunctionBlock &) = delete;

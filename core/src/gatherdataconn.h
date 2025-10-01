@@ -18,9 +18,9 @@
 
 namespace forte::internal {
 
-  class CGatheringDataConnection final : public CDelegatingDataConnection<CIEC_STRUCT> {
+  class CGatheringDataConnection final : public CDelegatingDataConnection<CIEC_ANY> {
     public:
-      CGatheringDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_STRUCT &paValue) :
+      CGatheringDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_ANY &paValue) :
           CDelegatingDataConnection(paSrcFB, paSrcPortId, paValue) {
       }
 

@@ -153,8 +153,7 @@ namespace forte {
       return EMGMResponse::NoSuchObject;
     }
 
-    auto &dstStruct = static_cast<CIEC_STRUCT &>(paDstDataPoint);
-    CIEC_ANY *dstMember = dstStruct.getMemberNamed(paDstPortNameId.subspan(1));
+    const CIEC_ANY *dstMember = paDstDataPoint.getVar(paDstPortNameId.subspan(1));
     if (!dstMember) {
       return EMGMResponse::NoSuchObject;
     }
@@ -167,7 +166,7 @@ namespace forte {
 
     CDataConnection *dstConnection = paDstFB.getDIConnection(paDstPortNameId.front());
     if (!dstConnection) {
-      dstConnection = new internal::CGatheringDataConnection(paDstFB, paDstPortId, dstStruct);
+      dstConnection = new internal::CGatheringDataConnection(paDstFB, paDstPortId, paDstDataPoint);
       if (!paDstFB.connectDI(paDstPortId, dstConnection)) {
         delete dstConnection;
         return EMGMResponse::InvalidState;
@@ -181,22 +180,19 @@ namespace forte {
   }
 
   CConnection::Wrapper CDataConnection::getDelegatingConnection(const std::span<const StringId> paSrcNameList) {
-    switch (getValue().getDataTypeID()) {
-      case CIEC_ANY::e_BOOL:
-        if (paSrcNameList.size() == 1 && paSrcNameList.front() == "NOT"_STRID) {
-          return make_delegating<internal::CNegatingDataConnection>(getSourceId().getFB(), getSourceId().getPortId(),
-                                                                    static_cast<CIEC_BOOL &>(getValue()));
-        }
-        break;
-      case CIEC_ANY::e_STRUCT:
-        if (CIEC_ANY *member = static_cast<CIEC_STRUCT &>(getValue()).getMemberNamed(paSrcNameList); member) {
-          return make_delegating<internal::CMemberDataConnection>(getSourceId().getFB(), getSourceId().getPortId(),
-                                                                  *member, paSrcNameList);
-        }
-        break;
-      default: break;
+    if (paSrcNameList.empty()) {
+      return Wrapper(this);
     }
-    return CConnection::getDelegatingConnection(paSrcNameList);
+    if (getValue().getDataTypeID() == CIEC_ANY::e_BOOL && paSrcNameList.size() == 1 &&
+        paSrcNameList.front() == "NOT"_STRID) {
+      return make_delegating<internal::CNegatingDataConnection>(getSourceId().getFB(), getSourceId().getPortId(),
+                                                                static_cast<CIEC_BOOL &>(getValue()));
+    }
+    if (CIEC_ANY *member = getValue().getVar(paSrcNameList)) {
+      return make_delegating<internal::CMemberDataConnection>(getSourceId().getFB(), getSourceId().getPortId(), *member,
+                                                              paSrcNameList);
+    }
+    return {};
   }
 
   void CDataConnection::getSourcePortName(TNameIdentifier &paResult) const {

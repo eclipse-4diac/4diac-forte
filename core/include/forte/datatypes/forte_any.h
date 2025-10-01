@@ -24,6 +24,7 @@
 #pragma once
 
 #include <bit>
+#include <span>
 #include <limits>
 #include "forte/typelib.h"
 #include "forte/iec61131_cast_helper.h"
@@ -248,6 +249,13 @@ namespace forte {
       virtual size_t getIECMemorySize() const {
         const EDataTypeID typeId = getDataTypeID();
         return typeId > (sizeof(csmDataLengthLookup) / sizeof(size_t)) ? 0 : csmDataLengthLookup[typeId];
+      }
+
+      virtual CIEC_ANY *getVar(const std::span<const StringId> paNameList) {
+        if (paNameList.empty()) {
+          return this;
+        }
+        return nullptr;
       }
 
 #ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES

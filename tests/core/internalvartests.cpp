@@ -95,10 +95,10 @@ namespace forte::test {
     StringId namelist[1] = {"DT"_STRID};
 
     CInternalVarTestFB testFB({});
-    BOOST_CHECK(nullptr == testFB.getVar(namelist, 1));
+    BOOST_CHECK(nullptr == testFB.getVar(namelist));
     // check that we should at least get the ECC variable
     namelist[0] = StringId::insert("!ECC");
-    BOOST_CHECK(nullptr != testFB.getVar(namelist, 1));
+    BOOST_CHECK(nullptr != testFB.getVar(namelist));
   }
 
   BOOST_AUTO_TEST_CASE(sampleInteralVarList) {
@@ -108,7 +108,7 @@ namespace forte::test {
     BOOST_REQUIRE(testFB.initialize());
 
     for (size_t i = 0; i < varInternalNames.size(); i++) {
-      CIEC_ANY *var = testFB.getVar(&(varInternalNames[i]), 1);
+      CIEC_ANY *var = testFB.getVar(std::array{varInternalNames[i]});
       BOOST_CHECK(nullptr != var);
       BOOST_CHECK_EQUAL(var, testFB.getVarInternal(static_cast<unsigned int>(i)));
     }

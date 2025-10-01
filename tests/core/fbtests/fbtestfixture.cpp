@@ -264,7 +264,7 @@ namespace forte::test {
 
       BOOST_CHECK_EQUAL(val, mFBUnderTest->getDIFromPortId(i));
       StringId stringIdBuf = interfaceSpec.mDINames[i];
-      BOOST_CHECK_EQUAL(val, mFBUnderTest->getVar(&stringIdBuf, 1));
+      BOOST_CHECK_EQUAL(val, mFBUnderTest->getVar(std::array{stringIdBuf}));
 
       BOOST_CHECK_EQUAL(i, interfaceSpec.getDIID(interfaceSpec.mDINames[i]));
 
@@ -290,7 +290,7 @@ namespace forte::test {
                     (CIEC_ANY::e_ANY == val->getDataTypeID()));
 
       StringId stringIdBuf = interfaceSpec.mDONames[i];
-      BOOST_CHECK_EQUAL(val, mFBUnderTest->getVar(&stringIdBuf, 1));
+      BOOST_CHECK_EQUAL(val, mFBUnderTest->getVar(std::array{stringIdBuf}));
 
       BOOST_CHECK_EQUAL(i, interfaceSpec.getDOID(interfaceSpec.mDONames[i]));
 

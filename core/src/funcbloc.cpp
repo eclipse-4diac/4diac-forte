@@ -225,18 +225,23 @@ bool CFunctionBlock::configureGenericDO(TPortId paDOPortId, const CIEC_ANY &paRe
   return true;
 }
 
-CIEC_ANY *CFunctionBlock::getDataOutput(StringId paDONameId) {
-  TPortId unDID = getFBInterfaceSpec().getDOID(paDONameId);
-  if (unDID != cgInvalidPortId) {
-    return getDO(unDID);
+CIEC_ANY *CFunctionBlock::getDataInput(const StringId paDINameId) {
+  if (const TPortId portId = getFBInterfaceSpec().getDIID(paDINameId); portId != cgInvalidPortId) {
+    return getDI(portId);
   }
   return nullptr;
 }
 
-CIEC_ANY *CFunctionBlock::getDataInput(StringId paDINameId) {
-  TPortId unDID = getFBInterfaceSpec().getDIID(paDINameId);
-  if (unDID != cgInvalidPortId) {
-    return getDI(unDID);
+CIEC_ANY *CFunctionBlock::getDataOutput(const StringId paDONameId) {
+  if (const TPortId portId = getFBInterfaceSpec().getDOID(paDONameId); portId != cgInvalidPortId) {
+    return getDO(portId);
+  }
+  return nullptr;
+}
+
+CIEC_ANY *CFunctionBlock::getDataInOut(const StringId paDIONameId) {
+  if (const TPortId portId = getFBInterfaceSpec().getDIOID(paDIONameId); portId != cgInvalidPortId) {
+    return getDIO(portId);
   }
   return nullptr;
 }
@@ -262,22 +267,21 @@ CIEC_ANY *CFunctionBlock::getDIOFromPortId(TPortId paDIPortId) {
   return nullptr;
 }
 
-CIEC_ANY *CFunctionBlock::getVar(StringId *paNameList, unsigned int paNameListSize) {
-  if (1 == paNameListSize) {
-    TPortId portId = getFBInterfaceSpec().getDIID(*paNameList);
-    if (cgInvalidPortId != portId) {
-      return getDI(portId);
-    }
-    portId = getFBInterfaceSpec().getDOID(*paNameList);
-    if (cgInvalidPortId != portId) {
-      return getDO(portId);
-    }
-    portId = getFBInterfaceSpec().getDIOID(*paNameList);
-    if (cgInvalidPortId != portId) {
-      return getDIO(portId);
-    }
+CIEC_ANY *CFunctionBlock::getVar(const std::span<const StringId> paNameList) {
+  if (paNameList.empty()) {
+    return nullptr;
   }
-  return nullptr;
+  const StringId name = paNameList.front();
+  if (const auto var = getDataInput(name)) {
+    return var->getVar(paNameList.subspan(1));
+  };
+  if (const auto var = getDataOutput(name)) {
+    return var->getVar(paNameList.subspan(1));
+  };
+  if (const auto var = getDataInOut(name)) {
+    return var->getVar(paNameList.subspan(1));
+  };
+  return CFBContainer::getVar(paNameList);
 }
 
 IPlugPin *CFunctionBlock::getPlugPin(StringId paPlugNameId) {
@@ -427,6 +431,19 @@ TAbsDataPortNum CFunctionBlock::getAbsDataPortNum(StringId paPortNameId) const {
   }
 
   return INVALID_ABS_DATA_PORT_ID;
+}
+
+bool CFunctionBlock::setForce(const std::span<const StringId> paNameList, const bool paForce) {
+  if (paNameList.empty()) {
+    return false;
+  }
+  const StringId name = paNameList.front();
+  if (const auto absDataPortNum = getAbsDataPortNum(name);
+      absDataPortNum != INVALID_ABS_DATA_PORT_ID && paNameList.size() == 1) {
+    setForce(absDataPortNum, paForce);
+    return true;
+  }
+  return CFBContainer::setForce(paNameList, paForce);
 }
 
 void CFunctionBlock::setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue) {

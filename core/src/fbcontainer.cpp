@@ -228,6 +228,28 @@ namespace forte {
     return retVal;
   }
 
+  CIEC_ANY *CFBContainer::getVar(const std::span<const StringId> paNameList) {
+    if (paNameList.empty()) {
+      return nullptr;
+    }
+    const StringId name = paNameList.front();
+    if (const auto child = getChild(name)) {
+      return child->getVar(paNameList.subspan(1));
+    }
+    return nullptr;
+  }
+
+  bool CFBContainer::setForce(const std::span<const StringId> paNameList, const bool paForce) {
+    if (paNameList.empty()) {
+      return false;
+    }
+    const StringId name = paNameList.front();
+    if (const auto child = getChild(name)) {
+      return child->setForce(paNameList.subspan(1), paForce);
+    }
+    return false;
+  }
+
   CConnection *CFBContainer::getInputConnection(const std::span<const StringId> paDstNameList) {
     if (paDstNameList.empty()) {
       return nullptr;

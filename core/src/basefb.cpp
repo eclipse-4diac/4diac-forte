@@ -36,12 +36,15 @@ namespace forte {
     CFunctionBlock::setInitialValues();
   }
 
-  CIEC_ANY *CBaseFB::getVar(StringId *paNameList, unsigned int paNameListSize) {
-    CIEC_ANY *poRetVal = CFunctionBlock::getVar(paNameList, paNameListSize);
-    if ((nullptr == poRetVal) && (1 == paNameListSize)) {
-      poRetVal = getInternalVar(*paNameList);
+  CIEC_ANY *CBaseFB::getVar(const std::span<const StringId> paNameList) {
+    if (paNameList.empty()) {
+      return nullptr;
     }
-    return poRetVal;
+    const StringId name = paNameList.front();
+    if (const auto var = getInternalVar(name)) {
+      return var->getVar(paNameList.subspan(1));
+    }
+    return CFunctionBlock::getVar(paNameList);
   }
 
   CIEC_ANY *CBaseFB::getInternalVar(StringId paInternalName) {

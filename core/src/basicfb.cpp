@@ -33,11 +33,13 @@ namespace forte {
     mECCState = CIEC_STATE(0);
   }
 
-  CIEC_ANY *CBasicFB::getVar(StringId *paNameList, unsigned int paNameListSize) {
-    CIEC_ANY *poRetVal = CBaseFB::getVar(paNameList, paNameListSize);
-    if ((nullptr == poRetVal) && (1 == paNameListSize) && *paNameList == "!ECC"_STRID) {
-      poRetVal = &mECCState;
+  CIEC_ANY *CBasicFB::getVar(const std::span<const StringId> paNameList) {
+    if (paNameList.empty()) {
+      return nullptr;
     }
-    return poRetVal;
+    if (paNameList.front() == "!ECC"_STRID) {
+      return mECCState.getVar(paNameList.subspan(1));
+    };
+    return CBaseFB::getVar(paNameList);
   }
 } // namespace forte

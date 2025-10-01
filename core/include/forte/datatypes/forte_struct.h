@@ -137,10 +137,10 @@ namespace forte {
 
       /*! \brief Get the struct's member var with the given name id
        *
-       * \param paMemberNameId the string id of the member name
+       * \param paNameList the string id of the member name
        * \return on a valid member name id a pointer to the member var otherwise 0
        */
-      CIEC_ANY *getMemberNamed(std::span<const StringId> paMemberNameId);
+      CIEC_ANY *getVar(std::span<const StringId> paNameList) final;
 
       size_t getMemberIndex(StringId paMemberNameId);
 

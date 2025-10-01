@@ -434,43 +434,26 @@ namespace forte {
   }
 
   EMGMResponse CResource::writeValue(TNameIdentifier &paNameList, const std::string &paValue, bool paForce) {
-    EMGMResponse retVal = EMGMResponse::NoSuchObject;
+    CIEC_ANY *const var = getVar(paNameList);
+    if (var == nullptr) {
+      return EMGMResponse::NoSuchObject;
+    }
 
-    StringId portName = paNameList.back();
-    paNameList.pop_back();
-    auto runner = paNameList.cbegin();
+    // 0 is not supported in the fromString method
+    if (paValue.empty() || var->fromString(paValue.c_str()) != static_cast<int>(paValue.length())) {
+      // if we cannot parse the full value the value is not valid
+      return EMGMResponse::BadParams;
+    }
 
-    CFunctionBlock *fb = this;
-    if (paNameList.size() >= 1) {
-      // this is not an identifier for the resource interface
-      fb = getFB(runner, paNameList.cend());
-      if (runner != paNameList.cend()) {
-        // currently we can not write values of FBs inside of FBs
+    if (paForce) {
+      if (!setForce(paNameList, true)) {
         return EMGMResponse::NoSuchObject;
       }
     }
-
-    if (fb != nullptr) {
-      CIEC_ANY *const var = fb->getVar(&portName, 1);
-      if (var != nullptr) {
-        // 0 is not supported in the fromString method
-        if ((paValue.length() > 0) && (static_cast<int>(paValue.length()) == var->fromString(paValue.c_str()))) {
-          // if we cannot parse the full value the value is not valid
-          if (paForce) {
-            auto absDataPortId = fb->getAbsDataPortNum(portName);
-            if (absDataPortId != INVALID_ABS_DATA_PORT_ID) {
-              fb->setForce(absDataPortId, true);
-            }
-          } else {
-            mInitialValues.emplace_back(*var, paValue);
-          }
-          retVal = EMGMResponse::Ready;
-        } else {
-          retVal = EMGMResponse::BadParams;
-        }
-      }
+    if (getState() == E_FBStates::Idle) {
+      mInitialValues.emplace_back(*var, paValue);
     }
-    return retVal;
+    return EMGMResponse::Ready;
   }
 
   void CResource::setInitialValues() {
@@ -480,7 +463,7 @@ namespace forte {
   }
 
   EMGMResponse CResource::readValue(TNameIdentifier &paNameList, std::string &paValue) {
-    CIEC_ANY *const var = getVariable(paNameList);
+    CIEC_ANY *const var = getVar(paNameList);
     if (var == nullptr) {
       return EMGMResponse::NoSuchObject;
     }
@@ -506,24 +489,6 @@ namespace forte {
       default: var->toString(paValue); break;
     }
     return EMGMResponse::Ready;
-  }
-
-  CIEC_ANY *CResource::getVariable(TNameIdentifier &paNameList) {
-    StringId portName = paNameList.back();
-    paNameList.pop_back();
-    auto runner = paNameList.cbegin();
-
-    CFunctionBlock *fb = this;
-    if (paNameList.size() >= 1) {
-      // this is not an identifier for the resource interface
-      fb = getFB(runner, paNameList.cend()); // the last entry is the input name therefore reduce list here by one
-    }
-
-    CIEC_ANY *var = nullptr;
-    if ((nullptr != fb) && (runner == paNameList.cend())) {
-      var = fb->getVar(&portName, 1);
-    }
-    return var;
   }
 
   CConnection::Wrapper CResource::getOutputConnection(const std::span<const StringId> paSrcNameList) {

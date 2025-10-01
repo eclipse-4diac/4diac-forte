@@ -197,13 +197,6 @@ namespace forte {
        */
       EMGMResponse readValue(TNameIdentifier &paNameList, std::string &paValue);
 
-      /*!\brief get the variable with the given name identifier
-       *
-       * @param paNameList the identifier name list of the variable to be retrieved
-       * @return the pointer to the variable or 0 if the variable with the given identifier name list does not exist
-       */
-      CIEC_ANY *getVariable(TNameIdentifier &paNameList);
-
       CConnection *getResIf2InConnection(StringId paResInput);
 
       virtual CConnection *getResIf2InConnectionUnchecked(TPortId) {

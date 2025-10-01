@@ -26,7 +26,7 @@ namespace forte {
     public:
       ~CBaseFB() override = default;
 
-      CIEC_ANY *getVar(StringId *paNameList, unsigned int paNameListSize) override;
+      CIEC_ANY *getVar(std::span<const StringId> paNameList) override;
 
       void toString(std::string &paTargetBuf) const override;
 
