@@ -150,6 +150,10 @@ namespace forte {
         return false;
       }
 
+      virtual bool isInOut() const {
+        return false;
+      }
+
     protected:
       /*!\brief An identifier for the source of this connection
        *

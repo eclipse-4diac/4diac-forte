@@ -51,6 +51,10 @@ namespace forte {
         return *mValue;
       }
 
+      bool isInOut() const override {
+        return true;
+      }
+
     protected:
       EMGMResponse establishDataConnection(CFunctionBlock &paDstFB,
                                            const TPortId paDstPortId,

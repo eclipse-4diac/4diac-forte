@@ -449,6 +449,9 @@ namespace forte {
       if (!setForce(paNameList, true)) {
         return EMGMResponse::NoSuchObject;
       }
+    } else if (const auto conn = getOutputConnection(paNameList);
+               conn && conn->isInOut() && !getInputConnection(paNameList)) {
+      static_cast<CInOutDataConnection *>(conn.get())->getValue().setValue(var->unwrap());
     }
     if (getState() == E_FBStates::Idle) {
       mInitialValues.emplace(paNameList, paValue);
