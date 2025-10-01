@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2024 fortiss GmbH, Monika Wenger, Johannes Kepler University Linz
+ * Copyright (c) 2017, 2025 fortiss GmbH, Monika Wenger, Johannes Kepler University Linz
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
@@ -16,95 +16,99 @@
 
 using namespace forte::io;
 
-const char *const RevPiController::scmFailedToOpenControlFile = "Failed to open control file.";
-const char *const RevPiController::scmFailedToResetControllerFile = "Failed to reset control file";
-const char *const RevPiController::scmFailedToGetDeviceList = "Failed to get device list";
+namespace forte::eclipse4diac::io::revpi {
 
-RevPiController::RevPiController(CDeviceExecution &paDeviceExecution) :
-    IODeviceMultiController(paDeviceExecution),
-    mDeviceCount(0) {
-  mConfig.updateInterval = 25;
-}
+  const char *const RevPiController::scmFailedToOpenControlFile = "Failed to open control file.";
+  const char *const RevPiController::scmFailedToResetControllerFile = "Failed to reset control file";
+  const char *const RevPiController::scmFailedToGetDeviceList = "Failed to get device list";
 
-void RevPiController::setConfig(struct IODeviceController::Config *paConfig) {
-  Config newConfig = *static_cast<Config *>(paConfig);
-
-  if (newConfig.updateInterval <= 0) {
-    DEVLOG_WARNING("[RevPiController] Configured UpdateInterval is set to an invalid value '%d'. Set to 25.\n",
-                   newConfig.updateInterval);
-    newConfig.updateInterval = 25;
+  RevPiController::RevPiController(CDeviceExecution &paDeviceExecution) :
+      IODeviceMultiController(paDeviceExecution),
+      mDeviceCount(0) {
+    mConfig.updateInterval = 25;
   }
 
-  this->mConfig = newConfig;
-}
+  void RevPiController::setConfig(struct IODeviceController::Config *paConfig) {
+    Config newConfig = *static_cast<Config *>(paConfig);
 
-const char *RevPiController::init() {
-  int status;
+    if (newConfig.updateInterval <= 0) {
+      DEVLOG_WARNING("[RevPiController] Configured UpdateInterval is set to an invalid value '%d'. Set to 25.\n",
+                     newConfig.updateInterval);
+      newConfig.updateInterval = 25;
+    }
 
-  if ((status = piControlReset()) != 0) {
-    DEVLOG_ERROR("[RevPiController] %s - %d\n", scmFailedToResetControllerFile, status);
-    return scmFailedToResetControllerFile;
+    this->mConfig = newConfig;
   }
 
-  if ((status = piControlGetDeviceInfoList((SDeviceInfoStr *) &mDeviceList)) < 0) {
-    DEVLOG_ERROR("[RevPiController] %s - %d\n", scmFailedToGetDeviceList, status);
-    return scmFailedToGetDeviceList;
+  const char *RevPiController::init() {
+    int status;
+
+    if ((status = piControlReset()) != 0) {
+      DEVLOG_ERROR("[RevPiController] %s - %d\n", scmFailedToResetControllerFile, status);
+      return scmFailedToResetControllerFile;
+    }
+
+    if ((status = piControlGetDeviceInfoList((SDeviceInfoStr *) &mDeviceList)) < 0) {
+      DEVLOG_ERROR("[RevPiController] %s - %d\n", scmFailedToGetDeviceList, status);
+      return scmFailedToGetDeviceList;
+    }
+
+    mDeviceCount = status;
+
+    for (int i = 0; i < mDeviceCount; i++) {
+      DEVLOG_INFO(
+          "[RevPiController] Found device %d - Type: %d -  Active: %d - Outputs: %d - Inputs: %d - Configs: %d\n",
+          mDeviceList[i].i8uAddress, mDeviceList[i].i16uModuleType, mDeviceList[i].i8uActive,
+          mDeviceList[i].i16uBaseOffset + mDeviceList[i].i16uOutputOffset,
+          mDeviceList[i].i16uBaseOffset + mDeviceList[i].i16uInputOffset, mDeviceList[i].i16uConfigLength);
+    }
+
+    return 0;
   }
 
-  mDeviceCount = status;
+  IOHandle *RevPiController::createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
+    HandleDescriptor &desc(static_cast<HandleDescriptor &>(paHandleDescriptor));
 
-  for (int i = 0; i < mDeviceCount; i++) {
-    DEVLOG_INFO("[RevPiController] Found device %d - Type: %d -  Active: %d - Outputs: %d - Inputs: %d - Configs: %d\n",
-                mDeviceList[i].i8uAddress, mDeviceList[i].i16uModuleType, mDeviceList[i].i8uActive,
-                mDeviceList[i].i16uBaseOffset + mDeviceList[i].i16uOutputOffset,
-                mDeviceList[i].i16uBaseOffset + mDeviceList[i].i16uInputOffset, mDeviceList[i].i16uConfigLength);
+    return new RevPiHandle(
+        this, desc.mType, desc.mDirection,
+        static_cast<uint16_t>(mDeviceList[desc.mSlaveIndex + 1].i16uBaseOffset + desc.mOffset +
+                              (desc.mDirection == IOMapper::In ? mDeviceList[desc.mSlaveIndex + 1].i16uInputOffset
+                                                               : mDeviceList[desc.mSlaveIndex + 1].i16uOutputOffset)),
+        desc.mPosition);
   }
 
-  return 0;
-}
-
-IOHandle *RevPiController::createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
-  HandleDescriptor &desc(static_cast<HandleDescriptor &>(paHandleDescriptor));
-
-  return new RevPiHandle(
-      this, desc.mType, desc.mDirection,
-      static_cast<uint16_t>(mDeviceList[desc.mSlaveIndex + 1].i16uBaseOffset + desc.mOffset +
-                            (desc.mDirection == IOMapper::In ? mDeviceList[desc.mSlaveIndex + 1].i16uInputOffset
-                                                             : mDeviceList[desc.mSlaveIndex + 1].i16uOutputOffset)),
-      desc.mPosition);
-}
-
-void RevPiController::deInit() {
-  piControlReset();
-  piControlClose();
-}
-
-void RevPiController::runLoop() {
-  while (isAlive()) {
-    mTimeoutSemaphore.timedWait(1000000000 / mConfig.updateInterval);
-
-    // Perform poll operation
-    this->checkForInputChanges();
+  void RevPiController::deInit() {
+    piControlReset();
+    piControlClose();
   }
-}
 
-void RevPiController::addSlaveHandle(size_t, std::unique_ptr<IOHandle> paHandle) {
-  CCriticalRegion criticalRegion(mHandleMutex);
-  paHandle->isInput() ? mInputHandles.push_back(std::move(paHandle)) : mOutputHandles.push_back(std::move(paHandle));
-}
+  void RevPiController::runLoop() {
+    while (isAlive()) {
+      mTimeoutSemaphore.timedWait(1000000000 / mConfig.updateInterval);
 
-void RevPiController::dropSlaveHandles(size_t) {
-  // Is handled by #dropHandles method
-}
+      // Perform poll operation
+      this->checkForInputChanges();
+    }
+  }
 
-bool RevPiController::isSlaveAvailable(size_t paIndex) {
-  return paIndex + 1 < mDeviceCount;
-}
+  void RevPiController::addSlaveHandle(size_t, std::unique_ptr<IOHandle> paHandle) {
+    forte::util::CCriticalRegion criticalRegion(mHandleMutex);
+    paHandle->isInput() ? mInputHandles.push_back(std::move(paHandle)) : mOutputHandles.push_back(std::move(paHandle));
+  }
 
-bool RevPiController::checkSlaveType(size_t paIndex, int paType) {
-  return mDeviceList[paIndex + 1].i16uModuleType == paType;
-}
+  void RevPiController::dropSlaveHandles(size_t) {
+    // Is handled by #dropHandles method
+  }
 
-bool RevPiController::isHandleValueEqual(IOHandle &paHandle) {
-  return !static_cast<RevPiHandle &>(paHandle).check();
-}
+  bool RevPiController::isSlaveAvailable(size_t paIndex) {
+    return paIndex + 1 < mDeviceCount;
+  }
+
+  bool RevPiController::checkSlaveType(size_t paIndex, int paType) {
+    return mDeviceList[paIndex + 1].i16uModuleType == paType;
+  }
+
+  bool RevPiController::isHandleValueEqual(IOHandle &paHandle) {
+    return !static_cast<RevPiHandle &>(paHandle).check();
+  }
+} // namespace forte::eclipse4diac::io::revpi

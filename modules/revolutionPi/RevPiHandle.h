@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2024 fortiss GmbH, Monika Wenger, Johannes Kepler University Linz
+ * Copyright (c) 2017, 2025 fortiss GmbH, Monika Wenger, Johannes Kepler University Linz
  *
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v2.0
@@ -16,24 +16,28 @@
 #include "forte/io/mapper/io_handle.h"
 #include "RevPiController.h"
 
-class RevPiHandle : public forte::io::IOHandle {
-  public:
-    RevPiHandle(RevPiController *controller,
-                CIEC_ANY::EDataTypeID type,
-                forte::io::IOMapper::Direction direction,
-                uint16_t offset,
-                uint8_t position);
+namespace forte::eclipse4diac::io::revpi {
 
-    ~RevPiHandle();
+  class RevPiHandle : public forte::io::IOHandle {
+    public:
+      RevPiHandle(RevPiController *controller,
+                  CIEC_ANY::EDataTypeID type,
+                  forte::io::IOMapper::Direction direction,
+                  uint16_t offset,
+                  uint8_t position);
 
-    virtual void set(const CIEC_ANY &);
-    void get(CIEC_ANY &);
+      ~RevPiHandle();
 
-    bool check();
+      virtual void set(const CIEC_ANY &);
+      void get(CIEC_ANY &);
 
-  protected:
-    SPIValueStr control;
-    CIEC_ANY *valueLastCheck;
+      bool check();
 
-    virtual void dropObserver();
-};
+    protected:
+      SPIValueStr control;
+      CIEC_ANY *valueLastCheck;
+
+      virtual void dropObserver();
+  };
+
+} // namespace forte::eclipse4diac::io::revpi

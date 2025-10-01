@@ -19,110 +19,113 @@
 #include "forte/datatypes/forte_wstring.h"
 #include "IORevPiBusAdapter.h"
 
-class FORTE_IORevPiAIO : public forte::io::IOConfigFBMultiSlave {
-    DECLARE_FIRMWARE_FB(FORTE_IORevPiAIO)
+namespace forte::eclipse4diac::io::revpi {
 
-  private:
-    static const TEventID scmEventMAPID = 0;
-    static const TEventID scmEventMAPOID = 0;
-    static const TEventID scmEventINDID = 1;
-    static const int scmBusAdapterInAdpNum = 0;
-    static const int scmBusAdapterOutAdpNum = 1;
+  class FORTE_IORevPiAIO : public ::forte::io::IOConfigFBMultiSlave {
+      DECLARE_FIRMWARE_FB(FORTE_IORevPiAIO)
 
-    static const TForteUInt8 scmSlaveConfigurationIO[];
-    static const TForteUInt8 scmSlaveConfigurationIONum;
+    private:
+      static const TEventID scmEventMAPID = 0;
+      static const TEventID scmEventMAPOID = 0;
+      static const TEventID scmEventINDID = 1;
+      static const int scmBusAdapterInAdpNum = 0;
+      static const int scmBusAdapterOutAdpNum = 1;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+      static const TForteUInt8 scmSlaveConfigurationIO[];
+      static const TForteUInt8 scmSlaveConfigurationIONum;
 
-  public:
-    FORTE_IORevPiAIO(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-    virtual ~FORTE_IORevPiAIO() {};
+    public:
+      FORTE_IORevPiAIO(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_BOOL var_QI;
-    CIEC_STRING var_AnalogInput_1;
-    CIEC_STRING var_AnalogInput_2;
-    CIEC_STRING var_AnalogInput_3;
-    CIEC_STRING var_AnalogInput_4;
-    CIEC_STRING var_RTD_1;
-    CIEC_STRING var_RTD_2;
-    CIEC_STRING var_AnalogOutput_1;
-    CIEC_STRING var_AnalogOutput_2;
+      virtual ~FORTE_IORevPiAIO() {};
 
-    CIEC_BOOL var_QO;
-    CIEC_WSTRING var_STATUS;
+      CIEC_BOOL var_QI;
+      CIEC_STRING var_AnalogInput_1;
+      CIEC_STRING var_AnalogInput_2;
+      CIEC_STRING var_AnalogInput_3;
+      CIEC_STRING var_AnalogInput_4;
+      CIEC_STRING var_RTD_1;
+      CIEC_STRING var_RTD_2;
+      CIEC_STRING var_AnalogOutput_1;
+      CIEC_STRING var_AnalogOutput_2;
 
-    CEventConnection conn_MAPO;
-    CEventConnection conn_IND;
+      CIEC_BOOL var_QO;
+      CIEC_WSTRING var_STATUS;
 
-    CDataConnection *conn_QI;
-    CDataConnection *conn_AnalogInput_1;
-    CDataConnection *conn_AnalogInput_2;
-    CDataConnection *conn_AnalogInput_3;
-    CDataConnection *conn_AnalogInput_4;
-    CDataConnection *conn_RTD_1;
-    CDataConnection *conn_RTD_2;
-    CDataConnection *conn_AnalogOutput_1;
-    CDataConnection *conn_AnalogOutput_2;
+      CEventConnection conn_MAPO;
+      CEventConnection conn_IND;
 
-    COutDataConnection<CIEC_BOOL> conn_QO;
-    COutDataConnection<CIEC_WSTRING> conn_STATUS;
+      CDataConnection *conn_QI;
+      CDataConnection *conn_AnalogInput_1;
+      CDataConnection *conn_AnalogInput_2;
+      CDataConnection *conn_AnalogInput_3;
+      CDataConnection *conn_AnalogInput_4;
+      CDataConnection *conn_RTD_1;
+      CDataConnection *conn_RTD_2;
+      CDataConnection *conn_AnalogOutput_1;
+      CDataConnection *conn_AnalogOutput_2;
 
-    forte::CPlugPin<FORTE_IORevPiBusAdapter_Plug> var_BusAdapterOut;
-    forte::CSocketPin<FORTE_IORevPiBusAdapter_Socket> var_BusAdapterIn;
+      COutDataConnection<CIEC_BOOL> conn_QO;
+      COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
+      forte::CPlugPin<FORTE_IORevPiBusAdapter_Plug> var_BusAdapterOut;
+      forte::CSocketPin<FORTE_IORevPiBusAdapter_Socket> var_BusAdapterIn;
 
-    forte::IPlugPin *getPlugPinUnchecked(size_t) override;
-    forte::ISocketPin *getSocketPinUnchecked(size_t) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
 
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      forte::IPlugPin *getPlugPinUnchecked(size_t) override;
+      forte::ISocketPin *getSocketPinUnchecked(size_t) override;
 
-    void evt_MAP(const CIEC_BOOL &paQI,
-                 const CIEC_STRING &paAnalogInput_1,
-                 const CIEC_STRING &paAnalogInput_2,
-                 const CIEC_STRING &paAnalogInput_3,
-                 const CIEC_STRING &paAnalogInput_4,
-                 const CIEC_STRING &paRTD_1,
-                 const CIEC_STRING &paRTD_2,
-                 const CIEC_STRING &paAnalogOutput_1,
-                 const CIEC_STRING &paAnalogOutput_2,
-                 CIEC_BOOL &paQO,
-                 CIEC_WSTRING &paSTATUS) {
-      var_QI = paQI;
-      var_AnalogInput_1 = paAnalogInput_1;
-      var_AnalogInput_2 = paAnalogInput_2;
-      var_AnalogInput_3 = paAnalogInput_3;
-      var_AnalogInput_4 = paAnalogInput_4;
-      var_RTD_1 = paRTD_1;
-      var_RTD_2 = paRTD_2;
-      var_AnalogOutput_1 = paAnalogOutput_1;
-      var_AnalogOutput_2 = paAnalogOutput_2;
-      executeEvent(scmEventMAPID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
-    }
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void operator()(const CIEC_BOOL &paQI,
-                    const CIEC_STRING &paAnalogInput_1,
-                    const CIEC_STRING &paAnalogInput_2,
-                    const CIEC_STRING &paAnalogInput_3,
-                    const CIEC_STRING &paAnalogInput_4,
-                    const CIEC_STRING &paRTD_1,
-                    const CIEC_STRING &paRTD_2,
-                    const CIEC_STRING &paAnalogOutput_1,
-                    const CIEC_STRING &paAnalogOutput_2,
-                    CIEC_BOOL &paQO,
-                    CIEC_WSTRING &paSTATUS) {
-      evt_MAP(paQI, paAnalogInput_1, paAnalogInput_2, paAnalogInput_3, paAnalogInput_4, paRTD_1, paRTD_2,
-              paAnalogOutput_1, paAnalogOutput_2, paQO, paSTATUS);
-    }
+      void evt_MAP(const CIEC_BOOL &paQI,
+                   const CIEC_STRING &paAnalogInput_1,
+                   const CIEC_STRING &paAnalogInput_2,
+                   const CIEC_STRING &paAnalogInput_3,
+                   const CIEC_STRING &paAnalogInput_4,
+                   const CIEC_STRING &paRTD_1,
+                   const CIEC_STRING &paRTD_2,
+                   const CIEC_STRING &paAnalogOutput_1,
+                   const CIEC_STRING &paAnalogOutput_2,
+                   CIEC_BOOL &paQO,
+                   CIEC_WSTRING &paSTATUS) {
+        var_QI = paQI;
+        var_AnalogInput_1 = paAnalogInput_1;
+        var_AnalogInput_2 = paAnalogInput_2;
+        var_AnalogInput_3 = paAnalogInput_3;
+        var_AnalogInput_4 = paAnalogInput_4;
+        var_RTD_1 = paRTD_1;
+        var_RTD_2 = paRTD_2;
+        var_AnalogOutput_1 = paAnalogOutput_1;
+        var_AnalogOutput_2 = paAnalogOutput_2;
+        executeEvent(scmEventMAPID, nullptr);
+        paQO = var_QO;
+        paSTATUS = var_STATUS;
+      }
 
-  protected:
-    void initHandles() override;
-};
+      void operator()(const CIEC_BOOL &paQI,
+                      const CIEC_STRING &paAnalogInput_1,
+                      const CIEC_STRING &paAnalogInput_2,
+                      const CIEC_STRING &paAnalogInput_3,
+                      const CIEC_STRING &paAnalogInput_4,
+                      const CIEC_STRING &paRTD_1,
+                      const CIEC_STRING &paRTD_2,
+                      const CIEC_STRING &paAnalogOutput_1,
+                      const CIEC_STRING &paAnalogOutput_2,
+                      CIEC_BOOL &paQO,
+                      CIEC_WSTRING &paSTATUS) {
+        evt_MAP(paQI, paAnalogInput_1, paAnalogInput_2, paAnalogInput_3, paAnalogInput_4, paRTD_1, paRTD_2,
+                paAnalogOutput_1, paAnalogOutput_2, paQO, paSTATUS);
+      }
+
+    protected:
+      void initHandles() override;
+  };
+} // namespace forte::eclipse4diac::io::revpi

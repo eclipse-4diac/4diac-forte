@@ -18,62 +18,67 @@
 #include "IORevPiBusAdapter.h"
 #include "forte/adapter.h"
 
-class FORTE_IORevPiCore : public forte::io::IOConfigFBMultiMaster {
-    DECLARE_FIRMWARE_FB(FORTE_IORevPiCore)
+namespace forte::eclipse4diac::io::revpi {
 
-  private:
-    static const TEventID scmEventINITID = 0;
-    static const TEventID scmEventINITOID = 0;
-    static const TEventID scmEventINDID = 1;
-    static const int scmBusAdapterOutAdpNum = 0;
+  class FORTE_IORevPiCore : public ::forte::io::IOConfigFBMultiMaster {
+      DECLARE_FIRMWARE_FB(FORTE_IORevPiCore)
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+    private:
+      static const TEventID scmEventINITID = 0;
+      static const TEventID scmEventINITOID = 0;
+      static const TEventID scmEventINDID = 1;
+      static const int scmBusAdapterOutAdpNum = 0;
 
-    forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
-    void setConfig() override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_IORevPiCore(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      ::forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
+      void setConfig() override;
 
-    ~FORTE_IORevPiCore() override = default;
+    public:
+      FORTE_IORevPiCore(const StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_BOOL var_QI;
-    CIEC_UINT var_UpdateInterval;
+      ~FORTE_IORevPiCore() override = default;
 
-    CIEC_BOOL var_QO;
-    CIEC_WSTRING var_STATUS;
+      CIEC_BOOL var_QI;
+      CIEC_UINT var_UpdateInterval;
 
-    CEventConnection conn_INITO;
-    CEventConnection conn_IND;
+      CIEC_BOOL var_QO;
+      CIEC_WSTRING var_STATUS;
 
-    CDataConnection *conn_QI;
-    CDataConnection *conn_UpdateInterval;
+      CEventConnection conn_INITO;
+      CEventConnection conn_IND;
 
-    COutDataConnection<CIEC_BOOL> conn_QO;
-    COutDataConnection<CIEC_WSTRING> conn_STATUS;
+      CDataConnection *conn_QI;
+      CDataConnection *conn_UpdateInterval;
 
-    forte::CPlugPin<FORTE_IORevPiBusAdapter_Plug> var_BusAdapterOut;
+      COutDataConnection<CIEC_BOOL> conn_QO;
+      COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
+      CPlugPin<FORTE_IORevPiBusAdapter_Plug> var_BusAdapterOut;
 
-    forte::IPlugPin *getPlugPinUnchecked(size_t) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
 
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      IPlugPin *getPlugPinUnchecked(size_t) override;
 
-    void evt_INIT(const CIEC_BOOL &paQI, const CIEC_UINT &paUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
-      var_QI = paQI;
-      var_UpdateInterval = paUpdateInterval;
-      executeEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
-    }
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void operator()(const CIEC_BOOL &paQI, const CIEC_UINT &paUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
-      evt_INIT(paQI, paUpdateInterval, paQO, paSTATUS);
-    }
-};
+      void evt_INIT(const CIEC_BOOL &paQI, const CIEC_UINT &paUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+        var_QI = paQI;
+        var_UpdateInterval = paUpdateInterval;
+        executeEvent(scmEventINITID, nullptr);
+        paQO = var_QO;
+        paSTATUS = var_STATUS;
+      }
+
+      void
+      operator()(const CIEC_BOOL &paQI, const CIEC_UINT &paUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+        evt_INIT(paQI, paUpdateInterval, paQO, paSTATUS);
+      }
+  };
+
+} // namespace forte::eclipse4diac::io::revpi

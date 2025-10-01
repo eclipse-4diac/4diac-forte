@@ -18,85 +18,89 @@
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_uint.h"
 
-class FORTE_IORevPiBusAdapter : public forte::io::IOConfigFBMultiAdapter {
-    DECLARE_ADAPTER_TYPE(FORTE_IORevPiBusAdapter)
+namespace forte::eclipse4diac::io::revpi {
 
-  protected:
-    void setInitialValues() override;
+  class FORTE_IORevPiBusAdapter : public ::forte::io::IOConfigFBMultiAdapter {
+      DECLARE_ADAPTER_TYPE(FORTE_IORevPiBusAdapter)
 
-  public:
-    CIEC_BOOL var_QO;
+    protected:
+      void setInitialValues() override;
 
-    CIEC_BOOL var_QI;
-    CIEC_UINT var_MasterId;
-    CIEC_UINT var_Index;
+    public:
+      CIEC_BOOL var_QO;
 
-    TEventID evt_INITO() {
-      return getParentAdapterListEventID() + scmEventINITOID;
-    }
+      CIEC_BOOL var_QI;
+      CIEC_UINT var_MasterId;
+      CIEC_UINT var_Index;
 
-    TEventID evt_INIT() {
-      return getParentAdapterListEventID() + scmEventINITID;
-    }
+      TEventID evt_INITO() {
+        return getParentAdapterListEventID() + scmEventINITOID;
+      }
 
-    CIEC_ANY *getDeviceConfigPin(int) override {
-      return nullptr;
-    }
-    ~FORTE_IORevPiBusAdapter() override = default;
+      TEventID evt_INIT() {
+        return getParentAdapterListEventID() + scmEventINITID;
+      }
 
-  protected:
-    FORTE_IORevPiBusAdapter(CFBContainer &paContainer,
-                            const SFBInterfaceSpec &paInterfaceSpec,
-                            const forte::StringId paInstanceNameId,
-                            TForteUInt8 paParentAdapterlistID);
-};
+      CIEC_ANY *getDeviceConfigPin(int) override {
+        return nullptr;
+      }
+      ~FORTE_IORevPiBusAdapter() override = default;
 
-class FORTE_IORevPiBusAdapter_Plug final : public FORTE_IORevPiBusAdapter {
-  public:
-    FORTE_IORevPiBusAdapter_Plug(forte::StringId paInstanceNameId,
-                                 CFBContainer &paContainer,
-                                 TForteUInt8 paParentAdapterlistID);
-    ~FORTE_IORevPiBusAdapter_Plug() override = default;
+    protected:
+      FORTE_IORevPiBusAdapter(CFBContainer &paContainer,
+                              const SFBInterfaceSpec &paInterfaceSpec,
+                              const forte::StringId paInstanceNameId,
+                              TForteUInt8 paParentAdapterlistID);
+  };
 
-    CEventConnection conn_INITO;
-
-    CDataConnection *conn_QI;
-    CDataConnection *conn_MasterId;
-    CDataConnection *conn_Index;
-
-    COutDataConnection<CIEC_BOOL> conn_QO;
-
-  private:
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
-};
-
-class FORTE_IORevPiBusAdapter_Socket final : public FORTE_IORevPiBusAdapter {
-  public:
-    FORTE_IORevPiBusAdapter_Socket(forte::StringId paInstanceNameId,
+  class FORTE_IORevPiBusAdapter_Plug final : public FORTE_IORevPiBusAdapter {
+    public:
+      FORTE_IORevPiBusAdapter_Plug(forte::StringId paInstanceNameId,
                                    CFBContainer &paContainer,
                                    TForteUInt8 paParentAdapterlistID);
-    ~FORTE_IORevPiBusAdapter_Socket() override = default;
+      ~FORTE_IORevPiBusAdapter_Plug() override = default;
 
-    CEventConnection conn_INIT;
+      CEventConnection conn_INITO;
 
-    CDataConnection *conn_QO;
+      CDataConnection *conn_QI;
+      CDataConnection *conn_MasterId;
+      CDataConnection *conn_Index;
 
-    COutDataConnection<CIEC_BOOL> conn_QI;
-    COutDataConnection<CIEC_UINT> conn_MasterId;
-    COutDataConnection<CIEC_UINT> conn_Index;
+      COutDataConnection<CIEC_BOOL> conn_QO;
 
-  private:
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
-};
+    private:
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
+  };
+
+  class FORTE_IORevPiBusAdapter_Socket final : public FORTE_IORevPiBusAdapter {
+    public:
+      FORTE_IORevPiBusAdapter_Socket(forte::StringId paInstanceNameId,
+                                     CFBContainer &paContainer,
+                                     TForteUInt8 paParentAdapterlistID);
+      ~FORTE_IORevPiBusAdapter_Socket() override = default;
+
+      CEventConnection conn_INIT;
+
+      CDataConnection *conn_QO;
+
+      COutDataConnection<CIEC_BOOL> conn_QI;
+      COutDataConnection<CIEC_UINT> conn_MasterId;
+      COutDataConnection<CIEC_UINT> conn_Index;
+
+    private:
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
+  };
+
+} // namespace forte::eclipse4diac::io::revpi
