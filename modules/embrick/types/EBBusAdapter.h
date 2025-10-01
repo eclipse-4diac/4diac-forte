@@ -19,98 +19,102 @@
 #include "forte/io/configFB/io_adapter_multi.h"
 #include "forte/datatypes/forte_uint.h"
 
-class FORTE_EBBusAdapter : public forte::io::IOConfigFBMultiAdapter {
-    DECLARE_ADAPTER_TYPE(FORTE_EBBusAdapter)
+namespace forte::eclipse4diac::io::embrick {
 
-  public:
-    static const TEventID scmEventINITOID = 0;
-    static const TEventID scmEventINITID = 0;
+  class FORTE_EBBusAdapter : public forte::io::IOConfigFBMultiAdapter {
+      DECLARE_ADAPTER_TYPE(FORTE_EBBusAdapter)
 
-    CIEC_UINT var_UpdateInterval;
+    public:
+      static const TEventID scmEventINITOID = 0;
+      static const TEventID scmEventINITID = 0;
 
-    TEventID evt_INITO() {
-      return getParentAdapterListEventID() + scmEventINITOID;
-    }
+      CIEC_UINT var_UpdateInterval;
 
-    TEventID evt_INIT() {
-      return getParentAdapterListEventID() + scmEventINITID;
-    }
+      TEventID evt_INITO() {
+        return getParentAdapterListEventID() + scmEventINITOID;
+      }
 
-    ~FORTE_EBBusAdapter() override = default;
+      TEventID evt_INIT() {
+        return getParentAdapterListEventID() + scmEventINITID;
+      }
 
-    void setInitialValues() override;
+      ~FORTE_EBBusAdapter() override = default;
 
-    CIEC_ANY *getDeviceConfigPin(int paIndex) override {
-      return (paIndex == 3) ? &var_UpdateInterval : nullptr;
-    }
+      void setInitialValues() override;
 
-  protected:
-    FORTE_EBBusAdapter(CFBContainer &paContainer,
-                       const SFBInterfaceSpec &paInterfaceSpec,
-                       const forte::StringId paInstanceNameId,
-                       TForteUInt8 paParentAdapterlistID);
-};
+      CIEC_ANY *getDeviceConfigPin(int paIndex) override {
+        return (paIndex == 3) ? &var_UpdateInterval : nullptr;
+      }
 
-class FORTE_EBBusAdapter_Socket;
+    protected:
+      FORTE_EBBusAdapter(CFBContainer &paContainer,
+                         const SFBInterfaceSpec &paInterfaceSpec,
+                         const forte::StringId paInstanceNameId,
+                         TForteUInt8 paParentAdapterlistID);
+  };
 
-class FORTE_EBBusAdapter_Plug final : public FORTE_EBBusAdapter {
-  public:
-    FORTE_EBBusAdapter_Plug(forte::StringId paInstanceNameId,
-                            CFBContainer &paContainer,
-                            TForteUInt8 paParentAdapterlistID);
-    ~FORTE_EBBusAdapter_Plug() override = default;
+  class FORTE_EBBusAdapter_Socket;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-
-    CEventConnection conn_INITO;
-
-    CDataConnection *conn_QI;
-    CDataConnection *conn_MasterId;
-    CDataConnection *conn_MasterIndex;
-    CDataConnection *conn_UpdateInterval;
-
-    COutDataConnection<CIEC_BOOL> conn_QO;
-
-  protected:
-    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
-    CIEC_ANY *getDI(TPortId paDINum) override;
-    CDataConnection **getDIConUnchecked(TPortId paDINum) override;
-    CDataConnection *getDOConUnchecked(TPortId paDONum) override;
-    CIEC_ANY *getDO(TPortId paDONum) override;
-
-  private:
-    FORTE_EBBusAdapter_Socket *getSocket();
-};
-
-class FORTE_EBBusAdapter_Socket final : public FORTE_EBBusAdapter {
-  public:
-    FORTE_EBBusAdapter_Socket(forte::StringId paInstanceNameId,
+  class FORTE_EBBusAdapter_Plug final : public FORTE_EBBusAdapter {
+    public:
+      FORTE_EBBusAdapter_Plug(forte::StringId paInstanceNameId,
                               CFBContainer &paContainer,
                               TForteUInt8 paParentAdapterlistID);
-    ~FORTE_EBBusAdapter_Socket() override = default;
+      ~FORTE_EBBusAdapter_Plug() override = default;
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
 
-    CDataConnection *conn_QO;
+      CEventConnection conn_INITO;
 
-    CEventConnection conn_INIT;
+      CDataConnection *conn_QI;
+      CDataConnection *conn_MasterId;
+      CDataConnection *conn_MasterIndex;
+      CDataConnection *conn_UpdateInterval;
 
-    COutDataConnection<CIEC_BOOL> conn_QI;
-    COutDataConnection<CIEC_UINT> conn_MasterId;
-    COutDataConnection<CIEC_UINT> conn_MasterIndex;
-    COutDataConnection<CIEC_UINT> conn_UpdateInterval;
+      COutDataConnection<CIEC_BOOL> conn_QO;
 
-  protected:
-    CEventConnection *getEOConUnchecked(TPortId paEONum) override;
-    CIEC_ANY *getDI(TPortId paDINum) override;
-    CDataConnection **getDIConUnchecked(TPortId paDINum) override;
-    CDataConnection *getDOConUnchecked(TPortId paDONum) override;
-    CIEC_ANY *getDO(TPortId paDONum) override;
+    protected:
+      CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+      CIEC_ANY *getDI(TPortId paDINum) override;
+      CDataConnection **getDIConUnchecked(TPortId paDINum) override;
+      CDataConnection *getDOConUnchecked(TPortId paDONum) override;
+      CIEC_ANY *getDO(TPortId paDONum) override;
 
-  private:
-    FORTE_EBBusAdapter_Plug *getPlug() {
-      return static_cast<FORTE_EBBusAdapter_Plug *>(getPeer());
-    }
-};
+    private:
+      FORTE_EBBusAdapter_Socket *getSocket();
+  };
+
+  class FORTE_EBBusAdapter_Socket final : public FORTE_EBBusAdapter {
+    public:
+      FORTE_EBBusAdapter_Socket(forte::StringId paInstanceNameId,
+                                CFBContainer &paContainer,
+                                TForteUInt8 paParentAdapterlistID);
+      ~FORTE_EBBusAdapter_Socket() override = default;
+
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+
+      CDataConnection *conn_QO;
+
+      CEventConnection conn_INIT;
+
+      COutDataConnection<CIEC_BOOL> conn_QI;
+      COutDataConnection<CIEC_UINT> conn_MasterId;
+      COutDataConnection<CIEC_UINT> conn_MasterIndex;
+      COutDataConnection<CIEC_UINT> conn_UpdateInterval;
+
+    protected:
+      CEventConnection *getEOConUnchecked(TPortId paEONum) override;
+      CIEC_ANY *getDI(TPortId paDINum) override;
+      CDataConnection **getDIConUnchecked(TPortId paDINum) override;
+      CDataConnection *getDOConUnchecked(TPortId paDONum) override;
+      CIEC_ANY *getDO(TPortId paDONum) override;
+
+    private:
+      FORTE_EBBusAdapter_Plug *getPlug() {
+        return static_cast<FORTE_EBBusAdapter_Plug *>(getPeer());
+      }
+  };
+
+} // namespace forte::eclipse4diac::io::embrick

@@ -12,8 +12,7 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#ifndef SRC_MODULES_EMBRICK_TYPES_SLAVE_H_
-#define SRC_MODULES_EMBRICK_TYPES_SLAVE_H_
+#pragma once
 
 #include "EBBusAdapter.h"
 #include "forte/arch/forte_sync.h"
@@ -21,44 +20,46 @@
 #include "../slave/handle.h"
 #include "forte/io/configFB/io_slave_multi.h"
 
-class EmbrickSlave : public forte::io::IOConfigFBMultiSlave, public EmbrickSlaveHandler::Delegate {
-  public:
-    EmbrickSlave(const TForteUInt8 *const paSlaveConfigurationIO,
-                 const TForteUInt8 paSlaveConfigurationIO_num,
-                 int paType,
-                 CFBContainer &paContainer,
-                 const SFBInterfaceSpec &paInterfaceSpec,
-                 const forte::StringId paInstanceNameId);
-    ~EmbrickSlave() override;
+namespace forte::eclipse4diac::io::embrick {
 
-    forte::CSocketPin<FORTE_EBBusAdapter_Socket> var_BusAdapterIn;
-    forte::CPlugPin<FORTE_EBBusAdapter_Plug> var_BusAdapterOut;
+  class EmbrickSlave : public forte::io::IOConfigFBMultiSlave, public EmbrickSlaveHandler::Delegate {
+    public:
+      EmbrickSlave(const TForteUInt8 *const paSlaveConfigurationIO,
+                   const TForteUInt8 paSlaveConfigurationIO_num,
+                   int paType,
+                   CFBContainer &paContainer,
+                   const SFBInterfaceSpec &paInterfaceSpec,
+                   const forte::StringId paInstanceNameId);
+      ~EmbrickSlave() override;
 
-    forte::IPlugPin *getPlugPinUnchecked(size_t) override;
-    forte::ISocketPin *getSocketPinUnchecked(size_t) override;
+      forte::CSocketPin<FORTE_EBBusAdapter_Socket> var_BusAdapterIn;
+      forte::CPlugPin<FORTE_EBBusAdapter_Plug> var_BusAdapterOut;
 
-  protected:
-    virtual CIEC_UINT &UpdateInterval() {
-      // TODO Remove
-      return *static_cast<CIEC_UINT *>(getDI(0));
-    }
+      forte::IPlugPin *getPlugPinUnchecked(size_t) override;
+      forte::ISocketPin *getSocketPinUnchecked(size_t) override;
 
-    CSyncObject mSlaveMutex;
-    EmbrickSlaveHandler *mSlave;
+    protected:
+      virtual CIEC_UINT &UpdateInterval() {
+        // TODO Remove
+        return *static_cast<CIEC_UINT *>(getDI(0));
+      }
 
-  public:
-    void onSlaveStatus(EmbrickSlaveHandler::SlaveStatus paStatus,
-                       EmbrickSlaveHandler::SlaveStatus paOldStatus) override;
-    void onSlaveDestroy() override;
+      arch::CSyncObject mSlaveMutex;
+      EmbrickSlaveHandler *mSlave;
 
-  private:
-    const char *init() override;
-    void deInit() override;
+    public:
+      void onSlaveStatus(EmbrickSlaveHandler::SlaveStatus paStatus,
+                         EmbrickSlaveHandler::SlaveStatus paOldStatus) override;
+      void onSlaveDestroy() override;
 
-    static const CIEC_WSTRING scmSlow;
-    static const CIEC_WSTRING scmInterrupted;
-    static const CIEC_WSTRING scmError;
-    static const CIEC_WSTRING scmUnknown;
-};
+    private:
+      const char *init() override;
+      void deInit() override;
 
-#endif /* SRC_MODULES_EMBRICK_TYPES_SLAVE_H_ */
+      static const CIEC_WSTRING scmSlow;
+      static const CIEC_WSTRING scmInterrupted;
+      static const CIEC_WSTRING scmError;
+      static const CIEC_WSTRING scmUnknown;
+  };
+
+} // namespace forte::eclipse4diac::io::embrick

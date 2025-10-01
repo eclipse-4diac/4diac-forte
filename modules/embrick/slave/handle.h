@@ -16,32 +16,35 @@
 
 #include "forte/io/mapper/io_handle.h"
 #include <stdint.h>
-#include <cstring>
 #include "forte/arch/forte_sync.h"
 
-class EmbrickSlaveHandler;
+namespace forte::eclipse4diac::io::embrick {
 
-class EmbrickSlaveHandle : public forte::io::IOHandle {
-  public:
-    EmbrickSlaveHandle(forte::io::IODeviceController *paController,
-                       forte::io::IOMapper::Direction paDirection,
-                       CIEC_ANY::EDataTypeID type,
-                       uint8_t paOffset,
-                       EmbrickSlaveHandler *paSlave);
-    ~EmbrickSlaveHandle() override = default;
+  class EmbrickSlaveHandler;
 
-    void set(const CIEC_ANY &) override;
-    virtual bool equal(unsigned char *) = 0;
+  class EmbrickSlaveHandle : public forte::io::IOHandle {
+    public:
+      EmbrickSlaveHandle(forte::io::IODeviceController *paController,
+                         forte::io::IOMapper::Direction paDirection,
+                         CIEC_ANY::EDataTypeID type,
+                         uint8_t paOffset,
+                         EmbrickSlaveHandler *paSlave);
+      ~EmbrickSlaveHandle() override = default;
 
-  protected:
-    virtual void reset() {
-    }
+      void set(const CIEC_ANY &) override;
+      virtual bool equal(unsigned char *) = 0;
 
-    void onObserver(forte::io::IOObserver *paObserver) override;
-    void dropObserver() override;
+    protected:
+      virtual void reset() {
+      }
 
-    unsigned char *mBuffer;
-    const uint8_t mOffset;
-    EmbrickSlaveHandler *mSlave;
-    CSyncObject *mUpdateMutex;
-};
+      void onObserver(forte::io::IOObserver *paObserver) override;
+      void dropObserver() override;
+
+      unsigned char *mBuffer;
+      const uint8_t mOffset;
+      EmbrickSlaveHandler *mSlave;
+      arch::CSyncObject *mUpdateMutex;
+  };
+
+} // namespace forte::eclipse4diac::io::embrick

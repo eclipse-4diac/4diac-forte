@@ -17,42 +17,38 @@
 #include <fcntl.h>
 #include <unistd.h>
 
-class EmbrickSPIHandler {
-    friend class EmbrickBusHandler;
+namespace forte::eclipse4diac::io::embrick {
 
-  protected:
-    explicit EmbrickSPIHandler(unsigned int paInterface);
-    virtual ~EmbrickSPIHandler();
+  class EmbrickSPIHandler {
+      friend class EmbrickBusHandler;
 
-    bool transfer(unsigned char *paSendBuffer, unsigned char *paRreceiveBuffer, int paLength);
+    protected:
+      explicit EmbrickSPIHandler(unsigned int paInterface);
+      virtual ~EmbrickSPIHandler();
 
-    void init(const char *paSpidev);
-    void deInit();
-    template<typename T>
-    bool config(unsigned int paConfig, unsigned int paConfigVerify, T paValue);
+      bool transfer(unsigned char *paSendBuffer, unsigned char *paRreceiveBuffer, int paLength);
 
-    bool hasError() {
-      return mError != nullptr;
-    }
-    const char *mError;
+      void init(const char *paSpidev);
+      void deInit();
+      template<typename T>
+      bool config(unsigned int paConfig, unsigned int paConfigVerify, T paValue);
 
-    static unsigned long const scmDefaultSpiSpeed;
-    static unsigned long const scmMaxSpiSpeed;
-    void setSpeed(const unsigned long paSpeed);
+      bool hasError() {
+        return mError != nullptr;
+      }
 
-  private:
-    int mFd;
-    unsigned long mSpiSpeed;
+      static unsigned long const scmDefaultSpiSpeed;
+      static unsigned long const scmMaxSpiSpeed;
 
-    static char const mSpiMode;
-    static char const mSpiBitOrder;
+      const char *mError;
 
-    void fail(const char *paReason);
+      void setSpeed(const unsigned long paSpeed);
 
-    static const char *const scmFailedToInitHandler;
-    static const char *const scmFailedToConfigMode;
-    static const char *const scmFailedToConfigBitOrder;
-    static const char *const scmFailedToConfigSpeed;
-    static const char *const scmFailedToTestBus;
-    static const char *const scmFailedToTransferBuffer;
-};
+    private:
+      int mFd;
+      unsigned long mSpiSpeed;
+
+      void fail(const char *paReason);
+  };
+
+} // namespace forte::eclipse4diac::io::embrick

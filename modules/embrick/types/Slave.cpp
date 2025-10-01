@@ -17,75 +17,79 @@
 
 using namespace forte::literals;
 
-const CIEC_WSTRING EmbrickSlave::scmSlow("Slow");
-const CIEC_WSTRING EmbrickSlave::scmInterrupted("Interrupted");
-const CIEC_WSTRING EmbrickSlave::scmError("Error");
-const CIEC_WSTRING EmbrickSlave::scmUnknown("Invalid status code");
+namespace forte::eclipse4diac::io::embrick {
 
-EmbrickSlave::EmbrickSlave(const TForteUInt8 *const paSlaveConfigurationIO,
-                           const TForteUInt8 paSlaveConfigurationIO_num,
-                           int paType,
-                           CFBContainer &paContainer,
-                           const SFBInterfaceSpec &paInterfaceSpec,
-                           const forte::StringId paInstanceNameId) :
-    IOConfigFBMultiSlave(
-        paSlaveConfigurationIO, paSlaveConfigurationIO_num, paType, paContainer, paInterfaceSpec, paInstanceNameId),
-    var_BusAdapterIn("BusAdapterIn"_STRID, *this, 0),
-    var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0),
-    mSlave(nullptr) {
-}
+  const CIEC_WSTRING EmbrickSlave::scmSlow("Slow");
+  const CIEC_WSTRING EmbrickSlave::scmInterrupted("Interrupted");
+  const CIEC_WSTRING EmbrickSlave::scmError("Error");
+  const CIEC_WSTRING EmbrickSlave::scmUnknown("Invalid status code");
 
-EmbrickSlave::~EmbrickSlave() {
-  deInit();
-}
-
-forte::IPlugPin *EmbrickSlave::getPlugPinUnchecked(size_t paIndex) {
-  return (paIndex == 0) ? &var_BusAdapterOut : nullptr;
-}
-
-forte::ISocketPin *EmbrickSlave::getSocketPinUnchecked(size_t paIndex) {
-  return (paIndex == 0) ? &var_BusAdapterIn : nullptr;
-}
-
-const char *EmbrickSlave::init() {
-  CCriticalRegion criticalRegion(mSlaveMutex);
-
-  EmbrickBusHandler &bus = *static_cast<EmbrickBusHandler *>(&getController());
-
-  mSlave = bus.getSlave(mIndex);
-  mSlave->mDelegate = this;
-
-  EmbrickSlaveHandler::Config config;
-  config.mUpdateInterval = UpdateInterval().operator TForteUInt16();
-  mSlave->setConfig(config);
-
-  return nullptr;
-}
-
-void EmbrickSlave::deInit() {
-  CCriticalRegion criticalRegion(mSlaveMutex);
-
-  if (mSlave != nullptr) {
-    mSlave->mDelegate = nullptr;
-    mSlave = nullptr;
-  }
-}
-
-void EmbrickSlave::onSlaveStatus(EmbrickSlaveHandler::SlaveStatus paStatus, EmbrickSlaveHandler::SlaveStatus) {
-  switch (paStatus) {
-    case EmbrickSlaveHandler::OK: STATUS() = scmOK; break;
-    case EmbrickSlaveHandler::Slow: STATUS() = scmSlow; break;
-    case EmbrickSlaveHandler::Interrupted: STATUS() = scmInterrupted; break;
-    case EmbrickSlaveHandler::Error: STATUS() = scmError; break;
-    default: STATUS() = scmUnknown; break;
+  EmbrickSlave::EmbrickSlave(const TForteUInt8 *const paSlaveConfigurationIO,
+                             const TForteUInt8 paSlaveConfigurationIO_num,
+                             int paType,
+                             CFBContainer &paContainer,
+                             const SFBInterfaceSpec &paInterfaceSpec,
+                             const forte::StringId paInstanceNameId) :
+      IOConfigFBMultiSlave(
+          paSlaveConfigurationIO, paSlaveConfigurationIO_num, paType, paContainer, paInterfaceSpec, paInstanceNameId),
+      var_BusAdapterIn("BusAdapterIn"_STRID, *this, 0),
+      var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0),
+      mSlave(nullptr) {
   }
 
-  sendOutputEvent(scmEventINDID, getEventChainExecutor());
-}
+  EmbrickSlave::~EmbrickSlave() {
+    deInit();
+  }
 
-void EmbrickSlave::onSlaveDestroy() {
-  deInit();
+  forte::IPlugPin *EmbrickSlave::getPlugPinUnchecked(size_t paIndex) {
+    return (paIndex == 0) ? &var_BusAdapterOut : nullptr;
+  }
 
-  QO() = false_BOOL;
-  STATUS() = scmError;
-}
+  forte::ISocketPin *EmbrickSlave::getSocketPinUnchecked(size_t paIndex) {
+    return (paIndex == 0) ? &var_BusAdapterIn : nullptr;
+  }
+
+  const char *EmbrickSlave::init() {
+    util::CCriticalRegion criticalRegion(mSlaveMutex);
+
+    EmbrickBusHandler &bus = *static_cast<EmbrickBusHandler *>(&getController());
+
+    mSlave = bus.getSlave(mIndex);
+    mSlave->mDelegate = this;
+
+    EmbrickSlaveHandler::Config config;
+    config.mUpdateInterval = UpdateInterval().operator TForteUInt16();
+    mSlave->setConfig(config);
+
+    return nullptr;
+  }
+
+  void EmbrickSlave::deInit() {
+    util::CCriticalRegion criticalRegion(mSlaveMutex);
+
+    if (mSlave != nullptr) {
+      mSlave->mDelegate = nullptr;
+      mSlave = nullptr;
+    }
+  }
+
+  void EmbrickSlave::onSlaveStatus(EmbrickSlaveHandler::SlaveStatus paStatus, EmbrickSlaveHandler::SlaveStatus) {
+    switch (paStatus) {
+      case EmbrickSlaveHandler::OK: STATUS() = scmOK; break;
+      case EmbrickSlaveHandler::Slow: STATUS() = scmSlow; break;
+      case EmbrickSlaveHandler::Interrupted: STATUS() = scmInterrupted; break;
+      case EmbrickSlaveHandler::Error: STATUS() = scmError; break;
+      default: STATUS() = scmUnknown; break;
+    }
+
+    sendOutputEvent(scmEventINDID, getEventChainExecutor());
+  }
+
+  void EmbrickSlave::onSlaveDestroy() {
+    deInit();
+
+    QO() = false_BOOL;
+    STATUS() = scmError;
+  }
+
+} // namespace forte::eclipse4diac::io::embrick

@@ -18,47 +18,51 @@
 
 #pragma pack(push, 1) // Disable padding for protocol structs
 
-struct EmbrickHeaderPackage {
-    char mAddress;
-    char mCommand;
-    char mChecksum;
-};
+namespace forte::eclipse4diac::io::embrick {
 
-struct EmbrickSlaveInitPackage {
-    uint8_t mProtocolVersion;
-    uint8_t mModuleVersion;
-    uint16_t mDeviceId;
-    uint16_t mProducerId;
-    uint8_t mDataSendLength; // Amount of bytes that the slave expects from the master
-    uint8_t mDataReceiveLength; // Amount of bytes that the master expects from the slave
+  struct EmbrickHeaderPackage {
+      char mAddress;
+      char mCommand;
+      char mChecksum;
+  };
 
-    static EmbrickSlaveInitPackage fromBuffer(unsigned char *paBuffer) {
-      EmbrickSlaveInitPackage pkg;
-      memcpy(&pkg, paBuffer, sizeof(EmbrickSlaveInitPackage));
+  struct EmbrickSlaveInitPackage {
+      uint8_t mProtocolVersion;
+      uint8_t mModuleVersion;
+      uint16_t mDeviceId;
+      uint16_t mProducerId;
+      uint8_t mDataSendLength; // Amount of bytes that the slave expects from the master
+      uint8_t mDataReceiveLength; // Amount of bytes that the master expects from the slave
 
-      pkg.mDeviceId = ntohs(pkg.mDeviceId);
-      // Switch bytes of deviceId as it is transmitted with a different endianess
-      pkg.mDeviceId = (uint16_t) (((pkg.mDeviceId & 0xFF00) >> 8) | ((pkg.mDeviceId & 0xFF) << 8));
+      static EmbrickSlaveInitPackage fromBuffer(unsigned char *paBuffer) {
+        EmbrickSlaveInitPackage pkg;
+        memcpy(&pkg, paBuffer, sizeof(EmbrickSlaveInitPackage));
 
-      pkg.mProducerId = ntohs(pkg.mProducerId);
+        pkg.mDeviceId = ntohs(pkg.mDeviceId);
+        // Switch bytes of deviceId as it is transmitted with a different endianess
+        pkg.mDeviceId = (uint16_t) (((pkg.mDeviceId & 0xFF00) >> 8) | ((pkg.mDeviceId & 0xFF) << 8));
 
-      return pkg;
-    }
-};
+        pkg.mProducerId = ntohs(pkg.mProducerId);
 
-struct EmbrickMasterInitPackage {
-    uint8_t mSlaveAddress;
-    uint16_t mSyncGapMultiplicator;
-    uint8_t padding[6];
+        return pkg;
+      }
+  };
 
-    void toBuffer(unsigned char *paBuffer) {
-      paBuffer[0] = mSlaveAddress;
+  struct EmbrickMasterInitPackage {
+      uint8_t mSlaveAddress;
+      uint16_t mSyncGapMultiplicator;
+      uint8_t padding[6];
 
-      uint16_t syncGapFactor = htons(this->mSyncGapMultiplicator);
-      memcpy(paBuffer + 1, &syncGapFactor, 2);
-      memset(paBuffer + 3, 0, sizeof(padding));
-    }
-};
+      void toBuffer(unsigned char *paBuffer) {
+        paBuffer[0] = mSlaveAddress;
+
+        uint16_t syncGapFactor = htons(this->mSyncGapMultiplicator);
+        memcpy(paBuffer + 1, &syncGapFactor, 2);
+        memset(paBuffer + 3, 0, sizeof(padding));
+      }
+  };
+
+} // namespace forte::eclipse4diac::io::embrick
 
 #pragma pack(pop)
 

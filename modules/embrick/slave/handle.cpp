@@ -15,34 +15,38 @@
 #include "slave.h"
 #include "forte/io/mapper/io_mapper.h"
 
-EmbrickSlaveHandle::EmbrickSlaveHandle(forte::io::IODeviceController *paController,
-                                       forte::io::IOMapper::Direction paDirection,
-                                       CIEC_ANY::EDataTypeID paType,
-                                       uint8_t paOffset,
-                                       EmbrickSlaveHandler *paSlave) :
-    IOHandle(paController, paDirection, paType),
-    mOffset(paOffset),
-    mSlave(paSlave),
-    mUpdateMutex(&mSlave->mUpdateMutex) {
-  if (paDirection == forte::io::IOMapper::In) {
-    mBuffer = mSlave->mUpdateReceiveImage;
-  } else if (paDirection == forte::io::IOMapper::Out) {
-    mBuffer = mSlave->mUpdateSendImage;
+namespace forte::eclipse4diac::io::embrick {
+
+  EmbrickSlaveHandle::EmbrickSlaveHandle(forte::io::IODeviceController *paController,
+                                         forte::io::IOMapper::Direction paDirection,
+                                         CIEC_ANY::EDataTypeID paType,
+                                         uint8_t paOffset,
+                                         EmbrickSlaveHandler *paSlave) :
+      IOHandle(paController, paDirection, paType),
+      mOffset(paOffset),
+      mSlave(paSlave),
+      mUpdateMutex(&mSlave->mUpdateMutex) {
+    if (paDirection == forte::io::IOMapper::In) {
+      mBuffer = mSlave->mUpdateReceiveImage;
+    } else if (paDirection == forte::io::IOMapper::Out) {
+      mBuffer = mSlave->mUpdateSendImage;
+    }
   }
-}
 
-void EmbrickSlaveHandle::set(const CIEC_ANY &) {
-  mSlave->forceUpdate();
-}
+  void EmbrickSlaveHandle::set(const CIEC_ANY &) {
+    mSlave->forceUpdate();
+  }
 
-void EmbrickSlaveHandle::onObserver(forte::io::IOObserver *paObserver) {
-  reset();
+  void EmbrickSlaveHandle::onObserver(forte::io::IOObserver *paObserver) {
+    reset();
 
-  IOHandle::onObserver(paObserver);
-}
+    IOHandle::onObserver(paObserver);
+  }
 
-void EmbrickSlaveHandle::dropObserver() {
-  IOHandle::dropObserver();
+  void EmbrickSlaveHandle::dropObserver() {
+    IOHandle::dropObserver();
 
-  reset();
-}
+    reset();
+  }
+
+} // namespace forte::eclipse4diac::io::embrick

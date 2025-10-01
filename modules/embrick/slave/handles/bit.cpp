@@ -15,32 +15,36 @@
 #include "bit.h"
 #include "forte/util/criticalregion.h"
 
-EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(forte::io::IODeviceController *paController,
-                                             forte::io::IOMapper::Direction paDirection,
-                                             uint8_t paOffset,
-                                             uint8_t paPosition,
-                                             EmbrickSlaveHandler *paSlave) :
-    EmbrickSlaveHandle(paController, paDirection, CIEC_ANY::e_BOOL, paOffset, paSlave),
-    mMask((uint8_t) (1 << paPosition)) {
-}
+namespace forte::eclipse4diac::io::embrick {
 
-void EmbrickBitSlaveHandle::set(const CIEC_ANY &paState) {
-  CCriticalRegion criticalRegion(*mUpdateMutex);
-
-  if (static_cast<const CIEC_BOOL &>(paState)) {
-    *(mBuffer + mOffset) = (uint8_t) (*(mBuffer + mOffset) | mMask);
-  } else {
-    *(mBuffer + mOffset) = (uint8_t) (*(mBuffer + mOffset) & ~mMask);
+  EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(forte::io::IODeviceController *paController,
+                                               forte::io::IOMapper::Direction paDirection,
+                                               uint8_t paOffset,
+                                               uint8_t paPosition,
+                                               EmbrickSlaveHandler *paSlave) :
+      EmbrickSlaveHandle(paController, paDirection, CIEC_ANY::e_BOOL, paOffset, paSlave),
+      mMask((uint8_t) (1 << paPosition)) {
   }
 
-  EmbrickSlaveHandle::set(paState);
-}
+  void EmbrickBitSlaveHandle::set(const CIEC_ANY &paState) {
+    util::CCriticalRegion criticalRegion(*mUpdateMutex);
 
-void EmbrickBitSlaveHandle::get(CIEC_ANY &paState) {
-  CCriticalRegion criticalRegion(*mUpdateMutex);
-  static_cast<CIEC_BOOL &>(paState) = CIEC_BOOL((*(mBuffer + mOffset) & mMask) != 0);
-}
+    if (static_cast<const CIEC_BOOL &>(paState)) {
+      *(mBuffer + mOffset) = (uint8_t) (*(mBuffer + mOffset) | mMask);
+    } else {
+      *(mBuffer + mOffset) = (uint8_t) (*(mBuffer + mOffset) & ~mMask);
+    }
 
-bool EmbrickBitSlaveHandle::equal(unsigned char *paOldBuffer) {
-  return (*(mBuffer + mOffset) & mMask) == (*(paOldBuffer + mOffset) & mMask);
-}
+    EmbrickSlaveHandle::set(paState);
+  }
+
+  void EmbrickBitSlaveHandle::get(CIEC_ANY &paState) {
+    util::CCriticalRegion criticalRegion(*mUpdateMutex);
+    static_cast<CIEC_BOOL &>(paState) = CIEC_BOOL((*(mBuffer + mOffset) & mMask) != 0);
+  }
+
+  bool EmbrickBitSlaveHandle::equal(unsigned char *paOldBuffer) {
+    return (*(mBuffer + mOffset) & mMask) == (*(paOldBuffer + mOffset) & mMask);
+  }
+
+} // namespace forte::eclipse4diac::io::embrick

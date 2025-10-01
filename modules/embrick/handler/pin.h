@@ -16,39 +16,36 @@
 
 #pragma once
 
-class EmbrickPinHandler {
-    friend class EmbrickBusHandler;
+namespace forte::eclipse4diac::io::embrick {
 
-  protected:
-    explicit EmbrickPinHandler(unsigned int paPin);
-    virtual ~EmbrickPinHandler();
+  class EmbrickPinHandler {
+      friend class EmbrickBusHandler;
 
-    bool set(bool paState);
-    bool enable() {
-      return set(true);
-    }
-    bool disable() {
-      return set(false);
-    }
+    protected:
+      explicit EmbrickPinHandler(unsigned int paPin);
+      virtual ~EmbrickPinHandler();
 
-    void init();
-    void deInit();
+      bool set(bool paState);
+      bool enable() {
+        return set(true);
+      }
+      bool disable() {
+        return set(false);
+      }
 
-    bool hasError() {
-      return mError != nullptr;
-    }
-    const char *mError;
+      void init();
+      void deInit();
 
-  private:
-    unsigned int mPinNumber = 0;
-    int mPinFd = -1;
-    bool didExport = false;
+      bool hasError() {
+        return mError != nullptr;
+      }
+      const char *mError;
 
-    void fail(const char *paReason);
+    private:
+      unsigned int mPinNumber = 0;
+      int mPinFd = -1;
+      bool didExport = false;
 
-    static const char *const scmFailedToExportPin;
-    static const char *const scmFailedToSetDirection;
-    static const char *const scmFailedToOpenFile;
-    static const char *const scmFailedToWriteFile;
-    static const char *const scmNotInitialised;
-};
+      void fail(const char *paReason);
+  };
+} // namespace forte::eclipse4diac::io::embrick

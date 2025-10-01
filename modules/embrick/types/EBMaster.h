@@ -21,82 +21,65 @@
 #include "forte/datatypes/forte_wstring.h"
 #include "EBBusAdapter.h"
 
-class FORTE_EBMaster final : public forte::io::IOConfigFBMultiMaster {
-    DECLARE_FIRMWARE_FB(FORTE_EBMaster)
+namespace forte::eclipse4diac::io::embrick {
 
-  private:
-    static const TEventID scmEventINITID = 0;
-    static const TEventID scmEventINITOID = 0;
-    static const TEventID scmEventINDID = 1;
-    static const int scmBusAdapterOutAdpNum = 0;
+  class FORTE_EBMaster final : public forte::io::IOConfigFBMultiMaster {
+      DECLARE_FIRMWARE_FB(FORTE_EBMaster)
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+    private:
+      static const TEventID scmEventINITID = 0;
+      static const TEventID scmEventINITOID = 0;
+      static const TEventID scmEventINDID = 1;
+      static const int scmBusAdapterOutAdpNum = 0;
 
-  protected:
-    forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-    void setConfig() override;
+    protected:
+      forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
 
-    void onStartup(CEventChainExecutionThread *const paECET) override;
+      void setConfig() override;
 
-  public:
-    FORTE_EBMaster(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      void onStartup(CEventChainExecutionThread *const paECET) override;
 
-    CIEC_BOOL var_QI;
-    CIEC_UINT var_BusInterface;
-    CIEC_UINT var_BusSelectPin;
-    CIEC_UDINT var_BusInitSpeed;
-    CIEC_UDINT var_BusLoopSpeed;
-    CIEC_UINT var_SlaveUpdateInterval;
+    public:
+      FORTE_EBMaster(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_BOOL var_QO;
-    CIEC_WSTRING var_STATUS;
+      CIEC_BOOL var_QI;
+      CIEC_UINT var_BusInterface;
+      CIEC_UINT var_BusSelectPin;
+      CIEC_UDINT var_BusInitSpeed;
+      CIEC_UDINT var_BusLoopSpeed;
+      CIEC_UINT var_SlaveUpdateInterval;
 
-    CEventConnection conn_INITO;
-    CEventConnection conn_IND;
+      CIEC_BOOL var_QO;
+      CIEC_WSTRING var_STATUS;
 
-    CDataConnection *conn_QI;
-    CDataConnection *conn_BusInterface;
-    CDataConnection *conn_BusSelectPin;
-    CDataConnection *conn_BusInitSpeed;
-    CDataConnection *conn_BusLoopSpeed;
-    CDataConnection *conn_SlaveUpdateInterval;
+      CEventConnection conn_INITO;
+      CEventConnection conn_IND;
 
-    COutDataConnection<CIEC_BOOL> conn_QO;
-    COutDataConnection<CIEC_WSTRING> conn_STATUS;
+      CDataConnection *conn_QI;
+      CDataConnection *conn_BusInterface;
+      CDataConnection *conn_BusSelectPin;
+      CDataConnection *conn_BusInitSpeed;
+      CDataConnection *conn_BusLoopSpeed;
+      CDataConnection *conn_SlaveUpdateInterval;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
+      COutDataConnection<CIEC_BOOL> conn_QO;
+      COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
-    forte::CPlugPin<FORTE_EBBusAdapter_Plug> var_BusAdapterOut;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
 
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
-    forte::IPlugPin *getPlugPinUnchecked(size_t) override;
+      forte::CPlugPin<FORTE_EBBusAdapter_Plug> var_BusAdapterOut;
 
-    void evt_INIT(const CIEC_BOOL &paQI,
-                  const CIEC_UINT &paBusInterface,
-                  const CIEC_UINT &paBusSelectPin,
-                  const CIEC_UDINT &paBusInitSpeed,
-                  const CIEC_UDINT &paBusLoopSpeed,
-                  const CIEC_UINT &paSlaveUpdateInterval,
-                  CIEC_BOOL &paQO,
-                  CIEC_WSTRING &paSTATUS) {
-      var_QI = paQI;
-      var_BusInterface = paBusInterface;
-      var_BusSelectPin = paBusSelectPin;
-      var_BusInitSpeed = paBusInitSpeed;
-      var_BusLoopSpeed = paBusLoopSpeed;
-      var_SlaveUpdateInterval = paSlaveUpdateInterval;
-      receiveInputEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
-    }
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
+      forte::IPlugPin *getPlugPinUnchecked(size_t) override;
 
-    void operator()(const CIEC_BOOL &paQI,
+      void evt_INIT(const CIEC_BOOL &paQI,
                     const CIEC_UINT &paBusInterface,
                     const CIEC_UINT &paBusSelectPin,
                     const CIEC_UDINT &paBusInitSpeed,
@@ -104,7 +87,28 @@ class FORTE_EBMaster final : public forte::io::IOConfigFBMultiMaster {
                     const CIEC_UINT &paSlaveUpdateInterval,
                     CIEC_BOOL &paQO,
                     CIEC_WSTRING &paSTATUS) {
-      evt_INIT(paQI, paBusInterface, paBusSelectPin, paBusInitSpeed, paBusLoopSpeed, paSlaveUpdateInterval, paQO,
-               paSTATUS);
-    }
-};
+        var_QI = paQI;
+        var_BusInterface = paBusInterface;
+        var_BusSelectPin = paBusSelectPin;
+        var_BusInitSpeed = paBusInitSpeed;
+        var_BusLoopSpeed = paBusLoopSpeed;
+        var_SlaveUpdateInterval = paSlaveUpdateInterval;
+        receiveInputEvent(scmEventINITID, nullptr);
+        paQO = var_QO;
+        paSTATUS = var_STATUS;
+      }
+
+      void operator()(const CIEC_BOOL &paQI,
+                      const CIEC_UINT &paBusInterface,
+                      const CIEC_UINT &paBusSelectPin,
+                      const CIEC_UDINT &paBusInitSpeed,
+                      const CIEC_UDINT &paBusLoopSpeed,
+                      const CIEC_UINT &paSlaveUpdateInterval,
+                      CIEC_BOOL &paQO,
+                      CIEC_WSTRING &paSTATUS) {
+        evt_INIT(paQI, paBusInterface, paBusSelectPin, paBusInitSpeed, paBusLoopSpeed, paSlaveUpdateInterval, paQO,
+                 paSTATUS);
+      }
+  };
+
+} // namespace forte::eclipse4diac::io::embrick

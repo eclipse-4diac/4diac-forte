@@ -17,23 +17,27 @@
 #include "../slave.h"
 #include "../handle.h"
 
-class EmbrickBitSlaveHandle : public EmbrickSlaveHandle {
-  public:
-    EmbrickBitSlaveHandle(forte::io::IODeviceController *paController,
-                          forte::io::IOMapper::Direction paDirection,
-                          uint8_t paOffset,
-                          uint8_t paPosition,
-                          EmbrickSlaveHandler *paSlave);
+namespace forte::eclipse4diac::io::embrick {
 
-    void set(const CIEC_ANY &) override;
-    void get(CIEC_ANY &) override;
+  class EmbrickBitSlaveHandle : public EmbrickSlaveHandle {
+    public:
+      EmbrickBitSlaveHandle(forte::io::IODeviceController *paController,
+                            forte::io::IOMapper::Direction paDirection,
+                            uint8_t paOffset,
+                            uint8_t paPosition,
+                            EmbrickSlaveHandler *paSlave);
 
-    bool equal(unsigned char *mOldBuffer) override;
+      void set(const CIEC_ANY &) override;
+      void get(CIEC_ANY &) override;
 
-  protected:
-    void reset() override {
-      set(false_BOOL);
-    }
+      bool equal(unsigned char *mOldBuffer) override;
 
-    const uint8_t mMask;
-};
+    protected:
+      void reset() override {
+        set(false_BOOL);
+      }
+
+      const uint8_t mMask;
+  };
+
+} // namespace forte::eclipse4diac::io::embrick
