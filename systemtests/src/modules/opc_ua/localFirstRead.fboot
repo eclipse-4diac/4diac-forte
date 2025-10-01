@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="foldersReadFirst" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="foldersReadFirst" Type="iec61499::system::EMB_RES" /></Request>
 foldersReadFirst;<Request ID="2" Action="CREATE"><FB Name="E_SR" Type="iec61499::events::E_SR" /></Request>
 foldersReadFirst;<Request ID="3" Action="CREATE"><FB Name="FoldersNoBrowseName.BOOL2BOOL_1_1" Type="eclipse4diac::convert::DINT2DINT" /></Request>
 foldersReadFirst;<Request ID="4" Action="CREATE"><FB Name="FoldersNoBrowseName.SUBSCRIBE_2" Type="iec61499::net::SUBSCRIBE_2" /></Request>

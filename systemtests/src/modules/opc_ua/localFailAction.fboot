@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="FailAction" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="FailAction" Type="iec61499::system::EMB_RES" /></Request>
 FailAction;<Request ID="2" Action="CREATE"><FB Name="E_SR" Type="iec61499::events::E_SR" /></Request>
 FailAction;<Request ID="3" Action="CREATE"><FB Name="ServerRead" Type="iec61499::net::SUBSCRIBE_1" /></Request>
 FailAction;<Request ID="4" Action="WRITE"><Connection Source="opc_ua[READ;/Objects/IsolatedTests/READVariable]" Destination="ServerRead.ID" /></Request>

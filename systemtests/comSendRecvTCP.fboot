@@ -1,4 +1,4 @@
-;<Request ID="10" Action="CREATE"><FB Name="EMB_RES" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="10" Action="CREATE"><FB Name="EMB_RES" Type="iec61499::system::EMB_RES" /></Request>
 EMB_RES;<Request ID="11" Action="CREATE"><FB Name="comSendRecvTCPApp.CLIENT_SEND" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
 EMB_RES;<Request ID="12" Action="CREATE"><FB Name="comSendRecvTCPApp.CLIENT_INIT" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
 EMB_RES;<Request ID="13" Action="CREATE"><FB Name="comSendRecvTCPApp.E_PERMIT_1" Type="iec61499::events::E_PERMIT" /></Request>

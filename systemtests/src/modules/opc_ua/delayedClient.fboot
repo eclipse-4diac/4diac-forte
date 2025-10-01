@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="delayedWorkingClient" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="delayedWorkingClient" Type="iec61499::system::EMB_RES" /></Request>
 delayedWorkingClient;<Request ID="2" Action="CREATE"><FB Name="E_PERMIT" Type="iec61499::events::E_PERMIT" /></Request>
 delayedWorkingClient;<Request ID="3" Action="CREATE"><FB Name="numericNodeIdTestRemote.WriteToVars.BOOL2BOOL_1_1_2" Type="eclipse4diac::convert::DINT2DINT" /></Request>
 delayedWorkingClient;<Request ID="4" Action="WRITE"><Connection Source="DINT#789" Destination="numericNodeIdTestRemote.WriteToVars.BOOL2BOOL_1_1_2.IN" /></Request>

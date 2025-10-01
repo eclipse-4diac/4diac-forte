@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="typesServer" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="typesServer" Type="iec61499::system::EMB_RES" /></Request>
 typesServer;<Request ID="2" Action="CREATE"><FB Name="AllTypes.SINT2SINT" Type="eclipse4diac::convert::SINT2SINT" /></Request>
 typesServer;<Request ID="3" Action="CREATE"><FB Name="AllTypes.UINT2UINT" Type="eclipse4diac::convert::UINT2UINT" /></Request>
 typesServer;<Request ID="4" Action="CREATE"><FB Name="AllTypes.BOOL2BOOL" Type="eclipse4diac::convert::BOOL2BOOL" /></Request>

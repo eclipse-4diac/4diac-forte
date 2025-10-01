@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="Fail_Example" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="Fail_Example" Type="iec61499::system::EMB_RES" /></Request>
 Fail_Example;<Request ID="2" Action="CREATE"><FB Name="BOOL2BOOL_1_1_1" Type="eclipse4diac::convert::BOOL2BOOL" /></Request>
 Fail_Example;<Request ID="3" Action="WRITE"><Connection Source="false" Destination="BOOL2BOOL_1_1_1.IN" /></Request>
 Fail_Example;<Request ID="4" Action="CREATE"><FB Name="BOOL2BOOL_1" Type="eclipse4diac::convert::BOOL2BOOL" /></Request>

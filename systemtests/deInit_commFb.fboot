@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="DeInitCommFB" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="DeInitCommFB" Type="iec61499::system::EMB_RES" /></Request>
 DeInitCommFB;<Request ID="2" Action="CREATE"><FB Name="E_SR" Type="iec61499::events::E_SR" /></Request>
 DeInitCommFB;<Request ID="3" Action="CREATE"><FB Name="E_SWITCH" Type="iec61499::events::E_SWITCH" /></Request>
 DeInitCommFB;<Request ID="4" Action="CREATE"><FB Name="STEST_END" Type="eclipse4diac::utils::STEST_END" /></Request>

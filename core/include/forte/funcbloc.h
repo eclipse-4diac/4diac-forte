@@ -40,7 +40,7 @@ namespace forte {
   class CMonitoringHandler;
 
 #ifdef FORTE_REPLAY_DEVICE
-  namespace iec61499::hardware {
+  namespace iec61499::system {
     class CResourceReplayer;
   }
 #endif // FORTE_REPLAY_DEVICE
@@ -597,7 +597,7 @@ namespace forte {
 #endif // FORTE_FMU
 
 #ifdef FORTE_REPLAY_DEVICE
-      friend class forte::iec61499::hardware::CResourceReplayer;
+      friend class forte::iec61499::system::CResourceReplayer;
 #endif // FORTE_REPLAY_DEVICE
   };
 

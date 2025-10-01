@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="createLocalMethods" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="createLocalMethods" Type="iec61499::system::EMB_RES" /></Request>
 createLocalMethods;<Request ID="2" Action="CREATE"><FB Name="F_BOOL_TO_UINT_2" Type="iec61131::conversion::F_BOOL_TO_UINT" /></Request>
 createLocalMethods;<Request ID="3" Action="CREATE"><FB Name="MethodOnlyBrowseName.DINT2DINT_1_1_1" Type="eclipse4diac::convert::DINT2DINT" /></Request>
 createLocalMethods;<Request ID="4" Action="CREATE"><FB Name="MethodOnlyBrowseName.DINT2DINT_1_2" Type="eclipse4diac::convert::DINT2DINT" /></Request>

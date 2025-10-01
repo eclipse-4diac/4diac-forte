@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="cleanAll" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="cleanAll" Type="iec61499::system::EMB_RES" /></Request>
 cleanAll;<Request ID="2" Action="CREATE"><FB Name="PUBL_0" Type="iec61499::net::PUBL_0" /></Request>
 cleanAll;<Request ID="3" Action="WRITE"><Connection Source="WSTRIGN#allCleaned" Destination="PUBL_0.ID" /></Request>
 cleanAll;<Request ID="4" Action="CREATE"><FB Name="FieldsToArrowheadSystem" Type="FieldsToArrowheadSystem" /></Request>
@@ -105,7 +105,7 @@ cleanAll;<Request ID="104" Action="CREATE"><Connection Source="FieldsToArrowhead
 cleanAll;<Request ID="105" Action="CREATE"><Connection Source="FieldsToArrowheadService_1.arrowheadService" Destination="RegisterService2.FieldsToServiceRegistryEntry.providedService" /></Request>
 cleanAll;<Request ID="106" Action="CREATE"><Connection Source="FieldsToArrowheadSystem.arrowheadSystem" Destination="RegisterService2.FieldsToServiceRegistryEntry.provider" /></Request>
 cleanAll;<Request ID="107" Action="START"/>
-;<Request ID="108" Action="CREATE"><FB Name="RegisterUnregister" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="108" Action="CREATE"><FB Name="RegisterUnregister" Type="iec61499::system::EMB_RES" /></Request>
 RegisterUnregister;<Request ID="109" Action="CREATE"><FB Name="QueryService" Type="QueryService" /></Request>
 RegisterUnregister;<Request ID="110" Action="WRITE"><Connection Source="WSTRING#opc.tcp://127.0.0.1:62551/serviceregistry" Destination="QueryService.address" /></Request>
 RegisterUnregister;<Request ID="111" Action="CREATE"><FB Name="GET_AT_INDEX" Type="eclipse4diac::utils::GET_AT_INDEX" /></Request>
@@ -291,7 +291,7 @@ RegisterUnregister;<Request ID="290" Action="CREATE"><Connection Source="F_EQ_2.
 RegisterUnregister;<Request ID="291" Action="CREATE"><Connection Source="RegisterService.registerService" Destination="RegisterServiceOpcUa.registerService" /></Request>
 RegisterUnregister;<Request ID="292" Action="CREATE"><Connection Source="QueryService.queryServices" Destination="QueryServiceOpcUa.queryServices" /></Request>
 RegisterUnregister;<Request ID="293" Action="START"/>
-;<Request ID="294" Action="CREATE"><FB Name="DoubleRegister" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="294" Action="CREATE"><FB Name="DoubleRegister" Type="iec61499::system::EMB_RES" /></Request>
 DoubleRegister;<Request ID="295" Action="CREATE"><FB Name="QueryService" Type="QueryService" /></Request>
 DoubleRegister;<Request ID="296" Action="WRITE"><Connection Source="WSTRING#opc.tcp://127.0.0.1:62551/serviceregistry" Destination="QueryService.address" /></Request>
 DoubleRegister;<Request ID="297" Action="CREATE"><FB Name="GET_AT_INDEX" Type="eclipse4diac::utils::GET_AT_INDEX" /></Request>
@@ -477,7 +477,7 @@ DoubleRegister;<Request ID="476" Action="CREATE"><Connection Source="F_EQ_2.OUT"
 DoubleRegister;<Request ID="477" Action="CREATE"><Connection Source="RegisterService.registerService" Destination="RegisterServiceOpcUa.registerService" /></Request>
 DoubleRegister;<Request ID="478" Action="CREATE"><Connection Source="QueryService.queryServices" Destination="QueryServiceOpcUa.queryServices" /></Request>
 DoubleRegister;<Request ID="479" Action="START"/>
-;<Request ID="480" Action="CREATE"><FB Name="RegisterMoreServices" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="480" Action="CREATE"><FB Name="RegisterMoreServices" Type="iec61499::system::EMB_RES" /></Request>
 RegisterMoreServices;<Request ID="481" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.WS2WS" Type="eclipse4diac::convert::WSTRING2WSTRING" /></Request>
 RegisterMoreServices;<Request ID="482" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 RegisterMoreServices;<Request ID="483" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.GetPort" Type="eclipse4diac::utils::GET_STRUCT_VALUE" /></Request>
@@ -846,7 +846,7 @@ RegisterMoreServices;<Request ID="845" Action="CREATE"><Connection Source="Field
 RegisterMoreServices;<Request ID="846" Action="CREATE"><Connection Source="Service2.arrowheadService" Destination="QueryService2.FieldsToServiceQueryForm.service" /></Request>
 RegisterMoreServices;<Request ID="847" Action="CREATE"><Connection Source="Service1.arrowheadService" Destination="QueryService1.FieldsToServiceQueryForm.service" /></Request>
 RegisterMoreServices;<Request ID="848" Action="START"/>
-;<Request ID="849" Action="CREATE"><FB Name="SameServiceTwice" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="849" Action="CREATE"><FB Name="SameServiceTwice" Type="iec61499::system::EMB_RES" /></Request>
 SameServiceTwice;<Request ID="850" Action="CREATE"><FB Name="SUBL_0" Type="iec61499::net::SUBL_0" /></Request>
 SameServiceTwice;<Request ID="851" Action="WRITE"><Connection Source="WSTRIGN#testMoreServicesReady" Destination="SUBL_0.ID" /></Request>
 SameServiceTwice;<Request ID="852" Action="CREATE"><FB Name="Sequencer.E_DEMUX" Type="iec61499::events::E_DEMUX" /></Request>
@@ -1155,7 +1155,7 @@ SameServiceTwice;<Request ID="1,154" Action="CREATE"><Connection Source="Service
 SameServiceTwice;<Request ID="1,155" Action="CREATE"><Connection Source="FieldsToArrowheadSystem.arrowheadSystem" Destination="RegisterService1.FieldsToServiceRegistryEntry.provider" /></Request>
 SameServiceTwice;<Request ID="1,156" Action="CREATE"><Connection Source="Service1.arrowheadService" Destination="QueryServiceHTTPSub.FieldsToServiceQueryForm.service" /></Request>
 SameServiceTwice;<Request ID="1,157" Action="START"/>
-;<Request ID="1,158" Action="CREATE"><FB Name="VersionInterfaceAndMetadata" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1,158" Action="CREATE"><FB Name="VersionInterfaceAndMetadata" Type="iec61499::system::EMB_RES" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,159" Action="CREATE"><FB Name="FieldsToArrowheadService" Type="FieldsToArrowheadService" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,160" Action="WRITE"><Connection Source="WSTRING#serviceTest" Destination="FieldsToArrowheadService.serviceDefinition" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,161" Action="WRITE"><Connection Source="[&quot;JSON&quot;, &quot;XML&quot;]" Destination="FieldsToArrowheadService.interfaces" /></Request>
@@ -1771,7 +1771,7 @@ VersionInterfaceAndMetadata;<Request ID="1,770" Action="CREATE"><Connection Sour
 VersionInterfaceAndMetadata;<Request ID="1,771" Action="CREATE"><Connection Source="FieldsToArrowheadService_1_2_1_1_1.arrowheadService" Destination="QueryServiceHTTPSub_1_2_1_1_1.FieldsToServiceQueryForm.service" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,772" Action="CREATE"><Connection Source="FieldsToArrowheadService_1_2_1_1_1_1.arrowheadService" Destination="QueryServiceHTTPSub_1_2_1_1_1_1.FieldsToServiceQueryForm.service" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,773" Action="START"/>
-;<Request ID="1,774" Action="CREATE"><FB Name="RegisterMoreServicesSubApp" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1,774" Action="CREATE"><FB Name="RegisterMoreServicesSubApp" Type="iec61499::system::EMB_RES" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,775" Action="CREATE"><FB Name="SUBL_0" Type="iec61499::net::SUBL_0" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,776" Action="WRITE"><Connection Source="WSTRIGN#versionEnded" Destination="SUBL_0.ID" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,777" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.WS2WS" Type="eclipse4diac::convert::WSTRING2WSTRING" /></Request>
@@ -2178,7 +2178,7 @@ RegisterMoreServicesSubApp;<Request ID="2,177" Action="CREATE"><Connection Sourc
 RegisterMoreServicesSubApp;<Request ID="2,178" Action="CREATE"><Connection Source="F_EQ_3_1_1_1.OUT" Destination="Pos0Empty4.check" /></Request>
 RegisterMoreServicesSubApp;<Request ID="2,179" Action="CREATE"><Connection Source="FieldsToArrowheadSystem.arrowheadSystem" Destination="RegisterManyServices.FieldsToServiceRegistryEntry.provider" /></Request>
 RegisterMoreServicesSubApp;<Request ID="2,180" Action="START"/>
-;<Request ID="2,181" Action="CREATE"><FB Name="OrchestratorNoRule" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="2,181" Action="CREATE"><FB Name="OrchestratorNoRule" Type="iec61499::system::EMB_RES" /></Request>
 OrchestratorNoRule;<Request ID="2,182" Action="CREATE"><FB Name="FieldsToServiceRequestForm" Type="FieldsToServiceRequestForm" /></Request>
 OrchestratorNoRule;<Request ID="2,183" Action="CREATE"><FB Name="FieldsToArrowheadSystem" Type="FieldsToArrowheadSystem" /></Request>
 OrchestratorNoRule;<Request ID="2,184" Action="WRITE"><Connection Source="WSTRING#systemTestName" Destination="FieldsToArrowheadSystem.systemName" /></Request>
@@ -2343,7 +2343,7 @@ OrchestratorNoRule;<Request ID="2,342" Action="CREATE"><Connection Source="Field
 OrchestratorNoRule;<Request ID="2,343" Action="CREATE"><Connection Source="E_SR.Q" Destination="SERVER_1_1.QI" /></Request>
 OrchestratorNoRule;<Request ID="2,344" Action="CREATE"><Connection Source="RequestOrchestrationForm.requestOrchestration" Destination="RequestOrchestrationHTTP.requestOrchestration" /></Request>
 OrchestratorNoRule;<Request ID="2,345" Action="START"/>
-;<Request ID="2,346" Action="CREATE"><FB Name="OrchestrationWithRules" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="2,346" Action="CREATE"><FB Name="OrchestrationWithRules" Type="iec61499::system::EMB_RES" /></Request>
 OrchestrationWithRules;<Request ID="2,347" Action="CREATE"><FB Name="FieldsToArrowheadSystem" Type="FieldsToArrowheadSystem" /></Request>
 OrchestrationWithRules;<Request ID="2,348" Action="WRITE"><Connection Source="WSTRING#systemTestName" Destination="FieldsToArrowheadSystem.systemName" /></Request>
 OrchestrationWithRules;<Request ID="2,349" Action="WRITE"><Connection Source="localhost" Destination="FieldsToArrowheadSystem.address" /></Request>
@@ -2577,7 +2577,7 @@ OrchestrationWithRules;<Request ID="2,576" Action="CREATE"><Connection Source="F
 OrchestrationWithRules;<Request ID="2,577" Action="CREATE"><Connection Source="STRING2STRING_3.OUT" Destination="CLIENT_1_2.SD_1" /></Request>
 OrchestrationWithRules;<Request ID="2,578" Action="CREATE"><Connection Source="STRING2STRING_3_1.OUT" Destination="CLIENT_1_2_1.SD_1" /></Request>
 OrchestrationWithRules;<Request ID="2,579" Action="START"/>
-;<Request ID="2,580" Action="CREATE"><FB Name="PublishSubscribe" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="2,580" Action="CREATE"><FB Name="PublishSubscribe" Type="iec61499::system::EMB_RES" /></Request>
 PublishSubscribe;<Request ID="2,581" Action="CREATE"><FB Name="FieldsToPublishEvent" Type="FieldsToPublishEvent" /></Request>
 PublishSubscribe;<Request ID="2,582" Action="CREATE"><FB Name="FieldsToArrowheadSystem" Type="FieldsToArrowheadSystem" /></Request>
 PublishSubscribe;<Request ID="2,583" Action="WRITE"><Connection Source="WSTRING#systemTestName" Destination="FieldsToArrowheadSystem.systemName" /></Request>

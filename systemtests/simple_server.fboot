@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="simpleServerTest" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="simpleServerTest" Type="iec61499::system::EMB_RES" /></Request>
 simpleServerTest;<Request ID="2" Action="CREATE"><FB Name="PUBLISH_1" Type="iec61499::net::PUBLISH_1" /></Request>
 simpleServerTest;<Request ID="3" Action="WRITE"><Connection Source="1" Destination="PUBLISH_1.QI" /></Request>
 simpleServerTest;<Request ID="4" Action="WRITE"><Connection Source="239.192.0.2:61500" Destination="PUBLISH_1.ID" /></Request>

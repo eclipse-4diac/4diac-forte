@@ -198,7 +198,7 @@ namespace forte::trace::test {
       auto device = std::make_unique<forte::test::CTesterDevice>(paDeviceName);
 
       BOOST_TEST_INFO("Create Resource");
-      BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName, "iec61499::hardware::EMB_RES"_STRID, ""));
+      BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName, "iec61499::system::EMB_RES"_STRID, ""));
 
       BOOST_TEST_INFO("Start Device");
       BOOST_CHECK(device->initialize());

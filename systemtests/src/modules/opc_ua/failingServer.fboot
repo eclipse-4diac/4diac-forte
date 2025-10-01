@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="FailingServer" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="FailingServer" Type="iec61499::system::EMB_RES" /></Request>
 FailingServer;<Request ID="2" Action="CREATE"><FB Name="E_SWITCH" Type="iec61499::events::E_SWITCH" /></Request>
 FailingServer;<Request ID="3" Action="CREATE"><FB Name="WorngInputs" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
 FailingServer;<Request ID="4" Action="WRITE"><Connection Source="0" Destination="WorngInputs.check" /></Request>

@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="foldersWriteFirst" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="foldersWriteFirst" Type="iec61499::system::EMB_RES" /></Request>
 foldersWriteFirst;<Request ID="2" Action="CREATE"><FB Name="STEST_END_1" Type="eclipse4diac::utils::STEST_END" /></Request>
 foldersWriteFirst;<Request ID="3" Action="CREATE"><FB Name="F_BOOL_TO_UINT_1" Type="iec61131::conversion::F_BOOL_TO_UINT" /></Request>
 foldersWriteFirst;<Request ID="4" Action="CREATE"><FB Name="E_DEMUX_2_1" Type="iec61499::events::E_DEMUX_2" /></Request>

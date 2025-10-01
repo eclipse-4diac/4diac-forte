@@ -25,8 +25,6 @@
 
 #include "../../core/src/cominfra/fbdkasn1layer.h"
 #include "forte/cominfra/commfb.h"
-#include "../../stdfblib/hardware/src/EMB_RES.h"
-
 #include <boost/test/tools/floating_point_comparison.hpp>
 #include <memory>
 
@@ -61,6 +59,7 @@
 
 #include "../../core/src/typelib_internal.h"
 #include "forte/datatypes/forte_array_fixed.h"
+#include "../../../stdfblib/system/src/EMB_RES.h"
 
 using namespace forte::literals;
 
@@ -70,7 +69,7 @@ namespace forte::com_infra::test {
   namespace {
     const auto scmInputTypes = std::array{"BOOL"_STRID, "BOOL"_STRID};
 
-    iec61499::hardware::EMB_RES resource({}, resource);
+    iec61499::system::EMB_RES resource({}, resource);
   } // namespace
 
   template<typename... RD>

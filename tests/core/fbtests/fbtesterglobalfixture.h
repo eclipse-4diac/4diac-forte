@@ -16,9 +16,8 @@
 #define TESTS_CORE_FBTESTS_FBTESTERGLOBALFIXTURE_H_
 
 #include "forte/device.h"
-#include "../../stdfblib/hardware/src/EMB_RES.h"
-
 #include <memory>
+#include "../../../stdfblib/system/src/EMB_RES.h"
 
 namespace forte::test {
   class CTesterDevice : public CDevice {
@@ -42,7 +41,7 @@ namespace forte::test {
       }
 
     private:
-      CInternalFB<iec61499::hardware::EMB_RES> mResource;
+      CInternalFB<iec61499::system::EMB_RES> mResource;
 
       constexpr static SFBInterfaceSpec scTestDevSpec = {};
   };

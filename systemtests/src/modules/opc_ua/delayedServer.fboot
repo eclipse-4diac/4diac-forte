@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="delayedWorkingServer" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="delayedWorkingServer" Type="iec61499::system::EMB_RES" /></Request>
 delayedWorkingServer;<Request ID="2" Action="CREATE"><FB Name="LocaMethods.MethodOnlyBrowseName.DINT2DINT_1_1_1" Type="eclipse4diac::convert::DINT2DINT" /></Request>
 delayedWorkingServer;<Request ID="3" Action="CREATE"><FB Name="LocaMethods.MethodOnlyBrowseName.DINT2DINT_1_2" Type="eclipse4diac::convert::DINT2DINT" /></Request>
 delayedWorkingServer;<Request ID="4" Action="CREATE"><FB Name="LocaMethods.MethodOnlyBrowseName.SERVER_0" Type="iec61499::net::SERVER_0" /></Request>

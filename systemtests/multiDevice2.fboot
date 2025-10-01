@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="multiDeviceMiddle" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="multiDeviceMiddle" Type="iec61499::system::EMB_RES" /></Request>
 multiDeviceMiddle;<Request ID="2" Action="CREATE"><FB Name="DINT2DINT_1" Type="eclipse4diac::convert::DINT2DINT" /></Request>
 multiDeviceMiddle;<Request ID="3" Action="CREATE"><FB Name="F_EQ_1" Type="iec61131::comparison::F_EQ" /></Request>
 multiDeviceMiddle;<Request ID="4" Action="WRITE"><Connection Source="DINT#26" Destination="F_EQ_1.IN2" /></Request>

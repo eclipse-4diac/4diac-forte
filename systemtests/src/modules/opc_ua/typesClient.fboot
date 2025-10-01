@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="typesClient" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="typesClient" Type="iec61499::system::EMB_RES" /></Request>
 typesClient;<Request ID="2" Action="CREATE"><FB Name="SubApp_2.INT2INT_1" Type="eclipse4diac::convert::INT2INT" /></Request>
 typesClient;<Request ID="3" Action="WRITE"><Connection Source="INT#234" Destination="SubApp_2.INT2INT_1.IN" /></Request>
 typesClient;<Request ID="4" Action="CREATE"><FB Name="SubApp_2.BOOL2BOOL_2_1" Type="eclipse4diac::convert::BOOL2BOOL" /></Request>

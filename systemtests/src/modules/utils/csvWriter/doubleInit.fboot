@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="doubleInit" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="doubleInit" Type="iec61499::system::EMB_RES" /></Request>
 doubleInit;<Request ID="2" Action="CREATE"><FB Name="DoubleInit.F_NOT_1" Type="iec61131::bitwiseOperators::F_NOT" /></Request>
 doubleInit;<Request ID="3" Action="CREATE"><FB Name="DoubleInit.E_SR_1" Type="iec61499::events::E_SR" /></Request>
 doubleInit;<Request ID="4" Action="CREATE"><FB Name="DoubleInit.DoubleInit1" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>

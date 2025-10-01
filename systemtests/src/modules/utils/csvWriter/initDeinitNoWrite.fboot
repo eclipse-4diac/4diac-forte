@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="initDeinitNoWrite" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="initDeinitNoWrite" Type="iec61499::system::EMB_RES" /></Request>
 initDeinitNoWrite;<Request ID="2" Action="CREATE"><FB Name="InitDeinitNoWrite.CSV_WRITER_1" Type="eclipse4diac::utils::CSV_WRITER_1" /></Request>
 initDeinitNoWrite;<Request ID="3" Action="WRITE"><Connection Source="&apos;csvWriteTest.csv&apos;" Destination="InitDeinitNoWrite.CSV_WRITER_1.FILE_NAME" /></Request>
 initDeinitNoWrite;<Request ID="4" Action="CREATE"><FB Name="InitDeinitNoWrite.InitTest" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>

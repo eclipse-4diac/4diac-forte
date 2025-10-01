@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="fastWrite" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="fastWrite" Type="iec61499::system::EMB_RES" /></Request>
 fastWrite;<Request ID="2" Action="CREATE"><FB Name="E_CYCLE" Type="iec61499::events::E_CYCLE" /></Request>
 fastWrite;<Request ID="3" Action="WRITE"><Connection Source="T#5ms" Destination="E_CYCLE.DT" /></Request>
 fastWrite;<Request ID="4" Action="CREATE"><FB Name="FB_RANDOM" Type="eclipse4diac::utils::FB_RANDOM" /></Request>

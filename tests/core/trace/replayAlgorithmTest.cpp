@@ -22,10 +22,10 @@
 #include "../../../core/src/trace/internal/EventMessage.h"
 #include "../../../core/src/trace/barectf_platform_forte.h"
 #include "../fbtests/fbtesterglobalfixture.h"
-#include "../../../stdfblib/hardware/src/replay/deviceReplayer.h"
 #include "../../../core/src/trace/reader/utils.h"
-#include "../../../stdfblib/hardware/src/ForteBootFileLoader.h"
-#include "../../../stdfblib/hardware/src/CommandParser.h"
+#include "../../../stdfblib/system/src/CommandParser.h"
+#include "../../../stdfblib/system/src/ForteBootFileLoader.h"
+#include "../../../stdfblib/system/src/replay/deviceReplayer.h"
 
 using namespace forte::literals;
 
@@ -101,10 +101,10 @@ namespace forte::trace::test {
       auto device = std::make_unique<forte::test::CTesterDevice>(paDeviceName);
 
       BOOST_TEST_INFO("Create Resource 1");
-      BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName1, "iec61499::hardware::EMB_RES"_STRID, ""));
+      BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName1, "iec61499::system::EMB_RES"_STRID, ""));
 
       BOOST_TEST_INFO("Create Resource 2");
-      BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName2, "iec61499::hardware::EMB_RES"_STRID, ""));
+      BOOST_CHECK(EMGMResponse::Ready == device->createFB(paResourceName2, "iec61499::system::EMB_RES"_STRID, ""));
 
       BOOST_TEST_INFO("Start Device");
       BOOST_CHECK(device->initialize());
@@ -435,14 +435,14 @@ namespace forte::trace::test {
     std::unique_ptr<CDevice> createDeviceFromFile(StringId paDeviceName, const std::string &paFilePath) {
       auto device = std::make_unique<forte::test::CTesterDevice>(paDeviceName);
       device->initialize();
-      iec61499::hardware::CommandParser commandParser(*device);
+      iec61499::system::CommandParser commandParser(*device);
 
-      iec61499::hardware::ForteBootFileLoader fileLoader(
+      iec61499::system::ForteBootFileLoader fileLoader(
           [&commandParser](const char *paDest, char *paCommand) -> bool {
             return EMGMResponse::Ready == commandParser.parseAndExecuteMGMCommand(paDest, paCommand);
           },
           paFilePath);
-      BOOST_REQUIRE(iec61499::hardware::LoadBootResult::LOAD_RESULT_OK == fileLoader.loadBootFile());
+      BOOST_REQUIRE(iec61499::system::LoadBootResult::LOAD_RESULT_OK == fileLoader.loadBootFile());
       return device;
     }
 
@@ -482,7 +482,7 @@ namespace forte::trace::test {
         std::unordered_map<std::string, std::vector<EventMessage>> reproducedEvents;
 
         {
-          auto deviceReplayer = iec61499::hardware::CDeviceReplayer(*device, allTracedExternalEvents);
+          auto deviceReplayer = iec61499::system::CDeviceReplayer(*device, allTracedExternalEvents);
           device->startDevice();
           reproducedEvents = deviceReplayer.reproduceAll();
         }
@@ -498,7 +498,7 @@ namespace forte::trace::test {
 
         auto allTracedExternalEvents = reader::utils::filterEventsForReplayDevice(allTracedEvents, *device);
 
-        auto deviceReplayer = iec61499::hardware::CDeviceReplayer(*device, allTracedExternalEvents);
+        auto deviceReplayer = iec61499::system::CDeviceReplayer(*device, allTracedExternalEvents);
 
         device->startDevice();
 

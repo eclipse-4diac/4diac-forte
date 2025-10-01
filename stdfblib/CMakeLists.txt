@@ -13,6 +13,6 @@
 #############################################################################
 
 add_subdirectory(events)
-add_subdirectory(hardware)
+add_subdirectory(system)
 add_subdirectory(io)
 add_subdirectory(net)

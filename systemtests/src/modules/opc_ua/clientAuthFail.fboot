@@ -1,4 +1,4 @@
-;<Request ID="1" Action="CREATE"><FB Name="clientAuthFail" Type="iec61499::hardware::EMB_RES" /></Request>
+;<Request ID="1" Action="CREATE"><FB Name="clientAuthFail" Type="iec61499::system::EMB_RES" /></Request>
 clientAuthFail;<Request ID="2" Action="CREATE"><FB Name="CLIENT_0_1" Type="iec61499::net::CLIENT_0_1" /></Request>
 clientAuthFail;<Request ID="3" Action="WRITE"><Connection Source="1" Destination="CLIENT_0_1.QI" /></Request>
 clientAuthFail;<Request ID="4" Action="WRITE"><Connection Source="opc_ua[READ;opc.tcp://localhost:4840#;/Objects/IsolatedTests/WRITEVariable]" Destination="CLIENT_0_1.ID" /></Request>
