@@ -62,6 +62,7 @@ namespace forte::com_infra::opc_ua {
       std::unique_ptr<CAlarmActionInfo> mMemberActionInfo;
 
       bool mIsStateActive;
+      bool mIsStateAcked;
       bool mHasSeverityProperty = false;
       int mMessageTextPortIndex = -1;
       std::unordered_map<std::string, UA_NodeId> mUAPropertyMap = {
@@ -93,6 +94,8 @@ namespace forte::com_infra::opc_ua {
       void initializeRDBuffer();
 
       UA_StatusCode triggerAlarm(bool paActivate);
+
+      UA_StatusCode resetAckedState(UA_Server *paServer);
 
       UA_StatusCode setConditionField(UA_Server *paServer,
                                       UA_QualifiedName paQualifiedName,

@@ -36,6 +36,7 @@ namespace forte::com_infra::opc_ua {
     char smEnableStateProperty[] =
         "EnableState"; // This is needed to avoid potential delete-subscription error with HMI tools
     char smActiveState[] = "ActiveState";
+    char smAckedState[] = "AckedState";
     char smActive[] = "Active";
     char smAcked[] = "Acknowledged";
     char smId[] = "Id";
@@ -62,7 +63,8 @@ namespace forte::com_infra::opc_ua {
       COPC_UA_Layer(paUpperLayer, paComFB),
       mHandler(nullptr),
       mMemberActionInfo(nullptr),
-      mIsStateActive(false) {
+      mIsStateActive(false),
+      mIsStateAcked(false) {
   }
 
   COPC_UA_AC_Layer::~COPC_UA_AC_Layer() {
@@ -172,6 +174,7 @@ namespace forte::com_infra::opc_ua {
     UA_StatusCode status = UA_STATUSCODE_GOOD;
     UA_Boolean activeState = paActivate;
     if (paActivate) {
+      status |= resetAckedState(server);
       if (!mHasSeverityProperty) {
         UA_UInt16 *severityValue = &smSeverityValue;
         status |= setConditionField(server, UA_QUALIFIEDNAME(0, smSeverity), severityValue, &UA_TYPES[UA_TYPES_UINT16]);
@@ -212,6 +215,12 @@ namespace forte::com_infra::opc_ua {
       mIsStateActive = false;
     }
     return status;
+  }
+
+  UA_StatusCode COPC_UA_AC_Layer::resetAckedState(UA_Server *paServer) {
+    UA_Boolean ackedState = false;
+    return setConditionVariableFieldProperty(paServer, UA_QUALIFIEDNAME(0, smAckedState), &ackedState,
+                                             &UA_TYPES[UA_TYPES_BOOLEAN]);
   }
 
   UA_StatusCode COPC_UA_AC_Layer::setConditionField(UA_Server *paServer,
@@ -634,7 +643,7 @@ namespace forte::com_infra::opc_ua {
   }
 
   UA_StatusCode COPC_UA_AC_Layer::onActive(UA_Server *server, const UA_NodeId *condition) {
-    COPC_UA_AC_Layer *layer;
+    COPC_UA_AC_Layer *layer = nullptr;
     UA_Server_getNodeContext(server, *condition, (void **) &layer);
     COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(layer->mHandler);
     if (layer->getCommFB()->getComServiceType() == e_Subscriber) {
@@ -654,13 +663,15 @@ namespace forte::com_infra::opc_ua {
   }
 
   UA_StatusCode COPC_UA_AC_Layer::onAcknowledged(UA_Server *server, const UA_NodeId *condition) {
-    COPC_UA_AC_Layer *layer;
+    COPC_UA_AC_Layer *layer = nullptr;
     UA_Server_getNodeContext(server, *condition, (void **) &layer);
     COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(layer->mHandler);
     if (layer->getCommFB()->getComServiceType() == e_Subscriber) {
-      std::pair<TPortId, const CIEC_BOOL> data = std::make_pair(layer->mFBOutputMap[smAcked], true_BOOL);
+      const CIEC_BOOL &value = layer->mIsStateAcked ? false_BOOL : true_BOOL;
+      std::pair<TPortId, const CIEC_BOOL> data = std::make_pair(layer->mFBOutputMap[smAcked], value);
       localHandler->onAlarmStateChanged(static_cast<const void *>(&data), 0, layer);
     }
+    layer->mIsStateAcked = !layer->mIsStateAcked;
     UA_DateTime dateTime = UA_DateTime_now();
     UA_StatusCode status = UA_Server_writeObjectProperty_scalar(server, *condition, UA_QUALIFIEDNAME(0, smTime),
                                                                 &dateTime, &UA_TYPES[UA_TYPES_DATETIME]);
