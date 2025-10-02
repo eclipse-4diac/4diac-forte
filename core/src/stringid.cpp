@@ -20,7 +20,7 @@
 
 namespace forte {
   namespace {
-    std::mutex internMutex;
+    constinit std::mutex internMutex;
 
     std::unordered_set<std::string_view> &internSet() {
       static std::unordered_set<std::string_view> internSet;
