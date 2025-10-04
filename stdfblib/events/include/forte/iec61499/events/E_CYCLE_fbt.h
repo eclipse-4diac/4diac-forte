@@ -12,8 +12,7 @@
  *     - initial API and implementation and/or initial documentation
  *   Alois Zoitl  - Reworked to new timer handler interface
  *******************************************************************************/
-#ifndef _E_CYCLE_H_
-#define _E_CYCLE_H_
+#pragma once
 
 #include "forte/iec61499/events/timedfb.h"
 
@@ -34,4 +33,3 @@ namespace forte::iec61499::events {
   };
 } // namespace forte::iec61499::events
 
-#endif /*E_CYCLE_H_*/

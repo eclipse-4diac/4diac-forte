@@ -16,8 +16,7 @@
 class for better handling generic FBs
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
-#ifndef _GEN_E_DEMUX_H_
-#define _GEN_E_DEMUX_H_
+#pragma once
 
 #include "forte/genfb.h"
 #include "forte/datatypes/forte_uint.h"
@@ -56,4 +55,3 @@ namespace forte::iec61499::events {
       ~GEN_E_DEMUX() override = default;
   };
 } // namespace forte::iec61499::events
-#endif //_GEN_E_DEMUX_H_

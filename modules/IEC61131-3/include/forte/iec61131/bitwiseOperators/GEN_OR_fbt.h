@@ -17,8 +17,7 @@ class for better handling generic FBs
  *     - refactor for ANY variant
  *******************************************************************************/
 
-#ifndef _GEN_OR_H_
-#define _GEN_OR_H_
+#pragma once
 
 #include "genbitbase_fbt.h"
 
@@ -35,4 +34,3 @@ namespace forte::iec61131::bitwiseOperators {
   };
 } // namespace forte::iec61131::bitwiseOperators
 
-#endif //_GEN_OR_H_

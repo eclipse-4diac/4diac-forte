@@ -10,8 +10,7 @@
  *   Alois Zoitl, Gerhard Ebenhofer
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _E_DELAY_H_
-#define _E_DELAY_H_
+#pragma once
 
 #include "forte/iec61499/events/timedfb.h"
 
@@ -34,4 +33,3 @@ namespace forte::iec61499::events {
   };
 } // namespace forte::iec61499::events
 
-#endif /*E_DELAY_H_*/
