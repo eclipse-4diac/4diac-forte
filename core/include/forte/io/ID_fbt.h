@@ -20,7 +20,7 @@
 #include "forte/datatypes/forte_dword.h"
 
 namespace forte::io {
-  /*! /brief generic class for IW function blocks providing access to one word physical input
+  /*! /brief generic class for ID function blocks providing access to one double word physical input
    */
   class FORTE_ID final : public CInputFB<CIEC_DWORD> {
       DECLARE_FIRMWARE_FB(FORTE_ID)
