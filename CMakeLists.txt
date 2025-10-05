@@ -51,7 +51,7 @@ if (NOT BUILD_SHARED_LIBS AND NOT CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE_SUPPORT
             "                                             \"<LINK_ITEM>\"\n"
             "                                             \"LINKER:--no-whole-archive\")\n"
             "  set(CMAKE_LINK_LIBRARY_USING_WHOLE_ARCHIVE_SUPPORTED TRUE)\n"
-            "  set(CMAKE_LINK_LIBRARY_WHOLE_ARCHIVE_PROPERTIES LIBRARY_TYPE=STATIC UNICITY=YES OVERRIDE=DEFAULT)\n"
+            "  set(CMAKE_LINK_LIBRARY_WHOLE_ARCHIVE_ATTRIBUTES LIBRARY_TYPE=STATIC DEDUPLICATION=YES OVERRIDE=DEFAULT)\n"
     )
 endif ()
 
