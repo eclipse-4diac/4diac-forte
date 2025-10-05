@@ -22,6 +22,7 @@ target_sources(forte-core PRIVATE
         ../../common/src/forte_standard_time.cpp
         ../../common/src/genforte_fileio.cpp
         ../../common/src/utils/timespec_utils.cpp
+        $<$<BOOL:${BUILD_SHARED_LIBS}>:${CMAKE_CURRENT_SOURCE_DIR}/load_option.cpp>
         $<$<BOOL:${FORTE_EXTERNAL_TIMEHA}>:${CMAKE_CURRENT_SOURCE_DIR}/externtimeha.cpp>
         $<$<BOOL:${FORTE_EXTERNAL_TIMEHA}>:${CMAKE_CURRENT_SOURCE_DIR}/externtimeha.h>
         $<$<NOT:$<BOOL:${FORTE_WINDOWS_XP_COMPAT}>>:${CMAKE_CURRENT_SOURCE_DIR}/forte_sync.cpp>
