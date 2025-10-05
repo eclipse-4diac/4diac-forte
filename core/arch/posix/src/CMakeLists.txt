@@ -30,6 +30,7 @@ target_sources(forte-core PRIVATE
         ../../common/src/genforte_printer.cpp
         ../../common/src/genforte_fileio.cpp
         ../../common/src/utils/timespec_utils.cpp
+        $<$<BOOL:${BUILD_SHARED_LIBS}>:${CMAKE_CURRENT_SOURCE_DIR}/load_option.cpp>
         $<$<BOOL:${FORTE_COM_SER}>:${CMAKE_CURRENT_SOURCE_DIR}/posixsercommlayer.cpp>
         $<$<BOOL:${FORTE_COM_SER}>:${CMAKE_CURRENT_SOURCE_DIR}/posixsercommlayer.h>
         $<$<BOOL:${FORTE_COM_ETH}>:${CMAKE_CURRENT_SOURCE_DIR}/../../common/src/fdselecthand.cpp>

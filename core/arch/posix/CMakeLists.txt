@@ -17,6 +17,7 @@ forte_register_architecture(Posix)
 target_link_libraries(forte-core PUBLIC
         pthread
         $<$<NOT:$<BOOL:${APPLE}>>:rt>
+        $<$<BOOL:${BUILD_SHARED_LIBS}>:dl>
 )
 
 set(FORTE_POSIX_GENERATE_MAP_FILE FALSE CACHE BOOL "Enable the generation of map files")
