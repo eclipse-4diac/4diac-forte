@@ -15,6 +15,7 @@
 target_sources(forte-core PRIVATE
         basefb.cpp
         common.cpp
+        factory.cpp
         fb.cpp
 )
 

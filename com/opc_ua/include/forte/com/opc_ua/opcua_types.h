@@ -17,6 +17,12 @@
 
 #include <open62541.h>
 
-namespace forte::com_infra::opc_ua {
-  using OPC_UA_External_Types = util::Registry<"", const UA_DataType *>;
-}
+namespace forte {
+  namespace util {
+    extern template class Registry<"", const UA_DataType *>;
+  }
+
+  namespace com_infra::opc_ua {
+    using OPC_UA_External_Types = util::Registry<"", const UA_DataType *>;
+  }
+} // namespace forte

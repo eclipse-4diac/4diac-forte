@@ -20,5 +20,9 @@
 #include <string_view>
 
 namespace forte {
+  namespace util::factory {
+    extern template class Factory<FixedEcetImpl, DefaultEcetImpl, CEventChainExecutionThread>;
+  }
+
   using EcetFactory = util::factory::Factory<FixedEcetImpl, DefaultEcetImpl, CEventChainExecutionThread>;
 } // namespace forte

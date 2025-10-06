@@ -15,21 +15,27 @@
 
 #include "forte/util/mainparam_utils.h"
 
-namespace {
-  class TimerHandlerOption final
-      : public forte::util::CommandLineParser::OptionImpl<"T", "timer", "<timer>", "Set the timer to be used"> {
-    public:
-      bool parseOption(const std::string_view paArgument) override {
-        if (forte::TimerHandlerFactory::setDefaultImpl(forte::StringId::lookup(paArgument))) {
-          return true;
-        }
-        printf("The selected timer '%s' is not valid. Select one of the following:\n", paArgument.data());
-        for (const auto name : forte::TimerHandlerFactory::getNames()) {
-          printf("  %s\n", name.data());
-        }
-        return false;
-      }
-  };
+namespace forte {
+  namespace util::factory {
+    template class Factory<FixedTimerHandlerImpl, DefaultTimerHandlerImpl, CTimerHandler, CDeviceExecution &>;
+  }
 
-  [[maybe_unused]] TimerHandlerOption gTimerHandlerOption;
-} // namespace
+  namespace {
+    class TimerHandlerOption final
+        : public util::CommandLineParser::OptionImpl<"T", "timer", "<timer>", "Set the timer to be used"> {
+      public:
+        bool parseOption(const std::string_view paArgument) override {
+          if (TimerHandlerFactory::setDefaultImpl(StringId::lookup(paArgument))) {
+            return true;
+          }
+          printf("The selected timer '%s' is not valid. Select one of the following:\n", paArgument.data());
+          for (const auto name : TimerHandlerFactory::getNames()) {
+            printf("  %s\n", name.data());
+          }
+          return false;
+        }
+    };
+
+    [[maybe_unused]] TimerHandlerOption gTimerHandlerOption;
+  } // namespace
+} // namespace forte

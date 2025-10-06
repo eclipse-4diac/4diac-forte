@@ -11,14 +11,8 @@
  *    Martin Erich Jobst - initial implementation
  *******************************************************************************/
 
-#pragma once
+#include "forte/startuphook.h"
 
-#include "forte/util/hook.h"
-
-namespace forte {
-  namespace util::hook {
-    extern template class Registry<void, int, char **>;
-  }
-
-  using StartupHookRegistry = util::hook::Registry<void, int, char **>;
-} // namespace forte
+namespace forte::util::hook {
+  template class Registry<void, int, char **>;
+}

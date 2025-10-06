@@ -11,14 +11,8 @@
  *    Martin Erich Jobst - initial implementation
  *******************************************************************************/
 
-#pragma once
+#include "forte/ecetfactory.h"
 
-#include "forte/util/hook.h"
-
-namespace forte {
-  namespace util::hook {
-    extern template class Registry<void, int, char **>;
-  }
-
-  using StartupHookRegistry = util::hook::Registry<void, int, char **>;
-} // namespace forte
+namespace forte::util::factory {
+  template class Factory<FixedEcetImpl, DefaultEcetImpl, CEventChainExecutionThread>;
+}

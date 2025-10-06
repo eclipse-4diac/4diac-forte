@@ -13,12 +13,20 @@
 
 #pragma once
 
+#include "forte/com/buffer.h"
 #include "forte/com/channel.h"
 
 #include "forte/util/factory.h"
 
-namespace forte::com {
+namespace forte {
+  class CIEC_ANY_VARIANT;
 
-  template<typename T>
-  using ComChannelFactory = util::factory::Factory<util::factory::DynamicImpl, "", ComChannel<T>, ComObserver<T> &>;
-} // namespace forte::com
+  namespace com {
+    template<typename T>
+    class ComChannelFactory
+        : public util::factory::Factory<util::factory::DynamicImpl, "", ComChannel<T>, ComObserver<T> &> {};
+
+    extern template class ComChannelFactory<ComBuffer>;
+    extern template class ComChannelFactory<std::span<CIEC_ANY_VARIANT>>;
+  } // namespace com
+} // namespace forte

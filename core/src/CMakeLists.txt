@@ -38,6 +38,7 @@ target_sources(forte-core PRIVATE
         device.cpp
         devicefactory.cpp
         ecet.cpp
+        ecetfactory.cpp
         eventconn.cpp
         extevhan.cpp
         fbcontainer.cpp
@@ -61,6 +62,7 @@ target_sources(forte-core PRIVATE
         resource.cpp
         resource_internal.h
         simplefb.cpp
+        startuphook.cpp
         stringid.cpp
         timerha.cpp
         timerhandlerfactory.cpp

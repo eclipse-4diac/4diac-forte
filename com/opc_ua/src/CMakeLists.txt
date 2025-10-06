@@ -26,10 +26,12 @@ configure_file(opcua_defaults.h.in
 target_sources(forte-com-opc_ua PRIVATE
         opcua_local_handler.h
         opcua_local_handler.cpp
+        opcua_nodesets.cpp
         opcua_helper.h
         opcua_helper.cpp
         opcua_remote_handler.h
         opcua_remote_handler.cpp
+        opcua_types.cpp
         opcua_handler_abstract.h
         opcua_handler_abstract.cpp
         opcua_client_information.h

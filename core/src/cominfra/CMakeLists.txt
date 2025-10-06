@@ -26,6 +26,7 @@ target_sources(forte-core PRIVATE
         basecommfb.cpp
         commfb.cpp
         comlayer.cpp
+        comlayersmanager.cpp
         $<$<BOOL:${FORTE_COM_ETH}>:${CMAKE_CURRENT_SOURCE_DIR}/ipcomlayer.cpp>
         $<$<BOOL:${FORTE_COM_ETH}>:${CMAKE_CURRENT_SOURCE_DIR}/ipcomlayer.h>
         $<$<BOOL:${FORTE_COM_FBDK}>:${CMAKE_CURRENT_SOURCE_DIR}/fbdkasn1layer.cpp>

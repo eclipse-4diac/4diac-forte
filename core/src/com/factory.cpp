@@ -11,14 +11,9 @@
  *    Martin Erich Jobst - initial implementation
  *******************************************************************************/
 
-#pragma once
+#include <forte/com/factory.h>
 
-#include "forte/util/hook.h"
-
-namespace forte {
-  namespace util::hook {
-    extern template class Registry<void, int, char **>;
-  }
-
-  using StartupHookRegistry = util::hook::Registry<void, int, char **>;
-} // namespace forte
+namespace forte::com {
+  template class ComChannelFactory<ComBuffer>;
+  template class ComChannelFactory<std::span<CIEC_ANY_VARIANT>>;
+} // namespace forte::com

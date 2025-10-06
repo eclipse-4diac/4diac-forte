@@ -16,28 +16,40 @@
 
 #include "forte/util/factory.h"
 
-namespace forte::com_infra {
+namespace forte {
+  namespace com_infra {
+    class CBaseCommFB;
+    class CComLayer;
+  } // namespace com_infra
 
-  class CBaseCommFB;
-  class CComLayer;
+  namespace util::factory {
+    extern template class Factory<DynamicImpl,
+                                  "",
+                                  com_infra::CComLayer,
+                                  com_infra::CComLayer *,
+                                  com_infra::CBaseCommFB *>;
+  }
 
-  /*!\brief Communication Layers Manager for communication with Server/Client and Publish/Subscriber
-   *
-   * The communication interface is separated into two part, the handler and the protocol
-   * The Hander is the interface for all function blocks which wants to communicate over
-   * a network. Every function block which wants to communicate has to be registered at the
-   * handler. A registration does not open any connection. Therefore the registration can be
-   * handled in the function block creation. The connection with a network is established with
-   * a INIT+ event.
-   * The protocol is a layered protocol-stack which has two interfaces. One for the communication
-   * with the upper layer and one with the underneath layer. The top layer is the network handler
-   * and the bottom layer is either the operating system or a protocol layer which is able to communicate
-   * directly with the network.
-   * The memory-allocation is always done by the underneath layer. Thus the upper layer can simple send
-   * data to a underlying layer. The underneath layer can notify the upper layer by calling the
-   * newDataAvailable-function. Then the upper layer has to get the data by calling the getDataPackage-
-   * function. The returned pointer has to be deleted by the upper layer. A smart-pointer like design
-   * is desirable.
-   */
-  using ComLayerManager = util::factory::Factory<util::factory::DynamicImpl, "", CComLayer, CComLayer *, CBaseCommFB *>;
-} // namespace forte::com_infra
+  namespace com_infra {
+    /*!\brief Communication Layers Manager for communication with Server/Client and Publish/Subscriber
+     *
+     * The communication interface is separated into two part, the handler and the protocol
+     * The Hander is the interface for all function blocks which wants to communicate over
+     * a network. Every function block which wants to communicate has to be registered at the
+     * handler. A registration does not open any connection. Therefore the registration can be
+     * handled in the function block creation. The connection with a network is established with
+     * a INIT+ event.
+     * The protocol is a layered protocol-stack which has two interfaces. One for the communication
+     * with the upper layer and one with the underneath layer. The top layer is the network handler
+     * and the bottom layer is either the operating system or a protocol layer which is able to communicate
+     * directly with the network.
+     * The memory-allocation is always done by the underneath layer. Thus the upper layer can simple send
+     * data to a underlying layer. The underneath layer can notify the upper layer by calling the
+     * newDataAvailable-function. Then the upper layer has to get the data by calling the getDataPackage-
+     * function. The returned pointer has to be deleted by the upper layer. A smart-pointer like design
+     * is desirable.
+     */
+    using ComLayerManager =
+        util::factory::Factory<util::factory::DynamicImpl, "", CComLayer, CComLayer *, CBaseCommFB *>;
+  } // namespace com_infra
+} // namespace forte

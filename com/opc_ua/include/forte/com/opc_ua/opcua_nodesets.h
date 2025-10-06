@@ -17,6 +17,12 @@
 
 #include <open62541.h>
 
-namespace forte::com_infra::opc_ua {
-  using OPC_UA_Nodesets = util::hook::Registry<UA_StatusCode, UA_Server *>;
-}
+namespace forte {
+  namespace util::hook {
+    extern template class Registry<UA_StatusCode, UA_Server *>;
+  }
+
+  namespace com_infra::opc_ua {
+    using OPC_UA_Nodesets = util::hook::Registry<UA_StatusCode, UA_Server *>;
+  }
+} // namespace forte

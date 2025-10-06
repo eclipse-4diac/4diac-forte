@@ -20,5 +20,9 @@
 #include <string_view>
 
 namespace forte {
+  namespace util::factory {
+    extern template class Factory<FixedDeviceImpl, DefaultDeviceImpl, CDevice, std::string_view>;
+  }
+
   using DeviceFactory = util::factory::Factory<FixedDeviceImpl, DefaultDeviceImpl, CDevice, std::string_view>;
 } // namespace forte

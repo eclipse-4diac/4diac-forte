@@ -34,7 +34,7 @@ namespace forte::util::factory {
 
   template<typename FixedImpl, fixed_string, typename T, typename... Args>
     requires Constructible<FixedImpl, T, Args...> || std::same_as<FixedImpl, DynamicImpl>
-  class Factory final {
+  class Factory {
     public:
       class Entry {
         public:
@@ -83,7 +83,7 @@ namespace forte::util::factory {
   };
 
   template<fixed_string DefaultImpl, typename T, typename... Args>
-  class Factory<DynamicImpl, DefaultImpl, T, Args...> final {
+  class Factory<DynamicImpl, DefaultImpl, T, Args...> {
     public:
       class Entry {
         public:

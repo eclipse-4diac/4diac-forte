@@ -11,14 +11,10 @@
  *    Martin Erich Jobst - initial implementation
  *******************************************************************************/
 
-#pragma once
+#include "forte/cominfra/comlayersmanager.h"
 
-#include "forte/util/hook.h"
+#include "forte/cominfra/comlayer.h"
 
-namespace forte {
-  namespace util::hook {
-    extern template class Registry<void, int, char **>;
-  }
-
-  using StartupHookRegistry = util::hook::Registry<void, int, char **>;
-} // namespace forte
+namespace forte::util::factory {
+  template class Factory<DynamicImpl, "", com_infra::CComLayer, com_infra::CComLayer *, com_infra::CBaseCommFB *>;
+}

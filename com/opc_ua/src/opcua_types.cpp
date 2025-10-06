@@ -11,14 +11,8 @@
  *    Martin Erich Jobst - initial implementation
  *******************************************************************************/
 
-#pragma once
+#include "forte/com/opc_ua/opcua_types.h"
 
-#include "forte/util/hook.h"
-
-namespace forte {
-  namespace util::hook {
-    extern template class Registry<void, int, char **>;
-  }
-
-  using StartupHookRegistry = util::hook::Registry<void, int, char **>;
-} // namespace forte
+namespace forte::util {
+  template class Registry<"", const UA_DataType *>;
+}

@@ -20,6 +20,10 @@
 #include <string_view>
 
 namespace forte {
+  namespace util::factory {
+    extern template class Factory<FixedTimerHandlerImpl, DefaultTimerHandlerImpl, CTimerHandler, CDeviceExecution &>;
+  }
+
   using TimerHandlerFactory =
       util::factory::Factory<FixedTimerHandlerImpl, DefaultTimerHandlerImpl, CTimerHandler, CDeviceExecution &>;
 } // namespace forte
