@@ -29,7 +29,7 @@
 
 namespace forte {
   template<typename T>
-  class CIEC_ARRAY_VARIABLE : public CIEC_ARRAY_COMMON<T> {
+  class CIEC_ARRAY_VARIABLE final : public CIEC_ARRAY_COMMON<T> {
     public:
       using difference_type = std::ptrdiff_t;
       using value_type = T;
@@ -212,7 +212,8 @@ namespace forte {
       }
 
       [[nodiscard]] reference at(intmax_t index) override {
-        return data.at(getDataArrayIndex(index));
+        CIEC_ARRAY::checkBounds(index, mLowerBound, mUpperBound, true);
+        return operator[](index);
       }
 
       // PLC-like systems always want range checks
@@ -221,7 +222,8 @@ namespace forte {
       }
 
       [[nodiscard]] const_reference at(intmax_t index) const override {
-        return data.at(getDataArrayIndex(index));
+        CIEC_ARRAY::checkBounds(index, mLowerBound, mUpperBound, true);
+        return operator[](index);
       }
 
       // PLC-like systems always want range checks

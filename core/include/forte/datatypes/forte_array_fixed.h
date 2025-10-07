@@ -30,7 +30,7 @@ namespace forte {
   class CIEC_ARRAY_VARIABLE;
 
   template<typename T, intmax_t lowerBound, intmax_t upperBound>
-  class CIEC_ARRAY_FIXED : public CIEC_ARRAY_COMMON<T> {
+  class CIEC_ARRAY_FIXED final : public CIEC_ARRAY_COMMON<T> {
     public:
       constexpr static const size_t cmSize = upperBound - lowerBound + 1;
 
@@ -227,7 +227,8 @@ namespace forte {
       }
 
       [[nodiscard]] constexpr reference at(intmax_t index) override {
-        return data.at(getDataArrayIndex(index));
+        CIEC_ARRAY::checkBounds(index, lowerBound, upperBound, true);
+        return operator[](index);
       }
 
       // PLC-like systems always want range checks
@@ -236,7 +237,8 @@ namespace forte {
       }
 
       [[nodiscard]] constexpr const_reference at(intmax_t index) const override {
-        return data.at(getDataArrayIndex(index));
+        CIEC_ARRAY::checkBounds(index, lowerBound, upperBound, true);
+        return operator[](index);
       }
 
       // PLC-like systems always want range checks

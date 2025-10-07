@@ -19,12 +19,13 @@
  *******************************************************************************/
 #pragma once
 
-#include <stddef.h>
-#include <inttypes.h>
+#include <cstddef>
+#include <cinttypes>
 
 #include "forte/datatypes/forte_any_derived.h"
 #include "forte/datatypes/forte_any_int.h"
 #include "forte/stringid.h"
+#include "forte/util/devlog.h"
 
 namespace forte {
   /** \brief A common supertype for all CIEC_ARRAY variants, providing the minimal interface an array must provide
@@ -146,6 +147,20 @@ namespace forte {
       }
 
       static const intmax_t cmCollapseMaxSize = 100;
+
+      constexpr static void
+      checkBounds(const intmax_t paIndex, const intmax_t paLowerBound, const intmax_t paUpperBound, bool paValid) {
+        if (paIndex < paLowerBound || paIndex > paUpperBound || !paValid) {
+#if __cpp_exceptions
+          throw std::out_of_range("Array access to index " + std::to_string(paIndex) + " is out of bounds from " +
+                                  std::to_string(paLowerBound) + " to " + std::to_string(paUpperBound));
+#else
+          DEVLOG_ERROR("Array access to index %" PRIdMAX " is out of bounds from %" PRIdMAX " to %" PRIdMAX "\n",
+                       paIndex, paLowerBound, paUpperBound);
+          std::abort();
+#endif
+        }
+      }
 
     private:
       void toCollapsedString(std::string &paTargetBuf) const;

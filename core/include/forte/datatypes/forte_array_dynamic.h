@@ -45,7 +45,7 @@ namespace forte {
 
   /*!\ingroup COREDTS CIEC_ARRAY_DYNAMIC represents the array data type according to IEC 61131.
    */
-  class CIEC_ARRAY_DYNAMIC : public CIEC_ARRAY {
+  class CIEC_ARRAY_DYNAMIC final : public CIEC_ARRAY {
       DECLARE_FIRMWARE_DATATYPE(ARRAY_DYNAMIC)
     public:
       using difference_type = std::ptrdiff_t;
@@ -514,37 +514,23 @@ namespace forte {
       }
 
       [[nodiscard]] reference at(intmax_t paIndex) override {
-        if (paIndex < mLowerBound || paIndex > mUpperBound || !mData) {
-#if __cpp_exceptions
-          throw std::out_of_range("array::at: Index: " + std::to_string(paIndex) +
-                                  " >=  size: " + std::to_string(size()));
-#else
-          std::abort();
-#endif
-        }
+        checkBounds(paIndex, mLowerBound, mUpperBound, mData);
+        return operator[](paIndex);
+      }
+
+      [[nodiscard]] const_reference at(intmax_t paIndex) const override {
+        checkBounds(paIndex, mLowerBound, mUpperBound, mData);
+        return operator[](paIndex);
+      }
+
+      [[nodiscard]] reference operator[](intmax_t paIndex) override {
         return *reinterpret_cast<pointer>(reinterpret_cast<TForteByte *>(mData) +
                                           getDataArrayIndex(paIndex) * mElementSize);
       }
 
-      [[nodiscard]] const_reference at(intmax_t paIndex) const override {
-        if (paIndex < mLowerBound || paIndex > mUpperBound || !mData) {
-#if __cpp_exceptions
-          throw std::out_of_range("array::at: Index: " + std::to_string(paIndex) +
-                                  " >=  size: " + std::to_string(size()));
-#else
-          std::abort();
-#endif
-        }
+      [[nodiscard]] const_reference operator[](intmax_t paIndex) const override {
         return *reinterpret_cast<const_pointer>(reinterpret_cast<const TForteByte *>(mData) +
                                                 getDataArrayIndex(paIndex) * mElementSize);
-      }
-
-      [[nodiscard]] reference operator[](intmax_t paIndex) override {
-        return at(paIndex);
-      }
-
-      [[nodiscard]] const_reference operator[](intmax_t paIndex) const override {
-        return at(paIndex);
       }
 
       [[nodiscard]] bool hasVariableBounds() const override {
