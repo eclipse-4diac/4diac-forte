@@ -36,9 +36,9 @@ namespace forte {
     }
   } // namespace
 
-  void StringId::intern(const std::string_view paString) {
+  std::string_view StringId::intern(const std::string_view paString) {
     std::unique_lock lock(internMutex());
-    internSet().insert(paString);
+    return *internSet().insert(paString).first;
   }
 
   StringId StringId::lookup(std::string_view paString) {

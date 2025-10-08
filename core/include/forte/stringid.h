@@ -71,14 +71,18 @@ namespace forte {
       template<util::fixed_string A>
       static constexpr StringId fixed() {
         (void) &Register<A>::scmRegister;
+#ifdef _WIN32
+        return StringId{intern(A)};
+#else
         return StringId{A};
+#endif
       }
 
     private:
       constexpr explicit StringId(const std::string_view paString) : mString(paString) {
       }
 
-      static void intern(std::string_view paString);
+      static std::string_view intern(std::string_view paString);
 
       std::string_view mString;
   };
