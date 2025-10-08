@@ -20,7 +20,10 @@
 
 namespace forte {
   namespace {
-    constinit std::mutex internMutex;
+    std::mutex &internMutex() {
+      static std::mutex internMutex;
+      return internMutex;
+    }
 
     std::unordered_set<std::string_view> &internSet() {
       static std::unordered_set<std::string_view> internSet;
@@ -34,12 +37,12 @@ namespace forte {
   } // namespace
 
   void StringId::intern(const std::string_view paString) {
-    std::unique_lock lock(internMutex);
+    std::unique_lock lock(internMutex());
     internSet().insert(paString);
   }
 
   StringId StringId::lookup(std::string_view paString) {
-    std::unique_lock lock(internMutex);
+    std::unique_lock lock(internMutex());
     const auto it = internSet().find(paString);
     if (it == internSet().end()) {
       return {};
@@ -48,7 +51,7 @@ namespace forte {
   }
 
   StringId StringId::insert(const std::string_view paString) {
-    std::unique_lock lock(internMutex);
+    std::unique_lock lock(internMutex());
     auto it = internSet().find(paString);
     if (it == internSet().end()) {
       it = internSet().insert(runtimeDeque().emplace_back(paString)).first;
