@@ -10,11 +10,10 @@
  * Milan Vathoopan, Guru Chandrasekhara - initial API and implementation and/or initial documentation
  ************************************************************************************/
 
-#ifndef SRC_ARCH_FREERTOS_SEMAPHORE_H_
-#define SRC_ARCH_FREERTOS_SEMAPHORE_H_
+#pragma once
 
-#include <FreeRTOS.h>
-#include <semphr.h>
+#include <freertos/FreeRTOS.h>
+#include <freertos/semphr.h>
 #include "forte/datatype.h"
 
 namespace forte {
@@ -54,5 +53,3 @@ namespace forte {
 
   } /* namespace arch */
 } /* namespace forte */
-
-#endif /* SRC_ARCH_POSIX_SEMAPHORE_H_ */

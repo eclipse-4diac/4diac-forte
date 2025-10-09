@@ -10,8 +10,7 @@
  * Jörg Walter - initial implementation
  ************************************************************************************/
 
-#ifndef SRC_ARCH_FREERTOS_SOCKHAND_PLUSTCP_H_
-#define SRC_ARCH_FREERTOS_SOCKHAND_PLUSTCP_H_
+#pragma once
 
 /*
  This is an emulation layer that defines enough of the classic BSD network API
@@ -36,7 +35,7 @@
 #undef FD_ISSET
 
 // base headers
-#include <FreeRTOS.h>
+#include <freertos/FreeRTOS.h>
 #include <FreeRTOS_Sockets.h>
 #include <FreeRTOS_IP.h>
 #include <FreeRTOS_TCP_IP.h>
@@ -164,5 +163,3 @@ static inline int select(intptr_t, fd_set *in, fd_set *out, fd_set *exc, timeval
   FreeRTOS_DeleteSocketSet(set);
   return ret;
 };
-
-#endif /* SRC_ARCH_FREERTOS_SOCKHAND_PLUSTCP_H_ */

@@ -41,7 +41,7 @@ add_subdirectory(c_interface)
 
 # add_subdirectory(be_m1)
 # add_subdirectory(ecos)
-# add_subdirectory(freeRTOS)
+add_subdirectory(freeRTOS)
 # add_subdirectory(macos)
 # add_subdirectory(netos)
 # add_subdirectory(pikeos_posix)

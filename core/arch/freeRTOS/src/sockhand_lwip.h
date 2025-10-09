@@ -11,8 +11,7 @@
  * Jörg Walter - make exchangeable with FreeRTOS-plus-TCP
  ************************************************************************************/
 
-#ifndef SRC_ARCH_FREERTOS_SOCKHAND_LWIP_H_
-#define SRC_ARCH_FREERTOS_SOCKHAND_LWIP_H_
+#pragma once
 
 #include "lwip/opt.h"
 #include "lwip/sockets.h"
@@ -37,5 +36,3 @@ inline int connect(int s, const struct sockaddr *name, socklen_t namelen) {
 static inline int bind(int sockfd, struct sockaddr *addr, socklen_t addrlen) {
   return lwip_bind(sockfd, addr, addrlen);
 }
-
-#endif /* SRC_ARCH_FREERTOS_SOCKHAND_LWIP_H_ */

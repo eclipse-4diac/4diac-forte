@@ -12,10 +12,12 @@
 
 #include "forte/arch/forte_sync.h"
 
-CFreeRTOSSyncObject::CFreeRTOSSyncObject() {
-  mMutexHandle = xSemaphoreCreateMutex();
-}
+namespace forte::arch {
+  CFreeRTOSSyncObject::CFreeRTOSSyncObject() {
+    mMutexHandle = xSemaphoreCreateMutex();
+  }
 
-CFreeRTOSSyncObject::~CFreeRTOSSyncObject() {
-  vSemaphoreDelete(mMutexHandle);
-}
+  CFreeRTOSSyncObject::~CFreeRTOSSyncObject() {
+    vSemaphoreDelete(mMutexHandle);
+  }
+} // namespace forte::arch

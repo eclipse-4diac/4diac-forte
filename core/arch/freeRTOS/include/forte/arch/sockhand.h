@@ -11,8 +11,7 @@
  * Jörg Walter - make lwIP exchangeable with FreeRTOS-plus-TCP
  ************************************************************************************/
 
-#ifndef SRC_ARCH_FREERTOS_SOCKHAND_H_
-#define SRC_ARCH_FREERTOS_SOCKHAND_H_
+#pragma once
 
 #include <errno.h>
 #include <string.h>
@@ -29,6 +28,6 @@
 #include "forte/arch/fdselecthand.h"
 #include "forte/arch/bsdsocketinterf.h"
 
-typedef CGenericIPComSocketHandler<CFDSelectHandler, CBSDSocketInterface> CIPComSocketHandler;
-
-#endif /* SRC_ARCH_FREERTOS_SOCKHAND_H_ */
+namespace forte::arch {
+  typedef CGenericIPComSocketHandler<CFDSelectHandler, CBSDSocketInterface> CIPComSocketHandler;
+}

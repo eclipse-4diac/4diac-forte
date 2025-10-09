@@ -10,8 +10,8 @@
  * Milan Vathoopan, Guru Chandrasekhara - initial API and implementation and/or initial documentation
  ************************************************************************************/
 
-#include "FreeRTOS.h"
-#include "task.h"
+#include <freertos/FreeRTOS.h>
+#include <freertos/task.h>
 
 #include "../c_interface/forte_c.h"
 
