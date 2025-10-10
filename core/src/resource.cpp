@@ -446,7 +446,7 @@ namespace forte {
     }
 
     if (paForce) {
-      if (!setForce(paNameList, true)) {
+      if (!setForced(paNameList, true)) {
         return EMGMResponse::NoSuchObject;
       }
     } else if (const auto conn = getOutputConnection(paNameList);

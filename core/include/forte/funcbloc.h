@@ -346,9 +346,9 @@ namespace forte {
 
       TAbsDataPortNum getAbsDataPortNum(StringId paPortNameId) const;
 
-      bool setForce(std::span<const StringId> paNameList, bool paForce) override;
+      bool setForced(std::span<const StringId> paNameList, bool paForce) override;
 
-      [[nodiscard]] constexpr bool getForce(const TAbsDataPortNum paAbsDataPortNum) const {
+      [[nodiscard]] constexpr bool isForced(const TAbsDataPortNum paAbsDataPortNum) const {
         return paAbsDataPortNum < mForces.size() && mForces[paAbsDataPortNum];
       }
 
@@ -432,7 +432,7 @@ namespace forte {
         if (!paConn) {
           return;
         }
-        if (!getForce(paAbsDataPortNum)) [[likely]] {
+        if (!isForced(paAbsDataPortNum)) [[likely]] {
           paConn->readData(paValue);
         }
 #ifdef FORTE_TRACE_CTF
@@ -448,7 +448,7 @@ namespace forte {
        */
       template<typename T, typename U>
       void writeData(const TAbsDataPortNum paAbsDataPortNum, T &paValue, U &paConn) {
-        if (!getForce(paAbsDataPortNum)) [[likely]] {
+        if (!isForced(paAbsDataPortNum)) [[likely]] {
           paConn.writeData(paValue);
         }
 #ifdef FORTE_TRACE_CTF
@@ -560,7 +560,7 @@ namespace forte {
        */
       virtual void writeOutputData(TEventID paEO) = 0;
 
-      bool setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue);
+      bool setForced(TAbsDataPortNum paAbsDataPortNum, bool paForceValue);
 
       /*!\brief Function resetting the values of forced outputs to the value from the output connection.
        */

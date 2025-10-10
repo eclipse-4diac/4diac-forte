@@ -430,20 +430,20 @@ TAbsDataPortNum CFunctionBlock::getAbsDataPortNum(StringId paPortNameId) const {
   return INVALID_ABS_DATA_PORT_ID;
 }
 
-bool CFunctionBlock::setForce(const std::span<const StringId> paNameList, const bool paForce) {
+bool CFunctionBlock::setForced(const std::span<const StringId> paNameList, const bool paForce) {
   if (paNameList.empty()) {
     return false;
   }
   const StringId name = paNameList.front();
   if (const auto absDataPortNum = getAbsDataPortNum(name);
       absDataPortNum != INVALID_ABS_DATA_PORT_ID && paNameList.size() == 1) {
-    setForce(absDataPortNum, paForce);
+    setForced(absDataPortNum, paForce);
     return true;
   }
-  return CFBContainer::setForce(paNameList, paForce);
+  return CFBContainer::setForced(paNameList, paForce);
 }
 
-bool CFunctionBlock::setForce(TAbsDataPortNum paAbsDataPortNum, bool paForceValue) {
+bool CFunctionBlock::setForced(TAbsDataPortNum paAbsDataPortNum, bool paForceValue) {
   if (paAbsDataPortNum >= mForces.size()) {
     return false;
   }
@@ -468,7 +468,7 @@ void CFunctionBlock::resetForcedOutputs() {
   const std::size_t numDIs = getFBInterfaceSpec().getNumDIs();
   const std::size_t numDOs = getFBInterfaceSpec().getNumDOs();
   for (TPortId index = 0; index < numDOs; ++index) {
-    if (getForce(numDIs + index)) {
+    if (isForced(numDIs + index)) {
       // when forcing we write back the value from the connection to keep the forced value on the output
       getDOConUnchecked(index)->readData(*getDO(index));
     }

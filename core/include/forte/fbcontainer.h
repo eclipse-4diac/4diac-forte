@@ -138,7 +138,7 @@ namespace forte {
        * @param paNameList the name hierarchy the requested variable
        * \return true on success, false otherwise.
        */
-      virtual bool setForce(std::span<const StringId> paNameList, bool paForce);
+      virtual bool setForced(std::span<const StringId> paNameList, bool paForce);
 
       /*!\brief get the connection object for the given destination identifier
        *

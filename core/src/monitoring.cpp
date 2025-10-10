@@ -134,7 +134,7 @@ namespace forte {
 
     void CDataWatchEntry::update(const CFunctionBlock &paFB) {
       mDataBuffer->setValue(mDataValueRef);
-      mForced = paFB.getForce(mForceIndex);
+      mForced = paFB.isForced(mForceIndex);
     }
 
     void CEventWatchEntry::update() {
@@ -241,7 +241,7 @@ namespace forte {
   }
 
   EMGMResponse CMonitoringHandler::clearForce(TNameIdentifier &paNameList) {
-    if (!mResource.setForce(paNameList, false)) {
+    if (!mResource.setForced(paNameList, false)) {
       return EMGMResponse::NoSuchObject;
     }
     return EMGMResponse::Ready;

@@ -239,13 +239,13 @@ namespace forte {
     return nullptr;
   }
 
-  bool CFBContainer::setForce(const std::span<const StringId> paNameList, const bool paForce) {
+  bool CFBContainer::setForced(const std::span<const StringId> paNameList, const bool paForce) {
     if (paNameList.empty()) {
       return false;
     }
     const StringId name = paNameList.front();
     if (const auto child = getChild(name)) {
-      return child->setForce(paNameList.subspan(1), paForce);
+      return child->setForced(paNameList.subspan(1), paForce);
     }
     return false;
   }
