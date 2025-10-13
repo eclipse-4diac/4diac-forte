@@ -94,7 +94,8 @@ namespace forte::util {
                 ptr != paArgument.data() + paArgument.size() || ec != std::errc()) {
               return false;
             }
-            return result;
+            setOption(result);
+            return true;
           }
 
           virtual bool setOption(T t) = 0;
