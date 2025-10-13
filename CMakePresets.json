@@ -68,7 +68,9 @@
         "rhs": "Linux"
       },
       "cacheVariables": {
-        "FORTE_ARCHITECTURE": "Posix"
+        "FORTE_ARCHITECTURE": "Posix",
+        "CMAKE_INSTALL_RPATH": "$ORIGIN/../lib",
+        "CMAKE_INSTALL_RPATH_USE_LINK_PATH": "ON"
       }
     },
     {
