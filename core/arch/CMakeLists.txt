@@ -22,8 +22,8 @@ cmake_dependent_option(FORTE_RTTI_AND_EXCEPTIONS "Enable RTTI and Exceptions" OF
 mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
 
 target_compile_options(forte-core PUBLIC
-        $<$<BOOL:${HAVE_RTTI_FLAG}>:$<IF:$<BOOL:${FORTE_RTTI_AND_EXCEPTIONS}>,-frtti,-fno-rtti>>
-        $<$<BOOL:${HAVE_EXCEPTIONS_FLAG}>:$<IF:$<BOOL:${FORTE_RTTI_AND_EXCEPTIONS}>,-fexceptions,-fno-exceptions>>
+        $<$<COMPILE_LANGUAGE:CXX>:$<$<BOOL:${HAVE_RTTI_FLAG}>:$<IF:$<BOOL:${FORTE_RTTI_AND_EXCEPTIONS}>,-frtti,-fno-rtti>>>
+        $<$<COMPILE_LANGUAGE:CXX>:$<$<BOOL:${HAVE_EXCEPTIONS_FLAG}>:$<IF:$<BOOL:${FORTE_RTTI_AND_EXCEPTIONS}>,-fexceptions,-fno-exceptions>>>
 )
 
 ###############################################################################
