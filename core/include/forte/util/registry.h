@@ -52,14 +52,14 @@ namespace forte::util {
       }
 
       [[nodiscard]] static StringId getDefault() {
-        return defaultName;
+        return defaultName();
       }
 
       static bool setDefault(const StringId paName) {
         if (!entries().contains(paName)) {
           return false;
         }
-        defaultName = paName;
+        defaultName() = paName;
         return true;
       }
 
@@ -75,9 +75,9 @@ namespace forte::util {
         return entries;
       }
 
-      constinit static StringId defaultName;
+      static StringId &defaultName() {
+        static StringId defaultName;
+        return defaultName;
+      }
   };
-
-  template<fixed_string Default, typename T>
-  constinit StringId Registry<Default, T>::defaultName = StringId::fixed<Default>();
 } // namespace forte::util
