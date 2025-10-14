@@ -62,7 +62,7 @@ namespace forte::com_infra {
   }
 
   bool CStructMemberLocalComLayer::parseArrayIndexFromString(const char *paNestedStructString, CIEC_INT &targetIndex) {
-    std::string str(paNestedStructString);
+    std::string_view str(paNestedStructString);
 
     const size_t startIndex = (str.find('[') != std::string::npos) ? str.find('[') + 1 : std::string::npos;
     const size_t stopIndex = str.find(']');
@@ -72,7 +72,7 @@ namespace forte::com_infra {
     }
 
     const char *indexString = str.substr(startIndex, stopIndex - startIndex).data();
-    TForteInt16 index = static_cast<TForteInt16>(util::strtol(indexString, nullptr, 10));
+    const auto index = static_cast<TForteInt16>(util::strtol(indexString, nullptr, 10));
 
     if (errno == ERANGE) {
       return false;
