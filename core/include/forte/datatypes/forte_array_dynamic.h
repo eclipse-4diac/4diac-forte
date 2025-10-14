@@ -572,7 +572,7 @@ namespace forte {
           mData = operator new(paArray.size() * mElementSize);
           auto *dest = static_cast<TForteByte *>(mData);
           for (intmax_t i = paArray.getLowerBound(), end = paArray.getUpperBound(); i <= end; ++i) {
-            paArray[i].clone(dest);
+            (void) paArray[i].clone(dest);
             dest += mElementSize;
             mSize++; // increment size one-by-one to track allocated elements for destruction
           }

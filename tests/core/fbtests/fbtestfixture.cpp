@@ -26,7 +26,7 @@
 
 namespace forte::test {
   //! Helper class allowing to access the can be connected function from the FBTester
-  class CFBTestConn final : public CDataConnection {
+  class CFBTestConn : public CDataConnection {
     public:
       static bool canBeConnected(const CIEC_ANY &paSrcDataPoint, const CIEC_ANY &paDstDataPoint) {
         return CDataConnection::canBeConnected(paSrcDataPoint, paDstDataPoint);
@@ -34,9 +34,6 @@ namespace forte::test {
 
       // you are not allowed to create this class
       CFBTestConn() = delete;
-
-    private:
-      ~CFBTestConn() override;
   };
 
   class CFBTestInputDataConn final : public CDataConnection {
