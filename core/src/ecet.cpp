@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2021 ACIN, Profactor GmbH, fortiss GmbH, Hit robot group
+ * Copyright (c) 2005, 2025 ACIN, Profactor GmbH, fortiss GmbH, Hit robot group
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,11 +14,8 @@
  *    zhaoxin
  *      -  fix that external event queue becomes event locker after it is full
  *******************************************************************************/
-#include "forte/config/forte_config.h"
 #include "forte/ecet.h"
-
 #include "forte/ecetfactory.h"
-#include "forte/esfb.h"
 #include "forte/util/criticalregion.h"
 #include "forte/util/devlog.h"
 
@@ -105,4 +102,18 @@ namespace forte {
       default: break;
     }
   }
+
+  void CEventChainExecutionThread::logFullEventQueue(TEventEntry paEventToAdd) {
+    const SFBInterfaceSpec &interfaceSpec = paEventToAdd.getFB().getFBInterfaceSpec();
+    if (paEventToAdd.getPortId() >= interfaceSpec.getNumEIs()) {
+      DEVLOG_ERROR("Event queue is full, event dropped! Function Block: %s, event num: %d (maxnum: %d)\n",
+                   paEventToAdd.getFB().getFullQualifiedApplicationInstanceName('.').c_str(), paEventToAdd.getPortId(),
+                   interfaceSpec.getNumEIs() - 1);
+    } else {
+      DEVLOG_ERROR("Event queue is full, event dropped! Function Block: %s, event: %s\n",
+                   paEventToAdd.getFB().getFullQualifiedApplicationInstanceName('.').c_str(),
+                   interfaceSpec.getEINameId(paEventToAdd.getPortId()).data());
+    }
+  }
+
 } // namespace forte

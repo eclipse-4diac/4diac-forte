@@ -20,6 +20,7 @@
  *******************************************************************************/
 #pragma once
 
+#include "forte/datatype.h"
 #include "forte/event.h"
 #include "forte/stringid.h"
 #include <span>
@@ -116,6 +117,14 @@ namespace forte {
       TPortId getPlugID(StringId paPlugNameId) const;
 
       TPortId getSocketID(StringId paSocketNameId) const;
+
+      StringId getEINameId(TPortId paPortId) const;
+      StringId getEONameId(TPortId paPortId) const;
+      StringId getDINameId(TPortId paPortId) const;
+      StringId getDONameId(TPortId paPortId) const;
+      StringId getDIONameId(TPortId paPortId) const;
+      StringId getSocketNameId(TPortId paPortId) const;
+      StringId getPlugNameId(TPortId paPortId) const;
   };
 
   TPortId getPortId(StringId paPortNameId, std::span<const StringId> paPortNames);

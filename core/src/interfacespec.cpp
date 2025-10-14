@@ -25,6 +25,16 @@
 using namespace forte::literals;
 
 namespace forte {
+
+  namespace {
+    StringId getPortNameId(TPortId paPortId, std::span<const StringId> paPortNames) {
+      if (paPortId >= paPortNames.size()) {
+        return {};
+      }
+      return paPortNames[paPortId];
+    }
+  } // namespace
+
   TPortId getPortId(StringId paPortNameId, std::span<const StringId> paPortNames) {
     auto it = std::find(paPortNames.begin(), paPortNames.end(), paPortNameId);
     if (it == paPortNames.end()) {
@@ -74,4 +84,33 @@ namespace forte {
   TPortId SFBInterfaceSpec::getSocketID(StringId paSocketNameId) const {
     return getPortId(paSocketNameId, mSocketNames);
   }
+
+  StringId SFBInterfaceSpec::getEINameId(TPortId paPortId) const {
+    return getPortNameId(paPortId, mEINames);
+  }
+
+  StringId SFBInterfaceSpec::getEONameId(TPortId paPortId) const {
+    return getPortNameId(paPortId, mEONames);
+  }
+
+  StringId SFBInterfaceSpec::getDINameId(TPortId paPortId) const {
+    return getPortNameId(paPortId, mDONames);
+  }
+
+  StringId SFBInterfaceSpec::getDONameId(TPortId paPortId) const {
+    return getPortNameId(paPortId, mDONames);
+  }
+
+  StringId SFBInterfaceSpec::getDIONameId(TPortId paPortId) const {
+    return getPortNameId(paPortId, mDIONames);
+  }
+
+  StringId SFBInterfaceSpec::getSocketNameId(TPortId paPortId) const {
+    return getPortNameId(paPortId, mSocketNames);
+  }
+
+  StringId SFBInterfaceSpec::getPlugNameId(TPortId paPortId) const {
+    return getPortNameId(paPortId, mPlugNames);
+  }
+
 } // namespace forte

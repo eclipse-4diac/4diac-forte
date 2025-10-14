@@ -15,7 +15,6 @@
 #pragma once
 
 #include "forte/event.h"
-#include "forte/datatypes/forte_time.h"
 #include "forte/util/ringbuf.h"
 #include "forte/config/forte_config.h"
 #include "forte/arch/forte_thread.h"
@@ -44,7 +43,7 @@ namespace forte {
        */
       void addEventEntry(TEventEntry paEventToAdd) {
         if (!mEventList.push(paEventToAdd)) {
-          DEVLOG_ERROR("Event queue is full, event dropped!\n");
+          logFullEventQueue(paEventToAdd);
         }
 #ifdef FORTE_TRACE_CTF
         else if (paEventToAdd.getPortId() != cgExternalEventID) {
@@ -87,6 +86,8 @@ namespace forte {
       void mainRun();
 
     private:
+      static void logFullEventQueue(TEventEntry paEventToAdd);
+
       /*! \brief The thread run()-method where the events are sent to the FBs and the FBs are executed in.
        *
        * If there is an entry in the Event List the event will be delivered and the FB executed.
