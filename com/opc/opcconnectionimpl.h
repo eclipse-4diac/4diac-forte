@@ -12,8 +12,7 @@
  *   Ketut Kumajaya - switch to OPCClientToolKit with 64bit support
  *                  - Code refactoring from char* to std::string
  *******************************************************************************/
-#ifndef OPCCONNECTIONIMPL_H_
-#define OPCCONNECTIONIMPL_H_
+#pragma once
 
 #include "opcprocessvar.h"
 // Includes from OPC library
@@ -86,5 +85,3 @@ class COpcConnectionImpl : public IAsyncDataCallback {
     const std::string mServerName;
     bool mConnected;
 };
-
-#endif // OPCCONNECTIONIMPL_H_

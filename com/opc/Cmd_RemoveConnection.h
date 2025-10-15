@@ -12,8 +12,7 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Ketut Kumajaya - Remove groups and items on disconnect
  *******************************************************************************/
-#ifndef CMDREMOVECONNECTION_H_
-#define CMDREMOVECONNECTION_H_
+#pragma once
 #include "ICmd.h"
 #include "forte/cominfra/comlayer.h"
 #include <vector>
@@ -42,5 +41,3 @@ class CCmd_RemoveConnection : public ICmd {
     const std::string mGroupName;
     bool mDisconnect;
 };
-
-#endif // CMDREMOVECONNECTION_H_

@@ -9,8 +9,7 @@
  * Contributors:
  *  Ketut Kumajaya - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef SRC_ARCH_FORTE_STRINGFUNCTIONS_H_
-#define SRC_ARCH_FORTE_STRINGFUNCTIONS_H_
+#pragma once
 
 #include <string>
 #include <codecvt>
@@ -40,5 +39,3 @@ inline std::string forte_wstringToString(const std::wstring &paVal) {
   dst.resize(to_next - dst.data());
   return dst;
 }
-
-#endif /* SRC_ARCH_FORTE_STRINGFUNCTIONS_H_ */

@@ -13,8 +13,7 @@
  *   Ketut Kumajaya - Clear command in queue on exit
  *                  - Fix disconnection issue on exit
  *******************************************************************************/
-#ifndef OPCEVENTHANDLER_H_
-#define OPCEVENTHANDLER_H_
+#pragma once
 
 #include "forte/extevhan.h"
 #include "forte/arch/forte_thread.h"
@@ -98,5 +97,3 @@ class COpcEventHandler : public CExternalEventHandler,
     typedef CSinglyLinkedList<ICmd *> TCommandQueue;
     TCommandQueue mCommandQueue;
 };
-
-#endif // OPCEVENTHANDLER_H_

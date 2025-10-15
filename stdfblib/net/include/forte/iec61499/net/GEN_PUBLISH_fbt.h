@@ -14,8 +14,7 @@
  *   Martin Erich Jobst
  *    - add generic event accessors
  *******************************************************************************/
-#ifndef _GEN_PUBLISH_H_
-#define _GEN_PUBLISH_H_
+#pragma once
 
 #include "forte/cominfra/commfb.h"
 
@@ -50,6 +49,5 @@ namespace forte::iec61499::net {
         evt_INIT(std::forward<Args>(paArgs)...);
       }
   };
-} // namespace forte::iec61499::net
 
-#endif //_GEN_PUBLISH_H_
+} // namespace forte::iec61499::net

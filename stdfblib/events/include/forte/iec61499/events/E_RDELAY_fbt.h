@@ -9,8 +9,7 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _E_RDELAY_H_
-#define _E_RDELAY_H_
+#pragma once
 
 #include "forte/iec61499/events/timedfb.h"
 
@@ -26,6 +25,5 @@ namespace forte::iec61499::events {
       FORTE_E_RDELAY(const StringId paInstanceNameId, CFBContainer &paContainer);
       ~FORTE_E_RDELAY() override = default;
   };
-} // namespace forte::iec61499::events
 
-#endif /*E_RDELAY_H_*/
+} // namespace forte::iec61499::events

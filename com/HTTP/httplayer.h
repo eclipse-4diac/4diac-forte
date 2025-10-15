@@ -14,8 +14,7 @@
  *    Martin Melik Merkumians - change CIEC_STRING to std::string
  ********************************************************************************/
 
-#ifndef _HTTPCOMLAYER_H_
-#define _HTTPCOMLAYER_H_
+#pragma once
 
 #include "forte/config/forte_config.h"
 #include "forte/arch/forte_sem.h"
@@ -118,5 +117,3 @@ namespace forte::com_infra::http {
   };
 
 } // namespace forte::com_infra::http
-
-#endif /* _HTTPCOMLAYER_H_ */

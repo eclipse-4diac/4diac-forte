@@ -16,8 +16,7 @@ class for better handling generic FBs
  *   Martin Jobst - add generic readInputData and writeOutputData
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#ifndef _GEN_CSV_WRITER_H_
-#define _GEN_CSV_WRITER_H_
+#pragma once
 
 #include "forte/genfb.h"
 #include <stdio.h>
@@ -102,5 +101,3 @@ namespace forte::eclipse4diac::utils {
       static const CIEC_STRING scmFileNotOpened;
   };
 } // namespace forte::eclipse4diac::utils
-
-#endif //_GEN_CSV_WRITER_H_

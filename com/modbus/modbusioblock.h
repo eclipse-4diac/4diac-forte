@@ -9,8 +9,7 @@
  * Contributors:
  *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
-#ifndef _MODBUSIOBLOCK_H_
-#define _MODBUSIOBLOCK_H_
+#pragma once
 
 #include <vector>
 #include "modbusenums.h"
@@ -69,5 +68,3 @@ class CModbusIOBlock {
     unsigned int mReadSize;
     unsigned int mSendSize;
 };
-
-#endif

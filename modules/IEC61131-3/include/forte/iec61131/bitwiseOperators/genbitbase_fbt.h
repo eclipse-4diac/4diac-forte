@@ -14,8 +14,7 @@
  *     - refactor for ANY variant
  *     - add generic readInputData and writeOutputData
  *******************************************************************************/
-#ifndef _GENBITBASE_H_
-#define _GENBITBASE_H_
+#pragma once
 
 #include "forte/genfb.h"
 #include "forte/datatypes/forte_any_bit_variant.h"
@@ -67,5 +66,3 @@ namespace forte::iec61131::bitwiseOperators {
       COutDataConnection<CIEC_ANY_BIT_VARIANT> conn_OUT;
   };
 } // namespace forte::iec61131::bitwiseOperators
-
-#endif /* _GENBITBASE_H_ */

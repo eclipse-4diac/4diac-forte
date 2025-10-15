@@ -21,8 +21,7 @@
  *      - Add support for Object Structs
  *******************************************************************************/
 
-#ifndef SRC_MODULES_OPC_UA_OPCUALOCALHANDLER_H_
-#define SRC_MODULES_OPC_UA_OPCUALOCALHANDLER_H_
+#pragma once
 
 #include "forte/arch/forte_thread.h"
 #include "forte/conn.h"
@@ -794,4 +793,3 @@ namespace forte::com_infra::opc_ua {
       static const char *const mDefaultDescriptionForVariableNodes;
   };
 } // namespace forte::com_infra::opc_ua
-#endif /* SRC_MODULES_OPC_UA_OPCUALOCALHANDLER_H_ */

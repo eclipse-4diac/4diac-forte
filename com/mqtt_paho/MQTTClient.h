@@ -11,8 +11,7 @@
  * Markus Meingast - refactoring and adaption to new Client class, enabling connection to multiple servers
  *******************************************************************************/
 
-#ifndef CMQTTCLIENT_H
-#define CMQTTCLIENT_H
+#pragma once
 
 #include "MQTTHandler.h"
 #include <string>
@@ -106,5 +105,3 @@ namespace forte::com_infra::mqtt_paho {
   };
 
 } // namespace forte::com_infra::mqtt_paho
-
-#endif /*CMQTTCLIENT_H*/

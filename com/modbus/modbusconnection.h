@@ -10,8 +10,7 @@
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
  *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
-#ifndef _MODBUSCONNECTION_H_
-#define _MODBUSCONNECTION_H_
+#pragma once
 
 #include <modbus.h>
 #include "forte/arch/forte_thread.h"
@@ -91,5 +90,3 @@ class CModbusConnection : public CThread {
     unsigned int mResponseTimeout;
     unsigned int mByteTimeout;
 };
-
-#endif // _MODBUSCONNECTION_H_

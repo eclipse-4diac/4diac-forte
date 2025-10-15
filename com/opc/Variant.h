@@ -9,8 +9,7 @@
  * Contributors:
  *   Werner Tremmel - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef VARIANTNEW_H_
-#define VARIANTNEW_H_
+#pragma once
 
 #include <boost/lexical_cast.hpp>
 
@@ -319,5 +318,3 @@ struct Variant : public VARIANT {
       a[1.2] = 0;
     }
 };
-
-#endif // VARIANTNEW_H_

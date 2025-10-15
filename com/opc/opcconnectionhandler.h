@@ -11,8 +11,7 @@
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
  *   Ketut Kumajaya - Code refactoring from char* to std::string
  *******************************************************************************/
-#ifndef OPCCONNECTIONHANDLER_H_
-#define OPCCONNECTIONHANDLER_H_
+#pragma once
 
 #include "forte/util/singlet.h"
 #include "forte/cominfra/comlayer.h"
@@ -43,5 +42,3 @@ class COpcConnectionHandler {
     typedef CSinglyLinkedList<COpcConnection *> TOpcConnectionList;
     TOpcConnectionList mOpcConnectionList;
 };
-
-#endif // OPCCONNECTIONHANDLER_H_

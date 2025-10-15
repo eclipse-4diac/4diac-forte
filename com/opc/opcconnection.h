@@ -12,8 +12,7 @@
  *   Ketut Kumajaya - switch to OPCClientToolKit with 64bit support
  *                  - Code refactoring from char* to std::string
  *******************************************************************************/
-#ifndef OPCCONNECTION_H_
-#define OPCCONNECTION_H_
+#pragma once
 
 #include "forte/cominfra/comlayer.h"
 #include "forte/arch/forte_sync.h"
@@ -191,5 +190,3 @@ class COpcConnection {
     COpcConnection(const COpcConnection &);
     COpcConnection &operator=(const COpcConnection &);
 };
-
-#endif // OPCCONNECTION_H_

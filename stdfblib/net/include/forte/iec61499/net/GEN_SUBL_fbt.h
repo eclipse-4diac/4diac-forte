@@ -11,8 +11,7 @@
  *   Martin Melik Merkumians
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef GEN_SUBL_H_
-#define GEN_SUBL_H_
+#pragma once
 
 #include "forte/iec61499/net/GEN_SUBSCRIBE_fbt.h"
 
@@ -35,6 +34,5 @@ namespace forte::iec61499::net {
     private:
       char *getDefaultIDString(const char *paID) override;
   };
-} // namespace forte::iec61499::net
 
-#endif /*GEN_SUBL_H_*/
+} // namespace forte::iec61499::net

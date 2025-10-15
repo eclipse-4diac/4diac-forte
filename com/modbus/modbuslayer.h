@@ -10,8 +10,7 @@
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
  *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
-#ifndef MODBUSCOMLAYER_H_
-#define MODBUSCOMLAYER_H_
+#pragma once
 
 #include <vector>
 #include "forte/config/forte_config.h"
@@ -108,5 +107,3 @@ namespace forte {
   } // namespace com_infra
 
 } // namespace forte
-
-#endif /* MODBUSCOMLAYER_H_ */

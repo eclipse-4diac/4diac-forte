@@ -18,8 +18,7 @@ class for better handling generic FBs
  *     - add generic readInputData and writeOutputData
  *******************************************************************************/
 
-#ifndef _GEN_ADD_H_
-#define _GEN_ADD_H_
+#pragma once
 
 #include "forte/genfb.h"
 #include "forte/datatypes/forte_any_magnitude_variant.h"
@@ -66,5 +65,3 @@ namespace forte::iec61131::arithmetic {
       ~GEN_ADD() override = default;
   };
 } // namespace forte::iec61131::arithmetic
-
-#endif // _GEN_ADD_H_

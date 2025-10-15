@@ -13,8 +13,7 @@
  *   Martin Jobst - add generic readInputData and writeOutputData
  *   Markus Meingast - add support for configured struct demux instances
  *******************************************************************************/
-#ifndef _GEN_STRUCT_DEMUX_H_
-#define _GEN_STRUCT_DEMUX_H_
+#pragma once
 
 #include "forte/genfb.h"
 #include "forte/datatypes/forte_struct.h"
@@ -72,5 +71,3 @@ namespace forte::eclipse4diac::convert {
       ~GEN_STRUCT_DEMUX() override = default;
   };
 } // namespace forte::eclipse4diac::convert
-
-#endif //_GEN_STRUCT_DEMUX_H_

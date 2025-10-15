@@ -10,8 +10,7 @@
  *   Alois Zoitl, Gerhard Ebenhofer
  *     - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _E_DELAY_H_
-#define _E_DELAY_H_
+#pragma once
 
 #include "forte/iec61499/events/timedfb.h"
 
@@ -32,6 +31,5 @@ namespace forte::iec61499::events {
       FORTE_E_DELAY(const StringId paInstanceNameId, CFBContainer &paContainer);
       ~FORTE_E_DELAY() override = default;
   };
-} // namespace forte::iec61499::events
 
-#endif /*E_DELAY_H_*/
+} // namespace forte::iec61499::events

@@ -15,8 +15,7 @@
  *                           enabling connection to multiple servers
  *******************************************************************************/
 
-#ifndef MQTTHANDLER_H_
-#define MQTTHANDLER_H_
+#pragma once
 
 #include "forte/extevhan.h"
 #include "MQTTComLayer.h"
@@ -70,5 +69,3 @@ namespace forte::com_infra::mqtt_paho {
   };
 
 } // namespace forte::com_infra::mqtt_paho
-
-#endif /* MQTTHANDLER_H_ */

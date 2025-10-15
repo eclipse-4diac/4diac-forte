@@ -12,8 +12,7 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
-#ifndef _GEN_STRUCT_MUX_H_
-#define _GEN_STRUCT_MUX_H_
+#pragma once
 
 #include "forte/genfb.h"
 #include "forte/datatypes/forte_struct.h"
@@ -62,5 +61,3 @@ namespace forte::eclipse4diac::convert {
       static StringId getStructNameId(std::string_view paConfigString);
   };
 } // namespace forte::eclipse4diac::convert
-
-#endif //_GEN_STRUCT_MUX_H_

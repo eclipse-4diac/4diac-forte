@@ -8,8 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  **********************************************************************/
 
-#ifndef XQUERY_XQUERYHANDLER_H_
-#define XQUERY_XQUERYHANDLER_H_
+#pragma once
 
 #include "forte/extevhan.h"
 #include "forte/arch/forte_thread.h"
@@ -44,5 +43,3 @@ class CXqueryHandler : public CExternalEventHandler,
   protected:
     void run() override;
 };
-
-#endif /* XQUERY_XQUERYHANDLER_H_ */

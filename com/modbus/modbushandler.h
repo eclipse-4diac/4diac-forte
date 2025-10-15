@@ -10,8 +10,7 @@
  *   Filip Andren, Alois Zoitl - initial API and implementation and/or initial documentation
  *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
-#ifndef _MODBUSHANDLER_H_
-#define _MODBUSHANDLER_H_
+#pragma once
 
 #include "forte/config/forte_config.h"
 #include "forte/extevhan.h"
@@ -34,5 +33,3 @@ class CModbusHandler : public CExternalEventHandler, public RegisterExternalEven
 
     void executeComCallback(forte::com_infra::CModbusComLayer *paComCallback);
 };
-
-#endif // _MODBUSHANDLER_H_

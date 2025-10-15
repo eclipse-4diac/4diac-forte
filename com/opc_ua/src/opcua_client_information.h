@@ -12,8 +12,7 @@
  *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
-#ifndef SRC_MODULES_OPC_UA_OPCUA_CLIENT_INFORMATION_H_
-#define SRC_MODULES_OPC_UA_OPCUA_CLIENT_INFORMATION_H_
+#pragma once
 
 #include "opcua_action_info.h"
 
@@ -469,4 +468,3 @@ namespace forte::com_infra::opc_ua {
       static const UA_UInt32 scmClientTimeoutInMilli = static_cast<UA_UInt32>(5E3); // 5s
   };
 } // namespace forte::com_infra::opc_ua
-#endif /* SRC_MODULES_OPC_UA_OPCUA_CLIENT_INFORMATION_H_ */

@@ -9,8 +9,7 @@
  * Contributors:
  *   Filip Andren - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef ICMD_H_
-#define ICMD_H_
+#pragma once
 
 class ICmd {
   public:
@@ -20,5 +19,3 @@ class ICmd {
     virtual void runCommand() = 0;
     virtual const char *getCommandName() const = 0;
 };
-
-#endif // ICMD_H_

@@ -11,8 +11,7 @@
  *    Jose Cabral - initial implementation
  *******************************************************************************/
 
-#ifndef SRC_MODULES_OPC_UA_OPCUA_CLIENT_CONFIG_PARSER_H_
-#define SRC_MODULES_OPC_UA_OPCUA_CLIENT_CONFIG_PARSER_H_
+#pragma once
 
 #include "forte/datatypes/forte_string.h"
 #include "open62541.h"
@@ -96,4 +95,3 @@ namespace forte::com_infra::opc_ua {
 #endif // UA_ENABLE_ENCRYPTION
   };
 } // namespace forte::com_infra::opc_ua
-#endif /* SRC_MODULES_OPC_UA_OPCUA_CLIENT_CONFIG_PARSER_H_ */

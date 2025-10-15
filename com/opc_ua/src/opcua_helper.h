@@ -13,8 +13,7 @@
  *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
-#ifndef FORTE_OPCUA_HELPER_H
-#define FORTE_OPCUA_HELPER_H
+#pragma once
 
 #include <open62541.h>
 #include "forte/datatypes/forte_any.h"
@@ -236,4 +235,3 @@ namespace forte {
     };
   } // namespace com_infra::opc_ua
 } // namespace forte
-#endif // FORTE_OPCUA_HELPER_H

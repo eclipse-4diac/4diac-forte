@@ -10,8 +10,7 @@
   Dirk O. Kaar - initial API and implementation and/or initial documentation
  ************************************************************************************/
 
-#ifndef SRC_ARCH_FORTE_FILEIO_H_
-#define SRC_ARCH_FORTE_FILEIO_H_
+#pragma once
 
 #include <stdio.h>
 
@@ -42,5 +41,3 @@ char *forte_fgets(char *str, int count, void *file);
 #ifdef __cplusplus
 }
 #endif
-
-#endif /* SRC_ARCH_FORTE_FILEIO_H_ */

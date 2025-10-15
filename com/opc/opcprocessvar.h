@@ -12,8 +12,7 @@
  *   Tibalt Zhao - use stl deque and polish the logs
  *   Ketut Kumajaya - Code refactoring from char* to std::string
  *******************************************************************************/
-#ifndef OPCPROCESSVAR_H_
-#define OPCPROCESSVAR_H_
+#pragma once
 
 #include "windows.h"
 #include "Variant.h"
@@ -60,5 +59,3 @@ class COpcProcessVar {
 
     EOpcProcessVarFunctions mFunction;
 };
-
-#endif // OPCPROCESSVAR_H_

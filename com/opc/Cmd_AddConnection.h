@@ -12,8 +12,7 @@
  *   Tibalt Zhao  - Merge additem into opc connect
  *   Ketut Kumajaya - Code refactoring from char* to std::string
  *******************************************************************************/
-#ifndef CMDADDCONNECTION_H_
-#define CMDADDCONNECTION_H_
+#pragma once
 #include "ICmd.h"
 #include "forte/cominfra/comlayer.h"
 #include <vector>
@@ -43,5 +42,3 @@ class CCmd_AddConnection : public ICmd {
     std::vector<std::string> mReadItems;
     std::vector<std::string> mWriteItems;
 };
-
-#endif // CMDADDCONNECTION_H_

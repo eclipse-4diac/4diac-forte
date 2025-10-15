@@ -11,8 +11,7 @@
  *                         - Change CIEC_STRING to std::string
  *******************************************************************************/
 
-#ifndef MQTTCOMLAYER_H_
-#define MQTTCOMLAYER_H_
+#pragma once
 
 #include "forte/cominfra/comlayer.h"
 #include "forte/datatypes/forte_string.h"
@@ -67,6 +66,5 @@ namespace forte::com_infra::mqtt_paho {
 
       enum Parameters { Address, ClientID, Topic };
   };
-} // namespace forte::com_infra::mqtt_paho
 
-#endif /* MQTTCOMLAYER_H_ */
+} // namespace forte::com_infra::mqtt_paho

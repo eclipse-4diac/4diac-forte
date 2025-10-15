@@ -11,8 +11,7 @@
  *    Jose Cabral - initial implementation
  *******************************************************************************/
 
-#ifndef SRC_MODULES_OPC_UA_OPCUA_CLIENT_CONFIG_PARSER_H_
-#define SRC_MODULES_OPC_UA_OPCUA_CLIENT_CONFIG_PARSER_H_
+#pragma once
 
 #include "forte/datatypes/forte_string.h"
 #include <string>
@@ -75,5 +74,3 @@ namespace forte::com_infra::mqtt_paho {
   };
 
 } // namespace forte::com_infra::mqtt_paho
-
-#endif /* SRC_MODULES_OPC_UA_OPCUA_CLIENT_CONFIG_PARSER_H_ */

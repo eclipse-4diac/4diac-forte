@@ -11,8 +11,7 @@
  *   Jose Cabral - initial implementation
  *******************************************************************************/
 
-#ifndef _FORTE_LOCALIZEDTEXT_H_
-#define _FORTE_LOCALIZEDTEXT_H_
+#pragma once
 
 #include "forte/datatypes/forte_struct.h"
 #include "forte/datatypes/forte_string.h"
@@ -44,4 +43,3 @@ namespace forte::com_infra::opc_ua {
       static const StringId scmElementNames[];
   };
 } // namespace forte::com_infra::opc_ua
-#endif //_FORTE_LOCALIZEDTEXT_H_

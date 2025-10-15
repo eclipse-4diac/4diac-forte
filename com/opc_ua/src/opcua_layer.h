@@ -18,8 +18,7 @@
  *      - add support for Object Structs
  *******************************************************************************/
 
-#ifndef SRC_MODULES_OPC_UA_OPCUA_LAYER_H_
-#define SRC_MODULES_OPC_UA_OPCUA_LAYER_H_
+#pragma once
 
 #include "forte/cominfra/comlayer.h"
 #include "opcua_helper.h"
@@ -157,4 +156,3 @@ namespace forte::com_infra::opc_ua {
       arch::CSyncObject mRDBufferMutex;
   };
 } // namespace forte::com_infra::opc_ua
-#endif /* SRC_MODULES_OPC_UA_OPCUA_LAYER_H_ */

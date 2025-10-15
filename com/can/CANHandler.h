@@ -11,8 +11,7 @@
  *  Malte Grave - Adapt the CAN handler to the new 4diac-FORTE structure
  *******************************************************************************/
 
-#ifndef CANHANDLER_H_
-#define CANHANDLER_H_
+#pragma once
 
 #include <linux/can.h>
 #include <linux/can/raw.h>
@@ -66,5 +65,3 @@ namespace forte::com_infra {
       bool mConnectionListChanged;
   };
 } // namespace forte::com_infra
-
-#endif

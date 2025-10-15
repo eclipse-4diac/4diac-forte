@@ -10,8 +10,7 @@
  *   Filip Andren - initial API and implementation and/or initial documentation
  *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
-#ifndef MODBUSPOLL_H_
-#define MODBUSPOLL_H_
+#pragma once
 
 #include "modbustimedevent.h"
 #include <vector>
@@ -34,5 +33,3 @@ class CModbusPoll : public CModbusTimedEvent {
 
     int readOneBlock(modbus_t *paModbusConn, CModbusIOBlock *paIOBlock);
 };
-
-#endif /* MODBUSPOLL_H_ */

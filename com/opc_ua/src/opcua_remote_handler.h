@@ -13,8 +13,7 @@
  *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
-#ifndef SRC_MODULES_OPC_UA_OPCUACLIENTHANDLER_H_
-#define SRC_MODULES_OPC_UA_OPCUACLIENTHANDLER_H_
+#pragma once
 
 #include "forte/arch/forte_thread.h"
 #include "forte/config/forte_config.h"
@@ -309,4 +308,3 @@ namespace forte::com_infra::opc_ua {
       arch::CSyncObject mAllClientListMutex;
   };
 } // namespace forte::com_infra::opc_ua
-#endif /* SRC_MODULES_OPC_UA_OPCUACLIENTHANDLER_H_ */

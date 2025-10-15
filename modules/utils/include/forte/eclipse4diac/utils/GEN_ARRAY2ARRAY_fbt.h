@@ -16,8 +16,7 @@
 class for better handling generic FBs
  *    Martin Jobst - add generic readInputData and writeOutputData
  *******************************************************************************/
-#ifndef _GEN_ARRAY2ARRAY_H_
-#define _GEN_ARRAY2ARRAY_H_
+#pragma once
 
 #include "forte/genfb.h"
 #include "forte/datatypes/forte_array_dynamic.h"
@@ -69,5 +68,3 @@ namespace forte::eclipse4diac::utils {
       ~GEN_ARRAY2ARRAY() override = default;
   };
 } // namespace forte::eclipse4diac::utils
-
-#endif //_GEN_ARRAY2ARRAY_H_

@@ -10,8 +10,7 @@
  *   Filip Andren - initial API and implementation and/or initial documentation
  *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
-#ifndef _MODBUSCLIENTCONNECTION_H_
-#define _MODBUSCLIENTCONNECTION_H_
+#pragma once
 
 #include <vector>
 #include "modbusconnection.h"
@@ -68,5 +67,3 @@ class CModbusClientConnection : public CModbusConnection {
 
     CSyncObject mModbusLock;
 };
-
-#endif

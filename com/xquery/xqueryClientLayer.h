@@ -8,8 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  **********************************************************************/
 
-#ifndef SRC_MODULES_XQUERY_XQUERYCLIENT_H_
-#define SRC_MODULES_XQUERY_XQUERYCLIENT_H_
+#pragma once
 
 #include "forte/cominfra/comlayer.h"
 #include "forte/extevhan.h"
@@ -48,5 +47,3 @@ class CXqueryClientLayer : public CComLayer {
     std::string mCommand;
     static const char *scmParameterSeperator;
 };
-
-#endif /* SRC_MODULES_XQUERY_XQUERYCLIENT_H_ */

@@ -12,8 +12,7 @@
  *    Martin Melik Merkumians - Change CIEC_STRING to std::string
  *******************************************************************************/
 
-#ifndef SRC_MODULES_OPC_UA_OPCUA_ACTION_INFO_H_
-#define SRC_MODULES_OPC_UA_OPCUA_ACTION_INFO_H_
+#pragma once
 
 #include "forte/arch/forte_sem.h"
 #include "opcua_layer.h"
@@ -386,4 +385,3 @@ namespace forte::com_infra::opc_ua {
       arch::CSemaphore mResultIsReady;
   };
 } // namespace forte::com_infra::opc_ua
-#endif /* SRC_MODULES_OPC_UA_OPCUA_ACTION_INFO_H_ */

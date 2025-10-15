@@ -9,8 +9,7 @@
  * Contributors:
  *   Filip Andren - initial API and implementation and/or initial documentation
  *******************************************************************************/
-#ifndef _MODBUSTIMEDEVENT_H_
-#define _MODBUSTIMEDEVENT_H_
+#pragma once
 
 #include "forte/timerha.h"
 #include <modbus.h>
@@ -48,5 +47,3 @@ class CModbusTimedEvent {
     bool mSingleShotEvent;
     bool mIsStarted;
 };
-
-#endif // _MODBUSTIMEDEVENT_H_

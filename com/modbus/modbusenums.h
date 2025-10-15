@@ -9,8 +9,7 @@
  * Contributors:
  *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
-#ifndef _MODBUSENUMS_H_
-#define _MODBUSENUMS_H_
+#pragma once
 
 enum EModbusFunction { eDiscreteInput = 0, eCoil, eInputRegister, eHoldingRegister };
 
@@ -21,5 +20,3 @@ enum EModbusFlowControl {
   eFlowDelay,
   eFlowLongDelay,
 };
-
-#endif

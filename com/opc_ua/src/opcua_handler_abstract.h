@@ -10,8 +10,7 @@
  * Contributors:
  *    Jose Cabral - initial implementation
  *******************************************************************************/
-#ifndef SRC_MODULES_OPC_UA_OPCUA_HANDLER_ABSTRACT_H_
-#define SRC_MODULES_OPC_UA_OPCUA_HANDLER_ABSTRACT_H_
+#pragma once
 
 #include "forte/extevhan.h"
 #include "forte/esfb.h"
@@ -80,4 +79,3 @@ namespace forte::com_infra::opc_ua {
       static const size_t mMaxLogLength = 400;
   };
 } // namespace forte::com_infra::opc_ua
-#endif /* SRC_MODULES_OPC_UA_OPCUA_HANDLER_ABSTRACT_H_ */

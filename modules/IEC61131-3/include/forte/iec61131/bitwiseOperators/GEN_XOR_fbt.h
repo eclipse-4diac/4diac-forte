@@ -17,8 +17,7 @@ class for better handling generic FBs
  *     - refactor for ANY variant
  *******************************************************************************/
 
-#ifndef _GEN_XOR_H_
-#define _GEN_XOR_H_
+#pragma once
 
 #include "genbitbase_fbt.h"
 
@@ -34,5 +33,3 @@ namespace forte::iec61131::bitwiseOperators {
       ~GEN_XOR() override = default;
   };
 } // namespace forte::iec61131::bitwiseOperators
-
-#endif //_GEN_XOR_H_

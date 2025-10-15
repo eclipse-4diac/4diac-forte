@@ -10,8 +10,7 @@
  *   Filip Andren - initial API and implementation and/or initial documentation
  *   Tibalt Zhao  - get rid of opcprocessvar from commfb
  *******************************************************************************/
-#ifndef CMDSETPROCESSVARVALUE_H_
-#define CMDSETPROCESSVARVALUE_H_
+#pragma once
 
 #include "ICmd.h"
 
@@ -40,5 +39,3 @@ class CCmd_SetProcessVarValue : public ICmd {
     const std::string mItemName;
     Variant mVar;
 };
-
-#endif // CMDSETPROCESSVARVALUE_H_

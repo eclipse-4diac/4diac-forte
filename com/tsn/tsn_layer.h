@@ -10,8 +10,7 @@
  *    Ben Schneider - Initial contribution; vlan and prio configuration to support tsn for pub/sub
  *******************************************************************************/
 
-#ifndef TSN_LAYER_H_
-#define TSN_LAYER_H_
+#pragma once
 
 #include "core/cominfra/ipcomlayer.h"
 
@@ -67,5 +66,3 @@ namespace forte {
     };
   } // namespace com_infra
 } // namespace forte
-
-#endif /* TSN_LAYER_H_ */

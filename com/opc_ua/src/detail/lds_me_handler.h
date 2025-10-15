@@ -12,8 +12,7 @@
  *      - initial integration of the OPC-UA protocol
  *******************************************************************************/
 
-#ifndef SRC_COM_OPC_UA_DETAIL_LDSMEHANDLER_H_
-#define SRC_COM_OPC_UA_DETAIL_LDSMEHANDLER_H_
+#pragma once
 
 #include <open62541.h>
 
@@ -96,5 +95,3 @@ namespace forte::com_infra::opc_ua::detail {
       std::vector<UA_StringRAII> mRegisteredServers;
   };
 } // namespace forte::com_infra::opc_ua::detail
-
-#endif // SRC_COM_OPC_UA_DETAIL_LDSMEHANDLER_H_

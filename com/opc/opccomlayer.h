@@ -12,8 +12,7 @@
  *   Tibalt Zhao - replace forte list with stl vector
  *   Ketut Kumajaya - Code refactoring from char* to std::string
  *******************************************************************************/
-#ifndef OPCCOMLAYER_H_
-#define OPCCOMLAYER_H_
+#pragma once
 
 #include "forte/config/forte_config.h"
 #include "forte/cominfra/comlayer.h"
@@ -76,5 +75,3 @@ namespace forte {
   } // namespace com_infra
 
 } // namespace forte
-
-#endif /* OPCCOMLAYER_H_ */
