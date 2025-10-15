@@ -12,7 +12,7 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-forte_register_architecture(Win32)
+forte_register_architecture(Win32 Windows)
 
 option(FORTE_WINDOWS_XP_COMPAT "Use only APIs that still work on Windows XP" OFF)
 

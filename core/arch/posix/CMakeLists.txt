@@ -12,7 +12,7 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-forte_register_architecture(Posix)
+forte_register_architecture(Posix Linux)
 
 target_link_libraries(forte-core PUBLIC
         pthread

@@ -29,10 +29,17 @@ target_compile_options(forte-core PUBLIC
 ###############################################################################
 # Architectures
 
-macro(forte_register_architecture arch)
-    set_property(TARGET forte-core APPEND PROPERTY forte_architectures ${arch})
-    if (NOT FORTE_ARCHITECTURE STREQUAL "${arch}")
+macro(forte_register_architecture canonical_name)
+    set(archs "${canonical_name}" "${ARGN}")
+    foreach (arch IN LISTS archs)
+        set_property(TARGET forte-core APPEND PROPERTY forte_architectures ${arch})
+    endforeach ()
+    if (NOT FORTE_ARCHITECTURE IN_LIST archs)
         return()
+    endif ()
+    if (NOT FORTE_ARCHITECTURE STREQUAL canonical_name)
+        message(STATUS "Using ${canonical_name} as FORTE_ARCHITECTURE")
+        set(FORTE_ARCHITECTURE "${canonical_name}")
     endif ()
 endmacro()
 
