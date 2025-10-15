@@ -27,43 +27,48 @@
 #include <vector>
 #include <memory>
 
-class CMQTTClient;
+namespace forte::com_infra::mqtt_paho {
+  class CMQTTClient;
 
-class MQTTHandler : public CExternalEventHandler, public RegisterExternalEventHandler<MQTTHandler>, public CThread {
-  public:
-    explicit MQTTHandler(CDeviceExecution &paDeviceExecution);
-    ~MQTTHandler() override;
+  class MQTTHandler : public CExternalEventHandler,
+                      public RegisterExternalEventHandler<MQTTHandler>,
+                      public arch::CThread {
+    public:
+      explicit MQTTHandler(CDeviceExecution &paDeviceExecution);
+      ~MQTTHandler() override;
 
-    enum RegisterLayerReturnCodes { eRegisterLayerSucceeded, eWrongClientID, eConnectionFailed };
+      enum RegisterLayerReturnCodes { eRegisterLayerSucceeded, eWrongClientID, eConnectionFailed };
 
-    int registerLayer(const std::string &paAddress, const std::string &paClientId, MQTTComLayer *paLayer);
+      int registerLayer(const std::string &paAddress, const std::string &paClientId, MQTTComLayer *paLayer);
 
-    void unregisterLayer(MQTTComLayer *paLayer);
+      void unregisterLayer(MQTTComLayer *paLayer);
 
-    void enableHandler() override;
-    /*!\brief Disable this event source
-     */
-    void disableHandler() override;
+      void enableHandler() override;
+      /*!\brief Disable this event source
+       */
+      void disableHandler() override;
 
-    void resumeSelfSuspend();
+      void resumeSelfSuspend();
 
-    void selfSuspend();
+      void selfSuspend();
 
-    void startNewEventChain(MQTTComLayer *layer);
+      void startNewEventChain(MQTTComLayer *layer);
 
-  protected:
-    void run() override;
+    protected:
+      void run() override;
 
-  private:
-    std::shared_ptr<CMQTTClient> getClient(const std::string &paAddress, const std::string &paClientId);
+    private:
+      std::shared_ptr<CMQTTClient> getClient(const std::string &paAddress, const std::string &paClientId);
 
-    static CSyncObject smMQTTMutex;
-    static const int smSleepTime = 5000;
+      static arch::CSyncObject smMQTTMutex;
+      static const int smSleepTime = 5000;
 
-    static CSemaphore mStateSemaphore;
-    static bool mIsSemaphoreEmpty;
+      static arch::CSemaphore mStateSemaphore;
+      static bool mIsSemaphoreEmpty;
 
-    std::vector<std::shared_ptr<CMQTTClient>> mClients;
-};
+      std::vector<std::shared_ptr<CMQTTClient>> mClients;
+  };
+
+} // namespace forte::com_infra::mqtt_paho
 
 #endif /* MQTTHANDLER_H_ */

@@ -14,59 +14,64 @@
 #include "MQTTClientConfigParser.h"
 
 #include "forte/util/devlog.h"
-#include "../../../core/src/util/configFileParser.h"
+#include "../../core/src/util/configFileParser.h"
 
-const char *const CMQTTClientConfigFileParser::mConfigKeysNames[] = {"endpoint", "username", "password"};
+namespace forte::com_infra::mqtt_paho {
 
-bool CMQTTClientConfigFileParser::loadConfig(const std::string &paFileLocation,
-                                             const std::string &paEndpoint,
-                                             MQTTConfigFromFile &paResult) {
-  bool retVal = true;
+  const char *const CMQTTClientConfigFileParser::mConfigKeysNames[] = {"endpoint", "username", "password"};
 
-  CConfigFileParser configFileParser(paFileLocation);
-  bool endpointFound = false;
-  std::string endpointKey = mConfigKeysNames[eEndoint];
+  bool CMQTTClientConfigFileParser::loadConfig(const std::string &paFileLocation,
+                                               const std::string &paEndpoint,
+                                               MQTTConfigFromFile &paResult) {
+    bool retVal = true;
 
-  if (CConfigFileParser::lookForKeyValueInFile(configFileParser, endpointKey, paEndpoint, endpointFound)) {
-    if (endpointFound) {
+    forte::util::CConfigFileParser configFileParser(paFileLocation);
+    bool endpointFound = false;
+    std::string endpointKey = mConfigKeysNames[eEndoint];
 
-      bool moreLinesToRead = true;
-      while (moreLinesToRead) {
-        std::pair<std::string, std::string> resultPair;
+    if (forte::util::CConfigFileParser::lookForKeyValueInFile(configFileParser, endpointKey, paEndpoint,
+                                                              endpointFound)) {
+      if (endpointFound) {
 
-        switch (configFileParser.parseNextLine(resultPair)) {
-          case CConfigFileParser::eOk:
-            if (0 == resultPair.first.compare(mConfigKeysNames[eEndoint])) {
+        bool moreLinesToRead = true;
+        while (moreLinesToRead) {
+          std::pair<std::string, std::string> resultPair;
+
+          switch (configFileParser.parseNextLine(resultPair)) {
+            case forte::util::CConfigFileParser::eOk:
+              if (0 == resultPair.first.compare(mConfigKeysNames[eEndoint])) {
+                moreLinesToRead = false;
+              } else if (0 == resultPair.first.compare(mConfigKeysNames[eUsername])) {
+                paResult.mUsername = resultPair.second;
+              } else if (0 == resultPair.first.compare(mConfigKeysNames[ePassword])) {
+                paResult.mPassword = resultPair.second;
+              } else {
+                DEVLOG_WARNING("[CMQTTClientConfigFileParser]: They %s was not recognized so it will be omitted\n",
+                               resultPair.first.c_str());
+              }
+              break;
+            case forte::util::CConfigFileParser::eEmptyLine:
+              // do nothing, keep reading
+              break;
+            case forte::util::CConfigFileParser::eEndOfFile: moreLinesToRead = false; break;
+            case forte::util::CConfigFileParser::eWrongLine:
+            case forte::util::CConfigFileParser::eFileNotOpened:
+            case forte::util::CConfigFileParser::eInternalError:
+            default:
+              retVal = false;
               moreLinesToRead = false;
-            } else if (0 == resultPair.first.compare(mConfigKeysNames[eUsername])) {
-              paResult.mUsername = resultPair.second;
-            } else if (0 == resultPair.first.compare(mConfigKeysNames[ePassword])) {
-              paResult.mPassword = resultPair.second;
-            } else {
-              DEVLOG_WARNING("[CMQTTClientConfigFileParser]: They %s was not recognized so it will be omitted\n",
-                             resultPair.first.c_str());
-            }
-            break;
-          case CConfigFileParser::eEmptyLine:
-            // do nothing, keep reading
-            break;
-          case CConfigFileParser::eEndOfFile: moreLinesToRead = false; break;
-          case CConfigFileParser::eWrongLine:
-          case CConfigFileParser::eFileNotOpened:
-          case CConfigFileParser::eInternalError:
-          default:
-            retVal = false;
-            moreLinesToRead = false;
-            break;
+              break;
+          }
         }
+      } else { // if the endpoint is not found, configuration is initialize as default
+        DEVLOG_INFO("[CMQTTClientConfigFileParser]: No entry for endpoint %s was found in file %s\n",
+                    paEndpoint.c_str(), paFileLocation.c_str());
       }
-    } else { // if the endpoint is not found, configuration is initialize as default
-      DEVLOG_INFO("[CMQTTClientConfigFileParser]: No entry for endpoint %s was found in file %s\n", paEndpoint.c_str(),
-                  paFileLocation.c_str());
+    } else { // if lookForEndpointInFile fails, the errors was already logged
+      retVal = false;
     }
-  } else { // if lookForEndpointInFile fails, the errors was already logged
-    retVal = false;
+
+    return retVal;
   }
 
-  return retVal;
-}
+} // namespace forte::com_infra::mqtt_paho

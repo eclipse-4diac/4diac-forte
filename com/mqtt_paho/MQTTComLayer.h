@@ -23,48 +23,50 @@
 
 // raw[].mqtt[tcp://localhost:1883, ClientID, Topic]
 
-class CMQTTClient;
+namespace forte::com_infra::mqtt_paho {
 
-using namespace forte::com_infra;
+  class CMQTTClient;
 
-class MQTTComLayer : public CComLayer {
-  public:
-    MQTTComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB);
-    ~MQTTComLayer() override;
+  class MQTTComLayer : public CComLayer {
+    public:
+      MQTTComLayer(CComLayer *paUpperLayer, CBaseCommFB *paFB);
+      ~MQTTComLayer() override;
 
-    EComResponse sendData(void *paData, unsigned int paSize) override;
+      EComResponse sendData(void *paData, unsigned int paSize) override;
 
-    EComResponse recvData(const void *paData, unsigned int paSize) override;
+      EComResponse recvData(const void *paData, unsigned int paSize) override;
 
-    EComResponse processInterrupt() override;
+      EComResponse processInterrupt() override;
 
-    const std::string &getTopicName() const {
-      return mTopicName;
-    }
+      const std::string &getTopicName() const {
+        return mTopicName;
+      }
 
-    std::shared_ptr<CMQTTClient> getClient() {
-      return mClient;
-    }
+      std::shared_ptr<CMQTTClient> getClient() {
+        return mClient;
+      }
 
-    void setClient(std::shared_ptr<CMQTTClient> paClient) {
-      mClient = paClient;
-    }
+      void setClient(std::shared_ptr<CMQTTClient> paClient) {
+        mClient = paClient;
+      }
 
-  private:
-    std::string mTopicName;
+    private:
+      std::string mTopicName;
 
-    std::shared_ptr<CMQTTClient> mClient;
+      std::shared_ptr<CMQTTClient> mClient;
 
-    static const unsigned int mNoOfParameters = 3;
-    static const unsigned int mBufferSize = 255;
+      static const unsigned int mNoOfParameters = 3;
+      static const unsigned int mBufferSize = 255;
 
-    char mDataBuffer[mBufferSize];
-    unsigned int mUsedBuffer;
-    EComResponse mInterruptResp;
+      char mDataBuffer[mBufferSize];
+      unsigned int mUsedBuffer;
+      EComResponse mInterruptResp;
 
-    EComResponse openConnection(char *paLayerParameter) override;
-    void closeConnection() override;
+      EComResponse openConnection(char *paLayerParameter) override;
+      void closeConnection() override;
 
-    enum Parameters { Address, ClientID, Topic };
-};
+      enum Parameters { Address, ClientID, Topic };
+  };
+} // namespace forte::com_infra::mqtt_paho
+
 #endif /* MQTTCOMLAYER_H_ */

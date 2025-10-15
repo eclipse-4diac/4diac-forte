@@ -18,87 +18,93 @@
 #include <string>
 #include <vector>
 
+#include "forte/arch/forte_sem.h"
+
 extern "C" {
 #include <MQTTAsync.h>
 }
 
-class CMQTTClient {
-  public:
-    enum MQTTStates {
-      NOT_CONNECTED,
-      CONNECTION_ASKED,
-      SUBSCRIBING,
-      ALL_SUBSCRIBED,
-    };
+namespace forte::com_infra::mqtt_paho {
 
-    CMQTTClient(const std::string &paAddress, const std::string &paClientId, MQTTHandler &paHandler);
+  class CMQTTClient {
+    public:
+      enum MQTTStates {
+        NOT_CONNECTED,
+        CONNECTION_ASKED,
+        SUBSCRIBING,
+        ALL_SUBSCRIBED,
+      };
 
-    ~CMQTTClient();
+      CMQTTClient(const std::string &paAddress, const std::string &paClientId, MQTTHandler &paHandler);
 
-    int initClient();
+      ~CMQTTClient();
 
-    bool runClient();
+      int initClient();
 
-    void reconnect();
+      bool runClient();
 
-    const std::string &getClientId() const {
-      return mClientId;
-    }
+      void reconnect();
 
-    const std::string &getAddress() const {
-      return mAddress;
-    }
+      const std::string &getClientId() const {
+        return mClientId;
+      }
 
-    MQTTStates getMQTTState() const {
-      return mMQTT_STATE;
-    }
+      const std::string &getAddress() const {
+        return mAddress;
+      }
 
-    void addLayer(MQTTComLayer *paLayer);
+      MQTTStates getMQTTState() const {
+        return mMQTT_STATE;
+      }
 
-    void removeLayer(MQTTComLayer *paLayer);
+      void addLayer(MQTTComLayer *paLayer);
 
-    int sendData(void *paData, unsigned int paSize, const std::string &paTopicName);
+      void removeLayer(MQTTComLayer *paLayer);
 
-    int mqttSubscribe(const MQTTComLayer *paLayer);
-    int mqttConnect();
+      int sendData(void *paData, unsigned int paSize, const std::string &paTopicName);
 
-    static void onMqttConnectionLost(void *paContext, char *paCause);
-    static int onMqttMessageArrived(void *paContext, char *paTopicName, int paTopicLen, MQTTAsync_message *paMessage);
+      int mqttSubscribe(const MQTTComLayer *paLayer);
+      int mqttConnect();
 
-    static void onMqttConnectionSucceed(void *paContext, MQTTAsync_successData *paResponse);
-    static void onMqttConnectionFailed(void *paContext, MQTTAsync_failureData *paResponse);
+      static void onMqttConnectionLost(void *paContext, char *paCause);
+      static int onMqttMessageArrived(void *paContext, char *paTopicName, int paTopicLen, MQTTAsync_message *paMessage);
 
-    static std::shared_ptr<CMQTTClient>
-    getNewClient(const std::string &paAddress, const std::string &paClientId, MQTTHandler &paHandler);
+      static void onMqttConnectionSucceed(void *paContext, MQTTAsync_successData *paResponse);
+      static void onMqttConnectionFailed(void *paContext, MQTTAsync_failureData *paResponse);
 
-  private:
-    static void onSubscribeSucceed(void *paContext, MQTTAsync_successData *paResponse);
-    static void onSubscribeFailed(void *paContext, MQTTAsync_failureData *paResponse);
+      static std::shared_ptr<CMQTTClient>
+      getNewClient(const std::string &paAddress, const std::string &paClientId, MQTTHandler &paHandler);
 
-    void removeLayerHelper(MQTTComLayer *paLayer, std::vector<MQTTComLayer *> &paLayerList);
+    private:
+      static void onSubscribeSucceed(void *paContext, MQTTAsync_successData *paResponse);
+      static void onSubscribeFailed(void *paContext, MQTTAsync_failureData *paResponse);
 
-    void removeToResubscribe(MQTTComLayer *paLayer);
+      void removeLayerHelper(MQTTComLayer *paLayer, std::vector<MQTTComLayer *> &paLayerList);
 
-    void clearToResubscribe() {
-      mToResubscribe.clear();
-    }
+      void removeToResubscribe(MQTTComLayer *paLayer);
 
-    static const int smKeepAliveInterval = 20;
-    static const int smCleanSession = 1;
+      void clearToResubscribe() {
+        mToResubscribe.clear();
+      }
 
-    static const int smTimeout = 10000;
+      static const int smKeepAliveInterval = 20;
+      static const int smCleanSession = 1;
 
-    std::string mAddress;
-    std::string mClientId;
+      static const int smTimeout = 10000;
 
-    MQTTAsync mAsClient;
-    MQTTAsync_connectOptions mClientConnectionOptions;
-    MQTTStates mMQTT_STATE;
-    CSyncObject mMQTTMutex;
+      std::string mAddress;
+      std::string mClientId;
 
-    MQTTHandler &mHandler;
-    std::vector<MQTTComLayer *> mLayers;
-    std::vector<MQTTComLayer *> mToResubscribe;
-};
+      MQTTAsync mAsClient;
+      MQTTAsync_connectOptions mClientConnectionOptions;
+      MQTTStates mMQTT_STATE;
+      forte::arch::CSyncObject mMQTTMutex;
+
+      MQTTHandler &mHandler;
+      std::vector<MQTTComLayer *> mLayers;
+      std::vector<MQTTComLayer *> mToResubscribe;
+  };
+
+} // namespace forte::com_infra::mqtt_paho
 
 #endif /*CMQTTCLIENT_H*/

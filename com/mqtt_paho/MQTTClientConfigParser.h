@@ -26,49 +26,54 @@
  *   The parser looks for an endpoint, and only after it matches the one passed as argument, it starts storing the
  * following information, and it will keep reading after another endpoint other the end of file is found
  */
-class CMQTTClientConfigFileParser {
-  public:
-    /**
-     * Encapsulation for the result used by the class when parsing the configuration file
-     */
-    class MQTTConfigFromFile {
-      public:
-        MQTTConfigFromFile(std::string &paUsername, std::string &paPassword) :
-            mUsername(paUsername),
-            mPassword(paPassword) {
-        }
-        std::string &mUsername;
-        std::string &mPassword;
-    };
 
-    /**
-     * Reads a configuration file, parse it and store the data
-     * @param paFileLocation Path to file to be parsed
-     * @param paEndpoint Endpoint of the client to be looked for
-     * @param paResult Place to store the results
-     * @return True if no error occurred, false otherwise
-     */
-    static bool
-    loadConfig(const std::string &paFileLocation, const std::string &paEndpoint, MQTTConfigFromFile &paResult);
+namespace forte::com_infra::mqtt_paho {
 
-    explicit CMQTTClientConfigFileParser() = delete;
-    virtual ~CMQTTClientConfigFileParser() = delete;
+  class CMQTTClientConfigFileParser {
+    public:
+      /**
+       * Encapsulation for the result used by the class when parsing the configuration file
+       */
+      class MQTTConfigFromFile {
+        public:
+          MQTTConfigFromFile(std::string &paUsername, std::string &paPassword) :
+              mUsername(paUsername),
+              mPassword(paPassword) {
+          }
+          std::string &mUsername;
+          std::string &mPassword;
+      };
 
-  private:
-    /**
-     * Allowed key in the configuration file for the mqtt clients
-     */
-    enum MQTTConfigKeys {
-      eEndoint, /**< eEndoint */
-      eUsername, /**< eUsername */
-      ePassword, /**< ePassword */
-      eUnknown /**< eUnknown */
-    };
+      /**
+       * Reads a configuration file, parse it and store the data
+       * @param paFileLocation Path to file to be parsed
+       * @param paEndpoint Endpoint of the client to be looked for
+       * @param paResult Place to store the results
+       * @return True if no error occurred, false otherwise
+       */
+      static bool
+      loadConfig(const std::string &paFileLocation, const std::string &paEndpoint, MQTTConfigFromFile &paResult);
 
-    /**
-     * Strings for the allowed keys in the configuration file for the mqtt clients
-     */
-    static const char *const mConfigKeysNames[eUnknown];
-};
+      explicit CMQTTClientConfigFileParser() = delete;
+      virtual ~CMQTTClientConfigFileParser() = delete;
+
+    private:
+      /**
+       * Allowed key in the configuration file for the mqtt clients
+       */
+      enum MQTTConfigKeys {
+        eEndoint, /**< eEndoint */
+        eUsername, /**< eUsername */
+        ePassword, /**< ePassword */
+        eUnknown /**< eUnknown */
+      };
+
+      /**
+       * Strings for the allowed keys in the configuration file for the mqtt clients
+       */
+      static const char *const mConfigKeysNames[eUnknown];
+  };
+
+} // namespace forte::com_infra::mqtt_paho
 
 #endif /* SRC_MODULES_OPC_UA_OPCUA_CLIENT_CONFIG_PARSER_H_ */
