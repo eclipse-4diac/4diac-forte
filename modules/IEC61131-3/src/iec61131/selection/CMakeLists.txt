@@ -16,6 +16,6 @@ target_sources(forte-iec61131-3 PRIVATE
         F_LIMIT_fbt.cpp
         F_MAX_fbt.cpp
         F_MIN_fbt.cpp
-        F_MUX_2_fbt.cpp
+        GEN_F_MUX_fbt.cpp
         F_SEL_fbt.cpp
 )
