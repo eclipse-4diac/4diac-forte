@@ -13,7 +13,5 @@
 #############################################################################
 
 target_sources(forte-utils PRIVATE
-        F_SEL_E_2_fbt.cpp
-        F_SEL_E_3_fbt.cpp
-        F_SEL_E_4_fbt.cpp
+        GEN_F_SEL_E_fbt.cpp
 )

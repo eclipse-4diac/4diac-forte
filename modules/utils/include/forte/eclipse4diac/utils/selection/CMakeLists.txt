@@ -15,7 +15,5 @@
 target_sources(forte-utils PUBLIC
         FILE_SET HEADERS
         FILES
-        F_SEL_E_2_fbt.h
-        F_SEL_E_3_fbt.h
-        F_SEL_E_4_fbt.h
+        GEN_F_SEL_E_fbt.h
 )
