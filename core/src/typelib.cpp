@@ -28,6 +28,12 @@ using namespace std::string_literals;
 
 namespace forte {
   namespace {
+
+    StringId demux = "eclipse4diac::convert::STRUCT_DEMUX"_STRID;
+    StringId demux_1 = "eclipse4diac::convert::STRUCT_DEMUX_1"_STRID;
+    StringId mux = "eclipse4diac::convert::STRUCT_MUX"_STRID;
+    StringId mux_1 = "eclipse4diac::convert::STRUCT_MUX_1"_STRID;
+
     std::vector<CFBTypeEntry *> &getFBTypeLib() {
       static std::vector<CFBTypeEntry *> *fbTypeLib = new std::vector<CFBTypeEntry *>();
       return *fbTypeLib;
@@ -216,7 +222,20 @@ namespace forte {
     }
 
     template<typename T>
-    T *findGenericTypeEntry(std::vector<T *> &vec, const StringId paTypeNameId) {
+    T *findGenericTypeEntry(std::vector<T *> &vec, const StringId paTypeNameId_ro) {
+
+      StringId paTypeNameId = paTypeNameId_ro;
+
+      if(paTypeNameId == mux)
+      {
+        paTypeNameId = mux_1;
+      }
+
+      if(paTypeNameId == demux)
+      {
+        paTypeNameId = demux_1;
+      }
+
       const std::size_t underScore = getFirstNonTypeNameUnderscorePos(paTypeNameId);
       if (underScore == std::string_view::npos) {
         // We found no underscore in the type name, so it can't be a generic type
