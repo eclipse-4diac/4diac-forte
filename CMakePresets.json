@@ -12,12 +12,30 @@
       "binaryDir": "${sourceDir}/build/${presetName}",
       "installDir": "${sourceDir}/install/${presetName}",
       "cacheVariables": {
-        "FORTE_COM_ETH": "ON",
-        "FORTE_COM_FBDK": "ON",
-        "FORTE_COM_LOCAL": "ON",
-        "FORTE_MODULE_CONVERT": "ON",
-        "FORTE_MODULE_IEC61131": "ON",
-        "FORTE_MODULE_UTILS": "ON"
+        "FORTE_COM_ETH": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_COM_FBDK": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_COM_LOCAL": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_MODULE_CONVERT": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_MODULE_IEC61131": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_MODULE_UTILS": {
+          "type": "BOOL",
+          "value": "ON"
+        }
       }
     },
     {
@@ -25,16 +43,46 @@
       "hidden": true,
       "inherits": "base",
       "cacheVariables": {
-        "FORTE_COM_HTTP": "ON",
-        "FORTE_COM_RAW": "ON",
-        "FORTE_COM_SER": "ON",
-        "FORTE_COM_STRUCT_MEMBER": "ON",
-        "FORTE_IO": "ON",
-        "FORTE_MODULE_RECONFIGURATION": "ON",
-        "FORTE_MODULE_RT_Events": "ON",
-        "FORTE_MODULE_SIGNALPROCESSING": "ON",
-        "FORTE_TESTS": "ON",
-        "FORTE_TEST_SANITIZE": "ON"
+        "FORTE_COM_HTTP": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_COM_RAW": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_COM_SER": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_COM_STRUCT_MEMBER": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_IO": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_MODULE_RECONFIGURATION": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_MODULE_RT_Events": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_MODULE_SIGNALPROCESSING": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_TESTS": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_TEST_SANITIZE": {
+          "type": "BOOL",
+          "value": "ON"
+        }
       }
     },
     {
@@ -42,11 +90,26 @@
       "hidden": true,
       "inherits": "base-tests",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "FORTE_BUILD_STATIC_LIBRARY": "ON",
-        "FORTE_BUILD_SHARED_LIBRARY": "ON",
-        "FORTE_C_INTERFACE": "ON",
-        "FORTE_TRACE_CTF": "ON"
+        "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Debug"
+        },
+        "FORTE_BUILD_STATIC_LIBRARY": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_BUILD_SHARED_LIBRARY": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_C_INTERFACE": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_TRACE_CTF": {
+          "type": "BOOL",
+          "value": "ON"
+        }
       }
     },
     {
@@ -54,8 +117,14 @@
       "hidden": true,
       "inherits": "base-tests",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "FORTE_SYSTEM_TESTS": "ON"
+        "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Debug"
+        },
+        "FORTE_SYSTEM_TESTS": {
+          "type": "BOOL",
+          "value": "ON"
+        }
       }
     },
     {
@@ -68,9 +137,18 @@
         "rhs": "Linux"
       },
       "cacheVariables": {
-        "FORTE_ARCHITECTURE": "Posix",
-        "CMAKE_INSTALL_RPATH": "$ORIGIN/../lib",
-        "CMAKE_INSTALL_RPATH_USE_LINK_PATH": "ON"
+        "FORTE_ARCHITECTURE": {
+          "type": "STRING",
+          "value": "Posix"
+        },
+        "CMAKE_INSTALL_RPATH": {
+          "type": "STRING",
+          "value": "$ORIGIN/../lib"
+        },
+        "CMAKE_INSTALL_RPATH_USE_LINK_PATH": {
+          "type": "BOOL",
+          "value": "ON"
+        }
       }
     },
     {
@@ -78,7 +156,10 @@
       "displayName": "Debug (Posix)",
       "inherits": "posix",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Debug"
+        }
       }
     },
     {
@@ -86,7 +167,10 @@
       "displayName": "Release (Posix)",
       "inherits": "posix",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Release"
+        }
       }
     },
     {
@@ -115,7 +199,10 @@
         "rhs": "Windows"
       },
       "cacheVariables": {
-        "FORTE_ARCHITECTURE": "Win32"
+        "FORTE_ARCHITECTURE": {
+          "type": "STRING",
+          "value": "Win32"
+        }
       },
       "architecture": {
         "value": "x64",
@@ -127,7 +214,10 @@
       "displayName": "Debug (Windows)",
       "inherits": "windows",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug"
+        "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Debug"
+        }
       }
     },
     {
@@ -135,7 +225,10 @@
       "displayName": "Release (Windows)",
       "inherits": "windows",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release"
+        "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Release"
+        }
       }
     },
     {
