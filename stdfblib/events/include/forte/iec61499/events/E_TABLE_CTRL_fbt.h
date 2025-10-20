@@ -80,25 +80,36 @@ namespace forte::iec61499::events {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void
-      evt_START(const CIEC_ARRAY_COMMON<CIEC_TIME> &paDT, const CIEC_UINT &paN, CIEC_TIME &paDTO, CIEC_UINT &paCV) {
+      void evt_START(const CIEC_ARRAY_COMMON<CIEC_TIME> &paDT,
+                     const CIEC_UINT &paN,
+                     COutputParameter<CIEC_TIME> paDTO,
+                     COutputParameter<CIEC_UINT> paCV) {
+        COutputGuard guard_paDTO(paDTO);
+        COutputGuard guard_paCV(paCV);
         var_DT = paDT;
         var_N = paN;
         executeEvent(scmEventSTARTID, nullptr);
-        paDTO = var_DTO;
-        paCV = var_CV;
+        *paDTO = var_DTO;
+        *paCV = var_CV;
       }
 
-      void evt_CLK(const CIEC_ARRAY_COMMON<CIEC_TIME> &paDT, const CIEC_UINT &paN, CIEC_TIME &paDTO, CIEC_UINT &paCV) {
+      void evt_CLK(const CIEC_ARRAY_COMMON<CIEC_TIME> &paDT,
+                   const CIEC_UINT &paN,
+                   COutputParameter<CIEC_TIME> paDTO,
+                   COutputParameter<CIEC_UINT> paCV) {
+        COutputGuard guard_paDTO(paDTO);
+        COutputGuard guard_paCV(paCV);
         var_DT = paDT;
         var_N = paN;
         executeEvent(scmEventCLKID, nullptr);
-        paDTO = var_DTO;
-        paCV = var_CV;
+        *paDTO = var_DTO;
+        *paCV = var_CV;
       }
 
-      void
-      operator()(const CIEC_ARRAY_COMMON<CIEC_TIME> &paDT, const CIEC_UINT &paN, CIEC_TIME &paDTO, CIEC_UINT &paCV) {
+      void operator()(const CIEC_ARRAY_COMMON<CIEC_TIME> &paDT,
+                      const CIEC_UINT &paN,
+                      COutputParameter<CIEC_TIME> paDTO,
+                      COutputParameter<CIEC_UINT> paCV) {
         evt_START(paDT, paN, paDTO, paCV);
       }
   };

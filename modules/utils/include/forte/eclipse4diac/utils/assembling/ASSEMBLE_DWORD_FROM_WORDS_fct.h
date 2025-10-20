@@ -63,7 +63,8 @@ namespace forte::eclipse4diac::utils::assembling {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_WORD &paWORD_00, const CIEC_WORD &paWORD_01, CIEC_DWORD &pa) {
+      void evt_REQ(const CIEC_WORD &paWORD_00, const CIEC_WORD &paWORD_01, CAnyBitOutputParameter<CIEC_DWORD> pa) {
+        COutputGuard guard_pa(pa);
         var_WORD_00 = paWORD_00;
         var_WORD_01 = paWORD_01;
         executeEvent(scmEventREQID, nullptr);

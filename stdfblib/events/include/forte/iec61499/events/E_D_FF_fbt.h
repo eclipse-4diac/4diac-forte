@@ -66,13 +66,14 @@ namespace forte::iec61499::events {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_CLK(const CIEC_BOOL &paD, CIEC_BOOL &paQ) {
+      void evt_CLK(const CIEC_BOOL &paD, CAnyBitOutputParameter<CIEC_BOOL> paQ) {
+        COutputGuard guard_paQ(paQ);
         var_D = paD;
         receiveInputEvent(scmEventCLKID, nullptr);
-        paQ = var_Q;
+        *paQ = var_Q;
       }
 
-      void operator()(const CIEC_BOOL &paD, CIEC_BOOL &paQ) {
+      void operator()(const CIEC_BOOL &paD, CAnyBitOutputParameter<CIEC_BOOL> paQ) {
         evt_CLK(paD, paQ);
       }
   };

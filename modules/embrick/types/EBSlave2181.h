@@ -115,8 +115,10 @@ namespace forte::eclipse4diac::io::embrick {
                    const CIEC_WSTRING &paDigitalOutput_7,
                    const CIEC_WSTRING &paDigitalOutput_8,
                    const CIEC_UINT &paUpdateInterval,
-                   CIEC_BOOL &paQO,
-                   CIEC_WSTRING &paSTATUS) {
+                   CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                   COutputParameter<CIEC_WSTRING> paSTATUS) {
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paSTATUS(paSTATUS);
         var_QI = paQI;
         var_DigitalInput_1 = paDigitalInput_1;
         var_DigitalInput_2 = paDigitalInput_2;
@@ -136,8 +138,8 @@ namespace forte::eclipse4diac::io::embrick {
         var_DigitalOutput_8 = paDigitalOutput_8;
         var_UpdateInterval = paUpdateInterval;
         receiveInputEvent(scmEventMAPID, nullptr);
-        paQO = var_QO;
-        paSTATUS = var_STATUS;
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
       }
 
       void operator()(const CIEC_BOOL &paQI,
@@ -158,8 +160,8 @@ namespace forte::eclipse4diac::io::embrick {
                       const CIEC_WSTRING &paDigitalOutput_7,
                       const CIEC_WSTRING &paDigitalOutput_8,
                       const CIEC_UINT &paUpdateInterval,
-                      CIEC_BOOL &paQO,
-                      CIEC_WSTRING &paSTATUS) {
+                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                      COutputParameter<CIEC_WSTRING> paSTATUS) {
         evt_MAP(paQI, paDigitalInput_1, paDigitalInput_2, paDigitalInput_3, paDigitalInput_4, paDigitalInput_5,
                 paDigitalInput_6, paDigitalInput_7, paDigitalInput_8, paDigitalOutput_1, paDigitalOutput_2,
                 paDigitalOutput_3, paDigitalOutput_4, paDigitalOutput_5, paDigitalOutput_6, paDigitalOutput_7,

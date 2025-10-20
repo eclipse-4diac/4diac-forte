@@ -65,55 +65,59 @@ namespace forte::eclipse4diac::rtevents {
                     const CIEC_TIME &pa_Tmin,
                     const CIEC_TIME &pa_Deadline,
                     const CIEC_TIME &pa_WCET,
-                    CIEC_BOOL &pa_QO) {
+                    CAnyBitOutputParameter<CIEC_BOOL> pa_QO) {
+        COutputGuard guard_pa_QO(pa_QO);
         var_QI = pa_QI;
         var_Tmin = pa_Tmin;
         var_Deadline = pa_Deadline;
         var_WCET = pa_WCET;
         receiveInputEvent(scmEventINITID, nullptr);
-        pa_QO = var_QO;
+        *pa_QO = var_QO;
       }
       void evt_EI1(const CIEC_BOOL &pa_QI,
                    const CIEC_TIME &pa_Tmin,
                    const CIEC_TIME &pa_Deadline,
                    const CIEC_TIME &pa_WCET,
-                   CIEC_BOOL &pa_QO) {
+                   CAnyBitOutputParameter<CIEC_BOOL> pa_QO) {
+        COutputGuard guard_pa_QO(pa_QO);
         var_QI = pa_QI;
         var_Tmin = pa_Tmin;
         var_Deadline = pa_Deadline;
         var_WCET = pa_WCET;
         receiveInputEvent(scmEventEI1ID, nullptr);
-        pa_QO = var_QO;
+        *pa_QO = var_QO;
       }
       void evt_EI2(const CIEC_BOOL &pa_QI,
                    const CIEC_TIME &pa_Tmin,
                    const CIEC_TIME &pa_Deadline,
                    const CIEC_TIME &pa_WCET,
-                   CIEC_BOOL &pa_QO) {
+                   CAnyBitOutputParameter<CIEC_BOOL> pa_QO) {
+        COutputGuard guard_pa_QO(pa_QO);
         var_QI = pa_QI;
         var_Tmin = pa_Tmin;
         var_Deadline = pa_Deadline;
         var_WCET = pa_WCET;
         receiveInputEvent(scmEventEI2ID, nullptr);
-        pa_QO = var_QO;
+        *pa_QO = var_QO;
       }
       void evt_R(const CIEC_BOOL &pa_QI,
                  const CIEC_TIME &pa_Tmin,
                  const CIEC_TIME &pa_Deadline,
                  const CIEC_TIME &pa_WCET,
-                 CIEC_BOOL &pa_QO) {
+                 CAnyBitOutputParameter<CIEC_BOOL> pa_QO) {
+        COutputGuard guard_pa_QO(pa_QO);
         var_QI = pa_QI;
         var_Tmin = pa_Tmin;
         var_Deadline = pa_Deadline;
         var_WCET = pa_WCET;
         receiveInputEvent(scmEventRID, nullptr);
-        pa_QO = var_QO;
+        *pa_QO = var_QO;
       }
       void operator()(const CIEC_BOOL &pa_QI,
                       const CIEC_TIME &pa_Tmin,
                       const CIEC_TIME &pa_Deadline,
                       const CIEC_TIME &pa_WCET,
-                      CIEC_BOOL &pa_QO) {
+                      CAnyBitOutputParameter<CIEC_BOOL> pa_QO) {
         evt_INIT(pa_QI, pa_Tmin, pa_Deadline, pa_WCET, pa_QO);
       }
   };

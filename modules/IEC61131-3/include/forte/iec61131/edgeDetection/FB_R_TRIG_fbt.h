@@ -63,13 +63,14 @@ namespace forte::iec61131::edgeDetection {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_BOOL &paCLK, CIEC_BOOL &paQ) {
+      void evt_REQ(const CIEC_BOOL &paCLK, CAnyBitOutputParameter<CIEC_BOOL> paQ) {
+        COutputGuard guard_paQ(paQ);
         var_CLK = paCLK;
         executeEvent(scmEventREQID, nullptr);
-        paQ = var_Q;
+        *paQ = var_Q;
       }
 
-      void operator()(const CIEC_BOOL &paCLK, CIEC_BOOL &paQ) {
+      void operator()(const CIEC_BOOL &paCLK, CAnyBitOutputParameter<CIEC_BOOL> paQ) {
         evt_REQ(paCLK, paQ);
       }
   };

@@ -18,8 +18,6 @@ target_sources(forte-net PRIVATE
         GEN_SEND_RECV_fbt.cpp
         GEN_SERVER_fbt.cpp
         GEN_SUBSCRIBE_fbt.cpp
-        PUBLISH_1_fbt.cpp
-        SUBSCRIBE_1_fbt.cpp
         $<$<BOOL:${FORTE_COM_LOCAL}>:${CMAKE_CURRENT_SOURCE_DIR}/GEN_PUBL_fbt.cpp>
         $<$<BOOL:${FORTE_COM_LOCAL}>:${CMAKE_CURRENT_SOURCE_DIR}/GEN_SUBL_fbt.cpp>
 )

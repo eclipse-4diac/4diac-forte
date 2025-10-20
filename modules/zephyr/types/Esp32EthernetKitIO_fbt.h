@@ -97,8 +97,10 @@ class FORTE_Esp32EthernetKitIO final : public FORTE_ZephyrIOBase {
                   const CIEC_STRING &paADC_CH_0,
                   const CIEC_STRING &paPWM,
                   const CIEC_TIME &paUpdateInterval,
-                  CIEC_BOOL &paQO,
-                  CIEC_STRING &paSTATUS) {
+                  CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                  COutputParameter<CIEC_STRING> paSTATUS) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paSTATUS(paSTATUS);
       var_QI = paQI;
       var_LED0 = paLED0;
       var_SW0 = paSW0;
@@ -106,8 +108,8 @@ class FORTE_Esp32EthernetKitIO final : public FORTE_ZephyrIOBase {
       var_PWM = paPWM;
       var_UpdateInterval = paUpdateInterval;
       executeEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
+      *paQO = var_QO;
+      *paSTATUS = var_STATUS;
     }
 
     void operator()(const CIEC_BOOL &paQI,
@@ -116,8 +118,8 @@ class FORTE_Esp32EthernetKitIO final : public FORTE_ZephyrIOBase {
                     const CIEC_STRING &paADC_CH_0,
                     const CIEC_STRING &paPWM,
                     const CIEC_TIME &paUpdateInterval,
-                    CIEC_BOOL &paQO,
-                    CIEC_STRING &paSTATUS) {
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_STRING> paSTATUS) {
       evt_INIT(paQI, paLED0, paSW0, paADC_CH_0, paPWM, paUpdateInterval, paQO, paSTATUS);
     }
 };

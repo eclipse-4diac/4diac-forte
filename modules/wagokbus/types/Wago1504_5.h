@@ -90,8 +90,10 @@ class FORTE_Wago1504_5 : public WagoSlaveBase {
                  const CIEC_STRING &paDigitalOutput_14,
                  const CIEC_STRING &paDigitalOutput_15,
                  const CIEC_STRING &paDigitalOutput_16,
-                 CIEC_BOOL &paQO,
-                 CIEC_WSTRING &paSTATUS) {
+                 CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                 COutputParameter<CIEC_WSTRING> paSTATUS) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paSTATUS(paSTATUS);
       var_QI = paQI;
       var_DigitalOutput_1 = paDigitalOutput_1;
       var_DigitalOutput_2 = paDigitalOutput_2;
@@ -110,8 +112,8 @@ class FORTE_Wago1504_5 : public WagoSlaveBase {
       var_DigitalOutput_15 = paDigitalOutput_15;
       var_DigitalOutput_16 = paDigitalOutput_16;
       executeEvent(scmEventMAPID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
+      *paQO = var_QO;
+      *paSTATUS = var_STATUS;
     }
 
     void operator()(const CIEC_BOOL &paQI,
@@ -131,8 +133,8 @@ class FORTE_Wago1504_5 : public WagoSlaveBase {
                     const CIEC_STRING &paDigitalOutput_14,
                     const CIEC_STRING &paDigitalOutput_15,
                     const CIEC_STRING &paDigitalOutput_16,
-                    CIEC_BOOL &paQO,
-                    CIEC_WSTRING &paSTATUS) {
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_WSTRING> paSTATUS) {
       evt_MAP(paQI, paDigitalOutput_1, paDigitalOutput_2, paDigitalOutput_3, paDigitalOutput_4, paDigitalOutput_5,
               paDigitalOutput_6, paDigitalOutput_7, paDigitalOutput_8, paDigitalOutput_9, paDigitalOutput_10,
               paDigitalOutput_11, paDigitalOutput_12, paDigitalOutput_13, paDigitalOutput_14, paDigitalOutput_15,

@@ -14,10 +14,12 @@
 
 #pragma once
 
-#include <type_traits>
+#include <concepts>
 
 #include "forte/datatypes/forte_any.h"
 #include "forte/datatypes/forte_any_bit.h"
+#include "forte/datatypes/forte_any_bit_variant.h"
+#include <forte/iec61131_functions.h>
 
 namespace forte {
   template<typename T>
@@ -43,9 +45,10 @@ namespace forte {
   class COutputGuard;
 
   template<typename T>
+    requires(std::default_initializable<T> && !std::derived_from<T, CIEC_ANY_BIT> ||
+             std::is_same_v<T, CIEC_ANY_BIT_VARIANT>)
   class COutputParameter {
       friend COutputGuard<COutputParameter>;
-      static_assert(std::negation_v<std::is_base_of<CIEC_ANY_BIT, T>>, "COutputReference not for ANY_BIT");
 
     public:
       COutputParameter() : mOutput(nullptr) {
@@ -82,9 +85,10 @@ namespace forte {
   };
 
   template<typename T>
+    requires(std::default_initializable<T> && std::derived_from<T, CIEC_ANY_BIT> &&
+             !std::is_same_v<T, CIEC_ANY_BIT_VARIANT>)
   class CAnyBitOutputParameter {
       friend COutputGuard<CAnyBitOutputParameter>;
-      static_assert(std::is_base_of_v<CIEC_ANY_BIT, T>, "CAnyBitOutputReference only for ANY_BIT");
 
     public:
       CAnyBitOutputParameter() : mOutput(nullptr), mNegate(false) {

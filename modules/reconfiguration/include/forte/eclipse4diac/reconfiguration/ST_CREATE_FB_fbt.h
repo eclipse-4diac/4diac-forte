@@ -61,22 +61,24 @@ namespace forte::eclipse4diac::reconfiguration {
                    const CIEC_WSTRING &pa_FB_NAME,
                    const CIEC_WSTRING &pa_FB_TYPE,
                    const CIEC_WSTRING &pa_DST,
-                   CIEC_BOOL &pa_QO,
-                   CIEC_WSTRING &pa_STATUS) {
+                   CAnyBitOutputParameter<CIEC_BOOL> pa_QO,
+                   COutputParameter<CIEC_WSTRING> pa_STATUS) {
+        COutputGuard guard_pa_QO(pa_QO);
+        COutputGuard guard_pa_STATUS(pa_STATUS);
         var_QI = pa_QI;
         var_FB_NAME = pa_FB_NAME;
         var_FB_TYPE = pa_FB_TYPE;
         var_DST = pa_DST;
         receiveInputEvent(scmEventREQID, nullptr);
-        pa_QO = var_QO;
-        pa_STATUS = var_STATUS;
+        *pa_QO = var_QO;
+        *pa_STATUS = var_STATUS;
       }
       void operator()(const CIEC_BOOL &pa_QI,
                       const CIEC_WSTRING &pa_FB_NAME,
                       const CIEC_WSTRING &pa_FB_TYPE,
                       const CIEC_WSTRING &pa_DST,
-                      CIEC_BOOL &pa_QO,
-                      CIEC_WSTRING &pa_STATUS) {
+                      CAnyBitOutputParameter<CIEC_BOOL> pa_QO,
+                      COutputParameter<CIEC_WSTRING> pa_STATUS) {
         evt_REQ(pa_QI, pa_FB_NAME, pa_FB_TYPE, pa_DST, pa_QO, pa_STATUS);
       }
   };

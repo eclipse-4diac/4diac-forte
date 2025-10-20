@@ -54,7 +54,8 @@ namespace forte::eclipse4diac::utils::timing {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(CIEC_DATE_AND_TIME &pa) {
+      void evt_REQ(COutputParameter<CIEC_DATE_AND_TIME> pa) {
+        COutputGuard guard_pa(pa);
         executeEvent(scmEventREQID, nullptr);
         pa = var_;
       }

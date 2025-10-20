@@ -65,20 +65,21 @@ namespace forte::iec61131::charString {
                    const CIEC_ANY_STRING &pa_IN2,
                    const CIEC_ANY_INT &pa_L,
                    const CIEC_ANY_INT &pa_P,
-                   CIEC_ANY_STRING &pa_OUT) {
+                   COutputParameter<CIEC_ANY_STRING_VARIANT> pa_OUT) {
+        COutputGuard guard_pa_OUT(pa_OUT);
         var_IN1 = pa_IN1;
         var_IN2 = pa_IN2;
         var_L = pa_L;
         var_P = pa_P;
         receiveInputEvent(scmEventREQID, nullptr);
-        pa_OUT.setValue(var_OUT.unwrap());
+        pa_OUT->setValue(var_OUT.unwrap());
       }
 
       void operator()(const CIEC_ANY_STRING &pa_IN1,
                       const CIEC_ANY_STRING &pa_IN2,
                       const CIEC_ANY_INT &pa_L,
                       const CIEC_ANY_INT &pa_P,
-                      CIEC_ANY_STRING &pa_OUT) {
+                      COutputParameter<CIEC_ANY_STRING_VARIANT> pa_OUT) {
         evt_REQ(pa_IN1, pa_IN2, pa_L, pa_P, pa_OUT);
       }
 

@@ -92,59 +92,75 @@ namespace forte::eclipse4diac::utils::splitting {
       CDataConnection *getDOConUnchecked(TPortId) override;
 
       void evt_REQ(const CIEC_DWORD &paIN,
-                   CIEC_BYTE &paQUARTER_BYTE_00,
-                   CIEC_BYTE &paQUARTER_BYTE_01,
-                   CIEC_BYTE &paQUARTER_BYTE_02,
-                   CIEC_BYTE &paQUARTER_BYTE_03,
-                   CIEC_BYTE &paQUARTER_BYTE_04,
-                   CIEC_BYTE &paQUARTER_BYTE_05,
-                   CIEC_BYTE &paQUARTER_BYTE_06,
-                   CIEC_BYTE &paQUARTER_BYTE_07,
-                   CIEC_BYTE &paQUARTER_BYTE_08,
-                   CIEC_BYTE &paQUARTER_BYTE_09,
-                   CIEC_BYTE &paQUARTER_BYTE_10,
-                   CIEC_BYTE &paQUARTER_BYTE_11,
-                   CIEC_BYTE &paQUARTER_BYTE_12,
-                   CIEC_BYTE &paQUARTER_BYTE_13,
-                   CIEC_BYTE &paQUARTER_BYTE_14,
-                   CIEC_BYTE &paQUARTER_BYTE_15) {
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_00,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_01,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_02,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_03,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_04,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_05,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_06,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_07,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_08,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_09,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_10,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_11,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_12,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_13,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_14,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_15) {
+        COutputGuard guard_paQUARTER_BYTE_00(paQUARTER_BYTE_00);
+        COutputGuard guard_paQUARTER_BYTE_01(paQUARTER_BYTE_01);
+        COutputGuard guard_paQUARTER_BYTE_02(paQUARTER_BYTE_02);
+        COutputGuard guard_paQUARTER_BYTE_03(paQUARTER_BYTE_03);
+        COutputGuard guard_paQUARTER_BYTE_04(paQUARTER_BYTE_04);
+        COutputGuard guard_paQUARTER_BYTE_05(paQUARTER_BYTE_05);
+        COutputGuard guard_paQUARTER_BYTE_06(paQUARTER_BYTE_06);
+        COutputGuard guard_paQUARTER_BYTE_07(paQUARTER_BYTE_07);
+        COutputGuard guard_paQUARTER_BYTE_08(paQUARTER_BYTE_08);
+        COutputGuard guard_paQUARTER_BYTE_09(paQUARTER_BYTE_09);
+        COutputGuard guard_paQUARTER_BYTE_10(paQUARTER_BYTE_10);
+        COutputGuard guard_paQUARTER_BYTE_11(paQUARTER_BYTE_11);
+        COutputGuard guard_paQUARTER_BYTE_12(paQUARTER_BYTE_12);
+        COutputGuard guard_paQUARTER_BYTE_13(paQUARTER_BYTE_13);
+        COutputGuard guard_paQUARTER_BYTE_14(paQUARTER_BYTE_14);
+        COutputGuard guard_paQUARTER_BYTE_15(paQUARTER_BYTE_15);
         var_IN = paIN;
         executeEvent(scmEventREQID, nullptr);
-        paQUARTER_BYTE_00 = var_QUARTER_BYTE_00;
-        paQUARTER_BYTE_01 = var_QUARTER_BYTE_01;
-        paQUARTER_BYTE_02 = var_QUARTER_BYTE_02;
-        paQUARTER_BYTE_03 = var_QUARTER_BYTE_03;
-        paQUARTER_BYTE_04 = var_QUARTER_BYTE_04;
-        paQUARTER_BYTE_05 = var_QUARTER_BYTE_05;
-        paQUARTER_BYTE_06 = var_QUARTER_BYTE_06;
-        paQUARTER_BYTE_07 = var_QUARTER_BYTE_07;
-        paQUARTER_BYTE_08 = var_QUARTER_BYTE_08;
-        paQUARTER_BYTE_09 = var_QUARTER_BYTE_09;
-        paQUARTER_BYTE_10 = var_QUARTER_BYTE_10;
-        paQUARTER_BYTE_11 = var_QUARTER_BYTE_11;
-        paQUARTER_BYTE_12 = var_QUARTER_BYTE_12;
-        paQUARTER_BYTE_13 = var_QUARTER_BYTE_13;
-        paQUARTER_BYTE_14 = var_QUARTER_BYTE_14;
-        paQUARTER_BYTE_15 = var_QUARTER_BYTE_15;
+        *paQUARTER_BYTE_00 = var_QUARTER_BYTE_00;
+        *paQUARTER_BYTE_01 = var_QUARTER_BYTE_01;
+        *paQUARTER_BYTE_02 = var_QUARTER_BYTE_02;
+        *paQUARTER_BYTE_03 = var_QUARTER_BYTE_03;
+        *paQUARTER_BYTE_04 = var_QUARTER_BYTE_04;
+        *paQUARTER_BYTE_05 = var_QUARTER_BYTE_05;
+        *paQUARTER_BYTE_06 = var_QUARTER_BYTE_06;
+        *paQUARTER_BYTE_07 = var_QUARTER_BYTE_07;
+        *paQUARTER_BYTE_08 = var_QUARTER_BYTE_08;
+        *paQUARTER_BYTE_09 = var_QUARTER_BYTE_09;
+        *paQUARTER_BYTE_10 = var_QUARTER_BYTE_10;
+        *paQUARTER_BYTE_11 = var_QUARTER_BYTE_11;
+        *paQUARTER_BYTE_12 = var_QUARTER_BYTE_12;
+        *paQUARTER_BYTE_13 = var_QUARTER_BYTE_13;
+        *paQUARTER_BYTE_14 = var_QUARTER_BYTE_14;
+        *paQUARTER_BYTE_15 = var_QUARTER_BYTE_15;
       }
 
       void operator()(const CIEC_DWORD &paIN,
-                      CIEC_BYTE &paQUARTER_BYTE_00,
-                      CIEC_BYTE &paQUARTER_BYTE_01,
-                      CIEC_BYTE &paQUARTER_BYTE_02,
-                      CIEC_BYTE &paQUARTER_BYTE_03,
-                      CIEC_BYTE &paQUARTER_BYTE_04,
-                      CIEC_BYTE &paQUARTER_BYTE_05,
-                      CIEC_BYTE &paQUARTER_BYTE_06,
-                      CIEC_BYTE &paQUARTER_BYTE_07,
-                      CIEC_BYTE &paQUARTER_BYTE_08,
-                      CIEC_BYTE &paQUARTER_BYTE_09,
-                      CIEC_BYTE &paQUARTER_BYTE_10,
-                      CIEC_BYTE &paQUARTER_BYTE_11,
-                      CIEC_BYTE &paQUARTER_BYTE_12,
-                      CIEC_BYTE &paQUARTER_BYTE_13,
-                      CIEC_BYTE &paQUARTER_BYTE_14,
-                      CIEC_BYTE &paQUARTER_BYTE_15) {
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_00,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_01,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_02,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_03,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_04,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_05,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_06,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_07,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_08,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_09,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_10,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_11,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_12,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_13,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_14,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_15) {
         evt_REQ(paIN, paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03, paQUARTER_BYTE_04,
                 paQUARTER_BYTE_05, paQUARTER_BYTE_06, paQUARTER_BYTE_07, paQUARTER_BYTE_08, paQUARTER_BYTE_09,
                 paQUARTER_BYTE_10, paQUARTER_BYTE_11, paQUARTER_BYTE_12, paQUARTER_BYTE_13, paQUARTER_BYTE_14,

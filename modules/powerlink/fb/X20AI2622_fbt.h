@@ -76,49 +76,59 @@ class FORTE_X20AI2622 final : public PowerlinkFunctionBlockAI {
     void evt_INIT(const CIEC_BOOL &paQI,
                   const CIEC_USINT &paCNID,
                   const CIEC_UINT &paMODID,
-                  CIEC_BOOL &paQO,
-                  CIEC_USINT &paCNIDO,
-                  CIEC_STRING &paSTATUS,
-                  CIEC_INT &paAI01,
-                  CIEC_INT &paAI02) {
+                  CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                  COutputParameter<CIEC_USINT> paCNIDO,
+                  COutputParameter<CIEC_STRING> paSTATUS,
+                  COutputParameter<CIEC_INT> paAI01,
+                  COutputParameter<CIEC_INT> paAI02) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paCNIDO(paCNIDO);
+      COutputGuard guard_paSTATUS(paSTATUS);
+      COutputGuard guard_paAI01(paAI01);
+      COutputGuard guard_paAI02(paAI02);
       var_QI = paQI;
       var_CNID = paCNID;
       var_MODID = paMODID;
       executeEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paCNIDO = var_CNIDO;
-      paSTATUS = var_STATUS;
-      paAI01 = var_AI01;
-      paAI02 = var_AI02;
+      *paQO = var_QO;
+      *paCNIDO = var_CNIDO;
+      *paSTATUS = var_STATUS;
+      *paAI01 = var_AI01;
+      *paAI02 = var_AI02;
     }
 
     void evt_REQ(const CIEC_BOOL &paQI,
                  const CIEC_USINT &paCNID,
                  const CIEC_UINT &paMODID,
-                 CIEC_BOOL &paQO,
-                 CIEC_USINT &paCNIDO,
-                 CIEC_STRING &paSTATUS,
-                 CIEC_INT &paAI01,
-                 CIEC_INT &paAI02) {
+                 CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                 COutputParameter<CIEC_USINT> paCNIDO,
+                 COutputParameter<CIEC_STRING> paSTATUS,
+                 COutputParameter<CIEC_INT> paAI01,
+                 COutputParameter<CIEC_INT> paAI02) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paCNIDO(paCNIDO);
+      COutputGuard guard_paSTATUS(paSTATUS);
+      COutputGuard guard_paAI01(paAI01);
+      COutputGuard guard_paAI02(paAI02);
       var_QI = paQI;
       var_CNID = paCNID;
       var_MODID = paMODID;
       executeEvent(scmEventREQID, nullptr);
-      paQO = var_QO;
-      paCNIDO = var_CNIDO;
-      paSTATUS = var_STATUS;
-      paAI01 = var_AI01;
-      paAI02 = var_AI02;
+      *paQO = var_QO;
+      *paCNIDO = var_CNIDO;
+      *paSTATUS = var_STATUS;
+      *paAI01 = var_AI01;
+      *paAI02 = var_AI02;
     }
 
     void operator()(const CIEC_BOOL &paQI,
                     const CIEC_USINT &paCNID,
                     const CIEC_UINT &paMODID,
-                    CIEC_BOOL &paQO,
-                    CIEC_USINT &paCNIDO,
-                    CIEC_STRING &paSTATUS,
-                    CIEC_INT &paAI01,
-                    CIEC_INT &paAI02) {
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_USINT> paCNIDO,
+                    COutputParameter<CIEC_STRING> paSTATUS,
+                    COutputParameter<CIEC_INT> paAI01,
+                    COutputParameter<CIEC_INT> paAI02) {
       evt_INIT(paQI, paCNID, paMODID, paQO, paCNIDO, paSTATUS, paAI01, paAI02);
     }
 };

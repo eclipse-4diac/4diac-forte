@@ -77,20 +77,21 @@ namespace forte::eclipse4diac::signalprocessing::distance {
                    const CIEC_UDINT &paDIST_OFF,
                    const CIEC_UDINT &paDIST_HIGH,
                    const CIEC_UDINT &paDIST_LOW,
-                   CIEC_BOOL &paQ) {
+                   CAnyBitOutputParameter<CIEC_BOOL> paQ) {
+        COutputGuard guard_paQ(paQ);
         var_DIST_IN = paDIST_IN;
         var_DIST_OFF = paDIST_OFF;
         var_DIST_HIGH = paDIST_HIGH;
         var_DIST_LOW = paDIST_LOW;
         executeEvent(scmEventREQID, nullptr);
-        paQ = var_Q;
+        *paQ = var_Q;
       }
 
       void operator()(const CIEC_UDINT &paDIST_IN,
                       const CIEC_UDINT &paDIST_OFF,
                       const CIEC_UDINT &paDIST_HIGH,
                       const CIEC_UDINT &paDIST_LOW,
-                      CIEC_BOOL &paQ) {
+                      CAnyBitOutputParameter<CIEC_BOOL> paQ) {
         evt_REQ(paDIST_IN, paDIST_OFF, paDIST_HIGH, paDIST_LOW, paQ);
       }
   };

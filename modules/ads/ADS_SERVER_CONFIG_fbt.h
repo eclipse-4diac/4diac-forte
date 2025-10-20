@@ -106,16 +106,18 @@ class FORTE_ADS_SERVER_CONFIG final : public CFunctionBlock {
                   const CIEC_WSTRING &paSERVER_ADS_ADDRESS,
                   const CIEC_UINT &paADS_PORT,
                   const CIEC_WSTRING &paSERVER_IPV4_OR_HOSTNAME,
-                  CIEC_BOOL &paQO,
-                  CIEC_WSTRING &paSTATUS) {
+                  CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                  COutputParameter<CIEC_WSTRING> paSTATUS) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paSTATUS(paSTATUS);
       var_QI = paQI;
       var_FRIENDLY_NAME = paFRIENDLY_NAME;
       var_SERVER_ADS_ADDRESS = paSERVER_ADS_ADDRESS;
       var_ADS_PORT = paADS_PORT;
       var_SERVER_IPV4_OR_HOSTNAME = paSERVER_IPV4_OR_HOSTNAME;
       executeEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
+      *paQO = var_QO;
+      *paSTATUS = var_STATUS;
     }
 
     void operator()(const CIEC_BOOL &paQI,
@@ -123,8 +125,8 @@ class FORTE_ADS_SERVER_CONFIG final : public CFunctionBlock {
                     const CIEC_WSTRING &paSERVER_ADS_ADDRESS,
                     const CIEC_UINT &paADS_PORT,
                     const CIEC_WSTRING &paSERVER_IPV4_OR_HOSTNAME,
-                    CIEC_BOOL &paQO,
-                    CIEC_WSTRING &paSTATUS) {
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_WSTRING> paSTATUS) {
       evt_INIT(paQI, paFRIENDLY_NAME, paSERVER_ADS_ADDRESS, paADS_PORT, paSERVER_IPV4_OR_HOSTNAME, paQO, paSTATUS);
     }
 };

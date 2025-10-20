@@ -63,14 +63,15 @@ namespace forte::iec61131::bistableElements {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_BOOL &paS1, const CIEC_BOOL &paR, CIEC_BOOL &paQ1) {
+      void evt_REQ(const CIEC_BOOL &paS1, const CIEC_BOOL &paR, CAnyBitOutputParameter<CIEC_BOOL> paQ1) {
+        COutputGuard guard_paQ1(paQ1);
         var_S1 = paS1;
         var_R = paR;
         executeEvent(scmEventREQID, nullptr);
-        paQ1 = var_Q1;
+        *paQ1 = var_Q1;
       }
 
-      void operator()(const CIEC_BOOL &paS1, const CIEC_BOOL &paR, CIEC_BOOL &paQ1) {
+      void operator()(const CIEC_BOOL &paS1, const CIEC_BOOL &paR, CAnyBitOutputParameter<CIEC_BOOL> paQ1) {
         evt_REQ(paS1, paR, paQ1);
       }
   };

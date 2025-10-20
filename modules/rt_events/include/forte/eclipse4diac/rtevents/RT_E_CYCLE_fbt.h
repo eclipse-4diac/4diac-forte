@@ -63,22 +63,32 @@ namespace forte::eclipse4diac::rtevents {
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
-      void evt_START(const CIEC_TIME &pa_DT, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_BOOL &pa_QO) {
+      void evt_START(const CIEC_TIME &pa_DT,
+                     const CIEC_TIME &pa_Deadline,
+                     const CIEC_TIME &pa_WCET,
+                     CAnyBitOutputParameter<CIEC_BOOL> pa_QO) {
+        COutputGuard guard_pa_QO(pa_QO);
         var_DT = pa_DT;
         var_Deadline = pa_Deadline;
         var_WCET = pa_WCET;
         receiveInputEvent(scmEventSTARTID, nullptr);
-        pa_QO = var_QO;
+        *pa_QO = var_QO;
       }
-      void evt_STOP(const CIEC_TIME &pa_DT, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_BOOL &pa_QO) {
+      void evt_STOP(const CIEC_TIME &pa_DT,
+                    const CIEC_TIME &pa_Deadline,
+                    const CIEC_TIME &pa_WCET,
+                    CAnyBitOutputParameter<CIEC_BOOL> pa_QO) {
+        COutputGuard guard_pa_QO(pa_QO);
         var_DT = pa_DT;
         var_Deadline = pa_Deadline;
         var_WCET = pa_WCET;
         receiveInputEvent(scmEventSTOPID, nullptr);
-        pa_QO = var_QO;
+        *pa_QO = var_QO;
       }
-      void
-      operator()(const CIEC_TIME &pa_DT, const CIEC_TIME &pa_Deadline, const CIEC_TIME &pa_WCET, CIEC_BOOL &pa_QO) {
+      void operator()(const CIEC_TIME &pa_DT,
+                      const CIEC_TIME &pa_Deadline,
+                      const CIEC_TIME &pa_WCET,
+                      CAnyBitOutputParameter<CIEC_BOOL> pa_QO) {
         evt_START(pa_DT, pa_Deadline, pa_WCET, pa_QO);
       }
   };

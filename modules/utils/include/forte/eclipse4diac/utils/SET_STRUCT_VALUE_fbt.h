@@ -64,18 +64,19 @@ namespace forte::eclipse4diac::utils {
       void evt_REQ(const CIEC_ANY &pa_in_struct,
                    const CIEC_STRING &pa_member,
                    const CIEC_ANY &pa_element_value,
-                   CIEC_ANY &pa_out_struct) {
+                   COutputParameter<CIEC_ANY_VARIANT> pa_out_struct) {
+        COutputGuard guard_pa_out_struct(pa_out_struct);
         var_in_struct = pa_in_struct;
         var_member = pa_member;
         var_element_value = pa_element_value;
         receiveInputEvent(scmEventREQID, nullptr);
-        pa_out_struct.setValue(var_out_struct.unwrap());
+        pa_out_struct->setValue(var_out_struct.unwrap());
       }
 
       void operator()(const CIEC_ANY &pa_in_struct,
                       const CIEC_STRING &pa_member,
                       const CIEC_ANY &pa_element_value,
-                      CIEC_ANY &pa_out_struct) {
+                      COutputParameter<CIEC_ANY_VARIANT> pa_out_struct) {
         evt_REQ(pa_in_struct, pa_member, pa_element_value, pa_out_struct);
       }
 

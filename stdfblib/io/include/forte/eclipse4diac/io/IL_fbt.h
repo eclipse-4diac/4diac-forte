@@ -70,35 +70,41 @@ namespace forte::eclipse4diac::io {
 
       void evt_INIT(const CIEC_BOOL &paQI,
                     const CIEC_STRING &paPARAMS,
-                    CIEC_BOOL &paQO,
-                    CIEC_STRING &paSTATUS,
-                    CIEC_LWORD &paIN) {
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_STRING> paSTATUS,
+                    CAnyBitOutputParameter<CIEC_LWORD> paIN) {
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paSTATUS(paSTATUS);
+        COutputGuard guard_paIN(paIN);
         var_QI = paQI;
         var_PARAMS = paPARAMS;
         receiveInputEvent(scmEventINITID, nullptr);
-        paQO = var_QO;
-        paSTATUS = var_STATUS;
-        paIN = var_IN;
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
+        *paIN = var_IN;
       }
 
       void evt_REQ(const CIEC_BOOL &paQI,
                    const CIEC_STRING &paPARAMS,
-                   CIEC_BOOL &paQO,
-                   CIEC_STRING &paSTATUS,
-                   CIEC_LWORD &paIN) {
+                   CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                   COutputParameter<CIEC_STRING> paSTATUS,
+                   CAnyBitOutputParameter<CIEC_LWORD> paIN) {
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paSTATUS(paSTATUS);
+        COutputGuard guard_paIN(paIN);
         var_QI = paQI;
         var_PARAMS = paPARAMS;
         receiveInputEvent(scmEventREQID, nullptr);
-        paQO = var_QO;
-        paSTATUS = var_STATUS;
-        paIN = var_IN;
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
+        *paIN = var_IN;
       }
 
       void operator()(const CIEC_BOOL &paQI,
                       const CIEC_STRING &paPARAMS,
-                      CIEC_BOOL &paQO,
-                      CIEC_STRING &paSTATUS,
-                      CIEC_LWORD &paIN) {
+                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                      COutputParameter<CIEC_STRING> paSTATUS,
+                      CAnyBitOutputParameter<CIEC_LWORD> paIN) {
         evt_INIT(paQI, paPARAMS, paQO, paSTATUS, paIN);
       }
   };

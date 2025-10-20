@@ -62,13 +62,14 @@ namespace forte::iec61131::conversion {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_DINT &paIN, CIEC_INT &paOUT) {
+      void evt_REQ(const CIEC_DINT &paIN, COutputParameter<CIEC_INT> paOUT) {
+        COutputGuard guard_paOUT(paOUT);
         var_IN = paIN;
         executeEvent(scmEventREQID, nullptr);
-        paOUT = var_OUT;
+        *paOUT = var_OUT;
       }
 
-      void operator()(const CIEC_DINT &paIN, CIEC_INT &paOUT) {
+      void operator()(const CIEC_DINT &paIN, COutputParameter<CIEC_INT> paOUT) {
         evt_REQ(paIN, paOUT);
       }
   };

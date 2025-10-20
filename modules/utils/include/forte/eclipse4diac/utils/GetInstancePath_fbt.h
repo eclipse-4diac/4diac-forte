@@ -55,13 +55,14 @@ namespace forte::eclipse4diac::utils {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_CHAR &paSep, CIEC_STRING &paPath) {
+      void evt_REQ(const CIEC_CHAR &paSep, COutputParameter<CIEC_STRING> paPath) {
+        COutputGuard guard_paPath(paPath);
         var_Sep = paSep;
         executeEvent(scmEventREQID, nullptr);
-        paPath = var_Path;
+        *paPath = var_Path;
       }
 
-      void operator()(const CIEC_CHAR &paSep, CIEC_STRING &paPath) {
+      void operator()(const CIEC_CHAR &paSep, COutputParameter<CIEC_STRING> paPath) {
         evt_REQ(paSep, paPath);
       }
   };

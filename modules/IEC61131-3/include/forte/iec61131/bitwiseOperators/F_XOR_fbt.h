@@ -56,14 +56,18 @@ namespace forte::iec61131::bitwiseOperators {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_ANY_BIT &pa_IN1, const CIEC_ANY_BIT &pa_IN2, CIEC_ANY_BIT &pa_OUT) {
+      void
+      evt_REQ(const CIEC_ANY_BIT &pa_IN1, const CIEC_ANY_BIT &pa_IN2, COutputParameter<CIEC_ANY_BIT_VARIANT> pa_OUT) {
+        COutputGuard guard_pa_OUT(pa_OUT);
         var_IN1 = pa_IN1;
         var_IN2 = pa_IN2;
         receiveInputEvent(scmEventREQID, nullptr);
-        pa_OUT.setValue(var_OUT.unwrap());
+        pa_OUT->setValue(var_OUT.unwrap());
       }
 
-      void operator()(const CIEC_ANY_BIT &pa_IN1, const CIEC_ANY_BIT &pa_IN2, CIEC_ANY_BIT &pa_OUT) {
+      void operator()(const CIEC_ANY_BIT &pa_IN1,
+                      const CIEC_ANY_BIT &pa_IN2,
+                      COutputParameter<CIEC_ANY_BIT_VARIANT> pa_OUT) {
         evt_REQ(pa_IN1, pa_IN2, pa_OUT);
       }
 

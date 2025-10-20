@@ -60,13 +60,14 @@ namespace forte::iec61131::conversion {
       CInOutDataConnection **getDIOInConUnchecked(TPortId) override;
       CInOutDataConnection *getDIOOutConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_TIME &paIN, CIEC_UDINT &paOUT) {
+      void evt_REQ(const CIEC_TIME &paIN, COutputParameter<CIEC_UDINT> paOUT) {
+        COutputGuard guard_paOUT(paOUT);
         var_IN = paIN;
         receiveInputEvent(scmEventREQID, nullptr);
-        paOUT = var_OUT;
+        *paOUT = var_OUT;
       }
 
-      void operator()(const CIEC_TIME &paIN, CIEC_UDINT &paOUT) {
+      void operator()(const CIEC_TIME &paIN, COutputParameter<CIEC_UDINT> paOUT) {
         evt_REQ(paIN, paOUT);
       }
   };

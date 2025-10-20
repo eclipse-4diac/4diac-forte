@@ -68,14 +68,19 @@ namespace forte::iec61131::counters {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void
-      evt_REQ(const CIEC_BOOL &paCD, const CIEC_BOOL &paLD, const CIEC_ULINT &paPV, CIEC_BOOL &paQ, CIEC_ULINT &paCV) {
+      void evt_REQ(const CIEC_BOOL &paCD,
+                   const CIEC_BOOL &paLD,
+                   const CIEC_ULINT &paPV,
+                   CAnyBitOutputParameter<CIEC_BOOL> paQ,
+                   COutputParameter<CIEC_ULINT> paCV) {
+        COutputGuard guard_paQ(paQ);
+        COutputGuard guard_paCV(paCV);
         var_CD = paCD;
         var_LD = paLD;
         var_PV = paPV;
         executeEvent(scmEventREQID, nullptr);
-        paQ = var_Q;
-        paCV = var_CV;
+        *paQ = var_Q;
+        *paCV = var_CV;
       }
 
       void operator()(

@@ -72,17 +72,23 @@ class FORTE_PLCnextMaster final : public forte::io::IOConfigFBMultiMaster {
     CDataConnection **getDIConUnchecked(TPortId) override;
     CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void
-    evt_INIT(const CIEC_BOOL &paQI, const CIEC_UINT &paSlaveUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    void evt_INIT(const CIEC_BOOL &paQI,
+                  const CIEC_UINT &paSlaveUpdateInterval,
+                  CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                  COutputParameter<CIEC_WSTRING> paSTATUS) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paSTATUS(paSTATUS);
       var_QI = paQI;
       var_SlaveUpdateInterval = paSlaveUpdateInterval;
       receiveInputEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
+      *paQO = var_QO;
+      *paSTATUS = var_STATUS;
     }
 
-    void
-    operator()(const CIEC_BOOL &paQI, const CIEC_UINT &paSlaveUpdateInterval, CIEC_BOOL &paQO, CIEC_WSTRING &paSTATUS) {
+    void operator()(const CIEC_BOOL &paQI,
+                    const CIEC_UINT &paSlaveUpdateInterval,
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_WSTRING> paSTATUS) {
       evt_INIT(paQI, paSlaveUpdateInterval, paQO, paSTATUS);
     }
 };

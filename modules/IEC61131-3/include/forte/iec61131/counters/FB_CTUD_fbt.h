@@ -79,18 +79,21 @@ namespace forte::iec61131::counters {
                    const CIEC_BOOL &paR,
                    const CIEC_BOOL &paLD,
                    const CIEC_INT &paPV,
-                   CIEC_BOOL &paQU,
-                   CIEC_BOOL &paQD,
-                   CIEC_INT &paCV) {
+                   CAnyBitOutputParameter<CIEC_BOOL> paQU,
+                   CAnyBitOutputParameter<CIEC_BOOL> paQD,
+                   COutputParameter<CIEC_INT> paCV) {
+        COutputGuard guard_paQU(paQU);
+        COutputGuard guard_paQD(paQD);
+        COutputGuard guard_paCV(paCV);
         var_CU = paCU;
         var_CD = paCD;
         var_R = paR;
         var_LD = paLD;
         var_PV = paPV;
         executeEvent(scmEventREQID, nullptr);
-        paQU = var_QU;
-        paQD = var_QD;
-        paCV = var_CV;
+        *paQU = var_QU;
+        *paQD = var_QD;
+        *paCV = var_CV;
       }
 
       void operator()(const CIEC_BOOL &paCU,
@@ -98,9 +101,9 @@ namespace forte::iec61131::counters {
                       const CIEC_BOOL &paR,
                       const CIEC_BOOL &paLD,
                       const CIEC_INT &paPV,
-                      CIEC_BOOL &paQU,
-                      CIEC_BOOL &paQD,
-                      CIEC_INT &paCV) {
+                      CAnyBitOutputParameter<CIEC_BOOL> paQU,
+                      CAnyBitOutputParameter<CIEC_BOOL> paQD,
+                      COutputParameter<CIEC_INT> paCV) {
         evt_REQ(paCU, paCD, paR, paLD, paPV, paQU, paQD, paCV);
       }
   };

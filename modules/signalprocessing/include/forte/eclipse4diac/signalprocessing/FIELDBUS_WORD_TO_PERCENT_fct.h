@@ -61,11 +61,14 @@ namespace forte::eclipse4diac::signalprocessing {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_WORD &paWI, CIEC_REAL &pa, CIEC_WORD &paWO) {
+      void evt_REQ(const CIEC_WORD &paWI, COutputParameter<CIEC_REAL> pa, CAnyBitOutputParameter<CIEC_WORD> paWO) {
+        COutputGuard guard_pa(pa);
+        COutputGuard guard_paWO(paWO);
+
         var_WI = paWI;
         executeEvent(scmEventREQID, nullptr);
         pa = var_;
-        paWO = var_WO;
+        *paWO = var_WO;
       }
 
       void operator()(const CIEC_WORD &paWI, CIEC_REAL &pa, CIEC_WORD &paWO) {

@@ -67,23 +67,27 @@ namespace forte::eclipse4diac::utils::splitting {
       CDataConnection *getDOConUnchecked(TPortId) override;
 
       void evt_REQ(const CIEC_BYTE &paIN,
-                   CIEC_BYTE &paQUARTER_BYTE_00,
-                   CIEC_BYTE &paQUARTER_BYTE_01,
-                   CIEC_BYTE &paQUARTER_BYTE_02,
-                   CIEC_BYTE &paQUARTER_BYTE_03) {
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_00,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_01,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_02,
+                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_03) {
+        COutputGuard guard_paQUARTER_BYTE_00(paQUARTER_BYTE_00);
+        COutputGuard guard_paQUARTER_BYTE_01(paQUARTER_BYTE_01);
+        COutputGuard guard_paQUARTER_BYTE_02(paQUARTER_BYTE_02);
+        COutputGuard guard_paQUARTER_BYTE_03(paQUARTER_BYTE_03);
         var_IN = paIN;
         executeEvent(scmEventREQID, nullptr);
-        paQUARTER_BYTE_00 = var_QUARTER_BYTE_00;
-        paQUARTER_BYTE_01 = var_QUARTER_BYTE_01;
-        paQUARTER_BYTE_02 = var_QUARTER_BYTE_02;
-        paQUARTER_BYTE_03 = var_QUARTER_BYTE_03;
+        *paQUARTER_BYTE_00 = var_QUARTER_BYTE_00;
+        *paQUARTER_BYTE_01 = var_QUARTER_BYTE_01;
+        *paQUARTER_BYTE_02 = var_QUARTER_BYTE_02;
+        *paQUARTER_BYTE_03 = var_QUARTER_BYTE_03;
       }
 
       void operator()(const CIEC_BYTE &paIN,
-                      CIEC_BYTE &paQUARTER_BYTE_00,
-                      CIEC_BYTE &paQUARTER_BYTE_01,
-                      CIEC_BYTE &paQUARTER_BYTE_02,
-                      CIEC_BYTE &paQUARTER_BYTE_03) {
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_00,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_01,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_02,
+                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_03) {
         evt_REQ(paIN, paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03);
       }
   };

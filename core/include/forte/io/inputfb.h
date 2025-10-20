@@ -74,14 +74,20 @@ namespace forte::io {
         return read();
       }
 
-      void
-      evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, T &paIN) {
+      void evt_REQ(const CIEC_BOOL &paQI,
+                   const CIEC_STRING &paPARAMS,
+                   CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                   COutputParameter<CIEC_STRING> paSTATUS,
+                   CAnyBitOutputParameter<T> &paIN) {
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paSTATUS(paSTATUS);
+        COutputGuard guard_paIN(paIN);
         var_QI = paQI;
         var_PARAMS = paPARAMS;
         receiveInputEvent(scmEventREQID, nullptr);
-        paQO = var_QO;
-        paSTATUS = var_STATUS;
-        paIN = var_IN;
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
+        *paIN = var_IN;
       }
 
       T var_IN;

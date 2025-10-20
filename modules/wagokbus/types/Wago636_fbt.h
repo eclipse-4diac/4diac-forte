@@ -108,8 +108,10 @@ class FORTE_Wago636 final : public WagoSlaveBase {
                  const CIEC_STRING &paPreset,
                  const CIEC_STRING &paPresetInputEnable,
                  const CIEC_STRING &paQuitErrors,
-                 CIEC_BOOL &paQO,
-                 CIEC_WSTRING &paSTATUS) {
+                 CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                 COutputParameter<CIEC_WSTRING> paSTATUS) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paSTATUS(paSTATUS);
       var_QI = paQI;
       var_Busy = paBusy;
       var_LimitSwitchN = paLimitSwitchN;
@@ -128,8 +130,8 @@ class FORTE_Wago636 final : public WagoSlaveBase {
       var_PresetInputEnable = paPresetInputEnable;
       var_QuitErrors = paQuitErrors;
       executeEvent(scmEventMAPID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
+      *paQO = var_QO;
+      *paSTATUS = var_STATUS;
     }
 
     void operator()(const CIEC_BOOL &paQI,
@@ -149,8 +151,8 @@ class FORTE_Wago636 final : public WagoSlaveBase {
                     const CIEC_STRING &paPreset,
                     const CIEC_STRING &paPresetInputEnable,
                     const CIEC_STRING &paQuitErrors,
-                    CIEC_BOOL &paQO,
-                    CIEC_WSTRING &paSTATUS) {
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_WSTRING> paSTATUS) {
       evt_MAP(paQI, paBusy, paLimitSwitchN, paLimitSwitchP, paPresetInput, paOptimizeOnZInput, paOnTarget,
               paReferenceOk, paCurrentPosition, paTargetPosition, paMotorN, paMotorP, paPositioning, paOptimizeOn,
               paPreset, paPresetInputEnable, paQuitErrors, paQO, paSTATUS);

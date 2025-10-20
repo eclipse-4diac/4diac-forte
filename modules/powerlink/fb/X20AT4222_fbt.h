@@ -80,59 +80,73 @@ class FORTE_X20AT4222 final : public PowerlinkFunctionBlockAT {
     void evt_INIT(const CIEC_BOOL &paQI,
                   const CIEC_USINT &paCNID,
                   const CIEC_UINT &paMODID,
-                  CIEC_BOOL &paQO,
-                  CIEC_USINT &paCNIDO,
-                  CIEC_STRING &paSTATUS,
-                  CIEC_REAL &paT01,
-                  CIEC_REAL &paT02,
-                  CIEC_REAL &paT03,
-                  CIEC_REAL &paT04) {
+                  CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                  COutputParameter<CIEC_USINT> paCNIDO,
+                  COutputParameter<CIEC_STRING> paSTATUS,
+                  COutputParameter<CIEC_REAL> paT01,
+                  COutputParameter<CIEC_REAL> paT02,
+                  COutputParameter<CIEC_REAL> paT03,
+                  COutputParameter<CIEC_REAL> paT04) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paCNIDO(paCNIDO);
+      COutputGuard guard_paSTATUS(paSTATUS);
+      COutputGuard guard_paT01(paT01);
+      COutputGuard guard_paT02(paT02);
+      COutputGuard guard_paT03(paT03);
+      COutputGuard guard_paT04(paT04);
       var_QI = paQI;
       var_CNID = paCNID;
       var_MODID = paMODID;
       executeEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paCNIDO = var_CNIDO;
-      paSTATUS = var_STATUS;
-      paT01 = var_T01;
-      paT02 = var_T02;
-      paT03 = var_T03;
-      paT04 = var_T04;
+      *paQO = var_QO;
+      *paCNIDO = var_CNIDO;
+      *paSTATUS = var_STATUS;
+      *paT01 = var_T01;
+      *paT02 = var_T02;
+      *paT03 = var_T03;
+      *paT04 = var_T04;
     }
 
     void evt_REQ(const CIEC_BOOL &paQI,
                  const CIEC_USINT &paCNID,
                  const CIEC_UINT &paMODID,
-                 CIEC_BOOL &paQO,
-                 CIEC_USINT &paCNIDO,
-                 CIEC_STRING &paSTATUS,
-                 CIEC_REAL &paT01,
-                 CIEC_REAL &paT02,
-                 CIEC_REAL &paT03,
-                 CIEC_REAL &paT04) {
+                 CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                 COutputParameter<CIEC_USINT> paCNIDO,
+                 COutputParameter<CIEC_STRING> paSTATUS,
+                 COutputParameter<CIEC_REAL> paT01,
+                 COutputParameter<CIEC_REAL> paT02,
+                 COutputParameter<CIEC_REAL> paT03,
+                 COutputParameter<CIEC_REAL> paT04) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paCNIDO(paCNIDO);
+      COutputGuard guard_paSTATUS(paSTATUS);
+      COutputGuard guard_paT01(paT01);
+      COutputGuard guard_paT02(paT02);
+      COutputGuard guard_paT03(paT03);
+      COutputGuard guard_paT04(paT04);
       var_QI = paQI;
       var_CNID = paCNID;
       var_MODID = paMODID;
       executeEvent(scmEventREQID, nullptr);
-      paQO = var_QO;
-      paCNIDO = var_CNIDO;
-      paSTATUS = var_STATUS;
-      paT01 = var_T01;
-      paT02 = var_T02;
-      paT03 = var_T03;
-      paT04 = var_T04;
+      *paQO = var_QO;
+      *paCNIDO = var_CNIDO;
+      *paSTATUS = var_STATUS;
+      *paT01 = var_T01;
+      *paT02 = var_T02;
+      *paT03 = var_T03;
+      *paT04 = var_T04;
     }
 
     void operator()(const CIEC_BOOL &paQI,
                     const CIEC_USINT &paCNID,
                     const CIEC_UINT &paMODID,
-                    CIEC_BOOL &paQO,
-                    CIEC_USINT &paCNIDO,
-                    CIEC_STRING &paSTATUS,
-                    CIEC_REAL &paT01,
-                    CIEC_REAL &paT02,
-                    CIEC_REAL &paT03,
-                    CIEC_REAL &paT04) {
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_USINT> paCNIDO,
+                    COutputParameter<CIEC_STRING> paSTATUS,
+                    COutputParameter<CIEC_REAL> paT01,
+                    COutputParameter<CIEC_REAL> paT02,
+                    COutputParameter<CIEC_REAL> paT03,
+                    COutputParameter<CIEC_REAL> paT04) {
       evt_INIT(paQI, paCNID, paMODID, paQO, paCNIDO, paSTATUS, paT01, paT02, paT03, paT04);
     }
 };

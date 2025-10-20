@@ -99,9 +99,9 @@ namespace forte::eclipse4diac::io {
         var_QI = paQI;
         var_PARAMS = paPARAMS;
         receiveInputEvent(scmEventINITID, nullptr);
-        paQO = var_QO;
-        paSTATUS = var_STATUS;
-        paIN = var_IN;
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
+        *paIN = var_IN;
       }
 
       void evt_REQ(
@@ -109,9 +109,9 @@ namespace forte::eclipse4diac::io {
         var_QI = paQI;
         var_PARAMS = paPARAMS;
         receiveInputEvent(scmEventREQID, nullptr);
-        paQO = var_QO;
-        paSTATUS = var_STATUS;
-        paIN = var_IN;
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
+        *paIN = var_IN;
       }
 
       void operator()(

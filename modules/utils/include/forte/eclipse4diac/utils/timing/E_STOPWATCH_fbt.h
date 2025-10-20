@@ -84,27 +84,31 @@ namespace forte::eclipse4diac::utils::timing {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_START(CIEC_TIME &paTD) {
+      void evt_START(COutputParameter<CIEC_TIME> paTD) {
+        COutputGuard guard_paTD(paTD);
         executeEvent(scmEventSTARTID, nullptr);
-        paTD = var_TD;
+        *paTD = var_TD;
       }
 
-      void evt_ET(CIEC_TIME &paTD) {
+      void evt_ET(COutputParameter<CIEC_TIME> paTD) {
+        COutputGuard guard_paTD(paTD);
         executeEvent(scmEventETID, nullptr);
-        paTD = var_TD;
+        *paTD = var_TD;
       }
 
-      void evt_STOP(CIEC_TIME &paTD) {
+      void evt_STOP(COutputParameter<CIEC_TIME> paTD) {
+        COutputGuard guard_paTD(paTD);
         executeEvent(scmEventSTOPID, nullptr);
-        paTD = var_TD;
+        *paTD = var_TD;
       }
 
-      void evt_RESET(CIEC_TIME &paTD) {
+      void evt_RESET(COutputParameter<CIEC_TIME> paTD) {
+        COutputGuard guard_paTD(paTD);
         executeEvent(scmEventRESETID, nullptr);
-        paTD = var_TD;
+        *paTD = var_TD;
       }
 
-      void operator()(CIEC_TIME &paTD) {
+      void operator()(COutputParameter<CIEC_TIME> paTD) {
         evt_START(paTD);
       }
   };

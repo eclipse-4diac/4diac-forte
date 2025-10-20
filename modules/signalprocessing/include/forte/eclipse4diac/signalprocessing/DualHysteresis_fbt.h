@@ -101,18 +101,21 @@ namespace forte::eclipse4diac::signalprocessing {
                     const CIEC_REAL &paDEAD,
                     const CIEC_REAL &paHYSTERESIS,
                     const CIEC_REAL &paINPUT,
-                    CIEC_BOOL &paQO,
-                    CIEC_BOOL &paDO_UP,
-                    CIEC_BOOL &paDO_DOWN) {
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    CAnyBitOutputParameter<CIEC_BOOL> paDO_UP,
+                    CAnyBitOutputParameter<CIEC_BOOL> paDO_DOWN) {
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paDO_UP(paDO_UP);
+        COutputGuard guard_paDO_DOWN(paDO_DOWN);
         var_QI = paQI;
         var_MI = paMI;
         var_DEAD = paDEAD;
         var_HYSTERESIS = paHYSTERESIS;
         var_INPUT = paINPUT;
         executeEvent(scmEventINITID, nullptr);
-        paQO = var_QO;
-        paDO_UP = var_DO_UP;
-        paDO_DOWN = var_DO_DOWN;
+        *paQO = var_QO;
+        *paDO_UP = var_DO_UP;
+        *paDO_DOWN = var_DO_DOWN;
       }
 
       void evt_REQ(const CIEC_BOOL &paQI,
@@ -120,18 +123,21 @@ namespace forte::eclipse4diac::signalprocessing {
                    const CIEC_REAL &paDEAD,
                    const CIEC_REAL &paHYSTERESIS,
                    const CIEC_REAL &paINPUT,
-                   CIEC_BOOL &paQO,
-                   CIEC_BOOL &paDO_UP,
-                   CIEC_BOOL &paDO_DOWN) {
+                   CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                   CAnyBitOutputParameter<CIEC_BOOL> paDO_UP,
+                   CAnyBitOutputParameter<CIEC_BOOL> paDO_DOWN) {
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paDO_UP(paDO_UP);
+        COutputGuard guard_paDO_DOWN(paDO_DOWN);
         var_QI = paQI;
         var_MI = paMI;
         var_DEAD = paDEAD;
         var_HYSTERESIS = paHYSTERESIS;
         var_INPUT = paINPUT;
         executeEvent(scmEventREQID, nullptr);
-        paQO = var_QO;
-        paDO_UP = var_DO_UP;
-        paDO_DOWN = var_DO_DOWN;
+        *paQO = var_QO;
+        *paDO_UP = var_DO_UP;
+        *paDO_DOWN = var_DO_DOWN;
       }
 
       void operator()(const CIEC_BOOL &paQI,
@@ -139,9 +145,9 @@ namespace forte::eclipse4diac::signalprocessing {
                       const CIEC_REAL &paDEAD,
                       const CIEC_REAL &paHYSTERESIS,
                       const CIEC_REAL &paINPUT,
-                      CIEC_BOOL &paQO,
-                      CIEC_BOOL &paDO_UP,
-                      CIEC_BOOL &paDO_DOWN) {
+                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                      CAnyBitOutputParameter<CIEC_BOOL> paDO_UP,
+                      CAnyBitOutputParameter<CIEC_BOOL> paDO_DOWN) {
         evt_INIT(paQI, paMI, paDEAD, paHYSTERESIS, paINPUT, paQO, paDO_UP, paDO_DOWN);
       }
   };

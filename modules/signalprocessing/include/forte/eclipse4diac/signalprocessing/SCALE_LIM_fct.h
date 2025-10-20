@@ -82,7 +82,8 @@ namespace forte::eclipse4diac::signalprocessing {
                    const CIEC_REAL &paMIN_OUT,
                    const CIEC_REAL &paMAX_OUT_FIX,
                    const CIEC_REAL &paMIN_OUT_FIX,
-                   CIEC_REAL &pa) {
+                   COutputParameter<CIEC_REAL> pa) {
+        COutputGuard guard_pa(pa);
         var_IN = paIN;
         var_MAX_IN = paMAX_IN;
         var_MIN_IN = paMIN_IN;

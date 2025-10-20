@@ -68,23 +68,25 @@ class FORTE_POWERLINK_MN final : public CFunctionBlock {
                   const CIEC_STRING &paCDC_CFG,
                   const CIEC_STRING &paAPP_CFG,
                   const CIEC_STRING &paDEV_NAME,
-                  CIEC_BOOL &paQO,
-                  CIEC_STRING &paSTATUS) {
+                  CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                  COutputParameter<CIEC_STRING> paSTATUS) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paSTATUS(paSTATUS);
       var_QI = paQI;
       var_CDC_CFG = paCDC_CFG;
       var_APP_CFG = paAPP_CFG;
       var_DEV_NAME = paDEV_NAME;
       executeEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
+      *paQO = var_QO;
+      *paSTATUS = var_STATUS;
     }
 
     void operator()(const CIEC_BOOL &paQI,
                     const CIEC_STRING &paCDC_CFG,
                     const CIEC_STRING &paAPP_CFG,
                     const CIEC_STRING &paDEV_NAME,
-                    CIEC_BOOL &paQO,
-                    CIEC_STRING &paSTATUS) {
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_STRING> paSTATUS) {
       evt_INIT(paQI, paCDC_CFG, paAPP_CFG, paDEV_NAME, paQO, paSTATUS);
     }
 };

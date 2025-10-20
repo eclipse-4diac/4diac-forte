@@ -73,21 +73,25 @@ namespace forte::iec61499::events {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_CU(const CIEC_UINT &paPV, CIEC_BOOL &paQ, CIEC_UINT &paCV) {
+      void evt_CU(const CIEC_UINT &paPV, CAnyBitOutputParameter<CIEC_BOOL> paQ, COutputParameter<CIEC_UINT> paCV) {
+        COutputGuard guard_paQ(paQ);
+        COutputGuard guard_paCV(paCV);
         var_PV = paPV;
         receiveInputEvent(scmEventCUID, nullptr);
-        paQ = var_Q;
-        paCV = var_CV;
+        *paQ = var_Q;
+        *paCV = var_CV;
       }
 
-      void evt_R(const CIEC_UINT &paPV, CIEC_BOOL &paQ, CIEC_UINT &paCV) {
+      void evt_R(const CIEC_UINT &paPV, CAnyBitOutputParameter<CIEC_BOOL> paQ, COutputParameter<CIEC_UINT> paCV) {
+        COutputGuard guard_paQ(paQ);
+        COutputGuard guard_paCV(paCV);
         var_PV = paPV;
         receiveInputEvent(scmEventRID, nullptr);
-        paQ = var_Q;
-        paCV = var_CV;
+        *paQ = var_Q;
+        *paCV = var_CV;
       }
 
-      void operator()(const CIEC_UINT &paPV, CIEC_BOOL &paQ, CIEC_UINT &paCV) {
+      void operator()(const CIEC_UINT &paPV, CAnyBitOutputParameter<CIEC_BOOL> paQ, COutputParameter<CIEC_UINT> paCV) {
         evt_CU(paPV, paQ, paCV);
       }
   };

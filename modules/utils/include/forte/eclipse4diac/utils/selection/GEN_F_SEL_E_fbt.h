@@ -26,7 +26,6 @@ namespace forte::eclipse4diac::utils::selection {
       DECLARE_GENERIC_FIRMWARE_FB(GEN_F_SEL_E)
 
     protected:
-
       /**
        * @brief Creates and allocates the memory for the generic data inputs.
        */

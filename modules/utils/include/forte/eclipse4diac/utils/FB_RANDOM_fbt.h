@@ -84,19 +84,21 @@ namespace forte::eclipse4diac::utils {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_INIT(const CIEC_UINT &paSEED, CIEC_REAL &paVAL) {
+      void evt_INIT(const CIEC_UINT &paSEED, COutputParameter<CIEC_REAL> paVAL) {
+        COutputGuard guard_paVAL(paVAL);
         var_SEED = paSEED;
         receiveInputEvent(scmEventINITID, nullptr);
-        paVAL = var_VAL;
+        *paVAL = var_VAL;
       }
 
-      void evt_REQ(const CIEC_UINT &paSEED, CIEC_REAL &paVAL) {
+      void evt_REQ(const CIEC_UINT &paSEED, COutputParameter<CIEC_REAL> paVAL) {
+        COutputGuard guard_paVAL(paVAL);
         var_SEED = paSEED;
         receiveInputEvent(scmEventREQID, nullptr);
-        paVAL = var_VAL;
+        *paVAL = var_VAL;
       }
 
-      void operator()(const CIEC_UINT &paSEED, CIEC_REAL &paVAL) {
+      void operator()(const CIEC_UINT &paSEED, COutputParameter<CIEC_REAL> paVAL) {
         evt_INIT(paSEED, paVAL);
       }
   };

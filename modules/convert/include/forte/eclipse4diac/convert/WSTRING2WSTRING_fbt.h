@@ -61,13 +61,14 @@ namespace forte::eclipse4diac::convert {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_WSTRING &paIN, CIEC_WSTRING &paOUT) {
+      void evt_REQ(const CIEC_WSTRING &paIN, COutputParameter<CIEC_WSTRING> paOUT) {
+        COutputGuard guard_paOUT(paOUT);
         var_IN = paIN;
         executeEvent(scmEventREQID, nullptr);
-        paOUT = var_OUT;
+        *paOUT = var_OUT;
       }
 
-      void operator()(const CIEC_WSTRING &paIN, CIEC_WSTRING &paOUT) {
+      void operator()(const CIEC_WSTRING &paIN, COutputParameter<CIEC_WSTRING> paOUT) {
         evt_REQ(paIN, paOUT);
       }
   };

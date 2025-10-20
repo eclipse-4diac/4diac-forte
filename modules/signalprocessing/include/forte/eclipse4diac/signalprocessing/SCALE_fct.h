@@ -39,7 +39,7 @@ namespace forte::eclipse4diac::signalprocessing {
       void setInitialValues() override;
 
     public:
-    FORTE_SCALE(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_SCALE(forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_REAL var_IN;
       CIEC_REAL var_MAX_IN;
@@ -70,7 +70,8 @@ namespace forte::eclipse4diac::signalprocessing {
                    const CIEC_REAL &paMIN_IN,
                    const CIEC_REAL &paMAX_OUT,
                    const CIEC_REAL &paMIN_OUT,
-                   CIEC_REAL &pa) {
+                   COutputParameter<CIEC_REAL> pa) {
+        COutputGuard guard_pa(pa);
         var_IN = paIN;
         var_MAX_IN = paMAX_IN;
         var_MIN_IN = paMIN_IN;

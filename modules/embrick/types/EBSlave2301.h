@@ -85,8 +85,10 @@ namespace forte::eclipse4diac::io::embrick {
                    const CIEC_WSTRING &paRelay_5,
                    const CIEC_WSTRING &paRelay_6,
                    const CIEC_UINT &paUpdateInterval,
-                   CIEC_BOOL &paQO,
-                   CIEC_WSTRING &paSTATUS) {
+                   CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                   COutputParameter<CIEC_WSTRING> paSTATUS) {
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paSTATUS(paSTATUS);
         var_QI = paQI;
         var_Relay_1 = paRelay_1;
         var_Relay_2 = paRelay_2;
@@ -96,8 +98,8 @@ namespace forte::eclipse4diac::io::embrick {
         var_Relay_6 = paRelay_6;
         var_UpdateInterval = paUpdateInterval;
         receiveInputEvent(scmEventMAPID, nullptr);
-        paQO = var_QO;
-        paSTATUS = var_STATUS;
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
       }
 
       void operator()(const CIEC_BOOL &paQI,
@@ -108,8 +110,8 @@ namespace forte::eclipse4diac::io::embrick {
                       const CIEC_WSTRING &paRelay_5,
                       const CIEC_WSTRING &paRelay_6,
                       const CIEC_UINT &paUpdateInterval,
-                      CIEC_BOOL &paQO,
-                      CIEC_WSTRING &paSTATUS) {
+                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                      COutputParameter<CIEC_WSTRING> paSTATUS) {
         evt_MAP(paQI, paRelay_1, paRelay_2, paRelay_3, paRelay_4, paRelay_5, paRelay_6, paUpdateInterval, paQO,
                 paSTATUS);
       }

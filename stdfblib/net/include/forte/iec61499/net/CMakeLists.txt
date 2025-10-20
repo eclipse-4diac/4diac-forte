@@ -20,8 +20,6 @@ target_sources(forte-net PUBLIC
         GEN_SEND_RECV_fbt.h
         GEN_SERVER_fbt.h
         GEN_SUBSCRIBE_fbt.h
-        PUBLISH_1_fbt.h
-        SUBSCRIBE_1_fbt.h
         $<$<BOOL:${FORTE_COM_LOCAL}>:${CMAKE_CURRENT_SOURCE_DIR}/GEN_PUBL_fbt.h>
         $<$<BOOL:${FORTE_COM_LOCAL}>:${CMAKE_CURRENT_SOURCE_DIR}/GEN_SUBL_fbt.h>
 )

@@ -95,99 +95,129 @@ class FORTE_X20DI9372 final : public PowerlinkFunctionBlockDI {
     void evt_INIT(const CIEC_BOOL &paQI,
                   const CIEC_USINT &paCNID,
                   const CIEC_UINT &paMODID,
-                  CIEC_BOOL &paQO,
-                  CIEC_USINT &paCNIDO,
-                  CIEC_STRING &paSTATUS,
-                  CIEC_BOOL &paDI01,
-                  CIEC_BOOL &paDI02,
-                  CIEC_BOOL &paDI03,
-                  CIEC_BOOL &paDI04,
-                  CIEC_BOOL &paDI05,
-                  CIEC_BOOL &paDI06,
-                  CIEC_BOOL &paDI07,
-                  CIEC_BOOL &paDI08,
-                  CIEC_BOOL &paDI09,
-                  CIEC_BOOL &paDI10,
-                  CIEC_BOOL &paDI11,
-                  CIEC_BOOL &paDI12) {
+                  CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                  COutputParameter<CIEC_USINT> paCNIDO,
+                  COutputParameter<CIEC_STRING> paSTATUS,
+                  CAnyBitOutputParameter<CIEC_BOOL> paDI01,
+                  CAnyBitOutputParameter<CIEC_BOOL> paDI02,
+                  CAnyBitOutputParameter<CIEC_BOOL> paDI03,
+                  CAnyBitOutputParameter<CIEC_BOOL> paDI04,
+                  CAnyBitOutputParameter<CIEC_BOOL> paDI05,
+                  CAnyBitOutputParameter<CIEC_BOOL> paDI06,
+                  CAnyBitOutputParameter<CIEC_BOOL> paDI07,
+                  CAnyBitOutputParameter<CIEC_BOOL> paDI08,
+                  CAnyBitOutputParameter<CIEC_BOOL> paDI09,
+                  CAnyBitOutputParameter<CIEC_BOOL> paDI10,
+                  CAnyBitOutputParameter<CIEC_BOOL> paDI11,
+                  CAnyBitOutputParameter<CIEC_BOOL> paDI12) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paCNIDO(paCNIDO);
+      COutputGuard guard_paSTATUS(paSTATUS);
+      COutputGuard guard_paDI01(paDI01);
+      COutputGuard guard_paDI02(paDI02);
+      COutputGuard guard_paDI03(paDI03);
+      COutputGuard guard_paDI04(paDI04);
+      COutputGuard guard_paDI05(paDI05);
+      COutputGuard guard_paDI06(paDI06);
+      COutputGuard guard_paDI07(paDI07);
+      COutputGuard guard_paDI08(paDI08);
+      COutputGuard guard_paDI09(paDI09);
+      COutputGuard guard_paDI10(paDI10);
+      COutputGuard guard_paDI11(paDI11);
+      COutputGuard guard_paDI12(paDI12);
       var_QI = paQI;
       var_CNID = paCNID;
       var_MODID = paMODID;
       executeEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paCNIDO = var_CNIDO;
-      paSTATUS = var_STATUS;
-      paDI01 = var_DI01;
-      paDI02 = var_DI02;
-      paDI03 = var_DI03;
-      paDI04 = var_DI04;
-      paDI05 = var_DI05;
-      paDI06 = var_DI06;
-      paDI07 = var_DI07;
-      paDI08 = var_DI08;
-      paDI09 = var_DI09;
-      paDI10 = var_DI10;
-      paDI11 = var_DI11;
-      paDI12 = var_DI12;
+      *paQO = var_QO;
+      *paCNIDO = var_CNIDO;
+      *paSTATUS = var_STATUS;
+      *paDI01 = var_DI01;
+      *paDI02 = var_DI02;
+      *paDI03 = var_DI03;
+      *paDI04 = var_DI04;
+      *paDI05 = var_DI05;
+      *paDI06 = var_DI06;
+      *paDI07 = var_DI07;
+      *paDI08 = var_DI08;
+      *paDI09 = var_DI09;
+      *paDI10 = var_DI10;
+      *paDI11 = var_DI11;
+      *paDI12 = var_DI12;
     }
 
     void evt_REQ(const CIEC_BOOL &paQI,
                  const CIEC_USINT &paCNID,
                  const CIEC_UINT &paMODID,
-                 CIEC_BOOL &paQO,
-                 CIEC_USINT &paCNIDO,
-                 CIEC_STRING &paSTATUS,
-                 CIEC_BOOL &paDI01,
-                 CIEC_BOOL &paDI02,
-                 CIEC_BOOL &paDI03,
-                 CIEC_BOOL &paDI04,
-                 CIEC_BOOL &paDI05,
-                 CIEC_BOOL &paDI06,
-                 CIEC_BOOL &paDI07,
-                 CIEC_BOOL &paDI08,
-                 CIEC_BOOL &paDI09,
-                 CIEC_BOOL &paDI10,
-                 CIEC_BOOL &paDI11,
-                 CIEC_BOOL &paDI12) {
+                 CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                 COutputParameter<CIEC_USINT> paCNIDO,
+                 COutputParameter<CIEC_STRING> paSTATUS,
+                 CAnyBitOutputParameter<CIEC_BOOL> paDI01,
+                 CAnyBitOutputParameter<CIEC_BOOL> paDI02,
+                 CAnyBitOutputParameter<CIEC_BOOL> paDI03,
+                 CAnyBitOutputParameter<CIEC_BOOL> paDI04,
+                 CAnyBitOutputParameter<CIEC_BOOL> paDI05,
+                 CAnyBitOutputParameter<CIEC_BOOL> paDI06,
+                 CAnyBitOutputParameter<CIEC_BOOL> paDI07,
+                 CAnyBitOutputParameter<CIEC_BOOL> paDI08,
+                 CAnyBitOutputParameter<CIEC_BOOL> paDI09,
+                 CAnyBitOutputParameter<CIEC_BOOL> paDI10,
+                 CAnyBitOutputParameter<CIEC_BOOL> paDI11,
+                 CAnyBitOutputParameter<CIEC_BOOL> paDI12) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paCNIDO(paCNIDO);
+      COutputGuard guard_paSTATUS(paSTATUS);
+      COutputGuard guard_paDI01(paDI01);
+      COutputGuard guard_paDI02(paDI02);
+      COutputGuard guard_paDI03(paDI03);
+      COutputGuard guard_paDI04(paDI04);
+      COutputGuard guard_paDI05(paDI05);
+      COutputGuard guard_paDI06(paDI06);
+      COutputGuard guard_paDI07(paDI07);
+      COutputGuard guard_paDI08(paDI08);
+      COutputGuard guard_paDI09(paDI09);
+      COutputGuard guard_paDI10(paDI10);
+      COutputGuard guard_paDI11(paDI11);
+      COutputGuard guard_paDI12(paDI12);
       var_QI = paQI;
       var_CNID = paCNID;
       var_MODID = paMODID;
       executeEvent(scmEventREQID, nullptr);
-      paQO = var_QO;
-      paCNIDO = var_CNIDO;
-      paSTATUS = var_STATUS;
-      paDI01 = var_DI01;
-      paDI02 = var_DI02;
-      paDI03 = var_DI03;
-      paDI04 = var_DI04;
-      paDI05 = var_DI05;
-      paDI06 = var_DI06;
-      paDI07 = var_DI07;
-      paDI08 = var_DI08;
-      paDI09 = var_DI09;
-      paDI10 = var_DI10;
-      paDI11 = var_DI11;
-      paDI12 = var_DI12;
+      *paQO = var_QO;
+      *paCNIDO = var_CNIDO;
+      *paSTATUS = var_STATUS;
+      *paDI01 = var_DI01;
+      *paDI02 = var_DI02;
+      *paDI03 = var_DI03;
+      *paDI04 = var_DI04;
+      *paDI05 = var_DI05;
+      *paDI06 = var_DI06;
+      *paDI07 = var_DI07;
+      *paDI08 = var_DI08;
+      *paDI09 = var_DI09;
+      *paDI10 = var_DI10;
+      *paDI11 = var_DI11;
+      *paDI12 = var_DI12;
     }
 
     void operator()(const CIEC_BOOL &paQI,
                     const CIEC_USINT &paCNID,
                     const CIEC_UINT &paMODID,
-                    CIEC_BOOL &paQO,
-                    CIEC_USINT &paCNIDO,
-                    CIEC_STRING &paSTATUS,
-                    CIEC_BOOL &paDI01,
-                    CIEC_BOOL &paDI02,
-                    CIEC_BOOL &paDI03,
-                    CIEC_BOOL &paDI04,
-                    CIEC_BOOL &paDI05,
-                    CIEC_BOOL &paDI06,
-                    CIEC_BOOL &paDI07,
-                    CIEC_BOOL &paDI08,
-                    CIEC_BOOL &paDI09,
-                    CIEC_BOOL &paDI10,
-                    CIEC_BOOL &paDI11,
-                    CIEC_BOOL &paDI12) {
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_USINT> paCNIDO,
+                    COutputParameter<CIEC_STRING> paSTATUS,
+                    CAnyBitOutputParameter<CIEC_BOOL> paDI01,
+                    CAnyBitOutputParameter<CIEC_BOOL> paDI02,
+                    CAnyBitOutputParameter<CIEC_BOOL> paDI03,
+                    CAnyBitOutputParameter<CIEC_BOOL> paDI04,
+                    CAnyBitOutputParameter<CIEC_BOOL> paDI05,
+                    CAnyBitOutputParameter<CIEC_BOOL> paDI06,
+                    CAnyBitOutputParameter<CIEC_BOOL> paDI07,
+                    CAnyBitOutputParameter<CIEC_BOOL> paDI08,
+                    CAnyBitOutputParameter<CIEC_BOOL> paDI09,
+                    CAnyBitOutputParameter<CIEC_BOOL> paDI10,
+                    CAnyBitOutputParameter<CIEC_BOOL> paDI11,
+                    CAnyBitOutputParameter<CIEC_BOOL> paDI12) {
       evt_INIT(paQI, paCNID, paMODID, paQO, paCNIDO, paSTATUS, paDI01, paDI02, paDI03, paDI04, paDI05, paDI06, paDI07,
                paDI08, paDI09, paDI10, paDI11, paDI12);
     }

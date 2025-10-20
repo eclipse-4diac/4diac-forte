@@ -66,23 +66,36 @@ namespace forte::eclipse4diac::io {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+      void evt_INIT(const CIEC_BOOL &paQI,
+                    const CIEC_STRING &paPARAMS,
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_STRING> paSTATUS) {
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paSTATUS(paSTATUS);
         var_QI = paQI;
         var_PARAMS = paPARAMS;
         receiveInputEvent(scmEventINITID, nullptr);
-        paQO = var_QO;
-        paSTATUS = var_STATUS;
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
       }
 
-      void evt_REQ(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+      void evt_REQ(const CIEC_BOOL &paQI,
+                   const CIEC_STRING &paPARAMS,
+                   CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                   COutputParameter<CIEC_STRING> paSTATUS) {
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paSTATUS(paSTATUS);
         var_QI = paQI;
         var_PARAMS = paPARAMS;
         receiveInputEvent(scmEventREQID, nullptr);
-        paQO = var_QO;
-        paSTATUS = var_STATUS;
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
       }
 
-      void operator()(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+      void operator()(const CIEC_BOOL &paQI,
+                      const CIEC_STRING &paPARAMS,
+                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                      COutputParameter<CIEC_STRING> paSTATUS) {
         evt_INIT(paQI, paPARAMS, paQO, paSTATUS);
       }
   };

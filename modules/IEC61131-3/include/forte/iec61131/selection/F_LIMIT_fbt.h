@@ -61,18 +61,19 @@ namespace forte::iec61131::selection {
       void evt_REQ(const CIEC_ANY_ELEMENTARY &pa_MN,
                    const CIEC_ANY_ELEMENTARY &pa_IN,
                    const CIEC_ANY_ELEMENTARY &pa_MX,
-                   CIEC_ANY_ELEMENTARY &pa_OUT) {
+                   COutputParameter<CIEC_ANY_ELEMENTARY_VARIANT> pa_OUT) {
+        COutputGuard guard_pa_OUT(pa_OUT);
         var_MN = pa_MN;
         var_IN = pa_IN;
         var_MX = pa_MX;
         receiveInputEvent(scmEventREQID, nullptr);
-        pa_OUT.setValue(var_OUT.unwrap());
+        pa_OUT->setValue(var_OUT.unwrap());
       }
 
       void operator()(const CIEC_ANY_ELEMENTARY &pa_MN,
                       const CIEC_ANY_ELEMENTARY &pa_IN,
                       const CIEC_ANY_ELEMENTARY &pa_MX,
-                      CIEC_ANY_ELEMENTARY &pa_OUT) {
+                      COutputParameter<CIEC_ANY_ELEMENTARY_VARIANT> pa_OUT) {
         evt_REQ(pa_MN, pa_IN, pa_MX, pa_OUT);
       }
 

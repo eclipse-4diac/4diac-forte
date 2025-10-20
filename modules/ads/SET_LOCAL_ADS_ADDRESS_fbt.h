@@ -92,22 +92,25 @@ class FORTE_SET_LOCAL_ADS_ADDRESS final : public CFunctionBlock {
 
     void evt_INIT(const CIEC_BOOL &paQI,
                   const CIEC_STRING &paPARAMS,
-                  CIEC_BOOL &paQO,
-                  CIEC_WSTRING &paSTATUS,
-                  CIEC_STRING &paLOCAL_ADS_ADDRESS) {
+                  CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                  COutputParameter<CIEC_WSTRING> paSTATUS,
+                  COutputParameter<CIEC_STRING> paLOCAL_ADS_ADDRESS) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paSTATUS(paSTATUS);
+      COutputGuard guard_paLOCAL_ADS_ADDRESS(paLOCAL_ADS_ADDRESS);
       var_QI = paQI;
       var_PARAMS = paPARAMS;
       executeEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
-      paLOCAL_ADS_ADDRESS = var_LOCAL_ADS_ADDRESS;
+      *paQO = var_QO;
+      *paSTATUS = var_STATUS;
+      *paLOCAL_ADS_ADDRESS = var_LOCAL_ADS_ADDRESS;
     }
 
     void operator()(const CIEC_BOOL &paQI,
                     const CIEC_STRING &paPARAMS,
-                    CIEC_BOOL &paQO,
-                    CIEC_WSTRING &paSTATUS,
-                    CIEC_STRING &paLOCAL_ADS_ADDRESS) {
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_WSTRING> paSTATUS,
+                    COutputParameter<CIEC_STRING> paLOCAL_ADS_ADDRESS) {
       evt_INIT(paQI, paPARAMS, paQO, paSTATUS, paLOCAL_ADS_ADDRESS);
     }
 };

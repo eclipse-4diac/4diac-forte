@@ -45,13 +45,14 @@ namespace forte::com_infra::opc_ua {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_LocalizedText &pa_IN, CIEC_LocalizedText &pa_OUT) {
+      void evt_REQ(const CIEC_LocalizedText &pa_IN, COutputParameter<CIEC_LocalizedText> pa_OUT) {
+        COutputGuard guard_pa_OUT(pa_OUT);
         var_IN = pa_IN;
         receiveInputEvent(scmEventREQID, nullptr);
-        pa_OUT = var_OUT;
+        *pa_OUT = var_OUT;
       }
 
-      void operator()(const CIEC_LocalizedText &pa_IN, CIEC_LocalizedText &pa_OUT) {
+      void operator()(const CIEC_LocalizedText &pa_IN, COutputParameter<CIEC_LocalizedText> pa_OUT) {
         evt_REQ(pa_IN, pa_OUT);
       }
 

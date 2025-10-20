@@ -61,16 +61,23 @@ namespace forte::eclipse4diac::utils {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_ANY &pa_in_struct, const CIEC_STRING &pa_member, CIEC_BOOL &pa_QO, CIEC_ANY &pa_output) {
+      void evt_REQ(const CIEC_ANY &pa_in_struct,
+                   const CIEC_STRING &pa_member,
+                   CAnyBitOutputParameter<CIEC_BOOL> pa_QO,
+                   COutputParameter<CIEC_ANY_VARIANT> pa_output) {
+        COutputGuard guard_pa_QO(pa_QO);
+        COutputGuard guard_pa_output(pa_output);
         var_in_struct = pa_in_struct;
         var_member = pa_member;
         receiveInputEvent(scmEventREQID, nullptr);
-        pa_QO = var_QO;
-        pa_output.setValue(var_output.unwrap());
+        *pa_QO = var_QO;
+        pa_output->setValue(var_output.unwrap());
       }
 
-      void
-      operator()(const CIEC_ANY &pa_in_struct, const CIEC_STRING &pa_member, CIEC_BOOL &pa_QO, CIEC_ANY &pa_output) {
+      void operator()(const CIEC_ANY &pa_in_struct,
+                      const CIEC_STRING &pa_member,
+                      CAnyBitOutputParameter<CIEC_BOOL> pa_QO,
+                      COutputParameter<CIEC_ANY_VARIANT> pa_output) {
         evt_REQ(pa_in_struct, pa_member, pa_QO, pa_output);
       }
 

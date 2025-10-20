@@ -57,14 +57,15 @@ namespace forte::iec61131::arithmetic {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_DATE &pa_IN1, const CIEC_DATE &pa_IN2, CIEC_TIME &pa_OUT) {
+      void evt_REQ(const CIEC_DATE &pa_IN1, const CIEC_DATE &pa_IN2, COutputParameter<CIEC_TIME> pa_OUT) {
+        COutputGuard guard_pa_OUT(pa_OUT);
         var_IN1 = pa_IN1;
         var_IN2 = pa_IN2;
         receiveInputEvent(scmEventREQID, nullptr);
-        pa_OUT = var_OUT;
+        *pa_OUT = var_OUT;
       }
 
-      void operator()(const CIEC_DATE &pa_IN1, const CIEC_DATE &pa_IN2, CIEC_TIME &pa_OUT) {
+      void operator()(const CIEC_DATE &pa_IN1, const CIEC_DATE &pa_IN2, COutputParameter<CIEC_TIME> pa_OUT) {
         evt_REQ(pa_IN1, pa_IN2, pa_OUT);
       }
 

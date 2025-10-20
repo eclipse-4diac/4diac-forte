@@ -94,8 +94,10 @@ namespace forte::eclipse4diac::io::revpi {
                    const CIEC_STRING &paRTD_2,
                    const CIEC_STRING &paAnalogOutput_1,
                    const CIEC_STRING &paAnalogOutput_2,
-                   CIEC_BOOL &paQO,
-                   CIEC_WSTRING &paSTATUS) {
+                   CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                   COutputParameter<CIEC_WSTRING> paSTATUS) {
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paSTATUS(paSTATUS);
         var_QI = paQI;
         var_AnalogInput_1 = paAnalogInput_1;
         var_AnalogInput_2 = paAnalogInput_2;
@@ -106,8 +108,8 @@ namespace forte::eclipse4diac::io::revpi {
         var_AnalogOutput_1 = paAnalogOutput_1;
         var_AnalogOutput_2 = paAnalogOutput_2;
         executeEvent(scmEventMAPID, nullptr);
-        paQO = var_QO;
-        paSTATUS = var_STATUS;
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
       }
 
       void operator()(const CIEC_BOOL &paQI,
@@ -119,8 +121,8 @@ namespace forte::eclipse4diac::io::revpi {
                       const CIEC_STRING &paRTD_2,
                       const CIEC_STRING &paAnalogOutput_1,
                       const CIEC_STRING &paAnalogOutput_2,
-                      CIEC_BOOL &paQO,
-                      CIEC_WSTRING &paSTATUS) {
+                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                      COutputParameter<CIEC_WSTRING> paSTATUS) {
         evt_MAP(paQI, paAnalogInput_1, paAnalogInput_2, paAnalogInput_3, paAnalogInput_4, paRTD_1, paRTD_2,
                 paAnalogOutput_1, paAnalogOutput_2, paQO, paSTATUS);
       }

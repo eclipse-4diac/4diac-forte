@@ -63,14 +63,20 @@ namespace forte::eclipse4diac::utils::splitting {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_DWORD &paIN, CIEC_WORD &paWORD_00, CIEC_WORD &paWORD_01) {
+      void evt_REQ(const CIEC_DWORD &paIN,
+                   CAnyBitOutputParameter<CIEC_WORD> paWORD_00,
+                   CAnyBitOutputParameter<CIEC_WORD> paWORD_01) {
+        COutputGuard guard_paWORD_00(paWORD_00);
+        COutputGuard guard_paWORD_01(paWORD_01);
         var_IN = paIN;
         executeEvent(scmEventREQID, nullptr);
-        paWORD_00 = var_WORD_00;
-        paWORD_01 = var_WORD_01;
+        *paWORD_00 = var_WORD_00;
+        *paWORD_01 = var_WORD_01;
       }
 
-      void operator()(const CIEC_DWORD &paIN, CIEC_WORD &paWORD_00, CIEC_WORD &paWORD_01) {
+      void operator()(const CIEC_DWORD &paIN,
+                      CAnyBitOutputParameter<CIEC_WORD> paWORD_00,
+                      CAnyBitOutputParameter<CIEC_WORD> paWORD_01) {
         evt_REQ(paIN, paWORD_00, paWORD_01);
       }
   };

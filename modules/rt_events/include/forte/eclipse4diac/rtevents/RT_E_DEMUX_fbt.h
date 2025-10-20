@@ -98,7 +98,8 @@ namespace forte::eclipse4diac::rtevents {
                     const CIEC_TIME &pa_WCET2,
                     const CIEC_TIME &pa_Deadline3,
                     const CIEC_TIME &pa_WCET3,
-                    CIEC_BOOL &pa_QO) {
+                    CAnyBitOutputParameter<CIEC_BOOL> pa_QO) {
+        COutputGuard guard_pa_QO(pa_QO);
         var_QI = pa_QI;
         var_K = pa_K;
         var_Tmin = pa_Tmin;
@@ -111,7 +112,7 @@ namespace forte::eclipse4diac::rtevents {
         var_Deadline3 = pa_Deadline3;
         var_WCET3 = pa_WCET3;
         receiveInputEvent(scmEventINITID, nullptr);
-        pa_QO = var_QO;
+        *pa_QO = var_QO;
       }
       void evt_EI(const CIEC_BOOL &pa_QI,
                   const CIEC_UINT &pa_K,
@@ -124,7 +125,8 @@ namespace forte::eclipse4diac::rtevents {
                   const CIEC_TIME &pa_WCET2,
                   const CIEC_TIME &pa_Deadline3,
                   const CIEC_TIME &pa_WCET3,
-                  CIEC_BOOL &pa_QO) {
+                  CAnyBitOutputParameter<CIEC_BOOL> pa_QO) {
+        COutputGuard guard_pa_QO(pa_QO);
         var_QI = pa_QI;
         var_K = pa_K;
         var_Tmin = pa_Tmin;
@@ -137,7 +139,7 @@ namespace forte::eclipse4diac::rtevents {
         var_Deadline3 = pa_Deadline3;
         var_WCET3 = pa_WCET3;
         receiveInputEvent(scmEventEIID, nullptr);
-        pa_QO = var_QO;
+        *pa_QO = var_QO;
       }
       void operator()(const CIEC_BOOL &pa_QI,
                       const CIEC_UINT &pa_K,
@@ -150,7 +152,7 @@ namespace forte::eclipse4diac::rtevents {
                       const CIEC_TIME &pa_WCET2,
                       const CIEC_TIME &pa_Deadline3,
                       const CIEC_TIME &pa_WCET3,
-                      CIEC_BOOL &pa_QO) {
+                      CAnyBitOutputParameter<CIEC_BOOL> pa_QO) {
         evt_INIT(pa_QI, pa_K, pa_Tmin, pa_Deadline0, pa_WCET0, pa_Deadline1, pa_WCET1, pa_Deadline2, pa_WCET2,
                  pa_Deadline3, pa_WCET3, pa_QO);
       }

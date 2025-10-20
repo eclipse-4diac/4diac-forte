@@ -155,7 +155,8 @@ namespace forte::eclipse4diac::utils::assembling {
                    const CIEC_BOOL &paBIT_29,
                    const CIEC_BOOL &paBIT_30,
                    const CIEC_BOOL &paBIT_31,
-                   CIEC_DWORD &pa) {
+                   CAnyBitOutputParameter<CIEC_DWORD> pa) {
+        COutputGuard guard_pa(pa);
         var_BIT_00 = paBIT_00;
         var_BIT_01 = paBIT_01;
         var_BIT_02 = paBIT_02;

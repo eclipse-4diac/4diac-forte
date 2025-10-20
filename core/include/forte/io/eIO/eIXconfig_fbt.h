@@ -55,14 +55,15 @@ namespace forte::io {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_CONF(const CIEC_BOOL &paFE, const CIEC_BOOL &paRE, CIEC_WSTRING &paSTATUS) {
+      void evt_CONF(const CIEC_BOOL &paFE, const CIEC_BOOL &paRE, COutputParameter<CIEC_WSTRING> paSTATUS) {
+        COutputGuard guard_paSTATUS(paSTATUS);
         var_FE = paFE;
         var_RE = paRE;
         executeEvent(scmEventCONFID, nullptr);
-        paSTATUS = var_STATUS;
+        *paSTATUS = var_STATUS;
       }
 
-      void operator()(const CIEC_BOOL &paFE, const CIEC_BOOL &paRE, CIEC_WSTRING &paSTATUS) {
+      void operator()(const CIEC_BOOL &paFE, const CIEC_BOOL &paRE, COutputParameter<CIEC_WSTRING> paSTATUS) {
         evt_CONF(paFE, paRE, paSTATUS);
       }
 

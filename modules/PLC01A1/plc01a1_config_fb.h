@@ -199,8 +199,10 @@ void evt_INIT(const CIEC_BOOL &paQI,
               const CIEC_WSTRING &paOUT7,
               const CIEC_WSTRING &paOUT8,
               const CIEC_UINT &paUpdateInterval,
-              CIEC_BOOL &paQO,
-              CIEC_WSTRING &paSTATUS) {
+              CAnyBitOutputParameter<CIEC_BOOL> paQO,
+              COutputParameter<CIEC_WSTRING> paSTATUS) {
+  COutputGuard guard_paQO(paQO);
+  COutputGuard guard_paSTATUS(paSTATUS);
   var_QI = paQI;
   var_IN1 = paIN1;
   var_IN2 = paIN2;
@@ -220,8 +222,8 @@ void evt_INIT(const CIEC_BOOL &paQI,
   var_OUT8 = paOUT8;
   var_UpdateInterval = paUpdateInterval;
   executeEvent(scmEventINITID, nullptr);
-  paQO = var_QO;
-  paSTATUS = var_STATUS;
+  *paQO = var_QO;
+  *paSTATUS = var_STATUS;
 }
 
 void operator()(const CIEC_BOOL &paQI,
@@ -242,8 +244,8 @@ void operator()(const CIEC_BOOL &paQI,
                 const CIEC_WSTRING &paOUT7,
                 const CIEC_WSTRING &paOUT8,
                 const CIEC_UINT &paUpdateInterval,
-                CIEC_BOOL &paQO,
-                CIEC_WSTRING &paSTATUS) {
+                CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                COutputParameter<CIEC_WSTRING> paSTATUS) {
   evt_INIT(paQI, paIN1, paIN2, paIN3, paIN4, paIN5, paIN6, paIN7, paIN8, paOUT1, paOUT2, paOUT3, paOUT4, paOUT5, paOUT6,
            paOUT7, paOUT8, paUpdateInterval, paQO, paSTATUS);
 }

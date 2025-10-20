@@ -85,39 +85,66 @@ namespace forte::iec61499::events {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_CU(const CIEC_UINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UINT &paCV) {
+      void evt_CU(const CIEC_UINT &paPV,
+                  CAnyBitOutputParameter<CIEC_BOOL> paQU,
+                  CAnyBitOutputParameter<CIEC_BOOL> paQD,
+                  COutputParameter<CIEC_UINT> paCV) {
+        COutputGuard guard_paQU(paQU);
+        COutputGuard guard_paQD(paQD);
+        COutputGuard guard_paCV(paCV);
         var_PV = paPV;
         receiveInputEvent(scmEventCUID, nullptr);
-        paQU = var_QU;
-        paQD = var_QD;
-        paCV = var_CV;
+        *paQU = var_QU;
+        *paQD = var_QD;
+        *paCV = var_CV;
       }
 
-      void evt_CD(const CIEC_UINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UINT &paCV) {
+      void evt_CD(const CIEC_UINT &paPV,
+                  CAnyBitOutputParameter<CIEC_BOOL> paQU,
+                  CAnyBitOutputParameter<CIEC_BOOL> paQD,
+                  COutputParameter<CIEC_UINT> paCV) {
+        COutputGuard guard_paQU(paQU);
+        COutputGuard guard_paQD(paQD);
+        COutputGuard guard_paCV(paCV);
         var_PV = paPV;
         receiveInputEvent(scmEventCDID, nullptr);
-        paQU = var_QU;
-        paQD = var_QD;
-        paCV = var_CV;
+        *paQU = var_QU;
+        *paQD = var_QD;
+        *paCV = var_CV;
       }
 
-      void evt_R(const CIEC_UINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UINT &paCV) {
+      void evt_R(const CIEC_UINT &paPV,
+                 CAnyBitOutputParameter<CIEC_BOOL> paQU,
+                 CAnyBitOutputParameter<CIEC_BOOL> paQD,
+                 COutputParameter<CIEC_UINT> paCV) {
+        COutputGuard guard_paQU(paQU);
+        COutputGuard guard_paQD(paQD);
+        COutputGuard guard_paCV(paCV);
         var_PV = paPV;
         receiveInputEvent(scmEventRID, nullptr);
-        paQU = var_QU;
-        paQD = var_QD;
-        paCV = var_CV;
+        *paQU = var_QU;
+        *paQD = var_QD;
+        *paCV = var_CV;
       }
 
-      void evt_LD(const CIEC_UINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UINT &paCV) {
+      void evt_LD(const CIEC_UINT &paPV,
+                  CAnyBitOutputParameter<CIEC_BOOL> paQU,
+                  CAnyBitOutputParameter<CIEC_BOOL> paQD,
+                  COutputParameter<CIEC_UINT> paCV) {
+        COutputGuard guard_paQU(paQU);
+        COutputGuard guard_paQD(paQD);
+        COutputGuard guard_paCV(paCV);
         var_PV = paPV;
         receiveInputEvent(scmEventLDID, nullptr);
-        paQU = var_QU;
-        paQD = var_QD;
-        paCV = var_CV;
+        *paQU = var_QU;
+        *paQD = var_QD;
+        *paCV = var_CV;
       }
 
-      void operator()(const CIEC_UINT &paPV, CIEC_BOOL &paQU, CIEC_BOOL &paQD, CIEC_UINT &paCV) {
+      void operator()(const CIEC_UINT &paPV,
+                      CAnyBitOutputParameter<CIEC_BOOL> paQU,
+                      CAnyBitOutputParameter<CIEC_BOOL> paQD,
+                      COutputParameter<CIEC_UINT> paCV) {
         evt_CU(paPV, paQU, paQD, paCV);
       }
   };

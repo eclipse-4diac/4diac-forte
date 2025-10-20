@@ -70,7 +70,8 @@ namespace forte::eclipse4diac::utils::assembling {
                    const CIEC_BYTE &paQUARTER_BYTE_01,
                    const CIEC_BYTE &paQUARTER_BYTE_02,
                    const CIEC_BYTE &paQUARTER_BYTE_03,
-                   CIEC_BYTE &pa) {
+                   CAnyBitOutputParameter<CIEC_BYTE> pa) {
+        COutputGuard guard_pa(pa);
         var_QUARTER_BYTE_00 = paQUARTER_BYTE_00;
         var_QUARTER_BYTE_01 = paQUARTER_BYTE_01;
         var_QUARTER_BYTE_02 = paQUARTER_BYTE_02;

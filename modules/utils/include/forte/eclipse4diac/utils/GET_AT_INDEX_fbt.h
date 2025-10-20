@@ -60,15 +60,23 @@ namespace forte::eclipse4diac::utils {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_ANY &pa_IN_ARRAY, const CIEC_UINT &pa_INDEX, CIEC_BOOL &pa_QO, CIEC_ANY &pa_OUT) {
+      void evt_REQ(const CIEC_ANY &pa_IN_ARRAY,
+                   const CIEC_UINT &pa_INDEX,
+                   CAnyBitOutputParameter<CIEC_BOOL> pa_QO,
+                   COutputParameter<CIEC_ANY_VARIANT> pa_OUT) {
+        COutputGuard guard_pa_QO(pa_QO);
+        COutputGuard guard_pa_OUT(pa_OUT);
         var_IN_ARRAY = pa_IN_ARRAY;
         var_INDEX = pa_INDEX;
         receiveInputEvent(scmEventREQID, nullptr);
-        pa_QO = var_QO;
-        pa_OUT.setValue(var_OUT.unwrap());
+        *pa_QO = var_QO;
+        pa_OUT->setValue(var_OUT.unwrap());
       }
 
-      void operator()(const CIEC_ANY &pa_IN_ARRAY, const CIEC_UINT &pa_INDEX, CIEC_BOOL &pa_QO, CIEC_ANY &pa_OUT) {
+      void operator()(const CIEC_ANY &pa_IN_ARRAY,
+                      const CIEC_UINT &pa_INDEX,
+                      CAnyBitOutputParameter<CIEC_BOOL> pa_QO,
+                      COutputParameter<CIEC_ANY_VARIANT> pa_OUT) {
         evt_REQ(pa_IN_ARRAY, pa_INDEX, pa_QO, pa_OUT);
       }
 

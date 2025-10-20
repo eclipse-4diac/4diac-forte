@@ -76,35 +76,43 @@ namespace forte::eclipse4diac::utils::splitting {
       CDataConnection *getDOConUnchecked(TPortId) override;
 
       void evt_REQ(const CIEC_BYTE &paIN,
-                   CIEC_BOOL &paBIT_00,
-                   CIEC_BOOL &paBIT_01,
-                   CIEC_BOOL &paBIT_02,
-                   CIEC_BOOL &paBIT_03,
-                   CIEC_BOOL &paBIT_04,
-                   CIEC_BOOL &paBIT_05,
-                   CIEC_BOOL &paBIT_06,
-                   CIEC_BOOL &paBIT_07) {
+                   CAnyBitOutputParameter<CIEC_BOOL> paBIT_00,
+                   CAnyBitOutputParameter<CIEC_BOOL> paBIT_01,
+                   CAnyBitOutputParameter<CIEC_BOOL> paBIT_02,
+                   CAnyBitOutputParameter<CIEC_BOOL> paBIT_03,
+                   CAnyBitOutputParameter<CIEC_BOOL> paBIT_04,
+                   CAnyBitOutputParameter<CIEC_BOOL> paBIT_05,
+                   CAnyBitOutputParameter<CIEC_BOOL> paBIT_06,
+                   CAnyBitOutputParameter<CIEC_BOOL> paBIT_07) {
+        COutputGuard guard_paBIT_00(paBIT_00);
+        COutputGuard guard_paBIT_01(paBIT_01);
+        COutputGuard guard_paBIT_02(paBIT_02);
+        COutputGuard guard_paBIT_03(paBIT_03);
+        COutputGuard guard_paBIT_04(paBIT_04);
+        COutputGuard guard_paBIT_05(paBIT_05);
+        COutputGuard guard_paBIT_06(paBIT_06);
+        COutputGuard guard_paBIT_07(paBIT_07);
         var_IN = paIN;
         executeEvent(scmEventREQID, nullptr);
-        paBIT_00 = var_BIT_00;
-        paBIT_01 = var_BIT_01;
-        paBIT_02 = var_BIT_02;
-        paBIT_03 = var_BIT_03;
-        paBIT_04 = var_BIT_04;
-        paBIT_05 = var_BIT_05;
-        paBIT_06 = var_BIT_06;
-        paBIT_07 = var_BIT_07;
+        *paBIT_00 = var_BIT_00;
+        *paBIT_01 = var_BIT_01;
+        *paBIT_02 = var_BIT_02;
+        *paBIT_03 = var_BIT_03;
+        *paBIT_04 = var_BIT_04;
+        *paBIT_05 = var_BIT_05;
+        *paBIT_06 = var_BIT_06;
+        *paBIT_07 = var_BIT_07;
       }
 
       void operator()(const CIEC_BYTE &paIN,
-                      CIEC_BOOL &paBIT_00,
-                      CIEC_BOOL &paBIT_01,
-                      CIEC_BOOL &paBIT_02,
-                      CIEC_BOOL &paBIT_03,
-                      CIEC_BOOL &paBIT_04,
-                      CIEC_BOOL &paBIT_05,
-                      CIEC_BOOL &paBIT_06,
-                      CIEC_BOOL &paBIT_07) {
+                      CAnyBitOutputParameter<CIEC_BOOL> paBIT_00,
+                      CAnyBitOutputParameter<CIEC_BOOL> paBIT_01,
+                      CAnyBitOutputParameter<CIEC_BOOL> paBIT_02,
+                      CAnyBitOutputParameter<CIEC_BOOL> paBIT_03,
+                      CAnyBitOutputParameter<CIEC_BOOL> paBIT_04,
+                      CAnyBitOutputParameter<CIEC_BOOL> paBIT_05,
+                      CAnyBitOutputParameter<CIEC_BOOL> paBIT_06,
+                      CAnyBitOutputParameter<CIEC_BOOL> paBIT_07) {
         evt_REQ(paIN, paBIT_00, paBIT_01, paBIT_02, paBIT_03, paBIT_04, paBIT_05, paBIT_06, paBIT_07);
       }
   };

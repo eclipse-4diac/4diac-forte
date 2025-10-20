@@ -123,8 +123,10 @@ class FORTE_PLCnextAXLSEDI16 final : public PLCnextSlaveHandler {
                   const CIEC_STRING &paDI_14,
                   const CIEC_STRING &paDI_15,
                   const CIEC_STRING &paDI_16,
-                  CIEC_BOOL &paQO,
-                  CIEC_WSTRING &paSTATUS) {
+                  CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                  COutputParameter<CIEC_WSTRING> paSTATUS) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paSTATUS(paSTATUS);
       var_QI = paQI;
       var_DI_1 = paDI_1;
       var_DI_2 = paDI_2;
@@ -143,8 +145,8 @@ class FORTE_PLCnextAXLSEDI16 final : public PLCnextSlaveHandler {
       var_DI_15 = paDI_15;
       var_DI_16 = paDI_16;
       receiveInputEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paSTATUS = var_STATUS;
+      *paQO = var_QO;
+      *paSTATUS = var_STATUS;
     }
 
     void operator()(const CIEC_BOOL &paQI,
@@ -164,8 +166,8 @@ class FORTE_PLCnextAXLSEDI16 final : public PLCnextSlaveHandler {
                     const CIEC_STRING &paDI_14,
                     const CIEC_STRING &paDI_15,
                     const CIEC_STRING &paDI_16,
-                    CIEC_BOOL &paQO,
-                    CIEC_WSTRING &paSTATUS) {
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_WSTRING> paSTATUS) {
       evt_INIT(paQI, paDI_1, paDI_2, paDI_3, paDI_4, paDI_5, paDI_6, paDI_7, paDI_8, paDI_9, paDI_10, paDI_11, paDI_12,
                paDI_13, paDI_14, paDI_15, paDI_16, paQO, paSTATUS);
     }

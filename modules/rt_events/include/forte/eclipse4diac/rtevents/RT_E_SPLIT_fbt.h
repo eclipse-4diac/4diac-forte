@@ -75,7 +75,8 @@ namespace forte::eclipse4diac::rtevents {
                     const CIEC_TIME &pa_WCET_EO1,
                     const CIEC_TIME &pa_Deadline_EO2,
                     const CIEC_TIME &pa_WCET_EO2,
-                    CIEC_BOOL &pa_QO) {
+                    CAnyBitOutputParameter<CIEC_BOOL> pa_QO) {
+        COutputGuard guard_pa_QO(pa_QO);
         var_QI = pa_QI;
         var_Tmin = pa_Tmin;
         var_Deadline_EO1 = pa_Deadline_EO1;
@@ -83,7 +84,7 @@ namespace forte::eclipse4diac::rtevents {
         var_Deadline_EO2 = pa_Deadline_EO2;
         var_WCET_EO2 = pa_WCET_EO2;
         receiveInputEvent(scmEventINITID, nullptr);
-        pa_QO = var_QO;
+        *pa_QO = var_QO;
       }
       void evt_EI(const CIEC_BOOL &pa_QI,
                   const CIEC_TIME &pa_Tmin,
@@ -91,7 +92,8 @@ namespace forte::eclipse4diac::rtevents {
                   const CIEC_TIME &pa_WCET_EO1,
                   const CIEC_TIME &pa_Deadline_EO2,
                   const CIEC_TIME &pa_WCET_EO2,
-                  CIEC_BOOL &pa_QO) {
+                  CAnyBitOutputParameter<CIEC_BOOL> pa_QO) {
+        COutputGuard guard_pa_QO(pa_QO);
         var_QI = pa_QI;
         var_Tmin = pa_Tmin;
         var_Deadline_EO1 = pa_Deadline_EO1;
@@ -99,7 +101,7 @@ namespace forte::eclipse4diac::rtevents {
         var_Deadline_EO2 = pa_Deadline_EO2;
         var_WCET_EO2 = pa_WCET_EO2;
         receiveInputEvent(scmEventEIID, nullptr);
-        pa_QO = var_QO;
+        *pa_QO = var_QO;
       }
       void operator()(const CIEC_BOOL &pa_QI,
                       const CIEC_TIME &pa_Tmin,
@@ -107,7 +109,7 @@ namespace forte::eclipse4diac::rtevents {
                       const CIEC_TIME &pa_WCET_EO1,
                       const CIEC_TIME &pa_Deadline_EO2,
                       const CIEC_TIME &pa_WCET_EO2,
-                      CIEC_BOOL &pa_QO) {
+                      CAnyBitOutputParameter<CIEC_BOOL> pa_QO) {
         evt_INIT(pa_QI, pa_Tmin, pa_Deadline_EO1, pa_WCET_EO1, pa_Deadline_EO2, pa_WCET_EO2, pa_QO);
       }
   };

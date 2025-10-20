@@ -83,9 +83,12 @@ class FORTE_X20DO4649 final : public PowerlinkFunctionBlockDO {
                   const CIEC_BOOL &paDO02,
                   const CIEC_BOOL &paDO03,
                   const CIEC_BOOL &paDO04,
-                  CIEC_BOOL &paQO,
-                  CIEC_USINT &paCNIDO,
-                  CIEC_STRING &paSTATUS) {
+                  CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                  COutputParameter<CIEC_USINT> paCNIDO,
+                  COutputParameter<CIEC_STRING> paSTATUS) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paCNIDO(paCNIDO);
+      COutputGuard guard_paSTATUS(paSTATUS);
       var_QI = paQI;
       var_CNID = paCNID;
       var_MODID = paMODID;
@@ -94,9 +97,9 @@ class FORTE_X20DO4649 final : public PowerlinkFunctionBlockDO {
       var_DO03 = paDO03;
       var_DO04 = paDO04;
       executeEvent(scmEventINITID, nullptr);
-      paQO = var_QO;
-      paCNIDO = var_CNIDO;
-      paSTATUS = var_STATUS;
+      *paQO = var_QO;
+      *paCNIDO = var_CNIDO;
+      *paSTATUS = var_STATUS;
     }
 
     void evt_REQ(const CIEC_BOOL &paQI,
@@ -106,9 +109,12 @@ class FORTE_X20DO4649 final : public PowerlinkFunctionBlockDO {
                  const CIEC_BOOL &paDO02,
                  const CIEC_BOOL &paDO03,
                  const CIEC_BOOL &paDO04,
-                 CIEC_BOOL &paQO,
-                 CIEC_USINT &paCNIDO,
-                 CIEC_STRING &paSTATUS) {
+                 CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                 COutputParameter<CIEC_USINT> paCNIDO,
+                 COutputParameter<CIEC_STRING> paSTATUS) {
+      COutputGuard guard_paQO(paQO);
+      COutputGuard guard_paCNIDO(paCNIDO);
+      COutputGuard guard_paSTATUS(paSTATUS);
       var_QI = paQI;
       var_CNID = paCNID;
       var_MODID = paMODID;
@@ -117,9 +123,9 @@ class FORTE_X20DO4649 final : public PowerlinkFunctionBlockDO {
       var_DO03 = paDO03;
       var_DO04 = paDO04;
       executeEvent(scmEventREQID, nullptr);
-      paQO = var_QO;
-      paCNIDO = var_CNIDO;
-      paSTATUS = var_STATUS;
+      *paQO = var_QO;
+      *paCNIDO = var_CNIDO;
+      *paSTATUS = var_STATUS;
     }
 
     void operator()(const CIEC_BOOL &paQI,
@@ -129,9 +135,9 @@ class FORTE_X20DO4649 final : public PowerlinkFunctionBlockDO {
                     const CIEC_BOOL &paDO02,
                     const CIEC_BOOL &paDO03,
                     const CIEC_BOOL &paDO04,
-                    CIEC_BOOL &paQO,
-                    CIEC_USINT &paCNIDO,
-                    CIEC_STRING &paSTATUS) {
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_USINT> paCNIDO,
+                    COutputParameter<CIEC_STRING> paSTATUS) {
       evt_INIT(paQI, paCNID, paMODID, paDO01, paDO02, paDO03, paDO04, paQO, paCNIDO, paSTATUS);
     }
 };

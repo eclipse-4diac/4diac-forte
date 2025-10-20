@@ -67,15 +67,23 @@ namespace forte::iec61131::timers {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_BOOL &paIN, const CIEC_TIME &paPT, CIEC_BOOL &paQ, CIEC_TIME &paET) {
+      void evt_REQ(const CIEC_BOOL &paIN,
+                   const CIEC_TIME &paPT,
+                   CAnyBitOutputParameter<CIEC_BOOL> paQ,
+                   COutputParameter<CIEC_TIME> paET) {
+        COutputGuard guard_paQ(paQ);
+        COutputGuard guard_paET(paET);
         var_IN = paIN;
         var_PT = paPT;
         executeEvent(scmEventREQID, nullptr);
-        paQ = var_Q;
-        paET = var_ET;
+        *paQ = var_Q;
+        *paET = var_ET;
       }
 
-      void operator()(const CIEC_BOOL &paIN, const CIEC_TIME &paPT, CIEC_BOOL &paQ, CIEC_TIME &paET) {
+      void operator()(const CIEC_BOOL &paIN,
+                      const CIEC_TIME &paPT,
+                      CAnyBitOutputParameter<CIEC_BOOL> paQ,
+                      COutputParameter<CIEC_TIME> paET) {
         evt_REQ(paIN, paPT, paQ, paET);
       }
   };

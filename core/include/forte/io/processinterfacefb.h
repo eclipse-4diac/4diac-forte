@@ -24,6 +24,8 @@
 #include "forte/io/mapper/io_observer.h"
 #include "forte/esfb.h"
 #include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/forte_st_util.h"
 
 #include <string>
 
@@ -44,12 +46,17 @@ namespace forte::io {
       CIEC_ANY *getDI(size_t) override;
       CIEC_ANY *getDO(size_t) override;
 
-      void evt_INIT(const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS) {
+      void evt_INIT(const CIEC_BOOL &paQI,
+                    const CIEC_STRING &paPARAMS,
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_STRING> paSTATUS) {
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paSTATUS(paSTATUS);
         var_QI = paQI;
         var_PARAMS = paPARAMS;
         receiveInputEvent(scmEventINITID, nullptr);
-        paQO = var_QO;
-        paSTATUS = var_STATUS;
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
       }
 
       CIEC_BOOL var_QI;

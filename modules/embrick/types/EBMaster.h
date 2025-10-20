@@ -85,8 +85,10 @@ namespace forte::eclipse4diac::io::embrick {
                     const CIEC_UDINT &paBusInitSpeed,
                     const CIEC_UDINT &paBusLoopSpeed,
                     const CIEC_UINT &paSlaveUpdateInterval,
-                    CIEC_BOOL &paQO,
-                    CIEC_WSTRING &paSTATUS) {
+                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                    COutputParameter<CIEC_WSTRING> paSTATUS) {
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paSTATUS(paSTATUS);
         var_QI = paQI;
         var_BusInterface = paBusInterface;
         var_BusSelectPin = paBusSelectPin;
@@ -94,8 +96,8 @@ namespace forte::eclipse4diac::io::embrick {
         var_BusLoopSpeed = paBusLoopSpeed;
         var_SlaveUpdateInterval = paSlaveUpdateInterval;
         receiveInputEvent(scmEventINITID, nullptr);
-        paQO = var_QO;
-        paSTATUS = var_STATUS;
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
       }
 
       void operator()(const CIEC_BOOL &paQI,
@@ -104,8 +106,8 @@ namespace forte::eclipse4diac::io::embrick {
                       const CIEC_UDINT &paBusInitSpeed,
                       const CIEC_UDINT &paBusLoopSpeed,
                       const CIEC_UINT &paSlaveUpdateInterval,
-                      CIEC_BOOL &paQO,
-                      CIEC_WSTRING &paSTATUS) {
+                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                      COutputParameter<CIEC_WSTRING> paSTATUS) {
         evt_INIT(paQI, paBusInterface, paBusSelectPin, paBusInitSpeed, paBusLoopSpeed, paSlaveUpdateInterval, paQO,
                  paSTATUS);
       }
