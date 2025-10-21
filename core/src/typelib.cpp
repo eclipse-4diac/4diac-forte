@@ -217,10 +217,10 @@ namespace forte {
 
     template<typename T>
     T *findGenericTypeEntry(std::vector<T *> &vec, const StringId paTypeNameId) {
-      const std::size_t underScore = getFirstNonTypeNameUnderscorePos(paTypeNameId);
+      std::size_t underScore = getFirstNonTypeNameUnderscorePos(paTypeNameId);
       if (underScore == std::string_view::npos) {
-        // We found no underscore in the type name, so it can't be a generic type
-        return nullptr;
+        // We found no underscore in the type name, so attempt the full name for a match
+        underScore = paTypeNameId.size();
       }
 
       std::string genFBName;
