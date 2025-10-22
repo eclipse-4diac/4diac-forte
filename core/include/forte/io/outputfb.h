@@ -51,8 +51,8 @@ namespace forte::io {
       void evt_REQ(const CIEC_BOOL &paQI,
                    const CIEC_STRING &paPARAMS,
                    const T &paOUT,
-                   CAnyBitOutputParameter<CIEC_BOOL> &paQO,
-                   COutputParameter<CIEC_STRING> &paSTATUS) {
+                   CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                   COutputParameter<CIEC_STRING> paSTATUS) {
         COutputGuard guard_paQO(paQO);
         COutputGuard guard_paSTATUS(paSTATUS);
         var_QI = paQI;
