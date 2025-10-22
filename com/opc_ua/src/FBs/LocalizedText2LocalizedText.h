@@ -14,6 +14,7 @@
 
 #include "forte/funcbloc.h"
 #include "../types/forte_localizedtext.h"
+#include "forte/forte_st_util.h"
 
 namespace forte::com_infra::opc_ua {
   class FORTE_LocalizedText2LocalizedText : public CFunctionBlock {
