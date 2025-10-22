@@ -13,18 +13,11 @@
 #############################################################################
 
 target_sources(forte-utils PRIVATE
-        FB_RANDOM_fbt.cpp
-        GEN_ARRAY2ARRAY_fbt.cpp
-        GEN_ARRAY2VALUES_fbt.cpp
+        FB_RANDOM_fbt.cpp    
         GEN_CSV_WRITER_fbt.cpp
-        GEN_VALUES2ARRAY_fbt.cpp
-        GET_AT_INDEX_fbt.cpp
-        GET_STRUCT_VALUE_fbt.cpp
         GetInstancePath_fbt.cpp
         GetInstancePathAndName_fbt.cpp
         OUT_ANY_CONSOLE_fbt.cpp
-        SET_AT_INDEX_fbt.cpp
-        SET_STRUCT_VALUE_fbt.cpp
         STEST_END_fbt.cpp
         TEST_CONDITION_fbt.cpp
 )

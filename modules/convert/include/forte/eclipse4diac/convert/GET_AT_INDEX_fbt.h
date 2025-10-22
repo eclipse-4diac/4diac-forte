@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2018, fortiss GmbH
+ * Copyright (c) 2014 Profactor GmbH
  *               2023 Martin Erich Jobst
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -8,7 +8,8 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Jose Cabral - initial implementation
+ *   Matthias Plasch
+ *   - initial API and implementation and/or initial documentation
  *   Martin Jobst
  *     - refactor for ANY variant
  *******************************************************************************/
@@ -17,7 +18,7 @@
 
 #include "forte/funcbloc.h"
 #include "forte/datatypes/forte_any_variant.h"
-#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_uint.h"
 #include "forte/datatypes/forte_bool.h"
 #include "forte/iec61131_functions.h"
 #include "forte/datatypes/forte_array_common.h"
@@ -25,16 +26,14 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-namespace forte::eclipse4diac::utils {
-  class FORTE_GET_STRUCT_VALUE : public CFunctionBlock {
-      DECLARE_FIRMWARE_FB(FORTE_GET_STRUCT_VALUE)
+namespace forte::eclipse4diac::convert {
+  class FORTE_GET_AT_INDEX : public CFunctionBlock {
+      DECLARE_FIRMWARE_FB(FORTE_GET_AT_INDEX)
 
     private:
       static const TEventID scmEventREQID = 0;
 
       static const TEventID scmEventCNFID = 0;
-
-      CIEC_ANY *lookForMember(CIEC_STRUCT &paWhereToLook, char *paMemberName);
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -42,18 +41,18 @@ namespace forte::eclipse4diac::utils {
       void writeOutputData(TEventID paEIID) override;
 
     public:
-      FORTE_GET_STRUCT_VALUE(const StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_GET_AT_INDEX(const StringId paInstanceNameId, CFBContainer &paContainer);
 
-      CIEC_ANY_VARIANT var_in_struct;
-      CIEC_STRING var_member;
+      CIEC_ANY_VARIANT var_IN_ARRAY;
+      CIEC_UINT var_INDEX;
       CIEC_BOOL var_QO;
-      CIEC_ANY_VARIANT var_output;
+      CIEC_ANY_VARIANT var_OUT;
 
       CEventConnection conn_CNF;
-      CDataConnection *conn_in_struct;
-      CDataConnection *conn_member;
+      CDataConnection *conn_IN_ARRAY;
+      CDataConnection *conn_INDEX;
       COutDataConnection<CIEC_BOOL> conn_QO;
-      COutDataConnection<CIEC_ANY_VARIANT> conn_output;
+      COutDataConnection<CIEC_ANY_VARIANT> conn_OUT;
 
       CIEC_ANY *getDI(size_t) override;
       CIEC_ANY *getDO(size_t) override;
@@ -61,27 +60,27 @@ namespace forte::eclipse4diac::utils {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_REQ(const CIEC_ANY &pa_in_struct,
-                   const CIEC_STRING &pa_member,
+      void evt_REQ(const CIEC_ANY &pa_IN_ARRAY,
+                   const CIEC_UINT &pa_INDEX,
                    CAnyBitOutputParameter<CIEC_BOOL> pa_QO,
-                   COutputParameter<CIEC_ANY_VARIANT> pa_output) {
+                   COutputParameter<CIEC_ANY_VARIANT> pa_OUT) {
         COutputGuard guard_pa_QO(pa_QO);
-        COutputGuard guard_pa_output(pa_output);
-        var_in_struct = pa_in_struct;
-        var_member = pa_member;
+        COutputGuard guard_pa_OUT(pa_OUT);
+        var_IN_ARRAY = pa_IN_ARRAY;
+        var_INDEX = pa_INDEX;
         receiveInputEvent(scmEventREQID, nullptr);
         *pa_QO = var_QO;
-        pa_output->setValue(var_output.unwrap());
+        pa_OUT->setValue(var_OUT.unwrap());
       }
 
-      void operator()(const CIEC_ANY &pa_in_struct,
-                      const CIEC_STRING &pa_member,
+      void operator()(const CIEC_ANY &pa_IN_ARRAY,
+                      const CIEC_UINT &pa_INDEX,
                       CAnyBitOutputParameter<CIEC_BOOL> pa_QO,
-                      COutputParameter<CIEC_ANY_VARIANT> pa_output) {
-        evt_REQ(pa_in_struct, pa_member, pa_QO, pa_output);
+                      COutputParameter<CIEC_ANY_VARIANT> pa_OUT) {
+        evt_REQ(pa_IN_ARRAY, pa_INDEX, pa_QO, pa_OUT);
       }
 
     protected:
       void setInitialValues() override;
   };
-} // namespace forte::eclipse4diac::utils
+} // namespace forte::eclipse4diac::convert

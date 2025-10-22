@@ -21,7 +21,7 @@ class for better handling generic FBs
 #include "forte/genfb.h"
 #include "forte/datatypes/forte_array_dynamic.h"
 
-namespace forte::eclipse4diac::utils {
+namespace forte::eclipse4diac::convert {
   class GEN_ARRAY2ARRAY final : public CGenFunctionBlock<CFunctionBlock> {
       DECLARE_GENERIC_FIRMWARE_FB(GEN_ARRAY2ARRAY)
 
@@ -67,4 +67,4 @@ namespace forte::eclipse4diac::utils {
       GEN_ARRAY2ARRAY(const StringId paInstanceNameId, CFBContainer &paContainer);
       ~GEN_ARRAY2ARRAY() override = default;
   };
-} // namespace forte::eclipse4diac::utils
+} // namespace forte::eclipse4diac::convert

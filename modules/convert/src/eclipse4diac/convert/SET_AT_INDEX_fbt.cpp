@@ -14,11 +14,11 @@
  *     - refactor for ANY variant
  *******************************************************************************/
 
-#include "forte/eclipse4diac/utils/SET_AT_INDEX_fbt.h"
+#include "forte/eclipse4diac/convert/SET_AT_INDEX_fbt.h"
 
 using namespace forte::literals;
 
-namespace forte::eclipse4diac::utils {
+namespace forte::eclipse4diac::convert {
   namespace {
     const auto cDataInputNames = std::array{"IN_ARRAY"_STRID, "INDEX"_STRID, "VALUE"_STRID};
 
@@ -43,7 +43,7 @@ namespace forte::eclipse4diac::utils {
     };
   } // namespace
 
-  DEFINE_FIRMWARE_FB(FORTE_SET_AT_INDEX, "eclipse4diac::utils::SET_AT_INDEX"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_SET_AT_INDEX, "eclipse4diac::convert::SET_AT_INDEX"_STRID)
 
   FORTE_SET_AT_INDEX::FORTE_SET_AT_INDEX(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
@@ -155,4 +155,4 @@ namespace forte::eclipse4diac::utils {
     var_OUT_ARRAY.reset();
   }
 
-} // namespace forte::eclipse4diac::utils
+} // namespace forte::eclipse4diac::convert

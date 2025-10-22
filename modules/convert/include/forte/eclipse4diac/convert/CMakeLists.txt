@@ -15,21 +15,13 @@
 target_sources(forte-convert PUBLIC
         FILE_SET HEADERS
         FILES
-        BOOL2BOOL_fbt.h
-        BYTE2BYTE_fbt.h
-        DINT2DINT_fbt.h
-        DWORD2DWORD_fbt.h
+        GEN_ARRAY2ARRAY_fbt.h
+        GEN_ARRAY2VALUES_fbt.h
         GEN_STRUCT_DEMUX_fbt.h
         GEN_STRUCT_MUX_fbt.h
-        INT2INT_fbt.h
-        LREAL2LREAL_fbt.h
-        REAL2REAL_fbt.h
-        SINT2SINT_fbt.h
-        STRING2STRING_fbt.h
-        TIME2TIME_fbt.h
-        UDINT2UDINT_fbt.h
-        UINT2UINT_fbt.h
-        USINT2USINT_fbt.h
-        WORD2WORD_fbt.h
-        WSTRING2WSTRING_fbt.h
+        GEN_VALUES2ARRAY_fbt.h
+        GET_AT_INDEX_fbt.h
+        GET_STRUCT_VALUE_fbt.h
+        SET_AT_INDEX_fbt.h
+        SET_STRUCT_VALUE_fbt.h
 )

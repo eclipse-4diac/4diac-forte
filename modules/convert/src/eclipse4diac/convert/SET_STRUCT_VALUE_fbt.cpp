@@ -14,11 +14,11 @@
  *     - refactor for ANY variant
  *******************************************************************************/
 
-#include "forte/eclipse4diac/utils/SET_STRUCT_VALUE_fbt.h"
+#include "forte/eclipse4diac/convert/SET_STRUCT_VALUE_fbt.h"
 
 using namespace forte::literals;
 
-namespace forte::eclipse4diac::utils {
+namespace forte::eclipse4diac::convert {
   namespace {
     const auto cDataInputNames = std::array{"in_struct"_STRID, "member"_STRID, "element_value"_STRID};
     const auto cDataOutputNames = std::array{"out_struct"_STRID};
@@ -40,7 +40,7 @@ namespace forte::eclipse4diac::utils {
     };
   } // namespace
 
-  DEFINE_FIRMWARE_FB(FORTE_SET_STRUCT_VALUE, "eclipse4diac::utils::SET_STRUCT_VALUE"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_SET_STRUCT_VALUE, "eclipse4diac::convert::SET_STRUCT_VALUE"_STRID)
 
   FORTE_SET_STRUCT_VALUE::FORTE_SET_STRUCT_VALUE(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
@@ -169,4 +169,4 @@ namespace forte::eclipse4diac::utils {
     var_out_struct.reset();
   }
 
-} // namespace forte::eclipse4diac::utils
+} // namespace forte::eclipse4diac::convert

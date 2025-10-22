@@ -16,21 +16,21 @@
  *     - refactor for ANY variant
  *     - add generic readInputData and writeOutputData
  *******************************************************************************/
-#include "forte/eclipse4diac/utils/GEN_VALUES2ARRAY_fbt.h"
+#include "forte/eclipse4diac/convert/GEN_VALUES2ARRAY_fbt.h"
 #include <memory>
 #include "forte/arch/forte_printer.h"
 #include "forte/util/string_utils.h"
 
 using namespace forte::literals;
 
-namespace forte::eclipse4diac::utils {
+namespace forte::eclipse4diac::convert {
   namespace {
     const auto cDataOutputNames = std::array{"OUT"_STRID};
     const auto cEventInputNames = std::array{"REQ"_STRID};
     const auto cEventOutputNames = std::array{"CNF"_STRID};
   } // namespace
 
-  DEFINE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY, "eclipse4diac::utils::GEN_VALUES2ARRAY"_STRID)
+  DEFINE_GENERIC_FIRMWARE_FB(GEN_VALUES2ARRAY, "eclipse4diac::convert::GEN_VALUES2ARRAY"_STRID)
 
   GEN_VALUES2ARRAY::GEN_VALUES2ARRAY(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
@@ -113,4 +113,4 @@ namespace forte::eclipse4diac::utils {
   CDataConnection *GEN_VALUES2ARRAY::getDOConUnchecked(TPortId paDONum) {
     return (paDONum == 0) ? &conn_OUT : nullptr;
   }
-} // namespace forte::eclipse4diac::utils
+} // namespace forte::eclipse4diac::convert
