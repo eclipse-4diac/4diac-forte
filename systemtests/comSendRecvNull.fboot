@@ -10,7 +10,7 @@ EMB_RES;<Request ID="16" Action="CREATE"><FB Name="comSendRecvNullApp.SEND_RECV_
 EMB_RES;<Request ID="17" Action="CREATE"><FB Name="comSendRecvNullApp.TEST_CONDITION_4" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
 EMB_RES;<Request ID="18" Action="CREATE"><FB Name="comSendRecvNullApp.TEST_CONDITION_5" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
 EMB_RES;<Request ID="19" Action="CREATE"><FB Name="comSendRecvNullApp.F_EQ_1" Type="iec61131::comparison::F_EQ" /></Request>
-EMB_RES;<Request ID="20" Action="CREATE"><FB Name="comSendRecvNullApp.F_MOVE" Type="iec61131::arithmetic::F_MOVE_1STRING" /></Request>
+EMB_RES;<Request ID="20" Action="CREATE"><FB Name="comSendRecvNullApp.F_MOVE" Type="iec61131::selection::F_MOVE_1STRING" /></Request>
 EMB_RES;<Request ID="21" Action="CREATE"><FB Name="comSendRecvNullApp.TEST_CONDITION_6" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
 EMB_RES;<Request ID="22" Action="CREATE"><FB Name="comSendRecvNullApp.STEST_END" Type="eclipse4diac::utils::STEST_END" /></Request>
 EMB_RES;<Request ID="23" Action="WRITE"><Connection Source="TRUE" Destination="comSendRecvNullApp.SEND_RECV_1_1.QI" /></Request>

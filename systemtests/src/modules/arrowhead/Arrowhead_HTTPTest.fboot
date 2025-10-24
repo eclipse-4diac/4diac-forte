@@ -118,7 +118,7 @@ RegisterUnregister;<Request ID="117" Action="WRITE"><Connection Source="[&quot;J
 RegisterUnregister;<Request ID="118" Action="WRITE"><Connection Source="[&quot;key1=value1&quot;, &quot;key2=value2&quot;]" Destination="FieldsToArrowheadService.serviceMetadata" /></Request>
 RegisterUnregister;<Request ID="119" Action="CREATE"><FB Name="F_EQ" Type="iec61131::comparison::F_EQ" /></Request>
 RegisterUnregister;<Request ID="120" Action="WRITE"><Connection Source="WSTRING#:0" Destination="F_EQ.IN1" /></Request>
-RegisterUnregister;<Request ID="121" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+RegisterUnregister;<Request ID="121" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 RegisterUnregister;<Request ID="122" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 RegisterUnregister;<Request ID="123" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 RegisterUnregister;<Request ID="124" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry.GetPort.member" /></Request>
@@ -160,7 +160,7 @@ RegisterUnregister;<Request ID="159" Action="CREATE"><FB Name="FieldsToArrowhead
 RegisterUnregister;<Request ID="160" Action="WRITE"><Connection Source="WSTRING#systemTestName" Destination="FieldsToArrowheadSystem.systemName" /></Request>
 RegisterUnregister;<Request ID="161" Action="WRITE"><Connection Source="localhost" Destination="FieldsToArrowheadSystem.address" /></Request>
 RegisterUnregister;<Request ID="162" Action="WRITE"><Connection Source="8090" Destination="FieldsToArrowheadSystem.port" /></Request>
-RegisterUnregister;<Request ID="163" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+RegisterUnregister;<Request ID="163" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 RegisterUnregister;<Request ID="164" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 RegisterUnregister;<Request ID="165" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 RegisterUnregister;<Request ID="166" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1.GetPort.member" /></Request>
@@ -300,7 +300,7 @@ DoubleRegister;<Request ID="299" Action="WRITE"><Connection Source="0" Destinati
 DoubleRegister;<Request ID="300" Action="CREATE"><FB Name="F_EQ" Type="iec61131::comparison::F_EQ" /></Request>
 DoubleRegister;<Request ID="301" Action="WRITE"><Connection Source="WSTRING#:0" Destination="F_EQ.IN1" /></Request>
 DoubleRegister;<Request ID="302" Action="CREATE"><FB Name="ServiceNotRegisteredPos1" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
-DoubleRegister;<Request ID="303" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+DoubleRegister;<Request ID="303" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 DoubleRegister;<Request ID="304" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 DoubleRegister;<Request ID="305" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 DoubleRegister;<Request ID="306" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry.GetPort.member" /></Request>
@@ -355,7 +355,7 @@ DoubleRegister;<Request ID="354" Action="CREATE"><FB Name="SUBSCRIBE_0" Type="ie
 DoubleRegister;<Request ID="355" Action="WRITE"><Connection Source="WSTRIGN#RegisterUnregisterTestReady" Destination="SUBSCRIBE_0.ID" /></Request>
 DoubleRegister;<Request ID="356" Action="CREATE"><FB Name="PUBL_0" Type="iec61499::net::PUBL_0" /></Request>
 DoubleRegister;<Request ID="357" Action="WRITE"><Connection Source="WSTRIGN#DoubleRegisterReady" Destination="PUBL_0.ID" /></Request>
-DoubleRegister;<Request ID="358" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+DoubleRegister;<Request ID="358" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 DoubleRegister;<Request ID="359" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 DoubleRegister;<Request ID="360" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 DoubleRegister;<Request ID="361" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1.GetPort.member" /></Request>
@@ -479,7 +479,7 @@ DoubleRegister;<Request ID="478" Action="CREATE"><Connection Source="RegisterSer
 DoubleRegister;<Request ID="479" Action="START"/>
 ;<Request ID="480" Action="CREATE"><FB Name="RegisterMoreServices" Type="iec61499::system::EMB_RES" /></Request>
 RegisterMoreServices;<Request ID="481" Action="CREATE"><FB Name="E_SWITCH" Type="iec61499::events::E_SWITCH" /></Request>
-RegisterMoreServices;<Request ID="482" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+RegisterMoreServices;<Request ID="482" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 RegisterMoreServices;<Request ID="483" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 RegisterMoreServices;<Request ID="484" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 RegisterMoreServices;<Request ID="485" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1.GetPort.member" /></Request>
@@ -503,7 +503,7 @@ RegisterMoreServices;<Request ID="502" Action="CREATE"><FB Name="F_EQ" Type="iec
 RegisterMoreServices;<Request ID="503" Action="WRITE"><Connection Source="WSTRING#:0" Destination="F_EQ.IN1" /></Request>
 RegisterMoreServices;<Request ID="504" Action="CREATE"><FB Name="F_EQ_2" Type="iec61131::comparison::F_EQ" /></Request>
 RegisterMoreServices;<Request ID="505" Action="WRITE"><Connection Source="WSTRING#localhost:8090/serviceTest/start" Destination="F_EQ_2.IN1" /></Request>
-RegisterMoreServices;<Request ID="506" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+RegisterMoreServices;<Request ID="506" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 RegisterMoreServices;<Request ID="507" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 RegisterMoreServices;<Request ID="508" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 RegisterMoreServices;<Request ID="509" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry.GetPort.member" /></Request>
@@ -557,7 +557,7 @@ RegisterMoreServices;<Request ID="556" Action="CREATE"><FB Name="F_EQ_1_1" Type=
 RegisterMoreServices;<Request ID="557" Action="WRITE"><Connection Source="WSTRING#:0" Destination="F_EQ_1_1.IN1" /></Request>
 RegisterMoreServices;<Request ID="558" Action="CREATE"><FB Name="S2Reg" Type="iec61499::events::E_SR" /></Request>
 RegisterMoreServices;<Request ID="559" Action="CREATE"><FB Name="E_SWITCH_1" Type="iec61499::events::E_SWITCH" /></Request>
-RegisterMoreServices;<Request ID="560" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+RegisterMoreServices;<Request ID="560" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 RegisterMoreServices;<Request ID="561" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 RegisterMoreServices;<Request ID="562" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 RegisterMoreServices;<Request ID="563" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1_1.GetPort.member" /></Request>
@@ -571,7 +571,7 @@ RegisterMoreServices;<Request ID="570" Action="WRITE"><Connection Source="STRING
 RegisterMoreServices;<Request ID="571" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.ServiceRegistryEntry2ServiceRegistryEntry" Type="ServiceRegistryEntry2ServiceRegistryEntry" /></Request>
 RegisterMoreServices;<Request ID="572" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.WS2WS_1" Type="iec61131::conversion::F_WSTRING_TO_STRING" /></Request>
 RegisterMoreServices;<Request ID="573" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.IpPortURI" Type="APPEND_STRING_2" /></Request>
-RegisterMoreServices;<Request ID="574" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_2.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+RegisterMoreServices;<Request ID="574" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_2.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 RegisterMoreServices;<Request ID="575" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_2.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 RegisterMoreServices;<Request ID="576" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_2.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 RegisterMoreServices;<Request ID="577" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_2.GetPort.member" /></Request>
@@ -889,7 +889,7 @@ SameServiceTwice;<Request ID="888" Action="CREATE"><FB Name="QueryServiceHTTPSub
 SameServiceTwice;<Request ID="889" Action="CREATE"><FB Name="QueryServiceHTTPSub.QueryServiceHTTP" Type="QueryServiceHTTP" /></Request>
 SameServiceTwice;<Request ID="890" Action="CREATE"><FB Name="GET_AT_INDEX_1" Type="eclipse4diac::convert::GET_AT_INDEX" /></Request>
 SameServiceTwice;<Request ID="891" Action="WRITE"><Connection Source="1" Destination="GET_AT_INDEX_1.INDEX" /></Request>
-SameServiceTwice;<Request ID="892" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+SameServiceTwice;<Request ID="892" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 SameServiceTwice;<Request ID="893" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 SameServiceTwice;<Request ID="894" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 SameServiceTwice;<Request ID="895" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry.GetPort.member" /></Request>
@@ -905,7 +905,7 @@ SameServiceTwice;<Request ID="904" Action="CREATE"><FB Name="GetEndpointFromServ
 SameServiceTwice;<Request ID="905" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.IpPortURI" Type="APPEND_STRING_2" /></Request>
 SameServiceTwice;<Request ID="906" Action="CREATE"><FB Name="GET_AT_INDEX" Type="eclipse4diac::convert::GET_AT_INDEX" /></Request>
 SameServiceTwice;<Request ID="907" Action="WRITE"><Connection Source="0" Destination="GET_AT_INDEX.INDEX" /></Request>
-SameServiceTwice;<Request ID="908" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+SameServiceTwice;<Request ID="908" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 SameServiceTwice;<Request ID="909" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 SameServiceTwice;<Request ID="910" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 SameServiceTwice;<Request ID="911" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1.GetPort.member" /></Request>
@@ -951,8 +951,8 @@ SameServiceTwice;<Request ID="950" Action="CREATE"><FB Name="E_MERGE_1" Type="ie
 SameServiceTwice;<Request ID="951" Action="CREATE"><FB Name="F_AND_1" Type="iec61131::bitwiseOperators::F_AND" /></Request>
 SameServiceTwice;<Request ID="952" Action="CREATE"><FB Name="F_OR" Type="iec61131::bitwiseOperators::F_OR" /></Request>
 SameServiceTwice;<Request ID="953" Action="CREATE"><FB Name="F_AND_1_1" Type="iec61131::bitwiseOperators::F_AND" /></Request>
-SameServiceTwice;<Request ID="954" Action="CREATE"><FB Name="BOOL2BOOL" Type="iec61131::arithmetic::F_MOVE_1BOOL" /></Request>
-SameServiceTwice;<Request ID="955" Action="CREATE"><FB Name="BOOL2BOOL_1" Type="iec61131::arithmetic::F_MOVE_1BOOL" /></Request>
+SameServiceTwice;<Request ID="954" Action="CREATE"><FB Name="BOOL2BOOL" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
+SameServiceTwice;<Request ID="955" Action="CREATE"><FB Name="BOOL2BOOL_1" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
 SameServiceTwice;<Request ID="956" Action="CREATE"><FB Name="FieldsToArrowheadSystem_1" Type="FieldsToArrowheadSystem" /></Request>
 SameServiceTwice;<Request ID="957" Action="WRITE"><Connection Source="WSTRING#systemTestName2" Destination="FieldsToArrowheadSystem_1.systemName" /></Request>
 SameServiceTwice;<Request ID="958" Action="WRITE"><Connection Source="localhost" Destination="FieldsToArrowheadSystem_1.address" /></Request>
@@ -1173,7 +1173,7 @@ VersionInterfaceAndMetadata;<Request ID="1,172" Action="CREATE"><FB Name="Fields
 VersionInterfaceAndMetadata;<Request ID="1,173" Action="WRITE"><Connection Source="WSTRING#serviceTest" Destination="FieldsToArrowheadService.serviceDefinition" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,174" Action="WRITE"><Connection Source="[&quot;JSON&quot;, &quot;XML&quot;]" Destination="FieldsToArrowheadService.interfaces" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,175" Action="WRITE"><Connection Source="[&quot;key1=value1&quot;, &quot;key2=value2&quot;]" Destination="FieldsToArrowheadService.serviceMetadata" /></Request>
-VersionInterfaceAndMetadata;<Request ID="1,176" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+VersionInterfaceAndMetadata;<Request ID="1,176" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,177" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,178" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,179" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry.GetPort.member" /></Request>
@@ -1202,7 +1202,7 @@ VersionInterfaceAndMetadata;<Request ID="1,201" Action="CREATE"><FB Name="QueryS
 VersionInterfaceAndMetadata;<Request ID="1,202" Action="CREATE"><FB Name="QueryServiceHTTPSub_1.QueryServiceHTTP" Type="QueryServiceHTTP" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,203" Action="CREATE"><FB Name="GET_AT_INDEX_1" Type="eclipse4diac::convert::GET_AT_INDEX" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,204" Action="WRITE"><Connection Source="0" Destination="GET_AT_INDEX_1.INDEX" /></Request>
-VersionInterfaceAndMetadata;<Request ID="1,205" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+VersionInterfaceAndMetadata;<Request ID="1,205" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,206" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,207" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,208" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1.GetPort.member" /></Request>
@@ -1222,7 +1222,7 @@ VersionInterfaceAndMetadata;<Request ID="1,221" Action="CREATE"><FB Name="OneInt
 VersionInterfaceAndMetadata;<Request ID="1,222" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_1.FieldsToServiceQueryForm" Type="FieldsToServiceQueryForm" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,223" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_1.QueryService" Type="QueryService" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,224" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_1.QueryServiceHTTP" Type="QueryServiceHTTP" /></Request>
-VersionInterfaceAndMetadata;<Request ID="1,225" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+VersionInterfaceAndMetadata;<Request ID="1,225" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,226" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,227" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,228" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1_1.GetPort.member" /></Request>
@@ -1248,7 +1248,7 @@ VersionInterfaceAndMetadata;<Request ID="1,247" Action="CREATE"><FB Name="OneInt
 VersionInterfaceAndMetadata;<Request ID="1,248" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_2.FieldsToServiceQueryForm" Type="FieldsToServiceQueryForm" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,249" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_2.QueryService" Type="QueryService" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,250" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_2.QueryServiceHTTP" Type="QueryServiceHTTP" /></Request>
-VersionInterfaceAndMetadata;<Request ID="1,251" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+VersionInterfaceAndMetadata;<Request ID="1,251" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,252" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,253" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,254" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1_2.GetPort.member" /></Request>
@@ -1276,7 +1276,7 @@ VersionInterfaceAndMetadata;<Request ID="1,275" Action="WRITE"><Connection Sourc
 VersionInterfaceAndMetadata;<Request ID="1,276" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_2_1.FieldsToServiceQueryForm" Type="FieldsToServiceQueryForm" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,277" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_2_1.QueryService" Type="QueryService" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,278" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_2_1.QueryServiceHTTP" Type="QueryServiceHTTP" /></Request>
-VersionInterfaceAndMetadata;<Request ID="1,279" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+VersionInterfaceAndMetadata;<Request ID="1,279" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,280" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,281" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,282" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1_2_1.GetPort.member" /></Request>
@@ -1299,7 +1299,7 @@ VersionInterfaceAndMetadata;<Request ID="1,298" Action="WRITE"><Connection Sourc
 VersionInterfaceAndMetadata;<Request ID="1,299" Action="CREATE"><FB Name="SUBL_0" Type="iec61499::net::SUBL_0" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,300" Action="WRITE"><Connection Source="WSTRIGN#sameServiceTwiceReady" Destination="SUBL_0.ID" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,301" Action="CREATE"><FB Name="OnlyOneMetadata" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
-VersionInterfaceAndMetadata;<Request ID="1,302" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_1.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+VersionInterfaceAndMetadata;<Request ID="1,302" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_1.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,303" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_1.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,304" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_1.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,305" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1_2_1_1.GetPort.member" /></Request>
@@ -1327,7 +1327,7 @@ VersionInterfaceAndMetadata;<Request ID="1,326" Action="CREATE"><FB Name="QueryS
 VersionInterfaceAndMetadata;<Request ID="1,327" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_2_1_1_1.FieldsToServiceQueryForm" Type="FieldsToServiceQueryForm" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,328" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_2_1_1_1.QueryService" Type="QueryService" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,329" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_2_1_1_1.QueryServiceHTTP" Type="QueryServiceHTTP" /></Request>
-VersionInterfaceAndMetadata;<Request ID="1,330" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_1_1.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+VersionInterfaceAndMetadata;<Request ID="1,330" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_1_1.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,331" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_1_1.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,332" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_1_1.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,333" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1_2_1_1_1.GetPort.member" /></Request>
@@ -1354,7 +1354,7 @@ VersionInterfaceAndMetadata;<Request ID="1,353" Action="WRITE"><Connection Sourc
 VersionInterfaceAndMetadata;<Request ID="1,354" Action="WRITE"><Connection Source="[&quot;key1=value1&quot;, &quot;key2=value2&quot;]" Destination="FieldsToArrowheadService_1_2_1_2.serviceMetadata" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,355" Action="CREATE"><FB Name="F_EQ_4_1_2_1_2" Type="iec61131::comparison::F_EQ" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,356" Action="WRITE"><Connection Source="WSTRING#:0" Destination="F_EQ_4_1_2_1_2.IN1" /></Request>
-VersionInterfaceAndMetadata;<Request ID="1,357" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_2.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+VersionInterfaceAndMetadata;<Request ID="1,357" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_2.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,358" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_2.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,359" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_2.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,360" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1_2_1_2.GetPort.member" /></Request>
@@ -1383,7 +1383,7 @@ VersionInterfaceAndMetadata;<Request ID="1,382" Action="CREATE"><FB Name="WrongM
 VersionInterfaceAndMetadata;<Request ID="1,383" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_2_1_1_1_1.FieldsToServiceQueryForm" Type="FieldsToServiceQueryForm" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,384" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_2_1_1_1_1.QueryService" Type="QueryService" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,385" Action="CREATE"><FB Name="QueryServiceHTTPSub_1_2_1_1_1_1.QueryServiceHTTP" Type="QueryServiceHTTP" /></Request>
-VersionInterfaceAndMetadata;<Request ID="1,386" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_1_1_1.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+VersionInterfaceAndMetadata;<Request ID="1,386" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_1_1_1.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,387" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_1_1_1.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,388" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_2_1_1_1_1.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 VersionInterfaceAndMetadata;<Request ID="1,389" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1_2_1_1_1_1.GetPort.member" /></Request>
@@ -1774,7 +1774,7 @@ VersionInterfaceAndMetadata;<Request ID="1,773" Action="START"/>
 ;<Request ID="1,774" Action="CREATE"><FB Name="RegisterMoreServicesSubApp" Type="iec61499::system::EMB_RES" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,775" Action="CREATE"><FB Name="SUBL_0" Type="iec61499::net::SUBL_0" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,776" Action="WRITE"><Connection Source="WSTRIGN#versionEnded" Destination="SUBL_0.ID" /></Request>
-RegisterMoreServicesSubApp;<Request ID="1,777" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+RegisterMoreServicesSubApp;<Request ID="1,777" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,778" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,779" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,780" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1.GetPort.member" /></Request>
@@ -1790,7 +1790,7 @@ RegisterMoreServicesSubApp;<Request ID="1,789" Action="CREATE"><FB Name="GetEndp
 RegisterMoreServicesSubApp;<Request ID="1,790" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1.IpPortURI" Type="APPEND_STRING_2" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,791" Action="CREATE"><FB Name="GET_AT_INDEX_1" Type="eclipse4diac::convert::GET_AT_INDEX" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,792" Action="WRITE"><Connection Source="1" Destination="GET_AT_INDEX_1.INDEX" /></Request>
-RegisterMoreServicesSubApp;<Request ID="1,793" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+RegisterMoreServicesSubApp;<Request ID="1,793" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,794" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,795" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,796" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry.GetPort.member" /></Request>
@@ -1833,7 +1833,7 @@ RegisterMoreServicesSubApp;<Request ID="1,832" Action="WRITE"><Connection Source
 RegisterMoreServicesSubApp;<Request ID="1,833" Action="CREATE"><FB Name="Sequencer.E_SWITCH_1" Type="iec61499::events::E_SWITCH" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,834" Action="CREATE"><FB Name="GET_AT_INDEX_1_1" Type="eclipse4diac::convert::GET_AT_INDEX" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,835" Action="WRITE"><Connection Source="1" Destination="GET_AT_INDEX_1_1.INDEX" /></Request>
-RegisterMoreServicesSubApp;<Request ID="1,836" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+RegisterMoreServicesSubApp;<Request ID="1,836" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,837" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,838" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,839" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_1_1.GetPort.member" /></Request>
@@ -1847,7 +1847,7 @@ RegisterMoreServicesSubApp;<Request ID="1,846" Action="WRITE"><Connection Source
 RegisterMoreServicesSubApp;<Request ID="1,847" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.ServiceRegistryEntry2ServiceRegistryEntry" Type="ServiceRegistryEntry2ServiceRegistryEntry" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,848" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.WS2WS_1" Type="iec61131::conversion::F_WSTRING_TO_STRING" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,849" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_1_1.IpPortURI" Type="APPEND_STRING_2" /></Request>
-RegisterMoreServicesSubApp;<Request ID="1,850" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_2.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+RegisterMoreServicesSubApp;<Request ID="1,850" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_2.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,851" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_2.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,852" Action="CREATE"><FB Name="GetEndpointFromServiceRegistryEntry_2.GetPort" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,853" Action="WRITE"><Connection Source="STRING#provider.port" Destination="GetEndpointFromServiceRegistryEntry_2.GetPort.member" /></Request>
@@ -1904,7 +1904,7 @@ RegisterMoreServicesSubApp;<Request ID="1,903" Action="CREATE"><FB Name="Registe
 RegisterMoreServicesSubApp;<Request ID="1,904" Action="CREATE"><FB Name="RegisterManyServices.GetName" Type="eclipse4diac::convert::GET_AT_INDEX" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,905" Action="CREATE"><FB Name="RegisterManyServices.E_CTU" Type="iec61499::events::E_CTU" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,906" Action="CREATE"><FB Name="RegisterManyServices.E_SWITCH" Type="iec61499::events::E_SWITCH" /></Request>
-RegisterMoreServicesSubApp;<Request ID="1,907" Action="CREATE"><FB Name="RegisterManyServices.WSTRING2WSTRING" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+RegisterMoreServicesSubApp;<Request ID="1,907" Action="CREATE"><FB Name="RegisterManyServices.WSTRING2WSTRING" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,908" Action="CREATE"><FB Name="RegisterManyServices.IsLast" Type="iec61131::comparison::F_EQ" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,909" Action="WRITE"><Connection Source="WSTRING#&quot;&quot;" Destination="RegisterManyServices.IsLast.IN1" /></Request>
 RegisterMoreServicesSubApp;<Request ID="1,910" Action="CREATE"><FB Name="RegisterManyServices.GetURI" Type="eclipse4diac::convert::GET_AT_INDEX" /></Request>
@@ -2190,7 +2190,7 @@ OrchestratorNoRule;<Request ID="2,189" Action="WRITE"><Connection Source="WSTRIN
 OrchestratorNoRule;<Request ID="2,190" Action="WRITE"><Connection Source="[&quot;JSON&quot;, &quot;XML&quot;]" Destination="Service1.interfaces" /></Request>
 OrchestratorNoRule;<Request ID="2,191" Action="WRITE"><Connection Source="[&quot;key1=value1&quot;, &quot;key2=value2&quot;]" Destination="Service1.serviceMetadata" /></Request>
 OrchestratorNoRule;<Request ID="2,192" Action="CREATE"><FB Name="GetEndpointFromOrchestrationForm.S2WS" Type="iec61131::conversion::F_STRING_TO_WSTRING" /></Request>
-OrchestratorNoRule;<Request ID="2,193" Action="CREATE"><FB Name="GetEndpointFromOrchestrationForm.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+OrchestratorNoRule;<Request ID="2,193" Action="CREATE"><FB Name="GetEndpointFromOrchestrationForm.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 OrchestratorNoRule;<Request ID="2,194" Action="CREATE"><FB Name="GetEndpointFromOrchestrationForm.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 OrchestratorNoRule;<Request ID="2,195" Action="CREATE"><FB Name="GetEndpointFromOrchestrationForm.GetAddress" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 OrchestratorNoRule;<Request ID="2,196" Action="WRITE"><Connection Source="STRING#provider.address" Destination="GetEndpointFromOrchestrationForm.GetAddress.member" /></Request>
@@ -2201,7 +2201,7 @@ OrchestratorNoRule;<Request ID="2,200" Action="WRITE"><Connection Source="STRING
 OrchestratorNoRule;<Request ID="2,201" Action="CREATE"><FB Name="GetEndpointFromOrchestrationForm.IpPort" Type="APPEND_STRING_3" /></Request>
 OrchestratorNoRule;<Request ID="2,202" Action="WRITE"><Connection Source="STRING#:" Destination="GetEndpointFromOrchestrationForm.IpPort.IN_2" /></Request>
 OrchestratorNoRule;<Request ID="2,203" Action="CREATE"><FB Name="GetEndpointFromOrchestrationForm.OrchestrationForm2OrchestrationForm" Type="OrchestrationForm2OrchestrationForm" /></Request>
-OrchestratorNoRule;<Request ID="2,204" Action="CREATE"><FB Name="GetEndpointFromOrchestrationForm.WS2WS_1" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+OrchestratorNoRule;<Request ID="2,204" Action="CREATE"><FB Name="GetEndpointFromOrchestrationForm.WS2WS_1" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 OrchestratorNoRule;<Request ID="2,205" Action="CREATE"><FB Name="GetEndpointFromOrchestrationForm.IpPortURI" Type="APPEND_STRING_2" /></Request>
 OrchestratorNoRule;<Request ID="2,206" Action="CREATE"><FB Name="F_EQ" Type="iec61131::comparison::F_EQ" /></Request>
 OrchestratorNoRule;<Request ID="2,207" Action="WRITE"><Connection Source="WSTRING#:0" Destination="F_EQ.IN1" /></Request>
@@ -2401,10 +2401,10 @@ OrchestrationWithRules;<Request ID="2,400" Action="CREATE"><FB Name="CLIENT_1_2_
 OrchestrationWithRules;<Request ID="2,401" Action="WRITE"><Connection Source="1" Destination="CLIENT_1_2_1.QI" /></Request>
 OrchestrationWithRules;<Request ID="2,402" Action="WRITE"><Connection Source="http[127.0.0.1:8440/orchestrator/mgmt/store; POST; application/json]]" Destination="CLIENT_1_2_1.ID" /></Request>
 OrchestrationWithRules;<Request ID="2,403" Action="WRITE"><Connection Source="STRING#[{&quot;service&quot; : {&quot;serviceDefinition&quot; : &quot;serviceTest&quot;,&quot;interfaces&quot; : [ &quot;XML&quot;, &quot;JSON&quot;],&quot;serviceMetadata&quot; : { &quot;key1&quot; : &quot;value1&quot;, &quot;key2&quot; : &quot;value2&quot;}},&quot;consumer&quot; : {&quot;systemName&quot; : &quot;systemTestName&quot;,&quot;address&quot; :&quot;localhost&quot;,&quot;port&quot; : 8090, &quot;authenticationInfo&quot; : &quot;&quot;},&quot;providerSystem&quot; : {&quot;systemName&quot; : &quot;systemTestName&quot;,&quot;address&quot; : &quot;localhost&quot;,&quot;port&quot; : 8090,&quot;authenticationInfo&quot; : &quot;&quot;},&quot;priority&quot; : 1,&quot;defaultEntry&quot; : true,&quot;name&quot; : &quot;&quot;,&quot;lastUpdated&quot; : &quot;&quot;,&quot;instruction&quot; : &quot;&quot;,&quot;attributes&quot; : { },&quot;serviceURI&quot; : &quot;serviceTest/start&quot;} ]" Destination="CLIENT_1_2_1.SD_1" /></Request>
-OrchestrationWithRules;<Request ID="2,404" Action="CREATE"><FB Name="STRING2STRING" Type="iec61131::arithmetic::F_MOVE_1STRING" /></Request>
+OrchestrationWithRules;<Request ID="2,404" Action="CREATE"><FB Name="STRING2STRING" Type="iec61131::selection::F_MOVE_1STRING" /></Request>
 OrchestrationWithRules;<Request ID="2,405" Action="CREATE"><FB Name="GetEndpointFromOrchestrationHTTPPFull.GET_AT_INDEX" Type="eclipse4diac::convert::GET_AT_INDEX" /></Request>
 OrchestrationWithRules;<Request ID="2,406" Action="CREATE"><FB Name="GetEndpointFromOrchestrationHTTPPFull.GetEndpointFromOrchestrationForm.S2WS" Type="iec61131::conversion::F_STRING_TO_WSTRING" /></Request>
-OrchestrationWithRules;<Request ID="2,407" Action="CREATE"><FB Name="GetEndpointFromOrchestrationHTTPPFull.GetEndpointFromOrchestrationForm.WS2WS" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+OrchestrationWithRules;<Request ID="2,407" Action="CREATE"><FB Name="GetEndpointFromOrchestrationHTTPPFull.GetEndpointFromOrchestrationForm.WS2WS" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 OrchestrationWithRules;<Request ID="2,408" Action="CREATE"><FB Name="GetEndpointFromOrchestrationHTTPPFull.GetEndpointFromOrchestrationForm.DI2S" Type="iec61131::conversion::F_DINT_TO_STRING" /></Request>
 OrchestrationWithRules;<Request ID="2,409" Action="CREATE"><FB Name="GetEndpointFromOrchestrationHTTPPFull.GetEndpointFromOrchestrationForm.GetAddress" Type="eclipse4diac::convert::GET_STRUCT_VALUE" /></Request>
 OrchestrationWithRules;<Request ID="2,410" Action="WRITE"><Connection Source="STRING#provider.address" Destination="GetEndpointFromOrchestrationHTTPPFull.GetEndpointFromOrchestrationForm.GetAddress.member" /></Request>
@@ -2415,7 +2415,7 @@ OrchestrationWithRules;<Request ID="2,414" Action="WRITE"><Connection Source="ST
 OrchestrationWithRules;<Request ID="2,415" Action="CREATE"><FB Name="GetEndpointFromOrchestrationHTTPPFull.GetEndpointFromOrchestrationForm.IpPort" Type="APPEND_STRING_3" /></Request>
 OrchestrationWithRules;<Request ID="2,416" Action="WRITE"><Connection Source="STRING#:" Destination="GetEndpointFromOrchestrationHTTPPFull.GetEndpointFromOrchestrationForm.IpPort.IN_2" /></Request>
 OrchestrationWithRules;<Request ID="2,417" Action="CREATE"><FB Name="GetEndpointFromOrchestrationHTTPPFull.GetEndpointFromOrchestrationForm.OrchestrationForm2OrchestrationForm" Type="OrchestrationForm2OrchestrationForm" /></Request>
-OrchestrationWithRules;<Request ID="2,418" Action="CREATE"><FB Name="GetEndpointFromOrchestrationHTTPPFull.GetEndpointFromOrchestrationForm.WS2WS_1" Type="iec61131::arithmetic::F_MOVE_1WSTRING" /></Request>
+OrchestrationWithRules;<Request ID="2,418" Action="CREATE"><FB Name="GetEndpointFromOrchestrationHTTPPFull.GetEndpointFromOrchestrationForm.WS2WS_1" Type="iec61131::selection::F_MOVE_1WSTRING" /></Request>
 OrchestrationWithRules;<Request ID="2,419" Action="CREATE"><FB Name="GetEndpointFromOrchestrationHTTPPFull.GetEndpointFromOrchestrationForm.IpPortURI" Type="APPEND_STRING_2" /></Request>
 OrchestrationWithRules;<Request ID="2,420" Action="CREATE"><FB Name="GetEndpointFromOrchestrationHTTPPFull.RequestOrchestrationHTTPPFull.FieldsToArrowheadCloud" Type="FieldsToArrowheadCloud" /></Request>
 OrchestrationWithRules;<Request ID="2,421" Action="CREATE"><FB Name="GetEndpointFromOrchestrationHTTPPFull.RequestOrchestrationHTTPPFull.FieldsToArrowheadSystem" Type="FieldsToArrowheadSystem" /></Request>

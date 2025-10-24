@@ -24,7 +24,7 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
-namespace forte::iec61131::arithmetic {
+namespace forte::iec61131::selection {
   class FORTE_F_MOVE : public CFunctionBlock {
       DECLARE_FIRMWARE_FB(FORTE_F_MOVE)
 
@@ -68,4 +68,4 @@ namespace forte::iec61131::arithmetic {
     protected:
       void setInitialValues() override;
   };
-} // namespace forte::iec61131::arithmetic
+} // namespace forte::iec61131::selection

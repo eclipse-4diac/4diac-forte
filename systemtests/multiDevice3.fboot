@@ -1,6 +1,6 @@
 ;<Request ID="1" Action="CREATE"><FB Name="multiDeviceEnd" Type="iec61499::system::EMB_RES" /></Request>
 multiDeviceEnd;<Request ID="2" Action="CREATE"><FB Name="STEST_END" Type="eclipse4diac::utils::STEST_END" /></Request>
-multiDeviceEnd;<Request ID="3" Action="CREATE"><FB Name="DINT2DINT_2" Type="iec61131::arithmetic::F_MOVE_1DINT" /></Request>
+multiDeviceEnd;<Request ID="3" Action="CREATE"><FB Name="DINT2DINT_2" Type="iec61131::selection::F_MOVE_1DINT" /></Request>
 multiDeviceEnd;<Request ID="4" Action="CREATE"><FB Name="F_EQ" Type="iec61131::comparison::F_EQ" /></Request>
 multiDeviceEnd;<Request ID="5" Action="WRITE"><Connection Source="DINT#26" Destination="F_EQ.IN2" /></Request>
 multiDeviceEnd;<Request ID="6" Action="CREATE"><FB Name="Device3" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>

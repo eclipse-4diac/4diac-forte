@@ -22,7 +22,6 @@ target_sources(forte-iec61131-3 PUBLIC
         F_DIVTIME_fbt.h
         F_EXPT_fbt.h
         F_MOD_fbt.h
-        F_MOVE_fbt.h
         F_MUL_fbt.h
         F_MULTIME_fbt.h
         F_SUB_DATE_DATE_fbt.h
@@ -33,5 +32,4 @@ target_sources(forte-iec61131-3 PUBLIC
         F_SUB_TOD_TOD_fbt.h
         F_TRUNC_fbt.h
         GEN_ADD_fbt.h
-        GEN_FORTE_F_MOVE_fbt.h
 )

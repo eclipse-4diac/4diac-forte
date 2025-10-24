@@ -3,7 +3,7 @@ normalExecution;<Request ID="2" Action="CREATE"><FB Name="NormalExecution.writeN
 normalExecution;<Request ID="3" Action="CREATE"><FB Name="NormalExecution.CSV_WRITER_1" Type="eclipse4diac::utils::CSV_WRITER_1" /></Request>
 normalExecution;<Request ID="4" Action="WRITE"><Connection Source="&apos;csvWriteTest.csv&apos;" Destination="NormalExecution.CSV_WRITER_1.FILE_NAME" /></Request>
 normalExecution;<Request ID="5" Action="CREATE"><FB Name="NormalExecution.InitTest" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
-normalExecution;<Request ID="6" Action="CREATE"><FB Name="NormalExecution.STRING2STRING" Type="iec61131::arithmetic::F_MOVE_1STRING" /></Request>
+normalExecution;<Request ID="6" Action="CREATE"><FB Name="NormalExecution.STRING2STRING" Type="iec61131::selection::F_MOVE_1STRING" /></Request>
 normalExecution;<Request ID="7" Action="WRITE"><Connection Source="&apos;csvFirstValue&apos;" Destination="NormalExecution.STRING2STRING.IN" /></Request>
 normalExecution;<Request ID="8" Action="CREATE"><FB Name="NormalExecution.DeInitTest" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
 normalExecution;<Request ID="9" Action="CREATE"><FB Name="NormalExecution.endNormal" Type="eclipse4diac::utils::STEST_END" /></Request>

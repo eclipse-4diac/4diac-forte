@@ -1,6 +1,6 @@
 ;<Request ID="1" Action="CREATE"><FB Name="EMB_RES" Type="iec61499::system::EMB_RES" /></Request>
-EMB_RES;<Request ID="2" Action="CREATE"><FB Name="negatingConnectionApp.BOOL2BOOL_1" Type="iec61131::arithmetic::F_MOVE_1BOOL" /></Request>
-EMB_RES;<Request ID="3" Action="CREATE"><FB Name="negatingConnectionApp.BOOL2BOOL" Type="iec61131::arithmetic::F_MOVE_1BOOL" /></Request>
+EMB_RES;<Request ID="2" Action="CREATE"><FB Name="negatingConnectionApp.BOOL2BOOL_1" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
+EMB_RES;<Request ID="3" Action="CREATE"><FB Name="negatingConnectionApp.BOOL2BOOL" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
 EMB_RES;<Request ID="4" Action="WRITE"><Connection Source="FALSE" Destination="negatingConnectionApp.BOOL2BOOL.IN" /></Request>
 EMB_RES;<Request ID="5" Action="CREATE"><FB Name="negatingConnectionApp.TEST_CONDITION" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
 EMB_RES;<Request ID="6" Action="CREATE"><FB Name="negatingConnectionApp.STEST_END" Type="eclipse4diac::utils::STEST_END" /></Request>

@@ -11,9 +11,9 @@ simpleClientTest;<Request ID="10" Action="CREATE"><FB Name="ReturnetValueOK" Typ
 simpleClientTest;<Request ID="11" Action="CREATE"><FB Name="F_EQ" Type="iec61131::comparison::F_EQ" /></Request>
 simpleClientTest;<Request ID="12" Action="WRITE"><Connection Source="DINT#26" Destination="F_EQ.IN2" /></Request>
 simpleClientTest;<Request ID="13" Action="CREATE"><FB Name="STEST_END" Type="eclipse4diac::utils::STEST_END" /></Request>
-simpleClientTest;<Request ID="14" Action="CREATE"><FB Name="DINT2DINT" Type="iec61131::arithmetic::F_MOVE_1DINT" /></Request>
+simpleClientTest;<Request ID="14" Action="CREATE"><FB Name="DINT2DINT" Type="iec61131::selection::F_MOVE_1DINT" /></Request>
 simpleClientTest;<Request ID="15" Action="WRITE"><Connection Source="DINT#26" Destination="DINT2DINT.IN" /></Request>
-simpleClientTest;<Request ID="16" Action="CREATE"><FB Name="DINT2DINT_2" Type="iec61131::arithmetic::F_MOVE_1DINT" /></Request>
+simpleClientTest;<Request ID="16" Action="CREATE"><FB Name="DINT2DINT_2" Type="iec61131::selection::F_MOVE_1DINT" /></Request>
 simpleClientTest;<Request ID="17" Action="CREATE"><Connection Source="START.COLD" Destination="PUBLISH_1.INIT" /></Request>
 simpleClientTest;<Request ID="18" Action="CREATE"><Connection Source="START.WARM" Destination="PUBLISH_1.INIT" /></Request>
 simpleClientTest;<Request ID="19" Action="CREATE"><Connection Source="PUBLISH_1.INITO" Destination="SUBSCRIBE_1.INIT" /></Request>

@@ -20,7 +20,6 @@ target_sources(forte-iec61131-3 PRIVATE
         F_DIVTIME_fbt.cpp
         F_EXPT_fbt.cpp
         F_MOD_fbt.cpp
-        F_MOVE_fbt.cpp
         F_MUL_fbt.cpp
         F_MULTIME_fbt.cpp
         F_SUB_DATE_DATE_fbt.cpp
@@ -31,5 +30,4 @@ target_sources(forte-iec61131-3 PRIVATE
         F_SUB_TOD_TOD_fbt.cpp
         F_TRUNC_fbt.cpp
         GEN_ADD_fbt.cpp
-        GEN_FORTE_F_MOVE_fbt.cpp
 )

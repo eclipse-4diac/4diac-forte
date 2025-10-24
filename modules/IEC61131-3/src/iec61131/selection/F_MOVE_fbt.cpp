@@ -14,11 +14,11 @@
  *     - refactor for ANY variant
  *******************************************************************************/
 
-#include "forte/iec61131/arithmetic/F_MOVE_fbt.h"
+#include "forte/iec61131/selection/F_MOVE_fbt.h"
 
 using namespace forte::literals;
 
-namespace forte::iec61131::arithmetic {
+namespace forte::iec61131::selection {
   namespace {
     const auto cDataInputNames = std::array{"IN"_STRID};
 
@@ -43,7 +43,7 @@ namespace forte::iec61131::arithmetic {
     };
   } // namespace
 
-  DEFINE_FIRMWARE_FB(FORTE_F_MOVE, "iec61131::arithmetic::F_MOVE"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_F_MOVE, "iec61131::selection::F_MOVE"_STRID)
 
   FORTE_F_MOVE::FORTE_F_MOVE(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
@@ -122,4 +122,4 @@ namespace forte::iec61131::arithmetic {
     var_OUT.reset();
   }
 
-} // namespace forte::iec61131::arithmetic
+} // namespace forte::iec61131::selection

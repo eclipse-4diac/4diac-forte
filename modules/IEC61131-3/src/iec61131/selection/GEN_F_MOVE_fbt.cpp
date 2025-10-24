@@ -11,7 +11,7 @@
  *   Alois Zoitl - refactored from F_MOVE
  *******************************************************************************/
 
-#include "forte/iec61131/arithmetic/GEN_FORTE_F_MOVE_fbt.h"
+#include "forte/iec61131/selection/GEN_F_MOVE_fbt.h"
 #include <memory>
 #include "forte/eventconn.h"
 #include "forte/datatypes/forte_any.h"
@@ -20,7 +20,7 @@
 
 using namespace forte::literals;
 
-namespace forte::iec61131::arithmetic {
+namespace forte::iec61131::selection {
   namespace {
     const auto cDataInputNames = std::array{"IN"_STRID};
     const auto cDataOutputNames = std::array{"OUT"_STRID};
@@ -28,34 +28,34 @@ namespace forte::iec61131::arithmetic {
     const auto cEventOutputNames = std::array{"CNF"_STRID};
   } // namespace
 
-  DEFINE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE, "iec61131::arithmetic::GEN_F_MOVE"_STRID)
+  DEFINE_GENERIC_FIRMWARE_FB(GEN_F_MOVE, "iec61131::selection::GEN_F_MOVE"_STRID)
 
-  GEN_FORTE_F_MOVE::GEN_FORTE_F_MOVE(const StringId paInstanceNameId, CFBContainer &paContainer) :
+  GEN_F_MOVE::GEN_F_MOVE(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
       conn_CNF(*this, 0),
       conn_IN(nullptr) {
   }
 
-  void GEN_FORTE_F_MOVE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  void GEN_F_MOVE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
     if (paEIID == scmEventREQID) {
       // as in and out are managed in one var we only need to send the output event
       sendOutputEvent(scmEventCNFID, paECET);
     }
   }
 
-  void GEN_FORTE_F_MOVE::readInputData(TEventID paEIID) {
+  void GEN_F_MOVE::readInputData(TEventID paEIID) {
     if (paEIID == scmEventREQID) {
       readData(0, *mIn, conn_IN);
     }
   }
 
-  void GEN_FORTE_F_MOVE::writeOutputData(TEventID paEOID) {
+  void GEN_F_MOVE::writeOutputData(TEventID paEOID) {
     if (paEOID == scmEventCNFID) {
       writeData(1 + 0, *mIn, *conn_OUT);
     }
   }
 
-  bool GEN_FORTE_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
+  bool GEN_F_MOVE::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
     if (strcmp(paConfigString, "F_MOVE") == 0) {
       mIn = std::make_unique<CIEC_ANY_VARIANT>();
     } else {
@@ -76,7 +76,7 @@ namespace forte::iec61131::arithmetic {
     return true;
   }
 
-  forte::StringId GEN_FORTE_F_MOVE::getDataTypeNameId(const char *paConfigString) {
+  forte::StringId GEN_F_MOVE::getDataTypeNameId(const char *paConfigString) {
     const char *acPos = strchr(paConfigString, '_');
     if (nullptr != acPos) {
       acPos++;
@@ -89,23 +89,23 @@ namespace forte::iec61131::arithmetic {
     return {};
   }
 
-  CEventConnection *GEN_FORTE_F_MOVE::getEOConUnchecked(TPortId paEONum) {
+  CEventConnection *GEN_F_MOVE::getEOConUnchecked(TPortId paEONum) {
     return (paEONum == 0) ? &conn_CNF : nullptr;
   }
 
-  CIEC_ANY *GEN_FORTE_F_MOVE::getDI(size_t paIndex) {
+  CIEC_ANY *GEN_F_MOVE::getDI(size_t paIndex) {
     return (paIndex == 0) ? mIn.get() : nullptr;
   }
 
-  CIEC_ANY *GEN_FORTE_F_MOVE::getDO(size_t paIndex) {
+  CIEC_ANY *GEN_F_MOVE::getDO(size_t paIndex) {
     return (paIndex == 0) ? mIn.get() : nullptr;
   }
 
-  CDataConnection **GEN_FORTE_F_MOVE::getDIConUnchecked(const TPortId paIndex) {
+  CDataConnection **GEN_F_MOVE::getDIConUnchecked(const TPortId paIndex) {
     return (paIndex == 0) ? &conn_IN : nullptr;
   }
 
-  CDataConnection *GEN_FORTE_F_MOVE::getDOConUnchecked(TPortId paDONum) {
+  CDataConnection *GEN_F_MOVE::getDOConUnchecked(TPortId paDONum) {
     return (paDONum == 0) ? conn_OUT.get() : nullptr;
   }
-} // namespace forte::iec61131::arithmetic
+} // namespace forte::iec61131::selection

@@ -15,9 +15,9 @@
 
 #include "forte/genfb.h"
 
-namespace forte::iec61131::arithmetic {
-  class GEN_FORTE_F_MOVE final : public CGenFunctionBlock<CFunctionBlock> {
-      DECLARE_GENERIC_FIRMWARE_FB(GEN_FORTE_F_MOVE)
+namespace forte::iec61131::selection {
+  class GEN_F_MOVE final : public CGenFunctionBlock<CFunctionBlock> {
+      DECLARE_GENERIC_FIRMWARE_FB(GEN_F_MOVE)
 
     protected:
       size_t getGenEOOffset() override {
@@ -60,7 +60,7 @@ namespace forte::iec61131::arithmetic {
       std::unique_ptr<CGenDataConnection> conn_OUT;
 
     public:
-      GEN_FORTE_F_MOVE(const StringId paInstanceNameId, CFBContainer &paContainer);
-      ~GEN_FORTE_F_MOVE() override = default;
+      GEN_F_MOVE(const StringId paInstanceNameId, CFBContainer &paContainer);
+      ~GEN_F_MOVE() override = default;
   };
-} // namespace forte::iec61131::arithmetic
+} // namespace forte::iec61131::selection
