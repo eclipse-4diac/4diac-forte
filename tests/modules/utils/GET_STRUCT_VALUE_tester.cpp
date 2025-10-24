@@ -125,7 +125,7 @@ namespace forte::eclipse4diac::utils::test {
   struct GET_STRUCT_VALUE_GenericTestFixture : public forte::test::CFBTestFixtureBase {
 
       GET_STRUCT_VALUE_GenericTestFixture(CIEC_ANY *paIN_STRUCT, CIEC_ANY *paOUT) :
-          CFBTestFixtureBase("eclipse4diac::utils::GET_STRUCT_VALUE"_STRID) {
+          CFBTestFixtureBase("eclipse4diac::convert::GET_STRUCT_VALUE"_STRID) {
         setInputData({paIN_STRUCT, &mMember});
         setOutputData({&mQO, paOUT});
       }

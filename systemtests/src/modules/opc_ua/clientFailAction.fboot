@@ -2,7 +2,7 @@
 FailAction;<Request ID="2" Action="CREATE"><FB Name="ClientWrite" Type="iec61499::net::CLIENT_1_0" /></Request>
 FailAction;<Request ID="3" Action="WRITE"><Connection Source="1" Destination="ClientWrite.QI" /></Request>
 FailAction;<Request ID="4" Action="WRITE"><Connection Source="opc_ua[WRITE;opc.tcp://localhost:4840#;/Objects/IsolatedTests/READVariable]" Destination="ClientWrite.ID" /></Request>
-FailAction;<Request ID="5" Action="CREATE"><FB Name="BOOL2BOOL_1" Type="eclipse4diac::convert::BOOL2BOOL" /></Request>
+FailAction;<Request ID="5" Action="CREATE"><FB Name="BOOL2BOOL_1" Type="iec61131::arithmetic::F_MOVE_1BOOL" /></Request>
 FailAction;<Request ID="6" Action="CREATE"><FB Name="ClientMethod" Type="iec61499::net::CLIENT_0" /></Request>
 FailAction;<Request ID="7" Action="WRITE"><Connection Source="1" Destination="ClientMethod.QI" /></Request>
 FailAction;<Request ID="8" Action="WRITE"><Connection Source="opc_ua[CALL_METHOD;opc.tcp://localhost:4840#;/Objects/firstRead/Methods/browseNameOnly/noOParameters]" Destination="ClientMethod.ID" /></Request>
@@ -27,7 +27,7 @@ FailAction;<Request ID="26" Action="WRITE"><Connection Source="127.0.0.1:60102" 
 FailAction;<Request ID="27" Action="CREATE"><FB Name="ClientRead" Type="iec61499::net::CLIENT_0_1" /></Request>
 FailAction;<Request ID="28" Action="WRITE"><Connection Source="1" Destination="ClientRead.QI" /></Request>
 FailAction;<Request ID="29" Action="WRITE"><Connection Source="opc_ua[READ;opc.tcp://localhost:4840#;/Objects/IsolatedTests/WRITEVariable]" Destination="ClientRead.ID" /></Request>
-FailAction;<Request ID="30" Action="CREATE"><FB Name="BOOL2BOOL_1_1" Type="eclipse4diac::convert::BOOL2BOOL" /></Request>
+FailAction;<Request ID="30" Action="CREATE"><FB Name="BOOL2BOOL_1_1" Type="iec61131::arithmetic::F_MOVE_1BOOL" /></Request>
 FailAction;<Request ID="31" Action="CREATE"><FB Name="E_DELAY_1" Type="iec61499::events::E_DELAY" /></Request>
 FailAction;<Request ID="32" Action="WRITE"><Connection Source="T#2s" Destination="E_DELAY_1.DT" /></Request>
 FailAction;<Request ID="33" Action="CREATE"><FB Name="E_DELAY_2" Type="iec61499::events::E_DELAY" /></Request>

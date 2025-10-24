@@ -6,7 +6,7 @@ doubleResourceFirst;<Request ID="5" Action="WRITE"><Connection Source="T#3s" Des
 doubleResourceFirst;<Request ID="6" Action="CREATE"><FB Name="Writable1" Type="iec61499::net::SUBSCRIBE_1" /></Request>
 doubleResourceFirst;<Request ID="7" Action="WRITE"><Connection Source="1" Destination="Writable1.QI" /></Request>
 doubleResourceFirst;<Request ID="8" Action="WRITE"><Connection Source="opc_ua[READ;/Objects/firstRead/OnlyBrowseName/folderTests/NoId]" Destination="Writable1.ID" /></Request>
-doubleResourceFirst;<Request ID="9" Action="CREATE"><FB Name="BOOL2BOOL_2_1" Type="eclipse4diac::convert::DINT2DINT" /></Request>
+doubleResourceFirst;<Request ID="9" Action="CREATE"><FB Name="BOOL2BOOL_2_1" Type="iec61131::arithmetic::F_MOVE_1DINT" /></Request>
 doubleResourceFirst;<Request ID="10" Action="CREATE"><Connection Source="PUBL_0.INITO" Destination="E_DELAY.START" /></Request>
 doubleResourceFirst;<Request ID="11" Action="CREATE"><Connection Source="E_DELAY.EO" Destination="PUBL_0.REQ" /></Request>
 doubleResourceFirst;<Request ID="12" Action="CREATE"><Connection Source="Writable1.IND" Destination="BOOL2BOOL_2_1.REQ" /></Request>
@@ -20,7 +20,7 @@ doubleResourceSecond;<Request ID="19" Action="CREATE"><FB Name="STEST_END_1" Typ
 doubleResourceSecond;<Request ID="20" Action="CREATE"><FB Name="E_REND" Type="iec61499::events::E_REND" /></Request>
 doubleResourceSecond;<Request ID="21" Action="CREATE"><FB Name="SUBL_0" Type="iec61499::net::SUBL_0" /></Request>
 doubleResourceSecond;<Request ID="22" Action="WRITE"><Connection Source="WSTRING#opcuaFirstResourceINIT" Destination="SUBL_0.ID" /></Request>
-doubleResourceSecond;<Request ID="23" Action="CREATE"><FB Name="BOOL2BOOL_2_2" Type="eclipse4diac::convert::DINT2DINT" /></Request>
+doubleResourceSecond;<Request ID="23" Action="CREATE"><FB Name="BOOL2BOOL_2_2" Type="iec61131::arithmetic::F_MOVE_1DINT" /></Request>
 doubleResourceSecond;<Request ID="24" Action="CREATE"><FB Name="Writable2" Type="iec61499::net::SUBSCRIBE_1" /></Request>
 doubleResourceSecond;<Request ID="25" Action="WRITE"><Connection Source="1" Destination="Writable2.QI" /></Request>
 doubleResourceSecond;<Request ID="26" Action="WRITE"><Connection Source="opc_ua[READ;/Objects/firstRead/NumericNodeId/folderTests/WithId,1:i=12345]" Destination="Writable2.ID" /></Request>

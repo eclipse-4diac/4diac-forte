@@ -241,15 +241,15 @@ namespace forte::trace::test {
 
         BOOST_TEST_INFO("Create FB UINT2UINT 1");
         BOOST_REQUIRE(EMGMResponse::Ready ==
-                      resource->createFB(uint2uintFirst, "eclipse4diac::convert::UINT2UINT"_STRID, ""));
+                      resource->createFB(uint2uintFirst, "iec61131::arithmetic::F_MOVE_1UINT"_STRID, ""));
 
         BOOST_TEST_INFO("Create FB UINT2UINT 2");
         BOOST_REQUIRE(EMGMResponse::Ready ==
-                      resource->createFB(uint2uintSecond, "eclipse4diac::convert::UINT2UINT"_STRID, ""));
+                      resource->createFB(uint2uintSecond, "iec61131::arithmetic::F_MOVE_1UINT"_STRID, ""));
 
         BOOST_TEST_INFO("Create FB UINT2UINT 3");
         BOOST_REQUIRE(EMGMResponse::Ready ==
-                      resource->createFB(uint2uintThird, "eclipse4diac::convert::UINT2UINT"_STRID, ""));
+                      resource->createFB(uint2uintThird, "iec61131::arithmetic::F_MOVE_1UINT"_STRID, ""));
 
         SManagementCMD command;
         command.mCMD = EMGMCommandType::CreateConnection;

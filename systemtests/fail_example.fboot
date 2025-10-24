@@ -1,9 +1,9 @@
 ;<Request ID="1" Action="CREATE"><FB Name="Fail_Example" Type="iec61499::system::EMB_RES" /></Request>
-Fail_Example;<Request ID="2" Action="CREATE"><FB Name="BOOL2BOOL_1_1_1" Type="eclipse4diac::convert::BOOL2BOOL" /></Request>
+Fail_Example;<Request ID="2" Action="CREATE"><FB Name="BOOL2BOOL_1_1_1" Type="iec61131::arithmetic::F_MOVE_1BOOL" /></Request>
 Fail_Example;<Request ID="3" Action="WRITE"><Connection Source="false" Destination="BOOL2BOOL_1_1_1.IN" /></Request>
-Fail_Example;<Request ID="4" Action="CREATE"><FB Name="BOOL2BOOL_1" Type="eclipse4diac::convert::BOOL2BOOL" /></Request>
+Fail_Example;<Request ID="4" Action="CREATE"><FB Name="BOOL2BOOL_1" Type="iec61131::arithmetic::F_MOVE_1BOOL" /></Request>
 Fail_Example;<Request ID="5" Action="WRITE"><Connection Source="false" Destination="BOOL2BOOL_1.IN" /></Request>
-Fail_Example;<Request ID="6" Action="CREATE"><FB Name="BOOL2BOOL_1_1" Type="eclipse4diac::convert::BOOL2BOOL" /></Request>
+Fail_Example;<Request ID="6" Action="CREATE"><FB Name="BOOL2BOOL_1_1" Type="iec61131::arithmetic::F_MOVE_1BOOL" /></Request>
 Fail_Example;<Request ID="7" Action="WRITE"><Connection Source="true" Destination="BOOL2BOOL_1_1.IN" /></Request>
 Fail_Example;<Request ID="8" Action="CREATE"><FB Name="STEST_END_0" Type="eclipse4diac::utils::STEST_END" /></Request>
 Fail_Example;<Request ID="9" Action="CREATE"><FB Name="SHOULD_FAIL_1" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>

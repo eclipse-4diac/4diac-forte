@@ -8,7 +8,7 @@ simpleServerTest;<Request ID="7" Action="WRITE"><Connection Source="239.192.0.2:
 simpleServerTest;<Request ID="8" Action="CREATE"><FB Name="F_EQ_1" Type="iec61131::comparison::F_EQ" /></Request>
 simpleServerTest;<Request ID="9" Action="WRITE"><Connection Source="DINT#26" Destination="F_EQ_1.IN2" /></Request>
 simpleServerTest;<Request ID="10" Action="CREATE"><FB Name="ReceivedDINTOK" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
-simpleServerTest;<Request ID="11" Action="CREATE"><FB Name="DINT2DINT_1" Type="eclipse4diac::convert::DINT2DINT" /></Request>
+simpleServerTest;<Request ID="11" Action="CREATE"><FB Name="DINT2DINT_1" Type="iec61131::arithmetic::F_MOVE_1DINT" /></Request>
 simpleServerTest;<Request ID="12" Action="CREATE"><FB Name="STEST_END_1" Type="eclipse4diac::utils::STEST_END" /></Request>
 simpleServerTest;<Request ID="13" Action="CREATE"><Connection Source="START.COLD" Destination="SUBSCRIBE_1.INIT" /></Request>
 simpleServerTest;<Request ID="14" Action="CREATE"><Connection Source="START.WARM" Destination="SUBSCRIBE_1.INIT" /></Request>
