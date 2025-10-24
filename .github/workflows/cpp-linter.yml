@@ -1,10 +1,10 @@
 name: cpp-linter
 on:
   pull_request:
-    branches: [ "release", "develop", "freeze", "feature/**" ]
+    branches: [ "release", "develop", "freeze", "feature/**", "3.0.x" ]
     paths: [ "**.c", "**.cpp", "**.h", "**.hpp", "**.cxx", "**.hxx", "**.cc", "**.hh", ".clang-format", ".clang-format-ignore" ]
   push:
-    branches: [ "release", "develop", "freeze", "feature/**" ]
+    branches: [ "release", "develop", "freeze", "feature/**", "3.0.x" ]
     paths: [ "**.c", "**.cpp", "**.h", "**.hpp", "**.cxx", "**.hxx", "**.cc", "**.hh", ".clang-format", ".clang-format-ignore" ]
 
 permissions:

@@ -4,9 +4,9 @@ name: Verify interface header sets
 
 on:
   push:
-    branches: [ "release", "develop", "freeze", "feature/**" ]
+    branches: [ "release", "develop", "freeze", "feature/**", "3.0.x" ]
   pull_request:
-    branches: [ "release", "develop", "freeze", "feature/**" ]
+    branches: [ "release", "develop", "freeze", "feature/**", "3.0.x" ]
 
 jobs:
   build:
