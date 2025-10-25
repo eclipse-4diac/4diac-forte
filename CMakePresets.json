@@ -251,5 +251,12 @@
         "windows"
       ]
     }
-  ]
+  ],
+  "vendor": {
+    "eclipse.dev/4diac/FBE/3.0": {
+      "dependencies": {
+        "posix-debug": [ "libmodbus", "open62541", "paho.mqtt.c" ]
+      }
+    }
+  }
 }
