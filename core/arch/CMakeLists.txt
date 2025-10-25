@@ -36,6 +36,22 @@ macro(forte_register_architecture arch)
     endif ()
 endmacro()
 
+if (WIN32)
+	set(default_arch "Win32")
+elseif (APPLE)
+	set(default_arch "MacOs")
+elseif (UNIX)
+	set(default_arch "Posix")
+else ()
+	set(default_arch "None")
+endif ()
+
+set(FORTE_ARCHITECTURE "${default_arch}" CACHE STRING "Architecture for which to build 4diac FORTE")
+
+if (FORTE_ARCHITECTURE STREQUAL "None")
+    message(FATAL_ERROR "No FORTE_ARCHITECTURE selected. Use one of ${architectures}")
+endif ()
+
 add_subdirectory(common)
 add_subdirectory(c_interface)
 
@@ -56,11 +72,6 @@ add_subdirectory(win32)
 ###############################################################################
 # Configuration Options
 
-set(FORTE_ARCHITECTURE "None" CACHE STRING "Architecture for which to build 4diac FORTE")
 get_property(architectures TARGET forte-core PROPERTY forte_architectures)
 list(SORT architectures)
 set_property(CACHE FORTE_ARCHITECTURE PROPERTY STRINGS None ${architectures})
-
-if (FORTE_ARCHITECTURE STREQUAL "None")
-    message(FATAL_ERROR "No FORTE_ARCHITECTURE selected. Use one of ${architectures}")
-endif ()
