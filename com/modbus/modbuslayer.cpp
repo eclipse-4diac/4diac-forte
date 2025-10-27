@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2012 - 2023 AIT, ACIN, fortiss GmbH, Davor Cihlar
+ * Copyright (c) 2012, 2023 AIT, ACIN, fortiss GmbH, Davor Cihlar
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -7,8 +8,9 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Filip Andren, Patrick Smejkal, Alois Zoitl, Martin Melik-Merkumians - initial API and implementation and/or initial
- *documentation Davor Cihlar - multiple FBs sharing a single Modbus connection
+ *   Filip Andren, Patrick Smejkal, Alois Zoitl, Martin Melik-Merkumians
+ *                - initial API and implementation and/or initial documentation
+ *   Davor Cihlar - multiple FBs sharing a single Modbus connection
  *******************************************************************************/
 #include <algorithm>
 #include "modbuslayer.h"
@@ -17,497 +19,638 @@
 #include "forte/cominfra/comlayersmanager.h"
 #include "forte/util/string_utils.h"
 
-using namespace forte::com_infra;
+#include "forte/datatypes/forte_dint.h"
+#include "forte/datatypes/forte_dword.h"
+#include "forte/datatypes/forte_int.h"
+#include "forte/datatypes/forte_lint.h"
+#include "forte/datatypes/forte_lreal.h"
+#include "forte/datatypes/forte_lword.h"
+#include "forte/datatypes/forte_real.h"
+#include "forte/datatypes/forte_sint.h"
+#include "forte/datatypes/forte_udint.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/datatypes/forte_ulint.h"
+#include "forte/datatypes/forte_usint.h"
+#include "forte/datatypes/forte_word.h"
+
 using namespace forte::literals;
 
-namespace {
-  [[maybe_unused]] const ComLayerManager::EntryImpl<CModbusComLayer> entry("modbus"_STRID);
-}
+namespace forte::com_infra::modbus {
 
-std::vector<CModbusComLayer::SConnection> CModbusComLayer::smConnections;
-
-CModbusComLayer::CModbusComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
-    CComLayer(paUpperLayer, paComFB),
-    mModbusConnection(nullptr),
-    mBufFillSize(0),
-    m_IOBlock(this) {
-  mConnectionState = e_Disconnected;
-}
-
-CModbusComLayer::~CModbusComLayer() = default;
-
-EComResponse CModbusComLayer::sendData(void *paData, unsigned int paSize) {
-  EComResponse eRetVal = e_ProcessDataOk;
-
-  if (mConnectionState == e_Connected) {
-    switch (mFb->getComServiceType()) {
-      case e_Server:
-        // todo
-        break;
-      case e_Client: {
-        TForteUInt8 *convertedData = new TForteUInt8[paSize * 8];
-        unsigned int sendLength = convertDataInput(paData, paSize, convertedData);
-        if (sendLength > 0) {
-          mModbusConnection->writeData(&m_IOBlock, convertedData, sendLength);
-        }
-        delete[] convertedData;
-        break;
-      }
-      case e_Publisher:
-        // todo
-        break;
-      case e_Subscriber:
-        // do nothing as subscribers do not send data
-        break;
-    }
+  namespace {
+    [[maybe_unused]] const ComLayerManager::EntryImpl<CModbusComLayer> entry("modbus"_STRID);
   }
-  return eRetVal;
-}
 
-unsigned int CModbusComLayer::convertDataInput(void *paInData, unsigned int paDataSize, void *paConvertedData) {
-  TForteUInt8 *convertedData = (TForteUInt8 *) paConvertedData;
-  unsigned int outLength = 0;
+  std::vector<CModbusComLayer::SConnection> CModbusComLayer::smConnections;
 
-  CIEC_ANY **apoSDs = static_cast<CIEC_ANY **>(paInData);
-  unsigned int nrSDs = paDataSize;
-
-  for (unsigned int i = 0; i < nrSDs; i++) {
-    CIEC_ANY &anyVal(apoSDs[i]->unwrap());
-    switch (anyVal.getDataTypeID()) {
-      /***************************************************************************
-      1bit data type
-      ***************************************************************************/
-      case CIEC_ANY::e_BOOL: // 1bit data type
-      {
-        TForteByte out = (bool) static_cast<CIEC_BOOL &>(anyVal);
-        *(TForteByte *) (&convertedData[outLength]) = out;
-        outLength += sizeof(TForteByte);
-        break;
-      }
-      /***************************************************************************
-       8bit data types
-       ***************************************************************************/
-      case CIEC_ANY::e_SINT: // 8bit data type signed
-      {
-        TForteInt8 out = (TForteInt8) static_cast<CIEC_SINT &>(anyVal);
-        *(TForteInt8 *) (&convertedData[outLength]) = out;
-        outLength += sizeof(TForteInt8);
-        break;
-      }
-      case CIEC_ANY::e_USINT: // 8bit data type unsigned
-      {
-        TForteUInt8 out = (TForteUInt8) static_cast<CIEC_USINT &>(anyVal);
-        *(TForteUInt8 *) (&convertedData[outLength]) = out;
-        outLength += sizeof(TForteUInt8);
-        break;
-      }
-      case CIEC_ANY::e_BYTE: // 8bit data type
-      {
-        TForteByte out = (TForteByte) static_cast<CIEC_BYTE &>(anyVal);
-        *(TForteByte *) (&convertedData[outLength]) = out;
-        outLength += sizeof(TForteByte);
-        break;
-      }
-      /***************************************************************************
-       16bit data types
-       ***************************************************************************/
-      case CIEC_ANY::e_INT: // 16bit data type signed
-      {
-        TForteInt16 out = (TForteInt16) static_cast<CIEC_INT &>(anyVal);
-        *(TForteInt16 *) (&convertedData[outLength]) = out;
-        outLength += sizeof(TForteInt16);
-        break;
-      }
-      case CIEC_ANY::e_UINT: // 16bit data type unsigned
-      {
-        TForteUInt16 out = (TForteUInt16) static_cast<CIEC_UINT &>(anyVal);
-        *(TForteUInt16 *) (&convertedData[outLength]) = out;
-        outLength += sizeof(TForteUInt16);
-        break;
-      }
-      case CIEC_ANY::e_WORD: // 16bit data type
-      {
-        TForteWord out = (TForteWord) static_cast<CIEC_WORD &>(anyVal);
-        *(TForteWord *) (&convertedData[outLength]) = out;
-        outLength += sizeof(TForteWord);
-        break;
-      }
-      /***************************************************************************
-       32bit data types
-       ***************************************************************************/
-      case CIEC_ANY::e_DINT: // 32bit data type signed
-      {
-        TForteInt32 out = (TForteInt32) static_cast<CIEC_DINT &>(anyVal);
-        *(TForteInt32 *) (&convertedData[outLength]) =
-            convertFBOutput<TForteInt32>((TForteByte *) &out, sizeof(TForteInt32));
-        outLength += sizeof(TForteInt32);
-        break;
-      }
-      case CIEC_ANY::e_UDINT: // 32bit data type unsigned
-      {
-        TForteUInt32 out = (TForteUInt32) static_cast<CIEC_UDINT &>(anyVal);
-        *(TForteUInt32 *) (&convertedData[outLength]) =
-            convertFBOutput<TForteUInt32>((TForteByte *) &out, sizeof(TForteUInt32));
-        outLength += sizeof(TForteUInt32);
-        break;
-      }
-      case CIEC_ANY::e_DWORD: // 32bit data type
-      {
-        TForteDWord out = (TForteDWord) static_cast<CIEC_DWORD &>(anyVal);
-        *(TForteDWord *) (&convertedData[outLength]) =
-            convertFBOutput<TForteDWord>((TForteByte *) &out, sizeof(TForteDWord));
-        outLength += sizeof(TForteDWord);
-        break;
-      }
-      case CIEC_ANY::e_REAL: // 32bit data type
-      {
-        TForteFloat out = (TForteFloat) static_cast<CIEC_REAL &>(anyVal);
-        *(TForteFloat *) (&convertedData[outLength]) =
-            convertFBOutput<TForteFloat>((TForteByte *) &out, sizeof(TForteFloat));
-        outLength += sizeof(TForteFloat);
-        break;
-      }
-      /***************************************************************************
-       64bit data types
-       ***************************************************************************/
-      case CIEC_ANY::e_LINT: // 64bit data type signed
-      {
-        TForteInt64 out = (TForteInt64) static_cast<CIEC_LINT &>(anyVal);
-        *(TForteInt64 *) (&convertedData[outLength]) =
-            convertFBOutput<TForteInt64>((TForteByte *) &out, sizeof(TForteInt64));
-        outLength += sizeof(TForteInt64);
-        break;
-      }
-      case CIEC_ANY::e_ULINT: // 64bit data type unsigned
-      {
-        TForteUInt64 out = (TForteUInt64) static_cast<CIEC_ULINT &>(anyVal);
-        *(TForteUInt64 *) (&convertedData[outLength]) =
-            convertFBOutput<TForteUInt64>((TForteByte *) &out, sizeof(TForteUInt64));
-        outLength += sizeof(TForteUInt64);
-        break;
-      }
-      case CIEC_ANY::e_LWORD: // 64bit data type
-      {
-        TForteLWord out = (TForteLWord) static_cast<CIEC_LWORD &>(anyVal);
-        *(TForteLWord *) (&convertedData[outLength]) =
-            convertFBOutput<TForteLWord>((TForteByte *) &out, sizeof(TForteLWord));
-        outLength += sizeof(TForteLWord);
-        break;
-      }
-      case CIEC_ANY::e_LREAL: // 64bit data type
-      {
-        TForteDFloat out = (TForteDFloat) static_cast<CIEC_LREAL &>(anyVal);
-        *(TForteDFloat *) (&convertedData[outLength]) =
-            convertFBOutput<TForteDFloat>((TForteByte *) &out, sizeof(TForteDFloat));
-        outLength += sizeof(TForteDFloat);
-        break;
-      }
-      default: break;
-    }
+  CModbusComLayer::CModbusComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
+      CComLayer(paUpperLayer, paComFB),
+      mModbusConnection(nullptr),
+      mBufFillSize(0),
+      m_IOBlock(this) {
+    mConnectionState = e_Disconnected;
   }
-  return outLength;
-}
 
-EComResponse CModbusComLayer::processInterrupt() {
-  if (e_ProcessDataOk == mInterruptResp) {
-    switch (mConnectionState) {
-      case e_Connected: {
-        CIEC_ANY **apoRDs = mFb->getRDs();
-        size_t nrRDs = mFb->getNumRD();
+  CModbusComLayer::~CModbusComLayer() = default;
 
-        unsigned int dataIndex = 0;
+  EComResponse CModbusComLayer::sendData(void *paData, unsigned int paSize) {
+    EComResponse eRetVal = e_ProcessDataOk;
 
-        for (unsigned int i = 0; i < nrRDs; i++) {
-          CIEC_ANY &anyVal(apoRDs[i]->unwrap());
-          switch (anyVal.getDataTypeID()) {
-            case CIEC_ANY::e_BOOL:
-              static_cast<CIEC_BOOL &>(anyVal) =
-                  CIEC_BOOL(convertFBOutput<bool>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(bool);
-              break;
-            case CIEC_ANY::e_SINT:
-              static_cast<CIEC_SINT &>(anyVal) =
-                  CIEC_SINT(convertFBOutput<TForteInt8>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(TForteInt8);
-              break;
-            case CIEC_ANY::e_INT:
-              static_cast<CIEC_INT &>(anyVal) =
-                  CIEC_INT(convertFBOutput<TForteInt16>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(TForteInt16);
-              break;
-            case CIEC_ANY::e_DINT:
-              static_cast<CIEC_DINT &>(anyVal) =
-                  CIEC_DINT(convertFBOutput<TForteInt32>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(TForteInt32);
-              break;
-            case CIEC_ANY::e_LINT:
-              static_cast<CIEC_LINT &>(anyVal) =
-                  CIEC_LINT(convertFBOutput<TForteInt64>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(TForteInt64);
-              break;
-            case CIEC_ANY::e_USINT:
-              static_cast<CIEC_USINT &>(anyVal) =
-                  CIEC_USINT(convertFBOutput<TForteUInt8>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(TForteUInt8);
-              break;
-            case CIEC_ANY::e_UINT:
-              static_cast<CIEC_UINT &>(anyVal) =
-                  CIEC_UINT(convertFBOutput<TForteUInt16>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(TForteUInt16);
-              break;
-            case CIEC_ANY::e_UDINT:
-              static_cast<CIEC_UDINT &>(anyVal) =
-                  CIEC_UDINT(convertFBOutput<TForteUInt32>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(TForteUInt32);
-              break;
-            case CIEC_ANY::e_ULINT:
-              static_cast<CIEC_ULINT &>(anyVal) =
-                  CIEC_ULINT(convertFBOutput<TForteUInt64>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(TForteUInt64);
-              break;
-            case CIEC_ANY::e_BYTE:
-              static_cast<CIEC_BYTE &>(anyVal) =
-                  CIEC_BYTE(convertFBOutput<TForteByte>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(TForteByte);
-              break;
-            case CIEC_ANY::e_WORD:
-              static_cast<CIEC_WORD &>(anyVal) =
-                  CIEC_WORD(convertFBOutput<TForteWord>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(TForteWord);
-              break;
-            case CIEC_ANY::e_DWORD:
-              static_cast<CIEC_DWORD &>(anyVal) =
-                  CIEC_DWORD(convertFBOutput<TForteDWord>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(TForteDWord);
-              break;
-            case CIEC_ANY::e_LWORD:
-              static_cast<CIEC_LWORD &>(anyVal) =
-                  CIEC_LWORD(convertFBOutput<TForteLWord>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(TForteLWord);
-              break;
-            case CIEC_ANY::e_REAL:
-              static_cast<CIEC_REAL &>(anyVal) =
-                  CIEC_REAL(convertFBOutput<TForteFloat>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(TForteFloat);
-              break;
-            case CIEC_ANY::e_LREAL:
-              static_cast<CIEC_LREAL &>(anyVal) =
-                  CIEC_LREAL(convertFBOutput<TForteDFloat>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
-              dataIndex += sizeof(TForteDFloat);
-              break;
-            default:
-              // TODO
-              break;
-          }
-        }
-        break;
-      }
-      case e_Disconnected:
-      case e_Listening:
-      case e_ConnectedAndListening:
-      default: break;
-    }
-  } else {
-    if (e_InitTerminated == mInterruptResp) {
-      // todo: Move server into listening mode again, etc.
-    }
-  }
-  return mInterruptResp;
-}
-
-EComResponse CModbusComLayer::recvData(const void *, unsigned int) {
-  mInterruptResp = e_Nothing;
-
-  switch (mConnectionState) {
-    case e_Listening:
-
-      // TODO accept incoming connection
-
-      break;
-    case e_Connected: {
-      int nRetVal = 0;
+    if (mConnectionState == e_Connected) {
       switch (mFb->getComServiceType()) {
         case e_Server:
-          // TODO
+          // todo
           break;
-        case e_Client:
-          // TODO check if errors occured during polling in ModbusConnection
-          nRetVal = mModbusConnection->readData(&m_IOBlock, &mRecvBuffer[0], sizeof(mRecvBuffer));
+        case e_Client: {
+          TForteUInt8 *convertedData = new TForteUInt8[paSize * 8];
+          unsigned int sendLength = convertDataInput(paData, paSize, convertedData);
+          if (sendLength > 0) {
+            mModbusConnection->writeData(&m_IOBlock, convertedData, sendLength);
+          }
+          delete[] convertedData;
           break;
+        }
         case e_Publisher:
-          // do nothing as publisher cannot receive data
+          // todo
           break;
         case e_Subscriber:
-          // do nothing since Modbus protocol cannot act as subscriber
+          // do nothing as subscribers do not send data
           break;
       }
-      switch (nRetVal) {
-        case 0:
-          // TODO
-          break;
-        default:
-          // we successfully received data
-          mBufFillSize = nRetVal;
-          mInterruptResp = e_ProcessDataOk;
-          break;
-      }
-      mFb->interruptCommFB(this);
-    } break;
-    case e_ConnectedAndListening:
-    case e_Disconnected:
-    default: break;
+    }
+    return eRetVal;
   }
-  return mInterruptResp;
-}
 
-template<typename T>
-T CModbusComLayer::convertFBOutput(TForteByte *paDataArray, unsigned int paDataSize) {
-  T retVal;
-  unsigned int currentDataSize = sizeof(T);
+  unsigned int CModbusComLayer::convertDataInput(void *paInData, unsigned int paDataSize, void *paConvertedData) {
+    TForteUInt8 *convertedData = (TForteUInt8 *) paConvertedData;
+    unsigned int outLength = 0;
 
-  if (currentDataSize <= paDataSize) {
-    if (currentDataSize > 2) {
-      // A data type with size greater than 16 bits is requested =>
-      // we need to swap order of each 16 bit data package
+    CIEC_ANY **apoSDs = static_cast<CIEC_ANY **>(paInData);
+    unsigned int nrSDs = paDataSize;
 
-      unsigned int nrUint16s = currentDataSize / 2;
-      TForteUInt16 *destAr = (TForteUInt16 *) (&retVal);
-      TForteUInt16 *sourceAr = (TForteUInt16 *) paDataArray;
+    for (unsigned int i = 0; i < nrSDs; i++) {
+      CIEC_ANY &anyVal(apoSDs[i]->unwrap());
+      switch (anyVal.getDataTypeID()) {
+        /***************************************************************************
+        1bit data type
+        ***************************************************************************/
+        case CIEC_ANY::e_BOOL: // 1bit data type
+        {
+          TForteByte out = (bool) static_cast<CIEC_BOOL &>(anyVal);
+          *(TForteByte *) (&convertedData[outLength]) = out;
+          outLength += sizeof(TForteByte);
+          break;
+        }
+        /***************************************************************************
+         8bit data types
+         ***************************************************************************/
+        case CIEC_ANY::e_SINT: // 8bit data type signed
+        {
+          TForteInt8 out = (TForteInt8) static_cast<CIEC_SINT &>(anyVal);
+          *(TForteInt8 *) (&convertedData[outLength]) = out;
+          outLength += sizeof(TForteInt8);
+          break;
+        }
+        case CIEC_ANY::e_USINT: // 8bit data type unsigned
+        {
+          TForteUInt8 out = (TForteUInt8) static_cast<CIEC_USINT &>(anyVal);
+          *(TForteUInt8 *) (&convertedData[outLength]) = out;
+          outLength += sizeof(TForteUInt8);
+          break;
+        }
+        case CIEC_ANY::e_BYTE: // 8bit data type
+        {
+          TForteByte out = (TForteByte) static_cast<CIEC_BYTE &>(anyVal);
+          *(TForteByte *) (&convertedData[outLength]) = out;
+          outLength += sizeof(TForteByte);
+          break;
+        }
+        /***************************************************************************
+         16bit data types
+         ***************************************************************************/
+        case CIEC_ANY::e_INT: // 16bit data type signed
+        {
+          TForteInt16 out = (TForteInt16) static_cast<CIEC_INT &>(anyVal);
+          *(TForteInt16 *) (&convertedData[outLength]) = out;
+          outLength += sizeof(TForteInt16);
+          break;
+        }
+        case CIEC_ANY::e_UINT: // 16bit data type unsigned
+        {
+          TForteUInt16 out = (TForteUInt16) static_cast<CIEC_UINT &>(anyVal);
+          *(TForteUInt16 *) (&convertedData[outLength]) = out;
+          outLength += sizeof(TForteUInt16);
+          break;
+        }
+        case CIEC_ANY::e_WORD: // 16bit data type
+        {
+          TForteWord out = (TForteWord) static_cast<CIEC_WORD &>(anyVal);
+          *(TForteWord *) (&convertedData[outLength]) = out;
+          outLength += sizeof(TForteWord);
+          break;
+        }
+        /***************************************************************************
+         32bit data types
+         ***************************************************************************/
+        case CIEC_ANY::e_DINT: // 32bit data type signed
+        {
+          TForteInt32 out = (TForteInt32) static_cast<CIEC_DINT &>(anyVal);
+          *(TForteInt32 *) (&convertedData[outLength]) =
+              convertFBOutput<TForteInt32>((TForteByte *) &out, sizeof(TForteInt32));
+          outLength += sizeof(TForteInt32);
+          break;
+        }
+        case CIEC_ANY::e_UDINT: // 32bit data type unsigned
+        {
+          TForteUInt32 out = (TForteUInt32) static_cast<CIEC_UDINT &>(anyVal);
+          *(TForteUInt32 *) (&convertedData[outLength]) =
+              convertFBOutput<TForteUInt32>((TForteByte *) &out, sizeof(TForteUInt32));
+          outLength += sizeof(TForteUInt32);
+          break;
+        }
+        case CIEC_ANY::e_DWORD: // 32bit data type
+        {
+          TForteDWord out = (TForteDWord) static_cast<CIEC_DWORD &>(anyVal);
+          *(TForteDWord *) (&convertedData[outLength]) =
+              convertFBOutput<TForteDWord>((TForteByte *) &out, sizeof(TForteDWord));
+          outLength += sizeof(TForteDWord);
+          break;
+        }
+        case CIEC_ANY::e_REAL: // 32bit data type
+        {
+          TForteFloat out = (TForteFloat) static_cast<CIEC_REAL &>(anyVal);
+          *(TForteFloat *) (&convertedData[outLength]) =
+              convertFBOutput<TForteFloat>((TForteByte *) &out, sizeof(TForteFloat));
+          outLength += sizeof(TForteFloat);
+          break;
+        }
+        /***************************************************************************
+         64bit data types
+         ***************************************************************************/
+        case CIEC_ANY::e_LINT: // 64bit data type signed
+        {
+          TForteInt64 out = (TForteInt64) static_cast<CIEC_LINT &>(anyVal);
+          *(TForteInt64 *) (&convertedData[outLength]) =
+              convertFBOutput<TForteInt64>((TForteByte *) &out, sizeof(TForteInt64));
+          outLength += sizeof(TForteInt64);
+          break;
+        }
+        case CIEC_ANY::e_ULINT: // 64bit data type unsigned
+        {
+          TForteUInt64 out = (TForteUInt64) static_cast<CIEC_ULINT &>(anyVal);
+          *(TForteUInt64 *) (&convertedData[outLength]) =
+              convertFBOutput<TForteUInt64>((TForteByte *) &out, sizeof(TForteUInt64));
+          outLength += sizeof(TForteUInt64);
+          break;
+        }
+        case CIEC_ANY::e_LWORD: // 64bit data type
+        {
+          TForteLWord out = (TForteLWord) static_cast<CIEC_LWORD &>(anyVal);
+          *(TForteLWord *) (&convertedData[outLength]) =
+              convertFBOutput<TForteLWord>((TForteByte *) &out, sizeof(TForteLWord));
+          outLength += sizeof(TForteLWord);
+          break;
+        }
+        case CIEC_ANY::e_LREAL: // 64bit data type
+        {
+          TForteDFloat out = (TForteDFloat) static_cast<CIEC_LREAL &>(anyVal);
+          *(TForteDFloat *) (&convertedData[outLength]) =
+              convertFBOutput<TForteDFloat>((TForteByte *) &out, sizeof(TForteDFloat));
+          outLength += sizeof(TForteDFloat);
+          break;
+        }
+        default: break;
+      }
+    }
+    return outLength;
+  }
 
-      for (unsigned int i = 0; i < nrUint16s; i++) {
-        destAr[i] = sourceAr[nrUint16s - 1 - i];
+  EComResponse CModbusComLayer::processInterrupt() {
+    if (e_ProcessDataOk == mInterruptResp) {
+      switch (mConnectionState) {
+        case e_Connected: {
+          CIEC_ANY **apoRDs = mFb->getRDs();
+          size_t nrRDs = mFb->getNumRD();
+
+          unsigned int dataIndex = 0;
+
+          for (unsigned int i = 0; i < nrRDs; i++) {
+            CIEC_ANY &anyVal(apoRDs[i]->unwrap());
+            switch (anyVal.getDataTypeID()) {
+              case CIEC_ANY::e_BOOL:
+                static_cast<CIEC_BOOL &>(anyVal) =
+                    CIEC_BOOL(convertFBOutput<bool>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(bool);
+                break;
+              case CIEC_ANY::e_SINT:
+                static_cast<CIEC_SINT &>(anyVal) =
+                    CIEC_SINT(convertFBOutput<TForteInt8>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(TForteInt8);
+                break;
+              case CIEC_ANY::e_INT:
+                static_cast<CIEC_INT &>(anyVal) =
+                    CIEC_INT(convertFBOutput<TForteInt16>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(TForteInt16);
+                break;
+              case CIEC_ANY::e_DINT:
+                static_cast<CIEC_DINT &>(anyVal) =
+                    CIEC_DINT(convertFBOutput<TForteInt32>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(TForteInt32);
+                break;
+              case CIEC_ANY::e_LINT:
+                static_cast<CIEC_LINT &>(anyVal) =
+                    CIEC_LINT(convertFBOutput<TForteInt64>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(TForteInt64);
+                break;
+              case CIEC_ANY::e_USINT:
+                static_cast<CIEC_USINT &>(anyVal) =
+                    CIEC_USINT(convertFBOutput<TForteUInt8>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(TForteUInt8);
+                break;
+              case CIEC_ANY::e_UINT:
+                static_cast<CIEC_UINT &>(anyVal) =
+                    CIEC_UINT(convertFBOutput<TForteUInt16>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(TForteUInt16);
+                break;
+              case CIEC_ANY::e_UDINT:
+                static_cast<CIEC_UDINT &>(anyVal) =
+                    CIEC_UDINT(convertFBOutput<TForteUInt32>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(TForteUInt32);
+                break;
+              case CIEC_ANY::e_ULINT:
+                static_cast<CIEC_ULINT &>(anyVal) =
+                    CIEC_ULINT(convertFBOutput<TForteUInt64>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(TForteUInt64);
+                break;
+              case CIEC_ANY::e_BYTE:
+                static_cast<CIEC_BYTE &>(anyVal) =
+                    CIEC_BYTE(convertFBOutput<TForteByte>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(TForteByte);
+                break;
+              case CIEC_ANY::e_WORD:
+                static_cast<CIEC_WORD &>(anyVal) =
+                    CIEC_WORD(convertFBOutput<TForteWord>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(TForteWord);
+                break;
+              case CIEC_ANY::e_DWORD:
+                static_cast<CIEC_DWORD &>(anyVal) =
+                    CIEC_DWORD(convertFBOutput<TForteDWord>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(TForteDWord);
+                break;
+              case CIEC_ANY::e_LWORD:
+                static_cast<CIEC_LWORD &>(anyVal) =
+                    CIEC_LWORD(convertFBOutput<TForteLWord>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(TForteLWord);
+                break;
+              case CIEC_ANY::e_REAL:
+                static_cast<CIEC_REAL &>(anyVal) =
+                    CIEC_REAL(convertFBOutput<TForteFloat>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(TForteFloat);
+                break;
+              case CIEC_ANY::e_LREAL:
+                static_cast<CIEC_LREAL &>(anyVal) =
+                    CIEC_LREAL(convertFBOutput<TForteDFloat>(&mRecvBuffer[dataIndex], mBufFillSize - dataIndex));
+                dataIndex += sizeof(TForteDFloat);
+                break;
+              default:
+                // TODO
+                break;
+            }
+          }
+          break;
+        }
+        case e_Disconnected:
+        case e_Listening:
+        case e_ConnectedAndListening:
+        default: break;
       }
     } else {
-      TForteByte *tempAr = (TForteByte *) (&retVal);
-      for (unsigned int j = 0; j < currentDataSize; j++) {
-        tempAr[j] = paDataArray[j];
+      if (e_InitTerminated == mInterruptResp) {
+        // todo: Move server into listening mode again, etc.
       }
     }
-  } else {
-    retVal = 0;
+    return mInterruptResp;
   }
 
-  return retVal;
-}
+  EComResponse CModbusComLayer::recvData(const void *, unsigned int) {
+    mInterruptResp = e_Nothing;
 
-EComResponse CModbusComLayer::openConnection(char *paLayerParameter) {
-  EComResponse eRetVal = e_InitInvalidId;
-  switch (mFb->getComServiceType()) {
-    case e_Server:
-      // TODO open server connection
-      mConnectionState = e_Listening;
-      break;
-    case e_Client: {
-      STcpParams tcpParams;
-      SRtuParams rtuParams;
-      SCommonParams commonParams;
-      char idString[256] = {0};
-      memset(&tcpParams, 0, sizeof(tcpParams));
-      memset(&rtuParams, 0, sizeof(rtuParams));
-      memset(&commonParams, 0, sizeof(commonParams));
+    switch (mConnectionState) {
+      case e_Listening:
 
-      int errCode = processClientParams(paLayerParameter, &tcpParams, &rtuParams, &commonParams, idString);
-      if (errCode != 0) {
-        DEVLOG_ERROR("CModbusComLayer:: Invalid input parameters\n");
+        // TODO accept incoming connection
+
+        break;
+      case e_Connected: {
+        int nRetVal = 0;
+        switch (mFb->getComServiceType()) {
+          case e_Server:
+            // TODO
+            break;
+          case e_Client:
+            // TODO check if errors occured during polling in ModbusConnection
+            nRetVal = mModbusConnection->readData(&m_IOBlock, &mRecvBuffer[0], sizeof(mRecvBuffer));
+            break;
+          case e_Publisher:
+            // do nothing as publisher cannot receive data
+            break;
+          case e_Subscriber:
+            // do nothing since Modbus protocol cannot act as subscriber
+            break;
+        }
+        switch (nRetVal) {
+          case 0:
+            // TODO
+            break;
+          default:
+            // we successfully received data
+            mBufFillSize = nRetVal;
+            mInterruptResp = e_ProcessDataOk;
+            break;
+        }
+        mFb->interruptCommFB(this);
+      } break;
+      case e_ConnectedAndListening:
+      case e_Disconnected:
+      default: break;
+    }
+    return mInterruptResp;
+  }
+
+  template<typename T>
+  T CModbusComLayer::convertFBOutput(TForteByte *paDataArray, unsigned int paDataSize) {
+    T retVal;
+    unsigned int currentDataSize = sizeof(T);
+
+    if (currentDataSize <= paDataSize) {
+      if (currentDataSize > 2) {
+        // A data type with size greater than 16 bits is requested =>
+        // we need to swap order of each 16 bit data package
+
+        unsigned int nrUint16s = currentDataSize / 2;
+        TForteUInt16 *destAr = (TForteUInt16 *) (&retVal);
+        TForteUInt16 *sourceAr = (TForteUInt16 *) paDataArray;
+
+        for (unsigned int i = 0; i < nrUint16s; i++) {
+          destAr[i] = sourceAr[nrUint16s - 1 - i];
+        }
       } else {
-        bool reuseConnection = false;
-        mModbusConnection = getClientConnection(idString);
-        if (strlen(tcpParams.mIp) > 0) {
-          mModbusConnection->setIPAddress(tcpParams.mIp);
-          mModbusConnection->setPort(tcpParams.mPort);
-        } else if (strlen(rtuParams.mDevice) > 0) {
-          mModbusConnection->setDevice(rtuParams.mDevice);
-          mModbusConnection->setBaud(rtuParams.mBaud);
-          mModbusConnection->setParity(rtuParams.mParity);
-          mModbusConnection->setDataBit(rtuParams.mDataBit);
-          mModbusConnection->setStopBit(rtuParams.mStopBit);
-          mModbusConnection->setFlowControl(rtuParams.mFlowControl);
-        } else {
-          reuseConnection = true;
+        TForteByte *tempAr = (TForteByte *) (&retVal);
+        for (unsigned int j = 0; j < currentDataSize; j++) {
+          tempAr[j] = paDataArray[j];
         }
-        mModbusConnection->setResponseTimeout(commonParams.mResponseTimeout);
-        mModbusConnection->setByteTimeout(commonParams.mByteTimeout);
-
-        static_cast<CModbusClientConnection *>(mModbusConnection)->setSlaveId(commonParams.mSlaveId);
-
-        for (unsigned int i = 0; i < commonParams.mNrPolls; i++) {
-          const SAddrRange *const readParams = commonParams.mRead;
-          m_IOBlock.addNewRead(readParams[i].mFunction, readParams[i].mStartAddress, readParams[i].mNrAddresses);
-        }
-        for (unsigned int i = 0; i < commonParams.mNrSends; i++) {
-          const SAddrRange *const sendParams = commonParams.mSend;
-          m_IOBlock.addNewSend(sendParams[i].mFunction, sendParams[i].mStartAddress, sendParams[i].mNrAddresses);
-        }
-        static_cast<CModbusClientConnection *>(mModbusConnection)->addNewPoll(commonParams.mPollFrequency, &m_IOBlock);
-
-        if (!reuseConnection && mModbusConnection->connect() < 0) {
-          return eRetVal;
-        }
-        mConnectionState = e_Connected;
-        eRetVal = e_InitOk;
       }
-    } break;
-    case e_Publisher:
-      // do nothing as modbus cannot be publisher
-      break;
-    case e_Subscriber:
-      // do nothing as modbus cannot be subscriber
-      break;
+    } else {
+      retVal = 0;
+    }
+
+    return retVal;
   }
 
-  return eRetVal;
-}
+  EComResponse CModbusComLayer::openConnection(char *paLayerParameter) {
+    EComResponse eRetVal = e_InitInvalidId;
+    switch (mFb->getComServiceType()) {
+      case e_Server:
+        // TODO open server connection
+        mConnectionState = e_Listening;
+        break;
+      case e_Client: {
+        STcpParams tcpParams;
+        SRtuParams rtuParams;
+        SCommonParams commonParams;
+        char idString[256] = {0};
+        memset(&tcpParams, 0, sizeof(tcpParams));
+        memset(&rtuParams, 0, sizeof(rtuParams));
+        memset(&commonParams, 0, sizeof(commonParams));
 
-void CModbusComLayer::closeConnection() {
-  // TODO
-  DEVLOG_INFO("CModbusLayer::closeConnection()\n");
+        int errCode = processClientParams(paLayerParameter, &tcpParams, &rtuParams, &commonParams, idString);
+        if (errCode != 0) {
+          DEVLOG_ERROR("CModbusComLayer:: Invalid input parameters\n");
+        } else {
+          bool reuseConnection = false;
+          mModbusConnection = getClientConnection(idString);
+          if (strlen(tcpParams.mIp) > 0) {
+            mModbusConnection->setIPAddress(tcpParams.mIp);
+            mModbusConnection->setPort(tcpParams.mPort);
+          } else if (strlen(rtuParams.mDevice) > 0) {
+            mModbusConnection->setDevice(rtuParams.mDevice);
+            mModbusConnection->setBaud(rtuParams.mBaud);
+            mModbusConnection->setParity(rtuParams.mParity);
+            mModbusConnection->setDataBit(rtuParams.mDataBit);
+            mModbusConnection->setStopBit(rtuParams.mStopBit);
+            mModbusConnection->setFlowControl(rtuParams.mFlowControl);
+          } else {
+            reuseConnection = true;
+          }
+          mModbusConnection->setResponseTimeout(commonParams.mResponseTimeout);
+          mModbusConnection->setByteTimeout(commonParams.mByteTimeout);
 
-  putConnection(mModbusConnection);
-}
+          static_cast<CModbusClientConnection *>(mModbusConnection)->setSlaveId(commonParams.mSlaveId);
 
-EModbusFunction CModbusComLayer::decodeFunction(const char *paParam, int *strIndex, EModbusFunction paDefaultFunction) {
-  switch (paParam[*strIndex]) {
-    case 'd':
-    case 'D': ++*strIndex; return eDiscreteInput;
-    case 'c':
-    case 'C': ++*strIndex; return eCoil;
-    case 'i':
-    case 'I': ++*strIndex; return eInputRegister;
-    case 'h':
-    case 'H': ++*strIndex; return eHoldingRegister;
-    default: break;
+          for (unsigned int i = 0; i < commonParams.mNrPolls; i++) {
+            const SAddrRange *const readParams = commonParams.mRead;
+            m_IOBlock.addNewRead(readParams[i].mFunction, readParams[i].mStartAddress, readParams[i].mNrAddresses);
+          }
+          for (unsigned int i = 0; i < commonParams.mNrSends; i++) {
+            const SAddrRange *const sendParams = commonParams.mSend;
+            m_IOBlock.addNewSend(sendParams[i].mFunction, sendParams[i].mStartAddress, sendParams[i].mNrAddresses);
+          }
+          static_cast<CModbusClientConnection *>(mModbusConnection)
+              ->addNewPoll(commonParams.mPollFrequency, &m_IOBlock);
+
+          if (!reuseConnection && mModbusConnection->connect() < 0) {
+            return eRetVal;
+          }
+          mConnectionState = e_Connected;
+          eRetVal = e_InitOk;
+        }
+      } break;
+      case e_Publisher:
+        // do nothing as modbus cannot be publisher
+        break;
+      case e_Subscriber:
+        // do nothing as modbus cannot be subscriber
+        break;
+    }
+
+    return eRetVal;
   }
-  return paDefaultFunction;
-}
 
-int CModbusComLayer::processClientParams(const char *paLayerParams,
-                                         STcpParams *paTcpParams,
-                                         SRtuParams *paRtuParams,
-                                         SCommonParams *paCommonParams,
-                                         char *paIdString) {
-  char *params = new char[strlen(paLayerParams) + 1];
-  char *paramsAddress = params;
-  strcpy(params, paLayerParams);
-  char *chrStorage;
-  unsigned int defaultSlaveId;
-  bool reuseConnection = false;
+  void CModbusComLayer::closeConnection() {
+    // TODO
+    DEVLOG_INFO("CModbusLayer::closeConnection()\n");
 
-  paTcpParams->mIp[0] = '\0';
-  paRtuParams->mDevice[0] = '\0';
-
-  chrStorage = strchr(params, ':');
-  if (chrStorage == nullptr) {
-    delete[] paramsAddress;
-    return -1;
+    putConnection(mModbusConnection);
   }
-  *chrStorage = '\0';
-  ++chrStorage;
 
-  if (strcmp(params, "rtu") == 0 || strcmp(params, "RTU") == 0) {
-    defaultSlaveId = 1;
+  EModbusFunction
+  CModbusComLayer::decodeFunction(const char *paParam, int *strIndex, EModbusFunction paDefaultFunction) {
+    switch (paParam[*strIndex]) {
+      case 'd':
+      case 'D': ++*strIndex; return eDiscreteInput;
+      case 'c':
+      case 'C': ++*strIndex; return eCoil;
+      case 'i':
+      case 'I': ++*strIndex; return eInputRegister;
+      case 'h':
+      case 'H': ++*strIndex; return eHoldingRegister;
+      default: break;
+    }
+    return paDefaultFunction;
+  }
 
-    // get rtu params
-    params = chrStorage;
+  int CModbusComLayer::processClientParams(const char *paLayerParams,
+                                           STcpParams *paTcpParams,
+                                           SRtuParams *paRtuParams,
+                                           SCommonParams *paCommonParams,
+                                           char *paIdString) {
+    char *params = new char[strlen(paLayerParams) + 1];
+    char *paramsAddress = params;
+    strcpy(params, paLayerParams);
+    char *chrStorage;
+    unsigned int defaultSlaveId;
+    bool reuseConnection = false;
+
+    paTcpParams->mIp[0] = '\0';
+    paRtuParams->mDevice[0] = '\0';
+
+    chrStorage = strchr(params, ':');
+    if (chrStorage == nullptr) {
+      delete[] paramsAddress;
+      return -1;
+    }
+    *chrStorage = '\0';
+    ++chrStorage;
+
+    if (strcmp(params, "rtu") == 0 || strcmp(params, "RTU") == 0) {
+      defaultSlaveId = 1;
+
+      // get rtu params
+      params = chrStorage;
+      chrStorage = strchr(chrStorage, ':');
+      if (chrStorage == nullptr) {
+        delete[] paramsAddress;
+        return -1;
+      }
+      *chrStorage = '\0';
+      ++chrStorage;
+
+      strcpy(paIdString, "rtu:");
+      strcat(paIdString, params);
+      strcpy(paRtuParams->mDevice, params);
+      paRtuParams->mBaud = (int) util::strtol(chrStorage, nullptr, 10);
+
+      chrStorage = strchr(chrStorage, ':');
+      if (chrStorage == nullptr) {
+        delete[] paramsAddress;
+        return -1;
+      }
+      *chrStorage = '\0';
+      ++chrStorage;
+
+      paRtuParams->mParity = chrStorage[0];
+      reuseConnection |= chrStorage[0] == ':';
+
+      chrStorage = strchr(chrStorage, ':');
+      if (chrStorage == nullptr) {
+        delete[] paramsAddress;
+        return -1;
+      }
+      *chrStorage = '\0';
+      ++chrStorage;
+
+      paRtuParams->mDataBit = (int) util::strtol(chrStorage, nullptr, 10);
+      reuseConnection |= !chrStorage[0];
+
+      chrStorage = strchr(chrStorage, ':');
+      if (chrStorage == nullptr) {
+        delete[] paramsAddress;
+        return -1;
+      }
+      *chrStorage = '\0';
+      ++chrStorage;
+
+      paRtuParams->mStopBit = (int) util::strtol(chrStorage, nullptr, 10);
+      reuseConnection |= !chrStorage[0];
+
+      chrStorage = strchr(chrStorage, ':');
+      if (chrStorage == nullptr) {
+        delete[] paramsAddress;
+        return -1;
+      }
+      *chrStorage = '\0';
+      ++chrStorage;
+
+      const char *flow = chrStorage;
+      chrStorage = strchr(chrStorage, ':');
+      if (chrStorage == 0) {
+        delete[] paramsAddress;
+        return -1;
+      }
+      *chrStorage = '\0';
+      ++chrStorage;
+
+      if (!strcmp(flow, "arduino")) {
+        paRtuParams->mFlowControl = eFlowArduino;
+#ifdef WIN32
+        paRtuParams->mFlowControl = eFlowDelay;
+        DEVLOG_WARNING("CModbusComLayer:: Flow control style \"arduino\" not supported on windows, using \"delay\"\n");
+#endif
+      } else if (!strcmp(flow, "delay")) {
+        paRtuParams->mFlowControl = eFlowDelay;
+      } else if (!strcmp(flow, "longdelay") || !strcmp(flow, "delay5")) {
+        paRtuParams->mFlowControl = eFlowLongDelay;
+      } else {
+        paRtuParams->mFlowControl = eFlowNone;
+      }
+
+      if (reuseConnection) {
+        paRtuParams->mDevice[0] = '\0';
+      }
+    } else {
+      if (strcmp(params, "tcp") == 0 || strcmp(params, "TCP") == 0) {
+        defaultSlaveId = 0xFF;
+
+        params = chrStorage;
+
+        chrStorage = strchr(chrStorage, ':');
+        if (chrStorage == nullptr) {
+          delete[] paramsAddress;
+          return -1;
+        }
+        *chrStorage = '\0';
+        ++chrStorage;
+      }
+      if (isIp(params)) {
+        // TCP connection
+        strcpy(paIdString, "tcp:");
+        strcat(paIdString, params);
+        strcat(paIdString, ":");
+        strcpy(paTcpParams->mIp, params);
+        paTcpParams->mPort = (unsigned int) util::strtoul(chrStorage, nullptr, 10);
+        reuseConnection |= !chrStorage[0];
+
+        params = chrStorage;
+        chrStorage = strchr(chrStorage, ':');
+        if (chrStorage == nullptr) {
+          delete[] paramsAddress;
+          return -1;
+        }
+        *chrStorage = '\0';
+        ++chrStorage;
+        strcat(paIdString, params);
+      } else {
+        delete[] paramsAddress;
+        return -1;
+      }
+
+      if (reuseConnection) {
+        paTcpParams->mIp[0] = '\0';
+      }
+    }
+    // Get common parameters
+
+    char *chrSlave = chrStorage;
     chrStorage = strchr(chrStorage, ':');
     if (chrStorage == nullptr) {
       delete[] paramsAddress;
@@ -516,53 +659,14 @@ int CModbusComLayer::processClientParams(const char *paLayerParams,
     *chrStorage = '\0';
     ++chrStorage;
 
-    strcpy(paIdString, "rtu:");
-    strcat(paIdString, params);
-    strcpy(paRtuParams->mDevice, params);
-    paRtuParams->mBaud = (int) util::strtol(chrStorage, nullptr, 10);
-
-    chrStorage = strchr(chrStorage, ':');
-    if (chrStorage == nullptr) {
-      delete[] paramsAddress;
-      return -1;
+    // Search for optional parameter slave id
+    if (*chrSlave) {
+      paCommonParams->mSlaveId = (unsigned int) util::strtoul(chrSlave, nullptr, 10);
+    } else {
+      paCommonParams->mSlaveId = defaultSlaveId;
     }
-    *chrStorage = '\0';
-    ++chrStorage;
 
-    paRtuParams->mParity = chrStorage[0];
-    reuseConnection |= chrStorage[0] == ':';
-
-    chrStorage = strchr(chrStorage, ':');
-    if (chrStorage == nullptr) {
-      delete[] paramsAddress;
-      return -1;
-    }
-    *chrStorage = '\0';
-    ++chrStorage;
-
-    paRtuParams->mDataBit = (int) util::strtol(chrStorage, nullptr, 10);
-    reuseConnection |= !chrStorage[0];
-
-    chrStorage = strchr(chrStorage, ':');
-    if (chrStorage == nullptr) {
-      delete[] paramsAddress;
-      return -1;
-    }
-    *chrStorage = '\0';
-    ++chrStorage;
-
-    paRtuParams->mStopBit = (int) util::strtol(chrStorage, nullptr, 10);
-    reuseConnection |= !chrStorage[0];
-
-    chrStorage = strchr(chrStorage, ':');
-    if (chrStorage == nullptr) {
-      delete[] paramsAddress;
-      return -1;
-    }
-    *chrStorage = '\0';
-    ++chrStorage;
-
-    const char *flow = chrStorage;
+    char *pollFrequency = chrStorage;
     chrStorage = strchr(chrStorage, ':');
     if (chrStorage == 0) {
       delete[] paramsAddress;
@@ -571,283 +675,200 @@ int CModbusComLayer::processClientParams(const char *paLayerParams,
     *chrStorage = '\0';
     ++chrStorage;
 
-    if (!strcmp(flow, "arduino")) {
-      paRtuParams->mFlowControl = eFlowArduino;
-#ifdef WIN32
-      paRtuParams->mFlowControl = eFlowDelay;
-      DEVLOG_WARNING("CModbusComLayer:: Flow control style \"arduino\" not supported on windows, using \"delay\"\n");
-#endif
-    } else if (!strcmp(flow, "delay")) {
-      paRtuParams->mFlowControl = eFlowDelay;
-    } else if (!strcmp(flow, "longdelay") || !strcmp(flow, "delay5")) {
-      paRtuParams->mFlowControl = eFlowLongDelay;
-    } else {
-      paRtuParams->mFlowControl = eFlowNone;
+    // Find poll frequency
+    paCommonParams->mPollFrequency = atol(pollFrequency);
+
+    char *readAddresses = chrStorage;
+    chrStorage = strchr(chrStorage, ':');
+    if (chrStorage == nullptr) {
+      delete[] paramsAddress;
+      return -1;
     }
+    *chrStorage = '\0';
+    ++chrStorage;
 
-    if (reuseConnection) {
-      paRtuParams->mDevice[0] = '\0';
-    }
-  } else {
-    if (strcmp(params, "tcp") == 0 || strcmp(params, "TCP") == 0) {
-      defaultSlaveId = 0xFF;
-
-      params = chrStorage;
-
-      chrStorage = strchr(chrStorage, ':');
-      if (chrStorage == nullptr) {
-        delete[] paramsAddress;
-        return -1;
+    // Find read addresses
+    int paramLen = (int) strlen(readAddresses);
+    int nrPolls = 0;
+    int strIndex = -1;
+    while (strIndex < paramLen - 1) {
+      strIndex = findNextStartAddress(readAddresses, ++strIndex);
+      if (strIndex < 0) {
+        break;
       }
+      SAddrRange *const curRead = &paCommonParams->mRead[nrPolls];
+      curRead->mFunction = decodeFunction(readAddresses, &strIndex);
+      curRead->mStartAddress = (unsigned int) util::strtoul(const_cast<char *>(&readAddresses[strIndex]), nullptr, 10);
+      strIndex = findNextStopAddress(readAddresses, strIndex);
+      curRead->mNrAddresses = (unsigned int) util::strtoul(const_cast<char *>(&readAddresses[strIndex]), nullptr, 10) -
+                              curRead->mStartAddress + 1;
+      nrPolls++;
+    }
+    paCommonParams->mNrPolls = nrPolls;
+
+    char *writeAddresses = chrStorage;
+    chrStorage = strchr(chrStorage, ':');
+    if (chrStorage != nullptr) {
       *chrStorage = '\0';
       ++chrStorage;
     }
-    if (isIp(params)) {
-      // TCP connection
-      strcpy(paIdString, "tcp:");
-      strcat(paIdString, params);
-      strcat(paIdString, ":");
-      strcpy(paTcpParams->mIp, params);
-      paTcpParams->mPort = (unsigned int) util::strtoul(chrStorage, nullptr, 10);
-      reuseConnection |= !chrStorage[0];
 
-      params = chrStorage;
+    // Find send addresses
+    paramLen = (int) strlen(writeAddresses);
+    int nrSends = 0;
+    strIndex = -1;
+    while (strIndex < paramLen - 1) {
+      strIndex = findNextStartAddress(writeAddresses, ++strIndex);
+      if (strIndex < 0) {
+        break;
+      }
+      SAddrRange *const curSend = &paCommonParams->mSend[nrSends];
+      curSend->mFunction = decodeFunction(writeAddresses, &strIndex);
+      curSend->mStartAddress = (unsigned int) util::strtoul(const_cast<char *>(&writeAddresses[strIndex]), nullptr, 10);
+      strIndex = findNextStopAddress(writeAddresses, strIndex);
+      curSend->mNrAddresses = (unsigned int) util::strtoul(const_cast<char *>(&writeAddresses[strIndex]), nullptr, 10) -
+                              curSend->mStartAddress + 1;
+      nrSends++;
+    }
+    paCommonParams->mNrSends = nrSends;
+
+    // Find responseTimeout and byteTimeout
+    do {
+      if (chrStorage == nullptr) {
+        break;
+      }
+      paCommonParams->mResponseTimeout = (unsigned int) util::strtoul(chrStorage, nullptr, 10);
+
       chrStorage = strchr(chrStorage, ':');
       if (chrStorage == nullptr) {
-        delete[] paramsAddress;
-        return -1;
+        break;
       }
       *chrStorage = '\0';
       ++chrStorage;
-      strcat(paIdString, params);
-    } else {
+
+      paCommonParams->mByteTimeout = (unsigned int) util::strtoul(chrStorage, nullptr, 10);
+    } while (false);
+
+    if (nrPolls == 0 && nrSends == 0) {
       delete[] paramsAddress;
       return -1;
     }
 
-    if (reuseConnection) {
-      paTcpParams->mIp[0] = '\0';
-    }
-  }
-  // Get common parameters
-
-  char *chrSlave = chrStorage;
-  chrStorage = strchr(chrStorage, ':');
-  if (chrStorage == nullptr) {
     delete[] paramsAddress;
-    return -1;
-  }
-  *chrStorage = '\0';
-  ++chrStorage;
-
-  // Search for optional parameter slave id
-  if (*chrSlave) {
-    paCommonParams->mSlaveId = (unsigned int) util::strtoul(chrSlave, nullptr, 10);
-  } else {
-    paCommonParams->mSlaveId = defaultSlaveId;
+    return 0;
   }
 
-  char *pollFrequency = chrStorage;
-  chrStorage = strchr(chrStorage, ':');
-  if (chrStorage == 0) {
-    delete[] paramsAddress;
-    return -1;
-  }
-  *chrStorage = '\0';
-  ++chrStorage;
-
-  // Find poll frequency
-  paCommonParams->mPollFrequency = atol(pollFrequency);
-
-  char *readAddresses = chrStorage;
-  chrStorage = strchr(chrStorage, ':');
-  if (chrStorage == nullptr) {
-    delete[] paramsAddress;
-    return -1;
-  }
-  *chrStorage = '\0';
-  ++chrStorage;
-
-  // Find read addresses
-  int paramLen = (int) strlen(readAddresses);
-  int nrPolls = 0;
-  int strIndex = -1;
-  while (strIndex < paramLen - 1) {
-    strIndex = findNextStartAddress(readAddresses, ++strIndex);
-    if (strIndex < 0) {
-      break;
-    }
-    SAddrRange *const curRead = &paCommonParams->mRead[nrPolls];
-    curRead->mFunction = decodeFunction(readAddresses, &strIndex);
-    curRead->mStartAddress = (unsigned int) util::strtoul(const_cast<char *>(&readAddresses[strIndex]), nullptr, 10);
-    strIndex = findNextStopAddress(readAddresses, strIndex);
-    curRead->mNrAddresses = (unsigned int) util::strtoul(const_cast<char *>(&readAddresses[strIndex]), nullptr, 10) -
-                            curRead->mStartAddress + 1;
-    nrPolls++;
-  }
-  paCommonParams->mNrPolls = nrPolls;
-
-  char *writeAddresses = chrStorage;
-  chrStorage = strchr(chrStorage, ':');
-  if (chrStorage != nullptr) {
-    *chrStorage = '\0';
-    ++chrStorage;
-  }
-
-  // Find send addresses
-  paramLen = (int) strlen(writeAddresses);
-  int nrSends = 0;
-  strIndex = -1;
-  while (strIndex < paramLen - 1) {
-    strIndex = findNextStartAddress(writeAddresses, ++strIndex);
-    if (strIndex < 0) {
-      break;
-    }
-    SAddrRange *const curSend = &paCommonParams->mSend[nrSends];
-    curSend->mFunction = decodeFunction(writeAddresses, &strIndex);
-    curSend->mStartAddress = (unsigned int) util::strtoul(const_cast<char *>(&writeAddresses[strIndex]), nullptr, 10);
-    strIndex = findNextStopAddress(writeAddresses, strIndex);
-    curSend->mNrAddresses = (unsigned int) util::strtoul(const_cast<char *>(&writeAddresses[strIndex]), nullptr, 10) -
-                            curSend->mStartAddress + 1;
-    nrSends++;
-  }
-  paCommonParams->mNrSends = nrSends;
-
-  // Find responseTimeout and byteTimeout
-  do {
-    if (chrStorage == nullptr) {
-      break;
-    }
-    paCommonParams->mResponseTimeout = (unsigned int) util::strtoul(chrStorage, nullptr, 10);
-
-    chrStorage = strchr(chrStorage, ':');
-    if (chrStorage == nullptr) {
-      break;
-    }
-    *chrStorage = '\0';
-    ++chrStorage;
-
-    paCommonParams->mByteTimeout = (unsigned int) util::strtoul(chrStorage, nullptr, 10);
-  } while (false);
-
-  if (nrPolls == 0 && nrSends == 0) {
-    delete[] paramsAddress;
-    return -1;
-  }
-
-  delete[] paramsAddress;
-  return 0;
-}
-
-int CModbusComLayer::findNextStartAddress(const char *paParam, int paStartIndex) {
-  if (paStartIndex == 0) {
-    switch (paParam[paStartIndex]) {
-      case '0':
-      case '1':
-      case '2':
-      case '3':
-      case '4':
-      case '5':
-      case '6':
-      case '7':
-      case '8':
-      case '9':
-      case 'c': // coil
-      case 'C':
-      case 'd': // discrete
-      case 'D':
-      case 'h': // holding
-      case 'H':
-      case 'i': // input
-      case 'I': return paStartIndex;
-    }
-  }
-
-  int strLength = (int) strlen(&paParam[paStartIndex]);
-  const char *pch = strchr(&paParam[paStartIndex], ',');
-
-  if (pch != nullptr) {
-    if (pch - &paParam[paStartIndex] < strLength - 1) {
-      return (int) (pch - &paParam[0]) + 1;
-    }
-  }
-
-  return -1;
-}
-
-int CModbusComLayer::findNextStopAddress(const char *paParam, int paStartIndex) {
-  int strLength = (int) strlen(&paParam[paStartIndex]);
-  const char *pchComma = strchr(&paParam[paStartIndex], ',');
-  const char *pchDot = strchr(&paParam[paStartIndex], '.');
-
-  if (pchComma != nullptr && pchDot != nullptr) {
-    if (pchDot < pchComma && (pchDot - &paParam[paStartIndex] < strLength - 2)) {
-      return (int) (pchDot - &paParam[0]) + 2;
-    }
-  } else if (pchDot != nullptr) {
-    if (pchDot - &paParam[paStartIndex] < strLength - 2) {
-      return (int) (pchDot - &paParam[0]) + 2;
-    }
-  }
-
-  return paStartIndex;
-}
-
-bool CModbusComLayer::isIp(const char *paIp) {
-  char *str = new char[strlen(paIp) + 1];
-  strcpy(str, paIp);
-  char *pch;
-  int nrPeriods = 0;
-
-  pch = strtok(str, ".");
-  while (pch != nullptr) {
-    nrPeriods++;
-    if (strlen(pch) > 3) {
-      delete[] str;
-      return false;
-    }
-    for (unsigned int i = 0; i < strlen(pch); i++) {
-      if (!util::isDigit(pch[i])) {
-        delete[] str;
-        return false;
+  int CModbusComLayer::findNextStartAddress(const char *paParam, int paStartIndex) {
+    if (paStartIndex == 0) {
+      switch (paParam[paStartIndex]) {
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+        case 'c': // coil
+        case 'C':
+        case 'd': // discrete
+        case 'D':
+        case 'h': // holding
+        case 'H':
+        case 'i': // input
+        case 'I': return paStartIndex;
       }
     }
 
-    pch = strtok(nullptr, ".");
+    int strLength = (int) strlen(&paParam[paStartIndex]);
+    const char *pch = strchr(&paParam[paStartIndex], ',');
+
+    if (pch != nullptr) {
+      if (pch - &paParam[paStartIndex] < strLength - 1) {
+        return (int) (pch - &paParam[0]) + 1;
+      }
+    }
+
+    return -1;
   }
-  if (nrPeriods != 4) {
+
+  int CModbusComLayer::findNextStopAddress(const char *paParam, int paStartIndex) {
+    int strLength = (int) strlen(&paParam[paStartIndex]);
+    const char *pchComma = strchr(&paParam[paStartIndex], ',');
+    const char *pchDot = strchr(&paParam[paStartIndex], '.');
+
+    if (pchComma != nullptr && pchDot != nullptr) {
+      if (pchDot < pchComma && (pchDot - &paParam[paStartIndex] < strLength - 2)) {
+        return (int) (pchDot - &paParam[0]) + 2;
+      }
+    } else if (pchDot != nullptr) {
+      if (pchDot - &paParam[paStartIndex] < strLength - 2) {
+        return (int) (pchDot - &paParam[0]) + 2;
+      }
+    }
+
+    return paStartIndex;
+  }
+
+  bool CModbusComLayer::isIp(const char *paIp) {
+    char *str = new char[strlen(paIp) + 1];
+    strcpy(str, paIp);
+    char *pch;
+    int nrPeriods = 0;
+
+    pch = strtok(str, ".");
+    while (pch != nullptr) {
+      nrPeriods++;
+      if (strlen(pch) > 3) {
+        delete[] str;
+        return false;
+      }
+      for (unsigned int i = 0; i < strlen(pch); i++) {
+        if (!util::isDigit(pch[i])) {
+          delete[] str;
+          return false;
+        }
+      }
+
+      pch = strtok(nullptr, ".");
+    }
+    if (nrPeriods != 4) {
+      delete[] str;
+      return false;
+    }
+
     delete[] str;
-    return false;
+    return true;
   }
 
-  delete[] str;
-  return true;
-}
+  CModbusConnection *CModbusComLayer::getClientConnection(const char *paIdString) {
+    auto itConn = std::find_if(smConnections.begin(), smConnections.end(),
+                               [paIdString](const SConnection &sc) { return !strcmp(sc.mIdString, paIdString); });
+    if (itConn != smConnections.end()) {
+      ++itConn->mUseCount;
+      return itConn->mConnection;
+    }
 
-CModbusConnection *CModbusComLayer::getClientConnection(const char *paIdString) {
-  auto itConn = std::find_if(smConnections.begin(), smConnections.end(),
-                             [paIdString](const SConnection &sc) { return !strcmp(sc.mIdString, paIdString); });
-  if (itConn != smConnections.end()) {
-    ++itConn->mUseCount;
-    return itConn->mConnection;
+    CModbusConnection *modbusConnection =
+        new CModbusClientConnection((CModbusHandler *) &getExtEvHandler<CModbusHandler>());
+    SConnection connInfo = {{0}, 1, modbusConnection};
+    strcpy(connInfo.mIdString, paIdString);
+    smConnections.push_back(connInfo);
+    return modbusConnection;
   }
 
-  CModbusConnection *modbusConnection =
-      new CModbusClientConnection((CModbusHandler *) &getExtEvHandler<CModbusHandler>());
-  SConnection connInfo = {{0}, 1, modbusConnection};
-  strcpy(connInfo.mIdString, paIdString);
-  smConnections.push_back(connInfo);
-  return modbusConnection;
-}
-
-void CModbusComLayer::putConnection(CModbusConnection *paModbusConn) {
-  auto itConn = std::find_if(smConnections.begin(), smConnections.end(),
-                             [paModbusConn](const SConnection &sc) { return sc.mConnection == paModbusConn; });
-  if (itConn != smConnections.end()) {
-    if (!--itConn->mUseCount) {
-      itConn->mConnection->disconnect();
-      delete itConn->mConnection;
-      smConnections.erase(itConn);
+  void CModbusComLayer::putConnection(CModbusConnection *paModbusConn) {
+    auto itConn = std::find_if(smConnections.begin(), smConnections.end(),
+                               [paModbusConn](const SConnection &sc) { return sc.mConnection == paModbusConn; });
+    if (itConn != smConnections.end()) {
+      if (!--itConn->mUseCount) {
+        itConn->mConnection->disconnect();
+        delete itConn->mConnection;
+        smConnections.erase(itConn);
+      }
     }
   }
-}
+
+} // namespace forte::com_infra::modbus

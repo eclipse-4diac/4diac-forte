@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2021 Davor Cihlar
+ * Copyright (c) 2021, 2025 Davor Cihlar
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,52 +13,52 @@
 #include "modbusioblock.h"
 #include "modbusconnection.h"
 
-CModbusIOBlock::CModbusIOBlock(forte::com_infra::CModbusComLayer *paParent) :
-    mParent(paParent),
-    mCache(0),
-    mReadSize(0),
-    mSendSize(0) {
-}
+namespace forte::com_infra::modbus {
 
-CModbusIOBlock::~CModbusIOBlock() {
-  if (mCache)
-    delete[] (uint8_t *) mCache;
-}
-
-void CModbusIOBlock::allocCache() {
-  mCache = new uint8_t[mReadSize]();
-}
-
-void CModbusIOBlock::addNewRead(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses) {
-  SModbusRange mbr;
-  mbr.mFunction = paFunction;
-  mbr.mStartAddress = paStartAddress;
-  mbr.mNrAddresses = paNrAddresses;
-  mReads.push_back(mbr);
-
-  mReadSize += getRegisterSize(paFunction) * paNrAddresses;
-  if (mCache) {
-    delete[] (uint8_t *) mCache;
-    allocCache();
+  CModbusIOBlock::CModbusIOBlock(CModbusComLayer *paParent) : mParent(paParent), mCache(0), mReadSize(0), mSendSize(0) {
   }
-}
 
-void CModbusIOBlock::addNewSend(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses) {
-  SModbusRange mbr;
-  mbr.mFunction = paFunction;
-  mbr.mStartAddress = paStartAddress;
-  mbr.mNrAddresses = paNrAddresses;
-  mSends.push_back(mbr);
-
-  mSendSize += getRegisterSize(paFunction) * paNrAddresses;
-}
-
-unsigned int CModbusIOBlock::getRegisterSize(EModbusFunction paFunction) {
-  switch (paFunction) {
-    case eDiscreteInput:
-    case eCoil: return sizeof(uint8_t);
-    case eInputRegister:
-    case eHoldingRegister: return sizeof(uint16_t);
-    default: return 0;
+  CModbusIOBlock::~CModbusIOBlock() {
+    if (mCache)
+      delete[] (uint8_t *) mCache;
   }
-}
+
+  void CModbusIOBlock::allocCache() {
+    mCache = new uint8_t[mReadSize]();
+  }
+
+  void CModbusIOBlock::addNewRead(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses) {
+    SModbusRange mbr;
+    mbr.mFunction = paFunction;
+    mbr.mStartAddress = paStartAddress;
+    mbr.mNrAddresses = paNrAddresses;
+    mReads.push_back(mbr);
+
+    mReadSize += getRegisterSize(paFunction) * paNrAddresses;
+    if (mCache) {
+      delete[] (uint8_t *) mCache;
+      allocCache();
+    }
+  }
+
+  void CModbusIOBlock::addNewSend(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses) {
+    SModbusRange mbr;
+    mbr.mFunction = paFunction;
+    mbr.mStartAddress = paStartAddress;
+    mbr.mNrAddresses = paNrAddresses;
+    mSends.push_back(mbr);
+
+    mSendSize += getRegisterSize(paFunction) * paNrAddresses;
+  }
+
+  unsigned int CModbusIOBlock::getRegisterSize(EModbusFunction paFunction) {
+    switch (paFunction) {
+      case eDiscreteInput:
+      case eCoil: return sizeof(uint8_t);
+      case eInputRegister:
+      case eHoldingRegister: return sizeof(uint16_t);
+      default: return 0;
+    }
+  }
+
+} // namespace forte::com_infra::modbus

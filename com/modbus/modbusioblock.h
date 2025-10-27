@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2021 Davor Cihlar
+ * Copyright (c) 2021, 2025 Davor Cihlar
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,57 +15,56 @@
 #include <vector>
 #include "modbusenums.h"
 
-namespace forte {
-  namespace com_infra {
-    class CModbusComLayer;
-  }
-} // namespace forte
+namespace forte::com_infra::modbus {
+  class CModbusComLayer;
 
-class CModbusIOBlock {
-  public:
-    struct SModbusRange {
-        EModbusFunction mFunction;
-        unsigned int mStartAddress;
-        unsigned int mNrAddresses;
-    };
-    typedef std::vector<SModbusRange> TModbusRangeList;
+  class CModbusIOBlock {
+    public:
+      struct SModbusRange {
+          EModbusFunction mFunction;
+          unsigned int mStartAddress;
+          unsigned int mNrAddresses;
+      };
+      typedef std::vector<SModbusRange> TModbusRangeList;
 
-    CModbusIOBlock(forte::com_infra::CModbusComLayer *paParent);
-    ~CModbusIOBlock();
+      CModbusIOBlock(CModbusComLayer *paParent);
+      ~CModbusIOBlock();
 
-    forte::com_infra::CModbusComLayer *getParent() const {
-      return mParent;
-    }
+      CModbusComLayer *getParent() const {
+        return mParent;
+      }
 
-    void addNewRead(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses);
-    void addNewSend(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses);
+      void addNewRead(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses);
+      void addNewSend(EModbusFunction paFunction, unsigned int paStartAddress, unsigned int paNrAddresses);
 
-    void allocCache();
-    void *getCache() {
-      return mCache;
-    }
+      void allocCache();
+      void *getCache() {
+        return mCache;
+      }
 
-    const TModbusRangeList &getReads() const {
-      return mReads;
-    }
-    const TModbusRangeList &getSends() const {
-      return mSends;
-    }
+      const TModbusRangeList &getReads() const {
+        return mReads;
+      }
+      const TModbusRangeList &getSends() const {
+        return mSends;
+      }
 
-    unsigned int getReadSize() const {
-      return mReadSize;
-    }
-    unsigned int getSendSize() const {
-      return mSendSize;
-    }
-    static unsigned int getRegisterSize(EModbusFunction paFunction);
+      unsigned int getReadSize() const {
+        return mReadSize;
+      }
+      unsigned int getSendSize() const {
+        return mSendSize;
+      }
+      static unsigned int getRegisterSize(EModbusFunction paFunction);
 
-  private:
-    forte::com_infra::CModbusComLayer *const mParent;
-    TModbusRangeList mReads;
-    TModbusRangeList mSends;
+    private:
+      CModbusComLayer *const mParent;
+      TModbusRangeList mReads;
+      TModbusRangeList mSends;
 
-    void *mCache;
-    unsigned int mReadSize;
-    unsigned int mSendSize;
-};
+      void *mCache;
+      unsigned int mReadSize;
+      unsigned int mSendSize;
+  };
+
+} // namespace forte::com_infra::modbus

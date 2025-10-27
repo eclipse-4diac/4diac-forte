@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 AIT
+ * Copyright (c) 2012, 2025 AIT
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,39 +11,43 @@
  *******************************************************************************/
 #pragma once
 
-#include "forte/timerha.h"
+#include "forte/datatype.h"
 #include <modbus.h>
 
-class CModbusTimedEvent {
-  public:
-    explicit CModbusTimedEvent(TForteUInt32 paUpdateInterval); // UpdateInterval = 0 => single shot event
-    virtual ~CModbusTimedEvent() = default;
+namespace forte::com_infra::modbus {
 
-    void setUpdateInterval(TForteUInt32 paUpdateInterval);
-    TForteUInt32 getUpdateInterval() const {
-      return mUpdateInterval;
-    }
+  class CModbusTimedEvent {
+    public:
+      explicit CModbusTimedEvent(TForteUInt32 paUpdateInterval); // UpdateInterval = 0 => single shot event
+      virtual ~CModbusTimedEvent() = default;
 
-    void activate();
-    void deactivate();
+      void setUpdateInterval(TForteUInt32 paUpdateInterval);
+      TForteUInt32 getUpdateInterval() const {
+        return mUpdateInterval;
+      }
 
-    bool isStarted() const {
-      return mIsStarted;
-    }
+      void activate();
+      void deactivate();
 
-    bool readyToExecute() const;
+      bool isStarted() const {
+        return mIsStarted;
+      }
 
-    // Classes impementing this should call restartTimer in executeEvent
-    virtual int executeEvent(modbus_t *paModbusConn, void *paRetVal) = 0;
+      bool readyToExecute() const;
 
-  protected:
-    void restartTimer();
+      // Classes impementing this should call restartTimer in executeEvent
+      virtual int executeEvent(modbus_t *paModbusConn, void *paRetVal) = 0;
 
-  private:
-    uint_fast64_t mStartTime;
+    protected:
+      void restartTimer();
 
-    TForteUInt32 mUpdateInterval; // Polling interval in milliseconds (0 => single shot event)
+    private:
+      uint_fast64_t mStartTime;
 
-    bool mSingleShotEvent;
-    bool mIsStarted;
-};
+      TForteUInt32 mUpdateInterval; // Polling interval in milliseconds (0 => single shot event)
+
+      bool mSingleShotEvent;
+      bool mIsStarted;
+  };
+
+} // namespace forte::com_infra::modbus

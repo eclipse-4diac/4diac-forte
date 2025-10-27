@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2012 - 2023 AIT, fortiss GmbH, Davor Cihlar
+ * Copyright (c) 2012, 2025 AIT, fortiss GmbH, Davor Cihlar
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -17,93 +18,87 @@
 #include "modbusioblock.h"
 #include "modbusenums.h"
 #include "forte/cominfra/comlayer.h"
-#include <stdint.h>
 
-class CModbusConnection;
-class CIEC_ANY;
+namespace forte::com_infra::modbus {
 
-namespace forte {
+  class CModbusConnection;
 
-  namespace com_infra {
+  class CModbusComLayer : public CComLayer {
+    public:
+      CModbusComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
+      ~CModbusComLayer() override;
 
-    class CModbusComLayer : public CComLayer {
-      public:
-        CModbusComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB);
-        ~CModbusComLayer() override;
+      EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
+      EComResponse recvData(const void *paData, unsigned int paSize) override;
 
-        EComResponse sendData(void *paData, unsigned int paSize) override; // top interface, called from top
-        EComResponse recvData(const void *paData, unsigned int paSize) override;
+      EComResponse processInterrupt() override;
 
-        EComResponse processInterrupt() override;
+    private:
+      struct STcpParams {
+          char mIp[16];
+          unsigned int mPort;
+      };
+      struct SRtuParams {
+          char mDevice[256];
+          int mBaud;
+          char mParity;
+          int mDataBit;
+          int mStopBit;
+          EModbusFlowControl mFlowControl;
+      };
+      struct SAddrRange {
+          EModbusFunction mFunction;
+          unsigned int mStartAddress;
+          unsigned int mNrAddresses;
+      };
+      struct SCommonParams {
+          unsigned int mNrPolls;
+          unsigned int mNrSends;
+          long mPollFrequency;
+          unsigned int mSlaveId;
+          SAddrRange mRead[100];
+          SAddrRange mSend[100];
+          unsigned int mResponseTimeout;
+          unsigned int mByteTimeout;
+      };
+      struct SConnection {
+          char mIdString[256];
+          unsigned int mUseCount;
+          CModbusConnection *mConnection;
+      };
 
-      private:
-        struct STcpParams {
-            char mIp[16];
-            unsigned int mPort;
-        };
-        struct SRtuParams {
-            char mDevice[256];
-            int mBaud;
-            char mParity;
-            int mDataBit;
-            int mStopBit;
-            EModbusFlowControl mFlowControl;
-        };
-        struct SAddrRange {
-            EModbusFunction mFunction;
-            unsigned int mStartAddress;
-            unsigned int mNrAddresses;
-        };
-        struct SCommonParams {
-            unsigned int mNrPolls;
-            unsigned int mNrSends;
-            long mPollFrequency;
-            unsigned int mSlaveId;
-            SAddrRange mRead[100];
-            SAddrRange mSend[100];
-            unsigned int mResponseTimeout;
-            unsigned int mByteTimeout;
-        };
-        struct SConnection {
-            char mIdString[256];
-            unsigned int mUseCount;
-            CModbusConnection *mConnection;
-        };
+      template<typename T>
+      T convertFBOutput(TForteByte *paDataArray, unsigned int paDataSize);
 
-        template<typename T>
-        T convertFBOutput(TForteByte *paDataArray, unsigned int paDataSize);
+      unsigned int convertDataInput(void *paInData, unsigned int paDataSize, void *paConvertedData);
 
-        unsigned int convertDataInput(void *paInData, unsigned int paDataSize, void *paConvertedData);
+      EComResponse openConnection(char *paLayerParameter) override;
+      void closeConnection() override;
 
-        EComResponse openConnection(char *paLayerParameter) override;
-        void closeConnection() override;
+      EModbusFunction
+      decodeFunction(const char *paParam, int *strIndex, EModbusFunction paDefaultFunction = eHoldingRegister);
+      int processClientParams(const char *paLayerParams,
+                              STcpParams *paTcpParams,
+                              SRtuParams *paRtuParams,
+                              SCommonParams *paCommonParams,
+                              char *paIdString);
+      int findNextStartAddress(const char *paString, int paStartIndex);
+      int findNextStopAddress(const char *paString, int paStartIndex);
+      bool isIp(const char *paIp);
 
-        EModbusFunction
-        decodeFunction(const char *paParam, int *strIndex, EModbusFunction paDefaultFunction = eHoldingRegister);
-        int processClientParams(const char *paLayerParams,
-                                STcpParams *paTcpParams,
-                                SRtuParams *paRtuParams,
-                                SCommonParams *paCommonParams,
-                                char *paIdString);
-        int findNextStartAddress(const char *paString, int paStartIndex);
-        int findNextStopAddress(const char *paString, int paStartIndex);
-        bool isIp(const char *paIp);
+      CModbusConnection *getClientConnection(const char *paIdString);
+      void putConnection(CModbusConnection *paModbusConn);
 
-        CModbusConnection *getClientConnection(const char *paIdString);
-        void putConnection(CModbusConnection *paModbusConn);
+      EComResponse mInterruptResp;
 
-        EComResponse mInterruptResp;
+      CModbusConnection *mModbusConnection;
 
-        CModbusConnection *mModbusConnection;
+      TForteByte mRecvBuffer[cgIPLayerRecvBufferSize];
+      unsigned int mBufFillSize;
 
-        TForteByte mRecvBuffer[cgIPLayerRecvBufferSize];
-        unsigned int mBufFillSize;
+      CModbusIOBlock m_IOBlock;
 
-        CModbusIOBlock m_IOBlock;
+      static std::vector<SConnection> smConnections;
+  };
 
-        static std::vector<SConnection> smConnections;
-    };
-
-  } // namespace com_infra
-
-} // namespace forte
+} // namespace forte::com_infra::modbus

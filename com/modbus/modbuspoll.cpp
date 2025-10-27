@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2012 - 2023 AIT, Davor Cihlar
+ * Copyright (c) 2012, 2025 AIT, Davor Cihlar
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,68 +14,71 @@
 #include "modbuspoll.h"
 #include "modbushandler.h"
 #include "modbusioblock.h"
-
-#include "forte/util/devlog.h"
-
 #include <modbus.h>
 
-CModbusPoll::CModbusPoll(CModbusHandler *paModbusHandler, long paPollInterval) :
-    CModbusTimedEvent((TForteUInt32) paPollInterval),
-    mModbusHandler(paModbusHandler) {
-}
+namespace forte::com_infra::modbus {
 
-CModbusPoll::~CModbusPoll() {
-  mPolls.clear();
-}
-
-void CModbusPoll::addPollBlock(CModbusIOBlock *paIOBlock) {
-  mPolls.push_back(paIOBlock);
-  paIOBlock->allocCache();
-}
-
-int CModbusPoll::executeEvent(modbus_t *paModbusConn, void *) {
-  restartTimer();
-
-  int nrVals = 0;
-  for (auto it : mPolls) {
-    nrVals += readOneBlock(paModbusConn, it);
+  CModbusPoll::CModbusPoll(CModbusHandler *paModbusHandler, long paPollInterval) :
+      CModbusTimedEvent((TForteUInt32) paPollInterval),
+      mModbusHandler(paModbusHandler) {
   }
-  return nrVals;
-}
 
-int CModbusPoll::readOneBlock(modbus_t *paModbusConn, CModbusIOBlock *paIOBlock) {
-  int nrVals = 0;
-  unsigned int dataIndex = 0;
-  const CModbusIOBlock::TModbusRangeList &lReads = paIOBlock->getReads();
-  uint8_t *pData = (uint8_t *) paIOBlock->getCache();
-  for (auto &it : lReads) {
-    const unsigned int nextDataIndex = dataIndex + it.mNrAddresses * CModbusIOBlock::getRegisterSize(it.mFunction);
-    if (nextDataIndex > paIOBlock->getReadSize()) {
-      break;
+  CModbusPoll::~CModbusPoll() {
+    mPolls.clear();
+  }
+
+  void CModbusPoll::addPollBlock(CModbusIOBlock *paIOBlock) {
+    mPolls.push_back(paIOBlock);
+    paIOBlock->allocCache();
+  }
+
+  int CModbusPoll::executeEvent(modbus_t *paModbusConn, void *) {
+    restartTimer();
+
+    int nrVals = 0;
+    for (auto it : mPolls) {
+      nrVals += readOneBlock(paModbusConn, it);
     }
-    switch (it.mFunction) {
-      case eCoil: nrVals += modbus_read_bits(paModbusConn, it.mStartAddress, it.mNrAddresses, &pData[dataIndex]); break;
-      case eDiscreteInput:
-        nrVals += modbus_read_input_bits(paModbusConn, it.mStartAddress, it.mNrAddresses, &pData[dataIndex]);
+    return nrVals;
+  }
+
+  int CModbusPoll::readOneBlock(modbus_t *paModbusConn, CModbusIOBlock *paIOBlock) {
+    int nrVals = 0;
+    unsigned int dataIndex = 0;
+    const CModbusIOBlock::TModbusRangeList &lReads = paIOBlock->getReads();
+    uint8_t *pData = (uint8_t *) paIOBlock->getCache();
+    for (auto &it : lReads) {
+      const unsigned int nextDataIndex = dataIndex + it.mNrAddresses * CModbusIOBlock::getRegisterSize(it.mFunction);
+      if (nextDataIndex > paIOBlock->getReadSize()) {
         break;
-      case eHoldingRegister:
-        nrVals +=
-            modbus_read_registers(paModbusConn, it.mStartAddress, it.mNrAddresses, (uint16_t *) &pData[dataIndex]);
-        break;
-      case eInputRegister:
-        nrVals += modbus_read_input_registers(paModbusConn, it.mStartAddress, it.mNrAddresses,
-                                              (uint16_t *) &pData[dataIndex]);
-        break;
-      default:
-        // TODO Error
-        break;
+      }
+      switch (it.mFunction) {
+        case eCoil:
+          nrVals += modbus_read_bits(paModbusConn, it.mStartAddress, it.mNrAddresses, &pData[dataIndex]);
+          break;
+        case eDiscreteInput:
+          nrVals += modbus_read_input_bits(paModbusConn, it.mStartAddress, it.mNrAddresses, &pData[dataIndex]);
+          break;
+        case eHoldingRegister:
+          nrVals +=
+              modbus_read_registers(paModbusConn, it.mStartAddress, it.mNrAddresses, (uint16_t *) &pData[dataIndex]);
+          break;
+        case eInputRegister:
+          nrVals += modbus_read_input_registers(paModbusConn, it.mStartAddress, it.mNrAddresses,
+                                                (uint16_t *) &pData[dataIndex]);
+          break;
+        default:
+          // TODO Error
+          break;
+      }
+      dataIndex = nextDataIndex;
     }
-    dataIndex = nextDataIndex;
+
+    if (nrVals > 0) {
+      mModbusHandler->executeComCallback(paIOBlock->getParent());
+    }
+
+    return nrVals;
   }
 
-  if (nrVals > 0) {
-    mModbusHandler->executeComCallback(paIOBlock->getParent());
-  }
-
-  return nrVals;
-}
+} // namespace forte::com_infra::modbus

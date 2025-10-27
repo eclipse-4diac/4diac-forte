@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2021 Davor Cihlar
+ * Copyright (c) 2021, 2025 Davor Cihlar
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,12 +12,16 @@
  *******************************************************************************/
 #pragma once
 
-enum EModbusFunction { eDiscreteInput = 0, eCoil, eInputRegister, eHoldingRegister };
+namespace forte::com_infra::modbus {
 
-enum EModbusFlowControl {
-  eFlowNone = 0,
-  eFlow485,
-  eFlowArduino,
-  eFlowDelay,
-  eFlowLongDelay,
-};
+  enum EModbusFunction { eDiscreteInput = 0, eCoil, eInputRegister, eHoldingRegister };
+
+  enum EModbusFlowControl {
+    eFlowNone = 0,
+    eFlow485,
+    eFlowArduino,
+    eFlowDelay,
+    eFlowLongDelay,
+  };
+
+} // namespace forte::com_infra::modbus

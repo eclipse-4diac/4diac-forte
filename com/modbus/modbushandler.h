@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2012 - 2023 AIT, fortiss GmbH, Davor Cihlar
+ * Copyright (c) 2012, 2025 AIT, fortiss GmbH, Davor Cihlar
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,24 +13,23 @@
  *******************************************************************************/
 #pragma once
 
-#include "forte/config/forte_config.h"
 #include "forte/extevhan.h"
 
-namespace forte {
-  namespace com_infra {
-    class CModbusComLayer;
-  }
-} // namespace forte
+namespace forte::com_infra::modbus {
 
-class CModbusHandler : public CExternalEventHandler, public RegisterExternalEventHandler<CModbusHandler> {
-  public:
-    explicit CModbusHandler(CDeviceExecution &paDeviceExecution);
-    ~CModbusHandler() override;
+  class CModbusComLayer;
 
-    typedef int TCallbackDescriptor;
+  class CModbusHandler : public CExternalEventHandler, public RegisterExternalEventHandler<CModbusHandler> {
+    public:
+      explicit CModbusHandler(CDeviceExecution &paDeviceExecution);
+      ~CModbusHandler() override;
 
-    void enableHandler() override {};
-    void disableHandler() override {};
+      typedef int TCallbackDescriptor;
 
-    void executeComCallback(forte::com_infra::CModbusComLayer *paComCallback);
-};
+      void enableHandler() override {};
+      void disableHandler() override {};
+
+      void executeComCallback(CModbusComLayer *paComCallback);
+  };
+
+} // namespace forte::com_infra::modbus

@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2012 - 2023 AIT, Davor Cihlar
+ * Copyright (c) 2012, 2025 AIT, Davor Cihlar
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -15,21 +16,25 @@
 #include "modbustimedevent.h"
 #include <vector>
 
-class CModbusIOBlock;
-class CModbusHandler;
+namespace forte::com_infra::modbus {
 
-class CModbusPoll : public CModbusTimedEvent {
-  public:
-    CModbusPoll(CModbusHandler *paModbusHandler, long paPollInterval);
-    ~CModbusPoll() override;
+  class CModbusIOBlock;
+  class CModbusHandler;
 
-    int executeEvent(modbus_t *paModbusConn, void *paRetVal) override;
+  class CModbusPoll : public CModbusTimedEvent {
+    public:
+      CModbusPoll(CModbusHandler *paModbusHandler, long paPollInterval);
+      ~CModbusPoll() override;
 
-    void addPollBlock(CModbusIOBlock *paIOBlock);
+      int executeEvent(modbus_t *paModbusConn, void *paRetVal) override;
 
-  private:
-    CModbusHandler *const mModbusHandler;
-    std::vector<CModbusIOBlock *> mPolls;
+      void addPollBlock(CModbusIOBlock *paIOBlock);
 
-    int readOneBlock(modbus_t *paModbusConn, CModbusIOBlock *paIOBlock);
-};
+    private:
+      CModbusHandler *const mModbusHandler;
+      std::vector<CModbusIOBlock *> mPolls;
+
+      int readOneBlock(modbus_t *paModbusConn, CModbusIOBlock *paIOBlock);
+  };
+
+} // namespace forte::com_infra::modbus

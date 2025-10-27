@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012 AIT
+ * Copyright (c) 2012, 2025 AIT
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,45 +12,48 @@
 #include "modbustimedevent.h"
 #include "forte/iec61131_functions.h"
 
-CModbusTimedEvent::CModbusTimedEvent(TForteUInt32 paUpdateInterval) : mIsStarted(false) {
-  mUpdateInterval = paUpdateInterval;
+namespace forte::com_infra::modbus {
 
-  if (paUpdateInterval == 0) {
-    mSingleShotEvent = true;
+  CModbusTimedEvent::CModbusTimedEvent(TForteUInt32 paUpdateInterval) : mIsStarted(false) {
+    mUpdateInterval = paUpdateInterval;
 
-    activate();
-  } else
-    mSingleShotEvent = false;
-}
+    if (paUpdateInterval == 0) {
+      mSingleShotEvent = true;
 
-void CModbusTimedEvent::setUpdateInterval(TForteUInt32 paUpdateInterval) {
-  mUpdateInterval = paUpdateInterval;
-}
+      activate();
+    } else
+      mSingleShotEvent = false;
+  }
 
-void CModbusTimedEvent::activate() {
-  mStartTime = func_NOW_MONOTONIC().getInMilliSeconds();
-  mIsStarted = true;
-}
+  void CModbusTimedEvent::setUpdateInterval(TForteUInt32 paUpdateInterval) {
+    mUpdateInterval = paUpdateInterval;
+  }
 
-void CModbusTimedEvent::deactivate() {
-  mIsStarted = false;
-}
+  void CModbusTimedEvent::activate() {
+    mStartTime = func_NOW_MONOTONIC().getInMilliSeconds();
+    mIsStarted = true;
+  }
 
-bool CModbusTimedEvent::readyToExecute() const {
-  uint_fast64_t currentTime = func_NOW_MONOTONIC().getInMilliSeconds();
-  if (mUpdateInterval > currentTime) {
+  void CModbusTimedEvent::deactivate() {
+    mIsStarted = false;
+  }
+
+  bool CModbusTimedEvent::readyToExecute() const {
+    uint_fast64_t currentTime = func_NOW_MONOTONIC().getInMilliSeconds();
+    if (mUpdateInterval > currentTime) {
+      return false;
+    }
+    currentTime -= mUpdateInterval;
+
+    if (isStarted() && (currentTime > mStartTime || currentTime == mStartTime)) {
+      return true;
+    }
+
     return false;
   }
-  currentTime -= mUpdateInterval;
 
-  if (isStarted() && (currentTime > mStartTime || currentTime == mStartTime)) {
-    return true;
+  void CModbusTimedEvent::restartTimer() {
+    activate();
   }
 
-  return false;
-}
-
-void CModbusTimedEvent::restartTimer() {
-
-  activate();
-}
+} // namespace forte::com_infra::modbus
