@@ -141,10 +141,6 @@
         "rhs": "Linux"
       },
       "cacheVariables": {
-        "FORTE_ARCHITECTURE": {
-          "type": "STRING",
-          "value": "Posix"
-        },
         "CMAKE_INSTALL_RPATH": {
           "type": "STRING",
           "value": "$ORIGIN/../lib"
@@ -201,12 +197,6 @@
         "type": "equals",
         "lhs": "${hostSystemName}",
         "rhs": "Windows"
-      },
-      "cacheVariables": {
-        "FORTE_ARCHITECTURE": {
-          "type": "STRING",
-          "value": "Win32"
-        }
       },
       "architecture": {
         "value": "x64",
