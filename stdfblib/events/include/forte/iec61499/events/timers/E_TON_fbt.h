@@ -12,6 +12,7 @@
  *** Description: standard timer function block (on-delay timing)
  *** Version:
  ***     1.0: 2024-03-04/Franz Hoepfinger - HR Agrartechnik GmbH -
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  *************************************************************************/
 
 #pragma once
@@ -29,7 +30,7 @@
 #include "forte/iec61499/events/E_DELAY_fbt.h"
 #include "forte/iec61499/events/E_RS_fbt.h"
 
-namespace forte::iec61499::events {
+namespace forte::iec61499::events::timers {
   class FORTE_E_TON final : public CCompositeFB {
       DECLARE_FIRMWARE_FB(FORTE_E_TON)
 
@@ -37,9 +38,9 @@ namespace forte::iec61499::events {
       static const TEventID scmEventREQID = 0;
       static const TEventID scmEventCNFID = 0;
 
-      CInternalFB<FORTE_E_SWITCH> fb_E_SWITCH;
-      CInternalFB<FORTE_E_DELAY> fb_E_DELAY;
-      CInternalFB<FORTE_E_RS> fb_E_RS;
+      CInternalFB<forte::iec61499::events::FORTE_E_SWITCH> fb_E_SWITCH;
+      CInternalFB<forte::iec61499::events::FORTE_E_DELAY> fb_E_DELAY;
+      CInternalFB<forte::iec61499::events::FORTE_E_RS> fb_E_RS;
 
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;
@@ -65,4 +66,4 @@ namespace forte::iec61499::events {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
   };
-} // namespace forte::iec61499::events
+} // namespace forte::iec61499::events::timers

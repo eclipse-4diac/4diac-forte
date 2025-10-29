@@ -8,11 +8,12 @@
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
- *** Name: E_TOF
- *** Description: standard timer function block (off-delay timing)
+ *** Name: E_TP
+ *** Description: standard timer function block (pulse)
  *** Version:
  ***     1.0: 2024-03-04/Franz Hoepfinger - HR Agrartechnik GmbH -
  ***     1.1: 2024-04-23/Franz Hoepfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  *************************************************************************/
 
 #pragma once
@@ -26,22 +27,22 @@
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
-#include "forte/iec61499/events/E_SWITCH_fbt.h"
 #include "forte/iec61499/events/E_DELAY_fbt.h"
 #include "forte/iec61499/events/E_RS_fbt.h"
+#include "forte/iec61499/events/E_PERMIT_fbt.h"
 
-namespace forte::iec61499::events {
-  class FORTE_E_TOF final : public CCompositeFB {
-      DECLARE_FIRMWARE_FB(FORTE_E_TOF)
+namespace forte::iec61499::events::timers {
+  class FORTE_E_TP final : public CCompositeFB {
+      DECLARE_FIRMWARE_FB(FORTE_E_TP)
 
     private:
       static const TEventID scmEventREQID = 0;
       static const TEventID scmEventRID = 1;
       static const TEventID scmEventCNFID = 0;
 
-      CInternalFB<FORTE_E_SWITCH> fb_E_SWITCH;
-      CInternalFB<FORTE_E_DELAY> fb_E_DELAY;
-      CInternalFB<FORTE_E_RS> fb_E_RS;
+      CInternalFB<forte::iec61499::events::FORTE_E_DELAY> fb_E_DELAY;
+      CInternalFB<forte::iec61499::events::FORTE_E_RS> fb_E_RS;
+      CInternalFB<forte::iec61499::events::FORTE_E_PERMIT> fb_E_PERMIT;
 
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;
@@ -49,7 +50,7 @@ namespace forte::iec61499::events {
       CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
     public:
-      FORTE_E_TOF(StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_E_TP(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CEventConnection conn_CNF;
 
@@ -67,4 +68,4 @@ namespace forte::iec61499::events {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
   };
-} // namespace forte::iec61499::events
+} // namespace forte::iec61499::events::timers

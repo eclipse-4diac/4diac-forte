@@ -29,7 +29,6 @@ target_sources(forte-events PUBLIC
         E_MERGE_fbt.h
         E_N_TABLE_fbt.h
         E_PERMIT_fbt.h
-        E_PULSE_fbt.h
         E_R_TRIG_fbt.h
         E_RDELAY_fbt.h
         E_REND_fbt.h
@@ -45,10 +44,6 @@ target_sources(forte-events PUBLIC
         E_TABLE_CTRL_fbt.h
         E_TABLE_fbt.h
         E_TimeOut_fbt.h
-        E_TOF_fbt.h
-        E_TON_fbt.h
-        E_TONOF_fbt.h
-        E_TP_fbt.h
         E_TRAIN_fbt.h
         E_TRIG_fbt.h
         GEN_E_DEMUX_fbt.h
@@ -57,3 +52,4 @@ target_sources(forte-events PUBLIC
         GEN_E_SPLIT_fbt.h
         timedfb.h
 )
+add_subdirectory(timers)

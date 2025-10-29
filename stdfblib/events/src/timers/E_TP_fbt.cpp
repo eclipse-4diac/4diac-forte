@@ -13,13 +13,21 @@
  *** Version:
  ***     1.0: 2024-03-04/Franz Hoepfinger - HR Agrartechnik GmbH -
  ***     1.1: 2024-04-23/Franz Hoepfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  *************************************************************************/
 
-#include "forte/iec61499/events/E_TP_fbt.h"
+#include "forte/iec61499/events/timers/E_TP_fbt.h"
 
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
+
+using namespace std::literals;
 using namespace forte::literals;
 
-namespace forte::iec61499::events {
+namespace forte::iec61499::events::timers {
   namespace {
     const auto cDataInputNames = std::array{"IN"_STRID, "PT"_STRID};
     const auto cDataOutputNames = std::array{"Q"_STRID};
@@ -27,6 +35,7 @@ namespace forte::iec61499::events {
     const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
     const auto cEventOutputNames = std::array{"CNF"_STRID};
     const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+
     const SFBInterfaceSpec cFBInterfaceSpec = {
         .mEINames = cEventInputNames,
         .mEITypeNames = cEventInputTypeIds,
@@ -62,7 +71,7 @@ namespace forte::iec61499::events {
     };
   } // namespace
 
-  DEFINE_FIRMWARE_FB(FORTE_E_TP, "iec61499::events::E_TP"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_E_TP, "iec61499::events::timers::E_TP"_STRID)
 
   FORTE_E_TP::FORTE_E_TP(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
@@ -77,6 +86,7 @@ namespace forte::iec61499::events {
       conn_if2in_PT(*this, 1, 0_TIME) {};
 
   void FORTE_E_TP::setInitialValues() {
+    CCompositeFB::setInitialValues();
     conn_if2in_IN.getValue() = 0_BOOL;
     conn_if2in_PT.getValue() = 0_TIME;
     fb_E_RS->conn_Q.getValue() = 0_BOOL;
@@ -152,4 +162,4 @@ namespace forte::iec61499::events {
     return nullptr;
   }
 
-} // namespace forte::iec61499::events
+} // namespace forte::iec61499::events::timers

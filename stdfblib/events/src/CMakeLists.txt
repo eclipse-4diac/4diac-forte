@@ -27,7 +27,6 @@ target_sources(forte-events PRIVATE
         E_MERGE_fbt.cpp
         E_N_TABLE_fbt.cpp
         E_PERMIT_fbt.cpp
-        E_PULSE_fbt.cpp
         E_R_TRIG_fbt.cpp
         E_RDELAY_fbt.cpp
         E_REND_fbt.cpp
@@ -43,10 +42,6 @@ target_sources(forte-events PRIVATE
         E_TABLE_CTRL_fbt.cpp
         E_TABLE_fbt.cpp
         E_TimeOut_fbt.cpp
-        E_TOF_fbt.cpp
-        E_TON_fbt.cpp
-        E_TONOF_fbt.cpp
-        E_TP_fbt.cpp
         E_TRAIN_fbt.cpp
         E_TRIG_fbt.cpp
         GEN_E_DEMUX_fbt.cpp
@@ -55,3 +50,5 @@ target_sources(forte-events PRIVATE
         GEN_E_SPLIT_fbt.cpp
         timedfb.cpp
 )
+
+add_subdirectory(timers)

@@ -14,13 +14,21 @@
  ***     1.0: 2023-08-21/Franz Hoepfinger - HR Agrartechnik GmbH - initial implementation as E_IMPULSE
  ***     1.0: 2024-03-05/Franz Hoepfinger - HR Agrartechnik GmbH - renamed to E_PULSE
  ***     1.1: 2024-04-23/Franz Hoepfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  *************************************************************************/
 
-#include "forte/iec61499/events/E_PULSE_fbt.h"
+#include "forte/iec61499/events/timers/E_PULSE_fbt.h"
 
+#include "forte/iec61131_functions.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
+
+using namespace std::literals;
 using namespace forte::literals;
 
-namespace forte::iec61499::events {
+namespace forte::iec61499::events::timers {
   namespace {
     const auto cDataInputNames = std::array{"PT"_STRID};
     const auto cDataOutputNames = std::array{"Q"_STRID};
@@ -28,6 +36,7 @@ namespace forte::iec61499::events {
     const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
     const auto cEventOutputNames = std::array{"CNF"_STRID};
     const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+
     const SFBInterfaceSpec cFBInterfaceSpec = {
         .mEINames = cEventInputNames,
         .mEITypeNames = cEventInputTypeIds,
@@ -61,7 +70,7 @@ namespace forte::iec61499::events {
     };
   } // namespace
 
-  DEFINE_FIRMWARE_FB(FORTE_E_PULSE, "iec61499::events::E_PULSE"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_E_PULSE, "iec61499::events::timers::E_PULSE"_STRID)
 
   FORTE_E_PULSE::FORTE_E_PULSE(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
@@ -73,6 +82,7 @@ namespace forte::iec61499::events {
       conn_if2in_PT(*this, 0, 0_TIME) {};
 
   void FORTE_E_PULSE::setInitialValues() {
+    CCompositeFB::setInitialValues();
     conn_if2in_PT.getValue() = 0_TIME;
     fb_E_SR->conn_Q.getValue() = 0_BOOL;
   }
@@ -139,4 +149,4 @@ namespace forte::iec61499::events {
     return nullptr;
   }
 
-} // namespace forte::iec61499::events
+} // namespace forte::iec61499::events::timers

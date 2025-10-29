@@ -8,11 +8,12 @@
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
- *** Name: E_TONOF
- *** Description: standard timer function block (on/off-delay timing)
+ *** Name: E_TOF
+ *** Description: standard timer function block (off-delay timing)
  *** Version:
  ***     1.0: 2024-03-04/Franz Hoepfinger - HR Agrartechnik GmbH -
  ***     1.1: 2024-04-23/Franz Hoepfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  *************************************************************************/
 
 #pragma once
@@ -30,19 +31,18 @@
 #include "forte/iec61499/events/E_DELAY_fbt.h"
 #include "forte/iec61499/events/E_RS_fbt.h"
 
-namespace forte::iec61499::events {
-  class FORTE_E_TONOF final : public CCompositeFB {
-      DECLARE_FIRMWARE_FB(FORTE_E_TONOF)
+namespace forte::iec61499::events::timers {
+  class FORTE_E_TOF final : public CCompositeFB {
+      DECLARE_FIRMWARE_FB(FORTE_E_TOF)
 
     private:
       static const TEventID scmEventREQID = 0;
       static const TEventID scmEventRID = 1;
       static const TEventID scmEventCNFID = 0;
 
-      CInternalFB<FORTE_E_SWITCH> fb_E_SWITCH;
-      CInternalFB<FORTE_E_DELAY> fb_E_DELAY_ON;
-      CInternalFB<FORTE_E_RS> fb_E_RS;
-      CInternalFB<FORTE_E_DELAY> fb_E_DELAY_OFF;
+      CInternalFB<forte::iec61499::events::FORTE_E_SWITCH> fb_E_SWITCH;
+      CInternalFB<forte::iec61499::events::FORTE_E_DELAY> fb_E_DELAY;
+      CInternalFB<forte::iec61499::events::FORTE_E_RS> fb_E_RS;
 
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;
@@ -50,19 +50,17 @@ namespace forte::iec61499::events {
       CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
     public:
-      FORTE_E_TONOF(StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_E_TOF(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CEventConnection conn_CNF;
 
       CDataConnection *conn_IN;
-      CDataConnection *conn_PT_ON;
-      CDataConnection *conn_PT_OFF;
+      CDataConnection *conn_PT;
 
       COutDataConnection<CIEC_BOOL> conn_Q;
 
       COutDataConnection<CIEC_BOOL> conn_if2in_IN;
-      COutDataConnection<CIEC_TIME> conn_if2in_PT_ON;
-      COutDataConnection<CIEC_TIME> conn_if2in_PT_OFF;
+      COutDataConnection<CIEC_TIME> conn_if2in_PT;
 
       CIEC_ANY *getDI(size_t) override;
       CIEC_ANY *getDO(size_t) override;
@@ -70,4 +68,4 @@ namespace forte::iec61499::events {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
   };
-} // namespace forte::iec61499::events
+} // namespace forte::iec61499::events::timers

@@ -30,7 +30,7 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 #include "forte/iec61499/events/E_CYCLE_fbt.h"
-#include "forte/iec61499/events/E_PULSE_fbt.h"
+#include "forte/iec61499/events/timers/E_PULSE_fbt.h"
 #include "forte/iec61131/arithmetic/GEN_ADD_fbt.h"
 
 namespace forte::eclipse4diac::utils::signals {
@@ -42,7 +42,7 @@ namespace forte::eclipse4diac::utils::signals {
       static const TEventID scmEventSTOPID = 1;
       static const TEventID scmEventCNFID = 0;
 
-      forte::CInternalFB<iec61499::events::FORTE_E_PULSE> fb_E_TP;
+      forte::CInternalFB<iec61499::events::timers::FORTE_E_PULSE> fb_E_TP;
       forte::CInternalFB<iec61499::events::FORTE_E_CYCLE> fb_E_CYCLE;
       forte::CInternalFB<iec61131::arithmetic::GEN_ADD> fb_ADD_2;
 
