@@ -9,7 +9,7 @@
 # documentation *    Jose Cabral - added fileWriter_fbt
 # *******************************************************************************/
 
-if (NOT FORTE_ARCHITECTURE STREQUAL "Posix")
+if (NOT LINUX)
     return()
 endif ()
 

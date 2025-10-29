@@ -10,7 +10,7 @@
 # initial documentation Jörg Walter - adaption of sysfs
 # *******************************************************************************/
 
-if (NOT FORTE_ARCHITECTURE STREQUAL "Posix")
+if (NOT LINUX)
     return()
 endif ()
 

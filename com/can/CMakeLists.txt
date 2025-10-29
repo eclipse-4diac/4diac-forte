@@ -16,6 +16,10 @@
 # CAN Com Layer (currently only usable on Linux)
 #############################################################################
 
+if (NOT LINUX)
+    return()
+endif ()
+
 option(FORTE_COM_CAN "Enable the CAN Commuication Layer" OFF)
 
 if(FORTE_COM_CAN)

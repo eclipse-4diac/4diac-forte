@@ -46,7 +46,7 @@ target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-com-m
 
 target_include_directories(forte-com-mqtt_paho PRIVATE ${FORTE_COM_PAHOMQTT_INCLUDE_DIR})
 target_link_directories(forte-com-mqtt_paho PUBLIC ${FORTE_COM_PAHOMQTT_LIB_DIR})
-if (FORTE_ARCHITECTURE STREQUAL "Win32")
+if (WIN32)
     target_link_libraries(forte-com-mqtt_paho PRIVATE crypt32)
 endif ()
 target_link_libraries(forte-com-mqtt_paho PRIVATE ${FORTE_COM_PAHOMQTT_LIB})

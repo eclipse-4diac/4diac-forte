@@ -11,6 +11,10 @@
 # of openPOWERLINK and tinyXML
 # *******************************************************************************/
 
+if (NOT WIN32 AND NOT LINUX)
+    return()
+endif ()
+
 option(FORTE_MODULE_POWERLINK "openPOWERLINK Service Interface Function Blocks" OFF)
 
 if (NOT FORTE_MODULE_POWERLINK)
@@ -21,13 +25,6 @@ endif ()
 # COM Service Interface Function Blocks
 # ############################################################################
 
-if (NOT "${FORTE_ARCHITECTURE}" STREQUAL "Win32"
-    AND NOT "${FORTE_ARCHITECTURE}" STREQUAL "Posix"
-)
-    message(FATAL_ERROR "openPOWERLINK is only supported for FORTE on Windows and Linux platforms."
-    )
-endif ()
-
 set(FORTE_MODULE_POWERLINK_LIB_DIR
     ""
     CACHE PATH "Path to openPOWERLINK-V1.08 directory"
@@ -37,10 +34,10 @@ set(FORTE_MODULE_POWERLINK_TINYXML_DIR
     CACHE PATH "Path to TinyXML directory"
 )
 
-if (FORTE_ARCHITECTURE STREQUAL "Win32")
+if (WIN32)
     target_compile_definitions(forte-powerlink PRIVATE WPCAP)
     target_link_libraries(forte PUBLIC openPOWERLINK wpcap iphlpapi)
-elseif (FORTE_ARCHITECTURE STREQUAL "Posix")
+elseif (LINUX)
     target_link_libraries(forte PUBLIC powerlink pcap rt)
 endif ()
 

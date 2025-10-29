@@ -9,12 +9,13 @@
 #   documentation
 # *******************************************************************************/
 
+if (NOT LINUX)
+    return()
+endif ()
+
 option(FORTE_MODULE_PLCNEXT "Support for PLCnext system" OFF)
 
 if (NOT FORTE_MODULE_PLCNEXT)
-    return()
-endif ()
-if (NOT FORTE_ARCHITECTURE STREQUAL "Posix")
     return()
 endif ()
 

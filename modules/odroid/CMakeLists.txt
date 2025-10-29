@@ -9,7 +9,7 @@
 # documentation
 # *******************************************************************************/
 
-if (NOT FORTE_ARCHITECTURE STREQUAL "Posix")
+if (NOT LINUX)
     return()
 endif ()
 

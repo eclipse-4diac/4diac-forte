@@ -14,6 +14,10 @@
 #      - migration to current runtime
 # *******************************************************************************/
 
+if (NOT LINUX)
+    return()
+endif()
+
 option(FORTE_MODULE_REVOLUTIONPI "Support for Revolution Pi" OFF)
 
 if (NOT FORTE_MODULE_REVOLUTIONPI)

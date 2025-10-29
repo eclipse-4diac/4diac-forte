@@ -5,16 +5,16 @@
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
+#
 # Contributors:
 #     Milan Vathoopan, Alois Zoitl - initial API and implementation and/or initial documentation
 #     Jose Cabral - Add modular IOs
 #     Monika Wenger - all files start with capital letters
-# *******************************************************************************/ 
+# *******************************************************************************/
 #############################################################################
 # WAGO KBUS SIFBs
 #############################################################################
-if (NOT "${FORTE_ARCHITECTURE}" STREQUAL "Posix")
+if (NOT LINUX)
   return ()
 endif ()
 

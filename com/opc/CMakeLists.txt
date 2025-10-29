@@ -14,7 +14,7 @@
 # OPC Com Layer
 # ############################################################################
 
-if (NOT FORTE_ARCHITECTURE STREQUAL "Win32")
+if (NOT WIN32)
     return()
 endif ()
 
