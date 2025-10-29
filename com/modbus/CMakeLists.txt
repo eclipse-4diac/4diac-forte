@@ -41,8 +41,6 @@ add_library(forte-com-modbus
 target_link_libraries(forte-com-modbus PUBLIC forte-core)
 target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-com-modbus,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-com-modbus>>)
 
-target_include_directories(forte-com-modbus PRIVATE /usr/include/modbus)
-target_include_directories(forte-com-modbus PRIVATE /usr/local/include/modbus)
 target_include_directories(forte-com-modbus PRIVATE ${FORTE_COM_MODBUS_LIB_DIR}/include/modbus)
 target_link_directories(forte-com-modbus PUBLIC ${FORTE_COM_MODBUS_LIB_DIR}/lib)
 target_link_libraries(forte-com-modbus PRIVATE modbus)
