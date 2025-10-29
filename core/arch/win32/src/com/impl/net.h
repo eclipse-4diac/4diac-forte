@@ -18,7 +18,7 @@
 
 namespace forte::com::impl::net {
 
-  SOCKET open(std::string_view paConfigString, const ADDRINFOEXA &paHints);
+  SOCKET open(std::string_view paConfigString, const ADDRINFOA &paHints);
 
   int setNonBlocking(SOCKET paSocket);
 

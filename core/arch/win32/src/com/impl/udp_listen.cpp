@@ -27,7 +27,7 @@ namespace forte::com::impl {
   }
 
   SOCKET UDPListenChannel::socket(const std::string_view paConfigString) {
-    ADDRINFOEXA hints{};
+    ADDRINFOA hints{};
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_DGRAM;
     hints.ai_protocol = IPPROTO_UDP;

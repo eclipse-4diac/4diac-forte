@@ -18,7 +18,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
-SOCKET forte::com::impl::net::open(const std::string_view paConfigString, const ADDRINFOEXA &paHints) {
+SOCKET forte::com::impl::net::open(const std::string_view paConfigString, const ADDRINFOA &paHints) {
   const size_t colonPos = paConfigString.rfind(':');
   if (colonPos == std::string_view::npos) {
     return -1;
@@ -27,13 +27,12 @@ SOCKET forte::com::impl::net::open(const std::string_view paConfigString, const 
   const auto host = std::string{paConfigString.substr(0, colonPos)};
   const auto portStr = std::string{paConfigString.substr(colonPos + 1)};
 
-  ADDRINFOEXA *result;
-  if (GetAddrInfoExA(host.c_str(), portStr.c_str(), NS_DNS, nullptr, &paHints, &result, nullptr, nullptr, nullptr,
-                     nullptr)) {
+  ADDRINFOA *result;
+  if (GetAddrInfoA(host.c_str(), portStr.c_str(), &paHints, &result)) {
     return -1;
   }
 
-  for (const ADDRINFOEXA *rp = result; rp != nullptr; rp = rp->ai_next) {
+  for (const ADDRINFOA *rp = result; rp != nullptr; rp = rp->ai_next) {
     const SOCKET sock = WSASocketA(rp->ai_family, rp->ai_socktype, rp->ai_protocol, nullptr, 0, WSA_FLAG_OVERLAPPED);
     if (sock == INVALID_SOCKET) {
       continue;
@@ -42,14 +41,14 @@ SOCKET forte::com::impl::net::open(const std::string_view paConfigString, const 
     if ((paHints.ai_flags & AI_PASSIVE ? ::bind(sock, rp->ai_addr, static_cast<int>(rp->ai_addrlen))
                                        : WSAConnect(sock, rp->ai_addr, static_cast<int>(rp->ai_addrlen), nullptr,
                                                     nullptr, nullptr, nullptr)) == 0) {
-      FreeAddrInfoEx(result);
+      FreeAddrInfo(result);
       return sock;
     }
 
     ::closesocket(sock);
   }
 
-  FreeAddrInfoEx(result);
+  FreeAddrInfo(result);
   return -1;
 }
 
