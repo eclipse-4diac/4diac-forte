@@ -71,4 +71,10 @@ target_sources(forte-core PRIVATE
         unicode_utils.h
 )
 
+# std::codecvt<char16_t, char, std::mbstate_t> in forte_wstring.h is
+# deprecated, and clang libc++ loudly complains about this fact. There is no
+# standardised replacement, not even planned, so we can't upgrade to a clean
+# API. Just silence the useless warnings for now.
+target_compile_definitions(forte-core PUBLIC _LIBCPP_DISABLE_DEPRECATION_WARNINGS)
+
 add_subdirectory(convert)

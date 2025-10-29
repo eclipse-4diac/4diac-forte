@@ -14,6 +14,7 @@
 #include "tcp_listen.h"
 #include "net.h"
 
+#include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 
