@@ -25,6 +25,8 @@ set(FORTE_BASEX_SRC_DIR
         CACHE PATH "Path to BaseX library directory"
 )
 
+message(FATAL_ERROR "This module has not yet been ported to 4diac FORTE 3.0")
+
 add_library(forte-com-xquery
         $<$<BOOL:${FORTE_COM_XqueryClient}>:xqueryClientLayer.cpp>
         $<$<BOOL:${FORTE_COM_XqueryClient}>:xqueryClientLayer.h>

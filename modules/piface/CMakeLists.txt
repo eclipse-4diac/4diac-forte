@@ -22,6 +22,8 @@ if (NOT FORTE_MODULE_PiFace)
     return()
 endif ()
 
+message(FATAL_ERROR "This module has not yet been ported to 4diac FORTE 3.0")
+
 forte_set_process_interface("PiFace" IX QX)
 add_library(forte-piface
             processinterface.h processinterface.cpp

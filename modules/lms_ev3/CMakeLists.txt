@@ -19,6 +19,8 @@ if (NOT FORTE_MODULE_LMS_EV3)
     return()
 endif ()
 
+message(FATAL_ERROR "This module has not yet been ported to 4diac FORTE 3.0")
+
 # ############################################################################
 # LMS_EV3
 # ############################################################################

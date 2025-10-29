@@ -22,6 +22,8 @@ if (NOT FORTE_MODULE_MLPI)
     return()
 endif ()
 
+message(FATAL_ERROR "This module has not yet been ported to 4diac FORTE 3.0")
+
 set(FORTE_COM_MLPI_DIR
     ""
     CACHE PATH "Path to MLPI src directory"

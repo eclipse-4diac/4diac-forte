@@ -18,6 +18,8 @@ if (NOT FORTE_MODULE_Arrowhead)
     return()
 endif ()
 
+message(FATAL_ERROR "This module has not yet been ported to 4diac FORTE 3.0")
+
 add_library(forte-arrowhead)
 target_link_libraries(forte-arrowhead PUBLIC forte-core)
 target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-arrowhead,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-arrowhead>>)

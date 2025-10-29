@@ -14,6 +14,9 @@ option(FORTE_MODULE_ADS "Interacting with ADS servers" OFF)
 if (NOT FORTE_MODULE_ADS)
   return()
 endif ()
+
+message(FATAL_ERROR "This module has not yet been ported to 4diac FORTE 3.0")
+
 set(FORTE_MODULE_ADS_PI_ADS_ROOT
     ""
     CACHE PATH "Path to ADS library source root directory"
