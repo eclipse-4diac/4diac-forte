@@ -132,6 +132,17 @@
       }
     },
     {
+      "name": "shared",
+      "hidden": true,
+      "inherits": "base",
+      "cacheVariables": {
+        "BUILD_SHARED_LIBS": {
+          "type": "BOOL",
+          "value": "ON"
+        }
+      }
+    },
+    {
       "name": "posix",
       "hidden": true,
       "inherits": "base",
@@ -166,6 +177,36 @@
       "name": "posix-release",
       "displayName": "Release (Posix)",
       "inherits": "posix",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Release"
+        }
+      }
+    },
+    {
+      "name": "posix-shared",
+      "hidden": true,
+      "inherits": [
+        "posix",
+        "shared"
+      ]
+    },
+    {
+      "name": "posix-shared-debug",
+      "displayName": "Debug (Posix, Shared Libraries)",
+      "inherits": "posix-shared",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Debug"
+        }
+      }
+    },
+    {
+      "name": "posix-shared-release",
+      "displayName": "Release (Posix, Shared Libraries)",
+      "inherits": "posix-shared",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": {
           "type": "STRING",
@@ -218,6 +259,42 @@
       "name": "windows-release",
       "displayName": "Release (Windows)",
       "inherits": "windows",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Release"
+        }
+      }
+    },
+    {
+      "name": "windows-shared",
+      "hidden": true,
+      "inherits": [
+        "windows",
+        "shared"
+      ],
+      "cacheVariables": {
+        "WINDOWS_EXPORT_ALL_SYMBOLS": {
+          "type": "BOOL",
+          "value": "ON"
+        }
+      }
+    },
+    {
+      "name": "windows-shared-debug",
+      "displayName": "Debug (Windows, Shared Libraries)",
+      "inherits": "windows-shared",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": {
+          "type": "STRING",
+          "value": "Debug"
+        }
+      }
+    },
+    {
+      "name": "windows-shared-release",
+      "displayName": "Release (Windows, Shared Libraries)",
+      "inherits": "windows-shared",
       "cacheVariables": {
         "CMAKE_BUILD_TYPE": {
           "type": "STRING",
