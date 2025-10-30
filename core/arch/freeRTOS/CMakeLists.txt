@@ -17,13 +17,14 @@
 
 forte_register_architecture(FreeRTOSLwIP)
 
-target_include_directories(
-	forte-core 
-	PUBLIC
-    "${FORTE_FREERTOS_INCLUDE_DIR}"
-)
-
-
+set(FORTE_FREERTOS_INCLUDE_DIR "" CACHE PATH "Path to FreeRTOS include files (leave empty for installed source code)")
+if (FORTE_FREERTOS_INCLUDE_DIR)
+    target_include_directories(
+            forte-core
+            PUBLIC
+            "${FORTE_FREERTOS_INCLUDE_DIR}"
+    )
+endif ()
 
 add_subdirectory(include)
 add_subdirectory(src)
