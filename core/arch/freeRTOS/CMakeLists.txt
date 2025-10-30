@@ -26,6 +26,9 @@ if (FORTE_FREERTOS_INCLUDE_DIR)
     )
 endif ()
 
+option(FORTE_FREERTOS_PLUS_TCP "Use FreeRTOS-plus-TCP" OFF)
+target_compile_definitions(forte-core PUBLIC $<$<BOOL:${FORTE_FREERTOS_PLUS_TCP}>:FORTE_FREERTOS_PLUS_TCP>)
+
 add_subdirectory(include)
 add_subdirectory(src)
 

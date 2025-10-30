@@ -19,5 +19,6 @@ target_sources(forte-core PUBLIC
         forte_sync.h
         forte_thread.h
         sockhand.h
-
+        $<$<BOOL:${FORTE_FREERTOS_PLUS_TCP}>:${CMAKE_CURRENT_SOURCE_DIR}/sockhand_plustcp.h>
+        $<$<NOT:$<BOOL:${FORTE_FREERTOS_PLUS_TCP}>>:${CMAKE_CURRENT_SOURCE_DIR}/sockhand_lwip.h>
 )
