@@ -12,7 +12,7 @@
 #pragma once
 
 #include "forte/datatype.h"
-#include <modbus.h>
+#include <modbus/modbus.h>
 
 namespace forte::com_infra::modbus {
 

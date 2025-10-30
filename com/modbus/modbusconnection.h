@@ -13,7 +13,7 @@
  *******************************************************************************/
 #pragma once
 
-#include <modbus.h>
+#include <modbus/modbus.h>
 #include "forte/arch/forte_thread.h"
 #include "modbushandler.h"
 #include "modbusioblock.h"

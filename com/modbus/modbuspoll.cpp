@@ -14,7 +14,7 @@
 #include "modbuspoll.h"
 #include "modbushandler.h"
 #include "modbusioblock.h"
-#include <modbus.h>
+#include <modbus/modbus.h>
 
 namespace forte::com_infra::modbus {
 

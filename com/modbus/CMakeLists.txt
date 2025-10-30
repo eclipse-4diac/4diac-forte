@@ -42,7 +42,7 @@ target_link_libraries(forte-com-modbus PUBLIC forte-core)
 target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-com-modbus,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-com-modbus>>)
 
 if (FORTE_COM_MODBUS_LIB_DIR)
-    target_include_directories(forte-com-modbus PRIVATE ${FORTE_COM_MODBUS_LIB_DIR}/include/modbus)
+    target_include_directories(forte-com-modbus PRIVATE ${FORTE_COM_MODBUS_LIB_DIR}/include)
     target_link_directories(forte-com-modbus PUBLIC ${FORTE_COM_MODBUS_LIB_DIR}/lib)
 endif ()
 target_link_libraries(forte-com-modbus PRIVATE modbus)
