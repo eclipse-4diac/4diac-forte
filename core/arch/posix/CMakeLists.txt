@@ -12,7 +12,9 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-forte_register_architecture(Posix Linux)
+forte_register_architecture(Posix Linux Darwin)
+
+include(CheckLinkerFlag)
 
 target_link_libraries(forte-core PUBLIC
         pthread
@@ -23,9 +25,14 @@ target_link_libraries(forte-core PUBLIC
 set(FORTE_POSIX_GENERATE_MAP_FILE FALSE CACHE BOOL "Enable the generation of map files")
 mark_as_advanced(FORTE_POSIX_GENERATE_MAP_FILE)
 target_link_options(forte-core PUBLIC
-        LINKER:--no-as-needed # restore default behavior of including "unused" shared library dependencies on Ubuntu/Debian
         $<$<BOOL:${FORTE_POSIX_GENERATE_MAP_FILE}>:-Wl,-M,-Map,forte.map,-cref>
 )
+
+check_linker_flag(CXX LINKER:--no-as-needed has_no_as_needed)
+if (has_no_as_needed)
+    # Ubuntu/Debian have '--as-needed' as default. Restore default behavior of including "unused" shared library dependencies.
+    target_link_options(forte-core PUBLIC LINKER:--no-as-needed)
+endif ()
 
 add_subdirectory(include)
 add_subdirectory(src)

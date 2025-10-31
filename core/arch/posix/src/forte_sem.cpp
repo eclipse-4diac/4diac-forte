@@ -33,9 +33,11 @@ namespace forte::arch {
     if (pthread_condattr_init(&condAttr) != 0) {
       DEVLOG_ERROR("Could not initialize cv attributes\n");
     }
+#ifdef HAVE_PTHREAD_CONDATTR_SETCLOCK
     if (pthread_condattr_setclock(&condAttr, CLOCK_MONOTONIC) != 0) {
       DEVLOG_ERROR("Could not set cv clock\n");
     }
+#endif
     if (pthread_cond_init(&mCond, &condAttr) != 0) {
       DEVLOG_ERROR("Could not initialize condition variable\n");
     }

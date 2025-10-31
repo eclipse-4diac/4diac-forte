@@ -26,6 +26,14 @@
 
 using namespace forte::literals;
 
+// Missing MacOS flags. Just set them to 0.
+#ifndef CMSPAR
+#define CMSPAR 0
+#endif
+#ifndef IUCLC
+#define IUCLC 0
+#endif
+
 namespace forte::arch {
 
   namespace {
@@ -154,7 +162,9 @@ namespace forte::arch {
     newTIO.c_cc[VEOF] = _POSIX_VDISABLE; /* Ctrl-d */
     newTIO.c_cc[VTIME] = 10; /* inter-character timer unused */
     newTIO.c_cc[VMIN] = 1; /* blocking read until 1 character arrives */
+#ifdef VSWTC
     newTIO.c_cc[VSWTC] = _POSIX_VDISABLE; /* '\0' */
+#endif
     newTIO.c_cc[VSTART] = _POSIX_VDISABLE; /* Ctrl-q */
     newTIO.c_cc[VSTOP] = _POSIX_VDISABLE; /* Ctrl-s */
     newTIO.c_cc[VSUSP] = _POSIX_VDISABLE; /* Ctrl-z */
@@ -202,7 +212,9 @@ namespace forte::arch {
       case e38400: speed = B38400; break;
       case e57600: speed = B57600; break;
       case e115200: speed = B115200; break;
+#ifdef B1000000
       case e1000000: speed = B1000000; break;
+#endif
       default: speed = B0; break;
     }
     return speed;
