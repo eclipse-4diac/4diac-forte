@@ -12,34 +12,37 @@
 
 #include "forte/extevhan.h"
 #include "forte/arch/forte_thread.h"
-#include "forte/util/singlet.h"
 #include "forte/arch/forte_sem.h"
 #include "xqueryClientLayer.h"
 #include <vector>
 
-// cppcheck-suppress noConstructor
-class CXqueryHandler : public CExternalEventHandler,
-                       public RegisterExternalEventHandler<CXqueryHandler>,
-                       private CThread {
-  public:
-    explicit CXqueryHandler(CDeviceExecution &paDeviceExecution);
-    ~CXqueryHandler() override;
+namespace forte::com_infra::xquery {
 
-  private:
-    using TXqueryFBContainer = std::vector<CXqueryClientLayer *>;
-    TXqueryFBContainer mXqueryFBList;
-    static CSyncObject smXqueryMutex;
-    static CSemaphore mStateSemaphore;
-    void resumeSuspend();
-    void selfSuspend();
-    char *result;
-    char *info;
+  // cppcheck-suppress noConstructor
+  class CXqueryHandler : public CExternalEventHandler,
+                         public RegisterExternalEventHandler<CXqueryHandler>,
+                         private arch::CThread {
+    public:
+      explicit CXqueryHandler(CDeviceExecution &paDeviceExecution);
+      ~CXqueryHandler() override;
 
-  public:
-    void enableHandler() override;
-    void disableHandler() override;
-    int registerLayer(CXqueryClientLayer *paLayer);
+    private:
+      using TXqueryFBContainer = std::vector<CXqueryClientLayer *>;
+      TXqueryFBContainer mXqueryFBList;
+      static arch::CSyncObject smXqueryMutex;
+      static arch::CSemaphore mStateSemaphore;
+      void resumeSuspend();
+      void selfSuspend();
+      char *result;
+      char *info;
 
-  protected:
-    void run() override;
-};
+    public:
+      void enableHandler() override;
+      void disableHandler() override;
+      int registerLayer(CXqueryClientLayer *paLayer);
+
+    protected:
+      void run() override;
+  };
+
+} // namespace forte::com_infra::xquery

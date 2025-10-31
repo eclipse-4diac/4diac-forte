@@ -12,88 +12,92 @@
 
 #include "forte/cominfra/commfb.h"
 #include "forte/util/criticalregion.h"
-#include "forte/datatypes/forte_string.h"
 #include "forte/util/devlog.h"
 #include "xqueryClientLayer.h"
+
 extern "C" {
 #include <basexdbc.h>
 }
 
-CSyncObject CXqueryHandler::smXqueryMutex = CSyncObject();
-forte::arch::CSemaphore CXqueryHandler::mStateSemaphore = forte::arch::CSemaphore();
+namespace forte::com_infra::xquery {
 
-CXqueryHandler::CXqueryHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
-  result = nullptr;
-  info = nullptr;
-}
+  arch::CSyncObject CXqueryHandler::smXqueryMutex = arch::CSyncObject();
+  forte::arch::CSemaphore CXqueryHandler::mStateSemaphore = forte::arch::CSemaphore();
 
-CXqueryHandler::~CXqueryHandler() {
-  if (isAlive()) {
-    {
-      CCriticalRegion sectionState(smXqueryMutex);
+  CXqueryHandler::CXqueryHandler(CDeviceExecution &paDeviceExecution) : CExternalEventHandler(paDeviceExecution) {
+    result = nullptr;
+    info = nullptr;
+  }
+
+  CXqueryHandler::~CXqueryHandler() {
+    if (isAlive()) {
+      {
+        util::CCriticalRegion sectionState(smXqueryMutex);
+        setAlive(false);
+        resumeSuspend();
+      }
+      free(result);
+      free(info);
+      end();
+    }
+  }
+
+  void CXqueryHandler::enableHandler() {
+    if (!isAlive()) {
+      start();
+    }
+  }
+
+  void CXqueryHandler::disableHandler() {
+    if (isAlive()) {
       setAlive(false);
       resumeSuspend();
+      end();
     }
-    free(result);
-    free(info);
-    end();
   }
-}
 
-void CXqueryHandler::enableHandler() {
-  if (!isAlive()) {
-    start();
-  }
-}
-
-void CXqueryHandler::disableHandler() {
-  if (isAlive()) {
-    setAlive(false);
+  int CXqueryHandler::registerLayer(CXqueryClientLayer *paLayer) {
+    mXqueryFBList.emplace_back(paLayer);
+    enableHandler();
     resumeSuspend();
-    end();
+    return 0;
   }
-}
 
-int CXqueryHandler::registerLayer(CXqueryClientLayer *paLayer) {
-  mXqueryFBList.emplace_back(paLayer);
-  enableHandler();
-  resumeSuspend();
-  return 0;
-}
-
-void CXqueryHandler::run() {
-  while (isAlive()) {
-    if (mXqueryFBList.empty()) {
-      selfSuspend();
-    } else {
-      auto it = mXqueryFBList.begin();
-      CXqueryClientLayer *xc = *it;
-      if (xc && xc->getSfd() > -1) {
-        int rc = basex_execute(xc->getSfd(), xc->getCommand(), &result, &info);
-        if (rc == -1) { // general (i/o or the like) error
-          DEVLOG_ERROR("An error occured during execution of '%s'.\n", xc->getCommand());
-          free(result);
-          free(info);
-        }
-        if (rc > 0) { // database error while processing command
-          DEVLOG_ERROR("Processing of '%s' failed.\n", xc->getCommand());
-        } else {
-          if (e_Nothing != xc->recvData(result, strlen(result))) {
-            startNewEventChain(xc->getCommFB());
-          }
-        }
+  void CXqueryHandler::run() {
+    while (isAlive()) {
+      if (mXqueryFBList.empty()) {
+        selfSuspend();
       } else {
-        DEVLOG_ERROR("Connection seems to be lost, query not sent.\n");
+        auto it = mXqueryFBList.begin();
+        CXqueryClientLayer *xc = *it;
+        if (xc && xc->getSfd() > -1) {
+          int rc = basex_execute(xc->getSfd(), xc->getCommand(), &result, &info);
+          if (rc == -1) { // general (i/o or the like) error
+            DEVLOG_ERROR("An error occured during execution of '%s'.\n", xc->getCommand());
+            free(result);
+            free(info);
+          }
+          if (rc > 0) { // database error while processing command
+            DEVLOG_ERROR("Processing of '%s' failed.\n", xc->getCommand());
+          } else {
+            if (e_Nothing != xc->recvData(result, strlen(result))) {
+              startNewEventChain(xc->getCommFB());
+            }
+          }
+        } else {
+          DEVLOG_ERROR("Connection seems to be lost, query not sent.\n");
+        }
+        mXqueryFBList.erase(mXqueryFBList.begin());
       }
-      mXqueryFBList.erase(mXqueryFBList.begin());
     }
   }
-}
 
-void CXqueryHandler::resumeSuspend() {
-  mStateSemaphore.inc();
-}
+  void CXqueryHandler::resumeSuspend() {
+    mStateSemaphore.inc();
+  }
 
-void CXqueryHandler::selfSuspend() {
-  mStateSemaphore.waitIndefinitely();
-}
+  void CXqueryHandler::selfSuspend() {
+    mStateSemaphore.waitIndefinitely();
+  }
+
+} // namespace forte::com_infra::xquery
