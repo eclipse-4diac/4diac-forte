@@ -90,7 +90,7 @@ namespace forte::arch {
 
     // as first shot take the serial interface device as param (e.g., /dev/ttyS0 )
     CFDSelectHandler::TFileDescriptor fileDescriptor =
-        open(paSerialParameters.interfaceName.c_str(), O_RDWR | O_NOCTTY);
+        open(paSerialParameters.mInterfaceName.c_str(), O_RDWR | O_NOCTTY);
 
     if (fileDescriptor == CFDSelectHandler::scmInvalidFileDescriptor) {
       DEVLOG_ERROR("CSerCommLayer: open failed: %s\n", strerror(errno));
@@ -108,7 +108,7 @@ namespace forte::arch {
     cfsetispeed(&newTIO, speed);
     cfsetospeed(&newTIO, speed);
 
-    switch (paSerialParameters.byteSize) {
+    switch (paSerialParameters.mByteSize) {
       case e5: newTIO.c_cflag |= CS5; break;
       case e6: newTIO.c_cflag |= CS6; break;
       case e7: newTIO.c_cflag |= CS7; break;
@@ -116,13 +116,13 @@ namespace forte::arch {
       default: return com_infra::e_InitInvalidId; break;
     }
 
-    switch (paSerialParameters.stopBits) {
+    switch (paSerialParameters.mStopBits) {
       case eOneBit: newTIO.c_cflag &= ~CSTOPB; break;
       case eTwoBits: newTIO.c_cflag |= CSTOPB; break;
       default: return com_infra::e_InitInvalidId; break;
     }
 
-    switch (paSerialParameters.parity) {
+    switch (paSerialParameters.mParity) {
       case eNoParity: newTIO.c_cflag &= ~(PARENB | PARODD | CMSPAR); break;
       case eODD: newTIO.c_cflag |= PARENB | PARODD; break;
       case eEven:
@@ -184,7 +184,7 @@ namespace forte::arch {
 
   speed_t CPosixSerCommLayer::getSpeed(const SSerialParameters &paSerialParameters) {
     speed_t speed;
-    switch (paSerialParameters.baudRate) {
+    switch (paSerialParameters.mBaudRate) {
       case e50: speed = B50; break;
       case e75: speed = B75; break;
       case e110: speed |= B110; break;

@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2017 ACIN, fortiss GmbH
+ * Copyright (c) 2017, 2025 ACIN, fortiss GmbH, Johannes Kepler University Linz
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -82,11 +83,11 @@ namespace forte::arch {
       enum EForteSerialParity { eNoParity = 0, eODD = 1, eEven = 2, eMark, eSpace };
 
       struct SSerialParameters {
-          CIEC_STRING interfaceName;
-          EForteSerialBaudRate baudRate;
-          EForteSerialByteSize byteSize;
-          EForteSerialStopBits stopBits;
-          EForteSerialParity parity;
+          CIEC_STRING mInterfaceName;
+          EForteSerialBaudRate mBaudRate;
+          EForteSerialByteSize mByteSize;
+          EForteSerialStopBits mStopBits;
+          EForteSerialParity mParity;
       };
 
       char mTerminationSymbol[3]; //**< Space for CR, LF, or CR/LF + Terminating \0
@@ -165,11 +166,11 @@ namespace forte::arch {
     }
 
     SSerialParameters parsedParameters;
-    parsedParameters.interfaceName = CIEC_STRING(parser[eInterface], strlen(parser[eInterface]));
+    parsedParameters.mInterfaceName = CIEC_STRING(parser[eInterface], strlen(parser[eInterface]));
 
     // Check baud rate setting
-    parsedParameters.baudRate = static_cast<EForteSerialBaudRate>(atoi(parser[eBaudrate]));
-    switch (parsedParameters.baudRate) {
+    parsedParameters.mBaudRate = static_cast<EForteSerialBaudRate>(atoi(parser[eBaudrate]));
+    switch (parsedParameters.mBaudRate) {
       // These are ok baud rates
       case e50: break;
       case e75: break;
@@ -198,33 +199,33 @@ namespace forte::arch {
     }
 
     // Check byte size setting
-    parsedParameters.byteSize = static_cast<EForteSerialByteSize>(atoi(parser[eByteSize]));
-    if (4 > parsedParameters.byteSize || 8 < parsedParameters.byteSize) {
+    parsedParameters.mByteSize = static_cast<EForteSerialByteSize>(atoi(parser[eByteSize]));
+    if (4 > parsedParameters.mByteSize || 8 < parsedParameters.mByteSize) {
       return com_infra::e_InitInvalidId;
     }
 
     // Check stopbits setting
     if (0 == strcmp(parser[eStopBits], "1")) {
-      parsedParameters.stopBits = eOneBit;
+      parsedParameters.mStopBits = eOneBit;
     } else if (0 == strcmp(parser[eStopBits], "1.5")) {
-      parsedParameters.stopBits = eOne5Bits;
+      parsedParameters.mStopBits = eOne5Bits;
     } else if (0 == strcmp(parser[eStopBits], "2")) {
-      parsedParameters.stopBits = eTwoBits;
+      parsedParameters.mStopBits = eTwoBits;
     } else {
       return com_infra::e_InitInvalidId;
     }
 
     // Check parity setting
     if (0 == strcmp(parser[eParity], "NONE")) {
-      parsedParameters.parity = eNoParity;
+      parsedParameters.mParity = eNoParity;
     } else if (0 == strcmp(parser[eParity], "ODD")) {
-      parsedParameters.parity = eODD;
+      parsedParameters.mParity = eODD;
     } else if (0 == strcmp(parser[eParity], "EVEN")) {
-      parsedParameters.parity = eEven;
+      parsedParameters.mParity = eEven;
     } else if (0 == strcmp(parser[eParity], "MARK")) {
-      parsedParameters.parity = eMark;
+      parsedParameters.mParity = eMark;
     } else if (0 == strcmp(parser[eParity], "SPACE")) {
-      parsedParameters.parity = eSpace;
+      parsedParameters.mParity = eSpace;
     } else {
       return com_infra::e_InitInvalidId;
     }

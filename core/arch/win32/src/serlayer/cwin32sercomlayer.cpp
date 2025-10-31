@@ -74,7 +74,7 @@ namespace forte::arch {
   CWin32SerComLayer::openSerialConnection(const SSerialParameters &paSerialParameters,
                                           CSerialComLayerBase<HANDLE>::TSerialHandleType *paHandleResult) {
 
-    HANDLE serialHandle = CreateFile(paSerialParameters.interfaceName.c_str(), GENERIC_READ | GENERIC_WRITE, 0, 0,
+    HANDLE serialHandle = CreateFile(paSerialParameters.mInterfaceName.c_str(), GENERIC_READ | GENERIC_WRITE, 0, 0,
                                      OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, 0);
 
     if (INVALID_HANDLE_VALUE == serialHandle) {
@@ -92,8 +92,8 @@ namespace forte::arch {
       return forte::com_infra::e_ProcessDataNoSocket;
     }
 
-    dcbSerialParams.BaudRate = static_cast<DWORD>(paSerialParameters.baudRate);
-    switch (paSerialParameters.baudRate) {
+    dcbSerialParams.BaudRate = static_cast<DWORD>(paSerialParameters.mBaudRate);
+    switch (paSerialParameters.mBaudRate) {
         // These are ok baud rates
       case e110: break;
       case e300: break;
@@ -113,15 +113,15 @@ namespace forte::arch {
       default: return forte::com_infra::e_InitInvalidId; break;
     }
 
-    dcbSerialParams.ByteSize = paSerialParameters.byteSize;
+    dcbSerialParams.ByteSize = paSerialParameters.mByteSize;
 
-    switch (paSerialParameters.stopBits) {
+    switch (paSerialParameters.mStopBits) {
       case EForteSerialStopBits::eOneBit: dcbSerialParams.StopBits = ONESTOPBIT; break;
       case EForteSerialStopBits::eOne5Bits: dcbSerialParams.StopBits = ONE5STOPBITS; break;
       case EForteSerialStopBits::eTwoBits: dcbSerialParams.StopBits = TWOSTOPBITS; break;
     }
 
-    switch (paSerialParameters.parity) {
+    switch (paSerialParameters.mParity) {
       case EForteSerialParity::eNoParity: dcbSerialParams.Parity = NOPARITY; break;
       case EForteSerialParity::eODD: dcbSerialParams.Parity = ODDPARITY; break;
       case EForteSerialParity::eEven: dcbSerialParams.Parity = EVENPARITY; break;
