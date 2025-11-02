@@ -26,7 +26,7 @@ typesServer;<Request ID="25" Action="CREATE"><FB Name="AllTypes.F_INT_TO_LWORD" 
 typesServer;<Request ID="26" Action="CREATE"><FB Name="AllTypes.BOOL2BOOL_1" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
 typesServer;<Request ID="27" Action="CREATE"><FB Name="AllTypes.BOOL2BOOL_2" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
 typesServer;<Request ID="28" Action="CREATE"><FB Name="AllTypes.BOOL2BOOL_3" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
-typesServer;<Request ID="29" Action="CREATE"><FB Name="AllTypes.LocalizedText2LocalizedText" Type="LocalizedText2LocalizedText" /></Request>
+typesServer;<Request ID="29" Action="CREATE"><FB Name="AllTypes.LocalizedText2LocalizedText" Type="F_MOVE_1LocalizedText" /></Request>
 typesServer;<Request ID="30" Action="CREATE"><FB Name="TypeTest.BollType" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
 typesServer;<Request ID="31" Action="CREATE"><FB Name="TypeTest.F_EQ_Bool" Type="iec61131::comparison::F_EQ" /></Request>
 typesServer;<Request ID="32" Action="WRITE"><Connection Source="BOOL#TRUE" Destination="TypeTest.F_EQ_Bool.IN2" /></Request>
@@ -129,7 +129,7 @@ typesServer;<Request ID="128" Action="CREATE"><FB Name="AllTypes_1.F_INT_TO_LWOR
 typesServer;<Request ID="129" Action="CREATE"><FB Name="AllTypes_1.BOOL2BOOL_1" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
 typesServer;<Request ID="130" Action="CREATE"><FB Name="AllTypes_1.BOOL2BOOL_2" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
 typesServer;<Request ID="131" Action="CREATE"><FB Name="AllTypes_1.BOOL2BOOL_3" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
-typesServer;<Request ID="132" Action="CREATE"><FB Name="AllTypes_1.LocalizedText2LocalizedText" Type="LocalizedText2LocalizedText" /></Request>
+typesServer;<Request ID="132" Action="CREATE"><FB Name="AllTypes_1.LocalizedText2LocalizedText" Type="F_MOVE_1LocalizedText" /></Request>
 typesServer;<Request ID="133" Action="CREATE"><FB Name="TypeTest_1.BollType" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
 typesServer;<Request ID="134" Action="CREATE"><FB Name="TypeTest_1.F_EQ_Bool" Type="iec61131::comparison::F_EQ" /></Request>
 typesServer;<Request ID="135" Action="WRITE"><Connection Source="BOOL#TRUE" Destination="TypeTest_1.F_EQ_Bool.IN2" /></Request>
@@ -266,7 +266,7 @@ typesServer;<Request ID="265" Action="WRITE"><Connection Source="TIME#1450ms" De
 typesServer;<Request ID="266" Action="CREATE"><FB Name="SubApp_1.DWORD2DWORD_1" Type="iec61131::selection::F_MOVE_1DWORD" /></Request>
 typesServer;<Request ID="267" Action="WRITE"><Connection Source="DWORD#654" Destination="SubApp_1.DWORD2DWORD_1.IN" /></Request>
 typesServer;<Request ID="268" Action="CREATE"><FB Name="SubApp_1.F_INT_TO_ULINT" Type="iec61131::conversion::F_INT_TO_ULINT" /></Request>
-typesServer;<Request ID="269" Action="CREATE"><FB Name="SubApp_1.LocalizedText2LocalizedText" Type="LocalizedText2LocalizedText" /></Request>
+typesServer;<Request ID="269" Action="CREATE"><FB Name="SubApp_1.LocalizedText2LocalizedText" Type="F_MOVE_1LocalizedText" /></Request>
 typesServer;<Request ID="270" Action="WRITE"><Connection Source="(text:=&apos;JustAText&apos;,locale:=&apos;de-DE&apos;)" Destination="SubApp_1.LocalizedText2LocalizedText.IN" /></Request>
 typesServer;<Request ID="271" Action="CREATE"><FB Name="LocalWrite" Type="iec61499::net::PUBLISH_22" /></Request>
 typesServer;<Request ID="272" Action="WRITE"><Connection Source="opc_ua[WRITE;/Objects/types/BOOL;/Objects/types/SINT;/Objects/types/INT;/Objects/types/DINT;/Objects/types/LINT;/Objects/types/USINT;/Objects/types/UINT;/Objects/types/UDINT;/Objects/types/ULINT;/Objects/types/BYTE;/Objects/types/WORD;/Objects/types/DWORD;/Objects/types/LWORD;/Objects/types/DATE;/Objects/types/TIME_OF_DAY;/Objects/types/DATE_AND_TIME;/Objects/types/TIME;/Objects/types/REAL;/Objects/types/LREAL;/Objects/types/STRING;/Objects/types/WSTRING;/Objects/types/LocalizedText]" Destination="LocalWrite.ID" /></Request>

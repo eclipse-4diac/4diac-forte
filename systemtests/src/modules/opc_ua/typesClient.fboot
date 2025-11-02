@@ -44,7 +44,7 @@ typesClient;<Request ID="43" Action="WRITE"><Connection Source="TIME#1450ms" Des
 typesClient;<Request ID="44" Action="CREATE"><FB Name="SubApp_2.DWORD2DWORD_1" Type="iec61131::selection::F_MOVE_1DWORD" /></Request>
 typesClient;<Request ID="45" Action="WRITE"><Connection Source="DWORD#654" Destination="SubApp_2.DWORD2DWORD_1.IN" /></Request>
 typesClient;<Request ID="46" Action="CREATE"><FB Name="SubApp_2.F_INT_TO_ULINT" Type="iec61131::conversion::F_INT_TO_ULINT" /></Request>
-typesClient;<Request ID="47" Action="CREATE"><FB Name="SubApp_2.LocalizedText2LocalizedText" Type="LocalizedText2LocalizedText" /></Request>
+typesClient;<Request ID="47" Action="CREATE"><FB Name="SubApp_2.LocalizedText2LocalizedText" Type="F_MOVE_1LocalizedText" /></Request>
 typesClient;<Request ID="48" Action="WRITE"><Connection Source="(text:=&apos;JustAText&apos;,locale:=&apos;de-DE&apos;)" Destination="SubApp_2.LocalizedText2LocalizedText.IN" /></Request>
 typesClient;<Request ID="49" Action="CREATE"><FB Name="TypeTest_3.BollType" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
 typesClient;<Request ID="50" Action="CREATE"><FB Name="TypeTest_3.F_EQ_Bool" Type="iec61131::comparison::F_EQ" /></Request>
@@ -148,7 +148,7 @@ typesClient;<Request ID="147" Action="CREATE"><FB Name="AllTypes_2.F_INT_TO_LWOR
 typesClient;<Request ID="148" Action="CREATE"><FB Name="AllTypes_2.BOOL2BOOL_1" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
 typesClient;<Request ID="149" Action="CREATE"><FB Name="AllTypes_2.BOOL2BOOL_2" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
 typesClient;<Request ID="150" Action="CREATE"><FB Name="AllTypes_2.BOOL2BOOL_3" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
-typesClient;<Request ID="151" Action="CREATE"><FB Name="AllTypes_2.LocalizedText2LocalizedText" Type="LocalizedText2LocalizedText" /></Request>
+typesClient;<Request ID="151" Action="CREATE"><FB Name="AllTypes_2.LocalizedText2LocalizedText" Type="F_MOVE_1LocalizedText" /></Request>
 typesClient;<Request ID="152" Action="CREATE"><FB Name="AllTypes_3.SINT2SINT" Type="iec61131::selection::F_MOVE_1SINT" /></Request>
 typesClient;<Request ID="153" Action="CREATE"><FB Name="AllTypes_3.UINT2UINT" Type="iec61131::selection::F_MOVE_1UINT" /></Request>
 typesClient;<Request ID="154" Action="CREATE"><FB Name="AllTypes_3.BOOL2BOOL" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
@@ -176,7 +176,7 @@ typesClient;<Request ID="175" Action="CREATE"><FB Name="AllTypes_3.F_INT_TO_LWOR
 typesClient;<Request ID="176" Action="CREATE"><FB Name="AllTypes_3.BOOL2BOOL_1" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
 typesClient;<Request ID="177" Action="CREATE"><FB Name="AllTypes_3.BOOL2BOOL_2" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
 typesClient;<Request ID="178" Action="CREATE"><FB Name="AllTypes_3.BOOL2BOOL_3" Type="iec61131::selection::F_MOVE_1BOOL" /></Request>
-typesClient;<Request ID="179" Action="CREATE"><FB Name="AllTypes_3.LocalizedText2LocalizedText" Type="LocalizedText2LocalizedText" /></Request>
+typesClient;<Request ID="179" Action="CREATE"><FB Name="AllTypes_3.LocalizedText2LocalizedText" Type="F_MOVE_1LocalizedText" /></Request>
 typesClient;<Request ID="180" Action="CREATE"><FB Name="TypeTest_2.BollType" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
 typesClient;<Request ID="181" Action="CREATE"><FB Name="TypeTest_2.F_EQ_Bool" Type="iec61131::comparison::F_EQ" /></Request>
 typesClient;<Request ID="182" Action="WRITE"><Connection Source="BOOL#TRUE" Destination="TypeTest_2.F_EQ_Bool.IN2" /></Request>
@@ -310,7 +310,7 @@ typesClient;<Request ID="309" Action="WRITE"><Connection Source="TIME#1450ms" De
 typesClient;<Request ID="310" Action="CREATE"><FB Name="SubApp.DWORD2DWORD_1" Type="iec61131::selection::F_MOVE_1DWORD" /></Request>
 typesClient;<Request ID="311" Action="WRITE"><Connection Source="DWORD#654" Destination="SubApp.DWORD2DWORD_1.IN" /></Request>
 typesClient;<Request ID="312" Action="CREATE"><FB Name="SubApp.F_INT_TO_ULINT" Type="iec61131::conversion::F_INT_TO_ULINT" /></Request>
-typesClient;<Request ID="313" Action="CREATE"><FB Name="SubApp.LocalizedText2LocalizedText" Type="LocalizedText2LocalizedText" /></Request>
+typesClient;<Request ID="313" Action="CREATE"><FB Name="SubApp.LocalizedText2LocalizedText" Type="F_MOVE_1LocalizedText" /></Request>
 typesClient;<Request ID="314" Action="WRITE"><Connection Source="(text:=&apos;JustAText&apos;,locale:=&apos;de-DE&apos;)" Destination="SubApp.LocalizedText2LocalizedText.IN" /></Request>
 typesClient;<Request ID="315" Action="CREATE"><FB Name="E_SR_2" Type="iec61499::events::E_SR" /></Request>
 typesClient;<Request ID="316" Action="CREATE"><FB Name="PUBLISH_0" Type="iec61499::net::PUBLISH_0" /></Request>

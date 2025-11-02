@@ -491,7 +491,7 @@ WorkingServer;<Request ID="490" Action="CREATE"><FB Name="CreateVariables.UINT2U
 WorkingServer;<Request ID="491" Action="WRITE"><Connection Source="UINT#678" Destination="CreateVariables.UINT2UINT.IN" /></Request>
 WorkingServer;<Request ID="492" Action="CREATE"><FB Name="CreateVariables.PUBLISH_1_1_3" Type="iec61499::net::PUBLISH_1" /></Request>
 WorkingServer;<Request ID="493" Action="WRITE"><Connection Source="opc_ua[WRITE;/Objects/createdPropertyDInt]" Destination="CreateVariables.PUBLISH_1_1_3.ID" /></Request>
-WorkingServer;<Request ID="494" Action="CREATE"><FB Name="CreateVariables.LocalizedText2LocalizedText" Type="LocalizedText2LocalizedText" /></Request>
+WorkingServer;<Request ID="494" Action="CREATE"><FB Name="CreateVariables.LocalizedText2LocalizedText" Type="F_MOVE_1LocalizedText" /></Request>
 WorkingServer;<Request ID="495" Action="WRITE"><Connection Source="(text:=&apos;JustAText&apos;,locale:=&apos;de-DE&apos;)" Destination="CreateVariables.LocalizedText2LocalizedText.IN" /></Request>
 WorkingServer;<Request ID="496" Action="CREATE"><FB Name="CreateVariables.PUBLISH_1_1_1_2" Type="iec61499::net::PUBLISH_1" /></Request>
 WorkingServer;<Request ID="497" Action="WRITE"><Connection Source="opc_ua[WRITE;/Objects/createdPropertyLT]" Destination="CreateVariables.PUBLISH_1_1_1_2.ID" /></Request>

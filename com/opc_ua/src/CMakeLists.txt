@@ -52,6 +52,5 @@ target_sources(forte-com-opc_ua PRIVATE
 )
 target_include_directories(forte-com-opc_ua PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 
-add_subdirectory(FBs)
 add_subdirectory(types)
 add_subdirectory(detail)
