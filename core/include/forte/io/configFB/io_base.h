@@ -15,6 +15,7 @@
 #define SRC_CORE_IO_CONFIGFB_BASE_H_
 
 #include "forte/esfb.h"
+#include "forte/forte_st_util.h"
 
 namespace forte::io {
 
