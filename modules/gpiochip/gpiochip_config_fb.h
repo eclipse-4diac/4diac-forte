@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 OFFIS e.V.
+ * Copyright (c) 2023, 2025 OFFIS e.V.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -18,64 +18,59 @@
 #include "forte/datatypes/forte_wstring.h"
 #include "forte/io/configFB/io_configFB_controller.h"
 
-class GPIOChipConfigFB : public forte::io::IOConfigFBController {
-    DECLARE_FIRMWARE_FB(GPIOChipConfigFB)
+namespace forte::eclipse4diac::io::gpiochip {
 
-  private:
-    CIEC_BOOL &QI() {
-      return *static_cast<CIEC_BOOL *>(getDI(0));
-    };
+  class FORTE_GPIOChip : public forte::io::IOConfigFBController {
+      DECLARE_FIRMWARE_FB(FORTE_GPIOChip)
 
-    CIEC_WSTRING &VALUE() {
-      return *static_cast<CIEC_WSTRING *>(getDI(1));
-    };
+    private:
+      static const TEventID scmEventINITOID = 0;
+      static const TEventID scmEventINDID = 1;
+      static const TEventID scmEventINITID = 0;
 
-    CIEC_UINT &ChipNumber() {
-      return *static_cast<CIEC_UINT *>(getDI(2));
-    };
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-    CIEC_UINT &LineNumber() {
-      return *static_cast<CIEC_UINT *>(getDI(3));
-    };
+    public:
+      FORTE_GPIOChip(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
-    CIEC_UINT &ReadWriteMode() {
-      return *static_cast<CIEC_UINT *>(getDI(4));
-    };
+      CIEC_BOOL var_QI;
+      CIEC_WSTRING var_VALUE;
+      CIEC_UINT var_ChipNumber;
+      CIEC_UINT var_LineNumber;
+      CIEC_UINT var_ReadWriteMode;
+      CIEC_UINT var_BiasMode;
+      CIEC_BOOL var_ActiveLow;
 
-    CIEC_UINT &BiasMode() {
-      return *static_cast<CIEC_UINT *>(getDI(5));
-    };
+      CIEC_BOOL var_QO;
+      CIEC_WSTRING var_STATUS;
 
-    CIEC_BOOL &ActiveLow() {
-      return *static_cast<CIEC_BOOL *>(getDI(6));
-    };
+      CEventConnection conn_INITO;
+      CEventConnection conn_IND;
 
-    CIEC_BOOL &QO() {
-      return *static_cast<CIEC_BOOL *>(getDO(0));
-    };
+      CDataConnection *conn_QI;
+      CDataConnection *conn_VALUE;
+      CDataConnection *conn_ChipNumber;
+      CDataConnection *conn_LineNumber;
+      CDataConnection *conn_ReadWriteMode;
+      CDataConnection *conn_BiasMode;
+      CDataConnection *conn_ActiveLow;
 
-    CIEC_WSTRING &STATUS() {
-      return *static_cast<CIEC_WSTRING *>(getDO(1));
-    };
+      COutDataConnection<CIEC_BOOL> conn_QO;
+      COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
-    static const TEventID scmEventINITID = 0;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    static const TEventID scmEventINITOID = 0;
-    static const TEventID scmEventINDID = 1;
+    protected:
+      forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
 
-    void setInitialValues() override;
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
+      void setConfig() override;
 
-  protected:
-    forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution);
-
-    void setConfig();
-
-    void onStartup(CEventChainExecutionThread *const paECET) override;
-
-  public:
-    GPIOChipConfigFB(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+      void onStartup(CEventChainExecutionThread *const paECET) override;
+  };
 }
-}
-;

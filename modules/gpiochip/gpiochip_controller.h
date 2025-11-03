@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2023 OFFIS e.V.
+ * Copyright (c) 2023, 2025 OFFIS e.V.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,45 +15,49 @@
 
 #include "forte/io/device/io_controller.h"
 
-class GPIOChipController : public forte::io::IODeviceController {
-  public:
-    explicit GPIOChipController(CDeviceExecution &paDeviceExecution) : IODeviceController(paDeviceExecution) {};
+namespace forte::eclipse4diac::io::gpiochip {
 
-    struct Config : IODeviceController::Config {
-        unsigned int mChipNumber = 0;
-        unsigned int mLineNumber = 0;
-        enum ReadWriteMode { Input, PushPull, OpenDrain, OpenSource } mReadWriteMode = Input;
-        enum BiasMode { None, PullUp, PullDown } mBiasMode = None;
-        bool mActiveLow = false;
-    };
+  class GPIOChipController : public forte::io::IODeviceController {
+    public:
+      explicit GPIOChipController(CDeviceExecution &paDeviceExecution) : IODeviceController(paDeviceExecution) {};
 
-    using IODeviceController::HandleDescriptor;
+      struct Config : IODeviceController::Config {
+          unsigned int mChipNumber = 0;
+          unsigned int mLineNumber = 0;
+          enum ReadWriteMode { Input, PushPull, OpenDrain, OpenSource } mReadWriteMode = Input;
+          enum BiasMode { None, PullUp, PullDown } mBiasMode = None;
+          bool mActiveLow = false;
+      };
 
-    void setConfig(struct IODeviceController::Config *paConfig) override {
-      mConfig = *static_cast<Config *>(paConfig);
-    }
+      using IODeviceController::HandleDescriptor;
 
-    bool isHandleValueEqual(forte::io::IOHandle &) override {
-      return false;
-    }
+      void setConfig(struct IODeviceController::Config *paConfig) override {
+        mConfig = *static_cast<Config *>(paConfig);
+      }
 
-    void handleChangeEvent(forte::io::IOHandle *paHandle) override;
-    forte::io::IOHandle *initHandle(HandleDescriptor *paHandleDescriptor) override;
+      bool isHandleValueEqual(forte::io::IOHandle &) override {
+        return false;
+      }
 
-  protected:
-    const char *init() override;
-    void deInit() override;
-    void runLoop() override;
+      void handleChangeEvent(forte::io::IOHandle *paHandle) override;
+      ::forte::io::IOHandle *createIOHandle(HandleDescriptor &paHandleDescriptor) override;
 
-  private:
-    int mFd = -1;
-    uint8_t mValue = 0;
-    Config mConfig;
+    protected:
+      const char *init() override;
+      void deInit() override;
+      void runLoop() override;
 
-    static const char *const scmFailedToAccessChip;
-    static const char *const scmFailedToAcquireLine;
-    static const char *const scmFailedToWatchLine;
-    static const char *const scmFailedToWriteLine;
-    static const char *const scmFailedToReadLine;
-    static const char *const scmOK;
-};
+    private:
+      int mFd = -1;
+      uint8_t mValue = 0;
+      Config mConfig;
+
+      static const char *const scmFailedToAccessChip;
+      static const char *const scmFailedToAcquireLine;
+      static const char *const scmFailedToWatchLine;
+      static const char *const scmFailedToWriteLine;
+      static const char *const scmFailedToReadLine;
+      static const char *const scmOK;
+  };
+
+} // namespace forte::eclipse4diac::io::gpiochip
