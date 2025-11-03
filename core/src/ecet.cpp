@@ -78,15 +78,18 @@ namespace forte {
 
   void CEventChainExecutionThread::startEventChain(TEventEntry paEventToAdd) {
     FORTE_TRACE("CEventChainExecutionThread::startEventChain\n");
+    bool inserted;
     {
       util::CCriticalRegion criticalRegion(mExternalEventListSync);
-      if (mExternalEventList.push(paEventToAdd)) {
-        mProcessingEvents = true;
-        resumeSelfSuspend();
-      } else {
-        DEVLOG_ERROR("External event queue is full, external event dropped!\n");
-      }
+      inserted = mExternalEventList.push(paEventToAdd);
     } // End critical region
+    if (inserted) {
+      mProcessingEvents = true;
+      resumeSelfSuspend();
+    } else {
+      DEVLOG_ERROR("External event queue is full, external event dropped! Function Block: %s\n",
+                   paEventToAdd.getFB().getFullQualifiedApplicationInstanceName('.').c_str());
+    }
   }
 
   void CEventChainExecutionThread::changeExecutionState(EMGMCommandType paCommand) {
