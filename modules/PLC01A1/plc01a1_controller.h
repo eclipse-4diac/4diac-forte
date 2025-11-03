@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2019 fortiss GmbH
+ * Copyright (c) 2019, 2025 fortiss GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,87 +10,66 @@
  *   Jose Cabral - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#ifndef SRC_MODULES_FESTO_CECC_FESTO_CONTROLLER_H_
-#define SRC_MODULES_FESTO_CECC_FESTO_CONTROLLER_H_
+#pragma once
 
 #include "forte/io/device/io_controller_poll.h"
 #include <linux/spi/spidev.h>
 
-class PLC01A1Controller : public forte::io::IODevicePollController {
-  public:
-    explicit PLC01A1Controller(CDeviceExecution &paDeviceExecution);
+namespace forte::eclipse4diac::io::plc01a1 {
 
-    struct Config : IODeviceController::Config {
-        unsigned int mUpdateInterval; //!< Sets the frequency for the data update cycle. The default value is 25 Hz.
-    };
+  class PLC01A1Controller : public forte::io::IODevicePollController {
+    public:
+      explicit PLC01A1Controller(CDeviceExecution &paDeviceExecution);
 
-    class HandleDescriptor : public IODeviceController::HandleDescriptor {
-      public:
-        uint8_t mOffset;
-        uint8_t mPosition;
+      struct Config : IODeviceController::Config {
+          unsigned int mUpdateInterval; //!< Sets the frequency for the data update cycle. The default value is 25 Hz.
+      };
 
-        HandleDescriptor(CIEC_WSTRING const &paId,
-                         forte::io::IOMapper::Direction paDirection,
-                         uint8_t paOffset,
-                         uint8_t paPosition) :
-            IODeviceController::HandleDescriptor(paId, paDirection),
-            mOffset(paOffset),
-            mPosition(paPosition) {
-        }
-    };
+      class HandleDescriptor : public IODeviceController::HandleDescriptor {
+        public:
+          uint8_t mOffset;
+          uint8_t mPosition;
 
-    void setConfig(struct IODeviceController::Config *paConfig);
+          HandleDescriptor(std::string const &paId,
+                           forte::io::IOMapper::Direction paDirection,
+                           uint8_t paOffset,
+                           uint8_t paPosition) :
+              IODeviceController::HandleDescriptor(paId, paDirection),
+              mOffset(paOffset),
+              mPosition(paPosition) {
+          }
+      };
 
-    virtual bool isHandleValueEqual(forte::io::IOHandle &paHandle);
+      void setConfig(struct IODeviceController::Config *paConfig) override;
 
-    forte::io::IOHandle *initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor);
+      bool isHandleValueEqual(forte::io::IOHandle &paHandle) override;
 
-  protected:
-    const char *init();
-    void deInit();
+      forte::io::IOHandle *createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
-    void poll();
+    protected:
+      const char *init() override;
+      void deInit() override;
 
-  private:
-    static const char *const scmSPIInputDevice;
-    static const char *const scmSPIOutputDevice;
+      void poll() override;
 
-    int mSPIInputFd;
-    int mSPIOutputFd;
+    private:
+      int mSPIInputFd;
+      int mSPIOutputFd;
 
-    static const char *const scmFailedToOpenInputControlFile;
-    static const char *const scmFailedToOpenOutputControlFile;
+      static const size_t scmInputArrayLenght = 2;
+      static const size_t scmOutputArrayLenght = 2;
 
-    static const uint32_t scmSPIMode;
+      uint8_t mInputArrayOld[scmInputArrayLenght];
+      uint8_t mInputArray[scmInputArrayLenght];
+      uint8_t mOutputArray[scmOutputArrayLenght];
 
-    static const char *const scmFailedToSetInputMode;
-    static const char *const scmFailedToSetOutputMode;
+      uint8_t mInputTX[scmInputArrayLenght];
+      uint8_t mOutputRX[scmInputArrayLenght];
 
-    static const uint8_t scmSPIBits;
+      struct spi_ioc_transfer mInputTR;
+      struct spi_ioc_transfer mOutputTR;
 
-    static const char *const scmFailedToSetInputBits;
-    static const char *const scmFailedToSetOutputBits;
+      void output_parity_bits();
+  };
 
-    static const uint32_t scmSPIInputMaxSpeed;
-    static const uint32_t scmSPIOutputMaxSpeed;
-
-    static const char *const scmFailedToSetInputSpeed;
-    static const char *const scmFailedToSetOutputSpeed;
-
-    static const size_t scmInputArrayLenght = 2;
-    static const size_t scmOutputArrayLenght = 2;
-
-    uint8_t mInputArrayOld[scmInputArrayLenght];
-    uint8_t mInputArray[scmInputArrayLenght];
-    uint8_t mOutputArray[scmOutputArrayLenght];
-
-    uint8_t mInputTX[scmInputArrayLenght];
-    uint8_t mOutputRX[scmInputArrayLenght];
-
-    struct spi_ioc_transfer mInputTR;
-    struct spi_ioc_transfer mOutputTR;
-
-    void output_parity_bits();
-};
-
-#endif /* SRC_MODULES_FESTO_CECC_FESTO_CONTROLLER_H_ */
+} // namespace forte::eclipse4diac::io::plc01a1
