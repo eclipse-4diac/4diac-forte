@@ -15,7 +15,7 @@
 
 include(CMakeDependentOption)
 
-set(FORTE_LOGLEVEL "$<IF:$<CONFIG:Debug>,LOGINFO,LOGERROR>" CACHE STRING "Loglevel to use")
+set(FORTE_LOGLEVEL "$<IF:$<CONFIG:Debug,RelWithDebInfo>,LOGINFO,LOGERROR>" CACHE STRING "Loglevel to use")
 set_property(CACHE FORTE_LOGLEVEL PROPERTY STRINGS LOGDEBUG LOGERROR LOGWARNING LOGINFO NOLOG)
 
 cmake_dependent_option(FORTE_STACKTRACE "Include stacktrace when logging errors" OFF "NOT FORTE_LOGLEVEL STREQUAL NOLOG" OFF)
