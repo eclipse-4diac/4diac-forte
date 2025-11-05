@@ -6,14 +6,14 @@
  ***
  *** SPDX-License-Identifier: EPL-2.0
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.0.0.202511041205!
  ***
  *** Name: E_TOF
  *** Description: standard timer function block (off-delay timing)
  *** Version:
- ***     1.0: 2024-03-04/Franz Hoepfinger - HR Agrartechnik GmbH -
- ***     1.1: 2024-04-23/Franz Hoepfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
  ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
+ ***     1.1: 2024-04-23/Franz Hoepfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
+ ***     1.0: 2024-03-04/Franz Hoepfinger - HR Agrartechnik GmbH -
  *************************************************************************/
 
 #pragma once
@@ -27,18 +27,18 @@
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
-#include "forte/iec61499/events/E_SWITCH_fbt.h"
 #include "forte/iec61499/events/E_DELAY_fbt.h"
 #include "forte/iec61499/events/E_RS_fbt.h"
+#include "forte/iec61499/events/E_SWITCH_fbt.h"
 
 namespace forte::iec61499::events::timers {
   class FORTE_E_TOF final : public CCompositeFB {
       DECLARE_FIRMWARE_FB(FORTE_E_TOF)
 
     private:
+      static const TEventID scmEventCNFID = 0;
       static const TEventID scmEventREQID = 0;
       static const TEventID scmEventRID = 1;
-      static const TEventID scmEventCNFID = 0;
 
       CInternalFB<forte::iec61499::events::FORTE_E_SWITCH> fb_E_SWITCH;
       CInternalFB<forte::iec61499::events::FORTE_E_DELAY> fb_E_DELAY;
@@ -47,7 +47,6 @@ namespace forte::iec61499::events::timers {
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;
       void setInitialValues() override;
-      CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
     public:
       FORTE_E_TOF(StringId paInstanceNameId, CFBContainer &paContainer);
@@ -67,5 +66,7 @@ namespace forte::iec61499::events::timers {
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
+      CDataConnection *getIf2InConUnchecked(TPortId) override;
   };
 } // namespace forte::iec61499::events::timers
+

@@ -6,15 +6,15 @@
  ***
  *** SPDX-License-Identifier: EPL-2.0
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.0.0.202511041205!
  ***
  *** Name: E_PULSE
  *** Description: standard timer function block (pulse)
  *** Version:
- ***     1.0: 2023-08-21/Franz Hoepfinger - HR Agrartechnik GmbH - initial implementation as E_IMPULSE
- ***     1.0: 2024-03-05/Franz Hoepfinger - HR Agrartechnik GmbH - renamed to E_PULSE
- ***     1.1: 2024-04-23/Franz Hoepfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
  ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
+ ***     1.1: 2024-04-23/Franz Hoepfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
+ ***     1.0.1: 2024-03-05/Franz Hoepfinger - HR Agrartechnik GmbH - renamed to E_PULSE
+ ***     1.0: 2023-08-21/Franz Hoepfinger - HR Agrartechnik GmbH - initial implementation as E_IMPULSE
  *************************************************************************/
 
 #include "forte/iec61499/events/timers/E_PULSE_fbt.h"
@@ -30,18 +30,16 @@ using namespace forte::literals;
 
 namespace forte::iec61499::events::timers {
   namespace {
+    const auto cEventInputNames = std::array{"REQ"_STRID, "R"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
     const auto cDataInputNames = std::array{"PT"_STRID};
     const auto cDataOutputNames = std::array{"Q"_STRID};
-    const auto cEventInputNames = std::array{"REQ"_STRID, "R"_STRID};
-    const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
-    const auto cEventOutputNames = std::array{"CNF"_STRID};
-    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
 
     const SFBInterfaceSpec cFBInterfaceSpec = {
         .mEINames = cEventInputNames,
-        .mEITypeNames = cEventInputTypeIds,
+        .mEITypeNames = {},
         .mEONames = cEventOutputNames,
-        .mEOTypeNames = cEventOutputTypeIds,
+        .mEOTypeNames = {},
         .mDINames = cDataInputNames,
         .mDONames = cDataOutputNames,
         .mDIONames = {},
@@ -100,7 +98,7 @@ namespace forte::iec61499::events::timers {
   void FORTE_E_PULSE::writeOutputData(const TEventID paEIID) {
     switch (paEIID) {
       case scmEventCNFID: {
-        writeData(cFBInterfaceSpec.getNumDIs() + 0, fb_E_SR->conn_Q.getValue(), conn_Q);
+        writeData(1, fb_E_SR->conn_Q.getValue(), conn_Q);
         break;
       }
       default: break;
@@ -142,7 +140,7 @@ namespace forte::iec61499::events::timers {
     return nullptr;
   }
 
-  CDataConnection *FORTE_E_PULSE::getIf2InConUnchecked(TPortId paIndex) {
+  CDataConnection *FORTE_E_PULSE::getIf2InConUnchecked(const TPortId paIndex) {
     switch (paIndex) {
       case 0: return &conn_if2in_PT;
     }
