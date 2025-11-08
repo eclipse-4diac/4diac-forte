@@ -51,7 +51,7 @@ namespace forte::iec61499::events::timers {
         {{}, "REQ"_STRID, "E_SWITCH"_STRID, "EI"_STRID},
         {"E_SWITCH"_STRID, "EO1"_STRID, "E_DELAY"_STRID, "START"_STRID},
         {"E_SWITCH"_STRID, "EO0"_STRID, "E_DELAY"_STRID, "STOP"_STRID},
-        {"E_SWITCH"_STRID, "EO1"_STRID, "E_RS"_STRID, "R"_STRID},
+        {"E_SWITCH"_STRID, "EO0"_STRID, "E_RS"_STRID, "R"_STRID},
         {"E_DELAY"_STRID, "EO"_STRID, "E_RS"_STRID, "S"_STRID},
         {"E_RS"_STRID, "EO"_STRID, {}, "CNF"_STRID},
     });
