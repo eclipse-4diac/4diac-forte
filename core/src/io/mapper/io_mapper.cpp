@@ -86,6 +86,16 @@ namespace forte::io {
     }
   }
 
+  IOHandle *IOMapper::getHandle(std::string const &paId) {
+    util::CCriticalRegion criticalRegion(mSyncMutex);
+
+    if (auto handleIt = mHandles.find(paId); handleIt != mHandles.end()) {
+      DEVLOG_DEBUG("[IOMapper] Retrieved handle %s\n", paId.c_str());
+      return handleIt->second;
+    }
+    return nullptr;
+  }
+
   bool IOMapper::registerObserver(std::string const &paId, IOObserver *paObserver) {
     util::CCriticalRegion criticalRegion(mSyncMutex);
 

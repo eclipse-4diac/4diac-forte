@@ -78,32 +78,61 @@ namespace forte::io {
     }
   }
 
-  void IODeviceController::updateHandleList(std::string const &paId, IOHandle *paHandle) {
-    for (auto it = mDiverseHandles.begin(); it != mDiverseHandles.end();) {
-      if (it->get() == paHandle) {
-        auto handleDirection = (*it)->getDirection();
-        switch (handleDirection) {
-          case IOMapper::In: {
-            util::CCriticalRegion criticalRegion(mHandleMutex);
-            mInputHandles.push_back(std::move(*it));
-            it = mDiverseHandles.erase(it);
-            break;
-          }
-          case IOMapper::Out: {
-            util::CCriticalRegion criticalRegion(mHandleMutex);
-            mOutputHandles.push_back(std::move(*it));
-            it = mDiverseHandles.erase(it);
-            break;
-          }
-          default:
-            DEVLOG_ERROR("[updateHandleList] %s's direction is neither `In` nor `Out`.\r\n", paId.c_str());
-            ++it;
-            break;
-        }
-        return;
-      } else {
-        ++it;
+  void IODeviceController::removeHandle(std::string const &paId) {
+    IOMapper &mapper = IOMapper::getInstance();
+    if (IOHandle *rawHandle = mapper.getHandle(paId); rawHandle) {
+      switch (rawHandle->getDirection()) {
+        case IOMapper::In: removeHandle(mInputHandles, rawHandle); return;
+        case IOMapper::Out: removeHandle(mOutputHandles, rawHandle); return;
+        case IOMapper::InOut: removeHandle(mDiverseHandles, rawHandle); return;
+        case IOMapper::UnknownDirection: removeHandle(mDiverseHandles, rawHandle); return;
+        default: break;
       }
+    }
+    DEVLOG_WARNING("[IODeviceController] Handle with ID '%s' not found in IOMapper for removal. Cannot remove from "
+                   "controller lists.\n",
+                   paId.c_str());
+  }
+
+  void IODeviceController::removeHandle(THandleList &paList, IOHandle *paRawHandle) {
+    util::CCriticalRegion criticalRegion(mHandleMutex);
+
+    IOMapper &mapper = IOMapper::getInstance();
+
+    auto new_end = std::remove_if(paList.begin(), paList.end(), [&](const std::unique_ptr<IOHandle> &handle) {
+      if (handle.get() == paRawHandle) {
+        mapper.deregisterHandle(*handle);
+        return true; // remove
+      }
+      return false;
+    });
+
+    paList.erase(new_end, paList.end());
+  }
+
+  void IODeviceController::updateHandleList(std::string const &paId, IOHandle *paHandle) {
+    auto it = std::find_if(mDiverseHandles.begin(), mDiverseHandles.end(),
+                           [&](const std::unique_ptr<IOHandle> &handle) { return handle.get() == paHandle; });
+
+    if (it == mDiverseHandles.end()) {
+      DEVLOG_INFO("[updateHandleList] %s's is no member of mDiverseHandles.\r\n", paId.c_str());
+      return;
+    }
+    auto handleDirection = (*it)->getDirection();
+    switch (handleDirection) {
+      case IOMapper::In: {
+        util::CCriticalRegion criticalRegion(mHandleMutex);
+        mInputHandles.push_back(std::move(*it));
+        mDiverseHandles.erase(it);
+        break;
+      }
+      case IOMapper::Out: {
+        util::CCriticalRegion criticalRegion(mHandleMutex);
+        mOutputHandles.push_back(std::move(*it));
+        mDiverseHandles.erase(it);
+        break;
+      }
+      default: DEVLOG_ERROR("[updateHandleList] %s's direction is neither `In` nor `Out`.\r\n", paId.c_str()); break;
     }
     DEVLOG_INFO("[updateHandleList] %s's is no member of mDiverseHandles.\r\n", paId.c_str());
   }

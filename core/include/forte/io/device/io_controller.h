@@ -104,6 +104,14 @@ namespace forte::io {
        */
       virtual void updateHandleList(std::string const &paId, IOHandle *paHandle);
 
+      /*! @brief Removes an IO handle from the controller and the IOMapper by ID
+       *
+       * The handle is removed from all internal lists.
+       *
+       * @param paId ID of the handle to remove
+       */
+      virtual void removeHandle(std::string const &paId);
+
     protected:
       explicit IODeviceController(CDeviceExecution &paDeviceExecution);
 
@@ -241,6 +249,8 @@ namespace forte::io {
       int mInitDelay;
 
       void addHandle(THandleList &paList, std::string const &paId, std::unique_ptr<IOHandle> paHandle);
+
+      void removeHandle(THandleList &paList, IOHandle *paRawHandle);
 
       // Functions needed for the external event handler interface
       void enableHandler() override {

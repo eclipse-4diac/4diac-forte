@@ -37,6 +37,13 @@ namespace forte::io {
       void deregisterHandle(IOHandle &paHandle);
       void deregisterHandle(std::string const &paId);
 
+      /*! @brief Get the handle instance with the given ID.
+       *
+       * @param paId The ID of the IOHandle.
+       * @return Pointer to the IOHandle instance, or nullptr if not found.
+       */
+      IOHandle *getHandle(std::string const &paId);
+
       bool registerObserver(std::string const &paId, IOObserver *paObserver);
       void deregisterObserver(IOObserver *paObserver);
 
