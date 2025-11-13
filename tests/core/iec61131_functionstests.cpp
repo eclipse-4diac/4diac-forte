@@ -29,6 +29,7 @@
 
 #include "forte/iec61131_functions.h"
 
+#include "forte/datatypes/forte_any_variant.h"
 #include "forte/datatypes/forte_char.h"
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_string_fixed.h"
@@ -144,6 +145,12 @@ namespace forte::test {
     COutputGuard paOutGuard(paOut);
 
     *paOut = paIn;
+  }
+
+  void testSTInIsOutAnyDummyFunction(const CIEC_ANY &paIn, COutputParameter<CIEC_ANY_VARIANT> paOut) {
+    COutputGuard paOutGuard(paOut);
+
+    paOut->setValue(paIn.unwrap());
   }
 
   BOOST_AUTO_TEST_SUITE(IEC61131_functions)
@@ -2184,6 +2191,13 @@ namespace forte::test {
     CIEC_STRING out;
     testSTInIsOutCharDummyFunction(in[1], out[1]);
     BOOST_TEST(static_cast<CIEC_STRING::TValueType>(out) == "a"s);
+  }
+
+  BOOST_AUTO_TEST_CASE(output_any_test) {
+    CIEC_DINT in(17);
+    CIEC_LINT out;
+    testSTInIsOutAnyDummyFunction(in, out);
+    BOOST_TEST(static_cast<CIEC_LINT::TValueType>(out) == 17);
   }
 
   BOOST_AUTO_TEST_CASE(is_valid_REAL) {

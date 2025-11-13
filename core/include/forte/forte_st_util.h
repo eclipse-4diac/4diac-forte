@@ -15,6 +15,7 @@
 #pragma once
 
 #include <concepts>
+#include <type_traits>
 
 #include "forte/datatypes/forte_any.h"
 #include "forte/datatypes/forte_any_bit.h"
@@ -45,8 +46,7 @@ namespace forte {
   class COutputGuard;
 
   template<typename T>
-    requires(std::default_initializable<T> && !std::derived_from<T, CIEC_ANY_BIT> ||
-             std::is_same_v<T, CIEC_ANY_BIT_VARIANT>)
+    requires(std::default_initializable<T> && (!std::derived_from<T, CIEC_ANY_BIT> || forte::generic_datatype<T>) )
   class COutputParameter {
       friend COutputGuard<COutputParameter>;
 
@@ -54,11 +54,11 @@ namespace forte {
       COutputParameter() : mOutput(nullptr) {
       }
 
-      template<typename U,
-               std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>> &&
-                                    std::is_assignable_v<std::remove_reference_t<U>, T>,
-                                bool> = true>
-      COutputParameter(U &&paOutput) : mOutput(&paOutput) {
+      template<typename U>
+        requires(std::derived_from<std::remove_reference_t<U>, CIEC_ANY> &&
+                 (std::is_assignable_v<std::remove_reference_t<U>, T> ||
+                  (forte::generic_datatype<T> && std::is_assignable_v<T, std::remove_reference_t<U>>) ))
+      explicit(false) COutputParameter(U &&paOutput) : mOutput(&paOutput) {
       }
 
       T *get() noexcept {
@@ -76,7 +76,7 @@ namespace forte {
     private:
       void writeBack() {
         if (mOutput) {
-          mOutput->setValue(mValue);
+          mOutput->setValue(mValue.unwrap());
         }
       }
 
@@ -85,8 +85,7 @@ namespace forte {
   };
 
   template<typename T>
-    requires(std::default_initializable<T> && std::derived_from<T, CIEC_ANY_BIT> &&
-             !std::is_same_v<T, CIEC_ANY_BIT_VARIANT>)
+    requires(std::default_initializable<T> && std::derived_from<T, CIEC_ANY_BIT> && !forte::generic_datatype<T>)
   class CAnyBitOutputParameter {
       friend COutputGuard<CAnyBitOutputParameter>;
 
@@ -94,17 +93,15 @@ namespace forte {
       CAnyBitOutputParameter() : mOutput(nullptr), mNegate(false) {
       }
 
-      template<typename U,
-               std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>> &&
-                                    std::is_assignable_v<std::remove_reference_t<U>, T>,
-                                bool> = true>
-      CAnyBitOutputParameter(U &&paOutput) : mOutput(&paOutput), mNegate(false) {
+      template<typename U>
+        requires(std::derived_from<std::remove_reference_t<U>, CIEC_ANY> &&
+                 std::is_assignable_v<std::remove_reference_t<U>, T>)
+      explicit(false) CAnyBitOutputParameter(U &&paOutput) : mOutput(&paOutput), mNegate(false) {
       }
 
-      template<typename U,
-               std::enable_if_t<std::is_base_of_v<CIEC_ANY, std::remove_reference_t<U>> &&
-                                    std::is_assignable_v<std::remove_reference_t<U>, T>,
-                                bool> = true>
+      template<typename U>
+        requires(std::derived_from<std::remove_reference_t<U>, CIEC_ANY> &&
+                 std::is_assignable_v<std::remove_reference_t<U>, T>)
       CAnyBitOutputParameter(U &&paOutput, const bool paNegate) : mOutput(&paOutput), mNegate(paNegate) {
       }
 
