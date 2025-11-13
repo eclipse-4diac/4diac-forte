@@ -87,4 +87,7 @@ namespace forte {
     private:
       static TForteInt32 smTimeZoneOffset;
   };
+
+  template<>
+  struct is_generic_datatype<CIEC_ANY_DATE> : std::true_type {};
 } // namespace forte

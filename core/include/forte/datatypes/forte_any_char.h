@@ -39,4 +39,7 @@ namespace forte {
     protected:
       CIEC_ANY_CHAR() = default;
   };
+
+  template<>
+  struct is_generic_datatype<CIEC_ANY_CHAR> : std::true_type {};
 } // namespace forte

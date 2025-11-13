@@ -33,4 +33,7 @@ namespace forte {
     protected:
       CIEC_ANY_MAGNITUDE() = default;
   };
+
+  template<>
+  struct is_generic_datatype<CIEC_ANY_MAGNITUDE> : std::true_type {};
 } // namespace forte

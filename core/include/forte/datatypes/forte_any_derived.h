@@ -28,4 +28,7 @@ namespace forte {
     protected:
       CIEC_ANY_DERIVED() = default;
   };
+
+  template<>
+  struct is_generic_datatype<CIEC_ANY_DERIVED> : std::true_type {};
 } // namespace forte

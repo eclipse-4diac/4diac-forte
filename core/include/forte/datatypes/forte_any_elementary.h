@@ -47,4 +47,7 @@ namespace forte {
       bool isTypeSpecifier(const char *paValue, const char *paHashPosition) const;
       bool isCastable(StringId paTypeNameId) const;
   };
+
+  template<>
+  struct is_generic_datatype<CIEC_ANY_ELEMENTARY> : std::true_type {};
 } // namespace forte

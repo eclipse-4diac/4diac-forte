@@ -55,4 +55,7 @@ namespace forte {
 
       CIEC_ANY_INT() = default;
   };
+
+  template<>
+  struct is_generic_datatype<CIEC_ANY_INT> : std::true_type {};
 } // namespace forte

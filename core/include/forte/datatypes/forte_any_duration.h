@@ -117,4 +117,7 @@ namespace forte {
       CIEC_ANY_DURATION() = default;
       void timeElementsToString(std::string &paTargetBuf, int64_t paTimeElement, const std::string &paUnit) const;
   };
+
+  template<>
+  struct is_generic_datatype<CIEC_ANY_DURATION> : std::true_type {};
 } // namespace forte

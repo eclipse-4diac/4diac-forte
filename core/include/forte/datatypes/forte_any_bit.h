@@ -35,4 +35,7 @@ namespace forte {
     protected:
       CIEC_ANY_BIT() = default;
   };
+
+  template<>
+  struct is_generic_datatype<CIEC_ANY_BIT> : std::true_type {};
 } // namespace forte

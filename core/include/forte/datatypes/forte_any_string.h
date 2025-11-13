@@ -157,4 +157,7 @@ namespace forte {
 
       CIEC_ANY_STRING() = default;
   };
+
+  template<>
+  struct is_generic_datatype<CIEC_ANY_STRING> : std::true_type {};
 } // namespace forte

@@ -33,4 +33,7 @@ namespace forte {
 
       ~CIEC_ANY_SIGNED() override = default;
   };
+
+  template<>
+  struct is_generic_datatype<CIEC_ANY_SIGNED> : std::true_type {};
 } // namespace forte

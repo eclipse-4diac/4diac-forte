@@ -30,4 +30,7 @@ namespace forte {
 
       static void normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos);
   };
+
+  template<>
+  struct is_generic_datatype<CIEC_ANY_REAL> : std::true_type {};
 } // namespace forte

@@ -26,6 +26,7 @@
 #include <bit>
 #include <span>
 #include <limits>
+#include <type_traits>
 #include "forte/typelib.h"
 #include "forte/iec61131_cast_helper.h"
 #include "forte/config/forte_config.h"
@@ -606,4 +607,27 @@ namespace forte {
       static constexpr StringId scmDataTypeName{};
   };
 
+  /*!
+   * \brief A type trait marking generic data types
+   * \tparam T The data type
+   */
+  template<typename T>
+  struct is_generic_datatype : std::false_type {};
+
+  template<>
+  struct is_generic_datatype<CIEC_ANY> : std::true_type {};
+
+  /*!
+   * \brief Helper variable template for is_generic_datatype
+   * \tparam T The data type
+   */
+  template<typename T>
+  inline constexpr bool is_generic_datatype_v = is_generic_datatype<T>::value;
+
+  /*!
+   * \brief A concept for generic data types
+   * \tparam T The data type
+   */
+  template<typename T>
+  concept generic_datatype = is_generic_datatype_v<std::remove_cvref_t<T>>;
 } // namespace forte

@@ -97,4 +97,7 @@ namespace forte {
   static_assert(std::is_copy_assignable_v<CIEC_ANY_INT_VARIANT>);
   static_assert(std::is_assignable_v<CIEC_ANY_INT_VARIANT, const CIEC_ANY_INT &>);
   static_assert(std::is_destructible_v<CIEC_ANY_INT_VARIANT>);
+
+  template<>
+  struct is_generic_datatype<CIEC_ANY_INT_VARIANT> : std::true_type {};
 } // namespace forte

@@ -37,4 +37,7 @@ namespace forte {
 
       static void dollarEscapeChar(std::string &paTargetBuf, char paSymbol, const EDataTypeID paTypeID);
   };
+
+  template<>
+  struct is_generic_datatype<CIEC_ANY_CHARS> : std::true_type {};
 } // namespace forte
