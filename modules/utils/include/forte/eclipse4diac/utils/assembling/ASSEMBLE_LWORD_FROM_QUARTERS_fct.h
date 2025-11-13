@@ -190,7 +190,7 @@ namespace forte::eclipse4diac::utils::assembling {
         var_QUARTER_BYTE_30 = paQUARTER_BYTE_30;
         var_QUARTER_BYTE_31 = paQUARTER_BYTE_31;
         executeEvent(scmEventREQID, nullptr);
-        pa = var_;
+        *pa = var_;
       }
 
       void operator()(const CIEC_BYTE &paQUARTER_BYTE_00,
@@ -225,7 +225,7 @@ namespace forte::eclipse4diac::utils::assembling {
                       const CIEC_BYTE &paQUARTER_BYTE_29,
                       const CIEC_BYTE &paQUARTER_BYTE_30,
                       const CIEC_BYTE &paQUARTER_BYTE_31,
-                      CIEC_LWORD &pa) {
+                      CAnyBitOutputParameter<CIEC_LWORD> &pa) {
         evt_REQ(paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03, paQUARTER_BYTE_04,
                 paQUARTER_BYTE_05, paQUARTER_BYTE_06, paQUARTER_BYTE_07, paQUARTER_BYTE_08, paQUARTER_BYTE_09,
                 paQUARTER_BYTE_10, paQUARTER_BYTE_11, paQUARTER_BYTE_12, paQUARTER_BYTE_13, paQUARTER_BYTE_14,

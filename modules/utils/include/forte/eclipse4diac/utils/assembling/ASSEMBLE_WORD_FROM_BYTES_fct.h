@@ -68,10 +68,10 @@ namespace forte::eclipse4diac::utils::assembling {
         var_BYTE_00 = paBYTE_00;
         var_BYTE_01 = paBYTE_01;
         executeEvent(scmEventREQID, nullptr);
-        pa = var_;
+        *pa = var_;
       }
 
-      void operator()(const CIEC_BYTE &paBYTE_00, const CIEC_BYTE &paBYTE_01, CIEC_WORD &pa) {
+      void operator()(const CIEC_BYTE &paBYTE_00, const CIEC_BYTE &paBYTE_01, CAnyBitOutputParameter<CIEC_WORD> &pa) {
         evt_REQ(paBYTE_00, paBYTE_01, pa);
       }
   };

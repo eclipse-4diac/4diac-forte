@@ -94,7 +94,7 @@ namespace forte::eclipse4diac::signalprocessing {
         var_MAX_OUT_FIX = paMAX_OUT_FIX;
         var_MIN_OUT_FIX = paMIN_OUT_FIX;
         executeEvent(scmEventREQID, nullptr);
-        pa = var_;
+        *pa = var_;
       }
 
       void operator()(const CIEC_REAL &paIN,
@@ -106,7 +106,7 @@ namespace forte::eclipse4diac::signalprocessing {
                       const CIEC_REAL &paMIN_OUT,
                       const CIEC_REAL &paMAX_OUT_FIX,
                       const CIEC_REAL &paMIN_OUT_FIX,
-                      CIEC_REAL &pa) {
+                      COutputParameter<CIEC_REAL> &pa) {
         evt_REQ(paIN, paMAX_IN, paMIN_IN, paMAX_IN_LIM, paMIN_IN_LIM, paMAX_OUT, paMIN_OUT, paMAX_OUT_FIX,
                 paMIN_OUT_FIX, pa);
       }

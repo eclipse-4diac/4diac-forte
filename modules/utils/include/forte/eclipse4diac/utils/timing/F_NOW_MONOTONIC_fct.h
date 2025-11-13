@@ -57,10 +57,10 @@ namespace forte::eclipse4diac::utils::timing {
       void evt_REQ(COutputParameter<CIEC_TIME> pa) {
         COutputGuard guard_pa(pa);
         executeEvent(scmEventREQID, nullptr);
-        pa = var_;
+        *pa = var_;
       }
 
-      void operator()(CIEC_TIME &pa) {
+      void operator()(COutputParameter<CIEC_TIME> pa) {
         evt_REQ(pa);
       }
   };

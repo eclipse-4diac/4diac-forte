@@ -83,8 +83,11 @@ namespace forte::iec61131::counters {
         *paCV = var_CV;
       }
 
-      void operator()(
-          const CIEC_BOOL &paCU, const CIEC_BOOL &paR, const CIEC_UDINT &paPV, CIEC_BOOL &paQ, CIEC_UDINT &paCV) {
+      void operator()(const CIEC_BOOL &paCU,
+                      const CIEC_BOOL &paR,
+                      const CIEC_UDINT &paPV,
+                      CAnyBitOutputParameter<CIEC_BOOL> paQ,
+                      COutputParameter<CIEC_UDINT> paCV) {
         evt_REQ(paCU, paR, paPV, paQ, paCV);
       }
   };

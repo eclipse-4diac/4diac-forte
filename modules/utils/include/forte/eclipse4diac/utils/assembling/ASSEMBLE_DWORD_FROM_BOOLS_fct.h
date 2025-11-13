@@ -190,7 +190,7 @@ namespace forte::eclipse4diac::utils::assembling {
         var_BIT_30 = paBIT_30;
         var_BIT_31 = paBIT_31;
         executeEvent(scmEventREQID, nullptr);
-        pa = var_;
+        *pa = var_;
       }
 
       void operator()(const CIEC_BOOL &paBIT_00,
@@ -225,7 +225,7 @@ namespace forte::eclipse4diac::utils::assembling {
                       const CIEC_BOOL &paBIT_29,
                       const CIEC_BOOL &paBIT_30,
                       const CIEC_BOOL &paBIT_31,
-                      CIEC_DWORD &pa) {
+                      CAnyBitOutputParameter<CIEC_DWORD> &pa) {
         evt_REQ(paBIT_00, paBIT_01, paBIT_02, paBIT_03, paBIT_04, paBIT_05, paBIT_06, paBIT_07, paBIT_08, paBIT_09,
                 paBIT_10, paBIT_11, paBIT_12, paBIT_13, paBIT_14, paBIT_15, paBIT_16, paBIT_17, paBIT_18, paBIT_19,
                 paBIT_20, paBIT_21, paBIT_22, paBIT_23, paBIT_24, paBIT_25, paBIT_26, paBIT_27, paBIT_28, paBIT_29,

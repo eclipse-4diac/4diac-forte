@@ -67,11 +67,11 @@ namespace forte::eclipse4diac::signalprocessing {
 
         var_WI = paWI;
         executeEvent(scmEventREQID, nullptr);
-        pa = var_;
+        *pa = var_;
         *paWO = var_WO;
       }
 
-      void operator()(const CIEC_WORD &paWI, CIEC_REAL &pa, CIEC_WORD &paWO) {
+      void operator()(const CIEC_WORD &paWI, COutputParameter<CIEC_REAL> &pa, CAnyBitOutputParameter<CIEC_WORD> &paWO) {
         evt_REQ(paWI, pa, paWO);
       }
   };

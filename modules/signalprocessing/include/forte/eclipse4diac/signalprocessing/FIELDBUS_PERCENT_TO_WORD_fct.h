@@ -63,10 +63,10 @@ namespace forte::eclipse4diac::signalprocessing {
         COutputGuard guard_pa(pa);
         var_RI = paRI;
         executeEvent(scmEventREQID, nullptr);
-        pa = var_;
+        *pa = var_;
       }
 
-      void operator()(const CIEC_REAL &paRI, CIEC_WORD &pa) {
+      void operator()(const CIEC_REAL &paRI, CAnyBitOutputParameter<CIEC_WORD> &pa) {
         evt_REQ(paRI, pa);
       }
   };

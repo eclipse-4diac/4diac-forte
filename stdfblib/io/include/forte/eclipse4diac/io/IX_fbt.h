@@ -93,8 +93,11 @@ namespace forte::eclipse4diac::io {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_INIT(
-          const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_BOOL &paIN) {
+      void evt_INIT(const CIEC_BOOL &paQI,
+                    const CIEC_STRING &paPARAMS,
+                    CAnyBitOutputParameter<CIEC_BOOL> &paQO,
+                    COutputParameter<CIEC_STRING> &paSTATUS,
+                    CAnyBitOutputParameter<CIEC_BOOL> &paIN) {
         var_QI = paQI;
         var_PARAMS = paPARAMS;
         receiveInputEvent(scmEventINITID, nullptr);
@@ -103,8 +106,11 @@ namespace forte::eclipse4diac::io {
         *paIN = var_IN;
       }
 
-      void evt_REQ(
-          const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_BOOL &paIN) {
+      void evt_REQ(const CIEC_BOOL &paQI,
+                   const CIEC_STRING &paPARAMS,
+                   CAnyBitOutputParameter<CIEC_BOOL> &paQO,
+                   COutputParameter<CIEC_STRING> &paSTATUS,
+                   CAnyBitOutputParameter<CIEC_BOOL> &paIN) {
         var_QI = paQI;
         var_PARAMS = paPARAMS;
         receiveInputEvent(scmEventREQID, nullptr);
@@ -113,8 +119,11 @@ namespace forte::eclipse4diac::io {
         *paIN = var_IN;
       }
 
-      void operator()(
-          const CIEC_BOOL &paQI, const CIEC_STRING &paPARAMS, CIEC_BOOL &paQO, CIEC_STRING &paSTATUS, CIEC_BOOL &paIN) {
+      void operator()(const CIEC_BOOL &paQI,
+                      const CIEC_STRING &paPARAMS,
+                      CAnyBitOutputParameter<CIEC_BOOL> &paQO,
+                      COutputParameter<CIEC_STRING> &paSTATUS,
+                      CAnyBitOutputParameter<CIEC_BOOL> &paIN) {
         evt_INIT(paQI, paPARAMS, paQO, paSTATUS, paIN);
       }
   };
