@@ -162,6 +162,17 @@ namespace forte {
     }
 
     template<class T>
+    void buildQueryTypeRepsonse(T *paTypeEntry, std::string &paReqResult, std::string_view paResponsePrefix) {
+      paReqResult = '<';
+      paReqResult += paResponsePrefix;
+      paReqResult += " Name=\""s;
+      paReqResult += paTypeEntry->getTypeName();
+      paReqResult += '#';
+      paReqResult += paTypeEntry->getTypeHash();
+      paReqResult += "\"/>"s;
+    }
+
+    template<class T>
     EMGMResponse createQueryTypeResponseMessage(T *paTypeEntry,
                                                 std::string_view paTypeHash,
                                                 std::string &paReqResult,
@@ -172,17 +183,12 @@ namespace forte {
 
       if (paTypeHash.empty()) {
         // return type hash
-        paReqResult = '<';
-        paReqResult += paResponsePrefix;
-        paReqResult += " Name=\""s;
-        paReqResult += paTypeEntry->getTypeName();
-        paReqResult += '#';
-        paReqResult += paTypeEntry->getTypeHash();
-        paReqResult += "\"/>"s;
+        buildQueryTypeRepsonse(paTypeEntry, paReqResult, paResponsePrefix);
       } else {
         // we can only clear paReqResult after this type hash check
         if (paTypeHash != paTypeEntry->getTypeHash()) {
-          paReqResult.clear();
+          // the type hash is different return it to the sender for checks
+          buildQueryTypeRepsonse(paTypeEntry, paReqResult, paResponsePrefix);
           return EMGMResponse::UnsupportedType;
         }
         paReqResult.clear();
