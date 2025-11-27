@@ -178,6 +178,7 @@ namespace forte {
                                                 std::string &paReqResult,
                                                 std::string_view paResponsePrefix) {
       if (paTypeEntry == nullptr) {
+        paReqResult.clear();
         return EMGMResponse::UnsupportedType;
       }
 

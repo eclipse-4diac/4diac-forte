@@ -117,16 +117,18 @@ namespace forte::iec61499::system {
       paResponse.append("\">\n  ");
     } else {
       paResponse.append(">\n  ");
-      if (mCommand.mCMD == EMGMCommandType::Read) {
-        paResponse.append("<Connection Source=\"");
-        appendIdentifierName(paResponse, mCommand.mFirstParam);
-        paResponse.append("\" Destination=\"");
-        paResponse.append(mCommand.mAdditionalParams);
-        paResponse.append("\" />");
-      } else {
-        generateQueryResponse(paResponse);
-      }
     }
+
+    if (mCommand.mCMD == EMGMCommandType::Read) {
+      paResponse.append("<Connection Source=\"");
+      appendIdentifierName(paResponse, mCommand.mFirstParam);
+      paResponse.append("\" Destination=\"");
+      paResponse.append(mCommand.mAdditionalParams);
+      paResponse.append("\" />");
+    } else {
+      generateQueryResponse(paResponse);
+    }
+
     paResponse.append("\n</Response>");
   }
 
