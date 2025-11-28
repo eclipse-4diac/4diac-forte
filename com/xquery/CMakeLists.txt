@@ -37,3 +37,5 @@ target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-com-x
 target_include_directories(forte-com-xquery PRIVATE ${FORTE_BASEX_SRC_DIR})
 
 target_link_libraries(forte-com-xquery PRIVATE ssl crypto)
+
+install(TARGETS forte-com-xquery EXPORT forte-export FILE_SET HEADERS)

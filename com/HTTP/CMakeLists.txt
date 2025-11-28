@@ -37,3 +37,5 @@ add_library(forte-com-HTTP
 target_include_directories(forte-com-HTTP PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
 target_link_libraries(forte-com-HTTP PUBLIC forte-core)
 target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-com-HTTP,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-com-HTTP>>)
+
+install(TARGETS forte-com-HTTP EXPORT forte-export FILE_SET HEADERS)

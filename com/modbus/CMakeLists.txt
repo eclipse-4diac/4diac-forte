@@ -46,3 +46,5 @@ if (FORTE_COM_MODBUS_LIB_DIR)
     target_link_directories(forte-com-modbus PUBLIC ${FORTE_COM_MODBUS_LIB_DIR}/lib)
 endif ()
 target_link_libraries(forte-com-modbus PRIVATE modbus)
+
+install(TARGETS forte-com-modbus EXPORT forte-export FILE_SET HEADERS)

@@ -64,4 +64,6 @@ if(FORTE_COM_CAN)
   target_include_directories(forte-com-CAN PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
   target_link_libraries(forte-com-CAN PUBLIC forte-core)
   target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-com-CAN>)
+  
+  install(TARGETS forte-com-CAN EXPORT forte-export FILE_SET HEADERS)
 endif(FORTE_COM_CAN)

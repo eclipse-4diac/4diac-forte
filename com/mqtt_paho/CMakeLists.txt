@@ -50,3 +50,5 @@ if (WIN32)
     target_link_libraries(forte-com-mqtt_paho PRIVATE crypt32)
 endif ()
 target_link_libraries(forte-com-mqtt_paho PRIVATE ${FORTE_COM_PAHOMQTT_LIB})
+
+install(TARGETS forte-com-mqtt_paho EXPORT forte-export FILE_SET HEADERS)
