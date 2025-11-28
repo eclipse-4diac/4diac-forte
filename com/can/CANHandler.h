@@ -19,6 +19,7 @@
 #include "forte/arch/forte_thread.h"
 #include "forte/arch/sockhand.h"
 #include "forte/extevhan.h"
+#include "forte/cominfra/comCallback.h"
 
 using namespace forte::arch;
 

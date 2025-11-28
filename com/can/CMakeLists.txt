@@ -23,7 +23,7 @@ endif ()
 option(FORTE_COM_CAN "Enable the CAN Commuication Layer" OFF)
 
 if(FORTE_COM_CAN)
-  set(FORTE_COM_CAN_MODULE_CHECK ON CACHE BOOL "Checking for the Presence of CAN Modules.")
+  set(FORTE_COM_CAN_MODULE_CHECK ON CACHE BOOL "Checking for the presence of CAN Modules.")
 
   if(FORTE_COM_CAN_MODULE_CHECK)
     execute_process(
@@ -63,7 +63,7 @@ if(FORTE_COM_CAN)
   )
   target_include_directories(forte-com-CAN PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
   target_link_libraries(forte-com-CAN PUBLIC forte-core)
-  target_link_libraries(forte PUBLIC $<LINK_LIBRARY:WHOLE_ARCHIVE,forte-com-CAN>)
-  
+  target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-com-CAN,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-com-CAN>>)
+
   install(TARGETS forte-com-CAN EXPORT forte-export FILE_SET HEADERS)
 endif(FORTE_COM_CAN)

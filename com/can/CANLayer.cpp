@@ -23,21 +23,27 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 
+#include "forte/stringid.h"
 #include "forte/cominfra/basecommfb.h"
+#include "forte/cominfra/comlayersmanager.h"
 #include "forte/cominfra/comtypes.h"
 #include "forte/datatype.h"
 #include "forte/datatypes/forte_any.h"
 #include "forte/datatypes/forte_byte.h"
 #include "forte/util/devlog.h"
-#include "forte/util/string_utils.h"
 
 #include "CANLayer.h"
 #include "CANHandler.h"
 
 using namespace forte::arch;
+using namespace forte::literals;
 using namespace forte::util;
 
 namespace forte::com_infra {
+  namespace {
+    [[maybe_unused]] const ComLayerManager::EntryImpl<CCANComLayer> entry("can"_STRID);
+  }
+
   CCANComLayer::CCANComLayer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) : CComLayer(paUpperLayer, paComFB) {
   }
 
