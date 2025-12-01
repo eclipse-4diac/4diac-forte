@@ -488,7 +488,7 @@ namespace forte::iec61499::system {
     uaMGR->setMGMCommand(EMGMCommandType::CreateFBInstance, {}, nullptr, resourceName.c_str(), resType.c_str());
     EMGMResponse eMGMRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
 
-    int status = scResponseMap.find(eMGMRetVal)->second;
+    UA_StatusCode status = scResponseMap.find(eMGMRetVal)->second;
     if (status != UA_STATUSCODE_GOOD) {
       return status;
     }
@@ -1206,7 +1206,7 @@ namespace forte::iec61499::system {
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
     uaMGR->setMGMCommand(EMGMCommandType::QueryFB, {}, nullptr, nullptr, nullptr);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    int status = scResponseMap.find(eRetVal)->second;
+    UA_StatusCode status = scResponseMap.find(eRetVal)->second;
     if (status != UA_STATUSCODE_GOOD) {
       return status;
     }
@@ -1249,7 +1249,7 @@ namespace forte::iec61499::system {
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
     uaMGR->setMGMCommand(EMGMCommandType::QueryFBType, {}, fbTypeHash.c_str(), fbTypeName.c_str(), nullptr);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    int status = scResponseMap.find(eRetVal)->second;
+    UA_StatusCode status = scResponseMap.find(eRetVal)->second;
     if (status != UA_STATUSCODE_GOOD) {
       return status;
     }
@@ -1290,9 +1290,9 @@ namespace forte::iec61499::system {
     parseHashedTypeName(hashedDataTypeName, dataTypeName, dataTypeHash);
 
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::QueryDTTypes, {}, dataTypeHash.c_str(), dataTypeName.c_str(), nullptr);
+    uaMGR->setMGMCommand(EMGMCommandType::QueryDataType, {}, dataTypeHash.c_str(), dataTypeName.c_str(), nullptr);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    int status = scResponseMap.find(eRetVal)->second;
+    UA_StatusCode status = scResponseMap.find(eRetVal)->second;
     if (status != UA_STATUSCODE_GOOD) {
       return status;
     }
@@ -1338,7 +1338,7 @@ namespace forte::iec61499::system {
     uaMGR->setMGMCommand(EMGMCommandType::QueryGlobalConstType, {}, globalConstTypeHash.c_str(),
                          globalConstTypeName.c_str(), nullptr);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    int status = scResponseMap.find(eRetVal)->second;
+    UA_StatusCode status = scResponseMap.find(eRetVal)->second;
     if (status != UA_STATUSCODE_GOOD) {
       return status;
     }
@@ -1409,7 +1409,7 @@ namespace forte::iec61499::system {
     OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
     uaMGR->setMGMCommand(EMGMCommandType::MonitoringReadWatches, {}, nullptr, nullptr, nullptr);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    int status = scResponseMap.find(eRetVal)->second;
+    UA_StatusCode status = scResponseMap.find(eRetVal)->second;
     if (status != UA_STATUSCODE_GOOD) {
       return status;
     }
