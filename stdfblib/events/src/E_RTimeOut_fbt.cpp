@@ -1,14 +1,21 @@
-/*******************************************************************************
- * Copyright (c) 2014 fortiss GmbH
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Alois Zoitl - initial API and implementation and/or initial documentation
- *******************************************************************************/
+/*************************************************************************
+ *** Copyright (c) 2014 fortiss GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.0.0.202511261532!
+ ***
+ *** Name: E_RTimeOut
+ *** Description: Simple implementation of the timeout services
+ *** Version:
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
+ ***     1.0: 2017-09-22/Alois Zoitl - fortiss GmbH - initial API and implementation and/or initial documentation
+ *************************************************************************/
 
 #include "forte/iec61499/events/E_RTimeOut_fbt.h"
 
@@ -20,7 +27,6 @@
 #include "forte/datatypes/forte_array_variable.h"
 
 using namespace std::literals;
-
 using namespace forte::literals;
 
 namespace forte::iec61499::events {
@@ -61,7 +67,7 @@ namespace forte::iec61499::events {
   FORTE_E_RTimeOut::FORTE_E_RTimeOut(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
       fb_DLY("DLY"_STRID, *this),
-      var_TimeOutSocket("TimeOutSocket"_STRID, *this, cgCFBParentAdapterlistIDMarker) {};
+      var_TimeOutSocket("TimeOutSocket"_STRID, *this, forte::cgCFBParentAdapterlistIDMarker) {};
 
   void FORTE_E_RTimeOut::setInitialValues() {
     CCompositeFB::setInitialValues();

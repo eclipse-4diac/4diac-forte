@@ -1,14 +1,21 @@
-/*******************************************************************************
- * Copyright (c) 2014 fortiss GmbH
- * This program and the accompanying materials are made available under the
- * terms of the Eclipse Public License 2.0 which is available at
- * http://www.eclipse.org/legal/epl-2.0.
- *
- * SPDX-License-Identifier: EPL-2.0
- *
- * Contributors:
- *   Alois Zoitl - initial API and implementation and/or initial documentation
- *******************************************************************************/
+/*************************************************************************
+ *** Copyright (c) 2014 fortiss GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.0.0.202511261532!
+ ***
+ *** Name: ARTimeOut
+ *** Description: Interface for a resetable time out service
+ *** Version:
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
+ ***     1.0: 2017-09-22/Alois Zoitl - fortiss GmbH - initial API and implementation and/or initial documentation
+ *************************************************************************/
 
 #pragma once
 
@@ -26,15 +33,14 @@ namespace forte::iec61499::events {
 
     private:
     public:
-      static const TEventID scmEventTimeOutID = 0;
-
-    private:
-    public:
       static const TEventID scmEventSTARTID = 0;
       static const TEventID scmEventSTOPID = 1;
 
     private:
-    protected:
+    public:
+      static const TEventID scmEventTimeOutID = 0;
+
+    private:
       void setInitialValues() override;
 
     public:
@@ -52,7 +58,7 @@ namespace forte::iec61499::events {
         return getParentAdapterListEventID() + scmEventSTOPID;
       }
 
-      virtual ~FORTE_ARTimeOut() override = default;
+      ~FORTE_ARTimeOut() override = default;
 
     protected:
       FORTE_ARTimeOut(CFBContainer &paContainer,
