@@ -1207,11 +1207,8 @@ namespace forte::iec61499::system {
     uaMGR->setMGMCommand(EMGMCommandType::QueryFB, {}, nullptr, nullptr, nullptr);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     UA_StatusCode status = scResponseMap.find(eRetVal)->second;
-    if (status != UA_STATUSCODE_GOOD) {
-      return status;
-    }
     UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mAdditionalParams.c_str());
-    status = UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
+    status |= UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
     UA_String_clear(&uaResp);
     return status;
   }
@@ -1250,11 +1247,8 @@ namespace forte::iec61499::system {
     uaMGR->setMGMCommand(EMGMCommandType::QueryFBType, {}, fbTypeHash.c_str(), fbTypeName.c_str(), nullptr);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     UA_StatusCode status = scResponseMap.find(eRetVal)->second;
-    if (status != UA_STATUSCODE_GOOD) {
-      return status;
-    }
     UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mAdditionalParams.c_str());
-    status = UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
+    status |= UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
     UA_String_clear(&uaResp);
     return status;
   }
@@ -1293,11 +1287,8 @@ namespace forte::iec61499::system {
     uaMGR->setMGMCommand(EMGMCommandType::QueryDataType, {}, dataTypeHash.c_str(), dataTypeName.c_str(), nullptr);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     UA_StatusCode status = scResponseMap.find(eRetVal)->second;
-    if (status != UA_STATUSCODE_GOOD) {
-      return status;
-    }
     UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mAdditionalParams.c_str());
-    status = UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
+    status |= UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
     UA_String_clear(&uaResp);
     return status;
   }
@@ -1339,11 +1330,8 @@ namespace forte::iec61499::system {
                          globalConstTypeName.c_str(), nullptr);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     UA_StatusCode status = scResponseMap.find(eRetVal)->second;
-    if (status != UA_STATUSCODE_GOOD) {
-      return status;
-    }
     UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mAdditionalParams.c_str());
-    status = UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
+    status |= UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
     UA_String_clear(&uaResp);
     return status;
   }
