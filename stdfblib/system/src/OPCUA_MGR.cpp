@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2024 Markus Meingast, Johannes Kepler University Linz
+ * Copyright (c) 2022, 2025 Markus Meingast, Johannes Kepler University Linz
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -271,6 +271,108 @@ namespace forte::iec61499::system {
   };
 
   const UA_UInt16 OPCUA_MGR::smNamespaces[] = {0, 1};
+
+  namespace {
+
+    std::string getInputValue(UA_String paInput) {
+      if (paInput.length == 0) {
+        return std::string(" ");
+      }
+      std::string inputNameStr((const char *) paInput.data, paInput.length);
+      return inputNameStr.substr(0, paInput.length);
+    }
+
+    void
+    parseHashedTypeName(const std::string_view paHashedTypeName, std::string &paTypeName, std::string &paTypeHash) {
+      size_t hashSeparator = paHashedTypeName.find('#');
+      if (hashSeparator != std::string::npos) {
+        paTypeName = paHashedTypeName.substr(0, hashSeparator);
+        paTypeHash = paHashedTypeName.substr(hashSeparator + 1);
+      } else {
+        paTypeName = paHashedTypeName;
+      }
+    }
+
+    UA_StatusCode onQueryFBType(UA_Server *,
+                                const UA_NodeId *,
+                                void *,
+                                const UA_NodeId *,
+                                void *methodContext,
+                                const UA_NodeId *,
+                                void *,
+                                size_t,
+                                const UA_Variant *input,
+                                size_t,
+                                UA_Variant *output) {
+      if (!methodContext) {
+        return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+      }
+      EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+      const std::string_view hashedFBTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)));
+      std::string fbTypeName;
+      std::string fbTypeHash;
+      parseHashedTypeName(hashedFBTypeName, fbTypeName, fbTypeHash);
+
+      OPCUA_MGR &uaMGR = *static_cast<OPCUA_MGR *>(methodContext);
+      UA_StatusCode status = uaMGR.executeQueryTypeCommand(EMGMCommandType::QueryFBType, fbTypeName, fbTypeHash);
+      status |= uaMGR.getCommandResult(output);
+      return status;
+    }
+
+    UA_StatusCode onQueryDataType(UA_Server *,
+                                  const UA_NodeId *,
+                                  void *,
+                                  const UA_NodeId *,
+                                  void *methodContext,
+                                  const UA_NodeId *,
+                                  void *,
+                                  size_t,
+                                  const UA_Variant *input,
+                                  size_t,
+                                  UA_Variant *output) {
+      if (!methodContext) {
+        return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+      }
+      EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+      const std::string_view hashedDataTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)));
+      std::string dataTypeName;
+      std::string dataTypeHash;
+      parseHashedTypeName(hashedDataTypeName, dataTypeName, dataTypeHash);
+
+      OPCUA_MGR &uaMGR = *static_cast<OPCUA_MGR *>(methodContext);
+      UA_StatusCode status = uaMGR.executeQueryTypeCommand(EMGMCommandType::QueryFBType, dataTypeName, dataTypeHash);
+      status |= uaMGR.getCommandResult(output);
+      return status;
+    }
+
+    UA_StatusCode onQueryGlobalConstType(UA_Server *,
+                                         const UA_NodeId *,
+                                         void *,
+                                         const UA_NodeId *,
+                                         void *methodContext,
+                                         const UA_NodeId *,
+                                         void *,
+                                         size_t,
+                                         const UA_Variant *input,
+                                         size_t,
+                                         UA_Variant *output) {
+      if (!methodContext) {
+        return UA_STATUSCODE_BADUNKNOWNRESPONSE;
+      }
+      EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
+      const std::string_view hashedGlobalConstTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)));
+      std::string globalConstTypeName;
+      std::string globalConstTypeHash;
+      parseHashedTypeName(hashedGlobalConstTypeName, globalConstTypeName, globalConstTypeHash);
+
+      OPCUA_MGR &uaMGR = *static_cast<OPCUA_MGR *>(methodContext);
+      UA_StatusCode status =
+          uaMGR.executeQueryTypeCommand(EMGMCommandType::QueryFBType, globalConstTypeName, globalConstTypeHash);
+      status |= uaMGR.getCommandResult(output);
+      return status;
+    }
+
+  } // namespace
 
   OPCUA_MGR::OPCUA_MGR(CDevice &paUaDevice) :
       mUaDevice(paUaDevice),
@@ -1207,9 +1309,7 @@ namespace forte::iec61499::system {
     uaMGR->setMGMCommand(EMGMCommandType::QueryFB, {}, nullptr, nullptr, nullptr);
     eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
     UA_StatusCode status = scResponseMap.find(eRetVal)->second;
-    UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mAdditionalParams.c_str());
-    status |= UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
-    UA_String_clear(&uaResp);
+    status |= uaMGR->getCommandResult(output);
     return status;
   }
 
@@ -1223,36 +1323,6 @@ namespace forte::iec61499::system {
                          &outputArgument, 1, &onQueryFBType);
   }
 
-  UA_StatusCode OPCUA_MGR::onQueryFBType(UA_Server *,
-                                         const UA_NodeId *,
-                                         void *,
-                                         const UA_NodeId *,
-                                         void *methodContext,
-                                         const UA_NodeId *,
-                                         void *,
-                                         size_t,
-                                         const UA_Variant *input,
-                                         size_t,
-                                         UA_Variant *output) {
-    if (!methodContext) {
-      return UA_STATUSCODE_BADUNKNOWNRESPONSE;
-    }
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    const std::string_view hashedFBTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)));
-    std::string fbTypeName;
-    std::string fbTypeHash;
-    parseHashedTypeName(hashedFBTypeName, fbTypeName, fbTypeHash);
-
-    OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::QueryFBType, {}, fbTypeHash.c_str(), fbTypeName.c_str(), nullptr);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    UA_StatusCode status = scResponseMap.find(eRetVal)->second;
-    UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mAdditionalParams.c_str());
-    status |= UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
-    UA_String_clear(&uaResp);
-    return status;
-  }
-
   EMGMResponse OPCUA_MGR::addQueryDataTypeMethod(UA_Server *paServer) {
     UA_Argument inputArgument;
     initArgument(inputArgument, UA_TYPES_STRING, smQueryDataTypeArgName, smQueryDataTypeArgDescription);
@@ -1261,36 +1331,6 @@ namespace forte::iec61499::system {
     UA_MethodAttributes queryDataTypeAttr = createAttribute(smQueryDataTypeDisplayName, smQueryDataTypeDescription);
     return addMethodNode(paServer, smQueryDataTypeMethodName, mMgmtTypeId, queryDataTypeAttr, &inputArgument, 1,
                          &outputArgument, 1, &onQueryDataType);
-  }
-
-  UA_StatusCode OPCUA_MGR::onQueryDataType(UA_Server *,
-                                           const UA_NodeId *,
-                                           void *,
-                                           const UA_NodeId *,
-                                           void *methodContext,
-                                           const UA_NodeId *,
-                                           void *,
-                                           size_t,
-                                           const UA_Variant *input,
-                                           size_t,
-                                           UA_Variant *output) {
-    if (!methodContext) {
-      return UA_STATUSCODE_BADUNKNOWNRESPONSE;
-    }
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    const std::string_view hashedDataTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)));
-    std::string dataTypeName;
-    std::string dataTypeHash;
-    parseHashedTypeName(hashedDataTypeName, dataTypeName, dataTypeHash);
-
-    OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::QueryDataType, {}, dataTypeHash.c_str(), dataTypeName.c_str(), nullptr);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    UA_StatusCode status = scResponseMap.find(eRetVal)->second;
-    UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mAdditionalParams.c_str());
-    status |= UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
-    UA_String_clear(&uaResp);
-    return status;
   }
 
   EMGMResponse OPCUA_MGR::addQueryGlobalConstTypeMethod(UA_Server *paServer) {
@@ -1303,37 +1343,6 @@ namespace forte::iec61499::system {
         createAttribute(smQueryGlobalConstTypeDisplayName, smQueryGlobalConstTypeDescription);
     return addMethodNode(paServer, smQueryGlobalConstTypeMethodName, mMgmtTypeId, queryGlobalConstTypeAttr,
                          &inputArgument, 1, &outputArgument, 1, &onQueryGlobalConstType);
-  }
-
-  UA_StatusCode OPCUA_MGR::onQueryGlobalConstType(UA_Server *,
-                                                  const UA_NodeId *,
-                                                  void *,
-                                                  const UA_NodeId *,
-                                                  void *methodContext,
-                                                  const UA_NodeId *,
-                                                  void *,
-                                                  size_t,
-                                                  const UA_Variant *input,
-                                                  size_t,
-                                                  UA_Variant *output) {
-    if (!methodContext) {
-      return UA_STATUSCODE_BADUNKNOWNRESPONSE;
-    }
-    EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-    const std::string_view hashedGlobalConstTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)));
-    std::string globalConstTypeName;
-    std::string globalConstTypeHash;
-    parseHashedTypeName(hashedGlobalConstTypeName, globalConstTypeName, globalConstTypeHash);
-
-    OPCUA_MGR *uaMGR = static_cast<OPCUA_MGR *>(methodContext);
-    uaMGR->setMGMCommand(EMGMCommandType::QueryGlobalConstType, {}, globalConstTypeHash.c_str(),
-                         globalConstTypeName.c_str(), nullptr);
-    eRetVal = uaMGR->mUaDevice.executeMGMCommand(uaMGR->mCommand);
-    UA_StatusCode status = scResponseMap.find(eRetVal)->second;
-    UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mAdditionalParams.c_str());
-    status |= UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
-    UA_String_clear(&uaResp);
-    return status;
   }
 
   EMGMResponse OPCUA_MGR::addAddWatchMethod(UA_Server *paServer) {
@@ -1403,7 +1412,6 @@ namespace forte::iec61499::system {
     }
     UA_String uaResp = UA_String_fromChars(uaMGR->mCommand.mMonitorResponse.c_str());
     status = UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
-    UA_String_clear(&uaResp);
     return status;
   }
 
@@ -1605,6 +1613,7 @@ namespace forte::iec61499::system {
   }
 
   void OPCUA_MGR::clearMGMCommand() {
+    mCommand.mDestination = {};
     mCommand.mFirstParam.clear();
     mCommand.mSecondParam.clear();
     mCommand.mAdditionalParams.clear();
@@ -1653,14 +1662,6 @@ namespace forte::iec61499::system {
     }
   }
 
-  std::string OPCUA_MGR::getInputValue(UA_String paInput) {
-    if (paInput.length == 0) {
-      return std::string(" ");
-    }
-    std::string inputNameStr((const char *) paInput.data, paInput.length);
-    return inputNameStr.substr(0, paInput.length);
-  }
-
   void OPCUA_MGR::parseDestinationName(const std::string &paDestination, std::vector<std::string> &paFbName) {
     std::string dst(paDestination);
     size_t index = dst.find_first_of(".");
@@ -1670,18 +1671,6 @@ namespace forte::iec61499::system {
       index = dst.find_first_of(".");
     }
     paFbName.push_back(dst.substr(0, index));
-  }
-
-  void OPCUA_MGR::parseHashedTypeName(const std::string_view paHashedTypeName,
-                                      std::string &paTypeName,
-                                      std::string &paTypeHash) {
-    size_t hashSeparator = paHashedTypeName.find('#');
-    if (hashSeparator != std::string::npos) {
-      paTypeName = paHashedTypeName.substr(0, hashSeparator);
-      paTypeHash = paHashedTypeName.substr(hashSeparator + 1);
-    } else {
-      paTypeName = paHashedTypeName;
-    }
   }
 
   void OPCUA_MGR::addExtraMgmMethod(const MethodInformation &paMethod) {
@@ -1707,4 +1696,23 @@ namespace forte::iec61499::system {
     }
     return EMGMResponse::Ready;
   }
+
+  UA_StatusCode
+  OPCUA_MGR::executeQueryTypeCommand(EMGMCommandType paCMD, std::string_view paTypeName, std::string_view paTypeHash) {
+    clearMGMCommand();
+    mCommand.mCMD = paCMD;
+    mCommand.mFirstParam.push_back(StringId::lookup(paTypeName));
+    mCommand.mAdditionalParams = paTypeHash;
+
+    EMGMResponse eRetVal = mUaDevice.executeMGMCommand(mCommand);
+    return scResponseMap.find(eRetVal)->second;
+  }
+
+  UA_StatusCode OPCUA_MGR::getCommandResult(UA_Variant *output) {
+    UA_String uaResp = UA_String_fromChars(mCommand.mAdditionalParams.c_str());
+    UA_StatusCode status = UA_Variant_setScalarCopy(output, &uaResp, &UA_TYPES[UA_TYPES_STRING]);
+    UA_String_clear(&uaResp);
+    return status;
+  }
+
 } // namespace forte::iec61499::system

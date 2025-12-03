@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2024 Markus Meingast, Johannes Kepler University Linz
+ * Copyright (c) 2022, 2025 Markus Meingast, Johannes Kepler University Linz
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -49,6 +49,11 @@ namespace forte {
         void addExtraMgmMethod(const MethodInformation &paMethod);
 
         void addExtraResourceMethod(const MethodInformation &paMethod);
+
+        UA_StatusCode
+        executeQueryTypeCommand(EMGMCommandType paCMD, std::string_view paTypeName, std::string_view paTypeHash);
+
+        UA_StatusCode getCommandResult(UA_Variant *output);
 
       private:
         static char smEmptyLocale[];
@@ -615,43 +620,8 @@ namespace forte {
                                               UA_Variant *output);
 
         EMGMResponse addQueryFBTypeMethod(UA_Server *paServer);
-        static UA_StatusCode onQueryFBType(UA_Server *server,
-                                           const UA_NodeId *sessionId,
-                                           void *sessionHandle,
-                                           const UA_NodeId *methodId,
-                                           void *methodContext,
-                                           const UA_NodeId *objectId,
-                                           void *objectContext,
-                                           size_t inputSize,
-                                           const UA_Variant *input,
-                                           size_t outputSize,
-                                           UA_Variant *output);
-
         EMGMResponse addQueryDataTypeMethod(UA_Server *paServer);
-        static UA_StatusCode onQueryDataType(UA_Server *server,
-                                             const UA_NodeId *sessionId,
-                                             void *sessionHandle,
-                                             const UA_NodeId *methodId,
-                                             void *methodContext,
-                                             const UA_NodeId *objectId,
-                                             void *objectContext,
-                                             size_t inputSize,
-                                             const UA_Variant *input,
-                                             size_t outputSize,
-                                             UA_Variant *output);
-
         EMGMResponse addQueryGlobalConstTypeMethod(UA_Server *paServer);
-        static UA_StatusCode onQueryGlobalConstType(UA_Server *server,
-                                                    const UA_NodeId *sessionId,
-                                                    void *sessionHandle,
-                                                    const UA_NodeId *methodId,
-                                                    void *methodContext,
-                                                    const UA_NodeId *objectId,
-                                                    void *objectContext,
-                                                    size_t inputSize,
-                                                    const UA_Variant *input,
-                                                    size_t outputSize,
-                                                    UA_Variant *output);
 
         /* FORTE Monitoring */
 
@@ -763,12 +733,7 @@ namespace forte {
                            std::vector<std::string> &paFirstParam,
                            std::vector<std::string> paSecondParam = std::vector<std::string>());
 
-        static std::string getInputValue(UA_String paInput);
-
         static void parseDestinationName(const std::string &paDestination, std::vector<std::string> &paTarget);
-
-        static void
-        parseHashedTypeName(const std::string_view paHashedTypeName, std::string &paTypeName, std::string &paTypeHash);
 
         EMGMResponse
         addExtraMethods(UA_Server *paServer, UA_NodeId paParentNodeId, std::vector<MethodInformation> &paMethods);
