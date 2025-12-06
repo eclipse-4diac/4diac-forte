@@ -52,29 +52,23 @@ namespace forte::iec61499::events {
       ~FORTE_ATimeOut() override = default;
   };
 
-  class FORTE_ATimeOut_Socket;
-
   class FORTE_ATimeOut_Plug final : public FORTE_ATimeOut {
     public:
       FORTE_ATimeOut_Plug(StringId paInstanceNameId, CFBContainer &paContainer, TForteUInt8 paParentAdapterlistID);
       ~FORTE_ATimeOut_Plug() override = default;
-
-      void readInputData(TEventID paEIID) override;
-      void writeOutputData(TEventID paEIID) override;
 
       CEventConnection conn_TimeOUT;
 
       CDataConnection *conn_DT;
 
     protected:
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
       CEventConnection *getEOConUnchecked(TPortId paEONum) override;
       CIEC_ANY *getDI(TPortId paDINum) override;
       CDataConnection **getDIConUnchecked(TPortId paDINum) override;
       CDataConnection *getDOConUnchecked(TPortId paDONum) override;
       CIEC_ANY *getDO(TPortId paDONum) override;
-
-    private:
-      FORTE_ATimeOut_Socket *getSocket();
   };
 
   class FORTE_ATimeOut_Socket final : public FORTE_ATimeOut {
@@ -82,24 +76,18 @@ namespace forte::iec61499::events {
       FORTE_ATimeOut_Socket(StringId paInstanceNameId, CFBContainer &paContainer, TForteUInt8 paParentAdapterlistID);
       ~FORTE_ATimeOut_Socket() override = default;
 
-      void readInputData(TEventID paEIID) override;
-      void writeOutputData(TEventID paEIID) override;
-
       CEventConnection conn_START;
       CEventConnection conn_STOP;
 
       COutDataConnection<CIEC_TIME> conn_DT;
 
-    protected:
+    private:
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
       CEventConnection *getEOConUnchecked(TPortId paEONum) override;
       CIEC_ANY *getDI(TPortId paDINum) override;
       CDataConnection **getDIConUnchecked(TPortId paDINum) override;
       CDataConnection *getDOConUnchecked(TPortId paDONum) override;
       CIEC_ANY *getDO(TPortId paDONum) override;
-
-    private:
-      FORTE_ATimeOut_Plug *getPlug() {
-        return static_cast<FORTE_ATimeOut_Plug *>(getPeer());
-      }
   };
 } // namespace forte::iec61499::events

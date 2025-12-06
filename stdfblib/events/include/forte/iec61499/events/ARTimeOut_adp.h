@@ -52,7 +52,7 @@ namespace forte::iec61499::events {
         return getParentAdapterListEventID() + scmEventSTOPID;
       }
 
-      virtual ~FORTE_ARTimeOut() override = default;
+      ~FORTE_ARTimeOut() override = default;
 
     protected:
       FORTE_ARTimeOut(CFBContainer &paContainer,

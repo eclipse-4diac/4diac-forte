@@ -50,6 +50,7 @@ namespace forte::iec61499::events {
   DEFINE_ADAPTER_TYPE(FORTE_ATimeOut, "iec61499::events::ATimeOut"_STRID)
 
   void FORTE_ATimeOut::setInitialValues() {
+    forte::CAdapter::setInitialValues();
     var_DT = 0_TIME;
   }
 
@@ -64,14 +65,15 @@ namespace forte::iec61499::events {
                                            CFBContainer &paContainer,
                                            TForteUInt8 paParentAdapterlistID) :
       FORTE_ATimeOut(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
-      conn_TimeOUT(*this, 0) {
+      conn_TimeOUT(*this, 0),
+      conn_DT(nullptr) {
   }
 
   void FORTE_ATimeOut_Plug::readInputData(TEventID paEIID) {
     if (paEIID == scmEventSTARTID) {
       readData(0, var_DT, conn_DT);
-      if (getPeer() != nullptr) {
-        getSocket()->var_DT = var_DT;
+      if (auto peer = static_cast<FORTE_ATimeOut_Socket *>(getPeer()); peer) {
+        peer->var_DT = var_DT;
       }
     }
   }
@@ -97,10 +99,6 @@ namespace forte::iec61499::events {
 
   CIEC_ANY *FORTE_ATimeOut_Plug::getDO(TPortId) {
     return nullptr;
-  }
-
-  FORTE_ATimeOut_Socket *FORTE_ATimeOut_Plug::getSocket() {
-    return static_cast<FORTE_ATimeOut_Socket *>(getPeer());
   }
 
   FORTE_ATimeOut_Socket::FORTE_ATimeOut_Socket(StringId paInstanceNameId,
