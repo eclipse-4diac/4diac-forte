@@ -344,6 +344,15 @@ namespace forte::com_infra {
                                                UA_NodeId &paMemberTypeNodeId);
 
         /**
+         * Replaces sequences of the Struct name in-place with a specified value if these sequences are present.
+         * @param paStructName The original struct name, which will be overwritten
+         * @param paFrom The sequence that should be replaced
+         * @param paTo The new sequence
+         */
+        static void
+        replaceStructNameElements(std::string &paStructName, std::string_view paFrom, std::string_view paTo);
+
+        /**
          * Returns the namespace index of the Object Struct Instance from the given browsepath
          * @param paBrowsePath The browsepath of the Object Struct
          * @return The namespace index of the Object Struct
