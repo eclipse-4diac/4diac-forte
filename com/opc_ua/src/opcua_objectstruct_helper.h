@@ -318,29 +318,6 @@ namespace forte::com_infra {
                                                CIEC_STRUCT &paStructMember,
                                                const StringId paStructMemberNameId,
                                                UA_NodeId &paMemberTypeNodeId);
-
-        /**
-         * Replaces sequences of the Struct name in-place with a specified value if these sequences are present.
-         * @param paStructName The original struct name, which will be overwritten
-         * @param paFrom The sequence that should be replaced
-         * @param paTo The new sequence
-         */
-        static void
-        replaceStructNameElements(std::string &paStructName, const std::string_view paFrom, const std::string_view paTo);
-
-        /**
-         * Returns the namespace index of the Object Struct Instance from the given browsepath
-         * @param paBrowsePath The browsepath of the Object Struct
-         * @return The namespace index of the Object Struct
-         */
-        static UA_UInt16 getNamespaceIndexFromBrowsepath(const std::string_view paBrowsePath);
-
-        /**
-         * Removes any present namespace indices from the browsepath.
-         * @param paBrowsePath The browsepath of the Object Struct
-         * @return The browsepath without any namespace indices
-         */
-        static std::string removeNamespaceIndicesFromBrowsePath(const std::string_view paBrowsePath);
     };
   } // namespace opc_ua
 } // namespace forte::com_infra

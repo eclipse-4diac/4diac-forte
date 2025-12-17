@@ -31,7 +31,73 @@ namespace forte::com_infra::opc_ua {
     constexpr std::string_view smSequenceToReplace{"::"};
     constexpr std::string_view smSequenceReplaced{"__"};
     char smEmptyString[] = "";
-  }
+
+    /**
+     * Replaces sequences of the Struct name in-place with a specified value if these sequences are present.
+     * @param paStructName The original struct name, which will be overwritten
+     * @param paFrom The sequence that should be replaced
+     * @param paTo The new sequence
+     */
+    void
+    replaceStructNameElements(std::string &paStructName, const std::string_view paFrom, const std::string_view paTo) {
+      size_t index = 0;
+      index = paStructName.find(paFrom, index);
+      while (index != std::string::npos) {
+        paStructName.replace(index, paFrom.length(), paTo);
+        index += paTo.length();
+        index = paStructName.find(paFrom, index);
+      }
+    }
+
+    /**
+     * Returns the namespace index of the Object Struct Instance from the given browsepath
+     * @param paBrowsePath The browsepath of the Object Struct
+     * @return The namespace index of the Object Struct
+     */
+    UA_UInt16 getNamespaceIndexFromBrowsepath(const std::string_view paBrowsePath) {
+      util::CParameterParser mainParser(paBrowsePath.data(), '/');
+      size_t parsingResult = mainParser.parseParameters();
+      if (parsingResult > 0) {
+        size_t elementNameIndex = strcmp("", mainParser[parsingResult - 1]) != 0 ? parsingResult - 1 : parsingResult - 2;
+        std::string objectName(mainParser[elementNameIndex]);
+        util::CParameterParser nsIndexParser(objectName.c_str(), ':');
+        parsingResult = nsIndexParser.parseParameters();
+        if (parsingResult > 1) {
+          return static_cast<UA_UInt16>(util::strtoul(nsIndexParser[0], nullptr, 10));
+        }
+      } else {
+        DEVLOG_ERROR("[OPC UA HELPER]: Error while parsing FB browse path %s\n", paBrowsePath.data());
+      }
+      return COPC_UA_Local_Handler::scmDefaultBrowsenameNameSpace;
+    }
+
+    /**
+     * Removes any present namespace indices from the browsepath.
+     * @param paBrowsePath The browsepath of the Object Struct
+     * @return The browsepath without any namespace indices
+     */
+    std::string removeNamespaceIndicesFromBrowsePath(const std::string_view paBrowsePath) {
+      std::stringstream ss;
+      util::CParameterParser mainParser(paBrowsePath.data(), '/');
+      size_t mainParserLength = mainParser.parseParameters();
+      for (size_t i = 0; i < mainParserLength; i++) {
+        std::string nodePair(mainParser[i]);
+        if (!nodePair.empty()) {
+          util::CParameterParser nsIndexParser(nodePair.c_str(), ':');
+          size_t parserLength = nsIndexParser.parseParameters();
+          size_t browsePathIndex = parserLength > 1 ? 1 : 0;
+          ss << '/' << nsIndexParser[browsePathIndex];
+        }
+      }
+      return ss.str();
+    }
+
+    std::string getTypeBrowsePath(StringId paStructTypeID, UA_UInt16 paNameSpaceIndex) {
+      std::string typeName {std::string(paStructTypeID)};
+      replaceStructNameElements(typeName, smSequenceToReplace, smSequenceReplaced);
+      return COPC_UA_ObjectStruct_Helper::getBrowsePath(smStructTypesBrowsePath, typeName, paNameSpaceIndex);
+    }
+  } // namespace
 
   COPC_UA_ObjectStruct_Helper::COPC_UA_ObjectStruct_Helper(COPC_UA_Layer &paLayer, COPC_UA_HandlerAbstract *paHandler) :
       mLayer(paLayer),
@@ -422,9 +488,7 @@ namespace forte::com_infra::opc_ua {
                                                                                       CIEC_STRUCT &paStructType) {
     std::shared_ptr<CActionInfo> actionInfo =
         std::make_shared<CActionInfo>(mLayer, CActionInfo::UA_ActionType::eCreateObject, paActionInfo.getEndpoint());
-    std::string typeName = std::string(paStructType.getTypeNameID());
-    replaceStructNameElements(typeName, smSequenceToReplace, smSequenceReplaced);
-    std::string typeBrowsePath(getBrowsePath(smStructTypesBrowsePath, typeName, mOpcuaTypeNamespaceIndex));
+    std::string typeBrowsePath {getTypeBrowsePath(paStructType.getTypeNameID(), mOpcuaTypeNamespaceIndex)};
     auto &nodePairs = actionInfo->getNodePairInfo();
     nodePairs.emplace_back(nullptr, typeBrowsePath);
     bool isNodeIdPresent = paActionInfo.getNodePairInfo().begin()->getNodeId() != nullptr;
@@ -522,51 +586,6 @@ namespace forte::com_infra::opc_ua {
     newNodeId->identifierType = UA_NODEIDTYPE_STRING;
     newNodeId->identifier.string = UA_String_fromChars(removeNamespaceIndicesFromBrowsePath(paBrowsePath).c_str());
     return newNodeId;
-  }
-
-  void COPC_UA_ObjectStruct_Helper::replaceStructNameElements(std::string &paStructName,
-                                                              const std::string_view paFrom,
-                                                              const std::string_view paTo) {
-    size_t index = 0;
-    index = paStructName.find(paFrom, index);
-    while (index != std::string::npos) {
-      paStructName.replace(index, paFrom.length(), paTo);
-      index += paTo.length();
-      index = paStructName.find(paFrom, index);
-    }
-  }
-
-  UA_UInt16 COPC_UA_ObjectStruct_Helper::getNamespaceIndexFromBrowsepath(const std::string_view paBrowsePath) {
-    util::CParameterParser mainParser(paBrowsePath.data(), '/');
-    size_t parsingResult = mainParser.parseParameters();
-    if (parsingResult > 0) {
-      size_t elementNameIndex = strcmp("", mainParser[parsingResult - 1]) != 0 ? parsingResult - 1 : parsingResult - 2;
-      std::string objectName(mainParser[elementNameIndex]);
-      util::CParameterParser nsIndexParser(objectName.c_str(), ':');
-      parsingResult = nsIndexParser.parseParameters();
-      if (parsingResult > 1) {
-        return static_cast<UA_UInt16>(util::strtoul(nsIndexParser[0], nullptr, 10));
-      }
-    } else {
-      DEVLOG_ERROR("[OPC UA HELPER]: Error while parsing FB browse path %s\n", paBrowsePath.data());
-    }
-    return COPC_UA_Local_Handler::scmDefaultBrowsenameNameSpace;
-  }
-
-  std::string COPC_UA_ObjectStruct_Helper::removeNamespaceIndicesFromBrowsePath(const std::string_view paBrowsePath) {
-    std::stringstream ss;
-    util::CParameterParser mainParser(paBrowsePath.data(), '/');
-    size_t mainParserLength = mainParser.parseParameters();
-    for (size_t i = 0; i < mainParserLength; i++) {
-      std::string nodePair(mainParser[i]);
-      if (!nodePair.empty()) {
-        util::CParameterParser nsIndexParser(nodePair.c_str(), ':');
-        size_t parserLength = nsIndexParser.parseParameters();
-        size_t browsePathIndex = parserLength > 1 ? 1 : 0;
-        ss << '/' << nsIndexParser[browsePathIndex];
-      }
-    }
-    return ss.str();
   }
 
   std::string COPC_UA_ObjectStruct_Helper::getBrowsePath(const std::string_view paPathPrefix, const std::string_view paObjectName,
