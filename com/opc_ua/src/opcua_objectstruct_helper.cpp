@@ -58,7 +58,8 @@ namespace forte::com_infra::opc_ua {
       util::CParameterParser mainParser(paBrowsePath.data(), '/');
       size_t parsingResult = mainParser.parseParameters();
       if (parsingResult > 0) {
-        size_t elementNameIndex = strcmp("", mainParser[parsingResult - 1]) != 0 ? parsingResult - 1 : parsingResult - 2;
+        size_t elementNameIndex =
+            strcmp("", mainParser[parsingResult - 1]) != 0 ? parsingResult - 1 : parsingResult - 2;
         std::string objectName(mainParser[elementNameIndex]);
         util::CParameterParser nsIndexParser(objectName.c_str(), ':');
         parsingResult = nsIndexParser.parseParameters();
@@ -92,10 +93,29 @@ namespace forte::com_infra::opc_ua {
       return ss.str();
     }
 
+    /**
+     * Returns the browsepath for Object Struct Types
+     * @param paStructTypeID The Struct Type ID
+     * @param paNameSpaceIndex The namespace index
+     * @return The browsepath of the Object Struct Type
+     */
     std::string getTypeBrowsePath(StringId paStructTypeID, UA_UInt16 paNameSpaceIndex) {
-      std::string typeName {std::string(paStructTypeID)};
+      std::string typeName{std::string(paStructTypeID)};
       replaceStructNameElements(typeName, smSequenceToReplace, smSequenceReplaced);
       return COPC_UA_ObjectStruct_Helper::getBrowsePath(smStructTypesBrowsePath, typeName, paNameSpaceIndex);
+    }
+
+    /**
+     * Returns the display name for Object Struct Types.
+     * @param paStructTypeName The name of the Object Struct Type
+     * @return The display name of the Object Struct Type
+     */
+    std::string getDisplayName(std::string_view paStructTypeName) {
+      size_t index = paStructTypeName.rfind(smSequenceReplaced);
+      if (index != std::string::npos) {
+        return std::string(paStructTypeName.substr(index + smSequenceReplaced.length()));
+      }
+      return std::string(paStructTypeName);
     }
   } // namespace
 
@@ -211,11 +231,7 @@ namespace forte::com_infra::opc_ua {
     } else {
       paNodeId = UA_NODEID_NUMERIC(mOpcuaTypeNamespaceIndex, 0);
     }
-    std::string displayName = structTypeName;
-    size_t index = paStructTypeName.rfind(smSequenceReplaced);
-    if (index != std::string::npos) {
-      displayName = paStructTypeName.substr(index + smSequenceReplaced.length());
-    }
+    std::string displayName{getDisplayName(paStructTypeName)};
     UA_ObjectTypeAttributes oAttr = UA_ObjectTypeAttributes_default;
     oAttr.displayName = UA_LOCALIZEDTEXT(smEmptyString, &displayName[0]);
     UA_StatusCode status = UA_Server_addObjectTypeNode(
@@ -488,7 +504,7 @@ namespace forte::com_infra::opc_ua {
                                                                                       CIEC_STRUCT &paStructType) {
     std::shared_ptr<CActionInfo> actionInfo =
         std::make_shared<CActionInfo>(mLayer, CActionInfo::UA_ActionType::eCreateObject, paActionInfo.getEndpoint());
-    std::string typeBrowsePath {getTypeBrowsePath(paStructType.getTypeNameID(), mOpcuaTypeNamespaceIndex)};
+    std::string typeBrowsePath{getTypeBrowsePath(paStructType.getTypeNameID(), mOpcuaTypeNamespaceIndex)};
     auto &nodePairs = actionInfo->getNodePairInfo();
     nodePairs.emplace_back(nullptr, typeBrowsePath);
     bool isNodeIdPresent = paActionInfo.getNodePairInfo().begin()->getNodeId() != nullptr;
@@ -588,7 +604,8 @@ namespace forte::com_infra::opc_ua {
     return newNodeId;
   }
 
-  std::string COPC_UA_ObjectStruct_Helper::getBrowsePath(const std::string_view paPathPrefix, const std::string_view paObjectName,
+  std::string COPC_UA_ObjectStruct_Helper::getBrowsePath(const std::string_view paPathPrefix,
+                                                         const std::string_view paObjectName,
                                                          UA_UInt16 paNamespaceIndex) {
     if (paObjectName.empty()) {
       return std::string();
@@ -600,8 +617,9 @@ namespace forte::com_infra::opc_ua {
     return ss.str();
   }
 
-  std::string COPC_UA_ObjectStruct_Helper::getStructMemberBrowsePathWithNSIndex(const std::string_view paBrowsePathPrefix,
-                                                                                const StringId structMemberNameId) {
+  std::string
+  COPC_UA_ObjectStruct_Helper::getStructMemberBrowsePathWithNSIndex(const std::string_view paBrowsePathPrefix,
+                                                                    const StringId structMemberNameId) {
     std::stringstream ss;
     char buf[100];
     snprintf(buf, sizeof(buf), smMemberNamespaceIndex.data(), mOpcuaObjectNamespaceIndex);

@@ -120,15 +120,17 @@ namespace forte::com_infra {
          * @param paObjectName The name of the object the BrowsePath refers to
          * @param paNamespaceIndex The Namespace index the type should be in
          */
-        static std::string
-        getBrowsePath(const std::string_view paPathPrefix, const std::string_view paObjectName, UA_UInt16 paNamespaceIndex);
+        static std::string getBrowsePath(const std::string_view paPathPrefix,
+                                         const std::string_view paObjectName,
+                                         UA_UInt16 paNamespaceIndex);
 
         /**
          * Get the BrowsePath to the OPC UA Object member
          * @param paBrowsePathPrefix BrowsePath to the Struct Object Node
          * @param paMemberName Name of OPC UA Object Member
          */
-        static std::string getMemberBrowsePath(const std::string_view paBrowsePathPrefix, const std::string_view paMemberName);
+        static std::string getMemberBrowsePath(const std::string_view paBrowsePathPrefix,
+                                               const std::string_view paMemberName);
 
         /**
          * Creates NodeId of type string from the given browsepath
@@ -286,8 +288,10 @@ namespace forte::com_infra {
          * @param paStructMember The Struct Member
          * @param paStructMemberNameId The id of the Struct Member name
          */
-        bool addOPCUAStructTypeComponents(
-            UA_Server *paServer, UA_NodeId &paParentNodeId, CIEC_STRUCT &paStructType, const std::string_view paStructTypeName);
+        bool addOPCUAStructTypeComponents(UA_Server *paServer,
+                                          UA_NodeId &paParentNodeId,
+                                          CIEC_STRUCT &paStructType,
+                                          const std::string_view paStructTypeName);
 
         /**
          * Creates the member variable for the OPC UA Struct Type Object Node with the given Struct Member Name
