@@ -18,6 +18,7 @@ target_sources(forte-utils PUBLIC
         SPLIT_BYTE_INTO_BOOLS_fct.h
         SPLIT_BYTE_INTO_QUARTERS_fct.h
         SPLIT_DWORD_INTO_BOOLS_fct.h
+        SPLIT_DWORD_INTO_BYTES_fct.h
         SPLIT_DWORD_INTO_QUARTERS_fct.h
         SPLIT_DWORD_INTO_WORDS_fct.h
         SPLIT_LWORD_INTO_BOOLS_fct.h

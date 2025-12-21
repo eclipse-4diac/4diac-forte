@@ -16,6 +16,7 @@ target_sources(forte-utils PRIVATE
         SPLIT_BYTE_INTO_BOOLS_fct.cpp
         SPLIT_BYTE_INTO_QUARTERS_fct.cpp
         SPLIT_DWORD_INTO_BOOLS_fct.cpp
+        SPLIT_DWORD_INTO_BYTES_fct.cpp
         SPLIT_DWORD_INTO_QUARTERS_fct.cpp
         SPLIT_DWORD_INTO_WORDS_fct.cpp
         SPLIT_LWORD_INTO_BOOLS_fct.cpp
