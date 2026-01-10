@@ -16,7 +16,7 @@
 
 #include "forte/datatypes/forte_date_and_time.h"
 #include "forte/datatypes/forte_time_of_day.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_DT_TO_TOD.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

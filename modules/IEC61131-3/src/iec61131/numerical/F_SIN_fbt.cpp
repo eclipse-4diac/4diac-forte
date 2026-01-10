@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/numerical/F_SIN_fbt.h"
+#include "forte/iec61131_functions/func_SIN.h"
 
 using namespace forte::literals;
 

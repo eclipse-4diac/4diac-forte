@@ -16,7 +16,7 @@
 
 #include "forte/datatypes/forte_lint.h"
 #include "forte/datatypes/forte_lreal.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_LREAL_TO_LINT.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

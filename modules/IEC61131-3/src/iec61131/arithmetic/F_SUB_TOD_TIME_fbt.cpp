@@ -16,6 +16,7 @@
 
 #include "forte/iec61131/arithmetic/F_SUB_TOD_TIME_fbt.h"
 #include "forte/datatypes/forte_time_of_day.h"
+#include "forte/iec61131_functions/func_SUB_TOD_TIME.h"
 
 using namespace forte::literals;
 

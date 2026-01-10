@@ -12,7 +12,11 @@
  *******************************************************************************/
 
 #include "../../core/fbtests/fbtestfixture.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_AND.h"
+#include "forte/iec61131_functions/func_GE.h"
+#include "forte/iec61131_functions/func_NE.h"
+#include "forte/iec61131_functions/func_NOT.h"
+#include "forte/iec61131_functions/func_OR.h"
 #include "forte/datatypes/forte_uint.h"
 #include "forte/datatypes/forte_bool.h"
 

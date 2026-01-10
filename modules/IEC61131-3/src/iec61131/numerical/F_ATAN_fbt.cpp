@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/numerical/F_ATAN_fbt.h"
+#include "forte/iec61131_functions/func_ATAN.h"
 
 using namespace forte::literals;
 

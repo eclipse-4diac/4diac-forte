@@ -17,6 +17,7 @@
 #include "forte/iec61131/arithmetic/F_ADD_DT_TIME_fbt.h"
 #include "forte/datatypes/forte_date_and_time.h"
 #include "forte/datatypes/forte_time.h"
+#include "forte/iec61131_functions/func_ADD_DT_TIME.h"
 
 using namespace forte::literals;
 

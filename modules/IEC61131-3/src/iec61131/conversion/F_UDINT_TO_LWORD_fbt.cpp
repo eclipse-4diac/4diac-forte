@@ -16,7 +16,7 @@
 
 #include "forte/datatypes/forte_lword.h"
 #include "forte/datatypes/forte_udint.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_UDINT_TO_LWORD.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

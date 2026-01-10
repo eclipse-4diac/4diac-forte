@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/bitwiseOperators/F_SHL_fbt.h"
+#include "forte/iec61131_functions/func_SHL.h"
 
 using namespace forte::literals;
 

@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/numerical/F_COS_fbt.h"
+#include "forte/iec61131_functions/func_COS.h"
 
 using namespace forte::literals;
 

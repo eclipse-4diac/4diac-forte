@@ -17,6 +17,7 @@
 #include "forte/iec61131/charString/F_CONCAT_DATE_TOD_fbt.h"
 #include "forte/datatypes/forte_date_and_time.h"
 #include "forte/datatypes/forte_time_of_day.h"
+#include "forte/iec61131_functions/func_CONCAT_DATE_TOD.h"
 
 using namespace forte::literals;
 

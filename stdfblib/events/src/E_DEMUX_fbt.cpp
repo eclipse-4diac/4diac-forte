@@ -17,7 +17,8 @@ using namespace forte::literals;
 
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_uint.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_EQ.h"
+#include "forte/iec61131_functions/func_GT.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

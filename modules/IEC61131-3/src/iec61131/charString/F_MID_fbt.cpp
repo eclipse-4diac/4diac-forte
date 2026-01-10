@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/charString/F_MID_fbt.h"
+#include "forte/iec61131_functions/func_MID.h"
 
 using namespace forte::literals;
 

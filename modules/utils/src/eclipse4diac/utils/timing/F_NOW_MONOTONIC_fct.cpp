@@ -20,7 +20,7 @@
 using namespace forte::literals;
 
 #include "forte/datatypes/forte_time.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_NOW_MONOTONIC.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

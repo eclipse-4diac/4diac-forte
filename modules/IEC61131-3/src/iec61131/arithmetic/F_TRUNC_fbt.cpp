@@ -17,6 +17,7 @@
 #include "forte/iec61131/arithmetic/F_TRUNC_fbt.h"
 #include "forte/datatypes/forte_any_int_variant.h"
 #include "forte/datatypes/forte_any_real_variant.h"
+#include "forte/iec61131_functions/func_TRUNC.h"
 
 using namespace forte::literals;
 

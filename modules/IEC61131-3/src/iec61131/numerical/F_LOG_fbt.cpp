@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/numerical/F_LOG_fbt.h"
+#include "forte/iec61131_functions/func_LOG.h"
 
 using namespace forte::literals;
 

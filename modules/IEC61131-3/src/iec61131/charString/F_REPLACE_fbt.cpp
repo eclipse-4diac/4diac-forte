@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/charString/F_REPLACE_fbt.h"
+#include "forte/iec61131_functions/func_REPLACE.h"
 
 using namespace forte::literals;
 

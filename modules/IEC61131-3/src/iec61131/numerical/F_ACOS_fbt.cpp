@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/numerical/F_ACOS_fbt.h"
+#include "forte/iec61131_functions/func_ACOS.h"
 
 using namespace forte::literals;
 

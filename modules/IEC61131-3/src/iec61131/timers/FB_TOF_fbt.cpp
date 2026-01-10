@@ -14,7 +14,9 @@
  *******************************************************************************/
 #include "forte/iec61131/timers/FB_TOF_fbt.h"
 
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_LE.h"
+#include "forte/iec61131_functions/func_NOW_MONOTONIC.h"
+#include "forte/iec61131_functions/func_SUB.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

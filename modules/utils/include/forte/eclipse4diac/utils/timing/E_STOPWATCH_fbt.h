@@ -22,7 +22,7 @@
 
 #include "forte/basicfb.h"
 #include "forte/datatypes/forte_time.h"
-#include "forte/iec61131_functions.h"
+#include "forte/forte_st_util.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/arithmetic/F_EXPT_fbt.h"
+#include "forte/iec61131_functions/func_EXPT.h"
 
 using namespace forte::literals;
 

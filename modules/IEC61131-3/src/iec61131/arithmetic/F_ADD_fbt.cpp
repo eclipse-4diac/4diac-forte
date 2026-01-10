@@ -17,6 +17,7 @@
 #include "forte/iec61131/arithmetic/F_ADD_fbt.h"
 #include "forte/datatypes/forte_any_magnitude.h"
 #include "forte/datatypes/forte_any_magnitude_variant.h"
+#include "forte/iec61131_functions/func_ADD.h"
 
 using namespace forte::literals;
 

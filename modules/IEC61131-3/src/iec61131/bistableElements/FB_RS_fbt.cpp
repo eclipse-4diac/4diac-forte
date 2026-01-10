@@ -15,7 +15,9 @@
 #include "forte/iec61131/bistableElements/FB_RS_fbt.h"
 
 #include "forte/datatypes/forte_bool.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_AND.h"
+#include "forte/iec61131_functions/func_NOT.h"
+#include "forte/iec61131_functions/func_OR.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

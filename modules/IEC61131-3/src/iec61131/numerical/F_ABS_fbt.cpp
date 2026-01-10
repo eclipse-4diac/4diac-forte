@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/numerical/F_ABS_fbt.h"
+#include "forte/iec61131_functions/func_ABS.h"
 
 using namespace forte::literals;
 

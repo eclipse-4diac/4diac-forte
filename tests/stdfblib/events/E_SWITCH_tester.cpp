@@ -12,7 +12,7 @@
  *   Alois Zoitl - migrated fb tests to boost test infrastructure
  *******************************************************************************/
 #include "../../core/fbtests/fbtestfixture.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_NOT.h"
 #include "forte/datatypes/forte_bool.h"
 
 using namespace forte::literals;

@@ -16,7 +16,10 @@
 
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_udint.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_AND.h"
+#include "forte/iec61131_functions/func_GT.h"
+#include "forte/iec61131_functions/func_LE.h"
+#include "forte/iec61131_functions/func_SUB.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

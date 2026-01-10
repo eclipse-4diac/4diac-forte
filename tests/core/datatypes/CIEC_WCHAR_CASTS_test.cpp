@@ -12,7 +12,11 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_WCHAR_TO_CHAR.h"
+#include "forte/iec61131_functions/func_WCHAR_TO_DWORD.h"
+#include "forte/iec61131_functions/func_WCHAR_TO_LWORD.h"
+#include "forte/iec61131_functions/func_WCHAR_TO_WORD.h"
+#include "forte/iec61131_functions/func_WCHAR_TO_WSTRING.h"
 
 #include "forte/datatypes/forte_wchar.h"
 #include "forte/datatypes/forte_char.h"

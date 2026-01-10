@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/numerical/F_SQRT_fbt.h"
+#include "forte/iec61131_functions/func_SQRT.h"
 
 using namespace forte::literals;
 

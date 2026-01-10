@@ -16,6 +16,7 @@
 
 #include "forte/iec61131/arithmetic/F_MULTIME_fbt.h"
 #include "forte/datatypes/forte_time.h"
+#include "forte/iec61131_functions/func_MUL_TIME.h"
 
 using namespace forte::literals;
 

@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/arithmetic/F_DIV_fbt.h"
+#include "forte/iec61131_functions/func_DIV.h"
 
 using namespace forte::literals;
 

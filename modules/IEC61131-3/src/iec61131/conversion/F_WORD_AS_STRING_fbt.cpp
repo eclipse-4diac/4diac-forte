@@ -16,7 +16,7 @@
 
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_word.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_WORD_AS_STRING.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

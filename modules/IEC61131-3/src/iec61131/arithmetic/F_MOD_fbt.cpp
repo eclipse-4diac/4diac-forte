@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/arithmetic/F_MOD_fbt.h"
+#include "forte/iec61131_functions/func_MOD.h"
 
 using namespace forte::literals;
 

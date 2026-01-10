@@ -18,7 +18,7 @@
 #include "http_config.h"
 
 #include "forte/devexec.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_NOW_MONOTONIC.h"
 #include "forte/cominfra/basecommfb.h"
 #include "forte/util/criticalregion.h"
 #include "httpparser.h"

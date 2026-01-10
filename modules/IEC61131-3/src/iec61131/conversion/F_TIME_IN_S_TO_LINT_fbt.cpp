@@ -17,7 +17,7 @@
 #include "forte/datatypes/forte_any_duration_variant.h"
 #include "forte/datatypes/forte_lint.h"
 #include "forte/datatypes/forte_time.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_TIME_IN_S_TO_LINT.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

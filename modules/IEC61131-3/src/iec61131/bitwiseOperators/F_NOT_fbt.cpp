@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/bitwiseOperators/F_NOT_fbt.h"
+#include "forte/iec61131_functions/func_NOT.h"
 
 using namespace forte::literals;
 

@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/charString/F_FIND_fbt.h"
+#include "forte/iec61131_functions/func_FIND.h"
 
 using namespace forte::literals;
 

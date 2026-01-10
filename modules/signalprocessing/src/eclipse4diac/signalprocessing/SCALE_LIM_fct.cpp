@@ -17,7 +17,12 @@
 #include "forte/eclipse4diac/signalprocessing/SCALE_LIM_fct.h"
 
 #include "forte/datatypes/forte_real.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_ADD.h"
+#include "forte/iec61131_functions/func_DIV.h"
+#include "forte/iec61131_functions/func_GT.h"
+#include "forte/iec61131_functions/func_LT.h"
+#include "forte/iec61131_functions/func_MUL.h"
+#include "forte/iec61131_functions/func_SUB.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

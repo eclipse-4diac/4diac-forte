@@ -10,7 +10,7 @@
  *   Filip Andren - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "modbustimedevent.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_NOW_MONOTONIC.h"
 
 namespace forte::com_infra::modbus {
 

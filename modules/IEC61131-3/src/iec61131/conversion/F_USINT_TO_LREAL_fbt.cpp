@@ -16,7 +16,7 @@
 
 #include "forte/datatypes/forte_lreal.h"
 #include "forte/datatypes/forte_usint.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_USINT_TO_LREAL.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

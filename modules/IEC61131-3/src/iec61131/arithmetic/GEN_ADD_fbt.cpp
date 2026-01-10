@@ -19,7 +19,7 @@
 #include "forte/iec61131/arithmetic/GEN_ADD_fbt.h"
 
 #include "forte/util/string_utils.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_ADD.h"
 
 using namespace forte::literals;
 

@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/bitwiseOperators/F_ROL_fbt.h"
+#include "forte/iec61131_functions/func_ROL.h"
 
 using namespace forte::literals;
 

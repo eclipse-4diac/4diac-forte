@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/numerical/F_EXP_fbt.h"
+#include "forte/iec61131_functions/func_EXP.h"
 
 using namespace forte::literals;
 

@@ -18,7 +18,7 @@
 
 #include "forte/iec61131/bitwiseOperators/GEN_AND_fbt.h"
 
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_AND.h"
 
 using namespace forte::literals;
 

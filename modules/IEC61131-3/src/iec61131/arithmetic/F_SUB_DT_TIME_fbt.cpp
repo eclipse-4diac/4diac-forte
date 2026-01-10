@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/arithmetic/F_SUB_DT_TIME_fbt.h"
+#include "forte/iec61131_functions/func_SUB_DT_TIME.h"
 
 using namespace forte::literals;
 

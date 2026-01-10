@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/arithmetic/F_DIVTIME_fbt.h"
+#include "forte/iec61131_functions/func_DIV_TIME.h"
 
 using namespace forte::literals;
 

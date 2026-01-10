@@ -13,6 +13,7 @@
 
 #include "forte/device.h"
 #include "forte/mgmcmdstruct.h"
+#include "forte/iec61131_functions/func_WSTRING_TO_STRING.h"
 
 using namespace forte::literals;
 

@@ -16,6 +16,7 @@
 
 #include "forte/iec61131/arithmetic/F_SUB_DT_DT_fbt.h"
 #include "forte/datatypes/forte_date_and_time.h"
+#include "forte/iec61131_functions/func_SUB_DT_DT.h"
 
 using namespace forte::literals;
 

@@ -16,7 +16,7 @@
 
 #include "forte/datatypes/forte_dint.h"
 #include "forte/datatypes/forte_int.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_DINT_TO_INT.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

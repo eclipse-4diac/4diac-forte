@@ -15,6 +15,7 @@
  *******************************************************************************/
 
 #include "forte/iec61131/numerical/F_LN_fbt.h"
+#include "forte/iec61131_functions/func_LN.h"
 
 using namespace forte::literals;
 

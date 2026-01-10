@@ -21,7 +21,7 @@
 #include "forte/funcbloc.h"
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_any_variant.h"
-#include "forte/iec61131_functions.h"
+#include "forte/forte_st_util.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"

@@ -20,7 +20,7 @@
 #include "forte/datatypes/forte_uint.h"
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_real.h"
-#include "forte/iec61131_functions.h"
+#include "forte/forte_st_util.h"
 #include "forte/datatypes/forte_array_common.h"
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_array_fixed.h"
