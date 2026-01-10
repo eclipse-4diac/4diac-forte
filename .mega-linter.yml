@@ -1,0 +1,25 @@
+# .mega-linter.yml
+# MegaLinter configuration for OpENer project
+
+# General settings
+FLAVOR_SUGGESTIONS: false
+SHOW_ELAPSED_TIME: true
+FILEIO_REPORTER: false
+
+# Apply fixes
+APPLY_FIXES: all
+
+# Linters configuration
+DISABLE_LINTERS:
+  - SPELL_CSPELL # Disabled as per original config
+
+# Formatter specific configuration
+C_CLANG_FORMAT_ARGUMENTS: "--style=file"
+
+# Report configuration
+SARIF_REPORTER: true
+TEXT_REPORTER: true
+UPDATED_SOURCES_REPORTER: true
+
+# Parallel processing
+PARALLEL: true

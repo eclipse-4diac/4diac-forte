@@ -1,0 +1,69 @@
+
+---
+name: MegaLinter
+on:
+  pull_request:
+    branches: [ "release", "develop", "freeze", "feature/**", "3.0.x" ]
+  push:
+    branches: [ "release", "develop", "freeze", "feature/**", "3.0.x" ]
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+
+jobs:
+  lint:
+    name: MegaLinter
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3
+        with:
+          fetch-depth: 0
+
+      - name: MegaLinter
+        uses: oxsecurity/megalinter/flavors/c_cpp@55a59b24a441e0e1943080d4a512d827710d4a9d
+        id: ml
+        env:
+          VALIDATE_ALL_CODEBASE: ${{ github.event_name == 'push' && github.ref == 'refs/heads/master' }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DISABLE_LINTERS: SPELL_CSPELL
+          DISABLE_ERRORS: false
+          # Enable auto-fixes
+          APPLY_FIXES: all
+          APPLY_FIXES_EVENT: pull_request
+          APPLY_FIXES_MODE: commit
+
+      - name: Archive MegaLinter Reports
+        if: always()
+        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4
+        with:
+          name: megalinter-reports
+          path: |
+            megalinter-reports
+            mega-linter.log
+
+      - name: Prepare Commit
+        if: >-
+          steps.ml.outputs.has_updated_sources == 1 &&
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          !contains(github.event.head_commit.message, 'skip fix')
+        run: sudo chown -Rc $UID .git/
+
+      - name: Commit and Push Linter Fixes
+        uses: stefanzweifel/git-auto-commit-action@28e16e81777b558cc906c8750092100bbb34c5e3
+        if: >-
+          steps.ml.outputs.has_updated_sources == 1 &&
+          github.event_name == 'pull_request' &&
+          github.event.pull_request.head.repo.full_name == github.repository &&
+          !contains(github.event.head_commit.message, 'skip fix')
+        with:
+          branch: ${{ github.event.pull_request.head.ref }}
+          commit_message: "[MegaLinter] Apply linter fixes"
+          commit_user_name: megalinter-bot
+          commit_user_email: 129584137+megalinter-bot@users.noreply.github.com
