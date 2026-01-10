@@ -10,7 +10,7 @@
  *  Ketut Kumajaya - initial API and implementation and/or initial documentation
  *******************************************************************************/
 
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_NOW.h"
 
 namespace forte::arch {
   std::string getRealtimeString() {

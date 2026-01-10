@@ -13,7 +13,8 @@
 
 #include "forte/io/configFB/io_slave_multi.h"
 
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_ADD.h"
+#include "forte/iec61131_functions/func_AND.h"
 
 namespace forte::io {
   const CIEC_WSTRING IOConfigFBMultiSlave::scmOK("OK");

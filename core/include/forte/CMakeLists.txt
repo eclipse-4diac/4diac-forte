@@ -1,5 +1,5 @@
 #############################################################################
-# Copyright (c) 2025 Martin Erich Jobst
+# Copyright (c) 2026 Martin Erich Jobst
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
@@ -57,4 +57,5 @@ add_subdirectory(com)
 add_subdirectory(cominfra)
 add_subdirectory(config)
 add_subdirectory(datatypes)
+add_subdirectory(iec61131_functions)
 add_subdirectory(util)

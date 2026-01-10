@@ -49,7 +49,6 @@ target_sources(forte-core PRIVATE
         funcbloc.cpp
         gatherdataconn.cpp
         gatherdataconn.h
-        iec61131_functions.cpp
         inoutdataconn.cpp
         interfacespec.cpp
         membdataconn.cpp
@@ -76,6 +75,7 @@ add_subdirectory(com)
 add_subdirectory(cominfra)
 add_subdirectory(datatypes)
 add_subdirectory(fmi)
+add_subdirectory(iec61131_functions)
 add_subdirectory(io)
 add_subdirectory(lua)
 add_subdirectory(trace)

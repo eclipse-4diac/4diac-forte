@@ -19,8 +19,7 @@
 
 #include "forte/datatypes/forte_any.h"
 #include "forte/datatypes/forte_any_bit.h"
-#include "forte/datatypes/forte_any_bit_variant.h"
-#include <forte/iec61131_functions.h>
+#include "forte/iec61131_functions/func_NOT.h"
 
 namespace forte {
   template<typename T>

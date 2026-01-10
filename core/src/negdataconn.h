@@ -14,7 +14,7 @@
 
 #include "delegdataconn.h"
 #include "forte/datatypes/forte_bool.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_NOT.h"
 
 namespace forte::internal {
 

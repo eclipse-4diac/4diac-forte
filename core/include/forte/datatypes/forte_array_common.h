@@ -24,6 +24,7 @@
 #include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_any_int.h"
 #include "forte/iec61131_cast_helper.h"
+#include "forte/iec61131_functions/func_EQ.h"
 
 namespace forte {
   /** \brief A common supertype for all typed CIEC_ARRAY variants, providing the minimal interface an array must provide

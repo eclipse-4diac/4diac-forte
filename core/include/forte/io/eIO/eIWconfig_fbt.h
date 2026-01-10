@@ -16,6 +16,7 @@
 #include "forte/datatypes/forte_word.h"
 #include "forte/datatypes/forte_wstring.h"
 #include "forte/io/eIO/eGenAdapter_adp.h"
+#include "forte/forte_st_util.h"
 
 namespace forte::io {
   class FORTE_eIWconfig final : public CeConfigFB {

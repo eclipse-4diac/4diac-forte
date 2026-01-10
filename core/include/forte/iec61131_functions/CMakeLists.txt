@@ -1,0 +1,142 @@
+#############################################################################
+# Copyright (c) 2025 Martin Erich Jobst
+#
+# This program and the accompanying materials are made available under the
+# terms of the Eclipse Public License 2.0 which is available at
+# http://www.eclipse.org/legal/epl-2.0.
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#    Martin Erich Jobst
+#      - initial API and implementation and/or initial documentation
+#############################################################################
+
+target_sources(forte-core PUBLIC
+        FILE_SET HEADERS
+        FILES
+        common.h
+        endianess.h
+        func_ABS.h
+        func_ACOS.h
+        func_ADD.h
+        func_ADD_DT_TIME.h
+        func_ADD_LDT_LTIME.h
+        func_ADD_LTIME.h
+        func_ADD_LTOD_LTIME.h
+        func_ADD_TIME.h
+        func_ADD_TOD_TIME.h
+        func_AND.h
+        func_ASIN.h
+        func_ATAN.h
+        func_ATAN2.h
+        func_CONCAT.h
+        func_CONCAT_DATE.h
+        func_CONCAT_DATE_TOD.h
+        func_CONCAT_DT.h
+        func_CONCAT_LDATE.h
+        func_CONCAT_LDATE_LTOD.h
+        func_CONCAT_LDT.h
+        func_CONCAT_LTOD.h
+        func_CONCAT_TOD.h
+        func_COS.h
+        func_DAY_OF_WEEK.h
+        func_DELETE.h
+        func_DIV.h
+        func_DIV_LTIME.h
+        func_DIV_TIME.h
+        func_EQ.h
+        func_EXP.h
+        func_EXPT.h
+        func_FIND.h
+        func_FROM_BIG_ENDIAN.h
+        func_FROM_LITTLE_ENDIAN.h
+        func_GE.h
+        func_GT.h
+        func_INSERT.h
+        func_IS_VALID.h
+        func_IS_VALID_BCD.h
+        func_LE.h
+        func_LEFT.h
+        func_LEN.h
+        func_LIMIT.h
+        func_LN.h
+        func_LOG.h
+        func_LOWER_BOUND.h
+        func_LREAL_TRUNC_DINT.h
+        func_LREAL_TRUNC_INT.h
+        func_LREAL_TRUNC_LINT.h
+        func_LREAL_TRUNC_SINT.h
+        func_LREAL_TRUNC_UDINT.h
+        func_LREAL_TRUNC_UINT.h
+        func_LREAL_TRUNC_ULINT.h
+        func_LREAL_TRUNC_USINT.h
+        func_LT.h
+        func_MAX.h
+        func_MID.h
+        func_MIN.h
+        func_MINUS.h
+        func_MOD.h
+        func_MOVE.h
+        func_MUL.h
+        func_MUL_LTIME.h
+        func_MUL_TIME.h
+        func_NE.h
+        func_NOT.h
+        func_NOW.h
+        func_NOW_MONOTONIC.h
+        func_OR.h
+        func_PLUS.h
+        func_REAL_TRUNC_DINT.h
+        func_REAL_TRUNC_INT.h
+        func_REAL_TRUNC_LINT.h
+        func_REAL_TRUNC_SINT.h
+        func_REAL_TRUNC_UDINT.h
+        func_REAL_TRUNC_UINT.h
+        func_REAL_TRUNC_ULINT.h
+        func_REAL_TRUNC_USINT.h
+        func_REPLACE.h
+        func_RIGHT.h
+        func_ROL.h
+        func_ROR.h
+        func_SEL.h
+        func_SHL.h
+        func_SHR.h
+        func_SIN.h
+        func_SPLIT_DATE.h
+        func_SPLIT_DT.h
+        func_SPLIT_LDATE.h
+        func_SPLIT_LDT.h
+        func_SPLIT_LTOD.h
+        func_SPLIT_TOD.h
+        func_SQRT.h
+        func_SUB.h
+        func_SUB_DATE_DATE.h
+        func_SUB_DT_DT.h
+        func_SUB_DT_TIME.h
+        func_SUB_LDATE_LDATE.h
+        func_SUB_LDT_LDT.h
+        func_SUB_LDT_LTIME.h
+        func_SUB_LTIME.h
+        func_SUB_LTOD_LTIME.h
+        func_SUB_LTOD_LTOD.h
+        func_SUB_TIME.h
+        func_SUB_TOD_TIME.h
+        func_SUB_TOD_TOD.h
+        func_TAN.h
+        func_TO_BIG_ENDIAN.h
+        func_TO_LITTLE_ENDIAN.h
+        func_TOLOWER.h
+        func_TOUPPER.h
+        func_TRUNC.h
+        func_TRUNC_DINT.h
+        func_TRUNC_INT.h
+        func_TRUNC_LINT.h
+        func_TRUNC_SINT.h
+        func_TRUNC_UDINT.h
+        func_TRUNC_UINT.h
+        func_TRUNC_ULINT.h
+        func_TRUNC_USINT.h
+        func_UPPER_BOUND.h
+        func_XOR.h
+)
