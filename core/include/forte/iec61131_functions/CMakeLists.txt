@@ -16,6 +16,7 @@ target_sources(forte-core PUBLIC
         FILE_SET HEADERS
         FILES
         common.h
+        convert.h
         endianess.h
         func_ABS.h
         func_ACOS.h
@@ -27,9 +28,55 @@ target_sources(forte-core PUBLIC
         func_ADD_TIME.h
         func_ADD_TOD_TIME.h
         func_AND.h
+        func_ANY_AS_STRING.h
         func_ASIN.h
         func_ATAN.h
         func_ATAN2.h
+        func_BCD_TO.h
+        func_BCD_TO_UDINT.h
+        func_BCD_TO_UINT.h
+        func_BCD_TO_ULINT.h
+        func_BCD_TO_USINT.h
+        func_BOOL_AS_STRING.h
+        func_BOOL_AS_WSTRING.h
+        func_BOOL_TO_BYTE.h
+        func_BOOL_TO_DINT.h
+        func_BOOL_TO_DWORD.h
+        func_BOOL_TO_INT.h
+        func_BOOL_TO_LINT.h
+        func_BOOL_TO_LWORD.h
+        func_BOOL_TO_SINT.h
+        func_BOOL_TO_UDINT.h
+        func_BOOL_TO_UINT.h
+        func_BOOL_TO_ULINT.h
+        func_BOOL_TO_USINT.h
+        func_BOOL_TO_WORD.h
+        func_BYTE_AS_STRING.h
+        func_BYTE_AS_WSTRING.h
+        func_BYTE_BCD_TO_UDINT.h
+        func_BYTE_BCD_TO_UINT.h
+        func_BYTE_BCD_TO_ULINT.h
+        func_BYTE_BCD_TO_USINT.h
+        func_BYTE_TO_BOOL.h
+        func_BYTE_TO_CHAR.h
+        func_BYTE_TO_DINT.h
+        func_BYTE_TO_DWORD.h
+        func_BYTE_TO_INT.h
+        func_BYTE_TO_LINT.h
+        func_BYTE_TO_LWORD.h
+        func_BYTE_TO_SINT.h
+        func_BYTE_TO_UDINT.h
+        func_BYTE_TO_UINT.h
+        func_BYTE_TO_ULINT.h
+        func_BYTE_TO_USINT.h
+        func_BYTE_TO_WORD.h
+        func_CHAR_TO_BYTE.h
+        func_CHAR_TO_DWORD.h
+        func_CHAR_TO_LWORD.h
+        func_CHAR_TO_STRING.h
+        func_CHAR_TO_USINT.h
+        func_CHAR_TO_WCHAR.h
+        func_CHAR_TO_WORD.h
         func_CONCAT.h
         func_CONCAT_DATE.h
         func_CONCAT_DATE_TOD.h
@@ -42,9 +89,47 @@ target_sources(forte-core PUBLIC
         func_COS.h
         func_DAY_OF_WEEK.h
         func_DELETE.h
+        func_DINT_AS_STRING.h
+        func_DINT_AS_WSTRING.h
+        func_DINT_TO_BYTE.h
+        func_DINT_TO_DWORD.h
+        func_DINT_TO_INT.h
+        func_DINT_TO_LINT.h
+        func_DINT_TO_LREAL.h
+        func_DINT_TO_LWORD.h
+        func_DINT_TO_REAL.h
+        func_DINT_TO_SINT.h
+        func_DINT_TO_UDINT.h
+        func_DINT_TO_UINT.h
+        func_DINT_TO_ULINT.h
+        func_DINT_TO_USINT.h
+        func_DINT_TO_WORD.h
         func_DIV.h
         func_DIV_LTIME.h
         func_DIV_TIME.h
+        func_DT_TO_DATE.h
+        func_DT_TO_LDT.h
+        func_DT_TO_LTOD.h
+        func_DT_TO_TOD.h
+        func_DWORD_AS_STRING.h
+        func_DWORD_AS_WSTRING.h
+        func_DWORD_BCD_TO_UDINT.h
+        func_DWORD_BCD_TO_UINT.h
+        func_DWORD_BCD_TO_ULINT.h
+        func_DWORD_BCD_TO_USINT.h
+        func_DWORD_TO_BOOL.h
+        func_DWORD_TO_BYTE.h
+        func_DWORD_TO_DINT.h
+        func_DWORD_TO_INT.h
+        func_DWORD_TO_LINT.h
+        func_DWORD_TO_LWORD.h
+        func_DWORD_TO_REAL.h
+        func_DWORD_TO_SINT.h
+        func_DWORD_TO_UDINT.h
+        func_DWORD_TO_UINT.h
+        func_DWORD_TO_ULINT.h
+        func_DWORD_TO_USINT.h
+        func_DWORD_TO_WORD.h
         func_EQ.h
         func_EXP.h
         func_EXPT.h
@@ -54,15 +139,62 @@ target_sources(forte-core PUBLIC
         func_GE.h
         func_GT.h
         func_INSERT.h
+        func_INT_AS_STRING.h
+        func_INT_AS_WSTRING.h
+        func_INT_TO_BYTE.h
+        func_INT_TO_DINT.h
+        func_INT_TO_DWORD.h
+        func_INT_TO_LINT.h
+        func_INT_TO_LREAL.h
+        func_INT_TO_LWORD.h
+        func_INT_TO_REAL.h
+        func_INT_TO_SINT.h
+        func_INT_TO_UDINT.h
+        func_INT_TO_UINT.h
+        func_INT_TO_ULINT.h
+        func_INT_TO_USINT.h
+        func_INT_TO_WORD.h
         func_IS_VALID.h
         func_IS_VALID_BCD.h
+        func_LDT_TO_DATE.h
+        func_LDT_TO_DT.h
+        func_LDT_TO_LDATE.h
+        func_LDT_TO_LTOD.h
+        func_LDT_TO_TOD.h
         func_LE.h
         func_LEFT.h
         func_LEN.h
         func_LIMIT.h
+        func_LINT_AS_STRING.h
+        func_LINT_AS_WSTRING.h
+        func_LINT_TO_BYTE.h
+        func_LINT_TO_DINT.h
+        func_LINT_TO_DWORD.h
+        func_LINT_TO_INT.h
+        func_LINT_TO_LREAL.h
+        func_LINT_TO_LWORD.h
+        func_LINT_TO_REAL.h
+        func_LINT_TO_SINT.h
+        func_LINT_TO_UDINT.h
+        func_LINT_TO_UINT.h
+        func_LINT_TO_ULINT.h
+        func_LINT_TO_USINT.h
+        func_LINT_TO_WORD.h
         func_LN.h
         func_LOG.h
         func_LOWER_BOUND.h
+        func_LREAL_AS_STRING.h
+        func_LREAL_AS_WSTRING.h
+        func_LREAL_TO_DINT.h
+        func_LREAL_TO_INT.h
+        func_LREAL_TO_LINT.h
+        func_LREAL_TO_LWORD.h
+        func_LREAL_TO_REAL.h
+        func_LREAL_TO_SINT.h
+        func_LREAL_TO_UDINT.h
+        func_LREAL_TO_UINT.h
+        func_LREAL_TO_ULINT.h
+        func_LREAL_TO_USINT.h
         func_LREAL_TRUNC_DINT.h
         func_LREAL_TRUNC_INT.h
         func_LREAL_TRUNC_LINT.h
@@ -72,6 +204,29 @@ target_sources(forte-core PUBLIC
         func_LREAL_TRUNC_ULINT.h
         func_LREAL_TRUNC_USINT.h
         func_LT.h
+        func_LTIME_AS_STRING.h
+        func_LTIME_AS_WSTRING.h
+        func_LTIME_TO_TIME.h
+        func_LTOD_TO_TOD.h
+        func_LWORD_AS_STRING.h
+        func_LWORD_AS_WSTRING.h
+        func_LWORD_BCD_TO_UDINT.h
+        func_LWORD_BCD_TO_UINT.h
+        func_LWORD_BCD_TO_ULINT.h
+        func_LWORD_BCD_TO_USINT.h
+        func_LWORD_TO_BOOL.h
+        func_LWORD_TO_BYTE.h
+        func_LWORD_TO_DINT.h
+        func_LWORD_TO_DWORD.h
+        func_LWORD_TO_INT.h
+        func_LWORD_TO_LINT.h
+        func_LWORD_TO_LREAL.h
+        func_LWORD_TO_SINT.h
+        func_LWORD_TO_UDINT.h
+        func_LWORD_TO_UINT.h
+        func_LWORD_TO_ULINT.h
+        func_LWORD_TO_USINT.h
+        func_LWORD_TO_WORD.h
         func_MAX.h
         func_MID.h
         func_MIN.h
@@ -87,6 +242,18 @@ target_sources(forte-core PUBLIC
         func_NOW_MONOTONIC.h
         func_OR.h
         func_PLUS.h
+        func_REAL_AS_STRING.h
+        func_REAL_AS_WSTRING.h
+        func_REAL_TO_DINT.h
+        func_REAL_TO_DWORD.h
+        func_REAL_TO_INT.h
+        func_REAL_TO_LINT.h
+        func_REAL_TO_LREAL.h
+        func_REAL_TO_SINT.h
+        func_REAL_TO_UDINT.h
+        func_REAL_TO_UINT.h
+        func_REAL_TO_ULINT.h
+        func_REAL_TO_USINT.h
         func_REAL_TRUNC_DINT.h
         func_REAL_TRUNC_INT.h
         func_REAL_TRUNC_LINT.h
@@ -103,6 +270,21 @@ target_sources(forte-core PUBLIC
         func_SHL.h
         func_SHR.h
         func_SIN.h
+        func_SINT_AS_STRING.h
+        func_SINT_AS_WSTRING.h
+        func_SINT_TO_BYTE.h
+        func_SINT_TO_DINT.h
+        func_SINT_TO_DWORD.h
+        func_SINT_TO_INT.h
+        func_SINT_TO_LINT.h
+        func_SINT_TO_LREAL.h
+        func_SINT_TO_LWORD.h
+        func_SINT_TO_REAL.h
+        func_SINT_TO_UDINT.h
+        func_SINT_TO_UINT.h
+        func_SINT_TO_ULINT.h
+        func_SINT_TO_USINT.h
+        func_SINT_TO_WORD.h
         func_SPLIT_DATE.h
         func_SPLIT_DT.h
         func_SPLIT_LDATE.h
@@ -110,6 +292,25 @@ target_sources(forte-core PUBLIC
         func_SPLIT_LTOD.h
         func_SPLIT_TOD.h
         func_SQRT.h
+        func_STRING_AS_BOOL.h
+        func_STRING_AS_BYTE.h
+        func_STRING_AS_DINT.h
+        func_STRING_AS_DWORD.h
+        func_STRING_AS_INT.h
+        func_STRING_AS_LINT.h
+        func_STRING_AS_LREAL.h
+        func_STRING_AS_LWORD.h
+        func_STRING_AS_REAL.h
+        func_STRING_AS_SINT.h
+        func_STRING_AS_TIME.h
+        func_STRING_AS_UDINT.h
+        func_STRING_AS_UINT.h
+        func_STRING_AS_ULINT.h
+        func_STRING_AS_USINT.h
+        func_STRING_AS_WORD.h
+        func_STRING_AS_X_helper.h
+        func_STRING_TO_CHAR.h
+        func_STRING_TO_WSTRING.h
         func_SUB.h
         func_SUB_DATE_DATE.h
         func_SUB_DT_DT.h
@@ -124,10 +325,69 @@ target_sources(forte-core PUBLIC
         func_SUB_TOD_TIME.h
         func_SUB_TOD_TOD.h
         func_TAN.h
-        func_TO_BIG_ENDIAN.h
-        func_TO_LITTLE_ENDIAN.h
+        func_TIME_AS_STRING.h
+        func_TIME_AS_WSTRING.h
+        func_TIME_IN_MS_TO.h
+        func_TIME_IN_MS_TO_DINT.h
+        func_TIME_IN_MS_TO_LINT.h
+        func_TIME_IN_MS_TO_LREAL.h
+        func_TIME_IN_MS_TO_UDINT.h
+        func_TIME_IN_MS_TO_ULINT.h
+        func_TIME_IN_NS_TO.h
+        func_TIME_IN_NS_TO_DINT.h
+        func_TIME_IN_NS_TO_LINT.h
+        func_TIME_IN_NS_TO_LREAL.h
+        func_TIME_IN_NS_TO_UDINT.h
+        func_TIME_IN_NS_TO_ULINT.h
+        func_TIME_IN_S_TO.h
+        func_TIME_IN_S_TO_DINT.h
+        func_TIME_IN_S_TO_LINT.h
+        func_TIME_IN_S_TO_LREAL.h
+        func_TIME_IN_S_TO_UDINT.h
+        func_TIME_IN_S_TO_ULINT.h
+        func_TIME_IN_US_TO.h
+        func_TIME_IN_US_TO_DINT.h
+        func_TIME_IN_US_TO_LINT.h
+        func_TIME_IN_US_TO_LREAL.h
+        func_TIME_IN_US_TO_UDINT.h
+        func_TIME_IN_US_TO_ULINT.h
+        func_TIME_TO_LTIME.h
+        func_TOD_TO_LTOD.h
         func_TOLOWER.h
         func_TOUPPER.h
+        func_TO_BCD.h
+        func_TO_BCD_BYTE.h
+        func_TO_BCD_DWORD.h
+        func_TO_BCD_LWORD.h
+        func_TO_BCD_WORD.h
+        func_TO_BIG_ENDIAN.h
+        func_TO_BYTE.h
+        func_TO_CHAR.h
+        func_TO_DATE.h
+        func_TO_DINT.h
+        func_TO_DT.h
+        func_TO_DWORD.h
+        func_TO_INT.h
+        func_TO_LDATE.h
+        func_TO_LDT.h
+        func_TO_LINT.h
+        func_TO_LITTLE_ENDIAN.h
+        func_TO_LREAL.h
+        func_TO_LTIME.h
+        func_TO_LTOD.h
+        func_TO_LWORD.h
+        func_TO_REAL.h
+        func_TO_SINT.h
+        func_TO_STRING.h
+        func_TO_TIME.h
+        func_TO_TOD.h
+        func_TO_UDINT.h
+        func_TO_UINT.h
+        func_TO_ULINT.h
+        func_TO_USINT.h
+        func_TO_WCHAR.h
+        func_TO_WORD.h
+        func_TO_WSTRING.h
         func_TRUNC.h
         func_TRUNC_DINT.h
         func_TRUNC_INT.h
@@ -137,6 +397,122 @@ target_sources(forte-core PUBLIC
         func_TRUNC_UINT.h
         func_TRUNC_ULINT.h
         func_TRUNC_USINT.h
+        func_UDINT_AS_STRING.h
+        func_UDINT_AS_WSTRING.h
+        func_UDINT_TO_BCD_BYTE.h
+        func_UDINT_TO_BCD_DWORD.h
+        func_UDINT_TO_BCD_LWORD.h
+        func_UDINT_TO_BCD_WORD.h
+        func_UDINT_TO_BYTE.h
+        func_UDINT_TO_DINT.h
+        func_UDINT_TO_DWORD.h
+        func_UDINT_TO_INT.h
+        func_UDINT_TO_LINT.h
+        func_UDINT_TO_LREAL.h
+        func_UDINT_TO_LWORD.h
+        func_UDINT_TO_REAL.h
+        func_UDINT_TO_SINT.h
+        func_UDINT_TO_UINT.h
+        func_UDINT_TO_ULINT.h
+        func_UDINT_TO_USINT.h
+        func_UDINT_TO_WORD.h
+        func_UINT_AS_STRING.h
+        func_UINT_AS_WSTRING.h
+        func_UINT_TO_BCD_BYTE.h
+        func_UINT_TO_BCD_DWORD.h
+        func_UINT_TO_BCD_LWORD.h
+        func_UINT_TO_BCD_WORD.h
+        func_UINT_TO_BYTE.h
+        func_UINT_TO_DINT.h
+        func_UINT_TO_DWORD.h
+        func_UINT_TO_INT.h
+        func_UINT_TO_LINT.h
+        func_UINT_TO_LREAL.h
+        func_UINT_TO_LWORD.h
+        func_UINT_TO_REAL.h
+        func_UINT_TO_SINT.h
+        func_UINT_TO_UDINT.h
+        func_UINT_TO_ULINT.h
+        func_UINT_TO_USINT.h
+        func_UINT_TO_WORD.h
+        func_ULINT_AS_STRING.h
+        func_ULINT_AS_WSTRING.h
+        func_ULINT_TO_BCD_BYTE.h
+        func_ULINT_TO_BCD_DWORD.h
+        func_ULINT_TO_BCD_LWORD.h
+        func_ULINT_TO_BCD_WORD.h
+        func_ULINT_TO_BYTE.h
+        func_ULINT_TO_DINT.h
+        func_ULINT_TO_DWORD.h
+        func_ULINT_TO_INT.h
+        func_ULINT_TO_LINT.h
+        func_ULINT_TO_LREAL.h
+        func_ULINT_TO_LWORD.h
+        func_ULINT_TO_REAL.h
+        func_ULINT_TO_SINT.h
+        func_ULINT_TO_UDINT.h
+        func_ULINT_TO_UINT.h
+        func_ULINT_TO_USINT.h
+        func_ULINT_TO_WORD.h
         func_UPPER_BOUND.h
+        func_USINT_AS_STRING.h
+        func_USINT_AS_WSTRING.h
+        func_USINT_TO_BCD_BYTE.h
+        func_USINT_TO_BCD_DWORD.h
+        func_USINT_TO_BCD_LWORD.h
+        func_USINT_TO_BCD_WORD.h
+        func_USINT_TO_BYTE.h
+        func_USINT_TO_DINT.h
+        func_USINT_TO_DWORD.h
+        func_USINT_TO_INT.h
+        func_USINT_TO_LINT.h
+        func_USINT_TO_LREAL.h
+        func_USINT_TO_LWORD.h
+        func_USINT_TO_REAL.h
+        func_USINT_TO_SINT.h
+        func_USINT_TO_UDINT.h
+        func_USINT_TO_UINT.h
+        func_USINT_TO_ULINT.h
+        func_USINT_TO_WORD.h
+        func_WCHAR_TO_CHAR.h
+        func_WCHAR_TO_DWORD.h
+        func_WCHAR_TO_LWORD.h
+        func_WCHAR_TO_WORD.h
+        func_WCHAR_TO_WSTRING.h
+        func_WORD_AS_STRING.h
+        func_WORD_AS_WSTRING.h
+        func_WORD_BCD_TO_UDINT.h
+        func_WORD_BCD_TO_UINT.h
+        func_WORD_BCD_TO_ULINT.h
+        func_WORD_BCD_TO_USINT.h
+        func_WORD_TO_BOOL.h
+        func_WORD_TO_BYTE.h
+        func_WORD_TO_DINT.h
+        func_WORD_TO_DWORD.h
+        func_WORD_TO_INT.h
+        func_WORD_TO_LINT.h
+        func_WORD_TO_LWORD.h
+        func_WORD_TO_SINT.h
+        func_WORD_TO_UDINT.h
+        func_WORD_TO_UINT.h
+        func_WORD_TO_ULINT.h
+        func_WORD_TO_USINT.h
+        func_WSTRING_AS_BOOL.h
+        func_WSTRING_AS_BYTE.h
+        func_WSTRING_AS_DINT.h
+        func_WSTRING_AS_DWORD.h
+        func_WSTRING_AS_INT.h
+        func_WSTRING_AS_LINT.h
+        func_WSTRING_AS_LREAL.h
+        func_WSTRING_AS_LWORD.h
+        func_WSTRING_AS_REAL.h
+        func_WSTRING_AS_SINT.h
+        func_WSTRING_AS_TIME.h
+        func_WSTRING_AS_UDINT.h
+        func_WSTRING_AS_UINT.h
+        func_WSTRING_AS_ULINT.h
+        func_WSTRING_AS_USINT.h
+        func_WSTRING_AS_WORD.h
+        func_WSTRING_TO_STRING.h
         func_XOR.h
 )

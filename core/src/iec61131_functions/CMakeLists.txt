@@ -28,8 +28,12 @@ target_sources(forte-core PRIVATE
         func_CONCAT_LDT.cpp
         func_CONCAT_LTOD.cpp
         func_CONCAT_TOD.cpp
+        func_DT_TO_DATE.cpp
+        func_DT_TO_TOD.cpp
         func_FROM_BIG_ENDIAN.cpp
         func_FROM_LITTLE_ENDIAN.cpp
+        func_LDT_TO_LDATE.cpp
+        func_LDT_TO_LTOD.cpp
         func_LREAL_TRUNC_DINT.cpp
         func_LREAL_TRUNC_INT.cpp
         func_LREAL_TRUNC_LINT.cpp

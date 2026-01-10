@@ -1,0 +1,46 @@
+/*******************************************************************************
+ * Copyright (c) 2010 - 2015 TU Vienna/ACIN, Profactor GmbH, fortiss GmbH,
+ *    2018-2019 TU Vienna/ACIN
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Alois Zoitl, Ingo Hegny, Monika Wenger, Carolyn Oates, Patrick Smejkal,
+ *    Matthias Plasch,
+ *      - initial implementation and rework communication infrastructure
+ *    Martin Melik-Merkumians - fixes DT_TO_TOD
+ *    Martin Melik-Merkumians - removes invalid casts, update implementation
+ *     to use new cast function
+ *******************************************************************************/
+
+#pragma once
+
+#include <type_traits>
+#include "common.h"
+#include "forte/iec61131_cast_helper.h"
+#include "forte/datatypes/forte_any.h"
+#include "forte/datatypes/forte_dint.h"
+#include "forte/datatypes/forte_dword.h"
+#include "forte/datatypes/forte_int.h"
+#include "forte/datatypes/forte_lint.h"
+#include "forte/datatypes/forte_lreal.h"
+#include "forte/datatypes/forte_real.h"
+#include "forte/datatypes/forte_sint.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_udint.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/datatypes/forte_ulint.h"
+#include "forte/datatypes/forte_usint.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "convert.h"
+
+namespace forte {
+  inline CIEC_WSTRING func_REAL_AS_WSTRING(const CIEC_REAL &paVal) {
+    CIEC_WSTRING string;
+    stringConverter(string, paVal);
+    return string;
+  }
+} // namespace forte

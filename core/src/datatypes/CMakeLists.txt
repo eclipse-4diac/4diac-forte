@@ -77,4 +77,3 @@ target_sources(forte-core PRIVATE
 # API. Just silence the useless warnings for now.
 target_compile_definitions(forte-core PUBLIC _LIBCPP_DISABLE_DEPRECATION_WARNINGS)
 
-add_subdirectory(convert)

@@ -83,4 +83,3 @@ target_sources(forte-core PUBLIC
         forte_wstring.h
 )
 
-add_subdirectory(convert)

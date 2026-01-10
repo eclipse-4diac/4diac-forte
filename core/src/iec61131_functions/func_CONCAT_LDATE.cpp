@@ -15,10 +15,10 @@
  *******************************************************************************/
 #include "forte/arch/forte_architecture_time.h"
 
+#include "forte/datatypes/forte_lint.h"
 #include "forte/iec61131_functions/func_CONCAT_LDATE.h"
 #include "forte/iec61131_functions/func_CONCAT_DT.h"
-#include "forte/datatypes/forte_lint.h"
-#include "forte/datatypes/convert/LDateAndTimeToConvertFunctions.h"
+#include "forte/iec61131_functions/func_LDT_TO_LDATE.h"
 
 namespace forte {
   CIEC_LDATE func_CONCAT_LDATE(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY) {

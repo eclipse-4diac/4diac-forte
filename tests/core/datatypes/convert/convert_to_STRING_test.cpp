@@ -12,7 +12,23 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "forte/datatypes/convert/convert_functions.h"
+#include "forte/iec61131_functions/func_ANY_AS_STRING.h"
+#include "forte/iec61131_functions/func_BOOL_AS_STRING.h"
+#include "forte/iec61131_functions/func_BYTE_AS_STRING.h"
+#include "forte/iec61131_functions/func_DINT_AS_STRING.h"
+#include "forte/iec61131_functions/func_DWORD_AS_STRING.h"
+#include "forte/iec61131_functions/func_INT_AS_STRING.h"
+#include "forte/iec61131_functions/func_LINT_AS_STRING.h"
+#include "forte/iec61131_functions/func_LREAL_AS_STRING.h"
+#include "forte/iec61131_functions/func_LWORD_AS_STRING.h"
+#include "forte/iec61131_functions/func_REAL_AS_STRING.h"
+#include "forte/iec61131_functions/func_SINT_AS_STRING.h"
+#include "forte/iec61131_functions/func_TIME_AS_STRING.h"
+#include "forte/iec61131_functions/func_UDINT_AS_STRING.h"
+#include "forte/iec61131_functions/func_UINT_AS_STRING.h"
+#include "forte/iec61131_functions/func_ULINT_AS_STRING.h"
+#include "forte/iec61131_functions/func_USINT_AS_STRING.h"
+#include "forte/iec61131_functions/func_WORD_AS_STRING.h"
 #include "forte/datatypes/forte_string.h"
 
 // BOOLEAN

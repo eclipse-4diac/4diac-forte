@@ -16,7 +16,7 @@
 #include "opcua_helper.h"
 #include "forte/util/parameterParser.h"
 #include "forte/util/devlog.h"
-#include "forte/datatypes/convert/convert_functions.h"
+#include "forte/iec61131_functions/func_WSTRING_TO_STRING.h"
 #include "forte/datatypes/forte_date.h"
 #include "forte/datatypes/forte_struct.h"
 #include "forte/datatypes/forte_array.h"

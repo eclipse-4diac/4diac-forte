@@ -12,7 +12,22 @@
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
 
-#include "forte/datatypes/convert/convert_functions.h"
+#include "forte/iec61131_functions/func_BOOL_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_BYTE_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_DINT_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_DWORD_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_INT_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_LINT_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_LREAL_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_LWORD_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_REAL_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_SINT_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_TIME_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_UDINT_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_UINT_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_ULINT_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_USINT_AS_WSTRING.h"
+#include "forte/iec61131_functions/func_WORD_AS_WSTRING.h"
 #include "forte/datatypes/forte_wstring.h"
 
 // BOOLEAN
