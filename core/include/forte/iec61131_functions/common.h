@@ -27,21 +27,6 @@
 
 #include "forte/iec61131_cast_helper.h"
 
-#include <cmath>
-
-#ifdef VXWORKS
-#define tanf(x) static_cast<TForteFloat>(tan(x))
-#define log10f(x) static_cast<TForteFloat>(log10(x))
-#define logf(x) static_cast<TForteFloat>(log(x))
-#define cosf(x) static_cast<TForteFloat>(cos(x))
-#define atanf(x) static_cast<TForteFloat>(atan(x))
-#define asinf(x) static_cast<TForteFloat>(asin(x))
-#define acosf(x) static_cast<TForteFloat>(acos(x))
-#define expf(x) static_cast<TForteFloat>(exp(x))
-#define sinf(x) static_cast<TForteFloat>(sin(x))
-#define sqrtf(x) static_cast<TForteFloat>(sqrt(x))
-#endif
-
 #define GENERATE_APPLY_FUNCTION(func)                                                                                  \
   template<typename T>                                                                                                 \
   struct func##_Function {                                                                                             \

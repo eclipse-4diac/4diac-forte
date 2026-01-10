@@ -25,6 +25,12 @@
 
 #pragma once
 
+#include <cmath>
+
+#ifdef VXWORKS
+#define log10f(x) static_cast<TForteFloat>(log10(x))
+#endif
+
 #include "forte/datatypes/forte_lreal.h"
 #include "forte/datatypes/forte_real.h"
 

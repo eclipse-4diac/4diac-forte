@@ -25,6 +25,8 @@
 
 #pragma once
 
+#include <cmath>
+
 #include "forte/datatypes/forte_any_real.h"
 
 #include "forte/datatypes/forte_bool.h"

@@ -25,6 +25,12 @@
 
 #pragma once
 
+#include <cmath>
+
+#ifdef VXWORKS
+#define cosf(x) static_cast<TForteFloat>(cos(x))
+#endif
+
 #include "forte/datatypes/forte_lreal.h"
 #include "forte/datatypes/forte_real.h"
 
