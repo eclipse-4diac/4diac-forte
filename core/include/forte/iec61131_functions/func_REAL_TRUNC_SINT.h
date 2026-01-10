@@ -28,8 +28,6 @@
 #include "forte/datatypes/forte_real.h"
 #include "forte/datatypes/forte_sint.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_SINT func_REAL_TRUNC_SINT(const CIEC_REAL &paIN);
 

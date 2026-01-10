@@ -28,8 +28,6 @@
 #include "forte/datatypes/forte_int.h"
 #include "forte/datatypes/forte_real.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_INT func_REAL_TRUNC_INT(const CIEC_REAL &paIN);
 

@@ -34,7 +34,6 @@
 #include "forte/datatypes/forte_time.h"
 #include "forte/datatypes/forte_time_of_day.h"
 
-#include "common.h"
 #include "func_SUB_TOD_TIME.h"
 #include "func_SUB_DT_TIME.h"
 #include "func_SUB_DT_DT.h"

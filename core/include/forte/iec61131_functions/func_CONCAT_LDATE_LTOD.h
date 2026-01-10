@@ -29,8 +29,6 @@
 #include "forte/datatypes/forte_ldate_and_time.h"
 #include "forte/datatypes/forte_ltime_of_day.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_LDATE_AND_TIME func_CONCAT_LDATE_LTOD(const CIEC_LDATE &paIN1, const CIEC_LTIME_OF_DAY &paIN2);
 

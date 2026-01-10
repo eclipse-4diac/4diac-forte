@@ -27,7 +27,7 @@
 
 #include "forte/datatypes/forte_any_int.h"
 
-#include "common.h"
+#include "forte/datatypes/forte_any_string.h"
 
 namespace forte {
   template<typename T, typename U>

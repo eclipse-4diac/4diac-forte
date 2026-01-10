@@ -13,7 +13,6 @@
  *    Martin Melik Merkumians - adds NOW and NOW_MONOTONIC functions,
  *        changes for removed implicit constructor for primitive types
  *******************************************************************************/
-#include "forte/arch/forte_architecture_time.h"
 
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_sint.h"
@@ -28,7 +27,6 @@
 #include "forte/datatypes/forte_word.h"
 #include "forte/datatypes/forte_dword.h"
 #include "forte/datatypes/forte_lword.h"
-#include "forte/datatypes/forte_any_date.h"
 #include "forte/datatypes/forte_date.h"
 #include "forte/datatypes/forte_time_of_day.h"
 #include "forte/datatypes/forte_date_and_time.h"
@@ -38,16 +36,14 @@
 #include "forte/datatypes/forte_ldate.h"
 #include "forte/datatypes/forte_ltime_of_day.h"
 #include "forte/datatypes/forte_ldate_and_time.h"
-#include "forte/datatypes/forte_ltime.h"
 #include "forte/datatypes/forte_real.h"
 #include "forte/datatypes/forte_lreal.h"
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
-#include "forte/datatypes/forte_any_magnitude.h"
-#include "forte/datatypes/forte_any_bit.h"
-#include "forte/datatypes/forte_any_char.h"
-#include "forte/datatypes/forte_any_string.h"
 #include "forte/iec61131_functions/endianess.h"
+#include "forte/datatypes/forte_struct.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_any.h"
 
 namespace forte {
   void swapEndianessInplace(CIEC_ARRAY &paValue) {

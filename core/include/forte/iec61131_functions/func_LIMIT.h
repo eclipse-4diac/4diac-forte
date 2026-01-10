@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "common.h"
+#include "forte/iec61131_cast_helper.h"
 
 namespace forte {
   template<typename T, typename U, typename V>

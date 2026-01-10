@@ -29,8 +29,6 @@
 
 #include "forte/datatypes/forte_time_of_day.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_TIME_OF_DAY func_CONCAT_TOD(const CIEC_ANY_INT &HOUR,
                                    const CIEC_ANY_INT &MINUTE,

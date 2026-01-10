@@ -27,7 +27,7 @@
 
 #include "forte/datatypes/forte_bool.h"
 
-#include "common.h"
+#include "forte/datatypes/forte_any_bit.h"
 
 namespace forte {
   template<class T, class U>

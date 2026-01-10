@@ -32,11 +32,11 @@
 #include "forte/datatypes/forte_time.h"
 #include "forte/datatypes/forte_time_of_day.h"
 
-#include "common.h"
 #include "func_ADD_TOD_TIME.h"
 #include "func_ADD_DT_TIME.h"
 #include "func_ADD_LTOD_LTIME.h"
 #include "func_ADD_LDT_LTIME.h"
+#include "forte/datatypes/forte_any_num.h"
 
 namespace forte {
   template<class T, class U>

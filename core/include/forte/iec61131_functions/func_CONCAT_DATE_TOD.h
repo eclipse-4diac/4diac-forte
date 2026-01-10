@@ -29,8 +29,6 @@
 #include "forte/datatypes/forte_date_and_time.h"
 #include "forte/datatypes/forte_time_of_day.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_DATE_AND_TIME func_CONCAT_DATE_TOD(const CIEC_DATE &paIN1, const CIEC_TIME_OF_DAY &paIN2);
 

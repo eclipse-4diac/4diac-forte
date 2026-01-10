@@ -33,7 +33,7 @@
 #include "forte/datatypes/forte_int.h"
 #include "forte/datatypes/forte_uint.h"
 
-#include "common.h"
+#include "forte/datatypes/forte_any_string.h"
 
 #include "forte/iec61131_functions/func_CONCAT.h"
 #include "forte/iec61131_functions/func_LEFT.h"

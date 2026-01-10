@@ -25,8 +25,6 @@
 
 #pragma once
 
-#include "common.h"
-
 namespace forte {
   template<typename T>
   T func_MINUS(const T &paIN) {

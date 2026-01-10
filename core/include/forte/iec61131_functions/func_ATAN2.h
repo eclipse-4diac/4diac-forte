@@ -29,8 +29,6 @@
 
 #include "forte/datatypes/forte_any_real.h"
 
-#include "common.h"
-
 namespace forte {
   template<typename T, typename U>
   inline auto func_ATAN2(const T &paY, const U &paX) -> typename mpl::get_castable_type_t<T, U> {

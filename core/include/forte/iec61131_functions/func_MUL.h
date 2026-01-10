@@ -28,9 +28,9 @@
 #include "forte/datatypes/forte_ltime.h"
 #include "forte/datatypes/forte_time.h"
 
-#include "common.h"
 #include "func_MUL_TIME.h"
 #include "func_MUL_LTIME.h"
+#include "forte/datatypes/forte_any_num.h"
 
 namespace forte {
   template<class T, class U>

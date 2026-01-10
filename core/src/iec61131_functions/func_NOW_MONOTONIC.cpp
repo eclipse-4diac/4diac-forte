@@ -16,6 +16,7 @@
 #include "forte/arch/forte_architecture_time.h"
 
 #include "forte/iec61131_functions/func_NOW_MONOTONIC.h"
+#include "forte/datatypes/forte_time.h"
 
 namespace forte {
   CIEC_TIME func_NOW_MONOTONIC() {

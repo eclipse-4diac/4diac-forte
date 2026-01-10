@@ -25,8 +25,6 @@
 
 #pragma once
 
-#include "common.h"
-
 namespace forte {
   template<typename T>
   constexpr T &&func_PLUS(T &&paIN) {

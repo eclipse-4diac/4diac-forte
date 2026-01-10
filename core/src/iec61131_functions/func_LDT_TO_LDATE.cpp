@@ -13,10 +13,8 @@
  *******************************************************************************/
 
 #include "forte/arch/forte_architecture_time.h"
-#include "forte/datatypes/forte_date_and_time.h"
 #include "forte/datatypes/forte_ldate.h"
 #include "forte/datatypes/forte_ldate_and_time.h"
-#include "forte/datatypes/forte_ltime_of_day.h"
 #include "forte/iec61131_functions/func_LDT_TO_LDATE.h"
 
 namespace forte {

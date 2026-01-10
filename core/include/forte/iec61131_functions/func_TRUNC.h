@@ -29,8 +29,6 @@
 
 #include "forte/datatypes/forte_any_real.h"
 
-#include "common.h"
-
 namespace forte {
   template<typename T, typename U>
   auto func_TRUNC(const U &paIN) ->

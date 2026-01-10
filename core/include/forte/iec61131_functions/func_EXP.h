@@ -34,8 +34,6 @@
 #include "forte/datatypes/forte_lreal.h"
 #include "forte/datatypes/forte_real.h"
 
-#include "common.h"
-
 namespace forte {
   inline CIEC_REAL func_EXP(const CIEC_REAL &paIN) {
     return CIEC_REAL(expf(static_cast<CIEC_REAL::TValueType>(paIN)));

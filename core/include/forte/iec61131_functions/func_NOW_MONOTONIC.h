@@ -27,8 +27,6 @@
 
 #include "forte/datatypes/forte_time.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_TIME func_NOW_MONOTONIC();
 

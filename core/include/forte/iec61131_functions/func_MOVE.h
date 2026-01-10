@@ -25,8 +25,6 @@
 
 #pragma once
 
-#include "common.h"
-
 namespace forte {
   template<typename T>
   T func_MOVE(const T &paIN) {

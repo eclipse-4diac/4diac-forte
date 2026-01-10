@@ -27,8 +27,6 @@
 
 #include "forte/datatypes/forte_time.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_TIME func_SUB_TIME(const CIEC_TIME &paIN1, const CIEC_TIME &paIN2);
 

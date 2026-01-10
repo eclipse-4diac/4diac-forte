@@ -28,8 +28,6 @@
 #include "forte/datatypes/forte_ldate.h"
 #include "forte/datatypes/forte_ltime.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_LTIME func_SUB_LDATE_LDATE(const CIEC_LDATE &paIN1, const CIEC_LDATE &paIN2);
 

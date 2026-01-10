@@ -21,18 +21,8 @@
 #pragma once
 
 #include <type_traits>
-#include "common.h"
-#include "forte/iec61131_cast_helper.h"
-#include "forte/datatypes/forte_bool.h"
-#include "forte/datatypes/forte_byte.h"
-#include "forte/datatypes/forte_dword.h"
-#include "forte/datatypes/forte_lword.h"
-#include "forte/datatypes/forte_string.h"
-#include "forte/datatypes/forte_udint.h"
-#include "forte/datatypes/forte_uint.h"
-#include "forte/datatypes/forte_ulint.h"
-#include "forte/datatypes/forte_usint.h"
-#include "forte/datatypes/forte_word.h"
+#include "forte/datatypes/forte_any_int.h"
+#include "forte/datatypes/forte_any_bit.h"
 
 namespace forte {
   template<typename U, typename T>

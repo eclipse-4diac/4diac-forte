@@ -27,8 +27,6 @@
 
 #include "forte/datatypes/forte_time.h"
 
-#include "common.h"
-
 namespace forte {
   template<typename T>
   CIEC_TIME func_MUL_TIME(const CIEC_TIME &paIN1, const T &paIN2) {

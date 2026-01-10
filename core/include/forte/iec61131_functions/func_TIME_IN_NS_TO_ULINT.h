@@ -14,15 +14,6 @@
 
 #pragma once
 
-#include <type_traits>
-#include "common.h"
-#include "forte/iec61131_cast_helper.h"
-#include "forte/datatypes/forte_dint.h"
-#include "forte/datatypes/forte_lint.h"
-#include "forte/datatypes/forte_lreal.h"
-#include "forte/datatypes/forte_string.h"
-#include "forte/datatypes/forte_time.h"
-#include "forte/datatypes/forte_udint.h"
 #include "forte/datatypes/forte_ulint.h"
 #include "forte/util/forte_constants.h"
 #include "func_TIME_IN_NS_TO.h"

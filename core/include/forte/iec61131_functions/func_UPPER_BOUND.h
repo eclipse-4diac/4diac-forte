@@ -25,11 +25,9 @@
 
 #pragma once
 
-#include "forte/datatypes/forte_array.h"
-
 #include "forte/datatypes/forte_any_int.h"
 
-#include "common.h"
+#include "forte/datatypes/forte_array_common.h"
 
 namespace forte {
   template<typename T, typename U>

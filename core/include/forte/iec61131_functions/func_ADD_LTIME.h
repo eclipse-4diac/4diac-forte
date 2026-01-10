@@ -27,8 +27,6 @@
 
 #include "forte/datatypes/forte_ltime.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_LTIME func_ADD_LTIME(const CIEC_LTIME &paIN1, const CIEC_LTIME &paIN2);
 

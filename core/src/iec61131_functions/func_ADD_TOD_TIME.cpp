@@ -13,9 +13,10 @@
  *    Martin Melik Merkumians - adds NOW and NOW_MONOTONIC functions,
  *        changes for removed implicit constructor for primitive types
  *******************************************************************************/
-#include "forte/arch/forte_architecture_time.h"
 
 #include "forte/iec61131_functions/func_ADD_TOD_TIME.h"
+#include "forte/datatypes/forte_time_of_day.h"
+#include "forte/datatypes/forte_time.h"
 
 namespace forte {
   CIEC_TIME_OF_DAY func_ADD_TOD_TIME(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME &paIN2) {

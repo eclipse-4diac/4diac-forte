@@ -16,6 +16,7 @@
 #include "forte/arch/forte_architecture_time.h"
 
 #include "forte/iec61131_functions/func_NOW.h"
+#include "forte/datatypes/forte_date_and_time.h"
 
 namespace forte {
   CIEC_DATE_AND_TIME func_NOW() {

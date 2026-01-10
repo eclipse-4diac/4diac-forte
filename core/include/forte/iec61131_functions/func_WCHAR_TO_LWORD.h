@@ -13,15 +13,9 @@
 
 #pragma once
 
-#include <type_traits>
-#include "common.h"
-#include "forte/iec61131_cast_helper.h"
 #include "forte/datatypes/forte_any.h"
-#include "forte/datatypes/forte_char.h"
-#include "forte/datatypes/forte_dword.h"
 #include "forte/datatypes/forte_lword.h"
-#include "forte/datatypes/forte_word.h"
-#include "forte/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_wchar.h"
 
 namespace forte {
   inline CIEC_LWORD func_WCHAR_TO_LWORD(const CIEC_WCHAR &paVal) {

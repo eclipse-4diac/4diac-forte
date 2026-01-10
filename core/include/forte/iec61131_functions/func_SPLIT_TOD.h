@@ -29,8 +29,6 @@
 
 #include "forte/datatypes/forte_time_of_day.h"
 
-#include "common.h"
-
 namespace forte {
   void func_SPLIT_TOD(const CIEC_TIME_OF_DAY &paValue,
                       CIEC_ANY_INT &HOUR,

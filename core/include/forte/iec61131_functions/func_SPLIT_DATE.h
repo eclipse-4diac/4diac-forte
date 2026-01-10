@@ -29,8 +29,6 @@
 
 #include "forte/datatypes/forte_date.h"
 
-#include "common.h"
-
 namespace forte {
   void func_SPLIT_DATE(const CIEC_DATE &paValue, CIEC_ANY_INT &YEAR, CIEC_ANY_INT &MONTH, CIEC_ANY_INT &DAY);
 

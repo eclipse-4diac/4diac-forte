@@ -29,8 +29,6 @@
 
 #include "forte/datatypes/forte_date.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_DATE func_CONCAT_DATE(const CIEC_ANY_INT &YEAR, const CIEC_ANY_INT &MONTH, const CIEC_ANY_INT &DAY);
 

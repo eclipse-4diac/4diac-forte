@@ -31,8 +31,6 @@
 
 #include "forte/datatypes/forte_bool.h"
 
-#include "common.h"
-
 namespace forte {
   template<typename T>
   CIEC_BOOL func_IS_VALID(const T &paValue) {

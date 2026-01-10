@@ -13,10 +13,11 @@
  *    Martin Melik Merkumians - adds NOW and NOW_MONOTONIC functions,
  *        changes for removed implicit constructor for primitive types
  *******************************************************************************/
-#include "forte/arch/forte_architecture_time.h"
 
 #include "forte/iec61131_functions/func_TRUNC_USINT.h"
 #include "forte/iec61131_functions/func_TRUNC.h"
+#include "forte/datatypes/forte_usint.h"
+#include "forte/datatypes/forte_lreal.h"
 
 namespace forte {
   CIEC_USINT func_TRUNC_USINT(const CIEC_LREAL &paIN) {

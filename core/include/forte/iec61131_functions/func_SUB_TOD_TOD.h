@@ -28,8 +28,6 @@
 #include "forte/datatypes/forte_time.h"
 #include "forte/datatypes/forte_time_of_day.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_TIME func_SUB_TOD_TOD(const CIEC_TIME_OF_DAY &paIN1, const CIEC_TIME_OF_DAY &paIN2);
 

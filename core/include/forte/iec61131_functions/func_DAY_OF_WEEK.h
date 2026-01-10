@@ -27,7 +27,6 @@
 
 #include "forte/datatypes/forte_any_int.h"
 #include "forte/datatypes/forte_ldate.h"
-#include "common.h"
 #include <type_traits>
 
 namespace forte {

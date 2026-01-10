@@ -27,8 +27,6 @@
 
 #include "forte/datatypes/forte_date_and_time.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_DATE_AND_TIME func_NOW();
 

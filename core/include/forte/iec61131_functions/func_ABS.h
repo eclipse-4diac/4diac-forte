@@ -25,7 +25,7 @@
 
 #pragma once
 
-#include "common.h"
+#include "forte/datatypes/forte_any_num.h"
 
 namespace forte {
   template<typename T>

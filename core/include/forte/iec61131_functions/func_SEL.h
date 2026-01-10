@@ -27,8 +27,6 @@
 
 #include "forte/datatypes/forte_bool.h"
 
-#include "common.h"
-
 namespace forte {
   template<typename T, typename U>
   auto func_SEL(const CIEC_BOOL &G, const T &IN0, const U &IN1) -> typename mpl::get_castable_type_t<T, U> {

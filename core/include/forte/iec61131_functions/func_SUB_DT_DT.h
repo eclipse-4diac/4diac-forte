@@ -28,8 +28,6 @@
 #include "forte/datatypes/forte_date_and_time.h"
 #include "forte/datatypes/forte_time.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_TIME func_SUB_DT_DT(const CIEC_DATE_AND_TIME &paIN1, const CIEC_DATE_AND_TIME &paIN2);
 

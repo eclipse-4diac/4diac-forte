@@ -18,11 +18,9 @@
  *******************************************************************************/
 
 #include "forte/arch/forte_architecture_time.h"
-#include "forte/datatypes/forte_date.h"
-#include "forte/datatypes/forte_ldate_and_time.h"
-#include "forte/datatypes/forte_ltime_of_day.h"
 #include "forte/datatypes/forte_time_of_day.h"
 #include "forte/iec61131_functions/func_DT_TO_TOD.h"
+#include "forte/datatypes/forte_date_and_time.h"
 
 namespace forte {
   CIEC_TIME_OF_DAY func_DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal) {

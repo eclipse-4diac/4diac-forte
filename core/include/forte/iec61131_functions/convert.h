@@ -24,7 +24,6 @@
 #pragma once
 
 #include <type_traits>
-#include "common.h"
 #include "forte/datatypes/forte_any.h"
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"

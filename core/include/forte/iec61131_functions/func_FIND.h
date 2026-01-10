@@ -30,7 +30,10 @@
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
 
-#include "common.h"
+#include "forte/datatypes/forte_wchar.h"
+#include "forte/datatypes/forte_char.h"
+#include "forte/datatypes/forte_any_string.h"
+#include "forte/datatypes/forte_any_chars.h"
 
 namespace forte {
   template<typename T, typename U, typename V>

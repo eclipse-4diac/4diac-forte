@@ -28,8 +28,6 @@
 #include "forte/datatypes/forte_dint.h"
 #include "forte/datatypes/forte_real.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_DINT func_REAL_TRUNC_DINT(const CIEC_REAL &paIN);
 

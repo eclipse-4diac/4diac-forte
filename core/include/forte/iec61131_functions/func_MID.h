@@ -31,7 +31,7 @@
 
 #include "forte/datatypes/forte_int.h"
 
-#include "common.h"
+#include "forte/datatypes/forte_any_string.h"
 
 #include "forte/iec61131_functions/func_LEFT.h"
 #include "forte/iec61131_functions/func_RIGHT.h"

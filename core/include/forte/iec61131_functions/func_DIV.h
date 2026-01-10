@@ -30,7 +30,6 @@
 #include "forte/datatypes/forte_ltime.h"
 #include "forte/datatypes/forte_time.h"
 
-#include "common.h"
 #include "func_DIV_TIME.h"
 #include "func_DIV_LTIME.h"
 

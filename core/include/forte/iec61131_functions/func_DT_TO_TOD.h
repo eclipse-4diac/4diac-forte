@@ -19,14 +19,8 @@
 
 #pragma once
 
-#include <type_traits>
-#include "common.h"
-#include "forte/iec61131_cast_helper.h"
-#include "forte/datatypes/forte_any.h"
-#include "forte/datatypes/forte_date.h"
-#include "forte/datatypes/forte_ldate_and_time.h"
-#include "forte/datatypes/forte_ltime_of_day.h"
 #include "forte/datatypes/forte_time_of_day.h"
+#include "forte/datatypes/forte_date_and_time.h"
 
 namespace forte {
   CIEC_TIME_OF_DAY func_DT_TO_TOD(const CIEC_DATE_AND_TIME &paVal);

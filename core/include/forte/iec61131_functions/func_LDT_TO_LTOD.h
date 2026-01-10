@@ -14,15 +14,8 @@
 
 #pragma once
 
-#include <type_traits>
-#include "common.h"
-#include "forte/iec61131_cast_helper.h"
-#include "forte/datatypes/forte_date.h"
-#include "forte/datatypes/forte_date_and_time.h"
-#include "forte/datatypes/forte_ldate.h"
 #include "forte/datatypes/forte_ldate_and_time.h"
 #include "forte/datatypes/forte_ltime_of_day.h"
-#include "forte/datatypes/forte_time_of_day.h"
 
 namespace forte {
   CIEC_LTIME_OF_DAY func_LDT_TO_LTOD(const CIEC_LDATE_AND_TIME &paValue);

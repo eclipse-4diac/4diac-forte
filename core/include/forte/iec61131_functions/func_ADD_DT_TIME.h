@@ -28,8 +28,6 @@
 #include "forte/datatypes/forte_date_and_time.h"
 #include "forte/datatypes/forte_time.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_DATE_AND_TIME func_ADD_DT_TIME(const CIEC_DATE_AND_TIME &paIN1, const CIEC_TIME &paIN2);
 

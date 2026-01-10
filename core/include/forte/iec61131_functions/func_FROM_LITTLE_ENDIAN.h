@@ -27,8 +27,15 @@
 
 #include "forte/datatypes/forte_array_dynamic.h"
 
-#include "common.h"
 #include "endianess.h"
+#include "forte/datatypes/forte_struct.h"
+#include "forte/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_any_string.h"
+#include "forte/datatypes/forte_any_magnitude.h"
+#include "forte/datatypes/forte_any_date.h"
+#include "forte/datatypes/forte_any_char.h"
+#include "forte/datatypes/forte_any_bit.h"
 
 namespace forte {
   template<typename T>

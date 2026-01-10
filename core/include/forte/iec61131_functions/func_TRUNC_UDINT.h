@@ -29,8 +29,6 @@
 #include "forte/datatypes/forte_real.h"
 #include "forte/datatypes/forte_udint.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_UDINT func_TRUNC_UDINT(const CIEC_REAL &paIN);
   CIEC_UDINT func_TRUNC_UDINT(const CIEC_LREAL &paIN);

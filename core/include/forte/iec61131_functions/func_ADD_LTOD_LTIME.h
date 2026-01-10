@@ -28,8 +28,6 @@
 #include "forte/datatypes/forte_ltime.h"
 #include "forte/datatypes/forte_ltime_of_day.h"
 
-#include "common.h"
-
 namespace forte {
   CIEC_LTIME_OF_DAY func_ADD_LTOD_LTIME(const CIEC_LTIME_OF_DAY &paIN1, const CIEC_LTIME &paIN2);
 

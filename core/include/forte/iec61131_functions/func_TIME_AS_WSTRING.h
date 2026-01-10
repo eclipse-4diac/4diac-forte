@@ -18,12 +18,6 @@
 
 #pragma once
 
-#include <type_traits>
-#include "common.h"
-#include "forte/iec61131_cast_helper.h"
-#include "forte/datatypes/forte_any.h"
-#include "forte/datatypes/forte_ltime.h"
-#include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_time.h"
 #include "forte/datatypes/forte_wstring.h"
 #include "convert.h"

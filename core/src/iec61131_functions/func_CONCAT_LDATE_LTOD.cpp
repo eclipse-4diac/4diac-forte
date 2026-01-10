@@ -13,9 +13,11 @@
  *    Martin Melik Merkumians - adds NOW and NOW_MONOTONIC functions,
  *        changes for removed implicit constructor for primitive types
  *******************************************************************************/
-#include "forte/arch/forte_architecture_time.h"
 
 #include "forte/iec61131_functions/func_CONCAT_LDATE_LTOD.h"
+#include "forte/datatypes/forte_ltime_of_day.h"
+#include "forte/datatypes/forte_ldate_and_time.h"
+#include "forte/datatypes/forte_ldate.h"
 
 namespace forte {
   CIEC_LDATE_AND_TIME func_CONCAT_LDATE_LTOD(const CIEC_LDATE &paIN1, const CIEC_LTIME_OF_DAY &paIN2) {

@@ -29,8 +29,6 @@
 
 #include "forte/datatypes/forte_ldate_and_time.h"
 
-#include "common.h"
-
 namespace forte {
   void func_SPLIT_LDT(const CIEC_LDATE_AND_TIME &paValue,
                       CIEC_ANY_INT &YEAR,
