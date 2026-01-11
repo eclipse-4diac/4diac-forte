@@ -308,10 +308,9 @@ namespace forte::iec61499::system {
         return UA_STATUSCODE_BADUNKNOWNRESPONSE;
       }
       EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-      const std::string_view hashedFBTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)));
       std::string fbTypeName;
       std::string fbTypeHash;
-      parseHashedTypeName(hashedFBTypeName, fbTypeName, fbTypeHash);
+      parseHashedTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)), fbTypeName, fbTypeHash);
 
       OPCUA_MGR &uaMGR = *static_cast<OPCUA_MGR *>(methodContext);
       UA_StatusCode status = uaMGR.executeQueryTypeCommand(EMGMCommandType::QueryFBType, fbTypeName, fbTypeHash);
@@ -334,10 +333,9 @@ namespace forte::iec61499::system {
         return UA_STATUSCODE_BADUNKNOWNRESPONSE;
       }
       EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-      const std::string_view hashedDataTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)));
       std::string dataTypeName;
       std::string dataTypeHash;
-      parseHashedTypeName(hashedDataTypeName, dataTypeName, dataTypeHash);
+      parseHashedTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)), dataTypeName, dataTypeHash);
 
       OPCUA_MGR &uaMGR = *static_cast<OPCUA_MGR *>(methodContext);
       UA_StatusCode status = uaMGR.executeQueryTypeCommand(EMGMCommandType::QueryFBType, dataTypeName, dataTypeHash);
@@ -360,10 +358,10 @@ namespace forte::iec61499::system {
         return UA_STATUSCODE_BADUNKNOWNRESPONSE;
       }
       EMGMResponse eRetVal = EMGMResponse::UnsupportedType;
-      const std::string_view hashedGlobalConstTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)));
       std::string globalConstTypeName;
       std::string globalConstTypeHash;
-      parseHashedTypeName(hashedGlobalConstTypeName, globalConstTypeName, globalConstTypeHash);
+      parseHashedTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)), globalConstTypeName,
+                          globalConstTypeHash);
 
       OPCUA_MGR &uaMGR = *static_cast<OPCUA_MGR *>(methodContext);
       UA_StatusCode status =
