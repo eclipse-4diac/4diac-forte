@@ -89,6 +89,12 @@ namespace forte::iec61499::system {
 
     auto replayAlgorithmEvents = trace::reader::utils::filterEventsForReplayDevice(events.value(), replayMgr->mDevice);
 
+    for (auto &[resourceName, messages] : events.value()) {
+      DEVLOG_INFO("Read %d events (%d sendOutputEvents) for resource %s from traces in %s\n",
+                  static_cast<int>(messages.size()), replayAlgorithmEvents[resourceName].size(), resourceName.c_str(),
+                  path.c_str());
+    }
+
     replayMgr->mDeviceReplayer =
         std::make_unique<CDeviceReplayer>(replayMgr->mDevice, std::move(replayAlgorithmEvents));
 
@@ -144,8 +150,15 @@ namespace forte::iec61499::system {
       auto event = nextEvent.value();
       auto functionBlockName = event.getFB().getFullQualifiedApplicationInstanceName('.');
       const auto interface = event.getFB().getFBInterfaceSpec();
-      auto portName = std::string(interface.mEINames[event.getPortId()]);
+      std::string portName;
+      if (event.getPortId() > interface.mEINames.size()) {
+        // probably an outgoing event in a CFB
+        portName = interface.mEONames[event.getPortId() & cgInternal2InterfaceRemovalMask];
+      } else {
+        portName = std::string(interface.mEINames[event.getPortId()]);
+      }
       response = UA_String_fromChars(std::string(functionBlockName + "." + portName).c_str());
+
     } else {
       response = UA_String_fromChars("");
     }

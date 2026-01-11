@@ -76,12 +76,12 @@ namespace forte::trace::reader::utils {
         if (child == nullptr) {
           continue;
         }
-        if (child->isDynamicContainer()) {
+        if (child->isDynamicContainer() || dynamic_cast<CCompositeFB *>(child) != nullptr) {
           iterateContainers(child);
           continue;
         }
-        if (dynamic_cast<CCompositeFB *>(child) == nullptr && // no composite
-            dynamic_cast<CBasicFB *>(child) == nullptr && // neither basic
+
+        if (dynamic_cast<CBasicFB *>(child) == nullptr && // no basic
             dynamic_cast<CFunctionBlock *>(child) != nullptr) { // neither just containers
           result.insert(dynamic_cast<CFunctionBlock *>(child)->getFBTypeId());
         }
