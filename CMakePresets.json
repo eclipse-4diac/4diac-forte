@@ -228,7 +228,21 @@
       "inherits": [
         "systemtests",
         "posix"
-      ]
+      ],
+      "cacheVariables": {
+        "FORTE_COM_OPC_UA": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_COM_OPC_UA_Events": {
+          "type": "BOOL",
+          "value": "ON"
+        },
+        "FORTE_COM_OPC_UA_AC": {
+          "type": "BOOL",
+          "value": "ON"
+        }
+      }
     },
     {
       "name": "windows",

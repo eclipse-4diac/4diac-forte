@@ -50,15 +50,8 @@ jobs:
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6.0.3
 
-      - name: Set reusable strings
-        # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
-        id: strings
-        shell: bash
-        run: |
-          echo "build-output-dir=${{ github.workspace }}/build" >> "$GITHUB_OUTPUT"
-
       - name: Install libboost (Linux)
-        if: ${{ matrix.os != 'windows-latest' }}
+        if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
           sudo apt-get update
           sudo apt-get install -y libboost-all-dev
@@ -67,25 +60,49 @@ jobs:
         if: ${{ matrix.os == 'windows-latest' }}
         run: nuget install boost -Version 1.84.0
 
+      - name: Clone open62541 (Linux)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: |
+          git clone --branch v1.5.4 https://github.com/open62541/open62541.git
+          git -C open62541 submodule update --init --recursive          
+
+      - name: Configure open62541 (Linux)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: >
+          cmake -S open62541 -B open62541/build
+          -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
+          -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
+          -DCMAKE_INTERPROCEDURAL_OPTIMIZATION=OFF
+          -DUA_ENABLE_DEBUG_SANITIZER=OFF
+          -DUA_NAMESPACE_ZERO=FULL
+          -DUA_ENABLE_SUBSCRIPTIONS_ALARMS_CONDITIONS=ON
+
+      - name: Build open62541 (Linux)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: cmake --build open62541/build --config ${{ matrix.build_type }}
+
+      - name: Install open62541 (Linux)
+        if: ${{ matrix.os == 'ubuntu-latest' }}
+        run: sudo cmake --install open62541/build --config ${{ matrix.build_type }}
+
       - name: Configure CMake
         # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
         # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
         run: >
-          cmake -B ${{ steps.strings.outputs.build-output-dir }}
+          cmake -S ${{ github.workspace }} -B ${{ github.workspace }}/build
+          --preset ${{ matrix.architecture }}-systemtests
           -DCMAKE_CXX_COMPILER=${{ matrix.cpp_compiler }}
           -DCMAKE_C_COMPILER=${{ matrix.c_compiler }}
           -DCMAKE_BUILD_TYPE=${{ matrix.build_type }}
           -DCMAKE_COMPILE_WARNING_AS_ERROR=ON
-          -S ${{ github.workspace }}
-          --preset ${{ matrix.architecture }}-systemtests
           ${{ matrix.os == 'windows-latest' && format('-DFORTE_TESTS_INC_DIRS={0}/boost.1.84.0/lib/native/include', github.workspace) || '' }}
 
       - name: Build
         # Build your program with the given configuration. Note that --config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
-        run: cmake --build ${{ steps.strings.outputs.build-output-dir }} --config ${{ matrix.build_type }}
+        run: cmake --build ${{ github.workspace }}/build --config ${{ matrix.build_type }}
 
       - name: Test
-        working-directory: ${{ steps.strings.outputs.build-output-dir }}
+        working-directory: ${{ github.workspace }}/build
         # Execute tests defined by the CMake configuration. Note that --build-config is needed because the default Windows generator is a multi-config generator (Visual Studio generator).
         # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
         run: ctest --build-config ${{ matrix.build_type }} --verbose
