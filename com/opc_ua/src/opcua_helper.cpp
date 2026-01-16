@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2023 fortiss GmbH, Primetals Technologies Austria GmbH
+ * Copyright (c) 2016, 2026 fortiss GmbH, Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -17,9 +17,31 @@
 #include "forte/util/parameterParser.h"
 #include "forte/util/devlog.h"
 #include "forte/iec61131_functions/func_WSTRING_TO_STRING.h"
-#include "forte/datatypes/forte_date.h"
-#include "forte/datatypes/forte_struct.h"
 #include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_byte.h"
+#include "forte/datatypes/forte_date.h"
+#include "forte/datatypes/forte_date_and_time.h"
+#include "forte/datatypes/forte_dint.h"
+#include "forte/datatypes/forte_dword.h"
+#include "forte/datatypes/forte_int.h"
+#include "forte/datatypes/forte_lint.h"
+#include "forte/datatypes/forte_lword.h"
+#include "forte/datatypes/forte_ldate.h"
+#include "forte/datatypes/forte_lreal.h"
+#include "forte/datatypes/forte_real.h"
+#include "forte/datatypes/forte_sint.h"
+#include "forte/datatypes/forte_struct.h"
+#include "forte/datatypes/forte_time.h"
+#include "forte/datatypes/forte_date_and_time.h"
+#include "forte/datatypes/forte_ldate_and_time.h"
+#include "forte/datatypes/forte_ltime.h"
+#include "forte/datatypes/forte_ltime_of_day.h"
+#include "forte/datatypes/forte_uint.h"
+#include "forte/datatypes/forte_udint.h"
+#include "forte/datatypes/forte_ulint.h"
+#include "forte/datatypes/forte_usint.h"
+#include "forte/datatypes/forte_word.h"
 #include "forte/util/string_utils.h"
 
 #include "forte/com/opc_ua/opcua_types.h"
