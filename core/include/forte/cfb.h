@@ -21,12 +21,14 @@
 
 #include "forte/funcbloc.h"
 
+#include <variant>
+
 namespace forte {
   struct SCFB_FBConnectionData {
       StringId mSrcFBNameId;
-      StringId mSrcId;
+      std::variant<StringId, std::span<const StringId>> mSrcId;
       StringId mDstFBNameId;
-      StringId mDstId;
+      std::variant<StringId, std::span<const StringId>> mDstId;
   };
 
   struct SCFB_FBNData {
@@ -85,18 +87,15 @@ namespace forte {
         return true;
       }
 
-      void createEventConnections();
       void prepareIf2InEventCons();
-
-      void establishConnection(CConnection *paCon, CFunctionBlock &paDstFb, std::span<const StringId> paDstNameId);
-      void createDataConnections();
-      CDataConnection *getDataConn(CFunctionBlock *paSrcFB, StringId paSrcNameId);
-      void createAdapterConnections();
+      bool createEventConnections();
+      bool createDataConnections();
+      bool createAdapterConnections();
       virtual void setFBNetworkInitialValues();
 
-      //! Acquire the function block for a given function block instance name id this may be a contained fb, an adapter,
-      //! or the composite itself.
-      CFunctionBlock *getFunctionBlock(StringId paFBNameId);
+      bool establishConnection(const SCFB_FBConnectionData &paConnectionData);
+      CConnection::Wrapper getInternalConnection(StringId paSrcFBNameId, std::span<const StringId> paSrcNameList);
+      CConnection::Wrapper getInternalConnection(std::span<const StringId> paSrcNameList);
 
       virtual CDataConnection *getIf2InConUnchecked(TPortId) = 0;
       virtual CInOutDataConnection *getDIOOutConInternalUnchecked(TPortId) {

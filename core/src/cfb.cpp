@@ -23,6 +23,31 @@
 
 namespace forte {
   namespace {
+    [[nodiscard]] constexpr StringId getId(const std::variant<StringId, std::span<const StringId>> &paId) {
+      return std::visit(
+          []<typename T>(T &&arg) -> StringId {
+            if constexpr (std::is_same_v<std::decay_t<T>, StringId>) {
+              return arg;
+            } else {
+              return arg.size() == 1 ? arg.front() : StringId{};
+            }
+          },
+          paId);
+    }
+
+    [[nodiscard]] constexpr std::span<const StringId>
+    getIds(const std::variant<StringId, std::span<const StringId>> &paId) {
+      return std::visit(
+          []<typename T>(T &&arg) -> std::span<const StringId> {
+            if constexpr (std::is_same_v<std::decay_t<T>, StringId>) {
+              return {&arg, 1};
+            } else {
+              return arg;
+            }
+          },
+          paId);
+    }
+
     bool forwardGenericDI(CFunctionBlock &dstFB, const StringId dstId, const CIEC_ANY &paRefValue) {
       const TPortId dstDIPortId = dstFB.getFBInterfaceSpec().getDIID(dstId);
       if (dstDIPortId == cgInvalidPortId) {
@@ -69,9 +94,16 @@ namespace forte {
     }
 
     setInitialValues();
-    createEventConnections();
-    createDataConnections();
-    createAdapterConnections();
+    prepareIf2InEventCons();
+    if (!createEventConnections()) {
+      return false;
+    }
+    if (!createDataConnections()) {
+      return false;
+    }
+    if (!createAdapterConnections()) {
+      return false;
+    }
     setFBNetworkInitialValues();
 
     return true;
@@ -86,12 +118,11 @@ namespace forte {
 
   bool CCompositeFB::configureGenericDI(const TPortId paDIPortId, const CIEC_ANY &paRefValue) {
     const StringId ifSrcId = getFBInterfaceSpec().mDINames[paDIPortId];
-    for (auto &currentConn : cmFBNData.mDataConnections) {
-      if (!currentConn.mSrcFBNameId && currentConn.mSrcId == ifSrcId) {
-        CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNameId);
-        if (!dstFB || !forwardGenericDI(*dstFB, currentConn.mDstId, paRefValue)) {
+    for (const auto &[srcFBNameId, srcId, dstFBNameId, dstId] : cmFBNData.mDataConnections) {
+      if (!srcFBNameId && getId(srcId) == ifSrcId) {
+        if (CFunctionBlock *dstFB = getFB(dstFBNameId); !dstFB || !forwardGenericDI(*dstFB, getId(dstId), paRefValue)) {
           return false;
-        };
+        }
       }
     }
     return CFunctionBlock::configureGenericDI(paDIPortId, paRefValue);
@@ -99,13 +130,13 @@ namespace forte {
 
   bool CCompositeFB::configureGenericDIO(const TPortId paDIOPortId, const CIEC_ANY &paRefValue) {
     const StringId ifSrcId = getFBInterfaceSpec().mDIONames[paDIOPortId];
-    for (auto &currentConn : cmFBNData.mDataConnections) {
-      if (!currentConn.mSrcFBNameId && currentConn.mSrcId == ifSrcId) {
-        CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNameId);
-        if (!dstFB || (!forwardGenericDI(*dstFB, currentConn.mDstId, paRefValue) &&
-                       !forwardGenericDIO(*dstFB, currentConn.mDstId, paRefValue))) {
+    for (const auto &[srcFBNameId, srcId, dstFBNameId, dstId] : cmFBNData.mDataConnections) {
+      if (!srcFBNameId && getId(srcId) == ifSrcId) {
+        if (CFunctionBlock *dstFB = getFB(dstFBNameId);
+            !dstFB || (!forwardGenericDI(*dstFB, getId(dstId), paRefValue) &&
+                       !forwardGenericDIO(*dstFB, getId(dstId), paRefValue))) {
           return false;
-        };
+        }
       }
     }
     return CFunctionBlock::configureGenericDIO(paDIOPortId, paRefValue);
@@ -113,12 +144,11 @@ namespace forte {
 
   bool CCompositeFB::configureGenericDO(const TPortId paDOPortId, const CIEC_ANY &paRefValue) {
     const StringId ifDstId = getFBInterfaceSpec().mDONames[paDOPortId];
-    for (auto &currentConn : cmFBNData.mDataConnections) {
-      if (!currentConn.mDstFBNameId && currentConn.mDstId == ifDstId) {
-        CFunctionBlock *srcFB = getFunctionBlock(currentConn.mSrcFBNameId);
-        if (!srcFB || !forwardGenericDO(*srcFB, currentConn.mSrcId, paRefValue)) {
+    for (const auto &[srcFBNameId, srcId, dstFBNameId, dstId] : cmFBNData.mDataConnections) {
+      if (!dstFBNameId && getId(dstId) == ifDstId) {
+        if (CFunctionBlock *srcFB = getFB(srcFBNameId); !srcFB || !forwardGenericDO(*srcFB, getId(srcId), paRefValue)) {
           return false;
-        };
+        }
       }
     }
     return CFunctionBlock::configureGenericDO(paDOPortId, paRefValue);
@@ -139,6 +169,10 @@ namespace forte {
     // currently nothing to do
   }
 
+  void CCompositeFB::setFBNetworkInitialValues() {
+    // per default we do not have initial values of internal blocks
+  }
+
   void CCompositeFB::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
     if (cgInternal2InterfaceMarker & paEIID) {
       TEventID internalEvent = static_cast<TEventID>(paEIID & cgInternal2InterfaceRemovalMask);
@@ -150,26 +184,6 @@ namespace forte {
     }
   }
 
-  void CCompositeFB::createEventConnections() {
-    prepareIf2InEventCons(); // the interface to internal event connections are needed even if they are not connected
-                             // therefore we have to create them correctly in any case
-
-    for (auto &currentConn : cmFBNData.mEventConnections) {
-      CFunctionBlock *srcFB = getFunctionBlock(currentConn.mSrcFBNameId);
-      CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNameId);
-
-      if ((nullptr != srcFB) && (nullptr != dstFB)) {
-        CEventConnection *evConn =
-            (this == srcFB) ? mInterface2InternalEventCons[getFBInterfaceSpec().getEIID(currentConn.mSrcId)].get()
-                            : srcFB->getEOConnection(currentConn.mSrcId);
-        establishConnection(evConn, *dstFB, std::array{currentConn.mDstId});
-      } else {
-        // FIXME implement way to inform FB creator that creation failed
-        DEVLOG_ERROR("Could not create event connection in CFB");
-      }
-    }
-  }
-
   void CCompositeFB::prepareIf2InEventCons() {
     mInterface2InternalEventCons.reserve(getFBInterfaceSpec().getNumEIs());
     for (TPortId i = 0; i < getFBInterfaceSpec().getNumEIs(); i++) {
@@ -177,79 +191,82 @@ namespace forte {
     }
   }
 
-  void CCompositeFB::establishConnection(CConnection *paCon,
-                                         CFunctionBlock &paDstFb,
-                                         const std::span<const StringId> paDstNameId) {
-    if (this == &paDstFb) {
-      paCon->connectToCFBInterface(paDstFb, paDstNameId);
+  bool CCompositeFB::createEventConnections() {
+    return std::ranges::all_of(cmFBNData.mEventConnections,
+                               [this](const auto &conn) { return establishConnection(conn); });
+  }
+
+  bool CCompositeFB::createDataConnections() {
+    return std::ranges::all_of(cmFBNData.mDataConnections, [this](const auto &conn) {
+      if (!establishConnection(conn)) {
+        return false;
+      }
+      if (!conn.mSrcFBNameId) {
+        // Data connections track on the source side the number of destinations. For interface to internals we don't
+        // want that. Therefore, we have to revert that ref count change.
+        decConnRefCount();
+      }
+      return true;
+    });
+  }
+
+  bool CCompositeFB::createAdapterConnections() {
+    return std::ranges::all_of(cmFBNData.mAdapterConnections,
+                               [this](const auto &conn) { return establishConnection(conn); });
+  }
+
+  bool CCompositeFB::establishConnection(const SCFB_FBConnectionData &paConnectionData) {
+    CConnection::Wrapper con = getInternalConnection(paConnectionData.mSrcFBNameId, getIds(paConnectionData.mSrcId));
+    if (!con) {
+      return false;
+    }
+    EMGMResponse retVal;
+    if (paConnectionData.mDstFBNameId) {
+      CFunctionBlock *dstFB = getFB(paConnectionData.mDstFBNameId);
+      if (!dstFB) {
+        return false;
+      }
+      retVal = con->connect(*dstFB, getIds(paConnectionData.mDstId));
     } else {
-      paCon->connect(paDstFb, paDstNameId);
+      retVal = con->connectToCFBInterface(*this, getIds(paConnectionData.mDstId));
     }
+    if (retVal != EMGMResponse::Ready) {
+      return false;
+    }
+    // the connection has registered itself in the destination FB, so release it here
+    con.release(); // NOLINT(bugprone-unused-return-value)
+    return true;
   }
 
-  void CCompositeFB::createDataConnections() {
-    for (auto &currentConn : cmFBNData.mDataConnections) {
-      // FIXME implement way to inform FB creator that creation failed
-      CFunctionBlock *srcFB = getFunctionBlock(currentConn.mSrcFBNameId);
-      CFunctionBlock *dstFB = getFunctionBlock(currentConn.mDstFBNameId);
-
-      if ((srcFB != nullptr) && (dstFB != nullptr)) {
-        establishConnection(getDataConn(srcFB, currentConn.mSrcId), *dstFB, std::array{currentConn.mDstId});
-        if (srcFB == this) {
-          // Data connections track on the source side the number of destinations. For interface to internals we don't
-          // want that. Therefore, we have to revert that ref count change.
-          decConnRefCount();
-        }
-      } else {
-        DEVLOG_ERROR("Could not create data connection in CFB");
+  CConnection::Wrapper CCompositeFB::getInternalConnection(const StringId paSrcFBNameId,
+                                                           const std::span<const StringId> paSrcNameList) {
+    if (paSrcFBNameId) {
+      CFunctionBlock *srcFB = getFB(paSrcFBNameId);
+      if (!srcFB) {
+        return {};
       }
+      return srcFB->getOutputConnection(paSrcNameList);
     }
+    return getInternalConnection(paSrcNameList);
   }
 
-  CDataConnection *CCompositeFB::getDataConn(CFunctionBlock *paSrcFB, StringId paSrcNameId) {
-    if (this == paSrcFB) {
-      TPortId diId = getFBInterfaceSpec().getDIID(paSrcNameId);
-      if (diId != cgInvalidPortId) {
-        return getIf2InConUnchecked(diId);
-      } else {
-        TPortId dioId = getFBInterfaceSpec().getDIOID(paSrcNameId);
-        return getDIOOutConInternalUnchecked(dioId);
-      }
+  CConnection::Wrapper CCompositeFB::getInternalConnection(const std::span<const StringId> paSrcNameList) {
+    if (paSrcNameList.empty()) {
+      return {};
     }
-
-    CDataConnection *con = paSrcFB->getDOConnection(paSrcNameId);
-    if (con == nullptr) {
-      con = paSrcFB->getDIOOutConnection(paSrcNameId);
+    const StringId name = paSrcNameList.front();
+    if (const TPortId id = getFBInterfaceSpec().getEIID(name); id != cgInvalidPortId) {
+      return mInterface2InternalEventCons[id]->getDelegatingConnection(paSrcNameList.subspan(1));
     }
-    return con;
-  }
-
-  void CCompositeFB::createAdapterConnections() {
-    for (auto &currentConn : cmFBNData.mAdapterConnections) {
-      // FIXME implement way to inform FB creator that creation failed
-      CFunctionBlock *const srcFB = getFunctionBlock(currentConn.mSrcFBNameId);
-      CFunctionBlock *const dstFB = getFunctionBlock(currentConn.mDstFBNameId);
-
-      if ((nullptr != srcFB) && (nullptr != dstFB)) {
-        if (auto plug = srcFB->getPlugPin(currentConn.mSrcId); plug != nullptr) {
-          plug->getAdapterCon().connect(*dstFB, std::array{currentConn.mDstId});
-        } else {
-          DEVLOG_ERROR("[CFB Creation] Adapter source is not a plug!");
-        }
-      } else {
-        DEVLOG_ERROR("[CFB Creation] Source or destination not found in adapter connection!");
-      }
+    if (const TPortId id = getFBInterfaceSpec().getDIID(name); id != cgInvalidPortId) {
+      return getIf2InConUnchecked(id)->getDelegatingConnection(paSrcNameList.subspan(1));
     }
-  }
-
-  void CCompositeFB::setFBNetworkInitialValues() {
-    // per default we do not have initial values of internal blocks
-  }
-
-  CFunctionBlock *CCompositeFB::getFunctionBlock(StringId paFBNameId) {
-    if (!paFBNameId) {
-      return this;
+    if (const TPortId id = getFBInterfaceSpec().getDIOID(name); id != cgInvalidPortId) {
+      return getDIOOutConInternalUnchecked(id)->getDelegatingConnection(paSrcNameList.subspan(1));
     }
-    return getFB(paFBNameId);
+    if (const auto plug = getPlugPin(name)) {
+      return plug->getAdapterCon().getDelegatingConnection(paSrcNameList.subspan(1));
+    }
+    return {};
   }
 } // namespace forte
