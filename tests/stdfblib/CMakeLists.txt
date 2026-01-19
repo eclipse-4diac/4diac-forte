@@ -15,3 +15,6 @@ add_subdirectory(events)
 
 forte_test_add_sourcefile_cpp(CFB_TEST.cpp)
 forte_test_add_sourcefile_cpp(CFB_TEST_tester.cpp)
+
+forte_test_add_sourcefile_cpp(CFB_DELEGATING_TEST.cpp)
+forte_test_add_sourcefile_cpp(CFB_DELEGATING_TEST_tester.cpp)
