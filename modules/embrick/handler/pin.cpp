@@ -19,6 +19,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include <string>
+#include <cstring>
 
 namespace forte::eclipse4diac::io::embrick {
 
