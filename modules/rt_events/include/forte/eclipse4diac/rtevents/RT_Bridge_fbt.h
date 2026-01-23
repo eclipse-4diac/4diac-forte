@@ -18,12 +18,12 @@
 #include "forte/arch/forte_sync.h"
 
 namespace forte::eclipse4diac::rtevents {
-  class FORTE_GEN_RT_Bridge final : public CGenFunctionBlock<CFunctionBlock> {
-      DECLARE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge)
+  class GEN_RT_Bridge final : public CGenFunctionBlock<CFunctionBlock> {
+      DECLARE_GENERIC_FIRMWARE_FB(GEN_RT_Bridge)
 
     public:
-      FORTE_GEN_RT_Bridge(StringId paInstanceNameId, CFBContainer &paContainer);
-      ~FORTE_GEN_RT_Bridge() override = default;
+      GEN_RT_Bridge(StringId paInstanceNameId, CFBContainer &paContainer);
+      ~GEN_RT_Bridge() override = default;
 
       CEventConnection conn_RDO;
 

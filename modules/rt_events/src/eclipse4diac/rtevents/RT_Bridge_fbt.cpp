@@ -24,16 +24,16 @@ namespace forte::eclipse4diac::rtevents {
     const auto cEventOutputNames = std::array{"RDO"_STRID};
   } // namespace
 
-  DEFINE_GENERIC_FIRMWARE_FB(FORTE_GEN_RT_Bridge, "eclipse4diac::rtevents::GEN_RT_Bridge"_STRID)
+  DEFINE_GENERIC_FIRMWARE_FB(GEN_RT_Bridge, "eclipse4diac::rtevents::GEN_RT_Bridge"_STRID)
 
-  FORTE_GEN_RT_Bridge::FORTE_GEN_RT_Bridge(const StringId paInstanceNameId, CFBContainer &paContainer) :
+  GEN_RT_Bridge::GEN_RT_Bridge(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CGenFunctionBlock<CFunctionBlock>(paContainer, paInstanceNameId),
       conn_RDO(*this, 0) {};
 
-  void FORTE_GEN_RT_Bridge::setInitialValues() {
+  void GEN_RT_Bridge::setInitialValues() {
   }
 
-  void FORTE_GEN_RT_Bridge::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+  void GEN_RT_Bridge::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
   util::CCriticalRegion criticalRegion(
       mSyncObject); // protect the processing of the data independent of the calling event
     switch (paEIID) {
@@ -46,7 +46,7 @@ namespace forte::eclipse4diac::rtevents {
     }
   }
 
-  void FORTE_GEN_RT_Bridge::readInputData(const TEventID paEIID) {
+  void GEN_RT_Bridge::readInputData(const TEventID paEIID) {
     if (paEIID == scmEventWRID) {
       for (size_t i = 0; i < getFBInterfaceSpec().getNumDIs(); i++) {
         readData(i, mGenDIs[i], mGenDIConns[i]);
@@ -54,7 +54,7 @@ namespace forte::eclipse4diac::rtevents {
     }
   }
 
-  void FORTE_GEN_RT_Bridge::writeOutputData(const TEventID paEIID) {
+  void GEN_RT_Bridge::writeOutputData(const TEventID paEIID) {
     if (paEIID == scmEventRDOID) {
       for (size_t i = 0; i < getFBInterfaceSpec().getNumDOs(); i++) {
         writeData(getFBInterfaceSpec().getNumDIs() + i, mGenDOs[i], mGenDOConns[i]);
@@ -62,7 +62,7 @@ namespace forte::eclipse4diac::rtevents {
     }
   }
 
-  bool FORTE_GEN_RT_Bridge::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
+  bool GEN_RT_Bridge::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
     size_t numPorts = 0;
 
     const char *pos = strrchr(paConfigString, '_');
@@ -89,23 +89,23 @@ namespace forte::eclipse4diac::rtevents {
     return true;
   }
 
-  CIEC_ANY *FORTE_GEN_RT_Bridge::getDI(size_t paIndex) {
+  CIEC_ANY *GEN_RT_Bridge::getDI(size_t paIndex) {
     return &mGenDIs[paIndex];
   }
 
-  CIEC_ANY *FORTE_GEN_RT_Bridge::getDO(size_t paIndex) {
+  CIEC_ANY *GEN_RT_Bridge::getDO(size_t paIndex) {
     return &mGenDOs[paIndex];
   }
 
-  CEventConnection *FORTE_GEN_RT_Bridge::getEOConUnchecked(TPortId paIndex) {
+  CEventConnection *GEN_RT_Bridge::getEOConUnchecked(TPortId paIndex) {
     return (paIndex == 0) ? &conn_RDO : nullptr;
   }
 
-  void FORTE_GEN_RT_Bridge::createGenInputData() {
+  void GEN_RT_Bridge::createGenInputData() {
     mGenDIs = std::make_unique<CIEC_ANY_VARIANT[]>(getFBInterfaceSpec().getNumDIs());
   }
 
-  void FORTE_GEN_RT_Bridge::createGenOutputData() {
+  void GEN_RT_Bridge::createGenOutputData() {
     mGenDOs = std::make_unique<CIEC_ANY_VARIANT[]>(getFBInterfaceSpec().getNumDOs());
   }
 } // namespace forte::eclipse4diac::rtevents
