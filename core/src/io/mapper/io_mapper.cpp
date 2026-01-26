@@ -1,6 +1,7 @@
 /*******************************************************************************
  * Copyright (c) 2016, 2022 Johannes Messmer (admin@jomess.com), fortiss GmbH,
- *                          Jonathan Lainer
+ *                          Jonathan Lainer,
+ *                          AVL List GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +12,7 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
  *   Jonathan Lainer - Add method for deregistering Handles by ID.
+ *   Thomas Oellinger - Add support for multiple observers per input.
  *******************************************************************************/
 
 #include "forte/io/mapper/io_mapper.h"
@@ -99,10 +101,17 @@ namespace forte::io {
   bool IOMapper::registerObserver(std::string const &paId, IOObserver *paObserver) {
     util::CCriticalRegion criticalRegion(mSyncMutex);
 
-    // Check for duplicates
-    if (mObservers.find(paId) != mObservers.end()) {
-      DEVLOG_WARNING("[IOMapper]  Duplicated observer entry '%s'\n", paId.c_str());
-      return false;
+    auto handleIt = mHandles.find(paId);
+    if (handleIt != mHandles.end()) {
+      auto handle = handleIt->second;
+      // We now allow multiple observer per input channel:
+      if (handle->getDirection() != IOMapper::Direction::In) {
+        // If not input then do not allow duplicates
+        if (mObservers.find(paId) != mObservers.end()) {
+          DEVLOG_WARNING("[IOMapper]  Duplicated observer entry '%s'\n", paId.c_str());
+          return false;
+        }
+      }
     }
 
     // Insert into observer list
@@ -111,7 +120,7 @@ namespace forte::io {
     DEVLOG_DEBUG("[IOMapper] Register observer %s\n", paId.c_str());
 
     // Check for existing handle
-    if (auto handleIt = mHandles.find(paId); handleIt != mHandles.end()) {
+    if (handleIt != mHandles.end()) {
       auto handle = handleIt->second;
       handle->onObserver(paObserver);
       paObserver->onHandle(handle);
