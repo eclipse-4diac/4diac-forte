@@ -58,7 +58,12 @@ int main(int argc, char *arg[]) {
   }
 
   if (!g4diacForteInstance.startupNewDevice(ipPort)) {
-    DEVLOG_INFO("Could not start a new device\n");
+    DEVLOG_ERROR("Could not start a new device\n");
+    if constexpr (forte::cgBuildSharedLibs) {
+      DEVLOG_ERROR("Did you load the required shared libraries using '-l'?\n");
+    } else {
+      DEVLOG_ERROR("Did you link the static libraries into the final executable using '--whole-archive'?\n");
+    }
     return -1;
   }
 

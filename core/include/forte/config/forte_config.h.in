@@ -37,6 +37,10 @@ namespace forte {
 
   //! Maximum supported absolute port index for forcing data pins.
   constexpr std::size_t cgMaxSupportedForceIndex = ${FORTE_MGM_MAX_SUPPORTED_FORCE_INDEX};
+
+#cmakedefine01 BUILD_SHARED_LIBS
+  constexpr bool cgBuildSharedLibs = BUILD_SHARED_LIBS;
+#undef BUILD_SHARED_LIBS
 }
 
 //! Support custom serializable data types
