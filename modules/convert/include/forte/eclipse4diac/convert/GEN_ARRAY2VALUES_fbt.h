@@ -30,8 +30,6 @@ namespace forte::eclipse4diac::convert {
       DECLARE_GENERIC_FIRMWARE_FB(GEN_ARRAY2VALUES)
 
     protected:
-      void createGenOutputData() override;
-
       size_t getGenEOOffset() override {
         return 1;
       }
@@ -65,8 +63,6 @@ namespace forte::eclipse4diac::convert {
 
       CIEC_ARRAY_DYNAMIC var_IN;
       CDataConnection *conn_IN;
-
-      std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDOs;
 
     public:
       GEN_ARRAY2VALUES(const StringId paInstanceNameId, CFBContainer &paContainer);

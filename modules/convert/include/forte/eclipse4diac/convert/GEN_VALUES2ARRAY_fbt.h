@@ -35,8 +35,6 @@ namespace forte::eclipse4diac::convert {
         return 1;
       }
 
-      void createGenInputData() override;
-
       CEventConnection *getEOConUnchecked(TPortId paEONum) override;
       CIEC_ANY *getDI(size_t paIndex) override;
       CIEC_ANY *getDO(size_t paIndex) override;
@@ -58,7 +56,6 @@ namespace forte::eclipse4diac::convert {
       CEventConnection conn_CNF;
       CIEC_ARRAY_DYNAMIC var_OUT;
       COutDataConnection<CIEC_ARRAY_DYNAMIC> conn_OUT;
-      std::unique_ptr<CIEC_ANY_VARIANT[]> mGenDIs;
 
     public:
       GEN_VALUES2ARRAY(const StringId paInstanceNameId, CFBContainer &paContainer);

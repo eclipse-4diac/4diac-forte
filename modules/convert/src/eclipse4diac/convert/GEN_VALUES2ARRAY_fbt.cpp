@@ -41,10 +41,7 @@ namespace forte::eclipse4diac::convert {
   void GEN_VALUES2ARRAY::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
     switch (paEIID) {
       case scmEventREQID:
-        for (unsigned int input_index = 0; input_index < getFBInterfaceSpec().getNumDIs(); input_index++) {
-          // copy input values to array
-          var_OUT[input_index].setValue(*getDI(input_index));
-        }
+        // the input data elements are directly the members we don't need to explicitly copy them anymore
         sendOutputEvent(scmEventCNFID, paECET);
         break;
     }
@@ -52,7 +49,7 @@ namespace forte::eclipse4diac::convert {
 
   void GEN_VALUES2ARRAY::readInputData(TEventID) {
     for (TPortId i = 0; i < getFBInterfaceSpec().getNumDIs(); ++i) {
-      readData(i, mGenDIs[i], mGenDIConns[i]);
+      readData(i, var_OUT[i], mGenDIConns[i]);
     }
   }
 
@@ -85,6 +82,7 @@ namespace forte::eclipse4diac::convert {
 
     // create data output type
     var_OUT.setup(numDIs, arrayValueTypeId);
+    conn_OUT.getValue().setup(numDIs, arrayValueTypeId);
 
     // create the interface Specification
     paInterfaceSpec.mEINames = cEventInputNames;
@@ -94,16 +92,12 @@ namespace forte::eclipse4diac::convert {
     return true;
   }
 
-  void GEN_VALUES2ARRAY::createGenInputData() {
-    mGenDIs = std::make_unique<CIEC_ANY_VARIANT[]>(getFBInterfaceSpec().getNumDIs());
-  }
-
   CEventConnection *GEN_VALUES2ARRAY::getEOConUnchecked(TPortId paEONum) {
     return (paEONum == 0) ? &conn_CNF : nullptr;
   }
 
   CIEC_ANY *GEN_VALUES2ARRAY::getDI(size_t paIndex) {
-    return &mGenDIs[paIndex];
+    return &var_OUT[paIndex];
   }
 
   CIEC_ANY *GEN_VALUES2ARRAY::getDO(size_t paIndex) {
