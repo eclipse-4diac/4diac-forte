@@ -21,7 +21,6 @@ namespace forte::arch {
   const int CFreeRTOSThread::scmForteTaskPriority = tskIDLE_PRIORITY + 4;
 
   CFreeRTOSThread::CFreeRTOSThread(long paStackSize) : CThreadBase(paStackSize) {
-    mStack = new char[paStackSize];
   }
 
   CFreeRTOSThread::~CFreeRTOSThread() {
