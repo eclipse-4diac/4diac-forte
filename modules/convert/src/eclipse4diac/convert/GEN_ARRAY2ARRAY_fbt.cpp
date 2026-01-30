@@ -76,6 +76,9 @@ namespace forte::eclipse4diac::convert {
     // create data input type
     var_IN.setup(arrayLength, valueTypeID);
 
+    // create data output type
+    var_OUT.setup(arrayLength, valueTypeID);
+
     conn_OUT.getValue().setup(arrayLength, valueTypeID);
 
     // create the interface Specification
