@@ -68,9 +68,14 @@ namespace forte {
   template<typename T>
   class COutInOutDataConnection final : public CInOutDataConnection {
     public:
-      COutInOutDataConnection(CFunctionBlock &paSrcFB, TPortId paSrcPortId, const T &paValue) :
+      COutInOutDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, const T &paValue) :
           CInOutDataConnection(paSrcFB, paSrcPortId, &mValue),
           mValue(paValue) {
+      }
+
+
+      T &getValue2() {
+        return mValue;
       }
 
     private:
