@@ -36,8 +36,7 @@ namespace forte::io {
         this->mObservers.push_back(paObserver);
         this->mObserver = paObserver;
       }
-    }
-    else {
+    } else {
       this->mObserver = paObserver;
     }
   }
@@ -46,20 +45,18 @@ namespace forte::io {
     this->mObserver = nullptr;
   }
 
-  void IOHandle::dropObserver(IOObserver* paObserver) {
+  void IOHandle::dropObserver(IOObserver *paObserver) {
     if (paObserver) {
       auto iter = std::find(this->mObservers.begin(), this->mObservers.end(), paObserver);
       if (iter != this->mObservers.end()) {
         this->mObservers.erase(iter);
         if (this->mObservers.empty()) {
           this->mObserver = nullptr;
-        }
-        else {
+        } else {
           this->mObserver = this->mObservers.at(0);
         }
       }
-    }
-    else {
+    } else {
       this->mObserver = nullptr;
       this->mObservers.clear();
     }
@@ -71,8 +68,7 @@ namespace forte::io {
         if (mObserver->onChange()) {
           mController->fireIndicationEvent(mObserver);
         }
-      }
-      else {  // Multiple observers for inputs:
+      } else { // Multiple observers for inputs:
         auto itEnd(mObservers.end());
         for (auto itObserver = mObservers.begin(); itObserver != itEnd;) {
           if ((*itObserver)->onChange()) {
