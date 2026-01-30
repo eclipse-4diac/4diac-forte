@@ -4,9 +4,9 @@ name: CMake on multiple platforms
 
 on:
   push:
-    branches: [ "release", "develop", "freeze", "feature/**", "3.0.x" ]
+    branches: [ "**" ]
   pull_request:
-    branches: [ "release", "develop", "freeze", "feature/**", "3.0.x" ]
+    branches: [ "**" ]
 
 jobs:
   build:

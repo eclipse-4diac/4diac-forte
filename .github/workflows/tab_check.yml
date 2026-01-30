@@ -4,9 +4,9 @@ name: Check for Tabs
 
 on:
   push:
-    branches: [ "release", "develop", "freeze", "feature/**", "3.0.x" ]
+    branches: [ "**" ]
   pull_request:
-    branches: [ "release", "develop", "freeze", "feature/**", "3.0.x" ]
+    branches: [ "**" ]
 
 jobs:
   build:
@@ -14,7 +14,7 @@ jobs:
     container: quay.io/eclipse4diac/4diac-fortebuildcontainer:latest
 
     steps:
-    - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
+      - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
 
-    - name: Test for Tabs
-      run: tests/findTabs.sh
+      - name: Test for Tabs
+        run: tests/findTabs.sh
