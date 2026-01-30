@@ -18,8 +18,13 @@
 #include "forte/iec61131_functions/func_TRUNC.h"
 #include "forte/datatypes/forte_udint.h"
 #include "forte/datatypes/forte_lreal.h"
+#include "forte/datatypes/forte_real.h"
 
 namespace forte {
+  CIEC_UDINT func_TRUNC_UDINT(const CIEC_REAL &paIN) {
+    return func_TRUNC<CIEC_UDINT, CIEC_REAL>(paIN);
+  }
+
   CIEC_UDINT func_TRUNC_UDINT(const CIEC_LREAL &paIN) {
     return func_TRUNC<CIEC_UDINT, CIEC_LREAL>(paIN);
   }
