@@ -86,6 +86,9 @@ namespace forte {
       }
 
       CIEC_ARRAY &operator=(const CIEC_ARRAY &paSource) {
+        if (hasVariableBounds()) {
+          setBounds(paSource.getLowerBound(), paSource.getUpperBound());
+        }
         assignDynamic(paSource, paSource.getLowerBound(), paSource.getUpperBound());
         return *this;
       }
