@@ -48,6 +48,13 @@ namespace forte {
   class CIEC_ARRAY_DYNAMIC final : public CIEC_ARRAY {
       DECLARE_FIRMWARE_DATATYPE(ARRAY_DYNAMIC)
     public:
+      TForteByte *getDataPtr() override {
+        return reinterpret_cast<TForteByte *>(mData);
+      }
+
+      const TForteByte *getConstDataPtr() const override {
+        return reinterpret_cast<const TForteByte *>(mData);
+      }
       using difference_type = std::ptrdiff_t;
       using CIEC_ARRAY::const_pointer;
       using CIEC_ARRAY::const_reference;
@@ -158,7 +165,7 @@ namespace forte {
             return paValue.mData >= paOther.mData;
           }
 
-        private:
+        protected:
           size_t mElementSize;
           void *mData;
       };
@@ -273,7 +280,7 @@ namespace forte {
             return paValue.mData >= paOther.mData;
           }
 
-        private:
+        protected:
           size_t mElementSize;
           const void *mData;
       };

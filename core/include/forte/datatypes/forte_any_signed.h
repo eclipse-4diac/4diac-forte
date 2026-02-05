@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2023 Profactor GmbH, ACIN, fortiss GmbH
- *                          Martin Erich Jobst
+ * Copyright (c) 2005, 2026 Profactor GmbH, ACIN, fortiss GmbH
+ *                          Martin Erich Jobst, HR Agrartechnik GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,6 +14,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Jobst
  *      - add ANY_SIGNED based on ANY_INT
+ *    Franz Höpfinger - add constexpr
  *******************************************************************************/
 #pragma once
 
@@ -25,9 +26,9 @@ namespace forte {
    */
   class CIEC_ANY_SIGNED : public CIEC_ANY_INT {
     public:
-      CIEC_ANY_SIGNED() = default;
+      constexpr CIEC_ANY_SIGNED() = default;
 
-      explicit CIEC_ANY_SIGNED(TLargestIntValueType paVal) {
+      constexpr explicit CIEC_ANY_SIGNED(TLargestIntValueType paVal) {
         setSignedValue(paVal);
       }
 

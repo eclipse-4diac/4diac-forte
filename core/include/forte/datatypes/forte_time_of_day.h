@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2025 nxtControl GmbH, ACIN, Profactor GmbH, fortiss GmbH,
+ * Copyright (c) 2008, 2026 nxtControl GmbH, ACIN, Profactor GmbH, fortiss GmbH,
  *                          Primetals Technologies Austria GmbH,
- *                          Martin Erich Jobst
+ *                          HR Agrartechnik GmbH, Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -18,6 +18,7 @@
  *      nanoseconds
  *   Martin Jobst - add user-defined literal
  *   Alois Zoitl  - migrated data type toString to std::string
+ *   Franz Höpfinger - add constexpr
  *******************************************************************************/
 
 #pragma once
@@ -31,6 +32,13 @@ namespace forte {
   class CIEC_TIME_OF_DAY final : public CIEC_ANY_DATE {
       DECLARE_FIRMWARE_DATATYPE(TIME_OF_DAY)
     public:
+      TForteByte *getDataPtr() override {
+        return reinterpret_cast<TForteByte *>(&mData);
+      }
+
+      const TForteByte *getConstDataPtr() const override {
+        return reinterpret_cast<const TForteByte *>(&mData);
+      }
       [[deprecated("Please use the corresponding numeric_limits template")]]
       constexpr static size_t scmBitLength = 64U;
       [[deprecated("Please use the corresponding numeric_limits template")]]
@@ -38,21 +46,19 @@ namespace forte {
       [[deprecated("Please use the corresponding numeric_limits template")]]
       static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
-      CIEC_TIME_OF_DAY() = default;
+      constexpr CIEC_TIME_OF_DAY() = default;
 
-      CIEC_TIME_OF_DAY(const CIEC_TIME_OF_DAY &paValue) : CIEC_ANY_DATE() {
-        setValueSimple(paValue);
+      constexpr CIEC_TIME_OF_DAY(const CIEC_TIME_OF_DAY &paValue) : CIEC_ANY_DATE(), mData(paValue.mData) {
+        mData = static_cast<TValueType>(static_cast<CIEC_TIME_OF_DAY::TValueType>(paValue));
       }
 
-      explicit CIEC_TIME_OF_DAY(const TValueType paValue) {
-        setTUINT64(paValue);
+      constexpr explicit CIEC_TIME_OF_DAY(const TValueType paValue) : mData(paValue) {
       }
 
       ~CIEC_TIME_OF_DAY() override = default;
 
       CIEC_TIME_OF_DAY &operator=(const CIEC_TIME_OF_DAY &paValue) {
-        // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = paValue.mData;
         return *this;
       }
 
@@ -60,7 +66,7 @@ namespace forte {
        *
        *   Conversion operator for converting CIEC_TIME_OF_DAY to elementary 64 bit unsigned integer
        */
-      explicit operator TForteUInt64() const {
+      constexpr explicit operator TForteUInt64() const {
         return getTUINT64();
       }
 
@@ -87,9 +93,12 @@ namespace forte {
        *   \param paTargetBuf Reference to the buffer String
        */
       void toString(std::string &paTargetBuf) const override;
+
+    protected:
+      TValueType mData = {};
   };
 
-  inline CIEC_TIME_OF_DAY operator""_TIME_OF_DAY(unsigned long long int paValue) {
+  constexpr inline CIEC_TIME_OF_DAY operator""_TIME_OF_DAY(unsigned long long int paValue) {
     return CIEC_TIME_OF_DAY(static_cast<CIEC_TIME_OF_DAY::TValueType>(paValue));
   }
 

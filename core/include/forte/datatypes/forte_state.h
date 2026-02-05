@@ -25,6 +25,13 @@ namespace forte {
       DECLARE_FIRMWARE_DATATYPE(STATE)
 
     public:
+      TForteByte *getDataPtr() override {
+        return reinterpret_cast<TForteByte *>(&mData);
+      }
+
+      const TForteByte *getConstDataPtr() const override {
+        return reinterpret_cast<const TForteByte *>(&mData);
+      }
       typedef TForteUInt16 TValueType;
 
       static const TValueType scmMinVal = 0;
@@ -32,25 +39,23 @@ namespace forte {
 
       CIEC_STATE() = default;
 
-      CIEC_STATE(const CIEC_STATE &paValue) : CIEC_ANY_INT() {
-        setValueSimple(paValue);
+      CIEC_STATE(const CIEC_STATE &paValue) : CIEC_ANY_INT(), mData(paValue.mData) {
+        mData = static_cast<TValueType>(static_cast<CIEC_STATE::TValueType>(paValue));
       }
 
-      explicit CIEC_STATE(const TValueType paValue) {
-        setTUINT16(paValue);
+      explicit CIEC_STATE(const TValueType paValue) : mData(paValue) {
       }
 
       ~CIEC_STATE() override = default;
 
       CIEC_STATE &operator=(const CIEC_STATE &paValue) {
-        // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = paValue.mData;
         return *this;
       }
 
       CIEC_STATE &operator=(const TForteUInt16 paValue) {
         // Simple value assignment - no self assignment check needed
-        setTUINT16(paValue);
+        mData = paValue;
         return *this;
       }
 
@@ -59,11 +64,14 @@ namespace forte {
        *   Conversion operator for converting CIEC_UDINT to elementary unsigned 16 bit integer
        */
       operator TForteUInt16() const {
-        return getTUINT16();
+        return mData;
       }
 
       EDataTypeID getDataTypeID() const override {
         return e_UINT;
       }
+
+    protected:
+      TValueType mData = {};
   };
 } // namespace forte

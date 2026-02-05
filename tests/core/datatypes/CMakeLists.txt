@@ -95,4 +95,6 @@
   
 forte_test_add_sourcefile_cpp(CIEC_STRUCT_test.cpp)
  
+forte_test_add_sourcefile_cpp(constexpr_test.cpp)
+
 forte_test_add_subdirectory(convert)

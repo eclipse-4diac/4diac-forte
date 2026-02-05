@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 Profactor GmbH, ACIN, fortiss GmbH
+ * Copyright (c) 2005, 2026 Profactor GmbH, ACIN, fortiss GmbH
+ *                          HR Agrartechnik GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +12,7 @@
  *    Thomas Strasser, Alois Zoitl, Monika Wenger,
  *    Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
+ *    Franz Höpfinger - add constexpr
  *******************************************************************************/
 
 #pragma once
@@ -26,7 +28,7 @@ namespace forte {
       ~CIEC_ANY_REAL() override = default;
 
     protected:
-      CIEC_ANY_REAL() = default;
+      constexpr CIEC_ANY_REAL() = default;
 
       static void normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos);
   };

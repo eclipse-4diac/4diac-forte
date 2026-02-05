@@ -84,7 +84,7 @@ namespace forte {
       }
 
       CIEC_STRING_FIXED &operator=(const CIEC_STRING_FIXED &paValue) {
-        getStorageMutable() = paValue.getStorage();
+        this->getStorageMutable() = paValue.getStorage();
         return *this;
       }
 

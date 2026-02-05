@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2025 Profactor GmbH, ACIN,
+ * Copyright (c) 2005, 2026 Profactor GmbH, ACIN,
  *                          Primetals Technologies Austria GmbH,
- *                          Martin Erich Jobst
+ *                          HR Agrartechnik GmbH, Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -19,6 +19,7 @@
  *   Martin Jobst - add equals function
  *                - add user-defined literal
  *   Alois Zoitl  - migrated data type toString to std::string
+ *   Franz Höpfinger - add constexpr
  *******************************************************************************/
 
 #pragma once
@@ -41,6 +42,13 @@ namespace forte {
       DECLARE_FIRMWARE_DATATYPE(LREAL)
 
     public:
+      TForteByte *getDataPtr() override {
+        return reinterpret_cast<TForteByte *>(&mData);
+      }
+
+      const TForteByte *getConstDataPtr() const override {
+        return reinterpret_cast<const TForteByte *>(&mData);
+      }
       using TValueType = TForteDFloat;
       [[deprecated("Please use the corresponding numeric_limits template")]]
       constexpr static size_t scmBitLength = 64U;
@@ -49,13 +57,13 @@ namespace forte {
       [[deprecated("Please use the corresponding numeric_limits template")]]
       static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
-      CIEC_LREAL() = default;
+      constexpr CIEC_LREAL() = default;
 
-      CIEC_LREAL(const CIEC_LREAL &paValue) : CIEC_ANY_REAL() {
-        setValueSimple(paValue);
+      constexpr CIEC_LREAL(const CIEC_LREAL &paValue) : CIEC_ANY_REAL(), mData(paValue.mData) {
+        mData = static_cast<TValueType>(static_cast<CIEC_LREAL::TValueType>(paValue));
       }
 
-      CIEC_LREAL(const CIEC_REAL &paValue) : CIEC_ANY_REAL() {
+      constexpr CIEC_LREAL(const CIEC_REAL &paValue) : CIEC_ANY_REAL() {
         setTDFLOAT(static_cast<TForteFloat>(static_cast<const CIEC_REAL &>(paValue)));
       }
 
@@ -83,15 +91,13 @@ namespace forte {
         setValue(paValue);
       }
 
-      explicit CIEC_LREAL(const TValueType paValue) {
-        setTDFLOAT(paValue);
+      constexpr explicit CIEC_LREAL(const TValueType paValue) : mData(paValue) {
       }
 
       ~CIEC_LREAL() override = default;
 
       CIEC_LREAL &operator=(const CIEC_LREAL &paValue) {
-        // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = paValue.mData;
         return *this;
       }
 
@@ -139,8 +145,8 @@ namespace forte {
        *   Conversion operator for converting CIEC_LREAL to elementary 64 bit float
        */
 
-      explicit operator TForteDFloat() const {
-        return getTDFLOAT();
+      constexpr explicit operator TForteDFloat() const {
+        return mData;
       }
 
       EDataTypeID getDataTypeID() const override {
@@ -167,7 +173,7 @@ namespace forte {
       /*! \brief Converts data type value to string
        *
        *   This command implements a conversion function from C++ data type
-       *   to IEC61131 conform data type (string format).
+       *   to IEC 61131 conform data type (string format).
        *   This function is necessary for communication with a proper engineering system.
        *   \param paTargetBuf Reference to the buffer String
        */
@@ -185,13 +191,16 @@ namespace forte {
        *  \param paDestValue Destination CIEC object of the cast
        */
       static void castLRealData(const CIEC_LREAL &paSrcValue, CIEC_ANY &paDestValue);
+
+    protected:
+      TValueType mData = {};
   };
 
-  inline CIEC_LREAL operator""_LREAL(unsigned long long int paValue) {
+  constexpr inline CIEC_LREAL operator""_LREAL(unsigned long long int paValue) {
     return CIEC_LREAL(static_cast<CIEC_LREAL::TValueType>(paValue));
   }
 
-  inline CIEC_LREAL operator""_LREAL(long double paValue) {
+  constexpr inline CIEC_LREAL operator""_LREAL(long double paValue) {
     return CIEC_LREAL(static_cast<CIEC_LREAL::TValueType>(paValue));
   }
 

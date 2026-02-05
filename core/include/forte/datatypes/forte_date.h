@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2025 nxtControl GmbH, ACIN, fortiss GmbH,
+ * Copyright (c) 2008, 2026 nxtControl GmbH, ACIN, fortiss GmbH,
  *                          Primetals Technologies Austria GmbH,
- *                          Martin Erich Jobst
+ *                          HR Agrartechnik GmbH, Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -16,6 +16,7 @@
  *                  removed built-in type operator=, removed operator++
  *   Martin Jobst - add user-defined literal
  *   Alois Zoitl  - migrated data type toString to std::string
+ *   Franz Höpfinger - add constexpr
  *******************************************************************************/
 
 #pragma once
@@ -29,24 +30,29 @@ namespace forte {
   class CIEC_DATE final : public CIEC_ANY_DATE {
       DECLARE_FIRMWARE_DATATYPE(DATE)
     public:
+      TForteByte *getDataPtr() override {
+        return reinterpret_cast<TForteByte *>(&mData);
+      }
+
+      const TForteByte *getConstDataPtr() const override {
+        return reinterpret_cast<const TForteByte *>(&mData);
+      }
       [[deprecated("Please use the corresponding numeric_limits template")]]
       constexpr static size_t scmBitLength = 64U;
 
-      CIEC_DATE() = default;
+      constexpr CIEC_DATE() = default;
 
-      CIEC_DATE(const CIEC_DATE &paValue) : CIEC_ANY_DATE() {
-        setValueSimple(paValue);
+      constexpr CIEC_DATE(const CIEC_DATE &paValue) : CIEC_ANY_DATE(), mData(paValue.mData) {
+        mData = static_cast<TValueType>(static_cast<CIEC_DATE::TValueType>(paValue));
       }
 
-      explicit CIEC_DATE(const TValueType paValue) {
-        setTUINT64(paValue);
+      constexpr explicit CIEC_DATE(const TValueType paValue) : mData(paValue) {
       }
 
       ~CIEC_DATE() override = default;
 
       CIEC_DATE &operator=(const CIEC_DATE &paValue) {
-        // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = paValue.mData;
         return *this;
       }
 
@@ -54,7 +60,7 @@ namespace forte {
        *
        *   Conversion operator for converting CIEC_TIME to unsigned 64 bit integer
        */
-      operator TForteUInt64() const {
+      constexpr operator TForteUInt64() const {
         return getTUINT64();
       }
 
@@ -81,6 +87,9 @@ namespace forte {
        *   \param paTargetBuf Reference to the provided buffer
        */
       void toString(std::string &paTargetBuf) const override;
+
+    protected:
+      TValueType mData = {};
   };
 
   inline bool operator==(const CIEC_DATE left, const CIEC_DATE &right) {
@@ -91,7 +100,7 @@ namespace forte {
     return !(left == right);
   }
 
-  inline CIEC_DATE operator""_DATE(unsigned long long int paValue) {
+  constexpr inline CIEC_DATE operator""_DATE(unsigned long long int paValue) {
     return CIEC_DATE(static_cast<CIEC_DATE::TValueType>(paValue));
   }
 

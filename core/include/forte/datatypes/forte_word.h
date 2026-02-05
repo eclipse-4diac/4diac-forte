@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2025 Profactor GmbH, ACIN
+ * Copyright (c) 2005, 2026 Profactor GmbH, ACIN
  *                          Johannes Kepler University Linz
  *                          Primetals Technologies Austria GmbH
- *                          Martin Erich Jobst
+ *                          HR Agrartechnik GmbH, Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -21,6 +21,7 @@
  *        castable CIEC types operator=
  *   Martin Jobst - add user-defined literal
  *   Alois Zoitl  - migrated data type toString to std::string
+ *   Franz Höpfinger - add constexpr
  *******************************************************************************/
 
 #pragma once
@@ -41,6 +42,13 @@ namespace forte {
       DECLARE_FIRMWARE_DATATYPE(WORD)
 
     public:
+      TForteByte *getDataPtr() override {
+        return reinterpret_cast<TForteByte *>(&mData);
+      }
+
+      const TForteByte *getConstDataPtr() const override {
+        return reinterpret_cast<const TForteByte *>(&mData);
+      }
       using TValueType = TForteWord;
       [[deprecated("Please use the corresponding numeric_limits template")]]
       constexpr static size_t scmBitLength = 16U;
@@ -49,41 +57,40 @@ namespace forte {
       [[deprecated("Please use the corresponding numeric_limits template")]]
       static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
-      CIEC_WORD() = default;
+      constexpr CIEC_WORD() = default;
 
-      CIEC_WORD(const CIEC_WORD &paValue) : CIEC_ANY_BIT() {
-        setValueSimple(paValue);
+      constexpr CIEC_WORD(const CIEC_WORD &paValue) : CIEC_ANY_BIT(), mData(paValue.mData) {
+        mData = static_cast<TValueType>(static_cast<CIEC_WORD::TValueType>(paValue));
       }
 
-      CIEC_WORD(const CIEC_BYTE &paValue) : CIEC_ANY_BIT() {
-        setValueSimple(paValue);
+      constexpr CIEC_WORD(const CIEC_BYTE &paValue) : CIEC_ANY_BIT() {
+        mData = static_cast<TValueType>(static_cast<CIEC_BYTE::TValueType>(paValue));
       }
 
-      CIEC_WORD(const CIEC_BOOL &paValue) : CIEC_ANY_BIT() {
-        setValueSimple(paValue);
+      constexpr CIEC_WORD(const CIEC_BOOL &paValue) :
+          CIEC_ANY_BIT(),
+          mData(static_cast<TValueType>(static_cast<TValueType>(paValue))) {
       }
 
-      explicit CIEC_WORD(const TValueType paValue) {
-        setTUINT16(paValue);
+      constexpr explicit CIEC_WORD(const TValueType paValue) : mData(paValue) {
       }
 
       ~CIEC_WORD() override = default;
 
       CIEC_WORD &operator=(const CIEC_WORD &paValue) {
-        // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = paValue.mData;
         return *this;
       }
 
       CIEC_WORD &operator=(const CIEC_BYTE &paValue) {
         // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = static_cast<TValueType>(static_cast<TValueType>(paValue));
         return *this;
       }
 
       CIEC_WORD &operator=(const CIEC_BOOL &paValue) {
         // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = static_cast<TValueType>(static_cast<TValueType>(paValue));
         return *this;
       }
 
@@ -91,8 +98,8 @@ namespace forte {
        *
        *   Conversion operator for converting CIEC_WORD to elementary word
        */
-      operator TForteWord() const {
-        return getTUINT16();
+      constexpr operator TForteWord() const {
+        return mData;
       }
 
       EDataTypeID getDataTypeID() const override final {
@@ -131,9 +138,12 @@ namespace forte {
       T cpartial(const CIEC_ANY_INT &paIndex) const {
         return partial<T>(paIndex);
       }
+
+    protected:
+      TValueType mData = {};
   };
 
-  inline CIEC_WORD operator""_WORD(unsigned long long int paValue) {
+  constexpr inline CIEC_WORD operator""_WORD(unsigned long long int paValue) {
     return CIEC_WORD(static_cast<CIEC_WORD::TValueType>(paValue));
   }
 

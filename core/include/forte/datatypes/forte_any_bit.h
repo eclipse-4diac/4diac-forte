@@ -1,7 +1,9 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2013 Profactor GmbH, ACIN
- *               2020 Johannes Kepler University Linz
- *               2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2005, 2026 Profactor GmbH, ACIN
+ *                          Johannes Kepler University Linz
+ *                          Primetals Technologies Austria GmbH
+ *                          HR Agrartechnik GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,12 +11,13 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *    Thomas Strasser, Ingomar Müller, Alois Zoitl, Monika Wenger,
- *    Martin Melik Merkumians
- *      - initial implementation and rework communication infrastructure
- *    Ernst Blecha - add multibit partial access
- *    Martin Melik Merkumians - changes multibit access index from template
+ *   Thomas Strasser, Ingomar Müller, Alois Zoitl, Monika Wenger,
+ *   Martin Melik Merkumians
+ *     - initial implementation and rework communication infrastructure
+ *   Ernst Blecha - add multibit partial access
+ *   Martin Melik Merkumians - changes multibit access index from template
  *      parameter to call argument
+ *   Franz Höpfinger - add constexpr
  *******************************************************************************/
 
 #pragma once
@@ -33,7 +36,7 @@ namespace forte {
       }
 
     protected:
-      CIEC_ANY_BIT() = default;
+      constexpr CIEC_ANY_BIT() = default;
   };
 
   template<>

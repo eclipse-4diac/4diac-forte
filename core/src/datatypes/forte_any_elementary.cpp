@@ -295,4 +295,70 @@ namespace forte {
     }
     return e_ANY;
   }
+
+  void CIEC_ANY_ELEMENTARY::setValue(const CIEC_ANY &paValue) {
+    if (&paValue == this) {
+      return;
+    }
+
+    EDataTypeID srcId = paValue.getDataTypeID();
+    EDataTypeID dstId = getDataTypeID();
+
+    if (srcId == dstId) {
+      setLargestUInt(paValue.getLargestUInt());
+      return;
+    }
+
+    bool bSrcFloat = (srcId == e_REAL || srcId == e_LREAL);
+    bool bDstFloat = (dstId == e_REAL || dstId == e_LREAL);
+
+    if (bSrcFloat || bDstFloat) {
+      bool bSrcBit = (srcId == e_BYTE || srcId == e_WORD || srcId == e_DWORD || srcId == e_LWORD);
+      bool bDstBit = (dstId == e_BYTE || dstId == e_WORD || dstId == e_DWORD || dstId == e_LWORD);
+
+      if ((bSrcFloat && bDstBit) || (bSrcBit && bDstFloat)) {
+        setLargestUInt(paValue.getLargestUInt());
+        return;
+      }
+
+      if (bSrcFloat) {
+        TForteDFloat fVal = (srcId == e_REAL) ? static_cast<TForteDFloat>(std::bit_cast<TForteFloat>(
+                                                    static_cast<TForteUInt32>(paValue.getLargestUInt())))
+                                              : std::bit_cast<TForteDFloat>(paValue.getLargestUInt());
+
+        if (bDstFloat) {
+          if (dstId == e_REAL)
+            setTFLOAT(static_cast<TForteFloat>(fVal));
+          else
+            setTDFLOAT(fVal);
+        } else {
+          setLargestInt(static_cast<TLargestIntValueType>(fVal));
+        }
+      } else {
+        bool bSrcSigned = (srcId == e_SINT || srcId == e_INT || srcId == e_DINT || srcId == e_LINT);
+
+        if (bSrcSigned) {
+          TLargestIntValueType val = paValue.getLargestInt();
+          if (dstId == e_REAL)
+            setTFLOAT(static_cast<TForteFloat>(val));
+          else
+            setTDFLOAT(static_cast<TForteDFloat>(val));
+        } else {
+          TLargestUIntValueType val = paValue.getLargestUInt();
+          if (dstId == e_REAL)
+            setTFLOAT(static_cast<TForteFloat>(val));
+          else
+            setTDFLOAT(static_cast<TForteDFloat>(val));
+        }
+      }
+      return;
+    }
+
+    bool bSrcSigned = (srcId == e_SINT || srcId == e_INT || srcId == e_DINT || srcId == e_LINT);
+    if (bSrcSigned) {
+      setLargestInt(paValue.getLargestInt());
+    } else {
+      setLargestUInt(paValue.getLargestUInt());
+    }
+  }
 } // namespace forte

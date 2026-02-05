@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2011 Profactor GmbH, ACIN
+ * Copyright (c) 2005, 2026 Profactor GmbH, ACIN, fortiss GmbH
+ *                          HR Agrartechnik GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +12,7 @@
  *    Thomas Strasser, Alois Zoitl, Monika Wenger,
  *    Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
+ *    Franz Höpfinger - add constexpr
  *******************************************************************************/
 
 #pragma once
@@ -30,7 +32,7 @@ namespace forte {
       }
 
     protected:
-      CIEC_ANY_NUM() = default;
+      constexpr CIEC_ANY_NUM() = default;
   };
 
   template<>

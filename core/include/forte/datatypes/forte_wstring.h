@@ -40,6 +40,14 @@ namespace forte {
       DECLARE_FIRMWARE_DATATYPE(WSTRING)
 
     public:
+      TForteByte *getDataPtr() override {
+        return getGenData();
+      }
+
+      const TForteByte *getConstDataPtr() const override {
+        return getGenData();
+      }
+
       using TValueType = std::wstring;
       using TSymbolType = TForteWChar;
       CIEC_WSTRING() = default;

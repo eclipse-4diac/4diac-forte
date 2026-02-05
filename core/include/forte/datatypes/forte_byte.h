@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2025 Profactor GmbH, ACIN,
+ * Copyright (c) 2005, 2026 Profactor GmbH, ACIN,
  *                          Johannes Kepler University Linz,
  *                          Primetals Technologies Austria GmbH,
- *                          Martin Erich Jobst
+ *                          HR Agrartechnik GmbH, Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -20,6 +20,7 @@
  *                  removed built-in type operator=
  *   Martin Jobst - add user-defined literal
  *   Alois Zoitl  - migrated data type toString to std::string
+ *   Franz Höpfinger - add constexpr
  *******************************************************************************/
 
 #pragma once
@@ -39,6 +40,13 @@ namespace forte {
       DECLARE_FIRMWARE_DATATYPE(BYTE)
 
     public:
+      TForteByte *getDataPtr() override {
+        return reinterpret_cast<TForteByte *>(&mData);
+      }
+
+      const TForteByte *getConstDataPtr() const override {
+        return reinterpret_cast<const TForteByte *>(&mData);
+      }
       using TValueType = TForteByte;
       [[deprecated("Please use the corresponding numeric_limits template")]]
       constexpr static size_t scmBitLength = 8U;
@@ -48,31 +56,29 @@ namespace forte {
       [[deprecated("Please use the corresponding numeric_limits template")]]
       static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
-      CIEC_BYTE() = default;
+      constexpr CIEC_BYTE() = default;
 
-      CIEC_BYTE(const CIEC_BYTE &paValue) : CIEC_ANY_BIT() {
-        setValueSimple(paValue);
+      constexpr CIEC_BYTE(const CIEC_BYTE &paValue) : CIEC_ANY_BIT(), mData(paValue.mData) {
+        mData = static_cast<TValueType>(static_cast<CIEC_BYTE::TValueType>(paValue));
       }
 
-      CIEC_BYTE(const CIEC_BOOL &paValue) : CIEC_ANY_BIT() {
-        setValueSimple(paValue);
+      constexpr CIEC_BYTE(const CIEC_BOOL &paValue) : CIEC_ANY_BIT() {
+        mData = static_cast<TValueType>(static_cast<CIEC_BOOL::TValueType>(paValue));
       }
 
-      explicit CIEC_BYTE(const TValueType paValue) {
-        setTUINT8(paValue);
+      constexpr explicit CIEC_BYTE(const TValueType paValue) : mData(paValue) {
       }
 
       ~CIEC_BYTE() override = default;
 
       CIEC_BYTE &operator=(const CIEC_BYTE &paValue) {
-        // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = paValue.mData;
         return *this;
       }
 
       CIEC_BYTE &operator=(const CIEC_BOOL &paValue) {
         // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = static_cast<TValueType>(static_cast<TValueType>(paValue));
         return *this;
       }
 
@@ -80,8 +86,8 @@ namespace forte {
        *
        *   Conversion operator for converting CIEC_BYTE to elementary byte
        */
-      operator TForteByte() const {
-        return getTUINT8();
+      constexpr operator TForteByte() const {
+        return mData;
       }
 
       EDataTypeID getDataTypeID() const override final {
@@ -120,9 +126,12 @@ namespace forte {
       T cpartial(const CIEC_ANY_INT &paIndex) const {
         return partial<T>(paIndex);
       }
+
+    protected:
+      TValueType mData = {};
   };
 
-  inline CIEC_BYTE operator""_BYTE(unsigned long long int paValue) {
+  constexpr inline CIEC_BYTE operator""_BYTE(unsigned long long int paValue) {
     return CIEC_BYTE(static_cast<CIEC_BYTE::TValueType>(paValue));
   }
 

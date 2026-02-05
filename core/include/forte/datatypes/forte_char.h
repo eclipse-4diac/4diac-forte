@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2022, 2025 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022, 2026 Primetals Technologies Austria GmbH
+ *                          HR Agrartechnik GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +12,7 @@
  *   Martin Melik-Merkumians
  *               - initial implementation and rework communication infrastructure
  *   Alois Zoitl - migrated data type toString to std::string
+ *   Franz Höpfinger - add constexpr
  *******************************************************************************/
 
 #pragma once
@@ -24,6 +26,13 @@ namespace forte {
       DECLARE_FIRMWARE_DATATYPE(CHAR)
 
     public:
+      TForteByte *getDataPtr() override {
+        return reinterpret_cast<TForteByte *>(&mData);
+      }
+
+      const TForteByte *getConstDataPtr() const override {
+        return reinterpret_cast<const TForteByte *>(&mData);
+      }
       using TValueType = TForteChar;
       [[deprecated("Please use the corresponding numeric_limits template")]]
       constexpr static size_t scmBitLength = 8U;
@@ -33,21 +42,19 @@ namespace forte {
       [[deprecated("Please use the corresponding numeric_limits template")]]
       static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
-      CIEC_CHAR() = default;
+      constexpr CIEC_CHAR() = default;
 
-      CIEC_CHAR(const CIEC_CHAR &paValue) : CIEC_ANY_CHAR() {
-        setValueSimple(paValue);
+      constexpr CIEC_CHAR(const CIEC_CHAR &paValue) : CIEC_ANY_CHAR(), mData(paValue.mData) {
+        mData = static_cast<TValueType>(static_cast<CIEC_CHAR::TValueType>(paValue));
       }
 
-      explicit CIEC_CHAR(const TValueType paValue) {
-        setChar(paValue);
+      constexpr explicit CIEC_CHAR(const TValueType paValue) : mData(paValue) {
       }
 
       ~CIEC_CHAR() override = default;
 
       CIEC_CHAR &operator=(const CIEC_CHAR &paValue) {
-        // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = paValue.mData;
         return *this;
       }
 
@@ -55,8 +62,8 @@ namespace forte {
        *
        *   Conversion operator for converting CIEC_CHAR to elementary byte
        */
-      explicit operator TForteChar() const {
-        return getChar8();
+      constexpr explicit operator TForteChar() const {
+        return mData;
       }
 
       void toString(std::string &paTargetBuf) const override;
@@ -66,17 +73,20 @@ namespace forte {
       EDataTypeID getDataTypeID() const final {
         return e_CHAR;
       }
+
+    protected:
+      TValueType mData = {};
   };
 
   inline bool operator==(const CIEC_CHAR &lhs, const CIEC_CHAR &rhs) {
     return static_cast<CIEC_CHAR::TValueType>(lhs) == static_cast<CIEC_CHAR::TValueType>(rhs);
   }
 
-  inline CIEC_CHAR operator""_CHAR(char paValue) {
+  constexpr inline CIEC_CHAR operator""_CHAR(char paValue) {
     return CIEC_CHAR(static_cast<CIEC_CHAR::TValueType>(paValue));
   }
 
-  inline CIEC_CHAR operator""_CHAR(unsigned long long int paValue) {
+  constexpr inline CIEC_CHAR operator""_CHAR(unsigned long long int paValue) {
     return CIEC_CHAR(static_cast<CIEC_CHAR::TValueType>(paValue));
   }
 

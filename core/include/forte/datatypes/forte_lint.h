@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2009, 2025 ACIN, Primetals Technologies Austria GmbH,
- *                          Martin Erich Jobst
+ * Copyright (c) 2009, 2026 ACIN, Primetals Technologies Austria GmbH,
+ *                          HR Agrartechnik GmbH, Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -17,6 +17,7 @@
  *   Martin Jobst - add user-defined literal
  *                - add ANY_SIGNED
  *   Alois Zoitl  - migrated data type toString to std::string
+ *   Franz Höpfinger - add constexpr
  *******************************************************************************/
 
 #pragma once
@@ -37,6 +38,13 @@ namespace forte {
       DECLARE_FIRMWARE_DATATYPE(LINT)
 
     public:
+      TForteByte *getDataPtr() override {
+        return reinterpret_cast<TForteByte *>(&mData);
+      }
+
+      const TForteByte *getConstDataPtr() const override {
+        return reinterpret_cast<const TForteByte *>(&mData);
+      }
       using TValueType = TForteInt64;
       [[deprecated("Please use the corresponding numeric_limits template")]]
       constexpr static size_t scmBitLength = 64U;
@@ -46,56 +54,60 @@ namespace forte {
       [[deprecated("Please use the corresponding numeric_limits template")]]
       static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
-      CIEC_LINT() = default;
+      constexpr CIEC_LINT() = default;
 
-      CIEC_LINT(const CIEC_LINT &paValue) : CIEC_ANY_SIGNED() {
-        setValueSimple(paValue);
+      constexpr CIEC_LINT(const CIEC_LINT &paValue) : CIEC_ANY_SIGNED(), mData(paValue.mData) {
       }
 
-      CIEC_LINT(const CIEC_DINT &paValue) : CIEC_ANY_SIGNED() {
-        setValueSimple(paValue);
+      constexpr CIEC_LINT(const CIEC_DINT &paValue) :
+          CIEC_ANY_SIGNED(),
+          mData(static_cast<TValueType>(paValue.getSignedValue())) {
       }
 
-      CIEC_LINT(const CIEC_UDINT &paValue) : CIEC_ANY_SIGNED() {
-        setValueSimple(paValue);
+      constexpr CIEC_LINT(const CIEC_UDINT &paValue) :
+          CIEC_ANY_SIGNED(),
+          mData(static_cast<TValueType>(paValue.getSignedValue())) {
       }
 
-      CIEC_LINT(const CIEC_INT &paValue) : CIEC_ANY_SIGNED() {
-        setValueSimple(paValue);
+      constexpr CIEC_LINT(const CIEC_INT &paValue) :
+          CIEC_ANY_SIGNED(),
+          mData(static_cast<TValueType>(paValue.getSignedValue())) {
       }
 
-      CIEC_LINT(const CIEC_UINT &paValue) : CIEC_ANY_SIGNED() {
-        setValueSimple(paValue);
+      constexpr CIEC_LINT(const CIEC_UINT &paValue) :
+          CIEC_ANY_SIGNED(),
+          mData(static_cast<TValueType>(paValue.getSignedValue())) {
       }
 
-      CIEC_LINT(const CIEC_SINT &paValue) : CIEC_ANY_SIGNED() {
-        setValueSimple(paValue);
+      constexpr CIEC_LINT(const CIEC_SINT &paValue) :
+          CIEC_ANY_SIGNED(),
+          mData(static_cast<TValueType>(paValue.getSignedValue())) {
       }
 
-      CIEC_LINT(const CIEC_USINT &paValue) : CIEC_ANY_SIGNED() {
-        setValueSimple(paValue);
+      constexpr CIEC_LINT(const CIEC_USINT &paValue) :
+          CIEC_ANY_SIGNED(),
+          mData(static_cast<TValueType>(paValue.getSignedValue())) {
       }
 
-      explicit CIEC_LINT(const CIEC_ANY_INT &paValue) : CIEC_ANY_SIGNED() {
-        setValueSimple(paValue);
+      constexpr explicit CIEC_LINT(const CIEC_ANY_INT &paValue) :
+          CIEC_ANY_SIGNED(),
+          mData(static_cast<TValueType>(paValue.getSignedValue())) {
       }
 
-      explicit CIEC_LINT(const TValueType paValue) {
-        setTINT64(paValue);
+      constexpr explicit CIEC_LINT(const TValueType paValue) : mData(paValue) {
       }
 
       ~CIEC_LINT() override = default;
 
       CIEC_LINT &operator=(const CIEC_LINT &paValue) {
-        // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = paValue.mData;
         return *this;
       }
 
       template<typename T,
                std::enable_if_t<std::is_same_v<typename mpl::implicit_cast_t<T, CIEC_LINT>, CIEC_LINT>, int> = 0>
       CIEC_LINT &operator=(const T &paValue) {
-        setValueSimple(paValue);
+        mData = static_cast<TValueType>(static_cast<typename T::TValueType>(paValue));
         return *this;
       }
 
@@ -107,16 +119,19 @@ namespace forte {
        *
        *   Conversion operator for converting CIEC_LINT to elementary 64 bit integer
        */
-      explicit operator TForteInt64() const {
-        return getTINT64();
+      constexpr explicit operator TForteInt64() const {
+        return mData;
       }
 
       EDataTypeID getDataTypeID() const override {
         return e_LINT;
       }
+
+    protected:
+      TValueType mData = {};
   };
 
-  inline CIEC_LINT operator""_LINT(unsigned long long int paValue) {
+  constexpr inline CIEC_LINT operator""_LINT(unsigned long long int paValue) {
     return CIEC_LINT(static_cast<CIEC_LINT::TValueType>(paValue));
   }
 

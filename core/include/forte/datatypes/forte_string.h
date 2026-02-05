@@ -114,6 +114,14 @@ namespace forte {
       }
 
     public:
+      TForteByte *getDataPtr() override {
+        return reinterpret_cast<TForteByte *>(&mValue);
+      }
+
+      const TForteByte *getConstDataPtr() const override {
+        return reinterpret_cast<const TForteByte *>(&mValue);
+      }
+
       using storage_type = std::string;
       using value_type = CIEC_CHAR;
       using reference = value_type &;
@@ -124,7 +132,7 @@ namespace forte {
 
       CIEC_STRING() {};
 
-      CIEC_STRING(const CIEC_STRING &paValue) : CIEC_ANY_STRING(), mValue(paValue.getStorage()) {};
+      CIEC_STRING(const CIEC_STRING &paValue) : CIEC_ANY_STRING(), mValue(paValue.mValue) {};
 
       CIEC_STRING(const CIEC_CHAR &paValue) :
           mValue(1, static_cast<char>(static_cast<CIEC_CHAR::TValueType>(paValue))) {
@@ -142,7 +150,7 @@ namespace forte {
       ~CIEC_STRING() override = default;
 
       CIEC_STRING &operator=(const CIEC_STRING &paValue) {
-        mValue = paValue.getStorage();
+        mValue = paValue.mValue;
         return *this;
       };
 
@@ -219,30 +227,36 @@ namespace forte {
       }
 
       class PARTIAL_ACCESS_TYPE : public CIEC_CHAR {
-          using value_type = TValueType;
-          using pointer_type = TValueType *;
-
         public:
+          TForteByte *getDataPtr() override {
+            return reinterpret_cast<TForteByte *>(&mData);
+          }
+
+          const TForteByte *getConstDataPtr() const override {
+            return reinterpret_cast<const TForteByte *>(&mData);
+          }
+
           using CIEC_CHAR::operator=;
 
           PARTIAL_ACCESS_TYPE(CIEC_STRING &paOriginalString, const size_t paIndex) :
               mOriginalString(paOriginalString),
               mIndex(paIndex) {
             if (mOriginalString.length() >= paIndex && paIndex > 0) {
-              setChar(static_cast<TForteChar>(mOriginalString.getStorage()[paIndex - 1]));
+              mData = static_cast<TForteChar>(mOriginalString.getStorage()[paIndex - 1]);
             } else {
-              setChar('\0');
+              mData = '\0';
             }
           }
 
           virtual ~PARTIAL_ACCESS_TYPE() {
             if (mIndex > 0 && mIndex < mOriginalString.getMaximumLength()) {
-              const value_type value = operator value_type();
-              if (mOriginalString.length() < mIndex && value != '\0') {
+              const value_type value = *this;
+              if (mOriginalString.length() < mIndex && static_cast<TForteChar>(value) != '\0') {
                 mOriginalString.getStorageMutable().resize(mIndex);
-                mOriginalString.getStorageMutable()[mIndex - 1] = static_cast<char>(value);
-              } else if (mOriginalString.getStorage()[mIndex - 1] != value) {
-                mOriginalString.getStorageMutable()[mIndex - 1] = static_cast<char>(value);
+                mOriginalString.getStorageMutable()[mIndex - 1] = static_cast<char>(static_cast<TForteChar>(value));
+              } else if (static_cast<TForteChar>(mOriginalString.getStorage()[mIndex - 1]) !=
+                         static_cast<TForteChar>(value)) {
+                mOriginalString.getStorageMutable()[mIndex - 1] = static_cast<char>(static_cast<TForteChar>(value));
               }
             }
           }
@@ -250,10 +264,6 @@ namespace forte {
           PARTIAL_ACCESS_TYPE &operator=(const PARTIAL_ACCESS_TYPE &paValue) {
             CIEC_CHAR::operator=(paValue);
             return *this;
-          }
-
-          operator value_type() const {
-            return getChar8();
           }
 
         private:

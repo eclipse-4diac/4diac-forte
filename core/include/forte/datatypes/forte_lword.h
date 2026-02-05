@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2025 ACIN, Johannes Kepler University Linz,
+ * Copyright (c) 2010, 2026 ACIN, Johannes Kepler University Linz,
  *                          Primetals Technologies Austria GmbH,
- *                          Martin Erich Jobst
+ *                          HR Agrartechnik GmbH, Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -19,6 +19,7 @@
  *                  type operator=, added castable CIEC types operator=
  *   Martin Jobst - add user-defined literal
  *   Alois Zoitl  - migrated data type toString to std::string
+ *   Franz Höpfinger - add constexpr
  *******************************************************************************/
 
 #pragma once
@@ -42,6 +43,13 @@ namespace forte {
       DECLARE_FIRMWARE_DATATYPE(LWORD)
 
     public:
+      TForteByte *getDataPtr() override {
+        return reinterpret_cast<TForteByte *>(&mData);
+      }
+
+      const TForteByte *getConstDataPtr() const override {
+        return reinterpret_cast<const TForteByte *>(&mData);
+      }
       using TValueType = TForteLWord;
       [[deprecated("Please use the corresponding numeric_limits template")]]
       constexpr static size_t scmBitLength = 64U;
@@ -50,60 +58,61 @@ namespace forte {
       [[deprecated("Please use the corresponding numeric_limits template")]]
       static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
-      CIEC_LWORD() = default;
+      constexpr CIEC_LWORD() = default;
 
-      CIEC_LWORD(const CIEC_LWORD &paValue) : CIEC_ANY_BIT() {
-        setValueSimple(paValue);
+      constexpr CIEC_LWORD(const CIEC_LWORD &paValue) : CIEC_ANY_BIT(), mData(paValue.mData) {
+        mData = static_cast<TValueType>(static_cast<CIEC_LWORD::TValueType>(paValue));
       }
 
-      CIEC_LWORD(const CIEC_DWORD &paValue) : CIEC_ANY_BIT() {
-        setValueSimple(paValue);
+      constexpr CIEC_LWORD(const CIEC_DWORD &paValue) : CIEC_ANY_BIT() {
+        mData = static_cast<TValueType>(static_cast<CIEC_DWORD::TValueType>(paValue));
       }
 
-      CIEC_LWORD(const CIEC_WORD &paValue) : CIEC_ANY_BIT() {
-        setValueSimple(paValue);
+      constexpr CIEC_LWORD(const CIEC_WORD &paValue) :
+          CIEC_ANY_BIT(),
+          mData(static_cast<TValueType>(static_cast<TValueType>(paValue))) {
       }
 
-      CIEC_LWORD(const CIEC_BYTE &paValue) : CIEC_ANY_BIT() {
-        setValueSimple(paValue);
+      constexpr CIEC_LWORD(const CIEC_BYTE &paValue) :
+          CIEC_ANY_BIT(),
+          mData(static_cast<TValueType>(static_cast<TValueType>(paValue))) {
       }
 
-      CIEC_LWORD(const CIEC_BOOL &paValue) : CIEC_ANY_BIT() {
-        setValueSimple(paValue);
+      constexpr CIEC_LWORD(const CIEC_BOOL &paValue) :
+          CIEC_ANY_BIT(),
+          mData(static_cast<TValueType>(static_cast<TValueType>(paValue))) {
       }
 
-      explicit CIEC_LWORD(const TValueType paValue) {
-        setTUINT64(paValue);
+      constexpr explicit CIEC_LWORD(const TValueType paValue) : mData(paValue) {
       }
       ~CIEC_LWORD() override = default;
 
       CIEC_LWORD &operator=(const CIEC_LWORD &paValue) {
-        // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = paValue.mData;
         return *this;
       }
 
       CIEC_LWORD &operator=(const CIEC_DWORD &paValue) {
         // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = static_cast<TValueType>(static_cast<TValueType>(paValue));
         return *this;
       }
 
       CIEC_LWORD &operator=(const CIEC_WORD &paValue) {
         // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = static_cast<TValueType>(static_cast<TValueType>(paValue));
         return *this;
       }
 
       CIEC_LWORD &operator=(const CIEC_BYTE &paValue) {
         // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = static_cast<TValueType>(static_cast<TValueType>(paValue));
         return *this;
       }
 
       CIEC_LWORD &operator=(const CIEC_BOOL &paValue) {
         // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = static_cast<TValueType>(static_cast<TValueType>(paValue));
         return *this;
       }
 
@@ -111,8 +120,8 @@ namespace forte {
        *
        *   Conversion operator for converting CIEC_LWORD to elementary word
        */
-      operator TForteLWord() const {
-        return getTUINT64();
+      constexpr operator TForteLWord() const {
+        return mData;
       }
 
       EDataTypeID getDataTypeID() const override final {
@@ -151,9 +160,12 @@ namespace forte {
       T cpartial(const CIEC_ANY_INT &paIndex) const {
         return partial<T>(paIndex);
       }
+
+    protected:
+      TValueType mData = {};
   };
 
-  inline CIEC_LWORD operator""_LWORD(unsigned long long int paValue) {
+  constexpr inline CIEC_LWORD operator""_LWORD(unsigned long long int paValue) {
     return CIEC_LWORD(static_cast<CIEC_LWORD::TValueType>(paValue));
   }
 

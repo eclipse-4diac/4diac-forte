@@ -110,6 +110,17 @@ namespace forte {
       }
 
     protected:
+      TForteByte *mGenData = nullptr;
+
+      TForteByte *getGenData() {
+        return mGenData;
+      }
+      const TForteByte *getGenData() const {
+        return mGenData;
+      }
+      void setGenData(TForteByte *paGenData) {
+        mGenData = paGenData;
+      }
       static char smNullString[];
 
       /*! \brief Determines the source length of a potentially escaped string

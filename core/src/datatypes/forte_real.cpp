@@ -22,6 +22,7 @@
 #include <format>
 #include "forte/datatypes/forte_real.h"
 #include "forte/datatypes/forte_lreal.h"
+#include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_lint.h"
 #include "forte/datatypes/forte_ulint.h"
 #include "forte/datatypes/forte_string.h"
@@ -63,27 +64,9 @@ namespace forte {
   void CIEC_REAL::setValue(const CIEC_ANY &paValue) {
     EDataTypeID eID = paValue.getDataTypeID();
     switch (eID) {
-      case e_REAL: setValueSimple(paValue); break;
-      case e_LREAL:
-        setTFLOAT(
-            static_cast<TValueType>(static_cast<CIEC_LREAL::TValueType>(static_cast<const CIEC_LREAL &>(paValue))));
-        break;
       case e_STRING: (*this).fromString(((CIEC_STRING &) paValue).getStorage().c_str()); break;
       case e_WSTRING: (*this).fromString(((CIEC_WSTRING &) paValue).getValue()); break;
-      case e_SINT:
-      case e_INT:
-      case e_DINT:
-      case e_LINT:
-        setTFLOAT(static_cast<TValueType>(static_cast<CIEC_LINT::TValueType>(static_cast<const CIEC_LINT &>(paValue))));
-        break;
-      case e_BYTE:
-      case e_WORD:
-      case e_DWORD:
-      case e_LWORD: setValueSimple(paValue); break;
-      default: // UINT types
-        setTFLOAT(
-            static_cast<TValueType>(static_cast<CIEC_ULINT::TValueType>(static_cast<const CIEC_ULINT &>(paValue))));
-        break;
+      default: CIEC_ANY_ELEMENTARY::setValue(paValue); break;
     }
   }
 
@@ -91,6 +74,7 @@ namespace forte {
     switch (paDestValue.getDataTypeID()) {
       case e_REAL: static_cast<CIEC_REAL &>(paDestValue) = paSrcValue; break;
       case e_LREAL: static_cast<CIEC_LREAL &>(paDestValue) = paSrcValue; break;
+      case e_BOOL: paDestValue.setValue(CIEC_BOOL(std::llrint(static_cast<TValueType>(paSrcValue)) != 0)); break;
       case e_BYTE:
       case e_WORD:
       case e_DWORD:

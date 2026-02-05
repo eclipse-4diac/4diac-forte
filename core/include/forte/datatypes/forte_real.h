@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2025 Pr3factor GmbH, ACIN, fortiss GmbH
- *                          Primetals Technologies Austria GmbH
- *                          Martin Erich Jobst
+ * Copyright (c) 2005, 2026 Profactor GmbH, ACIN, fortiss GmbH
+ *                          Primetals Technologies Austria GmbH,
+ *                          HR Agrartechnik GmbH, Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -18,6 +18,7 @@
  *   Martin Jobst - add equals function
  *                - add user-defined literal
  *   Alois Zoitl  - migrated data type toString to std::string
+ *   Franz Höpfinger - add constexpr
  *******************************************************************************/
 
 #pragma once
@@ -36,6 +37,13 @@ namespace forte {
       DECLARE_FIRMWARE_DATATYPE(REAL)
 
     public:
+      TForteByte *getDataPtr() override {
+        return reinterpret_cast<TForteByte *>(&mData);
+      }
+
+      const TForteByte *getConstDataPtr() const override {
+        return reinterpret_cast<const TForteByte *>(&mData);
+      }
       using TValueType = TForteFloat;
       [[deprecated("Please use the corresponding numeric_limits template")]]
       constexpr static size_t scmBitLength = 32U;
@@ -44,10 +52,10 @@ namespace forte {
       [[deprecated("Please use the corresponding numeric_limits template")]]
       static constexpr TValueType scmMaxVal = std::numeric_limits<TValueType>::max();
 
-      CIEC_REAL() = default;
+      constexpr CIEC_REAL() = default;
 
-      CIEC_REAL(const CIEC_REAL &paValue) : CIEC_ANY_REAL() {
-        setValueSimple(paValue);
+      constexpr CIEC_REAL(const CIEC_REAL &paValue) : CIEC_ANY_REAL(), mData(paValue.mData) {
+        mData = static_cast<TValueType>(static_cast<CIEC_REAL::TValueType>(paValue));
       }
 
       CIEC_REAL(const CIEC_SINT &paValue) : CIEC_ANY_REAL() {
@@ -66,15 +74,13 @@ namespace forte {
         setValue(paValue);
       }
 
-      explicit CIEC_REAL(const TValueType paValue) {
-        setTFLOAT(paValue);
+      constexpr explicit CIEC_REAL(const TValueType paValue) : mData(paValue) {
       }
 
       ~CIEC_REAL() override = default;
 
       CIEC_REAL &operator=(const CIEC_REAL &paValue) {
-        // Simple value assignment - no self assignment check needed
-        setValueSimple(paValue);
+        mData = paValue.mData;
         return *this;
       }
 
@@ -106,8 +112,8 @@ namespace forte {
        *
        *   Conversion operator for converting CIEC_REAL to elementary 32 bit float
        */
-      operator TForteFloat() const {
-        return getTFLOAT();
+      constexpr operator TForteFloat() const {
+        return mData;
       }
 
       void setValue(const CIEC_ANY &paValue) override;
@@ -151,13 +157,16 @@ namespace forte {
        *  \param paDestValue Destination CIEC object of the cast
        */
       static void castRealData(const CIEC_REAL &paSrcValue, CIEC_ANY &paDestValue);
+
+    protected:
+      TValueType mData = {};
   };
 
-  inline CIEC_REAL operator""_REAL(unsigned long long int paValue) {
+  constexpr inline CIEC_REAL operator""_REAL(unsigned long long int paValue) {
     return CIEC_REAL(static_cast<CIEC_REAL::TValueType>(paValue));
   }
 
-  inline CIEC_REAL operator""_REAL(long double paValue) {
+  constexpr inline CIEC_REAL operator""_REAL(long double paValue) {
     return CIEC_REAL(static_cast<CIEC_REAL::TValueType>(paValue));
   }
 

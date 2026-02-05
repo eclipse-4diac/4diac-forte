@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2022 Primetals Technologies Austria GmbH
+ * Copyright (c) 2022, 2026 Primetals Technologies Austria GmbH
+ *                          HR Agrartechnik GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -10,6 +11,7 @@
  * Contributors:
  *    Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
+ *    Franz Höpfinger - add constexpr
  *******************************************************************************/
 
 #pragma once
@@ -114,7 +116,7 @@ namespace forte {
       }
 
     protected:
-      CIEC_ANY_DURATION() = default;
+      constexpr CIEC_ANY_DURATION() = default;
       void timeElementsToString(std::string &paTargetBuf, int64_t paTimeElement, const std::string &paUnit) const;
   };
 
