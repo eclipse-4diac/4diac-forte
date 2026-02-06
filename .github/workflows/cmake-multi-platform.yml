@@ -59,7 +59,9 @@ jobs:
 
       - name: Install libboost (Linux)
         if: ${{ matrix.os != 'windows-latest' }}
-        run: sudo apt-get install -y libboost-all-dev
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libboost-all-dev
 
       - name: Install boost (Windows)
         if: ${{ matrix.os == 'windows-latest' }}
