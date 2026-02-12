@@ -185,9 +185,7 @@ namespace forte {
        *  \return Returns TForteByte*
        */
 
-      virtual constexpr TLargestUIntValueType getLargestUInt() const {
-        return 0;
-      }
+      virtual constexpr TLargestUIntValueType getLargestUInt() const = 0;
       virtual constexpr void setLargestUInt(TLargestUIntValueType paVal) {
         (void) paVal;
       }
