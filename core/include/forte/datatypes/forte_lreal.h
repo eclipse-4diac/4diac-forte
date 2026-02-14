@@ -149,6 +149,10 @@ namespace forte {
 
       void setValue(const CIEC_ANY &paValue) override;
 
+      void setValue(const CIEC_REAL &paValue) override;
+
+      void setValue(const CIEC_LREAL &paValue) override;
+
       void reset() override {
         setTDFLOAT(0.0);
       }

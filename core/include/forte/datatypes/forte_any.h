@@ -40,8 +40,52 @@
  */
 
 namespace forte {
-  class CIEC_ANY_REAL;
+  class CIEC_ANY_ELEMENTARY;
+  class CIEC_ANY_MAGNITUDE;
+  class CIEC_ANY_NUM;
+  class CIEC_ANY_DURATION;
+
+  class CIEC_TIME;
+  class CIEC_TIME_OF_DAY;
+  class CIEC_DATE;
+  class CIEC_DATE_AND_TIME;
+
+  class CIEC_LTIME;
+  class CIEC_LTIME_OF_DAY;
+  class CIEC_LDATE;
+  class CIEC_LDATE_AND_TIME;
+
   class CIEC_ANY_BIT;
+  class CIEC_BOOL;
+  class CIEC_BYTE;
+  class CIEC_WORD;
+  class CIEC_DWORD;
+  class CIEC_LWORD;
+
+  class CIEC_ANY_UNSIGNED;
+  class CIEC_USINT;
+  class CIEC_UINT;
+  class CIEC_UDINT;
+  class CIEC_ULINT;
+
+  class CIEC_ANY_INT;
+  class CIEC_ANY_SIGNED;
+  class CIEC_SINT;
+  class CIEC_INT;
+  class CIEC_DINT;
+  class CIEC_LINT;
+
+  class CIEC_ANY_REAL;
+  class CIEC_REAL;
+  class CIEC_LREAL;
+
+  class CIEC_ANY_CHARS;
+  class CIEC_ANY_CHAR;
+  class CIEC_CHAR;
+  class CIEC_WCHAR;
+  class CIEC_ANY_STRING;
+  class CIEC_STRING;
+  class CIEC_WSTRING;
 
   class CIEC_ANY {
     public:
@@ -136,6 +180,11 @@ namespace forte {
       virtual void setValue(const CIEC_ANY &paValue) {
         setValueSimple(paValue);
       }
+
+      virtual void setValue(const CIEC_REAL &paValue) {
+      } // will be pure Virtual later.
+      virtual void setValue(const CIEC_LREAL &paValue) {
+      } // will be pure Virtual later.
 
       /*! \brief Reset the value for to the default initial value
        */

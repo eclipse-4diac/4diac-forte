@@ -63,11 +63,6 @@ namespace forte {
   void CIEC_REAL::setValue(const CIEC_ANY &paValue) {
     EDataTypeID eID = paValue.getDataTypeID();
     switch (eID) {
-      case e_REAL: setValueSimple(paValue); break;
-      case e_LREAL:
-        setTFLOAT(
-            static_cast<TValueType>(static_cast<CIEC_LREAL::TValueType>(static_cast<const CIEC_LREAL &>(paValue))));
-        break;
       case e_STRING: (*this).fromString(((CIEC_STRING &) paValue).getStorage().c_str()); break;
       case e_WSTRING: (*this).fromString(((CIEC_WSTRING &) paValue).getValue()); break;
       case e_SINT:
@@ -85,6 +80,14 @@ namespace forte {
             static_cast<TValueType>(static_cast<CIEC_ULINT::TValueType>(static_cast<const CIEC_ULINT &>(paValue))));
         break;
     }
+  }
+
+  void CIEC_REAL::setValue(const CIEC_REAL &paValue) {
+    setValueSimple(paValue);
+  }
+
+  void CIEC_REAL::setValue(const CIEC_LREAL &paValue) {
+    setTFLOAT(static_cast<TValueType>(static_cast<CIEC_LREAL::TValueType>(static_cast<const CIEC_LREAL &>(paValue))));
   }
 
   void CIEC_REAL::castRealData(const CIEC_REAL &paSrcValue, CIEC_ANY &paDestValue) {

@@ -12,11 +12,25 @@
  *      - initial implementation and rework communication infrastructure
  *******************************************************************************/
 #include "forte/datatypes/forte_lword.h"
+#include "forte/datatypes/forte_real.h"
+#include "forte/datatypes/forte_lreal.h"
 
 using namespace forte::literals;
 
 namespace forte {
   DEFINE_FIRMWARE_DATATYPE(LWORD, "LWORD"_STRID)
+
+  void CIEC_LWORD::setValue(const CIEC_ANY &paValue) {
+    setValueSimple(paValue);
+  }
+
+  void CIEC_LWORD::setValue(const CIEC_REAL &paValue) {
+    setValueSimple(paValue);
+  }
+
+  void CIEC_LWORD::setValue(const CIEC_LREAL &paValue) {
+    setValueSimple(paValue);
+  }
 
   const StringId CDataTypeTrait<CIEC_LWORD>::scmDataTypeName = "LWORD"_STRID;
 } // namespace forte
