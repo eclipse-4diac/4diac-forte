@@ -15,6 +15,7 @@
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte/datatypes/forte_wstring.h"
+#include "forte/datatypes/forte_string.h"
 
 #include "forte/util/devlog.h"
 
@@ -24,6 +25,18 @@ using namespace forte::literals;
 
 namespace forte {
   DEFINE_FIRMWARE_DATATYPE(WSTRING, "WSTRING"_STRID)
+
+  void CIEC_WSTRING::setValue(const CIEC_ANY &paValue) {
+    EDataTypeID eID = paValue.getDataTypeID();
+    if (eID == e_WSTRING) {
+      const CIEC_WSTRING &roSrc(static_cast<const CIEC_WSTRING &>(paValue));
+      this->assign(roSrc.getValue(), roSrc.length());
+    } else if (eID == e_STRING) {
+      this->fromCharString(static_cast<const CIEC_STRING &>(paValue).getStorage().c_str());
+    } else if (eID == e_WCHAR) {
+      *this = CIEC_WSTRING(static_cast<const CIEC_WCHAR &>(paValue));
+    }
+  }
 
   bool CIEC_WSTRING::fromUTF16(const TForteWChar *paBuffer, unsigned int paBufferLen) {
     return fromUTF16(reinterpret_cast<const TForteByte *>(paBuffer), 2 * paBufferLen);

@@ -59,6 +59,8 @@ namespace forte {
         return getChar8();
       }
 
+      void setValue(const CIEC_ANY &paValue) override;
+
       void toString(std::string &paTargetBuf) const override;
 
       int fromString(const char *paValue) override;

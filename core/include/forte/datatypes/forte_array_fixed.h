@@ -290,6 +290,10 @@ namespace forte {
         return data[0].getTypeNameID();
       }
 
+      void setValue(const CIEC_ANY &paValue) override {
+        CIEC_ARRAY::setValue(paValue);
+      }
+
       [[nodiscard]] int fromString(const char *paValue) override {
         int nRetVal = -1;
         const char *pcRunner = paValue;

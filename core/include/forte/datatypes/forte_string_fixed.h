@@ -97,6 +97,15 @@ namespace forte {
         return maxLength;
       }
 
+      void setValue(const CIEC_ANY &paValue) override {
+        EDataTypeID eID = paValue.getDataTypeID();
+        if (eID == e_STRING) {
+          *this = static_cast<const CIEC_STRING &>(paValue);
+        } else if (eID == e_CHAR) {
+          *this = static_cast<const CIEC_CHAR &>(paValue);
+        }
+      }
+
       void reserve(const TForteUInt16 paRequestedSize) override {
         if (paRequestedSize > maxLength) {
           DEVLOG_WARNING("Attempt to reserve %zu chars, which is more than the CIEC_STRING_FIXED<%zu> shall support!",

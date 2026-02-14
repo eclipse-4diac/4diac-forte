@@ -20,6 +20,9 @@
 #include <stdlib.h>
 #include <errno.h>
 #include "forte/datatypes/forte_lreal.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_any_bit.h"
+#include "forte/datatypes/forte_any_int.h"
 #include "forte/datatypes/forte_real.h"
 #include "forte/datatypes/forte_lint.h"
 #include "forte/datatypes/forte_ulint.h"
@@ -60,26 +63,28 @@ namespace forte {
   void CIEC_LREAL::setValue(const CIEC_ANY &paValue) {
     EDataTypeID eID = paValue.getDataTypeID();
     switch (eID) {
-      case e_LREAL: setValueSimple(paValue); break;
+      case e_LREAL: setTDFLOAT(static_cast<TForteDFloat>(static_cast<const CIEC_LREAL &>(paValue))); break;
       case e_REAL: setTDFLOAT(static_cast<TForteFloat>(static_cast<const CIEC_REAL &>(paValue))); break;
-      case e_STRING: (*this).fromString(reinterpret_cast<const CIEC_STRING &>(paValue).getStorage().c_str()); break;
-      case e_WSTRING: (*this).fromString(reinterpret_cast<const CIEC_WSTRING &>(paValue).getValue()); break;
+      case e_BOOL: setTDFLOAT(static_cast<const CIEC_BOOL &>(paValue) ? 1.0 : 0.0); break;
+      case e_BYTE:
+      case e_WORD:
+      case e_DWORD:
+      case e_LWORD: setLargestUInt(static_cast<const CIEC_ANY_BIT &>(paValue).getUnsignedValue()); break;
       case e_SINT:
       case e_INT:
       case e_DINT:
       case e_LINT:
-        setTDFLOAT(static_cast<TValueType>(static_cast<TForteInt64>(static_cast<const CIEC_LINT &>(paValue))));
+        setTDFLOAT(static_cast<TValueType>(static_cast<const CIEC_ANY_INT &>(paValue).getSignedValue()));
         break;
-      case e_BYTE:
-      case e_WORD:
-      case e_DWORD:
-      case e_LWORD:
-        // bit string will cast to the binary representation of the real value
-        setValueSimple(paValue);
+      case e_USINT:
+      case e_UINT:
+      case e_UDINT:
+      case e_ULINT:
+        setTDFLOAT(static_cast<TValueType>(static_cast<const CIEC_ANY_INT &>(paValue).getUnsignedValue()));
         break;
-      default: // UINT types
-        setTDFLOAT(static_cast<TValueType>(static_cast<TForteUInt64>(static_cast<const CIEC_ULINT &>(paValue))));
-        break;
+      case e_STRING: (*this).fromString(static_cast<const CIEC_STRING &>(paValue).getStorage().c_str()); break;
+      case e_WSTRING: (*this).fromString(static_cast<const CIEC_WSTRING &>(paValue).getValue()); break;
+      default: break;
     }
   }
 

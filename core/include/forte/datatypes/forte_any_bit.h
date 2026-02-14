@@ -32,6 +32,10 @@ namespace forte {
         setTUINT64(0);
       }
 
+      TLargestUIntValueType getUnsignedValue() const {
+        return getLargestUInt();
+      }
+
     protected:
       CIEC_ANY_BIT() = default;
   };

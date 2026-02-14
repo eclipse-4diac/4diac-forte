@@ -18,6 +18,11 @@
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte/datatypes/forte_ltime.h"
+#include "forte/datatypes/forte_any_bit.h"
+#include "forte/datatypes/forte_any_duration.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_wstring.h"
+#include <string_view>
 #include "forte/util/forte_constants.h"
 #include "forte/util/string_utils.h"
 
@@ -26,6 +31,17 @@ using namespace std::literals::string_literals;
 
 namespace forte {
   DEFINE_FIRMWARE_DATATYPE(LTIME, "LTIME"_STRID)
+
+  void CIEC_LTIME::setValue(const CIEC_ANY &paValue) {
+    EDataTypeID eID = paValue.getDataTypeID();
+    switch (eID) {
+      case e_TIME:
+      case e_LTIME: setLargestInt(static_cast<const CIEC_ANY_DURATION &>(paValue).getSignedValue()); break;
+      case e_STRING: (*this).fromString(static_cast<const CIEC_STRING &>(paValue).getStorage().c_str()); break;
+      case e_WSTRING: (*this).fromString(static_cast<const CIEC_WSTRING &>(paValue).getValue()); break;
+      default: break;
+    }
+  }
 
   int CIEC_LTIME::fromString(const char *paValue) {
     int nRetVal = -1;

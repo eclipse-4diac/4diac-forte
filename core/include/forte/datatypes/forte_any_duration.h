@@ -109,6 +109,10 @@ namespace forte {
         setLargestInt(0);
       }
 
+      TLargestIntValueType getSignedValue() const {
+        return getLargestInt();
+      }
+
       EDataTypeID getDataTypeID() const override {
         return e_ANY;
       }

@@ -15,6 +15,10 @@
  *   Martin Jobst - fix line feed and newline escape sequences
  *******************************************************************************/
 #include "forte/datatypes/forte_wchar.h"
+#include "forte/datatypes/forte_any_bit.h"
+#include "forte/datatypes/forte_any_int.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_wstring.h"
 #include <cstdint>
 #include <format>
 #include "forte/util/string_utils.h"
@@ -24,6 +28,29 @@ using namespace std::literals::string_literals;
 
 namespace forte {
   DEFINE_FIRMWARE_DATATYPE(WCHAR, "WCHAR"_STRID)
+
+  void CIEC_WCHAR::setValue(const CIEC_ANY &paValue) {
+    EDataTypeID eID = paValue.getDataTypeID();
+    switch (eID) {
+      case e_WCHAR: setChar16(static_cast<TValueType>(static_cast<const CIEC_WCHAR &>(paValue))); break;
+      case e_BOOL:
+      case e_BYTE:
+      case e_WORD:
+      case e_DWORD:
+      case e_LWORD: setChar16(static_cast<TValueType>(static_cast<const CIEC_ANY_BIT &>(paValue).getUnsignedValue())); break;
+      case e_SINT:
+      case e_INT:
+      case e_DINT:
+      case e_LINT: setChar16(static_cast<TValueType>(static_cast<const CIEC_ANY_INT &>(paValue).getSignedValue())); break;
+      case e_USINT:
+      case e_UINT:
+      case e_UDINT:
+      case e_ULINT: setChar16(static_cast<TValueType>(static_cast<const CIEC_ANY_INT &>(paValue).getUnsignedValue())); break;
+      case e_STRING: (*this).fromString(static_cast<const CIEC_STRING &>(paValue).getStorage().c_str()); break;
+      case e_WSTRING: (*this).fromString(static_cast<const CIEC_WSTRING &>(paValue).getValue()); break;
+      default: break;
+    }
+  }
 
   void CIEC_WCHAR::toString(std::string &paTargetBuf) const {
     const TForteWChar symbol = this->operator TForteWChar();

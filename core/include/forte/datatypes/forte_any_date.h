@@ -30,6 +30,10 @@ namespace forte {
         setTUINT64(0);
       }
 
+      TLargestUIntValueType getUnsignedValue() const {
+        return getLargestUInt();
+      }
+
       /*! Retrieve the current timezone
        *
        * Can be sed to adjust mktime()-related values

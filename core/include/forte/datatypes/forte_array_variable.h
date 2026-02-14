@@ -331,6 +331,10 @@ namespace forte {
         return data[0].getTypeNameID();
       }
 
+      void setValue(const CIEC_ANY &paValue) override {
+        CIEC_ARRAY::setValue(paValue);
+      }
+
       [[nodiscard]] int fromString(const char *) override {
         DEVLOG_ERROR("Parsing variable-size array from string is not supported\n");
         return -1; // not supported

@@ -133,8 +133,7 @@ namespace forte {
        *  The data type value is set through the copy assignment
        *
        */
-      virtual void setValue(const CIEC_ANY &paValue) {
-        setValueSimple(paValue);
+      virtual void setValue(const CIEC_ANY &) {
       }
 
       /*! \brief Reset the value for to the default initial value

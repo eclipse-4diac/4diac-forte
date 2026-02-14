@@ -553,6 +553,8 @@ namespace forte {
         return mElementDataTypeEntry != nullptr ? mElementDataTypeEntry->getTypeNameId() : StringId{};
       }
 
+      void setValue(const CIEC_ANY &paValue) override;
+
       [[nodiscard]] int fromString(const char *paValue) override;
 
       // This constructor is only to be used by the create instance method or GenFBs that correctly configure it with

@@ -19,6 +19,10 @@
 #include <string.h>
 #include <ctype.h>
 #include "forte/datatypes/forte_ldate_and_time.h"
+#include "forte/datatypes/forte_any_bit.h"
+#include "forte/datatypes/forte_any_date.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_wstring.h"
 #include "forte/arch/forte_architecture_time.h"
 #include "forte/util/string_utils.h"
 
@@ -26,6 +30,21 @@ using namespace forte::literals;
 
 namespace forte {
   DEFINE_FIRMWARE_DATATYPE(LDATE_AND_TIME, "LDATE_AND_TIME"_STRID)
+
+  void CIEC_LDATE_AND_TIME::setValue(const CIEC_ANY &paValue) {
+    EDataTypeID eID = paValue.getDataTypeID();
+    switch (eID) {
+      case e_DATE:
+      case e_TIME_OF_DAY:
+      case e_DATE_AND_TIME:
+      case e_LDATE:
+      case e_LTIME_OF_DAY:
+      case e_LDATE_AND_TIME: setTUINT64(static_cast<const CIEC_ANY_DATE &>(paValue).getUnsignedValue()); break;
+      case e_STRING: (*this).fromString(static_cast<const CIEC_STRING &>(paValue).getStorage().c_str()); break;
+      case e_WSTRING: (*this).fromString(static_cast<const CIEC_WSTRING &>(paValue).getValue()); break;
+      default: break;
+    }
+  }
 
   int CIEC_LDATE_AND_TIME::fromString(const char *paValue) {
     // 2007-12-21-15:00:00.000

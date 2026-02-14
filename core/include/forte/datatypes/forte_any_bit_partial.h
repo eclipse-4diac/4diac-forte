@@ -57,6 +57,10 @@ namespace forte {
         return *this;
       }
 
+      void setValue(const CIEC_ANY &paValue) override {
+        PartialType::setValue(paValue);
+      }
+
       ~CIEC_ANY_BIT_PARTIAL() override {
         if (mIndex <= scmMaxIndex) {
           constexpr SourceValueType maskTemplate = std::numeric_limits<PartialValueType>::max();

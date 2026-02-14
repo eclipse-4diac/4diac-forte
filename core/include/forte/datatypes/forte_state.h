@@ -62,6 +62,8 @@ namespace forte {
         return getTUINT16();
       }
 
+      void setValue(const CIEC_ANY &paValue) override;
+
       EDataTypeID getDataTypeID() const override {
         return e_UINT;
       }

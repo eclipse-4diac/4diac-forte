@@ -63,6 +63,10 @@ namespace forte {
     }
   }
 
+  void CIEC_ARRAY_DYNAMIC::setValue(const CIEC_ANY &paValue) {
+    CIEC_ARRAY::setValue(paValue);
+  }
+
   int CIEC_ARRAY_DYNAMIC::fromString(const char *paValue) {
     int nRetVal = -1;
     const char *pcRunner = paValue;

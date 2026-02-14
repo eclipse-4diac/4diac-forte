@@ -35,6 +35,14 @@ namespace forte {
         return e_ANY;
       }
 
+      TLargestUIntValueType getUnsignedValue() const {
+        return getLargestUInt();
+      }
+
+      TLargestIntValueType getSignedValue() const {
+        return getLargestInt();
+      }
+
       void toString(std::string &paTargetBuf) const override;
       int fromString(const char *paValue) override;
 

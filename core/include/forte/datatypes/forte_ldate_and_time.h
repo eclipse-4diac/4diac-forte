@@ -72,6 +72,8 @@ namespace forte {
         return e_LDATE_AND_TIME;
       }
 
+      void setValue(const CIEC_ANY &paValue) override;
+
       /*! \brief Converts string value to data type value
        *
        *   This command implements a conversion function from IEC 61131

@@ -18,12 +18,35 @@
 #include <string.h>
 #include <ctype.h>
 #include "forte/datatypes/forte_date.h"
+#include "forte/datatypes/forte_any_bit.h"
+#include "forte/datatypes/forte_any_date.h"
+#include "forte/datatypes/forte_string.h"
+#include "forte/datatypes/forte_wstring.h"
 #include <format>
+#include <stdlib.h>
+#include <math.h>
+#include <string.h>
+#include <ctype.h>
 
 using namespace forte::literals;
 
 namespace forte {
   DEFINE_FIRMWARE_DATATYPE(DATE, "DATE"_STRID)
+
+  void CIEC_DATE::setValue(const CIEC_ANY &paValue) {
+    EDataTypeID eID = paValue.getDataTypeID();
+    switch (eID) {
+      case e_DATE:
+      case e_TIME_OF_DAY:
+      case e_DATE_AND_TIME:
+      case e_LDATE:
+      case e_LTIME_OF_DAY:
+      case e_LDATE_AND_TIME: setTUINT64(static_cast<const CIEC_ANY_DATE &>(paValue).getUnsignedValue()); break;
+      case e_STRING: (*this).fromString(static_cast<const CIEC_STRING &>(paValue).getStorage().c_str()); break;
+      case e_WSTRING: (*this).fromString(static_cast<const CIEC_WSTRING &>(paValue).getValue()); break;
+      default: break;
+    }
+  }
 
   int CIEC_DATE::fromString(const char *paValue) {
     // 2007-12-21

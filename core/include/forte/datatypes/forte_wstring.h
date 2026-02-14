@@ -154,12 +154,7 @@ namespace forte {
         return e_WSTRING;
       }
 
-      void setValue(const CIEC_ANY &paValue) override {
-        if (paValue.getDataTypeID() == e_WSTRING) {
-          const CIEC_WSTRING &roSrc(static_cast<const CIEC_WSTRING &>(paValue));
-          this->assign(roSrc.getValue(), roSrc.length());
-        }
-      }
+      void setValue(const CIEC_ANY &paValue) override;
 
       /*! \brief Converts string value to data type value
        *
