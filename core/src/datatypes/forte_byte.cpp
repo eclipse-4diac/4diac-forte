@@ -32,17 +32,25 @@ namespace forte {
       case e_BYTE:
       case e_WORD:
       case e_DWORD:
-      case e_LWORD: setTUINT8(static_cast<TValueType>(static_cast<const CIEC_ANY_BIT &>(paValue).getUnsignedValue())); break;
+      case e_LWORD:
+        setTUINT8(static_cast<TValueType>(static_cast<const CIEC_ANY_BIT &>(paValue).getUnsignedValue()));
+        break;
       case e_SINT:
       case e_INT:
       case e_DINT:
-      case e_LINT: setTUINT8(static_cast<TValueType>(static_cast<const CIEC_ANY_INT &>(paValue).getSignedValue())); break;
+      case e_LINT:
+        setTUINT8(static_cast<TValueType>(static_cast<const CIEC_ANY_INT &>(paValue).getSignedValue()));
+        break;
       case e_USINT:
       case e_UINT:
       case e_UDINT:
-      case e_ULINT: setTUINT8(static_cast<TValueType>(static_cast<const CIEC_ANY_INT &>(paValue).getUnsignedValue())); break;
+      case e_ULINT:
+        setTUINT8(static_cast<TValueType>(static_cast<const CIEC_ANY_INT &>(paValue).getUnsignedValue()));
+        break;
       case e_REAL:
-      case e_LREAL: setTUINT8(static_cast<TValueType>(static_cast<const CIEC_ANY_ELEMENTARY &>(paValue).getUnsignedValue())); break;
+      case e_LREAL:
+        setTUINT8(static_cast<TValueType>(static_cast<const CIEC_ANY_ELEMENTARY &>(paValue).getUnsignedValue()));
+        break;
       case e_STRING: (*this).fromString(static_cast<const CIEC_STRING &>(paValue).getStorage().c_str()); break;
       case e_WSTRING: (*this).fromString(static_cast<const CIEC_WSTRING &>(paValue).getValue()); break;
       default: break;
