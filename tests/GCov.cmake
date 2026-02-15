@@ -38,12 +38,17 @@ IF(NOT GENHTML_PATH)
 ENDIF()
 
 FUNCTION(SETUP_GCOV targetName testRunner outputName)
+        IF("${testRunner}" STREQUAL "ctest")
+          SET(testArgs "--verbose")
+        ELSE()
+          SET(testArgs "--log_format=HRF" "--log_level=test_suite" "--report_level=no")
+        ENDIF()
 
         # Setup target
         ADD_CUSTOM_TARGET(${targetName}
                 COMMAND ${LCOV_PATH} --directory . --zerocounters
                 
-                COMMAND ${testRunner} --verbose --log_format=HRF --log_level=test_suite --report_level=no ${ARGV3}
+                COMMAND ${testRunner} ${testArgs} ${ARGV3}
                 
                 COMMAND ${LCOV_PATH} --directory . --capture --gcov-tool ${GCOV_PATH} --output-file ${outputName}.info --rc lcov_branch_coverage=1
                 COMMAND ${LCOV_PATH} --remove ${outputName}.info '*tests*' '/usr/*' '*boost*' --output-file ${outputName}.info.cleaned --rc lcov_branch_coverage=1
