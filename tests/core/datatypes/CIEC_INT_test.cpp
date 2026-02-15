@@ -19,6 +19,10 @@
 
 #include "forte/datatypes/forte_any_int.h"
 #include "forte/datatypes/forte_int.h"
+#include "forte/datatypes/forte_sint.h"
+#include "forte/datatypes/forte_usint.h"
+
+using namespace forte::literals;
 
 namespace forte::test {
   BOOST_AUTO_TEST_SUITE(CIEC_INT_function_test)
@@ -39,6 +43,9 @@ namespace forte::test {
 
     CIEC_INT test3 = -32768_INT;
     BOOST_TEST(static_cast<CIEC_INT::TValueType>(test3) == std::numeric_limits<CIEC_INT::TValueType>::min());
+
+    CIEC_INT test4 = 1234_INT;
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(test4) == 1234);
   }
 
   BOOST_AUTO_TEST_CASE(Assignment_test) {
@@ -250,5 +257,78 @@ namespace forte::test {
     // check invalid fromString string
     BOOST_CHECK_EQUAL(testVal.fromString("NOT A VALID STRING"), -1);
   }
+
+  BOOST_AUTO_TEST_CASE(Operator_test) {
+    CIEC_INT nTest1(100);
+    CIEC_INT nTest2(-100);
+
+    // Test unary minus
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(-nTest1), -100);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(-nTest2), 100);
+
+    // Test comparison (cast to primitive since FORTE types often don't have direct comparison operators)
+    BOOST_CHECK(static_cast<CIEC_INT::TValueType>(nTest1) > static_cast<CIEC_INT::TValueType>(nTest2));
+    BOOST_CHECK(static_cast<CIEC_INT::TValueType>(nTest2) < static_cast<CIEC_INT::TValueType>(nTest1));
+    BOOST_CHECK(static_cast<CIEC_INT::TValueType>(nTest1) >= static_cast<CIEC_INT::TValueType>(nTest2));
+    BOOST_CHECK(static_cast<CIEC_INT::TValueType>(nTest2) <= static_cast<CIEC_INT::TValueType>(nTest1));
+    BOOST_CHECK(static_cast<CIEC_INT::TValueType>(nTest1) != static_cast<CIEC_INT::TValueType>(nTest2));
+    BOOST_CHECK(static_cast<CIEC_INT::TValueType>(nTest1) == 100);
+
+    // Test with limits
+    CIEC_INT nMax(32767);
+    CIEC_INT nMin(-32768);
+    BOOST_CHECK(static_cast<CIEC_INT::TValueType>(nMax) > static_cast<CIEC_INT::TValueType>(nMin));
+    BOOST_CHECK(static_cast<CIEC_INT::TValueType>(nMin) < static_cast<CIEC_INT::TValueType>(nMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(Virtual_SetValue_test) {
+    CIEC_INT nTest;
+    CIEC_ANY &rAny = nTest;
+
+    CIEC_INT nSource(1234);
+    rAny.setValue(nSource);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), 1234);
+
+    CIEC_INT nAnotherSource(-4321);
+    rAny.setValue(nAnotherSource);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(nTest), -4321);
+  }
+
+  BOOST_AUTO_TEST_CASE(Infrastructure_test) {
+    CIEC_INT nTest(5678);
+
+    // getSizeof
+    BOOST_CHECK_EQUAL(nTest.getSizeof(), sizeof(CIEC_INT));
+
+    // getTypeNameID
+    BOOST_CHECK_EQUAL(nTest.getTypeNameID(), "INT"_STRID);
+
+    // clone without buffer
+    CIEC_ANY *pClone = nTest.clone(nullptr);
+    BOOST_CHECK_EQUAL(pClone->getDataTypeID(), CIEC_ANY::e_INT);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(pClone)), 5678);
+    delete pClone;
+
+    // clone with buffer
+    alignas(CIEC_INT) TForteByte buffer[sizeof(CIEC_INT)];
+    pClone = nTest.clone(buffer);
+    BOOST_CHECK(pClone == reinterpret_cast<CIEC_ANY *>(buffer));
+    BOOST_CHECK_EQUAL(pClone->getDataTypeID(), CIEC_ANY::e_INT);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_INT::TValueType>(*static_cast<CIEC_INT *>(pClone)), 5678);
+    // no delete for placement new on stack buffer, but destructor should be called if it was complex
+    static_cast<CIEC_INT *>(pClone)->~CIEC_INT();
+
+    // createDataType without buffer
+    CIEC_ANY *pNewDT = CIEC_INT::createDataType(nullptr);
+    BOOST_CHECK_EQUAL(pNewDT->getDataTypeID(), CIEC_ANY::e_INT);
+    delete pNewDT;
+
+    // createDataType with buffer
+    pNewDT = CIEC_INT::createDataType(buffer);
+    BOOST_CHECK(pNewDT == reinterpret_cast<CIEC_ANY *>(buffer));
+    BOOST_CHECK_EQUAL(pNewDT->getDataTypeID(), CIEC_ANY::e_INT);
+    static_cast<CIEC_INT *>(pNewDT)->~CIEC_INT();
+  }
+
   BOOST_AUTO_TEST_SUITE_END()
 } // namespace forte::test
