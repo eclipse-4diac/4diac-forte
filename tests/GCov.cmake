@@ -50,9 +50,9 @@ FUNCTION(SETUP_GCOV targetName testRunner outputName)
                 
                 COMMAND ${testRunner} ${testArgs} ${ARGV3}
                 
-                COMMAND ${LCOV_PATH} --directory . --capture --gcov-tool ${GCOV_PATH} --output-file ${outputName}.info --rc lcov_branch_coverage=1
-                COMMAND ${LCOV_PATH} --remove ${outputName}.info '*tests*' '/usr/*' '*boost*' --output-file ${outputName}.info.cleaned --rc lcov_branch_coverage=1
-                COMMAND ${GENHTML_PATH} -o ${outputName} ${outputName}.info.cleaned --demangle-cpp --rc lcov_branch_coverage=1
+                COMMAND ${LCOV_PATH} --directory . --capture --gcov-tool ${GCOV_PATH} --output-file ${outputName}.info --rc lcov_branch_coverage=1 --ignore-errors inconsistent,mismatch
+                COMMAND ${LCOV_PATH} --remove ${outputName}.info '*tests*' '/usr/*' --output-file ${outputName}.info.cleaned --rc lcov_branch_coverage=1 --ignore-errors inconsistent,mismatch
+                COMMAND ${GENHTML_PATH} -o ${outputName} ${outputName}.info.cleaned --demangle-cpp --rc lcov_branch_coverage=1 --ignore-errors inconsistent,mismatch
                 COMMAND ${CMAKE_COMMAND} -E remove ${outputName}.info ${outputName}.info.cleaned
                 
                 WORKING_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
