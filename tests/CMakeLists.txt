@@ -141,6 +141,8 @@ if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   if(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
       INCLUDE(GCov.cmake)    
       SETUP_GCOV(TestCoverage forte_test coverage)
+      target_compile_options(forte_test PRIVATE -g -O0 --coverage -fno-inline -fno-elide-constructors)
+      target_link_options(forte_test PRIVATE --coverage)
   endif() 
 endif()
 
