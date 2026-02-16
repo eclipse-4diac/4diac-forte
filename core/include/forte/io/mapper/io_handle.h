@@ -33,11 +33,11 @@ namespace forte::io {
       virtual ~IOHandle();
 
       bool hasObserver() const {
-        return !!mObserver;
+        return !mObservers.empty();
       }
 
       IOObserver *getObserver() {
-        return mObserver;
+        return mObservers.empty() ? nullptr : mObservers.front();
       }
 
       std::vector<IOObserver *> &getObservers() {
@@ -77,7 +77,6 @@ namespace forte::io {
 
     private:
       std::vector<IOObserver *> mObservers; // We now support multiple observers on inputs.
-      IOObserver *mObserver; // The first or only observer for faster checking.
   };
 
 } // namespace forte::io
