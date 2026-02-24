@@ -108,7 +108,7 @@ namespace forte::com_infra::opc_ua {
 
       EComResponse initOPCUAType(UA_Server *paServer, const std::string &paTypeName);
 
-      EComResponse createOPCUAObject(UA_Server *paServer, const std::string &paPathToInstance, bool paIsPublisher);
+      EComResponse createOPCUAObject(UA_Server *paServer, const std::string &paPathToInstance);
 
       UA_StatusCode
       createOPCUAObjectNode(UA_Server *paServer, const std::string &paPathToInstance, std::string &paBrowsePath);
@@ -118,8 +118,6 @@ namespace forte::com_infra::opc_ua {
       UA_StatusCode initializeMapping();
 
       UA_BrowseResult browseNode(UA_NodeId &paNodeId);
-
-      bool isFullyInitialized(const std::string &paTypeName);
 
       bool checkDataPorts();
 
@@ -147,8 +145,6 @@ namespace forte::com_infra::opc_ua {
       void addNewNodeId(UA_NodeId *paNodeIdToAdd);
 
       bool isOPCUAObjectPresent(std::string &paBrowsePath, UA_NodeId *paNewNodeId);
-
-      const SFBInterfaceSpec &getParentInterfaceSpec();
 
       char *getNameFromString(const std::string &paName);
 

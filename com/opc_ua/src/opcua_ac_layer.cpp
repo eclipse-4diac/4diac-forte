@@ -102,7 +102,7 @@ namespace forte::com_infra::opc_ua {
       return eRetVal;
     }
     std::string instancePath(parser[PathToInstance] ? parser[PathToInstance] : smEmptyString);
-    eRetVal = createOPCUAObject(server, instancePath, isPublisher);
+    eRetVal = createOPCUAObject(server, instancePath);
     if (eRetVal == e_InitOk) {
       initializeRDBuffer();
     }
@@ -246,8 +246,7 @@ namespace forte::com_infra::opc_ua {
     return eRetVal;
   }
 
-  EComResponse
-  COPC_UA_AC_Layer::createOPCUAObject(UA_Server *paServer, const std::string &paPathToInstance, bool paIsPublisher) {
+  EComResponse COPC_UA_AC_Layer::createOPCUAObject(UA_Server *paServer, const std::string &paPathToInstance) {
     std::string objectBrowsePath;
     if (createOPCUAObjectNode(paServer, paPathToInstance, objectBrowsePath) != UA_STATUSCODE_GOOD) {
       return e_InitTerminated;
@@ -255,27 +254,16 @@ namespace forte::com_infra::opc_ua {
     std::string conditionBrowsePath =
         COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(objectBrowsePath, scmAlarmConditionName);
     if (isOPCUAObjectPresent(conditionBrowsePath, &mConditionInstanceId)) {
-      if (paIsPublisher) {
-        if (initializeMapping() != UA_STATUSCODE_GOOD) {
-          return e_InitTerminated;
-        }
-        if (initializeMemberActions(conditionBrowsePath) != e_InitOk) {
-          return e_InitTerminated;
-        }
-      }
       return e_InitOk;
     }
-
     if (addOPCUACondition(paServer, conditionBrowsePath) != UA_STATUSCODE_GOOD) {
       return e_InitTerminated;
     }
-    if (paIsPublisher) {
-      if (initializeMapping() != UA_STATUSCODE_GOOD) {
-        return e_InitTerminated;
-      }
-      if (initializeMemberActions(conditionBrowsePath) != e_InitOk) {
-        return e_InitTerminated;
-      }
+    if (initializeMapping() != UA_STATUSCODE_GOOD) {
+      return e_InitTerminated;
+    }
+    if (initializeMemberActions(conditionBrowsePath) != e_InitOk) {
+      return e_InitTerminated;
     }
     return setConditionCallbacks(paServer);
   }
@@ -287,7 +275,7 @@ namespace forte::com_infra::opc_ua {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Browsepath is invalid!");
       return UA_STATUSCODE_BAD;
     }
-    std::string instanceNameStr{getCommFB()->getParent().getInstanceName()};
+    std::string instanceNameStr{getCommFB()->getInstanceName()};
     if (instanceNameStr.empty()) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Retrieving FB Instance Name failed!");
       return UA_STATUSCODE_BAD;
@@ -415,23 +403,6 @@ namespace forte::com_infra::opc_ua {
     return true;
   }
 
-  bool COPC_UA_AC_Layer::isFullyInitialized(const std::string &paTypeName) {
-    bool retVal = false;
-    UA_BrowseResult result = browseNode(mTypeNodeId);
-    std::string variableName{getParentInterfaceSpec().mDINames[smFirstDataIndex].data()};
-    std::string memberBrowsePath{COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(paTypeName, variableName)};
-    for (size_t i = 0; i < result.referencesSize; i++) {
-      UA_ReferenceDescription *ref = &result.references[i];
-      std::string browseName((const char *) ref->browseName.name.data, ref->browseName.name.length);
-      if (browseName == memberBrowsePath) {
-        retVal = true;
-        break;
-      }
-    }
-    UA_BrowseResult_clear(&result);
-    return retVal;
-  }
-
   bool COPC_UA_AC_Layer::checkDataPorts() {
     bool retVal = true;
     if (!checkFirstDataInputType()) {
@@ -475,7 +446,7 @@ namespace forte::com_infra::opc_ua {
     mMemberActionInfo.reset(
         new CAlarmActionInfo(*this, CActionInfo::UA_ActionType::eWrite, std::string(), smFirstDataIndex));
     size_t numPorts = getCommFB()->getNumSD();
-    const std::span<const StringId> dataPortNameIds = getParentInterfaceSpec().mDINames;
+    const std::span<const StringId> dataPortNameIds = getCommFB()->getFBInterfaceSpec().mDINames;
     for (size_t i = smFirstDataIndex; i < numPorts; i++) {
       std::string dataPortName{dataPortNameIds[i].data()};
       auto propertyKeyIt = sm1499ToUAMap.find(dataPortName);
@@ -495,11 +466,11 @@ namespace forte::com_infra::opc_ua {
       }
     }
     if (!mHasSeverityProperty) {
-      DEVLOG_INFO("[OPC UA A&C LAYER]: No Data Port \"%s\" defined for FB %s. Using default value instead.", smSeverity,
-                  getCommFB()->getInstanceName());
+      DEVLOG_INFO("[OPC UA A&C LAYER]: No Data Port \"%s\" defined for FB %s. Using default value instead.\n",
+                  smSeverity, getCommFB()->getInstanceName());
     }
     if (mMessageTextPortIndex == -1) {
-      DEVLOG_INFO("[OPC UA A&C LAYER]: No Data Port \"%s\" defined for FB %s. Using default value instead.",
+      DEVLOG_INFO("[OPC UA A&C LAYER]: No Data Port \"%s\" defined for FB %s. Using default value instead.\n",
                   smMessageText, getCommFB()->getInstanceName());
     }
     if (mHandler->initializeAction(*mMemberActionInfo) != UA_STATUSCODE_GOOD) {
@@ -612,11 +583,6 @@ namespace forte::com_infra::opc_ua {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Failed to get LocalHandler because LocalHandler is null!\n");
     }
     return false;
-  }
-
-  const SFBInterfaceSpec &COPC_UA_AC_Layer::getParentInterfaceSpec() {
-    CFunctionBlock &parent = static_cast<CFunctionBlock &>(getCommFB()->getParent());
-    return parent.getFBInterfaceSpec();
   }
 
   char *COPC_UA_AC_Layer::getNameFromString(const std::string &paName) {
