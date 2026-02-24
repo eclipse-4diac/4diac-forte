@@ -106,7 +106,7 @@ namespace forte::com_infra::opc_ua {
                                                       void *dataValue,
                                                       UA_DataType *paDataType);
 
-      EComResponse initOPCUAType(UA_Server *paServer, const std::string &paTypeName, bool paIsPublisher);
+      EComResponse initOPCUAType(UA_Server *paServer, const std::string &paTypeName);
 
       EComResponse createOPCUAObject(UA_Server *paServer, const std::string &paPathToInstance, bool paIsPublisher);
 
@@ -121,9 +121,11 @@ namespace forte::com_infra::opc_ua {
 
       bool isFullyInitialized(const std::string &paTypeName);
 
+      bool checkDataPorts();
+
       bool checkFBOutputNames();
 
-      bool checkFirstDataPinType();
+      bool checkFirstDataInputType();
 
       bool getTriggerValue();
 

@@ -88,25 +88,16 @@ namespace forte::com_infra::opc_ua {
                    getCommFB()->getInstanceName(), scmNumberOfAlarmParameters, nrOfParams);
       return eRetVal;
     }
-    bool isPublisher;
-    switch (mFb->getComServiceType()) {
-      case e_Publisher: isPublisher = true; break;
-      case e_Subscriber: isPublisher = false; break;
-      default:
-        DEVLOG_ERROR("[OPC UA A&C LAYER]: Wrong CommFB used for FB %s! Expected: Publish/Subscribe\n",
-                     getCommFB()->getInstanceName());
-        return eRetVal;
-    }
-    if (!checkFirstDataPinType()) {
-      DEVLOG_ERROR("[OPC UA A&C Layer]: First Input of FB %s must be of type BOOL!\n",
-                   getCommFB()->getParent().getInstanceName());
+    if (!checkDataPorts()) {
+      DEVLOG_ERROR("[OPC UA A&C Layer]: FB %s does not match specification needed for using OPC UA A&C!\n",
+                   getCommFB()->getInstanceName());
       return eRetVal;
     }
     mHandler = static_cast<COPC_UA_HandlerAbstract *>(&getExtEvHandler<COPC_UA_Local_Handler>());
     COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(mHandler);
     localHandler->enableHandler();
     UA_Server *server = localHandler->getUAServer();
-    if (initOPCUAType(server, parser[TypeName], isPublisher) != e_InitOk) {
+    if (initOPCUAType(server, parser[TypeName]) != e_InitOk) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Initializing Alarm Type for FB %s failed!\n", getCommFB()->getInstanceName());
       return eRetVal;
     }
@@ -242,20 +233,14 @@ namespace forte::com_infra::opc_ua {
                                                        UA_QUALIFIEDNAME(0, smId));
   }
 
-  EComResponse COPC_UA_AC_Layer::initOPCUAType(UA_Server *paServer, const std::string &paTypeName, bool paIsPublisher) {
-    if (!paIsPublisher && !checkFBOutputNames()) {
-      return e_InitTerminated;
-    }
+  EComResponse COPC_UA_AC_Layer::initOPCUAType(UA_Server *paServer, const std::string &paTypeName) {
     std::string browsePath(COPC_UA_ObjectStruct_Helper::getBrowsePath(scmAlarmTypeBrowsePath, paTypeName,
                                                                       1)); // TODO Change 1 to namespaceIndex
     if (isOPCUAObjectPresent(browsePath, &mTypeNodeId)) {
-      if (paIsPublisher && !isFullyInitialized(paTypeName)) {
-        return addOPCUATypeProperties(paServer, paTypeName);
-      }
       return e_InitOk;
     }
     EComResponse eRetVal = createAlarmType(paServer, paTypeName);
-    if (eRetVal == e_InitOk && paIsPublisher) {
+    if (eRetVal == e_InitOk) {
       eRetVal = addOPCUATypeProperties(paServer, paTypeName);
     }
     return eRetVal;
@@ -356,9 +341,9 @@ namespace forte::com_infra::opc_ua {
     char *conditionName = getNameFromString(scmAlarmConditionName);
     char *conditionBrowsePath = getNameFromString(paBrowsePath);
     mConditionInstanceId = UA_NODEID_STRING(1, conditionBrowsePath); // TODO Change 1 to namespaceIndex
-    UA_StatusCode status = UA_Server_createConditionWithContext(
+    UA_StatusCode status = UA_Server_createCondition(
         paServer, mConditionInstanceId, mTypeNodeId, UA_QUALIFIEDNAME(1, conditionName), mConditionSourceId,
-        UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT), this, &mConditionInstanceId);
+        UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT), &mConditionInstanceId);
     if (status != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Adding Condition failed for FB %s. StatusCode %s\n",
                    getCommFB()->getInstanceName(), UA_StatusCode_name(status));
@@ -412,7 +397,7 @@ namespace forte::com_infra::opc_ua {
   }
 
   bool COPC_UA_AC_Layer::checkFBOutputNames() {
-    const SFBInterfaceSpec &interfaceSpec = getParentInterfaceSpec();
+    const SFBInterfaceSpec &interfaceSpec = getCommFB()->getFBInterfaceSpec();
     std::span<const StringId> portNameIds = interfaceSpec.mDONames;
     size_t foundProperties = 0;
     for (TPortId portId = 0; portId < interfaceSpec.getNumDOs(); portId++) {
@@ -423,7 +408,7 @@ namespace forte::com_infra::opc_ua {
       }
     }
     if (foundProperties != mFBOutputMap.size()) {
-      DEVLOG_ERROR("[OPC UA A&C LAYER]: Missing FB Output Ports %s / %s! Expected: %d, Actual: %d\n", smActive, smAcked,
+      DEVLOG_ERROR("[OPC UA A&C LAYER]: Missing FB Output Ports %s / %s! Expected: %d, Found: %d\n", smActive, smAcked,
                    mFBOutputMap.size(), foundProperties);
       return false;
     }
@@ -447,9 +432,20 @@ namespace forte::com_infra::opc_ua {
     return retVal;
   }
 
-  bool COPC_UA_AC_Layer::checkFirstDataPinType() {
-    CFunctionBlock &parent = static_cast<CFunctionBlock &>(getCommFB()->getParent());
-    return parent.getDI(0)->getDataTypeID() == CIEC_ANY::e_BOOL;
+  bool COPC_UA_AC_Layer::checkDataPorts() {
+    bool retVal = true;
+    if (!checkFirstDataInputType()) {
+      retVal = false;
+      DEVLOG_ERROR("[OPC UA A&C Layer]: First Input of FB %s must be of type BOOL!\n", getCommFB()->getInstanceName());
+    }
+    if (!checkFBOutputNames()) {
+      retVal = false;
+    }
+    return retVal;
+  }
+
+  bool COPC_UA_AC_Layer::checkFirstDataInputType() {
+    return getCommFB()->getNumSD() > 0 && getCommFB()->getSDs()[0]->unwrap().getDataTypeID() == CIEC_ANY::e_BOOL;
   }
 
   bool COPC_UA_AC_Layer::getTriggerValue() {
@@ -542,7 +538,7 @@ namespace forte::com_infra::opc_ua {
   EComResponse COPC_UA_AC_Layer::addOPCUATypeProperties(UA_Server *paServer, const std::string &paTypeName) {
     CIEC_ANY **apoDataPorts = getCommFB()->getSDs();
     size_t numDataPorts = getCommFB()->getNumSD();
-    const std::span<const StringId> dataPortNameIds = getParentInterfaceSpec().mDINames;
+    const std::span<const StringId> dataPortNameIds = getCommFB()->getFBInterfaceSpec().mDINames;
     for (size_t i = smFirstDataIndex; i < numDataPorts; i++) {
       std::string dataPortName{dataPortNameIds[i].data()};
       char *propertyName = getNameFromString(dataPortName);
