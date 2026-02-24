@@ -66,10 +66,8 @@ namespace forte::com_infra::opc_ua {
       bool mHasSeverityProperty = false;
       int mMessageTextPortIndex = -1;
       std::unordered_map<std::string, UA_NodeId> mUAPropertyMap = {
-          {"ClientUserId", UA_NODEID_NULL},
-          {"ConditionName", UA_NODEID_NULL},
-          {"SourceName", UA_NODEID_NULL},
-          {"Severity", UA_NODEID_NULL},
+          {"ClientUserId", UA_NODEID_NULL}, {"ConditionName", UA_NODEID_NULL}, {"SourceName", UA_NODEID_NULL},
+          {"Severity", UA_NODEID_NULL},     {"ActiveState", UA_NODEID_NULL},   {"AckedState", UA_NODEID_NULL},
       };
 
       std::unordered_map<std::string, TPortId> mFBOutputMap = {
@@ -93,7 +91,7 @@ namespace forte::com_infra::opc_ua {
 
       void initializeRDBuffer();
 
-      UA_StatusCode triggerAlarm(bool paActivate);
+      UA_StatusCode triggerAlarm(UA_Server *paServer, bool paActivate);
 
       UA_StatusCode resetAckedState(UA_Server *paServer);
 
@@ -118,6 +116,10 @@ namespace forte::com_infra::opc_ua {
       UA_StatusCode initializeMapping();
 
       UA_BrowseResult browseNode(UA_NodeId &paNodeId);
+
+      UA_NodeId browseTwoStateVariable(UA_NodeId &paTwoStateNodeId);
+
+      void readAlarmStateValues(UA_Server *paServer);
 
       bool checkDataPorts();
 
