@@ -42,11 +42,11 @@ namespace forte {
           return mCommServiceType;
         }
 
-        TPortId getNumSD() const {
+        virtual TPortId getNumSD() const {
           return getFBInterfaceSpec().getNumDIs() - 2;
         }
 
-        TPortId getNumRD() const {
+        virtual TPortId getNumRD() const {
           return getFBInterfaceSpec().getNumDOs() - 2;
         }
 
