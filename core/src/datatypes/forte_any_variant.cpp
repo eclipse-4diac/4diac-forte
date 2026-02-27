@@ -13,8 +13,109 @@
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
 #include "forte/datatypes/forte_any_variant.h"
+#include "forte/datatypes/forte_array_dynamic.h"
+
+#include <charconv>
+#include <cctype>
+#include <cstring>
+#include <memory>
+#include <string_view>
 
 using namespace forte::literals;
+
+namespace {
+  const char *skipWhitespace(const char *paPos, const char *paEnd) {
+    while (paPos < paEnd && std::isspace(static_cast<unsigned char>(*paPos))) {
+      ++paPos;
+    }
+    return paPos;
+  }
+
+  bool parseKeyword(const char *&paPos, const char *paEnd, std::string_view paKeyword) {
+    paPos = skipWhitespace(paPos, paEnd);
+    for (char keywordChar : paKeyword) {
+      if (paPos == paEnd || std::toupper(static_cast<unsigned char>(*paPos)) != keywordChar) {
+        return false;
+      }
+      ++paPos;
+    }
+    return true;
+  }
+
+  bool parseSignedInteger(const char *&paPos, const char *paEnd, intmax_t &paValue) {
+    paPos = skipWhitespace(paPos, paEnd);
+    const char *begin = paPos;
+    if (paPos < paEnd && ('+' == *paPos || '-' == *paPos)) {
+      ++paPos;
+    }
+    if (paPos == paEnd || !std::isdigit(static_cast<unsigned char>(*paPos))) {
+      return false;
+    }
+    while (paPos < paEnd && std::isdigit(static_cast<unsigned char>(*paPos))) {
+      ++paPos;
+    }
+    auto [parsedUntil, error] = std::from_chars(begin, paPos, paValue);
+    return error == std::errc{} && parsedUntil == paPos;
+  }
+
+  bool parseInlineArrayType(const char *paBegin,
+                            const char *paEnd,
+                            intmax_t &paLowerBound,
+                            intmax_t &paUpperBound,
+                            forte::StringId &paElementTypeNameId) {
+    const char *runner = paBegin;
+    if (!parseKeyword(runner, paEnd, "ARRAY")) {
+      return false;
+    }
+    runner = skipWhitespace(runner, paEnd);
+    if (runner == paEnd || '[' != *runner) {
+      return false;
+    }
+    ++runner;
+
+    if (!parseSignedInteger(runner, paEnd, paLowerBound)) {
+      return false;
+    }
+
+    runner = skipWhitespace(runner, paEnd);
+    if ((paEnd - runner) < 2 || runner[0] != '.' || runner[1] != '.') {
+      return false;
+    }
+    runner += 2;
+
+    if (!parseSignedInteger(runner, paEnd, paUpperBound)) {
+      return false;
+    }
+
+    runner = skipWhitespace(runner, paEnd);
+    if (runner == paEnd || ']' != *runner) {
+      return false;
+    }
+    ++runner;
+
+    if (!parseKeyword(runner, paEnd, "OF")) {
+      return false;
+    }
+
+    runner = skipWhitespace(runner, paEnd);
+    if (runner == paEnd || paLowerBound > paUpperBound) {
+      return false;
+    }
+
+    const char *elementTypeBegin = runner;
+    const char *elementTypeEnd = paEnd;
+    while (elementTypeEnd > elementTypeBegin && std::isspace(static_cast<unsigned char>(*(elementTypeEnd - 1)))) {
+      --elementTypeEnd;
+    }
+    if (elementTypeBegin == elementTypeEnd) {
+      return false;
+    }
+
+    paElementTypeNameId =
+        forte::StringId::lookup({elementTypeBegin, static_cast<size_t>(elementTypeEnd - elementTypeBegin)});
+    return true;
+  }
+} // namespace
 
 namespace forte {
   DEFINE_FIRMWARE_DATATYPE(ANY_VARIANT, "ANY"_STRID)
@@ -148,6 +249,23 @@ namespace forte {
             case e_ARRAY: operator=(CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>(static_cast<CIEC_ARRAY *>(value))); break;
             case e_STRUCT: operator=(CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>(static_cast<CIEC_STRUCT *>(value))); break;
             default: setValue(*value); delete value;
+          }
+        } else {
+          intmax_t lowerBound;
+          intmax_t upperBound;
+          StringId elementTypeNameId;
+          if (parseInlineArrayType(paValue, hashPos, lowerBound, upperBound, elementTypeNameId)) {
+            auto arrayValue = std::make_unique<CIEC_ARRAY_DYNAMIC>();
+            arrayValue->setup(lowerBound, upperBound, elementTypeNameId);
+            if (arrayValue->getElementDataTypeID() == e_ANY) {
+              return -1;
+            }
+            retVal = arrayValue->fromString(hashPos + 1); // start after '#'
+            if (retVal < 0) {
+              return retVal;
+            }
+            retVal += static_cast<int>(hashPos - paValue + 1); // add count for type including '#'
+            operator=(CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>(arrayValue.release()));
           }
         }
       }
