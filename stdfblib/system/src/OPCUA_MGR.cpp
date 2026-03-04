@@ -12,6 +12,9 @@
  *******************************************************************************/
 
 #include "OPCUA_MGR.h"
+
+#include <open62541/server.h>
+
 #include "forte/device.h"
 #include "forte/stringid.h"
 

@@ -13,9 +13,10 @@
 
 #pragma once
 
-#include <open62541.h>
 #include <string>
 #include <vector>
+
+#include <open62541/types.h>
 
 namespace forte::iec61499::system {
   class MultiDevice;

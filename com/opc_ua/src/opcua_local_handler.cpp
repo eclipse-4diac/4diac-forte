@@ -22,16 +22,19 @@
  *******************************************************************************/
 
 #include "opcua_defaults.h"
-#include "forte/devexec.h"
+#include "opcua_local_handler.h"
+
+#include <open62541/server.h>
+
 #include "forte/iec61131_functions.h"
 #include "forte/cominfra/basecommfb.h"
 #include "forte/util/parameterParser.h"
 #include "forte/util/string_utils.h"
 #include "forte/util/mainparam_utils.h"
 #include "forte/arch/forte_printer.h"
-#include "opcua_local_handler.h"
 
 #include "forte/com/opc_ua/opcua_nodesets.h"
+
 #include "struct_action_info.h"
 #ifdef FORTE_COM_OPC_UA_MULTICAST
 #include "detail/lds_me_handler.h"

@@ -13,16 +13,20 @@
 
 #include "opcua_objectstruct_helper.h"
 
-using namespace forte::literals;
+#include <sstream>
+
+#include <open62541/server.h>
+
+#include "forte/cominfra/basecommfb.h"
+#include "forte/util/parameterParser.h"
+#include "forte/util/string_utils.h"
 
 #include "opcua_layer.h"
+#include "opcua_local_handler.h"
 #include "struct_member_action_info.h"
 #include "struct_action_info.h"
-#include "forte/cominfra/basecommfb.h"
-#include "opcua_local_handler.h"
-#include "forte/util/parameterParser.h"
-#include <sstream>
-#include "forte/util/string_utils.h"
+
+using namespace forte::literals;
 
 namespace forte::com_infra::opc_ua {
   namespace {

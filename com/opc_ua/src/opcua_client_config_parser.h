@@ -13,9 +13,11 @@
 
 #pragma once
 
-#include "forte/datatypes/forte_string.h"
-#include "open62541.h"
 #include <string>
+
+#include <open62541/client.h>
+
+#include "forte/datatypes/forte_string.h"
 
 namespace forte::com_infra::opc_ua {
   /**

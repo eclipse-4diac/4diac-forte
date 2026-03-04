@@ -12,16 +12,20 @@
  *******************************************************************************/
 
 #include "opcua_ac_layer.h"
+
+#include <memory>
+
+#include <open62541/server.h>
+
 #include "forte/util/parameterParser.h"
 #include "forte/cominfra/basecommfb.h"
-#include "opcua_local_handler.h"
-#include "opcua_objectstruct_helper.h"
-#include "alarm_action_info.h"
 #include "forte/cominfra/comlayersmanager.h"
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
 
-#include <memory>
+#include "alarm_action_info.h"
+#include "opcua_local_handler.h"
+#include "opcua_objectstruct_helper.h"
 
 using namespace forte::literals;
 

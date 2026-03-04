@@ -14,6 +14,9 @@
  *******************************************************************************/
 
 #include "opcua_helper.h"
+
+#include <open62541/client.h>
+
 #include "forte/util/parameterParser.h"
 #include "forte/util/devlog.h"
 #include "forte/iec61131_functions/func_WSTRING_TO_STRING.h"

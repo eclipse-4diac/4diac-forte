@@ -12,10 +12,14 @@
  *******************************************************************************/
 
 #include "opcua_event_layer.h"
+
+#include <open62541/server.h>
+
 #include "forte/util/parameterParser.h"
 #include "forte/cominfra/basecommfb.h"
-#include "opcua_local_handler.h"
 #include "forte/cominfra/comlayersmanager.h"
+
+#include "opcua_local_handler.h"
 
 using namespace forte::literals;
 

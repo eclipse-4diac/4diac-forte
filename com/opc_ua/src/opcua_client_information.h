@@ -14,12 +14,14 @@
 
 #pragma once
 
-#include "opcua_action_info.h"
-
-#include "forte/arch/forte_sync.h"
+#include <open62541/client.h>
 
 #include <string>
 #include <vector>
+
+#include "forte/arch/forte_sync.h"
+
+#include "opcua_action_info.h"
 
 namespace forte::com_infra::opc_ua {
   /**
