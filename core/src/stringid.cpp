@@ -14,14 +14,16 @@
 #include "forte/stringid.h"
 
 #include <deque>
-#include <mutex>
 #include <string>
 #include <unordered_set>
 
+#include "forte/arch/forte_sync.h"
+#include "forte/util/criticalregion.h"
+
 namespace forte {
   namespace {
-    std::mutex &internMutex() {
-      static std::mutex internMutex;
+    arch::CSyncObject &internMutex() {
+      static arch::CSyncObject internMutex;
       return internMutex;
     }
 
@@ -37,12 +39,12 @@ namespace forte {
   } // namespace
 
   std::string_view StringId::intern(const std::string_view paString) {
-    std::unique_lock lock(internMutex());
+    util::CCriticalRegion lock(internMutex());
     return *internSet().insert(paString).first;
   }
 
   StringId StringId::lookup(std::string_view paString) {
-    std::unique_lock lock(internMutex());
+    util::CCriticalRegion lock(internMutex());
     const auto it = internSet().find(paString);
     if (it == internSet().end()) {
       return {};
@@ -51,7 +53,7 @@ namespace forte {
   }
 
   StringId StringId::insert(const std::string_view paString) {
-    std::unique_lock lock(internMutex());
+    util::CCriticalRegion lock(internMutex());
     auto it = internSet().find(paString);
     if (it == internSet().end()) {
       it = internSet().insert(runtimeDeque().emplace_back(paString)).first;
