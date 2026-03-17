@@ -127,11 +127,24 @@ namespace forte {
       }
     }
 
+    const std::string getFStatus(const CFunctionBlock &paFb) {
+      switch (paFb.getState()) {
+        using enum CFunctionBlock::E_FBStates;
+        case Running: return "RUNNING";
+        case Idle: return "IDLE";
+        case Stopped: return "STOPPED";
+        case Killed: return "KILLED";
+        default: return "UNKNOWN"; // this avoids a compiler warning
+      }
+    }
+
     void createFBResponseMessage(const CFunctionBlock &paFb, const std::string &fullName, std::string &paValue) {
-      paValue += "<FB name=\""s;
+      paValue += "<FB Name=\""s;
       paValue += fullName;
-      paValue += "\" type=\""s;
+      paValue += "\" Type=\""s;
       paValue += paFb.getFBTypeName();
+      paValue += "\" Status=\""s;
+      paValue += getFStatus(paFb);
       paValue += "\"/>\n"s;
     }
 
