@@ -55,7 +55,10 @@ namespace forte::com_infra::opc_ua {
                    LogCategoryNames[paCategory]);
     char *start = &tmpStr[strlen(tmpStr)];
 
-    forte_vsnprintf(start, mMaxLogLength, paMsg, paArgs);
+    UA_String logStr;
+    logStr.length = mMaxLogLength;
+    logStr.data = (UA_Byte *) start;
+    UA_String_vformat(&logStr, paMsg, paArgs);
 
     size_t len = strlen(tmpStr);
     tmpStr[len] = '\n';
