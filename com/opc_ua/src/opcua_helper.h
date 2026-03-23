@@ -15,11 +15,12 @@
 
 #pragma once
 
-#include <open62541.h>
-#include "forte/datatypes/forte_any.h"
-
 #include <string>
 #include <vector>
+
+#include <open62541/types.h>
+
+#include "forte/datatypes/forte_any.h"
 
 namespace forte {
   class CIEC_STRUCT;

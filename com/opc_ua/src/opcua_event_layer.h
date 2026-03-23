@@ -13,8 +13,10 @@
 
 #pragma once
 
+#include <open62541/common.h>
+#include <open62541/types.h>
+
 #include "forte/cominfra/comlayer.h"
-#include "open62541.h"
 
 namespace forte::com_infra::opc_ua {
   class COPC_UA_HandlerAbstract;

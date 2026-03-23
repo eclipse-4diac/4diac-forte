@@ -15,7 +15,7 @@
 
 #include "forte/util/registry.h"
 
-#include <open62541.h>
+#include <open62541/types.h>
 
 namespace forte {
   namespace util {
