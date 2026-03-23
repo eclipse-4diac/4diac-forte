@@ -12,6 +12,9 @@
  *******************************************************************************/
 
 #include "opcua_client_config_parser.h"
+
+#include <open62541/client_config_default.h>
+
 #include "forte/util/devlog.h"
 #include "../../../core/src/util/configFileParser.h"
 

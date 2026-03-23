@@ -3,6 +3,9 @@
 
 #include "forte/util/devlog.h"
 
+#include <open62541/client_config_default.h>
+#include <open62541/server.h>
+
 namespace forte::com_infra::opc_ua::detail {
   LdsMeHandler::LdsMeHandler(UA_Server &paUaServer) : mUaServer{paUaServer} {
     UA_Server_setServerOnNetworkCallback(&mUaServer, serverOnNetworkCallback, this);

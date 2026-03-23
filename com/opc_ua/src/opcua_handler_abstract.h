@@ -12,6 +12,8 @@
  *******************************************************************************/
 #pragma once
 
+#include <open62541/plugin/log.h>
+
 #include "forte/extevhan.h"
 #include "forte/esfb.h"
 #include "opcua_action_info.h"

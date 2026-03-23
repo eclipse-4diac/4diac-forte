@@ -23,15 +23,16 @@
 
 #pragma once
 
+#include <string>
+#include <vector>
+
 #include "forte/arch/forte_thread.h"
 #include "forte/conn.h"
 #include "forte/arch/forte_sem.h"
 #include "forte/arch/forte_sync.h"
+
 #include "opcua_handler_abstract.h"
 #include "opcua_helper.h"
-
-#include <string>
-#include <vector>
 
 namespace forte::com_infra::opc_ua {
   /**
