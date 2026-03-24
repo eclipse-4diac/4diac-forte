@@ -26,7 +26,6 @@
 #include "opcua_local_handler.h"
 #include "opcua_objectstruct_helper.h"
 
-
 using namespace forte::literals;
 
 namespace forte::com_infra::opc_ua {

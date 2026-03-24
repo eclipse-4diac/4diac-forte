@@ -18,6 +18,8 @@
 
 #include "opcua_layer.h"
 
+struct UA_Server;
+
 namespace forte::com_infra::opc_ua {
   class COPC_UA_HandlerAbstract;
   class CAlarmActionInfo;

@@ -34,6 +34,9 @@
 #include "opcua_handler_abstract.h"
 #include "opcua_helper.h"
 
+struct UA_Server;
+struct UA_ServerConfig;
+
 namespace forte::com_infra::opc_ua {
   /**
    * Class to handle all action that are executed on a local OPC UA server

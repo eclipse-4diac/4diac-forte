@@ -22,6 +22,8 @@
 
 #include "forte/datatypes/forte_any.h"
 
+struct UA_Client;
+
 namespace forte {
   class CIEC_STRUCT;
 

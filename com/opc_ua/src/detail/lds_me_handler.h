@@ -17,6 +17,12 @@
 #include <string>
 #include <vector>
 
+#include <open62541/common.h>
+#include <open62541/types.h>
+
+struct UA_Server;
+struct UA_ServerConfig;
+
 namespace forte::com_infra::opc_ua::detail {
 
   /**
