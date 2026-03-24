@@ -22,6 +22,8 @@
 
 #include "opcua_action_info.h"
 
+struct UA_Server;
+
 namespace forte::com_infra {
   class CBaseCommFB;
 

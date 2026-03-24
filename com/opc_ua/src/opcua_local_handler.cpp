@@ -33,7 +33,6 @@
 #include "forte/util/mainparam_utils.h"
 #include "forte/arch/forte_printer.h"
 
-
 #include "forte/com/opc_ua/opcua_nodesets.h"
 
 #include "struct_action_info.h"

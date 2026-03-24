@@ -18,6 +18,8 @@
 #include <open62541/common.h>
 #include <open62541/types.h>
 
+struct UA_Server;
+
 namespace forte {
   namespace util::hook {
     extern template class Registry<UA_StatusCode, UA_Server *>;
