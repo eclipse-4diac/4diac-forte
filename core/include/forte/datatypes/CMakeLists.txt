@@ -42,6 +42,7 @@ target_sources(forte-core PUBLIC
         forte_any_signed_variant.h
         forte_any_string.h
         forte_any_string_variant.h
+        forte_any_struct.h
         forte_any_unique_ptr.h
         forte_any_unsigned.h
         forte_any_unsigned_variant.h

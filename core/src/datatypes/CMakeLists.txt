@@ -34,6 +34,7 @@ target_sources(forte-core PRIVATE
         forte_any_signed_variant.cpp
         forte_any_string.cpp
         forte_any_string_variant.cpp
+        forte_any_struct.cpp
         forte_any_unsigned_variant.cpp
         forte_any_variant.cpp
         forte_array.cpp
