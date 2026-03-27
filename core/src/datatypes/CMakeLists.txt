@@ -22,6 +22,7 @@ target_sources(forte-core PRIVATE
         forte_any_chars_variant.cpp
         forte_any_date.cpp
         forte_any_date_variant.cpp
+        forte_any_derived_variant.cpp
         forte_any_duration.cpp
         forte_any_duration_variant.cpp
         forte_any_elementary.cpp
