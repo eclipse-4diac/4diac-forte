@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2025 Profactor GmbH, ACIN, nxtControl GmbH, TU Wien/ACIN,
+ * Copyright (c) 2005       Profactor GmbH, ACIN, nxtControl GmbH, TU Wien/ACIN,
  *                          Primetals Technologies Austria GmbH,
- *                          Martin Erich Jobst
+ *                          Martin Erich Jobst, HR Agrartechnik GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -22,6 +22,7 @@
  *   Martin Jobst - add compare operators
  *                - add equals function
  *   Alois Zoitl  - migrated data type toString to std::string
+ *    Franz Höpfinger - string_view for getResponseText
  *******************************************************************************/
 
 #pragma once
@@ -198,7 +199,7 @@ namespace forte {
 
       virtual void append(const CIEC_STRING &paValue);
 
-      virtual void append(const std::string &paValue);
+      virtual void append(const std::string_view paValue);
 
       int compare(const CIEC_STRING &paValue) const;
 
