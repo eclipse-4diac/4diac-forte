@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2005 ACIN, Profactor GmbH, fortiss GmbH, HR Agrartechnik GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -10,6 +10,7 @@
  *    Alois Zoitl, Gunnar Grabmaier, Thomas Strasser, Gerhard Ebenhofer,
  *    Martin Melik Merkumians, Ingo Hegny,
  *      - initial implementation and rework communication infrastructure
+ *    Franz Höpfinger - string_view for getResponseText
  *******************************************************************************/
 
 #pragma once
@@ -287,7 +288,7 @@ namespace forte {
 
   namespace mgm_cmd {
 
-    const std::string &getResponseText(EMGMResponse paResp);
+    const std::string_view getResponseText(EMGMResponse paResp);
 
   } // namespace mgm_cmd
 

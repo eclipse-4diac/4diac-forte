@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2023 Primetals Technologies Austria GmbH
+ * Copyright (c) 2023 Primetals Technologies Austria GmbH, HR Agrartechnik GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +9,7 @@
  * Contributors:
  *    Martin Melik Merkumians
  *      - initial implementation
+ *    Franz Höpfinger - string_view for getResponseText
  *******************************************************************************/
 
 #pragma once
@@ -121,7 +122,7 @@ namespace forte {
         }
       }
 
-      void append(const std::string &paValue) override {
+      void append(const std::string_view paValue) override {
         const size_t currentLength = length();
         if (currentLength < maxLength) {
           const size_t remainingSpace = maxLength - currentLength;
