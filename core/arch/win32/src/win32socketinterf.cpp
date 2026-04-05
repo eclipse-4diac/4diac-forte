@@ -1,6 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2010 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V., HIT robot group
- *               Samator Indo Gas, Primetals Technologies Austria GmbH
+ *               Samator Indo Gas, Primetals Technologies Austria GmbH, HR Agrartechnik GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +14,7 @@
  *  Zhao Xin - fix socket resource leakage
  *  Ketut Kumajaya - switch to the Unicode version of WSAStringToAddress
  *  Markus Meingast - add logging of actual tcp port being used
+ *  Franz Höpfinger - set SO_EXCLUSIVEADDRUSE to avoid port hijacking
  *******************************************************************************/
 
 #include "forte/arch/sockhand.h" //needs to be first pulls in the platform specific includes
@@ -71,9 +72,9 @@ namespace forte::arch {
     stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
     int nOptVal = 1;
-    if (setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char *) &nOptVal, sizeof(nOptVal)) == SOCKET_ERROR) {
+    if (setsockopt(nSocket, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, (char *) &nOptVal, sizeof(nOptVal)) == SOCKET_ERROR) {
       LPSTR pacErrorMessage = getErrorMessage(WSAGetLastError());
-      DEVLOG_ERROR("CWin32SocketInterface: could not set socket option SO_REUSEADDR:  %s\n", pacErrorMessage);
+      DEVLOG_ERROR("CWin32SocketInterface: could not set socket option SO_EXCLUSIVEADDRUSE:  %s\n", pacErrorMessage);
       LocalFree(pacErrorMessage);
       return nRetVal;
     }
@@ -241,7 +242,7 @@ namespace forte::arch {
 
     if (INVALID_SOCKET != nSocket) {
       int nReuseAddrVal = 1;
-      if (0 <= setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char *) &nReuseAddrVal, sizeof(nReuseAddrVal))) {
+      if (0 <= setsockopt(nSocket, SOL_SOCKET, SO_EXCLUSIVEADDRUSE, (char *) &nReuseAddrVal, sizeof(nReuseAddrVal))) {
         struct sockaddr_in stSockAddr = {};
         stSockAddr.sin_family = AF_INET;
         stSockAddr.sin_port = htons(paPort);
@@ -281,7 +282,7 @@ namespace forte::arch {
       } else {
         int nLastError = WSAGetLastError();
         LPSTR pacErrorMessage = getErrorMessage(nLastError);
-        DEVLOG_ERROR("CWin32SocketInterface: setsockopt(SO_REUSEADDR) failed: %d - %s\n", nLastError, pacErrorMessage);
+        DEVLOG_ERROR("CWin32SocketInterface: setsockopt(SO_EXCLUSIVEADDRUSE) failed: %d - %s\n", nLastError, pacErrorMessage);
         LocalFree(pacErrorMessage);
       }
     } else {
