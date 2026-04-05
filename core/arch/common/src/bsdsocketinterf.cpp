@@ -31,11 +31,7 @@ namespace forte::arch {
                                                                                       unsigned short paPort) {
     TSocketDescriptor nRetVal = -1;
 
-#ifndef FORTE_LOGINFO
-    (void) paIPAddr;
-#else
     DEVLOG_INFO("CBSDSocketInterface: Opening TCP-Server connection at: %s:%d\n", paIPAddr, paPort);
-#endif
 
     if (TSocketDescriptor nSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP); -1 != nSocket) {
       struct sockaddr_in stSockAddr;
