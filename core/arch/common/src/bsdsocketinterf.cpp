@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2023 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V.
+ * Copyright (c) 2010 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -46,10 +47,6 @@ namespace forte::arch {
       stSockAddr.sin_port = htons(paPort);
 #endif
       stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-
-      if (int nOptVal = 1; setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char *) &nOptVal, sizeof(nOptVal)) == -1) {
-        DEVLOG_ERROR("CBSDSocketInterface: could not set socket option SO_REUSEADDR:  %s\n", strerror(errno));
-      }
 
       if (0 == bind(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))) {
         if (-1 == listen(nSocket, 1)) { // for the classic IEC 61499 server only one connection at the same time is
