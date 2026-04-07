@@ -1,5 +1,5 @@
 #############################################################################
-# Copyright (c) 2025 Martin Erich Jobst
+# Copyright (c) 2025 Martin Erich Jobst, HR Agrartechnik GmbH
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
@@ -10,7 +10,10 @@
 # Contributors:
 #    Martin Erich Jobst
 #      - initial API and implementation and/or initial documentation
+#    Franz Höpfinger - added Endian Conversion Blocks.
 #############################################################################
+
+# This file was generated using the 4DIAC FORTE Export Filter 3.1.100.202604012115!
 
 target_sources(forte-iec61131-3 PUBLIC
         FILE_SET HEADERS
@@ -76,6 +79,8 @@ target_sources(forte-iec61131-3 PUBLIC
         F_DWORD_TO_ULINT_fbt.h
         F_DWORD_TO_USINT_fbt.h
         F_DWORD_TO_WORD_fbt.h
+        F_FROM_BIG_ENDIAN_fbt.h
+        F_FROM_LITTLE_ENDIAN_fbt.h
         F_INT_AS_STRING_fbt.h
         F_INT_AS_WSTRING_fbt.h
         F_INT_TO_BYTE_fbt.h
@@ -199,6 +204,8 @@ target_sources(forte-iec61131-3 PUBLIC
         F_TIME_IN_US_TO_LREAL_fbt.h
         F_TIME_IN_US_TO_UDINT_fbt.h
         F_TIME_IN_US_TO_ULINT_fbt.h
+        F_TO_BIG_ENDIAN_fbt.h
+        F_TO_LITTLE_ENDIAN_fbt.h
         F_UDINT_AS_STRING_fbt.h
         F_UDINT_AS_WSTRING_fbt.h
         F_UDINT_TO_BCD_DWORD_fbt.h

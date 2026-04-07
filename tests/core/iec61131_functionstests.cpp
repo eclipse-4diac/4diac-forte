@@ -52,6 +52,7 @@
 #include "forte/iec61131_functions/func_DIV_TIME.h"
 #include "forte/iec61131_functions/func_EQ.h"
 #include "forte/iec61131_functions/func_FIND.h"
+#include "forte/iec61131_functions/func_FROM_BIG_ENDIAN.h"
 #include "forte/iec61131_functions/func_FROM_LITTLE_ENDIAN.h"
 #include "forte/iec61131_functions/func_GE.h"
 #include "forte/iec61131_functions/func_GT.h"
@@ -2073,6 +2074,123 @@ namespace forte::test {
     BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(toLittleUlint) == 17);
   }
 
+  BOOST_AUTO_TEST_CASE(func_from_big_endian) {
+    CIEC_SINT sint(10);
+    CIEC_INT inte(11);
+    CIEC_DINT dint(12);
+    CIEC_LINT lint(13);
+
+    CIEC_USINT usint(14);
+    CIEC_UINT uinte(15);
+    CIEC_UDINT udint(16);
+    CIEC_ULINT ulint(17);
+
+    CIEC_BYTE byte(18);
+    CIEC_WORD word(19);
+    CIEC_DWORD dword(20);
+    CIEC_LWORD lword(21);
+
+    CIEC_SINT fromSint;
+    CIEC_INT fromInt;
+    CIEC_DINT fromDint;
+    CIEC_LINT fromLint;
+
+    CIEC_USINT fromUsint;
+    CIEC_UINT fromUint;
+    CIEC_UDINT fromUdint;
+    CIEC_ULINT fromUlint;
+
+    CIEC_BYTE fromByte;
+    CIEC_WORD fromWord;
+    CIEC_DWORD fromDword;
+    CIEC_LWORD fromLword;
+
+    fromSint = func_FROM_BIG_ENDIAN(sint);
+    BOOST_TEST(static_cast<CIEC_SINT::TValueType>(fromSint) == 10);
+    fromInt = func_FROM_BIG_ENDIAN(inte);
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(fromInt) == 2816);
+    fromDint = func_FROM_BIG_ENDIAN(dint);
+    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(fromDint) == 201326592);
+    fromLint = func_FROM_BIG_ENDIAN(lint);
+    BOOST_TEST(static_cast<CIEC_LINT::TValueType>(fromLint) == 936748722493063168);
+
+    fromUsint = func_FROM_BIG_ENDIAN(usint);
+    BOOST_TEST(static_cast<CIEC_USINT::TValueType>(fromUsint) == 14);
+    fromUint = func_FROM_BIG_ENDIAN(uinte);
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(fromUint) == 3840);
+    fromUdint = func_FROM_BIG_ENDIAN(udint);
+    BOOST_TEST(static_cast<CIEC_UDINT::TValueType>(fromUdint) == 268435456);
+    fromUlint = func_FROM_BIG_ENDIAN(ulint);
+    BOOST_TEST(static_cast<CIEC_ULINT::TValueType>(fromUlint) == 1224979098644774912);
+
+    fromByte = func_FROM_BIG_ENDIAN(byte);
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(fromByte) == 18);
+    fromWord = func_FROM_BIG_ENDIAN(word);
+    BOOST_TEST(static_cast<CIEC_WORD::TValueType>(fromWord) == 4864);
+    fromDword = func_FROM_BIG_ENDIAN(dword);
+    BOOST_TEST(static_cast<CIEC_DWORD::TValueType>(fromDword) == 335544320);
+    fromLword = func_FROM_BIG_ENDIAN(lword);
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(fromLword) == 1513209474796486656);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_array_fixed) {
+    CIEC_ARRAY_FIXED<CIEC_LWORD, -1, 1> originalArray = {CIEC_LWORD(72057594037927936), CIEC_LWORD(144115188075855872),
+                                                         CIEC_LWORD(216172782113783808)};
+    CIEC_ARRAY_FIXED<CIEC_LWORD, -1, 1> reversedArray;
+    reversedArray = func_FROM_BIG_ENDIAN(originalArray);
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[-1]) == 1);
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[0]) == 2);
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[1]) == 3);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_array_variable) {
+    CIEC_ARRAY_VARIABLE<CIEC_LWORD> originalArray = {CIEC_LWORD(72057594037927936), CIEC_LWORD(144115188075855872),
+                                                     CIEC_LWORD(216172782113783808)};
+    CIEC_ARRAY_VARIABLE<CIEC_LWORD> reversedArray(0, 2);
+    reversedArray = func_FROM_BIG_ENDIAN(originalArray);
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[0]) == 1);
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[1]) == 2);
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[2]) == 3);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_array_variable_copy_ctor) {
+    CIEC_ARRAY_VARIABLE<CIEC_LWORD> originalArray = {CIEC_LWORD(72057594037927936), CIEC_LWORD(144115188075855872),
+                                                     CIEC_LWORD(216172782113783808)};
+    CIEC_ARRAY_VARIABLE<CIEC_LWORD> reversedArray(func_FROM_BIG_ENDIAN(originalArray));
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[0]) == 1);
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[1]) == 2);
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reversedArray[2]) == 3);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_array_typelib_copy_ctor) {
+    CIEC_ARRAY_DYNAMIC originalArray(3, "LWORD"_STRID);
+    originalArray[0].setValue(CIEC_LWORD(72057594037927936));
+    originalArray[1].setValue(CIEC_LWORD(144115188075855872));
+    originalArray[2].setValue(CIEC_LWORD(216172782113783808));
+
+    CIEC_ARRAY_DYNAMIC reversedArray(func_FROM_BIG_ENDIAN(originalArray));
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD &>(reversedArray[0])) == 1);
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD &>(reversedArray[1])) == 2);
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(reinterpret_cast<CIEC_LWORD &>(reversedArray[2])) == 3);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_struct) {
+    CIEC_EndianessTestStruct original;
+
+    (*static_cast<CIEC_BOOL *>(original.getMemberNamed("Val1"_STRID))) = true_BOOL;
+    (*static_cast<CIEC_DINT *>(original.getMemberNamed("Val2"_STRID))) = CIEC_DINT(922746880);
+    (*static_cast<CIEC_LWORD *>(original.getMemberNamed("Val3"_STRID))) = CIEC_LWORD(1099511627776UL);
+
+    CIEC_EndianessTestStruct reversed;
+    reversed = func_FROM_BIG_ENDIAN(original);
+    BOOST_TEST(static_cast<CIEC_BOOL::TValueType>(
+                   *reinterpret_cast<CIEC_BOOL *>(reversed.getMemberNamed("Val1"_STRID))) == true);
+    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(
+                   *reinterpret_cast<CIEC_DINT *>(reversed.getMemberNamed("Val2"_STRID))) == 55);
+    BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(
+                   *reinterpret_cast<CIEC_LWORD *>(reversed.getMemberNamed("Val3"_STRID))) == 65536);
+  }
+
   BOOST_AUTO_TEST_CASE(func_to_big_endian) {
     CIEC_SINT sint(10);
     CIEC_INT inte(11);
@@ -2188,6 +2306,536 @@ namespace forte::test {
                    *reinterpret_cast<CIEC_DINT *>(reversed.getMemberNamed("Val2"_STRID))) == 922746880);
     BOOST_TEST(static_cast<CIEC_LWORD::TValueType>(
                    *reinterpret_cast<CIEC_LWORD *>(reversed.getMemberNamed("Val3"_STRID))) == 1099511627776);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_little_endian_sint_min_max) {
+    CIEC_SINT sintMin(-128);
+    CIEC_SINT sintMax(127);
+
+    CIEC_SINT resultMin = func_TO_LITTLE_ENDIAN(sintMin);
+    CIEC_SINT resultMax = func_TO_LITTLE_ENDIAN(sintMax);
+
+    BOOST_TEST(static_cast<CIEC_SINT::TValueType>(resultMin) == -128);
+    BOOST_TEST(static_cast<CIEC_SINT::TValueType>(resultMax) == 127);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_little_endian_sint_min_max) {
+    CIEC_SINT sintMin(-128);
+    CIEC_SINT sintMax(127);
+
+    CIEC_SINT resultMin = func_FROM_LITTLE_ENDIAN(sintMin);
+    CIEC_SINT resultMax = func_FROM_LITTLE_ENDIAN(sintMax);
+
+    BOOST_TEST(static_cast<CIEC_SINT::TValueType>(resultMin) == -128);
+    BOOST_TEST(static_cast<CIEC_SINT::TValueType>(resultMax) == 127);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_sint_min_max) {
+    CIEC_SINT sintMin(-128);
+    CIEC_SINT sintMax(127);
+
+    CIEC_SINT resultMin = func_FROM_BIG_ENDIAN(sintMin);
+    CIEC_SINT resultMax = func_FROM_BIG_ENDIAN(sintMax);
+
+    BOOST_TEST(static_cast<CIEC_SINT::TValueType>(resultMin) == -128);
+    BOOST_TEST(static_cast<CIEC_SINT::TValueType>(resultMax) == 127);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_big_endian_sint_min_max) {
+    CIEC_SINT sintMin(-128);
+    CIEC_SINT sintMax(127);
+
+    CIEC_SINT resultMin = func_TO_BIG_ENDIAN(sintMin);
+    CIEC_SINT resultMax = func_TO_BIG_ENDIAN(sintMax);
+
+    BOOST_TEST(static_cast<CIEC_SINT::TValueType>(resultMin) == -128);
+    BOOST_TEST(static_cast<CIEC_SINT::TValueType>(resultMax) == 127);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_little_endian_int_min_max) {
+    CIEC_INT intMin(-32768);
+    CIEC_INT intMax(32767);
+
+    CIEC_INT resultMin = func_TO_LITTLE_ENDIAN(intMin);
+    CIEC_INT resultMax = func_TO_LITTLE_ENDIAN(intMax);
+
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(resultMin) == -32768);
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(resultMax) == 32767);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_little_endian_int_min_max) {
+    CIEC_INT intMin(-32768);
+    CIEC_INT intMax(32767);
+
+    CIEC_INT resultMin = func_FROM_LITTLE_ENDIAN(intMin);
+    CIEC_INT resultMax = func_FROM_LITTLE_ENDIAN(intMax);
+
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(resultMin) == -32768);
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(resultMax) == 32767);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_int_min_max) {
+    CIEC_INT intMin(-32768);
+    CIEC_INT intMax(32767);
+
+    CIEC_INT resultMin = func_FROM_BIG_ENDIAN(intMin);
+    CIEC_INT resultMax = func_FROM_BIG_ENDIAN(intMax);
+
+    // After big-endian swap, MIN stays MIN (0x8000 -> 0x0080 is still small negative = 128)
+    // After big-endian swap, MAX becomes -129 (0x7FFF -> 0xFF7F is -129 as signed)
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(resultMin) == 128);
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(resultMax) == -129);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_big_endian_int_min_max) {
+    CIEC_INT intMin(-32768);
+    CIEC_INT intMax(32767);
+
+    CIEC_INT resultMin = func_TO_BIG_ENDIAN(intMin);
+    CIEC_INT resultMax = func_TO_BIG_ENDIAN(intMax);
+
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(resultMin) == 128);
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(resultMax) == -129);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_little_endian_dint_min_max) {
+    const CIEC_DINT dintMin(std::numeric_limits<CIEC_DINT::TValueType>::min());
+    const CIEC_DINT dintMax(std::numeric_limits<CIEC_DINT::TValueType>::max());
+
+    CIEC_DINT resultMin = func_TO_LITTLE_ENDIAN(dintMin);
+    CIEC_DINT resultMax = func_TO_LITTLE_ENDIAN(dintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DINT::TValueType>(resultMin), static_cast<CIEC_DINT::TValueType>(dintMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DINT::TValueType>(resultMax), static_cast<CIEC_DINT::TValueType>(dintMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_little_endian_dint_min_max) {
+    const CIEC_DINT dintMin(std::numeric_limits<CIEC_DINT::TValueType>::min());
+    const CIEC_DINT dintMax(std::numeric_limits<CIEC_DINT::TValueType>::max());
+
+    CIEC_DINT resultMin = func_FROM_LITTLE_ENDIAN(dintMin);
+    CIEC_DINT resultMax = func_FROM_LITTLE_ENDIAN(dintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DINT::TValueType>(resultMin), static_cast<CIEC_DINT::TValueType>(dintMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DINT::TValueType>(resultMax), static_cast<CIEC_DINT::TValueType>(dintMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_dint_min_max) {
+    const CIEC_DINT dintMin(std::numeric_limits<CIEC_DINT::TValueType>::min());
+    const CIEC_DINT dintMax(std::numeric_limits<CIEC_DINT::TValueType>::max());
+
+    CIEC_DINT resultMin = func_FROM_BIG_ENDIAN(dintMin);
+    CIEC_DINT resultMax = func_FROM_BIG_ENDIAN(dintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DINT::TValueType>(resultMin), 128);
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DINT::TValueType>(resultMax), -129);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_big_endian_dint_min_max) {
+    const CIEC_DINT dintMin(std::numeric_limits<CIEC_DINT::TValueType>::min());
+    const CIEC_DINT dintMax(std::numeric_limits<CIEC_DINT::TValueType>::max());
+
+    CIEC_DINT resultMin = func_TO_BIG_ENDIAN(dintMin);
+    CIEC_DINT resultMax = func_TO_BIG_ENDIAN(dintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DINT::TValueType>(resultMin), 128);
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DINT::TValueType>(resultMax), -129);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_little_endian_lint_min_max) {
+    const CIEC_LINT lintMin(std::numeric_limits<CIEC_LINT::TValueType>::min());
+    const CIEC_LINT lintMax(std::numeric_limits<CIEC_LINT::TValueType>::max());
+
+    CIEC_LINT resultMin = func_TO_LITTLE_ENDIAN(lintMin);
+    CIEC_LINT resultMax = func_TO_LITTLE_ENDIAN(lintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LINT::TValueType>(resultMin), static_cast<CIEC_LINT::TValueType>(lintMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LINT::TValueType>(resultMax), static_cast<CIEC_LINT::TValueType>(lintMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_little_endian_lint_min_max) {
+    const CIEC_LINT lintMin(std::numeric_limits<CIEC_LINT::TValueType>::min());
+    const CIEC_LINT lintMax(std::numeric_limits<CIEC_LINT::TValueType>::max());
+
+    CIEC_LINT resultMin = func_FROM_LITTLE_ENDIAN(lintMin);
+    CIEC_LINT resultMax = func_FROM_LITTLE_ENDIAN(lintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LINT::TValueType>(resultMin), static_cast<CIEC_LINT::TValueType>(lintMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LINT::TValueType>(resultMax), static_cast<CIEC_LINT::TValueType>(lintMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_lint_min_max) {
+    const CIEC_LINT lintMin(std::numeric_limits<CIEC_LINT::TValueType>::min());
+    const CIEC_LINT lintMax(std::numeric_limits<CIEC_LINT::TValueType>::max());
+
+    CIEC_LINT resultMin = func_FROM_BIG_ENDIAN(lintMin);
+    CIEC_LINT resultMax = func_FROM_BIG_ENDIAN(lintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LINT::TValueType>(resultMin), 128);
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LINT::TValueType>(resultMax), -129);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_big_endian_lint_min_max) {
+    const CIEC_LINT lintMin(std::numeric_limits<CIEC_LINT::TValueType>::min());
+    const CIEC_LINT lintMax(std::numeric_limits<CIEC_LINT::TValueType>::max());
+
+    CIEC_LINT resultMin = func_TO_BIG_ENDIAN(lintMin);
+    CIEC_LINT resultMax = func_TO_BIG_ENDIAN(lintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LINT::TValueType>(resultMin), 128);
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LINT::TValueType>(resultMax), -129);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_little_endian_usint_min_max) {
+    CIEC_USINT usintMin(0);
+    CIEC_USINT usintMax(255);
+
+    CIEC_USINT resultMin = func_TO_LITTLE_ENDIAN(usintMin);
+    CIEC_USINT resultMax = func_TO_LITTLE_ENDIAN(usintMax);
+
+    BOOST_TEST(static_cast<CIEC_USINT::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_USINT::TValueType>(resultMax) == 255);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_little_endian_usint_min_max) {
+    CIEC_USINT usintMin(0);
+    CIEC_USINT usintMax(255);
+
+    CIEC_USINT resultMin = func_FROM_LITTLE_ENDIAN(usintMin);
+    CIEC_USINT resultMax = func_FROM_LITTLE_ENDIAN(usintMax);
+
+    BOOST_TEST(static_cast<CIEC_USINT::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_USINT::TValueType>(resultMax) == 255);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_usint_min_max) {
+    CIEC_USINT usintMin(0);
+    CIEC_USINT usintMax(255);
+
+    CIEC_USINT resultMin = func_FROM_BIG_ENDIAN(usintMin);
+    CIEC_USINT resultMax = func_FROM_BIG_ENDIAN(usintMax);
+
+    BOOST_TEST(static_cast<CIEC_USINT::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_USINT::TValueType>(resultMax) == 255);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_big_endian_usint_min_max) {
+    CIEC_USINT usintMin(0);
+    CIEC_USINT usintMax(255);
+
+    CIEC_USINT resultMin = func_TO_BIG_ENDIAN(usintMin);
+    CIEC_USINT resultMax = func_TO_BIG_ENDIAN(usintMax);
+
+    BOOST_TEST(static_cast<CIEC_USINT::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_USINT::TValueType>(resultMax) == 255);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_little_endian_uint_min_max) {
+    CIEC_UINT uintMin(0);
+    CIEC_UINT uintMax(65535);
+
+    CIEC_UINT resultMin = func_TO_LITTLE_ENDIAN(uintMin);
+    CIEC_UINT resultMax = func_TO_LITTLE_ENDIAN(uintMax);
+
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(resultMax) == 65535);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_little_endian_uint_min_max) {
+    CIEC_UINT uintMin(0);
+    CIEC_UINT uintMax(65535);
+
+    CIEC_UINT resultMin = func_FROM_LITTLE_ENDIAN(uintMin);
+    CIEC_UINT resultMax = func_FROM_LITTLE_ENDIAN(uintMax);
+
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(resultMax) == 65535);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_uint_min_max) {
+    CIEC_UINT uintMin(0);
+    CIEC_UINT uintMax(65535);
+
+    CIEC_UINT resultMin = func_FROM_BIG_ENDIAN(uintMin);
+    CIEC_UINT resultMax = func_FROM_BIG_ENDIAN(uintMax);
+
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(resultMax) == 65535);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_big_endian_uint_min_max) {
+    CIEC_UINT uintMin(0);
+    CIEC_UINT uintMax(65535);
+
+    CIEC_UINT resultMin = func_TO_BIG_ENDIAN(uintMin);
+    CIEC_UINT resultMax = func_TO_BIG_ENDIAN(uintMax);
+
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_UINT::TValueType>(resultMax) == 65535);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_little_endian_udint_min_max) {
+    const CIEC_UDINT udintMin(std::numeric_limits<CIEC_UDINT::TValueType>::min());
+    const CIEC_UDINT udintMax(std::numeric_limits<CIEC_UDINT::TValueType>::max());
+
+    CIEC_UDINT resultMin = func_TO_LITTLE_ENDIAN(udintMin);
+    CIEC_UDINT resultMax = func_TO_LITTLE_ENDIAN(udintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_UDINT::TValueType>(resultMin), static_cast<CIEC_UDINT::TValueType>(udintMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_UDINT::TValueType>(resultMax), static_cast<CIEC_UDINT::TValueType>(udintMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_little_endian_udint_min_max) {
+    const CIEC_UDINT udintMin(std::numeric_limits<CIEC_UDINT::TValueType>::min());
+    const CIEC_UDINT udintMax(std::numeric_limits<CIEC_UDINT::TValueType>::max());
+
+    CIEC_UDINT resultMin = func_FROM_LITTLE_ENDIAN(udintMin);
+    CIEC_UDINT resultMax = func_FROM_LITTLE_ENDIAN(udintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_UDINT::TValueType>(resultMin), static_cast<CIEC_UDINT::TValueType>(udintMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_UDINT::TValueType>(resultMax), static_cast<CIEC_UDINT::TValueType>(udintMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_udint_min_max) {
+    const CIEC_UDINT udintMin(std::numeric_limits<CIEC_UDINT::TValueType>::min());
+    const CIEC_UDINT udintMax(std::numeric_limits<CIEC_UDINT::TValueType>::max());
+
+    CIEC_UDINT resultMin = func_FROM_BIG_ENDIAN(udintMin);
+    CIEC_UDINT resultMax = func_FROM_BIG_ENDIAN(udintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_UDINT::TValueType>(resultMin), static_cast<CIEC_UDINT::TValueType>(udintMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_UDINT::TValueType>(resultMax), static_cast<CIEC_UDINT::TValueType>(udintMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_big_endian_udint_min_max) {
+    const CIEC_UDINT udintMin(std::numeric_limits<CIEC_UDINT::TValueType>::min());
+    const CIEC_UDINT udintMax(std::numeric_limits<CIEC_UDINT::TValueType>::max());
+
+    CIEC_UDINT resultMin = func_TO_BIG_ENDIAN(udintMin);
+    CIEC_UDINT resultMax = func_TO_BIG_ENDIAN(udintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_UDINT::TValueType>(resultMin), static_cast<CIEC_UDINT::TValueType>(udintMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_UDINT::TValueType>(resultMax), static_cast<CIEC_UDINT::TValueType>(udintMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_little_endian_ulint_min_max) {
+    const CIEC_ULINT ulintMin(std::numeric_limits<CIEC_ULINT::TValueType>::min());
+    const CIEC_ULINT ulintMax(std::numeric_limits<CIEC_ULINT::TValueType>::max());
+
+    CIEC_ULINT resultMin = func_TO_LITTLE_ENDIAN(ulintMin);
+    CIEC_ULINT resultMax = func_TO_LITTLE_ENDIAN(ulintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_ULINT::TValueType>(resultMin), static_cast<CIEC_ULINT::TValueType>(ulintMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_ULINT::TValueType>(resultMax), static_cast<CIEC_ULINT::TValueType>(ulintMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_little_endian_ulint_min_max) {
+    const CIEC_ULINT ulintMin(std::numeric_limits<CIEC_ULINT::TValueType>::min());
+    const CIEC_ULINT ulintMax(std::numeric_limits<CIEC_ULINT::TValueType>::max());
+
+    CIEC_ULINT resultMin = func_FROM_LITTLE_ENDIAN(ulintMin);
+    CIEC_ULINT resultMax = func_FROM_LITTLE_ENDIAN(ulintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_ULINT::TValueType>(resultMin), static_cast<CIEC_ULINT::TValueType>(ulintMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_ULINT::TValueType>(resultMax), static_cast<CIEC_ULINT::TValueType>(ulintMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_ulint_min_max) {
+    const CIEC_ULINT ulintMin(std::numeric_limits<CIEC_ULINT::TValueType>::min());
+    const CIEC_ULINT ulintMax(std::numeric_limits<CIEC_ULINT::TValueType>::max());
+
+    CIEC_ULINT resultMin = func_FROM_BIG_ENDIAN(ulintMin);
+    CIEC_ULINT resultMax = func_FROM_BIG_ENDIAN(ulintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_ULINT::TValueType>(resultMin), static_cast<CIEC_ULINT::TValueType>(ulintMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_ULINT::TValueType>(resultMax), static_cast<CIEC_ULINT::TValueType>(ulintMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_big_endian_ulint_min_max) {
+    const CIEC_ULINT ulintMin(std::numeric_limits<CIEC_ULINT::TValueType>::min());
+    const CIEC_ULINT ulintMax(std::numeric_limits<CIEC_ULINT::TValueType>::max());
+
+    CIEC_ULINT resultMin = func_TO_BIG_ENDIAN(ulintMin);
+    CIEC_ULINT resultMax = func_TO_BIG_ENDIAN(ulintMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_ULINT::TValueType>(resultMin), static_cast<CIEC_ULINT::TValueType>(ulintMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_ULINT::TValueType>(resultMax), static_cast<CIEC_ULINT::TValueType>(ulintMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_little_endian_byte_min_max) {
+    CIEC_BYTE byteMin(0);
+    CIEC_BYTE byteMax(255);
+
+    CIEC_BYTE resultMin = func_TO_LITTLE_ENDIAN(byteMin);
+    CIEC_BYTE resultMax = func_TO_LITTLE_ENDIAN(byteMax);
+
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(resultMax) == 255);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_little_endian_byte_min_max) {
+    CIEC_BYTE byteMin(0);
+    CIEC_BYTE byteMax(255);
+
+    CIEC_BYTE resultMin = func_FROM_LITTLE_ENDIAN(byteMin);
+    CIEC_BYTE resultMax = func_FROM_LITTLE_ENDIAN(byteMax);
+
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(resultMax) == 255);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_byte_min_max) {
+    CIEC_BYTE byteMin(0);
+    CIEC_BYTE byteMax(255);
+
+    CIEC_BYTE resultMin = func_FROM_BIG_ENDIAN(byteMin);
+    CIEC_BYTE resultMax = func_FROM_BIG_ENDIAN(byteMax);
+
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(resultMax) == 255);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_big_endian_byte_min_max) {
+    CIEC_BYTE byteMin(0);
+    CIEC_BYTE byteMax(255);
+
+    CIEC_BYTE resultMin = func_TO_BIG_ENDIAN(byteMin);
+    CIEC_BYTE resultMax = func_TO_BIG_ENDIAN(byteMax);
+
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_BYTE::TValueType>(resultMax) == 255);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_little_endian_word_min_max) {
+    CIEC_WORD wordMin(0);
+    CIEC_WORD wordMax(65535);
+
+    CIEC_WORD resultMin = func_TO_LITTLE_ENDIAN(wordMin);
+    CIEC_WORD resultMax = func_TO_LITTLE_ENDIAN(wordMax);
+
+    BOOST_TEST(static_cast<CIEC_WORD::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_WORD::TValueType>(resultMax) == 65535);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_little_endian_word_min_max) {
+    CIEC_WORD wordMin(0);
+    CIEC_WORD wordMax(65535);
+
+    CIEC_WORD resultMin = func_FROM_LITTLE_ENDIAN(wordMin);
+    CIEC_WORD resultMax = func_FROM_LITTLE_ENDIAN(wordMax);
+
+    BOOST_TEST(static_cast<CIEC_WORD::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_WORD::TValueType>(resultMax) == 65535);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_word_min_max) {
+    CIEC_WORD wordMin(0);
+    CIEC_WORD wordMax(65535);
+
+    CIEC_WORD resultMin = func_FROM_BIG_ENDIAN(wordMin);
+    CIEC_WORD resultMax = func_FROM_BIG_ENDIAN(wordMax);
+
+    BOOST_TEST(static_cast<CIEC_WORD::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_WORD::TValueType>(resultMax) == 65535);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_big_endian_word_min_max) {
+    CIEC_WORD wordMin(0);
+    CIEC_WORD wordMax(65535);
+
+    CIEC_WORD resultMin = func_TO_BIG_ENDIAN(wordMin);
+    CIEC_WORD resultMax = func_TO_BIG_ENDIAN(wordMax);
+
+    BOOST_TEST(static_cast<CIEC_WORD::TValueType>(resultMin) == 0);
+    BOOST_TEST(static_cast<CIEC_WORD::TValueType>(resultMax) == 65535);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_little_endian_dword_min_max) {
+    const CIEC_DWORD dwordMin(std::numeric_limits<CIEC_DWORD::TValueType>::min());
+    const CIEC_DWORD dwordMax(std::numeric_limits<CIEC_DWORD::TValueType>::max());
+
+    CIEC_DWORD resultMin = func_TO_LITTLE_ENDIAN(dwordMin);
+    CIEC_DWORD resultMax = func_TO_LITTLE_ENDIAN(dwordMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DWORD::TValueType>(resultMin), static_cast<CIEC_DWORD::TValueType>(dwordMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DWORD::TValueType>(resultMax), static_cast<CIEC_DWORD::TValueType>(dwordMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_little_endian_dword_min_max) {
+    const CIEC_DWORD dwordMin(std::numeric_limits<CIEC_DWORD::TValueType>::min());
+    const CIEC_DWORD dwordMax(std::numeric_limits<CIEC_DWORD::TValueType>::max());
+
+    CIEC_DWORD resultMin = func_FROM_LITTLE_ENDIAN(dwordMin);
+    CIEC_DWORD resultMax = func_FROM_LITTLE_ENDIAN(dwordMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DWORD::TValueType>(resultMin), static_cast<CIEC_DWORD::TValueType>(dwordMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DWORD::TValueType>(resultMax), static_cast<CIEC_DWORD::TValueType>(dwordMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_dword_min_max) {
+    const CIEC_DWORD dwordMin(std::numeric_limits<CIEC_DWORD::TValueType>::min());
+    const CIEC_DWORD dwordMax(std::numeric_limits<CIEC_DWORD::TValueType>::max());
+
+    CIEC_DWORD resultMin = func_FROM_BIG_ENDIAN(dwordMin);
+    CIEC_DWORD resultMax = func_FROM_BIG_ENDIAN(dwordMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DWORD::TValueType>(resultMin), static_cast<CIEC_DWORD::TValueType>(dwordMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DWORD::TValueType>(resultMax), static_cast<CIEC_DWORD::TValueType>(dwordMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_big_endian_dword_min_max) {
+    const CIEC_DWORD dwordMin(std::numeric_limits<CIEC_DWORD::TValueType>::min());
+    const CIEC_DWORD dwordMax(std::numeric_limits<CIEC_DWORD::TValueType>::max());
+
+    CIEC_DWORD resultMin = func_TO_BIG_ENDIAN(dwordMin);
+    CIEC_DWORD resultMax = func_TO_BIG_ENDIAN(dwordMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DWORD::TValueType>(resultMin), static_cast<CIEC_DWORD::TValueType>(dwordMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_DWORD::TValueType>(resultMax), static_cast<CIEC_DWORD::TValueType>(dwordMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_little_endian_lword_min_max) {
+    const CIEC_LWORD lwordMin(std::numeric_limits<CIEC_LWORD::TValueType>::min());
+    const CIEC_LWORD lwordMax(std::numeric_limits<CIEC_LWORD::TValueType>::max());
+
+    CIEC_LWORD resultMin = func_TO_LITTLE_ENDIAN(lwordMin);
+    CIEC_LWORD resultMax = func_TO_LITTLE_ENDIAN(lwordMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LWORD::TValueType>(resultMin), static_cast<CIEC_LWORD::TValueType>(lwordMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LWORD::TValueType>(resultMax), static_cast<CIEC_LWORD::TValueType>(lwordMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_little_endian_lword_min_max) {
+    const CIEC_LWORD lwordMin(std::numeric_limits<CIEC_LWORD::TValueType>::min());
+    const CIEC_LWORD lwordMax(std::numeric_limits<CIEC_LWORD::TValueType>::max());
+
+    CIEC_LWORD resultMin = func_FROM_LITTLE_ENDIAN(lwordMin);
+    CIEC_LWORD resultMax = func_FROM_LITTLE_ENDIAN(lwordMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LWORD::TValueType>(resultMin), static_cast<CIEC_LWORD::TValueType>(lwordMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LWORD::TValueType>(resultMax), static_cast<CIEC_LWORD::TValueType>(lwordMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_from_big_endian_lword_min_max) {
+    const CIEC_LWORD lwordMin(std::numeric_limits<CIEC_LWORD::TValueType>::min());
+    const CIEC_LWORD lwordMax(std::numeric_limits<CIEC_LWORD::TValueType>::max());
+
+    CIEC_LWORD resultMin = func_FROM_BIG_ENDIAN(lwordMin);
+    CIEC_LWORD resultMax = func_FROM_BIG_ENDIAN(lwordMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LWORD::TValueType>(resultMin), static_cast<CIEC_LWORD::TValueType>(lwordMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LWORD::TValueType>(resultMax), static_cast<CIEC_LWORD::TValueType>(lwordMax));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_to_big_endian_lword_min_max) {
+    const CIEC_LWORD lwordMin(std::numeric_limits<CIEC_LWORD::TValueType>::min());
+    const CIEC_LWORD lwordMax(std::numeric_limits<CIEC_LWORD::TValueType>::max());
+
+    CIEC_LWORD resultMin = func_TO_BIG_ENDIAN(lwordMin);
+    CIEC_LWORD resultMax = func_TO_BIG_ENDIAN(lwordMax);
+
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LWORD::TValueType>(resultMin), static_cast<CIEC_LWORD::TValueType>(lwordMin));
+    BOOST_REQUIRE_EQUAL(static_cast<CIEC_LWORD::TValueType>(resultMax), static_cast<CIEC_LWORD::TValueType>(lwordMax));
   }
 
   BOOST_AUTO_TEST_CASE(output_int_test) {
