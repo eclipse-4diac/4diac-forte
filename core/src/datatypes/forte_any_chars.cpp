@@ -12,7 +12,6 @@
  *   Alois Zoitl - extracted and reimplemnted from forte_any_string
  *   Martin Jobst - fix line feed and newline escape sequences
  *******************************************************************************/
-#include <format>
 #include "forte/datatypes/forte_any_chars.h"
 
 using namespace forte;
@@ -29,7 +28,11 @@ void CIEC_ANY_CHARS::dollarEscapeChar(std::string &paTargetBuf, char paSymbol, c
     case '\"': paTargetBuf += (paTypeID == e_WSTRING) ? "$\"" : "\""s; break;
     default:
       if (!isprint(static_cast<unsigned char>(paSymbol)) && paTypeID == e_STRING) {
-        std::format_to(std::back_inserter(paTargetBuf), "${:02X}", static_cast<unsigned char>(paSymbol));
+        static const char scmHex[] = "0123456789ABCDEF";
+        const unsigned char c = static_cast<unsigned char>(paSymbol);
+        paTargetBuf += '$';
+        paTargetBuf += scmHex[(c >> 4) & 0xF];
+        paTargetBuf += scmHex[c & 0xF];
       } else {
         paTargetBuf += paSymbol;
       }

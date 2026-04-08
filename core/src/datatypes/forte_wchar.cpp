@@ -16,7 +16,6 @@
  *******************************************************************************/
 #include "forte/datatypes/forte_wchar.h"
 #include <cstdint>
-#include <format>
 #include "forte/util/string_utils.h"
 
 using namespace forte::literals;
@@ -42,7 +41,13 @@ namespace forte {
         if (symbol < 256 && isprint(static_cast<unsigned char>(symbol))) {
           paTargetBuf += static_cast<char>(symbol);
         } else {
-          std::format_to(std::back_inserter(paTargetBuf), "${:04X}", static_cast<uint16_t>(symbol));
+          static const char scmHex[] = "0123456789ABCDEF";
+          const uint16_t c = static_cast<uint16_t>(symbol);
+          paTargetBuf += '$';
+          paTargetBuf += scmHex[(c >> 12) & 0xF];
+          paTargetBuf += scmHex[(c >>  8) & 0xF];
+          paTargetBuf += scmHex[(c >>  4) & 0xF];
+          paTargetBuf += scmHex[ c        & 0xF];
         }
         paTargetBuf += "\"";
         break;

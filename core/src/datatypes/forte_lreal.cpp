@@ -15,7 +15,7 @@
  *   Alois Zoitl - migrated data type toString to std::string
  *******************************************************************************/
 #include <cmath>
-#include <format>
+#include <cstdio>
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
@@ -52,8 +52,11 @@ namespace forte {
 
   void CIEC_LREAL::toString(std::string &paTargetBuf) const {
     auto startPos = paTargetBuf.size();
-    std::format_to(std::back_inserter(paTargetBuf), "{:.{}g}", getTDFLOAT(),
-                   std::numeric_limits<TValueType>::max_digits10);
+    char buf[32];
+    snprintf(buf, sizeof(buf), "%.*g",
+             std::numeric_limits<TValueType>::max_digits10,
+             static_cast<double>(getTDFLOAT()));
+    paTargetBuf.append(buf);
     normalizeToStringRepresentation(paTargetBuf, startPos);
   }
 
