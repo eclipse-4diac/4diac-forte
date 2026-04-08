@@ -19,7 +19,6 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
-#include <format>
 #include "forte/datatypes/forte_real.h"
 #include "forte/datatypes/forte_lreal.h"
 #include "forte/datatypes/forte_lint.h"
