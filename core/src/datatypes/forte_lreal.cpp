@@ -15,7 +15,6 @@
  *   Alois Zoitl - migrated data type toString to std::string
  *******************************************************************************/
 #include <cmath>
-#include <format>
 #include <string.h>
 #include <stdlib.h>
 #include <errno.h>
