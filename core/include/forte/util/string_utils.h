@@ -37,6 +37,8 @@ namespace forte::util {
     return static_cast<TForteInt8>(paValue - '0');
   }
 
+  char hexChar(unsigned char charCode);
+
   TForteInt8 charAtoFToInt(char paValue);
 
   inline TForteInt8 charHexDigitToInt(char paValue) {
