@@ -1,5 +1,5 @@
 #############################################################################
-# Copyright (c) 2025 Martin Erich Jobst
+# Copyright (c) 2025 Martin Erich Jobst, Demmler Andreas Fahrzeugbau
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
@@ -10,9 +10,14 @@
 # Contributors:
 #    Martin Erich Jobst
 #      - initial API and implementation and/or initial documentation
+#    Franz Höpfinger
+#      - add arrays
 #############################################################################
 
+# This file was generated using the 4DIAC FORTE Export Filter 3.1.100.202604012115!
+
 add_subdirectory(arithmetic)
+add_subdirectory(arrays)
 add_subdirectory(bistableElements)
 add_subdirectory(bitwiseOperators)
 add_subdirectory(charString)
