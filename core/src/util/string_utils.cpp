@@ -41,6 +41,11 @@ namespace forte {
     return ((paValue >= 'A') && (paValue <= 'F'));
   }
 
+  char util::hexChar(unsigned char charCode) {
+    charCode &= 0x0F;
+    return charCode < 10 ? '0' + charCode : 'A' - 10 + charCode;
+  }
+
   TForteInt8 util::charAtoFToInt(char paValue) {
     return static_cast<TForteInt8>((toupper(paValue) - 'A') + 10);
   }
