@@ -23,7 +23,7 @@
 #include <iostream>
 #include <vector>
 #include <algorithm>
-#include <format>
+#include <iomanip>
 
 using namespace std::string_literals;
 
@@ -56,9 +56,8 @@ namespace forte::util {
                      const std::string_view paHelp,
                      std::size_t maxShortNameLength,
                      std::size_t maxLongNameLength) {
-      std::cout << std::format("  -{:{}} --{:{}} {} {}", std::string(paShortName) + ",", maxShortNameLength + 1,
-                               paLongName, maxLongNameLength, paArgumentName, paHelp)
-                << std::endl;
+      std::cout << "  -" << std::left << std::setw(maxShortNameLength + 1) << std::string(paShortName) + "," << " --"
+                << std::setw(maxLongNameLength) << paLongName << " " << paArgumentName << " " << paHelp << std::endl;
     }
   } // namespace
 
