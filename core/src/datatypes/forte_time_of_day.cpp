@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2015 nxtControl GmbH, ACIN, Profactor GmbH, fortiss GmbH,
- *                          Primetals Technologies Austria GmbH
+ * Copyright (c) 2008 nxtControl GmbH, ACIN, Profactor GmbH, fortiss GmbH,
+ *                    Primetals Technologies Austria GmbH, Insolsoft
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -12,14 +12,13 @@
  *   Stanislav Meduna, Alois Zoitl, Gerhard Ebenhofer, Martin Melik Merkumians
  *      - initial implementation and rework communication infrastructure
  *   Alois Zoitl  - migrated data type toString to std::string
+ *   Anton Gusev  - use appendInt in toString
  *******************************************************************************/
-#include <format>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
 #include "forte/datatypes/forte_time_of_day.h"
-#include "forte/arch/forte_architecture_time.h"
 #include "forte/util/string_utils.h"
 
 using namespace forte::literals;
@@ -94,12 +93,16 @@ namespace forte {
   }
 
   void CIEC_TIME_OF_DAY::toString(std::string &paTargetBuf) const {
-    TForteUInt64 ntoStingBuffer = getTUINT64();
-    time_t t = static_cast<time_t>(ntoStingBuffer / 1000000000);
-
-    std::format_to(std::back_inserter(paTargetBuf), "TOD#{:02}:{:02}:{:02}.{:03}", (int) (t / 3600),
-                   static_cast<int>((t % 3600) / 60), static_cast<int>(t % 60),
-                   static_cast<int>((ntoStingBuffer / 1000000) % 1000));
+    TForteUInt64 nanosec = getTUINT64();
+    time_t t = static_cast<time_t>(nanosec / (1000ULL * 1000000ULL));
+    paTargetBuf += "TOD#";
+    forte::util::appendInt<2>(paTargetBuf, t / 3600);
+    paTargetBuf += ":";
+    forte::util::appendInt<2>(paTargetBuf, (t % 3600) / 60);
+    paTargetBuf += ":";
+    forte::util::appendInt<2>(paTargetBuf, t % 60);
+    paTargetBuf += ".";
+    forte::util::appendInt<3>(paTargetBuf, (nanosec / 1000000) % 1000);
   }
 
   const StringId CDataTypeTrait<CIEC_TIME_OF_DAY>::scmDataTypeName = "TIME_OF_DAY"_STRID;

@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2025 fortiss GmbH, Martin Erich Jobst,
- *                          Primetals Technologies Austria GmbH
+ * Copyright (c) 2013 fortiss GmbH, Martin Erich Jobst,
+ *                    Primetals Technologies Austria GmbH, Insolsoft
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -14,6 +14,7 @@
  *   Alois Zoitl  - migrated data type toString to std::string
  *   Martin Jobst - move normalizeToStringRepresentation from CIEC_ANY_REAL
  *                - add floating-point formatting function
+ *   Anton Gusev  - add appendInt
  *******************************************************************************/
 
 #pragma once
@@ -100,6 +101,19 @@ namespace forte::util {
   template<typename T>
     requires std::same_as<T, TForteFloat> || std::same_as<T, TForteDFloat>
   void appendFloat(std::string &paTargetBuf, T paValue);
+
+  /**
+   * Append integer to string (zero-padded to width N )
+   */
+  template<size_t N>
+  void appendInt(std::string &paTargetBuf, int paValue) {
+    paTargetBuf.resize(paTargetBuf.size() + N);
+    auto lastPos = paTargetBuf.size() - 1;
+    for (auto i = 0u; i < N; i++) {
+      paTargetBuf[lastPos - i] = '0' + (paValue % 10);
+      paValue /= 10;
+    }
+  }
 
   void normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos);
 } // namespace forte::util
