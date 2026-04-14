@@ -29,5 +29,8 @@ forte_test_add_sourcefile_cpp(E_CTD_tester.cpp)
 forte_test_add_sourcefile_cpp(E_CTU_tester.cpp)
 forte_test_add_sourcefile_cpp(E_CTUD_tester.cpp)
 forte_test_add_sourcefile_cpp(E_REND_tester.cpp)
+forte_test_add_sourcefile_cpp(GEN_E_REND_2_tester.cpp)
+forte_test_add_sourcefile_cpp(GEN_E_REND_3_tester.cpp)
+forte_test_add_sourcefile_cpp(GEN_E_REND_4_tester.cpp)
 
 

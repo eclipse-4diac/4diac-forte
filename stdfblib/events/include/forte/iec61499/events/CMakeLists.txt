@@ -49,6 +49,7 @@ target_sources(forte-events PUBLIC
         GEN_E_DEMUX_fbt.h
         GEN_E_MUX_fbt.h
         GEN_E_MERGE_fbt.h
+        GEN_E_REND_fbt.h
         GEN_E_SPLIT_fbt.h
         timedfb.h
 )
