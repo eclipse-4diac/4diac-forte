@@ -16,6 +16,7 @@
 #pragma once
 
 #include "forte/datatypes/forte_any_elementary.h"
+#include "forte/arch/forte_architecture_time.h"
 
 namespace forte {
   /*!\ingroup COREDTS IIEC_ANY_DATE represents any date data types according to IEC 61131.

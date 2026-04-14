@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2008, 2025 nxtControl GmbH, ACIN, fortiss GmbH,
- *                          Primetals Technolgies Austria GmbH
+ * Copyright (c) 2008 nxtControl GmbH, ACIN, fortiss GmbH,
+ *                    Primetals Technolgies Austria GmbH, Insolsoft
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -12,14 +12,14 @@
  *   Stanislav Meduna, Alois Zoitl, Martin Melik Merkumians
  *                - initial implementation and rework communication infrastructure
  *   Alois Zoitl  - migrated data type toString to std::string
+ *   Anton Gusev  - use appendInt in toString
  *******************************************************************************/
-#include <format>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
 #include "forte/datatypes/forte_ldate.h"
-#include "forte/arch/forte_architecture_time.h"
+#include "forte/util/string_utils.h"
 
 using namespace forte::literals;
 
@@ -73,8 +73,12 @@ namespace forte {
   void CIEC_LDATE::toString(std::string &paTargetBuf) const {
     tm ptm;
     if (nullptr != getTimeStruct(&ptm)) {
-      std::format_to(std::back_inserter(paTargetBuf), "LD#{:04}-{:02}-{:02}", 1900 + ptm.tm_year, ptm.tm_mon + 1,
-                     ptm.tm_mday);
+      paTargetBuf += "LD#";
+      forte::util::appendInt<4>(paTargetBuf, 1900 + ptm.tm_year);
+      paTargetBuf += "-";
+      forte::util::appendInt<2>(paTargetBuf, ptm.tm_mon + 1);
+      paTargetBuf += "-";
+      forte::util::appendInt<2>(paTargetBuf, ptm.tm_mday);
     }
   }
 
