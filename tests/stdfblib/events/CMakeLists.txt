@@ -28,4 +28,6 @@ forte_test_add_sourcefile_cpp(E_SWITCH_tester.cpp)
 forte_test_add_sourcefile_cpp(E_CTD_tester.cpp)
 forte_test_add_sourcefile_cpp(E_CTU_tester.cpp)
 forte_test_add_sourcefile_cpp(E_CTUD_tester.cpp)
+forte_test_add_sourcefile_cpp(E_REND_tester.cpp)
+
 
