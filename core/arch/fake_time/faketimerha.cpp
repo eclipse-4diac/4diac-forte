@@ -75,6 +75,10 @@ namespace forte::arch {
             }
           }
           if (nap.napDuration == 0) {
+            nextTick();
+            while (execThread != 0 && execThread->isProcessingEvents()) {
+              sleepThread(0);
+            }
             DEVLOG_DEBUG("[FAKETIME]: reached target time\n");
           }
         }
