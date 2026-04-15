@@ -39,6 +39,7 @@ namespace forte::eclipse4diac::rtevents {
       bool mInitialized;
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+      EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;

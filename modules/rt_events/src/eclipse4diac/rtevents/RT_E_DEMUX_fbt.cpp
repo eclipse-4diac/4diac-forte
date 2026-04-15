@@ -76,15 +76,39 @@ namespace forte::eclipse4diac::rtevents {
     var_QO = 0_BOOL;
   }
 
+  EMGMResponse FORTE_RT_E_DEMUX::changeExecutionState(EMGMCommandType paCommand) {
+    EMGMResponse retVal = CFunctionBlock::changeExecutionState(paCommand);
+    if (retVal == EMGMResponse::Ready && (paCommand == EMGMCommandType::Stop || paCommand == EMGMCommandType::Kill)) {
+      mECEO0.changeExecutionState(paCommand);
+      mECEO1.changeExecutionState(paCommand);
+      mECEO2.changeExecutionState(paCommand);
+      mECEO3.changeExecutionState(paCommand);
+      mInitialized = false;
+    }
+    return retVal;
+  }
+
   void FORTE_RT_E_DEMUX::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
     switch (paEIID) {
       case scmEventEIID:
         if (mInitialized) {
           switch (static_cast<CIEC_UINT::TValueType>(var_K)) {
-            case 0: sendOutputEvent(scmEventEO0ID, &mECEO0); mECEO0.resumeSelfSuspend(); break;
-            case 1: sendOutputEvent(scmEventEO1ID, &mECEO1); mECEO1.resumeSelfSuspend(); break;
-            case 2: sendOutputEvent(scmEventEO2ID, &mECEO2); mECEO2.resumeSelfSuspend(); break;
-            case 3: sendOutputEvent(scmEventEO3ID, &mECEO3); mECEO3.resumeSelfSuspend(); break;
+            case 0:
+              sendOutputEvent(scmEventEO0ID, &mECEO0);
+              mECEO0.resumeSelfSuspend();
+              break;
+            case 1:
+              sendOutputEvent(scmEventEO1ID, &mECEO1);
+              mECEO1.resumeSelfSuspend();
+              break;
+            case 2:
+              sendOutputEvent(scmEventEO2ID, &mECEO2);
+              mECEO2.resumeSelfSuspend();
+              break;
+            case 3:
+              sendOutputEvent(scmEventEO3ID, &mECEO3);
+              mECEO3.resumeSelfSuspend();
+              break;
             default: break;
           }
         }

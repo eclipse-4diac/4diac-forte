@@ -74,6 +74,10 @@ namespace forte::test {
         return mGenDIs[paIndex].get();
       }
 
+      CFunctionBlock *getFBUnderTest() const {
+        return mFBUnderTest;
+      }
+
     private:
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 

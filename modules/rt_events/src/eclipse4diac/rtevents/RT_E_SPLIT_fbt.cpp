@@ -62,6 +62,16 @@ namespace forte::eclipse4diac::rtevents {
     var_QO = 0_BOOL;
   }
 
+  EMGMResponse FORTE_RT_E_SPLIT::changeExecutionState(EMGMCommandType paCommand) {
+    EMGMResponse retVal = CFunctionBlock::changeExecutionState(paCommand);
+    if (retVal == EMGMResponse::Ready && (paCommand == EMGMCommandType::Stop || paCommand == EMGMCommandType::Kill)) {
+      mECEO1.changeExecutionState(paCommand);
+      mECEO2.changeExecutionState(paCommand);
+      mInitialized = false;
+    }
+    return retVal;
+  }
+
   void FORTE_RT_E_SPLIT::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
     switch (paEIID) {
       case scmEventEIID:

@@ -45,7 +45,8 @@ namespace forte::eclipse4diac::rtevents {
       conn_Tmin(nullptr),
       conn_Deadline(nullptr),
       conn_WCET(nullptr),
-      conn_QO(*this, 0, var_QO) {};
+      conn_QO(*this, 0, var_QO),
+      mState(0) {};
 
   void FORTE_RT_E_REND::setInitialValues() {
     var_QI = 0_BOOL;
@@ -53,7 +54,6 @@ namespace forte::eclipse4diac::rtevents {
     var_Deadline = 0_TIME;
     var_WCET = 0_TIME;
     var_QO = 0_BOOL;
-    mState = 0;
   }
 
   bool FORTE_RT_E_REND::checkActivation(TEventID paEIID) {

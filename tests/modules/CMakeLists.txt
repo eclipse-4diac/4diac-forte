@@ -26,3 +26,8 @@ ENDIF()
 IF(FORTE_COM_HTTP)
   add_subdirectory(HTTP)
 ENDIF()
+
+IF(FORTE_MODULE_RT_Events)
+  add_subdirectory(rt_events)
+ENDIF()
+

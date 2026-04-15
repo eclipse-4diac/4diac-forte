@@ -97,12 +97,15 @@ namespace forte::eclipse4diac::rtevents {
   }
 
   EMGMResponse FORTE_RT_E_DELAY::changeExecutionState(EMGMCommandType paCommand) {
-    mECEO.changeExecutionState(paCommand);
     EMGMResponse eRetVal = CFunctionBlock::changeExecutionState(paCommand);
-    if ((EMGMResponse::Ready == eRetVal) &&
-        ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand)) && mActive) {
-      getTimer().unregisterTimedFB(this);
-      mActive = false;
+    if (EMGMResponse::Ready == eRetVal) {
+      mECEO.changeExecutionState(paCommand);
+      if ((EMGMCommandType::Stop == paCommand) || (EMGMCommandType::Kill == paCommand)) {
+        if (mActive) {
+          getTimer().unregisterTimedFB(this);
+          mActive = false;
+        }
+      }
     }
     return eRetVal;
   }
