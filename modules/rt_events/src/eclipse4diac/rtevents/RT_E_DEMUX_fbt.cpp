@@ -58,7 +58,8 @@ namespace forte::eclipse4diac::rtevents {
       conn_WCET2(nullptr),
       conn_Deadline3(nullptr),
       conn_WCET3(nullptr),
-      conn_QO(*this, 0, var_QO) {};
+      conn_QO(*this, 0, var_QO),
+      mInitialized(false) {};
 
   void FORTE_RT_E_DEMUX::setInitialValues() {
     var_QI = 0_BOOL;

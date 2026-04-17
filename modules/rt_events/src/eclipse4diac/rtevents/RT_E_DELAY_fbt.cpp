@@ -46,7 +46,9 @@ namespace forte::eclipse4diac::rtevents {
       conn_Tmin(nullptr),
       conn_Deadline(nullptr),
       conn_WCET(nullptr),
-      conn_QO(*this, 0, var_QO) {
+      conn_QO(*this, 0, var_QO),
+      mActive(false),
+      mInitialized(false) {
     setEventChainExecutor(&mECEO);
   };
 
