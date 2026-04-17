@@ -68,19 +68,12 @@ namespace forte::eclipse4diac::rtevents {
     switch (paEIID) {
       case scmEventEIID:
         if (mInitialized) {
-          CEventConnection *eoCon;
           if (!var_G) {
-            eoCon = getEOConUnchecked(scmEventEO1ID);
-            if (eoCon->isConnected()) {
-              eoCon->triggerEvent(&mECEO1);
-              mECEO1.resumeSelfSuspend();
-            }
+            sendOutputEvent(scmEventEO1ID, &mECEO1);
+            mECEO1.resumeSelfSuspend();
           } else {
-            eoCon = getEOConUnchecked(scmEventEO2ID);
-            if (eoCon->isConnected()) {
-              eoCon->triggerEvent(&mECEO2);
-              mECEO2.resumeSelfSuspend();
-            }
+            sendOutputEvent(scmEventEO2ID, &mECEO2);
+            mECEO2.resumeSelfSuspend();
           }
         }
         break;
