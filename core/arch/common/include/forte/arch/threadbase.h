@@ -90,6 +90,10 @@ namespace forte::arch {
       }
 
     protected:
+      constexpr long getStackSize() const {
+        return mStackSize;
+      }
+
       explicit CThreadBase(long paStackSize);
 
       virtual ~CThreadBase();
@@ -136,6 +140,7 @@ namespace forte::arch {
 
       /*! \brief create the thread and return a handle to it
        *
+       * @param paStackSize size of the stack in bytes to allocate for this thread
        * @return handle to the newly created thread
        */
       virtual TThreadHandleType createThread(long paStackSize) = 0;
