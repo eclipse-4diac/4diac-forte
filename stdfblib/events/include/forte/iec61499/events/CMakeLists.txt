@@ -23,6 +23,7 @@ target_sources(forte-events PUBLIC
         E_CTUD_UDINT_fbt.h
         E_CYCLE_fbt.h
         E_D_FF_fbt.h
+        E_D_FF_ANY_fbt.h
         E_DELAY_fbt.h
         E_DEMUX_fbt.h
         E_F_TRIG_fbt.h

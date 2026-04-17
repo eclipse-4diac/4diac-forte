@@ -21,6 +21,7 @@ target_sources(forte-events PRIVATE
         E_CTUD_UDINT_fbt.cpp
         E_CYCLE_fbt.cpp
         E_D_FF_fbt.cpp
+        E_D_FF_ANY_fbt.cpp
         E_DELAY_fbt.cpp
         E_DEMUX_fbt.cpp
         E_F_TRIG_fbt.cpp
