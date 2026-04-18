@@ -18,6 +18,8 @@ using namespace forte::literals;
 
 namespace forte::iec61499::events::test {
   struct E_PERMIT_TestFixture : public forte::test::CFBTestFixtureBase {
+      static constexpr TEventID EI = 0;
+      static constexpr TEventID EO = 0;
 
       E_PERMIT_TestFixture() : CFBTestFixtureBase("iec61499::events::E_PERMIT"_STRID) {
         setInputData({&mInPERMIT});
@@ -31,13 +33,13 @@ namespace forte::iec61499::events::test {
 
   BOOST_AUTO_TEST_CASE(permit) {
     mInPERMIT = true_BOOL;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(EI);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(EO));
   }
 
   BOOST_AUTO_TEST_CASE(dontPermit) {
     mInPERMIT = false_BOOL;
-    triggerEvent(0);
+    triggerEvent(EI);
     BOOST_CHECK(eventChainEmpty());
   }
 

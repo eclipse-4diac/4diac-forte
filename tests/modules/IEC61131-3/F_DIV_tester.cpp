@@ -33,8 +33,8 @@ namespace forte::iec61131::arithmetic {
   BOOST_FIXTURE_TEST_SUITE(F_DIV_Tests, F_DIV_TestFixture)
 
   BOOST_AUTO_TEST_CASE(validDivision) {
-    mIn1_DIV = CIEC_INT(30);
-    mIn2_DIV = CIEC_INT(5);
+    mIn1_DIV = 30_INT;
+    mIn2_DIV = 5_INT;
     /* trigger the inputevent */
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));
@@ -42,8 +42,8 @@ namespace forte::iec61131::arithmetic {
   }
 
   BOOST_AUTO_TEST_CASE(divisionByZero) {
-    mIn1_DIV = CIEC_INT(30);
-    mIn2_DIV = CIEC_INT(0);
+    mIn1_DIV = 30_INT;
+    mIn2_DIV = 0_INT;
     /* trigger the inputevent */
     triggerEvent(0);
     BOOST_CHECK(checkForSingleOutputEventOccurence(0));

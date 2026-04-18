@@ -23,6 +23,8 @@ using namespace forte::literals;
 
 namespace forte::test {
   struct CFB_DELEGATING_TEST_TestFixture : CFBTestFixtureBase {
+      static constexpr TEventID REQ = 0;
+      static constexpr TEventID CNF = 0;
 
       CFB_DELEGATING_TEST_TestFixture() : CFBTestFixtureBase("test::CFB_DELEGATING_TEST"_STRID) {
         setInputData({&var_QI, &var_DI1});
@@ -39,8 +41,8 @@ namespace forte::test {
   BOOST_FIXTURE_TEST_SUITE(DelegatingTests, CFB_DELEGATING_TEST_TestFixture)
 
   BOOST_AUTO_TEST_CASE(initTest) {
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     BOOST_TEST(var_QO == true);
     BOOST_TEST(var_DO1.var_VAR1 == false);
     BOOST_TEST(var_DO1.var_VAR2 == false);
@@ -50,8 +52,8 @@ namespace forte::test {
   BOOST_AUTO_TEST_CASE(dataTest) {
     var_QI = true_BOOL;
     var_DI1.var_VAR1 = true_BOOL;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     BOOST_TEST(var_QO == false);
     BOOST_TEST(var_DO1.var_VAR1 == true);
     BOOST_TEST(var_DO1.var_VAR2 == false);

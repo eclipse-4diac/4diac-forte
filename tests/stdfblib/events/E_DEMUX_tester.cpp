@@ -22,6 +22,12 @@ namespace forte::iec61499::events::test {
       DECLARE_FB_TESTER(E_DEMUX_tester);
 
     public:
+      static constexpr TEventID EI = 0;
+      static constexpr TEventID EO0 = 0;
+      static constexpr TEventID EO1 = 1;
+      static constexpr TEventID EO2 = 2;
+      static constexpr TEventID EO3 = 3;
+
     private:
       E_DEMUX_tester(CResource *mTestResource) : CFBTester(mTestResource) {
         setInputData({&mIn_K});
@@ -42,35 +48,35 @@ namespace forte::iec61499::events::test {
         /* prepare inputparameters */
         mIn_K = 0;
         /* trigger the inputevent */
-        triggerEvent(0);
-        return checkForSingleOutputEventOccurence(0);
+        triggerEvent(EI);
+        return checkForSingleOutputEventOccurence(EO0);
       }
       bool testCase_K1() {
         /* prepare inputparameters */
         mIn_K = 1;
         /* trigger the inputevent */
-        triggerEvent(0);
-        return checkForSingleOutputEventOccurence(1);
+        triggerEvent(EI);
+        return checkForSingleOutputEventOccurence(EO1);
       }
       bool testCase_K2() {
         /* prepare inputparameters */
         mIn_K = 2;
         /* trigger the inputevent */
-        triggerEvent(0);
-        return checkForSingleOutputEventOccurence(2);
+        triggerEvent(EI);
+        return checkForSingleOutputEventOccurence(EO2);
       }
       bool testCase_K3() {
         /* prepare inputparameters */
         mIn_K = 3;
         /* trigger the inputevent */
-        triggerEvent(0);
-        return checkForSingleOutputEventOccurence(3);
+        triggerEvent(EI);
+        return checkForSingleOutputEventOccurence(EO3);
       }
       bool testCase_K_GT_3() {
         /* prepare inputparameters */
         mIn_K = 4;
         /* trigger the inputevent */
-        triggerEvent(0);
+        triggerEvent(EI);
         return eventChainEmpty();
       }
 

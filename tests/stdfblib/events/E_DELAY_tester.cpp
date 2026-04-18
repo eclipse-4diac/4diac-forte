@@ -31,6 +31,10 @@ namespace forte::iec61499::events::test {
       DECLARE_FB_TESTER(E_DELAY_tester);
 
     public:
+      static constexpr TEventID START = 0;
+      static constexpr TEventID STOP = 1;
+      static constexpr TEventID EO = 0;
+
       E_DELAY_tester(CResource *mTestResource) : CFBTester(mTestResource) {
         setInputData({&mDT});
       }
@@ -47,18 +51,18 @@ namespace forte::iec61499::events::test {
 
       bool testCase_NormalDelay() {
         mDT.setFromMilliSeconds(500);
-        triggerEvent(0);
+        triggerEvent(START);
         usleep(500000);
-        return checkForSingleOutputEventOccurence(0);
+        return checkForSingleOutputEventOccurence(EO);
       }
       bool testCase_AbortedDelay() {
         bool retVal = true;
         mDT.setFromMilliSeconds(1000);
-        triggerEvent(0);
+        triggerEvent(START);
         if (!eventChainEmpty()) {
           retVal = false_BOOL;
         }
-        triggerEvent(1);
+        triggerEvent(STOP);
         if (!eventChainEmpty()) {
           retVal = false_BOOL;
         }
@@ -71,14 +75,14 @@ namespace forte::iec61499::events::test {
       bool testCase_MultipleStarts() {
         bool retVal = true;
         mDT.setFromMilliSeconds(200);
-        triggerEvent(0);
+        triggerEvent(START);
         usleep(50000);
         if (!eventChainEmpty()) {
           retVal = false_BOOL;
         }
-        triggerEvent(0);
+        triggerEvent(START);
         usleep(150000);
-        if (!checkForSingleOutputEventOccurence(0)) {
+        if (!checkForSingleOutputEventOccurence(EO)) {
           retVal = false_BOOL;
         }
         usleep(50000);

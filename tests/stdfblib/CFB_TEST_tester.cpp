@@ -18,6 +18,10 @@ using namespace forte::literals;
 
 namespace forte::test {
   struct CFB_TEST_TestFixture : public CFBTestFixtureBase {
+      static constexpr TEventID SET = 0;
+      static constexpr TEventID RESET = 1;
+      static constexpr TEventID CNF = 0;
+      static constexpr TEventID CHANGED = 1;
 
       CFB_TEST_TestFixture() : CFBTestFixtureBase("CFB_TEST"_STRID) {
         setInputData({&mInQI});
@@ -30,10 +34,10 @@ namespace forte::test {
 
       bool checkBothOutputEvents() {
         bool bResult = true;
-        if (0 != pullFirstChainEventID()) {
+        if (CNF != pullFirstChainEventID()) {
           bResult = false;
         }
-        if (1 != pullFirstChainEventID()) {
+        if (CHANGED != pullFirstChainEventID()) {
           bResult = false;
         }
         if (!eventChainEmpty()) {
@@ -48,10 +52,10 @@ namespace forte::test {
   BOOST_AUTO_TEST_CASE(inhibitTest) {
     mInQI = false_BOOL;
     for (unsigned int i = 0; i < 100; ++i) {
-      triggerEvent(0);
+      triggerEvent(SET);
       BOOST_CHECK(eventChainEmpty());
       BOOST_CHECK_EQUAL(false, mOutSR);
-      triggerEvent(1);
+      triggerEvent(RESET);
       BOOST_CHECK(eventChainEmpty());
       BOOST_CHECK_EQUAL(false, mOutSR);
     }
@@ -59,26 +63,26 @@ namespace forte::test {
 
   BOOST_AUTO_TEST_CASE(setTest) {
     mInQI = true_BOOL;
-    triggerEvent(0);
+    triggerEvent(SET);
     BOOST_CHECK(checkBothOutputEvents());
     BOOST_CHECK_EQUAL(true, mOutSR);
     for (unsigned int i = 0; i < 100; ++i) {
-      triggerEvent(0);
-      BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+      triggerEvent(SET);
+      BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
       BOOST_CHECK_EQUAL(true, mOutSR);
     }
   }
 
   BOOST_AUTO_TEST_CASE(resetTest) {
     mInQI = true_BOOL;
-    triggerEvent(0);
+    triggerEvent(SET);
     clearEventChain();
-    triggerEvent(1);
+    triggerEvent(RESET);
     BOOST_CHECK(checkBothOutputEvents());
     BOOST_CHECK_EQUAL(false, mOutSR);
     for (unsigned int i = 0; i < 100; ++i) {
-      triggerEvent(1);
-      BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+      triggerEvent(RESET);
+      BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
       BOOST_CHECK_EQUAL(false, mOutSR);
     }
   }
@@ -86,10 +90,10 @@ namespace forte::test {
   BOOST_AUTO_TEST_CASE(toggleTest) {
     mInQI = true_BOOL;
     for (int i = 0; i < 1000; ++i) {
-      triggerEvent(0);
+      triggerEvent(SET);
       BOOST_CHECK(checkBothOutputEvents());
       BOOST_CHECK_EQUAL(true, mOutSR);
-      triggerEvent(1);
+      triggerEvent(RESET);
       BOOST_CHECK(checkBothOutputEvents());
       BOOST_CHECK_EQUAL(false, mOutSR);
     }
