@@ -19,13 +19,13 @@
 #include <cstring>
 #include <cstdlib>
 #include <cstdio>
-#include <format>
 #include "forte/datatypes/forte_real.h"
 #include "forte/datatypes/forte_lreal.h"
 #include "forte/datatypes/forte_lint.h"
 #include "forte/datatypes/forte_ulint.h"
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
+#include "forte/arch/forte_format.h"
 
 using namespace forte::literals;
 
@@ -54,8 +54,8 @@ namespace forte {
 
   void CIEC_REAL::toString(std::string &paTargetBuf) const {
     auto startPos = paTargetBuf.size();
-    std::format_to(std::back_inserter(paTargetBuf), "{:.{}g}", getTFLOAT(),
-                   std::numeric_limits<TValueType>::max_digits10);
+    forte::arch::format_to(std::back_inserter(paTargetBuf), "{:.{}g}", getTFLOAT(),
+                           std::numeric_limits<TValueType>::max_digits10);
 
     normalizeToStringRepresentation(paTargetBuf, startPos);
   }

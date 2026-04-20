@@ -18,6 +18,7 @@ target_sources(forte-core PUBLIC
         forte_architecture.h
         forte_architecture_time.h
         forte_fileio.h
+        forte_format.h
         forte_printer.h
         forte_specific_architecture.h
         threadbase.h

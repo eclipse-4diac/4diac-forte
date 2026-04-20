@@ -13,13 +13,12 @@
  *                - initial implementation and rework communication infrastructure
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#include <format>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
 #include "forte/datatypes/forte_ldate.h"
-#include "forte/arch/forte_architecture_time.h"
+#include "forte/arch/forte_format.h"
 
 using namespace forte::literals;
 
@@ -73,8 +72,8 @@ namespace forte {
   void CIEC_LDATE::toString(std::string &paTargetBuf) const {
     tm ptm;
     if (nullptr != getTimeStruct(&ptm)) {
-      std::format_to(std::back_inserter(paTargetBuf), "LD#{:04}-{:02}-{:02}", 1900 + ptm.tm_year, ptm.tm_mon + 1,
-                     ptm.tm_mday);
+      forte::arch::format_to(std::back_inserter(paTargetBuf), "LD#{:04}-{:02}-{:02}", 1900 + ptm.tm_year,
+                             ptm.tm_mon + 1, ptm.tm_mday);
     }
   }
 

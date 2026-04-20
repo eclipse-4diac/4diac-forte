@@ -26,6 +26,13 @@ target_compile_options(forte-core PUBLIC
         $<$<COMPILE_LANGUAGE:CXX>:$<$<BOOL:${HAVE_EXCEPTIONS_FLAG}>:$<IF:$<BOOL:${FORTE_RTTI_AND_EXCEPTIONS}>,-fexceptions,-fno-exceptions>>>
 )
 
+option(FORTE_CUSTOM_FORMAT "Use custom format implementation" FALSE)
+#mark_as_advanced(FORTE_CUSTOM_FORMAT)
+if(FORTE_CUSTOM_FORMAT)
+  target_compile_definitions(forte-core PUBLIC "FORTE_CUSTOM_FORMAT")
+endif(FORTE_CUSTOM_FORMAT)
+
+
 ###############################################################################
 # Architectures
 

@@ -13,14 +13,13 @@
  *      - initial implementation and rework communication infrastructure
  *   Alois Zoitl  - migrated data type toString to std::string
  *******************************************************************************/
-#include <format>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>
 #include <ctype.h>
 #include "forte/datatypes/forte_time_of_day.h"
-#include "forte/arch/forte_architecture_time.h"
 #include "forte/util/string_utils.h"
+#include "forte/arch/forte_format.h"
 
 using namespace forte::literals;
 
@@ -97,9 +96,9 @@ namespace forte {
     TForteUInt64 ntoStingBuffer = getTUINT64();
     time_t t = static_cast<time_t>(ntoStingBuffer / 1000000000);
 
-    std::format_to(std::back_inserter(paTargetBuf), "TOD#{:02}:{:02}:{:02}.{:03}", (int) (t / 3600),
-                   static_cast<int>((t % 3600) / 60), static_cast<int>(t % 60),
-                   static_cast<int>((ntoStingBuffer / 1000000) % 1000));
+    forte::arch::format_to(std::back_inserter(paTargetBuf), "TOD#{:02}:{:02}:{:02}.{:03}", (int) (t / 3600),
+                           static_cast<int>((t % 3600) / 60), static_cast<int>(t % 60),
+                           static_cast<int>((ntoStingBuffer / 1000000) % 1000));
   }
 
   const StringId CDataTypeTrait<CIEC_TIME_OF_DAY>::scmDataTypeName = "TIME_OF_DAY"_STRID;
