@@ -1,0 +1,34 @@
+# https://pre-commit.com/
+# Install: pip install pre-commit && pre-commit install
+# Run manually: pre-commit run --all-files
+
+repos:
+  # General code quality checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    # Using the full SHA instead of the tag 'v6.0.0'
+    rev: 3e8a8703264a2f4a69428a0aa4dcb512790b2c8c
+    hooks:
+      - id: trailing-whitespace
+        exclude: \.patch$
+      - id: end-of-file-fixer
+        exclude: \.patch$
+      - id: check-yaml
+        exclude: ^core/src/trace/  # barectf custom YAML tags
+      - id: check-added-large-files
+      - id: check-merge-conflict
+      - id: mixed-line-ending
+        args: [--fix=lf]
+
+  # clang-format — identical to .github/workflows/cpp-linter.yml
+  # version: 20, style: file (.clang-format), tidy: disabled
+  - repo: https://github.com/pre-commit/mirrors-clang-format
+    # Using the full SHA instead of the tag 'v22.1.4'
+    rev: 39233709be54124a7371a50cbfc5325bd4fb9d90
+    hooks:
+      - id: clang-format
+        types_or: [c++]
+        exclude: |
+          (?x)^(
+            core/src/trace/classic/generated/.*|
+            core/src/trace/replay_debugging/generated/.*
+          )$

@@ -48,6 +48,35 @@ To build and develop the 4diac FORTE you need:
 
 A detailed description of setting up a 4diac FORTE development environment and build 4diac FORTE from source can be found in our [development documentation](https://eclipse.dev/4diac/doc/installation/#_4diacforte)
 
+### Code Style
+
+The coding guidelines are documented in the [4diac FORTE coding rules](https://github.com/eclipse-4diac/4diac-forte/blob/develop/doc/coding_rules/forte_coding_rules.pdf) page.
+
+Code style for C++ files is enforced via [clang-format](https://clang.llvm.org/docs/ClangFormat.html), configured in `.clang-format` at the repository root. Most modern editors (VS Code, CLion, Eclipse CDT) can apply clang-format automatically on save.
+
+#### Pre-commit Hooks (Optional)
+
+We provide Git [pre-commit](https://pre-commit.com/) hooks that can automatically check your code style locally in order to avoid CI failures.
+The hooks mirror the CI checks in `.github/workflows/`.
+
+**Install pre-commit:**
+```bash
+pip install pre-commit
+pre-commit install
+```
+
+Once installed, the hooks run automatically on every `git commit`. To run them manually on all files:
+```bash
+pre-commit run --all-files
+```
+
+The following checks are configured in `.pre-commit-config.yaml`:
+
+| Hook | Matches CI check |
+|------|-----------------|
+| `clang-format` (clang-20, style: file) | `.github/workflows/cpp-linter.yml` |
+| Trailing whitespace, end-of-file, YAML | general quality |
+
 ## Eclipse Development Process
 
 This project operates under the [Eclipse Foundation development process](https://eclipse.org/projects/dev_process) and [IP policy](https://www.eclipse.org/org/documents/Eclipse_IP_Policy.pdf).

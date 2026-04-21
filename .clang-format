@@ -125,4 +125,7 @@ SpacesInParentheses: false
 
 # https://clang.llvm.org/docs/ClangFormatStyleOptions.html#tabwidth
 TabWidth: 2
+
+# https://clang.llvm.org/docs/ClangFormatStyleOptions.html#usetab
+UseTab: Never
 ...
