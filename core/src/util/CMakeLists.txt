@@ -25,6 +25,9 @@ endif ()
 
 option(FORTE_LOGGER_READABLE_TIME "Logger time in IEC 61131-3 date time literal" OFF)
 
+option(FORTE_FORMAT_REAL_PRINTF "Use printf instead of std::to_chars for floating-point values" OFF)
+mark_as_advanced(FORTE_FORMAT_REAL_PRINTF)
+
 target_sources(forte-core PRIVATE
         configFileParser.cpp
         configFileParser.h
@@ -33,6 +36,7 @@ target_sources(forte-core PRIVATE
         string_utils.cpp
         $<$<NOT:$<OR:$<STREQUAL:${FORTE_LOGLEVEL},NOLOG>,$<BOOL:${FORTE_EXTERNAL_LOG_HANDLER}>>>:${CMAKE_CURRENT_SOURCE_DIR}/devlog.cpp>
         $<IF:$<BOOL:${FORTE_LOGGER_READABLE_TIME}>,${CMAKE_CURRENT_SOURCE_DIR}/readableTimeString.cpp,${CMAKE_CURRENT_SOURCE_DIR}/plainTimeString.cpp>
+        $<IF:$<BOOL:${FORTE_FORMAT_REAL_PRINTF}>,${CMAKE_CURRENT_SOURCE_DIR}/string_utils_printf.cpp,${CMAKE_CURRENT_SOURCE_DIR}/string_utils_to_chars.cpp>
 )
 target_compile_definitions(forte-core PUBLIC "FORTE_${FORTE_LOGLEVEL}")
 

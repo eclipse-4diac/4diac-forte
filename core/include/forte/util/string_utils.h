@@ -13,14 +13,17 @@
  *   Martin Jobst - add string join function
  *   Alois Zoitl  - migrated data type toString to std::string
  *   Martin Jobst - move normalizeToStringRepresentation from CIEC_ANY_REAL
+ *                - add floating-point formatting function
  *******************************************************************************/
 
 #pragma once
 
 #include "forte/datatype.h"
-#include <string>
 #include "forte/stringid.h"
 #include "forte/datatypes/forte_any.h"
+
+#include <concepts>
+#include <string>
 
 namespace forte::util {
 
@@ -93,6 +96,10 @@ namespace forte::util {
 
   void
   writeToStringNameValuePair(std::string &paTargetBuf, const StringId variableNameId, const CIEC_ANY *const variable);
+
+  template<typename T>
+    requires std::same_as<T, TForteFloat> || std::same_as<T, TForteDFloat>
+  void appendFloat(std::string &paTargetBuf, T paValue);
 
   void normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos);
 } // namespace forte::util
