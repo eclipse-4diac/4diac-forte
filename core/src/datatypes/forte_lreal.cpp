@@ -52,10 +52,7 @@ namespace forte {
   }
 
   void CIEC_LREAL::toString(std::string &paTargetBuf) const {
-    auto startPos = paTargetBuf.size();
-    std::format_to(std::back_inserter(paTargetBuf), "{:.{}g}", getTDFLOAT(),
-                   std::numeric_limits<TValueType>::max_digits10);
-    util::normalizeToStringRepresentation(paTargetBuf, startPos);
+    util::appendFloat(paTargetBuf, getTDFLOAT());
   }
 
   void CIEC_LREAL::setValue(const CIEC_ANY &paValue) {
