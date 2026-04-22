@@ -1,0 +1,110 @@
+/*******************************************************************************
+ * Copyright (c) 2023 Martin Erich Jobst, HR Agrartechnik GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Franz Höpfinger
+ *     - copy FB_CTUD_ULINT and made FB_CTUD_UDINT
+ *******************************************************************************/
+
+#pragma once
+
+#include "forte/simplefb.h"
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_udint.h"
+#include "forte/forte_st_util.h"
+#include "forte/datatypes/forte_array_common.h"
+#include "forte/datatypes/forte_array.h"
+#include "forte/datatypes/forte_array_fixed.h"
+#include "forte/datatypes/forte_array_variable.h"
+
+namespace forte::iec61131::counters {
+  class FORTE_FB_CTUD_UDINT final : public CSimpleFB {
+      DECLARE_FIRMWARE_FB(FORTE_FB_CTUD_UDINT)
+
+    private:
+      static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventREQID = 0;
+
+      CIEC_ANY *getVarInternal(size_t) override;
+
+      void alg_REQ(void);
+
+      void enterStateREQ(CEventChainExecutionThread *const paECET);
+
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
+
+    public:
+      FORTE_FB_CTUD_UDINT(StringId paInstanceNameId, CFBContainer &paContainer);
+
+      CIEC_BOOL var_CU;
+      CIEC_BOOL var_CD;
+      CIEC_BOOL var_R;
+      CIEC_BOOL var_LD;
+      CIEC_UDINT var_PV;
+
+      CIEC_BOOL var_QU;
+      CIEC_BOOL var_QD;
+      CIEC_UDINT var_CV;
+
+      CEventConnection conn_CNF;
+
+      CDataConnection *conn_CU;
+      CDataConnection *conn_CD;
+      CDataConnection *conn_R;
+      CDataConnection *conn_LD;
+      CDataConnection *conn_PV;
+
+      COutDataConnection<CIEC_BOOL> conn_QU;
+      COutDataConnection<CIEC_BOOL> conn_QD;
+      COutDataConnection<CIEC_UDINT> conn_CV;
+
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
+
+      void evt_REQ(const CIEC_BOOL &paCU,
+                   const CIEC_BOOL &paCD,
+                   const CIEC_BOOL &paR,
+                   const CIEC_BOOL &paLD,
+                   const CIEC_UDINT &paPV,
+                   CAnyBitOutputParameter<CIEC_BOOL> paQU,
+                   CAnyBitOutputParameter<CIEC_BOOL> paQD,
+                   COutputParameter<CIEC_UDINT> paCV) {
+        COutputGuard guard_paQU(paQU);
+        COutputGuard guard_paQD(paQD);
+        COutputGuard guard_paCV(paCV);
+        var_CU = paCU;
+        var_CD = paCD;
+        var_R = paR;
+        var_LD = paLD;
+        var_PV = paPV;
+        executeEvent(scmEventREQID, nullptr);
+        *paQU = var_QU;
+        *paQD = var_QD;
+        *paCV = var_CV;
+      }
+
+      void operator()(const CIEC_BOOL &paCU,
+                      const CIEC_BOOL &paCD,
+                      const CIEC_BOOL &paR,
+                      const CIEC_BOOL &paLD,
+                      const CIEC_UDINT &paPV,
+                      CAnyBitOutputParameter<CIEC_BOOL> paQU,
+                      CAnyBitOutputParameter<CIEC_BOOL> paQD,
+                      COutputParameter<CIEC_UDINT> paCV) {
+        evt_REQ(paCU, paCD, paR, paLD, paPV, paQU, paQD, paCV);
+      }
+  };
+} // namespace forte::iec61131::counters
