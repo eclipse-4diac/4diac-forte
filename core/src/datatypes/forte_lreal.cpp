@@ -25,6 +25,7 @@
 #include "forte/datatypes/forte_ulint.h"
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
+#include "forte/util/string_utils.h"
 
 using namespace forte::literals;
 
@@ -54,7 +55,7 @@ namespace forte {
     auto startPos = paTargetBuf.size();
     std::format_to(std::back_inserter(paTargetBuf), "{:.{}g}", getTDFLOAT(),
                    std::numeric_limits<TValueType>::max_digits10);
-    normalizeToStringRepresentation(paTargetBuf, startPos);
+    util::normalizeToStringRepresentation(paTargetBuf, startPos);
   }
 
   void CIEC_LREAL::setValue(const CIEC_ANY &paValue) {

@@ -30,7 +30,6 @@ target_sources(forte-core PRIVATE
         forte_any_int_variant.cpp
         forte_any_magnitude_variant.cpp
         forte_any_num_variant.cpp
-        forte_any_real.cpp
         forte_any_real_variant.cpp
         forte_any_signed_variant.cpp
         forte_any_string.cpp
