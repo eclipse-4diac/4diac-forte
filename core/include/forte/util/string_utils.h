@@ -12,9 +12,10 @@
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
  *   Martin Jobst - add string join function
  *   Alois Zoitl  - migrated data type toString to std::string
+ *   Martin Jobst - move normalizeToStringRepresentation from CIEC_ANY_REAL
  *******************************************************************************/
-#ifndef _STRING_UTILS_H_
-#define _STRING_UTILS_H_
+
+#pragma once
 
 #include "forte/datatype.h"
 #include <string>
@@ -93,6 +94,5 @@ namespace forte::util {
   void
   writeToStringNameValuePair(std::string &paTargetBuf, const StringId variableNameId, const CIEC_ANY *const variable);
 
+  void normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos);
 } // namespace forte::util
-
-#endif
