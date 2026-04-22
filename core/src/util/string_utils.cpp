@@ -229,8 +229,11 @@ namespace forte::util {
   void normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos) {
     if (std::isalpha(paTargetBuf[paStartPos]) || ((paTargetBuf[paStartPos] == '-' || paTargetBuf[paStartPos] == '+') &&
                                                   std::isalpha(paTargetBuf[paStartPos + 1]))) {
-      // if first or (signed) second char is an alphabetic char we have nan or infinity and we should not perform
-      // corrections
+      // if first or (signed) second char is an alphabetic char we have nan or infinity
+      // remove optional parenthesis after "nan" (e.g., "-nan(ind)")
+      if (const auto parenPos = paTargetBuf.find("(", paStartPos); parenPos != std::string::npos) {
+        paTargetBuf.resize(parenPos);
+      }
       return;
     }
 
