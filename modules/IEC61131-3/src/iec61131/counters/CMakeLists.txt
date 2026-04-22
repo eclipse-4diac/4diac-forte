@@ -26,5 +26,6 @@ target_sources(forte-iec61131-3 PRIVATE
         FB_CTUD_DINT_fbt.cpp
         FB_CTUD_fbt.cpp
         FB_CTUD_LINT_fbt.cpp
+        FB_CTUD_UDINT_fbt.cpp
         FB_CTUD_ULINT_fbt.cpp
 )
