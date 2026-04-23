@@ -22,6 +22,10 @@ using namespace forte::literals;
 
 namespace forte::iec61499::events::test {
   struct E_CTD_TestFixture : public forte::test::CFBTestFixtureBase {
+      static constexpr TEventID CD = 0;
+      static constexpr TEventID LD = 1;
+      static constexpr TEventID CDO = 0;
+      static constexpr TEventID LDO = 1;
 
       E_CTD_TestFixture() : CFBTestFixtureBase("iec61499::events::E_CTD"_STRID) {
         setInputData({&mInPV});
@@ -43,9 +47,9 @@ namespace forte::iec61499::events::test {
         } else {
           if (func_NE(CIEC_UINT(pa_prevCV - 1), mOutCV)) {
             return false;
-          } else if (func_NE(mOutQ, func_LT(mOutCV, CIEC_UINT(1)))) {
+          } else if (func_NE(mOutQ, func_LT(mOutCV, 1_UINT))) {
             return false;
-          } else if (!checkForSingleOutputEventOccurence(0)) {
+          } else if (!checkForSingleOutputEventOccurence(CDO)) {
             return false;
           }
         }
@@ -57,7 +61,7 @@ namespace forte::iec61499::events::test {
                     func_OR(func_NE(mInPV, mOutCV), func_NE(CIEC_BOOL(pa_usedPV < 1), mOutQ)))) {
           return false;
         }
-        if (!checkForSingleOutputEventOccurence(1)) {
+        if (!checkForSingleOutputEventOccurence(LDO)) {
           return false;
         }
         return true;
@@ -73,10 +77,10 @@ namespace forte::iec61499::events::test {
     for (unsigned int i = 0; i < numberOfValues; i++) {
       for (unsigned int j = 0; j < numberOfTries; j++) {
         mInPV = CIEC_UINT(valuesToTest[i]);
-        triggerEvent(1);
-        checkForSingleOutputEventOccurence(1);
+        triggerEvent(LD);
+        checkForSingleOutputEventOccurence(LDO);
         // Send event
-        triggerEvent(0);
+        triggerEvent(CD);
         BOOST_CHECK(checkCD(valuesToTest[i]));
       }
     }
@@ -89,7 +93,7 @@ namespace forte::iec61499::events::test {
     for (unsigned int i = 0; i < numberOftest; ++i) {
       for (unsigned int j = 0; j < numberOfTries; j++) {
         mInPV = CIEC_UINT(PVToTest[i]);
-        triggerEvent(1);
+        triggerEvent(LD);
         BOOST_CHECK(checkLD(PVToTest[i]));
       }
     }
@@ -98,48 +102,48 @@ namespace forte::iec61499::events::test {
   BOOST_AUTO_TEST_CASE(Mix) {
     unsigned int numberOfTries = 100;
     for (unsigned int i = 0; i < numberOfTries; i++) {
-      mInPV = CIEC_UINT(0);
-      triggerEvent(1);
+      mInPV = 0_UINT;
+      triggerEvent(LD);
       BOOST_CHECK(checkLD(0));
-      triggerEvent(0);
+      triggerEvent(CD);
       BOOST_CHECK(checkCD(0));
 
-      mInPV = CIEC_UINT(1);
-      triggerEvent(0);
+      mInPV = 1_UINT;
+      triggerEvent(CD);
       BOOST_CHECK(checkCD(0));
-      triggerEvent(1);
+      triggerEvent(LD);
       BOOST_CHECK(checkLD(1));
-      triggerEvent(0);
+      triggerEvent(CD);
       BOOST_CHECK(checkCD(1));
-      triggerEvent(0);
+      triggerEvent(CD);
       BOOST_CHECK(checkCD(0));
-      triggerEvent(1);
+      triggerEvent(LD);
       BOOST_CHECK(checkLD(1));
-      triggerEvent(1);
+      triggerEvent(LD);
       BOOST_CHECK(checkLD(1));
-      triggerEvent(1);
+      triggerEvent(LD);
       BOOST_CHECK(checkLD(1));
-      triggerEvent(0);
+      triggerEvent(CD);
       BOOST_CHECK(checkCD(1));
-      triggerEvent(0);
+      triggerEvent(CD);
       BOOST_CHECK(checkCD(0));
 
-      mInPV = CIEC_UINT(65535);
-      triggerEvent(1);
+      mInPV = 65535_UINT;
+      triggerEvent(LD);
       BOOST_CHECK(checkLD(65535));
-      triggerEvent(0);
+      triggerEvent(CD);
       BOOST_CHECK(checkCD(65535));
-      triggerEvent(0);
+      triggerEvent(CD);
       BOOST_CHECK(checkCD(65534));
-      triggerEvent(1);
+      triggerEvent(LD);
       BOOST_CHECK(checkLD(65535));
-      triggerEvent(1);
+      triggerEvent(LD);
       BOOST_CHECK(checkLD(65535));
-      triggerEvent(1);
+      triggerEvent(LD);
       BOOST_CHECK(checkLD(65535));
-      triggerEvent(0);
+      triggerEvent(CD);
       BOOST_CHECK(checkCD(65535));
-      triggerEvent(0);
+      triggerEvent(CD);
       BOOST_CHECK(checkCD(65534));
     }
   }

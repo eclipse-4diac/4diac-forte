@@ -123,6 +123,9 @@ namespace forte::eclipse4diac::utils::test {
   DEFINE_FIRMWARE_DATATYPE(GET_STRUCT_VALUE_Struct_test2, "GET_STRUCT_VALUE_Struct_test2"_STRID)
 
   struct GET_STRUCT_VALUE_GenericTestFixture : public forte::test::CFBTestFixtureBase {
+      static constexpr TEventID REQ = 0;
+      static constexpr TEventID INVALID_EI = 1;
+      static constexpr TEventID CNF = 0;
 
       GET_STRUCT_VALUE_GenericTestFixture(CIEC_ANY *paIN_STRUCT, CIEC_ANY *paOUT) :
           CFBTestFixtureBase("eclipse4diac::convert::GET_STRUCT_VALUE"_STRID) {
@@ -149,51 +152,51 @@ namespace forte::eclipse4diac::utils::test {
 
   BOOST_AUTO_TEST_CASE(firstLevel) {
     mMember = "Val1"_STRING;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     BOOST_CHECK_EQUAL(true, mQO);
     BOOST_CHECK_EQUAL(1, static_cast<CIEC_INT::TValueType>(mOut));
   }
 
   BOOST_AUTO_TEST_CASE(secondLevel) {
     mMember = "Val2.Val2"_STRING;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     BOOST_CHECK_EQUAL(true, mQO);
     BOOST_CHECK_EQUAL(2, static_cast<CIEC_INT::TValueType>(mOut));
   }
 
   BOOST_AUTO_TEST_CASE(firstLevelWrongName) {
     mMember = "xVal1"_STRING;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     BOOST_CHECK_EQUAL(false, mQO);
   }
 
   BOOST_AUTO_TEST_CASE(firstLevelWrongNameWithSecondLevel) {
     mMember = "xVal1.Val2"_STRING;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     BOOST_CHECK_EQUAL(false, mQO);
   }
 
   BOOST_AUTO_TEST_CASE(secondLevelWrongName) {
     mMember = "Val2.xVal2"_STRING;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     BOOST_CHECK_EQUAL(false, mQO);
   }
 
   BOOST_AUTO_TEST_CASE(accessNonStruct) {
     mMember = "Val1.Val1"_STRING;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     BOOST_CHECK_EQUAL(false, mQO);
   }
 
   BOOST_AUTO_TEST_CASE(WrongEventInput) {
     mMember = "Val2.Val1"_STRING;
-    triggerEvent(1);
+    triggerEvent(INVALID_EI);
     BOOST_CHECK(eventChainEmpty());
   }
 
@@ -202,7 +205,7 @@ namespace forte::eclipse4diac::utils::test {
   struct GET_STRUCT_VALUE_WRONG_OUTPUT_TYPE_TestFixture : public GET_STRUCT_VALUE_GenericTestFixture {
 
       GET_STRUCT_VALUE_WRONG_OUTPUT_TYPE_TestFixture() : GET_STRUCT_VALUE_GenericTestFixture(&mIn_struct, &mOut) {
-        mIn_struct = CIEC_INT(1);
+        mIn_struct = 1_INT;
         setup();
       }
 
@@ -214,8 +217,8 @@ namespace forte::eclipse4diac::utils::test {
 
   BOOST_AUTO_TEST_CASE(wrongInputType) {
     mMember = "Val1"_STRING;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     BOOST_CHECK_EQUAL(false, mQO);
   }
 

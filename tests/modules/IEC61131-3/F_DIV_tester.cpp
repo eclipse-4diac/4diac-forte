@@ -18,6 +18,9 @@ using namespace forte::literals;
 namespace forte::iec61131::arithmetic {
   struct F_DIV_TestFixture : public test::CFBTestFixtureBase {
 
+      static constexpr TEventID REQ = 0;
+      static constexpr TEventID CNF = 0;
+
       F_DIV_TestFixture() : CFBTestFixtureBase("iec61131::arithmetic::F_DIV"_STRID) {
         setInputData({&mIn1_DIV, &mIn2_DIV});
         setOutputData({&mOut_DIV});
@@ -33,20 +36,20 @@ namespace forte::iec61131::arithmetic {
   BOOST_FIXTURE_TEST_SUITE(F_DIV_Tests, F_DIV_TestFixture)
 
   BOOST_AUTO_TEST_CASE(validDivision) {
-    mIn1_DIV = CIEC_INT(30);
-    mIn2_DIV = CIEC_INT(5);
+    mIn1_DIV = 30_INT;
+    mIn2_DIV = 5_INT;
     /* trigger the inputevent */
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     BOOST_CHECK_EQUAL(6, static_cast<CIEC_INT::TValueType>(mOut_DIV));
   }
 
   BOOST_AUTO_TEST_CASE(divisionByZero) {
-    mIn1_DIV = CIEC_INT(30);
-    mIn2_DIV = CIEC_INT(0);
+    mIn1_DIV = 30_INT;
+    mIn2_DIV = 0_INT;
     /* trigger the inputevent */
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
   }
 
   BOOST_AUTO_TEST_SUITE_END()
