@@ -30,7 +30,16 @@ namespace forte {
     clear();
   }
 
-  CEventChainExecutionThread::~CEventChainExecutionThread() = default;
+  CEventChainExecutionThread::~CEventChainExecutionThread() {
+    /* Call end() while the vtable is still CEventChainExecutionThread's, so that
+     * onAliveChanged() dispatches to our resumeSelfSuspend() and wakes the thread
+     * from selfSuspend(). Without this, ~CThreadBase() would call end() with the
+     * base-class vtable, onAliveChanged() would be a no-op, and join() would block
+     * forever. This applies to all platforms, not just FreeRTOS.
+     * The subsequent end() call in ~CThreadBase() is a safe no-op because
+     * mThreadHandle is null after the first end() completes. */
+    end();
+  }
 
   void CEventChainExecutionThread::run() {
     while (isAlive()) { // thread is allowed to execute
