@@ -18,6 +18,7 @@ target_sources(forte-iec61131-3 PUBLIC
         F_ABS_fbt.h
         F_ACOS_fbt.h
         F_ASIN_fbt.h
+        F_ATAN2_fbt.h
         F_ATAN_fbt.h
         F_COS_fbt.h
         F_EXP_fbt.h

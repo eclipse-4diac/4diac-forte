@@ -16,6 +16,7 @@ target_sources(forte-iec61131-3 PRIVATE
         F_ABS_fbt.cpp
         F_ACOS_fbt.cpp
         F_ASIN_fbt.cpp
+        F_ATAN2_fbt.cpp
         F_ATAN_fbt.cpp
         F_COS_fbt.cpp
         F_EXP_fbt.cpp
