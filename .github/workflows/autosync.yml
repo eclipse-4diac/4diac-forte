@@ -1,24 +1,29 @@
+---
 name: Auto-sync
 run-name: Auto-sync of upstream branches
 on:
   workflow_dispatch:
-  schedule: 
+  schedule:
     - cron: "25 4-22 * * *"
+
+permissions: read-all  # Default everything to read-only
 
 jobs:
   auto-sync:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Only grant write where it's actually needed
     env:
       GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     steps:
       - name: Sync release
         run: |
           gh repo sync ${{github.repository}} --branch release
-        
+
       - name: Sync develop
         run: |
           gh repo sync ${{github.repository}} --branch develop
-        
+
       - name: Sync freeze
         run: |
           gh repo sync ${{github.repository}} --branch freeze
