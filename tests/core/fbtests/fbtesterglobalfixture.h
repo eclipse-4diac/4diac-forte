@@ -59,6 +59,10 @@ namespace forte::test {
         return smTestDev->getTestResource();
       }
 
+      static CDevice &getDevice() {
+        return *smTestDev;
+      }
+
     private:
       static std::unique_ptr<CTesterDevice> smTestDev;
   };
