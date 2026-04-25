@@ -20,6 +20,12 @@ namespace forte::internal {
 
   class CGatheringDataConnection final : public CDelegatingDataConnection<CIEC_ANY> {
     public:
+      struct SGatheringData {
+          CIEC_ANY *mMember{};
+          CDataConnection *mConnection{};
+          TNameIdentifier mMemberName;
+      };
+
       CGatheringDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_ANY &paValue) :
           CDelegatingDataConnection(paSrcFB, paSrcPortId, paValue) {
       }
@@ -38,6 +44,10 @@ namespace forte::internal {
 
       CDataConnection *getMemberConnection(std::span<const StringId> paMemberName) override;
 
+      [[nodiscard]] const std::vector<SGatheringData> &getMemberConnections() const {
+        return mGatheringData;
+      }
+
       [[nodiscard]] bool isGathering() const override {
         return true;
       }
@@ -53,12 +63,6 @@ namespace forte::internal {
       EMGMResponse removeMemberConnection(const CIEC_ANY *paMember);
 
       CDataConnection *getMemberConnection(const CIEC_ANY *paMember);
-
-      struct SGatheringData {
-          CIEC_ANY *mMember{};
-          CDataConnection *mConnection{};
-          TNameIdentifier mMemberName;
-      };
 
       std::vector<SGatheringData> mGatheringData;
   };
