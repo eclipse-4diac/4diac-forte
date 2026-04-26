@@ -36,6 +36,8 @@ namespace forte::internal {
 
       EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) override;
 
+      void getSourcePortName(TNameIdentifier &paResult) const override;
+
       void readData(CIEC_ANY &paValue) const override;
 
       EMGMResponse addMemberConnection(std::span<const StringId> paMemberName, CDataConnection &paConnection);

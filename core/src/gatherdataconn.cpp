@@ -54,6 +54,10 @@ namespace forte::internal {
     return EMGMResponse::Ready;
   }
 
+  void CGatheringDataConnection::getSourcePortName(TNameIdentifier &paResult) const {
+    paResult.push_back(StringId()); // source port cannot be determined
+  }
+
   void CGatheringDataConnection::readData(CIEC_ANY &) const {
     for (const auto [member, connection, memberName] : mGatheringData) {
       connection->readData(*member);
