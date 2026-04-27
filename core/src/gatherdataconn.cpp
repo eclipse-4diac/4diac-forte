@@ -48,6 +48,7 @@ namespace forte::internal {
       }
     }
     mGatheringData.clear();
+    paDstFB.connectDI(dstPortId, nullptr); // clear stale DI slot
 
     return EMGMResponse::Ready;
   }
