@@ -49,6 +49,8 @@ namespace forte::internal {
     }
     mGatheringData.clear();
 
+    paDstFB.connectDI(dstPortId, nullptr);
+
     return EMGMResponse::Ready;
   }
 
