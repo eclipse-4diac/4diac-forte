@@ -21,3 +21,4 @@ target_sources(forte-signalprocessing PRIVATE
         SCALE_fct.cpp
         SCALE_LIM_fct.cpp
 )
+add_subdirectory(distance)
