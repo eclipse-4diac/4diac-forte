@@ -127,6 +127,8 @@ namespace forte {
 
       [[nodiscard]] const CIEC_ANY_ELEMENTARY &unwrap() const override;
 
+      [[nodiscard]] bool isComparable(const CIEC_ANY_ELEMENTARY_VARIANT &paOther) const;
+
       int fromString(const char *paValue) override;
 
       void toString(std::string &paTargetBuf) const override;

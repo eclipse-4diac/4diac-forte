@@ -150,6 +150,21 @@ namespace forte {
     }
   }
 
+  bool CIEC_ANY_ELEMENTARY_VARIANT::isComparable(const CIEC_ANY_ELEMENTARY_VARIANT &paOther) const {
+    return std::visit(
+        [](auto &&value, auto &&other) -> bool {
+          using T = std::decay_t<decltype(value)>;
+          using U = std::decay_t<decltype(other)>;
+          using commonType = std::conditional_t<std::is_same_v<T, U>, T, typename mpl::get_castable_type<T, U>::type>;
+          if constexpr (std::is_base_of_v<CIEC_ANY_STRING, commonType>) {
+            return std::is_same_v<T, U>;
+          } else {
+            return !std::is_same_v<commonType, mpl::NullType>;
+          }
+        },
+        static_cast<const variant &>(*this), static_cast<const variant &>(paOther));
+  }
+
   int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paValue,
                                            const CIEC_ANY_ELEMENTARY_VARIANT &paOther) {
     return std::visit(
