@@ -31,6 +31,7 @@
 #include "forte/datatypes/forte_any_int.h"
 #include "forte/datatypes/forte_char.h"
 #include "forte/util/devlog.h"
+#include <compare>
 #include <string>
 #include <stdlib.h>
 
@@ -201,7 +202,7 @@ namespace forte {
 
       virtual void append(const std::string_view paValue);
 
-      int compare(const CIEC_STRING &paValue) const;
+      std::strong_ordering compare(const CIEC_STRING &paValue) const;
 
       [[deprecated("Don't use this anymore, use c_str() instead")]]
       virtual char *getValue() override {

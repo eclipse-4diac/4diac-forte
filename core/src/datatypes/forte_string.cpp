@@ -144,8 +144,8 @@ namespace forte {
     mValue.append(paValue);
   }
 
-  int CIEC_STRING::compare(const CIEC_STRING &paValue) const {
-    return mValue.compare(paValue.getStorage());
+  std::strong_ordering CIEC_STRING::compare(const CIEC_STRING &paValue) const {
+    return mValue <=> paValue.getStorage();
   }
 
   void CIEC_STRING::toString(std::string &paTargetBuf) const {

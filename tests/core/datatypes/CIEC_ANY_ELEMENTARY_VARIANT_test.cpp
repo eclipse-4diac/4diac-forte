@@ -133,6 +133,12 @@ namespace forte::test {
     BOOST_CHECK(!(test1 < test2));
     BOOST_CHECK(test1 >= test2);
     BOOST_CHECK(!(test1 > test2));
+    BOOST_CHECK(std::is_eq(test1 <=> test2));
+    BOOST_CHECK(!std::is_neq(test1 <=> test2));
+    BOOST_CHECK(!std::is_lt(test1 <=> test2));
+    BOOST_CHECK(std::is_lteq(test1 <=> test2));
+    BOOST_CHECK(!std::is_gt(test1 <=> test2));
+    BOOST_CHECK(std::is_gteq(test1 <=> test2));
 
     // same types
     test1 = CIEC_DINT(17);
@@ -144,6 +150,13 @@ namespace forte::test {
     BOOST_CHECK(!(test1 < test2));
     BOOST_CHECK(test1 >= test2);
     BOOST_CHECK(test1 > test2);
+    // std::is_* helpers should work for comparable types
+    BOOST_CHECK(!std::is_eq(test1 <=> test2));
+    BOOST_CHECK(std::is_neq(test1 <=> test2));
+    BOOST_CHECK(!std::is_lt(test1 <=> test2));
+    BOOST_CHECK(!std::is_lteq(test1 <=> test2));
+    BOOST_CHECK(std::is_gt(test1 <=> test2));
+    BOOST_CHECK(std::is_gteq(test1 <=> test2));
 
     test2 = CIEC_DINT(21);
 
@@ -153,6 +166,12 @@ namespace forte::test {
     BOOST_CHECK(test1 < test2);
     BOOST_CHECK(!(test1 >= test2));
     BOOST_CHECK(!(test1 > test2));
+    BOOST_CHECK(!std::is_eq(test1 <=> test2));
+    BOOST_CHECK(std::is_neq(test1 <=> test2));
+    BOOST_CHECK(std::is_lt(test1 <=> test2));
+    BOOST_CHECK(std::is_lteq(test1 <=> test2));
+    BOOST_CHECK(!std::is_gt(test1 <=> test2));
+    BOOST_CHECK(!std::is_gteq(test1 <=> test2));
 
     // different types (signed)
     test1 = CIEC_DINT(17);
@@ -164,6 +183,15 @@ namespace forte::test {
     BOOST_CHECK(!(test1 < test2));
     BOOST_CHECK(test1 >= test2);
     BOOST_CHECK(test1 > test2);
+
+    // same value, different types - should be equal via type promotion
+    test2 = CIEC_LINT(17);
+    BOOST_CHECK(test1 == test2);
+    BOOST_CHECK(!(test1 != test2));
+    BOOST_CHECK(test1 <= test2);
+    BOOST_CHECK(!(test1 < test2));
+    BOOST_CHECK(test1 >= test2);
+    BOOST_CHECK(!(test1 > test2));
 
     test2 = CIEC_SINT(21);
 
@@ -215,13 +243,16 @@ namespace forte::test {
     BOOST_CHECK(!(test1 > test2));
 
     // different types (incomparable)
+    // Previously these asserted test1 < test2 / test1 <= test2 etc.
+    // That was wrong: incomparable types (e.g. DINT vs STRING) are not ordered.
+    // They are simply unequal (unordered in std::partial_ordering terms).
     test1 = CIEC_DINT(17);
     test2 = "abc"_STRING;
 
     BOOST_CHECK(!(test1 == test2));
     BOOST_CHECK(test1 != test2);
-    BOOST_CHECK(test1 <= test2);
-    BOOST_CHECK(test1 < test2);
+    BOOST_CHECK(!(test1 <= test2));
+    BOOST_CHECK(!(test1 < test2));
     BOOST_CHECK(!(test1 >= test2));
     BOOST_CHECK(!(test1 > test2));
 
@@ -230,10 +261,33 @@ namespace forte::test {
 
     BOOST_CHECK(!(test1 == test2));
     BOOST_CHECK(test1 != test2);
-    BOOST_CHECK(test1 <= test2);
-    BOOST_CHECK(test1 < test2);
+    BOOST_CHECK(!(test1 <= test2));
+    BOOST_CHECK(!(test1 < test2));
     BOOST_CHECK(!(test1 >= test2));
     BOOST_CHECK(!(test1 > test2));
+
+    // check that the spaceship operator returns unordered for incomparable types
+    test1 = CIEC_DINT(17);
+    test2 = "abc"_STRING;
+    BOOST_CHECK((test1 <=> test2) == std::partial_ordering::unordered);
+    // For unordered, only is_eq is false and is_neq is true (not equivalent != unordered)
+    // is_lt/is_lteq/is_gt/is_gteq are all false since unordered is not comparable
+    BOOST_CHECK(!std::is_eq(test1 <=> test2));
+    BOOST_CHECK(std::is_neq(test1 <=> test2));
+    BOOST_CHECK(!std::is_lt(test1 <=> test2));
+    BOOST_CHECK(!std::is_lteq(test1 <=> test2));
+    BOOST_CHECK(!std::is_gt(test1 <=> test2));
+    BOOST_CHECK(!std::is_gteq(test1 <=> test2));
+
+    test1 = "abc"_STRING;
+    test2 = CIEC_DINT(17);
+    BOOST_CHECK((test1 <=> test2) == std::partial_ordering::unordered);
+    BOOST_CHECK(!std::is_eq(test1 <=> test2));
+    BOOST_CHECK(std::is_neq(test1 <=> test2));
+    BOOST_CHECK(!std::is_lt(test1 <=> test2));
+    BOOST_CHECK(!std::is_lteq(test1 <=> test2));
+    BOOST_CHECK(!std::is_gt(test1 <=> test2));
+    BOOST_CHECK(!std::is_gteq(test1 <=> test2));
 
     // large difference
     test1 = CIEC_ULINT(std::numeric_limits<CIEC_ULINT::TValueType>::min());

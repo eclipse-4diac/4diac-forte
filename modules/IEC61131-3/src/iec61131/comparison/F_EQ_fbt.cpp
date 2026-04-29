@@ -57,10 +57,18 @@ namespace forte::iec61131::comparison {
 
   void FORTE_F_EQ::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
     switch (paEIID) {
-      case scmEventREQID:
-        var_OUT = CIEC_BOOL(var_IN1 == var_IN2);
+      case scmEventREQID: {
+        const auto result = CIEC_ANY_ELEMENTARY_VARIANT::compare(var_IN1, var_IN2);
+        if (result == std::partial_ordering::unordered) {
+          DEVLOG_ERROR("Comparing incompatible types %s and %s in %s!\n", var_IN1.getTypeNameID().data(),
+                       var_IN2.getTypeNameID().data(), getFullQualifiedApplicationInstanceName('.').c_str());
+          var_OUT = false_BOOL;
+        } else {
+          var_OUT = CIEC_BOOL(result == std::partial_ordering::equivalent);
+        }
         sendOutputEvent(scmEventCNFID, paECET);
         break;
+      }
     }
   }
 

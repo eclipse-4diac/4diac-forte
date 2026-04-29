@@ -150,10 +150,10 @@ namespace forte {
     }
   }
 
-  int CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paValue,
-                                           const CIEC_ANY_ELEMENTARY_VARIANT &paOther) {
+  std::partial_ordering CIEC_ANY_ELEMENTARY_VARIANT::compare(const CIEC_ANY_ELEMENTARY_VARIANT &paValue,
+                                                             const CIEC_ANY_ELEMENTARY_VARIANT &paOther) {
     return std::visit(
-        [](auto &&value, auto &&other) -> int {
+        [](auto &&value, auto &&other) -> std::partial_ordering {
           using T = std::decay_t<decltype(value)>;
           using U = std::decay_t<decltype(other)>;
           using commonType = std::conditional_t<std::is_same_v<T, U>, T, typename mpl::get_castable_type<T, U>::type>;
@@ -161,22 +161,29 @@ namespace forte {
             if constexpr (std::is_same_v<T, U> && std::is_same_v<T, CIEC_STRING>) {
               return static_cast<CIEC_STRING>(value).compare(static_cast<CIEC_STRING>(other));
             } else if constexpr (std::is_same_v<T, U> && std::is_same_v<T, CIEC_WSTRING>) {
-              return strcmp(static_cast<commonType>(value).getValue(), static_cast<commonType>(other).getValue());
+              const auto wstringValue = static_cast<commonType>(value).getValue();
+              const auto wstringOther = static_cast<commonType>(other).getValue();
+              return wstringValue <=> wstringOther;
             } else {
-              DEVLOG_ERROR("Comparing incompatible types %s and %s\n", value.getTypeNameID().data(),
-                           other.getTypeNameID().data());
-              return -1;
+              return std::partial_ordering::unordered;
             }
           } else if constexpr (!std::is_same_v<commonType, mpl::NullType>) {
-            auto primitiveValue = static_cast<typename commonType::TValueType>(static_cast<commonType>(value));
-            auto primitiveOther = static_cast<typename commonType::TValueType>(static_cast<commonType>(other));
-            return (primitiveValue > primitiveOther) - (primitiveValue < primitiveOther);
+            const auto primitiveValue = static_cast<typename commonType::TValueType>(static_cast<commonType>(value));
+            const auto primitiveOther = static_cast<typename commonType::TValueType>(static_cast<commonType>(other));
+            return primitiveValue <=> primitiveOther;
           } else {
-            DEVLOG_ERROR("Comparing incompatible types %s and %s\n", value.getTypeNameID().data(),
-                         other.getTypeNameID().data());
-            return -1;
+            return std::partial_ordering::unordered;
           }
         },
         static_cast<const variant &>(paValue), static_cast<const variant &>(paOther));
+  }
+
+  std::partial_ordering operator<=>(const CIEC_ANY_ELEMENTARY_VARIANT &paValue,
+                                    const CIEC_ANY_ELEMENTARY_VARIANT &paOther) {
+    return CIEC_ANY_ELEMENTARY_VARIANT::compare(paValue, paOther);
+  }
+
+  bool operator==(const CIEC_ANY_ELEMENTARY_VARIANT &paValue, const CIEC_ANY_ELEMENTARY_VARIANT &paOther) {
+    return CIEC_ANY_ELEMENTARY_VARIANT::compare(paValue, paOther) == std::partial_ordering::equivalent;
   }
 } // namespace forte
