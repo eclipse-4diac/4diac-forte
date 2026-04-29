@@ -1,5 +1,5 @@
 #*******************************************************************************
-# Copyright (c) 2010 - 2024 ACIN, Profactor GmbH, fortiss GmbH, Jose Cabral
+# Copyright (c) 2010 ACIN, Profactor GmbH, fortiss GmbH, Jose Cabral and others
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -13,8 +13,17 @@
 # *******************************************************************************/
 
 option(FORTE_COM_SER "Enable Forte serial line communication" OFF)
+option(FORTE_FILEIO_RAMDISK "Use RAM disk for file I/O" OFF)
 
 include(CheckSymbolExists)
+
+if(FORTE_FILEIO_RAMDISK)
+    check_symbol_exists(fmemopen stdio.h HAVE_FMEMOPEN)
+    if(NOT HAVE_FMEMOPEN)
+        message(FATAL_ERROR "fmemopen not found, but FORTE_FILEIO_RAMDISK is enabled")
+    endif()
+    target_compile_definitions(forte-core PUBLIC FORTE_FILEIO_RAMDISK)
+endif()
 
 target_sources(forte-core PRIVATE
         forte_architecture_time.cpp
@@ -26,7 +35,8 @@ target_sources(forte-core PRIVATE
         ../../common/src/forte_specific_architecture.cpp
         ../../common/src/forte_standard_time.cpp
         ../../common/src/genforte_printer.cpp
-        ../../common/src/genforte_fileio.cpp
+        $<$<NOT:$<BOOL:${FORTE_FILEIO_RAMDISK}>>:${CMAKE_CURRENT_SOURCE_DIR}/../../common/src/genforte_fileio.cpp>
+        $<$<BOOL:${FORTE_FILEIO_RAMDISK}>:${CMAKE_CURRENT_SOURCE_DIR}/../../common/src/genforte_fileio_ramdisk.cpp>
         ../../common/src/utils/timespec_utils.cpp
         $<$<BOOL:${BUILD_SHARED_LIBS}>:${CMAKE_CURRENT_SOURCE_DIR}/load_option.cpp>
         $<$<BOOL:${FORTE_COM_SER}>:${CMAKE_CURRENT_SOURCE_DIR}/posixsercommlayer.cpp>

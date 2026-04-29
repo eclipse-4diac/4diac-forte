@@ -231,6 +231,20 @@
       ]
     },
     {
+      "name": "posix-systemtests-ramdisk",
+      "displayName": "System Tests (Posix, RAMDISK)",
+      "inherits": [
+        "systemtests",
+        "posix"
+      ],
+      "cacheVariables": {
+        "FORTE_FILEIO_RAMDISK": {
+          "type": "BOOL",
+          "value": "ON"
+        }
+      }
+    },
+    {
       "name": "windows",
       "hidden": true,
       "inherits": "base",

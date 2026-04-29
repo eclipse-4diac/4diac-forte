@@ -17,4 +17,5 @@ forte_test_add_sourcefile_cpp(
   testsingleton.cpp singeltontest.cpp singletontest2ndunit.cpp
   parameterParserTest.cpp
   string_utils_test.cpp
+  ramdisk_test.cpp
 )

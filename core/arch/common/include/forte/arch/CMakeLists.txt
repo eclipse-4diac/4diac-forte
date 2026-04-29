@@ -1,5 +1,5 @@
 #############################################################################
-# Copyright (c) 2025 Martin Erich Jobst
+# Copyright (c) 2025 Martin Erich Jobst and others
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
@@ -21,6 +21,7 @@ target_sources(forte-core PUBLIC
         forte_printer.h
         forte_specific_architecture.h
         threadbase.h
+        $<$<BOOL:${FORTE_FILEIO_RAMDISK}>:${CMAKE_CURRENT_SOURCE_DIR}/forte_ramdisk.h>
 )
 
 set_source_files_properties(

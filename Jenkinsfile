@@ -49,5 +49,19 @@ spec:
         }
       }
     }
+    stage('Build static RAMDISK') {
+      steps {
+        container('build') {
+          cmakeBuild installation: 'CMake 3.14.5', buildDir: 'static-ramdisk', generator: 'Unix Makefiles', buildType: 'Debug', cmakeArgs: '-DFORTE_ARCHITECTURE=Posix -DFORTE_TESTS=ON -DFORTE_SYSTEM_TESTS=ON -DFORTE_FILEIO_RAMDISK=ON -DFORTE_LOGLEVEL=LOGDEBUG -DFORTE_EventChainExternalEventListSize=32 -DFORTE_MODULE_CONVERT=ON -DFORTE_MODULE_IEC61131=ON -DFORTE_MODULE_UTILS=ON -DFORTE_MODULE_RT_Events=ON -DFORTE_MODULE_RECONFIGURATION=ON -DFORTE_IO=ON -DFORTE_COM_ETH=ON -DFORTE_COM_FBDK=ON -DFORTE_COM_LOCAL=ON -DFORTE_COM_RAW=ON -DFORTE_COM_HTTP=ON -DFORTE_COM_OPC_UA=ON -DFORTE_COM_OPC_UA_INCLUDE_DIR=${WORKDIR}/open62541/binStatic -DFORTE_COM_OPC_UA_LIB_DIR=${WORKDIR}/open62541/binStatic/bin -DFORTE_COM_OPC_UA_LIB=libopen62541.a', steps: [[args: 'all']]
+        }
+      }
+    }
+    stage('Test static RAMDISK') {
+      steps {
+        container('build') {
+          ctest installation: 'CMake 3.14.5', workingDir: 'static-ramdisk', arguments: '--verbose'
+        }
+      }
+    }
   }
 }
