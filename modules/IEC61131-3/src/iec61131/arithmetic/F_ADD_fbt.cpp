@@ -62,14 +62,15 @@ namespace forte::iec61131::arithmetic {
     switch (paEIID) {
       case scmEventREQID:
         var_OUT = std::visit(
-            [](auto &&paIN1, auto &&paIN2) -> CIEC_ANY_MAGNITUDE_VARIANT {
+            [this](auto &&paIN1, auto &&paIN2) -> CIEC_ANY_MAGNITUDE_VARIANT {
               using T = std::decay_t<decltype(paIN1)>;
               using U = std::decay_t<decltype(paIN2)>;
               using deductedType = typename mpl::get_add_operator_result_type<T, U>::type;
               if constexpr (!std::is_same<deductedType, mpl::NullType>::value) {
                 return func_ADD(paIN1, paIN2);
               }
-              DEVLOG_ERROR("Adding incompatible types %s and %s\n", paIN1.getTypeNameID().data(),
+              DEVLOG_ERROR("Adding incompatible types in %s! IN1:%s, IN2:%s\n",
+                           getFullQualifiedApplicationInstanceName('.').c_str(), paIN1.getTypeNameID().data(),
                            paIN2.getTypeNameID().data());
               return CIEC_ANY_MAGNITUDE_VARIANT();
             },

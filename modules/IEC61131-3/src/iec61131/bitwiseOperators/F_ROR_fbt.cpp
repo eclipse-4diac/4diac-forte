@@ -60,12 +60,13 @@ namespace forte::iec61131::bitwiseOperators {
     switch (paEIID) {
       case scmEventREQID:
         var_OUT = std::visit(
-            [](auto &&paIN, auto &&paN) -> CIEC_ANY_BIT_VARIANT {
+            [this](auto &&paIN, auto &&paN) -> CIEC_ANY_BIT_VARIANT {
               using T = std::decay_t<decltype(paIN)>;
               if constexpr (!std::is_same<T, CIEC_BOOL>::value) {
                 return func_ROR(paIN, paN);
               }
-              DEVLOG_ERROR("Rotating right incompatible types %s and %s\n", paIN.getTypeNameID().data(),
+              DEVLOG_ERROR("Rotating right incompatible types in %s! IN:%s, N:%s\n",
+                           getFullQualifiedApplicationInstanceName('.').c_str(), paIN.getTypeNameID().data(),
                            paN.getTypeNameID().data());
               return CIEC_ANY_BIT_VARIANT();
             },

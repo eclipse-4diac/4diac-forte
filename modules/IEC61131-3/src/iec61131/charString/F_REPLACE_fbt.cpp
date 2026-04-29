@@ -58,13 +58,14 @@ namespace forte::iec61131::charString {
     switch (paEIID) {
       case scmEventREQID:
         var_OUT = std::visit(
-            [](auto &&paIN1, auto &&paIN2, auto &&paP, auto &&paL) -> CIEC_ANY_STRING_VARIANT {
+            [this](auto &&paIN1, auto &&paIN2, auto &&paP, auto &&paL) -> CIEC_ANY_STRING_VARIANT {
               using T = std::decay_t<decltype(paIN1)>;
               using U = std::decay_t<decltype(paIN2)>;
               if constexpr (std::is_same_v<T, U>) {
                 return func_REPLACE(paIN1, paIN2, paP, paL);
               }
-              DEVLOG_ERROR("Replacing incompatible types %s and %s\n", paIN1.getTypeNameID().data(),
+              DEVLOG_ERROR("Replacing incompatible types in %s! IN1:%s, IN2:%s\n",
+                           getFullQualifiedApplicationInstanceName('.').c_str(), paIN1.getTypeNameID().data(),
                            paIN2.getTypeNameID().data());
               return CIEC_ANY_STRING_VARIANT();
             },

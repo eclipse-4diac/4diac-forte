@@ -60,7 +60,7 @@ namespace forte::iec61131::charString {
     switch (paEIID) {
       case scmEventREQID:
         std::visit(
-            [](auto &&paIN1, auto &&paIN2, auto &&paOUT) -> void {
+            [this](auto &&paIN1, auto &&paIN2, auto &&paOUT) -> void {
               using T = std::decay_t<decltype(paIN1)>;
               using U = std::decay_t<decltype(paIN2)>;
               if constexpr ((std::is_same_v<T, CIEC_STRING> &&
@@ -69,7 +69,8 @@ namespace forte::iec61131::charString {
                              (std::is_same_v<U, CIEC_WSTRING> || std::is_same_v<U, CIEC_WCHAR>) )) {
                 paOUT = func_FIND<std::remove_reference_t<decltype(paOUT)>>(paIN1, paIN2);
               } else {
-                DEVLOG_ERROR("Incompatible types IN1:%s and IN2:%s for FIND\n", paIN1.getTypeNameID().data(),
+                DEVLOG_ERROR("Incompatible types for FIND in %s! IN1:%s, IN2:%s\n",
+                             getFullQualifiedApplicationInstanceName('.').c_str(), paIN1.getTypeNameID().data(),
                              paIN2.getTypeNameID().data());
               }
             },

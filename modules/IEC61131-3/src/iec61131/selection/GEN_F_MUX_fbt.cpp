@@ -44,7 +44,6 @@ namespace forte::iec61131::selection {
       conn_K(nullptr),
       conn_OUT(*this, 0, var_OUT) {};
 
-
   void GEN_F_MUX::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
     switch (paEIID) {
       case scmEventREQID:
@@ -56,8 +55,8 @@ namespace forte::iec61131::selection {
               if (valueK >= 0 && valueK < getFBInterfaceSpec().getNumDIs() - 1) {
                 return mGenDIs[valueK];
               }
-              DEVLOG_ERROR("Value of input K is out of range. Expected between 0 and %zu\n",
-                           getFBInterfaceSpec().getNumDIs() - 2);
+              DEVLOG_ERROR("Value of input K is out of range in %s! Expected between 0 and %zu\n",
+                           getFullQualifiedApplicationInstanceName('.').c_str(), getFBInterfaceSpec().getNumDIs() - 2);
               return CIEC_ANY_VARIANT();
             },
             static_cast<CIEC_ANY_INT_VARIANT::variant &>(var_K));
@@ -101,7 +100,8 @@ namespace forte::iec61131::selection {
     DEVLOG_DEBUG("DIs: %d;\n", numDIs);
 
     if (numDIs < 2) {
-      DEVLOG_ERROR("GEN_F_MUX must have at least 2 IN ports.\n");
+      DEVLOG_ERROR("GEN_F_MUX %s must have at least 2 IN ports.\n",
+                   getFullQualifiedApplicationInstanceName('.').c_str());
       return false;
     }
 

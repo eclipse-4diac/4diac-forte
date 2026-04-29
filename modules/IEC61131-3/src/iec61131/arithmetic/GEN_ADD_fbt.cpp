@@ -44,14 +44,15 @@ namespace forte::iec61131::arithmetic {
       var_OUT = mGenDIs[0];
       for (size_t i = 1; i < getFBInterfaceSpec().getNumDIs(); ++i) {
         var_OUT = std::visit(
-            [](auto &&paOUT, auto &&paIN) -> CIEC_ANY_MAGNITUDE_VARIANT {
+            [this](auto &&paOUT, auto &&paIN) -> CIEC_ANY_MAGNITUDE_VARIANT {
               using T = std::decay_t<decltype(paOUT)>;
               using U = std::decay_t<decltype(paIN)>;
               using deductedType = typename mpl::get_add_operator_result_type<T, U>::type;
               if constexpr (!std::is_same<deductedType, mpl::NullType>::value) {
                 return func_ADD(paOUT, paIN);
               }
-              DEVLOG_ERROR("Adding incompatible types %s and %s\n", paOUT.getTypeNameID().data(),
+              DEVLOG_ERROR("Adding incompatible types in %s! OUT:%s, IN:%s\n",
+                           getFullQualifiedApplicationInstanceName('.').c_str(), paOUT.getTypeNameID().data(),
                            paIN.getTypeNameID().data());
               return paOUT;
             },
