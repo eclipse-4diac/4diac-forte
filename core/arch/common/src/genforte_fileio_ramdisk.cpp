@@ -50,11 +50,15 @@ int forte_ramdisk_load(const char *filename) {
 
   std::ifstream file(filename, std::ios::binary | std::ios::ate);
   if (!file) {
+    std::lock_guard<std::mutex> lock(g_ramdiskMutex);
+    g_ramdiskEntries[filename] = std::vector<char>();
     return -1;
   }
 
   std::streamsize size = file.tellg();
   if (size < 0) {
+    std::lock_guard<std::mutex> lock(g_ramdiskMutex);
+    g_ramdiskEntries[filename] = std::vector<char>();
     return -1;
   }
 
@@ -62,6 +66,8 @@ int forte_ramdisk_load(const char *filename) {
 
   std::vector<char> buffer(static_cast<size_t>(size));
   if (!file.read(buffer.data(), size)) {
+    std::lock_guard<std::mutex> lock(g_ramdiskMutex);
+    g_ramdiskEntries[filename] = std::vector<char>();
     return -1;
   }
 
@@ -85,6 +91,9 @@ void *forte_fopen(const char *filename, const char *mode) {
     if (it != g_ramdiskEntries.end()) {
       // Only use RAMDISK for read modes; write modes fallback to real file
       if (mode[0] == 'r') {
+        if (it->second.empty()) {
+          return nullptr;
+        }
         FILE *file = fmemopen(it->second.data(), it->second.size(), mode);
         if (file != nullptr) {
           g_ramdiskOpenFiles[file] = {filename, mode[0]};
