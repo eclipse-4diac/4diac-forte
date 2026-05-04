@@ -15,6 +15,7 @@
 add_subdirectory(ads)
 add_subdirectory(arrowhead)
 add_subdirectory(conmeleon_c1)
+add_subdirectory(controlengineering)
 add_subdirectory(convert)
 add_subdirectory(eliteboard)
 add_subdirectory(embrick)
