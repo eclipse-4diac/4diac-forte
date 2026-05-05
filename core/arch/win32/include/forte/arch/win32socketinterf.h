@@ -38,7 +38,5 @@ namespace forte::arch {
 
     private:
       CWin32SocketInterface(); // this function is not implemented as we don't want instances of this class
-
-      static LPSTR getErrorMessage(int paErrorNumber);
   };
 } // namespace forte::arch
