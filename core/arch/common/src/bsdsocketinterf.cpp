@@ -47,11 +47,8 @@ namespace forte::arch {
                                                                                       unsigned short paPort) {
     TSocketDescriptor nRetVal = -1;
 
-#ifndef FORTE_LOGINFO
-    (void) paIPAddr;
-#else
+    (void) paIPAddr; // Needed to avoid compiler warning at log levels where DEVLOG_INFO is empty
     DEVLOG_INFO("CBSDSocketInterface: Opening TCP-Server connection at: %s:%d\n", paIPAddr, paPort);
-#endif
 
     if (TSocketDescriptor nSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP); nSocket != -1) {
       struct sockaddr_in stSockAddr = {0};
