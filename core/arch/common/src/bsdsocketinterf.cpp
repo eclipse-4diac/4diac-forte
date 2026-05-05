@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2010 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V.
+ * Copyright (c) 2010, 2026 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V.
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -12,6 +13,8 @@
  *     - initial API and implementation and/or initial documentation
  *   Jörg Walter
  *     - improve multicast support
+ *   Markus Meingast
+ *     - add logging of actual tcp port being used
  *******************************************************************************/
 #include "forte/arch/sockhand.h" //needs to be first pulls in the platform specific includes
 #include "forte/arch/bsdsocketinterf.h"
@@ -19,6 +22,19 @@
 #include <string.h>
 
 namespace forte::arch {
+  namespace {
+    void displayActualPort(CBSDSocketInterface::TSocketDescriptor paSocket) {
+      struct sockaddr_in stSockAddr = {0};
+      socklen_t addressLen = sizeof(stSockAddr);
+      if (getsockname(paSocket, (struct sockaddr *) &stSockAddr, &addressLen) == 0) {
+        unsigned short assignedPort = ntohs(stSockAddr.sin_port);
+        DEVLOG_INFO("CBSDSocketInterface: Socket is listening on port: %d\n", assignedPort);
+      } else {
+        DEVLOG_ERROR("CBSDSocketInterface: getsockname() failed: %s\n", strerror(errno));
+      }
+    }
+  } // namespace
+
   void CBSDSocketInterface::closeSocket(TSocketDescriptor paSockD) {
 #if defined(NET_OS)
     closesocket(paSockD);
@@ -37,9 +53,8 @@ namespace forte::arch {
     DEVLOG_INFO("CBSDSocketInterface: Opening TCP-Server connection at: %s:%d\n", paIPAddr, paPort);
 #endif
 
-    if (TSocketDescriptor nSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP); -1 != nSocket) {
-      struct sockaddr_in stSockAddr;
-      memset(&(stSockAddr), '\0', sizeof(sockaddr_in));
+    if (TSocketDescriptor nSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP); nSocket != -1) {
+      struct sockaddr_in stSockAddr = {0};
       stSockAddr.sin_family = AF_INET;
 #if VXWORKS
       stSockAddr.sin_port = static_cast<unsigned short>(htons(paPort));
@@ -48,17 +63,20 @@ namespace forte::arch {
 #endif
       stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
 
-      if (0 == bind(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))) {
-        if (-1 == listen(nSocket, 1)) { // for the classic IEC 61499 server only one connection at the same time is
+      if (bind(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr)) == 0) {
+        if (listen(nSocket, 1) == -1) { // for the classic IEC 61499 server only one connection at the same time is
           // accepted TODO mayb make this adjustable for future extensions
           DEVLOG_ERROR("CBSDSocketInterface: listen() failed: %s\n", strerror(errno));
         } else {
           nRetVal = nSocket;
         }
+        if (paPort == 0) {
+          displayActualPort(nSocket);
+        }
       } else {
         DEVLOG_ERROR("CBSDSocketInterface: bind() failed: %s\n", strerror(errno));
       }
-      if (-1 == nRetVal) {
+      if (nRetVal == -1) {
         close(nSocket);
       }
     } else {
