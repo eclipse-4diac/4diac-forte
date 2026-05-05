@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2026 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V.
+ * Copyright (c) 2010 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V.
  *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
@@ -50,34 +50,35 @@ namespace forte::arch {
     (void) paIPAddr; // Needed to avoid compiler warning at log levels where DEVLOG_INFO is empty
     DEVLOG_INFO("CBSDSocketInterface: Opening TCP-Server connection at: %s:%d\n", paIPAddr, paPort);
 
-    if (TSocketDescriptor nSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP); nSocket != -1) {
-      struct sockaddr_in stSockAddr = {0};
-      stSockAddr.sin_family = AF_INET;
-#if VXWORKS
-      stSockAddr.sin_port = static_cast<unsigned short>(htons(paPort));
-#else
-      stSockAddr.sin_port = htons(paPort);
-#endif
-      stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-
-      if (bind(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr)) == 0) {
-        if (listen(nSocket, 1) == -1) { // for the classic IEC 61499 server only one connection at the same time is
-          // accepted TODO mayb make this adjustable for future extensions
-          DEVLOG_ERROR("CBSDSocketInterface: listen() failed: %s\n", strerror(errno));
-        } else {
-          nRetVal = nSocket;
-        }
-        if (paPort == 0) {
-          displayActualPort(nSocket);
-        }
-      } else {
-        DEVLOG_ERROR("CBSDSocketInterface: bind() failed: %s\n", strerror(errno));
-      }
-      if (nRetVal == -1) {
-        close(nSocket);
-      }
-    } else {
+    TSocketDescriptor nSocket = socket(PF_INET, SOCK_STREAM, IPPROTO_TCP);
+    if (nSocket == -1) {
       DEVLOG_ERROR("CBSDSocketInterface: Couldn't create socket: %s\n", strerror(errno));
+      return nRetVal;
+    }
+    struct sockaddr_in stSockAddr = {0};
+    stSockAddr.sin_family = AF_INET;
+#if VXWORKS
+    stSockAddr.sin_port = static_cast<unsigned short>(htons(paPort));
+#else
+    stSockAddr.sin_port = htons(paPort);
+#endif
+    stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    if (bind(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr)) != 0) {
+      DEVLOG_ERROR("CBSDSocketInterface: bind() failed: %s\n", strerror(errno));
+      close(nSocket);
+      return nRetVal;
+    }
+    if (listen(nSocket, 1) == -1) { // for the classic IEC 61499 server only one connection at the same time is
+      // accepted TODO mayb make this adjustable for future extensions
+      DEVLOG_ERROR("CBSDSocketInterface: listen() failed: %s\n", strerror(errno));
+      close(nSocket);
+      return nRetVal;
+    }
+
+    nRetVal = nSocket;
+    if (paPort == 0) {
+      displayActualPort(nSocket);
     }
     return nRetVal;
   }
