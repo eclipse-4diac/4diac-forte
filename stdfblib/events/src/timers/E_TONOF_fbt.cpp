@@ -6,41 +6,40 @@
  ***
  *** SPDX-License-Identifier: EPL-2.0
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.1.100.202604172003!
  ***
  *** Name: E_TONOF
  *** Description: standard timer function block (on/off-delay timing)
  *** Version:
- ***     1.0: 2024-03-04/Franz Hoepfinger - HR Agrartechnik GmbH -
- ***     1.1: 2024-04-23/Franz Hoepfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
+ ***     3.1: 2026-05-08/Franz Höpfinger - HR Agrartechnik GmbH - E_RF_TRIG instead of E_SWITCH
  ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
+ ***     1.1: 2024-04-23/Franz Höpfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
+ ***     1.0: 2024-03-04/Franz Höpfinger - HR Agrartechnik GmbH -
  *************************************************************************/
 
 #include "forte/iec61499/events/timers/E_TONOF_fbt.h"
 
-#include "forte/iec61131_functions.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
+#include "forte/forte_st_util.h"
 
 using namespace std::literals;
 using namespace forte::literals;
 
 namespace forte::iec61499::events::timers {
   namespace {
+    constexpr std::string_view TypeHash = ""sv;
+
+    const auto cEventInputNames = std::array{"REQ"_STRID, "R"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
     const auto cDataInputNames = std::array{"IN"_STRID, "PT_ON"_STRID, "PT_OFF"_STRID};
     const auto cDataOutputNames = std::array{"Q"_STRID};
-    const auto cEventInputNames = std::array{"REQ"_STRID, "R"_STRID};
-    const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
-    const auto cEventOutputNames = std::array{"CNF"_STRID};
-    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
 
     const SFBInterfaceSpec cFBInterfaceSpec = {
         .mEINames = cEventInputNames,
-        .mEITypeNames = cEventInputTypeIds,
+        .mEITypeNames = {},
         .mEONames = cEventOutputNames,
-        .mEOTypeNames = cEventOutputTypeIds,
+        .mEOTypeNames = {},
         .mDINames = cDataInputNames,
         .mDONames = cDataOutputNames,
         .mDIONames = {},
@@ -49,20 +48,20 @@ namespace forte::iec61499::events::timers {
     };
 
     const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
-        {{}, "REQ"_STRID, "E_SWITCH"_STRID, "EI"_STRID},
-        {"E_SWITCH"_STRID, "EO1"_STRID, "E_DELAY_ON"_STRID, "START"_STRID},
-        {"E_SWITCH"_STRID, "EO1"_STRID, "E_DELAY_OFF"_STRID, "STOP"_STRID},
-        {"E_SWITCH"_STRID, "EO0"_STRID, "E_DELAY_ON"_STRID, "STOP"_STRID},
-        {"E_SWITCH"_STRID, "EO0"_STRID, "E_DELAY_OFF"_STRID, "START"_STRID},
+        {{}, "REQ"_STRID, "E_RF_TRIG"_STRID, "EI"_STRID},
+        {"E_RF_TRIG"_STRID, "EF"_STRID, "E_DELAY_ON"_STRID, "START"_STRID},
+        {"E_RF_TRIG"_STRID, "ER"_STRID, "E_DELAY_ON"_STRID, "STOP"_STRID},
         {"E_DELAY_ON"_STRID, "EO"_STRID, "E_RS"_STRID, "S"_STRID},
         {"E_RS"_STRID, "EO"_STRID, {}, "CNF"_STRID},
         {"E_DELAY_OFF"_STRID, "EO"_STRID, "E_RS"_STRID, "R"_STRID},
+        {"E_RF_TRIG"_STRID, "ER"_STRID, "E_DELAY_OFF"_STRID, "START"_STRID},
+        {"E_RF_TRIG"_STRID, "EF"_STRID, "E_DELAY_OFF"_STRID, "STOP"_STRID},
         {{}, "R"_STRID, "E_RS"_STRID, "R"_STRID},
         {{}, "R"_STRID, "E_DELAY_OFF"_STRID, "STOP"_STRID},
     });
 
     const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
-        {{}, "IN"_STRID, "E_SWITCH"_STRID, "G"_STRID},
+        {{}, "IN"_STRID, "E_RF_TRIG"_STRID, "QI"_STRID},
         {{}, "PT_ON"_STRID, "E_DELAY_ON"_STRID, "DT"_STRID},
         {"E_RS"_STRID, "Q"_STRID, {}, "Q"_STRID},
         {{}, "PT_OFF"_STRID, "E_DELAY_OFF"_STRID, "DT"_STRID},
@@ -75,11 +74,11 @@ namespace forte::iec61499::events::timers {
     };
   } // namespace
 
-  DEFINE_FIRMWARE_FB(FORTE_E_TONOF, "iec61499::events::timers::E_TONOF"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_E_TONOF, "iec61499::events::timers::E_TONOF"_STRID, TypeHash)
 
   FORTE_E_TONOF::FORTE_E_TONOF(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
-      fb_E_SWITCH("E_SWITCH"_STRID, *this),
+      fb_E_RF_TRIG("E_RF_TRIG"_STRID, *this),
       fb_E_DELAY_ON("E_DELAY_ON"_STRID, *this),
       fb_E_RS("E_RS"_STRID, *this),
       fb_E_DELAY_OFF("E_DELAY_OFF"_STRID, *this),
@@ -93,6 +92,7 @@ namespace forte::iec61499::events::timers {
       conn_if2in_PT_OFF(*this, 2, 0_TIME) {};
 
   void FORTE_E_TONOF::setInitialValues() {
+    CCompositeFB::setInitialValues();
     conn_if2in_IN.getValue() = 0_BOOL;
     conn_if2in_PT_ON.getValue() = 0_TIME;
     conn_if2in_PT_OFF.getValue() = 0_TIME;
@@ -114,7 +114,7 @@ namespace forte::iec61499::events::timers {
   void FORTE_E_TONOF::writeOutputData(const TEventID paEIID) {
     switch (paEIID) {
       case scmEventCNFID: {
-        writeData(cFBInterfaceSpec.getNumDIs() + 0, fb_E_RS->conn_Q.getValue(), conn_Q);
+        writeData(3, fb_E_RS->conn_Q.getValue(), conn_Q);
         break;
       }
       default: break;
@@ -160,7 +160,7 @@ namespace forte::iec61499::events::timers {
     return nullptr;
   }
 
-  CDataConnection *FORTE_E_TONOF::getIf2InConUnchecked(TPortId paIndex) {
+  CDataConnection *FORTE_E_TONOF::getIf2InConUnchecked(const TPortId paIndex) {
     switch (paIndex) {
       case 0: return &conn_if2in_IN;
       case 1: return &conn_if2in_PT_ON;
