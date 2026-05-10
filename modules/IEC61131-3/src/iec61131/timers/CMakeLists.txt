@@ -14,6 +14,9 @@
 
 target_sources(forte-iec61131-3 PRIVATE
         FB_TOF_fbt.cpp
+        FB_TOF_LTIME_fbt.cpp
         FB_TON_fbt.cpp
+        FB_TON_LTIME_fbt.cpp
         FB_TP_fbt.cpp
+        FB_TP_LTIME_fbt.cpp
 )
