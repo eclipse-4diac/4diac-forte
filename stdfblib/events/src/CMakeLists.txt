@@ -28,6 +28,7 @@ target_sources(forte-events PRIVATE
         E_N_TABLE_fbt.cpp
         E_PERMIT_fbt.cpp
         E_R_TRIG_fbt.cpp
+        E_RF_TRIG_fbt.cpp
         E_RDELAY_fbt.cpp
         E_REND_fbt.cpp
         E_RESTART_fbt.cpp
