@@ -6,14 +6,17 @@
  ***
  *** SPDX-License-Identifier: EPL-2.0
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.1.100.202604172003!
  ***
  *** Name: E_TP
- *** Description: standard timer function block (pulse)
+ *** Description: standard timer function block (pulse) - non-retriggerable
  *** Version:
- ***     1.0: 2024-03-04/Franz Hoepfinger - HR Agrartechnik GmbH -
- ***     1.1: 2024-04-23/Franz Hoepfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
+ ***     3.1: 2026-04-19/Franz Höpfinger - HR Agrartechnik GmbH - Made non-retriggerable
  ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
+ ***     1.1: 2024-04-23/Franz Höpfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
+ ***     1.0: 2024-03-04/Franz Höpfinger - HR Agrartechnik GmbH -
  *************************************************************************/
 
 #pragma once
@@ -22,32 +25,29 @@
 #include "forte/typelib.h"
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_time.h"
-#include "forte/iec61131_functions.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
+#include "forte/forte_st_util.h"
 #include "forte/iec61499/events/E_DELAY_fbt.h"
-#include "forte/iec61499/events/E_RS_fbt.h"
 #include "forte/iec61499/events/E_PERMIT_fbt.h"
+#include "forte/iec61499/events/E_R_TRIG_fbt.h"
+#include "forte/iec61499/events/E_SR_fbt.h"
 
 namespace forte::iec61499::events::timers {
   class FORTE_E_TP final : public CCompositeFB {
       DECLARE_FIRMWARE_FB(FORTE_E_TP)
 
     private:
+      static const TEventID scmEventCNFID = 0;
       static const TEventID scmEventREQID = 0;
       static const TEventID scmEventRID = 1;
-      static const TEventID scmEventCNFID = 0;
 
       CInternalFB<forte::iec61499::events::FORTE_E_DELAY> fb_E_DELAY;
-      CInternalFB<forte::iec61499::events::FORTE_E_RS> fb_E_RS;
-      CInternalFB<forte::iec61499::events::FORTE_E_PERMIT> fb_E_PERMIT;
+      CInternalFB<forte::iec61499::events::FORTE_E_SR> fb_E_SR;
+      CInternalFB<forte::iec61499::events::FORTE_E_R_TRIG> fb_E_R_TRIG;
+      CInternalFB<forte::iec61499::events::FORTE_E_PERMIT> fb_CheckRunning;
 
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;
       void setInitialValues() override;
-      CDataConnection *getIf2InConUnchecked(TPortId paDIID) override;
 
     public:
       FORTE_E_TP(StringId paInstanceNameId, CFBContainer &paContainer);
@@ -67,5 +67,6 @@ namespace forte::iec61499::events::timers {
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
+      CDataConnection *getIf2InConUnchecked(TPortId) override;
   };
 } // namespace forte::iec61499::events::timers
