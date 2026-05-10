@@ -30,6 +30,7 @@ target_sources(forte-events PUBLIC
         E_N_TABLE_fbt.h
         E_PERMIT_fbt.h
         E_R_TRIG_fbt.h
+        E_RF_TRIG_fbt.h
         E_RDELAY_fbt.h
         E_REND_fbt.h
         E_RESTART_fbt.h
