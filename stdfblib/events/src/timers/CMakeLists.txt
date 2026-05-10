@@ -14,8 +14,10 @@
 
 target_sources(forte-events PRIVATE
         E_PULSE_fbt.cpp
+        E_PULSE_RETRIG_fbt.cpp
         E_TOF_fbt.cpp
         E_TONOF_fbt.cpp
         E_TON_fbt.cpp
         E_TP_fbt.cpp
+        E_TP_RETRIG_fbt.cpp
 )
