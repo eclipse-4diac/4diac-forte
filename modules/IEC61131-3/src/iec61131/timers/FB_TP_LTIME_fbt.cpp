@@ -1,0 +1,206 @@
+/*************************************************************************
+ *** Copyright (c) 2026 HR Agrartechnik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.1.100.202604172003!
+ ***
+ *** Name: FB_TP_LTIME
+ *** Description: standard timer function block (pulse) (LTIME)
+ *** Version:
+ ***     1.0: 2026-02-01/Franz Höpfinger - HR Agrartechnik GmbH - Copy over from FB_TP and made this Block
+ *************************************************************************/
+
+#include "forte/iec61131/timers/FB_TP_LTIME_fbt.h"
+
+#include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_ltime.h"
+#include "forte/datatypes/forte_time.h"
+#include "forte/forte_st_util.h"
+#include "forte/iec61131_functions/func_AND.h"
+#include "forte/iec61131_functions/func_GE.h"
+#include "forte/iec61131_functions/func_NOT.h"
+#include "forte/iec61131_functions/func_NOW_MONOTONIC.h"
+#include "forte/iec61131_functions/func_SUB.h"
+
+using namespace std::literals;
+using namespace forte::literals;
+
+namespace forte::iec61131::timers {
+  namespace {
+    constexpr std::string_view TypeHash = ""sv;
+
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
+    const auto cDataInputNames = std::array{"IN"_STRID, "PT"_STRID};
+    const auto cDataOutputNames = std::array{"Q"_STRID, "ET"_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = {},
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = {},
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+
+    const auto cInternalsNames = std::array{"MEM"_STRID, "StartTime"_STRID};
+  } // namespace
+
+  DEFINE_FIRMWARE_FB(FORTE_FB_TP_LTIME, "iec61131::timers::FB_TP_LTIME"_STRID, TypeHash)
+
+  FORTE_FB_TP_LTIME::FORTE_FB_TP_LTIME(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CSimpleFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cInternalsNames),
+      var_MEM(0_BOOL),
+      var_StartTime(0_LTIME),
+      var_IN(0_BOOL),
+      var_PT(0_LTIME),
+      var_Q(0_BOOL),
+      var_ET(0_LTIME),
+      conn_CNF(*this, 0),
+      conn_IN(nullptr),
+      conn_PT(nullptr),
+      conn_Q(*this, 0, var_Q),
+      conn_ET(*this, 1, var_ET) {
+  }
+
+  void FORTE_FB_TP_LTIME::setInitialValues() {
+    CSimpleFB::setInitialValues();
+    var_MEM = 0_BOOL;
+    var_StartTime = 0_LTIME;
+    var_IN = 0_BOOL;
+    var_PT = 0_LTIME;
+    var_Q = 0_BOOL;
+    var_ET = 0_LTIME;
+  }
+
+  void FORTE_FB_TP_LTIME::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    switch (paEIID) {
+      case scmEventREQID: enterStateREQ(paECET); break;
+      default: break;
+    }
+  }
+
+  void FORTE_FB_TP_LTIME::enterStateREQ(CEventChainExecutionThread *const paECET) {
+    alg_REQ();
+    sendOutputEvent(scmEventCNFID, paECET);
+  }
+
+  void FORTE_FB_TP_LTIME::readInputData(const TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventREQID: {
+        readData(0, var_IN, conn_IN);
+        readData(1, var_PT, conn_PT);
+        break;
+      }
+      default: break;
+    }
+  }
+
+  void FORTE_FB_TP_LTIME::writeOutputData(const TEventID paEIID) {
+    switch (paEIID) {
+      case scmEventCNFID: {
+        writeData(2, var_Q, conn_Q);
+        writeData(3, var_ET, conn_ET);
+        break;
+      }
+      default: break;
+    }
+  }
+
+  CIEC_ANY *FORTE_FB_TP_LTIME::getDI(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_IN;
+      case 1: return &var_PT;
+    }
+    return nullptr;
+  }
+
+  CIEC_ANY *FORTE_FB_TP_LTIME::getDO(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_Q;
+      case 1: return &var_ET;
+    }
+    return nullptr;
+  }
+
+  CEventConnection *FORTE_FB_TP_LTIME::getEOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_CNF;
+    }
+    return nullptr;
+  }
+
+  CDataConnection **FORTE_FB_TP_LTIME::getDIConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_IN;
+      case 1: return &conn_PT;
+    }
+    return nullptr;
+  }
+
+  CDataConnection *FORTE_FB_TP_LTIME::getDOConUnchecked(const TPortId paIndex) {
+    switch (paIndex) {
+      case 0: return &conn_Q;
+      case 1: return &conn_ET;
+    }
+    return nullptr;
+  }
+
+  CIEC_ANY *FORTE_FB_TP_LTIME::getVarInternal(const size_t paIndex) {
+    switch (paIndex) {
+      case 0: return &var_MEM;
+      case 1: return &var_StartTime;
+    }
+    return nullptr;
+  }
+
+  void FORTE_FB_TP_LTIME::alg_REQ(void) {
+    CIEC_TIME st_lv_SysTime = 0_TIME;
+
+#line 7 "FB_TP_LTIME.fbt"
+    st_lv_SysTime = func_NOW_MONOTONIC();
+#line 9 "FB_TP_LTIME.fbt"
+    if (func_AND<CIEC_BOOL>(var_IN, func_NOT<CIEC_BOOL>(var_MEM))) {
+#line 10 "FB_TP_LTIME.fbt"
+      var_MEM = true_BOOL;
+#line 12 "FB_TP_LTIME.fbt"
+      if (func_NOT<CIEC_BOOL>(var_Q)) {
+#line 13 "FB_TP_LTIME.fbt"
+        var_Q = true_BOOL;
+#line 14 "FB_TP_LTIME.fbt"
+        var_ET = 0_TIME;
+#line 15 "FB_TP_LTIME.fbt"
+        var_StartTime = st_lv_SysTime;
+      }
+    } else if (func_NOT<CIEC_BOOL>(var_IN)) {
+#line 19 "FB_TP_LTIME.fbt"
+      var_MEM = false_BOOL;
+    }
+#line 22 "FB_TP_LTIME.fbt"
+    if (var_Q) {
+#line 23 "FB_TP_LTIME.fbt"
+      var_ET = func_SUB<CIEC_LTIME>(st_lv_SysTime, var_StartTime);
+#line 25 "FB_TP_LTIME.fbt"
+      if (func_GE(var_ET, var_PT)) {
+#line 26 "FB_TP_LTIME.fbt"
+        var_Q = false_BOOL;
+#line 27 "FB_TP_LTIME.fbt"
+        var_ET = var_PT;
+      }
+    }
+#line 31 "FB_TP_LTIME.fbt"
+    if (func_AND<CIEC_BOOL>(func_NOT<CIEC_BOOL>(var_IN), func_NOT<CIEC_BOOL>(var_Q))) {
+#line 32 "FB_TP_LTIME.fbt"
+      var_ET = 0_TIME;
+    }
+  }
+
+} // namespace forte::iec61131::timers
