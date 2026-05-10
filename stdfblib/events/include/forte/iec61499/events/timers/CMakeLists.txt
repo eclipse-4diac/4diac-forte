@@ -16,6 +16,7 @@ target_sources(forte-events PUBLIC
         FILE_SET HEADERS
         FILES
         E_PULSE_fbt.h
+        E_TLIM_fbt.h
         E_TOF_fbt.h
         E_TONOF_fbt.h
         E_TON_fbt.h
