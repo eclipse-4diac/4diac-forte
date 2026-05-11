@@ -119,7 +119,7 @@ namespace forte {
   bool CCompositeFB::configureGenericDI(const TPortId paDIPortId, const CIEC_ANY &paRefValue) {
     const StringId ifSrcId = getFBInterfaceSpec().mDINames[paDIPortId];
     for (const auto &[srcFBNameId, srcId, dstFBNameId, dstId] : cmFBNData.mDataConnections) {
-      if (!srcFBNameId && getId(srcId) == ifSrcId) {
+      if (!srcFBNameId && dstFBNameId && getId(srcId) == ifSrcId) {
         if (CFunctionBlock *dstFB = getFB(dstFBNameId); !dstFB || !forwardGenericDI(*dstFB, getId(dstId), paRefValue)) {
           return false;
         }
@@ -131,7 +131,7 @@ namespace forte {
   bool CCompositeFB::configureGenericDIO(const TPortId paDIOPortId, const CIEC_ANY &paRefValue) {
     const StringId ifSrcId = getFBInterfaceSpec().mDIONames[paDIOPortId];
     for (const auto &[srcFBNameId, srcId, dstFBNameId, dstId] : cmFBNData.mDataConnections) {
-      if (!srcFBNameId && getId(srcId) == ifSrcId) {
+      if (!srcFBNameId && dstFBNameId && getId(srcId) == ifSrcId) {
         if (CFunctionBlock *dstFB = getFB(dstFBNameId);
             !dstFB || (!forwardGenericDI(*dstFB, getId(dstId), paRefValue) &&
                        !forwardGenericDIO(*dstFB, getId(dstId), paRefValue))) {
@@ -145,7 +145,7 @@ namespace forte {
   bool CCompositeFB::configureGenericDO(const TPortId paDOPortId, const CIEC_ANY &paRefValue) {
     const StringId ifDstId = getFBInterfaceSpec().mDONames[paDOPortId];
     for (const auto &[srcFBNameId, srcId, dstFBNameId, dstId] : cmFBNData.mDataConnections) {
-      if (!dstFBNameId && getId(dstId) == ifDstId) {
+      if (srcFBNameId && !dstFBNameId && getId(dstId) == ifDstId) {
         if (CFunctionBlock *srcFB = getFB(srcFBNameId); !srcFB || !forwardGenericDO(*srcFB, getId(srcId), paRefValue)) {
           return false;
         }
