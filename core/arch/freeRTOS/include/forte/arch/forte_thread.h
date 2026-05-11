@@ -103,7 +103,15 @@ namespace forte::arch {
       static const int scmForteTaskPriority;
 
       std::vector<StackType_t> mFreeRTOSStack;
-      std::unique_ptr<StaticTask_t, decltype([](StaticTask_t *paTask) { vPortFree(paTask); })> mTask;
+
+      // use a functor instead a lambda, to avoid a "internal linkage warning" at compile-time.
+      struct STCBDeleter {
+          void operator()(StaticTask_t *paTask) const {
+            vPortFree(paTask);
+          }
+      };
+
+      std::unique_ptr<StaticTask_t, STCBDeleter> mTask;
       TaskHandle_t mFreeRTOSThreadHandle = nullptr;
   };
 
