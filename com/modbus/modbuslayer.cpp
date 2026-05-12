@@ -100,7 +100,7 @@ namespace forte::com_infra::modbus {
         case CIEC_ANY::e_BOOL: // 1bit data type
         {
           CIEC_BOOL::TValueType out = static_cast<CIEC_BOOL::TValueType>(static_cast<CIEC_BOOL &>(anyVal));
-          *static_cast<CIEC_BOOL::TValueType *>(&convertedData[outLength]) = out;
+          *reinterpret_cast<CIEC_BOOL::TValueType *>(&convertedData[outLength]) = out;
           outLength += sizeof(CIEC_BOOL::TValueType);
           break;
         }
@@ -110,21 +110,21 @@ namespace forte::com_infra::modbus {
         case CIEC_ANY::e_SINT: // 8bit data type signed
         {
           CIEC_SINT::TValueType out = static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(anyVal));
-          *static_cast<CIEC_SINT::TValueType *>(&convertedData[outLength]) = out;
+          *reinterpret_cast<CIEC_SINT::TValueType *>(&convertedData[outLength]) = out;
           outLength += sizeof(CIEC_SINT::TValueType);
           break;
         }
         case CIEC_ANY::e_USINT: // 8bit data type unsigned
         {
           CIEC_USINT::TValueType out = static_cast<CIEC_USINT::TValueType>(static_cast<CIEC_USINT &>(anyVal));
-          *static_cast<CIEC_USINT::TValueType *>(&convertedData[outLength]) = out;
+          *reinterpret_cast<CIEC_USINT::TValueType *>(&convertedData[outLength]) = out;
           outLength += sizeof(CIEC_USINT::TValueType);
           break;
         }
         case CIEC_ANY::e_BYTE: // 8bit data type
         {
           CIEC_BYTE::TValueType out = static_cast<CIEC_BYTE::TValueType>(static_cast<CIEC_BYTE &>(anyVal));
-          *static_cast<CIEC_BYTE::TValueType *>(&convertedData[outLength]) = out;
+          *reinterpret_cast<CIEC_BYTE::TValueType *>(&convertedData[outLength]) = out;
           outLength += sizeof(CIEC_BYTE::TValueType);
           break;
         }
@@ -134,21 +134,21 @@ namespace forte::com_infra::modbus {
         case CIEC_ANY::e_INT: // 16bit data type signed
         {
           CIEC_INT::TValueType out = static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(anyVal));
-          *static_cast<CIEC_INT::TValueType *>(&convertedData[outLength]) = out;
+          *reinterpret_cast<CIEC_INT::TValueType *>(&convertedData[outLength]) = out;
           outLength += sizeof(CIEC_INT::TValueType);
           break;
         }
         case CIEC_ANY::e_UINT: // 16bit data type unsigned
         {
           CIEC_UINT::TValueType out = static_cast<CIEC_UINT::TValueType>(static_cast<CIEC_UINT &>(anyVal));
-          *static_cast<CIEC_UINT::TValueType *>(&convertedData[outLength]) = out;
+          *reinterpret_cast<CIEC_UINT::TValueType *>(&convertedData[outLength]) = out;
           outLength += sizeof(CIEC_UINT::TValueType);
           break;
         }
         case CIEC_ANY::e_WORD: // 16bit data type
         {
           CIEC_WORD::TValueType out = static_cast<CIEC_WORD::TValueType>(static_cast<CIEC_WORD &>(anyVal));
-          *static_cast<CIEC_WORD::TValueType *>(&convertedData[outLength]) = out;
+          *reinterpret_cast<CIEC_WORD::TValueType *>(&convertedData[outLength]) = out;
           outLength += sizeof(CIEC_WORD::TValueType);
           break;
         }
@@ -158,32 +158,36 @@ namespace forte::com_infra::modbus {
         case CIEC_ANY::e_DINT: // 32bit data type signed
         {
           CIEC_DINT::TValueType out = static_cast<CIEC_DINT::TValueType>(static_cast<CIEC_DINT &>(anyVal));
-          *static_cast<CIEC_DINT::TValueType *>(&convertedData[outLength]) =
-              convertFBOutput<CIEC_DINT::TValueType>((TForteByte *) &out, sizeof(CIEC_DINT::TValueType));
+          *reinterpret_cast<CIEC_DINT::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_DINT::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                     sizeof(CIEC_DINT::TValueType));
           outLength += sizeof(CIEC_DINT::TValueType);
           break;
         }
         case CIEC_ANY::e_UDINT: // 32bit data type unsigned
         {
           CIEC_UDINT::TValueType out = static_cast<CIEC_UDINT::TValueType>(static_cast<CIEC_UDINT &>(anyVal));
-          *static_cast<CIEC_UDINT::TValueType *>(&convertedData[outLength]) =
-              convertFBOutput<CIEC_UDINT::TValueType>((TForteByte *) &out, sizeof(CIEC_UDINT::TValueType));
+          *reinterpret_cast<CIEC_UDINT::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_UDINT::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                      sizeof(CIEC_UDINT::TValueType));
           outLength += sizeof(CIEC_UDINT::TValueType);
           break;
         }
         case CIEC_ANY::e_DWORD: // 32bit data type
         {
           CIEC_DWORD::TValueType out = static_cast<CIEC_DWORD::TValueType>(static_cast<CIEC_DWORD &>(anyVal));
-          *static_cast<CIEC_DWORD::TValueType *>(&convertedData[outLength]) =
-              convertFBOutput<CIEC_DWORD::TValueType>((TForteByte *) &out, sizeof(CIEC_DWORD::TValueType));
+          *reinterpret_cast<CIEC_DWORD::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_DWORD::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                      sizeof(CIEC_DWORD::TValueType));
           outLength += sizeof(CIEC_DWORD::TValueType);
           break;
         }
         case CIEC_ANY::e_REAL: // 32bit data type
         {
           CIEC_REAL::TValueType out = static_cast<CIEC_REAL::TValueType>(static_cast<CIEC_REAL &>(anyVal));
-          *static_cast<CIEC_REAL::TValueType *>((&convertedData[outLength])) = convertFBOutput<CIEC_REAL::TValueType>(
-              static_cast<CIEC_REAL::TValueType *>(&out), sizeof(CIEC_REAL::TValueType));
+          *reinterpret_cast<CIEC_REAL::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_REAL::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                     sizeof(CIEC_REAL::TValueType));
           outLength += sizeof(CIEC_REAL::TValueType);
           break;
         }
@@ -193,32 +197,36 @@ namespace forte::com_infra::modbus {
         case CIEC_ANY::e_LINT: // 64bit data type signed
         {
           CIEC_LINT::TValueType out = static_cast<CIEC_LINT::TValueType>(static_cast<CIEC_LINT &>(anyVal));
-          *static_cast<CIEC_LINT::TValueType *>(&convertedData[outLength]) =
-              convertFBOutput<CIEC_LINT::TValueType>((TForteByte *) &out, sizeof(CIEC_LINT::TValueType));
+          *reinterpret_cast<CIEC_LINT::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_LINT::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                     sizeof(CIEC_LINT::TValueType));
           outLength += sizeof(CIEC_LINT::TValueType);
           break;
         }
         case CIEC_ANY::e_ULINT: // 64bit data type unsigned
         {
           CIEC_ULINT::TValueType out = static_cast<CIEC_ULINT::TValueType>(static_cast<CIEC_ULINT &>(anyVal));
-          *static_cast<CIEC_ULINT::TValueType *>(&convertedData[outLength]) =
-              convertFBOutput<CIEC_ULINT::TValueType>((TForteByte *) &out, sizeof(CIEC_ULINT::TValueType));
+          *reinterpret_cast<CIEC_ULINT::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_ULINT::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                      sizeof(CIEC_ULINT::TValueType));
           outLength += sizeof(CIEC_ULINT::TValueType);
           break;
         }
         case CIEC_ANY::e_LWORD: // 64bit data type
         {
           CIEC_LWORD::TValueType out = static_cast<CIEC_LWORD::TValueType>(static_cast<CIEC_LWORD &>(anyVal));
-          *static_cast<CIEC_LWORD::TValueType *>(&convertedData[outLength]) =
-              convertFBOutput<CIEC_LWORD::TValueType>((TForteByte *) &out, sizeof(CIEC_LWORD::TValueType));
+          *reinterpret_cast<CIEC_LWORD::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_LWORD::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                      sizeof(CIEC_LWORD::TValueType));
           outLength += sizeof(CIEC_LWORD::TValueType);
           break;
         }
         case CIEC_ANY::e_LREAL: // 64bit data type
         {
           CIEC_LREAL::TValueType out = static_cast<CIEC_LREAL::TValueType>(static_cast<CIEC_LREAL &>(anyVal));
-          *static_cast<CIEC_LREAL::TValueType *>(&convertedData[outLength]) =
-              convertFBOutput<CIEC_LREAL::TValueType>((TForteByte *) &out, sizeof(CIEC_LREAL::TValueType));
+          *reinterpret_cast<CIEC_LREAL::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_LREAL::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                      sizeof(CIEC_LREAL::TValueType));
           outLength += sizeof(CIEC_LREAL::TValueType);
           break;
         }
@@ -391,14 +399,14 @@ namespace forte::com_infra::modbus {
         // we need to swap order of each 16 bit data package
 
         unsigned int nrUint16s = currentDataSize / 2;
-        TForteUInt16 *destAr = static_cast<TForteUInt16 *>(&retVal);
-        TForteUInt16 *sourceAr = static_cast<TForteUInt16 *>(&paDataArray[0]);
+        TForteUInt16 *destAr = reinterpret_cast<TForteUInt16 *>(&retVal);
+        TForteUInt16 *sourceAr = reinterpret_cast<TForteUInt16 *>(&paDataArray[0]);
 
         for (unsigned int i = 0; i < nrUint16s; i++) {
           destAr[i] = sourceAr[nrUint16s - 1 - i];
         }
       } else {
-        TForteByte *tempAr = static_cast<TForteByte *>(&retVal);
+        TForteByte *tempAr = reinterpret_cast<TForteByte *>(&retVal);
         for (unsigned int j = 0; j < currentDataSize; j++) {
           tempAr[j] = paDataArray[j];
         }
@@ -630,9 +638,8 @@ namespace forte::com_infra::modbus {
         strcpy(paIdString, "tcp:");
         strcat(paIdString, params);
         strcat(paIdString, ":");
-        strcpy(paTcpParams->mIp, params);
-        strncpy(paRtuParams->mIp, params, sizeof(paRtuParams->mIp));
-        paRtuParams->mDevice[sizeof(paRtuParams->mIp) - 1] = '\0';
+        strncpy(paTcpParams->mIp, params, sizeof(paTcpParams->mIp));
+        paTcpParams->mIp[sizeof(paTcpParams->mIp) - 1] = '\0';
         paTcpParams->mPort = static_cast<unsigned int>(util::strtoul(chrStorage, nullptr, 10));
         reuseConnection |= !chrStorage[0];
 
@@ -864,7 +871,7 @@ namespace forte::com_infra::modbus {
     CModbusConnection *modbusConnection =
         new CModbusClientConnection((CModbusHandler *) &getExtEvHandler<CModbusHandler>());
     SConnection connInfo = {{0}, 1, modbusConnection};
-    strncpy(connInfo.mIdString, params, sizeof(connInfo.mIdString) - 1);
+    strncpy(connInfo.mIdString, paIdString, sizeof(connInfo.mIdString) - 1);
     connInfo.mIdString[sizeof(connInfo.mIdString) - 1] = '\0';
     smConnections.push_back(connInfo);
     return modbusConnection;
