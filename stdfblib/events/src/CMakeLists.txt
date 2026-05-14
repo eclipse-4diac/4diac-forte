@@ -52,6 +52,9 @@ target_sources(forte-events PRIVATE
         GEN_E_REND_fbt.cpp
         GEN_E_SPLIT_fbt.cpp
         timedfb.cpp
+        E_TMIN_fbt.cpp
+	E_D_FF_TMIN_fbt.cpp
+	E_D_FF_ANY_TMIN_fbt.cpp
 )
 
 add_subdirectory(timers)
