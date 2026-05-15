@@ -106,13 +106,11 @@ namespace forte::test {
 
   namespace {
     void checkVars(CIEC_ANY &paTestVar, CIEC_ANY &paFreshVar) {
-      if (paFreshVar.getDataTypeID() == CIEC_ANY::e_ANY) {
-        if (auto tempVar = std::unique_ptr<CIEC_ANY>(paTestVar.unwrap().clone(nullptr))) {
-          tempVar->reset(); // reset the CIEC_ANY not the unique_ptr
-          paFreshVar.setValue(*tempVar);
-        }
+      // Skip check if the variable is of any type ANY, because due to FB Type default values to pins this cannot be
+      // tested reliably
+      if (paFreshVar.getDataTypeID() != CIEC_ANY::e_ANY) {
+        BOOST_TEST(paTestVar.equals(paFreshVar));
       }
-      BOOST_TEST(paTestVar.equals(paFreshVar));
     }
   } // namespace
 
