@@ -14,4 +14,5 @@
 # Tests for the utils function FBs
 #############################################################################
 
+forte_test_add_sourcefile_cpp(F_LEN_ARRAY_tester.cpp)
 forte_test_add_sourcefile_cpp(GEN_CSV_WRITER_tester.cpp)

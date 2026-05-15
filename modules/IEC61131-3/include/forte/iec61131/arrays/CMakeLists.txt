@@ -1,5 +1,5 @@
 #############################################################################
-# Copyright (c) 2025 Martin Erich Jobst
+# Copyright (c) 2026 Martin Melik Merkumians
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
@@ -8,26 +8,13 @@
 # SPDX-License-Identifier: EPL-2.0
 #
 # Contributors:
-#    Martin Erich Jobst
+#    Martin Melik Merkumians
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-target_sources(forte-utils PUBLIC
+target_sources(forte-iec61131-3 PUBLIC
         FILE_SET HEADERS
         FILES
-        FB_RANDOM_fbt.h
-        GEN_CSV_WRITER_fbt.h
-        GetInstancePath_fbt.h
-        GetInstancePathAndName_fbt.h
-        OUT_ANY_CONSOLE_fbt.h
-        STEST_END_fbt.h
-        TEST_CONDITION_fbt.h
+        F_LOWER_BOUND_fbt.h
+        F_UPPER_BOUND_fbt.h
 )
-
-add_subdirectory(arrays)
-add_subdirectory(assembling)
-add_subdirectory(const)
-add_subdirectory(selection)
-add_subdirectory(signals)
-add_subdirectory(splitting)
-add_subdirectory(timing)

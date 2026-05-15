@@ -1,5 +1,5 @@
 #############################################################################
-# Copyright (c) 2025 Martin Erich Jobst
+# Copyright (c) 2026 Martin Melik Merkumians
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
@@ -8,19 +8,10 @@
 # SPDX-License-Identifier: EPL-2.0
 #
 # Contributors:
-#    Martin Erich Jobst
+#    Martin Melik Merkumians
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-add_subdirectory(arithmetic)
-add_subdirectory(arrays)
-add_subdirectory(bistableElements)
-add_subdirectory(bitwiseOperators)
-add_subdirectory(charString)
-add_subdirectory(comparison)
-add_subdirectory(conversion)
-add_subdirectory(counters)
-add_subdirectory(edgeDetection)
-add_subdirectory(numerical)
-add_subdirectory(selection)
-add_subdirectory(timers)
+target_sources(forte-utils PRIVATE
+        F_LEN_ARRAY_fbt.cpp
+)
