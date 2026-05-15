@@ -13,7 +13,7 @@
 #############################################################################
 
 target_sources(forte-utils PRIVATE
-        FB_RANDOM_fbt.cpp    
+        FB_RANDOM_fbt.cpp
         GEN_CSV_WRITER_fbt.cpp
         GetInstancePath_fbt.cpp
         GetInstancePathAndName_fbt.cpp
@@ -22,6 +22,7 @@ target_sources(forte-utils PRIVATE
         TEST_CONDITION_fbt.cpp
 )
 
+add_subdirectory(arrays)
 add_subdirectory(assembling)
 add_subdirectory(const)
 add_subdirectory(selection)
