@@ -1,0 +1,193 @@
+/*************************************************************************
+ *** Copyright (c) 2026 HR Agrartechnik GmbH
+ *** This program and the accompanying materials are made available under the
+ *** terms of the Eclipse Public License 2.0 which is available at
+ *** http://www.eclipse.org/legal/epl-2.0.
+ ***
+ *** SPDX-License-Identifier: EPL-2.0
+ ***
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.1.100.202605112003!
+ ***
+ *** Name: ASSEMBLE_LWORD_FROM_BYTES
+ *** Description: this Function combines the 8 BYTES to a LWORD
+ *** Version:
+ ***     1.0: 2026-05-16/Franz Höpfinger - HR Agrartechnik - initial Implementation
+ *************************************************************************/
+
+#include "forte/eclipse4diac/utils/assembling/ASSEMBLE_LWORD_FROM_BYTES_fct.h"
+
+#include "forte/datatypes/forte_byte.h"
+#include "forte/datatypes/forte_lword.h"
+#include "forte/eclipse4diac/utils/assembling/ASSEMBLE_LWORD_FROM_BYTES_fct.h"
+
+using namespace std::literals;
+using namespace forte::literals;
+
+namespace forte::eclipse4diac::utils::assembling {
+  namespace {
+    constexpr std::string_view TypeHash =""sv;
+
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
+    const auto cDataInputNames = std::array{"BYTE_00"_STRID, "BYTE_01"_STRID, "BYTE_02"_STRID, "BYTE_03"_STRID, "BYTE_04"_STRID, "BYTE_05"_STRID, "BYTE_06"_STRID, "BYTE_07"_STRID};
+    const auto cDataOutputNames = std::array{""_STRID};
+    const SFBInterfaceSpec cFBInterfaceSpec = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = {},
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = {},
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  }
+
+  DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_LWORD_FROM_BYTES, "eclipse4diac::utils::assembling::ASSEMBLE_LWORD_FROM_BYTES"_STRID, TypeHash)
+
+  FORTE_ASSEMBLE_LWORD_FROM_BYTES::FORTE_ASSEMBLE_LWORD_FROM_BYTES(const StringId paInstanceNameId, CFBContainer &paContainer) :
+      CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      var_BYTE_00(0_BYTE),
+      var_BYTE_01(0_BYTE),
+      var_BYTE_02(0_BYTE),
+      var_BYTE_03(0_BYTE),
+      var_BYTE_04(0_BYTE),
+      var_BYTE_05(0_BYTE),
+      var_BYTE_06(0_BYTE),
+      var_BYTE_07(0_BYTE),
+      var_(0_LWORD),
+      conn_CNF(*this, 0),
+      conn_BYTE_00(nullptr),
+      conn_BYTE_01(nullptr),
+      conn_BYTE_02(nullptr),
+      conn_BYTE_03(nullptr),
+      conn_BYTE_04(nullptr),
+      conn_BYTE_05(nullptr),
+      conn_BYTE_06(nullptr),
+      conn_BYTE_07(nullptr),
+      conn_(*this, 0, var_) {
+  }
+
+  void FORTE_ASSEMBLE_LWORD_FROM_BYTES::setInitialValues() {
+    CFunctionBlock::setInitialValues();
+    var_BYTE_00 = 0_BYTE;
+    var_BYTE_01 = 0_BYTE;
+    var_BYTE_02 = 0_BYTE;
+    var_BYTE_03 = 0_BYTE;
+    var_BYTE_04 = 0_BYTE;
+    var_BYTE_05 = 0_BYTE;
+    var_BYTE_06 = 0_BYTE;
+    var_BYTE_07 = 0_BYTE;
+    var_ = 0_LWORD;
+  }
+
+  void FORTE_ASSEMBLE_LWORD_FROM_BYTES::readInputData(const TEventID paEIID) {
+    switch(paEIID) {
+      case scmEventREQID: {
+        readData(0, var_BYTE_00, conn_BYTE_00);
+        readData(1, var_BYTE_01, conn_BYTE_01);
+        readData(2, var_BYTE_02, conn_BYTE_02);
+        readData(3, var_BYTE_03, conn_BYTE_03);
+        readData(4, var_BYTE_04, conn_BYTE_04);
+        readData(5, var_BYTE_05, conn_BYTE_05);
+        readData(6, var_BYTE_06, conn_BYTE_06);
+        readData(7, var_BYTE_07, conn_BYTE_07);
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
+  void FORTE_ASSEMBLE_LWORD_FROM_BYTES::writeOutputData(const TEventID paEIID) {
+    switch(paEIID) {
+      case scmEventCNFID: {
+        writeData(8, var_, conn_);
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
+  CIEC_ANY *FORTE_ASSEMBLE_LWORD_FROM_BYTES::getDI(const size_t paIndex) {
+    switch(paIndex) {
+      case 0: return &var_BYTE_00;
+      case 1: return &var_BYTE_01;
+      case 2: return &var_BYTE_02;
+      case 3: return &var_BYTE_03;
+      case 4: return &var_BYTE_04;
+      case 5: return &var_BYTE_05;
+      case 6: return &var_BYTE_06;
+      case 7: return &var_BYTE_07;
+    }
+    return nullptr;
+  }
+
+  CIEC_ANY *FORTE_ASSEMBLE_LWORD_FROM_BYTES::getDO(const size_t paIndex) {
+    switch(paIndex) {
+      case 0: return &var_;
+    }
+    return nullptr;
+  }
+
+  CEventConnection *FORTE_ASSEMBLE_LWORD_FROM_BYTES::getEOConUnchecked(const TPortId paIndex) {
+    switch(paIndex) {
+      case 0: return &conn_CNF;
+    }
+    return nullptr;
+  }
+
+  CDataConnection **FORTE_ASSEMBLE_LWORD_FROM_BYTES::getDIConUnchecked(const TPortId paIndex) {
+    switch(paIndex) {
+      case 0: return &conn_BYTE_00;
+      case 1: return &conn_BYTE_01;
+      case 2: return &conn_BYTE_02;
+      case 3: return &conn_BYTE_03;
+      case 4: return &conn_BYTE_04;
+      case 5: return &conn_BYTE_05;
+      case 6: return &conn_BYTE_06;
+      case 7: return &conn_BYTE_07;
+    }
+    return nullptr;
+  }
+
+  CDataConnection *FORTE_ASSEMBLE_LWORD_FROM_BYTES::getDOConUnchecked(const TPortId paIndex) {
+    switch(paIndex) {
+      case 0: return &conn_;
+    }
+    return nullptr;
+  }
+
+  void FORTE_ASSEMBLE_LWORD_FROM_BYTES::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
+    var_ = func_ASSEMBLE_LWORD_FROM_BYTES(var_BYTE_00, var_BYTE_01, var_BYTE_02, var_BYTE_03, var_BYTE_04, var_BYTE_05, var_BYTE_06, var_BYTE_07);
+    sendOutputEvent(scmEventCNFID, paECET);
+  }
+
+  CIEC_LWORD func_ASSEMBLE_LWORD_FROM_BYTES(const CIEC_BYTE &st_lv_BYTE_00, const CIEC_BYTE &st_lv_BYTE_01, const CIEC_BYTE &st_lv_BYTE_02, const CIEC_BYTE &st_lv_BYTE_03, const CIEC_BYTE &st_lv_BYTE_04, const CIEC_BYTE &st_lv_BYTE_05, const CIEC_BYTE &st_lv_BYTE_06, const CIEC_BYTE &st_lv_BYTE_07) {
+    CIEC_LWORD st_ret_val = 0_LWORD;
+
+    #line 15 "ASSEMBLE_LWORD_FROM_BYTES.fct"
+    st_ret_val.partial<CIEC_BYTE>(0) = st_lv_BYTE_00;
+    #line 16 "ASSEMBLE_LWORD_FROM_BYTES.fct"
+    st_ret_val.partial<CIEC_BYTE>(1) = st_lv_BYTE_01;
+    #line 17 "ASSEMBLE_LWORD_FROM_BYTES.fct"
+    st_ret_val.partial<CIEC_BYTE>(2) = st_lv_BYTE_02;
+    #line 18 "ASSEMBLE_LWORD_FROM_BYTES.fct"
+    st_ret_val.partial<CIEC_BYTE>(3) = st_lv_BYTE_03;
+    #line 19 "ASSEMBLE_LWORD_FROM_BYTES.fct"
+    st_ret_val.partial<CIEC_BYTE>(4) = st_lv_BYTE_04;
+    #line 20 "ASSEMBLE_LWORD_FROM_BYTES.fct"
+    st_ret_val.partial<CIEC_BYTE>(5) = st_lv_BYTE_05;
+    #line 21 "ASSEMBLE_LWORD_FROM_BYTES.fct"
+    st_ret_val.partial<CIEC_BYTE>(6) = st_lv_BYTE_06;
+    #line 22 "ASSEMBLE_LWORD_FROM_BYTES.fct"
+    st_ret_val.partial<CIEC_BYTE>(7) = st_lv_BYTE_07;
+
+    return st_ret_val;
+  }
+
+}

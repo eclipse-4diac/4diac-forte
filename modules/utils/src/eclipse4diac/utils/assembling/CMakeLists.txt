@@ -20,6 +20,9 @@ target_sources(forte-utils PRIVATE
         ASSEMBLE_DWORD_FROM_QUARTERS_fct.cpp
         ASSEMBLE_DWORD_FROM_WORDS_fct.cpp
         ASSEMBLE_LWORD_FROM_BOOLS_fct.cpp
+        ASSEMBLE_LWORD_FROM_WORDS_fct.cpp
+        ASSEMBLE_LWORD_FROM_BYTES_fct.cpp
+        ASSEMBLE_LWORD_FROM_DWORDS_fct.cpp
         ASSEMBLE_LWORD_FROM_QUARTERS_fct.cpp
         ASSEMBLE_WORD_FROM_BOOLS_fct.cpp
         ASSEMBLE_WORD_FROM_BYTES_fct.cpp
