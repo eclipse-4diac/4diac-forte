@@ -137,6 +137,6 @@ namespace forte::eclipse4diac::utils::splitting {
 #line 13 "SPLIT_DWORD_INTO_WORDS.fct"
     st_lv_WORD_00 = st_lv_IN.cpartial<CIEC_WORD>(0);
 #line 14 "SPLIT_DWORD_INTO_WORDS.fct"
-    st_lv_WORD_01 = st_lv_IN.cpartial<CIEC_BOOL>(1);
+    st_lv_WORD_01 = st_lv_IN.cpartial<CIEC_WORD>(1);
   }
 } // namespace forte::eclipse4diac::utils::splitting
