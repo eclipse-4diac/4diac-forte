@@ -31,6 +31,7 @@
 #include "forte/util/string_utils.h"
 #include "monitoring.h"
 #include "typelib_internal.h"
+#include "gatherdataconn.h"
 
 using namespace forte::literals;
 
@@ -77,6 +78,7 @@ namespace forte {
     void createConnectionResponseMessage(const CConnection &paConn,
                                          const CFunctionBlock &paDstFb,
                                          const StringId paDstId,
+                                         const std::span<const StringId> paMemberName,
                                          std::string &paReqResult) {
       paReqResult += "<Connection Source=\""s;
 
@@ -90,6 +92,10 @@ namespace forte {
       paReqResult += paDstFb.getFullQualifiedApplicationInstanceName('.');
       paReqResult += "."s;
       paReqResult += paDstId;
+      if (!paMemberName.empty()) {
+        paReqResult += "."s;
+        util::join(paMemberName.begin(), paMemberName.end(), {}, '.', paReqResult);
+      }
 
       paReqResult.append("\"/>\n"s);
     }
@@ -101,7 +107,7 @@ namespace forte {
         if (eConn) {
           for (const auto &it : eConn->getDestinationList()) {
             createConnectionResponseMessage(*eConn, it.getFB(),
-                                            it.getFB().getFBInterfaceSpec().mEINames[it.getPortId()], paReqResult);
+                                            it.getFB().getFBInterfaceSpec().mEINames[it.getPortId()], {}, paReqResult);
           }
         }
       }
@@ -110,9 +116,17 @@ namespace forte {
     void createDOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
       const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
       for (size_t i = 0; i < spec.getNumDIs(); i++) {
-        const CDataConnection *const dConn = paFb.getDIConnection(spec.mDINames[i]);
-        if (dConn != nullptr) {
-          createConnectionResponseMessage(*dConn, paFb, spec.mDINames[i], paReqResult);
+        if (const CDataConnection *const dConn = paFb.getDIConnection(spec.mDINames[i]); dConn != nullptr) {
+          if (dConn->isGathering()) {
+            for (auto *gatherConn = static_cast<const internal::CGatheringDataConnection *>(dConn);
+                 const internal::CGatheringDataConnection::SGatheringData &membConn :
+                 gatherConn->getMemberConnections()) {
+              createConnectionResponseMessage(*membConn.mConnection, paFb, spec.mDINames[i], membConn.mMemberName,
+                                              paReqResult);
+            }
+          } else {
+            createConnectionResponseMessage(*dConn, paFb, spec.mDINames[i], {}, paReqResult);
+          }
         }
       }
     }
@@ -122,7 +136,7 @@ namespace forte {
       for (auto it : spec.mSocketNames) {
         const ISocketPin *const skt = paFb.getSocketPin(it);
         if (skt != nullptr && skt->getAdapterCon() != nullptr) {
-          createConnectionResponseMessage(*skt->getAdapterCon(), paFb, it, paReqResult);
+          createConnectionResponseMessage(*skt->getAdapterCon(), paFb, it, {}, paReqResult);
         }
       }
     }

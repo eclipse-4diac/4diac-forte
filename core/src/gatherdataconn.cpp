@@ -49,7 +49,13 @@ namespace forte::internal {
     }
     mGatheringData.clear();
 
+    paDstFB.connectDI(dstPortId, nullptr);
+
     return EMGMResponse::Ready;
+  }
+
+  void CGatheringDataConnection::getSourcePortName(TNameIdentifier &paResult) const {
+    paResult.push_back(StringId()); // source port cannot be determined
   }
 
   void CGatheringDataConnection::readData(CIEC_ANY &) const {
