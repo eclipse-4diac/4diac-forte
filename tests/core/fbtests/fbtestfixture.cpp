@@ -76,6 +76,11 @@ namespace forte::test {
   }
 
   CFBTestFixtureBase::~CFBTestFixtureBase() {
+    // No FB was created or the FB was already deleted during the test, so we can skip the cleanup
+    if (mFBUnderTest == nullptr) {
+      return;
+    }
+
     const SFBInterfaceSpec &interfaceSpec(mFBUnderTest->getFBInterfaceSpec());
 
     performFBResetTests();
