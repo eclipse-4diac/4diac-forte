@@ -57,7 +57,7 @@ namespace forte::arch {
                                                                                           unsigned short paPort) {
     TSocketDescriptor nRetVal = INVALID_SOCKET;
 
-    DEVLOG_INFO("CWin32SocketInterface: Opening TCP-Server connection at: %s:%d\n", paIPAddr, paPort);
+    DEVLOG_INFO("CWin32SocketInterface: Opening TCP-Server connection at: %s:%d\n", (nullptr != paIPAddr) ? paIPAddr : "nullptr", paPort);
 
     TSocketDescriptor nSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (nSocket == INVALID_SOCKET) {
