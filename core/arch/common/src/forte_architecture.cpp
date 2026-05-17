@@ -42,7 +42,6 @@ namespace forte::arch {
     if (auto result = CForteSpecificArchitecture::deinitialize(); result != 0) {
       return result;
     }
-    StringId::clearPool();
     mInitialized = false;
     return 0;
   }
