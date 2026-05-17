@@ -25,11 +25,18 @@ namespace forte::arch {
    *
    */
 
+  class CWin32ThreadDeletePolicy {
+    public:
+      static void deleteThread(HANDLE paHandle) {
+        CloseHandle(paHandle);
+      }
+  };
+
   /*! \ingroup win32_hal
    * \brief The thread implementation for the win32 thread interface.
    *
    */
-  class CWin32Thread : public forte::arch::CThreadBase<HANDLE> {
+  class CWin32Thread : public forte::arch::CThreadBase<HANDLE, 0, CWin32ThreadDeletePolicy> {
     public:
       /*! \brief Constructor of the Thread class
        *
