@@ -17,6 +17,7 @@
 #include "forte/arch/forte_specific_architecture.h"
 
 #include "forte/startuphook.h"
+#include "forte/stringid.h"
 
 namespace forte::arch {
   bool CForteGeneralArchitecture::mInitialized = false;
@@ -41,6 +42,7 @@ namespace forte::arch {
     if (auto result = CForteSpecificArchitecture::deinitialize(); result != 0) {
       return result;
     }
+    StringId::clearPool();
     mInitialized = false;
     return 0;
   }

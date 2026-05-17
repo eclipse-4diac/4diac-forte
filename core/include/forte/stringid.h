@@ -68,6 +68,8 @@ namespace forte {
 
       static StringId insert(std::string_view paString);
 
+      static void clearPool();
+
       template<util::fixed_string A>
       static constexpr StringId fixed() {
         (void) &Register<A>::scmRegister;

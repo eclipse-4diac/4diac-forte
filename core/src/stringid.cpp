@@ -60,4 +60,10 @@ namespace forte {
     }
     return StringId(*it);
   }
+
+  void StringId::clearPool() {
+    util::CCriticalRegion lock(internMutex());
+    internSet().clear();
+    runtimeDeque().clear();
+  }
 } // namespace forte
