@@ -26,7 +26,7 @@ namespace forte::arch {
     LPSTR getErrorMessage(int paErrorNumber) {
       LPSTR pacErrorMessage = nullptr;
       FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
-                    nullptr, paErrorNumber, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), pacErrorMessage, 0, nullptr);
+                    nullptr, paErrorNumber, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), (LPSTR) &pacErrorMessage, 0, nullptr);
       return pacErrorMessage;
     }
 
