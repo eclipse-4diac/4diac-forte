@@ -36,7 +36,7 @@ namespace forte::arch {
    * \brief The thread implementation for the win32 thread interface.
    *
    */
-  class CWin32Thread : public forte::arch::CThreadBase<HANDLE, 0, CWin32ThreadDeletePolicy> {
+  class CWin32Thread : public forte::arch::CThreadBase<HANDLE, static_cast<HANDLE>(0), CWin32ThreadDeletePolicy> {
     public:
       /*! \brief Constructor of the Thread class
        *
