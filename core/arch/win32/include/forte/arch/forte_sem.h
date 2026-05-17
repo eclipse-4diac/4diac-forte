@@ -20,13 +20,13 @@
 
 namespace forte::arch {
 
-  /*!\brief counting semaphore for syncing operation in FORTE
+  /*!\brief binary semaphore for syncing operation in FORTE
    *
    * The semaphore is initialized with the value given.
    */
   class CWin32Semaphore {
     public:
-      explicit CWin32Semaphore(unsigned int paInitialValue = 0);
+      explicit CWin32Semaphore(bool paInitialValue = false);
       ~CWin32Semaphore();
 
       /** @brief Unlocks (increments) the semaphore
@@ -53,7 +53,7 @@ namespace forte::arch {
       bool tryNoWait();
 
     private:
-      HANDLE mSemaphore;
+      HANDLE mEvent;
   };
 
   typedef CWin32Semaphore CSemaphore;
