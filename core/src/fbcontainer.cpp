@@ -63,8 +63,11 @@ namespace forte {
   }
 
   CFBContainer::~CFBContainer() {
-    for (TFBContainerList::iterator itRunner(mChildren.begin()); itRunner != mChildren.end(); ++itRunner) {
-      delete (*itRunner);
+    for (auto *child : mChildren) {
+      child->deinitialize();
+    }
+    for (auto *child : mChildren) {
+      delete child;
     }
     mChildren.clear();
   }

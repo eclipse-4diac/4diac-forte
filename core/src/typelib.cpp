@@ -29,23 +29,23 @@ using namespace std::string_literals;
 namespace forte {
   namespace {
     std::vector<CFBTypeEntry *> &getFBTypeLib() {
-      static std::vector<CFBTypeEntry *> *fbTypeLib = new std::vector<CFBTypeEntry *>();
-      return *fbTypeLib;
+      static std::vector<CFBTypeEntry *> fbTypeLib;
+      return fbTypeLib;
     }
 
     std::vector<CAdapterTypeEntry *> &getAdapterTypeLib() {
-      static std::vector<CAdapterTypeEntry *> *adapterTypeLib = new std::vector<CAdapterTypeEntry *>();
-      return *adapterTypeLib;
+      static std::vector<CAdapterTypeEntry *> adapterTypeLib;
+      return adapterTypeLib;
     }
 
     std::vector<CDataTypeEntry *> &getDataTypeLib() {
-      static std::vector<CDataTypeEntry *> *dataTypeLib = new std::vector<CDataTypeEntry *>();
-      return *dataTypeLib;
+      static std::vector<CDataTypeEntry *> dataTypeLib;
+      return dataTypeLib;
     }
 
     std::vector<CGlobalConstEntry *> &getGlobalConstTypeLib() {
-      static std::vector<CGlobalConstEntry *> *globalConstTypeLib = new std::vector<CGlobalConstEntry *>();
-      return *globalConstTypeLib;
+      static std::vector<CGlobalConstEntry *> globalConstTypeLib;
+      return globalConstTypeLib;
     }
 
     CFunctionBlock *createGenericFB(StringId paInstanceNameId,
