@@ -25,7 +25,8 @@ namespace forte::arch {
   CWin32Thread::~CWin32Thread() {
   }
 
-  CThreadBase<HANDLE, static_cast<HANDLE>(0), CWin32ThreadDeletePolicy>::TThreadHandleType CWin32Thread::createThread(long paStackSize) {
+  CThreadBase<HANDLE, static_cast<HANDLE>(0), CWin32ThreadDeletePolicy>::TThreadHandleType
+  CWin32Thread::createThread(long paStackSize) {
     DWORD threadID;
     return CreateThread(0, // default security attributes
                         paStackSize, // use default stack size
