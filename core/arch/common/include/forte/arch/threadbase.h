@@ -223,16 +223,27 @@ namespace forte::arch {
 
   template<typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
   void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::end() {
-    util::CCriticalRegion criticalRegion(mThreadMutex);
-    if (nullHandle != mThreadHandle) {
-      stop();
+    bool shouldJoin = false;
+    {
+      util::CCriticalRegion criticalRegion(mThreadMutex);
+      if (nullHandle != mThreadHandle) {
+        stop();
+        shouldJoin = true;
+      }
+    }
+    if (shouldJoin) {
       join();
     }
   }
 
   template<typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
   void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::join() {
-    if (nullHandle != mThreadHandle) {
+    bool shouldWait = false;
+    {
+      util::CCriticalRegion criticalRegion(mThreadMutex);
+      shouldWait = (nullHandle != mThreadHandle);
+    }
+    if (shouldWait) {
       mJoinSem.waitIndefinitely();
       mJoinSem.inc(); // allow many joins
     }
@@ -246,11 +257,14 @@ namespace forte::arch {
       paThread->setAlive(true);
       paThread->run();
       paThread->setAlive(false);
-      paThread->mThreadHandle = nullHandle;
-      paThread->mJoinSem.inc();
+      {
+        util::CCriticalRegion criticalRegion(paThread->mThreadMutex);
+        paThread->mThreadHandle = nullHandle;
+        paThread->mJoinSem.inc();
+      }
       ThreadDeletePolicy::deleteThread(threadHandle);
     } else {
-      DEVLOG_ERROR("pThread pointer is 0!");
+      DEVLOG_ERROR("pThread pointer is 0!\n");
     }
   }
 
