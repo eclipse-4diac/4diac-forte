@@ -16,26 +16,26 @@
 
 FUNCTION(ADD_CSVWRITE_TEST test_name bootFile csvFileName csvFileShouldExist expectedContent isHard timeout)
 
-  FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/csvWritertTest.cmake" scriptFile)
+    FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/csvWritertTest.cmake" scriptFile)
 
-  FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${bootFile}" file_str)
+    FILE(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${bootFile}" file_str)
 
-  ADD_TEST(NAME ${test_name} COMMAND ${CMAKE_COMMAND}
-         -DCMD=$<TARGET_FILE:forte>
-         -DBOOT=${file_str}
-         -DCSV_FILE=${csvFileName}
-         -DCSVFILESHOULDEXIST=${csvFileShouldExist}
-         -DEXPECTED_CONTENT=${expectedContent}
-         -P ${scriptFile})
-  
-  set_tests_properties (${test_name} PROPERTIES TIMEOUT ${timeout})
-  
-  if(${isHard})
-    SET_TESTS_PROPERTIES(${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T") 
-  else()
-    SET_TESTS_PROPERTIES(${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED") 
-  endif()
-  
+    ADD_TEST(NAME ${test_name} COMMAND ${CMAKE_COMMAND}
+            -DCMD=$<TARGET_FILE:forte_systemtest>
+            -DBOOT=${file_str}
+            -DCSV_FILE=${csvFileName}
+            -DCSVFILESHOULDEXIST=${csvFileShouldExist}
+            -DEXPECTED_CONTENT=${expectedContent}
+            -P ${scriptFile})
+
+    set_tests_properties(${test_name} PROPERTIES TIMEOUT ${timeout})
+
+    if (${isHard})
+        SET_TESTS_PROPERTIES(${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T")
+    else ()
+        SET_TESTS_PROPERTIES(${test_name} PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED")
+    endif ()
+
 ENDFUNCTION(ADD_CSVWRITE_TEST)
 
 ADD_CSVWRITE_TEST(Test_CSV_Writer_normalExecution_hard normalExecution.fboot "csvWriteTest.csv" 1 "'csvFirstValue'\; \n" 1 5)
