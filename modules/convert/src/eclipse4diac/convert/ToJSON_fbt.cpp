@@ -25,7 +25,33 @@ using namespace std::literals;
 using namespace forte::literals;
 
 namespace forte::eclipse4diac::convert {
+  
   namespace {
+
+  std::string escapeJSONString(const std::string &input) {
+          std::string result;
+          for (char c : input) {
+              switch(c) {
+                  case '"': result += "\\\""; break;
+                  case '\\': result += "\\\\"; break;
+                  case '\b': result += "\\b"; break;
+                  case '\f': result += "\\f"; break;
+                  case '\n': result += "\\n"; break;
+                  case '\r': result += "\\r"; break;
+                  case '\t': result += "\\t"; break;
+                  default:
+                      if (static_cast<unsigned char>(c) < 0x20) {
+                          char buf[7];
+                          snprintf(buf, sizeof(buf), "\\u%04x", static_cast<unsigned char>(c));
+                          result += buf;
+                      } else {
+                          result += c;
+                      }
+              }
+          }
+          return result;
+      }
+
     constexpr std::string_view TypeHash =""sv;
 
     const auto cEventInputNames = std::array{"REQ"_STRID};
@@ -72,7 +98,6 @@ namespace forte::eclipse4diac::convert {
     switch(paEIID) {
         case scmEventREQID: {
             alg_REQ();
-            writeOutputData(scmEventCNFID);
             sendOutputEvent(scmEventCNFID, paECET);
             break;
         }
@@ -145,27 +170,10 @@ namespace forte::eclipse4diac::convert {
   }
 
 void FORTE_ToJSON::alg_REQ(void){
-    std::string tmp(func_ANY_AS_STRING(var_Value).c_str(), func_ANY_AS_STRING(var_Value).length());
-
+    const CIEC_STRING &strValue = func_ANY_AS_STRING(var_Value);
+    std::string tmp = strValue.getStorage();
     if(!tmp.empty() && tmp.front() == '\'') tmp.erase(0,1);
     if(!tmp.empty() && tmp.back() == '\'') tmp.pop_back();
-
-    auto escapeJSONString = [](const std::string &input) -> std::string {
-        std::string output;
-        for(char c : input){
-            switch(c){
-                case '"': output += "\\\""; break;
-                case '\\': output += "\\\\"; break;
-                case '\b': output += "\\b"; break;
-                case '\f': output += "\\f"; break;
-                case '\n': output += "\\n"; break;
-                case '\r': output += "\\r"; break;
-                case '\t': output += "\\t"; break;
-                default: output += c;
-            }
-        }
-        return output;
-    };
 
     std::string valueStr;
 
@@ -199,7 +207,7 @@ void FORTE_ToJSON::alg_REQ(void){
             JSONOutStd += ", \"" + std::string(var_FieldName.c_str(), var_FieldName.length()) + "\":" + valueStr + "}";
         }
     }
-    var_JSONOut.assign(JSONOutStd.c_str(), static_cast<TForteUInt16>(JSONOutStd.size()));
+    var_JSONOut = CIEC_STRING(JSONOutStd);
 }
 
 } // namespace forte::eclipse4diac::convert

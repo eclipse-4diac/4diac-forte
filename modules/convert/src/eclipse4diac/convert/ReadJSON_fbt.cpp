@@ -64,7 +64,6 @@ void FORTE_ReadJSON::executeEvent(const TEventID paEIID, CEventChainExecutionThr
     switch(paEIID) {
         case scmEventREQID: {
             alg_REQ();
-            writeOutputData(scmEventCNFID);
             sendOutputEvent(scmEventCNFID, paECET);
             break;
         }
@@ -134,8 +133,8 @@ void FORTE_ReadJSON::executeEvent(const TEventID paEIID, CEventChainExecutionThr
   }
 
 void FORTE_ReadJSON::alg_REQ(void){
-    std::string JSONInStr = var_JSONIn.c_str();
-    std::string field = var_FieldName.c_str();
+    std::string JSONInStr = var_JSONIn.getStorage();
+    std::string field = var_FieldName.getStorage();
 
     std::string pattern = "\""+field+"\"\\s*:\\s*(\"[^\"]*\"|\\{[^}]*\\}|\\d+\\.?\\d*|true|false|null)";
     std::regex re(pattern);
@@ -152,9 +151,7 @@ if(valueStr == "true" || valueStr == "false") {
             if(isString) {
                 valueStr = valueStr.substr(1, valueStr.size()-2);
             }
-            CIEC_STRING tmpString;
-            tmpString.assign(valueStr.c_str(), static_cast<TForteUInt16>(valueStr.size()));
-            var_Value = CIEC_ANY_VARIANT(tmpString);
+            var_Value = CIEC_ANY_VARIANT(CIEC_STRING(valueStr));
         }
 
     } else {
