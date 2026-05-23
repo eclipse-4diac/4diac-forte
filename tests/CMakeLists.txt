@@ -5,9 +5,9 @@
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
+#
 # Contributors:
-#    Ingo Hegny, Alois Zoitl, Stanislav Meduna, Micheal Hofmann, 
+#    Ingo Hegny, Alois Zoitl, Stanislav Meduna, Micheal Hofmann,
 # *   Martin Melik-Merkumians  - initial API and implementation and/or initial documentation
 # *   Martin Melik-Merkumians  - adds subdirectory for arch tests
 # *******************************************************************************/
@@ -15,6 +15,12 @@
 if (NOT FORTE_TESTS)
   return()
 endif()
+
+# Several stdfblib tests require the IEC61131-3 module, so we need to enable it for the test build
+if(NOT FORTE_MODULE_IEC61131)
+  message(STATUS "Tests are enabled: Forcing FORTE_MODULE_IEC61131 to ON.")
+endif()
+set(FORTE_MODULE_IEC61131 ON CACHE BOOL "IEC61131-3 Function blocks" FORCE)
 
 if (FORTE_ARCHITECTURE STREQUAL "Posix")
   option(FORTE_TEST_CODE_COVERAGE_ANALYSIS "Perform code coverage analyis with GCOV and presentation with LCOV" OFF)
@@ -94,7 +100,7 @@ LINK_DIRECTORIES(${LINK_DIRECTORIES})
 #######################################################################################
 
 GET_PROPERTY(FORTE_TEST_SOURCE_H GLOBAL PROPERTY FORTE_SOURCE_H)
-  
+
 GET_PROPERTY(SOURCE_H              GLOBAL PROPERTY FORTE_TEST_SOURCE_H)
 GET_PROPERTY(SOURCE_H_GROUP        GLOBAL PROPERTY FORTE_TEST_SOURCE_H_GROUP)
 
@@ -106,7 +112,7 @@ FOREACH(FILE ${SOURCE_CPP} ${SOURCE_H})
   SET(WRITE_FILE "${WRITE_FILE}${FILE}\n")
 ENDFOREACH(FILE)
 FILE(WRITE ${CMAKE_CURRENT_BINARY_DIR}/file_test_list.txt "${WRITE_FILE}")
-  
+
 #######################################################################################
 # Create Exe File
 #######################################################################################
@@ -139,9 +145,9 @@ set_tests_properties(forte_test PROPERTIES TIMEOUT 300)
 
 if("${FORTE_ARCHITECTURE}" STREQUAL "Posix")
   if(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
-      INCLUDE(GCov.cmake)    
+      INCLUDE(GCov.cmake)
       SETUP_GCOV(TestCoverage ctest coverage)
-  endif() 
+  endif()
 endif()
 
 #######################################################################################
