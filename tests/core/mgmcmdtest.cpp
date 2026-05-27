@@ -34,6 +34,7 @@ namespace forte::test {
   BOOST_AUTO_TEST_CASE(createFB) {
     CInternalFB<iec61499::system::EMB_RES> resource("MGMCommandTest_createFB"_STRID,
                                                     CFBTestDataGlobalFixture::getDevice());
+    BOOST_REQUIRE(resource->initialize());
 
     // create FB
     BOOST_TEST(executeMGMCommand(*resource, {
@@ -48,11 +49,14 @@ namespace forte::test {
                                                 .mFirstParam = {"F_MOVE"_STRID},
                                                 .mSecondParam = {"iec61131::selection::F_MOVE_1DINT"_STRID},
                                             }) == EMGMResponse::InvalidState);
+
+    resource->deinitialize();
   }
 
   BOOST_AUTO_TEST_CASE(deleteFB) {
     CInternalFB<iec61499::system::EMB_RES> resource("MGMCommandTest_deleteFB"_STRID,
                                                     CFBTestDataGlobalFixture::getDevice());
+    BOOST_REQUIRE(resource->initialize());
 
     // delete FB (does not exist)
     BOOST_TEST(executeMGMCommand(*resource, {
@@ -79,11 +83,14 @@ namespace forte::test {
                                                    .mFirstParam = {"F_MOVE"_STRID},
                                                    .mSecondParam = {"iec61131::selection::F_MOVE_1DINT"_STRID},
                                                }) == EMGMResponse::Ready);
+
+    resource->deinitialize();
   }
 
   BOOST_AUTO_TEST_CASE(createConnection) {
     CInternalFB<iec61499::system::EMB_RES> resource("MGMCommandTest_createConnection"_STRID,
                                                     CFBTestDataGlobalFixture::getDevice());
+    BOOST_REQUIRE(resource->initialize());
 
     // create FB
     BOOST_REQUIRE(executeMGMCommand(*resource, {
@@ -154,11 +161,14 @@ namespace forte::test {
                                                 .mFirstParam = {"F_MOVE_3"_STRID, "OUT"_STRID},
                                                 .mSecondParam = {"F_MOVE_2"_STRID, "IN"_STRID},
                                             }) == EMGMResponse::InvalidState);
+
+    resource->deinitialize();
   }
 
   BOOST_AUTO_TEST_CASE(deleteConnection) {
     CInternalFB<iec61499::system::EMB_RES> resource("MGMCommandTest_deleteConnection"_STRID,
                                                     CFBTestDataGlobalFixture::getDevice());
+    BOOST_REQUIRE(resource->initialize());
 
     // create FB
     BOOST_REQUIRE(executeMGMCommand(*resource, {
@@ -194,11 +204,14 @@ namespace forte::test {
                                                 .mFirstParam = {"F_MOVE_1"_STRID, "OUT"_STRID},
                                                 .mSecondParam = {"F_MOVE_2"_STRID, "IN"_STRID},
                                             }) == EMGMResponse::Ready);
+
+    resource->deinitialize();
   }
 
   BOOST_AUTO_TEST_CASE(queryFB) {
     CInternalFB<iec61499::system::EMB_RES> resource("MGMCommandTest_queryFB"_STRID,
                                                     CFBTestDataGlobalFixture::getDevice());
+    BOOST_REQUIRE(resource->initialize());
 
     // query FB (empty)
     SManagementCMD queryCommand = {
@@ -223,11 +236,14 @@ namespace forte::test {
     BOOST_TEST(queryCommand.mAdditionalParams ==
                "<FB Name=\"F_MOVE_1\" Type=\"iec61131::selection::F_MOVE_1DINT\" Status=\"IDLE\"/>\n"
                "<FB Name=\"START\" Type=\"iec61499::events::E_RESTART\" Status=\"IDLE\"/>\n");
+
+    resource->deinitialize();
   }
 
   BOOST_AUTO_TEST_CASE(queryConnection) {
     CInternalFB<iec61499::system::EMB_RES> resource("MGMCommandTest_queryConnection"_STRID,
                                                     CFBTestDataGlobalFixture::getDevice());
+    BOOST_REQUIRE(resource->initialize());
 
     // create FB
     BOOST_REQUIRE(executeMGMCommand(*resource, {
@@ -263,6 +279,8 @@ namespace forte::test {
     };
     BOOST_TEST(resource->executeMGMCommand(queryCommand) == EMGMResponse::Ready);
     BOOST_TEST(queryCommand.mAdditionalParams == "<Connection Source=\"F_MOVE_1.OUT\" Destination=\"F_MOVE_2.IN\"/>\n");
+
+    resource->deinitialize();
   }
 
   BOOST_AUTO_TEST_SUITE_END()

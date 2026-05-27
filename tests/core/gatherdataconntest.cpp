@@ -90,6 +90,7 @@ namespace forte::test {
   BOOST_AUTO_TEST_CASE(createConnection) {
     CInternalFB<iec61499::system::EMB_RES> resource("GatheringConnectionTest_createConnection"_STRID,
                                                     CFBTestDataGlobalFixture::getDevice());
+    BOOST_REQUIRE(resource->initialize());
 
     // create FB
     BOOST_REQUIRE(executeMGMCommand(*resource, {
@@ -120,11 +121,14 @@ namespace forte::test {
                                                 .mFirstParam = {"F_MOVE_1"_STRID, "OUT"_STRID},
                                                 .mSecondParam = {"F_MOVE_2"_STRID, "IN"_STRID, "Var1"_STRID},
                                             }) == EMGMResponse::InvalidState);
+
+    resource->deinitialize();
   }
 
   BOOST_AUTO_TEST_CASE(deleteConnection) {
     CInternalFB<iec61499::system::EMB_RES> resource("GatheringConnectionTest_deleteConnection"_STRID,
                                                     CFBTestDataGlobalFixture::getDevice());
+    BOOST_REQUIRE(resource->initialize());
 
     // create FB
     BOOST_REQUIRE(executeMGMCommand(*resource, {
@@ -176,11 +180,14 @@ namespace forte::test {
                                                 .mFirstParam = {"F_MOVE_1"_STRID, "OUT"_STRID},
                                                 .mSecondParam = {"F_MOVE_2"_STRID, "IN"_STRID, "Var1"_STRID},
                                             }) == EMGMResponse::NoSuchObject);
+
+    resource->deinitialize();
   }
 
   BOOST_AUTO_TEST_CASE(queryConnection) {
     CInternalFB<iec61499::system::EMB_RES> resource("GatheringConnectionTest_queryConnection"_STRID,
                                                     CFBTestDataGlobalFixture::getDevice());
+    BOOST_REQUIRE(resource->initialize());
 
     // create FB
     BOOST_REQUIRE(executeMGMCommand(*resource, {
@@ -212,6 +219,8 @@ namespace forte::test {
     BOOST_TEST(resource->executeMGMCommand(queryCommand) == EMGMResponse::Ready);
     BOOST_TEST(queryCommand.mAdditionalParams ==
                "<Connection Source=\"F_MOVE_1.OUT\" Destination=\"F_MOVE_2.IN.Var1\"/>\n");
+
+    resource->deinitialize();
   }
 
   BOOST_AUTO_TEST_SUITE_END()
