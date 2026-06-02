@@ -84,6 +84,8 @@ namespace forte::com_infra::opc_ua {
        */
       void closeConnection() override;
 
+      EComResponse checkInputConnections();
+
       EComResponse createOPCUAEvent(UA_Server *paServer);
 
       static UA_StatusCode addNewEventType(UA_Server *paServer, UA_NodeId &paEventType, std::string paEventTypeName);
