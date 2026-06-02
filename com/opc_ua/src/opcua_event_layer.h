@@ -18,6 +18,8 @@
 
 #include "forte/cominfra/comlayer.h"
 
+struct UA_Server;
+
 namespace forte::com_infra::opc_ua {
   class COPC_UA_HandlerAbstract;
 
@@ -87,10 +89,12 @@ namespace forte::com_infra::opc_ua {
       static UA_StatusCode addNewEventType(UA_Server *paServer, UA_NodeId &paEventType, std::string paEventTypeName);
 
       static UA_StatusCode
-      addNewEventInstance(UA_Server *paServer, UA_NodeId &paEventType, UA_NodeId &paNodeId, CBaseCommFB *paFb);
+      createEventInstance(UA_Server *paServer, UA_NodeId &paEventType, UA_NodeId &paNodeId, CBaseCommFB *paFb);
 
       static UA_StatusCode writeTimeAndSourceProperty(UA_Server *paServer, UA_NodeId &paNodeId);
 
-      static UA_StatusCode writeDefaultProperties(UA_Server *paServer, UA_NodeId &paNodeId);
+      static UA_StatusCode writeEventProperties(UA_Server *paServer, UA_NodeId &paEventType, CIEC_ANY **paValues);
+
+      static UA_StatusCode writeDefaultEventProperties(UA_Server *paServer, UA_NodeId &paEventType);
   };
 } // namespace forte::com_infra::opc_ua
