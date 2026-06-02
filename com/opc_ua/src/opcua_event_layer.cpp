@@ -48,14 +48,14 @@ namespace forte::com_infra::opc_ua {
     util::CParameterParser parser(paLayerParameter, ',', 1);
     size_t nrOfParams = parser.parseParameters();
     if (nrOfParams != scmNumberOfParameters) {
-      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Too many layer arguments! Number of arguments: %d\n", nrOfParams);
+      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Too many layer arguments for FB %s! Expected: %d, Actual: %d\n",
+                   getCommFB()->getInstanceName(), scmNumberOfParameters, nrOfParams);
       return eRetVal;
     }
     mEventTypeName = parser[0];
 
-    size_t numSDs = getCommFB()->getNumSD();
-    if (numSDs != 0 && numSDs != 2) {
-      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Number of SDs must be 0 or 2 for FB %s", getCommFB()->getInstanceName());
+    if (checkInputConnections() != e_InitOk) {
+      return eRetVal;
     }
     mHandler = static_cast<COPC_UA_HandlerAbstract *>(&getExtEvHandler<COPC_UA_Local_Handler>());
     COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(mHandler);
@@ -87,6 +87,33 @@ namespace forte::com_infra::opc_ua {
   EComResponse COPC_UA_Event_Layer::processInterrupt() {
     // TODO
     return e_ProcessDataOk;
+  }
+
+  EComResponse COPC_UA_Event_Layer::checkInputConnections() {
+    size_t numSDs = getCommFB()->getNumSD();
+    if (numSDs == 2) {
+      bool error = false;
+      CIEC_ANY **sDs = getCommFB()->getSDs();
+      if (sDs[0]->unwrap().getDataTypeID() != CIEC_ANY::e_INT) {
+        DEVLOG_ERROR(
+            "[OPC UA EVENT LAYER]: Data type of first data input of FB %s is wrong! Expected: INT, Actual: %s\n",
+            getCommFB()->getInstanceName(), sDs[0]->unwrap().getTypeNameID().data());
+        error = true;
+      }
+      if (sDs[1]->unwrap().getDataTypeID() != CIEC_ANY::e_STRING) {
+        DEVLOG_ERROR(
+            "[OPC UA EVENT LAYER]: Data type of second data input of FB %s is wrong! Expected: STRING, Actual: %s\n",
+            getCommFB()->getInstanceName(), sDs[1]->unwrap().getTypeNameID().data());
+        error = true;
+      }
+      if (error) {
+        return e_InitTerminated;
+      }
+    } else if (numSDs != 0) {
+      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Number of SDs must be 0 or 2 for FB %s\n", getCommFB()->getInstanceName());
+      return e_InitTerminated;
+    }
+    return e_InitOk;
   }
 
   EComResponse COPC_UA_Event_Layer::createOPCUAEvent(UA_Server *paServer) {
