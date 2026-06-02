@@ -26,14 +26,14 @@ static UA_DataTypeMember DatatypeTest_members[3] = {
         offsetof(UA_DatatypeTest, isRegistered) - offsetof(UA_DatatypeTest, age) - sizeof(UA_SByte), /* .padding */
         false, /* .isArray */
         false /* .isOptional */
-    },
-};
-const UA_DataType UA_UA_TYPES_FORDIACNAMESPACE[UA_UA_TYPES_FORDIACNAMESPACE_COUNT] = {
+    }};
+UA_DataType UA_UA_TYPES_FORDIACNAMESPACE[UA_UA_TYPES_FORDIACNAMESPACE_COUNT] = {
     /* DatatypeTest */
     {
         UA_TYPENAME("DatatypeTest") /* .typeName */
-        {2, UA_NODEIDTYPE_NUMERIC, {13LU}}, /* .typeId */
-        {2, UA_NODEIDTYPE_NUMERIC, {14LU}}, /* .binaryEncodingId */
+        {0, UA_NODEIDTYPE_NUMERIC, {13LU}}, /* .typeId */
+        {0, UA_NODEIDTYPE_NUMERIC, {14LU}}, /* .binaryEncodingId */
+        {0, UA_NODEIDTYPE_NUMERIC, {22LU}}, /* .xmlEncodingId */
         sizeof(UA_DatatypeTest), /* .memSize */
         UA_DATATYPEKIND_STRUCTURE, /* .typeKind */
         false, /* .pointerFree */
