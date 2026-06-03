@@ -17,8 +17,8 @@
 
 #include "forte/util/parameterParser.h"
 #include "forte/cominfra/basecommfb.h"
-
 #include "forte/cominfra/comlayersmanager.h"
+#include "forte/datatypes/forte_string.h"
 
 #include "opcua_local_handler.h"
 
@@ -48,14 +48,14 @@ namespace forte::com_infra::opc_ua {
     util::CParameterParser parser(paLayerParameter, ',', 1);
     size_t nrOfParams = parser.parseParameters();
     if (nrOfParams != scmNumberOfParameters) {
-      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Too many layer arguments! Number of arguments: %d\n", nrOfParams);
+      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Too many layer arguments for FB %s! Expected: %d, Actual: %d\n",
+                   getCommFB()->getInstanceName(), scmNumberOfParameters, nrOfParams);
       return eRetVal;
     }
     mEventTypeName = parser[0];
 
-    size_t numSDs = getCommFB()->getNumSD();
-    if (numSDs != 0 && numSDs != 2) {
-      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Number of SDs must be 0 or 2 for FB %s", getCommFB()->getInstanceName());
+    if (checkInputConnections() != e_InitOk) {
+      return eRetVal;
     }
     mHandler = static_cast<COPC_UA_HandlerAbstract *>(&getExtEvHandler<COPC_UA_Local_Handler>());
     COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(mHandler);
@@ -77,14 +77,8 @@ namespace forte::com_infra::opc_ua {
     COPC_UA_Local_Handler *localHandler = static_cast<COPC_UA_Local_Handler *>(mHandler);
     UA_Server *server = localHandler->getUAServer();
     UA_NodeId eventNode;
-    if (addNewEventInstance(server, mEventTypeNode, eventNode, getCommFB()) != UA_STATUSCODE_GOOD) {
+    if (createEventInstance(server, mEventTypeNode, eventNode, getCommFB()) != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to create OPC UA Event %s.\n", mEventTypeName.c_str());
-      return eRetVal;
-    }
-    UA_StatusCode status =
-        UA_Server_triggerEvent(server, eventNode, UA_NODEID_NUMERIC(0, UA_NS0ID_SERVER), nullptr, UA_TRUE);
-    if (status != UA_STATUSCODE_GOOD) {
-      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to trigger OPC UA Event %s.\n", mEventTypeName.c_str());
       return eRetVal;
     }
     return e_ProcessDataOk;
@@ -93,6 +87,33 @@ namespace forte::com_infra::opc_ua {
   EComResponse COPC_UA_Event_Layer::processInterrupt() {
     // TODO
     return e_ProcessDataOk;
+  }
+
+  EComResponse COPC_UA_Event_Layer::checkInputConnections() {
+    size_t numSDs = getCommFB()->getNumSD();
+    if (numSDs == 2) {
+      bool error = false;
+      CIEC_ANY **sDs = getCommFB()->getSDs();
+      if (sDs[0]->unwrap().getDataTypeID() != CIEC_ANY::e_INT) {
+        DEVLOG_ERROR(
+            "[OPC UA EVENT LAYER]: Data type of first data input of FB %s is wrong! Expected: INT, Actual: %s\n",
+            getCommFB()->getInstanceName(), sDs[0]->unwrap().getTypeNameID().data());
+        error = true;
+      }
+      if (sDs[1]->unwrap().getDataTypeID() != CIEC_ANY::e_STRING) {
+        DEVLOG_ERROR(
+            "[OPC UA EVENT LAYER]: Data type of second data input of FB %s is wrong! Expected: STRING, Actual: %s\n",
+            getCommFB()->getInstanceName(), sDs[1]->unwrap().getTypeNameID().data());
+        error = true;
+      }
+      if (error) {
+        return e_InitTerminated;
+      }
+    } else if (numSDs != 0) {
+      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Number of SDs must be 0 or 2 for FB %s\n", getCommFB()->getInstanceName());
+      return e_InitTerminated;
+    }
+    return e_InitOk;
   }
 
   EComResponse COPC_UA_Event_Layer::createOPCUAEvent(UA_Server *paServer) {
@@ -117,37 +138,20 @@ namespace forte::com_infra::opc_ua {
     return status;
   }
 
-  UA_StatusCode COPC_UA_Event_Layer::addNewEventInstance(UA_Server *paServer,
+  UA_StatusCode COPC_UA_Event_Layer::createEventInstance(UA_Server *paServer,
                                                          UA_NodeId &paEventType,
                                                          UA_NodeId &paNodeId,
                                                          CBaseCommFB *paFb) {
-    UA_StatusCode status = UA_Server_createEvent(paServer, paEventType, &paNodeId);
-    if (status != UA_STATUSCODE_GOOD) {
-      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to create Event Instance. Status: %s\n", UA_StatusCode_name(status));
-      return status;
-    }
-    if (writeTimeAndSourceProperty(paServer, paNodeId)) {
-      return status;
-    }
     const size_t numSDs = paFb->getNumSD();
+    UA_StatusCode status;
     if (numSDs == 2) {
       CIEC_ANY **sds = paFb->getSDs();
-      for (size_t i = 0; i < numSDs; i++) {
-        char *eventProperty = i == 0 ? smEventSeverityProperty : smEventMessageProperty;
-        const UA_DataType *dataType = COPC_UA_Helper::getOPCUATypeFromAny(*sds[i]);
-        void *varValue = UA_new(dataType);
-        COPC_UA_Helper::convertToOPCUAType(*sds[i], varValue);
-        status = UA_Server_writeObjectProperty_scalar(
-            paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, eventProperty), varValue, dataType);
-        UA_delete(varValue, dataType);
-        if (status != UA_STATUSCODE_GOOD) {
-          DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to write property %s for OPC UA Event Instance. Status: %s\n",
-                       eventProperty, UA_StatusCode_name(status));
-          return status;
-        }
-      }
+      status = writeEventProperties(paServer, paEventType, paFb->getSDs());
     } else {
-      return writeDefaultProperties(paServer, paNodeId);
+      status = writeDefaultEventProperties(paServer, paEventType);
+    }
+    if (status != UA_STATUSCODE_GOOD) {
+      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to create Event. Status: %s\n", UA_StatusCode_name(status));
     }
     return status;
   }
@@ -174,26 +178,23 @@ namespace forte::com_infra::opc_ua {
     return status;
   }
 
-  UA_StatusCode COPC_UA_Event_Layer::writeDefaultProperties(UA_Server *paServer, UA_NodeId &paNodeId) {
-    UA_UInt16 eventSeverity = 100;
-    UA_StatusCode status = UA_Server_writeObjectProperty_scalar(
-        paServer, paNodeId, UA_QUALIFIEDNAME(scmServerNSIndex, smEventSeverityProperty), &eventSeverity,
-        &UA_TYPES[UA_TYPES_UINT16]);
-    if (status != UA_STATUSCODE_GOOD) {
-      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to write SeverityProperty for OPC UA Event Instance. Status: %s\n",
-                   UA_StatusCode_name(status));
-      return status;
-    }
+  UA_StatusCode
+  COPC_UA_Event_Layer::writeEventProperties(UA_Server *paServer, UA_NodeId &paEventType, CIEC_ANY **paValues) {
+    const UA_DataType *dataType = COPC_UA_Helper::getOPCUATypeFromAny(*paValues[0]);
+    UA_UInt16 eventSeverity;
+    COPC_UA_Helper::convertToOPCUAType(*paValues[0], static_cast<void *>(&eventSeverity));
 
+    std::string message{static_cast<CIEC_STRING &>(paValues[1]->unwrap()).c_str()};
+    UA_LocalizedText eventMessage = UA_LOCALIZEDTEXT(smEmptyString, message.data());
+    return UA_Server_createEvent(paServer, UA_NS0ID(SERVER), paEventType, eventSeverity, eventMessage, nullptr, nullptr,
+                                 nullptr);
+  }
+
+  UA_StatusCode COPC_UA_Event_Layer::writeDefaultEventProperties(UA_Server *paServer, UA_NodeId &paEventType) {
+    UA_UInt16 eventSeverity = 100;
     std::string message("An event has been generated.");
     UA_LocalizedText eventMessage = UA_LOCALIZEDTEXT(smEmptyString, message.data());
-    status = UA_Server_writeObjectProperty_scalar(paServer, paNodeId,
-                                                  UA_QUALIFIEDNAME(scmServerNSIndex, smEventMessageProperty),
-                                                  &eventMessage, &UA_TYPES[UA_TYPES_LOCALIZEDTEXT]);
-    if (status != UA_STATUSCODE_GOOD) {
-      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Failed to write MessageProperty for OPC UA Event Instance. Status: %s\n",
-                   UA_StatusCode_name(status));
-    }
-    return status;
+    return UA_Server_createEvent(paServer, UA_NS0ID(SERVER), paEventType, eventSeverity, eventMessage, nullptr, nullptr,
+                                 nullptr);
   }
 } // namespace forte::com_infra::opc_ua
