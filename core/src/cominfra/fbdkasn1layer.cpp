@@ -106,12 +106,11 @@ namespace forte::com_infra {
 
     if (mBottomLayer != nullptr) {
       const CIEC_ANY **apoSDs = static_cast<const CIEC_ANY **>(paData);
-      size_t unNeededBufferSize = 0;
+      size_t unNeededBufferSize = paSize ? 0 : 1; // ensure enough space for Null tag
 
       if (nullptr == apoSDs) {
         return e_ProcessDataDataTypeError;
       }
-
       for (size_t i = 0; i < paSize; ++i) {
         unNeededBufferSize += getRequiredSerializationSize(*apoSDs[i]);
       }
@@ -269,8 +268,10 @@ namespace forte::com_infra {
                                                  size_t paDataNum) {
     int nRetVal = -1;
     if (0 == paDataNum) {
-      serializeNull(paBytes);
-      nRetVal = 1;
+      if (paStreamSize > 0) {
+        serializeNull(paBytes);
+        nRetVal = 1;
+      }
     } else {
       if (paStreamSize > std::numeric_limits<int>::max()) {
         DEVLOG_ERROR("FBDK ASN1 Layer: paStreamSize too big!\n");
