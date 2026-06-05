@@ -68,10 +68,6 @@ namespace forte::eclipse4diac::utils {
       mCSVFile(nullptr) {
   }
 
-  GEN_CSV_WRITER::~GEN_CSV_WRITER() {
-    closeCSVFile();
-  }
-
   void GEN_CSV_WRITER::readInputData(TEventID paEI) {
     switch (paEI) {
       case scmEventINITID: {
@@ -119,7 +115,7 @@ namespace forte::eclipse4diac::utils {
   void GEN_CSV_WRITER::openCSVFile() {
     var_QO = false_BOOL;
     if (nullptr == mCSVFile) {
-      mCSVFile = forte_fopen(var_FILE_NAME.getStorage().c_str(), "w+");
+      mCSVFile.reset(forte_fopen(var_FILE_NAME.getStorage().c_str(), "w+"));
       if (nullptr != mCSVFile) {
         var_QO = true_BOOL;
         var_STATUS = scmOK;
@@ -140,7 +136,7 @@ namespace forte::eclipse4diac::utils {
   void GEN_CSV_WRITER::closeCSVFile() {
     var_QO = false_BOOL;
     if (nullptr != mCSVFile) {
-      if (0 == forte_fclose(mCSVFile)) {
+      if (0 == forte_fclose(mCSVFile.release())) {
         var_STATUS = scmOK;
         DEVLOG_INFO("[GEN_CSV_WRITER]: File %s successfully closed\n", var_FILE_NAME.getStorage().c_str());
       } else {
@@ -193,11 +189,11 @@ namespace forte::eclipse4diac::utils {
           } else {
             value.toString(mDataOutPutBuffer);
           }
-          forte_fwrite(mDataOutPutBuffer.c_str(), 1, mDataOutPutBuffer.size(), mCSVFile);
-          forte_fwrite("; ", 1, 2, mCSVFile);
+          forte_fwrite(mDataOutPutBuffer.c_str(), 1, mDataOutPutBuffer.size(), mCSVFile.get());
+          forte_fwrite("; ", 1, 2, mCSVFile.get());
           mDataOutPutBuffer.clear();
         }
-        forte_fwrite("\n", 1, 1, mCSVFile);
+        forte_fwrite("\n", 1, 1, mCSVFile.get());
       }
     } else {
       var_QO = false_BOOL;
