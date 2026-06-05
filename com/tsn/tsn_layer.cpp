@@ -76,7 +76,7 @@ namespace forte::com_infra::tsn {
       if (arch::CIPComSocketHandler::scmInvalidSocketDescriptor != nSockDes && e_InitOk == eRetVal) {
         if (e_Publisher != mFb->getComServiceType()) {
           // Publishers should not be registered for receiving data
-          getExtEvHandler<arch::CIPComSocketHandler>().addComCallback(nSockDes, this);
+          getExtEvHandler<arch::CFDSelectHandler>().addComCallback(nSockDes, this);
         }
         eRetVal = e_InitOk;
       } else {

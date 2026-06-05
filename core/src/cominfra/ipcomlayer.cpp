@@ -101,7 +101,7 @@ namespace forte::com_infra {
         mSocketID = arch::CIPComSocketHandler::acceptTCPConnection(mListeningID);
         if (arch::CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID) {
           DEVLOG_INFO("Connection established by client\n");
-          getExtEvHandler<arch::CIPComSocketHandler>().addComCallback(mSocketID, this);
+          getExtEvHandler<arch::CFDSelectHandler>().addComCallback(mSocketID, this);
           mConnectionState = e_Connected;
         }
         break;
@@ -158,7 +158,7 @@ namespace forte::com_infra {
       if (arch::CIPComSocketHandler::scmInvalidSocketDescriptor != nSockDes) {
         if (e_Publisher != mFb->getComServiceType()) {
           // Publishers should not be registered for receiving data
-          getExtEvHandler<arch::CIPComSocketHandler>().addComCallback(nSockDes, this);
+          getExtEvHandler<arch::CFDSelectHandler>().addComCallback(nSockDes, this);
         }
         eRetVal = e_InitOk;
       } else {
@@ -178,7 +178,7 @@ namespace forte::com_infra {
 
   void CIPComLayer::closeSocket(arch::CIPComSocketHandler::TSocketDescriptor *paSocketID) {
     if (arch::CIPComSocketHandler::scmInvalidSocketDescriptor != *paSocketID) {
-      getExtEvHandler<arch::CIPComSocketHandler>().removeComCallback(*paSocketID);
+      getExtEvHandler<arch::CFDSelectHandler>().removeComCallback(*paSocketID);
       arch::CIPComSocketHandler::closeSocket(*paSocketID);
       *paSocketID = arch::CIPComSocketHandler::scmInvalidSocketDescriptor;
     }
