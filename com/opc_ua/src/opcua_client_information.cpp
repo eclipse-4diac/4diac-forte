@@ -726,7 +726,7 @@ namespace forte::com_infra::opc_ua {
       outputSize = response->results->outputArgumentsSize;
     }
     // call layer even when it failed, to let the FB know
-    COPC_UA_Helper::UA_SendVariable_handle varHandle;
+    COPC_UA_Helper::UA_RecvVariable_handle varHandle;
     varHandle.mFailed = somethingFailed;
 
     if (!varHandle.mFailed) {
