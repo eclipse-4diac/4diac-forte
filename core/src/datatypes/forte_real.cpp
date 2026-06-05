@@ -18,11 +18,11 @@
 #include <cmath>
 #include <cstring>
 #include <cstdlib>
-#include <cstdio>
+#include "forte/datatypes/forte_any_signed.h"
+#include "forte/datatypes/forte_any_unsigned.h"
+#include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_real.h"
 #include "forte/datatypes/forte_lreal.h"
-#include "forte/datatypes/forte_lint.h"
-#include "forte/datatypes/forte_ulint.h"
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
 #include "forte/util/string_utils.h"
@@ -64,22 +64,26 @@ namespace forte {
         setTFLOAT(
             static_cast<TValueType>(static_cast<CIEC_LREAL::TValueType>(static_cast<const CIEC_LREAL &>(paValue))));
         break;
-      case e_STRING: (*this).fromString(((CIEC_STRING &) paValue).getStorage().c_str()); break;
-      case e_WSTRING: (*this).fromString(((CIEC_WSTRING &) paValue).getValue()); break;
+      case e_STRING: fromString(static_cast<const CIEC_STRING &>(paValue).getStorage().c_str()); break;
+      case e_WSTRING: fromString(static_cast<const CIEC_WSTRING &>(paValue).getValue()); break;
       case e_SINT:
       case e_INT:
       case e_DINT:
       case e_LINT:
-        setTFLOAT(static_cast<TValueType>(static_cast<CIEC_LINT::TValueType>(static_cast<const CIEC_LINT &>(paValue))));
+        setTFLOAT(static_cast<TValueType>(static_cast<const CIEC_ANY_SIGNED &>(paValue).getSignedValue()));
         break;
+      case e_USINT:
+      case e_UINT:
+      case e_UDINT:
+      case e_ULINT:
+        setTFLOAT(static_cast<TValueType>(static_cast<const CIEC_ANY_UNSIGNED &>(paValue).getUnsignedValue()));
+        break;
+      case e_BOOL: setTFLOAT(static_cast<const CIEC_BOOL &>(paValue)); break;
       case e_BYTE:
       case e_WORD:
       case e_DWORD:
       case e_LWORD: setValueSimple(paValue); break;
-      default: // UINT types
-        setTFLOAT(
-            static_cast<TValueType>(static_cast<CIEC_ULINT::TValueType>(static_cast<const CIEC_ULINT &>(paValue))));
-        break;
+      default: break;
     }
   }
 
