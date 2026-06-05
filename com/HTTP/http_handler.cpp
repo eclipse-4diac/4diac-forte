@@ -119,7 +119,7 @@ namespace forte::com_infra::http {
         accepted.mSocket = newConnection;
         accepted.mStartTime = func_NOW_MONOTONIC();
         mAcceptedSockets.emplace_back(std::move(accepted));
-        mDeviceExecution.getExtEvHandler<arch::CIPComSocketHandler>().addComCallback(newConnection, this);
+        mDeviceExecution.getExtEvHandler<arch::CFDSelectHandler>().addComCallback(newConnection, this);
         resumeSelfsuspend();
       } else {
         DEVLOG_ERROR("[HTTP Handler] Couldn't accept new HTTP connection\n");
@@ -262,7 +262,7 @@ namespace forte::com_infra::http {
         toAdd.mStartTime = func_NOW_MONOTONIC();
         startTimeoutThread();
         mClientLayers.emplace_back(std::move(toAdd));
-        mDeviceExecution.getExtEvHandler<arch::CIPComSocketHandler>().addComCallback(newSocket, this);
+        mDeviceExecution.getExtEvHandler<arch::CFDSelectHandler>().addComCallback(newSocket, this);
         resumeSelfsuspend();
         return true;
       } else {
@@ -407,7 +407,7 @@ namespace forte::com_infra::http {
       char address[] = "127.0.0.1";
       smServerListeningSocket = arch::CIPComSocketHandler::openTCPServerConnection(address, gHTTPServerPort.mArgument);
       if (arch::CIPComSocketHandler::scmInvalidSocketDescriptor != smServerListeningSocket) {
-        mDeviceExecution.getExtEvHandler<arch::CIPComSocketHandler>().addComCallback(smServerListeningSocket, this);
+        mDeviceExecution.getExtEvHandler<arch::CFDSelectHandler>().addComCallback(smServerListeningSocket, this);
         DEVLOG_INFO("[HTTP Handler] HTTP server listening on port %u\n", gHTTPServerPort.mArgument);
       } else {
         DEVLOG_ERROR("[HTTP Handler] Couldn't start HTTP server on port %u\n", gHTTPServerPort.mArgument);
@@ -423,8 +423,8 @@ namespace forte::com_infra::http {
   }
 
   void CHTTP_Handler::removeAndCloseSocket(const arch::CIPComSocketHandler::TSocketDescriptor paSocket) {
-    mDeviceExecution.getExtEvHandler<arch::CIPComSocketHandler>().removeComCallback(paSocket);
-    mDeviceExecution.getExtEvHandler<arch::CIPComSocketHandler>().closeSocket(paSocket);
+    mDeviceExecution.getExtEvHandler<arch::CFDSelectHandler>().removeComCallback(paSocket);
+    arch::CIPComSocketHandler::closeSocket(paSocket);
   }
 
   void CHTTP_Handler::resumeSelfsuspend() {
