@@ -14,6 +14,7 @@
 
 include(CMakeDependentOption)
 include(CheckCXXCompilerFlag)
+include(CheckLinkerFlag)
 
 check_cxx_compiler_flag(-frtti HAVE_RTTI_FLAG)
 check_cxx_compiler_flag(-fexceptions HAVE_EXCEPTIONS_FLAG)
@@ -24,6 +25,31 @@ mark_as_advanced(FORTE_RTTI_AND_EXCEPTIONS)
 target_compile_options(forte-core PUBLIC
         $<$<COMPILE_LANGUAGE:CXX>:$<$<BOOL:${HAVE_RTTI_FLAG}>:$<IF:$<BOOL:${FORTE_RTTI_AND_EXCEPTIONS}>,-frtti,-fno-rtti>>>
         $<$<COMPILE_LANGUAGE:CXX>:$<$<BOOL:${HAVE_EXCEPTIONS_FLAG}>:$<IF:$<BOOL:${FORTE_RTTI_AND_EXCEPTIONS}>,-fexceptions,-fno-exceptions>>>
+)
+
+function(forte_check_sanitizer flag variable)
+    list(APPEND CMAKE_REQUIRED_LINK_OPTIONS ${flag})
+    check_cxx_compiler_flag(${flag} ${variable})
+endfunction()
+
+forte_check_sanitizer("-fsanitize=address" HAVE_SANITIZE_ADDRESS_FLAG)
+forte_check_sanitizer("-fsanitize=leak" HAVE_SANITIZE_LEAK_FLAG)
+forte_check_sanitizer("-fsanitize=undefined" HAVE_SANITIZE_UNDEFINED_FLAG)
+forte_check_sanitizer("-fsanitize-address-use-after-scope" HAVE_SANITIZE_ADDRESS_USE_AFTER_SCOPE_FLAG)
+
+cmake_dependent_option(FORTE_SANITIZE "Enable sanitizer" OFF "HAVE_SANITIZE_ADDRESS_FLAG OR HAVE_SANITIZE_LEAK_FLAG OR HAVE_SANITIZE_UNDEFINED_FLAG" OFF)
+
+target_compile_options(forte-core PUBLIC
+        $<$<AND:$<BOOL:${FORTE_SANITIZE}>,$<BOOL:${HAVE_SANITIZE_ADDRESS_FLAG}>>:-fsanitize=address>
+        $<$<AND:$<BOOL:${FORTE_SANITIZE}>,$<BOOL:${HAVE_SANITIZE_LEAK_FLAG}>>:-fsanitize=leak>
+        $<$<AND:$<BOOL:${FORTE_SANITIZE}>,$<BOOL:${HAVE_SANITIZE_UNDEFINED_FLAG}>>:-fsanitize=undefined>
+        $<$<AND:$<BOOL:${FORTE_SANITIZE}>,$<BOOL:${HAVE_SANITIZE_ADDRESS_USE_AFTER_SCOPE_FLAG}>>:-fsanitize-address-use-after-scope>
+)
+target_link_options(forte-core PUBLIC
+        $<$<AND:$<BOOL:${FORTE_SANITIZE}>,$<BOOL:${HAVE_SANITIZE_ADDRESS_FLAG}>>:-fsanitize=address>
+        $<$<AND:$<BOOL:${FORTE_SANITIZE}>,$<BOOL:${HAVE_SANITIZE_LEAK_FLAG}>>:-fsanitize=leak>
+        $<$<AND:$<BOOL:${FORTE_SANITIZE}>,$<BOOL:${HAVE_SANITIZE_UNDEFINED_FLAG}>>:-fsanitize=undefined>
+        $<$<AND:$<BOOL:${FORTE_SANITIZE}>,$<BOOL:${HAVE_SANITIZE_ADDRESS_USE_AFTER_SCOPE_FLAG}>>:-fsanitize-address-use-after-scope>
 )
 
 ###############################################################################
