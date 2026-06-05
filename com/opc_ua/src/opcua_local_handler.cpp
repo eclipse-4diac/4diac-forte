@@ -718,13 +718,8 @@ namespace forte::com_infra::opc_ua {
         UA_NodeId parent = UA_NODEID_NUMERIC(0, UA_NS0ID_ROOTFOLDER);
 
         // look for parent object
-        for (auto itPresentNodes = presentNodes.begin(); itPresentNodes != presentNodes.end();) {
-          auto currentIterator = itPresentNodes;
-          ++itPresentNodes;
-          if (*itPresentNodes == presentNodes.back()) {
-            parent = **currentIterator;
-            break;
-          }
+        if (presentNodes.size() > 1) {
+          parent = *presentNodes[presentNodes.size() - 2];
         }
 
         retVal = handleExistingMethod(paActionInfo, parent);
