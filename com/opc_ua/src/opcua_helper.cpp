@@ -160,7 +160,7 @@ namespace forte::com_infra::opc_ua {
                      &convertFromOPCUAToIECSpecific<CIEC_ULINT, UA_UInt64>),
       UA_TypeConvert(&UA_TYPES[UA_TYPES_BYTE],
                      &convertFromIECToOPCUASpecific<CIEC_BYTE, UA_Byte>,
-                     &convertFromOPCUAToIECSpecific<CIEC_ULINT, UA_Byte>),
+                     &convertFromOPCUAToIECSpecific<CIEC_BYTE, UA_Byte>),
       UA_TypeConvert(&UA_TYPES[UA_TYPES_UINT16],
                      &convertFromIECToOPCUASpecific<CIEC_WORD, UA_UInt16>,
                      &convertFromOPCUAToIECSpecific<CIEC_WORD, UA_UInt16>),
