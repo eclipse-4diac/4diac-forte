@@ -55,41 +55,44 @@ namespace forte::com_infra::opc_ua {
   }
 
   bool CUA_ClientInformation::configureClient() {
-    bool retVal = true;
-    mClient = UA_Client_new();
-    UA_ClientConfig *configPointer = UA_Client_getConfig(mClient);
+    UA_ClientConfig config{
+        .logging = &COPC_UA_HandlerAbstract::getLogger(),
+        .stateCallback = CUA_RemoteCallbackFunctions::clientStateChangeCallback,
+    };
 
-    if (configureClientFromFile(*configPointer)) {
-      configPointer->stateCallback = CUA_RemoteCallbackFunctions::clientStateChangeCallback;
-      configPointer->logging = &COPC_UA_HandlerAbstract::getLogger();
-      configPointer->timeout = scmClientTimeoutInMilli;
-    } else {
-      UA_Client_delete(mClient);
-      mClient = nullptr;
-      retVal = false;
+    // set default config
+    if (const UA_StatusCode status = UA_ClientConfig_setDefault(&config); status != UA_STATUSCODE_GOOD) {
+      DEVLOG_ERROR("[OPC UA CLIENT]: Error setting client configuration. Error: %s\n", UA_StatusCode_name(status));
+      return false;
     }
-    return retVal;
+
+    // override defaults
+    config.timeout = scmClientTimeoutInMilli;
+
+    // load configuration from file
+    if (!configureClientFromFile(config)) {
+      UA_ClientConfig_clear(&config);
+      return false;
+    }
+
+    mClient = UA_Client_newWithConfig(&config);
+    if (!mClient) {
+      UA_ClientConfig_clear(&config);
+      return false;
+    }
+    return true;
   }
 
   bool CUA_ClientInformation::configureClientFromFile(UA_ClientConfig &paConfig) {
-    bool retVal = true;
-
-    if (!gOpcuaClientConfigFile.mArgument.empty()) { // file was provided
-      std::string endpoint = mEndpointUrl;
-      CUA_ClientConfigFileParser::UA_ConfigFromFile result =
-          CUA_ClientConfigFileParser::UA_ConfigFromFile(paConfig, mUsername, mPassword);
-
-      retVal = CUA_ClientConfigFileParser::loadConfig(gOpcuaClientConfigFile.mArgument, endpoint, result);
-    } else {
-      UA_StatusCode retValOpcUa = UA_ClientConfig_setDefault(&paConfig);
-      if (UA_STATUSCODE_GOOD != retValOpcUa) {
-        DEVLOG_ERROR("[OPC UA CLIENT]: Error setting client configuration. Error: %s\n",
-                     UA_StatusCode_name(retValOpcUa));
-        retVal = false;
-      }
+    if (gOpcuaClientConfigFile.mArgument.empty()) { // no file was provided
+      return true;
     }
 
-    return retVal;
+    std::string endpoint = mEndpointUrl;
+    CUA_ClientConfigFileParser::UA_ConfigFromFile result =
+        CUA_ClientConfigFileParser::UA_ConfigFromFile(paConfig, mUsername, mPassword);
+
+    return CUA_ClientConfigFileParser::loadConfig(gOpcuaClientConfigFile.mArgument, endpoint, result);
   }
 
   void CUA_ClientInformation::uninitializeClient() {
