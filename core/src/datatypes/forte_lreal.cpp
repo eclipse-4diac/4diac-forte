@@ -16,12 +16,12 @@
  *******************************************************************************/
 #include <cmath>
 #include <string.h>
-#include <stdlib.h>
 #include <errno.h>
+#include "forte/datatypes/forte_any_signed.h"
+#include "forte/datatypes/forte_any_unsigned.h"
+#include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_lreal.h"
 #include "forte/datatypes/forte_real.h"
-#include "forte/datatypes/forte_lint.h"
-#include "forte/datatypes/forte_ulint.h"
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
 #include "forte/util/string_utils.h"
@@ -59,14 +59,21 @@ namespace forte {
     switch (eID) {
       case e_LREAL: setValueSimple(paValue); break;
       case e_REAL: setTDFLOAT(static_cast<TForteFloat>(static_cast<const CIEC_REAL &>(paValue))); break;
-      case e_STRING: (*this).fromString(reinterpret_cast<const CIEC_STRING &>(paValue).getStorage().c_str()); break;
-      case e_WSTRING: (*this).fromString(reinterpret_cast<const CIEC_WSTRING &>(paValue).getValue()); break;
+      case e_STRING: fromString(static_cast<const CIEC_STRING &>(paValue).getStorage().c_str()); break;
+      case e_WSTRING: fromString(static_cast<const CIEC_WSTRING &>(paValue).getValue()); break;
       case e_SINT:
       case e_INT:
       case e_DINT:
       case e_LINT:
-        setTDFLOAT(static_cast<TValueType>(static_cast<TForteInt64>(static_cast<const CIEC_LINT &>(paValue))));
+        setTDFLOAT(static_cast<TValueType>(static_cast<const CIEC_ANY_SIGNED &>(paValue).getSignedValue()));
         break;
+      case e_USINT:
+      case e_UINT:
+      case e_UDINT:
+      case e_ULINT:
+        setTDFLOAT(static_cast<TValueType>(static_cast<const CIEC_ANY_UNSIGNED &>(paValue).getUnsignedValue()));
+        break;
+      case e_BOOL: setTDFLOAT(static_cast<const CIEC_BOOL &>(paValue)); break;
       case e_BYTE:
       case e_WORD:
       case e_DWORD:
@@ -74,9 +81,7 @@ namespace forte {
         // bit string will cast to the binary representation of the real value
         setValueSimple(paValue);
         break;
-      default: // UINT types
-        setTDFLOAT(static_cast<TValueType>(static_cast<TForteUInt64>(static_cast<const CIEC_ULINT &>(paValue))));
-        break;
+      default: break;
     }
   }
 
