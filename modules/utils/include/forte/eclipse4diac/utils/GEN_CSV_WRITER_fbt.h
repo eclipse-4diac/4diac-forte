@@ -80,7 +80,7 @@ namespace forte::eclipse4diac::utils {
 
     public:
       GEN_CSV_WRITER(const StringId paInstanceNameId, CFBContainer &paContainer);
-      ~GEN_CSV_WRITER() override;
+      ~GEN_CSV_WRITER() override = default;
 
     private:
       void openCSVFile();
@@ -88,7 +88,13 @@ namespace forte::eclipse4diac::utils {
       void writeCSVFileLine();
       bool areDIsSameArrayLength(size_t &commonArraySize);
 
-      decltype(forte_fopen(nullptr, nullptr)) mCSVFile;
+      struct CSVFileDeleter {
+        void operator()(decltype(forte_fopen(nullptr, nullptr)) paCSVFile) const {
+          forte_fclose(paCSVFile);
+        }
+      };
+
+      std::unique_ptr<std::remove_pointer_t<decltype(forte_fopen(nullptr, nullptr))>, CSVFileDeleter> mCSVFile;
 
       std::vector<StringId> mDataInputNames;
 

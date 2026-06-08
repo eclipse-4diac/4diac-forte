@@ -83,7 +83,7 @@
           "type": "BOOL",
           "value": "ON"
         },
-        "FORTE_TEST_SANITIZE": {
+        "FORTE_SANITIZE": {
           "type": "BOOL",
           "value": "ON"
         }
