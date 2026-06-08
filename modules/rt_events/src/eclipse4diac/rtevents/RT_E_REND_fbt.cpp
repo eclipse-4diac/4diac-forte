@@ -53,18 +53,21 @@ namespace forte::eclipse4diac::rtevents {
     var_Deadline = 0_TIME;
     var_WCET = 0_TIME;
     var_QO = 0_BOOL;
+    mState = 0;
   }
 
   bool FORTE_RT_E_REND::checkActivation(TEventID paEIID) {
     switch (paEIID) {
       case scmEventEI1ID:
         if (mState == 2) {
+          mState = 0;
           return true;
         }
         mState = 1;
         break;
       case scmEventEI2ID:
         if (mState == 1) {
+          mState = 0;
           return true;
         }
         mState = 2;

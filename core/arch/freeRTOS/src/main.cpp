@@ -1,5 +1,5 @@
 /************************************************************************************
- * Copyright (c) 2016, 2024 fortiss GmbH, Jose Cabral
+ * Copyright (c) 2016, 2024 fortiss GmbH, Jose Cabral, HR Agartechnik GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -14,6 +14,7 @@
 #include <freertos/task.h>
 
 #include "../c_interface/forte_c.h"
+#include "forte/util/devlog.h"
 
 namespace {
   const unsigned forteTaskPriority = tskIDLE_PRIORITY + 1;
@@ -43,7 +44,9 @@ int main() {
     return result;
   }
 
-  xTaskCreate(vForteTask, "forte", stackDepth, nullptr, forteTaskPriority, nullptr);
+  if (pdPASS != xTaskCreate(vForteTask, "forte", stackDepth, nullptr, forteTaskPriority, nullptr)) {
+    DEVLOG_ERROR("Failed to create forte task");
+  }
 
   vTaskStartScheduler();
 

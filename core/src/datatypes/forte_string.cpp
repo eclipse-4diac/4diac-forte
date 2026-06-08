@@ -1,7 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005, 2025 Profactor GmbH, TU Wien/ACIN, nxtControl GmbH,
+ * Copyright (c) 2005       Profactor GmbH, TU Wien/ACIN, nxtControl GmbH,
  *                          fortiss GmbH, Primetals Technologies Austria GmbH
- *                          Martin Erich Jobst
+ *                          Martin Erich Jobst, HR Agrartechnik GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -18,6 +18,7 @@
  *                           - changes storage to std::string
  *   Alois Zoitl - migrated data type toString to std::string
  *   Martin Jobst - fix line feed and newline escape sequences
+ *    Franz Höpfinger - string_view for getResponseText
  *******************************************************************************/
 
 #include "forte/datatypes/forte_string.h"
@@ -139,7 +140,7 @@ namespace forte {
     this->append(paValue.getStorage());
   }
 
-  void CIEC_STRING::append(const std::string &paValue) {
+  void CIEC_STRING::append(const std::string_view paValue) {
     mValue.append(paValue);
   }
 

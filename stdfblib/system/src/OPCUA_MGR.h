@@ -13,12 +13,16 @@
 
 #pragma once
 
-#include "../../../com/opc_ua/src/opcua_local_handler.h"
-#include "forte/mgmcmd.h"
-#include "forte/mgmcmdstruct.h"
 #include <vector>
 #include <string>
 #include <map>
+
+#include <open62541/plugin/nodestore.h>
+
+#include "forte/mgmcmd.h"
+#include "forte/mgmcmdstruct.h"
+
+#include "../../../com/opc_ua/src/opcua_local_handler.h"
 
 namespace forte {
   class CDevice;

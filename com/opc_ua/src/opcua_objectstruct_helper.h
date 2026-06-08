@@ -13,9 +13,16 @@
 
 #pragma once
 
-#include "opcua_layer.h"
 #include <memory>
+
+#include <open62541/common.h>
+#include <open62541/types.h>
+
+#include "opcua_layer.h"
+
 #include "opcua_action_info.h"
+
+struct UA_Server;
 
 namespace forte::com_infra {
   class CBaseCommFB;

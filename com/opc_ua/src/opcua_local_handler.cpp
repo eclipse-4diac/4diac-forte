@@ -22,16 +22,20 @@
  *******************************************************************************/
 
 #include "opcua_defaults.h"
-#include "forte/devexec.h"
+#include "opcua_local_handler.h"
+
+#include <open62541/server.h>
+#include <open62541/server_config_default.h>
+
 #include "forte/iec61131_functions.h"
 #include "forte/cominfra/basecommfb.h"
 #include "forte/util/parameterParser.h"
 #include "forte/util/string_utils.h"
 #include "forte/util/mainparam_utils.h"
 #include "forte/arch/forte_printer.h"
-#include "opcua_local_handler.h"
 
 #include "forte/com/opc_ua/opcua_nodesets.h"
+
 #include "struct_action_info.h"
 #ifdef FORTE_COM_OPC_UA_MULTICAST
 #include "detail/lds_me_handler.h"
@@ -94,20 +98,23 @@ namespace forte::com_infra::opc_ua {
   void COPC_UA_Local_Handler::run() {
     DEVLOG_INFO("[OPC UA LOCAL]: Starting OPC UA Server: opc.tcp://localhost:%d\n", gOpcuaServerPort.mArgument);
 
-    mUaServer = UA_Server_new();
+    UA_ServerConfig config{
+        config.logging = &getLogger(),
+    };
+
+    // set default config
+    if (const UA_StatusCode status = UA_ServerConfig_setDefault(&config); status != UA_STATUSCODE_GOOD) {
+      DEVLOG_ERROR("[OPC UA LOCAL]: Error setting server configuration. Error: %s\n", UA_StatusCode_name(status));
+      mServerStarted.inc(); // this will avoid locking startServer() for all cases where the starting of server failed
+      return;
+    }
+
+    UA_ServerStrings serverStrings;
+    generateServerStrings(gOpcuaServerPort.mArgument, serverStrings);
+    configureUAServer(serverStrings, config);
+
+    mUaServer = UA_Server_newWithConfig(&config);
     if (mUaServer) {
-      UA_ServerConfig *uaServerConfig = UA_Server_getConfig(mUaServer);
-      /* The original logger is needed to avoid memory leak on shutdown.
-       * It is reassigned before the server shutdown so that freeing the memory
-       * works properly.
-       */
-      UA_Logger uaLogger = *uaServerConfig->logging;
-      *uaServerConfig->logging = getLogger();
-
-      UA_ServerStrings serverStrings;
-      generateServerStrings(gOpcuaServerPort.mArgument, serverStrings);
-      configureUAServer(serverStrings, *uaServerConfig);
-
       if (initializeNodesets(*mUaServer)) {
         UA_StatusCode retVal = UA_Server_run_startup(mUaServer);
         if (UA_STATUSCODE_GOOD == retVal) {
@@ -147,10 +154,11 @@ namespace forte::com_infra::opc_ua {
       } else {
         DEVLOG_ERROR("[OPC UA LOCAL]: Couldn't initialize Nodesets\n", gOpcuaServerPort.mArgument);
       }
-      /* Reassign original logger to avoid memory leak. */
-      *uaServerConfig->logging = uaLogger;
       UA_Server_delete(mUaServer);
       mUaServer = nullptr;
+    } else {
+      DEVLOG_ERROR("[OPC UA LOCAL]: Couldn't initialize server\n");
+      UA_ServerConfig_clear(&config);
     }
     mServerStarted.inc(); // this will avoid locking startServer() for all cases where the starting of server failed
   }
@@ -715,13 +723,8 @@ namespace forte::com_infra::opc_ua {
         UA_NodeId parent = UA_NODEID_NUMERIC(0, UA_NS0ID_ROOTFOLDER);
 
         // look for parent object
-        for (auto itPresentNodes = presentNodes.begin(); itPresentNodes != presentNodes.end();) {
-          auto currentIterator = itPresentNodes;
-          ++itPresentNodes;
-          if (*itPresentNodes == presentNodes.back()) {
-            parent = **currentIterator;
-            break;
-          }
+        if (presentNodes.size() > 1) {
+          parent = *presentNodes[presentNodes.size() - 2];
         }
 
         retVal = handleExistingMethod(paActionInfo, parent);

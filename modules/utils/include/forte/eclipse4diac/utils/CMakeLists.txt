@@ -24,6 +24,7 @@ target_sources(forte-utils PUBLIC
         TEST_CONDITION_fbt.h
 )
 
+add_subdirectory(arrays)
 add_subdirectory(assembling)
 add_subdirectory(const)
 add_subdirectory(selection)

@@ -41,11 +41,8 @@ namespace forte::eclipse4diac::rtevents {
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override {
         if (paEIID) { // it is not the init event
           if (mInitialized && checkActivation(paEIID)) {
-            CEventConnection *eoCon = getEOConUnchecked(1);
-            if (eoCon->isConnected()) {
-              eoCon->triggerEvent(&mECEO);
-              mECEO.resumeSelfSuspend();
-            }
+            sendOutputEvent(1, &mECEO);
+            mECEO.resumeSelfSuspend();
           }
         } else { // we got init
           if (var_QI == true) {
@@ -67,7 +64,8 @@ namespace forte::eclipse4diac::rtevents {
       CRTEventSingle(CFBContainer &paContainer,
                      const SFBInterfaceSpec &paInterfaceSpec,
                      const StringId paInstanceNameId) :
-          CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId) {};
+          CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
+          mInitialized(false) {};
 
       CIEC_BOOL var_QI;
       CIEC_TIME var_Deadline;

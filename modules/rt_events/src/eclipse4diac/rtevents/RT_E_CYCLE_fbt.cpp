@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006 - 2014 ACIN, Profactor GmbH, fortiss GmbH
+ * Copyright (c) 2006 ACIN, Profactor GmbH, fortiss GmbH and others
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -17,7 +17,6 @@ using namespace forte::literals;
 namespace forte::eclipse4diac::rtevents {
   namespace {
     const auto cDataInputNames = std::array{"DT"_STRID, "Deadline"_STRID, "WCET"_STRID};
-    const auto cDataOutputNames = std::array{"QO"_STRID};
     const auto cEventInputNames = std::array{"START"_STRID, "STOP"_STRID};
     const auto cEventInputTypeIds = std::array{"Event"_STRID, "Event"_STRID};
     const auto cEventOutputNames = std::array{"EO"_STRID};
@@ -28,7 +27,7 @@ namespace forte::eclipse4diac::rtevents {
         .mEONames = cEventOutputNames,
         .mEOTypeNames = cEventOutputTypeIds,
         .mDINames = cDataInputNames,
-        .mDONames = cDataOutputNames,
+        .mDONames = {},
         .mDIONames = {},
         .mSocketNames = {},
         .mPlugNames = {},
@@ -43,7 +42,7 @@ namespace forte::eclipse4diac::rtevents {
       conn_DT(nullptr),
       conn_Deadline(nullptr),
       conn_WCET(nullptr),
-      conn_QO(*this, 0, var_QO) {
+      mActive(false) {
     setEventChainExecutor(&mECEO);
   };
 
@@ -51,7 +50,6 @@ namespace forte::eclipse4diac::rtevents {
     var_DT = 0_TIME;
     var_Deadline = 0_TIME;
     var_WCET = 0_TIME;
-    var_QO = 0_BOOL;
   }
 
   void FORTE_RT_E_CYCLE::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
@@ -112,10 +110,7 @@ namespace forte::eclipse4diac::rtevents {
     return nullptr;
   }
 
-  CIEC_ANY *FORTE_RT_E_CYCLE::getDO(size_t paIndex) {
-    switch (paIndex) {
-      case 0: return &var_QO;
-    }
+  CIEC_ANY *FORTE_RT_E_CYCLE::getDO(size_t) {
     return nullptr;
   }
 
@@ -135,10 +130,7 @@ namespace forte::eclipse4diac::rtevents {
     return nullptr;
   }
 
-  CDataConnection *FORTE_RT_E_CYCLE::getDOConUnchecked(TPortId paIndex) {
-    switch (paIndex) {
-      case 0: return &conn_QO;
-    }
+  CDataConnection *FORTE_RT_E_CYCLE::getDOConUnchecked(TPortId) {
     return nullptr;
   }
 

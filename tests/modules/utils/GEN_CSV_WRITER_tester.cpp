@@ -108,7 +108,7 @@ namespace forte::eclipse4diac::utils::test {
 
   BOOST_FIXTURE_TEST_CASE(validWrite, GEN_CSV_WRITER_TestFixtureIntString) {
     mQI = true_BOOL;
-    mSD_1 = CIEC_INT(1);
+    mSD_1 = 1_INT;
     mSD_2 = "Test"_STRING;
 
     triggerEvent(InputEventREQ);
@@ -117,7 +117,7 @@ namespace forte::eclipse4diac::utils::test {
     BOOST_CHECK(mQO);
 
     mQI = true_BOOL;
-    mSD_1 = CIEC_INT(20);
+    mSD_1 = 20_INT;
     mSD_2 = "Test2"_STRING;
 
     triggerEvent(InputEventREQ);
@@ -131,9 +131,9 @@ namespace forte::eclipse4diac::utils::test {
 
   BOOST_FIXTURE_TEST_CASE(arrayWrite, GEN_CSV_WRITER_TestFixtureArrayArray) {
     mQI = true_BOOL;
-    mSD_1[0].setValue(CIEC_INT(1));
-    mSD_1[1].setValue(CIEC_INT(2));
-    mSD_1[2].setValue(CIEC_INT(3));
+    mSD_1[0].setValue(1_INT);
+    mSD_1[1].setValue(2_INT);
+    mSD_1[2].setValue(3_INT);
     mSD_2[0].setValue(CIEC_STRING("A"s));
     mSD_2[1].setValue(CIEC_STRING("B"s));
     mSD_2[2].setValue(CIEC_STRING("C"s));

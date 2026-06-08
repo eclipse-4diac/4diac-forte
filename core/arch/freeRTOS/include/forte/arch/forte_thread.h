@@ -1,5 +1,5 @@
 /************************************************************************************
- * Copyright (c) 2016 fortiss GmbH
+ * Copyright (c) 2016 fortiss GmbH, HR Agartechnik GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -15,6 +15,8 @@
 
 #include <freertos/FreeRTOS.h>
 #include <freertos/task.h>
+#include <memory>
+#include <vector>
 
 #include "forte/datatype.h"
 #include "forte/util/devlog.h"
@@ -63,7 +65,6 @@ namespace forte::arch {
        *
        * @param pa_miliSeconds The miliseconds for the thread to sleep
        */
-
       static void sleepThread(unsigned int paMilliSeconds);
 
     protected:
@@ -87,7 +88,31 @@ namespace forte::arch {
        */
       virtual TThreadHandleType createThread(long paStackSize);
 
+      /*! \brief Convert a stack size in bytes to a FreeRTOS stack depth in words.
+       *
+       * FreeRTOS expects the stack depth as the number of StackType_t words, not bytes.
+       * @param paStackSize stack size in bytes
+       * @return stack depth in StackType_t words
+       */
+      constexpr size_t getStackDepth() {
+        return static_cast<size_t>(getStackSize()) / sizeof(StackType_t);
+      }
+
+      void deleteFreeRTOSTask();
+
       static const int scmForteTaskPriority;
+
+      std::vector<StackType_t> mFreeRTOSStack;
+
+      // use a functor instead a lambda, to avoid a "internal linkage warning" at compile-time.
+      struct STCBDeleter {
+          void operator()(StaticTask_t *paTask) const {
+            vPortFree(paTask);
+          }
+      };
+
+      std::unique_ptr<StaticTask_t, STCBDeleter> mTask;
+      TaskHandle_t mFreeRTOSThreadHandle = nullptr;
   };
 
   typedef CFreeRTOSThread CThread; // allows that doxygen can generate better documenation

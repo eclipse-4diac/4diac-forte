@@ -51,7 +51,8 @@ namespace forte::eclipse4diac::rtevents {
       conn_WCET_EO1(nullptr),
       conn_Deadline_EO2(nullptr),
       conn_WCET_EO2(nullptr),
-      conn_QO(*this, 0, var_QO) {};
+      conn_QO(*this, 0, var_QO),
+      mInitialized(false) {};
 
   void FORTE_RT_E_SWITCH::setInitialValues() {
     var_QI = 0_BOOL;
@@ -68,19 +69,12 @@ namespace forte::eclipse4diac::rtevents {
     switch (paEIID) {
       case scmEventEIID:
         if (mInitialized) {
-          CEventConnection *eoCon;
           if (!var_G) {
-            eoCon = getEOConUnchecked(scmEventEO1ID);
-            if (eoCon->isConnected()) {
-              eoCon->triggerEvent(&mECEO1);
-              mECEO1.resumeSelfSuspend();
-            }
+            sendOutputEvent(scmEventEO1ID, &mECEO1);
+            mECEO1.resumeSelfSuspend();
           } else {
-            eoCon = getEOConUnchecked(scmEventEO2ID);
-            if (eoCon->isConnected()) {
-              eoCon->triggerEvent(&mECEO2);
-              mECEO2.resumeSelfSuspend();
-            }
+            sendOutputEvent(scmEventEO2ID, &mECEO2);
+            mECEO2.resumeSelfSuspend();
           }
         }
         break;

@@ -58,7 +58,8 @@ namespace forte::eclipse4diac::rtevents {
       conn_WCET2(nullptr),
       conn_Deadline3(nullptr),
       conn_WCET3(nullptr),
-      conn_QO(*this, 0, var_QO) {};
+      conn_QO(*this, 0, var_QO),
+      mInitialized(false) {};
 
   void FORTE_RT_E_DEMUX::setInitialValues() {
     var_QI = 0_BOOL;
@@ -79,36 +80,11 @@ namespace forte::eclipse4diac::rtevents {
     switch (paEIID) {
       case scmEventEIID:
         if (mInitialized) {
-          CEventConnection *eoCon;
           switch (static_cast<CIEC_UINT::TValueType>(var_K)) {
-            case 0:
-              eoCon = getEOConUnchecked(scmEventEO0ID);
-              if (eoCon->isConnected()) {
-                eoCon->triggerEvent(&mECEO0);
-                mECEO0.resumeSelfSuspend();
-              }
-              break;
-            case 1:
-              eoCon = getEOConUnchecked(scmEventEO1ID);
-              if (eoCon->isConnected()) {
-                eoCon->triggerEvent(&mECEO1);
-                mECEO1.resumeSelfSuspend();
-              }
-              break;
-            case 2:
-              eoCon = getEOConUnchecked(scmEventEO2ID);
-              if (eoCon->isConnected()) {
-                eoCon->triggerEvent(&mECEO2);
-                mECEO2.resumeSelfSuspend();
-              }
-              break;
-            case 3:
-              eoCon = getEOConUnchecked(scmEventEO3ID);
-              if (eoCon->isConnected()) {
-                eoCon->triggerEvent(&mECEO3);
-                mECEO3.resumeSelfSuspend();
-              }
-              break;
+            case 0: sendOutputEvent(scmEventEO0ID, &mECEO0); mECEO0.resumeSelfSuspend(); break;
+            case 1: sendOutputEvent(scmEventEO1ID, &mECEO1); mECEO1.resumeSelfSuspend(); break;
+            case 2: sendOutputEvent(scmEventEO2ID, &mECEO2); mECEO2.resumeSelfSuspend(); break;
+            case 3: sendOutputEvent(scmEventEO3ID, &mECEO3); mECEO3.resumeSelfSuspend(); break;
             default: break;
           }
         }

@@ -21,6 +21,7 @@ target_sources(forte-events PRIVATE
         E_CTUD_UDINT_fbt.cpp
         E_CYCLE_fbt.cpp
         E_D_FF_fbt.cpp
+        E_D_FF_ANY_fbt.cpp
         E_DELAY_fbt.cpp
         E_DEMUX_fbt.cpp
         E_F_TRIG_fbt.cpp
@@ -28,6 +29,7 @@ target_sources(forte-events PRIVATE
         E_N_TABLE_fbt.cpp
         E_PERMIT_fbt.cpp
         E_R_TRIG_fbt.cpp
+        E_RF_TRIG_fbt.cpp
         E_RDELAY_fbt.cpp
         E_REND_fbt.cpp
         E_RESTART_fbt.cpp
@@ -47,6 +49,7 @@ target_sources(forte-events PRIVATE
         GEN_E_DEMUX_fbt.cpp
         GEN_E_MUX_fbt.cpp
         GEN_E_MERGE_fbt.cpp
+        GEN_E_REND_fbt.cpp
         GEN_E_SPLIT_fbt.cpp
         timedfb.cpp
 )

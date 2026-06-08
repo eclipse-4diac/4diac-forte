@@ -19,6 +19,9 @@ using namespace forte::literals;
 
 namespace forte::iec61499::events::test {
   struct E_SWITCH_TestFixture : public forte::test::CFBTestFixtureBase {
+      static constexpr TEventID EI = 0;
+      static constexpr TEventID EO0 = 0;
+      static constexpr TEventID EO1 = 1;
 
       E_SWITCH_TestFixture() : CFBTestFixtureBase("iec61499::events::E_SWITCH"_STRID) {
         setInputData({&mInG});
@@ -32,37 +35,37 @@ namespace forte::iec61499::events::test {
 
   BOOST_AUTO_TEST_CASE(singleE0) {
     mInG = false_BOOL;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(EI);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(EO0));
   }
 
   BOOST_AUTO_TEST_CASE(SingleE1) {
     mInG = true_BOOL;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(1));
+    triggerEvent(EI);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(EO1));
   }
 
   BOOST_AUTO_TEST_CASE(MultipleE0) {
     mInG = false_BOOL;
     for (unsigned int i = 0; i < 1000; ++i) {
-      triggerEvent(0);
-      BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+      triggerEvent(EI);
+      BOOST_CHECK(checkForSingleOutputEventOccurence(EO0));
     }
   }
 
   BOOST_AUTO_TEST_CASE(MultipleE1) {
     mInG = true_BOOL;
     for (unsigned int i = 0; i < 1000; ++i) {
-      triggerEvent(0);
-      BOOST_CHECK(checkForSingleOutputEventOccurence(1));
+      triggerEvent(EI);
+      BOOST_CHECK(checkForSingleOutputEventOccurence(EO1));
     }
   }
 
   BOOST_AUTO_TEST_CASE(Alternate) {
     for (unsigned int i = 0; i < 1000; ++i) {
       mInG = func_NOT(mInG);
-      triggerEvent(0);
-      BOOST_CHECK(checkForSingleOutputEventOccurence((mInG) ? 1 : 0));
+      triggerEvent(EI);
+      BOOST_CHECK(checkForSingleOutputEventOccurence((mInG) ? EO1 : EO0));
     }
   }
 

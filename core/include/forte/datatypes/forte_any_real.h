@@ -27,8 +27,6 @@ namespace forte {
 
     protected:
       CIEC_ANY_REAL() = default;
-
-      static void normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos);
   };
 
   template<>

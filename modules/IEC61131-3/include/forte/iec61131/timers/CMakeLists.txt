@@ -16,6 +16,9 @@ target_sources(forte-iec61131-3 PUBLIC
         FILE_SET HEADERS
         FILES
         FB_TOF_fbt.h
+        FB_TOF_LTIME_fbt.h
         FB_TON_fbt.h
+        FB_TON_LTIME_fbt.h
         FB_TP_fbt.h
+        FB_TP_LTIME_fbt.h
 )

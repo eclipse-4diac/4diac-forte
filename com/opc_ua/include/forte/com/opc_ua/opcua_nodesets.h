@@ -15,7 +15,10 @@
 
 #include "forte/util/hook.h"
 
-#include <open62541.h>
+#include <open62541/common.h>
+#include <open62541/types.h>
+
+struct UA_Server;
 
 namespace forte {
   namespace util::hook {

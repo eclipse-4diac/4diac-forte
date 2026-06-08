@@ -13,6 +13,7 @@
 #############################################################################
 
 add_subdirectory(arithmetic)
+add_subdirectory(arrays)
 add_subdirectory(bistableElements)
 add_subdirectory(bitwiseOperators)
 add_subdirectory(charString)

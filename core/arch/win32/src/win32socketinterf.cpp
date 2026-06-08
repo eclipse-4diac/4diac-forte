@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2023 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V., HIT robot group
- *               2024 Samator Indo Gas
+ * Copyright (c) 2010 ACIN, Profactor GmbH, AIT, fortiss GmbH, OFFIS e.V., HIT robot group
+ *               Samator Indo Gas, Primetals Technologies Austria GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,6 +13,7 @@
  *  Jörg Walter - Windows XP compatibility, improve UDP multicast support
  *  Zhao Xin - fix socket resource leakage
  *  Ketut Kumajaya - switch to the Unicode version of WSAStringToAddress
+ *  Markus Meingast - add logging of actual tcp port being used
  *******************************************************************************/
 
 #include "forte/arch/sockhand.h" //needs to be first pulls in the platform specific includes
@@ -21,6 +22,29 @@
 #include "../../common/src/forte_stringFunctions.h"
 
 namespace forte::arch {
+  namespace {
+    LPSTR getErrorMessage(int paErrorNumber) {
+      LPSTR pacErrorMessage = nullptr;
+      FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS,
+                    nullptr, paErrorNumber, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), pacErrorMessage, 0, nullptr);
+      return pacErrorMessage;
+    }
+
+    void displayActualPort(CWin32SocketInterface::TSocketDescriptor paSocket) {
+      sockaddr_in stSockAddr = {0};
+      socklen_t addressLen = sizeof(stSockAddr);
+      if (getsockname(paSocket, (struct sockaddr *) &stSockAddr, &addressLen) == 0) {
+        unsigned short assignedPort = ntohs(stSockAddr.sin_port);
+        DEVLOG_INFO("CWin32SocketInterface: Socket is listening on port: %d\n", assignedPort);
+      } else {
+        int nLastError = WSAGetLastError();
+        LPSTR pacErrorMessage = getErrorMessage(nLastError);
+        DEVLOG_ERROR("CWin32SocketInterface: getsockname() failed: %d - %s\n", nLastError, pacErrorMessage);
+        LocalFree(pacErrorMessage);
+      }
+    }
+  } // namespace
+
 #define S2WS(x) forte_stringToWstring(x)
 
   void CWin32SocketInterface::closeSocket(TSocketDescriptor paSockD) {
@@ -34,42 +58,46 @@ namespace forte::arch {
     DEVLOG_INFO("CWin32SocketInterface: Opening TCP-Server connection at: %s:%d\n", paIPAddr, paPort);
 
     TSocketDescriptor nSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
-
-    if (INVALID_SOCKET != nSocket) {
-      struct sockaddr_in stSockAddr = {};
-      stSockAddr.sin_family = AF_INET;
-      stSockAddr.sin_port = htons(paPort);
-      stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
-
-      int nOptVal = 1;
-      if (SOCKET_ERROR == setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char *) &nOptVal, sizeof(nOptVal))) {
-        LPSTR pacErrorMessage = getErrorMessage(WSAGetLastError());
-        DEVLOG_ERROR("CWin32SocketInterface: could not set socket option SO_REUSEADDR:  %s\n", pacErrorMessage);
-        LocalFree(pacErrorMessage);
-      }
-
-      if (0 == bind(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr))) {
-        if (SOCKET_ERROR ==
-            listen(nSocket, 1)) { // for the classic IEC 61499 server only one connection at the same time
-                                  // is accepted TODO mayb make this adjustable for future extensions
-          int nLastError = WSAGetLastError();
-          LPSTR pacErrorMessage = getErrorMessage(nLastError);
-          DEVLOG_ERROR("CWin32SocketInterface: listen() failed: %d - %s\n", nLastError, pacErrorMessage);
-          LocalFree(pacErrorMessage);
-        } else {
-          nRetVal = nSocket;
-        }
-      } else {
-        int nLastError = WSAGetLastError();
-        LPSTR pacErrorMessage = getErrorMessage(nLastError);
-        DEVLOG_ERROR("CWin32SocketInterface: bind() failed: %d - %s\n", nLastError, pacErrorMessage);
-        LocalFree(pacErrorMessage);
-      }
-    } else {
+    if (nSocket == INVALID_SOCKET) {
       int nLastError = WSAGetLastError();
       LPSTR pacErrorMessage = getErrorMessage(nLastError);
       DEVLOG_ERROR("CWin32SocketInterface: Couldn't create socket: %d - %s\n", nLastError, pacErrorMessage);
       LocalFree(pacErrorMessage);
+      return nRetVal;
+    }
+    struct sockaddr_in stSockAddr = {0};
+    stSockAddr.sin_family = AF_INET;
+    stSockAddr.sin_port = htons(paPort);
+    stSockAddr.sin_addr.s_addr = htonl(INADDR_ANY);
+
+    int nOptVal = 1;
+    if (setsockopt(nSocket, SOL_SOCKET, SO_REUSEADDR, (char *) &nOptVal, sizeof(nOptVal)) == SOCKET_ERROR) {
+      LPSTR pacErrorMessage = getErrorMessage(WSAGetLastError());
+      DEVLOG_ERROR("CWin32SocketInterface: could not set socket option SO_REUSEADDR:  %s\n", pacErrorMessage);
+      LocalFree(pacErrorMessage);
+      return nRetVal;
+    }
+
+    if (bind(nSocket, (struct sockaddr *) &stSockAddr, sizeof(struct sockaddr)) != 0) {
+      int nLastError = WSAGetLastError();
+      LPSTR pacErrorMessage = getErrorMessage(nLastError);
+      DEVLOG_ERROR("CWin32SocketInterface: bind() failed: %d - %s\n", nLastError, pacErrorMessage);
+      LocalFree(pacErrorMessage);
+      return nRetVal;
+    }
+
+    if (listen(nSocket, 1) == SOCKET_ERROR) { // for the classic IEC 61499 server only one connection at the same time
+      // is accepted TODO mayb make this adjustable for future extensions
+      int nLastError = WSAGetLastError();
+      LPSTR pacErrorMessage = getErrorMessage(nLastError);
+      DEVLOG_ERROR("CWin32SocketInterface: listen() failed: %d - %s\n", nLastError, pacErrorMessage);
+      LocalFree(pacErrorMessage);
+      return nRetVal;
+    }
+
+    nRetVal = nSocket;
+    if (paPort == 0) {
+      displayActualPort(nSocket);
     }
     return nRetVal;
   }
@@ -303,12 +331,5 @@ namespace forte::arch {
       LocalFree(pacErrorMessage);
     }
     return nRetVal;
-  }
-
-  LPSTR CWin32SocketInterface::getErrorMessage(int paErrorNumber) {
-    LPSTR pacErrorMessage = nullptr;
-    FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM | FORMAT_MESSAGE_IGNORE_INSERTS, nullptr,
-                  paErrorNumber, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), pacErrorMessage, 0, nullptr);
-    return pacErrorMessage;
   }
 } // namespace forte::arch

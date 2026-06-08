@@ -38,6 +38,7 @@ namespace forte::test {
 
   CFBTestDataGlobalFixture::~CFBTestDataGlobalFixture() {
     smTestDev->changeExecutionState(EMGMCommandType::Stop);
+    smTestDev->deinitialize();
     smTestDev.reset();
     // we don't need to delete the res here as the res is deletes in the destructor of the device
   }

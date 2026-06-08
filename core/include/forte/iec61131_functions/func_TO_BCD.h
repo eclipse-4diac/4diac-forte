@@ -38,9 +38,9 @@ namespace forte {
 
     TargetPrimitive bcdValue = 0;
     for (size_t i = 0; i < targetWidth; ++i) {
-      bcdValue += static_cast<TargetPrimitive>((sourceValue % divisor) << (i * 8));
+      bcdValue += static_cast<TargetPrimitive>(sourceValue % divisor) << (i * 8);
       sourceValue /= divisor;
-      bcdValue += static_cast<TargetPrimitive>((sourceValue % divisor) << (i * 8 + 4));
+      bcdValue += static_cast<TargetPrimitive>(sourceValue % divisor) << (i * 8 + 4);
       sourceValue /= divisor;
     }
     return U(bcdValue);

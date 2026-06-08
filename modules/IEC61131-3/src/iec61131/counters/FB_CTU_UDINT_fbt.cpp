@@ -88,6 +88,7 @@ namespace forte::iec61131::counters {
       case scmEventREQID: {
         readData(0, var_CU, conn_CU);
         readData(1, var_R, conn_R);
+        readData(2, var_PV, conn_PV);
         break;
       }
       default: break;

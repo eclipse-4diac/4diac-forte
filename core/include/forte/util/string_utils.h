@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2025 fortiss GmbH, Martin Erich Jobst,
- *                          Primetals Technologies Austria GmbH
+ * Copyright (c) 2013 fortiss GmbH, Martin Erich Jobst,
+ *                    Primetals Technologies Austria GmbH, Insolsoft
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -12,14 +12,19 @@
  *   Alois Zoitl  - initial API and implementation and/or initial documentation
  *   Martin Jobst - add string join function
  *   Alois Zoitl  - migrated data type toString to std::string
+ *   Martin Jobst - move normalizeToStringRepresentation from CIEC_ANY_REAL
+ *                - add floating-point formatting function
+ *   Anton Gusev  - add appendInt
  *******************************************************************************/
-#ifndef _STRING_UTILS_H_
-#define _STRING_UTILS_H_
+
+#pragma once
 
 #include "forte/datatype.h"
-#include <string>
 #include "forte/stringid.h"
 #include "forte/datatypes/forte_any.h"
+
+#include <concepts>
+#include <string>
 
 namespace forte::util {
 
@@ -36,6 +41,8 @@ namespace forte::util {
   inline TForteInt8 charDigitToInt(char paValue) {
     return static_cast<TForteInt8>(paValue - '0');
   }
+
+  char hexChar(unsigned char charCode);
 
   TForteInt8 charAtoFToInt(char paValue);
 
@@ -91,6 +98,22 @@ namespace forte::util {
   void
   writeToStringNameValuePair(std::string &paTargetBuf, const StringId variableNameId, const CIEC_ANY *const variable);
 
-} // namespace forte::util
+  template<typename T>
+    requires std::same_as<T, TForteFloat> || std::same_as<T, TForteDFloat>
+  void appendFloat(std::string &paTargetBuf, T paValue);
 
-#endif
+  /**
+   * Append integer to string (zero-padded to width N )
+   */
+  template<size_t N>
+  void appendInt(std::string &paTargetBuf, int paValue) {
+    paTargetBuf.resize(paTargetBuf.size() + N);
+    auto lastPos = paTargetBuf.size() - 1;
+    for (auto i = 0u; i < N; i++) {
+      paTargetBuf[lastPos - i] = '0' + (paValue % 10);
+      paValue /= 10;
+    }
+  }
+
+  void normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos);
+} // namespace forte::util

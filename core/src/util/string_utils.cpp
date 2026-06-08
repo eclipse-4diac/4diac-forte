@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2013, 2025 fortiss GmbH, Johannes Kepler University Linz,
- *                          Primetals Technologies Austria GmbH
+ * Copyright (c) 2013 fortiss GmbH, Johannes Kepler University Linz,
+ *                    Primetals Technologies Austria GmbH,
+ *                    Martin Erich Jobst
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +12,7 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Alois Zoitl  - migrated data type toString to std::string
+ *   Martin Jobst - move normalizeToStringRepresentation from CIEC_ANY_REAL
  *******************************************************************************/
 #include "forte/util/string_utils.h"
 #include "forte/datatypes/forte_dint.h"
@@ -26,7 +28,7 @@
 
 using namespace std::string_literals;
 
-namespace forte {
+namespace forte::util {
   constexpr auto scCharacters2Escape = std::array{"&quot;", "&apos;", "&amp;", "&lt;", "&gt;"};
 
   const std::map<char, std::tuple<const char *, size_t>> scEscapeMap = {
@@ -36,16 +38,21 @@ namespace forte {
       {'<', {scCharacters2Escape[3], std::char_traits<char>::length(scCharacters2Escape[3])}},
       {'>', {scCharacters2Escape[4], std::char_traits<char>::length(scCharacters2Escape[4])}}};
 
-  bool util::isAtoFChar(char paValue) {
+  bool isAtoFChar(char paValue) {
     paValue = static_cast<char>(toupper(paValue));
     return ((paValue >= 'A') && (paValue <= 'F'));
   }
 
-  TForteInt8 util::charAtoFToInt(char paValue) {
+  char hexChar(unsigned char charCode) {
+    charCode &= 0x0F;
+    return charCode < 10 ? '0' + charCode : 'A' - 10 + charCode;
+  }
+
+  TForteInt8 charAtoFToInt(char paValue) {
     return static_cast<TForteInt8>((toupper(paValue) - 'A') + 10);
   }
 
-  long int util::strtol(const char *nptr, char **endptr, int base) {
+  long int strtol(const char *nptr, char **endptr, int base) {
     long int nRetVal = 0;
     bool bNegativeNumber = false;
     errno = 0;
@@ -96,7 +103,7 @@ namespace forte {
     return nRetVal;
   }
 
-  unsigned long int util::strtoul(const char *nptr, char **endptr, int base) {
+  unsigned long int strtoul(const char *nptr, char **endptr, int base) {
     unsigned long int unRetVal = 0;
     unsigned long int unLimit1 = (std::numeric_limits<CIEC_UDINT::TValueType>::max() / base);
     unsigned long int unLimit2 = (std::numeric_limits<CIEC_UDINT::TValueType>::max() % base);
@@ -128,7 +135,7 @@ namespace forte {
     return unRetVal;
   }
 
-  long long int util::strtoll(const char *nptr, char **endptr, int base) {
+  long long int strtoll(const char *nptr, char **endptr, int base) {
     long long int nRetVal = 0;
     bool bNegativeNumber = false;
     errno = 0;
@@ -188,7 +195,7 @@ namespace forte {
     return nRetVal;
   }
 
-  unsigned long long int util::strtoull(const char *nptr, char **endptr, int base) {
+  unsigned long long int strtoull(const char *nptr, char **endptr, int base) {
     unsigned long long int unRetVal = 0;
     unsigned long long int unLimit1 = (std::numeric_limits<CIEC_ULINT::TValueType>::max() / base);
     unsigned long long int unLimit2 = (std::numeric_limits<CIEC_ULINT::TValueType>::max() % base);
@@ -219,7 +226,30 @@ namespace forte {
     return unRetVal;
   }
 
-  size_t util::getExtraSizeForXMLEscapedChars(const char *paString) {
+  void normalizeToStringRepresentation(std::string &paTargetBuf, size_t paStartPos) {
+    if (std::isalpha(paTargetBuf[paStartPos]) || ((paTargetBuf[paStartPos] == '-' || paTargetBuf[paStartPos] == '+') &&
+                                                  std::isalpha(paTargetBuf[paStartPos + 1]))) {
+      // if first or (signed) second char is an alphabetic char we have nan or infinity
+      // remove optional parenthesis after "nan" (e.g., "-nan(ind)")
+      if (const auto parenPos = paTargetBuf.find("(", paStartPos); parenPos != std::string::npos) {
+        paTargetBuf.resize(parenPos);
+      }
+      return;
+    }
+
+    auto dotPos = paTargetBuf.find('.', paStartPos);
+    auto expPos = paTargetBuf.find('e', paStartPos);
+
+    if (dotPos == std::string::npos) {
+      if (expPos == std::string::npos) {
+        paTargetBuf += ".0"s;
+      } else {
+        paTargetBuf.insert(expPos, ".0"s);
+      }
+    }
+  }
+
+  size_t getExtraSizeForXMLEscapedChars(const char *paString) {
     size_t retVal = 0;
     while (0 != *paString) {
       auto escapeChar = scEscapeMap.find(*paString);
@@ -231,7 +261,7 @@ namespace forte {
     return retVal;
   }
 
-  void util::transformNonEscapedToEscapedXMLText(std::string &paString, size_t paStart) {
+  void transformNonEscapedToEscapedXMLText(std::string &paString, size_t paStart) {
     if (paString.size() == 0) {
       return;
     }
@@ -245,7 +275,7 @@ namespace forte {
     }
   }
 
-  size_t util::transformEscapedXMLToNonEscapedText(char *const paString) {
+  size_t transformEscapedXMLToNonEscapedText(char *const paString) {
     char *runner = paString;
     char *endRunner = strchr(paString, '\0');
     size_t retVal = 0;
@@ -279,7 +309,7 @@ namespace forte {
     return retVal;
   }
 
-  char *util::lookForNonEscapedChar(char **paString, char paChar, char paEscapingChar) {
+  char *lookForNonEscapedChar(char **paString, char paChar, char paEscapingChar) {
     char *foundChar = nullptr;
     char *initialPosition = *paString;
     while (!foundChar && '\0' != **paString) {
@@ -304,7 +334,7 @@ namespace forte {
     return foundChar;
   }
 
-  bool util::isEscaped(char *paChar, char *paBeginLimit, char paEscapingChar) {
+  bool isEscaped(char *paChar, char *paBeginLimit, char paEscapingChar) {
     size_t noOfScapingSigns = 0;
     while (paBeginLimit !=
            paChar) { // count the amount of \ signs before paChar to know if the \ signs was also escaped.
@@ -319,7 +349,7 @@ namespace forte {
     return (noOfScapingSigns % 2); // an even number of \ (or zero) means paChar was not escaped
   }
 
-  void util::removeEscapedSigns(char **paString, char paEscapingChar) {
+  void removeEscapedSigns(char **paString, char paEscapingChar) {
     char *runner = *paString;
     while ('\0' != *runner) {
       if (paEscapingChar == *runner && paEscapingChar == *(runner + 1)) {
@@ -334,11 +364,10 @@ namespace forte {
     }
   }
 
-  void util::writeToStringNameValuePair(std::string &paTargetBuf,
-                                        const StringId variableNameId,
-                                        const CIEC_ANY *const variable) {
+  void
+  writeToStringNameValuePair(std::string &paTargetBuf, const StringId variableNameId, const CIEC_ANY *const variable) {
     paTargetBuf += variableNameId;
     paTargetBuf += ":="s;
     variable->toString(paTargetBuf);
   }
-} // namespace forte
+} // namespace forte::util

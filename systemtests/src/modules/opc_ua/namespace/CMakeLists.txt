@@ -9,8 +9,7 @@
 # *   Jose Cabral  - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
-# FIXME do not add test sources to non-test target
-target_sources(forte-com-opc_ua PRIVATE
+target_sources(forte_systemtest PRIVATE
         fordiacNamespace.cpp
         forte_datatypetest.cpp
         forte_datatypetest.h

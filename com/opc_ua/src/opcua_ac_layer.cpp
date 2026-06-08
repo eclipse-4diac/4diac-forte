@@ -12,16 +12,19 @@
  *******************************************************************************/
 
 #include "opcua_ac_layer.h"
+
+#include <memory>
+#include <open62541/server.h>
+
 #include "forte/util/parameterParser.h"
 #include "forte/cominfra/basecommfb.h"
-#include "opcua_local_handler.h"
-#include "opcua_objectstruct_helper.h"
-#include "alarm_action_info.h"
 #include "forte/cominfra/comlayersmanager.h"
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
 
-#include <memory>
+#include "alarm_action_info.h"
+#include "opcua_local_handler.h"
+#include "opcua_objectstruct_helper.h"
 
 using namespace forte::literals;
 
@@ -32,6 +35,7 @@ namespace forte::com_infra::opc_ua {
     const std::string scmAlarmConditionName = "AlarmCondition";
 
     char smEmptyString[] = "";
+    char smSeparator = '/';
     char smEnabledState[] = "EnabledState";
     char smEnableStateProperty[] =
         "EnableState"; // This is needed to avoid potential delete-subscription error with HMI tools
@@ -85,12 +89,13 @@ namespace forte::com_infra::opc_ua {
     size_t nrOfParams = parser.parseParameters();
     if (nrOfParams != scmNumberOfAlarmParameters) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Wrong number of parameters for FB %s. Expected: %d, Actual: %d\n",
-                   getCommFB()->getInstanceName(), scmNumberOfAlarmParameters, nrOfParams);
+                   getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str(),
+                   scmNumberOfAlarmParameters, nrOfParams);
       return eRetVal;
     }
     if (!checkDataPorts()) {
       DEVLOG_ERROR("[OPC UA A&C Layer]: FB %s does not match specification needed for using OPC UA A&C!\n",
-                   getCommFB()->getInstanceName());
+                   getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
       return eRetVal;
     }
     mHandler = static_cast<COPC_UA_HandlerAbstract *>(&getExtEvHandler<COPC_UA_Local_Handler>());
@@ -98,7 +103,8 @@ namespace forte::com_infra::opc_ua {
     localHandler->enableHandler();
     UA_Server *server = localHandler->getUAServer();
     if (initOPCUAType(server, parser[TypeName]) != e_InitOk) {
-      DEVLOG_ERROR("[OPC UA A&C LAYER]: Initializing Alarm Type for FB %s failed!\n", getCommFB()->getInstanceName());
+      DEVLOG_ERROR("[OPC UA A&C LAYER]: Initializing Alarm Type for FB %s failed!\n",
+                   getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
       return eRetVal;
     }
     std::string instancePath(parser[PathToInstance] ? parser[PathToInstance] : smEmptyString);
@@ -137,12 +143,14 @@ namespace forte::com_infra::opc_ua {
     }
     if (mMemberActionInfo) {
       if (mHandler->executeAction(*mMemberActionInfo) != UA_STATUSCODE_GOOD) {
-        DEVLOG_ERROR("[OPC UA A&C LAYER]: Sending FB Data failed for FB %s!\n", getCommFB()->getInstanceName());
+        DEVLOG_ERROR("[OPC UA A&C LAYER]: Sending FB Data failed for FB %s!\n",
+                     getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
         return e_ProcessDataSendFailed;
       }
     }
     if (triggerAlarm(server, activate) != UA_STATUSCODE_GOOD) {
-      DEVLOG_ERROR("[OPC UA A&C LAYER]: Sending Alarm Data failed for FB %s!\n", getCommFB()->getInstanceName());
+      DEVLOG_ERROR("[OPC UA A&C LAYER]: Sending Alarm Data failed for FB %s!\n",
+                   getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
       return e_ProcessDataSendFailed;
     }
     readAlarmStateValues(server);
@@ -189,7 +197,8 @@ namespace forte::com_infra::opc_ua {
 
       if (status != UA_STATUSCODE_GOOD) {
         DEVLOG_ERROR("[OPC UA A&C LAYER]: Triggering Alarm failed for FB %s, StatusCode: %s\n",
-                     getCommFB()->getInstanceName(), UA_StatusCode_name(status));
+                     getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str(),
+                     UA_StatusCode_name(status));
         return status;
       }
       mIsStateActive = true;
@@ -203,7 +212,8 @@ namespace forte::com_infra::opc_ua {
       status |= UA_Server_triggerConditionEvent(paServer, mConditionInstanceId, mConditionSourceId, nullptr);
       if (status != UA_STATUSCODE_GOOD) {
         DEVLOG_ERROR("[OPC UA A&C LAYER]: Resetting Alarm failed for FB %s, StatusCode: %s\n",
-                     getCommFB()->getInstanceName(), UA_StatusCode_name(status));
+                     getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str(),
+                     UA_StatusCode_name(status));
         return e_ProcessDataSendFailed;
       }
       mIsStateActive = false;
@@ -278,7 +288,7 @@ namespace forte::com_infra::opc_ua {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Browsepath is invalid!");
       return UA_STATUSCODE_BAD;
     }
-    std::string instanceNameStr{getCommFB()->getInstanceName()};
+    std::string instanceNameStr{getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator)};
     if (instanceNameStr.empty()) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Retrieving FB Instance Name failed!");
       return UA_STATUSCODE_BAD;
@@ -337,7 +347,8 @@ namespace forte::com_infra::opc_ua {
         UA_NODEID_NUMERIC(0, UA_NS0ID_HASCOMPONENT), &mConditionInstanceId);
     if (status != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Adding Condition failed for FB %s. StatusCode %s\n",
-                   getCommFB()->getInstanceName(), UA_StatusCode_name(status));
+                   getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str(),
+                   UA_StatusCode_name(status));
       return status;
     }
     UA_QualifiedName enabledStateField = UA_QUALIFIEDNAME(0, smEnabledState);
@@ -350,7 +361,8 @@ namespace forte::com_infra::opc_ua {
                                                          enabledStateIdField);
     if (status != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Enabling Condition failed for FB %s, StatusCode: %s\n",
-                   getCommFB()->getInstanceName(), UA_StatusCode_name(status));
+                   getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str(),
+                   UA_StatusCode_name(status));
     }
     return status;
   }
@@ -449,7 +461,8 @@ namespace forte::com_infra::opc_ua {
     bool retVal = true;
     if (!checkFirstDataInputType()) {
       retVal = false;
-      DEVLOG_ERROR("[OPC UA A&C Layer]: First Input of FB %s must be of type BOOL!\n", getCommFB()->getInstanceName());
+      DEVLOG_ERROR("[OPC UA A&C Layer]: First Input of FB %s must be of type BOOL!\n",
+                   getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
     }
     if (!checkFBOutputNames()) {
       retVal = false;
@@ -478,7 +491,8 @@ namespace forte::com_infra::opc_ua {
                                                              callback, UA_ENTERING_ACKEDSTATE);
     if (status != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Setting Condition callback methods failed for FB %s, Status Code: %s\n",
-                   getCommFB()->getInstanceName(), UA_StatusCode_name(status));
+                   getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str(),
+                   UA_StatusCode_name(status));
       return e_InitTerminated;
     }
     return e_InitOk;
@@ -509,15 +523,15 @@ namespace forte::com_infra::opc_ua {
     }
     if (!mHasSeverityProperty) {
       DEVLOG_INFO("[OPC UA A&C LAYER]: No Data Port \"%s\" defined for FB %s. Using default value instead.\n",
-                  smSeverity, getCommFB()->getInstanceName());
+                  smSeverity, getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
     }
     if (mMessageTextPortIndex == -1) {
       DEVLOG_INFO("[OPC UA A&C LAYER]: No Data Port \"%s\" defined for FB %s. Using default value instead.\n",
-                  smMessageText, getCommFB()->getInstanceName());
+                  smMessageText, getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
     }
     if (mHandler->initializeAction(*mMemberActionInfo) != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Error occured in FB %s while initializing members\n",
-                   getCommFB()->getInstanceName());
+                   getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
       return e_InitTerminated;
     }
     return e_InitOk;
@@ -558,7 +572,8 @@ namespace forte::com_infra::opc_ua {
       UA_StatusCode status = addVariableNode(paServer, paTypeName, propertyName, apoDataPorts[i]->unwrap());
       if (status != UA_STATUSCODE_GOOD) {
         DEVLOG_ERROR("[OPC UA A&C LAYER]: Failed to add OPCUA AlarmType Property for FB %s, Port: %s, Status: %s\n",
-                     getCommFB()->getInstanceName(), dataPortName.c_str(), UA_StatusCode_name(status));
+                     getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str(), dataPortName.c_str(),
+                     UA_StatusCode_name(status));
         return e_InitTerminated;
       }
     }
@@ -580,7 +595,8 @@ namespace forte::com_infra::opc_ua {
     mTypePropertyNodes.emplace_back(memberNodeId);
     if (status != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Failed to add OPCUA EnableState Property for FB %s, Status: %s\n",
-                   getCommFB()->getInstanceName(), UA_StatusCode_name(status));
+                   getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str(),
+                   UA_StatusCode_name(status));
       return e_InitTerminated;
     }
     return e_InitOk;

@@ -19,6 +19,9 @@ using namespace forte::literals;
 
 namespace forte::iec61499::events::test {
   struct E_SELECT_TestFixture : public forte::test::CFBTestFixtureBase {
+      static constexpr TEventID EI0 = 0;
+      static constexpr TEventID EI1 = 1;
+      static constexpr TEventID EO = 0;
 
       E_SELECT_TestFixture() : CFBTestFixtureBase("iec61499::events::E_SELECT"_STRID) {
         setInputData({&mInG});
@@ -32,30 +35,30 @@ namespace forte::iec61499::events::test {
 
   BOOST_AUTO_TEST_CASE(SelectEI0) {
     mInG = false_BOOL;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    triggerEvent(1);
+    triggerEvent(EI0);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(EO));
+    triggerEvent(EI1);
     BOOST_CHECK(eventChainEmpty());
   }
 
   BOOST_AUTO_TEST_CASE(SelectEI1) {
     mInG = true_BOOL;
-    triggerEvent(1);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-    triggerEvent(0);
+    triggerEvent(EI1);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(EO));
+    triggerEvent(EI0);
     BOOST_CHECK(eventChainEmpty());
   }
 
   BOOST_AUTO_TEST_CASE(MultipleSelectEI0) {
     mInG = false_BOOL;
     for (unsigned int i = 0; i < 1000; i++) {
-      triggerEvent(0);
-      BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+      triggerEvent(EI0);
+      BOOST_CHECK(checkForSingleOutputEventOccurence(EO));
     }
     for (unsigned int i = 0; i < 1000; i++) {
-      triggerEvent(0);
-      BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-      triggerEvent(1);
+      triggerEvent(EI0);
+      BOOST_CHECK(checkForSingleOutputEventOccurence(EO));
+      triggerEvent(EI1);
       BOOST_CHECK(eventChainEmpty());
     }
   }
@@ -63,13 +66,13 @@ namespace forte::iec61499::events::test {
   BOOST_AUTO_TEST_CASE(MultipleSelectEI1) {
     mInG = true_BOOL;
     for (unsigned int i = 0; i < 1000; i++) {
-      triggerEvent(1);
-      BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+      triggerEvent(EI1);
+      BOOST_CHECK(checkForSingleOutputEventOccurence(EO));
     }
     for (unsigned int i = 0; i < 1000; i++) {
-      triggerEvent(1);
-      BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-      triggerEvent(0);
+      triggerEvent(EI1);
+      BOOST_CHECK(checkForSingleOutputEventOccurence(EO));
+      triggerEvent(EI0);
       BOOST_CHECK(eventChainEmpty());
     }
   }
@@ -77,13 +80,13 @@ namespace forte::iec61499::events::test {
   BOOST_AUTO_TEST_CASE(Alternate) {
     for (unsigned int i = 0; i < 1000; ++i) {
       mInG = func_NOT(mInG);
-      triggerEvent((mInG) ? 1 : 0);
-      BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+      triggerEvent((mInG) ? EI1 : EI0);
+      BOOST_CHECK(checkForSingleOutputEventOccurence(EO));
     }
     for (unsigned int i = 0; i < 1000; i++) {
-      triggerEvent((mInG) ? 1 : 0);
-      BOOST_CHECK(checkForSingleOutputEventOccurence(0));
-      triggerEvent((mInG) ? 0 : 1);
+      triggerEvent((mInG) ? EI1 : EI0);
+      BOOST_CHECK(checkForSingleOutputEventOccurence(EO));
+      triggerEvent((mInG) ? EI0 : EI1);
       BOOST_CHECK(eventChainEmpty());
     }
   }

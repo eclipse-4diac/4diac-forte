@@ -19,6 +19,8 @@ using namespace forte::literals;
 
 namespace forte::eclipse4diac::convert::test {
   struct STRUCT_DEMUX_TestFixture_1 : public forte::test::CFBTestFixtureBase {
+      static constexpr TEventID REQ = 0;
+      static constexpr TEventID CNF = 0;
 
       STRUCT_DEMUX_TestFixture_1() :
           CFBTestFixtureBase("eclipse4diac::convert::STRUCT_DEMUX_1Struct_Muxer_Test_Struct_1"_STRID) {
@@ -43,46 +45,46 @@ namespace forte::eclipse4diac::convert::test {
   BOOST_FIXTURE_TEST_SUITE(STRUCT_DEMUX_MainTests, STRUCT_DEMUX_TestFixture_1)
 
   BOOST_AUTO_TEST_CASE(initalValueCheck) {
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     checkStructValues();
   }
 
   BOOST_AUTO_TEST_CASE(changeValueCheck) {
-    mIn.Var1 = CIEC_INT(-256);
-    mIn.Var2 = CIEC_INT(23145);
+    mIn.Var1 = -256_INT;
+    mIn.Var2 = 23145_INT;
     mIn.Var3 = "My Test String!"_STRING;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     checkStructValues();
   }
 
   BOOST_AUTO_TEST_CASE(updateValueCheck) {
-    mIn.Var1 = CIEC_INT(12);
-    mIn.Var2 = CIEC_INT(11111);
+    mIn.Var1 = 12_INT;
+    mIn.Var2 = 11111_INT;
     mIn.Var3 = "string!"_STRING;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     checkStructValues();
 
     // change values to check consecutive updates
 
-    mIn.Var1 = CIEC_INT(32255);
-    mIn.Var2 = CIEC_INT(12345);
+    mIn.Var1 = 32255_INT;
+    mIn.Var2 = 12345_INT;
     mIn.Var3 = "new string!"_STRING;
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     checkStructValues();
   }
 
   BOOST_AUTO_TEST_CASE(steadyStateValueCheck) {
-    mIn.Var1 = CIEC_INT(13);
-    mIn.Var2 = CIEC_INT(234);
+    mIn.Var1 = 13_INT;
+    mIn.Var2 = 234_INT;
     mIn.Var3 = "stable value"_STRING;
 
     for (size_t i = 0; i < 45; i++) {
-      triggerEvent(0);
-      BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+      triggerEvent(REQ);
+      BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
       checkStructValues();
     }
   }
@@ -90,6 +92,8 @@ namespace forte::eclipse4diac::convert::test {
   BOOST_AUTO_TEST_SUITE_END()
 
   struct STRUCT_DEMUX_TestFixture_2 : public forte::test::CFBTestFixtureBase {
+      static constexpr TEventID REQ = 0;
+      static constexpr TEventID CNF = 0;
 
       STRUCT_DEMUX_TestFixture_2() :
           CFBTestFixtureBase("eclipse4diac::convert::STRUCT_DEMUX_1Struct_Muxer_Test_Struct_2"_STRID) {
@@ -114,17 +118,17 @@ namespace forte::eclipse4diac::convert::test {
   BOOST_FIXTURE_TEST_SUITE(STRUCT_DEMUX_SecondStructTest, STRUCT_DEMUX_TestFixture_2)
 
   BOOST_AUTO_TEST_CASE(initalValueCheck) {
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     checkStructValues();
   }
 
   BOOST_AUTO_TEST_CASE(changeValueCheck) {
-    mIn.Var1 = CIEC_INT(1234);
+    mIn.Var1 = 1234_INT;
     mIn.Var2 = "this is the second struct!"_STRING;
-    mIn.Var3 = CIEC_INT(-2345);
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    mIn.Var3 = -2345_INT;
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     checkStructValues();
   }
 
@@ -166,6 +170,8 @@ namespace forte::eclipse4diac::convert::test {
   BOOST_AUTO_TEST_SUITE_END()
 
   struct STRUCT_DEMUX_TestFixture_5 : public forte::test::CFBTestFixtureBase {
+      static constexpr TEventID REQ = 0;
+      static constexpr TEventID CNF = 0;
 
       STRUCT_DEMUX_TestFixture_5() :
           CFBTestFixtureBase("eclipse4diac::convert::STRUCT_DEMUX_1Struct_Muxer_Test_Struct_5"_STRID) {
@@ -197,19 +203,19 @@ namespace forte::eclipse4diac::convert::test {
   BOOST_FIXTURE_TEST_SUITE(STRUCT_DEMUX_ArrayStructTest, STRUCT_DEMUX_TestFixture_5)
 
   BOOST_AUTO_TEST_CASE(initalValueCheck) {
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     checkStructValues();
   }
 
   BOOST_AUTO_TEST_CASE(changeValueCheck) {
-    mIn.Var1 = CIEC_INT(1234);
-    mIn.Var2 = CIEC_ARRAY_FIXED<CIEC_INT, 0, 3>{CIEC_INT(17), CIEC_INT(4), CIEC_INT(21), CIEC_INT(42)};
+    mIn.Var1 = 1234_INT;
+    mIn.Var2 = CIEC_ARRAY_FIXED<CIEC_INT, 0, 3>{17_INT, 4_INT, 21_INT, 42_INT};
     mIn.Var3 = CIEC_ARRAY_FIXED<CIEC_ARRAY_FIXED<CIEC_INT, 0, 3>, 0, 1>{
-        CIEC_ARRAY_FIXED<CIEC_INT, 0, 3>{CIEC_INT(17), CIEC_INT(4), CIEC_INT(21), CIEC_INT(42)},
-        CIEC_ARRAY_FIXED<CIEC_INT, 0, 3>{CIEC_INT(1), CIEC_INT(2), CIEC_INT(3), CIEC_INT(4)}};
-    triggerEvent(0);
-    BOOST_CHECK(checkForSingleOutputEventOccurence(0));
+        CIEC_ARRAY_FIXED<CIEC_INT, 0, 3>{17_INT, 4_INT, 21_INT, 42_INT},
+        CIEC_ARRAY_FIXED<CIEC_INT, 0, 3>{1_INT, 2_INT, 3_INT, 4_INT}};
+    triggerEvent(REQ);
+    BOOST_CHECK(checkForSingleOutputEventOccurence(CNF));
     checkStructValues();
   }
 

@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2010, 2023 ACIN, fortiss GmbH, OFFIS e.V.
+ * Copyright (c) 2010 ACIN, fortiss GmbH, OFFIS e.V.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -38,7 +38,5 @@ namespace forte::arch {
 
     private:
       CWin32SocketInterface(); // this function is not implemented as we don't want instances of this class
-
-      static LPSTR getErrorMessage(int paErrorNumber);
   };
 } // namespace forte::arch

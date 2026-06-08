@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2005 - 2015 ACIN, Profactor GmbH, fortiss GmbH
- *                      2018 Johannes Kepler University
+ * Copyright (c) 2005   ACIN, Profactor GmbH, fortiss GmbH
+ *                      Johannes Kepler University
+ *                      HR Agrartechnik GmbH
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -16,6 +17,7 @@
  *   Jens Reimann
  *    - Enhance bootfile loading behavior
  *    Alois Zoitl - introduced new CGenFB class for better handling generic FBs
+ *    Franz Höpfinger - string_view for getResponseText
  *******************************************************************************/
 
 #include "DEV_MGR.h"
@@ -107,7 +109,7 @@ namespace forte::iec61499::system {
   bool DEV_MGR::executeCommand(const char *const paDest, char *paCommand) {
     EMGMResponse eResp = mCommandParser.parseAndExecuteMGMCommand(paDest, paCommand);
     if (eResp != EMGMResponse::Ready) {
-      DEVLOG_ERROR("Boot file error. DEV_MGR says error is %s\n", forte::mgm_cmd::getResponseText(eResp).c_str());
+      DEVLOG_ERROR("Boot file error. DEV_MGR says error is %s\n", forte::mgm_cmd::getResponseText(eResp).data());
     }
     return (eResp == EMGMResponse::Ready);
   }

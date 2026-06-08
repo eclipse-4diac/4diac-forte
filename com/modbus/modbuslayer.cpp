@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2012, 2023 AIT, ACIN, fortiss GmbH, Davor Cihlar
+ * Copyright (c) 2026 AIT, ACIN, fortiss GmbH, Davor Cihlar, Martin Melik Merkumians
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +11,9 @@
  *   Filip Andren, Patrick Smejkal, Alois Zoitl, Martin Melik-Merkumians
  *                - initial API and implementation and/or initial documentation
  *   Davor Cihlar - multiple FBs sharing a single Modbus connection
+ *   Martin Melik Merkumians - fix security vulnerability on strcpy, update to
+ *              C++ style casts and using data type tvalue types instead of the
+ *              data types themselves for conversion
  *******************************************************************************/
 #include <algorithm>
 #include "modbuslayer.h"
@@ -96,9 +99,9 @@ namespace forte::com_infra::modbus {
         ***************************************************************************/
         case CIEC_ANY::e_BOOL: // 1bit data type
         {
-          TForteByte out = (bool) static_cast<CIEC_BOOL &>(anyVal);
-          *(TForteByte *) (&convertedData[outLength]) = out;
-          outLength += sizeof(TForteByte);
+          CIEC_BOOL::TValueType out = static_cast<CIEC_BOOL::TValueType>(static_cast<CIEC_BOOL &>(anyVal));
+          *reinterpret_cast<CIEC_BOOL::TValueType *>(&convertedData[outLength]) = out;
+          outLength += sizeof(CIEC_BOOL::TValueType);
           break;
         }
         /***************************************************************************
@@ -106,23 +109,23 @@ namespace forte::com_infra::modbus {
          ***************************************************************************/
         case CIEC_ANY::e_SINT: // 8bit data type signed
         {
-          TForteInt8 out = (TForteInt8) static_cast<CIEC_SINT &>(anyVal);
-          *(TForteInt8 *) (&convertedData[outLength]) = out;
-          outLength += sizeof(TForteInt8);
+          CIEC_SINT::TValueType out = static_cast<CIEC_SINT::TValueType>(static_cast<CIEC_SINT &>(anyVal));
+          *reinterpret_cast<CIEC_SINT::TValueType *>(&convertedData[outLength]) = out;
+          outLength += sizeof(CIEC_SINT::TValueType);
           break;
         }
         case CIEC_ANY::e_USINT: // 8bit data type unsigned
         {
-          TForteUInt8 out = (TForteUInt8) static_cast<CIEC_USINT &>(anyVal);
-          *(TForteUInt8 *) (&convertedData[outLength]) = out;
-          outLength += sizeof(TForteUInt8);
+          CIEC_USINT::TValueType out = static_cast<CIEC_USINT::TValueType>(static_cast<CIEC_USINT &>(anyVal));
+          *reinterpret_cast<CIEC_USINT::TValueType *>(&convertedData[outLength]) = out;
+          outLength += sizeof(CIEC_USINT::TValueType);
           break;
         }
         case CIEC_ANY::e_BYTE: // 8bit data type
         {
-          TForteByte out = (TForteByte) static_cast<CIEC_BYTE &>(anyVal);
-          *(TForteByte *) (&convertedData[outLength]) = out;
-          outLength += sizeof(TForteByte);
+          CIEC_BYTE::TValueType out = static_cast<CIEC_BYTE::TValueType>(static_cast<CIEC_BYTE &>(anyVal));
+          *reinterpret_cast<CIEC_BYTE::TValueType *>(&convertedData[outLength]) = out;
+          outLength += sizeof(CIEC_BYTE::TValueType);
           break;
         }
         /***************************************************************************
@@ -130,23 +133,23 @@ namespace forte::com_infra::modbus {
          ***************************************************************************/
         case CIEC_ANY::e_INT: // 16bit data type signed
         {
-          TForteInt16 out = (TForteInt16) static_cast<CIEC_INT &>(anyVal);
-          *(TForteInt16 *) (&convertedData[outLength]) = out;
-          outLength += sizeof(TForteInt16);
+          CIEC_INT::TValueType out = static_cast<CIEC_INT::TValueType>(static_cast<CIEC_INT &>(anyVal));
+          *reinterpret_cast<CIEC_INT::TValueType *>(&convertedData[outLength]) = out;
+          outLength += sizeof(CIEC_INT::TValueType);
           break;
         }
         case CIEC_ANY::e_UINT: // 16bit data type unsigned
         {
-          TForteUInt16 out = (TForteUInt16) static_cast<CIEC_UINT &>(anyVal);
-          *(TForteUInt16 *) (&convertedData[outLength]) = out;
-          outLength += sizeof(TForteUInt16);
+          CIEC_UINT::TValueType out = static_cast<CIEC_UINT::TValueType>(static_cast<CIEC_UINT &>(anyVal));
+          *reinterpret_cast<CIEC_UINT::TValueType *>(&convertedData[outLength]) = out;
+          outLength += sizeof(CIEC_UINT::TValueType);
           break;
         }
         case CIEC_ANY::e_WORD: // 16bit data type
         {
-          TForteWord out = (TForteWord) static_cast<CIEC_WORD &>(anyVal);
-          *(TForteWord *) (&convertedData[outLength]) = out;
-          outLength += sizeof(TForteWord);
+          CIEC_WORD::TValueType out = static_cast<CIEC_WORD::TValueType>(static_cast<CIEC_WORD &>(anyVal));
+          *reinterpret_cast<CIEC_WORD::TValueType *>(&convertedData[outLength]) = out;
+          outLength += sizeof(CIEC_WORD::TValueType);
           break;
         }
         /***************************************************************************
@@ -154,34 +157,38 @@ namespace forte::com_infra::modbus {
          ***************************************************************************/
         case CIEC_ANY::e_DINT: // 32bit data type signed
         {
-          TForteInt32 out = (TForteInt32) static_cast<CIEC_DINT &>(anyVal);
-          *(TForteInt32 *) (&convertedData[outLength]) =
-              convertFBOutput<TForteInt32>((TForteByte *) &out, sizeof(TForteInt32));
-          outLength += sizeof(TForteInt32);
+          CIEC_DINT::TValueType out = static_cast<CIEC_DINT::TValueType>(static_cast<CIEC_DINT &>(anyVal));
+          *reinterpret_cast<CIEC_DINT::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_DINT::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                     sizeof(CIEC_DINT::TValueType));
+          outLength += sizeof(CIEC_DINT::TValueType);
           break;
         }
         case CIEC_ANY::e_UDINT: // 32bit data type unsigned
         {
-          TForteUInt32 out = (TForteUInt32) static_cast<CIEC_UDINT &>(anyVal);
-          *(TForteUInt32 *) (&convertedData[outLength]) =
-              convertFBOutput<TForteUInt32>((TForteByte *) &out, sizeof(TForteUInt32));
-          outLength += sizeof(TForteUInt32);
+          CIEC_UDINT::TValueType out = static_cast<CIEC_UDINT::TValueType>(static_cast<CIEC_UDINT &>(anyVal));
+          *reinterpret_cast<CIEC_UDINT::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_UDINT::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                      sizeof(CIEC_UDINT::TValueType));
+          outLength += sizeof(CIEC_UDINT::TValueType);
           break;
         }
         case CIEC_ANY::e_DWORD: // 32bit data type
         {
-          TForteDWord out = (TForteDWord) static_cast<CIEC_DWORD &>(anyVal);
-          *(TForteDWord *) (&convertedData[outLength]) =
-              convertFBOutput<TForteDWord>((TForteByte *) &out, sizeof(TForteDWord));
-          outLength += sizeof(TForteDWord);
+          CIEC_DWORD::TValueType out = static_cast<CIEC_DWORD::TValueType>(static_cast<CIEC_DWORD &>(anyVal));
+          *reinterpret_cast<CIEC_DWORD::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_DWORD::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                      sizeof(CIEC_DWORD::TValueType));
+          outLength += sizeof(CIEC_DWORD::TValueType);
           break;
         }
         case CIEC_ANY::e_REAL: // 32bit data type
         {
-          TForteFloat out = (TForteFloat) static_cast<CIEC_REAL &>(anyVal);
-          *(TForteFloat *) (&convertedData[outLength]) =
-              convertFBOutput<TForteFloat>((TForteByte *) &out, sizeof(TForteFloat));
-          outLength += sizeof(TForteFloat);
+          CIEC_REAL::TValueType out = static_cast<CIEC_REAL::TValueType>(static_cast<CIEC_REAL &>(anyVal));
+          *reinterpret_cast<CIEC_REAL::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_REAL::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                     sizeof(CIEC_REAL::TValueType));
+          outLength += sizeof(CIEC_REAL::TValueType);
           break;
         }
         /***************************************************************************
@@ -189,34 +196,38 @@ namespace forte::com_infra::modbus {
          ***************************************************************************/
         case CIEC_ANY::e_LINT: // 64bit data type signed
         {
-          TForteInt64 out = (TForteInt64) static_cast<CIEC_LINT &>(anyVal);
-          *(TForteInt64 *) (&convertedData[outLength]) =
-              convertFBOutput<TForteInt64>((TForteByte *) &out, sizeof(TForteInt64));
-          outLength += sizeof(TForteInt64);
+          CIEC_LINT::TValueType out = static_cast<CIEC_LINT::TValueType>(static_cast<CIEC_LINT &>(anyVal));
+          *reinterpret_cast<CIEC_LINT::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_LINT::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                     sizeof(CIEC_LINT::TValueType));
+          outLength += sizeof(CIEC_LINT::TValueType);
           break;
         }
         case CIEC_ANY::e_ULINT: // 64bit data type unsigned
         {
-          TForteUInt64 out = (TForteUInt64) static_cast<CIEC_ULINT &>(anyVal);
-          *(TForteUInt64 *) (&convertedData[outLength]) =
-              convertFBOutput<TForteUInt64>((TForteByte *) &out, sizeof(TForteUInt64));
-          outLength += sizeof(TForteUInt64);
+          CIEC_ULINT::TValueType out = static_cast<CIEC_ULINT::TValueType>(static_cast<CIEC_ULINT &>(anyVal));
+          *reinterpret_cast<CIEC_ULINT::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_ULINT::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                      sizeof(CIEC_ULINT::TValueType));
+          outLength += sizeof(CIEC_ULINT::TValueType);
           break;
         }
         case CIEC_ANY::e_LWORD: // 64bit data type
         {
-          TForteLWord out = (TForteLWord) static_cast<CIEC_LWORD &>(anyVal);
-          *(TForteLWord *) (&convertedData[outLength]) =
-              convertFBOutput<TForteLWord>((TForteByte *) &out, sizeof(TForteLWord));
-          outLength += sizeof(TForteLWord);
+          CIEC_LWORD::TValueType out = static_cast<CIEC_LWORD::TValueType>(static_cast<CIEC_LWORD &>(anyVal));
+          *reinterpret_cast<CIEC_LWORD::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_LWORD::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                      sizeof(CIEC_LWORD::TValueType));
+          outLength += sizeof(CIEC_LWORD::TValueType);
           break;
         }
         case CIEC_ANY::e_LREAL: // 64bit data type
         {
-          TForteDFloat out = (TForteDFloat) static_cast<CIEC_LREAL &>(anyVal);
-          *(TForteDFloat *) (&convertedData[outLength]) =
-              convertFBOutput<TForteDFloat>((TForteByte *) &out, sizeof(TForteDFloat));
-          outLength += sizeof(TForteDFloat);
+          CIEC_LREAL::TValueType out = static_cast<CIEC_LREAL::TValueType>(static_cast<CIEC_LREAL &>(anyVal));
+          *reinterpret_cast<CIEC_LREAL::TValueType *>(&convertedData[outLength]) =
+              convertFBOutput<CIEC_LREAL::TValueType>(reinterpret_cast<TForteByte *>(&out),
+                                                      sizeof(CIEC_LREAL::TValueType));
+          outLength += sizeof(CIEC_LREAL::TValueType);
           break;
         }
         default: break;
@@ -388,14 +399,14 @@ namespace forte::com_infra::modbus {
         // we need to swap order of each 16 bit data package
 
         unsigned int nrUint16s = currentDataSize / 2;
-        TForteUInt16 *destAr = (TForteUInt16 *) (&retVal);
-        TForteUInt16 *sourceAr = (TForteUInt16 *) paDataArray;
+        TForteUInt16 *destAr = reinterpret_cast<TForteUInt16 *>(&retVal);
+        TForteUInt16 *sourceAr = reinterpret_cast<TForteUInt16 *>(&paDataArray[0]);
 
         for (unsigned int i = 0; i < nrUint16s; i++) {
           destAr[i] = sourceAr[nrUint16s - 1 - i];
         }
       } else {
-        TForteByte *tempAr = (TForteByte *) (&retVal);
+        TForteByte *tempAr = reinterpret_cast<TForteByte *>(&retVal);
         for (unsigned int j = 0; j < currentDataSize; j++) {
           tempAr[j] = paDataArray[j];
         }
@@ -505,8 +516,8 @@ namespace forte::com_infra::modbus {
                                            SCommonParams *paCommonParams,
                                            char *paIdString) {
     char *params = new char[strlen(paLayerParams) + 1];
-    char *paramsAddress = params;
     strcpy(params, paLayerParams);
+    char *paramsAddress = params;
     char *chrStorage;
     unsigned int defaultSlaveId;
     bool reuseConnection = false;
@@ -537,8 +548,9 @@ namespace forte::com_infra::modbus {
 
       strcpy(paIdString, "rtu:");
       strcat(paIdString, params);
-      strcpy(paRtuParams->mDevice, params);
-      paRtuParams->mBaud = (int) util::strtol(chrStorage, nullptr, 10);
+      strncpy(paRtuParams->mDevice, params, sizeof(paRtuParams->mDevice));
+      paRtuParams->mDevice[sizeof(paRtuParams->mDevice) - 1] = '\0';
+      paRtuParams->mBaud = static_cast<int>(util::strtol(chrStorage, nullptr, 10));
 
       chrStorage = strchr(chrStorage, ':');
       if (chrStorage == nullptr) {
@@ -626,8 +638,9 @@ namespace forte::com_infra::modbus {
         strcpy(paIdString, "tcp:");
         strcat(paIdString, params);
         strcat(paIdString, ":");
-        strcpy(paTcpParams->mIp, params);
-        paTcpParams->mPort = (unsigned int) util::strtoul(chrStorage, nullptr, 10);
+        strncpy(paTcpParams->mIp, params, sizeof(paTcpParams->mIp));
+        paTcpParams->mIp[sizeof(paTcpParams->mIp) - 1] = '\0';
+        paTcpParams->mPort = static_cast<unsigned int>(util::strtoul(chrStorage, nullptr, 10));
         reuseConnection |= !chrStorage[0];
 
         params = chrStorage;
@@ -688,7 +701,7 @@ namespace forte::com_infra::modbus {
     ++chrStorage;
 
     // Find read addresses
-    int paramLen = (int) strlen(readAddresses);
+    int paramLen = static_cast<int>(strlen(readAddresses));
     int nrPolls = 0;
     int strIndex = -1;
     while (strIndex < paramLen - 1) {
@@ -698,10 +711,12 @@ namespace forte::com_infra::modbus {
       }
       SAddrRange *const curRead = &paCommonParams->mRead[nrPolls];
       curRead->mFunction = decodeFunction(readAddresses, &strIndex);
-      curRead->mStartAddress = (unsigned int) util::strtoul(const_cast<char *>(&readAddresses[strIndex]), nullptr, 10);
+      curRead->mStartAddress =
+          static_cast<unsigned int>(util::strtoul(const_cast<char *>(&readAddresses[strIndex]), nullptr, 10));
       strIndex = findNextStopAddress(readAddresses, strIndex);
-      curRead->mNrAddresses = (unsigned int) util::strtoul(const_cast<char *>(&readAddresses[strIndex]), nullptr, 10) -
-                              curRead->mStartAddress + 1;
+      curRead->mNrAddresses =
+          static_cast<unsigned int>(util::strtoul(const_cast<char *>(&readAddresses[strIndex]), nullptr, 10)) -
+          curRead->mStartAddress + 1;
       nrPolls++;
     }
     paCommonParams->mNrPolls = nrPolls;
@@ -714,7 +729,7 @@ namespace forte::com_infra::modbus {
     }
 
     // Find send addresses
-    paramLen = (int) strlen(writeAddresses);
+    paramLen = static_cast<int>(strlen(writeAddresses));
     int nrSends = 0;
     strIndex = -1;
     while (strIndex < paramLen - 1) {
@@ -724,10 +739,12 @@ namespace forte::com_infra::modbus {
       }
       SAddrRange *const curSend = &paCommonParams->mSend[nrSends];
       curSend->mFunction = decodeFunction(writeAddresses, &strIndex);
-      curSend->mStartAddress = (unsigned int) util::strtoul(const_cast<char *>(&writeAddresses[strIndex]), nullptr, 10);
+      curSend->mStartAddress =
+          static_cast<unsigned int>(util::strtoul(const_cast<char *>(&writeAddresses[strIndex]), nullptr, 10));
       strIndex = findNextStopAddress(writeAddresses, strIndex);
-      curSend->mNrAddresses = (unsigned int) util::strtoul(const_cast<char *>(&writeAddresses[strIndex]), nullptr, 10) -
-                              curSend->mStartAddress + 1;
+      curSend->mNrAddresses =
+          static_cast<unsigned int>(util::strtoul(const_cast<char *>(&writeAddresses[strIndex]), nullptr, 10)) -
+          curSend->mStartAddress + 1;
       nrSends++;
     }
     paCommonParams->mNrSends = nrSends;
@@ -782,12 +799,12 @@ namespace forte::com_infra::modbus {
       }
     }
 
-    int strLength = (int) strlen(&paParam[paStartIndex]);
+    int strLength = static_cast<int>(strlen(&paParam[paStartIndex]));
     const char *pch = strchr(&paParam[paStartIndex], ',');
 
     if (pch != nullptr) {
       if (pch - &paParam[paStartIndex] < strLength - 1) {
-        return (int) (pch - &paParam[0]) + 1;
+        return static_cast<int>(pch - &paParam[0]) + 1;
       }
     }
 
@@ -795,17 +812,17 @@ namespace forte::com_infra::modbus {
   }
 
   int CModbusComLayer::findNextStopAddress(const char *paParam, int paStartIndex) {
-    int strLength = (int) strlen(&paParam[paStartIndex]);
+    int strLength = static_cast<int>(strlen(&paParam[paStartIndex]));
     const char *pchComma = strchr(&paParam[paStartIndex], ',');
     const char *pchDot = strchr(&paParam[paStartIndex], '.');
 
     if (pchComma != nullptr && pchDot != nullptr) {
       if (pchDot < pchComma && (pchDot - &paParam[paStartIndex] < strLength - 2)) {
-        return (int) (pchDot - &paParam[0]) + 2;
+        return static_cast<int>(pchDot - &paParam[0]) + 2;
       }
     } else if (pchDot != nullptr) {
       if (pchDot - &paParam[paStartIndex] < strLength - 2) {
-        return (int) (pchDot - &paParam[0]) + 2;
+        return static_cast<int>(pchDot - &paParam[0]) + 2;
       }
     }
 
@@ -854,7 +871,8 @@ namespace forte::com_infra::modbus {
     CModbusConnection *modbusConnection =
         new CModbusClientConnection((CModbusHandler *) &getExtEvHandler<CModbusHandler>());
     SConnection connInfo = {{0}, 1, modbusConnection};
-    strcpy(connInfo.mIdString, paIdString);
+    strncpy(connInfo.mIdString, paIdString, sizeof(connInfo.mIdString) - 1);
+    connInfo.mIdString[sizeof(connInfo.mIdString) - 1] = '\0';
     smConnections.push_back(connInfo);
     return modbusConnection;
   }

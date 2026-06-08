@@ -22,7 +22,7 @@
 #include "resource_internal.h"
 #include "forte/ecet.h"
 #include "forte/util/string_utils.h"
-#include <format>
+#include <string>
 
 using namespace std::string_literals;
 
@@ -126,7 +126,7 @@ namespace forte {
         appendPortTag(paResponse, paEventWatchEntry.getPortId());
 
         paResponse += "<Data value=\""s;
-        std::format_to(std::back_inserter(paResponse), "{}", paEventWatchEntry.mEventDataBuf);
+        paResponse.append(std::to_string(paEventWatchEntry.mEventDataBuf));
         paResponse += "\"/>\n</Port>"s;
       }
 

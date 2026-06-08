@@ -1,8 +1,8 @@
 
-#if 1
+#if 0
 #include "open62541.h"
 #else
-#include "ua_types_encoding_binary.h"
+#include <open62541/types_encoding_binary.h>
 #include "ua_types_fordiacNamespace_generated.h"
 #endif
 

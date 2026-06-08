@@ -26,6 +26,7 @@ target_sources(forte-core PUBLIC
         forte_any_date.h
         forte_any_date_variant.h
         forte_any_derived.h
+        forte_any_derived_variant.h
         forte_any_duration.h
         forte_any_duration_variant.h
         forte_any_elementary.h
@@ -42,6 +43,7 @@ target_sources(forte-core PUBLIC
         forte_any_signed_variant.h
         forte_any_string.h
         forte_any_string_variant.h
+        forte_any_struct.h
         forte_any_unique_ptr.h
         forte_any_unsigned.h
         forte_any_unsigned_variant.h
