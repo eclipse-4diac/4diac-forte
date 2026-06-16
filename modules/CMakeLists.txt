@@ -10,6 +10,8 @@
 # Contributors:
 #    Martin Erich Jobst
 #      - initial API and implementation and/or initial documentation
+#    Sichuan Qunyuan Technology Co., Ltd.
+#      - add ethercat module
 #############################################################################
 
 add_subdirectory(ads)
@@ -18,6 +20,7 @@ add_subdirectory(conmeleon_c1)
 add_subdirectory(convert)
 add_subdirectory(eliteboard)
 add_subdirectory(embrick)
+add_subdirectory(ethercat)
 add_subdirectory(gpiochip)
 add_subdirectory(i2c_dev)
 add_subdirectory(IEC61131-3)

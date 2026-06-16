@@ -10,6 +10,8 @@
 # Contributors:
 #    Martin Erich Jobst
 #      - initial API and implementation and/or initial documentation
+#    Sichuan Qunyuan Technology Co., Ltd.
+#      - add io_slave_multi_handler
 #############################################################################
 
 target_sources(forte-core PUBLIC
@@ -20,4 +22,5 @@ target_sources(forte-core PUBLIC
         io_configFB_controller.h
         io_master_multi.h
         io_slave_multi.h
+        io_slave_multi_handler.h
 )
