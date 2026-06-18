@@ -13,7 +13,6 @@
 
 // #include <sched.h>
 #include <sys/mman.h>
-#include <fmt/base.h>
 #include "forte/timerha.h"
 #include "forte/io/mapper/io_mapper.h"
 #include "bus.h"
