@@ -52,3 +52,17 @@ FilesAnalyzed: false
 PackageLicenseConcluded: NOASSERTION
 PackageLicenseDeclared: NOASSERTION
 PackageCopyrightText: NOASSERTION
+
+PackageName: ethercat
+SPDXID: SPDXRef-ethercat
+PackageComment: <text>IgH EtherCAT Master userspace library (libethercat, ecrt.h). FORTE links against the userspace API only; kernel modules are not bundled. Userspace library license: LGPL-2.1-only.</text>
+ExternalRef: PACKAGE-MANAGER purl pkg:gitlab/etherlab.org/ethercat@1.6.7
+PackageVersion: 1.6.7
+PackageSupplier: Organization: etherlab
+Relationship: SPDXRef-ethercat OPTIONAL_DEPENDENCY_OF SPDXRef-4diac-FORTE
+PackageDownloadLocation: https://gitlab.com/api/v4/projects/etherlab.org%2Fethercat/packages/generic/ethercat/1.6.7/ethercat-1.6.7.tar.bz2
+PackageChecksum: SHA256: 024e976a58eb527aacd86767e94a826fe937ca1741b133208e6c6e76f81ca062
+FilesAnalyzed: false
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
