@@ -73,5 +73,7 @@ namespace forte {
 
       /*\brief pointer to the response to generate the correct response */
       std::string mMonitorResponse;
+
+      void clear();
   };
 } // namespace forte
