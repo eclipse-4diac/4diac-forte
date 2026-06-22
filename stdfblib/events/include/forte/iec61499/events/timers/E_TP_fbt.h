@@ -13,6 +13,7 @@
  *** Name: E_TP
  *** Description: standard timer function block (pulse)
  *** Version:
+ ***     3.2: 2026-06-22/Franz Höpfinger - HR Agrartechnik GmbH - validate all timers
  ***     3.1: 2026-05-13/Franz Höpfinger - HR Agrartechnik GmbH - E_R_TRIG instead of E_PERMIT
  ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.1: 2024-04-23/Franz Höpfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
