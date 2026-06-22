@@ -54,6 +54,7 @@ target_sources(forte-core PRIVATE
         membdataconn.cpp
         membdataconn.h
         mgmcmd.cpp
+        mgmcmdstruct.cpp
         monitoring.cpp
         monitoring.h
         negdataconn.cpp
