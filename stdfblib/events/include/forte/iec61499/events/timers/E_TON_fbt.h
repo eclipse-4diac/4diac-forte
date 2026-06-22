@@ -13,6 +13,7 @@
  *** Name: E_TON
  *** Description: standard timer function block (on-delay timing)
  *** Version:
+ ***     3.2: 2026-06-22/Franz Höpfinger - HR Agrartechnik GmbH - validate all timers
  ***     3.1: 2026-05-08/Franz Höpfinger - HR Agrartechnik GmbH - E_RF_TRIG instead of E_SWITCH
  ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.0: 2024-03-04/Franz Höpfinger - HR Agrartechnik GmbH -

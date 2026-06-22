@@ -13,6 +13,7 @@
  *** Name: E_TP
  *** Description: standard timer function block (pulse)
  *** Version:
+ ***     3.2: 2026-06-22/Franz Höpfinger - HR Agrartechnik GmbH - validate all timers
  ***     3.1: 2026-05-13/Franz Höpfinger - HR Agrartechnik GmbH - E_R_TRIG instead of E_PERMIT
  ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.1: 2024-04-23/Franz Höpfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
@@ -96,10 +97,6 @@ namespace forte::iec61499::events::timers {
       case scmEventREQID: {
         readData(0, conn_if2in_IN.getValue(), conn_IN);
         readData(1, conn_if2in_PT.getValue(), conn_PT);
-        break;
-      }
-      case scmEventRID: {
-        readData(0, conn_if2in_IN.getValue(), conn_IN);
         break;
       }
       default: break;

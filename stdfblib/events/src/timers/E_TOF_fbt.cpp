@@ -13,6 +13,7 @@
  *** Name: E_TOF
  *** Description: standard timer function block (off-delay timing)
  *** Version:
+ ***     3.2: 2026-06-22/Franz Höpfinger - HR Agrartechnik GmbH - validate all timers
  ***     3.1: 2026-05-08/Franz Höpfinger - HR Agrartechnik GmbH - E_RF_TRIG instead of E_SWITCH
  ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.1: 2024-04-23/Franz Höpfinger - HR Agrartechnik GmbH - Add a Reset to Timer FBs
@@ -49,19 +50,19 @@ namespace forte::iec61499::events::timers {
 
     const auto cEventConnections = std::to_array<SCFB_FBConnectionData>({
         {{}, "REQ"_STRID, "E_RF_TRIG"_STRID, "EI"_STRID},
-        {"E_RS"_STRID, "EO"_STRID, {}, "CNF"_STRID},
-        {"E_DELAY"_STRID, "EO"_STRID, "E_RS"_STRID, "R"_STRID},
-        {"E_RF_TRIG"_STRID, "ER"_STRID, "E_RS"_STRID, "S"_STRID},
-        {"E_RF_TRIG"_STRID, "ER"_STRID, "E_DELAY"_STRID, "START"_STRID},
-        {"E_RF_TRIG"_STRID, "EF"_STRID, "E_DELAY"_STRID, "STOP"_STRID},
-        {{}, "R"_STRID, "E_RS"_STRID, "R"_STRID},
+        {"E_SR"_STRID, "EO"_STRID, {}, "CNF"_STRID},
+        {"E_DELAY"_STRID, "EO"_STRID, "E_SR"_STRID, "R"_STRID},
+        {"E_RF_TRIG"_STRID, "ER"_STRID, "E_SR"_STRID, "S"_STRID},
+        {{}, "R"_STRID, "E_SR"_STRID, "R"_STRID},
         {{}, "R"_STRID, "E_DELAY"_STRID, "STOP"_STRID},
+        {"E_RF_TRIG"_STRID, "EF"_STRID, "E_DELAY"_STRID, "START"_STRID},
+        {"E_RF_TRIG"_STRID, "ER"_STRID, "E_DELAY"_STRID, "STOP"_STRID},
     });
 
     const auto cDataConnections = std::to_array<SCFB_FBConnectionData>({
         {{}, "IN"_STRID, "E_RF_TRIG"_STRID, "QI"_STRID},
         {{}, "PT"_STRID, "E_DELAY"_STRID, "DT"_STRID},
-        {"E_RS"_STRID, "Q"_STRID, {}, "Q"_STRID},
+        {"E_SR"_STRID, "Q"_STRID, {}, "Q"_STRID},
     });
 
     const SCFB_FBNData cFBNData = {
@@ -77,7 +78,7 @@ namespace forte::iec61499::events::timers {
       CCompositeFB(paContainer, cFBInterfaceSpec, paInstanceNameId, cFBNData),
       fb_E_RF_TRIG("E_RF_TRIG"_STRID, *this),
       fb_E_DELAY("E_DELAY"_STRID, *this),
-      fb_E_RS("E_RS"_STRID, *this),
+      fb_E_SR("E_SR"_STRID, *this),
       conn_CNF(*this, 0),
       conn_IN(nullptr),
       conn_PT(nullptr),
@@ -89,7 +90,7 @@ namespace forte::iec61499::events::timers {
     CCompositeFB::setInitialValues();
     conn_if2in_IN.getValue() = 0_BOOL;
     conn_if2in_PT.getValue() = 0_TIME;
-    fb_E_RS->conn_Q.getValue() = 0_BOOL;
+    fb_E_SR->conn_Q.getValue() = 0_BOOL;
   }
 
   void FORTE_E_TOF::readInputData(const TEventID paEIID) {
@@ -106,7 +107,7 @@ namespace forte::iec61499::events::timers {
   void FORTE_E_TOF::writeOutputData(const TEventID paEIID) {
     switch (paEIID) {
       case scmEventCNFID: {
-        writeData(2, fb_E_RS->conn_Q.getValue(), conn_Q);
+        writeData(2, fb_E_SR->conn_Q.getValue(), conn_Q);
         break;
       }
       default: break;
@@ -123,7 +124,7 @@ namespace forte::iec61499::events::timers {
 
   CIEC_ANY *FORTE_E_TOF::getDO(const size_t paIndex) {
     switch (paIndex) {
-      case 0: return &fb_E_RS->conn_Q.getValue();
+      case 0: return &fb_E_SR->conn_Q.getValue();
     }
     return nullptr;
   }
