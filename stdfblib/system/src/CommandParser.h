@@ -41,14 +41,13 @@ namespace forte {
 
         /*! \brief Generate a response string according to the previous executed command
          *
-         * @param paResponse generated response, the given string is used to reduce memory load on the system
+         * @param paResponseText generated response, the given string is used to reduce memory load on the system
+         * @param paResponse response provided by the parser or device management
          */
-        void generateResponse(CIEC_STRING &aResponse);
+        void generateResponse(CIEC_STRING &paResponseText, EMGMResponse paResponse);
 
       private:
         SManagementCMD mCommand;
-
-        EMGMResponse mLastResponse{EMGMResponse::InvalidObject};
 
         CDevice &mDevice;
 
@@ -122,19 +121,21 @@ namespace forte {
         int parseTypeName(const std::string_view paCmdString, TNameIdentifier &paIdentifier, std::string &paTypeHash);
 
         bool parseMonitoringData(char *paRequestPartLeft);
-        void generateMonitorResponse(CIEC_STRING &paResponse);
+        void generateMonitorResponse(CIEC_STRING &paResponseText, EMGMResponse paResponse);
 
         /*! \brief Generate a short response string according to the previous executed command
          *
-         * @param paResponse generated response, the given string is used to reduce memory load on the system
+         * @param paResponseText generated response, the given string is used to reduce memory load on the system
+         * @param paResponse response provided by the parser or device management
          */
-        void generateShortResponse(CIEC_STRING &paResponse);
+        void generateShortResponse(CIEC_STRING &paResponseText, EMGMResponse paResponse);
 
         /*! \brief Generate a response string according to the previous executed command
          *
-         * @param paResponse generated response, the given string is used to reduce memory load on the system
+         * @param paResponseText generated response, the given string is used to reduce memory load on the system
+         * @param paResponse response provided by the parser or device management
          */
-        void generateLongResponse(CIEC_STRING &paResponse);
+        void generateLongResponse(CIEC_STRING &paResponseText, EMGMResponse paResponse);
 
         void appendIdentifierName(CIEC_STRING &paDest, TNameIdentifier &paIdentifier);
     };

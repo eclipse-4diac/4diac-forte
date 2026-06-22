@@ -83,8 +83,8 @@ namespace forte::iec61499::system {
     char *request = new char[RQST().length() + 1];
     strcpy(request, RQST().getStorage().c_str());
 
-    mCommandParser.parseAndExecuteMGMCommand(DST().getStorage().c_str(), request);
-    mCommandParser.generateResponse(RESP());
+    EMGMResponse response = mCommandParser.parseAndExecuteMGMCommand(DST().getStorage().c_str(), request);
+    mCommandParser.generateResponse(RESP(), response);
 
     delete[] (request);
   }
