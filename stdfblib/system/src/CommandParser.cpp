@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024, 2025 Jose Cabral
+ * Copyright (c) 2024 Jose Cabral, Johannes Kepler University Linz
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -28,16 +28,9 @@ namespace forte::iec61499::system {
     mLastResponse = EMGMResponse::InvalidObject;
 
     if (nullptr != strchr(paCommand, '>')) {
-      mCommand.mID = nullptr;
-      mCommand.mAdditionalParams.clear();
-      mCommand.mFirstParam.clear();
-      mCommand.mSecondParam.clear();
-      mCommand.mMonitorResponse.clear();
+      mCommand.clear();
 
       mCommand.mDestination = (strlen(paDest) != 0) ? StringId::insert(paDest) : StringId{};
-      if (255 <= mCommand.mAdditionalParams.capacity()) {
-        mCommand.mAdditionalParams.reserve(255);
-      }
 
       char *acRequestPartLeft = parseRequest(paCommand);
       if (nullptr != acRequestPartLeft) {
