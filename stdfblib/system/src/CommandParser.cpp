@@ -16,15 +16,15 @@
 #include <cstring>
 #include <string_view>
 
+#include "forte/mgmcmd.h"
 #include "forte/util/string_utils.h"
-#include "forte/device.h"
 
 namespace forte::iec61499::system {
-  CommandParser::CommandParser(CDevice &paDevice) : mDevice{paDevice} {
-    mCommand.mAdditionalParams.reserve(255);
+
+  CommandParser::CommandParser(SManagementCMD &paCommand) : mCommand(paCommand) {
   }
 
-  EMGMResponse CommandParser::parseAndExecuteMGMCommand(const char *const paDest, char *paCommand) {
+  EMGMResponse CommandParser::parseMGMCommand(const char *const paDest, char *paCommand) {
     if (nullptr != strchr(paCommand, '>')) {
       mCommand.clear();
 
@@ -56,9 +56,8 @@ namespace forte::iec61499::system {
             break;
           default: break;
         }
-
         if (EMGMCommandType::INVALID != mCommand.mCMD) {
-          return mDevice.executeMGMCommand(mCommand);
+          return EMGMResponse::Ready;
         }
       } else {
         return EMGMResponse::UnsupportedCmd;
