@@ -15,6 +15,7 @@
 #include <babeltrace2/babeltrace.h>
 #include <boost/test/unit_test.hpp>
 
+#include "forte/mgmcmdstruct.h"
 #include "trace_test_config.h"
 #include "common.h"
 #include "forte/device.h"
@@ -435,11 +436,16 @@ namespace forte::trace::test {
     std::unique_ptr<CDevice> createDeviceFromFile(StringId paDeviceName, const std::string &paFilePath) {
       auto device = std::make_unique<forte::test::CTesterDevice>(paDeviceName);
       device->initialize();
-      iec61499::system::CommandParser commandParser(*device);
+      SManagementCMD commandData;
+      iec61499::system::CommandParser commandParser(commandData);
 
       iec61499::system::ForteBootFileLoader fileLoader(
           [&commandParser](const char *paDest, char *paCommand) -> bool {
-            return EMGMResponse::Ready == commandParser.parseAndExecuteMGMCommand(paDest, paCommand);
+            auto resp = commandParser.parseMGMCommand(paDest, paCommand);
+            if (resp == EMGMResponse::Ready) {
+              resp = mDevice.executeMGMCommand(mCommand);
+            }
+            return resp == EMGMResponse::Ready;
           },
           paFilePath);
       BOOST_REQUIRE(iec61499::system::LoadBootResult::LOAD_RESULT_OK == fileLoader.loadBootFile());
