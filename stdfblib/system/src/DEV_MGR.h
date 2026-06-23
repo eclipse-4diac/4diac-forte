@@ -17,7 +17,7 @@
 #include "forte/funcbloc.h"
 #include "forte/cominfra/commfb.h"
 #include "forte/datatypes/forte_string.h"
-#include "CommandParser.h"
+#include "forte/mgmcmdstruct.h"
 
 namespace forte {
   class CDevice;
@@ -52,7 +52,10 @@ namespace forte {
         //! The device the block is contained in
         CDevice &mDevice;
 
-        CommandParser mCommandParser;
+        /*! Data buffer for management command handling, put as field to preserve allocated memory between command
+         * executions
+         */
+        SManagementCMD mCommand;
 
         void executeRQST();
 
