@@ -21,6 +21,21 @@
 
 namespace forte::iec61499::system {
 
+  namespace detail {
+    class CommandScanner {
+      public:
+        CommandScanner(std::string_view paRemaining);
+
+        void skipWhiteSpace();
+        bool consume(std::string_view paToConsume);
+        std::string_view takeUntil(char paDelimiter);
+        bool empty();
+
+      private:
+        std::string_view mRemaining;
+    };
+  } // namespace detail
+
   class CommandParser {
 
     public:
