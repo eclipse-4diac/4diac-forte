@@ -21,6 +21,38 @@
 
 namespace forte::iec61499::system {
 
+  namespace detail {
+    CommandScanner::CommandScanner(std::string_view paRemaining) : mRemaining(paRemaining) {
+    }
+
+    void CommandScanner::skipWhiteSpace() {
+      auto pos = mRemaining.find_first_not_of(" \t\r\n");
+      mRemaining = (pos == std::string_view::npos) ? std::string_view{} : mRemaining.substr(pos);
+    }
+
+    bool CommandScanner::consume(std::string_view paToConsume) {
+      if (!mRemaining.starts_with(paToConsume)) {
+        return false;
+      }
+      mRemaining = mRemaining.substr(paToConsume.size());
+      return true;
+    }
+
+    std::string_view CommandScanner::takeUntil(char paDelimiter) {
+      auto pos = mRemaining.find(paDelimiter);
+      if (pos == std::string_view::npos) {
+        return {};
+      }
+      auto token = mRemaining.substr(0, pos);
+      mRemaining = mRemaining.substr(pos + 1);
+      return token;
+    }
+
+    bool CommandScanner::empty() {
+      return mRemaining.empty();
+    }
+  } // namespace detail
+
   CommandParser::CommandParser(SManagementCMD &paCommand) : mCommand(paCommand) {
   }
 
