@@ -57,7 +57,7 @@ namespace forte::iec61499::system {
       if constexpr (cgSupportBootFile) {
         if ((true == QI()) && (false == QO())) {
           // this is the first time init is called try to load a boot file
-          ForteBootFileLoader loader([this](const char *const paDest, char *paCommand) -> bool {
+          ForteBootFileLoader loader([this](std::string_view paDest, std::string_view paCommand) -> bool {
             return this->executeCommand(paDest, paCommand);
           });
           if (loader.needsExit()) {
@@ -106,7 +106,7 @@ namespace forte::iec61499::system {
 
   DEV_MGR::~DEV_MGR() = default;
 
-  bool DEV_MGR::executeCommand(const char *const paDest, char *paCommand) {
+  bool DEV_MGR::executeCommand(std::string_view paDest, std::string_view paCommand) {
     EMGMResponse eResp = CommandParser(mCommand).parseMGMCommand(paDest, paCommand);
 
     if (eResp == EMGMResponse::Ready) {

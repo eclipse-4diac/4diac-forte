@@ -39,9 +39,7 @@ namespace forte {
         void createGenOutputData() override;
 
       private:
-        bool executeCommand(const char *const paDest, char *paCommand);
-
-        EMGMResponse parseAndExecuteMGMCommand(const char *const paDest, char *paCommand);
+        bool executeCommand(std::string_view paDest, std::string_view paCommand);
 
         static const TEventID scmEventINITID = 0;
         static const TEventID scmEventREQID = 1;

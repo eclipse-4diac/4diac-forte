@@ -132,6 +132,7 @@ namespace forte::iec61499::system {
       return resp;
     }
 
+    scanner.skipWhiteSpace();
     if (!scanner.empty() && !proceedToOpenBracket(scanner)) {
       return EMGMResponse::InvalidObject;
     }
