@@ -76,8 +76,6 @@ namespace forte::iec61499::system::test {
 
   } // namespace
 
-
-
   BOOST_AUTO_TEST_SUITE(commandparser)
 
   BOOST_AUTO_TEST_CASE(createFbInstance) {
@@ -92,6 +90,17 @@ namespace forte::iec61499::system::test {
     BOOST_TEST(nameIdentifierEquals(cmd.mFirstParam, {"Trigger"}));
     BOOST_TEST(nameIdentifierEquals(cmd.mSecondParam, {"E_CYCLE"}));
     BOOST_TEST(cmd.mID == "1");
+  }
+
+  BOOST_AUTO_TEST_CASE(createFbInstanceAcceptsWhitespaceAtEnd) {
+    SManagementCMD cmd;
+    CommandParser parser(cmd);
+
+    auto response =
+        parser.parseMGMCommand("", R"(<Request ID="1" Action="CREATE"><FB Name="Trigger" Type="E_CYCLE" /></Request>)"
+                                   "\n");
+
+    BOOST_TEST(response == EMGMResponse::Ready);
   }
 
   BOOST_AUTO_TEST_CASE(createFBInstanceHierarchicalName) {
@@ -469,6 +478,23 @@ namespace forte::iec61499::system::test {
     CommandParser parser(cmd);
 
     std::string xml = R"(<Request ID="1" Action=")" + actionName + R"("/>)";
+    auto response = parser.parseMGMCommand("", xml);
+
+    BOOST_TEST(response == EMGMResponse::Ready);
+    BOOST_TEST(cmd.mCMD == expectedCmd);
+    BOOST_TEST(cmd.mFirstParam.size() == 0);
+  }
+
+  BOOST_DATA_TEST_CASE(selfClosingWithWhiteSpaceAtEndIsAccepted,
+                       data::make(stateChangeActions) ^ data::make(stateChangeCommands),
+                       actionName,
+                       expectedCmd) {
+    SManagementCMD cmd;
+    CommandParser parser(cmd);
+
+    std::string xml = R"(<Request ID="1" Action=")" + actionName +
+                      R"("/>)"
+                      "\n";
     auto response = parser.parseMGMCommand("", xml);
 
     BOOST_TEST(response == EMGMResponse::Ready);

@@ -18,6 +18,7 @@
 #include <string>
 #include <functional>
 #include <optional>
+#include <string_view>
 
 namespace forte::iec61499::system {
   enum LoadBootResult {
@@ -29,7 +30,7 @@ namespace forte::iec61499::system {
 
   class ForteBootFileLoader {
     public:
-      using BootFileCallback = std::function<bool(const char *, char *)>;
+      using BootFileCallback = std::function<bool(std::string_view, std::string_view)>;
 
       /**
        * Constructor which uses the the default values for the boot file location
