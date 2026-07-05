@@ -103,9 +103,9 @@ namespace forte::iec61499::system {
        *
        * @param paIdentifierString string value of the identifier
        * @param paIdentifier identifier vector where to write the parsed identifiers to
-       * @param true when all segments could be parsed and added to the name identifier
+       * @return EMGMResponse::Ready if all segments could be parsed and added to the name identifier
        */
-      bool parseIdentifier(std::string_view paIdentifierString, TNameIdentifier &paIdentifier);
+      EMGMResponse parseIdentifier(std::string_view paIdentifierString, TNameIdentifier &paIdentifier);
 
       /*! \brief Parse the name of the type
        *
