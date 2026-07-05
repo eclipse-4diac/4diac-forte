@@ -81,17 +81,12 @@ namespace forte::iec61499::system {
   }
 
   void DEV_MGR::executeRQST() {
-    char *request = new char[RQST().length() + 1];
-    strcpy(request, RQST().getStorage().c_str());
-
     CommandParser parser(mCommand);
-    EMGMResponse response = parser.parseMGMCommand(DST().getStorage().c_str(), request);
+    EMGMResponse response = parser.parseMGMCommand(DST().getStorage(), RQST().getStorage());
     if (response == EMGMResponse::Ready) {
       response = mDevice.executeMGMCommand(mCommand);
     }
     parser.generateResponse(RESP(), response);
-
-    delete[] (request);
   }
 
   DEV_MGR::DEV_MGR(StringId paInstanceNameId, CFBContainer &paContainer) :
