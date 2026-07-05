@@ -21,7 +21,7 @@ namespace forte {
     mFirstParam.clear();
     mSecondParam.clear();
     mAdditionalParams.clear();
-    mID = nullptr;
+    mID.clear();
     mMonitorResponse.clear();
   }
 } // namespace forte
