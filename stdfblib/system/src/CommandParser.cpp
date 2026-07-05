@@ -114,7 +114,7 @@ namespace forte::iec61499::system {
 
     bool isResetEventCount(std::string_view paValue) {
       return paValue.size() == 3 && paValue[0] == '$' && (paValue[1] == 'e' || paValue[1] == 'E') &&
-             (paValue[1] == 'r' || paValue[1] == 'R');
+             (paValue[2] == 'r' || paValue[2] == 'R');
     }
 
   } // namespace
@@ -245,8 +245,14 @@ namespace forte::iec61499::system {
     }
 
     auto fbInstanceName = paScanner.takeUntil('"');
-    if (!isAsteriskValue(fbInstanceName) && !parseIdentifier(fbInstanceName, mCommand.mFirstParam)) {
-      return EMGMResponse::Overflow;
+    if (fbInstanceName.empty()) {
+      return EMGMResponse::BadParams;
+    }
+    if (!isAsteriskValue(fbInstanceName)) {
+      EMGMResponse resp = parseIdentifier(fbInstanceName, mCommand.mFirstParam);
+      if (resp != EMGMResponse::Ready) {
+        return resp;
+      }
     }
 
     paScanner.skipWhiteSpace();
@@ -255,8 +261,7 @@ namespace forte::iec61499::system {
     }
 
     auto fbTypeName = paScanner.takeUntil('"');
-    if (!isAsteriskValue(fbInstanceName) &&
-        !parseTypeName(fbTypeName, mCommand.mSecondParam, mCommand.mAdditionalParams)) {
+    if (!isAsteriskValue(fbTypeName) && !parseTypeName(fbTypeName, mCommand.mSecondParam, mCommand.mAdditionalParams)) {
       return EMGMResponse::Overflow;
     }
 
@@ -266,21 +271,24 @@ namespace forte::iec61499::system {
     return EMGMResponse::Ready;
   }
 
-  bool CommandParser::parseIdentifier(std::string_view paIdentifierString, TNameIdentifier &paIdentifier) {
+  EMGMResponse CommandParser::parseIdentifier(std::string_view paIdentifierString, TNameIdentifier &paIdentifier) {
     while (!paIdentifierString.empty()) {
       auto pos = paIdentifierString.find('.');
       if (pos == std::string_view::npos) {
-        if (!paIdentifier.push_back(StringId::insert(paIdentifierString))) {
-          return false;
+        if (!paIdentifier.try_push_back(StringId::insert(paIdentifierString))) {
+          return EMGMResponse::Overflow;
         }
-        return true;
+        return EMGMResponse::Ready;
       }
-      if (!paIdentifier.push_back(StringId::insert(paIdentifierString.substr(0, pos)))) {
-        return false;
+      if (pos == 0) {
+        return EMGMResponse::BadParams;
+      }
+      if (!paIdentifier.try_push_back(StringId::insert(paIdentifierString.substr(0, pos)))) {
+        return EMGMResponse::Overflow;
       }
       paIdentifierString = paIdentifierString.substr(pos + 1);
     }
-    return true;
+    return EMGMResponse::BadParams;
   }
 
   bool CommandParser::parseTypeName(const std::string_view paTypeString,
@@ -294,7 +302,7 @@ namespace forte::iec61499::system {
       fbTypeName = fbTypeName.substr(0, typeHashSeparator);
     }
 
-    return paIdentifier.push_back(StringId::insert(fbTypeName));
+    return paIdentifier.try_push_back(StringId::insert(fbTypeName));
   }
 
   EMGMResponse CommandParser::parseConnectionData(detail::CommandScanner &paScanner) {
@@ -309,8 +317,14 @@ namespace forte::iec61499::system {
       return EMGMResponse::InvalidObject;
     }
     auto source = paScanner.takeUntil('"');
-    if (!parseIdentifier(source, mCommand.mFirstParam)) {
-      return EMGMResponse::Overflow;
+    if (source.empty()) {
+      return EMGMResponse::BadParams;
+    }
+    if (source != "*") {
+      EMGMResponse resp = parseIdentifier(source, mCommand.mFirstParam);
+      if (resp != EMGMResponse::Ready) {
+        return resp;
+      }
     }
 
     paScanner.skipWhiteSpace();
@@ -319,8 +333,14 @@ namespace forte::iec61499::system {
     }
 
     auto destination = paScanner.takeUntil('"');
-    if (!parseIdentifier(destination, mCommand.mSecondParam)) {
-      return EMGMResponse::Overflow;
+    if (destination.empty()) {
+      return EMGMResponse::BadParams;
+    }
+    if (destination != "*") {
+      EMGMResponse resp = parseIdentifier(destination, mCommand.mSecondParam);
+      if (resp != EMGMResponse::Ready) {
+        return resp;
+      }
     }
 
     if (!proceedToClosingBracket(paScanner)) {
@@ -413,6 +433,7 @@ namespace forte::iec61499::system {
         }
         resp = EMGMResponse::Ready;
         mCommand.mCMD = EMGMCommandType::MonitoringReadWatches;
+        break;
       default: break;
     }
     if (resp == EMGMResponse::Ready && !proceedToOpenBracket(paScanner)) {
@@ -426,6 +447,9 @@ namespace forte::iec61499::system {
       return EMGMResponse::InvalidObject;
     }
     auto source = paScanner.takeUntil('"');
+    if (source.empty()) {
+      return EMGMResponse::BadParams;
+    }
     char *addParams = new char[source.size() + 1]();
     memcpy(addParams, source.data(), source.size());
     addParams[source.size()] = '\0';
@@ -438,8 +462,12 @@ namespace forte::iec61499::system {
       return EMGMResponse::InvalidObject;
     }
     auto destination = paScanner.takeUntil('"');
-    if (!parseIdentifier(destination, mCommand.mFirstParam)) {
-      return EMGMResponse::Overflow;
+    if (destination.empty()) {
+      return EMGMResponse::BadParams;
+    }
+    EMGMResponse resp = parseIdentifier(destination, mCommand.mFirstParam);
+    if (resp != EMGMResponse::Ready) {
+      return resp;
     }
 
     paScanner.skipWhiteSpace();
@@ -488,7 +516,7 @@ namespace forte::iec61499::system {
         break;
       case 'D': // query datatype or datatype list
         if (paScanner.consume("DataType")) {
-          parseQueryTypes(paScanner, EMGMCommandType::QueryDataType, EMGMCommandType::QueryDTTypes);
+          resp = parseQueryTypes(paScanner, EMGMCommandType::QueryDataType, EMGMCommandType::QueryDTTypes);
         }
         break;
       case 'A': // query adaptertype list
@@ -519,12 +547,14 @@ namespace forte::iec61499::system {
     }
 
     auto nameVal = paScanner.takeUntil('"');
-
+    if (nameVal.empty()) {
+      return EMGMResponse::BadParams;
+    }
     if (nameVal == "*") {
       mCommand.mCMD = paListQueryCMD;
     } else {
       if (!parseTypeName(nameVal, mCommand.mFirstParam, mCommand.mAdditionalParams)) {
-        return EMGMResponse::InvalidObject;
+        return EMGMResponse::Overflow;
       }
       mCommand.mCMD = paSingleQueryCMD;
     }

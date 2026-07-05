@@ -140,6 +140,11 @@ namespace forte {
     return out;
   }
 
+  inline std::ostream &boost_test_print_type(std::ostream &out, const EMGMCommandType &variable) {
+    out << static_cast<std::underlying_type_t<EMGMCommandType>>(variable);
+    return out;
+  }
+
   inline std::ostream &boost_test_print_type(std::ostream &out, const CFunctionBlock::E_FBStates &variable) {
     out << static_cast<std::underlying_type_t<CFunctionBlock::E_FBStates>>(variable);
     return out;
