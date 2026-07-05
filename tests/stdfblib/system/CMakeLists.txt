@@ -11,3 +11,4 @@
 # *******************************************************************************/
 
 forte_test_add_sourcefile_cpp(commandscanner_test.cpp)
+forte_test_add_sourcefile_cpp(commandparser_test.cpp)
