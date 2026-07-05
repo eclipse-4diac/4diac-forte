@@ -102,4 +102,20 @@ BOOST_AUTO_TEST_CASE(skipWhiteSpaceAllWhitespaceLeavesEmpty) {
   BOOST_TEST(s.empty());
 }
 
+/********************* peek *********************/
+BOOST_AUTO_TEST_CASE(peekReturnsFirstCharacter) {
+  CommandScanner s{"hello"};
+  BOOST_TEST(s.peek() == 'h');
+}
+
+BOOST_AUTO_TEST_CASE(peekDoesNotAdvance) {
+  CommandScanner s{"hello"};
+  s.peek();
+  BOOST_TEST(s.consume("hello"));
+}
+
+BOOST_AUTO_TEST_CASE(peekEmptyReturnsNullTerminator) {
+  CommandScanner s{""};
+  BOOST_TEST(s.peek() == '\0');
+}
 BOOST_AUTO_TEST_SUITE_END()

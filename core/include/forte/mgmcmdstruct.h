@@ -68,8 +68,8 @@ namespace forte {
        */
       std::string mAdditionalParams;
 
-      /*\brief pointer to the ID to generate the correct response */
-      char *mID;
+      /*\brief the ID of this request*/
+      std::string mID;
 
       /*\brief pointer to the response to generate the correct response */
       std::string mMonitorResponse;
