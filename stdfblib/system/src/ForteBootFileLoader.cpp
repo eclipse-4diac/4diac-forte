@@ -108,18 +108,16 @@ namespace forte::iec61499::system {
           eResp = MISSING_COLON;
           DEVLOG_ERROR("Boot file line does not contain separating ';'. Line: %d\n", nLineCount);
         } else {
-          std::string command(line.substr(sepPosition + 1));
-          std::string destination(line.substr(0, sepPosition));
-          char *commandBuffer = new char[command.length() + 1]{};
-          strcpy(commandBuffer, command.c_str());
-          if (!mCallback(destination.c_str(), commandBuffer)) {
+          std::string_view lineView(line);
+          std::string_view command(lineView.substr(sepPosition + 1));
+          std::string_view destination(lineView.substr(0, sepPosition));
+          if (!mCallback(destination, command)) {
             // command was not successful
-            DEVLOG_ERROR("Boot file command could not be executed. Line: %d: %s\n", nLineCount, commandBuffer);
+            DEVLOG_ERROR("Boot file command could not be executed. Line: %d: %s\n", nLineCount, line.c_str());
             eResp = EXTERNAL_ERROR;
           } else {
             nLineCount++;
           }
-          delete[] (commandBuffer);
         }
       }
     } else {
