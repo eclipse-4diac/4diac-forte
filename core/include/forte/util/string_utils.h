@@ -67,10 +67,10 @@ namespace forte::util {
 
   /**
    * Transforms a string with escaped chars (&apos;) into a string with the original chars (').
-   * @param paString The null ended C-string to be transformed. It's changed after calling this function
-   * @return Extra number of chars which were present in the original string
+   * @param paSrc    src string to be unescaped
+   * @param paTarget the string where the unescaped string will be put to
    */
-  size_t transformEscapedXMLToNonEscapedText(char *const paString);
+  void transformEscapedXMLToNonEscapedText(std::string_view paSrc, std::string &paTarget);
 
   /**
    * Transforms a string with chars to be scaped (') into a string with the escaped chars (&apos;)
