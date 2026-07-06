@@ -275,38 +275,32 @@ namespace forte::util {
     }
   }
 
-  size_t transformEscapedXMLToNonEscapedText(char *const paString) {
-    char *runner = paString;
-    char *endRunner = strchr(paString, '\0');
-    size_t retVal = 0;
-    while (runner <= endRunner) {
-      if ('&' == *runner) {
-        char toCopy = 0;
-        size_t toMove = 0;
-
+  void transformEscapedXMLToNonEscapedText(std::string_view paSrc, std::string &paTarget) {
+    for (size_t i = 0; i < paSrc.size();) {
+      if (paSrc[i] == '&') {
+        auto rest = paSrc.substr(i);
+        bool replaced = false;
         for (const auto &[characters2Escape, escapeSeqTuple] : scEscapeMap) {
           const char *escapSeq = std::get<0>(escapeSeqTuple);
           size_t escapeSequLen = std::get<1>(escapeSeqTuple);
-          if (0 == strncmp(runner, escapSeq, escapeSequLen)) {
-            toCopy = characters2Escape;
-            toMove = escapeSequLen;
+          if (rest.starts_with(std::string_view(escapSeq, escapeSequLen))) {
+            paTarget += characters2Escape;
+            i += escapeSequLen;
+            replaced = true;
             break;
           }
         }
 
-        if (0 != toCopy) {
-          *runner = toCopy;
-          memmove(runner + 1, &runner[toMove], (endRunner - &runner[toMove]) + 1);
-          endRunner -= toMove - 1;
-          retVal += toMove - 1;
+        if (replaced) {
+          continue;
         } else {
           DEVLOG_ERROR(
               "[XML Transformer] The given XML text has & character but it's none of the known escaped characters");
         }
       }
-      runner++;
+      paTarget += paSrc[i];
+      i++;
     }
-    return retVal;
   }
 
   char *lookForNonEscapedChar(char **paString, char paChar, char paEscapingChar) {
