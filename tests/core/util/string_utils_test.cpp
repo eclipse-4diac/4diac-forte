@@ -570,12 +570,10 @@ namespace forte::util::test {
   }
 
   BOOST_AUTO_TEST_CASE(transformEscapedXMLToNonEscapedText) {
-    char toTest[50];
     for (size_t i = 0; i < sNonEscapedData.size(); i++) {
-      memset(toTest, 0, 50);
-      memcpy(toTest, sEscapedData[i].c_str(), sEscapedData[i].length());
-      BOOST_CHECK_EQUAL(forte::util::transformEscapedXMLToNonEscapedText(toTest), sExtraSize[i]);
-      BOOST_CHECK_EQUAL(0, strcmp(toTest, sNonEscapedData[i]));
+      std::string result;
+      forte::util::transformEscapedXMLToNonEscapedText(sEscapedData[i], result);
+      BOOST_TEST(result == sNonEscapedData[i]);
     }
   }
 

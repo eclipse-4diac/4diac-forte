@@ -451,12 +451,7 @@ namespace forte::iec61499::system {
     if (source.empty()) {
       return EMGMResponse::BadParams;
     }
-    char *addParams = new char[source.size() + 1]();
-    memcpy(addParams, source.data(), source.size());
-    addParams[source.size()] = '\0';
-    util::transformEscapedXMLToNonEscapedText(addParams);
-    mCommand.mAdditionalParams = addParams;
-    delete[] (addParams);
+    util::transformEscapedXMLToNonEscapedText(source, mCommand.mAdditionalParams);
 
     paScanner.skipWhiteSpace();
     if (!paScanner.consume(R"(Destination=")")) {
