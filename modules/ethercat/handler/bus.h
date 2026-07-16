@@ -8,11 +8,12 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Sichuan Qunyuan Technology Co., Ltd. - initial API and implementation
+ *   Zijun Tang - initial API and implementation
  *******************************************************************************/
 
 #pragma once
 
+#include <memory>
 #include <string>
 #include <ecrt.h>
 #include "../device/bus_device_handler.h"
@@ -22,6 +23,8 @@ namespace forte::eclipse4diac::io::ethercat {
 
   class ECBusDeviceHandler;
   class ECDeviceHandler;
+  class EsiCatalog;
+  class EsiIoConfigurator;
 
   class ECBusHandler : public forte::io::IODeviceMultiController {
 
@@ -67,6 +70,11 @@ namespace forte::eclipse4diac::io::ethercat {
 
       ECDeviceHandler *getParentDevice(ECBusDeviceHandler *paDevice);
 
+      EsiCatalog &esiCatalog();
+      const EsiCatalog &esiCatalog() const;
+      EsiIoConfigurator &esiConfigurator();
+      const EsiIoConfigurator &esiConfigurator() const;
+
     protected:
       const char* init() override;
       void deInit() override;
@@ -98,6 +106,9 @@ namespace forte::eclipse4diac::io::ethercat {
       bool mLoopPreparedFlag;
       bool mEnableFlag;
       bool mIsShuttingDown;
+
+      std::unique_ptr<EsiCatalog> mEsiCatalog;
+      std::unique_ptr<EsiIoConfigurator> mEsiIoConfigurator;
   };
 
 }

@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Sichuan Qunyuan Technology Co., Ltd. - initial API and implementation
+ *   Zijun Tang - initial API and implementation
  *******************************************************************************/
 
 #pragma once
@@ -39,7 +39,7 @@ namespace forte::eclipse4diac::io::ethercat {
         return mHandleId;
       }
 
-      /** Domain byte offset for EtherCAT registration (EsiFileParser / ECDeviceModel). */
+      /** Domain byte offset for EtherCAT registration (EsiIoConfigurator / ECDeviceModel). */
       unsigned int *ecDomainOffsetPtr() {
         return &mECDomainDataOffset;
       }
