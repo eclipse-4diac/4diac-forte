@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 - 2018 fortiss GmbH
+ * Copyright (c) 2017 fortiss GmbH, Sichuan Qunyuan Technology Co., Ltd.
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +9,7 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Zijun Tang - add createSlaveHandler() hook and generic FB constructor
  *******************************************************************************/
 
 #include "forte/io/configFB/io_slave_multi.h"
@@ -22,6 +23,7 @@ namespace forte::io {
   const char *const IOConfigFBMultiSlave::scmMasterNotFound("Master not found");
   const char *const IOConfigFBMultiSlave::scmNotFound("Module not found");
   const char *const IOConfigFBMultiSlave::scmIncorrectType("Module type is incorrect");
+  const char *const IOConfigFBMultiSlave::scmCreateSlaveHandlerFailed("Create slave handler failed");
 
   IOConfigFBMultiSlave::IOConfigFBMultiSlave(const TForteUInt8 *const paSlaveConfigurationIO,
                                              const TForteUInt8 paSlaveConfigurationIONum,
@@ -40,6 +42,16 @@ namespace forte::io {
     for (int i = 0; i < mSlaveConfigurationIONum; i++) {
       mSlaveConfigurationIOIsDefault[i] = false;
     }
+  }
+
+  IOConfigFBMultiSlave::IOConfigFBMultiSlave(CFBContainer &paContainer,
+                                             const SFBInterfaceSpec &paInterfaceSpec,
+                                             forte::StringId paInstanceNameId,
+                                             const TForteUInt8 *const paSlaveConfigurationIO,
+                                             TForteUInt8 paSlaveConfigurationIONum,
+                                             int paType) :
+      IOConfigFBMultiSlave(
+          paSlaveConfigurationIO, paSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec, paInstanceNameId) {
   }
 
   IOConfigFBMultiSlave::~IOConfigFBMultiSlave() {
@@ -159,6 +171,11 @@ namespace forte::io {
     }
 
     IODeviceMultiController &controller = getController();
+
+    if (!createSlaveHandler()) {
+      DEVLOG_ERROR("[IOConfigFBMultiSlave] Create slave handler failed\n");
+      return scmCreateSlaveHandlerFailed;
+    }
 
     // Check if slave exists
     if (!controller.isSlaveAvailable(mIndex)) {

@@ -11,30 +11,34 @@
  *   Zijun Tang - initial API and implementation
  *******************************************************************************/
 
-#pragma once
-
 #include "bus_device_handler.h"
-#include "model/ec_model.h"
+#include "ec_device.h"
+#include <cstdint>
 
 namespace forte::eclipse4diac::io::ethercat {
 
-  class ECDeviceHandler : public ECBusDeviceHandler {
+  class ECModuleHandler : public ECBusDeviceHandler {
     
     public:
       struct Config : ECBusDeviceHandler::Config {
-        uint16_t mAlias;
-        uint16_t mPosition;
-        uint32_t mVendorId;
-        uint32_t mProductCode;
+        uint32_t mModuleIdent;
+        uint16_t mSlot;
       };
-
-      ECDeviceModel mECDeviceModel;
 
       void setConfig(struct ECBusDeviceHandler::Config *paConfig) override;
 
-      ECDeviceHandler(ECBusHandler *paBus, ECBusDeviceHandler::DeviceType paDeviceType, size_t paDeviceIndex);
+      ECModuleHandler(ECBusHandler *paBus, size_t paDeviceIndex);
+
+      uint32_t moduleIdent() const {
+        return mConfig.mModuleIdent;
+      }
+
+      uint16_t slot() const {
+        return mConfig.mSlot;
+      }
 
     protected:
+      ECModuleHandler *mDeviceHandler;
       struct Config mConfig;
   };
 }
