@@ -1,5 +1,5 @@
 #############################################################################
-# Copyright (c) 2025 Martin Erich Jobst
+# Copyright (c) 2025 Martin Erich Jobst, Sichuan Qunyuan Technology Co., Ltd.
 #
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
@@ -10,7 +10,7 @@
 # Contributors:
 #    Martin Erich Jobst
 #      - initial API and implementation and/or initial documentation
-#    Sichuan Qunyuan Technology Co., Ltd.
+#    Zijun Tang
 #      - add ethercat module
 #############################################################################
 
