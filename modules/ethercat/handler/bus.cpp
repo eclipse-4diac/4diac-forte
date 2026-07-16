@@ -8,7 +8,7 @@
  * SPDX-License-Identifier: EPL-2.0
  *
  * Contributors:
- *   Sichuan Qunyuan Technology Co., Ltd. - initial API and implementation
+ *   Zijun Tang - initial API and implementation
  *******************************************************************************/
 
 // #include <sched.h>
@@ -17,6 +17,8 @@
 #include "forte/io/mapper/io_mapper.h"
 #include "bus.h"
 #include "../device/ec_device.h"
+#include "../utils/esi_catalog.h"
+#include "../utils/esi_io_configurator.h"
 
 namespace forte::eclipse4diac::io::ethercat {
 
@@ -39,7 +41,9 @@ namespace forte::eclipse4diac::io::ethercat {
     mInitializedFlag(false),
     mLoopPreparedFlag(false),
     mEnableFlag(false),
-    mIsShuttingDown(false){
+    mIsShuttingDown(false),
+    mEsiCatalog(std::make_unique<EsiCatalog>()),
+    mEsiIoConfigurator(std::make_unique<EsiIoConfigurator>(*mEsiCatalog)) {
   }
 
   void ECBusHandler::setConfig(struct IODeviceController::Config *paConfig) {
@@ -144,6 +148,9 @@ namespace forte::eclipse4diac::io::ethercat {
       ecrt_release_master(mECController);
       mECController = nullptr;
     }
+
+    mEsiIoConfigurator.reset();
+    mEsiCatalog.reset();
 
     mECDomain = nullptr;
     mECDomainPd = nullptr;
@@ -355,6 +362,22 @@ namespace forte::eclipse4diac::io::ethercat {
       }
       DEVLOG_INFO("[ECBusHandler]: EtherCAT cycle resumed.\n");
     }
+  }
+
+  EsiCatalog &ECBusHandler::esiCatalog() {
+    return *mEsiCatalog;
+  }
+
+  const EsiCatalog &ECBusHandler::esiCatalog() const {
+    return *mEsiCatalog;
+  }
+
+  EsiIoConfigurator &ECBusHandler::esiConfigurator() {
+    return *mEsiIoConfigurator;
+  }
+
+  const EsiIoConfigurator &ECBusHandler::esiConfigurator() const {
+    return *mEsiIoConfigurator;
   }
 
 }
