@@ -1,6 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2025 fortiss GmbH, Johannes Kepler University,
-
+ * Copyright (c) 2015, 2026 fortiss GmbH, Johannes Kepler University,
+ *                          Primetals Technologies Austria GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -11,6 +11,7 @@
  * Contributors:
  *   Alois Zoitl - initial implementation and rework communication infrastructure
  *               - moved forced flag to FB
+ *   Markus Meingast - Change type of CWatchEntry::mPortId to TNameIdentifier
  *******************************************************************************/
 #ifndef MONITORING_H_
 #define MONITORING_H_
@@ -29,7 +30,7 @@ namespace forte {
 
     class CWatchEntry {
       public:
-        StringId getPortId() const {
+        const TNameIdentifier &getPortId() const {
           return mPortId;
         }
 
@@ -37,19 +38,19 @@ namespace forte {
         CWatchEntry &operator=(const CWatchEntry &) = delete;
 
       protected:
-        CWatchEntry(StringId paPortId) : mPortId(paPortId) {
+        CWatchEntry(const TNameIdentifier &paPortId) : mPortId(paPortId) {
         }
 
         CWatchEntry(CWatchEntry &&) = default;
         CWatchEntry &operator=(CWatchEntry &&) = default;
 
       private:
-        StringId mPortId;
+        TNameIdentifier mPortId;
     };
 
     class CDataWatchEntry : public CWatchEntry {
       public:
-        CDataWatchEntry(StringId paPortId, CIEC_ANY &paDataValue, TAbsDataPortNum paForceIndex) :
+        CDataWatchEntry(const TNameIdentifier &paPortId, CIEC_ANY &paDataValue, TAbsDataPortNum paForceIndex) :
             CWatchEntry(paPortId),
             mDataBuffer(paDataValue.clone(nullptr)),
             mForceIndex(paForceIndex),
@@ -73,7 +74,7 @@ namespace forte {
 
     class CEventWatchEntry : public CWatchEntry {
       public:
-        CEventWatchEntry(StringId paPortId, TForteUInt32 &paEventData) :
+        CEventWatchEntry(const TNameIdentifier &paPortId, TForteUInt32 &paEventData) :
             CWatchEntry(paPortId),
             mEventDataRef(paEventData) {
         }
@@ -129,8 +130,9 @@ namespace forte {
 
     private:
       CFunctionBlock *getFB(TNameIdentifier &paNameList);
-      CFunctionBlock *
-      getFB(TNameIdentifier &paNameList, std::span<const StringId> &paFBNameList, std::span<const StringId> &paPortNameList);
+      CFunctionBlock *getFB(TNameIdentifier &paNameList,
+                            std::span<const StringId> &paFBNameList,
+                            std::span<const StringId> &paPortNameList);
 
       EMGMResponse addWatch(TNameIdentifier &paNameList);
       EMGMResponse removeWatch(TNameIdentifier &paNameList);
