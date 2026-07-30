@@ -129,6 +129,8 @@ namespace forte {
 
     private:
       CFunctionBlock *getFB(TNameIdentifier &paNameList);
+      CFunctionBlock *
+      getFB(TNameIdentifier &paNameList, std::span<const StringId> &paFBNameList, std::span<const StringId> &paPortNameList);
 
       EMGMResponse addWatch(TNameIdentifier &paNameList);
       EMGMResponse removeWatch(TNameIdentifier &paNameList);
