@@ -15,6 +15,8 @@
 target_sources(
         forte-core
         PRIVATE
+        endian.h
+        endian.cpp
         null.h
         null.cpp
         raw.h
