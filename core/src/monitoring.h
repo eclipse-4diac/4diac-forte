@@ -38,7 +38,7 @@ namespace forte {
         CWatchEntry &operator=(const CWatchEntry &) = delete;
 
       protected:
-        CWatchEntry(const TNameIdentifier &paPortId) : mPortId(paPortId) {
+        CWatchEntry(std::span<const StringId> paPortId) : mPortId(paPortId.begin(), paPortId.end()) {
         }
 
         CWatchEntry(CWatchEntry &&) = default;
@@ -50,7 +50,7 @@ namespace forte {
 
     class CDataWatchEntry : public CWatchEntry {
       public:
-        CDataWatchEntry(const TNameIdentifier &paPortId, CIEC_ANY &paDataValue, TAbsDataPortNum paForceIndex) :
+        CDataWatchEntry(std::span<const StringId> paPortId, CIEC_ANY &paDataValue, TAbsDataPortNum paForceIndex) :
             CWatchEntry(paPortId),
             mDataBuffer(paDataValue.clone(nullptr)),
             mForceIndex(paForceIndex),
@@ -74,7 +74,7 @@ namespace forte {
 
     class CEventWatchEntry : public CWatchEntry {
       public:
-        CEventWatchEntry(const TNameIdentifier &paPortId, TForteUInt32 &paEventData) :
+        CEventWatchEntry(std::span<const StringId> paPortId, TForteUInt32 &paEventData) :
             CWatchEntry(paPortId),
             mEventDataRef(paEventData) {
         }
@@ -141,7 +141,8 @@ namespace forte {
       EMGMResponse triggerEvent(TNameIdentifier &paNameList);
       EMGMResponse resetEventCount(TNameIdentifier &paNameList);
 
-      internal::SFBMonitoringEntry &findOrCreateFBMonitoringEntry(CFunctionBlock *paFB, TNameIdentifier &paNameList);
+      internal::SFBMonitoringEntry &findOrCreateFBMonitoringEntry(CFunctionBlock *paFB,
+                                                                  std::span<const StringId> paNameList);
       void readResourceWatches(std::string &paResponse);
 
       void updateMonitoringData();
