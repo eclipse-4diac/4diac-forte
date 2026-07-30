@@ -1,7 +1,8 @@
 
 /*******************************************************************************
- * Copyright (c) 2015, 2025 fortiss GmbH, Johannes Kepler University
+ * Copyright (c) 2015, 2026 fortiss GmbH, Johannes Kepler University,
  *                          Primetals Technologies Austria GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,6 +12,7 @@
  * Contributors:
  *   Alois Zoitl - initial implementation and rework communication infrastructure
  *   Martin Melik Merkumians - adds functionality for W/CHAR
+ *   Markus Meingast - Change type of CWatchEntry::mPortId to TNameIdentifier
  *******************************************************************************/
 
 #include "monitoring.h"
@@ -29,9 +31,10 @@ using namespace std::string_literals;
 namespace forte {
   namespace internal {
     const std::string cgClosingXMLTag = "\">"s;
+    const char cgNameDelimiter = '.';
 
     namespace {
-      constexpr auto watchEntryComparator = [](const CWatchEntry &paItem, StringId paPortId) {
+      constexpr auto watchEntryComparator = [](const CWatchEntry &paItem, const TNameIdentifier &paPortId) {
         return paItem.getPortId() < paPortId;
       };
 
@@ -39,56 +42,34 @@ namespace forte {
           [](const SFBMonitoringEntry &paItem, const CFunctionBlock *const paFB) { return &paItem.getFB() < paFB; };
 
       void createFullFBName(std::string &paFullName, TNameIdentifier &paNameList) {
-        for (const auto &runner : paNameList) {
-          paFullName.append(runner);
-          paFullName.append(".");
-        }
-        paFullName.pop_back();
-      }
-
-      StringId getFullPortName(TNameIdentifier &paPortId) {
-        std::string name;
-        createFullFBName(name, paPortId);
-        return StringId::insert(name);
+        util::join(paNameList.cbegin(), paNameList.cend(), {}, cgNameDelimiter, paFullName);
       }
 
       void addDataWatch(SFBMonitoringEntry &paFBMonitoringEntry, TNameIdentifier &paPortId, CIEC_ANY &paDataVal) {
-        StringId portName;
-        TAbsDataPortNum absolutePortNum;
-        if (paPortId.size() > 1) {
-          portName = getFullPortName(paPortId);
-          absolutePortNum = paFBMonitoringEntry.getFB().getAbsDataPortNum(
-              paPortId.front()); // root element of struct, needed for forcing
-        } else {
-          portName = paPortId.front();
-          absolutePortNum = paFBMonitoringEntry.getFB().getAbsDataPortNum(portName);
-        }
-
         auto &dataWatches = paFBMonitoringEntry.mWatchedDataPoints;
-        auto it = std::lower_bound(dataWatches.begin(), dataWatches.end(), portName, watchEntryComparator);
+        auto it = std::lower_bound(dataWatches.begin(), dataWatches.end(), paPortId, watchEntryComparator);
 
-        if (it != dataWatches.end() && it->getPortId() == portName) {
+        if (it != dataWatches.end() && it->getPortId() == paPortId) {
           // the data point is already in the watch list
           return;
         }
 
-        dataWatches.emplace(it, portName, paDataVal, absolutePortNum);
+        dataWatches.emplace(it, paPortId, paDataVal, paFBMonitoringEntry.getFB().getAbsDataPortNum(paPortId.front()));
       }
 
       bool removeDataWatch(SFBMonitoringEntry &paFBMonitoringEntry, TNameIdentifier &paPortId) {
-        StringId portName = paPortId.size() > 1 ? portName = getFullPortName(paPortId) : paPortId.front();
-
         auto &dataWatches = paFBMonitoringEntry.mWatchedDataPoints;
-        auto it = std::lower_bound(dataWatches.begin(), dataWatches.end(), portName, watchEntryComparator);
+        auto it = std::lower_bound(dataWatches.begin(), dataWatches.end(), paPortId, watchEntryComparator);
 
-        if (it != dataWatches.end() && it->getPortId() == portName) {
+        if (it != dataWatches.end() && it->getPortId() == paPortId) {
           dataWatches.erase(it);
           return true;
         }
         return false;
       }
 
-      void addEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, StringId paPortId, TForteUInt32 &paEventData) {
+      void
+      addEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, TNameIdentifier &paPortId, TForteUInt32 &paEventData) {
         auto &eventWatches = paFBMonitoringEntry.mWatchedEventPoints;
         auto it = std::lower_bound(eventWatches.begin(), eventWatches.end(), paPortId, watchEntryComparator);
 
@@ -100,7 +81,7 @@ namespace forte {
         eventWatches.emplace(it, paPortId, paEventData);
       }
 
-      bool removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, StringId paPortId) {
+      bool removeEventWatch(SFBMonitoringEntry &paFBMonitoringEntry, TNameIdentifier &paPortId) {
         auto &eventWatches = paFBMonitoringEntry.mWatchedEventPoints;
         auto it = std::lower_bound(eventWatches.begin(), eventWatches.end(), paPortId, watchEntryComparator);
 
@@ -111,9 +92,9 @@ namespace forte {
         return false;
       }
 
-      void appendPortTag(std::string &paResponse, StringId paPortId) {
+      void appendPortTag(std::string &paResponse, const TNameIdentifier &paPortId) {
         paResponse += "<Port name=\""s;
-        paResponse += paPortId;
+        util::join(paPortId.cbegin(), paPortId.cend(), {}, cgNameDelimiter, paResponse);
         paResponse += cgClosingXMLTag;
       }
 
@@ -148,21 +129,6 @@ namespace forte {
         paResponse.append(std::to_string(paEventWatchEntry.mEventDataBuf));
         paResponse += "\"/>\n</Port>"s;
       }
-
-      bool getNamesFromFB(CFunctionBlock *paFB,
-                          TNameIdentifier &paNameList,
-                          TNameIdentifier &paFBNameList,
-                          TNameIdentifier &paPortNameList) {
-        for (auto nameListIt = paNameList.cend(); nameListIt != paNameList.cbegin(); nameListIt--) {
-          if (*nameListIt == paFB->getInstanceNameId()) {
-            paFBNameList.insert(paFBNameList.begin(), paNameList.begin(), nameListIt + 1);
-            paPortNameList.insert(paPortNameList.begin(), nameListIt + 1, paNameList.end());
-            return true;
-          }
-        }
-        return false;
-      }
-
     } // namespace
 
     void CDataWatchEntry::update(const CFunctionBlock &paFB) {
@@ -231,15 +197,14 @@ namespace forte {
         internal::addDataWatch(fbMonitoringEntry, portNameList, *dataVal);
         eRetVal = EMGMResponse::Ready;
       } else {
-        StringId portName = portNameList.front();
-        TEventID eventId = fB->getFBInterfaceSpec().getEIID(portName);
+        TEventID eventId = fB->getFBInterfaceSpec().getEIID(portNameList.front());
         if (cgInvalidEventID != eventId) {
-          internal::addEventWatch(fbMonitoringEntry, portName, fB->getEIMonitorData(eventId));
+          internal::addEventWatch(fbMonitoringEntry, portNameList, fB->getEIMonitorData(eventId));
           eRetVal = EMGMResponse::Ready;
         } else {
-          eventId = fB->getFBInterfaceSpec().getEOID(portName);
+          eventId = fB->getFBInterfaceSpec().getEOID(portNameList.front());
           if (cgInvalidEventID != eventId) {
-            internal::addEventWatch(fbMonitoringEntry, portName, fB->getEOMonitorData(eventId));
+            internal::addEventWatch(fbMonitoringEntry, portNameList, fB->getEOMonitorData(eventId));
             eRetVal = EMGMResponse::Ready;
           }
         }
@@ -262,9 +227,8 @@ namespace forte {
       if (it != mFBMonitoringList.end() && &it->getFB() == fB) {
         internal::SFBMonitoringEntry &monitoringEntry = *it;
         if (internal::removeDataWatch(monitoringEntry, portNameList) ||
-            internal::removeEventWatch(
-                monitoringEntry,
-                portNameList.front())) { // if element is not watched, end search and return error
+            internal::removeEventWatch(monitoringEntry,
+                                       portNameList)) { // if element is not watched, end search and return error
 
           if (monitoringEntry.mWatchedDataPoints.empty() && (monitoringEntry.mWatchedEventPoints.empty())) {
             mFBMonitoringList.erase(it);
