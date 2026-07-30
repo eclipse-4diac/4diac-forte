@@ -10,54 +10,54 @@
  *   Jose Cabral - initial API and implementation and/or initial documentation
  *************************************************************************/
 
-#ifndef SRC_MODULES_WAGOKBUS_MODULAR_WAGOHANDLE_H_
-#define SRC_MODULES_WAGOKBUS_MODULAR_WAGOHANDLE_H_
+#pragma once
 
 #include "forte/datatypes/forte_word.h"
 #include "forte/datatypes/forte_dword.h"
 #include "forte/io/mapper/io_handle.h"
 #include "WagoDeviceController.h"
 
-class WagoHandle : public forte::io::IOHandle {
-  public:
-    WagoHandle(WagoDeviceController *paController,
-               CIEC_ANY::EDataTypeID paType,
-               forte::io::IOMapper::Direction paDirection,
-               tApplicationDeviceInterface *paAppDevInterface,
-               uint32_t paTaskId,
-               tDeviceId paKBusDeviceId,
-               TForteUInt32 paOutputOffset,
-               TForteUInt32 paInputOffset);
+namespace forte::eclipse4diac::io::wago {
 
-    ~WagoHandle() override;
+  class WagoHandle : public forte::io::IOHandle {
+    public:
+      WagoHandle(WagoDeviceController *paController,
+                 CIEC_ANY::EDataTypeID paType,
+                 forte::io::IOMapper::Direction paDirection,
+                 tApplicationDeviceInterface *paAppDevInterface,
+                 uint32_t paTaskId,
+                 tDeviceId paKBusDeviceId,
+                 TForteUInt32 paOutputOffset,
+                 TForteUInt32 paInputOffset);
 
-    virtual void set(const CIEC_ANY &) override;
+      ~WagoHandle() override;
 
-    void get(CIEC_ANY &) override;
+      virtual void set(const CIEC_ANY &) override;
 
-    bool check();
+      void get(CIEC_ANY &) override;
 
-  private:
-    void getBoolean(CIEC_BOOL &paState);
-    void setBoolean(const CIEC_BOOL &paState);
+      bool check();
 
-    void getWord(CIEC_WORD &paState);
-    void setWord(const CIEC_WORD &paState);
+    private:
+      void getBoolean(CIEC_BOOL &paState);
+      void setBoolean(const CIEC_BOOL &paState);
 
-    void getDWord(CIEC_DWORD &paState);
-    void setDWord(const CIEC_DWORD &paState);
+      void getWord(CIEC_WORD &paState);
+      void setWord(const CIEC_WORD &paState);
 
-    template<typename T>
-    bool checkValue();
+      void getDWord(CIEC_DWORD &paState);
+      void setDWord(const CIEC_DWORD &paState);
 
-    tApplicationDeviceInterface *mAppDevInterface;
-    uint32_t mTaskId;
-    tDeviceId mKBusDeviceId;
-    TForteUInt32 mOutputOffset;
-    TForteUInt32 mInputOffset;
-    CIEC_ANY *mLastValue;
+      template<typename T>
+      bool checkValue();
 
-    virtual void dropObserver() override;
-};
+      tApplicationDeviceInterface *mAppDevInterface;
+      uint32_t mTaskId;
+      tDeviceId mKBusDeviceId;
+      TForteUInt32 mOutputOffset;
+      TForteUInt32 mInputOffset;
+      CIEC_ANY *mLastValue;
 
-#endif /* SRC_MODULES_WAGOKBUS_MODULAR_WAGOHANDLE_H_ */
+      virtual void dropObserver() override;
+  };
+} // namespace forte::eclipse4diac::io::wago
