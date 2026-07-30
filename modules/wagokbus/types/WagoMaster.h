@@ -9,72 +9,76 @@
 
 #pragma once
 
-#include "WagoBusAdapter.h"
 #include "forte/io/configFB/io_master_multi.h"
+#include "WagoBusAdapter.h"
 
-class FORTE_WagoMaster : public forte::io::IOConfigFBMultiMaster {
-    DECLARE_FIRMWARE_FB(FORTE_WagoMaster)
+namespace forte::eclipse4diac::io::wago {
 
-  public:
-    FORTE_WagoMaster(forte::StringId paInstanceNameId, CFBContainer &paContainer);
-    ~FORTE_WagoMaster() override = default;
+  class FORTE_WagoMaster : public ::forte::io::IOConfigFBMultiMaster {
+      DECLARE_FIRMWARE_FB(FORTE_WagoMaster)
 
-    CIEC_BOOL var_QI;
-    CIEC_UINT var_UpdateInterval;
+    public:
+      FORTE_WagoMaster(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      ~FORTE_WagoMaster() override = default;
 
-    CIEC_BOOL var_QO;
-    CIEC_WSTRING var_STATUS;
+      CIEC_BOOL var_QI;
+      CIEC_UINT var_UpdateInterval;
 
-    CEventConnection conn_INITO;
-    CEventConnection conn_IND;
+      CIEC_BOOL var_QO;
+      CIEC_WSTRING var_STATUS;
 
-    CDataConnection *conn_QI;
-    CDataConnection *conn_UpdateInterval;
+      CEventConnection conn_INITO;
+      CEventConnection conn_IND;
 
-    COutDataConnection<CIEC_BOOL> conn_QO;
-    COutDataConnection<CIEC_WSTRING> conn_STATUS;
+      CDataConnection *conn_QI;
+      CDataConnection *conn_UpdateInterval;
 
-    forte::CPlugPin<FORTE_WagoBusAdapter_Plug> var_BusAdapterOut;
+      COutDataConnection<CIEC_BOOL> conn_QO;
+      COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
+      forte::CPlugPin<FORTE_WagoBusAdapter_Plug> var_BusAdapterOut;
 
-    forte::IPlugPin *getPlugPinUnchecked(size_t) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
 
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      forte::IPlugPin *getPlugPinUnchecked(size_t) override;
 
-    void evt_INIT(const CIEC_BOOL &paQI,
-                  const CIEC_UINT &paUpdateInterval,
-                  CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                  COutputParameter<CIEC_WSTRING> paSTATUS) {
-      COutputGuard guard_paQO(paQO);
-      COutputGuard guard_paSTATUS(paSTATUS);
-      var_QI = paQI;
-      var_UpdateInterval = paUpdateInterval;
-      executeEvent(scmEventINITID, nullptr);
-      *paQO = var_QO;
-      *paSTATUS = var_STATUS;
-    }
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void operator()(const CIEC_BOOL &paQI,
+      void evt_INIT(const CIEC_BOOL &paQI,
                     const CIEC_UINT &paUpdateInterval,
                     CAnyBitOutputParameter<CIEC_BOOL> paQO,
                     COutputParameter<CIEC_WSTRING> paSTATUS) {
-      evt_INIT(paQI, paUpdateInterval, paQO, paSTATUS);
-    }
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paSTATUS(paSTATUS);
+        var_QI = paQI;
+        var_UpdateInterval = paUpdateInterval;
+        executeEvent(scmEventINITID, nullptr);
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
+      }
 
-  private:
-    static const TEventID scmEventINITID = 0;
-    static const TEventID scmEventINITOID = 0;
-    static const TEventID scmEventINDID = 1;
-    static const int scmBusAdapterOutAdpNum = 0;
+      void operator()(const CIEC_BOOL &paQI,
+                      const CIEC_UINT &paUpdateInterval,
+                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                      COutputParameter<CIEC_WSTRING> paSTATUS) {
+        evt_INIT(paQI, paUpdateInterval, paQO, paSTATUS);
+      }
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+    private:
+      static const TEventID scmEventINITID = 0;
+      static const TEventID scmEventINITOID = 0;
+      static const TEventID scmEventINDID = 1;
+      static const int scmBusAdapterOutAdpNum = 0;
 
-    forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
-    void setConfig() override;
-};
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
+
+      ::forte::io::IODeviceController *createDeviceController(CDeviceExecution &paDeviceExecution) override;
+      void setConfig() override;
+  };
+
+} // namespace forte::eclipse4diac::io::wago
