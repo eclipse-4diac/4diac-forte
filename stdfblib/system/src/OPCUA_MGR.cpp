@@ -341,7 +341,7 @@ namespace forte::iec61499::system {
       parseHashedTypeName(getInputValue(*static_cast<UA_String *>(input[0].data)), dataTypeName, dataTypeHash);
 
       OPCUA_MGR &uaMGR = *static_cast<OPCUA_MGR *>(methodContext);
-      UA_StatusCode status = uaMGR.executeQueryTypeCommand(EMGMCommandType::QueryFBType, dataTypeName, dataTypeHash);
+      UA_StatusCode status = uaMGR.executeQueryTypeCommand(EMGMCommandType::QueryDataType, dataTypeName, dataTypeHash);
       status |= uaMGR.getCommandResult(output);
       return status;
     }
@@ -367,8 +367,8 @@ namespace forte::iec61499::system {
                           globalConstTypeHash);
 
       OPCUA_MGR &uaMGR = *static_cast<OPCUA_MGR *>(methodContext);
-      UA_StatusCode status =
-          uaMGR.executeQueryTypeCommand(EMGMCommandType::QueryFBType, globalConstTypeName, globalConstTypeHash);
+      UA_StatusCode status = uaMGR.executeQueryTypeCommand(EMGMCommandType::QueryGlobalConstType, globalConstTypeName,
+                                                           globalConstTypeHash);
       status |= uaMGR.getCommandResult(output);
       return status;
     }
@@ -1702,7 +1702,7 @@ namespace forte::iec61499::system {
   OPCUA_MGR::executeQueryTypeCommand(EMGMCommandType paCMD, std::string_view paTypeName, std::string_view paTypeHash) {
     clearMGMCommand();
     mCommand.mCMD = paCMD;
-    mCommand.mFirstParam.push_back(StringId::lookup(paTypeName));
+    mCommand.mFirstParam.push_back(StringId::insert(paTypeName));
     mCommand.mAdditionalParams = paTypeHash;
 
     EMGMResponse eRetVal = mUaDevice.executeMGMCommand(mCommand);
