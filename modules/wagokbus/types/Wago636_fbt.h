@@ -14,147 +14,151 @@
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
 
-class FORTE_Wago636 final : public WagoSlaveBase {
-    DECLARE_FIRMWARE_FB(FORTE_Wago636)
+namespace forte::eclipse4diac::io::wago {
 
-  private:
-    static const TEventID scmEventMAPID = 0;
-    static const TEventID scmEventMAPOID = 0;
-    static const TEventID scmEventINDID = 1;
-    static const int scmBusAdapterInAdpNum = 0;
-    static const int scmBusAdapterOutAdpNum = 1;
+  class FORTE_Wago636 final : public WagoSlaveBase {
+      DECLARE_FIRMWARE_FB(FORTE_Wago636)
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
+    private:
+      static const TEventID scmEventMAPID = 0;
+      static const TEventID scmEventMAPOID = 0;
+      static const TEventID scmEventINDID = 1;
+      static const int scmBusAdapterInAdpNum = 0;
+      static const int scmBusAdapterOutAdpNum = 1;
 
-  protected:
-    void initHandlesBase(size_t paNumberOfBoolInputs,
-                         size_t paNumberOfBoolOutputs,
-                         size_t paNumberOfAnalogInputs,
-                         size_t paNumberOfAnalogOutputs);
-    INIT_HANDLES(7, 7, 1, 1)
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
 
-  public:
-    FORTE_Wago636(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
-    ~FORTE_Wago636() override = default;
+    protected:
+      void initHandlesBase(size_t paNumberOfBoolInputs,
+                           size_t paNumberOfBoolOutputs,
+                           size_t paNumberOfAnalogInputs,
+                           size_t paNumberOfAnalogOutputs);
+      INIT_HANDLES(7, 7, 1, 1)
 
-    CIEC_BOOL var_QI;
-    CIEC_STRING var_Busy;
-    CIEC_STRING var_LimitSwitchN;
-    CIEC_STRING var_LimitSwitchP;
-    CIEC_STRING var_PresetInput;
-    CIEC_STRING var_OptimizeOnZInput;
-    CIEC_STRING var_OnTarget;
-    CIEC_STRING var_ReferenceOk;
-    CIEC_STRING var_CurrentPosition;
-    CIEC_STRING var_TargetPosition;
-    CIEC_STRING var_MotorN;
-    CIEC_STRING var_MotorP;
-    CIEC_STRING var_Positioning;
-    CIEC_STRING var_OptimizeOn;
-    CIEC_STRING var_Preset;
-    CIEC_STRING var_PresetInputEnable;
-    CIEC_STRING var_QuitErrors;
+    public:
+      FORTE_Wago636(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      ~FORTE_Wago636() override = default;
 
-    CIEC_BOOL var_QO;
-    CIEC_WSTRING var_STATUS;
+      CIEC_BOOL var_QI;
+      CIEC_STRING var_Busy;
+      CIEC_STRING var_LimitSwitchN;
+      CIEC_STRING var_LimitSwitchP;
+      CIEC_STRING var_PresetInput;
+      CIEC_STRING var_OptimizeOnZInput;
+      CIEC_STRING var_OnTarget;
+      CIEC_STRING var_ReferenceOk;
+      CIEC_STRING var_CurrentPosition;
+      CIEC_STRING var_TargetPosition;
+      CIEC_STRING var_MotorN;
+      CIEC_STRING var_MotorP;
+      CIEC_STRING var_Positioning;
+      CIEC_STRING var_OptimizeOn;
+      CIEC_STRING var_Preset;
+      CIEC_STRING var_PresetInputEnable;
+      CIEC_STRING var_QuitErrors;
 
-    CEventConnection conn_MAPO;
-    CEventConnection conn_IND;
+      CIEC_BOOL var_QO;
+      CIEC_WSTRING var_STATUS;
 
-    CDataConnection *conn_QI;
-    CDataConnection *conn_Busy;
-    CDataConnection *conn_LimitSwitchN;
-    CDataConnection *conn_LimitSwitchP;
-    CDataConnection *conn_PresetInput;
-    CDataConnection *conn_OptimizeOnZInput;
-    CDataConnection *conn_OnTarget;
-    CDataConnection *conn_ReferenceOk;
-    CDataConnection *conn_CurrentPosition;
-    CDataConnection *conn_TargetPosition;
-    CDataConnection *conn_MotorN;
-    CDataConnection *conn_MotorP;
-    CDataConnection *conn_Positioning;
-    CDataConnection *conn_OptimizeOn;
-    CDataConnection *conn_Preset;
-    CDataConnection *conn_PresetInputEnable;
-    CDataConnection *conn_QuitErrors;
+      CEventConnection conn_MAPO;
+      CEventConnection conn_IND;
 
-    COutDataConnection<CIEC_BOOL> conn_QO;
-    COutDataConnection<CIEC_WSTRING> conn_STATUS;
+      CDataConnection *conn_QI;
+      CDataConnection *conn_Busy;
+      CDataConnection *conn_LimitSwitchN;
+      CDataConnection *conn_LimitSwitchP;
+      CDataConnection *conn_PresetInput;
+      CDataConnection *conn_OptimizeOnZInput;
+      CDataConnection *conn_OnTarget;
+      CDataConnection *conn_ReferenceOk;
+      CDataConnection *conn_CurrentPosition;
+      CDataConnection *conn_TargetPosition;
+      CDataConnection *conn_MotorN;
+      CDataConnection *conn_MotorP;
+      CDataConnection *conn_Positioning;
+      CDataConnection *conn_OptimizeOn;
+      CDataConnection *conn_Preset;
+      CDataConnection *conn_PresetInputEnable;
+      CDataConnection *conn_QuitErrors;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
+      COutDataConnection<CIEC_BOOL> conn_QO;
+      COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
 
-    void evt_MAP(const CIEC_BOOL &paQI,
-                 const CIEC_STRING &paBusy,
-                 const CIEC_STRING &paLimitSwitchN,
-                 const CIEC_STRING &paLimitSwitchP,
-                 const CIEC_STRING &paPresetInput,
-                 const CIEC_STRING &paOptimizeOnZInput,
-                 const CIEC_STRING &paOnTarget,
-                 const CIEC_STRING &paReferenceOk,
-                 const CIEC_STRING &paCurrentPosition,
-                 const CIEC_STRING &paTargetPosition,
-                 const CIEC_STRING &paMotorN,
-                 const CIEC_STRING &paMotorP,
-                 const CIEC_STRING &paPositioning,
-                 const CIEC_STRING &paOptimizeOn,
-                 const CIEC_STRING &paPreset,
-                 const CIEC_STRING &paPresetInputEnable,
-                 const CIEC_STRING &paQuitErrors,
-                 CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                 COutputParameter<CIEC_WSTRING> paSTATUS) {
-      COutputGuard guard_paQO(paQO);
-      COutputGuard guard_paSTATUS(paSTATUS);
-      var_QI = paQI;
-      var_Busy = paBusy;
-      var_LimitSwitchN = paLimitSwitchN;
-      var_LimitSwitchP = paLimitSwitchP;
-      var_PresetInput = paPresetInput;
-      var_OptimizeOnZInput = paOptimizeOnZInput;
-      var_OnTarget = paOnTarget;
-      var_ReferenceOk = paReferenceOk;
-      var_CurrentPosition = paCurrentPosition;
-      var_TargetPosition = paTargetPosition;
-      var_MotorN = paMotorN;
-      var_MotorP = paMotorP;
-      var_Positioning = paPositioning;
-      var_OptimizeOn = paOptimizeOn;
-      var_Preset = paPreset;
-      var_PresetInputEnable = paPresetInputEnable;
-      var_QuitErrors = paQuitErrors;
-      executeEvent(scmEventMAPID, nullptr);
-      *paQO = var_QO;
-      *paSTATUS = var_STATUS;
-    }
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void operator()(const CIEC_BOOL &paQI,
-                    const CIEC_STRING &paBusy,
-                    const CIEC_STRING &paLimitSwitchN,
-                    const CIEC_STRING &paLimitSwitchP,
-                    const CIEC_STRING &paPresetInput,
-                    const CIEC_STRING &paOptimizeOnZInput,
-                    const CIEC_STRING &paOnTarget,
-                    const CIEC_STRING &paReferenceOk,
-                    const CIEC_STRING &paCurrentPosition,
-                    const CIEC_STRING &paTargetPosition,
-                    const CIEC_STRING &paMotorN,
-                    const CIEC_STRING &paMotorP,
-                    const CIEC_STRING &paPositioning,
-                    const CIEC_STRING &paOptimizeOn,
-                    const CIEC_STRING &paPreset,
-                    const CIEC_STRING &paPresetInputEnable,
-                    const CIEC_STRING &paQuitErrors,
-                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                    COutputParameter<CIEC_WSTRING> paSTATUS) {
-      evt_MAP(paQI, paBusy, paLimitSwitchN, paLimitSwitchP, paPresetInput, paOptimizeOnZInput, paOnTarget,
-              paReferenceOk, paCurrentPosition, paTargetPosition, paMotorN, paMotorP, paPositioning, paOptimizeOn,
-              paPreset, paPresetInputEnable, paQuitErrors, paQO, paSTATUS);
-    }
-};
+      void evt_MAP(const CIEC_BOOL &paQI,
+                   const CIEC_STRING &paBusy,
+                   const CIEC_STRING &paLimitSwitchN,
+                   const CIEC_STRING &paLimitSwitchP,
+                   const CIEC_STRING &paPresetInput,
+                   const CIEC_STRING &paOptimizeOnZInput,
+                   const CIEC_STRING &paOnTarget,
+                   const CIEC_STRING &paReferenceOk,
+                   const CIEC_STRING &paCurrentPosition,
+                   const CIEC_STRING &paTargetPosition,
+                   const CIEC_STRING &paMotorN,
+                   const CIEC_STRING &paMotorP,
+                   const CIEC_STRING &paPositioning,
+                   const CIEC_STRING &paOptimizeOn,
+                   const CIEC_STRING &paPreset,
+                   const CIEC_STRING &paPresetInputEnable,
+                   const CIEC_STRING &paQuitErrors,
+                   CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                   COutputParameter<CIEC_WSTRING> paSTATUS) {
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paSTATUS(paSTATUS);
+        var_QI = paQI;
+        var_Busy = paBusy;
+        var_LimitSwitchN = paLimitSwitchN;
+        var_LimitSwitchP = paLimitSwitchP;
+        var_PresetInput = paPresetInput;
+        var_OptimizeOnZInput = paOptimizeOnZInput;
+        var_OnTarget = paOnTarget;
+        var_ReferenceOk = paReferenceOk;
+        var_CurrentPosition = paCurrentPosition;
+        var_TargetPosition = paTargetPosition;
+        var_MotorN = paMotorN;
+        var_MotorP = paMotorP;
+        var_Positioning = paPositioning;
+        var_OptimizeOn = paOptimizeOn;
+        var_Preset = paPreset;
+        var_PresetInputEnable = paPresetInputEnable;
+        var_QuitErrors = paQuitErrors;
+        executeEvent(scmEventMAPID, nullptr);
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
+      }
+
+      void operator()(const CIEC_BOOL &paQI,
+                      const CIEC_STRING &paBusy,
+                      const CIEC_STRING &paLimitSwitchN,
+                      const CIEC_STRING &paLimitSwitchP,
+                      const CIEC_STRING &paPresetInput,
+                      const CIEC_STRING &paOptimizeOnZInput,
+                      const CIEC_STRING &paOnTarget,
+                      const CIEC_STRING &paReferenceOk,
+                      const CIEC_STRING &paCurrentPosition,
+                      const CIEC_STRING &paTargetPosition,
+                      const CIEC_STRING &paMotorN,
+                      const CIEC_STRING &paMotorP,
+                      const CIEC_STRING &paPositioning,
+                      const CIEC_STRING &paOptimizeOn,
+                      const CIEC_STRING &paPreset,
+                      const CIEC_STRING &paPresetInputEnable,
+                      const CIEC_STRING &paQuitErrors,
+                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                      COutputParameter<CIEC_WSTRING> paSTATUS) {
+        evt_MAP(paQI, paBusy, paLimitSwitchN, paLimitSwitchP, paPresetInput, paOptimizeOnZInput, paOnTarget,
+                paReferenceOk, paCurrentPosition, paTargetPosition, paMotorN, paMotorP, paPositioning, paOptimizeOn,
+                paPreset, paPresetInputEnable, paQuitErrors, paQO, paSTATUS);
+      }
+  };
+
+} // namespace forte::eclipse4diac::io::wago
