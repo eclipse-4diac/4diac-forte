@@ -23,6 +23,7 @@
 #include <cassert>
 #include <algorithm>
 #include <functional>
+#include <span>
 
 namespace forte::util {
 
@@ -206,6 +207,13 @@ namespace forte::util {
     return paFirst.size() == paSecond.size() && std::equal(paFirst.cbegin(), paFirst.cend(), paSecond.cbegin());
   }
 
+  template<typename T1, typename T2, std::size_t U, std::size_t V>
+    requires std::equality_comparable_with<T1, T2>
+  [[nodiscard]]
+  bool operator==(const inplace_vector<T1, U> &paFirst, std::span<T2, V> paSecond) {
+    return paFirst.size() == paSecond.size() && std::equal(paFirst.cbegin(), paFirst.cend(), paSecond.begin());
+  }
+
   template<typename T, std::size_t U, std::size_t V>
   [[nodiscard]]
   bool operator!=(const inplace_vector<T, U> &paFirst, const inplace_vector<T, V> &paSecond) {
@@ -216,6 +224,13 @@ namespace forte::util {
   [[nodiscard]]
   auto operator<=>(const inplace_vector<T, U> &paFirst, const inplace_vector<T, V> &paSecond) {
     return std::lexicographical_compare_three_way(paFirst.cbegin(), paFirst.cend(), paSecond.cbegin(), paSecond.cend());
+  }
+
+  template<typename T1, typename T2, std::size_t U, std::size_t V>
+    requires std::three_way_comparable_with<T1, T2>
+  [[nodiscard]]
+  auto operator<=>(const inplace_vector<T1, U> &paFirst, std::span<T2, V> paSecond) {
+    return std::lexicographical_compare_three_way(paFirst.cbegin(), paFirst.cend(), paSecond.begin(), paSecond.end());
   }
 } // namespace forte::util
 
