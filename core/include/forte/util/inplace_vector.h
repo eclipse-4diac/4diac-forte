@@ -211,6 +211,12 @@ namespace forte::util {
   bool operator!=(const inplace_vector<T, U> &paFirst, const inplace_vector<T, V> &paSecond) {
     return !(paFirst == paSecond);
   }
+
+  template<typename T, std::size_t U, std::size_t V>
+  [[nodiscard]]
+  auto operator<=>(const inplace_vector<T, U> &paFirst, const inplace_vector<T, V> &paSecond) {
+    return std::lexicographical_compare_three_way(paFirst.cbegin(), paFirst.cend(), paSecond.cbegin(), paSecond.cend());
+  }
 } // namespace forte::util
 
 template<typename T, std::size_t Capacity>
