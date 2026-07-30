@@ -14,81 +14,85 @@
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
 
-class FORTE_Wago459 : public WagoSlaveBase {
-    DECLARE_FIRMWARE_FB(FORTE_Wago459)
+namespace forte::eclipse4diac::io::wago {
 
-  public:
-    FORTE_Wago459(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
-    ~FORTE_Wago459() override = default;
+  class FORTE_Wago459 : public WagoSlaveBase {
+      DECLARE_FIRMWARE_FB(FORTE_Wago459)
 
-    CIEC_BOOL var_QI;
-    CIEC_STRING var_AnalogInput_1;
-    CIEC_STRING var_AnalogInput_2;
-    CIEC_STRING var_AnalogInput_3;
-    CIEC_STRING var_AnalogInput_4;
+    public:
+      FORTE_Wago459(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      ~FORTE_Wago459() override = default;
 
-    CIEC_BOOL var_QO;
-    CIEC_WSTRING var_STATUS;
+      CIEC_BOOL var_QI;
+      CIEC_STRING var_AnalogInput_1;
+      CIEC_STRING var_AnalogInput_2;
+      CIEC_STRING var_AnalogInput_3;
+      CIEC_STRING var_AnalogInput_4;
 
-    CEventConnection conn_MAPO;
-    CEventConnection conn_IND;
+      CIEC_BOOL var_QO;
+      CIEC_WSTRING var_STATUS;
 
-    CDataConnection *conn_QI;
-    CDataConnection *conn_AnalogInput_1;
-    CDataConnection *conn_AnalogInput_2;
-    CDataConnection *conn_AnalogInput_3;
-    CDataConnection *conn_AnalogInput_4;
+      CEventConnection conn_MAPO;
+      CEventConnection conn_IND;
 
-    COutDataConnection<CIEC_BOOL> conn_QO;
-    COutDataConnection<CIEC_WSTRING> conn_STATUS;
+      CDataConnection *conn_QI;
+      CDataConnection *conn_AnalogInput_1;
+      CDataConnection *conn_AnalogInput_2;
+      CDataConnection *conn_AnalogInput_3;
+      CDataConnection *conn_AnalogInput_4;
 
-    CIEC_ANY *getDI(size_t) override;
-    CIEC_ANY *getDO(size_t) override;
+      COutDataConnection<CIEC_BOOL> conn_QO;
+      COutDataConnection<CIEC_WSTRING> conn_STATUS;
 
-    CEventConnection *getEOConUnchecked(TPortId) override;
-    CDataConnection **getDIConUnchecked(TPortId) override;
-    CDataConnection *getDOConUnchecked(TPortId) override;
+      CIEC_ANY *getDI(size_t) override;
+      CIEC_ANY *getDO(size_t) override;
 
-    void evt_MAP(const CIEC_BOOL &paQI,
-                 const CIEC_STRING &paAnalogInput_1,
-                 const CIEC_STRING &paAnalogInput_2,
-                 const CIEC_STRING &paAnalogInput_3,
-                 const CIEC_STRING &paAnalogInput_4,
-                 CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                 COutputParameter<CIEC_WSTRING> paSTATUS) {
-      COutputGuard guard_paQO(paQO);
-      COutputGuard guard_paSTATUS(paSTATUS);
-      var_QI = paQI;
-      var_AnalogInput_1 = paAnalogInput_1;
-      var_AnalogInput_2 = paAnalogInput_2;
-      var_AnalogInput_3 = paAnalogInput_3;
-      var_AnalogInput_4 = paAnalogInput_4;
-      executeEvent(scmEventMAPID, nullptr);
-      *paQO = var_QO;
-      *paSTATUS = var_STATUS;
-    }
+      CEventConnection *getEOConUnchecked(TPortId) override;
+      CDataConnection **getDIConUnchecked(TPortId) override;
+      CDataConnection *getDOConUnchecked(TPortId) override;
 
-    void operator()(const CIEC_BOOL &paQI,
-                    const CIEC_STRING &paAnalogInput_1,
-                    const CIEC_STRING &paAnalogInput_2,
-                    const CIEC_STRING &paAnalogInput_3,
-                    const CIEC_STRING &paAnalogInput_4,
-                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                    COutputParameter<CIEC_WSTRING> paSTATUS) {
-      evt_MAP(paQI, paAnalogInput_1, paAnalogInput_2, paAnalogInput_3, paAnalogInput_4, paQO, paSTATUS);
-    }
+      void evt_MAP(const CIEC_BOOL &paQI,
+                   const CIEC_STRING &paAnalogInput_1,
+                   const CIEC_STRING &paAnalogInput_2,
+                   const CIEC_STRING &paAnalogInput_3,
+                   const CIEC_STRING &paAnalogInput_4,
+                   CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                   COutputParameter<CIEC_WSTRING> paSTATUS) {
+        COutputGuard guard_paQO(paQO);
+        COutputGuard guard_paSTATUS(paSTATUS);
+        var_QI = paQI;
+        var_AnalogInput_1 = paAnalogInput_1;
+        var_AnalogInput_2 = paAnalogInput_2;
+        var_AnalogInput_3 = paAnalogInput_3;
+        var_AnalogInput_4 = paAnalogInput_4;
+        executeEvent(scmEventMAPID, nullptr);
+        *paQO = var_QO;
+        *paSTATUS = var_STATUS;
+      }
 
-  protected:
-    INIT_HANDLES(0, 0, 4, 0)
+      void operator()(const CIEC_BOOL &paQI,
+                      const CIEC_STRING &paAnalogInput_1,
+                      const CIEC_STRING &paAnalogInput_2,
+                      const CIEC_STRING &paAnalogInput_3,
+                      const CIEC_STRING &paAnalogInput_4,
+                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
+                      COutputParameter<CIEC_WSTRING> paSTATUS) {
+        evt_MAP(paQI, paAnalogInput_1, paAnalogInput_2, paAnalogInput_3, paAnalogInput_4, paQO, paSTATUS);
+      }
 
-  private:
-    static const TEventID scmEventMAPID = 0;
-    static const TEventID scmEventMAPOID = 0;
-    static const TEventID scmEventINDID = 1;
-    static const int scmBusAdapterInAdpNum = 0;
-    static const int scmBusAdapterOutAdpNum = 1;
+    protected:
+      INIT_HANDLES(0, 0, 4, 0)
 
-    void readInputData(TEventID paEIID) override;
-    void writeOutputData(TEventID paEIID) override;
-    void setInitialValues() override;
-};
+    private:
+      static const TEventID scmEventMAPID = 0;
+      static const TEventID scmEventMAPOID = 0;
+      static const TEventID scmEventINDID = 1;
+      static const int scmBusAdapterInAdpNum = 0;
+      static const int scmBusAdapterOutAdpNum = 1;
+
+      void readInputData(TEventID paEIID) override;
+      void writeOutputData(TEventID paEIID) override;
+      void setInitialValues() override;
+  };
+
+} // namespace forte::eclipse4diac::io::wago

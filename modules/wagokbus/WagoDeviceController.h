@@ -10,8 +10,7 @@
  *   Jose Cabral - initial API and implementation and/or initial documentation
  *************************************************************************/
 
-#ifndef SRC_MODULES_WAGOKBUS_MODULAR_WAGODEVICECONTROLLER_H_
-#define SRC_MODULES_WAGOKBUS_MODULAR_WAGODEVICECONTROLLER_H_
+#pragma once
 
 #include "forte/io/device/io_controller_multi.h"
 
@@ -23,99 +22,101 @@ extern "C" {
 #include <ldkc_kbus_register_communication.h>
 }
 
-class WagoDeviceController : public forte::io::IODeviceMultiController {
-  public:
-    explicit WagoDeviceController(CDeviceExecution &paDeviceExecution);
+namespace forte::eclipse4diac::io::wago {
 
-    ~WagoDeviceController() override;
+  class WagoDeviceController : public ::forte::io::IODeviceMultiController {
+    public:
+      explicit WagoDeviceController(CDeviceExecution &paDeviceExecution);
 
-    struct WagoConfig : forte::io::IODeviceController::Config {
-        unsigned int updateInterval; //!< Sets the frequency for the data update cycle. The default value is 25 Hz.
-    };
+      ~WagoDeviceController() override;
 
-    class WagoHandleDescriptor : public forte::io::IODeviceMultiController::HandleDescriptor {
-      public:
-        CIEC_ANY::EDataTypeID mType;
-        TForteUInt32 mChannel;
+      struct WagoConfig : IODeviceController::Config {
+          unsigned int updateInterval; //!< Sets the frequency for the data update cycle. The default value is 25 Hz.
+      };
 
-        WagoHandleDescriptor(std::string const &paId,
-                             forte::io::IOMapper::Direction paDirection,
-                             size_t paSlaveIndex,
-                             CIEC_ANY::EDataTypeID paType,
-                             TForteUInt32 paChannel) :
-            forte::io::IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
-            mType(paType),
-            mChannel(paChannel) {
-        }
-    };
+      class WagoHandleDescriptor : public IODeviceMultiController::HandleDescriptor {
+        public:
+          CIEC_ANY::EDataTypeID mType;
+          TForteUInt32 mChannel;
 
-    void setConfig(struct forte::io::IODeviceController::Config *paConfig) override;
+          WagoHandleDescriptor(std::string const &paId,
+                               forte::io::IOMapper::Direction paDirection,
+                               size_t paSlaveIndex,
+                               CIEC_ANY::EDataTypeID paType,
+                               TForteUInt32 paChannel) :
+              IODeviceMultiController::HandleDescriptor(paId, paDirection, paSlaveIndex),
+              mType(paType),
+              mChannel(paChannel) {
+          }
+      };
 
-    void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::io::IOHandle> paHandle) override;
+      void setConfig(struct IODeviceController::Config *paConfig) override;
 
-    void dropSlaveHandles(size_t paIndex) override;
+      void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::io::IOHandle> paHandle) override;
 
-  protected:
-    const char *init();
+      void dropSlaveHandles(size_t paIndex) override;
 
-    forte::io::IOHandle *createIOHandle(forte::io::IODeviceController::HandleDescriptor &paHandleDescriptor) override;
+    protected:
+      const char *init();
 
-    void deInit() override;
+      forte::io::IOHandle *createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override;
 
-    void runLoop() override;
+      void deInit() override;
 
-    tApplicationDeviceInterface *mAppDevInterface;
-    uint32_t mTaskId;
-    tDeviceId mKBusDeviceId;
+      void runLoop() override;
 
-    /*KBus Terminal information */
-    size_t mTerminalCount;
-    u16 mTerminalIds[LDKC_KBUS_TERMINAL_COUNT_MAX];
-    tldkc_KbusInfo_TerminalInfo mTerminalInfos[LDKC_KBUS_TERMINAL_COUNT_MAX];
+      tApplicationDeviceInterface *mAppDevInterface;
+      uint32_t mTaskId;
+      tDeviceId mKBusDeviceId;
 
-    WagoConfig mConfig;
+      /*KBus Terminal information */
+      size_t mTerminalCount;
+      u16 mTerminalIds[LDKC_KBUS_TERMINAL_COUNT_MAX];
+      tldkc_KbusInfo_TerminalInfo mTerminalInfos[LDKC_KBUS_TERMINAL_COUNT_MAX];
 
-    /*! @brief Checks if the value of a handle has changed. Used by the #checkForInputChanges method.
-     *
-     * @param handle Handle which should be compared to the previous IO state
-     * @return True if the current state is equal to the previous IO state. In case it has changed, return false.
-     */
-    virtual bool isHandleValueEqual(forte::io::IOHandle &paHandle) override;
+      WagoConfig mConfig;
 
-  private:
-    /*! @brief Checks if a slave exists at the given index
-     *
-     * @param index Index/Position of the modular slave
-     * @return True in case a slave was found at the given position
-     */
-    bool isSlaveAvailable(size_t paIndex);
+      /*! @brief Checks if the value of a handle has changed. Used by the #checkForInputChanges method.
+       *
+       * @param handle Handle which should be compared to the previous IO state
+       * @return True if the current state is equal to the previous IO state. In case it has changed, return false.
+       */
+      virtual bool isHandleValueEqual(forte::io::IOHandle &paHandle) override;
 
-    /*! @brief Checks if the slave type matches the configured type
-     *
-     * @param index Index/Position of the modular slave
-     * @param type Type identifier which describes the modular slave
-     * @return True in case the slave at the index has the given type
-     */
-    bool checkSlaveType(size_t paIndex, int paType);
+    private:
+      /*! @brief Checks if a slave exists at the given index
+       *
+       * @param index Index/Position of the modular slave
+       * @return True in case a slave was found at the given position
+       */
+      bool isSlaveAvailable(size_t paIndex);
 
-    const char *loadTerminalInformation();
+      /*! @brief Checks if the slave type matches the configured type
+       *
+       * @param index Index/Position of the modular slave
+       * @param type Type identifier which describes the modular slave
+       * @return True in case the slave at the index has the given type
+       */
+      bool checkSlaveType(size_t paIndex, int paType);
 
-    bool triggerKBusCycle();
+      const char *loadTerminalInformation();
 
-    static const tDeviceId scmInvalidDeviceId = -1;
-    static const size_t scmNumberOfDevicesToScan = 10;
+      bool triggerKBusCycle();
 
-    static const char *const scmKBusDeviceName;
+      static const tDeviceId scmInvalidDeviceId = -1;
+      static const size_t scmNumberOfDevicesToScan = 10;
 
-    static const char *const scmFailedToGetApplicationInterface;
-    static const char *const scmFailedToInitializeKBus;
-    static const char *const scmFailedToScanDevices;
-    static const char *const scmFailedToOpenKBusDevice;
-    static const char *const scmFailedToGetDeviceList;
+      static const char *const scmKBusDeviceName;
 
-    static const char *const scmFailedToCreateKBusInfo;
-    static const char *const scmFailedGetTerminalInfo;
-    static const char *const scmFailedGetTerminalList;
-};
+      static const char *const scmFailedToGetApplicationInterface;
+      static const char *const scmFailedToInitializeKBus;
+      static const char *const scmFailedToScanDevices;
+      static const char *const scmFailedToOpenKBusDevice;
+      static const char *const scmFailedToGetDeviceList;
 
-#endif /* SRC_MODULES_WAGOKBUS_MODULAR_WAGODEVICECONTROLLER_H_ */
+      static const char *const scmFailedToCreateKBusInfo;
+      static const char *const scmFailedGetTerminalInfo;
+      static const char *const scmFailedGetTerminalList;
+  };
+
+} // namespace forte::eclipse4diac::io::wago
