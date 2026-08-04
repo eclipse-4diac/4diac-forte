@@ -13,8 +13,6 @@
 #SET(SOURCE_GROUP ${SOURCE_GROUP}\\core)
 
   forte_test_add_inc_directories(${CMAKE_CURRENT_SOURCE_DIR})
-  
-  forte_test_add_sourcefile_cpp(fbdkasn1layerser_test.cpp)
-  forte_test_add_sourcefile_cpp(fbdkasn1layerdeser_test.cpp)
+
   forte_test_add_sourcefile_cpp(extractLayerAndParamsTest.cpp)
   

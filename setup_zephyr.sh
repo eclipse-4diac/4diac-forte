@@ -3,8 +3,7 @@ echo "--------------------------------------------------------------------------
 echo " Automatically set up development environment for Zephyr-platform"
 echo "----------------------------------------------------------------------------"
 echo ""
-echo " Includes 64bit-datatypes, float-datatypes, Ethernet-Interface,"
-echo " ASN1-encoding, ..."
+echo " Includes 64bit-datatypes, float-datatypes, Ethernet-Interface"
 echo ""
 echo " To include tests set directories for boost-test-framework and "
 echo " set FORTE_TESTS-option to 'ON'"
@@ -53,7 +52,6 @@ if [ -d "$forte_bin_dir" ]; then
     -DFORTE_IO=ON \
     -DFORTE_IO_ZEPHYR=ON \
     -DFORTE_COM_ETH=ON \
-    -DFORTE_COM_FBDK=ON \
     -DFORTE_COM_LOCAL=ON \
     -DFORTE_MODULE_UTILS=ON \
     -DFORTE_EXTERNAL_MODULES_DIRECTORY="${forte_external_modules_dir}" \

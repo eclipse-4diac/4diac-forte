@@ -33,7 +33,6 @@ mkdir -p bin/posix
 cd bin/posix
 %cmake -DFORTE_ARCHITECTURE=Posix \
        -DFORTE_COM_ETH=ON \
-       -DFORTE_COM_FBDK=ON \
        -DFORTE_COM_LOCAL=ON \
        %{?_with_opcua: -DFORTE_COM_OPC_UA=ON -DFORTE_COM_OPC_UA_INCLUDE_DIR=%{_includedir}/open62541 -DFORTE_COM_OPC_UA_LIB_DIR=%{_libdir}} \
        -DFORTE_MODULE_CONVERT=ON \

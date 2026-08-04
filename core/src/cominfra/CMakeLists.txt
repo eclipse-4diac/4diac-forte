@@ -17,7 +17,6 @@
 # ############################################################################
 
 option(FORTE_COM_ETH "Enable Forte Com Ethernet" ON)
-option(FORTE_COM_FBDK "Enable Forte Com FBDK" ON)
 option(FORTE_COM_LOCAL "Enable Forte local communication" ON)
 option(FORTE_COM_RAW "Enable Forte raw communication" ON)
 option(FORTE_COM_STRUCT_MEMBER "Local communication layer writing to a single element in a struct" OFF)
@@ -29,8 +28,6 @@ target_sources(forte-core PRIVATE
         comlayersmanager.cpp
         $<$<BOOL:${FORTE_COM_ETH}>:${CMAKE_CURRENT_SOURCE_DIR}/ipcomlayer.cpp>
         $<$<BOOL:${FORTE_COM_ETH}>:${CMAKE_CURRENT_SOURCE_DIR}/ipcomlayer.h>
-        $<$<BOOL:${FORTE_COM_FBDK}>:${CMAKE_CURRENT_SOURCE_DIR}/fbdkasn1layer.cpp>
-        $<$<BOOL:${FORTE_COM_FBDK}>:${CMAKE_CURRENT_SOURCE_DIR}/fbdkasn1layer.h>
         $<$<BOOL:${FORTE_COM_LOCAL}>:${CMAKE_CURRENT_SOURCE_DIR}/localcomlayer.cpp>
         $<$<BOOL:${FORTE_COM_LOCAL}>:${CMAKE_CURRENT_SOURCE_DIR}/localcomlayer.h>
         $<$<BOOL:${FORTE_COM_RAW}>:${CMAKE_CURRENT_SOURCE_DIR}/rawdatacomlayer.cpp>

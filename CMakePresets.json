@@ -20,10 +20,6 @@
           "type": "BOOL",
           "value": "ON"
         },
-        "FORTE_COM_FBDK": {
-          "type": "BOOL",
-          "value": "ON"
-        },
         "FORTE_COM_LOCAL": {
           "type": "BOOL",
           "value": "ON"

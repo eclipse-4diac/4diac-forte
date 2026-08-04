@@ -773,8 +773,6 @@ namespace forte::test {
     const char cTestString8[] = {"(Val1:=[\'String1\',\'String2\'],Val2:=TRUE, Val3:=[13])"};
     const char cTestString9[] = {"(Val1:=[\'String1\',\'String2\'], Val3:=[13], Val2:=TRUE)"};
 
-    BOOST_CHECK_EQUAL(stStruct1.getASN1StructType(),
-                      64 + 32 + 1); // CIEC_STRUCT::e_APPLICATION + CIEC_STRUCT::e_CONSTRUCTED + 1
     BOOST_CHECK_EQUAL(stStruct1.getStructSize(), 3);
     const StringId *names = stStruct1.elementNames();
     BOOST_CHECK_EQUAL(names[0], "Val1"_STRID);

@@ -3,8 +3,7 @@ echo "--------------------------------------------------------------------------
 echo " Automatically set up development environment for POSIX-platform"
 echo "----------------------------------------------------------------------------"
 echo ""
-echo " Includes 64bit-datatypes, float-datatypes, Ethernet-Interface,"
-echo " ASN1-encoding, ..."
+echo " Includes 64bit-datatypes, float-datatypes, Ethernet-Interface"
 echo ""
 echo " To include tests set directories for boost-test-framework and "
 echo " set FORTE_TESTS-option to 'ON'"
@@ -36,7 +35,6 @@ if [ -d "$forte_bin_dir" ]; then
     -DCMAKE_TOOLCHAIN_FILE=$1/axcf2152.cmake \
     -DFORTE_ARCHITECTURE=PLCnext \
     -DFORTE_COM_ETH=ON \
-    -DFORTE_COM_FBDK=ON \
     -DFORTE_COM_LOCAL=ON \
     -DFORTE_TESTS=OFF \
     -DFORTE_MODULE_CONVERT=ON \

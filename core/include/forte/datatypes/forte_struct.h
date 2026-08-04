@@ -43,17 +43,6 @@ namespace forte {
 
       ~CIEC_STRUCT() override = default;
 
-      /*! \brief Get the Struct's type
-       *
-       *   With this command the type-ID of the struct can be evaluated.
-       *
-       *   \param - No parameters necessary.
-       *   \return - the type-ID of the struct.
-       */
-      virtual TForteUInt8 getASN1StructType() const {
-        return +e_APPLICATION + +e_CONSTRUCTED + 1;
-      }
-
       /*! \brief Get the Struct's size
        *
        *   With this command the size of the struct can be evaluated.
@@ -145,9 +134,6 @@ namespace forte {
       size_t getMemberIndex(StringId paMemberNameId);
 
     protected:
-      enum EASN1Tags { e_UNIVERSAL = 0, e_APPLICATION = 64, e_CONTEXT = 128, e_PRIVATE = 192 };
-      enum EASN1Encoding { e_PRIMITIVE = 0, e_CONSTRUCTED = 32 };
-
       CIEC_STRUCT(const CIEC_STRUCT &) {};
 
       CIEC_STRUCT(CIEC_STRUCT &&) {};

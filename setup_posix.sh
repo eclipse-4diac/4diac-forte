@@ -3,8 +3,7 @@ echo "--------------------------------------------------------------------------
 echo " Automatically set up development environment for POSIX-platform"
 echo "----------------------------------------------------------------------------"
 echo ""
-echo " Includes 64bit-datatypes, float-datatypes, Ethernet-Interface,"
-echo " ASN1-encoding, ..."
+echo " Includes 64bit-datatypes, float-datatypes, Ethernet-Interface"
 echo ""
 echo " To include tests set directories for boost-test-framework and "
 echo " set FORTE_TESTS-option to 'ON'"
@@ -34,7 +33,6 @@ if [ -d "$forte_bin_dir" ]; then
   cmake -G "Unix Makefiles" \
     -DFORTE_ARCHITECTURE=Posix \
     -DFORTE_COM_ETH=ON \
-    -DFORTE_COM_FBDK=ON \
     -DFORTE_COM_LOCAL=ON \
     -DFORTE_TESTS=OFF \
     -DFORTE_TESTS_INC_DIRS=${forte_boost_test_inc_dirs} \
