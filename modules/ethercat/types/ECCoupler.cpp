@@ -28,7 +28,7 @@ namespace forte::eclipse4diac::io::ethercat {
 
   FORTE_ECCoupler::FORTE_ECCoupler(forte::StringId paInstanceNameId, CFBContainer &paContainer) :
       FORTE_ECDevice(paInstanceNameId, paContainer, ECBusDeviceHandler::DeviceType::ECCoupler),
-      var_ModuleAdapterOut("ModuleAdapterOut"_STRID, *this, 1) {
+      var_ModuleAdapterOut("ModuleAdapterOut"_STRID, *this, 2) {
   }
 
   bool FORTE_ECCoupler::createInterfaceSpec(const char *paConfigString, SFBInterfaceSpec &paInterfaceSpec) {
