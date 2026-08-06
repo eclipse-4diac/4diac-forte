@@ -24,7 +24,7 @@ WagoSlaveBase::WagoSlaveBase(int paType,
     IOConfigFBMultiSlave(
         scmSlaveConfigurationIO, scmSlaveConfigurationIONum, paType, paContainer, paInterfaceSpec, paInstanceNameId),
     var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0),
-    var_BusAdapterIn("BusAdapterIn"_STRID, *this, 0) {
+    var_BusAdapterIn("BusAdapterIn"_STRID, *this, 1) {
 }
 
 void WagoSlaveBase::initWagoHandle(int paDIIndex,

@@ -33,7 +33,7 @@ namespace forte::eclipse4diac::io::embrick {
       IOConfigFBMultiSlave(
           paSlaveConfigurationIO, paSlaveConfigurationIO_num, paType, paContainer, paInterfaceSpec, paInstanceNameId),
       var_BusAdapterIn("BusAdapterIn"_STRID, *this, 0),
-      var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0),
+      var_BusAdapterOut("BusAdapterOut"_STRID, *this, 1),
       mSlave(nullptr) {
   }
 

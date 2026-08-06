@@ -110,7 +110,7 @@ namespace forte::eclipse4diac::io::revpi {
       conn_QO(*this, 0, var_QO),
       conn_STATUS(*this, 1, var_STATUS),
       var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0),
-      var_BusAdapterIn("BusAdapterIn"_STRID, *this, 0) {};
+      var_BusAdapterIn("BusAdapterIn"_STRID, *this, 1) {};
 
   void FORTE_IORevPiDIO::setInitialValues() {
     var_QI = 0_BOOL;
