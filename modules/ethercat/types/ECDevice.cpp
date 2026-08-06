@@ -40,13 +40,13 @@ namespace forte::eclipse4diac::io::ethercat {
   const TForteUInt8 FORTE_ECDevice::scmSlaveConfigurationIONum = 0;
 
   FORTE_ECDevice::FORTE_ECDevice(const forte::StringId paInstanceNameId,
-                               CFBContainer &paContainer,
-                               ECBusDeviceHandler::DeviceType paDeviceType) :
+                                 CFBContainer &paContainer,
+                                 ECBusDeviceHandler::DeviceType paDeviceType) :
       CGenFunctionBlock<forte::io::IOConfigFBMultiSlave>(paContainer,
-                                           paInstanceNameId,
-                                           scmSlaveConfigurationIO,
-                                           scmSlaveConfigurationIONum,
-                                           static_cast<int>(paDeviceType)),
+                                                         paInstanceNameId,
+                                                         scmSlaveConfigurationIO,
+                                                         scmSlaveConfigurationIONum,
+                                                         static_cast<int>(paDeviceType)),
       conn_MAPO(*this, 0),
       conn_IND(*this, 1),
       conn_QI(nullptr),
@@ -54,7 +54,7 @@ namespace forte::eclipse4diac::io::ethercat {
       conn_QO(*this, 0, var_QO),
       conn_STATUS(*this, 1, var_STATUS),
       var_BusAdapterIn("BusAdapterIn"_STRID, *this, 0),
-      var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0) {
+      var_BusAdapterOut("BusAdapterOut"_STRID, *this, 1) {
   }
 
   FORTE_ECDevice::~FORTE_ECDevice() {
