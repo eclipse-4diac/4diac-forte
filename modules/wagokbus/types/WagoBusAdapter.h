@@ -19,26 +19,6 @@ namespace forte::eclipse4diac::io::wago {
       DECLARE_ADAPTER_TYPE(FORTE_WagoBusAdapter)
 
     public:
-      static const TEventID scmEventINITOID = 0;
-      static const TEventID scmEventINITID = 0;
-
-      void setInitialValues() override;
-
-    public:
-      CIEC_BOOL var_QO;
-
-      CIEC_BOOL var_QI;
-      CIEC_UINT var_MasterId;
-      CIEC_UINT var_Index;
-
-      TEventID evt_INITO() {
-        return getParentAdapterListEventID() + scmEventINITOID;
-      }
-
-      TEventID evt_INIT() {
-        return getParentAdapterListEventID() + scmEventINITID;
-      }
-
       CIEC_ANY *getDeviceConfigPin(int) override {
         return nullptr;
       }
