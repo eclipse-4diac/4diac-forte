@@ -58,19 +58,7 @@ namespace forte::eclipse4diac::io::revpi {
                                                    const SFBInterfaceSpec &paInterfaceSpec,
                                                    const forte::StringId paInstanceNameId,
                                                    TForteUInt8 paParentAdapterlistID) :
-      ::forte::io::IOConfigFBMultiAdapter({}, paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
-      var_QO(0_BOOL),
-      var_QI(0_BOOL),
-      var_MasterId(0_UINT),
-      var_Index(0_UINT) {
-  }
-
-  void FORTE_IORevPiBusAdapter::setInitialValues() {
-    CAdapter::setInitialValues();
-    var_QO = 0_BOOL;
-    var_QI = 0_BOOL;
-    var_MasterId = 0_UINT;
-    var_Index = 0_UINT;
+      ::forte::io::IOConfigFBMultiAdapter({}, paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID) {
   }
 
   FORTE_IORevPiBusAdapter_Plug::FORTE_IORevPiBusAdapter_Plug(forte::StringId paInstanceNameId,
