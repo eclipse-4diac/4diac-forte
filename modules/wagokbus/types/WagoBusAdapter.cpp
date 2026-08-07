@@ -53,19 +53,7 @@ namespace forte::eclipse4diac::io::wago {
                                              const SFBInterfaceSpec &paInterfaceSpec,
                                              const forte::StringId paInstanceNameId,
                                              TForteUInt8 paParentAdapterlistID) :
-      IOConfigFBMultiAdapter({}, paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
-      var_QO(0_BOOL),
-      var_QI(0_BOOL),
-      var_MasterId(0_UINT),
-      var_Index(0_UINT) {
-  }
-
-  void FORTE_WagoBusAdapter::setInitialValues() {
-    CAdapter::setInitialValues();
-    var_QO = 0_BOOL;
-    var_QI = 0_BOOL;
-    var_MasterId = 0_UINT;
-    var_Index = 0_UINT;
+      IOConfigFBMultiAdapter({}, paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID) {
   }
 
   FORTE_WagoBusAdapter_Plug::FORTE_WagoBusAdapter_Plug(forte::StringId paInstanceNameId,
