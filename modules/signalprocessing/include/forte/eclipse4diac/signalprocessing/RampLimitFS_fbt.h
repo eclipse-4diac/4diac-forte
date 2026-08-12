@@ -6,41 +6,46 @@
  ***
  *** SPDX-License-Identifier: EPL-2.0
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.2.100.202608212006!
  ***
  *** Name: RampLimitFS
  *** Description: Setpoint Ramp: Step up and down Values with Fast and Slow mode
  *** Version:
- ***     1.0: 2024-09-20/Franz Höpfinger - HR Agrartechnik GmbH -
+ ***     3.1: 2026-08-12/Franz Höpfinger - HR Agrartechnik GmbH - add init and correct WITH, add upper and lower limit
+ ***                                       reached indicators
+ ***     3.0: 2025-04-14/Patrick Aigner  - changed package
  ***     1.1: 2024-10-02/Franz Höpfinger - HR Agrartechnik GmbH - Rename to RampLimitFS
+ ***     1.0: 2024-09-20/Franz Höpfinger - HR Agrartechnik GmbH -
  *************************************************************************/
 
 #pragma once
 
 #include "forte/simplefb.h"
+#include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_dint.h"
 #include "forte/forte_st_util.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
 
 namespace forte::eclipse4diac::signalprocessing {
   class FORTE_RampLimitFS final : public CSimpleFB {
       DECLARE_FIRMWARE_FB(FORTE_RampLimitFS)
 
     private:
-      static const TEventID scmEventZEROID = 0;
-      static const TEventID scmEventUP_SLOWID = 1;
-      static const TEventID scmEventUP_FASTID = 2;
-      static const TEventID scmEventDOWN_SLOWID = 3;
-      static const TEventID scmEventDOWN_FASTID = 4;
-      static const TEventID scmEventFULLID = 5;
-      static const TEventID scmEventLOADID = 6;
-      static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventINITOID = 0;
+      static const TEventID scmEventCNFID = 1;
+      static const TEventID scmEventINITID = 0;
+      static const TEventID scmEventZEROID = 1;
+      static const TEventID scmEventUP_SLOWID = 2;
+      static const TEventID scmEventUP_FASTID = 3;
+      static const TEventID scmEventDOWN_SLOWID = 4;
+      static const TEventID scmEventDOWN_FASTID = 5;
+      static const TEventID scmEventFULLID = 6;
+      static const TEventID scmEventLOADID = 7;
 
       CIEC_ANY *getVarInternal(size_t) override;
 
+      void alg_INIT(void);
       void alg_ZERO(void);
       void alg_UP_SLOW(void);
       void alg_UP_FAST(void);
@@ -48,6 +53,15 @@ namespace forte::eclipse4diac::signalprocessing {
       void alg_DOWN_FAST(void);
       void alg_FULL(void);
       void alg_LOAD(void);
+
+      void enterStateINIT(CEventChainExecutionThread *const paECET);
+      void enterStateZERO(CEventChainExecutionThread *const paECET);
+      void enterStateUP_SLOW(CEventChainExecutionThread *const paECET);
+      void enterStateUP_FAST(CEventChainExecutionThread *const paECET);
+      void enterStateDOWN_SLOW(CEventChainExecutionThread *const paECET);
+      void enterStateDOWN_FAST(CEventChainExecutionThread *const paECET);
+      void enterStateFULL(CEventChainExecutionThread *const paECET);
+      void enterStateLOAD(CEventChainExecutionThread *const paECET);
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -65,7 +79,10 @@ namespace forte::eclipse4diac::signalprocessing {
       CIEC_DINT var_VAL_FULL;
 
       CIEC_DINT var_OUT;
+      CIEC_BOOL var_qAtZero;
+      CIEC_BOOL var_qAtFull;
 
+      CEventConnection conn_INITO;
       CEventConnection conn_CNF;
 
       CDataConnection *conn_PV;
@@ -75,6 +92,8 @@ namespace forte::eclipse4diac::signalprocessing {
       CDataConnection *conn_VAL_FULL;
 
       COutDataConnection<CIEC_DINT> conn_OUT;
+      COutDataConnection<CIEC_BOOL> conn_qAtZero;
+      COutDataConnection<CIEC_BOOL> conn_qAtFull;
 
       CIEC_ANY *getDI(size_t) override;
       CIEC_ANY *getDO(size_t) override;
@@ -82,13 +101,39 @@ namespace forte::eclipse4diac::signalprocessing {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
+      void evt_INIT(const CIEC_DINT &paPV,
+                    const CIEC_DINT &paVAL_ZERO,
+                    const CIEC_DINT &paSLOW,
+                    const CIEC_DINT &paFAST,
+                    const CIEC_DINT &paVAL_FULL,
+                    COutputParameter<CIEC_DINT> paOUT,
+                    CAnyBitOutputParameter<CIEC_BOOL> paqAtZero,
+                    CAnyBitOutputParameter<CIEC_BOOL> paqAtFull) {
+        COutputGuard guard_OUT(paOUT);
+        COutputGuard guard_qAtZero(paqAtZero);
+        COutputGuard guard_qAtFull(paqAtFull);
+        var_PV = paPV;
+        var_VAL_ZERO = paVAL_ZERO;
+        var_SLOW = paSLOW;
+        var_FAST = paFAST;
+        var_VAL_FULL = paVAL_FULL;
+        executeEvent(scmEventINITID, nullptr);
+        *paOUT = var_OUT;
+        *paqAtZero = var_qAtZero;
+        *paqAtFull = var_qAtFull;
+      }
+
       void evt_ZERO(const CIEC_DINT &paPV,
                     const CIEC_DINT &paVAL_ZERO,
                     const CIEC_DINT &paSLOW,
                     const CIEC_DINT &paFAST,
                     const CIEC_DINT &paVAL_FULL,
-                    COutputParameter<CIEC_DINT> paOUT) {
-        COutputGuard guard_paOUT(paOUT);
+                    COutputParameter<CIEC_DINT> paOUT,
+                    CAnyBitOutputParameter<CIEC_BOOL> paqAtZero,
+                    CAnyBitOutputParameter<CIEC_BOOL> paqAtFull) {
+        COutputGuard guard_OUT(paOUT);
+        COutputGuard guard_qAtZero(paqAtZero);
+        COutputGuard guard_qAtFull(paqAtFull);
         var_PV = paPV;
         var_VAL_ZERO = paVAL_ZERO;
         var_SLOW = paSLOW;
@@ -96,6 +141,8 @@ namespace forte::eclipse4diac::signalprocessing {
         var_VAL_FULL = paVAL_FULL;
         executeEvent(scmEventZEROID, nullptr);
         *paOUT = var_OUT;
+        *paqAtZero = var_qAtZero;
+        *paqAtFull = var_qAtFull;
       }
 
       void evt_UP_SLOW(const CIEC_DINT &paPV,
@@ -103,8 +150,12 @@ namespace forte::eclipse4diac::signalprocessing {
                        const CIEC_DINT &paSLOW,
                        const CIEC_DINT &paFAST,
                        const CIEC_DINT &paVAL_FULL,
-                       COutputParameter<CIEC_DINT> paOUT) {
-        COutputGuard guard_paOUT(paOUT);
+                       COutputParameter<CIEC_DINT> paOUT,
+                       CAnyBitOutputParameter<CIEC_BOOL> paqAtZero,
+                       CAnyBitOutputParameter<CIEC_BOOL> paqAtFull) {
+        COutputGuard guard_OUT(paOUT);
+        COutputGuard guard_qAtZero(paqAtZero);
+        COutputGuard guard_qAtFull(paqAtFull);
         var_PV = paPV;
         var_VAL_ZERO = paVAL_ZERO;
         var_SLOW = paSLOW;
@@ -112,6 +163,8 @@ namespace forte::eclipse4diac::signalprocessing {
         var_VAL_FULL = paVAL_FULL;
         executeEvent(scmEventUP_SLOWID, nullptr);
         *paOUT = var_OUT;
+        *paqAtZero = var_qAtZero;
+        *paqAtFull = var_qAtFull;
       }
 
       void evt_UP_FAST(const CIEC_DINT &paPV,
@@ -119,8 +172,12 @@ namespace forte::eclipse4diac::signalprocessing {
                        const CIEC_DINT &paSLOW,
                        const CIEC_DINT &paFAST,
                        const CIEC_DINT &paVAL_FULL,
-                       COutputParameter<CIEC_DINT> paOUT) {
-        COutputGuard guard_paOUT(paOUT);
+                       COutputParameter<CIEC_DINT> paOUT,
+                       CAnyBitOutputParameter<CIEC_BOOL> paqAtZero,
+                       CAnyBitOutputParameter<CIEC_BOOL> paqAtFull) {
+        COutputGuard guard_OUT(paOUT);
+        COutputGuard guard_qAtZero(paqAtZero);
+        COutputGuard guard_qAtFull(paqAtFull);
         var_PV = paPV;
         var_VAL_ZERO = paVAL_ZERO;
         var_SLOW = paSLOW;
@@ -128,6 +185,8 @@ namespace forte::eclipse4diac::signalprocessing {
         var_VAL_FULL = paVAL_FULL;
         executeEvent(scmEventUP_FASTID, nullptr);
         *paOUT = var_OUT;
+        *paqAtZero = var_qAtZero;
+        *paqAtFull = var_qAtFull;
       }
 
       void evt_DOWN_SLOW(const CIEC_DINT &paPV,
@@ -135,8 +194,12 @@ namespace forte::eclipse4diac::signalprocessing {
                          const CIEC_DINT &paSLOW,
                          const CIEC_DINT &paFAST,
                          const CIEC_DINT &paVAL_FULL,
-                         COutputParameter<CIEC_DINT> paOUT) {
-        COutputGuard guard_paOUT(paOUT);
+                         COutputParameter<CIEC_DINT> paOUT,
+                         CAnyBitOutputParameter<CIEC_BOOL> paqAtZero,
+                         CAnyBitOutputParameter<CIEC_BOOL> paqAtFull) {
+        COutputGuard guard_OUT(paOUT);
+        COutputGuard guard_qAtZero(paqAtZero);
+        COutputGuard guard_qAtFull(paqAtFull);
         var_PV = paPV;
         var_VAL_ZERO = paVAL_ZERO;
         var_SLOW = paSLOW;
@@ -144,6 +207,8 @@ namespace forte::eclipse4diac::signalprocessing {
         var_VAL_FULL = paVAL_FULL;
         executeEvent(scmEventDOWN_SLOWID, nullptr);
         *paOUT = var_OUT;
+        *paqAtZero = var_qAtZero;
+        *paqAtFull = var_qAtFull;
       }
 
       void evt_DOWN_FAST(const CIEC_DINT &paPV,
@@ -151,8 +216,12 @@ namespace forte::eclipse4diac::signalprocessing {
                          const CIEC_DINT &paSLOW,
                          const CIEC_DINT &paFAST,
                          const CIEC_DINT &paVAL_FULL,
-                         COutputParameter<CIEC_DINT> paOUT) {
-        COutputGuard guard_paOUT(paOUT);
+                         COutputParameter<CIEC_DINT> paOUT,
+                         CAnyBitOutputParameter<CIEC_BOOL> paqAtZero,
+                         CAnyBitOutputParameter<CIEC_BOOL> paqAtFull) {
+        COutputGuard guard_OUT(paOUT);
+        COutputGuard guard_qAtZero(paqAtZero);
+        COutputGuard guard_qAtFull(paqAtFull);
         var_PV = paPV;
         var_VAL_ZERO = paVAL_ZERO;
         var_SLOW = paSLOW;
@@ -160,6 +229,8 @@ namespace forte::eclipse4diac::signalprocessing {
         var_VAL_FULL = paVAL_FULL;
         executeEvent(scmEventDOWN_FASTID, nullptr);
         *paOUT = var_OUT;
+        *paqAtZero = var_qAtZero;
+        *paqAtFull = var_qAtFull;
       }
 
       void evt_FULL(const CIEC_DINT &paPV,
@@ -167,8 +238,12 @@ namespace forte::eclipse4diac::signalprocessing {
                     const CIEC_DINT &paSLOW,
                     const CIEC_DINT &paFAST,
                     const CIEC_DINT &paVAL_FULL,
-                    COutputParameter<CIEC_DINT> paOUT) {
-        COutputGuard guard_paOUT(paOUT);
+                    COutputParameter<CIEC_DINT> paOUT,
+                    CAnyBitOutputParameter<CIEC_BOOL> paqAtZero,
+                    CAnyBitOutputParameter<CIEC_BOOL> paqAtFull) {
+        COutputGuard guard_OUT(paOUT);
+        COutputGuard guard_qAtZero(paqAtZero);
+        COutputGuard guard_qAtFull(paqAtFull);
         var_PV = paPV;
         var_VAL_ZERO = paVAL_ZERO;
         var_SLOW = paSLOW;
@@ -176,6 +251,8 @@ namespace forte::eclipse4diac::signalprocessing {
         var_VAL_FULL = paVAL_FULL;
         executeEvent(scmEventFULLID, nullptr);
         *paOUT = var_OUT;
+        *paqAtZero = var_qAtZero;
+        *paqAtFull = var_qAtFull;
       }
 
       void evt_LOAD(const CIEC_DINT &paPV,
@@ -183,8 +260,12 @@ namespace forte::eclipse4diac::signalprocessing {
                     const CIEC_DINT &paSLOW,
                     const CIEC_DINT &paFAST,
                     const CIEC_DINT &paVAL_FULL,
-                    COutputParameter<CIEC_DINT> paOUT) {
-        COutputGuard guard_paOUT(paOUT);
+                    COutputParameter<CIEC_DINT> paOUT,
+                    CAnyBitOutputParameter<CIEC_BOOL> paqAtZero,
+                    CAnyBitOutputParameter<CIEC_BOOL> paqAtFull) {
+        COutputGuard guard_OUT(paOUT);
+        COutputGuard guard_qAtZero(paqAtZero);
+        COutputGuard guard_qAtFull(paqAtFull);
         var_PV = paPV;
         var_VAL_ZERO = paVAL_ZERO;
         var_SLOW = paSLOW;
@@ -192,15 +273,8 @@ namespace forte::eclipse4diac::signalprocessing {
         var_VAL_FULL = paVAL_FULL;
         executeEvent(scmEventLOADID, nullptr);
         *paOUT = var_OUT;
-      }
-
-      void operator()(const CIEC_DINT &paPV,
-                      const CIEC_DINT &paVAL_ZERO,
-                      const CIEC_DINT &paSLOW,
-                      const CIEC_DINT &paFAST,
-                      const CIEC_DINT &paVAL_FULL,
-                      COutputParameter<CIEC_DINT> paOUT) {
-        evt_ZERO(paPV, paVAL_ZERO, paSLOW, paFAST, paVAL_FULL, paOUT);
+        *paqAtZero = var_qAtZero;
+        *paqAtFull = var_qAtFull;
       }
   };
 } // namespace forte::eclipse4diac::signalprocessing
