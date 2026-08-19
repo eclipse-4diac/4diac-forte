@@ -13,6 +13,7 @@
 #pragma once
 
 #include "forte/io/device/io_controller_multi.h"
+#include "types/RegComCmd_dtp.h"
 
 #define OS_MUST_BE_ARRAY
 
@@ -23,6 +24,8 @@ extern "C" {
 }
 
 namespace forte::eclipse4diac::io::wago {
+
+  class WagoRegComDevice;
 
   class WagoDeviceController : public ::forte::io::IODeviceMultiController {
     public:
@@ -51,19 +54,22 @@ namespace forte::eclipse4diac::io::wago {
       };
 
       void setConfig(struct IODeviceController::Config *paConfig) override;
-
       void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::io::IOHandle> paHandle) override;
-
       void dropSlaveHandles(size_t paIndex) override;
+
+      void enableRegCom(WagoRegComDevice *paECStartFB);
+      void disableRegCom();
+      void writeRegComRequest(const CIEC_RegComCmd &paCmd);
+      void readRegComRequest(const CIEC_RegComCmd &paCmd);
+      void readRegComResult(CIEC_BYTE &paD0, CIEC_BYTE &paD1);
+      void initRegComOffsets(WagoRegComDevice *paECStartFB);
 
     protected:
       const char *init();
+      void deInit() override;
+      void runLoop() override;
 
       forte::io::IOHandle *createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override;
-
-      void deInit() override;
-
-      void runLoop() override;
 
       tApplicationDeviceInterface *mAppDevInterface;
       uint32_t mTaskId;
@@ -102,6 +108,12 @@ namespace forte::eclipse4diac::io::wago {
       const char *loadTerminalInformation();
 
       bool triggerKBusCycle();
+
+      void checkForRegComChanges();
+      TForteByte mREG_S;
+      TForteByte mREG_C = 0x80;
+      bool isRegComOn;
+      WagoRegComDevice *mRegComDevice = nullptr;
 
       static const tDeviceId scmInvalidDeviceId = -1;
       static const size_t scmNumberOfDevicesToScan = 10;

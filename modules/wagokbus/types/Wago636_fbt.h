@@ -9,14 +9,15 @@
 
 #pragma once
 
-#include "WagoSlaveBase.h"
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_wstring.h"
+#include "../WagoDeviceController.h"
+#include "WagoRegComDevice.h"
 
 namespace forte::eclipse4diac::io::wago {
 
-  class FORTE_Wago636 final : public WagoSlaveBase {
+  class FORTE_Wago636 final : public WagoRegComDevice {
       DECLARE_FIRMWARE_FB(FORTE_Wago636)
 
     private:
@@ -25,6 +26,8 @@ namespace forte::eclipse4diac::io::wago {
       static const TEventID scmEventINDID = 1;
       static const int scmBusAdapterInAdpNum = 0;
       static const int scmBusAdapterOutAdpNum = 1;
+
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;

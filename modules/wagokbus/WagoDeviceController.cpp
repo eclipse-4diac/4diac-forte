@@ -13,6 +13,8 @@
 #include "WagoDeviceController.h"
 #include "forte/util/criticalregion.h"
 #include "WagoHandle.h"
+#include "types/WagoRegComDevice.h"
+#include "forte/iec61131_functions/func_USINT_TO_BYTE.h"
 
 using namespace forte::io;
 
@@ -137,7 +139,9 @@ namespace forte::eclipse4diac::io::wago {
         if (!triggerKBusCycle()) {
           break; // we have severe problem exit KBus handling thread
         }
-
+        if(mRegComDevice){
+          checkForRegComChanges();
+        }
         checkForInputChanges();
       }
     } else {
@@ -202,6 +206,101 @@ namespace forte::eclipse4diac::io::wago {
       DEVLOG_ERROR("[WagoDeviceController] CallDeviceSpecificFunction for 'libpackbus_Push' failed\n");
     }
     return false;
+  }
+
+  void WagoDeviceController::checkForRegComChanges() {
+    mAppDevInterface->ReadStart(mKBusDeviceId, mTaskId);
+    if(DAL_SUCCESS == mAppDevInterface->ReadBytes(mKBusDeviceId, mTaskId, mRegComDevice->getOffset_REG_S0() / 8, 1, &mREG_S)) {
+      if (!isRegComOn && ( (mREG_S & 0x80) == 0x80)) {
+        isRegComOn = true;
+        DEVLOG_DEBUG("[WagoDeviceController] Register communication on.\n");
+        startNewEventChain(mRegComDevice);
+      } else if (isRegComOn && ((mREG_S & 0xBF) == (mREG_C & 0xBF)) ) {
+        mREG_C = 0x00; // one change approve
+        DEVLOG_DEBUG("[WagoDeviceController] Register communication change.\n");
+        startNewEventChain(mRegComDevice);
+      } else if (isRegComOn && ((mREG_S & 0x80) == 0x00)) {
+        isRegComOn = false;
+        DEVLOG_DEBUG("[WagoDeviceController] Register communication off.\n");
+        startNewEventChain(mRegComDevice);
+        mRegComDevice = nullptr;
+    }
+  }
+  mAppDevInterface->ReadEnd(mKBusDeviceId, mTaskId);
+}
+
+  void WagoDeviceController::enableRegCom(WagoRegComDevice *paECStartFB) {
+    mRegComDevice = paECStartFB;
+    mAppDevInterface->WriteStart(mKBusDeviceId, mTaskId);
+    if(DAL_SUCCESS == mAppDevInterface->WriteBool(mKBusDeviceId, mTaskId, mRegComDevice->getOffset_REG_C7(), true) ) {
+      DEVLOG_DEBUG("[WagoDeviceController] Register communication enabling.\n");
+    }
+    mAppDevInterface->WriteEnd(mKBusDeviceId, mTaskId);
+  }
+
+  void WagoDeviceController::disableRegCom() {
+    mAppDevInterface->WriteStart(mKBusDeviceId, mTaskId);
+    if(DAL_SUCCESS == mAppDevInterface->WriteBool(mKBusDeviceId, mTaskId, mRegComDevice->getOffset_REG_C7(), false) ) {
+      DEVLOG_DEBUG("[WagoDeviceController] Register communication disabling.\n");
+    }
+    mAppDevInterface->WriteEnd(mKBusDeviceId, mTaskId);
+  }
+
+  void WagoDeviceController::writeRegComRequest(const CIEC_RegComCmd &paCmd) {
+    if (isRegComOn){
+      mAppDevInterface->WriteStart(mKBusDeviceId, mTaskId);
+      TForteByte outData[3];
+      outData[0] = mREG_C = 0xC0 | (func_USINT_TO_BYTE(paCmd.var_RegNr) & 0x3F); // Bit7 = 1, Bit6 = write = 1, Bit0-5= regNr
+      outData[1] = paCmd.var_REG_D0; // data
+      outData[2] = paCmd.var_REG_D1; // data
+      if(DAL_SUCCESS == mAppDevInterface->WriteBytes(mKBusDeviceId, mTaskId, mRegComDevice->getOffset_REG_C0() / 8, 3, outData) ) {
+        DEVLOG_DEBUG("[WagoDeviceController] Register communication write.\n");
+      }
+      mAppDevInterface->WriteEnd(mKBusDeviceId, mTaskId);
+    } else {
+      DEVLOG_ERROR("[WagoDeviceController] Register communication is off, write request not executable.\n");
+    }
+  }
+
+  void WagoDeviceController::readRegComRequest(const CIEC_RegComCmd &paCmd) {
+      if (isRegComOn){
+        mAppDevInterface->WriteStart(mKBusDeviceId, mTaskId);
+        mREG_C = 0x80 | func_USINT_TO_BYTE(paCmd.var_RegNr); // Bit7 = 1, Bit6 = read = 0, Bit0-5= regNr
+        if(DAL_SUCCESS == mAppDevInterface->WriteBytes(mKBusDeviceId, mTaskId, mRegComDevice->getOffset_REG_C0() / 8, 1, &mREG_C) ) {
+          DEVLOG_DEBUG("[WagoDeviceController] Register communication read request.\n");
+        }
+        mAppDevInterface->WriteEnd(mKBusDeviceId, mTaskId);
+      } else{
+        DEVLOG_ERROR("[WagoDeviceController] Register communication is off, read request not executable.\n");
+      }
+    }
+
+  void WagoDeviceController::readRegComResult(CIEC_BYTE &paD0, CIEC_BYTE &paD1) {
+    if (isRegComOn){
+      TForteByte inDataWord[2];
+      mAppDevInterface->ReadStart(mKBusDeviceId, mTaskId);
+      if(DAL_SUCCESS == mAppDevInterface->ReadBytes(mKBusDeviceId, mTaskId, mRegComDevice->getOffset_rREG_D0() / 8, 2, inDataWord) ) {
+        paD0 = CIEC_BYTE(inDataWord[0]);
+        paD1 = CIEC_BYTE(inDataWord[1]);
+        DEVLOG_DEBUG("[WagoDeviceController] Register communication read.\n");
+      }
+      mAppDevInterface->ReadEnd(mKBusDeviceId, mTaskId);
+      startNewEventChain(mRegComDevice);
+    } else{
+      DEVLOG_ERROR("[WagoDeviceController] Register communication is off, register result cannot be read.\n");
+    }
+  }
+
+  void WagoDeviceController::initRegComOffsets(WagoRegComDevice *paECStartFB){
+    size_t slaveIndex = paECStartFB->getSlaveIndex();
+    TForteUInt32 startOffsetIn = mTerminalInfos[slaveIndex].OffsetInput_bits;
+    paECStartFB->setOffset_REG_S0( startOffsetIn ); // register communication mirrored request
+    paECStartFB->setOffset_REG_S7( startOffsetIn + 7 ); // register communication enable response
+    paECStartFB->setOffset_rREG_D0( startOffsetIn + 8 ); // register communication response data
+    TForteUInt32 startOffsetOut = mTerminalInfos[slaveIndex].OffsetOutput_bits;
+    paECStartFB->setOffset_REG_C0( startOffsetOut ); // register communication request data
+    paECStartFB->setOffset_REG_C7( startOffsetOut + 7 ); // register communication enable
+    paECStartFB->setOffset_wREG_D0( startOffsetOut + 8 ); // register communication set data
   }
 
 } // namespace forte::eclipse4diac::io::wago

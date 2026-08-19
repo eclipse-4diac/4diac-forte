@@ -1,0 +1,252 @@
+/*************************************************************************
+ *** FORTE Library Element
+ ***
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.2.100.qualifier!
+ ***
+ *** Name: WagoRegCom
+ *** Description: Register communication for Wago modules
+ *** Version:
+ ***     3.0: 2026-07-21/Monika Wenger -  -
+ *************************************************************************/
+
+#include "WagoRegCom_adp.h"
+
+#include "forte/forte_st_util.h"
+
+using namespace std::literals;
+using namespace forte::literals;
+
+namespace forte::eclipse4diac::io::wago {
+  namespace {
+    constexpr std::string_view TypeHash =""sv;
+
+    const auto cEventInputNames = std::array{"Opened"_STRID, "CNF"_STRID, "Closed"_STRID};
+    const auto cEventOutputNames = std::array{"Open"_STRID, "Read"_STRID, "Write"_STRID, "Close"_STRID};
+    const auto cDataInputNames = std::array{"counter"_STRID, "rREG_D0"_STRID, "rREG_D1"_STRID};
+    const auto cDataOutputNames = std::array{"cmd"_STRID};
+
+    const SFBInterfaceSpec cFBInterfaceSpecSocket = {
+        .mEINames = cEventInputNames,
+        .mEITypeNames = {},
+        .mEONames = cEventOutputNames,
+        .mEOTypeNames = {},
+        .mDINames = cDataInputNames,
+        .mDONames = cDataOutputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+
+    const SFBInterfaceSpec cFBInterfaceSpecPlug = {
+        .mEINames = cEventOutputNames,
+        .mEITypeNames = {},
+        .mEONames = cEventInputNames,
+        .mEOTypeNames = {},
+        .mDINames = cDataOutputNames,
+        .mDONames = cDataInputNames,
+        .mDIONames = {},
+        .mSocketNames = {},
+        .mPlugNames = {},
+    };
+  }
+
+  DEFINE_ADAPTER_TYPE(FORTE_WagoRegCom, "eclipse4diac::io::wago::WagoRegCom"_STRID, TypeHash)
+
+
+  FORTE_WagoRegCom::FORTE_WagoRegCom(CFBContainer &paContainer,
+                               const SFBInterfaceSpec &paInterfaceSpec,
+                               const StringId paInstanceNameId,
+                               TForteUInt8 paParentAdapterlistID) :
+      CAdapter(paContainer, paInterfaceSpec, paInstanceNameId, paParentAdapterlistID),
+      var_counter(0_USINT),
+      var_rREG_D0(0_BYTE),
+      var_rREG_D1(0_BYTE),
+      var_cmd(forte::eclipse4diac::io::wago::CIEC_RegComCmd()) {
+  }
+
+  void FORTE_WagoRegCom::setInitialValues() {
+    forte::CAdapter::setInitialValues();
+    var_counter = 0_USINT;
+    var_rREG_D0 = 0_BYTE;
+    var_rREG_D1 = 0_BYTE;
+    var_cmd = forte::eclipse4diac::io::wago::CIEC_RegComCmd();
+  }
+
+
+  FORTE_WagoRegCom_Plug::FORTE_WagoRegCom_Plug(StringId paInstanceNameId,
+                                           CFBContainer &paContainer,
+                                           TForteUInt8 paParentAdapterlistID) :
+      FORTE_WagoRegCom(paContainer, cFBInterfaceSpecPlug, paInstanceNameId, paParentAdapterlistID),
+      conn_Opened(*this, 0),
+      conn_CNF(*this, 1),
+      conn_Closed(*this, 2),
+      conn_cmd(nullptr),
+      conn_counter(*this, 0, var_counter),
+      conn_rREG_D0(*this, 1, var_rREG_D0),
+      conn_rREG_D1(*this, 2, var_rREG_D1) {
+  }
+
+  void FORTE_WagoRegCom_Plug::readInputData(const TEventID paEIID) {
+    switch(paEIID) {
+      case scmEventReadID: {
+        readData(3, var_cmd, conn_cmd);
+        if(auto peer = static_cast<FORTE_WagoRegCom_Socket *>(getPeer()); peer) {
+          peer->var_cmd = var_cmd;
+        }
+        break;
+      }
+      case scmEventWriteID: {
+        readData(3, var_cmd, conn_cmd);
+        if(auto peer = static_cast<FORTE_WagoRegCom_Socket *>(getPeer()); peer) {
+          peer->var_cmd = var_cmd;
+        }
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
+  void FORTE_WagoRegCom_Plug::writeOutputData(const TEventID paEIID) {
+    switch(paEIID) {
+      case scmEventCNFID: {
+        writeData(0, var_counter, conn_counter);
+        writeData(1, var_rREG_D0, conn_rREG_D0);
+        writeData(2, var_rREG_D1, conn_rREG_D1);
+        break;
+      }
+      default:
+        break;
+    }
+  }
+  CIEC_ANY *FORTE_WagoRegCom_Plug::getDI(const size_t paIndex) {
+    switch(paIndex) {
+      case 0: return &var_cmd;
+    }
+    return nullptr;
+  }
+
+  CIEC_ANY *FORTE_WagoRegCom_Plug::getDO(const size_t paIndex) {
+    switch(paIndex) {
+      case 0: return &var_counter;
+      case 1: return &var_rREG_D0;
+      case 2: return &var_rREG_D1;
+    }
+    return nullptr;
+  }
+
+  CEventConnection *FORTE_WagoRegCom_Plug::getEOConUnchecked(const TPortId paIndex) {
+    switch(paIndex) {
+      case 0: return &conn_Opened;
+      case 1: return &conn_CNF;
+      case 2: return &conn_Closed;
+    }
+    return nullptr;
+  }
+
+  CDataConnection **FORTE_WagoRegCom_Plug::getDIConUnchecked(const TPortId paIndex) {
+    switch(paIndex) {
+      case 0: return &conn_cmd;
+    }
+    return nullptr;
+  }
+
+  CDataConnection *FORTE_WagoRegCom_Plug::getDOConUnchecked(const TPortId paIndex) {
+    switch(paIndex) {
+      case 0: return &conn_counter;
+      case 1: return &conn_rREG_D0;
+      case 2: return &conn_rREG_D1;
+    }
+    return nullptr;
+  }
+
+
+  FORTE_WagoRegCom_Socket::FORTE_WagoRegCom_Socket(StringId paInstanceNameId,
+                                           CFBContainer &paContainer,
+                                           TForteUInt8 paParentAdapterlistID) :
+      FORTE_WagoRegCom(paContainer, cFBInterfaceSpecSocket, paInstanceNameId, paParentAdapterlistID),
+      conn_Open(*this, 0),
+      conn_Read(*this, 1),
+      conn_Write(*this, 2),
+      conn_Close(*this, 3),
+      conn_counter(nullptr),
+      conn_rREG_D0(nullptr),
+      conn_rREG_D1(nullptr),
+      conn_cmd(*this, 0, var_cmd) {
+  }
+
+  void FORTE_WagoRegCom_Socket::readInputData(const TEventID paEIID) {
+    switch(paEIID) {
+      case scmEventCNFID: {
+        readData(0, var_counter, conn_counter);
+        readData(1, var_rREG_D0, conn_rREG_D0);
+        readData(2, var_rREG_D1, conn_rREG_D1);
+        if(auto peer = static_cast<FORTE_WagoRegCom_Plug *>(getPeer()); peer) {
+          peer->var_counter = var_counter;
+          peer->var_rREG_D0 = var_rREG_D0;
+          peer->var_rREG_D1 = var_rREG_D1;
+        }
+        break;
+      }
+      default:
+        break;
+    }
+  }
+
+  void FORTE_WagoRegCom_Socket::writeOutputData(const TEventID paEIID) {
+    switch(paEIID) {
+      case scmEventReadID: {
+        writeData(3, var_cmd, conn_cmd);
+        break;
+      }
+      case scmEventWriteID: {
+        writeData(3, var_cmd, conn_cmd);
+        break;
+      }
+      default:
+        break;
+    }
+  }
+  CIEC_ANY *FORTE_WagoRegCom_Socket::getDI(const size_t paIndex) {
+    switch(paIndex) {
+      case 0: return &var_counter;
+      case 1: return &var_rREG_D0;
+      case 2: return &var_rREG_D1;
+    }
+    return nullptr;
+  }
+
+  CIEC_ANY *FORTE_WagoRegCom_Socket::getDO(const size_t paIndex) {
+    switch(paIndex) {
+      case 0: return &var_cmd;
+    }
+    return nullptr;
+  }
+
+  CEventConnection *FORTE_WagoRegCom_Socket::getEOConUnchecked(const TPortId paIndex) {
+    switch(paIndex) {
+      case 0: return &conn_Open;
+      case 1: return &conn_Read;
+      case 2: return &conn_Write;
+      case 3: return &conn_Close;
+    }
+    return nullptr;
+  }
+
+  CDataConnection **FORTE_WagoRegCom_Socket::getDIConUnchecked(const TPortId paIndex) {
+    switch(paIndex) {
+      case 0: return &conn_counter;
+      case 1: return &conn_rREG_D0;
+      case 2: return &conn_rREG_D1;
+    }
+    return nullptr;
+  }
+
+  CDataConnection *FORTE_WagoRegCom_Socket::getDOConUnchecked(const TPortId paIndex) {
+    switch(paIndex) {
+      case 0: return &conn_cmd;
+    }
+    return nullptr;
+  }
+
+}

@@ -8,8 +8,6 @@
  *************************************************************************/
 
 #include "Wago636_fbt.h"
-#include "WagoSlaveBase.h"
-#include "../WagoDeviceController.h"
 
 using namespace forte::literals;
 using namespace forte::io;
@@ -38,7 +36,7 @@ namespace forte::eclipse4diac::io::wago {
     const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
     const auto cEventInputNames = std::array{"MAP"_STRID};
     const auto cEventOutputNames = std::array{"MAPO"_STRID, "IND"_STRID};
-    const auto cSocketNameIds = std::array{"BusAdapterIn"_STRID};
+    const auto cSocketNameIds = std::array{"BusAdapterIn"_STRID, "RegCom"_STRID};
     const auto cPlugNameIds = std::array{"BusAdapterOut"_STRID};
 
     const SFBInterfaceSpec cFBInterfaceSpec = {
@@ -55,7 +53,7 @@ namespace forte::eclipse4diac::io::wago {
   } // namespace
 
   FORTE_Wago636::FORTE_Wago636(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
-      WagoSlaveBase(636, paContainer, cFBInterfaceSpec, paInstanceNameId),
+    WagoRegComDevice(636, paContainer, cFBInterfaceSpec, paInstanceNameId),
       var_QI(0_BOOL),
       var_Busy(""_STRING),
       var_LimitSwitchN(""_STRING),
@@ -278,6 +276,23 @@ namespace forte::eclipse4diac::io::wago {
       initWagoHandle(6 + offset, 15, CIEC_ANY::e_BOOL, IOMapper::Out); // quit error Control-Byte 1 Bit 7
     } else {
       DEVLOG_ERROR("[Wago636] only supports 7 BOOL outputs, but got %d.\n", paNumberOfBoolOutputs);
+    }
+
+    getController().initRegComOffsets(this);
+  }
+
+  void FORTE_Wago636::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    IOConfigFBMultiSlave::executeEvent(paEIID, paECET);
+    if (cgExternalEventID == paEIID) {
+      handleExternalEvent();
+    } else if (RegCom().evt_Write() == paEIID) {
+      writeRegCom();
+    } else if (RegCom().evt_Read() == paEIID){
+      readRegCom();
+    } else if (RegCom().evt_Open() == paEIID){
+      openRegCom(paECET);
+    } else if (RegCom().evt_Close() == paEIID){
+      closeRegCom();
     }
   }
 
