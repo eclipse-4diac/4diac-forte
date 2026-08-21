@@ -47,8 +47,8 @@ add_library(forte-wagoKbus
             types/Wago1504_5.cpp
             types/Wago459.h
             types/Wago459.cpp
-            types/RegComCmd_dtp.h
-            types/RegComCmd_dtp.cpp
+            types/WagoRegComCmd_dtp.h
+            types/WagoRegComCmd_dtp.cpp
             types/WagoRegCom_adp.cpp
             types/WagoRegCom_adp.h
             types/WagoRegComDevice.h

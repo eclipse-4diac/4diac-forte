@@ -27,8 +27,6 @@ namespace forte::eclipse4diac::io::wago {
       static const int scmBusAdapterInAdpNum = 0;
       static const int scmBusAdapterOutAdpNum = 1;
 
-      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
-
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;
       void setInitialValues() override;

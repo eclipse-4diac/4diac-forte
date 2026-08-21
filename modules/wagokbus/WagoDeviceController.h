@@ -13,7 +13,7 @@
 #pragma once
 
 #include "forte/io/device/io_controller_multi.h"
-#include "types/RegComCmd_dtp.h"
+#include "types/WagoRegComCmd_dtp.h"
 
 #define OS_MUST_BE_ARRAY
 
@@ -57,11 +57,11 @@ namespace forte::eclipse4diac::io::wago {
       void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::io::IOHandle> paHandle) override;
       void dropSlaveHandles(size_t paIndex) override;
 
-      void enableRegCom(WagoRegComDevice *paECStartFB);
-      void disableRegCom();
-      void writeRegComRequest(const CIEC_RegComCmd &paCmd);
-      void readRegComRequest(const CIEC_RegComCmd &paCmd);
-      void readRegComResult(CIEC_BYTE &paD0, CIEC_BYTE &paD1);
+      bool enableRegCom(WagoRegComDevice *paECStartFB);
+      bool disableRegCom();
+      bool writeRegComRequest(const CIEC_WagoRegComCmd &paCmd);
+      bool readRegComRequest(const CIEC_WagoRegComCmd &paCmd);
+      bool readRegComResult(CIEC_BYTE &paD0, CIEC_BYTE &paD1);
       void initRegComOffsets(WagoRegComDevice *paECStartFB);
 
     protected:
@@ -89,6 +89,8 @@ namespace forte::eclipse4diac::io::wago {
        */
       virtual bool isHandleValueEqual(forte::io::IOHandle &paHandle) override;
 
+      arch::CSyncObject mRegComMutex;
+
     private:
       /*! @brief Checks if a slave exists at the given index
        *
@@ -110,9 +112,8 @@ namespace forte::eclipse4diac::io::wago {
       bool triggerKBusCycle();
 
       void checkForRegComChanges();
-      TForteByte mREG_S;
       TForteByte mREG_C = 0x80;
-      bool isRegComOn;
+      bool isRegComOn = false;
       WagoRegComDevice *mRegComDevice = nullptr;
 
       static const tDeviceId scmInvalidDeviceId = -1;

@@ -3,7 +3,7 @@
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter 3.2.100.qualifier!
  ***
- *** Name: RegComCmd
+ *** Name: WagoRegComCmd
  *** Description: Write register communication
  *** Version:
  ***     3.0: 2026-07-21/Monika Wenger -  -
@@ -18,13 +18,13 @@
 
 
 namespace forte::eclipse4diac::io::wago {
-  class CIEC_RegComCmd final : public CIEC_STRUCT {
-    DECLARE_FIRMWARE_DATATYPE(RegComCmd)
+  class CIEC_WagoRegComCmd final : public CIEC_STRUCT {
+    DECLARE_FIRMWARE_DATATYPE(WagoRegComCmd)
 
     public:
-      CIEC_RegComCmd();
+      CIEC_WagoRegComCmd();
 
-      CIEC_RegComCmd(const CIEC_USINT &paRegNr, const CIEC_BYTE &paREG_D0, const CIEC_BYTE &paREG_D1);
+      CIEC_WagoRegComCmd(const CIEC_USINT &paRegNr, const CIEC_BYTE &paREG_D0, const CIEC_BYTE &paREG_D1);
 
       CIEC_USINT var_RegNr;
       CIEC_BYTE var_REG_D0;

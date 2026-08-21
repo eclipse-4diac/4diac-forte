@@ -9,11 +9,25 @@
  *************************************************************************/
 
 #include "WagoRegComDevice.h"
+#include "WagoRegComCmd_dtp.h"
 #include "forte/iec61131_functions/func_ADD.h"
+#include "forte/iec61131_functions/func_GT.h"
+#include "forte/datatypes/forte_wstring.h"
 
 using namespace forte::literals;
 
 namespace forte::eclipse4diac::io::wago {
+
+  const CIEC_WagoRegComCmd WagoRegComDevice::mSetPsw{CIEC_USINT(31), CIEC_BYTE(0x35), CIEC_BYTE(0x12)};
+  const CIEC_WagoRegComCmd WagoRegComDevice::mResetPsw{CIEC_USINT(31), CIEC_BYTE(0x00), CIEC_BYTE(0x00)};
+
+  const CIEC_WSTRING WagoRegComDevice::scmRegNrOutOfRange("Register number out of range (0-31).");
+  const CIEC_WSTRING WagoRegComDevice::scmOK("OK.");
+  const CIEC_WSTRING WagoRegComDevice::scmEnabled("Register communication enabled.");
+  const CIEC_WSTRING WagoRegComDevice::scmDisabled("Register communication disabled.");
+
+  const CIEC_WSTRING WagoRegComDevice::scmRegComOpenFail("Failed to open register communication.");
+  const CIEC_WSTRING WagoRegComDevice::scmRegComReqFail("Failed request of register communication.");
 
   WagoRegComDevice::WagoRegComDevice(int paType, CFBContainer &paContainer, const SFBInterfaceSpec &paInterfaceSpec, const forte::StringId paInstanceNameId)
       : WagoSlaveBase(paType, paContainer, paInterfaceSpec, paInstanceNameId),
@@ -25,71 +39,141 @@ namespace forte::eclipse4diac::io::wago {
   }
 
   void WagoRegComDevice::writeRegCom() {
-    if (regComState == RegComStatus::Idle) {
-      regComState = RegComStatus::Write;
-      getController().writeRegComRequest(RegCom().var_cmd);
-    } else {
-      DEVLOG_DEBUG("[WagoRegComDevice::writeRegCom] Register communication state not Idle.\n");
+    if (checkRegNr() && mRegComState == RegComStatus::Idle) {
+      if(getController().writeRegComRequest(RegCom().var_cmd)) {
+        mRegComState = RegComStatus::Write;
+      } else {
+        mRegComState = RegComStatus::Idle;
+        RegCom().var_STATUS = scmRegComReqFail;
+        sendAdapterEvent(RegCom(), FORTE_WagoRegCom::scmEventErrorID, getEventChainExecutor());
+      }
     }
   }
 
+  bool WagoRegComDevice::checkRegNr() {
+    bool retVal = true;
+    if (func_GT(RegCom().var_cmd.var_RegNr, 63_USINT)) { // USINT = 8Bit but regNr only 6Bit
+      RegCom().var_STATUS = scmRegNrOutOfRange;
+      sendAdapterEvent(RegCom(), FORTE_WagoRegCom::scmEventErrorID, getEventChainExecutor());
+      retVal = false;
+    }
+    return retVal;
+  }
+
   void WagoRegComDevice::readRegCom() {
-    if (regComState == RegComStatus::Idle) {
-      regComState = RegComStatus::ReadReq;
-      getController().readRegComRequest(RegCom().var_cmd);
-    } else {
-      DEVLOG_DEBUG("[WagoRegComDevice::readRegCom] Register communication state not Idle.\n");
+    if (checkRegNr() && mRegComState == RegComStatus::Idle) {
+      if(getController().readRegComRequest(RegCom().var_cmd)) {
+        mRegComState = RegComStatus::ReadReq;
+      } else {
+        mRegComState = RegComStatus::Idle;
+        RegCom().var_STATUS = scmRegComReqFail;
+        sendAdapterEvent(RegCom(), FORTE_WagoRegCom::scmEventErrorID, getEventChainExecutor());
+      }
     }
   }
 
   void WagoRegComDevice::closeRegCom() {
-    if (regComState == RegComStatus::Idle) {
-      regComState = RegComStatus::ResetPassword;
-      getController().writeRegComRequest(mResetPsw);
-    } else {
-      DEVLOG_DEBUG("[WagoRegComDevice::closeRegCom] Register communication state not Idle.\n");
+    if (mRegComState == RegComStatus::Idle) {
+      if(!RegCom().var_autoPsw) {
+        disableRegCom();
+        return;
+      }
+      if(getController().writeRegComRequest(mResetPsw)) {
+        mRegComState = RegComStatus::ResetPassword;
+      } else {
+        RegCom().var_STATUS = scmRegComReqFail;
+        sendAdapterEvent(RegCom(), FORTE_WagoRegCom::scmEventErrorID, getEventChainExecutor());
+      }
     }
   }
 
   void WagoRegComDevice::openRegCom(CEventChainExecutionThread* const paECET) {
-    if (regComState == RegComStatus::Init) {
+    if (mRegComState == RegComStatus::Init) {
       setEventChainExecutor(paECET);
-      getController().enableRegCom(this);
-    } else {
-      DEVLOG_DEBUG("[WagoRegComDevice::openRegCom] Register communication state not Init.\n");
+      if (!getController().enableRegCom(this)) {
+        mRegComState = RegComStatus::Init;
+        RegCom().var_STATUS = scmRegComOpenFail;
+        sendAdapterEvent(RegCom(), FORTE_WagoRegCom::scmEventErrorID, paECET);
+      }
     }
+  }
+
+  void WagoRegComDevice::disableRegCom() {
+    if (getController().disableRegCom()){
+      mRegComState = RegComStatus::Deinit;
+    }else{
+      mRegComState = RegComStatus::Idle;
+      RegCom().var_STATUS = scmRegComReqFail;
+      sendAdapterEvent(RegCom(), FORTE_WagoRegCom::scmEventErrorID, getEventChainExecutor());
+    }
+  }
+
+  void WagoRegComDevice::enabled(CEventChainExecutionThread* paECET) {
+      mRegComState = RegComStatus::Idle;
+      RegCom().var_STATUS = scmEnabled;
+      sendAdapterEvent(RegCom(), FORTE_WagoRegCom::scmEventOpenedID, paECET);
   }
 
   void WagoRegComDevice::handleExternalEvent() {
     CEventChainExecutionThread* paECET = getEventChainExecutor();
-    switch(regComState) {
+    switch(mRegComState) {
     case RegComStatus::Read:
     case RegComStatus::Write:
       RegCom().var_counter = func_ADD(RegCom().var_counter, CIEC_USINT(1));
-      regComState = RegComStatus::Idle;
+      mRegComState = RegComStatus::Idle;
+      RegCom().var_STATUS = scmOK;
       sendAdapterEvent(RegCom(), FORTE_WagoRegCom::scmEventCNFID, paECET);
       break;
     case RegComStatus::ReadReq:
-      regComState = RegComStatus::Read;
-      getController().readRegComResult(RegCom().var_rREG_D0, RegCom().var_rREG_D1);
+      if (getController().readRegComResult(RegCom().var_REG_D0, RegCom().var_REG_D1)) {
+        mRegComState = RegComStatus::Read;
+      } else {
+        mRegComState = RegComStatus::Idle;
+        RegCom().var_STATUS = scmRegComReqFail;
+        sendAdapterEvent(RegCom(), FORTE_WagoRegCom::scmEventErrorID, paECET);
+      }
       break;
     case RegComStatus::Init:
-      regComState = RegComStatus::SetPassword;
-      getController().writeRegComRequest(mSetPsw);
+      if(!RegCom().var_autoPsw) {
+        enabled(paECET);
+        break;
+      }
+      if (getController().writeRegComRequest(mSetPsw)) {
+        mRegComState = RegComStatus::SetPassword;
+      } else {
+        RegCom().var_STATUS = scmRegComReqFail;
+        sendAdapterEvent(RegCom(), FORTE_WagoRegCom::scmEventErrorID, paECET);
+      }
       break;
     case RegComStatus::SetPassword:
-      regComState = RegComStatus::Idle;
-      sendAdapterEvent(RegCom(), FORTE_WagoRegCom::scmEventOpenedID, paECET);
+      enabled(paECET);
       break;
     case RegComStatus::ResetPassword:
-      RegCom().var_counter = CIEC_USINT(0);
-      regComState = RegComStatus::Deinit;
-      getController().disableRegCom();
+      disableRegCom();
       break;
     case RegComStatus::Deinit:
-      regComState = RegComStatus::Init;
+      mRegComState = RegComStatus::Init;
+      RegCom().var_counter = CIEC_USINT(0);
+      RegCom().var_STATUS = scmDisabled;
       sendAdapterEvent(RegCom(), FORTE_WagoRegCom::scmEventClosedID, paECET);
       break;
+    }
+  }
+
+  void WagoRegComDevice::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
+    IOConfigFBMultiSlave::executeEvent(paEIID, paECET);
+    if (cgExternalEventID == paEIID) {
+      handleExternalEvent();
+    } else if (RegCom().evt_Write() == paEIID) {
+      writeRegCom();
+    } else if (RegCom().evt_Read() == paEIID){
+      readRegCom();
+    } else if (RegCom().evt_Open() == paEIID){
+      openRegCom(paECET);
+    } else if (RegCom().evt_Close() == paEIID){
+      closeRegCom();
+    } else if (BusAdapterIn().INIT() == paEIID) {
+      getController().initRegComOffsets(this);
     }
   }
 

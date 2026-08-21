@@ -277,23 +277,6 @@ namespace forte::eclipse4diac::io::wago {
     } else {
       DEVLOG_ERROR("[Wago636] only supports 7 BOOL outputs, but got %d.\n", paNumberOfBoolOutputs);
     }
-
-    getController().initRegComOffsets(this);
-  }
-
-  void FORTE_Wago636::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
-    IOConfigFBMultiSlave::executeEvent(paEIID, paECET);
-    if (cgExternalEventID == paEIID) {
-      handleExternalEvent();
-    } else if (RegCom().evt_Write() == paEIID) {
-      writeRegCom();
-    } else if (RegCom().evt_Read() == paEIID){
-      readRegCom();
-    } else if (RegCom().evt_Open() == paEIID){
-      openRegCom(paECET);
-    } else if (RegCom().evt_Close() == paEIID){
-      closeRegCom();
-    }
   }
 
 } // namespace forte::eclipse4diac::io::wago

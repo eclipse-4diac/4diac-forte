@@ -12,9 +12,11 @@
 #pragma once
 
 #include "forte/adapter.h"
+#include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_byte.h"
 #include "forte/datatypes/forte_usint.h"
-#include "RegComCmd_dtp.h"
+#include "forte/datatypes/forte_wstring.h"
+#include "WagoRegComCmd_dtp.h"
 #include "forte/forte_st_util.h"
 
 namespace forte::eclipse4diac::io::wago {
@@ -22,27 +24,26 @@ namespace forte::eclipse4diac::io::wago {
       DECLARE_ADAPTER_TYPE(FORTE_WagoRegCom)
 
     private:
-      public:
-        static const TEventID scmEventOpenID = 0;
-        static const TEventID scmEventReadID = 1;
-        static const TEventID scmEventWriteID = 2;
-        static const TEventID scmEventCloseID = 3;
-
-      private:
-      public:
-        static const TEventID scmEventOpenedID = 0;
-        static const TEventID scmEventCNFID = 1;
-        static const TEventID scmEventClosedID = 2;
-
-      private:
-
       void setInitialValues() override;
-    public:
-      CIEC_USINT var_counter;
-      CIEC_BYTE var_rREG_D0;
-      CIEC_BYTE var_rREG_D1;
 
-      CIEC_RegComCmd var_cmd;
+    public:
+      static const TEventID scmEventOpenID = 0;
+      static const TEventID scmEventReadID = 1;
+      static const TEventID scmEventWriteID = 2;
+      static const TEventID scmEventCloseID = 3;
+
+      static const TEventID scmEventOpenedID = 0;
+      static const TEventID scmEventCNFID = 1;
+      static const TEventID scmEventClosedID = 2;
+      static const TEventID scmEventErrorID = 3;
+
+      CIEC_WSTRING var_STATUS;
+      CIEC_USINT var_counter;
+      CIEC_BYTE var_REG_D0;
+      CIEC_BYTE var_REG_D1;
+
+      CIEC_BOOL var_autoPsw;
+      CIEC_WagoRegComCmd var_cmd;
 
       TEventID evt_Opened() {
         return getParentAdapterListEventID() + scmEventOpenedID;
@@ -54,6 +55,10 @@ namespace forte::eclipse4diac::io::wago {
 
       TEventID evt_Closed() {
         return getParentAdapterListEventID() + scmEventClosedID;
+      }
+
+      TEventID evt_Error() {
+        return getParentAdapterListEventID() + scmEventErrorID;
       }
 
       TEventID evt_Open() {
@@ -91,12 +96,15 @@ namespace forte::eclipse4diac::io::wago {
       CEventConnection conn_Opened;
       CEventConnection conn_CNF;
       CEventConnection conn_Closed;
+      CEventConnection conn_Error;
 
+      CDataConnection *conn_autoPsw;
       CDataConnection *conn_cmd;
 
+      COutDataConnection<CIEC_WSTRING> conn_STATUS;
       COutDataConnection<CIEC_USINT> conn_counter;
-      COutDataConnection<CIEC_BYTE> conn_rREG_D0;
-      COutDataConnection<CIEC_BYTE> conn_rREG_D1;
+      COutDataConnection<CIEC_BYTE> conn_REG_D0;
+      COutDataConnection<CIEC_BYTE> conn_REG_D1;
 
     private:
       void readInputData(TEventID paEIID) override;
@@ -120,11 +128,13 @@ namespace forte::eclipse4diac::io::wago {
       CEventConnection conn_Write;
       CEventConnection conn_Close;
 
+      CDataConnection *conn_STATUS;
       CDataConnection *conn_counter;
-      CDataConnection *conn_rREG_D0;
-      CDataConnection *conn_rREG_D1;
+      CDataConnection *conn_REG_D0;
+      CDataConnection *conn_REG_D1;
 
-      COutDataConnection<forte::eclipse4diac::io::wago::CIEC_RegComCmd> conn_cmd;
+      COutDataConnection<CIEC_BOOL> conn_autoPsw;
+      COutDataConnection<CIEC_WagoRegComCmd> conn_cmd;
 
     private:
       void readInputData(TEventID paEIID) override;

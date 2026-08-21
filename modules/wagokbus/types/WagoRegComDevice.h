@@ -12,10 +12,12 @@
 
 #include "WagoSlaveBase.h"
 #include "WagoRegCom_adp.h"
-#include "RegComCmd_dtp.h"
 #include "../WagoDeviceController.h"
+#include "forte/datatypes/forte_wstring.h"
 
 namespace forte::eclipse4diac::io::wago {
+
+  class CIEC_WagoRegComCmd;
 
   class WagoRegComDevice : public WagoSlaveBase {
     public:
@@ -24,9 +26,7 @@ namespace forte::eclipse4diac::io::wago {
 
       forte::CSocketPin<FORTE_WagoRegCom_Socket> var_RegCom;
 
-      size_t getSlaveIndex() {
-        return mIndex;
-      }
+      size_t getSlaveIndex() { return mIndex; }
 
       void setOffset_REG_S0(TForteUInt32 paOffset) { mOffset_REG_S0 = paOffset; }
       void setOffset_REG_S7(TForteUInt32 paOffset) { mOffset_REG_S7 = paOffset; }
@@ -45,12 +45,13 @@ namespace forte::eclipse4diac::io::wago {
       void handleExternalEvent();
 
     protected:
+      forte::ISocketPin *getSocketPinUnchecked(size_t) override;
+      void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
+
       void writeRegCom();
       void readRegCom();
       void closeRegCom();
       void openRegCom(CEventChainExecutionThread* const paECET);
-
-      forte::ISocketPin *getSocketPinUnchecked(size_t) override;
 
       WagoDeviceController &getController() {
         return static_cast<WagoDeviceController &>(IOConfigFBMultiSlave::getController());
@@ -61,6 +62,10 @@ namespace forte::eclipse4diac::io::wago {
       }
 
     private:
+      bool checkRegNr();
+      void disableRegCom();
+      void enabled(CEventChainExecutionThread* paECET);
+
       enum class RegComStatus : std::uint8_t {
           Init = 0,
           SetPassword = 1,
@@ -72,7 +77,7 @@ namespace forte::eclipse4diac::io::wago {
           Deinit = 7
       };
 
-      RegComStatus regComState = RegComStatus::Init;
+      RegComStatus mRegComState = RegComStatus::Init;
 
       TForteUInt32 mOffset_REG_S0;
       TForteUInt32 mOffset_REG_S7;
@@ -81,8 +86,15 @@ namespace forte::eclipse4diac::io::wago {
       TForteUInt32 mOffset_wREG_D0;
       TForteUInt32 mOffset_rREG_D0;
 
-      CIEC_RegComCmd const mSetPsw{CIEC_USINT(31), CIEC_BYTE(0x35), CIEC_BYTE(0x12)};
-      CIEC_RegComCmd const mResetPsw{CIEC_USINT(31), CIEC_BYTE(0x00), CIEC_BYTE(0x00)};
+      static const CIEC_WagoRegComCmd mSetPsw;
+      static const CIEC_WagoRegComCmd mResetPsw;
+
+      static const CIEC_WSTRING scmRegNrOutOfRange;
+      static const CIEC_WSTRING scmOK;
+      static const CIEC_WSTRING scmEnabled;
+      static const CIEC_WSTRING scmDisabled;
+      static const CIEC_WSTRING scmRegComOpenFail;
+      static const CIEC_WSTRING scmRegComReqFail;
   };
 
 } // namespace forte::eclipse4diac::io::wago
