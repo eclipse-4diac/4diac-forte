@@ -66,3 +66,17 @@ FilesAnalyzed: false
 PackageLicenseConcluded: NOASSERTION
 PackageLicenseDeclared: NOASSERTION
 PackageCopyrightText: NOASSERTION
+
+PackageName: nlohmann-json
+SPDXID: SPDXRef-nlohmann-json
+PackageComment: <text>Header-only C++ library for JSON serialization and deserialization. FORTE uses the header-only API.</text>
+ExternalRef: PACKAGE-MANAGER purl pkg:github/nlohmann/json@3.12.0
+PackageVersion: 3.12.0
+PackageSupplier: Organization: nlohmann
+Relationship: SPDXRef-nlohmann-json OPTIONAL_DEPENDENCY_OF SPDXRef-4diac-FORTE
+PackageDownloadLocation: https://github.com/nlohmann/json/releases/download/v3.12.0/json.tar.xz
+FilesAnalyzed: false
+PackageChecksum: SHA256: 42f6e95cad6ec532fd372391373363b62a14af6d771056dbfc86160e6dfff7aa
+PackageLicenseConcluded: MIT
+PackageLicenseDeclared: MIT
+PackageCopyrightText: Copyright © 2013-2026 Niels Lohmann
