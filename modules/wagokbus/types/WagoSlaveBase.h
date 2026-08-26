@@ -26,7 +26,7 @@ namespace forte::eclipse4diac::io::wago {
                     CFBContainer &paContainer,
                     const SFBInterfaceSpec &paInterfaceSpec,
                     const forte::StringId paInstanceNameId);
-      ~WagoSlaveBase() override = default;
+      virtual ~WagoSlaveBase() override = default;
 
       forte::CPlugPin<FORTE_WagoBusAdapter_Plug> var_BusAdapterOut;
       forte::CSocketPin<FORTE_WagoBusAdapter_Socket> var_BusAdapterIn;

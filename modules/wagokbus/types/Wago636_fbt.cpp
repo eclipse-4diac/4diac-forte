@@ -8,8 +8,6 @@
  *************************************************************************/
 
 #include "Wago636_fbt.h"
-#include "WagoSlaveBase.h"
-#include "../WagoDeviceController.h"
 
 using namespace forte::literals;
 using namespace forte::io;
@@ -33,12 +31,13 @@ namespace forte::eclipse4diac::io::wago {
                                             "Positioning"_STRID,
                                             "OptimizeOn"_STRID,
                                             "Preset"_STRID,
+                                            "CurrentControlOn"_STRID,
                                             "PresetInputEnable"_STRID,
                                             "QuitErrors"_STRID};
     const auto cDataOutputNames = std::array{"QO"_STRID, "STATUS"_STRID};
     const auto cEventInputNames = std::array{"MAP"_STRID};
     const auto cEventOutputNames = std::array{"MAPO"_STRID, "IND"_STRID};
-    const auto cSocketNameIds = std::array{"BusAdapterIn"_STRID};
+    const auto cSocketNameIds = std::array{"BusAdapterIn"_STRID, "RegCom"_STRID};
     const auto cPlugNameIds = std::array{"BusAdapterOut"_STRID};
 
     const SFBInterfaceSpec cFBInterfaceSpec = {
@@ -55,7 +54,7 @@ namespace forte::eclipse4diac::io::wago {
   } // namespace
 
   FORTE_Wago636::FORTE_Wago636(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
-      WagoSlaveBase(636, paContainer, cFBInterfaceSpec, paInstanceNameId),
+    WagoRegComDevice(636, paContainer, cFBInterfaceSpec, paInstanceNameId),
       var_QI(0_BOOL),
       var_Busy(""_STRING),
       var_LimitSwitchN(""_STRING),
@@ -70,6 +69,7 @@ namespace forte::eclipse4diac::io::wago {
       var_MotorP(""_STRING),
       var_Positioning(""_STRING),
       var_Preset(""_STRING),
+      var_CurrentControlOn(""_STRING),
       var_PresetInputEnable(""_STRING),
       var_QuitErrors(""_STRING),
       var_QO(0_BOOL),
@@ -91,6 +91,7 @@ namespace forte::eclipse4diac::io::wago {
       conn_Positioning(nullptr),
       conn_OptimizeOn(nullptr),
       conn_Preset(nullptr),
+      conn_CurrentControlOn(nullptr),
       conn_PresetInputEnable(nullptr),
       conn_QuitErrors(nullptr),
       conn_QO(*this, 0, var_QO),
@@ -112,6 +113,7 @@ namespace forte::eclipse4diac::io::wago {
     var_Positioning = ""_STRING;
     var_OptimizeOn = ""_STRING;
     var_Preset = ""_STRING;
+    var_CurrentControlOn = ""_STRING;
     var_PresetInputEnable = ""_STRING;
     var_QuitErrors = ""_STRING;
     var_QO = 0_BOOL;
@@ -136,8 +138,9 @@ namespace forte::eclipse4diac::io::wago {
         readData(12, var_Positioning, conn_Positioning);
         readData(13, var_OptimizeOn, conn_OptimizeOn);
         readData(14, var_Preset, conn_Preset);
-        readData(15, var_PresetInputEnable, conn_PresetInputEnable);
-        readData(16, var_QuitErrors, conn_QuitErrors);
+        readData(15, var_CurrentControlOn, conn_CurrentControlOn);
+        readData(16, var_PresetInputEnable, conn_PresetInputEnable);
+        readData(17, var_QuitErrors, conn_QuitErrors);
         break;
       }
       default: break;
@@ -176,8 +179,9 @@ namespace forte::eclipse4diac::io::wago {
       case 12: return &var_Positioning;
       case 13: return &var_OptimizeOn;
       case 14: return &var_Preset;
-      case 15: return &var_PresetInputEnable;
-      case 16: return &var_QuitErrors;
+      case 15: return &var_CurrentControlOn;
+      case 16: return &var_PresetInputEnable;
+      case 17: return &var_QuitErrors;
     }
     return nullptr;
   }
@@ -215,8 +219,9 @@ namespace forte::eclipse4diac::io::wago {
       case 12: return &conn_Positioning;
       case 13: return &conn_OptimizeOn;
       case 14: return &conn_Preset;
-      case 15: return &conn_PresetInputEnable;
-      case 16: return &conn_QuitErrors;
+      case 15: return &conn_CurrentControlOn;
+      case 16: return &conn_PresetInputEnable;
+      case 17: return &conn_QuitErrors;
     }
     return nullptr;
   }
@@ -268,16 +273,17 @@ namespace forte::eclipse4diac::io::wago {
 
     offset += paNumberOfAnalogOutputs;
 
-    if (paNumberOfBoolOutputs == 7) {
+    if (paNumberOfBoolOutputs == 8) {
       initWagoHandle(offset, 0, CIEC_ANY::e_BOOL, IOMapper::Out); // motor negative - Control-Byte 0 Bit 0
       initWagoHandle(1 + offset, 1, CIEC_ANY::e_BOOL, IOMapper::Out); // motor positive - Control-Byte 0 Bit 1
       initWagoHandle(2 + offset, 2, CIEC_ANY::e_BOOL, IOMapper::Out); // positioning - Control-Byte 0 Bit 2
       initWagoHandle(3 + offset, 9, CIEC_ANY::e_BOOL, IOMapper::Out); // optimize on - Control-Byte 1 Bit 1
       initWagoHandle(4 + offset, 3, CIEC_ANY::e_BOOL, IOMapper::Out); // preset - Control-Byte 0 Bit 3
-      initWagoHandle(5 + offset, 8, CIEC_ANY::e_BOOL, IOMapper::Out); // preset input enable - Control-Byte 1 Bit 0
-      initWagoHandle(6 + offset, 15, CIEC_ANY::e_BOOL, IOMapper::Out); // quit error Control-Byte 1 Bit 7
+      initWagoHandle(5 + offset, 4, CIEC_ANY::e_BOOL, IOMapper::Out); // current control on - Control-Byte 0 Bit 4
+      initWagoHandle(6 + offset, 8, CIEC_ANY::e_BOOL, IOMapper::Out); // preset input enable - Control-Byte 1 Bit 0
+      initWagoHandle(7 + offset, 15, CIEC_ANY::e_BOOL, IOMapper::Out); // quit error Control-Byte 1 Bit 7
     } else {
-      DEVLOG_ERROR("[Wago636] only supports 7 BOOL outputs, but got %d.\n", paNumberOfBoolOutputs);
+      DEVLOG_ERROR("[Wago636] only supports 8 BOOL outputs, but got %d.\n", paNumberOfBoolOutputs);
     }
   }
 
