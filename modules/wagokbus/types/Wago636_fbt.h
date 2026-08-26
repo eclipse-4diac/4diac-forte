@@ -36,7 +36,7 @@ namespace forte::eclipse4diac::io::wago {
                            size_t paNumberOfBoolOutputs,
                            size_t paNumberOfAnalogInputs,
                            size_t paNumberOfAnalogOutputs);
-      INIT_HANDLES(7, 7, 1, 1)
+      INIT_HANDLES(7, 8, 1, 1)
 
     public:
       FORTE_Wago636(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
@@ -57,6 +57,7 @@ namespace forte::eclipse4diac::io::wago {
       CIEC_STRING var_Positioning;
       CIEC_STRING var_OptimizeOn;
       CIEC_STRING var_Preset;
+      CIEC_STRING var_CurrentControlOn;
       CIEC_STRING var_PresetInputEnable;
       CIEC_STRING var_QuitErrors;
 
@@ -81,6 +82,7 @@ namespace forte::eclipse4diac::io::wago {
       CDataConnection *conn_Positioning;
       CDataConnection *conn_OptimizeOn;
       CDataConnection *conn_Preset;
+      CDataConnection *conn_CurrentControlOn;
       CDataConnection *conn_PresetInputEnable;
       CDataConnection *conn_QuitErrors;
 
@@ -109,6 +111,7 @@ namespace forte::eclipse4diac::io::wago {
                    const CIEC_STRING &paPositioning,
                    const CIEC_STRING &paOptimizeOn,
                    const CIEC_STRING &paPreset,
+                   const CIEC_STRING &paCurrentControlOn,
                    const CIEC_STRING &paPresetInputEnable,
                    const CIEC_STRING &paQuitErrors,
                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
@@ -130,6 +133,7 @@ namespace forte::eclipse4diac::io::wago {
         var_Positioning = paPositioning;
         var_OptimizeOn = paOptimizeOn;
         var_Preset = paPreset;
+        var_CurrentControlOn = paCurrentControlOn;
         var_PresetInputEnable = paPresetInputEnable;
         var_QuitErrors = paQuitErrors;
         executeEvent(scmEventMAPID, nullptr);
@@ -152,13 +156,31 @@ namespace forte::eclipse4diac::io::wago {
                       const CIEC_STRING &paPositioning,
                       const CIEC_STRING &paOptimizeOn,
                       const CIEC_STRING &paPreset,
+                      const CIEC_STRING &paCurrentControlOn,
                       const CIEC_STRING &paPresetInputEnable,
                       const CIEC_STRING &paQuitErrors,
                       CAnyBitOutputParameter<CIEC_BOOL> paQO,
                       COutputParameter<CIEC_WSTRING> paSTATUS) {
-        evt_MAP(paQI, paBusy, paLimitSwitchN, paLimitSwitchP, paPresetInput, paOptimizeOnZInput, paOnTarget,
-                paReferenceOk, paCurrentPosition, paTargetPosition, paMotorN, paMotorP, paPositioning, paOptimizeOn,
-                paPreset, paPresetInputEnable, paQuitErrors, paQO, paSTATUS);
+        evt_MAP(paQI,
+                paBusy,
+                paLimitSwitchN,
+                paLimitSwitchP,
+                paPresetInput,
+                paOptimizeOnZInput,
+                paOnTarget,
+                paReferenceOk,
+                paCurrentPosition,
+                paTargetPosition,
+                paMotorN,
+                paMotorP,
+                paPositioning,
+                paOptimizeOn,
+                paPreset,
+                paCurrentControlOn,
+                paPresetInputEnable,
+                paQuitErrors,
+                paQO,
+                paSTATUS);
       }
   };
 
