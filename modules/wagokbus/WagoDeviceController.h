@@ -13,6 +13,7 @@
 #pragma once
 
 #include "forte/io/device/io_controller_multi.h"
+#include "types/WagoRegComCmd_dtp.h"
 
 #define OS_MUST_BE_ARRAY
 
@@ -23,6 +24,8 @@ extern "C" {
 }
 
 namespace forte::eclipse4diac::io::wago {
+
+  class WagoRegComDevice;
 
   class WagoDeviceController : public ::forte::io::IODeviceMultiController {
     public:
@@ -51,19 +54,22 @@ namespace forte::eclipse4diac::io::wago {
       };
 
       void setConfig(struct IODeviceController::Config *paConfig) override;
-
       void addSlaveHandle(size_t paIndex, std::unique_ptr<forte::io::IOHandle> paHandle) override;
-
       void dropSlaveHandles(size_t paIndex) override;
+
+      bool enableRegCom(WagoRegComDevice *paECStartFB);
+      bool disableRegCom();
+      bool writeRegComRequest(const CIEC_WagoRegComCmd &paCmd);
+      bool readRegComRequest(const CIEC_WagoRegComCmd &paCmd);
+      bool readRegComResult(CIEC_BYTE &paD0, CIEC_BYTE &paD1);
+      void initRegComOffsets(WagoRegComDevice *paECStartFB);
 
     protected:
       const char *init();
+      void deInit() override;
+      void runLoop() override;
 
       forte::io::IOHandle *createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) override;
-
-      void deInit() override;
-
-      void runLoop() override;
 
       tApplicationDeviceInterface *mAppDevInterface;
       uint32_t mTaskId;
@@ -82,6 +88,8 @@ namespace forte::eclipse4diac::io::wago {
        * @return True if the current state is equal to the previous IO state. In case it has changed, return false.
        */
       virtual bool isHandleValueEqual(forte::io::IOHandle &paHandle) override;
+
+      arch::CSyncObject mRegComMutex;
 
     private:
       /*! @brief Checks if a slave exists at the given index
@@ -102,6 +110,11 @@ namespace forte::eclipse4diac::io::wago {
       const char *loadTerminalInformation();
 
       bool triggerKBusCycle();
+
+      void checkForRegComChanges();
+      TForteByte mREG_C = 0x80;
+      bool isRegComOn = false;
+      WagoRegComDevice *mRegComDevice = nullptr;
 
       static const tDeviceId scmInvalidDeviceId = -1;
       static const size_t scmNumberOfDevicesToScan = 10;
