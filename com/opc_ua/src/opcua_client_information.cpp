@@ -790,12 +790,17 @@ namespace forte::com_infra::opc_ua {
     // there
     if (channelState == UA_SECURECHANNELSTATE_CLOSED) {
       DEVLOG_INFO("[OPC UA CLIENT]: The client is disconnected\n");
-    } else if (channelState != UA_SECURECHANNELSTATE_OPEN) {
-      DEVLOG_INFO("[OPC UA CLIENT]: A TCP connection to the server is open\n");
-    } else if (sessionState != UA_SESSIONSTATE_ACTIVATED) {
-      DEVLOG_INFO("[OPC UA CLIENT]: A SecureChannel to the server is open\n");
-    } else if (sessionState == UA_SESSIONSTATE_ACTIVATED) {
-      DEVLOG_INFO("[OPC UA CLIENT]: A session with the server is open\n");
+    } else if (channelState == UA_SECURECHANNELSTATE_OPEN) {
+      if (sessionState == UA_SESSIONSTATE_ACTIVATED) {
+        DEVLOG_INFO("[OPC UA CLIENT]: A session with the server is open\n");
+      } else {
+        DEVLOG_INFO("[OPC UA CLIENT]: A SecureChannel to the server is open\n");
+      }
+    } else {
+      // Everything between CLOSED and OPEN (CONNECTING, RHE/HEL/ACK/OPN
+      // handshake steps, ...) -- report the actual state so a stuck/failed
+      // handshake can be pinpointed instead of being reported as "open".
+      DEVLOG_INFO("[OPC UA CLIENT]: Connecting to the server (channel state %d)\n", channelState);
     }
     if (connectStatus != UA_STATUSCODE_GOOD) {
       DEVLOG_WARNING("[OPC UA CLIENT]: client error: channel %d, session %d, status 0x%08x\n", channelState,
