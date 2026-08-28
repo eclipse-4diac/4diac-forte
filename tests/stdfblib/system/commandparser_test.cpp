@@ -198,14 +198,19 @@ namespace forte::iec61499::system::test {
     BOOST_TEST(response == EMGMResponse::BadParams);
   }
 
-  BOOST_AUTO_TEST_CASE(createConnectionDotAtEndOfSource) {
+  // A Connection's Source ending in '.' means the final segment (the port name) is itself the
+  // empty string. That's valid: IEC 61131-3 Functions use the empty string as the name of their
+  // return-value output port, so a Connection sourced from e.g. an ASSEMBLE_BYTE_FROM_BOOLS
+  // instance's return value looks exactly like this on the wire.
+  BOOST_AUTO_TEST_CASE(createConnectionSourceEndsWithEmptyPortName) {
     SManagementCMD cmd;
     CommandParser parser(cmd);
 
     auto response = parser.parseMGMCommand(
-        "", R"(<Request ID="1" Action="CREATE"><Connection Source="Test." Destination="Trigger.DT" />)");
+        "", R"(<Request ID="1" Action="CREATE"><Connection Source="Test." Destination="Trigger.DT" /></Request>)");
 
-    BOOST_TEST(response == EMGMResponse::BadParams);
+    BOOST_TEST(response == EMGMResponse::Ready);
+    BOOST_TEST(nameIdentifierEquals(cmd.mFirstParam, {"Test", ""}));
   }
 
   BOOST_AUTO_TEST_CASE(createConnectionDoubleDotInDestination) {
@@ -259,6 +264,17 @@ namespace forte::iec61499::system::test {
 
     auto response =
         parser.parseMGMCommand("", R"(<Request ID="9" Action="CREATE"><Watch Source="" Destination="*" /></Request>)");
+
+    BOOST_TEST(response == EMGMResponse::BadParams);
+  }
+
+  // Unlike a Connection's Source, a Watch's Destination must always have a real final segment.
+  BOOST_AUTO_TEST_CASE(createWatchDotAtEndOfDestination) {
+    SManagementCMD cmd;
+    CommandParser parser(cmd);
+
+    auto response = parser.parseMGMCommand(
+        "", R"(<Request ID="9" Action="CREATE"><Watch Source="FF.Q" Destination="Switch.G." /></Request>)");
 
     BOOST_TEST(response == EMGMResponse::BadParams);
   }
@@ -375,6 +391,17 @@ namespace forte::iec61499::system::test {
     BOOST_TEST(response == EMGMResponse::BadParams);
   }
 
+  // Symmetric with createFBDotAtEnd: an FB instance name must always have a real final segment.
+  BOOST_AUTO_TEST_CASE(deleteFBDotAtEnd) {
+    SManagementCMD cmd;
+    CommandParser parser(cmd);
+
+    auto response =
+        parser.parseMGMCommand("", R"(<Request ID="1" Action="DELETE"><FB Name="Trigger." Type="" /></Request>)");
+
+    BOOST_TEST(response == EMGMResponse::BadParams);
+  }
+
   BOOST_AUTO_TEST_CASE(deleteConnection) {
     SManagementCMD cmd;
     CommandParser parser(cmd);
@@ -404,6 +431,31 @@ namespace forte::iec61499::system::test {
 
     auto response = parser.parseMGMCommand(
         "", R"(<Request ID="1" Action="DELETE"><Connection Source="T#500ms" Destination="" /></Request>)");
+
+    BOOST_TEST(response == EMGMResponse::BadParams);
+  }
+
+  // Symmetric with createConnectionSourceEndsWithEmptyPortName: deleting a Connection sourced
+  // from an IEC 61131-3 Function's (unnamed) return-value output must work the same way.
+  BOOST_AUTO_TEST_CASE(deleteConnectionSourceEndsWithEmptyPortName) {
+    SManagementCMD cmd;
+    CommandParser parser(cmd);
+
+    auto response = parser.parseMGMCommand(
+        "", R"(<Request ID="1" Action="DELETE"><Connection Source="Test." Destination="Trigger.DT" /></Request>)");
+
+    BOOST_TEST(response == EMGMResponse::Ready);
+    BOOST_TEST(nameIdentifierEquals(cmd.mFirstParam, {"Test", ""}));
+  }
+
+  // Symmetric with createConnectionDotAtEndOfDestination: a Connection's Destination must always
+  // have a real final segment, for DELETE as well as CREATE.
+  BOOST_AUTO_TEST_CASE(deleteConnectionDotAtEndOfDestination) {
+    SManagementCMD cmd;
+    CommandParser parser(cmd);
+
+    auto response = parser.parseMGMCommand(
+        "", R"(<Request ID="1" Action="DELETE"><Connection Source="Test.EO" Destination="Trigger.DT." />)");
 
     BOOST_TEST(response == EMGMResponse::BadParams);
   }
@@ -438,6 +490,17 @@ namespace forte::iec61499::system::test {
 
     auto response =
         parser.parseMGMCommand("", R"(<Request ID="1" Action="DELETE"><Watch Source="" Destination="*" /></Request>)");
+
+    BOOST_TEST(response == EMGMResponse::BadParams);
+  }
+
+  // Symmetric with createWatchDotAtEndOfDestination.
+  BOOST_AUTO_TEST_CASE(deleteWatchDotAtEndOfDestination) {
+    SManagementCMD cmd;
+    CommandParser parser(cmd);
+
+    auto response = parser.parseMGMCommand(
+        "", R"(<Request ID="1" Action="DELETE"><Watch Source="FF.Q" Destination="Switch.G." /></Request>)");
 
     BOOST_TEST(response == EMGMResponse::BadParams);
   }
@@ -620,6 +683,18 @@ namespace forte::iec61499::system::test {
 
     auto response = parser.parseMGMCommand(
         "", R"(<Request ID="1" Action="WRITE"><Connection Source="42" Destination="" /></Request>)");
+
+    BOOST_TEST(response == EMGMResponse::BadParams);
+  }
+
+  // Unlike a Connection's Source in CREATE/DELETE, a WRITE's Destination must always have a real
+  // final segment -- it identifies the port being written to, not a Function's return value.
+  BOOST_AUTO_TEST_CASE(writeDestinationDotAtEndIsBadParams) {
+    SManagementCMD cmd;
+    CommandParser parser(cmd);
+
+    auto response = parser.parseMGMCommand(
+        "", R"(<Request ID="1" Action="WRITE"><Connection Source="42" Destination="Trigger.DT." /></Request>)");
 
     BOOST_TEST(response == EMGMResponse::BadParams);
   }

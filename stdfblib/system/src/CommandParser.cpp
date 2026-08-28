@@ -9,6 +9,8 @@
  * Contributors:
  *   Jose Cabral
  *    - initial API and implementation and/or initial documentation
+ *   Franz Höpfinger
+ *    - fix parseIdentifier() dropping a trailing empty name segment
  *******************************************************************************/
 
 #include "CommandParser.h"
@@ -272,7 +274,9 @@ namespace forte::iec61499::system {
     return EMGMResponse::Ready;
   }
 
-  EMGMResponse CommandParser::parseIdentifier(std::string_view paIdentifierString, TNameIdentifier &paIdentifier) {
+  EMGMResponse CommandParser::parseIdentifier(std::string_view paIdentifierString,
+                                              TNameIdentifier &paIdentifier,
+                                              bool paAllowEmptyLastSegment) {
     while (!paIdentifierString.empty()) {
       auto pos = paIdentifierString.find('.');
       if (pos == std::string_view::npos) {
@@ -288,6 +292,18 @@ namespace forte::iec61499::system {
         return EMGMResponse::Overflow;
       }
       paIdentifierString = paIdentifierString.substr(pos + 1);
+      if (paIdentifierString.empty()) {
+        // Trailing '.': the final segment is the empty string. Only valid where explicitly
+        // allowed (a Connection's Source -- see the parameter doc in the header); an FB
+        // instance name or a Connection's Destination must always have a real final segment.
+        if (!paAllowEmptyLastSegment) {
+          return EMGMResponse::BadParams;
+        }
+        if (!paIdentifier.try_push_back(StringId::insert(std::string_view{}))) {
+          return EMGMResponse::Overflow;
+        }
+        return EMGMResponse::Ready;
+      }
     }
     return EMGMResponse::BadParams;
   }
@@ -322,7 +338,7 @@ namespace forte::iec61499::system {
       return EMGMResponse::BadParams;
     }
     if (source != "*") {
-      EMGMResponse resp = parseIdentifier(source, mCommand.mFirstParam);
+      EMGMResponse resp = parseIdentifier(source, mCommand.mFirstParam, true);
       if (resp != EMGMResponse::Ready) {
         return resp;
       }

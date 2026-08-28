@@ -58,7 +58,9 @@ namespace forte {
      *
      * When creating a connection the parameters of the SManagementCMD are defined as:
      *    - mDestination = "" for creating within the device or "resname" for creating within a resource
-     *    - mFistParam = source of the connection given by: "fbname.output"
+     *    - mFistParam = source of the connection given by: "fbname.output". The output may be
+     *      empty ("fbname."), which addresses an IEC 61131-3 Function's unnamed return-value
+     *      output port.
      *    - mSecondParam = destination of the connection given by: "fbname.intput"
      *    - mAdditionalParams not used
      */
@@ -82,7 +84,9 @@ namespace forte {
      *
      * When deleting a connection the parameters of the SManagementCMD are defined as:
      *    - mDestination = "" for deleting within the device or "resname" for deleting within a resource
-     *    - mFistParam = source of the connection given by: "fbname.output"
+     *    - mFistParam = source of the connection given by: "fbname.output". The output may be
+     *      empty ("fbname."), which addresses an IEC 61131-3 Function's unnamed return-value
+     *      output port.
      *    - mSecondParam = destination of the connection given by: "fbname.intput"
      *    - mAdditionalParams not used
      */
