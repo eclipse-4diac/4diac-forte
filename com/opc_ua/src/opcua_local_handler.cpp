@@ -99,7 +99,7 @@ namespace forte::com_infra::opc_ua {
     DEVLOG_INFO("[OPC UA LOCAL]: Starting OPC UA Server: opc.tcp://localhost:%d\n", gOpcuaServerPort.mArgument);
 
     UA_ServerConfig config{
-        config.logging = &getLogger(),
+        .logging = &getLogger(),
     };
 
     // set default config
