@@ -103,9 +103,16 @@ namespace forte::iec61499::system {
        *
        * @param paIdentifierString string value of the identifier
        * @param paIdentifier identifier vector where to write the parsed identifiers to
+       * @param paAllowEmptyLastSegment allow the final segment (after the last '.') to be empty,
+       *        for identifiers whose last segment names a port rather than an FB instance -- IEC
+       *        61131-3 Functions use the empty string as the name of their return-value output
+       *        port, so a Connection's Source can legitimately end in '.'. Not allowed by default,
+       *        since e.g. an FB instance name or a Connection's Destination must never be empty.
        * @return EMGMResponse::Ready if all segments could be parsed and added to the name identifier
        */
-      EMGMResponse parseIdentifier(std::string_view paIdentifierString, TNameIdentifier &paIdentifier);
+      EMGMResponse parseIdentifier(std::string_view paIdentifierString,
+                                   TNameIdentifier &paIdentifier,
+                                   bool paAllowEmptyLastSegment = false);
 
       /*! \brief Parse the name of the type
        *
