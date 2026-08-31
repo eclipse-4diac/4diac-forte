@@ -10,6 +10,8 @@
  *   Jose Cabral
  *    - initial API and implementation and/or initial documentation
  *   Franz Höpfinger
+ *    - fix appendIdentifierName() emitting a duplicated/extra final segment
+ *   Franz Höpfinger
  *    - fix parseIdentifier() dropping a trailing empty name segment
  *******************************************************************************/
 
@@ -628,12 +630,15 @@ namespace forte::iec61499::system {
   }
 
   void CommandParser::appendIdentifierName(CIEC_STRING &paDest, TNameIdentifier &paIdentifier) {
-    if (!paIdentifier.empty()) {
-      for (const auto &runner : paIdentifier) {
-        paDest.append(runner.data());
-        paDest.append(".");
-      }
-      paDest.append(paIdentifier.back().data());
+    auto it = paIdentifier.begin();
+    if (it == paIdentifier.end()) {
+      return;
+    }
+
+    paDest.append(it->data());
+    for (++it; it != paIdentifier.end(); ++it) {
+      paDest.append(".");
+      paDest.append(it->data());
     }
   }
 
