@@ -811,6 +811,25 @@ namespace forte::iec61499::system::test {
     BOOST_TEST(response == EMGMResponse::BadParams);
   }
 
+  // Regression test: appendIdentifierName() appended a separator after every segment (including
+  // the last) and then appended the last segment a second time, duplicating it in READ responses
+  // (e.g. "SubApp1.Trigger.DT" became "SubApp1.Trigger.DT.DT").
+  BOOST_AUTO_TEST_CASE(readConnectionResponseDoesNotDuplicateLastSourceSegment) {
+    SManagementCMD cmd;
+    CommandParser parser(cmd);
+
+    auto response = parser.parseMGMCommand(
+        "", R"(<Request ID="1" Action="READ"><Connection Source="SubApp1.Trigger.DT" Destination="*" /></Request>)");
+
+    // Simulate the device manager having filled in the read value before the response is generated.
+    cmd.mAdditionalParams = "TRUE";
+    CIEC_STRING responseText;
+    parser.generateResponse(responseText, response);
+
+    BOOST_TEST(static_cast<std::string>(responseText) ==
+               "<Response ID=\"1\">\n  <Connection Source=\"SubApp1.Trigger.DT\" Destination=\"TRUE\" />\n</Response>");
+  }
+
   BOOST_AUTO_TEST_CASE(readWatches) {
     SManagementCMD cmd;
     CommandParser parser(cmd);
