@@ -13,6 +13,8 @@
 #############################################################################
 # Tests for the IEC 61131-3 function FBs
 #############################################################################
+forte_test_add_sourcefile_cpp(F_ADD_tester.cpp)
+forte_test_add_sourcefile_cpp(F_MUL_tester.cpp)
 forte_test_add_sourcefile_cpp(F_DIV_tester.cpp)
 forte_test_add_sourcefile_cpp(F_MULTIME_tester.cpp)
 forte_test_add_sourcefile_cpp(F_DIVTIME_tester.cpp)
@@ -26,3 +28,9 @@ forte_test_add_sourcefile_cpp(F_TIME_IN_S_TO_ULINT_tester.cpp F_TIME_IN_MS_TO_UL
 forte_test_add_sourcefile_cpp(F_TIME_IN_US_TO_ULINT_tester.cpp F_TIME_IN_NS_TO_ULINT_tester.cpp)
 forte_test_add_sourcefile_cpp(F_TIME_IN_S_TO_LREAL_tester.cpp F_TIME_IN_MS_TO_LREAL_tester.cpp)
 forte_test_add_sourcefile_cpp(F_TIME_IN_US_TO_LREAL_tester.cpp F_TIME_IN_NS_TO_LREAL_tester.cpp)
+forte_test_add_sourcefile_cpp(GEN_ADD_2_tester.cpp)
+forte_test_add_sourcefile_cpp(GEN_ADD_3_tester.cpp)
+forte_test_add_sourcefile_cpp(GEN_ADD_4_tester.cpp)
+forte_test_add_sourcefile_cpp(GEN_MUL_2_tester.cpp)
+forte_test_add_sourcefile_cpp(GEN_MUL_3_tester.cpp)
+forte_test_add_sourcefile_cpp(GEN_MUL_4_tester.cpp)
