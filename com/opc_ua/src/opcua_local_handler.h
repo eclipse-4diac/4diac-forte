@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2025 Florian Froschermeier <florian.froschermeier@tum.de>,
- *                          fortiss GmbH, Primetals Technologies Austria GmbH
+ * Copyright (c) 2015 Florian Froschermeier <florian.froschermeier@tum.de>,
+ *                    fortiss GmbH, Primetals Technologies Austria GmbH,
+ *                    HR Agrartechnik GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -19,6 +20,8 @@
  *      - Change CIEC_STRING to std::string
  *    Markus Meingast:
  *      - Add support for Object Structs
+ *    Franz Höpfinger
+ *      - Add optional OPC UA over WebSocket (insecure and secure transports) server endpoint
  *******************************************************************************/
 
 #pragma once
@@ -31,11 +34,24 @@
 #include "forte/arch/forte_sem.h"
 #include "forte/arch/forte_sync.h"
 
+// Must come before any use of FORTE_COM_OPC_UA_WEBSOCKET below: this header is
+// also reached via stdfblib/system/src/OPCUA_MGR.h, in a different CMake target
+// than forte-com-opc_ua. Without including the generated defaults here, that
+// target would see FORTE_COM_OPC_UA_WEBSOCKET as undefined while opcua_local_handler.cpp
+// sees it defined, giving COPC_UA_Local_Handler two different sizes (ODR violation:
+// mWsConnectionManager present in one TU's layout, absent in the other's) - the
+// constructor (compiled once, with the member present) then writes past the end of
+// an object allocated using the smaller, member-less size.
+#include "opcua_defaults.h"
+
 #include "opcua_handler_abstract.h"
 #include "opcua_helper.h"
 
 struct UA_Server;
 struct UA_ServerConfig;
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET
+struct UA_ConnectionManager;
+#endif // FORTE_COM_OPC_UA_WEBSOCKET
 
 namespace forte::com_infra::opc_ua {
   /**
@@ -197,6 +213,12 @@ namespace forte::com_infra::opc_ua {
        */
       struct UA_ServerStrings {
           std::string mHostname;
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET_INSECURE
+          std::string mWsHostname;
+#endif // FORTE_COM_OPC_UA_WEBSOCKET_INSECURE
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET_SECURE
+          std::string mWssHostname;
+#endif // FORTE_COM_OPC_UA_WEBSOCKET_SECURE
           std::string mAppURI;
 #ifdef FORTE_COM_OPC_UA_MULTICAST
           std::string mMdnsServerName;
@@ -211,7 +233,11 @@ namespace forte::com_infra::opc_ua {
       void generateServerStrings(TForteUInt16 paUAServerPort, UA_ServerStrings &paServerStrings) const;
 
       /**
-       *  Creates the configuration for the OPC UA Server.
+       *  Creates the configuration for the OPC UA Server. When built with
+       *  FORTE_COM_OPC_UA_WEBSOCKET, also creates and registers the WebSocket
+       *  ConnectionManager backing paServerStrings.mWsHostname (unencrypted) and
+       *  paServerStrings.mWssHostname (secure), storing it in
+       *  mWsConnectionManager.
        * @param paServerStrings Strings needed to configure the server
        * @param paUaServerConfig Place to store all the configurations
        */
@@ -220,7 +246,21 @@ namespace forte::com_infra::opc_ua {
       /**
        * Handler of the OPC UA stack server
        */
-      UA_Server *mUaServer;
+      UA_Server *mUaServer = nullptr;
+
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET
+      /**
+       * WebSocket ConnectionManager backing the server's insecure and secure
+       * endpoints. Only populated on platforms built with UA_ENABLE_LWS
+       * (libwebsockets, POSIX-only), where it is created via
+       * UA_ConnectionManager_new_LWS_WebSocket; stays null on platforms without
+       * libwebsockets (RTOS targets such as FreeRTOS/Zephyr), where the unencrypted
+       * transport has to be backed by a ConnectionManager registered elsewhere.
+       * Owned by the EventLoop of mUaServer once registered -- freed together with
+       * it, torn down in run() by UA_Server_delete().
+       */
+      mutable UA_ConnectionManager *mWsConnectionManager = nullptr;
+#endif // FORTE_COM_OPC_UA_WEBSOCKET
 
       /**
        * Maximal length for the server name

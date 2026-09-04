@@ -1,7 +1,23 @@
+/*******************************************************************************
+ * Copyright (c) 2026 HR Agrartechnik GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *    Franz Höpfinger
+ *      - Add optional OPC UA over WebSocket (insecure and secure transports) server endpoint
+ *******************************************************************************/
 #define FORTE_COM_OPC_UA_PORT ${FORTE_COM_OPC_UA_PORT}
 #define FORTE_COM_OPC_UA_SERVER_MAX_ITERATION_INTERVAL ${FORTE_COM_OPC_UA_SERVER_MAX_ITERATION_INTERVAL}
 #define FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL ${FORTE_COM_OPC_UA_SERVER_PUB_INTERVAL}
 #define FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL ${FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL}
     
 #cmakedefine FORTE_COM_OPC_UA_MULTICAST
+#cmakedefine FORTE_COM_OPC_UA_WEBSOCKET
+#cmakedefine FORTE_COM_OPC_UA_WEBSOCKET_INSECURE
+#cmakedefine FORTE_COM_OPC_UA_WEBSOCKET_SECURE
 #cmakedefine FORTE_COM_OPC_UA_CUSTOM_HOSTNAME "${FORTE_COM_OPC_UA_CUSTOM_HOSTNAME}"

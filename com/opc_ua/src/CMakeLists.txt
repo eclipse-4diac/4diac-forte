@@ -1,16 +1,17 @@
 # *******************************************************************************************
 
-# Copyright (c) 2015-2016 Florian Froschermeier
-# <florian.froschermeier@tum.de>, fortiss GmbH This program and the
-# accompanying materials are made available under the terms of the Eclipse
-# Public License 2.0 which is available at
+# Copyright (c) 2015 Florian Froschermeier
+# <florian.froschermeier@tum.de>, fortiss GmbH, HR Agrartechnik GmbH. This
+# program and the accompanying materials are made available under the terms
+# of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
 #
 # Contributors: Florian Froschermeier - initial integration of OPC Unified
-# Architecture into FORTE Stefan Profanter - refactoring and adaption to new
-# concept
+# Architecture into FORTE Stefan Profanter - refactoring and adaptation to new concept;
+# Franz Höpfinger - Add optional OPC UA over WebSocket (insecure and secure
+# transports) server endpoint
 # ******************************************************************************************
 
 # ############################################################################
@@ -50,7 +51,7 @@ target_sources(forte-com-opc_ua PRIVATE
         $<$<BOOL:${FORTE_COM_OPC_UA_AC}>:${CMAKE_CURRENT_SOURCE_DIR}/opcua_ac_layer.cpp>
         $<$<BOOL:${FORTE_COM_OPC_UA_AC}>:${CMAKE_CURRENT_SOURCE_DIR}/opcua_ac_layer.h>
 )
-target_include_directories(forte-com-opc_ua PRIVATE ${CMAKE_CURRENT_BINARY_DIR})
+target_include_directories(forte-com-opc_ua PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}>)
 
 add_subdirectory(types)
 add_subdirectory(detail)

@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2025 Florian Froschermeier <florian.froschermeier@tum.de>,
- *                          fortiss GmbH, Primetals Technologies Austria GmbH
+ * Copyright (c) 2015 Florian Froschermeier <florian.froschermeier@tum.de>,
+ *                    fortiss GmbH, Primetals Technologies Austria GmbH,
+ *                    HR Agrartechnik GmbH
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -19,13 +20,20 @@
  *      - Change CIEC_STRING to std::string
  *    Markus Meingast:
  *      - Add support for Object Structs
+ *    Franz Höpfinger
+ *      - Add optional OPC UA over WebSocket (insecure and secure transports) server endpoint
  *******************************************************************************/
 
-#include "opcua_defaults.h"
 #include "opcua_local_handler.h"
 
 #include <open62541/server.h>
 #include <open62541/server_config_default.h>
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET
+#include <open62541/plugin/eventloop.h>
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET_CONNECTIONMANAGER
+#include "ws_connection_manager.h"
+#endif // FORTE_COM_OPC_UA_WEBSOCKET_CONNECTIONMANAGER
+#endif // FORTE_COM_OPC_UA_WEBSOCKET
 
 #include "forte/iec61131_functions.h"
 #include "forte/cominfra/basecommfb.h"
@@ -41,6 +49,8 @@
 #include "detail/lds_me_handler.h"
 #endif // FORTE_COM_OPC_UA_MULTICAST
 #include <string>
+#include <cstdint>
+#include <limits>
 
 #ifndef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
 #include "forte/arch/sockhand.h"
@@ -74,8 +84,7 @@ namespace forte::com_infra::opc_ua {
   const char *const COPC_UA_Local_Handler::mDefaultDescriptionForVariableNodes = "Digital port of Function Block";
 
   COPC_UA_Local_Handler::COPC_UA_Local_Handler(CDeviceExecution &paDeviceExecution) :
-      COPC_UA_HandlerAbstract(paDeviceExecution),
-      mUaServer(nullptr) {
+      COPC_UA_HandlerAbstract(paDeviceExecution) {
   }
 
   COPC_UA_Local_Handler::~COPC_UA_Local_Handler() {
@@ -95,9 +104,20 @@ namespace forte::com_infra::opc_ua {
     stopServer();
   }
 
-  void COPC_UA_Local_Handler::run() {
-    DEVLOG_INFO("[OPC UA LOCAL]: Starting OPC UA Server: opc.tcp://localhost:%d\n", gOpcuaServerPort.mArgument);
+  namespace {
+    constexpr std::uint32_t scmWsPortOffset = 1U;
+    constexpr std::uint32_t scmWssPortOffset = 2U;
 
+    constexpr std::uint32_t getInsecureWsPort(std::uint32_t paTcpPort) {
+      return paTcpPort + scmWsPortOffset;
+    }
+
+    constexpr std::uint32_t getSecureWsPort(std::uint32_t paTcpPort) {
+      return paTcpPort + scmWssPortOffset;
+    }
+  } // namespace
+
+  void COPC_UA_Local_Handler::run() {
     UA_ServerConfig config{
         .logging = &getLogger(),
     };
@@ -113,11 +133,25 @@ namespace forte::com_infra::opc_ua {
     generateServerStrings(gOpcuaServerPort.mArgument, serverStrings);
     configureUAServer(serverStrings, config);
 
+    // Built from the endpoints configureUAServer() actually registered (e.g. it drops the
+    // unencrypted WebSocket endpoint if the WebSocket ConnectionManager failed to register,
+    // and the secure one if no certificate/private key were configured), not from the raw
+    // port and compile-time flags. Only logged below once the server has actually started
+    // listening.
+    std::string startupLogMsg = "[OPC UA LOCAL]: Starting OPC UA Server";
+    for (size_t i = 0; i < config.serverUrlsSize; ++i) {
+      startupLogMsg += (i == 0) ? ": " : ", ";
+      startupLogMsg +=
+          std::string(reinterpret_cast<const char *>(config.serverUrls[i].data), config.serverUrls[i].length);
+    }
+    startupLogMsg += "\n";
+
     mUaServer = UA_Server_newWithConfig(&config);
     if (mUaServer) {
       if (initializeNodesets(*mUaServer)) {
         UA_StatusCode retVal = UA_Server_run_startup(mUaServer);
         if (UA_STATUSCODE_GOOD == retVal) {
+          DEVLOG_INFO("%s", startupLogMsg.c_str());
           {
 #ifdef FORTE_COM_OPC_UA_MULTICAST
             // the extra curly brace on top is to limit the lifetime of this object.
@@ -130,6 +164,23 @@ namespace forte::com_infra::opc_ua {
               UA_UInt16 timeToSleepMs;
               {
                 util::CCriticalRegion criticalRegion(mServerAccessMutex);
+#if defined(FORTE_COM_OPC_UA_WEBSOCKET) && defined(FORTE_COM_OPC_UA_WEBSOCKET_CONNECTIONMANAGER) &&                    \
+    !defined(UA_ENABLE_LWS)
+                // Must run on the same thread as UA_Server_run_iterate(), see
+                // ws_connection_manager.h: open62541 has no locking on this
+                // architecture, so all UA_Server access has to stay on this thread.
+                //
+                // The !defined(UA_ENABLE_LWS) guard matters here even though
+                // FORTE_COM_OPC_UA_WEBSOCKET_CONNECTIONMANAGER is meant for platforms
+                // without it: if both end up defined for the same build, the #ifdef/#elif
+                // in configureUAServer() below still gives UA_ENABLE_LWS priority, so
+                // mWsConnectionManager is an LWS-backed UA_ConnectionManager, not a
+                // WsConnectionManager -- calling WsConnectionManager_poll() on it would be
+                // undefined behavior.
+                if (mWsConnectionManager) {
+                  WsConnectionManager_poll(mWsConnectionManager);
+                }
+#endif // FORTE_COM_OPC_UA_WEBSOCKET && FORTE_COM_OPC_UA_WEBSOCKET_CONNECTIONMANAGER && !UA_ENABLE_LWS
                 timeToSleepMs = UA_Server_run_iterate(mUaServer, false);
               }
 
@@ -156,9 +207,19 @@ namespace forte::com_infra::opc_ua {
       }
       UA_Server_delete(mUaServer);
       mUaServer = nullptr;
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET
+      // mWsConnectionManager was torn down as part of the EventLoop that
+      // UA_Server_delete() just freed; drop the now-dangling pointer.
+      mWsConnectionManager = nullptr;
+#endif // FORTE_COM_OPC_UA_WEBSOCKET
     } else {
       DEVLOG_ERROR("[OPC UA LOCAL]: Couldn't initialize server\n");
       UA_ServerConfig_clear(&config);
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET
+      // Same as above: torn down together with the eventLoop that
+      // UA_ServerConfig_clear() just cleared.
+      mWsConnectionManager = nullptr;
+#endif // FORTE_COM_OPC_UA_WEBSOCKET
     }
     mServerStarted.inc(); // this will avoid locking startServer() for all cases where the starting of server failed
   }
@@ -185,18 +246,123 @@ namespace forte::com_infra::opc_ua {
 #endif // FORTE_COM_OPC_UA_MULTICAST
 
     paServerStrings.mAppURI = "org.eclipse.4diac."s;
-    paServerStrings.mHostname = std::string("opc.tcp://");
+    std::string serverName;
 #ifdef FORTE_COM_OPC_UA_CUSTOM_HOSTNAME
-    paServerStrings.mHostname.append(FORTE_COM_OPC_UA_CUSTOM_HOSTNAME);
-    paServerStrings.mHostname.append("-"s);
-    paServerStrings.mHostname.append(helperBuffer);
-    paServerStrings.mAppURI.append(paServerStrings.mHostname);
+    serverName = std::string(FORTE_COM_OPC_UA_CUSTOM_HOSTNAME) + "-" + helperBuffer;
+    paServerStrings.mAppURI.append("opc.tcp://" + serverName);
 #else
     paServerStrings.mAppURI.append(helperBuffer);
 #endif
+    // serverName stays empty here when FORTE_COM_OPC_UA_CUSTOM_HOSTNAME is not defined --
+    // that's intentional, not a lost host identifier: it matches this function's
+    // pre-WebSocket behavior (mHostname was always "opc.tcp://" + ":" + port in that case,
+    // helperBuffer only ever went into mAppURI), and an empty host makes open62541 listen
+    // on all interfaces, which is the desired default. See the WebSocket hostname comment
+    // below for the same rationale.
+    paServerStrings.mHostname = "opc.tcp://" + serverName;
     paServerStrings.mHostname.append(":");
     paServerStrings.mHostname.append(std::to_string(paUAServerPort));
+
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET
+    const auto makeWebSocketHostname = [&](const char *paScheme, const std::uint32_t paPort) {
+      std::string hostname(paScheme);
+      hostname.append(serverName);
+      hostname.append(":");
+      hostname.append(std::to_string(paPort));
+      return hostname;
+    };
+#if defined(FORTE_COM_OPC_UA_WEBSOCKET_SECURE)
+    constexpr std::uint32_t maxAllowedPort = std::numeric_limits<TForteUInt16>::max() - scmWssPortOffset;
+#else
+    constexpr std::uint32_t maxAllowedPort = std::numeric_limits<TForteUInt16>::max() - scmWsPortOffset;
+#endif
+    if (paUAServerPort <= maxAllowedPort) {
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET_INSECURE
+      // Mirrors mHostname above: an empty hostname makes open62541 listen on
+      // all interfaces, which is the default here (no FORTE_COM_OPC_UA_CUSTOM_HOSTNAME).
+      // Intentional unencrypted-WebSocket support (builder-configurable, off when
+      // INSECURE=OFF): a dev/test transport, never enabled by default.
+      paServerStrings.mWsHostname = makeWebSocketHostname(
+          "opc.ws://",
+          getInsecureWsPort(paUAServerPort)); // nosemgrep: javascript.lang.security.detect-insecure-websocket
+#endif // FORTE_COM_OPC_UA_WEBSOCKET_INSECURE
+
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET_SECURE
+      paServerStrings.mWssHostname = makeWebSocketHostname("opc.wss://", getSecureWsPort(paUAServerPort));
+#endif // FORTE_COM_OPC_UA_WEBSOCKET_SECURE
+    } else {
+      DEVLOG_ERROR("[OPC UA LOCAL]: OPC UA server port %u is too high to derive WebSocket ports (max %u)\n",
+                   paUAServerPort, maxAllowedPort);
+    }
+#endif // FORTE_COM_OPC_UA_WEBSOCKET
   }
+
+#if defined(FORTE_COM_OPC_UA_WEBSOCKET) &&                                                                             \
+    (defined(UA_ENABLE_LWS) ||                                                                                         \
+     (defined(FORTE_COM_OPC_UA_WEBSOCKET_CONNECTIONMANAGER) && defined(FORTE_COM_OPC_UA_WEBSOCKET_INSECURE)))
+  namespace {
+    // Registers paConnectionManager (already created by the caller) with the EventLoop.
+    // On any failure, logs, frees it, and nulls it out; on success, marks webSocketEnabled.
+    // Shared by both the UA_ENABLE_LWS and platform-ConnectionManager paths below, which
+    // otherwise differ only in how the ConnectionManager itself gets created. Guarded to
+    // match exactly the condition under which it's actually called (both call sites live
+    // in configureUAServer(), guarded the same way) so it isn't defined-but-unused when
+    // neither path applies.
+    // Frees paConnectionManager's event source, if the ConnectionManager provides a free
+    // callback at all (defensive -- not all implementations necessarily set one).
+    void freeWsEventSource(UA_ConnectionManager *paConnectionManager) {
+      if (paConnectionManager->eventSource.free) {
+        paConnectionManager->eventSource.free(&paConnectionManager->eventSource);
+      }
+    }
+
+    void registerWsConnectionManager(UA_ConnectionManager *&paConnectionManager, UA_ServerConfig &paUaServerConfig) {
+      if (!paConnectionManager) {
+        DEVLOG_ERROR("[OPC UA LOCAL]: Could not create the WebSocket ConnectionManager\n");
+        return;
+      }
+      if (paUaServerConfig.eventLoop == nullptr) {
+        DEVLOG_ERROR("[OPC UA LOCAL]: Could not register WebSocket ConnectionManager: eventLoop is null\n");
+        // registerEventSource() was never called here, so the event source was never
+        // linked into the EventLoop -- safe to free directly.
+        freeWsEventSource(paConnectionManager);
+        paConnectionManager = nullptr;
+        return;
+      }
+      const UA_StatusCode wsRetVal = paUaServerConfig.eventLoop->registerEventSource(paUaServerConfig.eventLoop,
+                                                                                     &paConnectionManager->eventSource);
+      if (wsRetVal != UA_STATUSCODE_GOOD) {
+        DEVLOG_ERROR("[OPC UA LOCAL]: Could not register the WebSocket ConnectionManager: %s\n",
+                     UA_StatusCode_name(wsRetVal));
+        // registerEventSource() links the event source into the EventLoop's internal list
+        // *before* attempting to start it, so on failure (a failed start()) it is still
+        // linked there even though the overall call reports failure -- confirmed against
+        // both the UA_ENABLE_LWS and platform ConnectionManager start() implementations,
+        // neither of which touch eventSource.state on a failure path, leaving it at the
+        // STOPPED state registerEventSource() set just before calling start(). Deregister
+        // it first so the EventLoop doesn't keep a dangling pointer to the memory freed
+        // below.
+        const UA_StatusCode deregisterStatus = paUaServerConfig.eventLoop->deregisterEventSource(
+            paUaServerConfig.eventLoop, &paConnectionManager->eventSource);
+        if (deregisterStatus != UA_STATUSCODE_GOOD) {
+          // Could not safely unlink it from the EventLoop (e.g. still mid-start) -- freeing
+          // it now would leave the EventLoop holding a dangling pointer, so leak it instead
+          // of risking a use-after-free.
+          DEVLOG_ERROR("[OPC UA LOCAL]: Could not deregister the failed WebSocket ConnectionManager: %s -- "
+                       "leaking it to avoid a dangling EventLoop reference\n",
+                       UA_StatusCode_name(deregisterStatus));
+          paConnectionManager = nullptr;
+          return;
+        }
+        freeWsEventSource(paConnectionManager);
+        paConnectionManager = nullptr;
+        return;
+      }
+      paUaServerConfig.webSocketEnabled = true;
+    }
+  } // namespace
+#endif // FORTE_COM_OPC_UA_WEBSOCKET && (UA_ENABLE_LWS || (FORTE_COM_OPC_UA_WEBSOCKET_CONNECTIONMANAGER &&
+       // FORTE_COM_OPC_UA_WEBSOCKET_INSECURE))
 
   void COPC_UA_Local_Handler::configureUAServer(UA_ServerStrings &paServerStrings,
                                                 UA_ServerConfig &paUaServerConfig) const {
@@ -208,16 +374,79 @@ namespace forte::com_infra::opc_ua {
     paUaServerConfig.serverUrls = nullptr;
     paUaServerConfig.serverUrlsSize = 0;
 
-    UA_String serverUrls[1];
-    size_t serverUrlsSize = 0;
-    serverUrls[serverUrlsSize] = UA_STRING(&paServerStrings.mHostname[0]);
-    serverUrlsSize++;
-    UA_StatusCode retVal =
-        UA_Array_copy(serverUrls, serverUrlsSize, (void **) &paUaServerConfig.serverUrls, &UA_TYPES[UA_TYPES_STRING]);
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET
+    // WebSocket support (both insecure and secure transports): UA_ENABLE_WEBSOCKET_TRANSPORT
+    // (the generic server-side handling for both) looks up a UA_ConnectionManager named
+    // "websocket" in the EventLoop. On platforms built with UA_ENABLE_LWS (libwebsockets,
+    // POSIX-only), open62541 provides that ConnectionManager via
+    // UA_ConnectionManager_new_LWS_WebSocket. Platforms without libwebsockets (RTOS targets
+    // such as FreeRTOS/Zephyr, e.g. ESP-IDF builds) never define UA_ENABLE_LWS; there
+    // webSocketEnabled is set directly and the unencrypted transport has to come from a
+    // ConnectionManager registered by that platform's own code.
+    bool webSocketTransportAvailable = false;
+    paUaServerConfig.webSocketEnabled = false;
+#ifdef UA_ENABLE_LWS
+    mWsConnectionManager = UA_ConnectionManager_new_LWS_WebSocket(UA_STRING_STATIC("websocket"));
+    registerWsConnectionManager(mWsConnectionManager, paUaServerConfig);
+    if (mWsConnectionManager) {
+      webSocketTransportAvailable = true;
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET_INSECURE
+      paUaServerConfig.webSocketAllowUnencrypted = true;
+#endif
+    }
+#elif defined(FORTE_COM_OPC_UA_WEBSOCKET_CONNECTIONMANAGER) && defined(FORTE_COM_OPC_UA_WEBSOCKET_INSECURE)
+    // No libwebsockets on this platform (e.g. ESP-IDF/FreeRTOS+lwIP): use the
+    // platform-provided "websocket" ConnectionManager instead (unencrypted transport
+    // only, WsCM_openConnection() rejects useSSL, so the secure one stays disabled).
+    mWsConnectionManager = WsConnectionManager_new();
+    registerWsConnectionManager(mWsConnectionManager, paUaServerConfig);
+    if (mWsConnectionManager) {
+      webSocketTransportAvailable = true;
+      paUaServerConfig.webSocketAllowUnencrypted = true;
+    }
+#else
+    // No ConnectionManager is created here when libwebsockets is unavailable.
+#endif // UA_ENABLE_LWS
+#endif // FORTE_COM_OPC_UA_WEBSOCKET
+
+    std::vector<UA_String> serverUrls;
+    serverUrls.push_back(UA_STRING(&paServerStrings.mHostname[0]));
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET_INSECURE
+    if (webSocketTransportAvailable && !paServerStrings.mWsHostname.empty()) {
+      serverUrls.push_back(UA_STRING(&paServerStrings.mWsHostname[0]));
+    }
+#endif // FORTE_COM_OPC_UA_WEBSOCKET_INSECURE
+#ifdef FORTE_COM_OPC_UA_WEBSOCKET_SECURE
+    const bool hasWebSocketCredentials =
+        paUaServerConfig.webSocketCertificate.length > 0 && paUaServerConfig.webSocketCertificate.data != nullptr &&
+        paUaServerConfig.webSocketPrivateKey.length > 0 && paUaServerConfig.webSocketPrivateKey.data != nullptr;
+    if (!paServerStrings.mWssHostname.empty()) {
+      if (webSocketTransportAvailable && hasWebSocketCredentials) {
+        serverUrls.push_back(UA_STRING(&paServerStrings.mWssHostname[0]));
+      } else if (!hasWebSocketCredentials) {
+        // Forte itself never populates webSocketCertificate/webSocketPrivateKey -- there is
+        // no built-in configuration path for them yet, so with a stock (unpatched)
+        // UA_ServerConfig_setDefault() this branch is always taken and opc.wss:// can never
+        // actually come up. Logged as an error, not a warning: FORTE_COM_OPC_UA_WEBSOCKET_SECURE
+        // defaulting to ON creates an explicit expectation of an encrypted endpoint that this
+        // build cannot meet, which the operator needs to notice.
+        DEVLOG_ERROR("[OPC UA LOCAL]: opc.wss:// endpoint requires webSocketCertificate and webSocketPrivateKey "
+                     "credentials, which forte does not currently provide a configuration path for; disabling "
+                     "opc.wss://\n");
+      } else {
+        DEVLOG_WARNING("[OPC UA LOCAL]: opc.wss:// endpoint configured with valid webSocketCertificate and "
+                       "webSocketPrivateKey, but WebSocket transport is unavailable; disabling opc.wss://\n");
+      }
+    }
+#endif // FORTE_COM_OPC_UA_WEBSOCKET_SECURE
+
+    UA_StatusCode retVal = UA_Array_copy(serverUrls.data(), serverUrls.size(), (void **) &paUaServerConfig.serverUrls,
+                                         &UA_TYPES[UA_TYPES_STRING]);
     if (retVal != UA_STATUSCODE_GOOD) {
+      DEVLOG_ERROR("[OPC UA LOCAL]: Could not set the server URLs. Error: %s\n", UA_StatusCode_name(retVal));
       return;
     }
-    paUaServerConfig.serverUrlsSize = serverUrlsSize;
+    paUaServerConfig.serverUrlsSize = serverUrls.size();
 
     // delete pre-initialized values
     UA_LocalizedText_clear(&paUaServerConfig.applicationDescription.applicationName);
