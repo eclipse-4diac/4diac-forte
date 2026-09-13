@@ -63,6 +63,7 @@ namespace forte::eclipse4diac::io::wago {
       bool readRegComRequest(const CIEC_WagoRegComCmd &paCmd);
       bool readRegComResult(CIEC_BYTE &paD0, CIEC_BYTE &paD1);
       void initRegComOffsets(WagoRegComDevice *paECStartFB);
+      bool regComInitFailed();
 
     protected:
       const char *init();
@@ -115,6 +116,7 @@ namespace forte::eclipse4diac::io::wago {
       TForteByte mREG_C = 0x80;
       bool isRegComOn = false;
       WagoRegComDevice *mRegComDevice = nullptr;
+      int mReadCounter = 0;
 
       static const tDeviceId scmInvalidDeviceId = -1;
       static const size_t scmNumberOfDevicesToScan = 10;

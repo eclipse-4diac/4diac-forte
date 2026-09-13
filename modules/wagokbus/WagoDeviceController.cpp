@@ -225,6 +225,7 @@ namespace forte::eclipse4diac::io::wago {
         return;
       }
       mAppDevInterface->ReadStart(mKBusDeviceId, mTaskId);
+      mReadCounter += 1;
       mAppDevInterface->ReadBytes(mKBusDeviceId, mTaskId, mRegComDevice->getOffset_REG_S0() / 8, 1, &lREG_S);
       mAppDevInterface->ReadEnd(mKBusDeviceId, mTaskId);
       lRegComDevice = mRegComDevice;
@@ -232,6 +233,10 @@ namespace forte::eclipse4diac::io::wago {
         isRegComOn = true;
         triggerEvent = true;
         DEVLOG_DEBUG("[WagoDeviceController] Register communication on.\n");
+      } else if (mReadCounter > 50) { // abort in case of C0.7 fail
+        mReadCounter = -1;
+        mRegComDevice = nullptr;
+        triggerEvent = true;
       }
       else if (isRegComOn && ((lREG_S & 0xBF) == (mREG_C & 0xBF))) {
         mREG_C = 0x00; // one change approve
@@ -250,11 +255,21 @@ namespace forte::eclipse4diac::io::wago {
     }
   }
 
-  bool WagoDeviceController::enableRegCom(WagoRegComDevice *paECStartFB) {
+  bool WagoDeviceController::regComInitFailed(){
     util::CCriticalRegion criticalRegion(mRegComMutex);
-    if (mRegComDevice && isRegComOn) {
+    if (mReadCounter == -1) {
+      return true;
+    } else {
       return false;
     }
+  }
+
+  bool WagoDeviceController::enableRegCom(WagoRegComDevice *paECStartFB) {
+    util::CCriticalRegion criticalRegion(mRegComMutex);
+    if (mRegComDevice && isRegComOn) { // register communication is already running
+      return false;
+    }
+    mReadCounter = 0;
     mAppDevInterface->WriteStart(mKBusDeviceId, mTaskId);
     mAppDevInterface->WriteBool(mKBusDeviceId, mTaskId, paECStartFB->getOffset_REG_C7(), true);
     DEVLOG_DEBUG("[WagoDeviceController] Register communication enabling.\n");
