@@ -63,6 +63,7 @@ namespace forte::eclipse4diac::io::wago {
       bool readRegComRequest(const CIEC_WagoRegComCmd &paCmd);
       bool readRegComResult(CIEC_BYTE &paD0, CIEC_BYTE &paD1);
       void initRegComOffsets(WagoRegComDevice *paECStartFB);
+      bool regComInitFailed();
 
     protected:
       const char *init();
@@ -115,21 +116,23 @@ namespace forte::eclipse4diac::io::wago {
       TForteByte mREG_C = 0x80;
       bool isRegComOn = false;
       WagoRegComDevice *mRegComDevice = nullptr;
+      int mReadCounter = 0;
 
-      static const tDeviceId scmInvalidDeviceId = -1;
-      static const size_t scmNumberOfDevicesToScan = 10;
+      static constexpr tDeviceId scmInvalidDeviceId = -1;
+      static constexpr size_t scmNumberOfDevicesToScan = 10;
+      static constexpr int scmRegComInitFail = -1;
 
-      static const char *const scmKBusDeviceName;
+      static constexpr const char* scmKBusDeviceName = "libpackbus";
 
-      static const char *const scmFailedToGetApplicationInterface;
-      static const char *const scmFailedToInitializeKBus;
-      static const char *const scmFailedToScanDevices;
-      static const char *const scmFailedToOpenKBusDevice;
-      static const char *const scmFailedToGetDeviceList;
-
-      static const char *const scmFailedToCreateKBusInfo;
-      static const char *const scmFailedGetTerminalInfo;
-      static const char *const scmFailedGetTerminalList;
+      static constexpr const char* scmFailedToGetApplicationInterface = "Failed to get the application Interface";
+      static constexpr const char* scmFailedToInitializeKBus =
+            "Failed to initialize the KBus device. Probably there's another program that is using the bus";
+      static constexpr const char* scmFailedToScanDevices = "Failed to scan devices on the KBus";
+      static constexpr const char* scmFailedToOpenKBusDevice = "Failed to open KBus device.";
+      static constexpr const char* scmFailedToCreateKBusInfo = "Call to ldkc_KbusInfo_Create() failed";
+      static constexpr const char* scmFailedGetTerminalInfo = "Call to ldkc_KbusInfo_GetTerminalInfo() failed";
+      static constexpr const char* scmFailedGetTerminalList = "Call to ldkc_KbusInfo_GetTerminalList() failed";
+      static constexpr const char* scmFailedToGetDeviceList = "Failed to get device list";
   };
 
 } // namespace forte::eclipse4diac::io::wago
