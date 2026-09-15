@@ -32,5 +32,7 @@ forte_test_add_sourcefile_cpp(E_REND_tester.cpp)
 forte_test_add_sourcefile_cpp(GEN_E_REND_2_tester.cpp)
 forte_test_add_sourcefile_cpp(GEN_E_REND_3_tester.cpp)
 forte_test_add_sourcefile_cpp(GEN_E_REND_4_tester.cpp)
+forte_test_add_sourcefile_cpp(GEN_E_D_FF_ANY_1_tester.cpp)
+forte_test_add_sourcefile_cpp(GEN_E_D_FF_ANY_3_tester.cpp)
 
 
