@@ -116,6 +116,11 @@ namespace forte::eclipse4diac::io::wago {
 
   void WagoRegComDevice::handleExternalEvent() {
     CEventChainExecutionThread* paECET = getEventChainExecutor();
+    if (getController().regComInitFailed()) {
+      RegCom().var_STATUS = scmRegComReqFail;
+      sendAdapterEvent(RegCom(), FORTE_WagoRegCom::scmEventErrorID, getEventChainExecutor());
+      return;
+    }
     switch(mRegComState) {
     case RegComStatus::Read:
     case RegComStatus::Write:
