@@ -1,0 +1,14 @@
+;<Request ID="1" Action="CREATE"><FB Name="killMultiSubscribe" Type="iec61499::system::EMB_RES" /></Request>
+killMultiSubscribe;<Request ID="2" Action="CREATE"><FB Name="PUBLISH_2" Type="iec61499::net::PUBLISH_2" /></Request>
+killMultiSubscribe;<Request ID="3" Action="WRITE"><Connection Source="1" Destination="PUBLISH_2.QI" /></Request>
+killMultiSubscribe;<Request ID="4" Action="WRITE"><Connection Source="opc_ua[WRITE;/Objects/killMultiSubscribe/var1;/Objects/killMultiSubscribe/var2]" Destination="PUBLISH_2.ID" /></Request>
+killMultiSubscribe;<Request ID="5" Action="WRITE"><Connection Source="REAL#1.0" Destination="PUBLISH_2.SD_1" /></Request>
+killMultiSubscribe;<Request ID="6" Action="WRITE"><Connection Source="REAL#2.0" Destination="PUBLISH_2.SD_2" /></Request>
+killMultiSubscribe;<Request ID="7" Action="CREATE"><FB Name="E_DELAY" Type="iec61499::events::E_DELAY" /></Request>
+killMultiSubscribe;<Request ID="8" Action="WRITE"><Connection Source="T#25s" Destination="E_DELAY.DT" /></Request>
+killMultiSubscribe;<Request ID="9" Action="CREATE"><FB Name="STEST_END" Type="eclipse4diac::utils::STEST_END" /></Request>
+killMultiSubscribe;<Request ID="10" Action="CREATE"><Connection Source="START.COLD" Destination="PUBLISH_2.INIT" /></Request>
+killMultiSubscribe;<Request ID="11" Action="CREATE"><Connection Source="START.WARM" Destination="PUBLISH_2.INIT" /></Request>
+killMultiSubscribe;<Request ID="12" Action="CREATE"><Connection Source="PUBLISH_2.INITO" Destination="E_DELAY.START" /></Request>
+killMultiSubscribe;<Request ID="13" Action="CREATE"><Connection Source="E_DELAY.EO" Destination="STEST_END.REQ" /></Request>
+killMultiSubscribe;<Request ID="14" Action="START"/>
