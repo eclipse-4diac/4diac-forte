@@ -28,5 +28,7 @@ target_sources(forte-convert PUBLIC
         GET_STRUCT_VALUE_fbt.h
         SET_AT_INDEX_fbt.h
         SET_STRUCT_VALUE_fbt.h
+		ToJSON_fbt.h
+		ReadJSON_fbt.h
 )
 add_subdirectory(providers)
