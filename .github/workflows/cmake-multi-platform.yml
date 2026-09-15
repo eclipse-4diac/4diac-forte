@@ -63,7 +63,8 @@ jobs:
       - name: Clone open62541 (Linux)
         if: ${{ matrix.os == 'ubuntu-latest' }}
         run: |
-          git clone --branch v1.5.4 https://github.com/open62541/open62541.git
+          # keep in sync with forte-config.cmake.in, com/opc_ua/CMakeLists.txt, and dependencies.spdx
+          git clone --branch v1.5.8 https://github.com/open62541/open62541.git
           git -C open62541 submodule update --init --recursive          
 
       - name: Configure open62541 (Linux)
