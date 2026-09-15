@@ -13,6 +13,7 @@
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte_boost_output_support.h"
+#include "forte/datatypes/forte_array.h"
 #include "forte/datatypes/forte_any_variant.h"
 
 using namespace forte::literals;
@@ -155,6 +156,33 @@ namespace forte::test {
     checkStringConversion(test, "ULINT#123123123123123", CIEC_ANY::e_ULINT);
     checkStringConversion(test, "LWORD#123123123123123", CIEC_ANY::e_LWORD);
     checkStringConversion(test, "AnyTestStruct#(Var1:='test',Var2:=TRUE,Var3:=17)", CIEC_ANY::e_STRUCT);
+  }
+
+  BOOST_AUTO_TEST_CASE(Inline_Array_String_Conversion_test) {
+    CIEC_ANY_VARIANT test;
+
+    const char *realArrayString = "ARRAY[0..0] OF REAL#[0.35]";
+    BOOST_CHECK_EQUAL(test.fromString(realArrayString), strlen(realArrayString));
+    BOOST_CHECK_EQUAL(test.getDataTypeID(), CIEC_ANY::e_ANY);
+    BOOST_CHECK_EQUAL(test.unwrap().getDataTypeID(), CIEC_ANY::e_ARRAY);
+    const CIEC_ARRAY &realArray = static_cast<const CIEC_ARRAY &>(test.unwrap());
+    BOOST_CHECK_EQUAL(realArray.getLowerBound(), 0);
+    BOOST_CHECK_EQUAL(realArray.getUpperBound(), 0);
+    BOOST_CHECK_EQUAL(realArray.getElementDataTypeID(), CIEC_ANY::e_REAL);
+    BOOST_CHECK_CLOSE(static_cast<CIEC_REAL::TValueType>(static_cast<const CIEC_REAL &>(realArray[0])), 0.35f, 0.1f);
+
+    const char *byteArrayString = "ARRAY[0..3] OF BYTE#[1,2,3,4]";
+    BOOST_CHECK_EQUAL(test.fromString(byteArrayString), strlen(byteArrayString));
+    BOOST_CHECK_EQUAL(test.getDataTypeID(), CIEC_ANY::e_ANY);
+    BOOST_CHECK_EQUAL(test.unwrap().getDataTypeID(), CIEC_ANY::e_ARRAY);
+    const CIEC_ARRAY &byteArray = static_cast<const CIEC_ARRAY &>(test.unwrap());
+    BOOST_CHECK_EQUAL(byteArray.getLowerBound(), 0);
+    BOOST_CHECK_EQUAL(byteArray.getUpperBound(), 3);
+    BOOST_CHECK_EQUAL(byteArray.getElementDataTypeID(), CIEC_ANY::e_BYTE);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BYTE::TValueType>(static_cast<const CIEC_BYTE &>(byteArray[0])), 1);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BYTE::TValueType>(static_cast<const CIEC_BYTE &>(byteArray[1])), 2);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BYTE::TValueType>(static_cast<const CIEC_BYTE &>(byteArray[2])), 3);
+    BOOST_CHECK_EQUAL(static_cast<CIEC_BYTE::TValueType>(static_cast<const CIEC_BYTE &>(byteArray[3])), 4);
   }
 
   BOOST_AUTO_TEST_CASE(Equality_test) {
