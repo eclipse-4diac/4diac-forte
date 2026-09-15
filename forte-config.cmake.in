@@ -18,7 +18,7 @@ include(CMakeFindDependencyMacro)
 
 if(@FORTE_COM_OPC_UA@)
   # keep in sync with dependencies.spdx and com/opc_ua/CMakeLists.txt
-  find_dependency(open62541 1.5.4 REQUIRED)
+  find_dependency(open62541 1.5.8 REQUIRED)
 endif()
 
 include(${CMAKE_CURRENT_LIST_DIR}/forte-export.cmake)

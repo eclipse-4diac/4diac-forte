@@ -29,12 +29,12 @@ PackageName: open62541
 SPDXID: SPDXRef-open62541
 PackageComment: <text>OPC-UA support library</text>
 # keep in sync with forte-config.cmake.in and com/opc_ua/CMakeLists.txt
-ExternalRef: PACKAGE-MANAGER purl pkg:github/open62541/open62541@1.5.4
-PackageVersion: 1.5.4
+ExternalRef: PACKAGE-MANAGER purl pkg:github/open62541/open62541@1.5.8
+PackageVersion: 1.5.8
 PackageSupplier: Organization: open62541
 Relationship: SPDXRef-open62541 OPTIONAL_DEPENDENCY_OF SPDXRef-4diac-FORTE
-PackageDownloadLocation: https://github.com/open62541/open62541/archive/refs/tags/v1.5.4.zip
-PackageChecksum: SHA256: fb5aafc19c67a91368d1f71d9ee4acf0f4b47a0d65c66db4ed738691828779c7
+PackageDownloadLocation: https://github.com/open62541/open62541/archive/refs/tags/v1.5.8.zip
+PackageChecksum: SHA256: aae5d1e6c73f8fd5a72e36e6d21afb27bf5eacbe3f20e3581dbde80d3024cadc
 FilesAnalyzed: false
 PackageLicenseConcluded: NOASSERTION
 PackageLicenseDeclared: NOASSERTION
