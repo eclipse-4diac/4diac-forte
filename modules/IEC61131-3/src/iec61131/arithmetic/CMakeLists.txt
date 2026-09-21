@@ -30,4 +30,5 @@ target_sources(forte-iec61131-3 PRIVATE
         F_SUB_TOD_TOD_fbt.cpp
         F_TRUNC_fbt.cpp
         GEN_ADD_fbt.cpp
+        GEN_MUL_fbt.cpp
 )
