@@ -25,6 +25,9 @@
 
 #include <string>
 #include <vector>
+#ifdef FORTE_COM_OPC_UA_TEST_HOOKS
+#include <atomic>
+#endif // FORTE_COM_OPC_UA_TEST_HOOKS
 
 #include "forte/arch/forte_thread.h"
 #include "forte/conn.h"
@@ -186,6 +189,20 @@ namespace forte::com_infra::opc_ua {
        * Indicates that the server has started, and allow waiting threads to work on it
        */
       arch::CSemaphore mServerStarted;
+
+#ifdef FORTE_COM_OPC_UA_TEST_HOOKS
+      std::atomic<unsigned int> mTestInitializeActionAttempts{0};
+#endif // FORTE_COM_OPC_UA_TEST_HOOKS
+
+      /**
+       * Guards startServer()/stopServer() end-to-end
+       */
+      arch::CSyncObject mStartMutex;
+
+      /**
+       * True only once the server has actually finished starting *successfully*
+       */
+      bool mServerReady = false;
 
       /**
        * Stops the OPC UA server
