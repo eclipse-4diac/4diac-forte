@@ -25,8 +25,8 @@ if (NOT FORTE_COM_OPC_UA)
     return()
 endif ()
 
-# keep in sync with forte-config.cmake.in and dependencies.spdx
-find_package(open62541 1.5.4 REQUIRED)
+# keep in sync with forte-config.cmake.in, dependencies.spdx, and .github/workflows/cmake-multi-platform.yml
+find_package(open62541 1.5.8 REQUIRED)
 
 set(FORTE_COM_OPC_UA_PORT
         4840
