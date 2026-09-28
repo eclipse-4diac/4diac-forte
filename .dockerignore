@@ -1,0 +1,8 @@
+.git
+.venv
+.container-tools
+bin
+build
+install
+diagrams
+*.pdf
