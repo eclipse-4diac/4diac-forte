@@ -1,0 +1,63 @@
+name: docker-build
+
+on:
+  pull_request:
+    branches: [ "**" ]
+  push:
+    branches: [ "**" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: build (${{ matrix.platform }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [ linux/amd64, linux/arm64 ]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@99012661954931238ded8c8b007157a8430204e1 # v4.4.0
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
+
+      - name: Build image
+        run: |
+          docker buildx build \
+            --platform ${{ matrix.platform }} \
+            --file docker/Dockerfile.linux \
+            --tag 4diac-forte:test \
+            --load \
+            .
+
+      - name: Smoke test image
+        run: |
+          set +e
+          output=$(docker run --rm --platform ${{ matrix.platform }} 4diac-forte:test --help 2>&1)
+          status=$?
+          set -e
+          echo "$output"
+          if [[ "$status" -ne 255 ]]; then
+            echo "ERROR: forte --help exited with status $status, expected 255" >&2
+            exit 1
+          fi
+          grep -Fq 'Usage: forte [options]' <<< "$output"
+
+      - name: Save image artifact
+        run: |
+          slug=$(echo "${{ matrix.platform }}" | tr '/' '-')
+          echo "ARTIFACT_NAME=4diac-forte-${slug}" >> "$GITHUB_ENV"
+          docker save --output "4diac-forte-${slug}.tar" 4diac-forte:test
+
+      - name: Upload image artifact
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ env.ARTIFACT_NAME }}
+          path: ${{ env.ARTIFACT_NAME }}.tar
+          retention-days: 7
