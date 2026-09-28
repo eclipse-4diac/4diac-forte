@@ -3,6 +3,8 @@ name: docker-build
 on:
   pull_request:
     branches: [ "**" ]
+  push:
+    branches: [ "**" ]
 
 permissions:
   contents: read
