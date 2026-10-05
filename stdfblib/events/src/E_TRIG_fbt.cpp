@@ -1,4 +1,16 @@
-/*************************************************************************
+/*******************************************************************************
+ * Copyright (c) 2025 Primetals Technologies Austria GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Mario Kastner - initial API and implementation and/or initial documentation
+ *   Alois Zoitl   - reworked to not overload the event queue
+ *
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -10,6 +22,8 @@
  *************************************************************************/
 
 #include "forte/iec61499/events/E_TRIG_fbt.h"
+#include "forte/event.h"
+#include "forte/util/devlog.h"
 
 using namespace forte::literals;
 
@@ -49,17 +63,14 @@ namespace forte::iec61499::events {
 
   void FORTE_E_TRIG::setInitialValues() {
     var_EVENTTYPE = "EInit"_STRING;
+    mCursor = CTriggerEventCursor();
   }
 
   void FORTE_E_TRIG::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
     switch (paEIID) {
-      case scmEventREQID:
-        const TEventTypeID eventTypeId = StringId::lookup(var_EVENTTYPE.c_str());
-        if (eventTypeId) {
-          triggerEventsInResource(getResource(), eventTypeId, paECET);
-          sendOutputEvent(scmEventCNFID, paECET);
-        }
-        break;
+      case scmEventREQID: handleREQ(paECET); break;
+      case cgExternalEventID: handleOneTriggerEvent(paECET); break;
+      default: break;
     }
   }
 
@@ -106,34 +117,77 @@ namespace forte::iec61499::events {
     return nullptr;
   }
 
-  void FORTE_E_TRIG::triggerEventsInResource(CFBContainer *paContainer,
-                                             const TEventTypeID paEventType,
-                                             CEventChainExecutionThread *const paECET) {
-    if (paContainer != nullptr) {
-      if (paContainer->isFB()) {
-        triggerEventsOfType(paEventType, static_cast<CFunctionBlock *>(paContainer), paECET);
-      }
-      if (paContainer->isDynamicContainer()) {
-        for (auto child : paContainer->getChildren()) {
-          triggerEventsInResource(child, paEventType, paECET);
-        }
-      }
-    }
-  }
-
-  void FORTE_E_TRIG::triggerEventsOfType(TEventTypeID paEventTypeId,
-                                         CFunctionBlock *paFb,
-                                         CEventChainExecutionThread *const paECET) {
-    const SFBInterfaceSpec &interfaceSpec = paFb->getFBInterfaceSpec();
-    // most of the FBs will only have the basic event type -> mEITypes == nullptr
-    if (interfaceSpec.mEITypeNames.empty()) {
+  void FORTE_E_TRIG::handleREQ(CEventChainExecutionThread *const paECET) {
+    if (mCursor.isActive()) {
+      // we are still processing the previous request, ignore it.
+      DEVLOG_WARNING("E_TRIG received REQ while still processing previous REQ. REQ event dropped!\n");
       return;
     }
-    for (TEventID eventId = 0; eventId < interfaceSpec.getNumEIs(); eventId++) {
-      if (interfaceSpec.getEIType(eventId) == paEventTypeId && !paFb->isInputEventConnected(eventId)) {
-        paECET->addEventEntry(TEventEntry(*paFb, eventId));
-      }
+
+    const TEventTypeID eventTypeId = StringId::lookup(var_EVENTTYPE.c_str());
+    if (eventTypeId) {
+      mCursor = CTriggerEventCursor(getResource(), eventTypeId);
+      // process the one entry of the list or send CNF to indicate that we are done
+      handleOneTriggerEvent(paECET);
     }
   }
 
+  void FORTE_E_TRIG::handleOneTriggerEvent(CEventChainExecutionThread *const paECET) {
+    if (auto entry = mCursor.next()) {
+      entry->getFB().receiveInputEvent(entry->getPortId(), paECET);
+      // we may not be done yet, so come back and ask the cursor again
+      paECET->addEventEntry(TEventEntry(*this, cgExternalEventID));
+    } else {
+      // cursor exhausted: inform about completion
+      mCursor = CTriggerEventCursor();
+      sendOutputEvent(scmEventCNFID, paECET);
+    }
+  }
+
+  FORTE_E_TRIG::CTriggerEventCursor::CTriggerEventCursor(CFBContainer *paRoot, TEventTypeID paEventType) :
+      mEventType(paEventType) {
+    enter(paRoot);
+  }
+
+  std::optional<TEventEntry> FORTE_E_TRIG::CTriggerEventCursor::next() {
+    while (true) {
+      if (mFb != nullptr) {
+        const SFBInterfaceSpec &spec = mFb->getFBInterfaceSpec();
+        while (mEventId < spec.getNumEIs()) {
+          const TEventID id = mEventId++;
+          if (spec.getEIType(id) == mEventType && !mFb->isInputEventConnected(id)) {
+            return TEventEntry{*mFb, id};
+          }
+        }
+        mFb = nullptr;
+      }
+      if (mStack.empty()) {
+        return std::nullopt;
+      }
+      std::span<CFBContainer *const> &remaining = mStack.back();
+      if (remaining.empty()) {
+        mStack.pop_back();
+        continue;
+      }
+      CFBContainer *child = remaining.front();
+      remaining = remaining.subspan(1);
+      enter(child);
+    }
+  }
+
+  void FORTE_E_TRIG::CTriggerEventCursor::enter(CFBContainer *paContainer) {
+    if (paContainer == nullptr) {
+      return;
+    }
+    if (paContainer->isFB()) {
+      auto *fb = static_cast<CFunctionBlock *>(paContainer);
+      if (!fb->getFBInterfaceSpec().mEITypeNames.empty()) {
+        mFb = fb;
+        mEventId = 0;
+      }
+    }
+    if (paContainer->isDynamicContainer()) {
+      mStack.emplace_back(paContainer->getChildren());
+    }
+  }
 } // namespace forte::iec61499::events

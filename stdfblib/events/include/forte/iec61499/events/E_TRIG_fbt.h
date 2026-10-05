@@ -1,4 +1,16 @@
-/*************************************************************************
+/*******************************************************************************
+ * Copyright (c) 2025 Primetals Technologies Austria GmbH
+ *
+ * This program and the accompanying materials are made available under the
+ * terms of the Eclipse Public License 2.0 which is available at
+ * http://www.eclipse.org/legal/epl-2.0.
+ *
+ * SPDX-License-Identifier: EPL-2.0
+ *
+ * Contributors:
+ *   Mario Kastner - initial API and implementation and/or initial documentation
+ *   Alois Zoitl   - reworked to not overload the event queue
+ *
  *** FORTE Library Element
  ***
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
@@ -19,6 +31,8 @@
 #include "forte/datatypes/forte_array_fixed.h"
 #include "forte/datatypes/forte_array_variable.h"
 
+#include <optional>
+
 namespace forte::iec61499::events {
   class FORTE_E_TRIG final : public CFunctionBlock {
       DECLARE_FIRMWARE_FB(FORTE_E_TRIG)
@@ -34,21 +48,6 @@ namespace forte::iec61499::events {
       void readInputData(TEventID paEIID) override;
       void writeOutputData(TEventID paEIID) override;
       void setInitialValues() override;
-
-      /*!\brief This function will trigger unconnected event ports of a certain EventType within a resource
-       * \param paEventTypeId ID of event type to be triggered
-       */
-      void triggerEventsInResource(CFBContainer *paContainer,
-                                   const TEventTypeID paEventType,
-                                   CEventChainExecutionThread *const paECET);
-
-      /*!\brief This function will trigger unconnected event ports of a certain EventType
-       * \param paEventTypeId ID of event type to be triggered
-       * \param paFb function block search for events to be triggerd
-       * \param paECET event chain execution thread to add the event
-       */
-      void
-      triggerEventsOfType(TEventTypeID paEventTypeId, CFunctionBlock *paFb, CEventChainExecutionThread *const paECET);
 
     public:
       FORTE_E_TRIG(StringId paInstanceNameId, CFBContainer &paContainer);
@@ -73,5 +72,31 @@ namespace forte::iec61499::events {
       void operator()(const CIEC_STRING &paEVENTTYPE) {
         evt_REQ(paEVENTTYPE);
       }
+
+    private:
+      void handleREQ(CEventChainExecutionThread *const paECET);
+      void handleOneTriggerEvent(CEventChainExecutionThread *const paECET);
+
+      class CTriggerEventCursor {
+        public:
+          CTriggerEventCursor() = default;
+          CTriggerEventCursor(CFBContainer *paRoot, TEventTypeID paEventType);
+
+          std::optional<TEventEntry> next();
+
+          bool isActive() {
+            return mEventType;
+          }
+
+        private:
+          void enter(CFBContainer *paContainer);
+
+          TEventTypeID mEventType;
+          CFunctionBlock *mFb = nullptr;
+          TEventID mEventId = 0;
+          std::vector<std::span<CFBContainer *const>> mStack;
+      };
+
+      CTriggerEventCursor mCursor;
   };
 } // namespace forte::iec61499::events
