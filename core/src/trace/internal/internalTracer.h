@@ -16,6 +16,8 @@
 #define INTERNAL_TRACER_H
 
 #include <vector>
+#include <atomic>
+#include <cstddef>
 
 #include "EventMessage.h"
 #include "forte/stringid.h"
@@ -32,7 +34,7 @@ namespace forte::trace {
     public:
       CInternalTracer(StringId, size_t);
 
-      virtual ~CInternalTracer() = default;
+      ~CInternalTracer();
 
       CInternalTracer(const CInternalTracer &) = delete;
       CInternalTracer &operator=(const CInternalTracer &) = delete;
@@ -75,7 +77,13 @@ namespace forte::trace {
                            const uint64_t paDataId,
                            const char *const paValue);
 
-      bool isEnabled();
+      bool isEnabled() {
+        return true;
+      }
+
+      static bool isGlobalEnabled() {
+        return smActiveCount.load(std::memory_order_relaxed) > 0;
+      }
 
       /**
        * @brief Get the traced events
@@ -97,6 +105,7 @@ namespace forte::trace {
       void fillStringsVector(const char *const *const paIn, const uint32_t paLen, std::vector<std::string> &paOut);
 
       std::vector<EventMessage> mEvents;
+      static inline constinit std::atomic<std::size_t> smActiveCount;
   };
 } // namespace forte::trace
 #endif // INTERNAL_TRACER_H

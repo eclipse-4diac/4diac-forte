@@ -24,6 +24,8 @@
 
 #include "barectf.h"
 
+#include <atomic>
+
 namespace forte::trace {
   /**
    * @brief BareCTF tracer
@@ -94,13 +96,23 @@ namespace forte::trace {
         barectf_default_trace_outputData(&context, paTypeName, paInstanceName, paDataId, paValue);
       }
 
-      bool isEnabled() {
+      bool isEnabled() const {
         return barectf_is_tracing_enabled(&context);
+      }
+
+      static bool isGlobalEnabled() {
+        return smGlobalEnabled.load(std::memory_order_relaxed);
       }
 
       static void setup(std::string_view paDirectory);
 
     private:
+      static void setGlobalEnabled(const bool paEnabled) {
+        smGlobalEnabled.store(paEnabled, std::memory_order_relaxed);
+      }
+
+      static inline constinit std::atomic<bool> smGlobalEnabled;
+
       std::ofstream output;
       std::unique_ptr<uint8_t[]> buffer;
       barectf_default_ctx context;

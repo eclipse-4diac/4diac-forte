@@ -19,6 +19,7 @@
 
 #include <variant>
 #include <string>
+#include <atomic>
 
 #include "forte/stringid.h"
 #include "../barectf_platform_forte.h"
@@ -81,6 +82,10 @@ namespace forte::trace {
                            const char *const paValue);
 
       bool isEnabled();
+
+      static bool isGlobalEnabled() {
+        return BarectfPlatformFORTE::isGlobalEnabled() || CInternalTracer::isGlobalEnabled();
+      }
 
       const TracerVariant &getTracerVariant() const;
 
