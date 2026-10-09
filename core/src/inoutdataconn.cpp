@@ -99,6 +99,13 @@ namespace forte {
     return EMGMResponse::Ready;
   }
 
+  void CInOutDataConnection::handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint) {
+    if (CIEC_ANY::e_ANY != paDstDataPoint.getDataTypeID()) {
+      getValue().setValue(paDstDataPoint.unwrap());
+      getSourceId().getFB().configureGenericDIO(getSourceId().getPortId(), paDstDataPoint);
+    }
+  }
+
   void CInOutDataConnection::getSourcePortName(TNameIdentifier &paResult) const {
     paResult.push_back(getSourceId().getFB().getFBInterfaceSpec().mDIONames[getSourceId().getPortId()]);
   }
