@@ -4,6 +4,9 @@
 
 namespace forte {
   void CFunctionBlock::traceOutputEvent(TEventID paEOID, CEventChainExecutionThread *const paECET) {
+    if (!trace::CForteTracer::isGlobalEnabled()) [[likely]] {
+      return;
+    }
     if (auto &tracer = getResource()->getInternal().getTracer(); tracer.isEnabled()) {
 
       // don't trace events that are not connected since they don't increase the event counter

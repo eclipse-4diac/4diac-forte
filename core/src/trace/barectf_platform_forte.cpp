@@ -37,7 +37,6 @@ namespace forte::trace {
     [[maybe_unused]] OutputDirectoryOption gOutputDirectory;
 
     constinit std::string traceDirectory;
-    constinit bool enabled = false;
 
     std::string dateCapture() {
       const auto now = std::chrono::system_clock::now();
@@ -56,7 +55,7 @@ namespace forte::trace {
   void BarectfPlatformFORTE::setup(std::string_view paDirectory) {
     if (paDirectory.empty()) {
       DEVLOG_INFO("[TRACE_CTF]: no output directory given, disabling TRACE_CTF\n");
-      enabled = false;
+      setGlobalEnabled(false);
       return;
     }
     std::filesystem::path directory = std::filesystem::path(paDirectory).make_preferred();
@@ -66,11 +65,11 @@ namespace forte::trace {
 
     if (std::filesystem::is_directory(directory)) {
       DEVLOG_INFO("[TRACE_CTF]: enabling TRACE_CTF, output in \"%s\"\n", directory.c_str());
-      enabled = true;
+      setGlobalEnabled(true);
       traceDirectory = directory.string();
     } else {
       DEVLOG_INFO("[TRACE_CTF]: non-existent output directory given \"%s\", disabling TRACE_CTF\n", directory.c_str());
-      enabled = false;
+      setGlobalEnabled(false);
     }
   }
 
@@ -84,14 +83,14 @@ namespace forte::trace {
   }
 
   void BarectfPlatformFORTE::openPacket(void *data) {
-    if (enabled) {
+    if (isGlobalEnabled()) {
       BarectfPlatformFORTE *platform = static_cast<BarectfPlatformFORTE *>(data);
       barectf_default_open_packet(&platform->context);
     }
   }
 
   void BarectfPlatformFORTE::closePacket(void *data) {
-    if (enabled) {
+    if (isGlobalEnabled()) {
       BarectfPlatformFORTE *platform = static_cast<BarectfPlatformFORTE *>(data);
       barectf_default_close_packet(&platform->context);
       platform->output.write(reinterpret_cast<const char *>(barectf_packet_buf(&platform->context)),
@@ -105,15 +104,15 @@ namespace forte::trace {
                                                                                  .close_packet = closePacket};
 
   BarectfPlatformFORTE::BarectfPlatformFORTE(std::filesystem::path filename, size_t bufferSize) :
-      buffer(enabled ? new uint8_t[bufferSize] : nullptr) {
-    if (enabled) {
+      buffer(isGlobalEnabled() ? new uint8_t[bufferSize] : nullptr) {
+    if (isGlobalEnabled()) {
       output = std::ofstream(filename, std::ios::binary);
       barectf_init(&context, buffer.get(), static_cast<uint32_t>(bufferSize), barectfCallbacks, this);
-      barectf_enable_tracing(&context, enabled);
+      barectf_enable_tracing(&context, true);
       openPacket(this);
     } else {
       barectf_init(&context, buffer.get(), static_cast<uint32_t>(0), barectfCallbacks, this);
-      barectf_enable_tracing(&context, enabled);
+      barectf_enable_tracing(&context, false);
     }
   }
 
@@ -125,7 +124,7 @@ namespace forte::trace {
   }
 
   BarectfPlatformFORTE::~BarectfPlatformFORTE() {
-    if (enabled) {
+    if (isGlobalEnabled()) {
       if (barectf_packet_is_open(&context)) {
         closePacket(this);
       }

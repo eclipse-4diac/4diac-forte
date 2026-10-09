@@ -4,6 +4,9 @@
 
 namespace forte {
   void CFunctionBlock::traceOutputEvent(TEventID paEOID, CEventChainExecutionThread *const) {
+    if (!trace::CForteTracer::isGlobalEnabled()) [[likely]] {
+      return;
+    }
     if (auto &tracer = getResource()->getInternal().getTracer(); tracer.isEnabled()) {
       tracer.traceSendOutputEvent(getFBTypeName(), getFullQualifiedApplicationInstanceName('.').c_str(),
                                   static_cast<uint64_t>(paEOID));

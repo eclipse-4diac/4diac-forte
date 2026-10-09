@@ -505,6 +505,9 @@ void CFunctionBlock::toString(std::string &paTargetBuf) const {
 //**********************************************************
 #ifdef FORTE_TRACE_CTF
 void CFunctionBlock::traceInputEvent(TEventID paEIID) {
+  if (!trace::CForteTracer::isGlobalEnabled()) [[likely]] {
+    return;
+  }
   if (auto &tracer = getResource()->getInternal().getTracer(); tracer.isEnabled()) {
     tracer.traceReceiveInputEvent(getFBTypeName(), getFullQualifiedApplicationInstanceName('.').c_str(),
                                   static_cast<uint64_t>(paEIID));
@@ -513,6 +516,9 @@ void CFunctionBlock::traceInputEvent(TEventID paEIID) {
 }
 
 void CFunctionBlock::traceReadData(TPortId paDINum, CIEC_ANY &paValue) {
+  if (!trace::CForteTracer::isGlobalEnabled()) [[likely]] {
+    return;
+  }
   if (auto &tracer = getResource()->getInternal().getTracer(); tracer.isEnabled()) {
 
     std::string valueString;
@@ -523,6 +529,9 @@ void CFunctionBlock::traceReadData(TPortId paDINum, CIEC_ANY &paValue) {
 }
 
 void CFunctionBlock::traceWriteData(TPortId paDONum, CIEC_ANY &paValue) {
+  if (!trace::CForteTracer::isGlobalEnabled()) [[likely]] {
+    return;
+  }
   if (auto &tracer = getResource()->getInternal().getTracer(); tracer.isEnabled()) {
 
     std::string valueString;
