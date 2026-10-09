@@ -180,15 +180,20 @@ namespace forte {
   }
 
   CConnection::Wrapper CDataConnection::getDelegatingConnection(const std::span<const StringId> paSrcNameList) {
+    return getDelegatingDataConnection(paSrcNameList);
+  }
+
+  CDataConnection::Wrapper CDataConnection::getDelegatingDataConnection(const std::span<const StringId> paSrcNameList) {
     if (paSrcNameList.empty()) {
       return Wrapper(this);
     }
-    if (getValue().getDataTypeID() == CIEC_ANY::e_BOOL && paSrcNameList.size() == 1 &&
-        paSrcNameList.front() == "NOT"_STRID) {
-      return make_delegating<internal::CNegatingDataConnection>(getSourceId().getFB(), getSourceId().getPortId(),
-                                                                static_cast<CIEC_BOOL &>(getValue()));
-    }
-    if (CIEC_ANY *member = getValue().getVar(paSrcNameList)) {
+    if (paSrcNameList.back() == "NOT"_STRID) {
+      if (auto delegate = getDelegatingDataConnection(paSrcNameList.subspan(0, paSrcNameList.size() - 1));
+          delegate && delegate->getDataTypeID() == CIEC_ANY::e_BOOL) {
+        return make_delegating<internal::CNegatingDataConnection>(getSourceId().getFB(), getSourceId().getPortId(),
+                                                                  std::move(delegate));
+      }
+    } else if (CIEC_ANY *member = getValue().getVar(paSrcNameList)) {
       return make_delegating<internal::CMemberDataConnection>(getSourceId().getFB(), getSourceId().getPortId(), *member,
                                                               paSrcNameList);
     }
