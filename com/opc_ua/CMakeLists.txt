@@ -63,6 +63,9 @@ add_library(forte-com-opc_ua)
 target_link_libraries(forte-com-opc_ua PUBLIC forte-core open62541::open62541)
 target_link_libraries(forte PUBLIC $<IF:$<BOOL:${BUILD_SHARED_LIBS}>,forte-com-opc_ua,$<LINK_LIBRARY:WHOLE_ARCHIVE,forte-com-opc_ua>>)
 
+# artificial startup delay - only for test
+target_compile_definitions(forte-com-opc_ua PUBLIC $<$<BOOL:${FORTE_SYSTEM_TESTS}>:FORTE_COM_OPC_UA_TEST_HOOKS>)
+
 add_subdirectory(include)
 add_subdirectory(src)
 
