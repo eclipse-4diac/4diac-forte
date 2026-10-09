@@ -82,7 +82,7 @@ namespace forte {
   EMGMResponse CInOutDataConnection::establishDataConnection(CFunctionBlock &paDstFB,
                                                              const TPortId paDstPortId,
                                                              const CIEC_ANY &paDstDataPoint) {
-    if (getValue().getDataTypeID() == CIEC_ANY::e_ANY) {
+    if (getDataTypeID() == CIEC_ANY::e_ANY) {
       handleAnySrcPortConnection(paDstDataPoint);
     } else if (!canBeConnected(getValue(), paDstDataPoint)) {
       return EMGMResponse::InvalidOperation;

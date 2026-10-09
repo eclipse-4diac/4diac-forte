@@ -30,5 +30,9 @@ namespace forte::internal {
       }
 
       void getSourcePortName(TNameIdentifier &paResult) const override;
+
+      CIEC_ANY::EDataTypeID getDataTypeID() const override {
+        return CIEC_ANY::e_BOOL;
+      }
   };
 } // namespace forte::internal
