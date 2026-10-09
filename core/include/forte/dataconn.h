@@ -27,6 +27,13 @@ namespace forte {
    */
   class CDataConnection : public CConnection {
     public:
+      using Wrapper = std::unique_ptr<CDataConnection, DelegatingDeleter>;
+
+      template<typename T, typename... Args>
+      static Wrapper make_delegating(Args &&...paArgs) {
+        return Wrapper(new T(std::forward<Args>(paArgs)...));
+      }
+
       CDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId);
 
       EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) override;
@@ -35,7 +42,7 @@ namespace forte {
 
       EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) override;
 
-      Wrapper getDelegatingConnection(std::span<const StringId> paSrcNameList) override;
+      CConnection::Wrapper getDelegatingConnection(std::span<const StringId> paSrcNameList) override;
 
       void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
 
@@ -101,6 +108,8 @@ namespace forte {
       establishDataConnection(CFunctionBlock &paDstFB, TPortId paDstPortId, const CIEC_ANY &paDstDataPoint);
 
     private:
+      Wrapper getDelegatingDataConnection(std::span<const StringId> paSrcNameList);
+
       EMGMResponse establishGatheringConnection(CFunctionBlock &paDstFB,
                                                 TPortId paDstPortId,
                                                 CIEC_ANY &paDstDataPoint,

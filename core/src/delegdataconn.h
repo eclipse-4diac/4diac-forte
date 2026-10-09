@@ -15,11 +15,9 @@
 #include "forte/dataconn.h"
 
 namespace forte::internal {
-
-  template<typename T>
   class CDelegatingDataConnection : public CDataConnection {
     public:
-      CDelegatingDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, T &paValue) :
+      CDelegatingDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_ANY &paValue) :
           CDataConnection(paSrcFB, paSrcPortId),
           mValue(paValue) {
       }
@@ -29,11 +27,11 @@ namespace forte::internal {
         // writing is only done on the original connection
       }
 
-      T &getValue() override {
+      CIEC_ANY &getValue() override {
         return mValue;
       }
 
-      const T &getValue() const {
+      const CIEC_ANY &getValue() const {
         return mValue;
       }
 
@@ -46,7 +44,7 @@ namespace forte::internal {
       }
 
     private:
-      T &mValue;
+      CIEC_ANY &mValue;
   };
 
 } // namespace forte::internal
