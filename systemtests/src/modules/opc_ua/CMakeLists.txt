@@ -67,4 +67,8 @@ endif(FORTE_COM_OPC_UA_ENCRYPTION AND FORTE_COM_OPC_UA_MASTER_BRANCH)
 
 forte_add_multi_systemtests(OPCUA_FastWrite 200 0 fastWriteClient.fboot " " fastWriteServer.fboot " ") # There's no test in these systems. It only tests quick accessing the server with a client subscribed to it, and there won't be any problem, thus finishing the test without a timeout
 
+forte_add_multi_systemtests(OPCUA_KillMultiSubscribe 40 0 killMultiSubscribeClient.fboot " " killMultiSubscribeServer.fboot " ") # Two SUBSCRIBE_1 FBs on the same remote endpoint, each de-initialized (QI 1->0) after connecting; soft because the initial connection attempt can race the server's listen socket, like OPCUA_WorkingClientServer above
+
+SET_TESTS_PROPERTIES(OPCUA_KillMultiSubscribe PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR|BadMonitoredItemIdInvalid")
+
 add_subdirectory(namespace)
