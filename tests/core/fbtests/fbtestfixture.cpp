@@ -53,6 +53,10 @@ namespace forte::test {
         return mValue;
       }
 
+      CIEC_ANY::EDataTypeID getDataTypeID() const override {
+        return mValue.getDataTypeID();
+      }
+
     private:
       CIEC_ANY &mValue;
   };

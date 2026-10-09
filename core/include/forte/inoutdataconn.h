@@ -51,6 +51,10 @@ namespace forte {
         return *mValue;
       }
 
+      CIEC_ANY::EDataTypeID getDataTypeID() const override {
+        return mValue->getDataTypeID();
+      }
+
       bool isInOut() const override {
         return true;
       }

@@ -72,7 +72,7 @@ namespace forte {
       using Wrapper = std::unique_ptr<CConnection, DelegatingDeleter>;
 
       template<typename T, typename... Args>
-      Wrapper make_delegating(Args &&...paArgs) {
+      static Wrapper make_delegating(Args &&...paArgs) {
         return Wrapper(new T(std::forward<Args>(paArgs)...));
       }
 

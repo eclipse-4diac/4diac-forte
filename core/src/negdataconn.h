@@ -18,17 +18,27 @@
 
 namespace forte::internal {
 
-  class CNegatingDataConnection : public CDelegatingDataConnection<CIEC_BOOL> {
+  class CNegatingDataConnection : public CDelegatingDataConnection {
 
     public:
-      CNegatingDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, CIEC_BOOL &paValue) :
-          CDelegatingDataConnection<CIEC_BOOL>(paSrcFB, paSrcPortId, paValue) {
+      CNegatingDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId, Wrapper paDelegate) :
+          CDelegatingDataConnection(paSrcFB, paSrcPortId, paDelegate->getValue()),
+          mDelegate(std::move(paDelegate)) {
       }
 
       void readData(CIEC_ANY &paValue) const override {
-        static_cast<CIEC_BOOL &>(paValue) = func_NOT(getValue());
+        CIEC_BOOL value;
+        mDelegate->readData(value);
+        paValue.setValue(func_NOT(value));
       }
 
       void getSourcePortName(TNameIdentifier &paResult) const override;
+
+      CIEC_ANY::EDataTypeID getDataTypeID() const override {
+        return CIEC_ANY::e_BOOL;
+      }
+
+    private:
+      Wrapper mDelegate;
   };
 } // namespace forte::internal

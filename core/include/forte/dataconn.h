@@ -27,6 +27,13 @@ namespace forte {
    */
   class CDataConnection : public CConnection {
     public:
+      using Wrapper = std::unique_ptr<CDataConnection, DelegatingDeleter>;
+
+      template<typename T, typename... Args>
+      static Wrapper make_delegating(Args &&...paArgs) {
+        return Wrapper(new T(std::forward<Args>(paArgs)...));
+      }
+
       CDataConnection(CFunctionBlock &paSrcFB, const TPortId paSrcPortId);
 
       EMGMResponse connect(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) override;
@@ -35,7 +42,7 @@ namespace forte {
 
       EMGMResponse disconnect(CFunctionBlock &paDstFB, std::span<const StringId> paDstPortNameId) override;
 
-      Wrapper getDelegatingConnection(std::span<const StringId> paSrcNameList) override;
+      CConnection::Wrapper getDelegatingConnection(std::span<const StringId> paSrcNameList) override;
 
       void getSourcePortName(TNameIdentifier &paResult) const override;
 
@@ -62,6 +69,12 @@ namespace forte {
        *   \return pointer to class member variable mValue
        */
       virtual CIEC_ANY &getValue() = 0;
+
+      /*! \brief Get the data type identifier of this connection's value.
+       *
+       *  \return The IEC data type ID of the value carried by this data connection.
+       */
+      virtual CIEC_ANY::EDataTypeID getDataTypeID() const = 0;
 
       [[nodiscard]] virtual bool isGathering() const {
         return false;
@@ -95,6 +108,8 @@ namespace forte {
       virtual void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
 
     private:
+      Wrapper getDelegatingDataConnection(std::span<const StringId> paSrcNameList);
+
       EMGMResponse establishGatheringConnection(CFunctionBlock &paDstFB,
                                                 TPortId paDstPortId,
                                                 CIEC_ANY &paDstDataPoint,
@@ -125,6 +140,10 @@ namespace forte {
         return mValue;
       }
 
+      CIEC_ANY::EDataTypeID getDataTypeID() const override {
+        return mValue.getDataTypeID();
+      }
+
     private:
       T mValue;
   };
@@ -146,6 +165,10 @@ namespace forte {
 
       CIEC_ANY &getValue() override {
         return *mValue;
+      }
+
+      CIEC_ANY::EDataTypeID getDataTypeID() const override {
+        return mValue->getDataTypeID();
       }
 
     private:
