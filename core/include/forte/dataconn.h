@@ -65,6 +65,12 @@ namespace forte {
        */
       virtual CIEC_ANY &getValue() = 0;
 
+      /*! \brief Get the data type identifier of this connection's value.
+       *
+       *  \return The IEC data type ID of the value carried by this data connection.
+       */
+      virtual CIEC_ANY::EDataTypeID getDataTypeID() const = 0;
+
       [[nodiscard]] virtual bool isGathering() const {
         return false;
       }
@@ -125,6 +131,10 @@ namespace forte {
         return mValue;
       }
 
+      CIEC_ANY::EDataTypeID getDataTypeID() const override {
+        return mValue.getDataTypeID();
+      }
+
     private:
       T mValue;
   };
@@ -146,6 +156,10 @@ namespace forte {
 
       CIEC_ANY &getValue() override {
         return *mValue;
+      }
+
+      CIEC_ANY::EDataTypeID getDataTypeID() const override {
+        return mValue->getDataTypeID();
       }
 
     private:

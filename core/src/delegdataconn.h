@@ -37,6 +37,10 @@ namespace forte::internal {
         return mValue;
       }
 
+      CIEC_ANY::EDataTypeID getDataTypeID() const override {
+        return mValue.getDataTypeID();
+      }
+
       bool isDelegating() const final {
         return true;
       }
