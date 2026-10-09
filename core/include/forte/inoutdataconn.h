@@ -60,6 +60,8 @@ namespace forte {
                                            const TPortId paDstPortId,
                                            const CIEC_ANY &paDstDataPoint) override;
 
+      void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint) override;
+
     private:
       CIEC_ANY *mValue;
       std::vector<CConnectionPoint> mInOutDestinationIds;

@@ -37,8 +37,6 @@ namespace forte {
 
       Wrapper getDelegatingConnection(std::span<const StringId> paSrcNameList) override;
 
-      void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
-
       void getSourcePortName(TNameIdentifier &paResult) const override;
 
       /*! \brief Write connection data value.
@@ -93,6 +91,8 @@ namespace forte {
 
       virtual EMGMResponse
       establishDataConnection(CFunctionBlock &paDstFB, TPortId paDstPortId, const CIEC_ANY &paDstDataPoint);
+
+      virtual void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint);
 
     private:
       EMGMResponse establishGatheringConnection(CFunctionBlock &paDstFB,
