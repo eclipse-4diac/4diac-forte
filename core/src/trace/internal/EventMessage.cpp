@@ -190,42 +190,6 @@ namespace forte::trace {
     return false;
   }
 
-  // ************* //
-  // FBDataPayload //
-  // ************* //
-  FBDataPayload::FBDataPayload(std::string paTypeName,
-                               std::string paInstanceName,
-                               uint64_t paDataId,
-                               std::string paValue) :
-      AbstractPayload(std::move(paTypeName), std::move(paInstanceName)),
-      mDataId(paDataId),
-      mValue(paValue) {
-  }
-
-  std::unique_ptr<AbstractPayload> FBDataPayload::clone() const {
-    return std::make_unique<FBDataPayload>(*this);
-  }
-
-  std::string FBDataPayload::specificPayloadString() const {
-    auto convertedString = mValue;
-
-    // add backslash to quoutes and double quotes
-    for (auto toReplace : {"\"", "\'"}) {
-      for (auto pos = convertedString.find(toReplace); pos != std::string::npos;
-           pos = convertedString.find(toReplace, pos + 2)) {
-        convertedString.insert(pos, "\\");
-      }
-    }
-    return ", dataId = " + std::to_string(mDataId) + ", value = \"" + convertedString + "\"";
-  }
-
-  bool FBDataPayload::specificPayloadEqual(const AbstractPayload &paOther) const {
-    if (const auto childInstance = dynamic_cast<const FBDataPayload *>(&paOther); childInstance != nullptr) {
-      return mDataId == childInstance->mDataId && mValue == childInstance->mValue;
-    }
-    return false;
-  }
-
   // ********************* //
   // FBInstanceDataPayload //
   // ********************* //
