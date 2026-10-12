@@ -512,24 +512,4 @@ void CFunctionBlock::traceInputEvent(TEventID paEIID) {
   }
 }
 
-void CFunctionBlock::traceReadData(TPortId paDINum, CIEC_ANY &paValue) {
-  if (auto &tracer = getResource()->getInternal().getTracer(); tracer.isEnabled()) {
-
-    std::string valueString;
-    paValue.toString(valueString);
-    tracer.traceInputData(getFBTypeName(), getFullQualifiedApplicationInstanceName('.').c_str(),
-                          static_cast<uint64_t>(paDINum), valueString.c_str());
-  }
-}
-
-void CFunctionBlock::traceWriteData(TPortId paDONum, CIEC_ANY &paValue) {
-  if (auto &tracer = getResource()->getInternal().getTracer(); tracer.isEnabled()) {
-
-    std::string valueString;
-    paValue.toString(valueString);
-    tracer.traceOutputData(getFBTypeName(), getFullQualifiedApplicationInstanceName('.').c_str(),
-                           static_cast<uint64_t>(paDONum), valueString.c_str());
-  }
-}
-
 #endif

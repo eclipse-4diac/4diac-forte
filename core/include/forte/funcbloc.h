@@ -435,9 +435,6 @@ namespace forte {
         if (!isForced(paAbsDataPortNum)) [[likely]] {
           paConn->readData(paValue);
         }
-#ifdef FORTE_TRACE_CTF
-        traceReadData(paAbsDataPortNum, paValue);
-#endif // FORTE_TRACE_CTF
       }
 
       /*!\brief Function to write data to an output connection from a variable of the FB.
@@ -451,9 +448,6 @@ namespace forte {
         if (!isForced(paAbsDataPortNum)) [[likely]] {
           paConn.writeData(paValue);
         }
-#ifdef FORTE_TRACE_CTF
-        traceWriteData(paAbsDataPortNum - mInterfaceSpec.getNumDIs(), paValue);
-#endif // FORTE_TRACE_CTF
       }
 
       /*!\brief Set the initial values of data inputs, outputs, and internal vars.
@@ -581,8 +575,6 @@ namespace forte {
 #ifdef FORTE_TRACE_CTF
       void traceInputEvent(TEventID paEIID);
       void traceOutputEvent(TEventID paEOID, CEventChainExecutionThread *const paECET);
-      void traceReadData(TPortId paDINum, CIEC_ANY &paValue);
-      void traceWriteData(TPortId paDONum, CIEC_ANY &paValue);
 #endif
 
       /*!\brief Current state of the runnable object.
