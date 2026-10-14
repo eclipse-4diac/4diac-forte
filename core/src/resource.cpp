@@ -131,6 +131,16 @@ namespace forte {
       }
     }
 
+    void createDIOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
+      const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
+      for (size_t i = 0; i < spec.getNumDIOs(); i++) {
+        if (const CInOutDataConnection *const dioConn = paFb.getDIOInConnection(spec.mDIONames[i]);
+            dioConn != nullptr) {
+          createConnectionResponseMessage(*dioConn, paFb, spec.mDIONames[i], {}, paReqResult);
+        }
+      }
+    }
+
     void createAOConnectionResponse(const CFunctionBlock &paFb, std::string &paReqResult) {
       const SFBInterfaceSpec &spec(paFb.getFBInterfaceSpec());
       for (auto it : spec.mSocketNames) {
@@ -180,6 +190,7 @@ namespace forte {
           const CFunctionBlock &fb = static_cast<const CFunctionBlock &>(*itRunner);
           createEOConnectionResponse(fb, paReqResult);
           createDOConnectionResponse(fb, paReqResult);
+          createDIOConnectionResponse(fb, paReqResult);
           createAOConnectionResponse(fb, paReqResult);
         } else {
           queryConnections(paReqResult, *itRunner);

@@ -18,7 +18,7 @@
 
 namespace forte::internal {
 
-  class CGatheringDataConnection final : public CDelegatingDataConnection<CIEC_ANY> {
+  class CGatheringDataConnection final : public CDelegatingDataConnection {
     public:
       struct SGatheringData {
           CIEC_ANY *mMember{};

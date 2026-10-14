@@ -51,6 +51,10 @@ namespace forte {
         return *mValue;
       }
 
+      CIEC_ANY::EDataTypeID getDataTypeID() const override {
+        return mValue->getDataTypeID();
+      }
+
       bool isInOut() const override {
         return true;
       }
@@ -59,6 +63,8 @@ namespace forte {
       EMGMResponse establishDataConnection(CFunctionBlock &paDstFB,
                                            const TPortId paDstPortId,
                                            const CIEC_ANY &paDstDataPoint) override;
+
+      void handleAnySrcPortConnection(const CIEC_ANY &paDstDataPoint) override;
 
     private:
       CIEC_ANY *mValue;

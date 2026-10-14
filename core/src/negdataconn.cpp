@@ -18,7 +18,7 @@ using namespace std::string_literals;
 
 namespace forte::internal {
   void CNegatingDataConnection::getSourcePortName(TNameIdentifier &paResult) const {
-    CDataConnection::getSourcePortName(paResult);
+    mDelegate->getSourcePortName(paResult);
     paResult.push_back("NOT"_STRID);
   }
 } // namespace forte::internal

@@ -29,14 +29,28 @@
 using namespace std::string_literals;
 
 namespace forte::util {
-  constexpr auto scCharacters2Escape = std::array{"&quot;", "&apos;", "&amp;", "&lt;", "&gt;"};
+  namespace {
 
-  const std::map<char, std::tuple<const char *, size_t>> scEscapeMap = {
-      {'"', {scCharacters2Escape[0], std::char_traits<char>::length(scCharacters2Escape[0])}},
-      {'\'', {scCharacters2Escape[1], std::char_traits<char>::length(scCharacters2Escape[1])}},
-      {'&', {scCharacters2Escape[2], std::char_traits<char>::length(scCharacters2Escape[2])}},
-      {'<', {scCharacters2Escape[3], std::char_traits<char>::length(scCharacters2Escape[3])}},
-      {'>', {scCharacters2Escape[4], std::char_traits<char>::length(scCharacters2Escape[4])}}};
+    constexpr auto scCharacters2Escape = std::array{"&quot;", "&apos;", "&amp;", "&lt;", "&gt;"};
+
+    const std::map<char, std::tuple<const char *, size_t>> scEscapeMap = {
+        {'"', {scCharacters2Escape[0], std::char_traits<char>::length(scCharacters2Escape[0])}},
+        {'\'', {scCharacters2Escape[1], std::char_traits<char>::length(scCharacters2Escape[1])}},
+        {'&', {scCharacters2Escape[2], std::char_traits<char>::length(scCharacters2Escape[2])}},
+        {'<', {scCharacters2Escape[3], std::char_traits<char>::length(scCharacters2Escape[3])}},
+        {'>', {scCharacters2Escape[4], std::char_traits<char>::length(scCharacters2Escape[4])}}};
+
+    constexpr std::string_view getEscapedXMLSequence(char paChar) noexcept {
+      switch (paChar) {
+        case '"': return scCharacters2Escape[0];
+        case '\'': return scCharacters2Escape[1];
+        case '&': return scCharacters2Escape[2];
+        case '<': return scCharacters2Escape[3];
+        case '>': return scCharacters2Escape[4];
+        default: return {};
+      }
+    }
+  } // namespace
 
   bool isAtoFChar(char paValue) {
     paValue = static_cast<char>(toupper(paValue));
@@ -267,10 +281,9 @@ namespace forte::util {
     }
 
     for (size_t runner = paString.size() - 1; runner >= paStart && runner != static_cast<size_t>(-1); runner--) {
-      auto escapeChar = scEscapeMap.find(paString[runner]);
-      if (escapeChar != scEscapeMap.end()) {
-        const char *const escapSeq = std::get<0>(escapeChar->second);
-        paString.replace(runner, 1, escapSeq);
+      const std::string_view escapedSeq = getEscapedXMLSequence(paString[runner]);
+      if (!escapedSeq.empty()) {
+        paString.replace(runner, 1, escapedSeq.data(), escapedSeq.size());
       }
     }
   }

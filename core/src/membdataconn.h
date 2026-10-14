@@ -17,7 +17,7 @@
 
 namespace forte::internal {
 
-  class CMemberDataConnection : public CDelegatingDataConnection<CIEC_ANY> {
+  class CMemberDataConnection : public CDelegatingDataConnection {
 
     public:
       CMemberDataConnection(CFunctionBlock &paSrcFB,
