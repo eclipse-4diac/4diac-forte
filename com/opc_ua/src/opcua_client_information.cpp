@@ -10,6 +10,7 @@
  * Contributors:
  *    Jose Cabral - initial implementation
  *    Martin Melik Merkumians - Change CIEC_STRING to std::string
+ *    Franz Höpfinger - Reuse existing subscription across actions
  *******************************************************************************/
 
 #include "opcua_client_information.h"
@@ -457,7 +458,6 @@ namespace forte::com_infra::opc_ua {
         for (auto &newMonitoredInfo : newMonitoredInfos) {
           mSubscriptionInfo.mMonitoredItems.emplace_back(std::move(newMonitoredInfo));
         }
-        addAsyncCall();
       } else { // if something failed, remove added monitoring items and fail the whole action
 
         for (auto &newMonitoredInfo : newMonitoredInfos) { // remove items from the library
@@ -474,6 +474,10 @@ namespace forte::com_infra::opc_ua {
   }
 
   bool CUA_ClientInformation::createSubscription() {
+    if (mSubscriptionInfo.mSubscriptionId != 0) { // already have a subscription, all actions share it
+      return true;
+    }
+
     UA_CreateSubscriptionRequest request = UA_CreateSubscriptionRequest_default();
     request.requestedPublishingInterval = FORTE_COM_OPC_UA_CLIENT_PUB_INTERVAL;
     UA_CreateSubscriptionResponse response = UA_Client_Subscriptions_create(
@@ -482,6 +486,7 @@ namespace forte::com_infra::opc_ua {
       DEVLOG_INFO("[OPC UA CLIENT]: Create subscription to %s succeeded, id %u\n", mEndpointUrl.c_str(),
                   response.subscriptionId);
       mSubscriptionInfo.mSubscriptionId = response.subscriptionId;
+      addAsyncCall(); // once per subscription, not per action, to match resetSubscription()'s single decrement
       return true;
     } else {
       DEVLOG_ERROR("[OPC UA CLIENT]: Create subscription to %s failed. Error: %s\n", mEndpointUrl.c_str(),
@@ -553,14 +558,26 @@ namespace forte::com_infra::opc_ua {
   }
 
   void CUA_ClientInformation::resetSubscription(bool paDeleteSubscription) {
-    removeAsyncCall();
     if (paDeleteSubscription) {
       UA_StatusCode retval = UA_Client_Subscriptions_deleteSingle(mClient, mSubscriptionInfo.mSubscriptionId);
       if (UA_STATUSCODE_GOOD != retval) {
         DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete subscription %u. Failed with error %s. No further actions will "
                      "be taken\n",
                      mSubscriptionInfo.mSubscriptionId, UA_StatusCode_name(retval));
+        // The subscription may still exist server-side, so leave the tracked state untouched -
+        // clearing it now could let a future createSubscription() create a duplicate.
+        return;
       }
+    }
+
+    // Reached either on a successful delete above, or from deleteSubscriptionCallback() (our own
+    // delete's confirmation, or an unsolicited server-side deletion). Guarded so this runs
+    // exactly once even if open62541 invokes that callback synchronously from within
+    // UA_Client_Subscriptions_deleteSingle() above.
+    if (mSubscriptionInfo.mSubscriptionId != 0) {
+      removeAsyncCall();
+      mSubscriptionInfo.mSubscriptionId = 0;
+      mSubscriptionInfo.mMonitoredItems.clear();
     }
   }
 
