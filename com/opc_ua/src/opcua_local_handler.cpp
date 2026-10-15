@@ -19,6 +19,8 @@
  *      - Change CIEC_STRING to std::string
  *    Markus Meingast:
  *      - Add support for Object Structs
+ *    Franz Höpfinger:
+ *      - Allow several FBs to read the same local node
  *******************************************************************************/
 
 #include "opcua_defaults.h"
@@ -286,10 +288,14 @@ namespace forte::com_infra::opc_ua {
           }
 
           if (iterRef->mActionsReferencingIt.empty()) {
-            nodeReferencedToDelete = iterRef;
             if (0 != iterRef->mNodeId->namespaceIndex && mUaServer) {
+              if (hasVariableReaders(*iterRef->mNodeId)) {
+                // keep the entry: the node is deleted when its last reader leaves (see removeVariableReaders())
+                break;
+              }
               UA_Server_deleteNode(mUaServer, *iterRef->mNodeId, UA_TRUE);
             }
+            nodeReferencedToDelete = iterRef;
           }
           break;
         }
@@ -403,6 +409,7 @@ namespace forte::com_infra::opc_ua {
       case CActionInfo::eCreateVariable:
       case CActionInfo::eDeleteObject:
       case CActionInfo::eDeleteVariable:
+        removeVariableReaders(paActionInfo);
         referencedNodesDecrement(paActionInfo);
         retVal = UA_STATUSCODE_GOOD;
         break;
@@ -453,6 +460,8 @@ namespace forte::com_infra::opc_ua {
     referencedNodesIncrement(referencedNodes, paActionInfo);
 
     if (UA_STATUSCODE_GOOD != retVal) {
+      // a failed port must not leave this action as reader of the nodes of the ports that succeeded before it
+      removeVariableReaders(paActionInfo);
       referencedNodesDecrement(paActionInfo);
     }
 
@@ -490,6 +499,7 @@ namespace forte::com_infra::opc_ua {
     }
     referencedNodesIncrement(referencedNodes, *paActionInfo);
     if (UA_STATUSCODE_GOOD != retVal) {
+      removeVariableReaders(*paActionInfo);
       referencedNodesDecrement(*paActionInfo);
     }
     for (auto referenceNode : referencedNodes) {
@@ -512,24 +522,8 @@ namespace forte::com_infra::opc_ua {
         if (!paWrite) { // If we are reading a variable, it should be writable from the outside
           retVal = addWritePermission(*paNodePairInfo.getNodeId());
           if (UA_STATUSCODE_GOOD == retVal) {
-            void *handle = nullptr;
-            retVal = UA_Server_getNodeContext(mUaServer, *paNodePairInfo.getNodeId(), &handle);
-            if (UA_STATUSCODE_GOOD == retVal) {
-              if (!handle) {
-                retVal = registerVariableCallBack(*paNodePairInfo.getNodeId(), paActionInfo, paIndexOfNodePair);
-              } else {
-                DEVLOG_ERROR(
-                    "[OPC UA LOCAL]: At FB %s RD_%d the node %s has already a FB who is reading from it. Cannot "
-                    "add another one\n",
-                    paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair,
-                    paNodePairInfo.getBrowsePath().c_str());
-                retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
-              }
-            } else {
-              DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s RD_%d the node %s could not retrieve context. Error: %s\n",
-                           paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair,
-                           paNodePairInfo.getBrowsePath().c_str(), UA_StatusCode_name(retVal));
-            }
+            // the node may already be read by other FBs: register as one more reader
+            retVal = registerVariableCallBack(*paNodePairInfo.getNodeId(), paActionInfo, paIndexOfNodePair);
           } else {
             DEVLOG_ERROR("[OPC UA LOCAL]: Cannot set write permission of node for port %d. Error: %s\n",
                          paIndexOfNodePair, UA_StatusCode_name(retVal));
@@ -677,11 +671,30 @@ namespace forte::com_infra::opc_ua {
                                                                 CActionInfo &paActionInfo,
                                                                 size_t paPortIndex) {
 
+    void *existingContext = nullptr;
+    UA_StatusCode retVal = UA_Server_getNodeContext(mUaServer, paNodeId, &existingContext);
+    if (UA_STATUSCODE_GOOD != retVal) {
+      DEVLOG_ERROR("[OPC UA LOCAL]: Could not get callback context of node. Error: %s\n", UA_StatusCode_name(retVal));
+      return UA_STATUSCODE_BADUNEXPECTEDERROR;
+    }
+
+    if (existingContext) {
+      UA_VariableContext_Handle *readers = getOwnedVariableContext(existingContext);
+      if (!readers) {
+        DEVLOG_ERROR("[OPC UA LOCAL]: The node already has a context which is not a reader list of this handler\n");
+        return UA_STATUSCODE_BADUNEXPECTEDERROR;
+      }
+      // another FB reads this node already: its callback is registered, this FB just joins the readers
+      readers->addReader(paActionInfo, paPortIndex);
+      return UA_STATUSCODE_GOOD;
+    }
+
     const UA_ValueCallback writeCallback = {nullptr, CUA_LocalCallbackFunctions::onWrite};
-    UA_StatusCode retVal = UA_Server_setVariableNode_valueCallback(mUaServer, paNodeId, writeCallback);
+    retVal = UA_Server_setVariableNode_valueCallback(mUaServer, paNodeId, writeCallback);
     if (UA_STATUSCODE_GOOD == retVal) {
 
-      auto nodeContext = std::make_unique<UA_VariableContext_Handle>(paActionInfo, paPortIndex);
+      auto nodeContext = std::make_unique<UA_VariableContext_Handle>();
+      nodeContext->addReader(paActionInfo, paPortIndex);
 
       retVal = UA_Server_setNodeContext(mUaServer, paNodeId, nodeContext.get());
       if (UA_STATUSCODE_GOOD != retVal) {
@@ -696,6 +709,91 @@ namespace forte::com_infra::opc_ua {
       retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
     }
     return retVal;
+  }
+
+  COPC_UA_Local_Handler::UA_VariableContext_Handle *
+  COPC_UA_Local_Handler::getOwnedVariableContext(void *paNodeContext) {
+    for (auto &ownedContext : mNodeCallbackHandles) {
+      if (ownedContext.get() == paNodeContext) {
+        return ownedContext.get();
+      }
+    }
+    return nullptr;
+  }
+
+  bool COPC_UA_Local_Handler::hasVariableReaders(const UA_NodeId &paNodeId) {
+    std::vector<UA_NodeId> visitedNodes;
+    bool retVal = hasVariableReadersBelow(paNodeId, visitedNodes);
+    for (auto &visitedNode : visitedNodes) {
+      UA_NodeId_clear(&visitedNode);
+    }
+    return retVal;
+  }
+
+  bool COPC_UA_Local_Handler::hasVariableReadersBelow(const UA_NodeId &paNodeId,
+                                                      std::vector<UA_NodeId> &paVisitedNodes) {
+    // hierarchical references may form loops, each node is looked at only once
+    for (const auto &visitedNode : paVisitedNodes) {
+      if (UA_NodeId_equal(&visitedNode, &paNodeId)) {
+        return false;
+      }
+    }
+    paVisitedNodes.emplace_back();
+    UA_NodeId_copy(&paNodeId, &paVisitedNodes.back());
+
+    void *context = nullptr;
+    if (UA_STATUSCODE_GOOD == UA_Server_getNodeContext(mUaServer, paNodeId, &context)) {
+      UA_VariableContext_Handle *readers = getOwnedVariableContext(context);
+      if (readers && !readers->mReaders.empty()) {
+        return true;
+      }
+    }
+
+    // deleting a node also deletes its hierarchical children, so a reader further down keeps the node as well
+    UA_BrowseDescription browseDescription;
+    UA_BrowseDescription_init(&browseDescription);
+    browseDescription.nodeId = paNodeId;
+    browseDescription.browseDirection = UA_BROWSEDIRECTION_FORWARD;
+    browseDescription.referenceTypeId = UA_NODEID_NUMERIC(0, UA_NS0ID_HIERARCHICALREFERENCES);
+    browseDescription.includeSubtypes = true;
+    browseDescription.resultMask = UA_BROWSERESULTMASK_NONE;
+
+    bool retVal = false;
+    UA_BrowseResult children = UA_Server_browse(mUaServer, 0, &browseDescription);
+    if (UA_STATUSCODE_GOOD == children.statusCode) {
+      for (size_t i = 0; i < children.referencesSize && !retVal; i++) {
+        retVal = hasVariableReadersBelow(children.references[i].nodeId.nodeId, paVisitedNodes);
+      }
+    }
+    UA_BrowseResult_clear(&children);
+    return retVal;
+  }
+
+  void COPC_UA_Local_Handler::removeVariableReaders(const CActionInfo &paActionInfo) {
+    // walk all reader lists instead of the nodes referenced by the action: a reader that addresses its node only by
+    // NodeId has no entry in the node references
+    for (auto &ownedContext : mNodeCallbackHandles) {
+      ownedContext->removeReadersOf(paActionInfo);
+    }
+
+    deleteNodesWithoutReferences();
+  }
+
+  void COPC_UA_Local_Handler::deleteNodesWithoutReferences() {
+    if (!mUaServer) {
+      return;
+    }
+
+    // entries without actions were kept by referencedNodesDecrement() because a reader was still registered
+    for (auto iterRef = mNodesReferences.begin(); iterRef != mNodesReferences.end();) {
+      if (iterRef->mActionsReferencingIt.empty() && !hasVariableReaders(*iterRef->mNodeId)) {
+        UA_Server_deleteNode(mUaServer, *iterRef->mNodeId, UA_TRUE);
+        UA_NodeId_delete(const_cast<UA_NodeId *>(iterRef->mNodeId));
+        iterRef = mNodesReferences.erase(iterRef);
+      } else {
+        ++iterRef;
+      }
+    }
   }
 
   UA_StatusCode COPC_UA_Local_Handler::addWritePermission(const UA_NodeId &paNodeId) {
@@ -1600,21 +1698,26 @@ namespace forte::com_infra::opc_ua {
                                                                   const UA_DataValue *data) {
 
     UA_VariableContext_Handle *variableCallbackHandle = static_cast<UA_VariableContext_Handle *>(nodeContext);
+    if (!variableCallbackHandle) {
+      return;
+    }
 
-    COPC_UA_Helper::UA_RecvVariable_handle handleRecv;
+    // every FB reading this node gets the new value
+    for (const auto &reader : variableCallbackHandle->mReaders) {
+      COPC_UA_Helper::UA_RecvVariable_handle handleRecv;
 
-    handleRecv.mData.push_back(data->hasValue ? &data->value : nullptr); // TODO: check this empty data
-    handleRecv.mOffset = variableCallbackHandle->mPortIndex;
-    handleRecv.mNodeId = nodeId;
+      handleRecv.mData.push_back(data->hasValue ? &data->value : nullptr); // TODO: check this empty data
+      handleRecv.mOffset = reader.mPortIndex;
+      handleRecv.mNodeId = nodeId;
 
-    EComResponse retVal = variableCallbackHandle->mActionInfo.getLayer().recvData(
-        static_cast<const void *>(&handleRecv), 0); // TODO: add multidimensional mData handling with 'range'.
+      EComResponse retVal = reader.mActionInfo->getLayer().recvData(
+          static_cast<const void *>(&handleRecv), 0); // TODO: add multidimensional mData handling with 'range'.
 
-    if (e_Nothing != retVal) {
-      variableCallbackHandle->mActionInfo.getLayer().getCommFB()->interruptCommFB(
-          &variableCallbackHandle->mActionInfo.getLayer());
-      util::getExtEvHandler<COPC_UA_Local_Handler>(*variableCallbackHandle->mActionInfo.getLayer().getCommFB())
-          .startNewEventChain(variableCallbackHandle->mActionInfo.getLayer().getCommFB());
+      if (e_Nothing != retVal) {
+        reader.mActionInfo->getLayer().getCommFB()->interruptCommFB(&reader.mActionInfo->getLayer());
+        util::getExtEvHandler<COPC_UA_Local_Handler>(*reader.mActionInfo->getLayer().getCommFB())
+            .startNewEventChain(reader.mActionInfo->getLayer().getCommFB());
+      }
     }
   }
 
