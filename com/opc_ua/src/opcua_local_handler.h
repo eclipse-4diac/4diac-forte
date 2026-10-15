@@ -19,6 +19,8 @@
  *      - Change CIEC_STRING to std::string
  *    Markus Meingast:
  *      - Add support for Object Structs
+ *    Franz Höpfinger:
+ *      - Allow several FBs to read the same local node
  *******************************************************************************/
 
 #pragma once
@@ -377,26 +379,31 @@ namespace forte::com_infra::opc_ua {
                                 CCreateInfo &paResult) const;
 
       /**
-       * Context passed to a variable node in the OPC UA stack, which is returned when the variable is written from a
-       * client. ATTENTION: this is exactly the same class as the one used for subscription in the client
-       * (UA_SubscribeContext_Handle), but because of compilation errors occurred when including headers, it was copied,
-       * since no right place could be found where to declare/define this class. If someone can manage to use the same
-       * class both in the CUA_ClientInformation and here, it can be deleted
+       * Context passed to a variable node in the OPC UA stack, which is returned when the variable is written. A node
+       * can be read by several FBs (RD ports of SUBSCRIBE or similar), so it holds the list of all of them and a write
+       * is handed to each one. Every access happens with mServerAccessMutex held.
        */
       struct UA_VariableContext_Handle {
-          UA_VariableContext_Handle(CActionInfo &paActionInfo, size_t paPortIndex) :
-              mActionInfo(paActionInfo),
-              mPortIndex(paPortIndex) {
+          struct SReader {
+              SReader(CActionInfo &paActionInfo, size_t paPortIndex) :
+                  mActionInfo(&paActionInfo),
+                  mPortIndex(paPortIndex) {
+              }
+
+              CActionInfo *mActionInfo;
+              size_t mPortIndex;
+          };
+
+          void addReader(CActionInfo &paActionInfo, size_t paPortIndex) {
+            mReaders.emplace_back(paActionInfo, paPortIndex);
           }
 
-          // default copy constructor should be enough
-
-          bool operator==(UA_VariableContext_Handle const &paRightObject) const {
-            return (&mActionInfo == &paRightObject.mActionInfo && mPortIndex == paRightObject.mPortIndex);
+          void removeReadersOf(const CActionInfo &paActionInfo) {
+            std::erase_if(mReaders,
+                          [&paActionInfo](const SReader &paReader) { return paReader.mActionInfo == &paActionInfo; });
           }
 
-          CActionInfo &mActionInfo;
-          size_t mPortIndex;
+          std::vector<SReader> mReaders;
       };
 
       /**
@@ -543,6 +550,47 @@ namespace forte::com_infra::opc_ua {
        * @return UA_STATUSCODE_GOOD on success, other value otherwise
        */
       UA_StatusCode registerVariableCallBack(const UA_NodeId &paNodeId, CActionInfo &paActionInfo, size_t paPortIndex);
+
+      /**
+       * Returns the given node context as reader list, if this handler created it for a variable node.
+       * Contexts of other owners (methods, other components) must not be cast or touched.
+       * mServerAccessMutex must be held by the caller.
+       * @param paNodeContext The context returned by the OPC UA stack for a node
+       * @return The reader list, or nullptr if the context is not owned by this handler
+       */
+      UA_VariableContext_Handle *getOwnedVariableContext(void *paNodeContext);
+
+      /**
+       * Tells if an FB still reads the node or a node below it, e.g. one that addresses it by NodeId only and so is
+       * not counted in the node references. Such a node must not be deleted, as deleting it also deletes its
+       * children. mServerAccessMutex must be held by the caller.
+       * @param paNodeId The node to check
+       * @return true if at least one reader is registered at the node or one of its hierarchical children
+       */
+      bool hasVariableReaders(const UA_NodeId &paNodeId);
+
+      /**
+       * Recursive part of hasVariableReaders().
+       * @param paNodeId The node to check
+       * @param paVisitedNodes The nodes already looked at, so that loops in the hierarchy end. Owned by the caller,
+       * which has to clear the NodeIds.
+       * @return true if at least one reader is registered at the node or one of its hierarchical children
+       */
+      bool hasVariableReadersBelow(const UA_NodeId &paNodeId, std::vector<UA_NodeId> &paVisitedNodes);
+
+      /**
+       * Deletes the nodes that no action references any more and that no reader is registered at, i.e. the nodes
+       * which referencedNodesDecrement() had to keep for their readers. mServerAccessMutex must be held by the caller.
+       */
+      void deleteNodesWithoutReferences();
+
+      /**
+       * Removes an action from the reader lists of all variable nodes, so a node that outlives the FB (it is still
+       * referenced by a writer or another reader) never calls into the deleted FB.
+       * mServerAccessMutex must be held by the caller.
+       * @param paActionInfo The action that is uninitialized or failed to initialize
+       */
+      void removeVariableReaders(const CActionInfo &paActionInfo);
 
       /**
        * Adds write permission to a node

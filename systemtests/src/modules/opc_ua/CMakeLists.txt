@@ -21,6 +21,22 @@ forte_add_systemtest_hard(OPCUA_LocalFirstWrite localFirstWrite.fboot 10)
 
 SET_TESTS_PROPERTIES(OPCUA_LocalFirstRead PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR|OPC UA REMOTE") #remote handler shouldn't start
 
+forte_add_systemtest_hard(OPCUA_LocalTwoReaders localTwoReaders.fboot 10)
+
+SET_TESTS_PROPERTIES(OPCUA_LocalTwoReaders PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR|OPC UA REMOTE") #two FBs read one local node: both must be initialized and both get the value
+
+forte_add_systemtest_hard(OPCUA_LocalReaderLeaves localReaderLeaves.fboot 10)
+
+SET_TESTS_PROPERTIES(OPCUA_LocalReaderLeaves PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR|OPC UA REMOTE") #one of two readers of a local node leaves: the other one still gets the values
+
+forte_add_systemtest_hard(OPCUA_LocalNodeIdOnlyReader localNodeIdOnlyReader.fboot 10)
+
+SET_TESTS_PROPERTIES(OPCUA_LocalNodeIdOnlyReader PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR|OPC UA REMOTE") #the node of the last publisher stays while a reader attached by NodeId only is registered and goes with the last reader
+
+forte_add_systemtest_hard(OPCUA_LocalMultiPortInitFails localMultiPortInitFails.fboot 10)
+
+SET_TESTS_PROPERTIES(OPCUA_LocalMultiPortInitFails PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR|OPC UA REMOTE") #the first port of a reader joined a node, the second one failed: the reader must not stay at the first node
+
 forte_add_systemtest_hard(OPCUA_LocalMethdodsCreate localMethodsCreate.fboot 10)
 
 SET_TESTS_PROPERTIES(OPCUA_LocalFirstRead PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR|OPC UA REMOTE") #remote handler shouldn't start
