@@ -19,7 +19,13 @@ SET_TESTS_PROPERTIES(OPCUA_LocalFirstRead PROPERTIES FAIL_REGULAR_EXPRESSION "ER
 
 forte_add_systemtest_hard(OPCUA_LocalFirstWrite localFirstWrite.fboot 10)
 
-SET_TESTS_PROPERTIES(OPCUA_LocalFirstRead PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR|OPC UA REMOTE") #remote handler shouldn't start
+file(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/opcuaLocalHandlerStartServerRace.fboot" opcua_race_bootfile)
+add_test(NAME OPCUA_LocalHandlerStartServerRace
+         COMMAND $<TARGET_FILE:forte_systemtest> -d OPCUA_DEV -f "${opcua_race_bootfile}")
+set_tests_properties(OPCUA_LocalHandlerStartServerRace PROPERTIES
+                      TIMEOUT 10
+                      FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|ERROR: T|==ERROR"
+                      ENVIRONMENT "FORTE_COM_OPC_UA_TEST_STARTUP_DELAY_MS=500;FORTE_COM_OPC_UA_TEST_STARTUP_WAIT_FOR_ATTEMPTS=16;LSAN_OPTIONS=suppressions=${CMAKE_CURRENT_SOURCE_DIR}/opcua_dev_known_leak.lsan-suppressions;ASAN_OPTIONS=fast_unwind_on_malloc=0:malloc_context_size=30")
 
 forte_add_systemtest_hard(OPCUA_LocalMethdodsCreate localMethodsCreate.fboot 10)
 

@@ -33,6 +33,10 @@
 #include "forte/util/string_utils.h"
 #include "forte/util/mainparam_utils.h"
 #include "forte/arch/forte_printer.h"
+#ifdef FORTE_COM_OPC_UA_TEST_HOOKS
+#include "forte/arch/forte_fileio.h"
+#include <cerrno>
+#endif // FORTE_COM_OPC_UA_TEST_HOOKS
 
 #include "forte/com/opc_ua/opcua_nodesets.h"
 
@@ -68,6 +72,31 @@ namespace forte::com_infra::opc_ua {
     OpcuaServerPortOption gOpcuaServerPort;
 
     TForteUInt16 gOpcuaServerMaxIterationInterval = FORTE_COM_OPC_UA_SERVER_MAX_ITERATION_INTERVAL;
+
+#ifdef FORTE_COM_OPC_UA_TEST_HOOKS // Test-only
+    unsigned int parseTestUnsignedMs(const char *paEnvValue, const char *paEnvName, unsigned int paMax) {
+      if (nullptr == paEnvValue || '\0' == *paEnvValue) {
+        return 0;
+      }
+      const char *cursor = paEnvValue;
+      while (' ' == *cursor || '\t' == *cursor) {
+        ++cursor;
+      }
+      if ('-' == *cursor) {
+        DEVLOG_ERROR("[OPC UA LOCAL]: %s must not be negative, ignoring: %s\n", paEnvName, paEnvValue);
+        return 0;
+      }
+      char *endPtr = nullptr;
+      errno = 0;
+      const unsigned long parsed = util::strtoul(paEnvValue, &endPtr, 10);
+      if (0 != errno || endPtr == paEnvValue || '\0' != *endPtr || parsed > paMax) {
+        DEVLOG_ERROR("[OPC UA LOCAL]: %s is malformed or out of range [0, %u], ignoring: %s\n", paEnvName, paMax,
+                     paEnvValue);
+        return 0;
+      }
+      return static_cast<unsigned int>(parsed);
+    }
+#endif // FORTE_COM_OPC_UA_TEST_HOOKS
   } // namespace
 
   const char *const COPC_UA_Local_Handler::mEnglishLocaleForNodes = "en-US";
@@ -98,6 +127,23 @@ namespace forte::com_infra::opc_ua {
   void COPC_UA_Local_Handler::run() {
     DEVLOG_INFO("[OPC UA LOCAL]: Starting OPC UA Server: opc.tcp://localhost:%d\n", gOpcuaServerPort.mArgument);
 
+#ifdef FORTE_COM_OPC_UA_TEST_HOOKS // Test-only
+    const unsigned int testMaxDelayMs = parseTestUnsignedMs(forte_getenv("FORTE_COM_OPC_UA_TEST_STARTUP_DELAY_MS"),
+                                                            "FORTE_COM_OPC_UA_TEST_STARTUP_DELAY_MS", 60000U);
+    if (testMaxDelayMs > 0) {
+      const unsigned int targetAttempts =
+          parseTestUnsignedMs(forte_getenv("FORTE_COM_OPC_UA_TEST_STARTUP_WAIT_FOR_ATTEMPTS"),
+                              "FORTE_COM_OPC_UA_TEST_STARTUP_WAIT_FOR_ATTEMPTS", 10000U);
+      constexpr unsigned int cPollIntervalMs = 5;
+      unsigned int elapsedMs = 0;
+      while (elapsedMs < testMaxDelayMs &&
+             (0 == targetAttempts || mTestInitializeActionAttempts.load(std::memory_order_relaxed) < targetAttempts)) {
+        sleepThread(cPollIntervalMs);
+        elapsedMs += cPollIntervalMs;
+      }
+    }
+#endif // FORTE_COM_OPC_UA_TEST_HOOKS
+
     UA_ServerConfig config{
         .logging = &getLogger(),
     };
@@ -113,6 +159,7 @@ namespace forte::com_infra::opc_ua {
     generateServerStrings(gOpcuaServerPort.mArgument, serverStrings);
     configureUAServer(serverStrings, config);
 
+    bool serverStartedSignaled = false;
     mUaServer = UA_Server_newWithConfig(&config);
     if (mUaServer) {
       if (initializeNodesets(*mUaServer)) {
@@ -126,6 +173,7 @@ namespace forte::com_infra::opc_ua {
             auto mLdsMeHandler = forte::com_infra::opc_ua::detail::LdsMeHandler(*mUaServer);
 #endif // FORTE_COM_OPC_UA_MULTICAST
             mServerStarted.inc();
+            serverStartedSignaled = true;
             while (isAlive()) {
               UA_UInt16 timeToSleepMs;
               {
@@ -160,19 +208,35 @@ namespace forte::com_infra::opc_ua {
       DEVLOG_ERROR("[OPC UA LOCAL]: Couldn't initialize server\n");
       UA_ServerConfig_clear(&config);
     }
-    mServerStarted.inc(); // this will avoid locking startServer() for all cases where the starting of server failed
+
+    if (!serverStartedSignaled) {
+      mServerStarted.inc(); // this will avoid locking startServer() for all cases where the starting of server failed
+    }
   }
 
   void COPC_UA_Local_Handler::startServer() {
-    if (!isAlive()) {
-      start();
-      mServerStarted.waitIndefinitely();
-      mServerStarted.inc(); // in case two threads get into this block at the same time
+    util::CCriticalRegion criticalRegion(mStartMutex);
+    if (mServerReady) {
+      return;
+    }
+
+    start();
+    mServerStarted.waitIndefinitely();
+    mServerReady = (nullptr != mUaServer);
+
+    if (!mServerReady) {
+      end();
+
+      while (arch::CThread::TThreadHandleType{} != getThreadHandle()) {
+        sleepThread(1);
+      }
     }
   }
 
   void COPC_UA_Local_Handler::stopServer() {
+    util::CCriticalRegion criticalRegion(mStartMutex);
     end();
+    mServerReady = false;
   }
 
   void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort,
@@ -315,6 +379,9 @@ namespace forte::com_infra::opc_ua {
   }
 
   UA_StatusCode COPC_UA_Local_Handler::initializeAction(CActionInfo &paActionInfo) {
+#ifdef FORTE_COM_OPC_UA_TEST_HOOKS // Test-only
+    mTestInitializeActionAttempts.fetch_add(1, std::memory_order_relaxed);
+#endif // FORTE_COM_OPC_UA_TEST_HOOKS
     enableHandler();
     UA_StatusCode retVal = UA_STATUSCODE_BADINTERNALERROR;
     if (mUaServer) { // if the server failed at starting, nothing will be initialized
