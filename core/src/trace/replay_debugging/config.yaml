@@ -68,24 +68,6 @@ trace:
                       class: dynamic-array
                       element-field-type:
                         class: string
-          # inputData
-          inputData:
-            payload-field-type:
-              class: structure
-              members:
-                - typeName: string # FB type name
-                - instanceName: string # FB instance name
-                - dataId: uint64 # Data id
-                - value: string # Data value
-          # outputData
-          outputData:
-            payload-field-type:
-              class: structure
-              members:
-                - typeName: string # FB type name
-                - instanceName: string # FB instance name
-                - dataId: uint64 # Data id
-                - value: string # Data value
           # instanceData
           instanceData:
             payload-field-type:
@@ -113,4 +95,3 @@ trace:
                       class: dynamic-array
                       element-field-type:
                         class: string
-                      

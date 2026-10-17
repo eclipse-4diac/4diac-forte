@@ -91,37 +91,7 @@ namespace forte::trace {
         mTracer);
   }
 
-  void CFlexibleTracer::traceInputData(const char *const paTypeName,
-                                       const char *const paInstanceName,
-                                       const uint64_t paDataId,
-                                       const char *const paValue) {
-
-    std::visit(
-        [&](auto &&paTracer) {
-          using T = std::decay_t<decltype(paTracer)>;
-          if constexpr (std::is_same_v<T, std::monostate> == false) {
-            paTracer.traceInputData(paTypeName, paInstanceName, paDataId, paValue);
-          }
-        },
-        mTracer);
-  }
-
-  void CFlexibleTracer::traceOutputData(const char *const paTypeName,
-                                        const char *const paInstanceName,
-                                        const uint64_t paDataId,
-                                        const char *const paValue) {
-
-    std::visit(
-        [&](auto &&paTracer) {
-          using T = std::decay_t<decltype(paTracer)>;
-          if constexpr (std::is_same_v<T, std::monostate> == false) {
-            paTracer.traceOutputData(paTypeName, paInstanceName, paDataId, paValue);
-          }
-        },
-        mTracer);
-  }
-
-  bool CFlexibleTracer::isEnabled() {
+  bool CFlexibleTracer::isEnabled() const {
 
     return std::visit(
         [](auto &&paTracer) -> bool {
