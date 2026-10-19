@@ -14,5 +14,5 @@
 #include "forte/ecetfactory.h"
 
 namespace forte::util::factory {
-  template class Factory<FixedEcetImpl, DefaultEcetImpl, CEventChainExecutionThread>;
+  template class Factory<FixedEcetImpl, DefaultEcetImpl, CEventChainExecutionThread, StringId>;
 }
