@@ -14,15 +14,14 @@
 #pragma once
 
 #include "forte/device.h"
+#include "forte/stringid.h"
 #include "forte/util/factory.h"
 #include "forte/config/ecetfactory_config.h"
 
-#include <string_view>
-
 namespace forte {
   namespace util::factory {
-    extern template class Factory<FixedEcetImpl, DefaultEcetImpl, CEventChainExecutionThread>;
+    extern template class Factory<FixedEcetImpl, DefaultEcetImpl, CEventChainExecutionThread, StringId>;
   }
 
-  using EcetFactory = util::factory::Factory<FixedEcetImpl, DefaultEcetImpl, CEventChainExecutionThread>;
+  using EcetFactory = util::factory::Factory<FixedEcetImpl, DefaultEcetImpl, CEventChainExecutionThread, StringId>;
 } // namespace forte

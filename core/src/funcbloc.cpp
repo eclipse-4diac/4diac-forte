@@ -35,7 +35,7 @@
 #include "forte/datatypes/forte_array.h"
 #include "forte/util/string_utils.h"
 
-#include "resource_internal.h"
+#include "ecet_internal.h"
 
 using namespace forte;
 using namespace std::string_literals;
@@ -504,11 +504,15 @@ void CFunctionBlock::toString(std::string &paTargetBuf) const {
 //********************************** below here are CTF Tracing specific functions
 //**********************************************************
 #ifdef FORTE_TRACE_CTF
-void CFunctionBlock::traceInputEvent(TEventID paEIID) {
-  if (auto &tracer = getResource()->getInternal().getTracer(); tracer.isEnabled()) {
+void CFunctionBlock::traceInputEvent(TEventID paEIID, CEventChainExecutionThread *paECET) {
+  if (!paECET) {
+    return;
+  }
+
+  if (auto &tracer = paECET->getInternal().getTracer(); tracer.isEnabled()) {
     tracer.traceReceiveInputEvent(getFBTypeName(), getFullQualifiedApplicationInstanceName('.').c_str(),
                                   static_cast<uint64_t>(paEIID));
-    traceInstanceData();
+    traceInstanceData(paECET);
   }
 }
 

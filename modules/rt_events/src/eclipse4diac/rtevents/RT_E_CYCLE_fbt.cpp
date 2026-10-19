@@ -11,6 +11,7 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "forte/eclipse4diac/rtevents/RT_E_CYCLE_fbt.h"
+#include "forte/resource.h"
 
 using namespace forte::literals;
 
@@ -42,7 +43,9 @@ namespace forte::eclipse4diac::rtevents {
       conn_DT(nullptr),
       conn_Deadline(nullptr),
       conn_WCET(nullptr),
-      mActive(false) {
+      mActive(false),
+      mECEO(StringId::insert(std::string(paContainer.getResource()->getInstanceName()) + "." +
+                             CFBContainer::getFullQualifiedApplicationInstanceName('.'))) {
     setEventChainExecutor(&mECEO);
   };
 

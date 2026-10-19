@@ -24,8 +24,8 @@ namespace {
   [[maybe_unused]] const forte::EcetFactory::EntryImpl<CFMUEventChainExecutionThread> entry("fmu"_STRID);
 }
 
-CFMUEventChainExecutionThread::CFMUEventChainExecutionThread() :
-    CEventChainExecutionThread(),
+CFMUEventChainExecutionThread::CFMUEventChainExecutionThread(StringId paName) :
+    CEventChainExecutionThread(paName),
     mAllowedToRun(0),
     mStepSemaphore(0),
     mWaitingStep(true) {

@@ -11,6 +11,7 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "forte/eclipse4diac/rtevents/RT_E_SWITCH_fbt.h"
+#include "forte/resource.h"
 
 using namespace forte::literals;
 
@@ -52,6 +53,10 @@ namespace forte::eclipse4diac::rtevents {
       conn_Deadline_EO2(nullptr),
       conn_WCET_EO2(nullptr),
       conn_QO(*this, 0, var_QO),
+      mECEO1(StringId::insert(std::string(paContainer.getResource()->getInstanceName()) + "." +
+                              CFBContainer::getFullQualifiedApplicationInstanceName('.') + ".1")),
+      mECEO2(StringId::insert(std::string(paContainer.getResource()->getInstanceName()) + "." +
+                              CFBContainer::getFullQualifiedApplicationInstanceName('.') + ".2")),
       mInitialized(false) {};
 
   void FORTE_RT_E_SWITCH::setInitialValues() {

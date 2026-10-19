@@ -12,8 +12,9 @@
 
 #include "resourceReplayer.h"
 
+#include "forte/ecet.h"
 #include "forte/resource.h"
-#include "../../../../core/src/resource_internal.h"
+#include "../../../../core/src/ecet_internal.h"
 #include "../../../../core/src/trace/reader/utils.h"
 #include "../../../../core/src/ecetFake.h"
 
@@ -51,7 +52,7 @@ namespace forte::iec61499::system {
       }
 
       paEvent.getFB().readInputData(paEvent.getPortId());
-      paEvent.getFB().traceInputEvent(paEvent.getPortId());
+      paEvent.getFB().traceInputEvent(paEvent.getPortId(), &ecet);
     };
 
     mEcet.setRemoteCallbackForEventTriggering(processOneEvent);
@@ -136,6 +137,6 @@ namespace forte::iec61499::system {
           }
           return {};
         },
-        mResource.getInternal().getTracer().getTracerVariant());
+        mEcet.getInternal().getTracer().getTracerVariant());
   }
 } // namespace forte::iec61499::system
