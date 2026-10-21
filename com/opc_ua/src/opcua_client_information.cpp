@@ -68,6 +68,7 @@ namespace forte::com_infra::opc_ua {
 
     // override defaults
     config.timeout = scmClientTimeoutInMilli;
+    config.subscriptionInactivityCallback = CUA_RemoteCallbackFunctions::subscriptionInactivityCallback;
 
     // load configuration from file
     if (!configureClientFromFile(config)) {
@@ -113,6 +114,8 @@ namespace forte::com_infra::opc_ua {
     mLastReconnectionTry = 0;
     mLastActionInitializationTry = 0;
     mMissingAsyncCalls = 0;
+    mSubscriptionInactive = false;
+    mSubscriptionActivity.clear();
   }
 
   bool CUA_ClientInformation::handleClientState() {
@@ -166,7 +169,13 @@ namespace forte::com_infra::opc_ua {
   }
 
   bool CUA_ClientInformation::executeAsyncCalls() {
-    return (UA_STATUSCODE_GOOD == UA_Client_run_iterate(mClient, 10));
+    const UA_StatusCode status = UA_Client_run_iterate(mClient, 10);
+    if (mSubscriptionInactive) {
+      // the server does not answer any more: fail, so the client is reset and connects again
+      mSubscriptionInactive = false;
+      return false;
+    }
+    return (UA_STATUSCODE_GOOD == status);
   }
 
   UA_StatusCode CUA_ClientInformation::executeRead(CActionInfo &paActionInfo) {
@@ -482,6 +491,12 @@ namespace forte::com_infra::opc_ua {
       DEVLOG_INFO("[OPC UA CLIENT]: Create subscription to %s succeeded, id %u\n", mEndpointUrl.c_str(),
                   response.subscriptionId);
       mSubscriptionInfo.mSubscriptionId = response.subscriptionId;
+      // the longest time the server may stay silent, the same way open62541 calculates it
+      mSubscriptionActivity[response.subscriptionId] = {
+          static_cast<uint_fast64_t>(response.revisedPublishingInterval * response.revisedMaxKeepAliveCount +
+                                     scmClientTimeoutInMilli) *
+              1000000ULL,
+          0};
       return true;
     } else {
       DEVLOG_ERROR("[OPC UA CLIENT]: Create subscription to %s failed. Error: %s\n", mEndpointUrl.c_str(),
@@ -807,5 +822,32 @@ namespace forte::com_infra::opc_ua {
                      sessionState, connectStatus);
     }
     return;
+  }
+
+  void CUA_ClientInformation::CUA_RemoteCallbackFunctions::subscriptionInactivityCallback(
+      UA_Client *, UA_UInt32 paSubscriptionId, void *paSubscriptionContext) { // NOSONAR
+    auto *clientInformation = static_cast<CUA_ClientInformation *>(paSubscriptionContext);
+    if (!clientInformation) {
+      return;
+    }
+    auto activity = clientInformation->mSubscriptionActivity.find(paSubscriptionId);
+    if (activity != clientInformation->mSubscriptionActivity.end()) {
+      // open62541 reports an inactivity once in a while even though the server is fine. If the server is really
+      // silent, the report repeats after the silence time, so only a second report in a row resets the client
+      SSubscriptionActivity &subscription = activity->second;
+      const uint_fast64_t now = arch::getNanoSecondsMonotonic();
+      const bool repeated =
+          (0 != subscription.mLastInactivity) &&
+          ((now - subscription.mLastInactivity) < (subscription.mMaxSilence + subscription.mMaxSilence / 2));
+      subscription.mLastInactivity = now;
+      if (repeated) {
+        DEVLOG_WARNING("[OPC UA CLIENT]: Subscription %u of client %s is inactive. The client will connect again\n",
+                       paSubscriptionId, clientInformation->mEndpointUrl.c_str());
+        clientInformation->mSubscriptionInactive = true;
+      } else {
+        DEVLOG_INFO("[OPC UA CLIENT]: Subscription %u of client %s got no answer for a while\n", paSubscriptionId,
+                    clientInformation->mEndpointUrl.c_str());
+      }
+    }
   }
 } // namespace forte::com_infra::opc_ua
