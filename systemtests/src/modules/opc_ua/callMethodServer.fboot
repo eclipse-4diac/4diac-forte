@@ -1,0 +1,8 @@
+;<Request ID="1" Action="CREATE"><FB Name="callMethodServer" Type="iec61499::system::EMB_RES" /></Request>
+callMethodServer;<Request ID="2" Action="CREATE"><FB Name="METHOD" Type="iec61499::net::SERVER_0" /></Request>
+callMethodServer;<Request ID="3" Action="WRITE"><Connection Source="opc_ua[CREATE_METHOD;/Objects/callMethodRestart/method]" Destination="METHOD.ID" /></Request>
+callMethodServer;<Request ID="4" Action="WRITE"><Connection Source="1" Destination="METHOD.QI" /></Request>
+callMethodServer;<Request ID="5" Action="CREATE"><Connection Source="METHOD.IND" Destination="METHOD.RSP" /></Request>
+callMethodServer;<Request ID="6" Action="CREATE"><Connection Source="START.COLD" Destination="METHOD.INIT" /></Request>
+callMethodServer;<Request ID="7" Action="CREATE"><Connection Source="START.WARM" Destination="METHOD.INIT" /></Request>
+callMethodServer;<Request ID="8" Action="START"/>

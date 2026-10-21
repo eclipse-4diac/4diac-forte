@@ -1,0 +1,25 @@
+;<Request ID="1" Action="CREATE"><FB Name="callMethodClient" Type="iec61499::system::EMB_RES" /></Request>
+callMethodClient;<Request ID="2" Action="CREATE"><FB Name="STEST_END_1" Type="eclipse4diac::utils::STEST_END" /></Request>
+callMethodClient;<Request ID="3" Action="CREATE"><FB Name="CALL" Type="iec61499::net::CLIENT_0" /></Request>
+callMethodClient;<Request ID="4" Action="WRITE"><Connection Source="opc_ua[CALL_METHOD;opc.tcp://localhost:4840#;/Objects/callMethodRestart/method]" Destination="CALL.ID" /></Request>
+callMethodClient;<Request ID="5" Action="WRITE"><Connection Source="1" Destination="CALL.QI" /></Request>
+callMethodClient;<Request ID="6" Action="CREATE"><FB Name="E_CYCLE_1" Type="iec61499::events::E_CYCLE" /></Request>
+callMethodClient;<Request ID="7" Action="WRITE"><Connection Source="T#200ms" Destination="E_CYCLE_1.DT" /></Request>
+callMethodClient;<Request ID="8" Action="CREATE"><FB Name="SUCCESS_SWITCH" Type="iec61499::events::E_SWITCH" /></Request>
+callMethodClient;<Request ID="9" Action="CREATE"><FB Name="SUCCEEDED" Type="iec61499::events::E_CTU" /></Request>
+callMethodClient;<Request ID="10" Action="WRITE"><Connection Source="UINT#40" Destination="SUCCEEDED.PV" /></Request>
+callMethodClient;<Request ID="11" Action="CREATE"><FB Name="ENOUGH_SWITCH" Type="iec61499::events::E_SWITCH" /></Request>
+callMethodClient;<Request ID="12" Action="CREATE"><FB Name="methodCalledAgainAfterServerRestart" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
+callMethodClient;<Request ID="13" Action="WRITE"><Connection Source="1" Destination="methodCalledAgainAfterServerRestart.check" /></Request>
+callMethodClient;<Request ID="14" Action="CREATE"><Connection Source="START.COLD" Destination="CALL.INIT" /></Request>
+callMethodClient;<Request ID="15" Action="CREATE"><Connection Source="START.WARM" Destination="CALL.INIT" /></Request>
+callMethodClient;<Request ID="16" Action="CREATE"><Connection Source="CALL.INITO" Destination="E_CYCLE_1.START" /></Request>
+callMethodClient;<Request ID="17" Action="CREATE"><Connection Source="E_CYCLE_1.EO" Destination="CALL.REQ" /></Request>
+callMethodClient;<Request ID="18" Action="CREATE"><Connection Source="CALL.CNF" Destination="SUCCESS_SWITCH.EI" /></Request>
+callMethodClient;<Request ID="19" Action="CREATE"><Connection Source="CALL.QO" Destination="SUCCESS_SWITCH.G" /></Request>
+callMethodClient;<Request ID="20" Action="CREATE"><Connection Source="SUCCESS_SWITCH.EO1" Destination="SUCCEEDED.CU" /></Request>
+callMethodClient;<Request ID="21" Action="CREATE"><Connection Source="SUCCEEDED.CUO" Destination="ENOUGH_SWITCH.EI" /></Request>
+callMethodClient;<Request ID="22" Action="CREATE"><Connection Source="SUCCEEDED.Q" Destination="ENOUGH_SWITCH.G" /></Request>
+callMethodClient;<Request ID="23" Action="CREATE"><Connection Source="ENOUGH_SWITCH.EO1" Destination="methodCalledAgainAfterServerRestart.REQ" /></Request>
+callMethodClient;<Request ID="24" Action="CREATE"><Connection Source="methodCalledAgainAfterServerRestart.CNF" Destination="STEST_END_1.REQ" /></Request>
+callMethodClient;<Request ID="25" Action="START"/>

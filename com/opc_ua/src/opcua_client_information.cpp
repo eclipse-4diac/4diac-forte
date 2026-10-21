@@ -158,6 +158,7 @@ namespace forte::com_infra::opc_ua {
         } else { // if connection succeeded, don't break the while and try to handle subscriptions immediately
           mNeedsReconnection = false;
           DEVLOG_INFO("[OPC UA CLIENT]: Client connected to endpoint %s\n", mEndpointUrl.c_str());
+          initializeActionsAgain();
         }
       }
     }
@@ -288,6 +289,8 @@ namespace forte::com_infra::opc_ua {
       DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch call action for FB %s. Error %s\n",
                    paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
       delete remoteCallHandle;
+      mNeedsReconnection = false;
+      retVal = handleClientState(); // force a reconnection, as for read and write
     } else {
       addAsyncCall();
     }
@@ -326,6 +329,18 @@ namespace forte::com_infra::opc_ua {
     } else {
       return (UA_STATUSCODE_GOOD ==
               UA_Client_connectUsername(mClient, mEndpointUrl.c_str(), mUsername.c_str(), mPassword.c_str()));
+    }
+  }
+
+  void CUA_ClientInformation::initializeActionsAgain() {
+    // the actions refer to the nodes of the earlier connection. The server can have been restarted since then and
+    // the nodes can have other NodeIds now, so the actions are initialized again
+    for (auto actionReferencingIt : mActionsReferencingIt) {
+      if (std::find(mActionsToBeInitialized.begin(), mActionsToBeInitialized.end(), actionReferencingIt) ==
+          mActionsToBeInitialized.end()) {
+        uninitializeAction(*actionReferencingIt);
+        mActionsToBeInitialized.push_back(actionReferencingIt);
+      }
     }
   }
 
@@ -371,7 +386,9 @@ namespace forte::com_infra::opc_ua {
                          UA_StatusCode_name(retVal));
             somethingFailed = true;
           } else {
-            if (itNodePair->getNodeId() != nullptr) {
+            // a NodeId that was only stored by an earlier initialization can be outdated, e.g. after a restart of
+            // the server, so only a NodeId given in the ID of the FB is checked
+            if (itNodePair->isNodeIdGiven()) {
               if (!UA_NodeId_equal(itNodePair->getNodeId(),
                                    nodeId)) { // if NodeId was provided, check if found is the same
                 DEVLOG_ERROR("[OPC UA CLIENT]: The call from FB %s failed the found nodeId of the method doesn't match "
@@ -413,7 +430,9 @@ namespace forte::com_infra::opc_ua {
           paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
       somethingFailed = true;
     } else {
-      if (itNodePair->getNodeId() != nullptr) {
+      // a NodeId that was only stored by an earlier initialization can be outdated, e.g. after a restart of the
+      // server, so only a NodeId given in the ID of the FB is checked
+      if (itNodePair->isNodeIdGiven()) {
         if (!UA_NodeId_equal(itNodePair->getNodeId(),
                              methodNode)) { // if NodeId of method was provided, check if found is the same
           DEVLOG_ERROR(
@@ -427,8 +446,11 @@ namespace forte::com_infra::opc_ua {
         itNodePair->setNodeId(methodNode);
       }
       if (!somethingFailed) {
-        // store the parentNodeId in the second position. BrowseName is not needed
-        paActionInfo.getNodePairInfo().emplace_back(parentNode, "");
+        // store the parentNodeId in the second position. BrowseName is not needed. The parent of an earlier
+        // initialization is replaced, it can be outdated as well
+        auto &nodePairs = paActionInfo.getNodePairInfo();
+        nodePairs.erase(nodePairs.begin() + 1, nodePairs.end());
+        nodePairs.emplace_back(parentNode, "");
       } else {
         UA_NodeId_delete(parentNode);
       }
