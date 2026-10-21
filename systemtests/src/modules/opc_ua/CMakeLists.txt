@@ -74,3 +74,13 @@ add_test(NAME OPCUA_ClientRecoversFromInactivity
         COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/inactivityTest.sh $<TARGET_FILE:forte_systemtest>
         ${CMAKE_CURRENT_SOURCE_DIR}/inactivityServer.fboot ${CMAKE_CURRENT_SOURCE_DIR}/inactivityClient.fboot)
 set_tests_properties(OPCUA_ClientRecoversFromInactivity PROPERTIES TIMEOUT 120)
+
+# a server is replaced by one where the called method has another NodeId: the client has to find it again. The
+# test is a shell script, so it needs a POSIX environment
+if(UNIX)
+  add_test(NAME OPCUA_CallMethodAfterServerRestart
+          COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/callMethodRestartTest.sh $<TARGET_FILE:forte_systemtest>
+          ${CMAKE_CURRENT_SOURCE_DIR}/callMethodServer.fboot ${CMAKE_CURRENT_SOURCE_DIR}/callMethodServerRestarted.fboot
+          ${CMAKE_CURRENT_SOURCE_DIR}/callMethodClient.fboot)
+  set_tests_properties(OPCUA_CallMethodAfterServerRestart PROPERTIES TIMEOUT 120)
+endif()

@@ -50,7 +50,8 @@ namespace forte::com_infra::opc_ua {
         public:
           CNodePairInfo(UA_NodeId *paNodeId, const std::string &paBrowsePath) :
               mNodeId(paNodeId, UA_NodeId_delete),
-              mBrowsePath(paBrowsePath) {
+              mBrowsePath(paBrowsePath),
+              mNodeIdGiven(nullptr != paNodeId) {
           }
 
           UA_NodeId *getNodeId() const {
@@ -65,9 +66,18 @@ namespace forte::com_infra::opc_ua {
             return mBrowsePath;
           }
 
+          /**
+           * @return true if the NodeId was given in the ID of the FB, false if there was none or it was only stored
+           * later with setNodeId(), e.g. after it was found by the browse path
+           */
+          bool isNodeIdGiven() const {
+            return mNodeIdGiven;
+          }
+
         private:
           std::unique_ptr<UA_NodeId, decltype(&UA_NodeId_delete)> mNodeId{nullptr, UA_NodeId_delete};
           std::string mBrowsePath;
+          bool mNodeIdGiven;
       };
 
       /**
