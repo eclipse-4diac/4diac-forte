@@ -1,0 +1,20 @@
+;<Request ID="1" Action="CREATE"><FB Name="inactivityClient" Type="iec61499::system::EMB_RES" /></Request>
+inactivityClient;<Request ID="2" Action="CREATE"><FB Name="STEST_END_1" Type="eclipse4diac::utils::STEST_END" /></Request>
+inactivityClient;<Request ID="3" Action="CREATE"><FB Name="SUBSCRIBE_1" Type="iec61499::net::SUBSCRIBE_1" /></Request>
+inactivityClient;<Request ID="4" Action="WRITE"><Connection Source="opc_ua[SUBSCRIBE;opc.tcp://localhost:4840#;/Objects/inactivity/counter]" Destination="SUBSCRIBE_1.ID" /></Request>
+inactivityClient;<Request ID="5" Action="WRITE"><Connection Source="1" Destination="SUBSCRIBE_1.QI" /></Request>
+inactivityClient;<Request ID="6" Action="CREATE"><FB Name="UINT_TYPE" Type="iec61499::events::E_CTU" /></Request>
+inactivityClient;<Request ID="7" Action="CREATE"><Connection Source="SUBSCRIBE_1.RD_1" Destination="UINT_TYPE.PV" /></Request>
+inactivityClient;<Request ID="8" Action="CREATE"><FB Name="RECEIVED" Type="iec61499::events::E_CTU" /></Request>
+inactivityClient;<Request ID="9" Action="WRITE"><Connection Source="UINT#60" Destination="RECEIVED.PV" /></Request>
+inactivityClient;<Request ID="10" Action="CREATE"><FB Name="ENOUGH_SWITCH" Type="iec61499::events::E_SWITCH" /></Request>
+inactivityClient;<Request ID="11" Action="CREATE"><FB Name="valuesCameAgainAfterTheServerWasSilent" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
+inactivityClient;<Request ID="12" Action="WRITE"><Connection Source="1" Destination="valuesCameAgainAfterTheServerWasSilent.check" /></Request>
+inactivityClient;<Request ID="13" Action="CREATE"><Connection Source="START.COLD" Destination="SUBSCRIBE_1.INIT" /></Request>
+inactivityClient;<Request ID="14" Action="CREATE"><Connection Source="START.WARM" Destination="SUBSCRIBE_1.INIT" /></Request>
+inactivityClient;<Request ID="15" Action="CREATE"><Connection Source="SUBSCRIBE_1.IND" Destination="RECEIVED.CU" /></Request>
+inactivityClient;<Request ID="16" Action="CREATE"><Connection Source="RECEIVED.CUO" Destination="ENOUGH_SWITCH.EI" /></Request>
+inactivityClient;<Request ID="17" Action="CREATE"><Connection Source="RECEIVED.Q" Destination="ENOUGH_SWITCH.G" /></Request>
+inactivityClient;<Request ID="18" Action="CREATE"><Connection Source="ENOUGH_SWITCH.EO1" Destination="valuesCameAgainAfterTheServerWasSilent.REQ" /></Request>
+inactivityClient;<Request ID="19" Action="CREATE"><Connection Source="valuesCameAgainAfterTheServerWasSilent.CNF" Destination="STEST_END_1.REQ" /></Request>
+inactivityClient;<Request ID="20" Action="START"/>

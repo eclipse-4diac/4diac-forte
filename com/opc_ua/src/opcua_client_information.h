@@ -201,6 +201,13 @@ namespace forte::com_infra::opc_ua {
                                                 UA_SecureChannelState channelState,
                                                 UA_SessionState sessionState,
                                                 UA_StatusCode connectStatus);
+
+          /**
+           * Function called when a subscription did not receive anything (not even a keep-alive) for longer than its
+           * publishing interval times the keep-alive count plus the client timeout
+           */
+          static void
+          subscriptionInactivityCallback(UA_Client *paClient, UA_UInt32 paSubscriptionId, void *paSubscriptionContext);
       };
 
     private:
@@ -415,6 +422,28 @@ namespace forte::com_infra::opc_ua {
        * an action fails to connect once
        */
       bool mNeedsReconnection{false};
+
+      /**
+       * Set by the inactivity callback of a subscription. executeAsyncCalls() then reports a failure, so the client is
+       * reset, reconnected and its actions (and with them the subscription) are initialized again
+       */
+      bool mSubscriptionInactive{false};
+      struct SSubscriptionActivity {
+          //! TRUE while the subscription below exists
+          bool mValid{false};
+          //! Id of the watched subscription
+          UA_UInt32 mSubscriptionId{0};
+          //! The longest time the server may stay silent before open62541 reports the subscription as inactive
+          uint_fast64_t mMaxSilence{0};
+          //! Time of the last inactivity report of the subscription, 0 if there was none
+          uint_fast64_t mLastInactivity{0};
+      };
+
+      /**
+       * Activity of the current subscription of this client (mSubscriptionInfo). A silent server makes all
+       * subscriptions of the connection inactive at once, so watching the current one is enough
+       */
+      SSubscriptionActivity mSubscriptionActivity;
 
       /**
        * Indicates if the client should wait scmInitializeActionRetryNano before trying to initialize the actions. This
