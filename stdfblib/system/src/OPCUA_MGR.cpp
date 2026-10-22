@@ -377,10 +377,16 @@ namespace forte::iec61499::system {
 
   OPCUA_MGR::OPCUA_MGR(CDevice &paUaDevice) :
       mUaDevice(paUaDevice),
-      mUaHandler(paUaDevice.getDeviceExecution().getExtEvHandler<com_infra::opc_ua::COPC_UA_Local_Handler>()) {
+      mUaHandler(paUaDevice.getDeviceExecution().getExtEvHandler<com_infra::opc_ua::COPC_UA_Local_Handler>()),
+      mMgmtTypeId(UA_NODEID_NULL),
+      mMgmtNodeId(UA_NODEID_NULL),
+      mResourceTypeId(UA_NODEID_NULL) {
   }
 
   OPCUA_MGR::~OPCUA_MGR() {
+    UA_NodeId_clear(&mMgmtTypeId);
+    UA_NodeId_clear(&mMgmtNodeId);
+    UA_NodeId_clear(&mResourceTypeId);
   }
 
   EMGMResponse OPCUA_MGR::initialize() {
@@ -446,13 +452,14 @@ namespace forte::iec61499::system {
 
   EMGMResponse OPCUA_MGR::defineIEC61499MgmtObjectType(UA_Server *paServer) {
     EMGMResponse eRetVal = EMGMResponse::Ready;
-    mMgmtTypeId = UA_NODEID_STRING(smNamespaces[1], smMgmtType);
+    // The requested NodeId must not be assigned directly to mMgmtTypeId
+    const UA_NodeId requestedMgmtTypeId = UA_NODEID_STRING(smNamespaces[1], smMgmtType);
     UA_ObjectTypeAttributes rtAttr = UA_ObjectTypeAttributes_default;
     rtAttr.displayName = UA_LOCALIZEDTEXT(smEmptyLocale, smMgmtType);
-    UA_StatusCode status =
-        UA_Server_addObjectTypeNode(paServer, mMgmtTypeId, UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_BASEOBJECTTYPE),
-                                    UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_HASSUBTYPE),
-                                    UA_QUALIFIEDNAME(smNamespaces[1], smMgmtType), rtAttr, nullptr, &mMgmtTypeId);
+    UA_StatusCode status = UA_Server_addObjectTypeNode(
+        paServer, requestedMgmtTypeId, UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_BASEOBJECTTYPE),
+        UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_HASSUBTYPE), UA_QUALIFIEDNAME(smNamespaces[1], smMgmtType), rtAttr,
+        nullptr, &mMgmtTypeId);
 
     if (status != UA_STATUSCODE_GOOD) {
       return EMGMResponse::InvalidState;
@@ -515,11 +522,12 @@ namespace forte::iec61499::system {
 
   EMGMResponse OPCUA_MGR::defineIEC61499ResourceObjectType(UA_Server *paServer) {
     EMGMResponse eRetVal = EMGMResponse::Ready;
-    mResourceTypeId = UA_NODEID_STRING(smNamespaces[1], smResType);
+    // The requested NodeId must not be assigned directly to mMgmtTypeId
+    const UA_NodeId requestedResourceTypeId = UA_NODEID_STRING(smNamespaces[1], smResType);
     UA_ObjectTypeAttributes rtAttr = UA_ObjectTypeAttributes_default;
     rtAttr.displayName = UA_LOCALIZEDTEXT(smEmptyLocale, smResType);
     UA_StatusCode status = UA_Server_addObjectTypeNode(
-        paServer, mResourceTypeId, UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_BASEOBJECTTYPE),
+        paServer, requestedResourceTypeId, UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_BASEOBJECTTYPE),
         UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_HASSUBTYPE), UA_QUALIFIEDNAME(smNamespaces[1], smResType), rtAttr,
         nullptr, &mResourceTypeId);
     if (status != UA_STATUSCODE_GOOD) {
@@ -1574,7 +1582,7 @@ namespace forte::iec61499::system {
                                         UA_MethodCallback paCallback,
                                         void *nodeContext) {
     EMGMResponse eRetVal = EMGMResponse::Ready;
-    UA_NodeId methodId;
+    UA_NodeId methodId = UA_NODEID_NULL;
     UA_StatusCode status = UA_Server_addMethodNode(
         paServer, UA_NODEID_STRING(smNamespaces[1], paMethodNodeName), paParentNodeId,
         UA_NODEID_NUMERIC(smNamespaces[0], UA_NS0ID_HASCOMPONENT), UA_QUALIFIEDNAME(smNamespaces[1], paMethodNodeName),
@@ -1582,9 +1590,11 @@ namespace forte::iec61499::system {
         &methodId);
 
     if (status != UA_STATUSCODE_GOOD) {
+      UA_NodeId_clear(&methodId);
       return EMGMResponse::InvalidState;
     }
     status = addReference(paServer, methodId);
+    UA_NodeId_clear(&methodId);
     if (status != UA_STATUSCODE_GOOD) {
       return EMGMResponse::InvalidState;
     }
