@@ -74,3 +74,11 @@ add_test(NAME OPCUA_ClientRecoversFromInactivity
         COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/inactivityTest.sh $<TARGET_FILE:forte_systemtest>
         ${CMAKE_CURRENT_SOURCE_DIR}/inactivityServer.fboot ${CMAKE_CURRENT_SOURCE_DIR}/inactivityClient.fboot)
 set_tests_properties(OPCUA_ClientRecoversFromInactivity PROPERTIES TIMEOUT 120)
+
+# a client that only called a method is the last one in the iteration list: the subscription of the other client
+# has to keep delivering values
+add_test(NAME OPCUA_SubscriptionAfterOtherClientsCall
+        COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/iterationTest.sh $<TARGET_FILE:forte_systemtest>
+        ${CMAKE_CURRENT_SOURCE_DIR}/iterationCounterServer.fboot ${CMAKE_CURRENT_SOURCE_DIR}/iterationMethodServer.fboot
+        ${CMAKE_CURRENT_SOURCE_DIR}/iterationClient.fboot)
+set_tests_properties(OPCUA_SubscriptionAfterOtherClientsCall PROPERTIES TIMEOUT 120)
