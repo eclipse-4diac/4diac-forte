@@ -19,6 +19,8 @@
  *      - Change CIEC_STRING to std::string
  *    Markus Meingast:
  *      - Add support for Object Structs
+ *    Franz Höpfinger:
+ *      - Wait in startServer() until the server is really started
  *******************************************************************************/
 
 #pragma once
@@ -186,6 +188,16 @@ namespace forte::com_infra::opc_ua {
        * Indicates that the server has started, and allow waiting threads to work on it
        */
       arch::CSemaphore mServerStarted;
+
+      /**
+       * Guards startServer()/stopServer() end-to-end
+       */
+      arch::CSyncObject mStartMutex;
+
+      /**
+       * True only once the server has actually finished starting *successfully*
+       */
+      bool mServerReady = false;
 
       /**
        * Stops the OPC UA server

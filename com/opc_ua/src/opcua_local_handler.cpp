@@ -19,6 +19,8 @@
  *      - Change CIEC_STRING to std::string
  *    Markus Meingast:
  *      - Add support for Object Structs
+ *    Franz Höpfinger:
+ *      - Wait in startServer() until the server is really started
  *******************************************************************************/
 
 #include "opcua_defaults.h"
@@ -113,11 +115,17 @@ namespace forte::com_infra::opc_ua {
     generateServerStrings(gOpcuaServerPort.mArgument, serverStrings);
     configureUAServer(serverStrings, config);
 
-    mUaServer = UA_Server_newWithConfig(&config);
-    if (mUaServer) {
-      if (initializeNodesets(*mUaServer)) {
-        UA_StatusCode retVal = UA_Server_run_startup(mUaServer);
+    bool serverStartedSignaled = false;
+    // mUaServer is only set once the server is started, so FBs never use a server that is still starting up
+    UA_Server *uaServer = UA_Server_newWithConfig(&config);
+    if (uaServer) {
+      if (initializeNodesets(*uaServer)) {
+        UA_StatusCode retVal = UA_Server_run_startup(uaServer);
         if (UA_STATUSCODE_GOOD == retVal) {
+          {
+            util::CCriticalRegion criticalRegion(mServerAccessMutex);
+            mUaServer = uaServer;
+          }
           {
 #ifdef FORTE_COM_OPC_UA_MULTICAST
             // the extra curly brace on top is to limit the lifetime of this object.
@@ -126,6 +134,7 @@ namespace forte::com_infra::opc_ua {
             auto mLdsMeHandler = forte::com_infra::opc_ua::detail::LdsMeHandler(*mUaServer);
 #endif // FORTE_COM_OPC_UA_MULTICAST
             mServerStarted.inc();
+            serverStartedSignaled = true;
             while (isAlive()) {
               UA_UInt16 timeToSleepMs;
               {
@@ -154,25 +163,37 @@ namespace forte::com_infra::opc_ua {
       } else {
         DEVLOG_ERROR("[OPC UA LOCAL]: Couldn't initialize Nodesets\n", gOpcuaServerPort.mArgument);
       }
-      UA_Server_delete(mUaServer);
+      UA_Server_delete(uaServer);
       mUaServer = nullptr;
     } else {
       DEVLOG_ERROR("[OPC UA LOCAL]: Couldn't initialize server\n");
       UA_ServerConfig_clear(&config);
     }
-    mServerStarted.inc(); // this will avoid locking startServer() for all cases where the starting of server failed
+
+    if (!serverStartedSignaled) {
+      mServerStarted.inc(); // this will avoid locking startServer() for all cases where the starting of server failed
+    }
   }
 
   void COPC_UA_Local_Handler::startServer() {
-    if (!isAlive()) {
-      start();
-      mServerStarted.waitIndefinitely();
-      mServerStarted.inc(); // in case two threads get into this block at the same time
+    util::CCriticalRegion criticalRegion(mStartMutex);
+    if (mServerReady) {
+      return;
+    }
+
+    start();
+    mServerStarted.waitIndefinitely();
+    mServerReady = (nullptr != mUaServer);
+
+    if (!mServerReady) {
+      end(); // the next call starts a new attempt
     }
   }
 
   void COPC_UA_Local_Handler::stopServer() {
+    util::CCriticalRegion criticalRegion(mStartMutex);
     end();
+    mServerReady = false;
   }
 
   void COPC_UA_Local_Handler::generateServerStrings(TForteUInt16 paUAServerPort,
