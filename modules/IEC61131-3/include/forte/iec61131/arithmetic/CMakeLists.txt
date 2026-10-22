@@ -32,4 +32,6 @@ target_sources(forte-iec61131-3 PUBLIC
         F_SUB_TOD_TOD_fbt.h
         F_TRUNC_fbt.h
         GEN_ADD_fbt.h
+        GEN_MUL_fbt.h
+        genarithbase_fbt.h
 )
