@@ -68,3 +68,10 @@ endif(FORTE_COM_OPC_UA_ENCRYPTION AND FORTE_COM_OPC_UA_MASTER_BRANCH)
 forte_add_multi_systemtests(OPCUA_FastWrite 200 0 fastWriteClient.fboot " " fastWriteServer.fboot " ") # There's no test in these systems. It only tests quick accessing the server with a client subscribed to it, and there won't be any problem, thus finishing the test without a timeout
 
 add_subdirectory(namespace)
+
+# a server is replaced by one where the called method has another NodeId: the client has to find it again
+add_test(NAME OPCUA_CallMethodAfterServerRestart
+        COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/callMethodRestartTest.sh $<TARGET_FILE:forte_systemtest>
+        ${CMAKE_CURRENT_SOURCE_DIR}/callMethodServer.fboot ${CMAKE_CURRENT_SOURCE_DIR}/callMethodServerRestarted.fboot
+        ${CMAKE_CURRENT_SOURCE_DIR}/callMethodClient.fboot)
+set_tests_properties(OPCUA_CallMethodAfterServerRestart PROPERTIES TIMEOUT 120)
