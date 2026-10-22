@@ -1,0 +1,21 @@
+;<Request ID="1" Action="CREATE"><FB Name="serverRestartServer" Type="iec61499::system::EMB_RES" /></Request>
+serverRestartServer;<Request ID="2" Action="CREATE"><FB Name="E_CYCLE_1" Type="iec61499::events::E_CYCLE" /></Request>
+serverRestartServer;<Request ID="3" Action="WRITE"><Connection Source="T#100ms" Destination="E_CYCLE_1.DT" /></Request>
+serverRestartServer;<Request ID="4" Action="CREATE"><FB Name="E_CTU_1" Type="iec61499::events::E_CTU" /></Request>
+serverRestartServer;<Request ID="5" Action="WRITE"><Connection Source="UINT#65535" Destination="E_CTU_1.PV" /></Request>
+serverRestartServer;<Request ID="6" Action="CREATE"><FB Name="PUBLISH_A" Type="iec61499::net::PUBLISH_1" /></Request>
+serverRestartServer;<Request ID="7" Action="WRITE"><Connection Source="opc_ua[WRITE;/Objects/serverRestart/a]" Destination="PUBLISH_A.ID" /></Request>
+serverRestartServer;<Request ID="8" Action="WRITE"><Connection Source="1" Destination="PUBLISH_A.QI" /></Request>
+serverRestartServer;<Request ID="9" Action="CREATE"><Connection Source="E_CTU_1.CV" Destination="PUBLISH_A.SD_1" /></Request>
+serverRestartServer;<Request ID="10" Action="CREATE"><Connection Source="E_CTU_1.CUO" Destination="PUBLISH_A.REQ" /></Request>
+serverRestartServer;<Request ID="11" Action="CREATE"><FB Name="PUBLISH_B" Type="iec61499::net::PUBLISH_1" /></Request>
+serverRestartServer;<Request ID="12" Action="WRITE"><Connection Source="opc_ua[WRITE;/Objects/serverRestart/b]" Destination="PUBLISH_B.ID" /></Request>
+serverRestartServer;<Request ID="13" Action="WRITE"><Connection Source="1" Destination="PUBLISH_B.QI" /></Request>
+serverRestartServer;<Request ID="14" Action="CREATE"><Connection Source="E_CTU_1.CV" Destination="PUBLISH_B.SD_1" /></Request>
+serverRestartServer;<Request ID="15" Action="CREATE"><Connection Source="E_CTU_1.CUO" Destination="PUBLISH_B.REQ" /></Request>
+serverRestartServer;<Request ID="16" Action="CREATE"><Connection Source="START.COLD" Destination="PUBLISH_A.INIT" /></Request>
+serverRestartServer;<Request ID="17" Action="CREATE"><Connection Source="START.WARM" Destination="PUBLISH_A.INIT" /></Request>
+serverRestartServer;<Request ID="18" Action="CREATE"><Connection Source="PUBLISH_A.INITO" Destination="PUBLISH_B.INIT" /></Request>
+serverRestartServer;<Request ID="19" Action="CREATE"><Connection Source="PUBLISH_B.INITO" Destination="E_CYCLE_1.START" /></Request>
+serverRestartServer;<Request ID="20" Action="CREATE"><Connection Source="E_CYCLE_1.EO" Destination="E_CTU_1.CU" /></Request>
+serverRestartServer;<Request ID="21" Action="START"/>
