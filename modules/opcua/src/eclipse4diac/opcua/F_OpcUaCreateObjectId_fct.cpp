@@ -20,6 +20,8 @@ using namespace forte::literals;
 
 namespace forte::eclipse4diac::opcua {
   namespace {
+    constexpr std::string_view TypeHash =""sv;
+
     const auto cEventInputNames = std::array{"REQ"_STRID};
     const auto cEventOutputNames = std::array{"CNF"_STRID};
     const auto cDataInputNames = std::array{"instanceBrowseName"_STRID, "instanceNodeId"_STRID, "typeBrowseName"_STRID};
@@ -35,9 +37,11 @@ namespace forte::eclipse4diac::opcua {
         .mSocketNames = {},
         .mPlugNames = {},
     };
+
+    CIEC_WSTRING func_F_OpcUaCreateObjectId__impl(const CIEC_WSTRING &st_lv_instanceBrowseName, const CIEC_WSTRING &st_lv_instanceNodeId, const CIEC_WSTRING &st_lv_typeBrowseName);
   }
 
-  DEFINE_FIRMWARE_FB(FORTE_F_OpcUaCreateObjectId, "eclipse4diac::opcua::F_OpcUaCreateObjectId"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_F_OpcUaCreateObjectId, "eclipse4diac::opcua::F_OpcUaCreateObjectId"_STRID, TypeHash)
 
   FORTE_F_OpcUaCreateObjectId::FORTE_F_OpcUaCreateObjectId(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
@@ -124,21 +128,26 @@ namespace forte::eclipse4diac::opcua {
   }
 
   void FORTE_F_OpcUaCreateObjectId::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-    var_ = func_F_OpcUaCreateObjectId(var_instanceBrowseName, var_instanceNodeId, var_typeBrowseName);
+    var_ = func_F_OpcUaCreateObjectId__impl(var_instanceBrowseName, var_instanceNodeId, var_typeBrowseName);
     sendOutputEvent(scmEventCNFID, paECET);
   }
 
   CIEC_WSTRING func_F_OpcUaCreateObjectId(const CIEC_WSTRING &st_lv_instanceBrowseName, const CIEC_WSTRING &st_lv_instanceNodeId, const CIEC_WSTRING &st_lv_typeBrowseName) {
-    CIEC_WSTRING st_ret_val = u""_WSTRING;
-    const CIEC_WSTRING st_lv_PREFIX = u"opc_ua[CREATE_OBJECT;"_WSTRING;
-    const CIEC_WSTRING st_lv_NODEID_TYPE = u",s="_WSTRING;
-    const CIEC_WSTRING st_lv_SUFFIX = u"]"_WSTRING;
-    const CIEC_WSTRING st_lv_SEPARATOR_PAIR = u";"_WSTRING;
-
-    #line 16 "F_OpcUaCreateObjectId.fct"
-    st_ret_val = func_CONCAT(st_lv_PREFIX, st_lv_typeBrowseName, st_lv_SEPARATOR_PAIR, st_lv_instanceBrowseName, st_lv_NODEID_TYPE, st_lv_instanceNodeId, st_lv_SUFFIX);
-
-    return st_ret_val;
+    return func_F_OpcUaCreateObjectId__impl(st_lv_instanceBrowseName, st_lv_instanceNodeId, st_lv_typeBrowseName);
   }
 
+  namespace {
+    CIEC_WSTRING func_F_OpcUaCreateObjectId__impl(const CIEC_WSTRING &st_lv_instanceBrowseName, const CIEC_WSTRING &st_lv_instanceNodeId, const CIEC_WSTRING &st_lv_typeBrowseName) {
+      CIEC_WSTRING st_ret_val = u""_WSTRING;
+      const CIEC_WSTRING st_lv_PREFIX = u"opc_ua[CREATE_OBJECT;"_WSTRING;
+      const CIEC_WSTRING st_lv_NODEID_TYPE = u",s="_WSTRING;
+      const CIEC_WSTRING st_lv_SUFFIX = u"]"_WSTRING;
+      const CIEC_WSTRING st_lv_SEPARATOR_PAIR = u";"_WSTRING;
+
+      #line 16 "F_OpcUaCreateObjectId.fct"
+      st_ret_val = func_CONCAT(st_lv_PREFIX, st_lv_typeBrowseName, st_lv_SEPARATOR_PAIR, st_lv_instanceBrowseName, st_lv_NODEID_TYPE, st_lv_instanceNodeId, st_lv_SUFFIX);
+
+      return st_ret_val;
+    }
+  }
 }

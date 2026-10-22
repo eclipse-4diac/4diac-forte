@@ -20,6 +20,8 @@ using namespace forte::literals;
 
 namespace forte::eclipse4diac::opcua {
   namespace {
+    constexpr std::string_view TypeHash =""sv;
+
     const auto cEventInputNames = std::array{"REQ"_STRID};
     const auto cEventOutputNames = std::array{"CNF"_STRID};
     const auto cDataInputNames = std::array{"instanceBrowseName"_STRID, "instanceNodeId"_STRID};
@@ -35,9 +37,11 @@ namespace forte::eclipse4diac::opcua {
         .mSocketNames = {},
         .mPlugNames = {},
     };
+
+    CIEC_WSTRING func_F_OpcUaCreateWriteId__impl(const CIEC_WSTRING &st_lv_instanceBrowseName, const CIEC_WSTRING &st_lv_instanceNodeId);
   }
 
-  DEFINE_FIRMWARE_FB(FORTE_F_OpcUaCreateWriteId, "eclipse4diac::opcua::F_OpcUaCreateWriteId"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_F_OpcUaCreateWriteId, "eclipse4diac::opcua::F_OpcUaCreateWriteId"_STRID, TypeHash)
 
   FORTE_F_OpcUaCreateWriteId::FORTE_F_OpcUaCreateWriteId(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
@@ -118,20 +122,25 @@ namespace forte::eclipse4diac::opcua {
   }
 
   void FORTE_F_OpcUaCreateWriteId::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-    var_ = func_F_OpcUaCreateWriteId(var_instanceBrowseName, var_instanceNodeId);
+    var_ = func_F_OpcUaCreateWriteId__impl(var_instanceBrowseName, var_instanceNodeId);
     sendOutputEvent(scmEventCNFID, paECET);
   }
 
   CIEC_WSTRING func_F_OpcUaCreateWriteId(const CIEC_WSTRING &st_lv_instanceBrowseName, const CIEC_WSTRING &st_lv_instanceNodeId) {
-    CIEC_WSTRING st_ret_val = u""_WSTRING;
-    const CIEC_WSTRING st_lv_PREFIX = u"opc_ua[WRITE;"_WSTRING;
-    const CIEC_WSTRING st_lv_NODEID_TYPE = u",s="_WSTRING;
-    const CIEC_WSTRING st_lv_SUFFIX = u"]"_WSTRING;
-
-    #line 14 "F_OpcUaCreateWriteId.fct"
-    st_ret_val = func_CONCAT(st_lv_PREFIX, st_lv_instanceBrowseName, st_lv_NODEID_TYPE, st_lv_instanceNodeId, st_lv_SUFFIX);
-
-    return st_ret_val;
+    return func_F_OpcUaCreateWriteId__impl(st_lv_instanceBrowseName, st_lv_instanceNodeId);
   }
 
+  namespace {
+    CIEC_WSTRING func_F_OpcUaCreateWriteId__impl(const CIEC_WSTRING &st_lv_instanceBrowseName, const CIEC_WSTRING &st_lv_instanceNodeId) {
+      CIEC_WSTRING st_ret_val = u""_WSTRING;
+      const CIEC_WSTRING st_lv_PREFIX = u"opc_ua[WRITE;"_WSTRING;
+      const CIEC_WSTRING st_lv_NODEID_TYPE = u",s="_WSTRING;
+      const CIEC_WSTRING st_lv_SUFFIX = u"]"_WSTRING;
+
+      #line 14 "F_OpcUaCreateWriteId.fct"
+      st_ret_val = func_CONCAT(st_lv_PREFIX, st_lv_instanceBrowseName, st_lv_NODEID_TYPE, st_lv_instanceNodeId, st_lv_SUFFIX);
+
+      return st_ret_val;
+    }
+  }
 }

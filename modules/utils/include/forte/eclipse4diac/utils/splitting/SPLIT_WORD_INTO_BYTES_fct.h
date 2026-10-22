@@ -8,13 +8,15 @@
  ***
  *** FORTE Library Element
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.3.0.qualifier!
  ***
  *** Name: SPLIT_WORD_INTO_BYTES
  *** Description: this Function extracts the 2 BYTE from a word
  *** Version:
- ***     1.0: 2024-02-22/Franz Höpfinger - HR Agrartechnik - initial Implementation
+ ***     3.0.1: 2026-09-29/Martin Jobst -  - fix ST package declaration
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.1: 2024-07-24/Moritz Ortmeier - HR Agrartechnik - rename Function and change Output Variables
+ ***     1.0: 2024-02-22/Franz Höpfinger - HR Agrartechnik - initial Implementation
  *************************************************************************/
 
 #pragma once
@@ -23,18 +25,14 @@
 #include "forte/datatypes/forte_byte.h"
 #include "forte/datatypes/forte_word.h"
 #include "forte/forte_st_util.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
 
 namespace forte::eclipse4diac::utils::splitting {
   class FORTE_SPLIT_WORD_INTO_BYTES final : public CFunctionBlock {
       DECLARE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_BYTES)
 
     private:
-      static const TEventID scmEventREQID = 0;
       static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventREQID = 0;
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -43,7 +41,7 @@ namespace forte::eclipse4diac::utils::splitting {
       void setInitialValues() override;
 
     public:
-      FORTE_SPLIT_WORD_INTO_BYTES(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_SPLIT_WORD_INTO_BYTES(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_WORD var_IN;
 
@@ -62,24 +60,9 @@ namespace forte::eclipse4diac::utils::splitting {
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
-
-      void evt_REQ(const CIEC_WORD &paIN,
-                   CAnyBitOutputParameter<CIEC_BYTE> paBYTE_00,
-                   CAnyBitOutputParameter<CIEC_BYTE> paBYTE_01) {
-        COutputGuard guard_paBYTE_00(paBYTE_00);
-        COutputGuard guard_paBYTE_01(paBYTE_01);
-        var_IN = paIN;
-        executeEvent(scmEventREQID, nullptr);
-        *paBYTE_00 = var_BYTE_00;
-        *paBYTE_01 = var_BYTE_01;
-      }
-
-      void operator()(const CIEC_WORD &paIN,
-                      CAnyBitOutputParameter<CIEC_BYTE> paBYTE_00,
-                      CAnyBitOutputParameter<CIEC_BYTE> paBYTE_01) {
-        evt_REQ(paIN, paBYTE_00, paBYTE_01);
-      }
   };
 
-  void func_SPLIT_WORD_INTO_BYTES(CIEC_WORD st_lv_IN, CIEC_BYTE &st_lv_BYTE_00, CIEC_BYTE &st_lv_BYTE_01);
+  void func_SPLIT_WORD_INTO_BYTES(const CIEC_WORD &st_lv_IN,
+                                  CAnyBitOutputParameter<CIEC_BYTE> st_lv_BYTE_00,
+                                  CAnyBitOutputParameter<CIEC_BYTE> st_lv_BYTE_01);
 } // namespace forte::eclipse4diac::utils::splitting

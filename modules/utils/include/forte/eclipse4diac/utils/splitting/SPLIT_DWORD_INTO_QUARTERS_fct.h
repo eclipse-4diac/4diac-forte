@@ -8,33 +8,31 @@
  ***
  *** FORTE Library Element
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.3.0.qualifier!
  ***
  *** Name: SPLIT_DWORD_INTO_QUARTERS
  *** Description: this Function extracts the 16 QUARTER BYTE from a dword
  *** Version:
- ***     1.0: 2024-02-22/Franz Höpfinger - HR Agrartechnik - initial Implementation
+ ***     3.0.1: 2026-09-29/Martin Jobst -  - fix ST package declaration
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.1: 2024-07-24/Moritz Ortmeier - HR Agrartechnik - rename Function and change Output Variables
+ ***     1.0: 2024-02-22/Franz Höpfinger - HR Agrartechnik - initial Implementation
  *************************************************************************/
 
 #pragma once
 
 #include "forte/funcbloc.h"
-#include "forte/datatypes/forte_dword.h"
 #include "forte/datatypes/forte_byte.h"
+#include "forte/datatypes/forte_dword.h"
 #include "forte/forte_st_util.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
 
 namespace forte::eclipse4diac::utils::splitting {
   class FORTE_SPLIT_DWORD_INTO_QUARTERS final : public CFunctionBlock {
       DECLARE_FIRMWARE_FB(FORTE_SPLIT_DWORD_INTO_QUARTERS)
 
     private:
-      static const TEventID scmEventREQID = 0;
       static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventREQID = 0;
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -43,7 +41,7 @@ namespace forte::eclipse4diac::utils::splitting {
       void setInitialValues() override;
 
     public:
-      FORTE_SPLIT_DWORD_INTO_QUARTERS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_SPLIT_DWORD_INTO_QUARTERS(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_DWORD var_IN;
 
@@ -90,99 +88,23 @@ namespace forte::eclipse4diac::utils::splitting {
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
-
-      void evt_REQ(const CIEC_DWORD &paIN,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_00,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_01,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_02,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_03,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_04,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_05,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_06,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_07,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_08,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_09,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_10,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_11,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_12,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_13,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_14,
-                   CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_15) {
-        COutputGuard guard_paQUARTER_BYTE_00(paQUARTER_BYTE_00);
-        COutputGuard guard_paQUARTER_BYTE_01(paQUARTER_BYTE_01);
-        COutputGuard guard_paQUARTER_BYTE_02(paQUARTER_BYTE_02);
-        COutputGuard guard_paQUARTER_BYTE_03(paQUARTER_BYTE_03);
-        COutputGuard guard_paQUARTER_BYTE_04(paQUARTER_BYTE_04);
-        COutputGuard guard_paQUARTER_BYTE_05(paQUARTER_BYTE_05);
-        COutputGuard guard_paQUARTER_BYTE_06(paQUARTER_BYTE_06);
-        COutputGuard guard_paQUARTER_BYTE_07(paQUARTER_BYTE_07);
-        COutputGuard guard_paQUARTER_BYTE_08(paQUARTER_BYTE_08);
-        COutputGuard guard_paQUARTER_BYTE_09(paQUARTER_BYTE_09);
-        COutputGuard guard_paQUARTER_BYTE_10(paQUARTER_BYTE_10);
-        COutputGuard guard_paQUARTER_BYTE_11(paQUARTER_BYTE_11);
-        COutputGuard guard_paQUARTER_BYTE_12(paQUARTER_BYTE_12);
-        COutputGuard guard_paQUARTER_BYTE_13(paQUARTER_BYTE_13);
-        COutputGuard guard_paQUARTER_BYTE_14(paQUARTER_BYTE_14);
-        COutputGuard guard_paQUARTER_BYTE_15(paQUARTER_BYTE_15);
-        var_IN = paIN;
-        executeEvent(scmEventREQID, nullptr);
-        *paQUARTER_BYTE_00 = var_QUARTER_BYTE_00;
-        *paQUARTER_BYTE_01 = var_QUARTER_BYTE_01;
-        *paQUARTER_BYTE_02 = var_QUARTER_BYTE_02;
-        *paQUARTER_BYTE_03 = var_QUARTER_BYTE_03;
-        *paQUARTER_BYTE_04 = var_QUARTER_BYTE_04;
-        *paQUARTER_BYTE_05 = var_QUARTER_BYTE_05;
-        *paQUARTER_BYTE_06 = var_QUARTER_BYTE_06;
-        *paQUARTER_BYTE_07 = var_QUARTER_BYTE_07;
-        *paQUARTER_BYTE_08 = var_QUARTER_BYTE_08;
-        *paQUARTER_BYTE_09 = var_QUARTER_BYTE_09;
-        *paQUARTER_BYTE_10 = var_QUARTER_BYTE_10;
-        *paQUARTER_BYTE_11 = var_QUARTER_BYTE_11;
-        *paQUARTER_BYTE_12 = var_QUARTER_BYTE_12;
-        *paQUARTER_BYTE_13 = var_QUARTER_BYTE_13;
-        *paQUARTER_BYTE_14 = var_QUARTER_BYTE_14;
-        *paQUARTER_BYTE_15 = var_QUARTER_BYTE_15;
-      }
-
-      void operator()(const CIEC_DWORD &paIN,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_00,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_01,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_02,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_03,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_04,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_05,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_06,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_07,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_08,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_09,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_10,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_11,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_12,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_13,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_14,
-                      CAnyBitOutputParameter<CIEC_BYTE> paQUARTER_BYTE_15) {
-        evt_REQ(paIN, paQUARTER_BYTE_00, paQUARTER_BYTE_01, paQUARTER_BYTE_02, paQUARTER_BYTE_03, paQUARTER_BYTE_04,
-                paQUARTER_BYTE_05, paQUARTER_BYTE_06, paQUARTER_BYTE_07, paQUARTER_BYTE_08, paQUARTER_BYTE_09,
-                paQUARTER_BYTE_10, paQUARTER_BYTE_11, paQUARTER_BYTE_12, paQUARTER_BYTE_13, paQUARTER_BYTE_14,
-                paQUARTER_BYTE_15);
-      }
   };
 
-  void func_SPLIT_DWORD_INTO_QUARTERS(CIEC_DWORD st_lv_IN,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_00,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_01,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_02,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_03,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_04,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_05,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_06,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_07,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_08,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_09,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_10,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_11,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_12,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_13,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_14,
-                                      CIEC_BYTE &st_lv_QUARTER_BYTE_15);
+  void func_SPLIT_DWORD_INTO_QUARTERS(const CIEC_DWORD &st_lv_IN,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_00,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_01,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_02,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_03,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_04,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_05,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_06,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_07,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_08,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_09,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_10,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_11,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_12,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_13,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_14,
+                                      CAnyBitOutputParameter<CIEC_BYTE> st_lv_QUARTER_BYTE_15);
 } // namespace forte::eclipse4diac::utils::splitting

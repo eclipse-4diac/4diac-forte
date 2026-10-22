@@ -8,58 +8,67 @@
  ***
  *** FORTE Library Element
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.3.0.qualifier!
  ***
  *** Name: ASSEMBLE_BYTE_FROM_QUARTERS
  *** Description: this Function combines the 4 QUARTER BYTES to a BYTE
  *** Version:
- ***     1.0: 2024-02-22/Franz Höpfinger - HR Agrartechnik - initial Implementation
+ ***     3.0.1: 2026-09-29/Martin Jobst -  - fix ST package declaration
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.1: 2024-07-28/Moritz Ortmeier - HR Agrartechnik - rename Function and change Input/Output Variables
- *******************************************************************************/
+ ***     1.0: 2024-02-22/Franz Höpfinger - HR Agrartechnik - initial Implementation
+ *************************************************************************/
 
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_BYTE_FROM_QUARTERS_fct.h"
 
-using namespace forte::literals;
-
-#include "forte/datatypes/forte_any_int_variant.h"
 #include "forte/datatypes/forte_byte.h"
-#include "forte/datatypes/forte_any_bit_variant.h"
+#include "forte/eclipse4diac/utils/assembling/ASSEMBLE_BYTE_FROM_QUARTERS_fct.h"
+#include "forte/eclipse4diac/utils/const/quarterconst_gcf.h"
 #include "forte/iec61131_functions/func_OR.h"
 #include "forte/iec61131_functions/func_SHL.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
-#include "forte/eclipse4diac/utils/const/quarterconst_gcf.h"
-#include "forte/eclipse4diac/utils/assembling/ASSEMBLE_BYTE_FROM_QUARTERS_fct.h"
+
+using namespace std::literals;
+using namespace forte::literals;
 
 namespace forte::eclipse4diac::utils::assembling {
   namespace {
-    const auto cDataInputNames = std::array{"BYTE"_STRID, "BYTE"_STRID, "BYTE"_STRID, "BYTE"_STRID};
-    const auto cDataOutputNames = std::array{""_STRID};
+    constexpr std::string_view TypeHash = ""sv;
+
     const auto cEventInputNames = std::array{"REQ"_STRID};
-    const auto cEventInputTypeIds = std::array{"Event"_STRID};
     const auto cEventOutputNames = std::array{"CNF"_STRID};
-    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+    const auto cDataInputNames =
+        std::array{"QUARTER_BYTE_00"_STRID, "QUARTER_BYTE_01"_STRID, "QUARTER_BYTE_02"_STRID, "QUARTER_BYTE_03"_STRID};
+    const auto cDataOutputNames = std::array{""_STRID};
     const SFBInterfaceSpec cFBInterfaceSpec = {
         .mEINames = cEventInputNames,
-        .mEITypeNames = cEventInputTypeIds,
+        .mEITypeNames = {},
         .mEONames = cEventOutputNames,
-        .mEOTypeNames = cEventOutputTypeIds,
+        .mEOTypeNames = {},
         .mDINames = cDataInputNames,
         .mDONames = cDataOutputNames,
         .mDIONames = {},
         .mSocketNames = {},
         .mPlugNames = {},
     };
+
+    CIEC_BYTE func_ASSEMBLE_BYTE_FROM_QUARTERS__impl(const CIEC_BYTE &st_lv_QUARTER_BYTE_00,
+                                                     const CIEC_BYTE &st_lv_QUARTER_BYTE_01,
+                                                     const CIEC_BYTE &st_lv_QUARTER_BYTE_02,
+                                                     const CIEC_BYTE &st_lv_QUARTER_BYTE_03);
   } // namespace
 
   DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_QUARTERS,
-                     "eclipse4diac::utils::assembling::ASSEMBLE_BYTE_FROM_QUARTERS"_STRID)
+                     "eclipse4diac::utils::assembling::ASSEMBLE_BYTE_FROM_QUARTERS"_STRID,
+                     TypeHash)
 
-  FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::FORTE_ASSEMBLE_BYTE_FROM_QUARTERS(const forte::StringId paInstanceNameId,
-                                                                       forte::CFBContainer &paContainer) :
+  FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::FORTE_ASSEMBLE_BYTE_FROM_QUARTERS(const StringId paInstanceNameId,
+                                                                       CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      var_QUARTER_BYTE_00(0_BYTE),
+      var_QUARTER_BYTE_01(0_BYTE),
+      var_QUARTER_BYTE_02(0_BYTE),
+      var_QUARTER_BYTE_03(0_BYTE),
+      var_(0_BYTE),
       conn_CNF(*this, 0),
       conn_QUARTER_BYTE_00(nullptr),
       conn_QUARTER_BYTE_01(nullptr),
@@ -69,6 +78,7 @@ namespace forte::eclipse4diac::utils::assembling {
   }
 
   void FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::setInitialValues() {
+    CFunctionBlock::setInitialValues();
     var_QUARTER_BYTE_00 = 0_BYTE;
     var_QUARTER_BYTE_01 = 0_BYTE;
     var_QUARTER_BYTE_02 = 0_BYTE;
@@ -92,7 +102,7 @@ namespace forte::eclipse4diac::utils::assembling {
   void FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::writeOutputData(const TEventID paEIID) {
     switch (paEIID) {
       case scmEventCNFID: {
-        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
+        writeData(4, var_, conn_);
         break;
       }
       default: break;
@@ -141,36 +151,46 @@ namespace forte::eclipse4diac::utils::assembling {
   }
 
   void FORTE_ASSEMBLE_BYTE_FROM_QUARTERS::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-    var_ = func_ASSEMBLE_BYTE_FROM_QUARTERS(var_QUARTER_BYTE_00, var_QUARTER_BYTE_01, var_QUARTER_BYTE_02,
-                                            var_QUARTER_BYTE_03);
+    var_ = func_ASSEMBLE_BYTE_FROM_QUARTERS__impl(var_QUARTER_BYTE_00, var_QUARTER_BYTE_01, var_QUARTER_BYTE_02,
+                                                  var_QUARTER_BYTE_03);
     sendOutputEvent(scmEventCNFID, paECET);
   }
 
-  CIEC_BYTE func_ASSEMBLE_BYTE_FROM_QUARTERS(CIEC_BYTE st_lv_QUARTER_BYTE_00,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_01,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_02,
-                                             CIEC_BYTE st_lv_QUARTER_BYTE_03) {
-    CIEC_BYTE st_ret_val = 0_BYTE;
-
-#line 11 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
-    st_ret_val = forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_BYTE_QUARTER_ZZ;
-#line 12 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
-    st_ret_val = func_OR<CIEC_BYTE>(
-        st_ret_val,
-        func_SHL(st_lv_QUARTER_BYTE_03, forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_03));
-#line 13 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
-    st_ret_val = func_OR<CIEC_BYTE>(
-        st_ret_val,
-        func_SHL(st_lv_QUARTER_BYTE_02, forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_02));
-#line 14 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
-    st_ret_val = func_OR<CIEC_BYTE>(
-        st_ret_val,
-        func_SHL(st_lv_QUARTER_BYTE_01, forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_01));
-#line 15 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
-    st_ret_val = func_OR<CIEC_BYTE>(
-        st_ret_val,
-        func_SHL(st_lv_QUARTER_BYTE_00, forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_00));
-
-    return st_ret_val;
+  CIEC_BYTE func_ASSEMBLE_BYTE_FROM_QUARTERS(const CIEC_BYTE &st_lv_QUARTER_BYTE_00,
+                                             const CIEC_BYTE &st_lv_QUARTER_BYTE_01,
+                                             const CIEC_BYTE &st_lv_QUARTER_BYTE_02,
+                                             const CIEC_BYTE &st_lv_QUARTER_BYTE_03) {
+    return func_ASSEMBLE_BYTE_FROM_QUARTERS__impl(st_lv_QUARTER_BYTE_00, st_lv_QUARTER_BYTE_01, st_lv_QUARTER_BYTE_02,
+                                                  st_lv_QUARTER_BYTE_03);
   }
+
+  namespace {
+    CIEC_BYTE func_ASSEMBLE_BYTE_FROM_QUARTERS__impl(const CIEC_BYTE &st_lv_QUARTER_BYTE_00,
+                                                     const CIEC_BYTE &st_lv_QUARTER_BYTE_01,
+                                                     const CIEC_BYTE &st_lv_QUARTER_BYTE_02,
+                                                     const CIEC_BYTE &st_lv_QUARTER_BYTE_03) {
+      CIEC_BYTE st_ret_val = 0_BYTE;
+
+#line 15 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
+      st_ret_val = forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_BYTE_QUARTER_ZZ;
+#line 16 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
+      st_ret_val = func_OR<CIEC_BYTE>(
+          st_ret_val, func_SHL(st_lv_QUARTER_BYTE_03,
+                               forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_03));
+#line 17 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
+      st_ret_val = func_OR<CIEC_BYTE>(
+          st_ret_val, func_SHL(st_lv_QUARTER_BYTE_02,
+                               forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_02));
+#line 18 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
+      st_ret_val = func_OR<CIEC_BYTE>(
+          st_ret_val, func_SHL(st_lv_QUARTER_BYTE_01,
+                               forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_01));
+#line 19 "ASSEMBLE_BYTE_FROM_QUARTERS.fct"
+      st_ret_val = func_OR<CIEC_BYTE>(
+          st_ret_val, func_SHL(st_lv_QUARTER_BYTE_00,
+                               forte::eclipse4diac::utils::const_::FORTE_quarterconst::var_SHIFT_QUARTER_00));
+
+      return st_ret_val;
+    }
+  } // namespace
 } // namespace forte::eclipse4diac::utils::assembling

@@ -6,57 +6,78 @@
  ***
  *** SPDX-License-Identifier: EPL-2.0
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.3.0.qualifier!
  ***
  *** Name: SCALE_LIM
  *** Description: Scaling Function Block with limits
  *** Version:
+ ***     3.0.1: 2026-08-27/Franz Höpfinger - HR Agrartechnik GmbH - updated description, cleaned up formatting, and
+ * qualified PACKAGE declaration with eclipse4diac:: prefix to match CompilerInfo packageName
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.0: 2024-09-19/Franz Höpfinger - HR Agrartechnik GmbH -
  *************************************************************************/
 
 #include "forte/eclipse4diac/signalprocessing/SCALE_LIM_fct.h"
 
 #include "forte/datatypes/forte_real.h"
+#include "forte/eclipse4diac/signalprocessing/SCALE_LIM_fct.h"
 #include "forte/iec61131_functions/func_ADD.h"
 #include "forte/iec61131_functions/func_DIV.h"
 #include "forte/iec61131_functions/func_GT.h"
 #include "forte/iec61131_functions/func_LT.h"
 #include "forte/iec61131_functions/func_MUL.h"
 #include "forte/iec61131_functions/func_SUB.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
-#include "forte/eclipse4diac/signalprocessing/SCALE_LIM_fct.h"
 
+using namespace std::literals;
 using namespace forte::literals;
 
 namespace forte::eclipse4diac::signalprocessing {
   namespace {
+    constexpr std::string_view TypeHash = ""sv;
+
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
     const auto cDataInputNames =
         std::array{"IN"_STRID,      "MAX_IN"_STRID,  "MIN_IN"_STRID,      "MAX_IN_LIM"_STRID, "MIN_IN_LIM"_STRID,
                    "MAX_OUT"_STRID, "MIN_OUT"_STRID, "MAX_OUT_FIX"_STRID, "MIN_OUT_FIX"_STRID};
     const auto cDataOutputNames = std::array{""_STRID};
-    const auto cEventInputNames = std::array{"REQ"_STRID};
-    const auto cEventInputTypeIds = std::array{"Event"_STRID};
-    const auto cEventOutputNames = std::array{"CNF"_STRID};
-    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
     const SFBInterfaceSpec cFBInterfaceSpec = {
         .mEINames = cEventInputNames,
-        .mEITypeNames = cEventInputTypeIds,
+        .mEITypeNames = {},
         .mEONames = cEventOutputNames,
-        .mEOTypeNames = cEventOutputTypeIds,
+        .mEOTypeNames = {},
         .mDINames = cDataInputNames,
         .mDONames = cDataOutputNames,
         .mDIONames = {},
         .mSocketNames = {},
         .mPlugNames = {},
     };
+
+    CIEC_REAL func_SCALE_LIM__impl(const CIEC_REAL &st_lv_IN,
+                                   const CIEC_REAL &st_lv_MAX_IN,
+                                   const CIEC_REAL &st_lv_MIN_IN,
+                                   const CIEC_REAL &st_lv_MAX_IN_LIM,
+                                   const CIEC_REAL &st_lv_MIN_IN_LIM,
+                                   const CIEC_REAL &st_lv_MAX_OUT,
+                                   const CIEC_REAL &st_lv_MIN_OUT,
+                                   const CIEC_REAL &st_lv_MAX_OUT_FIX,
+                                   const CIEC_REAL &st_lv_MIN_OUT_FIX);
   } // namespace
 
-  DEFINE_FIRMWARE_FB(FORTE_SCALE_LIM, "eclipse4diac::signalprocessing::SCALE_LIM"_STRID)
-  FORTE_SCALE_LIM::FORTE_SCALE_LIM(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+  DEFINE_FIRMWARE_FB(FORTE_SCALE_LIM, "eclipse4diac::signalprocessing::SCALE_LIM"_STRID, TypeHash)
+
+  FORTE_SCALE_LIM::FORTE_SCALE_LIM(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      var_IN(0_REAL),
+      var_MAX_IN(0_REAL),
+      var_MIN_IN(0_REAL),
+      var_MAX_IN_LIM(0_REAL),
+      var_MIN_IN_LIM(0_REAL),
+      var_MAX_OUT(0_REAL),
+      var_MIN_OUT(0_REAL),
+      var_MAX_OUT_FIX(0_REAL),
+      var_MIN_OUT_FIX(0_REAL),
+      var_(0_REAL),
       conn_CNF(*this, 0),
       conn_IN(nullptr),
       conn_MAX_IN(nullptr),
@@ -71,6 +92,7 @@ namespace forte::eclipse4diac::signalprocessing {
   }
 
   void FORTE_SCALE_LIM::setInitialValues() {
+    CFunctionBlock::setInitialValues();
     var_IN = 0_REAL;
     var_MAX_IN = 0_REAL;
     var_MIN_IN = 0_REAL;
@@ -104,7 +126,7 @@ namespace forte::eclipse4diac::signalprocessing {
   void FORTE_SCALE_LIM::writeOutputData(const TEventID paEIID) {
     switch (paEIID) {
       case scmEventCNFID: {
-        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
+        writeData(9, var_, conn_);
         break;
       }
       default: break;
@@ -163,38 +185,53 @@ namespace forte::eclipse4diac::signalprocessing {
   }
 
   void FORTE_SCALE_LIM::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-    var_ = func_SCALE_LIM(var_IN, var_MAX_IN, var_MIN_IN, var_MAX_IN_LIM, var_MIN_IN_LIM, var_MAX_OUT, var_MIN_OUT,
-                          var_MAX_OUT_FIX, var_MIN_OUT_FIX);
+    var_ = func_SCALE_LIM__impl(var_IN, var_MAX_IN, var_MIN_IN, var_MAX_IN_LIM, var_MIN_IN_LIM, var_MAX_OUT,
+                                var_MIN_OUT, var_MAX_OUT_FIX, var_MIN_OUT_FIX);
     sendOutputEvent(scmEventCNFID, paECET);
   }
 
-  CIEC_REAL func_SCALE_LIM(CIEC_REAL st_lv_IN,
-                           CIEC_REAL st_lv_MAX_IN,
-                           CIEC_REAL st_lv_MIN_IN,
-                           CIEC_REAL st_lv_MAX_IN_LIM,
-                           CIEC_REAL st_lv_MIN_IN_LIM,
-                           CIEC_REAL st_lv_MAX_OUT,
-                           CIEC_REAL st_lv_MIN_OUT,
-                           CIEC_REAL st_lv_MAX_OUT_FIX,
-                           CIEC_REAL st_lv_MIN_OUT_FIX) {
-    CIEC_REAL st_ret_val = 0_REAL;
+  CIEC_REAL func_SCALE_LIM(const CIEC_REAL &st_lv_IN,
+                           const CIEC_REAL &st_lv_MAX_IN,
+                           const CIEC_REAL &st_lv_MIN_IN,
+                           const CIEC_REAL &st_lv_MAX_IN_LIM,
+                           const CIEC_REAL &st_lv_MIN_IN_LIM,
+                           const CIEC_REAL &st_lv_MAX_OUT,
+                           const CIEC_REAL &st_lv_MIN_OUT,
+                           const CIEC_REAL &st_lv_MAX_OUT_FIX,
+                           const CIEC_REAL &st_lv_MIN_OUT_FIX) {
+    return func_SCALE_LIM__impl(st_lv_IN, st_lv_MAX_IN, st_lv_MIN_IN, st_lv_MAX_IN_LIM, st_lv_MIN_IN_LIM, st_lv_MAX_OUT,
+                                st_lv_MIN_OUT, st_lv_MAX_OUT_FIX, st_lv_MIN_OUT_FIX);
+  }
+
+  namespace {
+    CIEC_REAL func_SCALE_LIM__impl(const CIEC_REAL &st_lv_IN,
+                                   const CIEC_REAL &st_lv_MAX_IN,
+                                   const CIEC_REAL &st_lv_MIN_IN,
+                                   const CIEC_REAL &st_lv_MAX_IN_LIM,
+                                   const CIEC_REAL &st_lv_MIN_IN_LIM,
+                                   const CIEC_REAL &st_lv_MAX_OUT,
+                                   const CIEC_REAL &st_lv_MIN_OUT,
+                                   const CIEC_REAL &st_lv_MAX_OUT_FIX,
+                                   const CIEC_REAL &st_lv_MIN_OUT_FIX) {
+      CIEC_REAL st_ret_val = 0_REAL;
 
 #line 17 "SCALE_LIM.fct"
-    if (func_LT(st_lv_IN, st_lv_MIN_IN_LIM)) {
+      if (func_LT(st_lv_IN, st_lv_MIN_IN_LIM)) {
 #line 18 "SCALE_LIM.fct"
-      st_ret_val = st_lv_MIN_OUT_FIX;
-    } else if (func_GT(st_lv_IN, st_lv_MAX_IN_LIM)) {
+        st_ret_val = st_lv_MIN_OUT_FIX;
+      } else if (func_GT(st_lv_IN, st_lv_MAX_IN_LIM)) {
 #line 20 "SCALE_LIM.fct"
-      st_ret_val = st_lv_MAX_OUT_FIX;
-    } else {
+        st_ret_val = st_lv_MAX_OUT_FIX;
+      } else {
 #line 22 "SCALE_LIM.fct"
-      st_ret_val = func_ADD<CIEC_REAL>(
-          func_DIV<CIEC_REAL>(func_MUL<CIEC_REAL>(func_SUB<CIEC_REAL>(st_lv_IN, st_lv_MIN_IN),
-                                                  func_SUB<CIEC_REAL>(st_lv_MAX_OUT, st_lv_MIN_OUT)),
-                              func_SUB<CIEC_REAL>(st_lv_MAX_IN, st_lv_MIN_IN)),
-          st_lv_MIN_OUT);
-    }
+        st_ret_val = func_ADD<CIEC_REAL>(
+            func_DIV<CIEC_REAL>(func_MUL<CIEC_REAL>(func_SUB<CIEC_REAL>(st_lv_IN, st_lv_MIN_IN),
+                                                    func_SUB<CIEC_REAL>(st_lv_MAX_OUT, st_lv_MIN_OUT)),
+                                func_SUB<CIEC_REAL>(st_lv_MAX_IN, st_lv_MIN_IN)),
+            st_lv_MIN_OUT);
+      }
 
-    return st_ret_val;
-  }
+      return st_ret_val;
+    }
+  } // namespace
 } // namespace forte::eclipse4diac::signalprocessing

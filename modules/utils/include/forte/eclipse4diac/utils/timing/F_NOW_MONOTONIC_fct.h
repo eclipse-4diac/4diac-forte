@@ -10,8 +10,9 @@
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
  *** Name: F_NOW_MONOTONIC
- *** Description: return a clear monotonic time
+ *** Description: returns current monotonic clock value
  *** Version:
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.0: 2024-10-01/Franz Höpfinger - HR Agrartechnik GmbH    -
  *************************************************************************/
 
@@ -19,19 +20,14 @@
 
 #include "forte/funcbloc.h"
 #include "forte/datatypes/forte_time.h"
-#include "forte/forte_st_util.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
 
 namespace forte::eclipse4diac::utils::timing {
   class FORTE_F_NOW_MONOTONIC final : public CFunctionBlock {
       DECLARE_FIRMWARE_FB(FORTE_F_NOW_MONOTONIC)
 
     private:
-      static const TEventID scmEventREQID = 0;
       static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventREQID = 0;
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -40,7 +36,7 @@ namespace forte::eclipse4diac::utils::timing {
       void setInitialValues() override;
 
     public:
-      FORTE_F_NOW_MONOTONIC(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_F_NOW_MONOTONIC(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_TIME var_;
 
@@ -53,16 +49,6 @@ namespace forte::eclipse4diac::utils::timing {
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
-
-      void evt_REQ(COutputParameter<CIEC_TIME> pa) {
-        COutputGuard guard_pa(pa);
-        executeEvent(scmEventREQID, nullptr);
-        *pa = var_;
-      }
-
-      void operator()(COutputParameter<CIEC_TIME> pa) {
-        evt_REQ(pa);
-      }
   };
 
   CIEC_TIME func_F_NOW_MONOTONIC();

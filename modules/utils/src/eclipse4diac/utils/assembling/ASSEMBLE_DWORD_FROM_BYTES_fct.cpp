@@ -8,11 +8,12 @@
  ***
  *** FORTE Library Element
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter 3.0.0.202512201229!
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.3.0.qualifier!
  ***
  *** Name: ASSEMBLE_DWORD_FROM_BYTES
  *** Description: this Function combines the 4 BYTES to a DWORD
  *** Version:
+ ***     3.0.2: 2026-09-29/Martin Jobst -  - fix ST package declaration
  ***     3.0.1: 2025-12-21/Franz Höpfinger - HR Agrartechnik - fix 2 --> 4
  ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.1: 2024-07-28/Moritz Ortmeier - HR Agrartechnik - rename Function and change Input/Output Variables
@@ -23,11 +24,6 @@
 
 #include "forte/datatypes/forte_byte.h"
 #include "forte/datatypes/forte_dword.h"
-#include "forte/iec61131_functions.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_DWORD_FROM_BYTES_fct.h"
 
 using namespace std::literals;
@@ -35,7 +31,7 @@ using namespace forte::literals;
 
 namespace forte::eclipse4diac::utils::assembling {
   namespace {
-    constexpr std::string_view TypeHash =""sv;
+    constexpr std::string_view TypeHash = ""sv;
 
     const auto cEventInputNames = std::array{"REQ"_STRID};
     const auto cEventOutputNames = std::array{"CNF"_STRID};
@@ -52,11 +48,19 @@ namespace forte::eclipse4diac::utils::assembling {
         .mSocketNames = {},
         .mPlugNames = {},
     };
-  }
 
-  DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_BYTES, "eclipse4diac::utils::assembling::ASSEMBLE_DWORD_FROM_BYTES"_STRID, TypeHash)
+    CIEC_DWORD func_ASSEMBLE_DWORD_FROM_BYTES__impl(const CIEC_BYTE &st_lv_BYTE_00,
+                                                    const CIEC_BYTE &st_lv_BYTE_01,
+                                                    const CIEC_BYTE &st_lv_BYTE_02,
+                                                    const CIEC_BYTE &st_lv_BYTE_03);
+  } // namespace
 
-  FORTE_ASSEMBLE_DWORD_FROM_BYTES::FORTE_ASSEMBLE_DWORD_FROM_BYTES(const StringId paInstanceNameId, CFBContainer &paContainer) :
+  DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_DWORD_FROM_BYTES,
+                     "eclipse4diac::utils::assembling::ASSEMBLE_DWORD_FROM_BYTES"_STRID,
+                     TypeHash)
+
+  FORTE_ASSEMBLE_DWORD_FROM_BYTES::FORTE_ASSEMBLE_DWORD_FROM_BYTES(const StringId paInstanceNameId,
+                                                                   CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
       var_BYTE_00(0_BYTE),
       var_BYTE_01(0_BYTE),
@@ -81,7 +85,7 @@ namespace forte::eclipse4diac::utils::assembling {
   }
 
   void FORTE_ASSEMBLE_DWORD_FROM_BYTES::readInputData(const TEventID paEIID) {
-    switch(paEIID) {
+    switch (paEIID) {
       case scmEventREQID: {
         readData(0, var_BYTE_00, conn_BYTE_00);
         readData(1, var_BYTE_01, conn_BYTE_01);
@@ -89,24 +93,22 @@ namespace forte::eclipse4diac::utils::assembling {
         readData(3, var_BYTE_03, conn_BYTE_03);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   }
 
   void FORTE_ASSEMBLE_DWORD_FROM_BYTES::writeOutputData(const TEventID paEIID) {
-    switch(paEIID) {
+    switch (paEIID) {
       case scmEventCNFID: {
         writeData(4, var_, conn_);
         break;
       }
-      default:
-        break;
+      default: break;
     }
   }
 
   CIEC_ANY *FORTE_ASSEMBLE_DWORD_FROM_BYTES::getDI(const size_t paIndex) {
-    switch(paIndex) {
+    switch (paIndex) {
       case 0: return &var_BYTE_00;
       case 1: return &var_BYTE_01;
       case 2: return &var_BYTE_02;
@@ -116,21 +118,21 @@ namespace forte::eclipse4diac::utils::assembling {
   }
 
   CIEC_ANY *FORTE_ASSEMBLE_DWORD_FROM_BYTES::getDO(const size_t paIndex) {
-    switch(paIndex) {
+    switch (paIndex) {
       case 0: return &var_;
     }
     return nullptr;
   }
 
   CEventConnection *FORTE_ASSEMBLE_DWORD_FROM_BYTES::getEOConUnchecked(const TPortId paIndex) {
-    switch(paIndex) {
+    switch (paIndex) {
       case 0: return &conn_CNF;
     }
     return nullptr;
   }
 
   CDataConnection **FORTE_ASSEMBLE_DWORD_FROM_BYTES::getDIConUnchecked(const TPortId paIndex) {
-    switch(paIndex) {
+    switch (paIndex) {
       case 0: return &conn_BYTE_00;
       case 1: return &conn_BYTE_01;
       case 2: return &conn_BYTE_02;
@@ -140,30 +142,41 @@ namespace forte::eclipse4diac::utils::assembling {
   }
 
   CDataConnection *FORTE_ASSEMBLE_DWORD_FROM_BYTES::getDOConUnchecked(const TPortId paIndex) {
-    switch(paIndex) {
+    switch (paIndex) {
       case 0: return &conn_;
     }
     return nullptr;
   }
 
   void FORTE_ASSEMBLE_DWORD_FROM_BYTES::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-    var_ = func_ASSEMBLE_DWORD_FROM_BYTES(var_BYTE_00, var_BYTE_01, var_BYTE_02, var_BYTE_03);
+    var_ = func_ASSEMBLE_DWORD_FROM_BYTES__impl(var_BYTE_00, var_BYTE_01, var_BYTE_02, var_BYTE_03);
     sendOutputEvent(scmEventCNFID, paECET);
   }
 
-  CIEC_DWORD func_ASSEMBLE_DWORD_FROM_BYTES(const CIEC_BYTE &st_lv_BYTE_00, const CIEC_BYTE &st_lv_BYTE_01, const CIEC_BYTE &st_lv_BYTE_02, const CIEC_BYTE &st_lv_BYTE_03) {
-    CIEC_DWORD st_ret_val = 0_DWORD;
-
-    #line 11 "ASSEMBLE_DWORD_FROM_BYTES.fct"
-    st_ret_val.partial<CIEC_BYTE>(0) = st_lv_BYTE_00;
-    #line 12 "ASSEMBLE_DWORD_FROM_BYTES.fct"
-    st_ret_val.partial<CIEC_BYTE>(1) = st_lv_BYTE_01;
-    #line 13 "ASSEMBLE_DWORD_FROM_BYTES.fct"
-    st_ret_val.partial<CIEC_BYTE>(2) = st_lv_BYTE_02;
-    #line 14 "ASSEMBLE_DWORD_FROM_BYTES.fct"
-    st_ret_val.partial<CIEC_BYTE>(3) = st_lv_BYTE_03;
-
-    return st_ret_val;
+  CIEC_DWORD func_ASSEMBLE_DWORD_FROM_BYTES(const CIEC_BYTE &st_lv_BYTE_00,
+                                            const CIEC_BYTE &st_lv_BYTE_01,
+                                            const CIEC_BYTE &st_lv_BYTE_02,
+                                            const CIEC_BYTE &st_lv_BYTE_03) {
+    return func_ASSEMBLE_DWORD_FROM_BYTES__impl(st_lv_BYTE_00, st_lv_BYTE_01, st_lv_BYTE_02, st_lv_BYTE_03);
   }
 
-}
+  namespace {
+    CIEC_DWORD func_ASSEMBLE_DWORD_FROM_BYTES__impl(const CIEC_BYTE &st_lv_BYTE_00,
+                                                    const CIEC_BYTE &st_lv_BYTE_01,
+                                                    const CIEC_BYTE &st_lv_BYTE_02,
+                                                    const CIEC_BYTE &st_lv_BYTE_03) {
+      CIEC_DWORD st_ret_val = 0_DWORD;
+
+#line 13 "ASSEMBLE_DWORD_FROM_BYTES.fct"
+      st_ret_val.partial<CIEC_BYTE>(0) = st_lv_BYTE_00;
+#line 14 "ASSEMBLE_DWORD_FROM_BYTES.fct"
+      st_ret_val.partial<CIEC_BYTE>(1) = st_lv_BYTE_01;
+#line 15 "ASSEMBLE_DWORD_FROM_BYTES.fct"
+      st_ret_val.partial<CIEC_BYTE>(2) = st_lv_BYTE_02;
+#line 16 "ASSEMBLE_DWORD_FROM_BYTES.fct"
+      st_ret_val.partial<CIEC_BYTE>(3) = st_lv_BYTE_03;
+
+      return st_ret_val;
+    }
+  } // namespace
+} // namespace forte::eclipse4diac::utils::assembling

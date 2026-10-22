@@ -8,11 +8,12 @@
  ***
  *** FORTE Library Element
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter 3.0.0.202512201229!
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.3.0.qualifier!
  ***
  *** Name: SPLIT_DWORD_INTO_BYTES
  *** Description: this Function extracts the 4 BYTE from a dword
  *** Version:
+ ***     1.0.1: 2026-09-29/Martin Jobst -  - fix ST package declaration
  ***     1.0: 2025-12-21/Franz Höpfinger - HR Agrartechnik - initial Version
  *************************************************************************/
 
@@ -22,10 +23,6 @@
 #include "forte/datatypes/forte_byte.h"
 #include "forte/datatypes/forte_dword.h"
 #include "forte/forte_st_util.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
 
 namespace forte::eclipse4diac::utils::splitting {
   class FORTE_SPLIT_DWORD_INTO_BYTES final : public CFunctionBlock {
@@ -65,25 +62,11 @@ namespace forte::eclipse4diac::utils::splitting {
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
-
-      void evt_REQ(const CIEC_DWORD &paIN, CAnyBitOutputParameter<CIEC_BYTE> paBYTE_00, CAnyBitOutputParameter<CIEC_BYTE> paBYTE_01, CAnyBitOutputParameter<CIEC_BYTE> paBYTE_02, CAnyBitOutputParameter<CIEC_BYTE> paBYTE_03) {
-        COutputGuard guard_BYTE_00(paBYTE_00);
-        COutputGuard guard_BYTE_01(paBYTE_01);
-        COutputGuard guard_BYTE_02(paBYTE_02);
-        COutputGuard guard_BYTE_03(paBYTE_03);
-        var_IN = paIN;
-        executeEvent(scmEventREQID, nullptr);
-        *paBYTE_00 = var_BYTE_00;
-        *paBYTE_01 = var_BYTE_01;
-        *paBYTE_02 = var_BYTE_02;
-        *paBYTE_03 = var_BYTE_03;
-      }
-
-      void operator()(const CIEC_DWORD &paIN, CAnyBitOutputParameter<CIEC_BYTE> paBYTE_00, CAnyBitOutputParameter<CIEC_BYTE> paBYTE_01, CAnyBitOutputParameter<CIEC_BYTE> paBYTE_02, CAnyBitOutputParameter<CIEC_BYTE> paBYTE_03) {
-        evt_REQ(std::forward<const CIEC_DWORD &>(paIN), std::forward<CAnyBitOutputParameter<CIEC_BYTE>>(paBYTE_00), std::forward<CAnyBitOutputParameter<CIEC_BYTE>>(paBYTE_01), std::forward<CAnyBitOutputParameter<CIEC_BYTE>>(paBYTE_02), std::forward<CAnyBitOutputParameter<CIEC_BYTE>>(paBYTE_03));
-      }
   };
 
-  void func_SPLIT_DWORD_INTO_BYTES(const CIEC_DWORD &st_lv_IN, CAnyBitOutputParameter<CIEC_BYTE> st_lv_BYTE_00, CAnyBitOutputParameter<CIEC_BYTE> st_lv_BYTE_01, CAnyBitOutputParameter<CIEC_BYTE> st_lv_BYTE_02, CAnyBitOutputParameter<CIEC_BYTE> st_lv_BYTE_03);
-}
-
+  void func_SPLIT_DWORD_INTO_BYTES(const CIEC_DWORD &st_lv_IN,
+                                   CAnyBitOutputParameter<CIEC_BYTE> st_lv_BYTE_00,
+                                   CAnyBitOutputParameter<CIEC_BYTE> st_lv_BYTE_01,
+                                   CAnyBitOutputParameter<CIEC_BYTE> st_lv_BYTE_02,
+                                   CAnyBitOutputParameter<CIEC_BYTE> st_lv_BYTE_03);
+} // namespace forte::eclipse4diac::utils::splitting

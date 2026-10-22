@@ -6,13 +6,16 @@
  ***
  *** SPDX-License-Identifier: EPL-2.0
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.3.0.qualifier!
  ***
  *** Name: FIELDBUS_PERCENT_TO_WORD
- *** Description: Convert a WORD Value Range 0-FAFF to a REAL in the Range 0.0 to 100.0
+ *** Description: Convert a REAL in the Range 0.0% to 100.0% (0.0 to 1.0) to a WORD Value Range 0-FAFF
  *** Version:
- ***     1.0: 2023-10-21/Franz Höpfinger - HR Agrartechnik GmbH -
+ ***     3.0.1: 2026-08-27/Franz Höpfinger - HR Agrartechnik GmbH - updated description, cleaned up formatting, and
+ * qualified PACKAGE declaration with eclipse4diac:: prefix to match CompilerInfo packageName
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.1: 2024-09-19/Franz Höpfinger - HR Agrartechnik GmbH - Update to a more Function like Interface
+ ***     1.0: 2023-10-21/Franz Höpfinger - HR Agrartechnik GmbH -
  *************************************************************************/
 
 #pragma once
@@ -20,19 +23,14 @@
 #include "forte/funcbloc.h"
 #include "forte/datatypes/forte_real.h"
 #include "forte/datatypes/forte_word.h"
-#include "forte/forte_st_util.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
 
 namespace forte::eclipse4diac::signalprocessing {
   class FORTE_FIELDBUS_PERCENT_TO_WORD final : public CFunctionBlock {
       DECLARE_FIRMWARE_FB(FORTE_FIELDBUS_PERCENT_TO_WORD)
 
     private:
-      static const TEventID scmEventREQID = 0;
       static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventREQID = 0;
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -41,7 +39,7 @@ namespace forte::eclipse4diac::signalprocessing {
       void setInitialValues() override;
 
     public:
-      FORTE_FIELDBUS_PERCENT_TO_WORD(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_FIELDBUS_PERCENT_TO_WORD(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_REAL var_RI;
 
@@ -58,18 +56,7 @@ namespace forte::eclipse4diac::signalprocessing {
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
-
-      void evt_REQ(const CIEC_REAL &paRI, CAnyBitOutputParameter<CIEC_WORD> pa) {
-        COutputGuard guard_pa(pa);
-        var_RI = paRI;
-        executeEvent(scmEventREQID, nullptr);
-        *pa = var_;
-      }
-
-      void operator()(const CIEC_REAL &paRI, CAnyBitOutputParameter<CIEC_WORD> &pa) {
-        evt_REQ(paRI, pa);
-      }
   };
 
-  CIEC_WORD func_FIELDBUS_PERCENT_TO_WORD(CIEC_REAL st_lv_RI);
+  CIEC_WORD func_FIELDBUS_PERCENT_TO_WORD(const CIEC_REAL &st_lv_RI);
 } // namespace forte::eclipse4diac::signalprocessing

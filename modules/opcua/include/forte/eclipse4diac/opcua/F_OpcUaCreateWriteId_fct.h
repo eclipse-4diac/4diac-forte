@@ -48,16 +48,6 @@ namespace forte::eclipse4diac::opcua {
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
-
-      void evt_REQ(const CIEC_WSTRING &painstanceBrowseName, const CIEC_WSTRING &painstanceNodeId) {
-        var_instanceBrowseName = painstanceBrowseName;
-        var_instanceNodeId = painstanceNodeId;
-        executeEvent(scmEventREQID, nullptr);
-      }
-
-      void operator()(const CIEC_WSTRING &painstanceBrowseName, const CIEC_WSTRING &painstanceNodeId) {
-        evt_REQ(std::forward<const CIEC_WSTRING &>(painstanceBrowseName), std::forward<const CIEC_WSTRING &>(painstanceNodeId));
-      }
   };
 
   CIEC_WSTRING func_F_OpcUaCreateWriteId(const CIEC_WSTRING &st_lv_instanceBrowseName, const CIEC_WSTRING &st_lv_instanceNodeId);

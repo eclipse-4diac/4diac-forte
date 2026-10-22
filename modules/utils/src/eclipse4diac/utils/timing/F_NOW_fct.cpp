@@ -10,51 +10,54 @@
  *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
  ***
  *** Name: F_NOW
- *** Description: return the current time
+ *** Description: returns current local date and time
  *** Version:
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.0: 2024-10-01/Franz Höpfinger - HR Agrartechnik GmbH    -
  *************************************************************************/
 
 #include "forte/eclipse4diac/utils/timing/F_NOW_fct.h"
 
+#include "forte/datatypes/forte_date_and_time.h"
+#include "forte/eclipse4diac/utils/timing/F_NOW_fct.h"
+#include "forte/iec61131_functions/func_NOW.h"
+
+using namespace std::literals;
 using namespace forte::literals;
 
-#include "forte/datatypes/forte_date_and_time.h"
-#include "forte/iec61131_functions/func_NOW.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
-#include "forte/eclipse4diac/utils/timing/F_NOW_fct.h"
-
 namespace forte::eclipse4diac::utils::timing {
-  DEFINE_FIRMWARE_FB(FORTE_F_NOW, "eclipse4diac::utils::timing::F_NOW"_STRID)
   namespace {
-    const auto cDataOutputNames = std::array{""_STRID};
+    constexpr std::string_view TypeHash = ""sv;
+
     const auto cEventInputNames = std::array{"REQ"_STRID};
-    const auto cEventInputTypeIds = std::array{"Event"_STRID};
     const auto cEventOutputNames = std::array{"CNF"_STRID};
-    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+    const auto cDataOutputNames = std::array{""_STRID};
     const SFBInterfaceSpec cFBInterfaceSpec = {
         .mEINames = cEventInputNames,
-        .mEITypeNames = cEventInputTypeIds,
+        .mEITypeNames = {},
         .mEONames = cEventOutputNames,
-        .mEOTypeNames = cEventOutputTypeIds,
+        .mEOTypeNames = {},
         .mDINames = {},
         .mDONames = cDataOutputNames,
         .mDIONames = {},
         .mSocketNames = {},
         .mPlugNames = {},
     };
+
+    CIEC_DATE_AND_TIME func_F_NOW__impl();
   } // namespace
 
-  FORTE_F_NOW::FORTE_F_NOW(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+  DEFINE_FIRMWARE_FB(FORTE_F_NOW, "eclipse4diac::utils::timing::F_NOW"_STRID, TypeHash)
+
+  FORTE_F_NOW::FORTE_F_NOW(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      var_(0_DATE_AND_TIME),
       conn_CNF(*this, 0),
       conn_(*this, 0, var_) {
   }
 
   void FORTE_F_NOW::setInitialValues() {
+    CFunctionBlock::setInitialValues();
     var_ = 0_DATE_AND_TIME;
   }
 
@@ -65,7 +68,7 @@ namespace forte::eclipse4diac::utils::timing {
   void FORTE_F_NOW::writeOutputData(const TEventID paEIID) {
     switch (paEIID) {
       case scmEventCNFID: {
-        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
+        writeData(0, var_, conn_);
         break;
       }
       default: break;
@@ -102,16 +105,22 @@ namespace forte::eclipse4diac::utils::timing {
   }
 
   void FORTE_F_NOW::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-    var_ = func_F_NOW();
+    var_ = func_F_NOW__impl();
     sendOutputEvent(scmEventCNFID, paECET);
   }
 
   CIEC_DATE_AND_TIME func_F_NOW() {
-    CIEC_DATE_AND_TIME st_ret_val = 0_DATE_AND_TIME;
+    return func_F_NOW__impl();
+  }
+
+  namespace {
+    CIEC_DATE_AND_TIME func_F_NOW__impl() {
+      CIEC_DATE_AND_TIME st_ret_val = 0_DATE_AND_TIME;
 
 #line 5 "F_NOW.fct"
-    st_ret_val = func_NOW();
+      st_ret_val = func_NOW();
 
-    return st_ret_val;
-  }
+      return st_ret_val;
+    }
+  } // namespace
 } // namespace forte::eclipse4diac::utils::timing
