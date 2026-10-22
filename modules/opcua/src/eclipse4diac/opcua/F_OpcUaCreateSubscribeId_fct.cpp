@@ -22,6 +22,8 @@ using namespace forte::literals;
 
 namespace forte::eclipse4diac::opcua {
   namespace {
+    constexpr std::string_view TypeHash =""sv;
+
     const auto cEventInputNames = std::array{"REQ"_STRID};
     const auto cEventOutputNames = std::array{"CNF"_STRID};
     const auto cDataInputNames = std::array{"instanceBrowseName"_STRID, "instanceNodeId"_STRID, "host"_STRID, "port"_STRID};
@@ -37,9 +39,11 @@ namespace forte::eclipse4diac::opcua {
         .mSocketNames = {},
         .mPlugNames = {},
     };
+
+    CIEC_WSTRING func_F_OpcUaCreateSubscribeId__impl(const CIEC_WSTRING &st_lv_instanceBrowseName, const CIEC_WSTRING &st_lv_instanceNodeId, const CIEC_WSTRING &st_lv_host, const CIEC_USINT &st_lv_port);
   }
 
-  DEFINE_FIRMWARE_FB(FORTE_F_OpcUaCreateSubscribeId, "eclipse4diac::opcua::F_OpcUaCreateSubscribeId"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_F_OpcUaCreateSubscribeId, "eclipse4diac::opcua::F_OpcUaCreateSubscribeId"_STRID, TypeHash)
 
   FORTE_F_OpcUaCreateSubscribeId::FORTE_F_OpcUaCreateSubscribeId(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
@@ -132,22 +136,27 @@ namespace forte::eclipse4diac::opcua {
   }
 
   void FORTE_F_OpcUaCreateSubscribeId::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-    var_ = func_F_OpcUaCreateSubscribeId(var_instanceBrowseName, var_instanceNodeId, var_host, var_port);
+    var_ = func_F_OpcUaCreateSubscribeId__impl(var_instanceBrowseName, var_instanceNodeId, var_host, var_port);
     sendOutputEvent(scmEventCNFID, paECET);
   }
 
   CIEC_WSTRING func_F_OpcUaCreateSubscribeId(const CIEC_WSTRING &st_lv_instanceBrowseName, const CIEC_WSTRING &st_lv_instanceNodeId, const CIEC_WSTRING &st_lv_host, const CIEC_USINT &st_lv_port) {
-    CIEC_WSTRING st_ret_val = u""_WSTRING;
-    const CIEC_WSTRING st_lv_PREFIX = u"opc_ua[SUBSCRIBE;opc.tcp://"_WSTRING;
-    const CIEC_WSTRING st_lv_NODEID_TYPE = u",s="_WSTRING;
-    const CIEC_WSTRING st_lv_SUFFIX = u"]"_WSTRING;
-    const CIEC_WSTRING st_lv_SEPARATOR_HASH = u"#;"_WSTRING;
-    const CIEC_WSTRING st_lv_SEPARATOR_HOST = u":"_WSTRING;
-
-    #line 18 "F_OpcUaCreateSubscribeId.fct"
-    st_ret_val = func_CONCAT(st_lv_PREFIX, st_lv_host, st_lv_SEPARATOR_HOST, func_USINT_AS_WSTRING(st_lv_port), st_lv_SEPARATOR_HASH, st_lv_instanceBrowseName, st_lv_NODEID_TYPE, st_lv_instanceNodeId, st_lv_SUFFIX);
-
-    return st_ret_val;
+    return func_F_OpcUaCreateSubscribeId__impl(st_lv_instanceBrowseName, st_lv_instanceNodeId, st_lv_host, st_lv_port);
   }
 
+  namespace {
+    CIEC_WSTRING func_F_OpcUaCreateSubscribeId__impl(const CIEC_WSTRING &st_lv_instanceBrowseName, const CIEC_WSTRING &st_lv_instanceNodeId, const CIEC_WSTRING &st_lv_host, const CIEC_USINT &st_lv_port) {
+      CIEC_WSTRING st_ret_val = u""_WSTRING;
+      const CIEC_WSTRING st_lv_PREFIX = u"opc_ua[SUBSCRIBE;opc.tcp://"_WSTRING;
+      const CIEC_WSTRING st_lv_NODEID_TYPE = u",s="_WSTRING;
+      const CIEC_WSTRING st_lv_SUFFIX = u"]"_WSTRING;
+      const CIEC_WSTRING st_lv_SEPARATOR_HASH = u"#;"_WSTRING;
+      const CIEC_WSTRING st_lv_SEPARATOR_HOST = u":"_WSTRING;
+
+      #line 18 "F_OpcUaCreateSubscribeId.fct"
+      st_ret_val = func_CONCAT(st_lv_PREFIX, st_lv_host, st_lv_SEPARATOR_HOST, func_USINT_AS_WSTRING(st_lv_port), st_lv_SEPARATOR_HASH, st_lv_instanceBrowseName, st_lv_NODEID_TYPE, st_lv_instanceNodeId, st_lv_SUFFIX);
+
+      return st_ret_val;
+    }
+  }
 }

@@ -21,6 +21,8 @@ using namespace forte::literals;
 
 namespace forte::eclipse4diac::opcua {
   namespace {
+    constexpr std::string_view TypeHash =""sv;
+
     const auto cEventInputNames = std::array{"REQ"_STRID};
     const auto cEventOutputNames = std::array{"CNF"_STRID};
     const auto cDataInputNames = std::array{"browsePrefix"_STRID, "nodePrefix"_STRID, "containerName"_STRID, "objectPrefix"_STRID, "objectName"_STRID};
@@ -36,9 +38,11 @@ namespace forte::eclipse4diac::opcua {
         .mSocketNames = {},
         .mPlugNames = {},
     };
+
+    void func_F_OpcUaCreatePaths__impl(const CIEC_WSTRING &st_lv_browsePrefix, const CIEC_WSTRING &st_lv_nodePrefix, const CIEC_WSTRING &st_lv_containerName, const CIEC_WSTRING &st_lv_objectPrefix, const CIEC_WSTRING &st_lv_objectName, CIEC_WSTRING &st_lv_browseName, CIEC_WSTRING &st_lv_nodeId);
   }
 
-  DEFINE_FIRMWARE_FB(FORTE_F_OpcUaCreatePaths, "eclipse4diac::opcua::F_OpcUaCreatePaths"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_F_OpcUaCreatePaths, "eclipse4diac::opcua::F_OpcUaCreatePaths"_STRID, TypeHash)
 
   FORTE_F_OpcUaCreatePaths::FORTE_F_OpcUaCreatePaths(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
@@ -143,32 +147,37 @@ namespace forte::eclipse4diac::opcua {
   }
 
   void FORTE_F_OpcUaCreatePaths::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-    func_F_OpcUaCreatePaths(var_browsePrefix, var_nodePrefix, var_containerName, var_objectPrefix, var_objectName, var_browseName, var_nodeId);
+    func_F_OpcUaCreatePaths__impl(var_browsePrefix, var_nodePrefix, var_containerName, var_objectPrefix, var_objectName, var_browseName, var_nodeId);
     sendOutputEvent(scmEventCNFID, paECET);
   }
 
   void func_F_OpcUaCreatePaths(const CIEC_WSTRING &st_lv_browsePrefix, const CIEC_WSTRING &st_lv_nodePrefix, const CIEC_WSTRING &st_lv_containerName, const CIEC_WSTRING &st_lv_objectPrefix, const CIEC_WSTRING &st_lv_objectName, COutputParameter<CIEC_WSTRING> st_lv_browseName, COutputParameter<CIEC_WSTRING> st_lv_nodeId) {
     COutputGuard st_guard_browseName(st_lv_browseName);
     COutputGuard st_guard_nodeId(st_lv_nodeId);
-    (*st_lv_browseName) = u""_WSTRING;
-    (*st_lv_nodeId) = u""_WSTRING;
-    const CIEC_WSTRING st_lv_BROWSE_SEPARATOR = u"/"_WSTRING;
-    const CIEC_WSTRING st_lv_NODE_SEPARATOR = u"."_WSTRING;
-
-    #line 20 "F_OpcUaCreatePaths.fct"
-    if (func_EQ(st_lv_objectPrefix, u""_WSTRING)) {
-      #line 21 "F_OpcUaCreatePaths.fct"
-      (*st_lv_browseName) = func_CONCAT(st_lv_browsePrefix, st_lv_containerName, st_lv_BROWSE_SEPARATOR, st_lv_objectName);
-      #line 22 "F_OpcUaCreatePaths.fct"
-      (*st_lv_nodeId) = func_CONCAT(st_lv_nodePrefix, st_lv_containerName, st_lv_NODE_SEPARATOR, st_lv_objectName);
-    }
-    else {
-      #line 24 "F_OpcUaCreatePaths.fct"
-      (*st_lv_browseName) = func_CONCAT(st_lv_browsePrefix, st_lv_containerName, st_lv_BROWSE_SEPARATOR, st_lv_objectPrefix, st_lv_BROWSE_SEPARATOR, st_lv_objectName);
-      #line 25 "F_OpcUaCreatePaths.fct"
-      (*st_lv_nodeId) = func_CONCAT(st_lv_nodePrefix, st_lv_containerName, st_lv_NODE_SEPARATOR, st_lv_objectPrefix, st_lv_NODE_SEPARATOR, st_lv_objectName);
-    }
-
+    func_F_OpcUaCreatePaths__impl(st_lv_browsePrefix, st_lv_nodePrefix, st_lv_containerName, st_lv_objectPrefix, st_lv_objectName, *st_lv_browseName, *st_lv_nodeId);
   }
 
+  namespace {
+    void func_F_OpcUaCreatePaths__impl(const CIEC_WSTRING &st_lv_browsePrefix, const CIEC_WSTRING &st_lv_nodePrefix, const CIEC_WSTRING &st_lv_containerName, const CIEC_WSTRING &st_lv_objectPrefix, const CIEC_WSTRING &st_lv_objectName, CIEC_WSTRING &st_lv_browseName, CIEC_WSTRING &st_lv_nodeId) {
+      st_lv_browseName = u""_WSTRING;
+      st_lv_nodeId = u""_WSTRING;
+      const CIEC_WSTRING st_lv_BROWSE_SEPARATOR = u"/"_WSTRING;
+      const CIEC_WSTRING st_lv_NODE_SEPARATOR = u"."_WSTRING;
+
+      #line 20 "F_OpcUaCreatePaths.fct"
+      if (func_EQ(st_lv_objectPrefix, u""_WSTRING)) {
+        #line 21 "F_OpcUaCreatePaths.fct"
+        st_lv_browseName = func_CONCAT(st_lv_browsePrefix, st_lv_containerName, st_lv_BROWSE_SEPARATOR, st_lv_objectName);
+        #line 22 "F_OpcUaCreatePaths.fct"
+        st_lv_nodeId = func_CONCAT(st_lv_nodePrefix, st_lv_containerName, st_lv_NODE_SEPARATOR, st_lv_objectName);
+      }
+      else {
+        #line 24 "F_OpcUaCreatePaths.fct"
+        st_lv_browseName = func_CONCAT(st_lv_browsePrefix, st_lv_containerName, st_lv_BROWSE_SEPARATOR, st_lv_objectPrefix, st_lv_BROWSE_SEPARATOR, st_lv_objectName);
+        #line 25 "F_OpcUaCreatePaths.fct"
+        st_lv_nodeId = func_CONCAT(st_lv_nodePrefix, st_lv_containerName, st_lv_NODE_SEPARATOR, st_lv_objectPrefix, st_lv_NODE_SEPARATOR, st_lv_objectName);
+      }
+
+    }
+  }
 }

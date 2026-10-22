@@ -6,56 +6,58 @@
  * http://www.eclipse.org/legal/epl-2.0.
  *
  * SPDX-License-Identifier: EPL-2.0
-
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.3.0.qualifier!
  ***
  *** Name: F_NOW_MONOTONIC
- *** Description: return a clear monotonic time
+ *** Description: returns current monotonic clock value
  *** Version:
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.0: 2024-10-01/Franz Höpfinger - HR Agrartechnik GmbH    -
  *************************************************************************/
 
 #include "forte/eclipse4diac/utils/timing/F_NOW_MONOTONIC_fct.h"
 
-using namespace forte::literals;
-
 #include "forte/datatypes/forte_time.h"
-#include "forte/iec61131_functions/func_NOW_MONOTONIC.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
 #include "forte/eclipse4diac/utils/timing/F_NOW_MONOTONIC_fct.h"
+#include "forte/iec61131_functions/func_NOW_MONOTONIC.h"
+
+using namespace std::literals;
+using namespace forte::literals;
 
 namespace forte::eclipse4diac::utils::timing {
   namespace {
-    const auto cDataOutputNames = std::array{""_STRID};
+    constexpr std::string_view TypeHash = ""sv;
+
     const auto cEventInputNames = std::array{"REQ"_STRID};
-    const auto cEventInputTypeIds = std::array{"Event"_STRID};
     const auto cEventOutputNames = std::array{"CNF"_STRID};
-    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
+    const auto cDataOutputNames = std::array{""_STRID};
     const SFBInterfaceSpec cFBInterfaceSpec = {
         .mEINames = cEventInputNames,
-        .mEITypeNames = cEventInputTypeIds,
+        .mEITypeNames = {},
         .mEONames = cEventOutputNames,
-        .mEOTypeNames = cEventOutputTypeIds,
+        .mEOTypeNames = {},
         .mDINames = {},
         .mDONames = cDataOutputNames,
         .mDIONames = {},
         .mSocketNames = {},
         .mPlugNames = {},
     };
+
+    CIEC_TIME func_F_NOW_MONOTONIC__impl();
   } // namespace
 
-  DEFINE_FIRMWARE_FB(FORTE_F_NOW_MONOTONIC, "eclipse4diac::utils::timing::F_NOW_MONOTONIC"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_F_NOW_MONOTONIC, "eclipse4diac::utils::timing::F_NOW_MONOTONIC"_STRID, TypeHash)
 
-  FORTE_F_NOW_MONOTONIC::FORTE_F_NOW_MONOTONIC(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+  FORTE_F_NOW_MONOTONIC::FORTE_F_NOW_MONOTONIC(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      var_(0_TIME),
       conn_CNF(*this, 0),
       conn_(*this, 0, var_) {
   }
 
   void FORTE_F_NOW_MONOTONIC::setInitialValues() {
+    CFunctionBlock::setInitialValues();
     var_ = 0_TIME;
   }
 
@@ -66,7 +68,7 @@ namespace forte::eclipse4diac::utils::timing {
   void FORTE_F_NOW_MONOTONIC::writeOutputData(const TEventID paEIID) {
     switch (paEIID) {
       case scmEventCNFID: {
-        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
+        writeData(0, var_, conn_);
         break;
       }
       default: break;
@@ -103,16 +105,22 @@ namespace forte::eclipse4diac::utils::timing {
   }
 
   void FORTE_F_NOW_MONOTONIC::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-    var_ = func_F_NOW_MONOTONIC();
+    var_ = func_F_NOW_MONOTONIC__impl();
     sendOutputEvent(scmEventCNFID, paECET);
   }
 
   CIEC_TIME func_F_NOW_MONOTONIC() {
-    CIEC_TIME st_ret_val = 0_TIME;
+    return func_F_NOW_MONOTONIC__impl();
+  }
+
+  namespace {
+    CIEC_TIME func_F_NOW_MONOTONIC__impl() {
+      CIEC_TIME st_ret_val = 0_TIME;
 
 #line 5 "F_NOW_MONOTONIC.fct"
-    st_ret_val = func_NOW_MONOTONIC();
+      st_ret_val = func_NOW_MONOTONIC();
 
-    return st_ret_val;
-  }
+      return st_ret_val;
+    }
+  } // namespace
 } // namespace forte::eclipse4diac::utils::timing

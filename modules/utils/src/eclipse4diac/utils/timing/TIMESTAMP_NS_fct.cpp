@@ -6,62 +6,62 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *
- * This file was generated using the 4DIAC FORTE Export Filter
+ * This file was generated using the 4DIAC FORTE Export Filter 3.3.0.qualifier!
  *
  * Name: TIMESTAMP_NS
- * Description: creates default a Unix-Epoch-Timestamp in nanoseconds use other start dates for other timestamp types
- * Version:
- *     1.0: 2024-10-14/Monika Wenger - initial commit -
+ * Description: Creates by default a Unix-Epoch-Timestamp in nanoseconds. Use other start dates for other timestamp
+ * types. Version: 3.0.1: 2026-09-02/Franz Höpfinger - HR Agrartechnik GmbH - add missing PACKAGE statement, improved
+ * comments 3.0: 2025-04-14/Patrick Aigner -  - changed package 1.0: 2024-10-14/Monika Wenger -  -
  *************************************************************************/
 
 #include "forte/eclipse4diac/utils/timing/TIMESTAMP_NS_fct.h"
 
-using namespace forte::literals;
-
-#include "forte/datatypes/forte_any_duration_variant.h"
 #include "forte/datatypes/forte_date_and_time.h"
 #include "forte/datatypes/forte_ulint.h"
+#include "forte/eclipse4diac/utils/timing/TIMESTAMP_NS_fct.h"
 #include "forte/iec61131_functions/func_NOW.h"
 #include "forte/iec61131_functions/func_SUB.h"
 #include "forte/iec61131_functions/func_TIME_IN_NS_TO_ULINT.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
-#include "forte/eclipse4diac/utils/timing/TIMESTAMP_NS_fct.h"
+
+using namespace std::literals;
+using namespace forte::literals;
 
 namespace forte::eclipse4diac::utils::timing {
   namespace {
+    constexpr std::string_view TypeHash = ""sv;
+
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
     const auto cDataInputNames = std::array{"startDate"_STRID};
     const auto cDataOutputNames = std::array{""_STRID};
-    const auto cEventInputNames = std::array{"REQ"_STRID};
-    const auto cEventInputTypeIds = std::array{"Event"_STRID};
-    const auto cEventOutputNames = std::array{"CNF"_STRID};
-    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
     const SFBInterfaceSpec cFBInterfaceSpec = {
         .mEINames = cEventInputNames,
-        .mEITypeNames = cEventInputTypeIds,
+        .mEITypeNames = {},
         .mEONames = cEventOutputNames,
-        .mEOTypeNames = cEventOutputTypeIds,
+        .mEOTypeNames = {},
         .mDINames = cDataInputNames,
         .mDONames = cDataOutputNames,
         .mDIONames = {},
         .mSocketNames = {},
         .mPlugNames = {},
     };
+
+    CIEC_ULINT func_TIMESTAMP_NS__impl(const CIEC_DATE_AND_TIME &st_lv_startDate);
   } // namespace
 
-  DEFINE_FIRMWARE_FB(FORTE_TIMESTAMP_NS, "eclipse4diac::utils::timing::TIMESTAMP_NS"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_TIMESTAMP_NS, "eclipse4diac::utils::timing::TIMESTAMP_NS"_STRID, TypeHash)
 
-  FORTE_TIMESTAMP_NS::FORTE_TIMESTAMP_NS(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
+  FORTE_TIMESTAMP_NS::FORTE_TIMESTAMP_NS(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
       var_startDate(0_DATE_AND_TIME),
+      var_(0_ULINT),
       conn_CNF(*this, 0),
       conn_startDate(nullptr),
       conn_(*this, 0, var_) {
   }
 
   void FORTE_TIMESTAMP_NS::setInitialValues() {
+    CFunctionBlock::setInitialValues();
     var_startDate = 0_DATE_AND_TIME;
     var_ = 0_ULINT;
   }
@@ -79,7 +79,7 @@ namespace forte::eclipse4diac::utils::timing {
   void FORTE_TIMESTAMP_NS::writeOutputData(const TEventID paEIID) {
     switch (paEIID) {
       case scmEventCNFID: {
-        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
+        writeData(1, var_, conn_);
         break;
       }
       default: break;
@@ -122,16 +122,22 @@ namespace forte::eclipse4diac::utils::timing {
   }
 
   void FORTE_TIMESTAMP_NS::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-    var_ = func_TIMESTAMP_NS(var_startDate);
+    var_ = func_TIMESTAMP_NS__impl(var_startDate);
     sendOutputEvent(scmEventCNFID, paECET);
   }
 
-  CIEC_ULINT func_TIMESTAMP_NS(CIEC_DATE_AND_TIME st_lv_startDate) {
-    CIEC_ULINT st_ret_val = 0_ULINT;
-
-#line 5 "TIMESTAMP_NS.fct"
-    st_ret_val = func_TIME_IN_NS_TO_ULINT(func_SUB<CIEC_TIME>(func_NOW(), st_lv_startDate));
-
-    return st_ret_val;
+  CIEC_ULINT func_TIMESTAMP_NS(const CIEC_DATE_AND_TIME &st_lv_startDate) {
+    return func_TIMESTAMP_NS__impl(st_lv_startDate);
   }
+
+  namespace {
+    CIEC_ULINT func_TIMESTAMP_NS__impl(const CIEC_DATE_AND_TIME &st_lv_startDate) {
+      CIEC_ULINT st_ret_val = 0_ULINT;
+
+#line 8 "TIMESTAMP_NS.fct"
+      st_ret_val = func_TIME_IN_NS_TO_ULINT(func_SUB<CIEC_TIME>(func_NOW(), st_lv_startDate));
+
+      return st_ret_val;
+    }
+  } // namespace
 } // namespace forte::eclipse4diac::utils::timing

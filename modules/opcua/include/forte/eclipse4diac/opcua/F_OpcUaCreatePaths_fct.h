@@ -57,23 +57,6 @@ namespace forte::eclipse4diac::opcua {
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
-
-      void evt_REQ(const CIEC_WSTRING &pabrowsePrefix, const CIEC_WSTRING &panodePrefix, const CIEC_WSTRING &pacontainerName, const CIEC_WSTRING &paobjectPrefix, const CIEC_WSTRING &paobjectName, COutputParameter<CIEC_WSTRING> pabrowseName, COutputParameter<CIEC_WSTRING> panodeId) {
-        COutputGuard guard_browseName(pabrowseName);
-        COutputGuard guard_nodeId(panodeId);
-        var_browsePrefix = pabrowsePrefix;
-        var_nodePrefix = panodePrefix;
-        var_containerName = pacontainerName;
-        var_objectPrefix = paobjectPrefix;
-        var_objectName = paobjectName;
-        executeEvent(scmEventREQID, nullptr);
-        *pabrowseName = var_browseName;
-        *panodeId = var_nodeId;
-      }
-
-      void operator()(const CIEC_WSTRING &pabrowsePrefix, const CIEC_WSTRING &panodePrefix, const CIEC_WSTRING &pacontainerName, const CIEC_WSTRING &paobjectPrefix, const CIEC_WSTRING &paobjectName, COutputParameter<CIEC_WSTRING> pabrowseName, COutputParameter<CIEC_WSTRING> panodeId) {
-        evt_REQ(std::forward<const CIEC_WSTRING &>(pabrowsePrefix), std::forward<const CIEC_WSTRING &>(panodePrefix), std::forward<const CIEC_WSTRING &>(pacontainerName), std::forward<const CIEC_WSTRING &>(paobjectPrefix), std::forward<const CIEC_WSTRING &>(paobjectName), std::forward<COutputParameter<CIEC_WSTRING>>(pabrowseName), std::forward<COutputParameter<CIEC_WSTRING>>(panodeId));
-      }
   };
 
   void func_F_OpcUaCreatePaths(const CIEC_WSTRING &st_lv_browsePrefix, const CIEC_WSTRING &st_lv_nodePrefix, const CIEC_WSTRING &st_lv_containerName, const CIEC_WSTRING &st_lv_objectPrefix, const CIEC_WSTRING &st_lv_objectName, COutputParameter<CIEC_WSTRING> st_lv_browseName, COutputParameter<CIEC_WSTRING> st_lv_nodeId);
