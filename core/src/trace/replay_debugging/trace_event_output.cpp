@@ -1,10 +1,14 @@
 #include "forte/funcbloc.h"
-#include "forte/resource.h"
-#include "../../resource_internal.h"
+#include "forte/ecet.h"
+#include "../../ecet_internal.h"
 
 namespace forte {
   void CFunctionBlock::traceOutputEvent(TEventID paEOID, CEventChainExecutionThread *const paECET) {
-    if (auto &tracer = getResource()->getInternal().getTracer(); tracer.isEnabled()) {
+    if (!paECET) {
+      return;
+    }
+
+    if (auto &tracer = paECET->getInternal().getTracer(); tracer.isEnabled()) {
 
       // don't trace events that are not connected since they don't increase the event counter
       if (getEOConUnchecked(static_cast<TPortId>(paEOID))->getDestinationList().size() == 0) {

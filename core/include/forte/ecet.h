@@ -21,13 +21,16 @@
 #include "forte/arch/forte_sync.h"
 #include "forte/arch/forte_sem.h"
 
+#include <memory>
+
 namespace forte {
+  class ECETInternal;
   /*! \ingroup CORE\brief Class for executing one event chain.
    *
    */
   class CEventChainExecutionThread : public arch::CThread {
     public:
-      CEventChainExecutionThread();
+      explicit CEventChainExecutionThread(StringId paName);
       ~CEventChainExecutionThread() override;
 
       /*!\brief Start the a new event chain with the given event.
@@ -69,6 +72,11 @@ namespace forte {
       void resumeSelfSuspend() {
         mSuspendSemaphore.inc();
       }
+
+      [[nodiscard]] ECETInternal &getInternal() const {
+        return *mInternal;
+      }
+
 #ifdef FORTE_TRACE_CTF
       uint64_t mEventCounter{0};
 #endif // FORTE_TRACE_CTF
@@ -138,5 +146,7 @@ namespace forte {
        * TODO consider surrounding the usage points of this flag with #defines such that it is only used for testing.
        */
       bool mProcessingEvents{false};
+
+      std::unique_ptr<ECETInternal> mInternal;
   };
 } // namespace forte

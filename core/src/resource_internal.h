@@ -19,20 +19,10 @@
 #include "lua/luaengine.h"
 #endif
 
-#ifdef FORTE_TRACE_CTF
-#include "trace/tracerConfig.h"
-#endif
-
 namespace forte {
   class ResourceInternal {
     public:
-      explicit ResourceInternal(CResource &paResource) :
-          mMonitoringHandler(paResource)
-#ifdef FORTE_TRACE_CTF
-          ,
-          mTracer(paResource.getInstanceNameId(), FORTE_TRACE_CTF_BUFFER_SIZE)
-#endif
-      {
+      explicit ResourceInternal(CResource &paResource) : mMonitoringHandler(paResource) {
       }
 
       CMonitoringHandler &getMonitoringHandler() {
@@ -45,18 +35,8 @@ namespace forte {
       }
 #endif
 
-#ifdef FORTE_TRACE_CTF
-      trace::CForteTracer &getTracer() {
-        return mTracer;
-      }
-#endif
-
     private:
       CMonitoringHandler mMonitoringHandler;
-
-#ifdef FORTE_TRACE_CTF
-      trace::CForteTracer mTracer;
-#endif // FORTE_TRACE_CTF
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
       CLuaEngine luaEngine; //!< The Lua engine for this container

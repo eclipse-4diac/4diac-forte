@@ -226,7 +226,7 @@ namespace forte {
                     getFBInterfaceSpec().getNumEIs() - 1);
 
 #ifdef FORTE_TRACE_CTF
-        traceInputEvent(paEIID);
+        traceInputEvent(paEIID, paExecEnv);
 #endif // FORTE_TRACE_CTF
         if (E_FBStates::Running == getState()) {
           if (paEIID < getFBInterfaceSpec().getNumEIs()) {
@@ -355,7 +355,7 @@ namespace forte {
       virtual void toString(std::string &paTargetBuf) const;
 
 #ifdef FORTE_TRACE_CTF
-      virtual void traceInstanceData() {
+      virtual void traceInstanceData(CEventChainExecutionThread *paECET) {
       }
 #endif // FORTE_TRACE_CTF
 
@@ -573,8 +573,8 @@ namespace forte {
       std::bitset<cgMaxSupportedForceIndex> mForces;
 
 #ifdef FORTE_TRACE_CTF
-      void traceInputEvent(TEventID paEIID);
-      void traceOutputEvent(TEventID paEOID, CEventChainExecutionThread *const paECET);
+      void traceInputEvent(TEventID paEIID, CEventChainExecutionThread *paECET);
+      void traceOutputEvent(TEventID paEOID, CEventChainExecutionThread *paECET);
 #endif
 
       /*!\brief Current state of the runnable object.

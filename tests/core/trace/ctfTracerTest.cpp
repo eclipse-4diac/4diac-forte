@@ -91,9 +91,6 @@ namespace forte::trace::test {
                               0);
     };
 
-    // device resource has no events
-    expectedMessages[std::string(deviceName)] = {};
-
     // default resource in the test device
     expectedMessages["EMB_RES"] = {};
 

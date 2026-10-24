@@ -19,6 +19,8 @@
 #include "forte/util/criticalregion.h"
 #include "forte/util/devlog.h"
 
+#include "ecet_internal.h"
+
 using namespace forte::literals;
 
 namespace forte {
@@ -26,7 +28,9 @@ namespace forte {
     [[maybe_unused]] const EcetFactory::EntryImpl<CEventChainExecutionThread> entry("default"_STRID);
   }
 
-  CEventChainExecutionThread::CEventChainExecutionThread() : arch::CThread() {
+  CEventChainExecutionThread::CEventChainExecutionThread(StringId paName) :
+      arch::CThread(),
+      mInternal(std::make_unique<ECETInternal>(paName)) {
     clear();
   }
 
