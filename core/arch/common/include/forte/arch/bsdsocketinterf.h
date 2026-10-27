@@ -41,6 +41,6 @@ namespace forte::arch {
       CBSDSocketInterface() = delete;
 
     private:
-      static int handleError(int nRetVal, const char *msg);
+      static int handleError(int paRetVal, int paRecvErrno, const char *paProtocol);
   };
 } // namespace forte::arch
