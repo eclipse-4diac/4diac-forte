@@ -253,30 +253,30 @@ namespace forte::eclipse4diac::io::ethercat {
 
       DEVLOG_INFO("ethercat[BusHandler]: Configured device - Alias: %u, Position: %u, VendorId: 0x%08X, ProductCode: 0x%08X\n"
                   ,deviceModel.mAlias, deviceModel.mPosition, deviceModel.mVendorId, deviceModel.mProductCode);
-      
-      const int activateRet = ecrt_master_activate(mECController);
-      if(activateRet) {
-        DEVLOG_ERROR("ethercat[BusHandler]: %s(Controller ID: %u).\n", scmECControllerActivateFailed, mConfig.mECControllerId);
-        return;
-      }
-
-      mECDomainPd = ecrt_domain_data(mECDomain);
-      if(mECDomainPd == nullptr) {
-        DEVLOG_ERROR("ethercat[BusHandler]: %s(Controller ID: %u).\n", scmECGetDomainProcessDataFailed, mConfig.mECControllerId);
-        return;
-      }
-
-      ec_master_state_t ms;
-      ecrt_master_state(mECController, &ms);
-      DEVLOG_INFO("ethercat[BusHandler]: Initial state - Devices responding: %u, AL States: 0x%02x\n", ms.slaves_responding, ms.al_states);
-
-      size_t domainSize = ecrt_domain_size(mECDomain);
-      DEVLOG_INFO("ethercat[BusHandler]: Domain size: %zu bytes\n", domainSize);
-
-      DEVLOG_INFO("ethercat[BusHandler]: Controller activated successfully.\n");
-
-      mLoopPreparedFlag = true;
     }
+
+    const int activateRet = ecrt_master_activate(mECController);
+    if(activateRet) {
+      DEVLOG_ERROR("ethercat[BusHandler]: %s(Controller ID: %u).\n", scmECControllerActivateFailed, mConfig.mECControllerId);
+      return;
+    }
+
+    mECDomainPd = ecrt_domain_data(mECDomain);
+    if(mECDomainPd == nullptr) {
+      DEVLOG_ERROR("ethercat[BusHandler]: %s(Controller ID: %u).\n", scmECGetDomainProcessDataFailed, mConfig.mECControllerId);
+      return;
+    }
+
+    ec_master_state_t ms;
+    ecrt_master_state(mECController, &ms);
+    DEVLOG_INFO("ethercat[BusHandler]: Initial state - Devices responding: %u, AL States: 0x%02x\n", ms.slaves_responding, ms.al_states);
+
+    size_t domainSize = ecrt_domain_size(mECDomain);
+    DEVLOG_INFO("ethercat[BusHandler]: Domain size: %zu bytes\n", domainSize);
+
+    DEVLOG_INFO("ethercat[BusHandler]: Controller activated successfully.\n");
+
+    mLoopPreparedFlag = true;
   }
 
   void ECBusHandler::runLoop() {
