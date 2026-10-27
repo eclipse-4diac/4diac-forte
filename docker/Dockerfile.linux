@@ -1,0 +1,47 @@
+FROM debian:trixie-slim AS build
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+        ca-certificates \
+        cmake \
+        g++ \
+        ninja-build \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /src
+COPY . .
+
+RUN cmake -S . -B /build -G Ninja \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/opt/forte \
+        -DFORTE_LOGLEVEL=LOGINFO \
+        -DFORTE_ARCHITECTURE=Posix \
+        -DFORTE_COM_ETH=ON \
+        -DFORTE_COM_FBDK=ON \
+        -DFORTE_COM_LOCAL=ON \
+        -DFORTE_MODULE_CONVERT=ON \
+        -DFORTE_MODULE_IEC61131=ON \
+        -DFORTE_MODULE_UTILS=ON \
+        -DFORTE_TESTS=OFF \
+    && cmake --build /build --parallel \
+    && cmake --install /build
+
+FROM debian:trixie-slim AS runtime
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+        ca-certificates \
+        libstdc++6 \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --gid 10001 forte \
+    && useradd --uid 10001 --gid forte --no-create-home --shell /usr/sbin/nologin forte
+
+COPY --from=build /opt/forte/bin/forte /usr/local/bin/forte
+
+USER forte
+WORKDIR /var/lib/forte
+
+EXPOSE 61499/tcp
+
+ENTRYPOINT ["/usr/local/bin/forte"]
+CMD ["--listen", "0.0.0.0:61499"]
