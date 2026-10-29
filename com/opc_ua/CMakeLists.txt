@@ -46,6 +46,11 @@ set(FORTE_COM_OPC_UA_SERVER_MAX_ITERATION_INTERVAL
         CACHE STRING
         "The maximum time in OPC UA server will wait to iterate again"
 )
+set(FORTE_COM_OPC_UA_CLIENT_INIT_TIMEOUT
+        60000
+        CACHE STRING
+        "Time in ms a remote OPC UA client FB waits for its first initialization, 0 waits forever"
+)
 
 option(FORTE_COM_OPC_UA_MULTICAST
         "Enable multicast support for OPC UA and registering with LDS" OFF

@@ -31,13 +31,34 @@
 #include "opcua_remote_handler.h"
 #include "opcua_objectstruct_helper.h"
 #include "forte/cominfra/comlayersmanager.h"
+#include "forte/arch/forte_architecture_time.h"
+#include "forte/util/mainparam_utils.h"
+#include "opcua_defaults.h"
 
 using namespace forte::literals;
 
 namespace forte::com_infra::opc_ua {
   namespace {
     [[maybe_unused]] const ComLayerManager::EntryImpl<COPC_UA_Layer> entry("opc_ua"_STRID);
-  }
+
+    class OpcuaClientInitTimeoutOption final
+        : public util::CommandLineParser::IntOptionImpl<
+              TForteUInt32,
+              "oi",
+              "opc_ua-client-init-timeout",
+              "<ms>",
+              "Set the time a remote OPC UA client FB waits for its first initialization, 0 waits forever"> {
+      public:
+        bool setOption(const TForteUInt32 paArgument) override {
+          mArgument = paArgument;
+          return true;
+        }
+
+        TForteUInt32 mArgument = FORTE_COM_OPC_UA_CLIENT_INIT_TIMEOUT;
+    };
+
+    OpcuaClientInitTimeoutOption gOpcuaClientInitTimeout;
+  } // namespace
 
   COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
       CComLayer(paUpperLayer, paComFB),
@@ -57,12 +78,25 @@ namespace forte::com_infra::opc_ua {
                      ? static_cast<COPC_UA_HandlerAbstract *>(&getExtEvHandler<COPC_UA_Remote_Handler>())
                      : static_cast<COPC_UA_HandlerAbstract *>(&getExtEvHandler<COPC_UA_Local_Handler>());
       if (checkTypesFromInterface()) {
+        if (mActionInfo->isRemote()) {
+          // set before the action is handed to the handler, which may initialize it at once in another thread
+          util::CCriticalRegion dataReadRegion(mDataAlreadyPresentMutex);
+          mRemoteInitState = ERemoteInitState::ePending;
+          mRemoteInitDeadline = (0 != gOpcuaClientInitTimeout.mArgument)
+                                    ? arch::getNanoSecondsMonotonic() +
+                                          static_cast<uint_fast64_t>(gOpcuaClientInitTimeout.mArgument) * 1000000
+                                    : 0;
+        }
         if (UA_STATUSCODE_GOOD == mHandler->initializeAction(*mActionInfo)) {
           util::CCriticalRegion criticalRegion(mRDBufferMutex);
-          response = e_InitOk;
+          // a remote action is only queued here, INITO is sent when it is initialized
+          response = mActionInfo->isRemote() ? e_Nothing : e_InitOk;
           for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
             mRDBuffer.emplace_back(getCommFB()->getRDs()[i]->clone(nullptr));
           }
+        } else {
+          util::CCriticalRegion dataReadRegion(mDataAlreadyPresentMutex);
+          mRemoteInitState = ERemoteInitState::eNone;
         }
       } else {
         bool isPublisher;
@@ -155,12 +189,8 @@ namespace forte::com_infra::opc_ua {
     }
 
     if (e_ProcessDataOk == mInterruptResp) {
-      if (getDataAlreadyPresentRead()) {
-        return e_Nothing; // won't trigger another external event on subscription
-      } else {
-        setDataAlreadyPresentRead(true);
-        return e_ProcessDataOk; // will trigger an external event on subscription
-      }
+      // won't trigger another external event on subscription if data is already present or INITO is not sent yet
+      return markDataPresent() ? e_ProcessDataOk : e_Nothing;
     }
 
     return mInterruptResp;
@@ -174,6 +204,23 @@ namespace forte::com_infra::opc_ua {
   }
 
   EComResponse COPC_UA_Layer::processInterrupt() {
+    EComResponse initResp;
+    bool dataPresent;
+    {
+      util::CCriticalRegion dataReadRegion(mDataAlreadyPresentMutex);
+      initResp = mInitResp;
+      mInitResp = e_Nothing;
+      dataPresent = mDataAlreadyPresent;
+    }
+    if (e_Nothing != initResp) {
+      if (e_InitOk == initResp && dataPresent) {
+        // data received before INITO is reported with the next external event
+        getCommFB()->interruptCommFB(this);
+        triggerNewEvent();
+      }
+      return initResp;
+    }
+
     util::CCriticalRegion criticalRegion(mRDBufferMutex);
     if (mIsObjectNodeStruct) {
       CIEC_STRUCT &structType = static_cast<CIEC_STRUCT &>(getCommFB()->getRDs()[0]->unwrap());
@@ -189,6 +236,33 @@ namespace forte::com_infra::opc_ua {
 
   void COPC_UA_Layer::triggerNewEvent() {
     mHandler->triggerNewEvent(*this->getCommFB());
+  }
+
+  void COPC_UA_Layer::remoteInitializationFinished(bool paSuccess) {
+    {
+      util::CCriticalRegion dataReadRegion(mDataAlreadyPresentMutex);
+      if (ERemoteInitState::ePending != mRemoteInitState) {
+        return;
+      }
+      mRemoteInitState = paSuccess ? ERemoteInitState::eNone : ERemoteInitState::eFailed;
+      mInitResp = paSuccess ? e_InitOk : e_InitTerminated;
+    }
+    if (!paSuccess) {
+      DEVLOG_ERROR("[OPC UA LAYER]: The remote action of FB %s was not initialized within %u ms\n",
+                   getCommFB()->getInstanceName(), static_cast<unsigned int>(gOpcuaClientInitTimeout.mArgument));
+    }
+    getCommFB()->interruptCommFB(this);
+    triggerNewEvent();
+  }
+
+  bool COPC_UA_Layer::isRemoteInitializationTimedOut(uint_fast64_t paNow) {
+    util::CCriticalRegion dataReadRegion(mDataAlreadyPresentMutex);
+    return ERemoteInitState::ePending == mRemoteInitState && 0 != mRemoteInitDeadline && paNow >= mRemoteInitDeadline;
+  }
+
+  bool COPC_UA_Layer::hasRemoteInitializationFailed() {
+    util::CCriticalRegion dataReadRegion(mDataAlreadyPresentMutex);
+    return ERemoteInitState::eFailed == mRemoteInitState;
   }
 
   bool COPC_UA_Layer::checkTypesFromInterface() const {
@@ -218,10 +292,15 @@ namespace forte::com_infra::opc_ua {
     return true;
   }
 
-  bool COPC_UA_Layer::getDataAlreadyPresentRead() {
+  bool COPC_UA_Layer::markDataPresent() {
     util::CCriticalRegion dataReadRegion(mDataAlreadyPresentMutex);
-    return mDataAlreadyPresent;
+    if (mDataAlreadyPresent) {
+      return false;
+    }
+    mDataAlreadyPresent = true;
+    return ERemoteInitState::ePending != mRemoteInitState && e_Nothing == mInitResp;
   }
+
   void COPC_UA_Layer::setDataAlreadyPresentRead(bool paDataRead) {
     util::CCriticalRegion dataReadRegion(mDataAlreadyPresentMutex);
     mDataAlreadyPresent = paDataRead;
