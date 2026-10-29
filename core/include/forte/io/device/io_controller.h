@@ -59,7 +59,7 @@ namespace forte::io {
        */
       class HandleDescriptor {
         public:
-          std::string const &mId;
+          std::string const mId;
           IOMapper::Direction mDirection;
 
           HandleDescriptor(std::string const &paId, IOMapper::Direction paDirection) :
