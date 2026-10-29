@@ -121,6 +121,8 @@ namespace forte::com_infra::opc_ua {
 
   bool CUA_ClientInformation::handleClientState() {
 
+    reportInitializationTimeouts();
+
     mSomeActionWasInitialized = false;
     bool noMoreChangesNeeded = false;
     bool tryAnotherChangeImmediately = true;
@@ -346,9 +348,17 @@ namespace forte::com_infra::opc_ua {
     bool somethingFailed = false;
 
     for (auto itActionInfo = mActionsToBeInitialized.begin(); itActionInfo != mActionsToBeInitialized.end();) {
-
-      if (!initializeAction(**itActionInfo)) {
+      COPC_UA_Layer &layer = (*itActionInfo)->getLayer();
+      // the connection before can take a while, so the time is checked again for each action
+      if (layer.isRemoteInitializationTimedOut(arch::getNanoSecondsMonotonic())) {
+        layer.remoteInitializationFinished(false);
+      }
+      if (layer.hasRemoteInitializationFailed()) {
+        // INITO already reported the failure, the action stays uninitialized until the FB is initialized again
+        itActionInfo++;
+      } else if (!initializeAction(**itActionInfo)) {
         mSomeActionWasInitialized = true;
+        layer.remoteInitializationFinished(true);
         itActionInfo = mActionsToBeInitialized.erase(itActionInfo);
       } else {
         somethingFailed = true;
@@ -357,6 +367,16 @@ namespace forte::com_infra::opc_ua {
     }
 
     return !somethingFailed;
+  }
+
+  void CUA_ClientInformation::reportInitializationTimeouts() {
+    const uint_fast64_t now = arch::getNanoSecondsMonotonic();
+    for (auto actionToBeInitialized : mActionsToBeInitialized) {
+      COPC_UA_Layer &layer = actionToBeInitialized->getLayer();
+      if (layer.isRemoteInitializationTimedOut(now)) {
+        layer.remoteInitializationFinished(false);
+      }
+    }
   }
 
   bool CUA_ClientInformation::initializeAction(CActionInfo &paActionInfo) {
