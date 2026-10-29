@@ -108,6 +108,7 @@ namespace forte::com_infra::opc_ua {
       UA_Client_delete(mClient);
       mClient = nullptr;
     }
+    mActionsOfLostSubscription.clear(); // all actions are initialized again anyway
     mWaitToInitializeActions = false;
     mNeedsReconnection = false;
     mSomeActionWasInitialized = false;
@@ -163,7 +164,27 @@ namespace forte::com_infra::opc_ua {
       }
     }
 
+    // the subscription can also be lost during the service calls above
+    if (requeueActionsOfLostSubscription()) {
+      noMoreChangesNeeded = false;
+    }
+
     return noMoreChangesNeeded;
+  }
+
+  bool CUA_ClientInformation::requeueActionsOfLostSubscription() {
+    if (mActionsOfLostSubscription.empty()) {
+      return false;
+    }
+    for (auto actionInfo : mActionsOfLostSubscription) {
+      if (std::find(mActionsToBeInitialized.begin(), mActionsToBeInitialized.end(), actionInfo) ==
+          mActionsToBeInitialized.end()) {
+        mActionsToBeInitialized.push_back(actionInfo);
+      }
+    }
+    mActionsOfLostSubscription.clear();
+    mWaitToInitializeActions = false;
+    return true;
   }
 
   bool CUA_ClientInformation::executeAsyncCalls() {
@@ -528,6 +549,7 @@ namespace forte::com_infra::opc_ua {
   void CUA_ClientInformation::uninitializeAction(CActionInfo &paActionInfo) {
     // remove in case it is still not initialized
     std::erase(mActionsToBeInitialized, &paActionInfo);
+    std::erase(mActionsOfLostSubscription, &paActionInfo);
 
     if (CActionInfo::eSubscribe == paActionInfo.getAction()) { // only subscription has something to release
       uninitializeSubscribeAction(paActionInfo);
@@ -586,6 +608,11 @@ namespace forte::com_infra::opc_ua {
     if (mSubscriptionInfo.mSubscriptionId != 0) {
       removeAsyncCall();
       mSubscriptionInfo.mSubscriptionId = 0;
+      // We delete the subscription only when it has no items left. So items are left when the subscription was
+      // deleted without our request, e.g. after the server lost it. Their actions have to subscribe again
+      for (const auto &monitoringItemInfo : mSubscriptionInfo.mMonitoredItems) {
+        mActionsOfLostSubscription.push_back(monitoringItemInfo->mVariableInfo.mActionInfo);
+      }
       mSubscriptionInfo.mMonitoredItems.clear();
     }
   }
