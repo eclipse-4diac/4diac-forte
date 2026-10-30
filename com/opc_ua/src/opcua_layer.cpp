@@ -141,8 +141,8 @@ namespace forte::com_infra::opc_ua {
             }
           }
         } else {
-          DEVLOG_ERROR("[OPC UA LAYER]: Receiving data for FB %s failed because the response size is %u with an offset "
-                       "of %u but the FB has %u RDs\n",
+          DEVLOG_ERROR("[OPC UA LAYER]: Receiving data for FB %s failed because the response size is %zu with an "
+                       "offset of %zu but the FB has %zu RDs\n",
                        getCommFB()->getInstanceName(), handleRecv->mData.size(), handleRecv->mOffset,
                        getCommFB()->getNumRD());
           mInterruptResp = e_ProcessDataRecvFaild;
