@@ -88,7 +88,7 @@ namespace forte::com_infra::opc_ua {
     util::CParameterParser parser(paLayerParameter, ';');
     size_t nrOfParams = parser.parseParameters();
     if (nrOfParams != scmNumberOfAlarmParameters) {
-      DEVLOG_ERROR("[OPC UA A&C LAYER]: Wrong number of parameters for FB %s. Expected: %d, Actual: %d\n",
+      DEVLOG_ERROR("[OPC UA A&C LAYER]: Wrong number of parameters for FB %s. Expected: %zu, Actual: %zu\n",
                    getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str(),
                    scmNumberOfAlarmParameters, nrOfParams);
       return eRetVal;
@@ -125,7 +125,7 @@ namespace forte::com_infra::opc_ua {
     auto data = static_cast<const std::pair<TPortId, const CIEC_BOOL> *>(paData);
     TPortId portId = data->first;
     if (portId >= mRDBuffer.size()) {
-      DEVLOG_ERROR("[OPC UA A&C LAYER]: Wrong PortId for receiving data. Maximum allowed Id: %d, Actual: %d\n",
+      DEVLOG_ERROR("[OPC UA A&C LAYER]: Wrong PortId for receiving data. Maximum allowed Id: %zu, Actual: %zu\n",
                    mRDBuffer.size(), portId);
       return e_ProcessDataRecvFaild;
     }
@@ -387,7 +387,7 @@ namespace forte::com_infra::opc_ua {
     UA_BrowseResult_clear(&result);
     if (foundProperties != mUAPropertyMap.size()) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Number of found properties does not match number of properties to be "
-                   "mapped. Expected: %d, Actual: %d\n",
+                   "mapped. Expected: %zu, Actual: %zu\n",
                    mUAPropertyMap.size(), foundProperties);
       return UA_STATUSCODE_BADNODEIDUNKNOWN;
     }
@@ -450,8 +450,8 @@ namespace forte::com_infra::opc_ua {
       }
     }
     if (foundProperties != mFBOutputMap.size()) {
-      DEVLOG_ERROR("[OPC UA A&C LAYER]: Missing FB Output Ports %s / %s! Expected: %d, Found: %d\n", smActive, smAcked,
-                   mFBOutputMap.size(), foundProperties);
+      DEVLOG_ERROR("[OPC UA A&C LAYER]: Missing FB Output Ports %s / %s! Expected: %zu, Found: %zu\n", smActive,
+                   smAcked, mFBOutputMap.size(), foundProperties);
       return false;
     }
     return true;
