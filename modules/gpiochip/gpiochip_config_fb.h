@@ -14,6 +14,7 @@
 
 #include "forte/funcbloc.h"
 #include "forte/datatypes/forte_bool.h"
+#include "forte/datatypes/forte_string.h"
 #include "forte/datatypes/forte_uint.h"
 #include "forte/datatypes/forte_wstring.h"
 #include "forte/io/configFB/io_configFB_controller.h"
@@ -36,7 +37,7 @@ namespace forte::eclipse4diac::io::gpiochip {
       FORTE_GPIOChip(const forte::StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_BOOL var_QI;
-      CIEC_WSTRING var_VALUE;
+      CIEC_STRING var_VALUE;
       CIEC_UINT var_ChipNumber;
       CIEC_UINT var_LineNumber;
       CIEC_UINT var_ReadWriteMode;
