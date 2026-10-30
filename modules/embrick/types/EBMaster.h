@@ -78,39 +78,6 @@ namespace forte::eclipse4diac::io::embrick {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
       forte::IPlugPin *getPlugPinUnchecked(size_t) override;
-
-      void evt_INIT(const CIEC_BOOL &paQI,
-                    const CIEC_UINT &paBusInterface,
-                    const CIEC_UINT &paBusSelectPin,
-                    const CIEC_UDINT &paBusInitSpeed,
-                    const CIEC_UDINT &paBusLoopSpeed,
-                    const CIEC_UINT &paSlaveUpdateInterval,
-                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                    COutputParameter<CIEC_WSTRING> paSTATUS) {
-        COutputGuard guard_paQO(paQO);
-        COutputGuard guard_paSTATUS(paSTATUS);
-        var_QI = paQI;
-        var_BusInterface = paBusInterface;
-        var_BusSelectPin = paBusSelectPin;
-        var_BusInitSpeed = paBusInitSpeed;
-        var_BusLoopSpeed = paBusLoopSpeed;
-        var_SlaveUpdateInterval = paSlaveUpdateInterval;
-        receiveInputEvent(scmEventINITID, nullptr);
-        *paQO = var_QO;
-        *paSTATUS = var_STATUS;
-      }
-
-      void operator()(const CIEC_BOOL &paQI,
-                      const CIEC_UINT &paBusInterface,
-                      const CIEC_UINT &paBusSelectPin,
-                      const CIEC_UDINT &paBusInitSpeed,
-                      const CIEC_UDINT &paBusLoopSpeed,
-                      const CIEC_UINT &paSlaveUpdateInterval,
-                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                      COutputParameter<CIEC_WSTRING> paSTATUS) {
-        evt_INIT(paQI, paBusInterface, paBusSelectPin, paBusInitSpeed, paBusLoopSpeed, paSlaveUpdateInterval, paQO,
-                 paSTATUS);
-      }
   };
 
 } // namespace forte::eclipse4diac::io::embrick

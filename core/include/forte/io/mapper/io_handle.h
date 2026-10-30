@@ -1,5 +1,6 @@
 /*******************************************************************************
- * Copyright (c) 2016 - 2018 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ * Copyright (c) 2016 Johannes Messmer (admin@jomess.com), fortiss GmbH
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -11,12 +12,9 @@
  *   Jose Cabral - Cleaning of namespaces
  *******************************************************************************/
 
-#ifndef SRC_CORE_IO_MAPPER_HANDLE_H_
-#define SRC_CORE_IO_MAPPER_HANDLE_H_
+#pragma once
 
 #include "forte/datatypes/forte_any.h"
-#include "forte/datatypes/forte_bool.h"
-
 #include "forte/io/mapper/io_mapper.h"
 
 namespace forte::io {
@@ -73,5 +71,3 @@ namespace forte::io {
   };
 
 } // namespace forte::io
-
-#endif /* SRC_CORE_IO_MAPPER_HANDLE_H_ */

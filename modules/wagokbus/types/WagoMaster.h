@@ -47,26 +47,6 @@ namespace forte::eclipse4diac::io::wago {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_INIT(const CIEC_BOOL &paQI,
-                    const CIEC_UINT &paUpdateInterval,
-                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                    COutputParameter<CIEC_WSTRING> paSTATUS) {
-        COutputGuard guard_paQO(paQO);
-        COutputGuard guard_paSTATUS(paSTATUS);
-        var_QI = paQI;
-        var_UpdateInterval = paUpdateInterval;
-        executeEvent(scmEventINITID, nullptr);
-        *paQO = var_QO;
-        *paSTATUS = var_STATUS;
-      }
-
-      void operator()(const CIEC_BOOL &paQI,
-                      const CIEC_UINT &paUpdateInterval,
-                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                      COutputParameter<CIEC_WSTRING> paSTATUS) {
-        evt_INIT(paQI, paUpdateInterval, paQO, paSTATUS);
-      }
-
     private:
       static const TEventID scmEventINITID = 0;
       static const TEventID scmEventINITOID = 0;

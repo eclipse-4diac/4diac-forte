@@ -22,18 +22,5 @@ namespace forte::eclipse4diac::io::ethercat {
     public:
       GEN_ECCoupler(const StringId paInstanceNameId, CFBContainer &paContainer);
       ~GEN_ECCoupler() override = default;
-
-      template<typename... Args>
-      void evt_MAP(Args &&...paArgs) {
-        writeInputArguments(std::forward<Args>(paArgs)...);
-        receiveInputEvent(scmEventMAPID, nullptr);
-        readOutputArguments(std::forward<Args>(paArgs)...);
-      }
-
-      template<typename ...Args>
-        void operator()(Args &&...paArgs) {
-        evt_INIT(std::forward<Args>(paArgs)...);
-      }
   };
 } // namespace forte::eclipse4diac::io::ethercat
-

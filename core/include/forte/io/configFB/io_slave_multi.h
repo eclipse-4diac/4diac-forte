@@ -1,5 +1,6 @@
 /*******************************************************************************
  * Copyright (c) 2017 fortiss GmbH, Sichuan Qunyuan Technology Co., Ltd.
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -12,8 +13,7 @@
  *   Zijun Tang - add createSlaveHandler() hook and generic FB constructor
  *******************************************************************************/
 
-#ifndef SRC_CORE_IO_CONFIGFB_SLAVE_MULTI_H_
-#define SRC_CORE_IO_CONFIGFB_SLAVE_MULTI_H_
+#pragma once
 
 #include "forte/io/configFB/io_base.h"
 #include "forte/io/device/io_controller_multi.h"
@@ -114,5 +114,3 @@ namespace forte::io {
   };
 
 } // namespace forte::io
-
-#endif /* SRC_CORE_IO_CONFIGFB_SLAVE_MULTI_H_ */

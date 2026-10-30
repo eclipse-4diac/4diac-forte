@@ -51,35 +51,6 @@ namespace forte::eclipse4diac::io::wago {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void evt_MAP(const CIEC_BOOL &paQI,
-                   const CIEC_STRING &paAnalogInput_1,
-                   const CIEC_STRING &paAnalogInput_2,
-                   const CIEC_STRING &paAnalogInput_3,
-                   const CIEC_STRING &paAnalogInput_4,
-                   CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                   COutputParameter<CIEC_WSTRING> paSTATUS) {
-        COutputGuard guard_paQO(paQO);
-        COutputGuard guard_paSTATUS(paSTATUS);
-        var_QI = paQI;
-        var_AnalogInput_1 = paAnalogInput_1;
-        var_AnalogInput_2 = paAnalogInput_2;
-        var_AnalogInput_3 = paAnalogInput_3;
-        var_AnalogInput_4 = paAnalogInput_4;
-        executeEvent(scmEventMAPID, nullptr);
-        *paQO = var_QO;
-        *paSTATUS = var_STATUS;
-      }
-
-      void operator()(const CIEC_BOOL &paQI,
-                      const CIEC_STRING &paAnalogInput_1,
-                      const CIEC_STRING &paAnalogInput_2,
-                      const CIEC_STRING &paAnalogInput_3,
-                      const CIEC_STRING &paAnalogInput_4,
-                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                      COutputParameter<CIEC_WSTRING> paSTATUS) {
-        evt_MAP(paQI, paAnalogInput_1, paAnalogInput_2, paAnalogInput_3, paAnalogInput_4, paQO, paSTATUS);
-      }
-
     protected:
       INIT_HANDLES(0, 0, 4, 0)
 
