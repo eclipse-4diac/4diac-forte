@@ -48,7 +48,7 @@ namespace forte::com_infra::opc_ua {
     util::CParameterParser parser(paLayerParameter, ',', 1);
     size_t nrOfParams = parser.parseParameters();
     if (nrOfParams != scmNumberOfParameters) {
-      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Too many layer arguments for FB %s! Expected: %d, Actual: %d\n",
+      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Too many layer arguments for FB %s! Expected: %zu, Actual: %zu\n",
                    getCommFB()->getInstanceName(), scmNumberOfParameters, nrOfParams);
       return eRetVal;
     }

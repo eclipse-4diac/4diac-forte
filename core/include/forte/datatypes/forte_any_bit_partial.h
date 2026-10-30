@@ -47,7 +47,7 @@ namespace forte {
             partialValue = static_cast<PartialValueType>(sourceValue >> shiftIndex);
           }
         } else {
-          DEVLOG_ERROR("Attempted partial index %d outside the range of allowed indices %d\n", paIndex, scmMaxIndex);
+          DEVLOG_ERROR("Attempted partial index %zu outside the range of allowed indices %d\n", paIndex, scmMaxIndex);
         }
         return PartialType(partialValue);
       }

@@ -49,7 +49,7 @@ namespace forte::eclipse4diac::utils::selection {
       // Send the 'CNF' event to activate subsequent FBs.
       sendOutputEvent(scmEventCNFID, paECET);
     } else {
-      DEVLOG_ERROR("GEN_F_SEL_E: Event ID %d is out of valid range.\n", paEIID);
+      DEVLOG_ERROR("GEN_F_SEL_E: Event ID %zu is out of valid range.\n", paEIID);
     }
   }
 

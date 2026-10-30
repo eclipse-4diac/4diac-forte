@@ -101,11 +101,11 @@ namespace forte::iec61499::events {
       } else {
         // Log errors if the number is out of bounds.
         if ((mNumEIs + 1) >= scmMaxInterfaceEvents) {
-          DEVLOG_ERROR("Cannot configure FB-Instance GEN_E_REND_%d. Number of event inputs exceeds maximum of %d.\n",
+          DEVLOG_ERROR("Cannot configure FB-Instance GEN_E_REND_%zu. Number of event inputs exceeds maximum of %zu.\n",
                        mNumEIs, CFunctionBlock::scmMaxInterfaceEvents - 1);
         } else {
           DEVLOG_ERROR(
-              "Cannot configure FB-Instance GEN_E_REND_%d. Number of event inputs smaller than minimum of 2.\n",
+              "Cannot configure FB-Instance GEN_E_REND_%zu. Number of event inputs smaller than minimum of 2.\n",
               mNumEIs);
         }
       }
