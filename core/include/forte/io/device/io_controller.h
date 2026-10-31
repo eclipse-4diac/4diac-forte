@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017 fortiss GmbH
+ * Copyright (c) 2017 fortiss GmbH, Johannes Kepler Universität Linz
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,7 +9,9 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
- *   Jose Cabral - Cleaning of namespaces
+ *   Jose Cabral      - cleaning of namespaces
+ *   Malte Grave, Alois Zoitl - reworked to allow multiple reading observers per
+ *                      handle
  *******************************************************************************/
 
 #pragma once
@@ -91,16 +93,6 @@ namespace forte::io {
       void fireIndicationEvent(IOObserver *paObserver);
 
       virtual void handleChangeEvent(IOHandle *paHandle);
-
-      /*! @brief Updates the current handle in the input or output handle list
-       *
-       * This method deletes the current handle in the device-specific input and
-       * output list and adds it again, according to its current direction.
-       *
-       * @param paId Handle ID of the IOHandle, which should be updated
-       * @param paHandle IOHandle which should be updated
-       */
-      virtual void updateHandleList(std::string const &paId, IOHandle *paHandle);
 
       /*! @brief Removes an IO handle from the controller and the IOMapper by ID
        *
@@ -222,13 +214,6 @@ namespace forte::io {
        * #dropHandles is called automatically during deinitialization.
        */
       THandleList mOutputHandles;
-
-      /*! @brief All other handles (nighter input or output) of the main controller
-       * The list contain handles of the main controller, which cannot be classified.
-       * The list is managed by the #addHandle and #dropHandles method.
-       * #dropHandles is called automatically during deinitialization.
-       */
-      THandleList mDiverseHandles;
 
     private:
       IOConfigFBController *mDelegate;
