@@ -125,8 +125,8 @@ namespace forte::com_infra::opc_ua {
     auto data = static_cast<const std::pair<TPortId, const CIEC_BOOL> *>(paData);
     TPortId portId = data->first;
     if (portId >= mRDBuffer.size()) {
-      DEVLOG_ERROR("[OPC UA A&C LAYER]: Wrong PortId for receiving data. Maximum allowed Id: %d, Actual: %d\n",
-                   mRDBuffer.size(), portId);
+      DEVLOG_ERROR("[OPC UA A&C LAYER]: Wrong PortId for receiving data in FB %s. Maximum allowed Id: %d, Actual: %d\n",
+                   getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(), mRDBuffer.size(), portId);
       return e_ProcessDataRecvFaild;
     }
     (*mRDBuffer[portId]).setValue(data->second);
@@ -285,12 +285,14 @@ namespace forte::com_infra::opc_ua {
                                                         const std::string &paPathToInstance,
                                                         std::string &paBrowsePath) {
     if (!COPC_UA_Helper::isBrowsePathValid(paPathToInstance)) {
-      DEVLOG_ERROR("[OPC UA A&C LAYER]: Browsepath is invalid!");
+      DEVLOG_ERROR("[OPC UA A&C LAYER]: Browsepath '%s' of FB %s is invalid!\n", paPathToInstance.c_str(),
+                   getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
       return UA_STATUSCODE_BAD;
     }
     std::string instanceNameStr{getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator)};
     if (instanceNameStr.empty()) {
-      DEVLOG_ERROR("[OPC UA A&C LAYER]: Retrieving FB Instance Name failed!");
+      DEVLOG_ERROR("[OPC UA A&C LAYER]: Retrieving the instance name of FB %s failed!\n",
+                   getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
       return UA_STATUSCODE_BAD;
     }
     paBrowsePath = COPC_UA_ObjectStruct_Helper::getMemberBrowsePath(paPathToInstance, instanceNameStr);
@@ -386,9 +388,10 @@ namespace forte::com_infra::opc_ua {
     }
     UA_BrowseResult_clear(&result);
     if (foundProperties != mUAPropertyMap.size()) {
-      DEVLOG_ERROR("[OPC UA A&C LAYER]: Number of found properties does not match number of properties to be "
+      DEVLOG_ERROR("[OPC UA A&C LAYER]: Number of found properties of FB %s does not match number of properties to be "
                    "mapped. Expected: %d, Actual: %d\n",
-                   mUAPropertyMap.size(), foundProperties);
+                   getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(), mUAPropertyMap.size(),
+                   foundProperties);
       return UA_STATUSCODE_BADNODEIDUNKNOWN;
     }
     return UA_STATUSCODE_GOOD;

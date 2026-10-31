@@ -211,7 +211,8 @@ namespace forte::com_infra::opc_ua {
     if (!COPC_UA_Helper::getOPCUATypeFromAny(pin)) {
       if (!COPC_UA_ObjectStruct_Helper::isStructType(*this, paIsSD)) {
         DEVLOG_ERROR("[OPC UA LAYER]: Invalid  type %s in FB %s at pin %s\n", pin.getTypeNameID().data(),
-                     getCommFB()->getInstanceName(), getLocalPortNameId(paPortIndex, paIsSD).data());
+                     getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                     getLocalPortNameId(paPortIndex, paIsSD).data());
       }
       return false;
     }

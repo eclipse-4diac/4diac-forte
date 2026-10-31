@@ -195,7 +195,8 @@ namespace forte::com_infra::opc_ua {
 
     if (UA_STATUSCODE_GOOD != retVal) {
       DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch read action for FB %s. Error: %s\n",
-                   paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+                   paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                   UA_StatusCode_name(retVal));
       delete remoteCallHandle;
       mNeedsReconnection = false;
       retVal = handleClientState(); // force a reconnection
@@ -239,7 +240,8 @@ namespace forte::com_infra::opc_ua {
 
     if (UA_STATUSCODE_GOOD != retVal) {
       DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch write action for FB %s. Error: %s\n",
-                   paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+                   paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                   UA_StatusCode_name(retVal));
       delete remoteCallHandle;
       mNeedsReconnection = false;
       retVal = handleClientState(); // force a reconnection
@@ -286,7 +288,8 @@ namespace forte::com_infra::opc_ua {
 
     if (UA_STATUSCODE_GOOD != retVal) {
       DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't dispatch call action for FB %s. Error %s\n",
-                   paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+                   paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                   UA_StatusCode_name(retVal));
       delete remoteCallHandle;
     } else {
       addAsyncCall();
@@ -367,7 +370,8 @@ namespace forte::com_infra::opc_ua {
           if (UA_STATUSCODE_GOOD != retVal) {
             DEVLOG_ERROR("[OPC UA CLIENT]: The index %u of the FB %s could not be initialized because the requested "
                          "nodeId was not found. Error: %s\n",
-                         runnerHelper, paActionInfo.getLayer().getCommFB()->getInstanceName(),
+                         runnerHelper,
+                         paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
                          UA_StatusCode_name(retVal));
             somethingFailed = true;
           } else {
@@ -376,7 +380,7 @@ namespace forte::com_infra::opc_ua {
                                    nodeId)) { // if NodeId was provided, check if found is the same
                 DEVLOG_ERROR("[OPC UA CLIENT]: The call from FB %s failed the found nodeId of the method doesn't match "
                              "the provided one\n",
-                             paActionInfo.getLayer().getCommFB()->getInstanceName());
+                             paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
                 somethingFailed = true;
               }
               UA_NodeId_delete(nodeId);
@@ -410,7 +414,8 @@ namespace forte::com_infra::opc_ua {
     if (UA_STATUSCODE_GOOD != retVal) {
       DEVLOG_ERROR(
           "[OPC UA CLIENT]: The method call from FB %s failed because the requested node was not found. Error: %s\n",
-          paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+          paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+          UA_StatusCode_name(retVal));
       somethingFailed = true;
     } else {
       if (itNodePair->getNodeId() != nullptr) {
@@ -419,7 +424,7 @@ namespace forte::com_infra::opc_ua {
           DEVLOG_ERROR(
               "[OPC UA CLIENT]: The method call from FB %s failed the found nodeId of the method doesn't match "
               "the provided one\n",
-              paActionInfo.getLayer().getCommFB()->getInstanceName());
+              paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
           somethingFailed = true;
         }
         UA_NodeId_delete(methodNode);
@@ -505,7 +510,10 @@ namespace forte::com_infra::opc_ua {
       paMonitoringInfo.mMonitoringItemId = monResponse.monitoredItemId;
     } else {
       DEVLOG_ERROR("[OPC UA CLIENT]: Monitoring of FB %s at index %u failed. Error: %s\n",
-                   paMonitoringInfo.mVariableInfo.mActionInfo->getLayer().getCommFB()->getInstanceName(),
+                   paMonitoringInfo.mVariableInfo.mActionInfo->getLayer()
+                       .getCommFB()
+                       ->getFullQualifiedApplicationInstanceName('.')
+                       .c_str(),
                    paMonitoringInfo.mVariableInfo.mPortIndex, UA_StatusCode_name(monResponse.statusCode));
     }
 
@@ -581,7 +589,10 @@ namespace forte::com_infra::opc_ua {
           if (paResponse->results[i].hasStatus && UA_STATUSCODE_GOOD != paResponse->results[i].status) {
             DEVLOG_ERROR("[OPC UA CLIENT]: Reading for FB %s in client %s failed because the response for index %u has "
                          "status %s\n",
-                         remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(),
+                         remoteCallHandle->mActionInfo.getLayer()
+                             .getCommFB()
+                             ->getFullQualifiedApplicationInstanceName('.')
+                             .c_str(),
                          remoteCallHandle->mActionInfo.getEndpoint().c_str(), i,
                          UA_StatusCode_name(paResponse->results[i].status));
             varHandle.mFailed = true;
@@ -600,16 +611,17 @@ namespace forte::com_infra::opc_ua {
         DEVLOG_ERROR(
             "[OPC UA CLIENT]: Reading for FB %s in client %s failed because the response size is %u but the FB "
             "has %u values to read\n",
-            remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(),
+            remoteCallHandle->mActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
             remoteCallHandle->mActionInfo.getEndpoint().c_str(), paResponse->resultsSize,
             remoteCallHandle->mActionInfo.getNoOfNodePairs());
         varHandle.mFailed = true;
       }
     } else {
-      DEVLOG_ERROR("[OPC UA CLIENT]: Reading for FB %s in client %s failed. Error: %s\n",
-                   remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(),
-                   remoteCallHandle->mActionInfo.getEndpoint().c_str(),
-                   UA_StatusCode_name(paResponse->responseHeader.serviceResult));
+      DEVLOG_ERROR(
+          "[OPC UA CLIENT]: Reading for FB %s in client %s failed. Error: %s\n",
+          remoteCallHandle->mActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+          remoteCallHandle->mActionInfo.getEndpoint().c_str(),
+          UA_StatusCode_name(paResponse->responseHeader.serviceResult));
       varHandle.mFailed = true;
     }
 
@@ -632,7 +644,10 @@ namespace forte::com_infra::opc_ua {
           if (UA_STATUSCODE_GOOD != paResponse->results[i]) {
             DEVLOG_ERROR("[OPC UA CLIENT]: Writing for FB %s in client %s failed because the response for index %u has "
                          "status %s\n",
-                         remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(),
+                         remoteCallHandle->mActionInfo.getLayer()
+                             .getCommFB()
+                             ->getFullQualifiedApplicationInstanceName('.')
+                             .c_str(),
                          remoteCallHandle->mActionInfo.getEndpoint().c_str(), i,
                          UA_StatusCode_name(paResponse->results[i]));
             varHandle.mFailed = true;
@@ -643,16 +658,17 @@ namespace forte::com_infra::opc_ua {
         DEVLOG_ERROR(
             "[OPC UA CLIENT]: Writing for FB %s in client %s failed because the response size is %u but the FB "
             "has %u values to write\n",
-            remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(),
+            remoteCallHandle->mActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
             remoteCallHandle->mActionInfo.getEndpoint().c_str(), paResponse->resultsSize,
             remoteCallHandle->mActionInfo.getNoOfNodePairs());
         varHandle.mFailed = true;
       }
     } else {
-      DEVLOG_ERROR("[OPC UA CLIENT]: Writing for FB %s in client %s failed. Error: %s\n",
-                   remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(),
-                   remoteCallHandle->mActionInfo.getEndpoint().c_str(),
-                   UA_StatusCode_name(paResponse->responseHeader.serviceResult));
+      DEVLOG_ERROR(
+          "[OPC UA CLIENT]: Writing for FB %s in client %s failed. Error: %s\n",
+          remoteCallHandle->mActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+          remoteCallHandle->mActionInfo.getEndpoint().c_str(),
+          UA_StatusCode_name(paResponse->responseHeader.serviceResult));
       varHandle.mFailed = true;
     }
 
@@ -685,7 +701,10 @@ namespace forte::com_infra::opc_ua {
             DEVLOG_ERROR(
                 "[OPC UA CLIENT]: Calling for FB %s in client %s failed because the number of RD connectors of "
                 "the client %u does not match the number of returned values %u from the method call\n",
-                remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(),
+                remoteCallHandle->mActionInfo.getLayer()
+                    .getCommFB()
+                    ->getFullQualifiedApplicationInstanceName('.')
+                    .c_str(),
                 remoteCallHandle->mActionInfo.getEndpoint().c_str(),
                 remoteCallHandle->mActionInfo.getLayer().getCommFB()->getNumRD(),
                 response->results->outputArgumentsSize);
@@ -695,7 +714,10 @@ namespace forte::com_infra::opc_ua {
               if (UA_STATUSCODE_GOOD != response->results->inputArgumentResults[i]) {
                 DEVLOG_ERROR("[OPC UA CLIENT]: Calling for FB %s in client %s failed because the input response for "
                              "index %u has status %s\n",
-                             remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(),
+                             remoteCallHandle->mActionInfo.getLayer()
+                                 .getCommFB()
+                                 ->getFullQualifiedApplicationInstanceName('.')
+                                 .c_str(),
                              remoteCallHandle->mActionInfo.getEndpoint().c_str(), i,
                              UA_StatusCode_name(response->results->inputArgumentResults[i]));
                 somethingFailed = true;
@@ -705,23 +727,28 @@ namespace forte::com_infra::opc_ua {
           }
         } else {
           DEVLOG_ERROR("[OPC UA CLIENT]: Calling for FB %s in client %s failed with the specific error: %s\n",
-                       remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(),
+                       remoteCallHandle->mActionInfo.getLayer()
+                           .getCommFB()
+                           ->getFullQualifiedApplicationInstanceName('.')
+                           .c_str(),
                        remoteCallHandle->mActionInfo.getEndpoint().c_str(),
                        UA_StatusCode_name(response->results->statusCode));
           somethingFailed = true;
         }
       } else {
-        DEVLOG_ERROR("[OPC UA CLIENT]: Calling for FB %s in client %s failed because the response size is %u, "
-                     "different from 1\n",
-                     remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(),
-                     remoteCallHandle->mActionInfo.getEndpoint().c_str(), response->resultsSize);
+        DEVLOG_ERROR(
+            "[OPC UA CLIENT]: Calling for FB %s in client %s failed because the response size is %u, "
+            "different from 1\n",
+            remoteCallHandle->mActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+            remoteCallHandle->mActionInfo.getEndpoint().c_str(), response->resultsSize);
         somethingFailed = true;
       }
     } else {
-      DEVLOG_ERROR("[OPC UA CLIENT]: Calling for FB %s in client %s failed with the main error: %s\n",
-                   remoteCallHandle->mActionInfo.getLayer().getCommFB()->getInstanceName(),
-                   remoteCallHandle->mActionInfo.getEndpoint().c_str(),
-                   UA_StatusCode_name(response->responseHeader.serviceResult));
+      DEVLOG_ERROR(
+          "[OPC UA CLIENT]: Calling for FB %s in client %s failed with the main error: %s\n",
+          remoteCallHandle->mActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+          remoteCallHandle->mActionInfo.getEndpoint().c_str(),
+          UA_StatusCode_name(response->responseHeader.serviceResult));
       somethingFailed = true;
     }
     size_t outputSize = 0;
