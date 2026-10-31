@@ -17,28 +17,34 @@
 #include "forte/io/device/io_controller.h"
 
 namespace forte::io {
-  IOHandle::IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType) :
+  IOHandle::IOHandle(IODeviceController &paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType) :
       mController(paController),
       mType(paType),
       mDirection(paDirection),
-      mObserver(nullptr) {
+      mMapping(nullptr) {
   }
 
-  IOHandle::~IOHandle() {
-    IOMapper::getInstance().deregisterHandle(*this);
+  bool IOHandle::hasObserver() const {
+    return isBound() && !mMapping->mObservers.empty();
   }
 
-  void IOHandle::onObserver(IOObserver *paObserver) {
-    this->mObserver = paObserver;
+  void IOHandle::bind(IOMappingData *paMapping) {
+    mMapping = paMapping;
   }
 
-  void IOHandle::dropObserver() {
-    this->mObserver = nullptr;
+  void IOHandle::onNewObserver(IOObserver &paObserver) {
+    // per default there is nothing to do for new observers
   }
 
   void IOHandle::onChange() {
-    if (mObserver != nullptr && mObserver->onChange()) {
-      mController->fireIndicationEvent(mObserver);
+    if (!isBound()) {
+      return;
+    }
+
+    for (IOObserver *observer : mMapping->mObservers) {
+      if (observer->onChange()) {
+        mController.fireIndicationEvent(*observer);
+      }
     }
   }
 } // namespace forte::io

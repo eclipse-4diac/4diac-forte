@@ -12,9 +12,10 @@
  *******************************************************************************/
 
 #include "forte/io/mapper/io_handle_bit.h"
+#include "forte/datatypes/forte_bool.h"
 
 namespace forte::io {
-  IOHandleBit::IOHandleBit(IODeviceController *paController,
+  IOHandleBit::IOHandleBit(IODeviceController &paController,
                            IOMapper::Direction paDirection,
                            uint8_t paOffset,
                            uint8_t paPosition,
@@ -25,21 +26,16 @@ namespace forte::io {
       mImage(paImage) {
   }
 
-  void IOHandleBit::onObserver(IOObserver *paObserver) {
-    IOHandle::onObserver(paObserver);
+  void IOHandleBit::onNewObserver(IOObserver &paObserver) {
+    IOHandle::onNewObserver(paObserver);
 
     if (mDirection == IOMapper::In) {
       CIEC_BOOL state;
       get(state);
       if (state) {
-        mController->fireIndicationEvent(paObserver);
+        mController.fireIndicationEvent(paObserver);
       }
     }
-  }
-
-  void IOHandleBit::dropObserver() {
-    IOHandle::dropObserver();
-    reset();
   }
 
   void IOHandleBit::set(const CIEC_ANY &paState) {
@@ -49,7 +45,7 @@ namespace forte::io {
       *(mImage + mOffset) = (uint8_t) (*(mImage + mOffset) & ~mMask);
     }
 
-    mController->handleChangeEvent(this);
+    mController.handleChangeEvent(this);
   }
 
   void IOHandleBit::get(CIEC_ANY &paState) {

@@ -113,7 +113,7 @@ namespace forte::io {
     deinitialise();
 
     // Register interface
-    if (!(mIsListening = IOMapper::getInstance().registerObserver(getId(), this))) {
+    if (!(mIsListening = IOMapper::getInstance().registerObserver(getId(), *this))) {
       var_STATUS = scmFailedToRegister;
       return false_BOOL;
     }
@@ -138,7 +138,7 @@ namespace forte::io {
   CIEC_BOOL CProcessInterfaceFB::deinitialise() {
     // Deregister interface
     if (mIsListening) {
-      IOMapper::getInstance().deregisterObserver(this);
+      IOMapper::getInstance().deregisterObserver(getId(), *this);
       mIsListening = false; // we are deregistered !
     }
 
@@ -151,15 +151,15 @@ namespace forte::io {
     return true;
   }
 
-  void CProcessInterfaceFB::onHandle(IOHandle *const paHandle) {
+  void CProcessInterfaceFB::onHandle(IOHandle &paHandle) {
     IOObserver::onHandle(paHandle);
 
-    if (paHandle->getIOHandleDataType() != getIOObserverDataType()) {
+    if (paHandle.getIOHandleDataType() != getIOObserverDataType()) {
       var_STATUS = scmMappedWrongDataType;
       return;
     }
 
-    if (paHandle->getDirection() != getDirection()) {
+    if (paHandle.getDirection() != getDirection()) {
       var_STATUS = getDirection() == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
       return;
     }

@@ -24,7 +24,7 @@ namespace forte::eclipse4diac::io::embrick {
 
   class EmbrickSlaveHandle : public forte::io::IOHandle {
     public:
-      EmbrickSlaveHandle(forte::io::IODeviceController *paController,
+      EmbrickSlaveHandle(forte::io::IODeviceController &paController,
                          forte::io::IOMapper::Direction paDirection,
                          CIEC_ANY::EDataTypeID type,
                          uint8_t paOffset,
@@ -35,12 +35,6 @@ namespace forte::eclipse4diac::io::embrick {
       virtual bool equal(unsigned char *) = 0;
 
     protected:
-      virtual void reset() {
-      }
-
-      void onObserver(forte::io::IOObserver *paObserver) override;
-      void dropObserver() override;
-
       unsigned char *mBuffer;
       const uint8_t mOffset;
       EmbrickSlaveHandler *mSlave;

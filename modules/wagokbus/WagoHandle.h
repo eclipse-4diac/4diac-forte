@@ -21,7 +21,7 @@ namespace forte::eclipse4diac::io::wago {
 
   class WagoHandle : public forte::io::IOHandle {
     public:
-      WagoHandle(WagoDeviceController *paController,
+      WagoHandle(WagoDeviceController &paController,
                  CIEC_ANY::EDataTypeID paType,
                  forte::io::IOMapper::Direction paDirection,
                  tApplicationDeviceInterface *paAppDevInterface,
@@ -57,7 +57,5 @@ namespace forte::eclipse4diac::io::wago {
       TForteUInt32 mOutputOffset;
       TForteUInt32 mInputOffset;
       CIEC_ANY *mLastValue;
-
-      virtual void dropObserver() override;
   };
 } // namespace forte::eclipse4diac::io::wago
