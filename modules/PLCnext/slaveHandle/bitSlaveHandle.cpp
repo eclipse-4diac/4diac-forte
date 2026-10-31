@@ -14,7 +14,7 @@
 #include "forte/util/criticalregion.h"
 #include "../slaveHandler.h"
 
-PLCnextBitSlaveHandle::PLCnextBitSlaveHandle(forte::io::IODeviceController *paController,
+PLCnextBitSlaveHandle::PLCnextBitSlaveHandle(forte::io::IODeviceController &paController,
                                              forte::io::IOMapper::Direction paDirection,
                                              uint16_t paBitPosition,
                                              PLCnextSlaveHandler *paSlave) :

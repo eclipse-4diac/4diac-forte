@@ -15,7 +15,7 @@
 #include "../slaveHandler.h"
 #include "forte/util/devlog.h"
 
-PLCnextSlaveHandle::PLCnextSlaveHandle(forte::io::IODeviceController *paController,
+PLCnextSlaveHandle::PLCnextSlaveHandle(forte::io::IODeviceController &paController,
                                        forte::io::IOMapper::Direction paDirection,
                                        CIEC_ANY::EDataTypeID paType,
                                        PLCnextSlaveHandler *paSlave) :

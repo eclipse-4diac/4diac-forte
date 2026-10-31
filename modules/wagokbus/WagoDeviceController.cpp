@@ -36,7 +36,7 @@ namespace forte::eclipse4diac::io::wago {
 
   WagoDeviceController::WagoDeviceController(CDeviceExecution &paDeviceExecution) :
       IODeviceMultiController(paDeviceExecution),
-      mAppDevInterface(0),
+      mAppDevInterface(nullptr),
       mTaskId(0),
       mKBusDeviceId(scmInvalidDeviceId),
       mTerminalCount(0) {
@@ -46,9 +46,7 @@ namespace forte::eclipse4diac::io::wago {
     mConfig.updateInterval = 25;
   }
 
-  WagoDeviceController::~WagoDeviceController() {
-    // do nothing
-  }
+  WagoDeviceController::~WagoDeviceController() = default;
 
   void WagoDeviceController::setConfig(struct Config *paConfig) {
     this->mConfig = *static_cast<WagoConfig *>(paConfig);
@@ -92,7 +90,7 @@ namespace forte::eclipse4diac::io::wago {
       DEVLOG_INFO("[WagoDeviceController] Found device with ID: %d\n", mTerminalIds[i]);
     }
 
-    return 0;
+    return nullptr;
   }
 
   IOHandle *WagoDeviceController::createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
@@ -112,20 +110,20 @@ namespace forte::eclipse4diac::io::wago {
         outputOffset = (mTerminalInfos[desc.mSlaveIndex].OffsetOutput_bits + desc.mChannel) / 8;
         inputOffset = (mTerminalInfos[desc.mSlaveIndex].OffsetInput_bits + desc.mChannel) / 8;
         break;
-      default: return 0;
+      default: return nullptr;
     }
-    return new WagoHandle(this, desc.mType, desc.mDirection, mAppDevInterface, mTaskId, mKBusDeviceId, outputOffset,
+    return new WagoHandle(*this, desc.mType, desc.mDirection, mAppDevInterface, mTaskId, mKBusDeviceId, outputOffset,
                           inputOffset);
   }
 
   void WagoDeviceController::deInit() {
-    if (0 != mAppDevInterface) {
+    if (mAppDevInterface != nullptr) {
       if (0 != mAppDevInterface->CloseDevice(mKBusDeviceId)) {
         DEVLOG_ERROR("[WagoDeviceController] There was a problem closing the KBus device\n");
       }
       mAppDevInterface->Exit(); // disconnect ADI-Interface
       mKBusDeviceId = scmInvalidDeviceId;
-      mAppDevInterface = 0;
+      mAppDevInterface = nullptr;
     }
   }
 
@@ -195,7 +193,7 @@ namespace forte::eclipse4diac::io::wago {
       return scmFailedGetTerminalList;
     }
 
-    return 0;
+    return nullptr;
   }
 
   bool WagoDeviceController::triggerKBusCycle() {

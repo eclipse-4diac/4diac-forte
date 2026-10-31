@@ -43,7 +43,7 @@ EliteBoardDeviceController::IOHandle *EliteBoardDeviceController::createIOHandle
   switch (desc_base.mIOType) {
     case GPIO: {
       auto desc = static_cast<GPIODescriptor &>(paHandleDescriptor);
-      handle = new IOHandleGPIO(this, desc);
+      handle = new IOHandleGPIO(*this, desc);
       break;
     }
     default: break;

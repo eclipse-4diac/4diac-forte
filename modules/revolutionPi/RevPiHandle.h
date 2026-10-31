@@ -20,24 +20,22 @@ namespace forte::eclipse4diac::io::revpi {
 
   class RevPiHandle : public forte::io::IOHandle {
     public:
-      RevPiHandle(RevPiController *controller,
+      RevPiHandle(RevPiController &controller,
                   CIEC_ANY::EDataTypeID type,
                   forte::io::IOMapper::Direction direction,
                   uint16_t offset,
                   uint8_t position);
 
-      ~RevPiHandle();
+      ~RevPiHandle() override;
 
-      virtual void set(const CIEC_ANY &);
-      void get(CIEC_ANY &);
+      virtual void set(const CIEC_ANY &) override;
+      void get(CIEC_ANY &) override;
 
       bool check();
 
     protected:
       SPIValueStr control;
       CIEC_ANY *valueLastCheck;
-
-      virtual void dropObserver();
   };
 
 } // namespace forte::eclipse4diac::io::revpi

@@ -16,13 +16,12 @@
 
 #include "forte/io/mapper/io_handle.h"
 #include "forte/io/device/io_controller.h"
-#include "forte/datatypes/forte_bool.h"
 
 namespace forte::io {
 
   class IOHandleBit : public IOHandle {
     public:
-      IOHandleBit(IODeviceController *paController,
+      IOHandleBit(IODeviceController &paController,
                   IOMapper::Direction paDirection,
                   uint8_t paOffset,
                   uint8_t paPosition,
@@ -34,13 +33,7 @@ namespace forte::io {
       bool equal(unsigned char *paOldImage) const;
 
     protected:
-      void onObserver(IOObserver *paObserver) override;
-
-      void dropObserver() override;
-
-      virtual void reset() {
-        set(CIEC_BOOL());
-      }
+      void onNewObserver(IOObserver &paObserver) override;
 
       const uint8_t mOffset;
       const uint8_t mMask;

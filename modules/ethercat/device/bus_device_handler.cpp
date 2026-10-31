@@ -101,12 +101,12 @@ namespace forte::eclipse4diac::io::ethercat {
     }
 
     for(ECDeviceHandle *it : mInputs) {
-      mapper.deregisterHandle(it->handleId());
+      mapper.deregisterHandle(*it);
       delete it;
     }
 
-    for(ECDeviceHandle *it : mOutputs) {
-      mapper.deregisterHandle(it->handleId());
+    for (ECDeviceHandle *it : mOutputs) {
+      mapper.deregisterHandle(*it);
       delete it;
     }
 

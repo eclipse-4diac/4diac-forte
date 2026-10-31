@@ -26,19 +26,19 @@ namespace forte::io {
 
     public:
       IOObserver();
-      virtual ~IOObserver();
+      virtual ~IOObserver() = default;
 
       virtual bool onChange() = 0;
 
-      virtual CIEC_ANY::EDataTypeID getIOObserverDataType() = 0;
-      virtual IOMapper::Direction getDirection() = 0;
+      virtual CIEC_ANY::EDataTypeID getIOObserverDataType() const = 0;
+      virtual IOMapper::Direction getDirection() const = 0;
 
-      IOHandle *getHandle() {
+      IOHandle *getHandle() const {
         return mHandle;
       }
 
     protected:
-      virtual void onHandle(IOHandle *const paHandle);
+      virtual void onHandle(IOHandle &paHandle);
       virtual void dropHandle();
 
     private:

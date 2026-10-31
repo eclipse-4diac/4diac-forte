@@ -15,7 +15,7 @@
 
 namespace forte::eclipse4diac::io::wago {
 
-  WagoHandle::WagoHandle(WagoDeviceController *paController,
+  WagoHandle::WagoHandle(WagoDeviceController &paController,
                          CIEC_ANY::EDataTypeID paType,
                          forte::io::IOMapper::Direction paDirection,
                          tApplicationDeviceInterface *paAppDevInterface,
@@ -78,11 +78,6 @@ namespace forte::eclipse4diac::io::wago {
       default: break;
     }
     return changed;
-  }
-
-  void WagoHandle::dropObserver() {
-    set(CIEC_WORD(0));
-    IOHandle::dropObserver();
   }
 
   void WagoHandle::getBoolean(CIEC_BOOL &paState) {
