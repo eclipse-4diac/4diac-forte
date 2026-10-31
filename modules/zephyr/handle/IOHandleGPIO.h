@@ -26,7 +26,7 @@ class IOHandleGPIO : public forte::io::IOHandle {
     using IOMapper = forte::io::IOMapper;
 
   public:
-    IOHandleGPIO(IODeviceController *paDeviceCtrl,
+    IOHandleGPIO(IODeviceController &paDeviceCtrl,
                  IOMapper::Direction paDirection,
                  const gpio_dt_spec *paGPIOSpec,
                  gpio_flags_t paFlags);

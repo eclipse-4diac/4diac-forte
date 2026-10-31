@@ -28,7 +28,7 @@ class IOHandleGPIO : public forte::io::IOHandle {
     using IOMapper = forte::io::IOMapper;
 
   public:
-    IOHandleGPIO(EliteBoardDeviceController *paDeviceCtrl, EliteBoardDeviceController::GPIODescriptor desc);
+    IOHandleGPIO(EliteBoardDeviceController &paDeviceCtrl, EliteBoardDeviceController::GPIODescriptor desc);
     void get(CIEC_ANY &) override;
     void set(const CIEC_ANY &) override;
 

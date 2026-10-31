@@ -180,7 +180,7 @@ namespace forte::eclipse4diac::io::gpiochip {
   }
 
   ::forte::io::IOHandle *GPIOChipController::createIOHandle(HandleDescriptor &paHandleDescriptor) {
-    return new forte::io::IOHandleBit(this, paHandleDescriptor.mDirection, 0, 0, &mValue);
+    return new forte::io::IOHandleBit(*this, paHandleDescriptor.mDirection, 0, 0, &mValue);
   }
 
 } // namespace forte::eclipse4diac::io::gpiochip

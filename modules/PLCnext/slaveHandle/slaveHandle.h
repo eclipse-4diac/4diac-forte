@@ -25,7 +25,7 @@ class PLCnextSlaveHandler;
 
 class PLCnextSlaveHandle : public forte::io::IOHandle {
   public:
-    PLCnextSlaveHandle(forte::io::IODeviceController *paController,
+    PLCnextSlaveHandle(forte::io::IODeviceController &paController,
                        forte::io::IOMapper::Direction paDirection,
                        CIEC_ANY::EDataTypeID type,
                        PLCnextSlaveHandler *paSlave);

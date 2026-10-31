@@ -26,23 +26,25 @@ namespace forte::io {
 
     public:
       IOObserver();
-      virtual ~IOObserver();
+      virtual ~IOObserver() = default;
 
       virtual bool onChange() = 0;
 
-      virtual CIEC_ANY::EDataTypeID getIOObserverDataType() = 0;
-      virtual IOMapper::Direction getDirection() = 0;
+      virtual CIEC_ANY::EDataTypeID getIOObserverDataType() const = 0;
+      virtual IOMapper::Direction getDirection() const = 0;
 
-      IOHandle *getHandle() {
-        return mHandle;
+      IOHandle *getHandle() const {
+        return (mMapping) ? mMapping->mHandle : nullptr;
       }
 
     protected:
-      virtual void onHandle(IOHandle *const paHandle);
+      virtual void onHandle();
       virtual void dropHandle();
 
     private:
-      IOHandle *mHandle;
+      void bind(IOMappingData *paMapping);
+
+      const IOMappingData *mMapping = nullptr;
   };
 
 } // namespace forte::io
