@@ -57,7 +57,6 @@ void IOHandleADC::onObserver(IOObserver *paObserver) {
 void IOHandleADC::dropObserver() {
   DEVLOG_INFO("IOHandleADC::dropObserver\n");
   IOHandle::dropObserver();
-  mDirection = IOMapper::UnknownDirection;
 }
 
 void IOHandleADC::get(CIEC_ANY &paState) {
