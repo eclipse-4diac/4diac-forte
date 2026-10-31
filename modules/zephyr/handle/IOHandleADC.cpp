@@ -13,7 +13,7 @@
 #include "IOHandleADC.h"
 #include "forte/datatypes/forte_dword.h"
 
-IOHandleADC::IOHandleADC(IODeviceController *paDeviceCtrl, const adc_dt_spec *paADCSpec) :
+IOHandleADC::IOHandleADC(IODeviceController &paDeviceCtrl, const adc_dt_spec *paADCSpec) :
     IOHandle(paDeviceCtrl, IOMapper::In, CIEC_ANY::e_DWORD),
     mADCSpec(paADCSpec) {
   int ret = adc_channel_setup_dt(getADCSpec());

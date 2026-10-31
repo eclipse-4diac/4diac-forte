@@ -27,7 +27,7 @@ class IOHandlePWM : public forte::io::IOHandle {
     using IOMapper = forte::io::IOMapper;
 
   public:
-    IOHandlePWM(IODeviceController *paDeviceCtrl, std::string const &paId, const pwm_dt_spec *paPWMSpec);
+    IOHandlePWM(IODeviceController &paDeviceCtrl, std::string const &paId, const pwm_dt_spec *paPWMSpec);
 
     ~IOHandlePWM() override;
 

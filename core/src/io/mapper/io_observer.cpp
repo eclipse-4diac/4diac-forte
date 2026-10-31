@@ -17,18 +17,25 @@
 #include "forte/util/devlog.h"
 
 namespace forte::io {
-  IOObserver::IOObserver() : mHandle(nullptr) {
+  IOObserver::IOObserver() : mMapping(nullptr) {
   }
 
   IOObserver::~IOObserver() {
-    IOMapper::getInstance().deregisterObserver(this);
+    if (mMapping != nullptr) {
+      DEVLOG_ERROR("[IOObserver] Observer deleted which was not correctly removed from the mapping!\n");
+    }
   }
 
-  void IOObserver::onHandle(IOHandle *const paHandle) {
-    this->mHandle = paHandle;
+  void IOObserver::onHandle() {
+    // per default nothing needs to be done
   }
 
   void IOObserver::dropHandle() {
-    this->mHandle = nullptr;
+    // per default nothing needs to be done
   }
+
+  void IOObserver::bind(IOMappingData *paMapping) {
+    mMapping = paMapping;
+  }
+
 } // namespace forte::io

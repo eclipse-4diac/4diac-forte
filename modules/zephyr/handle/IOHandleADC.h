@@ -26,7 +26,7 @@ class IOHandleADC : public forte::io::IOHandle {
     using IOMapper = forte::io::IOMapper;
 
   public:
-    IOHandleADC(IODeviceController *paDeviceCtrl, const adc_dt_spec *paADCSpec);
+    IOHandleADC(IODeviceController &paDeviceCtrl, const adc_dt_spec *paADCSpec);
     ~IOHandleADC() override;
     void get(CIEC_ANY &) override;
     void set(const CIEC_ANY &) override;

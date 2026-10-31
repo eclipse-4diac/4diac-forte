@@ -12,7 +12,7 @@
 
 #include "IOHandleGPIO.h"
 
-IOHandleGPIO::IOHandleGPIO(IODeviceController *paDeviceCtrl,
+IOHandleGPIO::IOHandleGPIO(IODeviceController &paDeviceCtrl,
                            IOMapper::Direction paDirection,
                            const gpio_dt_spec *paGPIOSpec,
                            gpio_flags_t paFlags) :

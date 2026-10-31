@@ -14,7 +14,7 @@
  *   Jose Cabral      - Cleaning of namespaces
  *   Thomas Öllinger  - added getId method to detremine Id for reference to I/O
  *                      configuration
- *   Alois ZOitl      - removed old process interface structure, added common
+ *   Alois Zoitl      - removed old process interface structure, added common
  *                      interface elements
  *******************************************************************************/
 
@@ -79,8 +79,8 @@ namespace forte::io {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void onHandle(IOHandle *const paHandle) override;
-      void dropHandle() final override;
+      void onHandle() override;
+      void dropHandle() final;
 
       bool isReady() {
         return mIsReady;
@@ -103,13 +103,6 @@ namespace forte::io {
 
       bool mIsListening;
       bool mIsReady;
-
-      static const CIEC_STRING scmOK;
-      static const CIEC_STRING scmWaitingForHandle;
-      static const CIEC_STRING scmFailedToRegister;
-      static const CIEC_STRING scmMappedWrongDirectionOutput;
-      static const CIEC_STRING scmMappedWrongDirectionInput;
-      static const CIEC_STRING scmMappedWrongDataType;
   };
 
 } // namespace forte::io

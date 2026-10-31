@@ -18,25 +18,25 @@ using namespace forte::io;
 
 namespace forte::eclipse4diac::io::revpi {
 
-  RevPiHandle::RevPiHandle(RevPiController *paController,
+  RevPiHandle::RevPiHandle(RevPiController &paController,
                            CIEC_ANY::EDataTypeID paType,
                            IOMapper::Direction paDirection,
                            uint16_t paOffset,
                            uint8_t paPosition) :
       IOHandle(paController, paDirection, paType),
-      valueLastCheck(0) {
+      valueLastCheck(nullptr) {
     control.i16uAddress = paOffset;
     control.i8uBit = paPosition;
     control.i8uValue = 0;
     switch (mType) {
       case CIEC_ANY::e_BOOL: valueLastCheck = new CIEC_BOOL; break;
       case CIEC_ANY::e_WORD: valueLastCheck = new CIEC_WORD; break;
-      default: valueLastCheck = 0;
+      default: valueLastCheck = nullptr;
     }
   }
 
   RevPiHandle::~RevPiHandle() {
-    if (0 != valueLastCheck) {
+    if (valueLastCheck != nullptr) {
       delete valueLastCheck;
     }
   }
@@ -92,11 +92,6 @@ namespace forte::eclipse4diac::io::revpi {
       default: break;
     }
     return changed;
-  }
-
-  void RevPiHandle::dropObserver() {
-    set(CIEC_WORD(0));
-    IOHandle::dropObserver();
   }
 
 } // namespace forte::eclipse4diac::io::revpi
