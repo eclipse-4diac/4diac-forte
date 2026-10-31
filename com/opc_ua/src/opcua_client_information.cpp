@@ -107,6 +107,7 @@ namespace forte::com_infra::opc_ua {
       UA_Client_delete(mClient);
       mClient = nullptr;
     }
+    mNewActions.clear();
     mWaitToInitializeActions = false;
     mNeedsReconnection = false;
     mSomeActionWasInitialized = false;
@@ -131,7 +132,8 @@ namespace forte::com_infra::opc_ua {
       uint_fast64_t now = arch::getNanoSecondsMonotonic();
       if ((now - mLastActionInitializationTry) <
           scmInitializeActionRetryNano) { // if an action failed, wait scmInitializeActionRetryNano until next retry to
-        // initialize them
+        // initialize them. Actions added meanwhile are tried at once
+        initializeNewActions();
         tryAnotherChangeImmediately = false;
       }
     }
@@ -300,7 +302,8 @@ namespace forte::com_infra::opc_ua {
   void CUA_ClientInformation::addAction(CActionInfo &paActionInfo) {
     mActionsReferencingIt.push_back(&paActionInfo);
     mActionsToBeInitialized.push_back(&paActionInfo);
-    mWaitToInitializeActions = false;
+    // only the new action is tried at once, the failed ones keep their retry interval
+    mNewActions.push_back(&paActionInfo);
   }
 
   void CUA_ClientInformation::removeAction(CActionInfo &paActionInfo) {
@@ -331,6 +334,7 @@ namespace forte::com_infra::opc_ua {
 
   bool CUA_ClientInformation::initializeAllActions() {
     bool somethingFailed = false;
+    mNewActions.clear(); // they are in mActionsToBeInitialized as well
 
     for (auto itActionInfo = mActionsToBeInitialized.begin(); itActionInfo != mActionsToBeInitialized.end();) {
 
@@ -344,6 +348,24 @@ namespace forte::com_infra::opc_ua {
     }
 
     return !somethingFailed;
+  }
+
+  void CUA_ClientInformation::initializeNewActions() {
+    if (mNewActions.empty()) {
+      return;
+    }
+    UA_SessionState sessionState;
+    UA_Client_getState(mClient, nullptr, &sessionState, nullptr);
+    if (sessionState != UA_SESSIONSTATE_ACTIVATED) {
+      return; // the next initialization round tries them together with the others
+    }
+    for (auto actionInfo : mNewActions) {
+      if (!initializeAction(*actionInfo)) {
+        mSomeActionWasInitialized = true;
+        std::erase(mActionsToBeInitialized, actionInfo);
+      }
+    }
+    mNewActions.clear();
   }
 
   bool CUA_ClientInformation::initializeAction(CActionInfo &paActionInfo) {
@@ -523,6 +545,7 @@ namespace forte::com_infra::opc_ua {
   void CUA_ClientInformation::uninitializeAction(CActionInfo &paActionInfo) {
     // remove in case it is still not initialized
     std::erase(mActionsToBeInitialized, &paActionInfo);
+    std::erase(mNewActions, &paActionInfo);
 
     if (CActionInfo::eSubscribe == paActionInfo.getAction()) { // only subscription has something to release
       uninitializeSubscribeAction(paActionInfo);
