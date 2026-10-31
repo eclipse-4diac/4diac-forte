@@ -23,6 +23,7 @@
 #include "forte/cominfra/comlayer.h"
 #include "opcua_helper.h"
 #include <cstddef>
+#include <cstdint>
 #include <memory>
 
 namespace forte::com_infra::opc_ua {
@@ -77,7 +78,30 @@ namespace forte::com_infra::opc_ua {
        */
       void triggerNewEvent();
 
+      /**
+       * Called by the remote handler when the first initialization of the remote action succeeded or failed for good.
+       * Triggers INITO with QO=TRUE or QO=FALSE. Calls after the first one are ignored.
+       * @param paSuccess True if the action was initialized
+       */
+      void remoteInitializationFinished(bool paSuccess);
+
+      /**
+       * @param paNow Current monotonic time in nanoseconds
+       * @return True if the first initialization of the remote action did not finish in time
+       */
+      bool isRemoteInitializationTimedOut(uint_fast64_t paNow);
+
+      /**
+       * @return True if the first initialization of the remote action failed. The action must not be initialized again.
+       */
+      bool hasRemoteInitializationFailed();
+
     private:
+      enum class ERemoteInitState {
+        eNone, // no remote initialization pending
+        ePending, // INITO is sent when the remote action is initialized
+        eFailed // the remote action was not initialized in time
+      };
       /**
        * Response for the processInterrupt() method
        */
@@ -98,7 +122,8 @@ namespace forte::com_infra::opc_ua {
       /**
        * Called when INIT is triggered in the FB and QI is set to true
        * @param paLayerParameter String conatained between the square brackets in the ID data input (opc_ua[...])
-       * @return e_InitOk is initialization was ok, e_InitTerminated otherwise
+       * @return e_InitOk is initialization was ok, e_Nothing if the result of a remote initialization is reported
+       * later through INITO, e_InitTerminated otherwise
        */
       EComResponse openConnection(char *paLayerParameter) override;
 
@@ -129,9 +154,30 @@ namespace forte::com_infra::opc_ua {
        * reduces a little.
        */
       void setDataAlreadyPresentRead(bool paDataRead);
-      bool getDataAlreadyPresentRead();
       arch::CSyncObject mDataAlreadyPresentMutex;
       bool mDataAlreadyPresent;
+
+      /**
+       * Marks received data as present
+       * @return True if an external event has to be triggered for the data. False if data is already present or INITO
+       * was not sent yet, in which case the data is reported later.
+       */
+      bool markDataPresent();
+
+      /**
+       * State of the first initialization of a remote action, protected by mDataAlreadyPresentMutex
+       */
+      ERemoteInitState mRemoteInitState{ERemoteInitState::eNone};
+
+      /**
+       * INITO response that was not yet passed to the FB, protected by mDataAlreadyPresentMutex
+       */
+      EComResponse mInitResp{e_Nothing};
+
+      /**
+       * Monotonic time in nanoseconds when the first initialization of a remote action times out, 0 for no timeout
+       */
+      uint_fast64_t mRemoteInitDeadline{0};
 
       bool mIsObjectNodeStruct;
 

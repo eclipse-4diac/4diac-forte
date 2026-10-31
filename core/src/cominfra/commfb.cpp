@@ -99,6 +99,10 @@ namespace forte::com_infra {
       }
     }
 
+    if (scg_unINIT & resp) {
+      mInitPending = false;
+    }
+
     if (e_Nothing != resp) {
       STATUS() = CIEC_WSTRING(scmResponseTexts[resp & 0xF]);
       QO() = CIEC_BOOL(!(resp & scg_unComNegative));
