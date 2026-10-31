@@ -16,6 +16,7 @@
 
 #include <open62541/client.h>
 
+#include <set>
 #include <string>
 #include <vector>
 
@@ -409,6 +410,12 @@ namespace forte::com_infra::opc_ua {
        * List of actions that need to be initialized
        */
       std::vector<CActionInfo *> mActionsToBeInitialized;
+
+      /**
+       * Browse paths whose missing node was already reported. A path is reported again only after its node was found
+       * or the client was reset, so a node that appears late doesn't flood the log on every retry
+       */
+      std::set<std::string> mReportedMissingPaths;
 
       /**
        * Indicates if the client should wait scmConnectionRetryTimeoutNano before trying to reconnect. This is true when
