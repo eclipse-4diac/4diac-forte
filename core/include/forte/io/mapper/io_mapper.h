@@ -30,7 +30,7 @@ namespace forte::io {
       DECLARE_SINGLETON(IOMapper)
 
     public:
-      enum Direction { UnknownDirection, In, Out, InOut };
+      enum Direction { In, Out };
 
       bool registerHandle(std::string const &paId, IOHandle &paHandle);
       void deregisterHandle(IOHandle &paHandle);

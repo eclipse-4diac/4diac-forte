@@ -72,7 +72,6 @@ void IOHandleGPIO::onObserver(IOObserver *paObserver) {
 void IOHandleGPIO::dropObserver() {
   DEVLOG_INFO("IOHandleGPIO::dropObserver\n");
   IOHandle::dropObserver();
-  mDirection = IOMapper::UnknownDirection;
 }
 
 void IOHandleGPIO::get(CIEC_ANY &paState) {

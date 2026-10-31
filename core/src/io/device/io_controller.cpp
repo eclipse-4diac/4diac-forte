@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2017, 2025 fortiss GmbH, Johannes Kepler University Linz
+ * Copyright (c) 2017 fortiss GmbH, Johannes Kepler University Linz
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -9,11 +9,12 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
- *   Jose Cabral - Cleaning of namespaces
+ *   Jose Cabral      - Cleaning of namespaces
+ *   Malte Grave, Alois Zoitl - reworked to allow multiple reading observers per
+ *                      handle
  *******************************************************************************/
 
 #include "forte/io/device/io_controller.h"
-
 #include "forte/io/processinterfacefb.h"
 #include "forte/io/configFB/io_configFB_controller.h"
 #include "forte/util/criticalregion.h"
@@ -72,8 +73,6 @@ namespace forte::io {
     switch (paHandle->getDirection()) {
       case IOMapper::In: addHandle(mInputHandles, paId, std::move(paHandle)); break;
       case IOMapper::Out: addHandle(mOutputHandles, paId, std::move(paHandle)); break;
-      case IOMapper::InOut: addHandle(mDiverseHandles, paId, std::move(paHandle)); break;
-      case IOMapper::UnknownDirection: addHandle(mDiverseHandles, paId, std::move(paHandle)); break;
       default: break;
     }
   }
@@ -84,8 +83,6 @@ namespace forte::io {
       switch (rawHandle->getDirection()) {
         case IOMapper::In: removeHandle(mInputHandles, rawHandle); return;
         case IOMapper::Out: removeHandle(mOutputHandles, rawHandle); return;
-        case IOMapper::InOut: removeHandle(mDiverseHandles, rawHandle); return;
-        case IOMapper::UnknownDirection: removeHandle(mDiverseHandles, rawHandle); return;
         default: break;
       }
     }
@@ -108,33 +105,6 @@ namespace forte::io {
     });
 
     paList.erase(new_end, paList.end());
-  }
-
-  void IODeviceController::updateHandleList(std::string const &paId, IOHandle *paHandle) {
-    auto it = std::find_if(mDiverseHandles.begin(), mDiverseHandles.end(),
-                           [&](const std::unique_ptr<IOHandle> &handle) { return handle.get() == paHandle; });
-
-    if (it == mDiverseHandles.end()) {
-      DEVLOG_INFO("[updateHandleList] %s's is no member of mDiverseHandles.\r\n", paId.c_str());
-      return;
-    }
-    auto handleDirection = (*it)->getDirection();
-    switch (handleDirection) {
-      case IOMapper::In: {
-        util::CCriticalRegion criticalRegion(mHandleMutex);
-        mInputHandles.push_back(std::move(*it));
-        mDiverseHandles.erase(it);
-        break;
-      }
-      case IOMapper::Out: {
-        util::CCriticalRegion criticalRegion(mHandleMutex);
-        mOutputHandles.push_back(std::move(*it));
-        mDiverseHandles.erase(it);
-        break;
-      }
-      default: DEVLOG_ERROR("[updateHandleList] %s's direction is neither `In` nor `Out`.\r\n", paId.c_str()); break;
-    }
-    DEVLOG_INFO("[updateHandleList] %s's is no member of mDiverseHandles.\r\n", paId.c_str());
   }
 
   void IODeviceController::fireIndicationEvent(IOObserver *paObserver) {
@@ -197,13 +167,8 @@ namespace forte::io {
       mapper.deregisterHandle(*outputHandle);
     }
 
-    for (auto &diverseHandle : mDiverseHandles) {
-      mapper.deregisterHandle(*diverseHandle);
-    }
-
     mInputHandles.clear();
     mOutputHandles.clear();
-    mDiverseHandles.clear();
   }
 
   bool IODeviceController::isHandleValueEqual(IOHandle &) {

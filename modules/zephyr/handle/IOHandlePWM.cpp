@@ -44,7 +44,6 @@ class IOHandlePWMPeriod : public forte::io::IOHandle {
     void dropObserver() {
       DEVLOG_INFO("IOHandlePWMPeriod::dropObserver\n");
       IOHandle::dropObserver();
-      mDirection = IOMapper::UnknownDirection;
     }
 
   private:
@@ -112,5 +111,4 @@ void IOHandlePWM::onObserver(IOObserver *paObserver) {
 void IOHandlePWM::dropObserver() {
   DEVLOG_INFO("IOHandlePWM::dropObserver\n");
   IOHandle::dropObserver();
-  mDirection = IOMapper::UnknownDirection;
 }
