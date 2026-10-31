@@ -14,7 +14,7 @@
 #include "forte/util/criticalregion.h"
 #include "../slaveHandler.h"
 
-PLCnextBitSlaveHandle::PLCnextBitSlaveHandle(forte::io::IODeviceController *paController,
+PLCnextBitSlaveHandle::PLCnextBitSlaveHandle(forte::io::IODeviceController &paController,
                                              forte::io::IOMapper::Direction paDirection,
                                              uint16_t paBitPosition,
                                              PLCnextSlaveHandler *paSlave) :
@@ -39,11 +39,6 @@ void PLCnextBitSlaveHandle::set(const CIEC_ANY &paState) {
 }
 
 void PLCnextBitSlaveHandle::get(CIEC_ANY &paState) {
-  if (mDirection == forte::io::IOMapper::Out) {
-    DEVLOG_ERROR("GET operation not allowed for type OUTPUT\n");
-    return;
-  }
-
   CCriticalRegion criticalRegion(mSlave->handleMutex);
   static_cast<CIEC_BOOL &>(paState) = (*(mSlave->imageBuffer + mOffset) & mMask) != 0;
 }

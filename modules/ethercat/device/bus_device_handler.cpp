@@ -19,9 +19,7 @@
 #include <algorithm>
 
 namespace forte::eclipse4diac::io::ethercat {
-  ECBusDeviceHandler::ECBusDeviceHandler(ECBusHandler *paBus,
-                                 DeviceType paDeviceType,
-                                 size_t paDeviceIndex) : 
+  ECBusDeviceHandler::ECBusDeviceHandler(ECBusHandler *paBus, DeviceType paDeviceType, size_t paDeviceIndex) :
       mDelegate(nullptr),
       mDeviceIndex(paDeviceIndex),
       mDeviceType(paDeviceType),
@@ -36,7 +34,7 @@ namespace forte::eclipse4diac::io::ethercat {
     dropHandles();
 
     if (mDelegate != nullptr) {
-      if(mBus != nullptr && mBus->isShuttingDown()) {
+      if (mBus != nullptr && mBus->isShuttingDown()) {
         mDelegate = nullptr;
         return;
       }
@@ -82,7 +80,7 @@ namespace forte::eclipse4diac::io::ethercat {
     util::CCriticalRegion criticalRegion(mHandleMutex);
     forte::io::IOMapper &mapper = forte::io::IOMapper::getInstance();
 
-    if(mBus != nullptr && mBus->isShuttingDown()) {
+    if (mBus != nullptr && mBus->isShuttingDown()) {
       deregisterHandles(mapper);
       return;
     }
@@ -112,11 +110,11 @@ namespace forte::eclipse4diac::io::ethercat {
 
   void ECBusDeviceHandler::deregisterHandles(forte::io::IOMapper &mapper) {
     for (auto &it : mInputs) {
-      mapper.deregisterHandle(it->handleId());
+      mapper.deregisterHandle(*it);
     }
 
     for (auto &it : mOutputs) {
-      mapper.deregisterHandle(it->handleId());
+      mapper.deregisterHandle(*it);
     }
 
     mInputs.clear();
@@ -132,9 +130,9 @@ namespace forte::eclipse4diac::io::ethercat {
   }
 
   ECDeviceHandle *ECBusDeviceHandler::getHandle(std::vector<std::unique_ptr<ECDeviceHandle>> &paList, size_t paIndex) {
-    if(paList.size() <= paIndex) {
+    if (paList.size() <= paIndex) {
       return nullptr;
     }
     return paList[paIndex].get();
   }
-}
+} // namespace forte::eclipse4diac::io::ethercat

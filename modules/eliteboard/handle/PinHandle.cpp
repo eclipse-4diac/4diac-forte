@@ -14,8 +14,8 @@
 #include "forte/datatypes/forte_bool.h"
 #include "forte/util/extevhandlerhelper.h"
 
-IOHandleGPIO::IOHandleGPIO(EliteBoardDeviceController *paDeviceCtrl, EliteBoardDeviceController::GPIODescriptor desc) :
-    IOHandle(static_cast<IODeviceController *>(paDeviceCtrl), desc.mDirection, CIEC_ANY::e_BOOL),
+IOHandleGPIO::IOHandleGPIO(EliteBoardDeviceController &paDeviceCtrl, EliteBoardDeviceController::GPIODescriptor desc) :
+    IOHandle(static_cast<IODeviceController &>(paDeviceCtrl), desc.mDirection, CIEC_ANY::e_BOOL),
     mGPIO_Port(desc.mGPIO_Port),
     mGPIO_Pin(desc.mPin),
     mId(desc.mId) {

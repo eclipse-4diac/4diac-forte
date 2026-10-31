@@ -18,7 +18,7 @@ class IOHandlePWMPeriod : public forte::io::IOHandle {
     using IOMapper = forte::io::IOMapper;
 
   public:
-    IOHandlePWMPeriod(IODeviceController *paDeviceCtrl, IOHandlePWM *paMasterHandle) :
+    IOHandlePWMPeriod(IODeviceController &paDeviceCtrl, IOHandlePWM *paMasterHandle) :
         IOHandle(paDeviceCtrl, IOMapper::Out, CIEC_ANY::e_DWORD),
         mMasterHandle(paMasterHandle) {
       DEVLOG_DEBUG("IOHandlePWMPeriod::IOHandlePWMPeriod\n");
@@ -51,7 +51,7 @@ class IOHandlePWMPeriod : public forte::io::IOHandle {
     CIEC_DWORD mValue{0};
 };
 
-IOHandlePWM::IOHandlePWM(IODeviceController *paDeviceCtrl, std::string const &paId, const pwm_dt_spec *paPWMSpec) :
+IOHandlePWM::IOHandlePWM(IODeviceController &paDeviceCtrl, std::string const &paId, const pwm_dt_spec *paPWMSpec) :
     IOHandle(paDeviceCtrl, IOMapper::Out, CIEC_ANY::e_DWORD),
     mPWMSpec(paPWMSpec) {
   if (!pwm_is_ready_dt(getPWMSpec())) {

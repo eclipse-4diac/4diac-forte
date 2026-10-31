@@ -14,10 +14,11 @@
 
 #include "bit.h"
 #include "forte/util/criticalregion.h"
+#include "forte/datatypes/forte_bool.h"
 
 namespace forte::eclipse4diac::io::embrick {
 
-  EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(forte::io::IODeviceController *paController,
+  EmbrickBitSlaveHandle::EmbrickBitSlaveHandle(forte::io::IODeviceController &paController,
                                                forte::io::IOMapper::Direction paDirection,
                                                uint8_t paOffset,
                                                uint8_t paPosition,

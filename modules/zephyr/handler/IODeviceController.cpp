@@ -29,17 +29,17 @@ IODeviceController::IOHandle *IODeviceController::createIOHandle(HandleDescripto
   switch (desc.mType) {
     case IOHandleDescriptor::Gpio: {
       auto gpioDesc = static_cast<IOHandleGPIODescriptor &>(paHandleDescriptor);
-      handle = new IOHandleGPIO(this, gpioDesc.mDirection, gpioDesc.getGpioSpec(), gpioDesc.getFlags());
+      handle = new IOHandleGPIO(*this, gpioDesc.mDirection, gpioDesc.getGpioSpec(), gpioDesc.getFlags());
       break;
     }
     case IOHandleDescriptor::Adc: {
       auto adcDesc = static_cast<IOHandleADCDescriptor &>(paHandleDescriptor);
-      handle = new IOHandleADC(this, adcDesc.getAdcSpec());
+      handle = new IOHandleADC(*this, adcDesc.getAdcSpec());
       break;
     }
     case IOHandleDescriptor::Pwm: {
       auto pwmDesc = static_cast<IOHandlePWMDescriptor &>(paHandleDescriptor);
-      handle = new IOHandlePWM(this, pwmDesc.mId, pwmDesc.getPwmSpec());
+      handle = new IOHandlePWM(*this, pwmDesc.mId, pwmDesc.getPwmSpec());
       break;
     }
     default:
