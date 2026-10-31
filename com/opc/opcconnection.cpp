@@ -49,19 +49,19 @@ void COpcConnection::addGroup(const std::string &paGroupName,
   DEVLOG_INFO("Add group&opc layer added [0x%lX][%s]\n", paComCallback, paGroupName.c_str());
   if (ifInGroupList(paGroupName)) {
     DEVLOG_INFO("group [%s] already in list\n", paGroupName.c_str());
-    DEVLOG_INFO("group map size is %d\n", mOpcGroupMapList.size());
+    DEVLOG_INFO("group map size is %zu\n", mOpcGroupMapList.size());
     return;
   }
   CCriticalRegion criticalRegion(mSync);
   mOpcGroupMapList.push_back(new SOpcGroupMap(paGroupName, mEventHandler->addComCallback(paComCallback)));
-  DEVLOG_INFO("group map size is %d\n", mOpcGroupMapList.size());
+  DEVLOG_INFO("group map size is %zu\n", mOpcGroupMapList.size());
 }
 
 int COpcConnection::removeGroupCallbackDesc(const std::string &paGroupName) {
   for (size_t i = 0; i < mOpcGroupMapList.size(); i++) {
     if (mOpcGroupMapList[i]->mGroupName == paGroupName) {
       mEventHandler->removeComCallback(mOpcGroupMapList[i]->mCallbackDesc);
-      DEVLOG_INFO("erase from m_lOpcGroupMapList %d[%s]\n", i, paGroupName.c_str());
+      DEVLOG_INFO("erase from m_lOpcGroupMapList %zu[%s]\n", i, paGroupName.c_str());
       // remove group's read item list first
       for (auto &readItem : mOpcGroupMapList[i]->mReadItemsList) {
         delete readItem;
@@ -171,7 +171,7 @@ int COpcConnection::send_disconnect(const std::string &paGroupName) {
     return 0;
   }
   // remove  this group but not affect the connection as there are other fb still using it
-  DEVLOG_INFO("disconnect cmd cannot pass, there are %d groups left, connnection state=%d[%s]\n",
+  DEVLOG_INFO("disconnect cmd cannot pass, there are %zu groups left, connnection state=%d[%s]\n",
               mOpcGroupMapList.size(), mConnectionState, paGroupName.c_str());
   DEVLOG_INFO("remove group %s\n", paGroupName.c_str());
   removeGroup(paGroupName);
