@@ -100,14 +100,14 @@ namespace forte::com_infra::http {
     for (size_t i = 2; i < mFb->getNumSD(); i++) {
       CIEC_ANY::EDataTypeID typeToCheck = mFb->getDI(static_cast<unsigned int>(i))->getDataTypeID();
       if (CIEC_ANY::e_ANY != typeToCheck && CIEC_ANY::e_STRING != typeToCheck && CIEC_ANY::e_WSTRING != typeToCheck) {
-        DEVLOG_ERROR("[HTTP Layer] Client called %s has an invalid SD_%d\n", mFb->getInstanceNameId().data(), i);
+        DEVLOG_ERROR("[HTTP Layer] Client called %s has an invalid SD_%zu\n", mFb->getInstanceNameId().data(), i);
         return false;
       }
     }
     for (size_t i = 2; i < mFb->getNumRD(); i++) {
       CIEC_ANY::EDataTypeID typeToCheck = mFb->getDO(static_cast<unsigned int>(i))->getDataTypeID();
       if (CIEC_ANY::e_ANY != typeToCheck && CIEC_ANY::e_STRING != typeToCheck && CIEC_ANY::e_WSTRING != typeToCheck) {
-        DEVLOG_ERROR("[HTTP Layer] Client called %s has an invalid RD_%d\n", mFb->getInstanceNameId().data(), i);
+        DEVLOG_ERROR("[HTTP Layer] Client called %s has an invalid RD_%zu\n", mFb->getInstanceNameId().data(), i);
         return false;
       }
     }
@@ -269,8 +269,8 @@ namespace forte::com_infra::http {
           mFb->getRDs()[noOfParameters++]->setValue(CIEC_STRING(parameterValue));
         }
       } else {
-        DEVLOG_ERROR("[HTTP Layer] FB with path %s received a number of parameters of %u, while it has %u SDs\n",
-                     mPath.c_str(), static_cast<TForteUInt16>(paParameterValues.size()), mFb->getNumRD());
+        DEVLOG_ERROR("[HTTP Layer] FB with path %s received a number of parameters of %zu, while it has %zu SDs\n",
+                     mPath.c_str(), paParameterValues.size(), mFb->getNumRD());
         failed = true;
       }
     }
