@@ -30,6 +30,7 @@ using namespace forte::literals;
 
 namespace forte::com_infra::opc_ua {
   namespace {
+    constexpr char smSeparator = '.'; // separator for the full FB path in log messages
     constexpr std::string_view smStructTypesBrowsePath = "/Types/0:ObjectTypes/0:BaseObjectType/%d:";
     constexpr std::string_view smMemberNamespaceIndex = "/%d:";
     constexpr std::string_view smSequenceToReplace{"::"};
@@ -160,7 +161,7 @@ namespace forte::com_infra::opc_ua {
     UA_NodeId typeNodeId = checkAndCreateOPCUAStructType(paActionInfo, paStructType);
     if (UA_NodeId_equal(&typeNodeId, &UA_NODEID_NULL)) {
       DEVLOG_ERROR("[OPC UA OBJECT STRUCT HELPER]: Could not create OPC UA Struct Type at FB %s\n",
-                   mLayer.getCommFB()->getInstanceName());
+                   mLayer.getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
       retVal = false;
     }
     UA_NodeId_clear(&typeNodeId);
@@ -551,7 +552,8 @@ namespace forte::com_infra::opc_ua {
           DEVLOG_ERROR(
               "[OPC UA OBJECT STRUCT HELPER]: Error occured in FB %s while initializing Struct Object member %s "
               "of Struct Type %s\n",
-              mLayer.getCommFB()->getInstanceName(), structMemberNames[i].data(), paStructType.getTypeNameID().data());
+              mLayer.getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str(),
+              structMemberNames[i].data(), paStructType.getTypeNameID().data());
           return e_InitTerminated;
         }
         actionInfo->addMemberActionInfos(newActionInfos);
@@ -568,7 +570,8 @@ namespace forte::com_infra::opc_ua {
           DEVLOG_ERROR(
               "[OPC UA OBJECT STRUCT HELPER]: Error occured in FB %s while initializing Struct Variable member "
               "%s of Struct Type %s\n",
-              mLayer.getCommFB()->getInstanceName(), structMemberNames[i].data(), paStructType.getTypeNameID().data());
+              mLayer.getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str(),
+              structMemberNames[i].data(), paStructType.getTypeNameID().data());
           return e_InitTerminated;
         }
         paMemberActionInfos.emplace_back(std::move(actionInfo));
