@@ -107,6 +107,7 @@ namespace forte::com_infra::opc_ua {
       UA_Client_delete(mClient);
       mClient = nullptr;
     }
+    mReportedMissingPaths.clear();
     mWaitToInitializeActions = false;
     mNeedsReconnection = false;
     mSomeActionWasInitialized = false;
@@ -361,16 +362,23 @@ namespace forte::com_infra::opc_ua {
             !itNodePair->getBrowsePath()
                  .empty()) { // if browsepath was given, look for NodeId, even if NodeID was also provided
           UA_NodeId *nodeId;
-          UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(
-              *mClient, itNodePair->getBrowsePath().c_str(), nullptr, &nodeId); // we don't care about the parent
+          const std::string &browsePath = itNodePair->getBrowsePath();
+          const bool reportMissing = !mReportedMissingPaths.contains(browsePath);
+          UA_StatusCode retVal = COPC_UA_Helper::getRemoteNodeForPath(*mClient, browsePath.c_str(), nullptr, &nodeId,
+                                                                      reportMissing); // we don't care about the parent
 
           if (UA_STATUSCODE_GOOD != retVal) {
-            DEVLOG_ERROR("[OPC UA CLIENT]: The index %u of the FB %s could not be initialized because the requested "
-                         "nodeId was not found. Error: %s\n",
-                         runnerHelper, paActionInfo.getLayer().getCommFB()->getInstanceName(),
-                         UA_StatusCode_name(retVal));
+            if (reportMissing) {
+              DEVLOG_ERROR("[OPC UA CLIENT]: The index %u of the FB %s could not be initialized because the "
+                           "requested nodeId was not found. Error: %s. Further retries are not reported until the "
+                           "node is found\n",
+                           runnerHelper, paActionInfo.getLayer().getCommFB()->getInstanceName(),
+                           UA_StatusCode_name(retVal));
+              mReportedMissingPaths.insert(browsePath);
+            }
             somethingFailed = true;
           } else {
+            mReportedMissingPaths.erase(browsePath);
             if (itNodePair->getNodeId() != nullptr) {
               if (!UA_NodeId_equal(itNodePair->getNodeId(),
                                    nodeId)) { // if NodeId was provided, check if found is the same
@@ -404,15 +412,21 @@ namespace forte::com_infra::opc_ua {
     UA_NodeId *methodNode;
     UA_NodeId *parentNode;
 
+    const std::string &browsePath = itNodePair->getBrowsePath();
+    const bool reportMissing = !mReportedMissingPaths.contains(browsePath);
     UA_StatusCode retVal =
-        COPC_UA_Helper::getRemoteNodeForPath(*mClient, itNodePair->getBrowsePath().c_str(), &parentNode, &methodNode);
+        COPC_UA_Helper::getRemoteNodeForPath(*mClient, browsePath.c_str(), &parentNode, &methodNode, reportMissing);
 
     if (UA_STATUSCODE_GOOD != retVal) {
-      DEVLOG_ERROR(
-          "[OPC UA CLIENT]: The method call from FB %s failed because the requested node was not found. Error: %s\n",
-          paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+      if (reportMissing) {
+        DEVLOG_ERROR("[OPC UA CLIENT]: The method call from FB %s failed because the requested node was not found. "
+                     "Error: %s. Further retries are not reported until the node is found\n",
+                     paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+        mReportedMissingPaths.insert(browsePath);
+      }
       somethingFailed = true;
     } else {
+      mReportedMissingPaths.erase(browsePath);
       if (itNodePair->getNodeId() != nullptr) {
         if (!UA_NodeId_equal(itNodePair->getNodeId(),
                              methodNode)) { // if NodeId of method was provided, check if found is the same
