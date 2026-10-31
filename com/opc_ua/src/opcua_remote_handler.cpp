@@ -285,7 +285,8 @@ namespace forte::com_infra::opc_ua {
         if (!clientInformation->executeAsyncCalls()) {
           failedClients.push_back(clientInformation);
         } else {
-          asyncIsNeeded = clientInformation->isAsyncNeeded();
+          // any client with open calls or a subscription keeps the loop going, not only the last one in the list
+          asyncIsNeeded = asyncIsNeeded || clientInformation->isAsyncNeeded();
         }
       }
       if (!isAlive()) {
