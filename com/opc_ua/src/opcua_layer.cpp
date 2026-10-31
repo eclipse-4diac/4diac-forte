@@ -16,6 +16,8 @@
  *      - refactoring to cleaner architecture
  *    Markus Meingast:
  *      - add support for Object Structs
+ *    Franz Höpfinger:
+ *      - add FB instance path and OPC UA node ID to recvData() error logging
  *******************************************************************************/
 
 #include "opcua_layer.h"
@@ -37,7 +39,27 @@ using namespace forte::literals;
 namespace forte::com_infra::opc_ua {
   namespace {
     [[maybe_unused]] const ComLayerManager::EntryImpl<COPC_UA_Layer> entry("opc_ua"_STRID);
-  }
+
+    // OPC UA "ExpandedNodeId" string notation (ns=<namespace>;i=<numeric>/s=<string>), so it can be grepped straight
+    // against the OPC UA server's own node-registration logs even when the owning FB is already gone.
+    std::string nodeIdToString(const UA_NodeId *paNodeId) {
+      if (nullptr == paNodeId) {
+        return "<none>";
+      }
+      switch (paNodeId->identifierType) {
+        case UA_NODEIDTYPE_NUMERIC:
+          return "ns=" + std::to_string(paNodeId->namespaceIndex) +
+                 ";i=" + std::to_string(paNodeId->identifier.numeric);
+        case UA_NODEIDTYPE_STRING:
+          return "ns=" + std::to_string(paNodeId->namespaceIndex) + ";s=" +
+                 std::string(reinterpret_cast<const char *>(paNodeId->identifier.string.data),
+                             paNodeId->identifier.string.length);
+        default:
+          return "ns=" + std::to_string(paNodeId->namespaceIndex) +
+                 ";type=" + std::to_string(static_cast<int>(paNodeId->identifierType));
+      }
+    }
+  } // namespace
 
   COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
       CComLayer(paUpperLayer, paComFB),
@@ -125,8 +147,9 @@ namespace forte::com_infra::opc_ua {
                                         ? mStructObjectHelper->getRDBufferIndexFromNodeId(handleRecv->mNodeId)
                                         : handleRecv->mOffset + i;
             if (bufferIndex == -1) {
-              DEVLOG_ERROR("[OPC UA LAYER]: Received Node ID %d does not match with any registered Node ID for FB %s\n",
-                           handleRecv->mNodeId, getCommFB()->getInstanceName());
+              DEVLOG_ERROR("[OPC UA LAYER]: Received Node ID %s does not match with any registered Node ID for FB %s\n",
+                           nodeIdToString(handleRecv->mNodeId).c_str(),
+                           getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
               mInterruptResp = e_ProcessDataRecvFaild;
               break;
             }
@@ -134,16 +157,19 @@ namespace forte::com_infra::opc_ua {
                 handleRecv->mData[i]->type == COPC_UA_Helper::getOPCUATypeFromAny(*mRDBuffer[bufferIndex])) {
               COPC_UA_Helper::convertFromOPCUAType(handleRecv->mData[i]->data, *mRDBuffer[bufferIndex]);
             } else {
-              DEVLOG_ERROR("[OPC UA LAYER]: RD_%d of FB %s has no data, is not a scalar or there is a type mismatch\n",
-                           bufferIndex, getCommFB()->getInstanceName());
+              DEVLOG_ERROR("[OPC UA LAYER]: RD_%lld of FB %s (Node ID %s) has no data, is not a scalar or there is a "
+                           "type mismatch\n",
+                           bufferIndex, getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                           nodeIdToString(handleRecv->mNodeId).c_str());
               mInterruptResp = e_ProcessDataRecvFaild;
               break;
             }
           }
         } else {
-          DEVLOG_ERROR("[OPC UA LAYER]: Receiving data for FB %s failed because the response size is %u with an offset "
-                       "of %u but the FB has %u RDs\n",
-                       getCommFB()->getInstanceName(), handleRecv->mData.size(), handleRecv->mOffset,
+          DEVLOG_ERROR("[OPC UA LAYER]: Receiving data for FB %s (Node ID %s) failed because the response size is %u "
+                       "with an offset of %u but the FB has %u RDs\n",
+                       getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                       nodeIdToString(handleRecv->mNodeId).c_str(), handleRecv->mData.size(), handleRecv->mOffset,
                        getCommFB()->getNumRD());
           mInterruptResp = e_ProcessDataRecvFaild;
         }
