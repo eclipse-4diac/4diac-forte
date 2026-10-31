@@ -18,7 +18,7 @@
 
 namespace forte::eclipse4diac::io::embrick {
 
-  EmbrickAnalog10SlaveHandle::EmbrickAnalog10SlaveHandle(forte::io::IODeviceController *paController,
+  EmbrickAnalog10SlaveHandle::EmbrickAnalog10SlaveHandle(forte::io::IODeviceController &paController,
                                                          forte::io::IOMapper::Direction paDirection,
                                                          uint8_t paOffset,
                                                          EmbrickSlaveHandler *paSlave) :

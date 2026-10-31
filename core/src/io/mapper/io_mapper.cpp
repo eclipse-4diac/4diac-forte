@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2022 Johannes Messmer (admin@jomess.com), fortiss GmbH,
- *                          Jonathan Lainer
+ * Copyright (c) 2016 Johannes Messmer (admin@jomess.com), fortiss GmbH,
+ *                    Jonathan Lainer, Johannes Kepler University Linz
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,11 +10,16 @@
  *
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
- *   Jose Cabral - Cleaning of namespaces
- *   Jonathan Lainer - Add method for deregistering Handles by ID.
+ *   Jose Cabral      - Cleaning of namespaces
+ *   Jonathan Lainer  - Add method for deregistering Handles by ID.
+ *   Malte Grave, Alois Zoitl - reworked handle and oberserver handling reducing
+ *                      memory overhead and allowing for to have several read
+ *                      only observers
  *******************************************************************************/
 
 #include "forte/io/mapper/io_mapper.h"
+#include <algorithm>
+#include <string_view>
 #include "forte/io/mapper/io_handle.h"
 #include "forte/io/mapper/io_observer.h"
 #include "forte/util/devlog.h"
@@ -26,117 +32,129 @@ namespace forte::io {
 
   IOMapper::~IOMapper() = default;
 
-  bool IOMapper::registerHandle(std::string const &paId, IOHandle &paHandle) {
+  bool IOMapper::registerHandle(std::string_view paId, IOHandle &paHandle) {
     util::CCriticalRegion criticalRegion(mSyncMutex);
 
-    // Check for duplicates
-    if (mHandles.find(paId) != mHandles.end()) {
-      DEVLOG_WARNING("[IOMapper] Duplicated handle entry '%s'\n", paId.c_str());
+    if (paHandle.mMapping != nullptr) {
+      DEVLOG_WARNING("[IOMapper] Handle is already registered\n");
       return false;
     }
 
-    // Insert into handles list
-    mHandles.insert(std::make_pair(paId, &paHandle));
-
-    DEVLOG_DEBUG("[IOMapper] Register handle %s\n", paId.c_str());
-
-    // Check for existing observer
-    if (mObservers.find(paId) != mObservers.end()) {
-      paHandle.onObserver(mObservers[paId]);
-      mObservers[paId]->onHandle(&paHandle);
-
-      DEVLOG_INFO("[IOMapper] Connected %s\n", paId.c_str());
+    auto it = lowerBound(paId);
+    if (isMatch(it, paId)) {
+      IOMappingData &m = **it;
+      if (m.mHandle != nullptr) {
+        DEVLOG_WARNING("[IOMapper] Duplicated handle entry '%s'\n", m.mId.c_str());
+        return false;
+      }
+      m.mHandle = &paHandle; // entry existed only because of observers
+      paHandle.bind(&m);
+      for (IOObserver *o : m.mObservers) {
+        o->onHandle(paHandle);
+      }
+      for (IOObserver *observer : m.mObservers) {
+        paHandle.onNewObserver(*observer);
+      }
+      return true;
     }
 
+    auto mapping = std::make_unique<IOMappingData>(paId);
+    mapping->mHandle = &paHandle;
+    paHandle.bind(mapping.get());
+    mMappings.insert(it, std::move(mapping));
     return true;
   }
 
   void IOMapper::deregisterHandle(IOHandle &paHandle) {
     util::CCriticalRegion criticalRegion(mSyncMutex);
 
-    for (auto it = mHandles.begin(); it != mHandles.end(); ++it) {
-      if (it->second == &paHandle) {
-        if (mObservers.find(it->first) != mObservers.end()) {
-          paHandle.dropObserver();
-          mObservers[it->first]->dropHandle();
-          DEVLOG_INFO("[IOMapper]  Disconnected %s (lost handle)\n", it->first.data());
+    const IOMappingData *m = paHandle.mMapping;
+    if (m == nullptr) {
+      DEVLOG_WARNING("[IOMapper] Tried to deregister unbound handle\n");
+      return;
+    }
+
+    auto it = lowerBound(m->mId);
+    if (!isMatch(it, m->mId) || (*it)->mHandle != &paHandle) {
+      DEVLOG_WARNING("[IOMapper] Tried to deregister wrong handle '%s'\n", m->mId.c_str());
+      return;
+    }
+
+    (*it)->mHandle = nullptr;
+    paHandle.bind(nullptr);
+    for (IOObserver *o : (*it)->mObservers) {
+      o->dropHandle();
+    }
+    purgeIfUnused(it); // `m` may be dangling after this call
+  }
+
+  bool IOMapper::registerObserver(std::string_view paId, IOObserver &paObserver) {
+    util::CCriticalRegion criticalRegion(mSyncMutex);
+
+    auto it = lowerBound(paId);
+    if (isMatch(it, paId)) {
+      IOMappingData &m = **it;
+      const auto &obs = m.mObservers;
+
+      if (std::find(obs.begin(), obs.end(), &paObserver) != obs.end()) {
+        DEVLOG_WARNING("[IOMapper]  Duplicated observer entry '%s'\n", m.mId.c_str());
+        return false;
+      }
+      if (paObserver.getDirection() == Out) {
+        // check if there is allready an output observer registered
+        if (std::any_of(obs.begin(), obs.end(), [](const IOObserver *o) { return o->getDirection() == Out; })) {
+          DEVLOG_WARNING("[IOMapper] A second output observer tried to register on '%s'\n", m.mId.c_str());
+          return false;
         }
-
-        DEVLOG_DEBUG("[IOMapper] Deregister handle %s\n", it->first.data());
-
-        mHandles.erase(it);
-        break;
       }
-    }
-  }
-
-  void IOMapper::deregisterHandle(std::string const &paId) {
-    util::CCriticalRegion criticalRegion(mSyncMutex);
-
-    auto handleIt = mHandles.find(paId);
-    if (handleIt != mHandles.end()) {
-      auto observerIt = mObservers.find(paId);
-      if (observerIt != mObservers.end()) {
-        handleIt->second->dropObserver();
-        observerIt->second->dropHandle();
-        DEVLOG_INFO("[IOMapper] Disconnected %s (lost handle)\n", paId.c_str());
+      m.mObservers.push_back(&paObserver);
+      if (m.mHandle != nullptr) {
+        paObserver.onHandle(*m.mHandle);
+        m.mHandle->onNewObserver(paObserver);
+        DEVLOG_INFO("[IOMapper]  Connected %s\n", m.mId.c_str());
       }
-      DEVLOG_DEBUG("[IOMapper] Deregister handle %s\n", paId.c_str());
-      mHandles.erase(handleIt);
-    }
-  }
-
-  IOHandle *IOMapper::getHandle(std::string const &paId) {
-    util::CCriticalRegion criticalRegion(mSyncMutex);
-
-    if (auto handleIt = mHandles.find(paId); handleIt != mHandles.end()) {
-      DEVLOG_DEBUG("[IOMapper] Retrieved handle %s\n", paId.c_str());
-      return handleIt->second;
-    }
-    return nullptr;
-  }
-
-  bool IOMapper::registerObserver(std::string const &paId, IOObserver *paObserver) {
-    util::CCriticalRegion criticalRegion(mSyncMutex);
-
-    // Check for duplicates
-    if (mObservers.find(paId) != mObservers.end()) {
-      DEVLOG_WARNING("[IOMapper]  Duplicated observer entry '%s'\n", paId.c_str());
-      return false;
+      return true;
     }
 
-    // Insert into observer list
-    mObservers.insert(std::make_pair(paId, paObserver));
-
-    DEVLOG_DEBUG("[IOMapper] Register observer %s\n", paId.c_str());
-
-    // Check for existing handle
-    if (auto handleIt = mHandles.find(paId); handleIt != mHandles.end()) {
-      auto handle = handleIt->second;
-      handle->onObserver(paObserver);
-      paObserver->onHandle(handle);
-      DEVLOG_INFO("[IOMapper]  Connected %s\n", paId.c_str());
-    }
-
+    auto mapping = std::make_unique<IOMappingData>(paId);
+    mapping->mObservers.push_back(&paObserver);
+    mMappings.insert(it, std::move(mapping));
     return true;
   }
 
-  void IOMapper::deregisterObserver(IOObserver *paObserver) {
+  void IOMapper::deregisterObserver(std::string_view paId, IOObserver &paObserver) {
     util::CCriticalRegion criticalRegion(mSyncMutex);
 
-    for (TObserverMap::iterator it = mObservers.begin(); it != mObservers.end(); ++it) {
-      if (it->second == paObserver) {
-        if (mHandles.find(it->first) != mHandles.end()) {
-          mHandles[it->first]->dropObserver();
-          paObserver->dropHandle();
-          DEVLOG_INFO("[IOMapper]  Disconnected %s (lost observer)\n", it->first.data());
-        }
+    auto it = lowerBound(paId);
+    if (!isMatch(it, paId)) {
+      return;
+    }
+    auto &obs = (*it)->mObservers;
+    auto pos = std::find(obs.begin(), obs.end(), &paObserver);
+    if (pos == obs.end()) {
+      return;
+    }
+    paObserver.dropHandle();
+    obs.erase(pos);
+    purgeIfUnused(it);
+  }
 
-        DEVLOG_DEBUG("[IOMapper] Deregister observer %s\n", it->first.data());
+  IOMapper::MappingDataStorage::const_iterator IOMapper::lowerBound(std::string_view paId) const {
+    return std::lower_bound(mMappings.begin(), mMappings.end(), paId,
+                            [](const std::unique_ptr<IOMappingData> &paM, std::string_view paKey) {
+                              return std::string_view(paM->mId) < paKey;
+                            });
+  }
 
-        mObservers.erase(it);
-        break;
-      }
+  bool IOMapper::isMatch(MappingDataStorage::const_iterator paIt, std::string_view paId) const {
+    return paIt != mMappings.end() && (*paIt)->mId == paId;
+  }
+
+  void IOMapper::purgeIfUnused(MappingDataStorage::const_iterator paIt) {
+    const IOMappingData &m = **paIt;
+    if (m.mHandle == nullptr && m.mObservers.empty()) {
+      mMappings.erase(paIt);
     }
   }
+
 } // namespace forte::io

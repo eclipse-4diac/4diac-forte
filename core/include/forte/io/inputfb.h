@@ -41,32 +41,32 @@ namespace forte::io {
           conn_IN(*this, 2, var_IN) {
       }
 
-      CIEC_ANY *getDO(size_t paIndex) final override {
+      CIEC_ANY *getDO(size_t paIndex) final {
         if (paIndex == 2) {
           return &var_IN;
         }
         return CProcessInterfaceFB::getDO(paIndex);
       }
 
-      CEventConnection *getEOConUnchecked(TPortId paIndex) final override {
+      CEventConnection *getEOConUnchecked(TPortId paIndex) final {
         if (paIndex == 2) {
           return &conn_IND;
         }
         return CProcessInterfaceFB::getEOConUnchecked(paIndex);
       }
 
-      CDataConnection *getDOConUnchecked(TPortId paIndex) final override {
+      CDataConnection *getDOConUnchecked(TPortId paIndex) final {
         if (paIndex == 2) {
           return &conn_IN;
         }
         return CProcessInterfaceFB::getDOConUnchecked(paIndex);
       }
 
-      CIEC_ANY::EDataTypeID getIOObserverDataType() override {
+      CIEC_ANY::EDataTypeID getIOObserverDataType() const override {
         return CDataTypeTrait<T>::scmDataTypeId;
       }
 
-      IOMapper::Direction getDirection() final override {
+      IOMapper::Direction getDirection() const final {
         return IOMapper::In;
       }
 
@@ -97,7 +97,7 @@ namespace forte::io {
     protected:
       static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-      void onHandle(IOHandle *const paHandle) final override {
+      void onHandle(IOHandle &paHandle) final {
         CProcessInterfaceFB::onHandle(paHandle);
         if (isReady()) {
           var_QO = read();
@@ -126,7 +126,7 @@ namespace forte::io {
         }
       }
 
-      void writeOutputData(TEventID paEIID) final override {
+      void writeOutputData(TEventID paEIID) final {
         switch (paEIID) {
           case scmEventCNFID: {
             writeData(scmFBInterfaceSpec.getNumDIs() + 0, var_QO, conn_QO);
@@ -144,7 +144,7 @@ namespace forte::io {
         }
       }
 
-      void setInitialValues() final override {
+      void setInitialValues() final {
         CProcessInterfaceFB::setInitialValues();
         var_IN = T(0);
       }

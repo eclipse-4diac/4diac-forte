@@ -38,11 +38,11 @@ namespace forte::io {
 
       CEventConnection *getEOConUnchecked(TPortId) override;
 
-      CIEC_ANY::EDataTypeID getIOObserverDataType() override {
+      CIEC_ANY::EDataTypeID getIOObserverDataType() const override {
         return CIEC_ANY::e_Max;
       }
 
-      IOMapper::Direction getDirection() override {
+      IOMapper::Direction getDirection() const override {
         return IOMapper::In;
       }
 

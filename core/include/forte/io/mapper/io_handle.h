@@ -25,15 +25,17 @@ namespace forte::io {
       friend class IOMapper;
 
     public:
-      IOHandle(IODeviceController *paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType);
-      virtual ~IOHandle();
+      IOHandle(IODeviceController &paController, IOMapper::Direction paDirection, CIEC_ANY::EDataTypeID paType);
+      virtual ~IOHandle() = default;
 
-      bool hasObserver() const {
-        return !!mObserver;
+      bool isBound() const {
+        return mMapping != nullptr;
       }
 
-      IOObserver *getObserver() {
-        return mObserver;
+      bool hasObserver() const;
+
+      std::string_view getId() const {
+        return mMapping ? std::string_view(mMapping->mId) : std::string_view{};
       }
 
       CIEC_ANY::EDataTypeID getIOHandleDataType() const {
@@ -58,16 +60,16 @@ namespace forte::io {
       void onChange();
 
     protected:
-      IODeviceController *mController;
-      CIEC_ANY::EDataTypeID mType;
+      virtual void onNewObserver(IOObserver &paObserver);
 
+      IODeviceController &mController;
+      CIEC_ANY::EDataTypeID mType;
       IOMapper::Direction mDirection;
 
-      virtual void onObserver(IOObserver *paObserver);
-      virtual void dropObserver();
-
     private:
-      IOObserver *mObserver;
+      void bind(IOMappingData *paMapping);
+
+      const IOMappingData *mMapping = nullptr;
   };
 
 } // namespace forte::io

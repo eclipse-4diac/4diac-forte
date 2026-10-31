@@ -14,18 +14,13 @@
  *******************************************************************************/
 
 #include "forte/io/mapper/io_observer.h"
-#include "forte/util/devlog.h"
 
 namespace forte::io {
   IOObserver::IOObserver() : mHandle(nullptr) {
   }
 
-  IOObserver::~IOObserver() {
-    IOMapper::getInstance().deregisterObserver(this);
-  }
-
-  void IOObserver::onHandle(IOHandle *const paHandle) {
-    this->mHandle = paHandle;
+  void IOObserver::onHandle(IOHandle &paHandle) {
+    this->mHandle = &paHandle;
   }
 
   void IOObserver::dropHandle() {

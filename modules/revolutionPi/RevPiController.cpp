@@ -70,7 +70,7 @@ namespace forte::eclipse4diac::io::revpi {
     HandleDescriptor &desc(static_cast<HandleDescriptor &>(paHandleDescriptor));
 
     return new RevPiHandle(
-        this, desc.mType, desc.mDirection,
+        *this, desc.mType, desc.mDirection,
         static_cast<uint16_t>(mDeviceList[desc.mSlaveIndex + 1].i16uBaseOffset + desc.mOffset +
                               (desc.mDirection == IOMapper::In ? mDeviceList[desc.mSlaveIndex + 1].i16uInputOffset
                                                                : mDeviceList[desc.mSlaveIndex + 1].i16uOutputOffset)),

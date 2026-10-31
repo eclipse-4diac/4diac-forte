@@ -17,7 +17,7 @@
 
 namespace forte::eclipse4diac::io::embrick {
 
-  EmbrickSlaveHandle::EmbrickSlaveHandle(forte::io::IODeviceController *paController,
+  EmbrickSlaveHandle::EmbrickSlaveHandle(forte::io::IODeviceController &paController,
                                          forte::io::IOMapper::Direction paDirection,
                                          CIEC_ANY::EDataTypeID paType,
                                          uint8_t paOffset,
@@ -35,18 +35,6 @@ namespace forte::eclipse4diac::io::embrick {
 
   void EmbrickSlaveHandle::set(const CIEC_ANY &) {
     mSlave->forceUpdate();
-  }
-
-  void EmbrickSlaveHandle::onObserver(forte::io::IOObserver *paObserver) {
-    reset();
-
-    IOHandle::onObserver(paObserver);
-  }
-
-  void EmbrickSlaveHandle::dropObserver() {
-    IOHandle::dropObserver();
-
-    reset();
   }
 
 } // namespace forte::eclipse4diac::io::embrick

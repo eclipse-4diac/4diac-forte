@@ -77,38 +77,8 @@ namespace forte::io {
     }
   }
 
-  void IODeviceController::removeHandle(std::string const &paId) {
-    IOMapper &mapper = IOMapper::getInstance();
-    if (IOHandle *rawHandle = mapper.getHandle(paId); rawHandle) {
-      switch (rawHandle->getDirection()) {
-        case IOMapper::In: removeHandle(mInputHandles, rawHandle); return;
-        case IOMapper::Out: removeHandle(mOutputHandles, rawHandle); return;
-        default: break;
-      }
-    }
-    DEVLOG_WARNING("[IODeviceController] Handle with ID '%s' not found in IOMapper for removal. Cannot remove from "
-                   "controller lists.\n",
-                   paId.c_str());
-  }
-
-  void IODeviceController::removeHandle(THandleList &paList, IOHandle *paRawHandle) {
-    util::CCriticalRegion criticalRegion(mHandleMutex);
-
-    IOMapper &mapper = IOMapper::getInstance();
-
-    auto new_end = std::remove_if(paList.begin(), paList.end(), [&](const std::unique_ptr<IOHandle> &handle) {
-      if (handle.get() == paRawHandle) {
-        mapper.deregisterHandle(*handle);
-        return true; // remove
-      }
-      return false;
-    });
-
-    paList.erase(new_end, paList.end());
-  }
-
-  void IODeviceController::fireIndicationEvent(IOObserver *paObserver) {
-    startNewEventChain(static_cast<CProcessInterfaceFB *>(paObserver));
+  void IODeviceController::fireIndicationEvent(IOObserver &paObserver) {
+    startNewEventChain(static_cast<CProcessInterfaceFB *>(&paObserver));
   }
 
   void IODeviceController::handleChangeEvent(IOHandle *) {
