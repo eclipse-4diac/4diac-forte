@@ -1,0 +1,12 @@
+;<Request ID="1" Action="CREATE"><FB Name="callMethodServerRestarted" Type="iec61499::system::EMB_RES" /></Request>
+callMethodServerRestarted;<Request ID="2" Action="CREATE"><FB Name="METHOD" Type="iec61499::net::SERVER_0" /></Request>
+callMethodServerRestarted;<Request ID="3" Action="WRITE"><Connection Source="opc_ua[CREATE_METHOD;/Objects/callMethodRestart/method]" Destination="METHOD.ID" /></Request>
+callMethodServerRestarted;<Request ID="4" Action="WRITE"><Connection Source="1" Destination="METHOD.QI" /></Request>
+callMethodServerRestarted;<Request ID="5" Action="CREATE"><Connection Source="METHOD.IND" Destination="METHOD.RSP" /></Request>
+callMethodServerRestarted;<Request ID="6" Action="CREATE"><FB Name="OTHER_NODE" Type="iec61499::net::PUBLISH_1" /></Request>
+callMethodServerRestarted;<Request ID="7" Action="WRITE"><Connection Source="opc_ua[WRITE;/Objects/callMethodRestartOther/otherNode]" Destination="OTHER_NODE.ID" /></Request>
+callMethodServerRestarted;<Request ID="8" Action="WRITE"><Connection Source="1" Destination="OTHER_NODE.QI" /></Request>
+callMethodServerRestarted;<Request ID="9" Action="CREATE"><Connection Source="START.COLD" Destination="OTHER_NODE.INIT" /></Request>
+callMethodServerRestarted;<Request ID="10" Action="CREATE"><Connection Source="START.WARM" Destination="OTHER_NODE.INIT" /></Request>
+callMethodServerRestarted;<Request ID="11" Action="CREATE"><Connection Source="OTHER_NODE.INITO" Destination="METHOD.INIT" /></Request>
+callMethodServerRestarted;<Request ID="12" Action="START"/>
