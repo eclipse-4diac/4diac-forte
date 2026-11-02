@@ -129,6 +129,51 @@ namespace forte::test {
     BOOST_TEST(21 == static_cast<CIEC_DINT::TValueType>(test10Value[2]));
   }
 
+  BOOST_AUTO_TEST_CASE(Default_initialization_test) {
+    CIEC_ANY_DERIVED_VARIANT defaultInitialized;
+    CIEC_ANY_DERIVED_VARIANT braceInitialized{};
+    CIEC_ANY_DERIVED_VARIANT valueInitialized = CIEC_ANY_DERIVED_VARIANT();
+    BOOST_TEST(defaultInitialized.unwrap().getDataTypeID() == CIEC_ANY::e_STRUCT);
+    BOOST_TEST(braceInitialized.unwrap().getDataTypeID() == CIEC_ANY::e_STRUCT);
+    BOOST_TEST(valueInitialized.unwrap().getDataTypeID() == CIEC_ANY::e_STRUCT);
+  }
+
+  BOOST_AUTO_TEST_CASE(Array_to_default_struct_reset_test) {
+    CIEC_ANY_DERIVED_VARIANT destination = CIEC_ARRAY_FIXED<CIEC_DINT, 0, 2>{17_DINT, 4_DINT, 21_DINT};
+    const CIEC_ANY_DERIVED_VARIANT source;
+    destination = source;
+    BOOST_TEST(destination.unwrap().getDataTypeID() == CIEC_ANY::e_STRUCT);
+    destination = CIEC_ARRAY_FIXED<CIEC_DINT, 0, 2>{17_DINT, 4_DINT, 21_DINT};
+    destination = CIEC_ANY_DERIVED_VARIANT();
+    BOOST_TEST(destination.unwrap().getDataTypeID() == CIEC_ANY::e_STRUCT);
+  }
+
+  BOOST_AUTO_TEST_CASE(Deep_copy_test) {
+    CIEC_ANY_DERIVED_VARIANT structure = CIEC_AnyDerivedTestStruct("test"_STRING, true_BOOL, 17_INT);
+    CIEC_ANY_DERIVED_VARIANT structureCopy(structure);
+    CIEC_ANY_DERIVED_VARIANT structureAssigned;
+    structureAssigned = structure;
+    BOOST_TEST(&structure.unwrap() != &structureCopy.unwrap());
+    BOOST_TEST(&structure.unwrap() != &structureAssigned.unwrap());
+    static_cast<CIEC_AnyDerivedTestStruct &>(structure.unwrap()).Var3 = 42_INT;
+    BOOST_TEST(
+        static_cast<CIEC_INT::TValueType>(static_cast<CIEC_AnyDerivedTestStruct &>(structureCopy.unwrap()).Var3) == 17);
+    BOOST_TEST(static_cast<CIEC_INT::TValueType>(
+                   static_cast<CIEC_AnyDerivedTestStruct &>(structureAssigned.unwrap()).Var3) == 17);
+
+    CIEC_ANY_DERIVED_VARIANT array = CIEC_ARRAY_FIXED<CIEC_DINT, 0, 2>{17_DINT, 4_DINT, 21_DINT};
+    CIEC_ANY_DERIVED_VARIANT arrayCopy(array);
+    CIEC_ANY_DERIVED_VARIANT arrayAssigned;
+    arrayAssigned = array;
+    BOOST_TEST(&array.unwrap() != &arrayCopy.unwrap());
+    BOOST_TEST(&array.unwrap() != &arrayAssigned.unwrap());
+    static_cast<CIEC_ARRAY_FIXED<CIEC_DINT, 0, 2> &>(array.unwrap())[0] = 42_DINT;
+    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(
+                   static_cast<CIEC_ARRAY_FIXED<CIEC_DINT, 0, 2> &>(arrayCopy.unwrap())[0]) == 17);
+    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(
+                   static_cast<CIEC_ARRAY_FIXED<CIEC_DINT, 0, 2> &>(arrayAssigned.unwrap())[0]) == 17);
+  }
+
   BOOST_AUTO_TEST_CASE(Assignment_test) {
     CIEC_ANY_DERIVED_VARIANT test1;
     CIEC_ANY_DERIVED_VARIANT test2;

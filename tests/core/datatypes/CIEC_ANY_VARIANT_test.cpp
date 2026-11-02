@@ -89,6 +89,15 @@ namespace forte::test {
     BOOST_TEST(17 == static_cast<CIEC_DINT::TValueType>(std::get<CIEC_DINT>(test5)));
   }
 
+  BOOST_AUTO_TEST_CASE(Default_initialization_test) {
+    CIEC_ANY_VARIANT defaultInitialized;
+    CIEC_ANY_VARIANT braceInitialized{};
+    CIEC_ANY_VARIANT valueInitialized = CIEC_ANY_VARIANT();
+    BOOST_TEST(defaultInitialized.unwrap().getDataTypeID() == CIEC_ANY::e_SINT);
+    BOOST_TEST(braceInitialized.unwrap().getDataTypeID() == CIEC_ANY::e_SINT);
+    BOOST_TEST(valueInitialized.unwrap().getDataTypeID() == CIEC_ANY::e_SINT);
+  }
+
   BOOST_AUTO_TEST_CASE(Assignment_test) {
     CIEC_ANY_VARIANT test1;
     CIEC_ANY_VARIANT test2;
