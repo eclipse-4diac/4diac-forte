@@ -31,7 +31,6 @@ namespace forte {
   class CIEC_ANY_DERIVED_VARIANT : public CIEC_ANY, public TIecAnyDerivedVariantType {
       DECLARE_FIRMWARE_DATATYPE(ANY_DERIVED_VARIANT)
     public:
-      using TIecAnyDerivedVariantType::variant;
       using TIecAnyDerivedVariantType::operator=;
       template<class>
       static inline constexpr bool always_false_v = false;
@@ -40,6 +39,16 @@ namespace forte {
       }
 
       CIEC_ANY_DERIVED_VARIANT(const CIEC_ANY_DERIVED_VARIANT &paVal) : variant(paVal) {
+      }
+
+      CIEC_ANY_DERIVED_VARIANT(const CIEC_ARRAY &paVal) :
+          variant(std::in_place_type<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>,
+                  static_cast<CIEC_ARRAY *>(paVal.clone(nullptr))) {
+      }
+
+      CIEC_ANY_DERIVED_VARIANT(const CIEC_STRUCT &paVal) :
+          variant(std::in_place_type<CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>>,
+                  static_cast<CIEC_STRUCT *>(paVal.clone(nullptr))) {
       }
 
       CIEC_ANY_DERIVED_VARIANT(const CIEC_ANY &paVal) {
