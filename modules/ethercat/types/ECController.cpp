@@ -48,7 +48,7 @@ namespace forte::eclipse4diac::io::ethercat {
       var_QI(0_BOOL),
       var_Enable(0_BOOL),
       var_ControllerId(0_UINT),
-      var_UpdateInterval(0_TIME),
+      var_UpdateInterval(1000000_TIME),
       conn_INITO(*this, 0),
       conn_CNF(*this, 1),
       conn_IND(*this, 2),
@@ -71,7 +71,7 @@ namespace forte::eclipse4diac::io::ethercat {
     var_QI = 0_BOOL;
     var_Enable = 0_BOOL;
     var_ControllerId = 0_UINT;
-    var_UpdateInterval.setFromMilliSeconds(1);
+    var_UpdateInterval = 1000000_TIME;
     var_QO = 0_BOOL;
     var_STATUS = u""_WSTRING;
   }
