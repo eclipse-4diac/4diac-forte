@@ -112,7 +112,9 @@ namespace forte::com_infra::opc_ua {
         case eCreateVariable: retVal = checkCreateVariableAction(fbType, noOfRDs, noOfSDs); break;
         case eDeleteObject:
         case eDeleteVariable: retVal = checkDeleteNodeAction(fbType, noOfRDs, noOfSDs); break;
-        default: DEVLOG_ERROR("[OPC UA ACTION]: Unknown action %d\n", mAction);
+        default:
+          DEVLOG_ERROR("[OPC UA ACTION]: Unknown action %d in FB %s\n", mAction,
+                       mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
       }
     }
 
@@ -125,7 +127,7 @@ namespace forte::com_infra::opc_ua {
       if (it->getBrowsePath().empty() &&
           nullptr == it->getNodeId()) { // browsePath AND/OR NodeId must be given. If both are empty there's a problem
         DEVLOG_ERROR("[OPC UA ACTION]: BrowsePath and NodeId are empty in FB %s\n",
-                     mLayer.getCommFB()->getInstanceName());
+                     mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
         retVal = false;
         break;
       }
@@ -142,20 +144,22 @@ namespace forte::com_infra::opc_ua {
         DEVLOG_ERROR(
             "[OPC UA ACTION]: In FB %s: Local %s action is only allowed using a Subscriber FB and the amount of "
             "BrowseName,NodeId pairs should match the number of RDs\n",
-            mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead]);
+            mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(), CActionInfo::mActionNames[eRead]);
       }
     } else {
       if (paFbType != e_Client) {
         DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Remote %s action is only allowed using a Client FB\n",
-                     mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead]);
+                     mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                     CActionInfo::mActionNames[eRead]);
       } else if (getNoOfNodePairs() != paNoOfRDs) {
         DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Remote %s action needs as many BrowseName,NodeId pairs as there are "
                      "RDs. (have: %i, need: %i)\n",
-                     mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead], getNoOfNodePairs(),
-                     paNoOfRDs);
+                     mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                     CActionInfo::mActionNames[eRead], getNoOfNodePairs(), paNoOfRDs);
       } else if (paNoOfSDs != 0) {
         DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Remote %s action must have no SDs. (have: %i)\n",
-                     mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead], paNoOfSDs);
+                     mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                     CActionInfo::mActionNames[eRead], paNoOfSDs);
       } else {
         retVal = true;
       }
@@ -172,7 +176,8 @@ namespace forte::com_infra::opc_ua {
         DEVLOG_ERROR(
             "[OPC UA ACTION]: In FB %s: Local action %s is only allowed using a Publisher FB and the amount of "
             "BrowseName,NodeId pairs should match the number of SDs\n",
-            mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eWrite]);
+            mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+            CActionInfo::mActionNames[eWrite]);
       }
     } else {
       if (e_Client == paFbType && paNoOfSDs == getNoOfNodePairs() && 0 == paNoOfRDs) {
@@ -180,7 +185,8 @@ namespace forte::com_infra::opc_ua {
       } else {
         DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Remote action %s is only allowed using a Client FB, the amount of "
                      "BrowseName,NodeId pairs should match the number of SDs and must have no RDs\n",
-                     mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eWrite]);
+                     mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                     CActionInfo::mActionNames[eWrite]);
       }
     }
     return retVal;
@@ -193,7 +199,8 @@ namespace forte::com_infra::opc_ua {
     } else {
       DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Server FB, the amount of "
                    "BrowseName,NodeId pairs should be 1\n",
-                   mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCreateMethod]);
+                   mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                   CActionInfo::mActionNames[eCreateMethod]);
     }
     return retVal;
   }
@@ -202,14 +209,17 @@ namespace forte::com_infra::opc_ua {
     bool retVal = false;
     if (paFbType != e_Client) {
       DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Client FB\n",
-                   mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod]);
+                   mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                   CActionInfo::mActionNames[eCallMethod]);
     } else if (getNoOfNodePairs() != 1) {
       DEVLOG_ERROR(
           "[OPC UA ACTION]: In FB %s: %s action is only allowed with a single BrowseName,NodeId pair. (have: %i)\n",
-          mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod], getNoOfNodePairs());
+          mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+          CActionInfo::mActionNames[eCallMethod], getNoOfNodePairs());
     } else if (mNodePair.begin()->getBrowsePath().empty()) {
       DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed with a non-empty browsepath\n",
-                   mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod]);
+                   mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                   CActionInfo::mActionNames[eCallMethod]);
     } else {
       retVal = true;
     }
@@ -223,7 +233,8 @@ namespace forte::com_infra::opc_ua {
     } else {
       DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Subscribe FB, the amount of "
                    "BrowseName,NodeId pairs should match the number of RDs\n",
-                   mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eSubscribe]);
+                   mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                   CActionInfo::mActionNames[eSubscribe]);
     }
     return retVal;
   }
@@ -235,7 +246,8 @@ namespace forte::com_infra::opc_ua {
     } else {
       DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Publish FB, the amount of "
                    "BrowseName,NodeId pairs should be 2, and no SD must be provided\n",
-                   mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCreateObject]);
+                   mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                   CActionInfo::mActionNames[eCreateObject]);
     }
     return retVal;
   }
@@ -247,7 +259,8 @@ namespace forte::com_infra::opc_ua {
     } else {
       DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Publish FB, the amount of "
                    "BrowseName,NodeId pairs should be 3, and no SD must be provided\n",
-                   mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCreateVariable]);
+                   mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                   CActionInfo::mActionNames[eCreateVariable]);
     }
     return retVal;
   }
@@ -259,7 +272,8 @@ namespace forte::com_infra::opc_ua {
     } else {
       DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed using a Publish FB, the amount of "
                    "BrowseName,NodeId pairs should be 1, and no SD must be provided\n",
-                   mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eDeleteObject]);
+                   mLayer.getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                   CActionInfo::mActionNames[eDeleteObject]);
     }
     return retVal;
   }

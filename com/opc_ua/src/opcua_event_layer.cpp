@@ -49,7 +49,8 @@ namespace forte::com_infra::opc_ua {
     size_t nrOfParams = parser.parseParameters();
     if (nrOfParams != scmNumberOfParameters) {
       DEVLOG_ERROR("[OPC UA EVENT LAYER]: Too many layer arguments for FB %s! Expected: %d, Actual: %d\n",
-                   getCommFB()->getInstanceName(), scmNumberOfParameters, nrOfParams);
+                   getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(), scmNumberOfParameters,
+                   nrOfParams);
       return eRetVal;
     }
     mEventTypeName = parser[0];
@@ -97,20 +98,21 @@ namespace forte::com_infra::opc_ua {
       if (sDs[0]->unwrap().getDataTypeID() != CIEC_ANY::e_INT) {
         DEVLOG_ERROR(
             "[OPC UA EVENT LAYER]: Data type of first data input of FB %s is wrong! Expected: INT, Actual: %s\n",
-            getCommFB()->getInstanceName(), sDs[0]->unwrap().getTypeNameID().data());
+            getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(), sDs[0]->unwrap().getTypeNameID().data());
         error = true;
       }
       if (sDs[1]->unwrap().getDataTypeID() != CIEC_ANY::e_STRING) {
         DEVLOG_ERROR(
             "[OPC UA EVENT LAYER]: Data type of second data input of FB %s is wrong! Expected: STRING, Actual: %s\n",
-            getCommFB()->getInstanceName(), sDs[1]->unwrap().getTypeNameID().data());
+            getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(), sDs[1]->unwrap().getTypeNameID().data());
         error = true;
       }
       if (error) {
         return e_InitTerminated;
       }
     } else if (numSDs != 0) {
-      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Number of SDs must be 0 or 2 for FB %s\n", getCommFB()->getInstanceName());
+      DEVLOG_ERROR("[OPC UA EVENT LAYER]: Number of SDs must be 0 or 2 for FB %s\n",
+                   getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
       return e_InitTerminated;
     }
     return e_InitOk;

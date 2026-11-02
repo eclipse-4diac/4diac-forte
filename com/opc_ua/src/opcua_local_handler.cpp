@@ -333,7 +333,10 @@ namespace forte::com_infra::opc_ua {
           DEVLOG_ERROR("[OPC UA LOCAL]: Cannot perform action %s locally. Initialization failed\n",
                        CActionInfo::mActionNames[paActionInfo.getAction()]);
           break;
-        default: DEVLOG_ERROR("[OPC UA LOCAL]: Unknown action %d to be initialized\n", paActionInfo.getAction()); break;
+        default:
+          DEVLOG_ERROR("[OPC UA LOCAL]: Unknown action %d of FB %s to be initialized\n", paActionInfo.getAction(),
+                       paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
+          break;
       }
       mServerNeedsIteration.inc();
     }
@@ -366,7 +369,9 @@ namespace forte::com_infra::opc_ua {
       case CActionInfo::eDeleteObject:
       case CActionInfo::eDeleteVariable: retVal = executeDeleteObject(paActionInfo); break;
       default: // eCallMethod, eSubscribe will never reach here since they weren't initialized. eRead is a Subscribe FB
-        DEVLOG_ERROR("[OPC UA LOCAL]: Action %d to be executed is unknown or invalid\n", paActionInfo.getAction());
+        DEVLOG_ERROR("[OPC UA LOCAL]: Action %d of FB %s to be executed is unknown or invalid\n",
+                     paActionInfo.getAction(),
+                     paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
         break;
     }
 
@@ -382,8 +387,9 @@ namespace forte::com_infra::opc_ua {
     switch (paActionInfo.getAction()) {
       case CActionInfo::eWrite: retVal = executeStructWrite(paActionInfo, paMember); break;
       default: // eCallMethod, eSubscribe will never reach here since they weren't initialized. eRead is a Subscribe FB
-        DEVLOG_ERROR("[OPC UA LOCAL]: Struct Action %d to be executed is unknown or invalid\n",
-                     paActionInfo.getAction());
+        DEVLOG_ERROR("[OPC UA LOCAL]: Struct Action %d of FB %s to be executed is unknown or invalid\n",
+                     paActionInfo.getAction(),
+                     paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
         break;
     }
 
@@ -407,7 +413,9 @@ namespace forte::com_infra::opc_ua {
         retVal = UA_STATUSCODE_GOOD;
         break;
       default:
-        DEVLOG_ERROR("[OPC UA LOCAL]: Action %d to be uninitialized is unknown or invalid\n", paActionInfo.getAction());
+        DEVLOG_ERROR("[OPC UA LOCAL]: Action %d of FB %s to be uninitialized is unknown or invalid\n",
+                     paActionInfo.getAction(),
+                     paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
         break;
     }
 
@@ -521,14 +529,14 @@ namespace forte::com_infra::opc_ua {
                 DEVLOG_ERROR(
                     "[OPC UA LOCAL]: At FB %s RD_%d the node %s has already a FB who is reading from it. Cannot "
                     "add another one\n",
-                    paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair,
-                    paNodePairInfo.getBrowsePath().c_str());
+                    paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                    paIndexOfNodePair, paNodePairInfo.getBrowsePath().c_str());
                 retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
               }
             } else {
               DEVLOG_ERROR("[OPC UA LOCAL]: At FB %s RD_%d the node %s could not retrieve context. Error: %s\n",
-                           paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair,
-                           paNodePairInfo.getBrowsePath().c_str(), UA_StatusCode_name(retVal));
+                           paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                           paIndexOfNodePair, paNodePairInfo.getBrowsePath().c_str(), UA_StatusCode_name(retVal));
             }
           } else {
             DEVLOG_ERROR("[OPC UA LOCAL]: Cannot set write permission of node for port %d. Error: %s\n",
@@ -538,13 +546,15 @@ namespace forte::com_infra::opc_ua {
       } else {
         DEVLOG_ERROR(
             "[OPC UA LOCAL]: At FB %s index %d there was the type of the existing node doesn't match the new one\n",
-            paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair);
+            paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+            paIndexOfNodePair);
         retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
       }
     } else {
       DEVLOG_ERROR(
           "[OPC UA LOCAL]: At FB %s index %d there was a problem reading the type of the existing node. Error: %s\n",
-          paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, UA_StatusCode_name(retVal));
+          paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(), paIndexOfNodePair,
+          UA_StatusCode_name(retVal));
     }
 
     return retVal;
@@ -784,7 +794,8 @@ namespace forte::com_infra::opc_ua {
           UA_NodeId_equal(it->getNodeId(), methodContext.mMethodNodeId)) {
         DEVLOG_ERROR("[OPC UA LOCAL]: The FB %s is trying to reference a local method at %s which has already a FB who "
                      "is referencing it. Cannot add another one\n",
-                     paActionInfo.getLayer().getCommFB()->getInstanceName(), it->getBrowsePath().c_str());
+                     paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                     it->getBrowsePath().c_str());
         retVal = UA_STATUSCODE_BADINTERNALERROR;
         break;
       }
@@ -801,11 +812,13 @@ namespace forte::com_infra::opc_ua {
           mMethodsContexts.emplace_back(paParentNode, it->getNodeId(), static_cast<CLocalMethodInfo &>(paActionInfo));
         } else {
           DEVLOG_ERROR("[OPC UA LOCAL]: Could not set context function for method at %s. Error: %s\n",
-                       paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+                       paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                       UA_StatusCode_name(retVal));
         }
       } else {
         DEVLOG_ERROR("[OPC UA LOCAL]: Could not set callback function for method at %s. Error: %s\n",
-                     paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+                     paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                     UA_StatusCode_name(retVal));
       }
     }
     return retVal;
@@ -892,7 +905,10 @@ namespace forte::com_infra::opc_ua {
       mMethodsContexts.emplace_back(parentNodeId, *paNodeId, paCreateMethodInfo.mLocalMethodInfo);
     } else {
       DEVLOG_ERROR("[OPC UA LOCAL]: OPC UA could not create method at %s. Error: %s\n",
-                   paCreateMethodInfo.mLocalMethodInfo.getLayer().getCommFB()->getInstanceName(),
+                   paCreateMethodInfo.mLocalMethodInfo.getLayer()
+                       .getCommFB()
+                       ->getFullQualifiedApplicationInstanceName('.')
+                       .c_str(),
                    UA_StatusCode_name(retVal));
     }
 
@@ -912,7 +928,8 @@ namespace forte::com_infra::opc_ua {
       retVal = UA_STATUSCODE_BADINTERNALERROR;
       DEVLOG_ERROR(
           "[OPC UA LOCAL]: The BrowsePath of the instance is mandatory for creating a node at FB %s. Error: %s\n",
-          paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+          paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+          UA_StatusCode_name(retVal));
     }
     return retVal;
   }
@@ -932,7 +949,8 @@ namespace forte::com_infra::opc_ua {
       retVal = updateNodeValue(*it->getNodeId(), dataToSend[indexOfNodePair]);
       if (UA_STATUSCODE_GOOD != retVal) {
         DEVLOG_ERROR("[OPC UA LOCAL]: Could not convert value to write for port %d at FB %s. Error: %s\n",
-                     indexOfNodePair, paActionInfo.getLayer().getCommFB()->getInstanceName(),
+                     indexOfNodePair,
+                     paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
                      UA_StatusCode_name(retVal));
         break;
       }
@@ -961,7 +979,8 @@ namespace forte::com_infra::opc_ua {
       if (UA_STATUSCODE_GOOD != retVal) {
         DEVLOG_ERROR("[OPC UA LOCAL]: Could not convert value to write for node %s at FB %s. Error: %s\n",
                      (*paActionInfo.getNodePairInfo().begin()).getBrowsePath().c_str(),
-                     paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+                     paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                     UA_StatusCode_name(retVal));
         return retVal;
       }
     }
@@ -984,7 +1003,7 @@ namespace forte::com_infra::opc_ua {
       retVal = UA_STATUSCODE_GOOD;
     } else {
       DEVLOG_ERROR("[OPC UA LOCAL]: The method being returned hasn't been called before of FB %s\n",
-                   paActionInfo.getLayer().getCommFB()->getInstanceName());
+                   paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
     }
 
     return retVal;
@@ -1028,7 +1047,7 @@ namespace forte::com_infra::opc_ua {
           }
         } else {
           DEVLOG_ERROR("[OPC UA LOCAL]: You are trying to create an object which already exists at FB %s\n",
-                       paActionInfo.getLayer().getCommFB()->getInstanceName());
+                       paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
           retVal = UA_STATUSCODE_BADINTERNALERROR;
         }
       }
@@ -1048,7 +1067,7 @@ namespace forte::com_infra::opc_ua {
 
     } else {
       DEVLOG_ERROR("[OPC UA LOCAL]: The type of the object to create could not be found at FB %s\n",
-                   paActionInfo.getLayer().getCommFB()->getInstanceName());
+                   paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
     }
 
     return retVal;
@@ -1146,7 +1165,7 @@ namespace forte::com_infra::opc_ua {
             }
           } else {
             DEVLOG_ERROR("[OPC UA LOCAL]: You are trying to create a variable which already exists at FB %s\n",
-                         paActionInfo.getLayer().getCommFB()->getInstanceName());
+                         paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
             retVal = UA_STATUSCODE_BADINTERNALERROR;
           }
         }
@@ -1165,11 +1184,11 @@ namespace forte::com_infra::opc_ua {
         }
       } else {
         DEVLOG_ERROR("[OPC UA LOCAL]: The data value type of the variable to create could not be found at FB %s\n",
-                     paActionInfo.getLayer().getCommFB()->getInstanceName());
+                     paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
       }
     } else {
       DEVLOG_ERROR("[OPC UA LOCAL]: The type of the variable to create could not be found at FB %s\n",
-                   paActionInfo.getLayer().getCommFB()->getInstanceName());
+                   paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
     }
 
     return retVal;
@@ -1205,7 +1224,7 @@ namespace forte::com_infra::opc_ua {
         retVal = UA_Server_deleteNode(mUaServer, *itInstance->getNodeId(), true);
       } else {
         DEVLOG_ERROR("[OPC UA LOCAL]: The instance of the object to delete could not be found for FB %s\n",
-                     paActionInfo.getLayer().getCommFB()->getInstanceName());
+                     paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
         retVal = UA_STATUSCODE_BADINTERNALERROR;
       }
 
@@ -1538,7 +1557,8 @@ namespace forte::com_infra::opc_ua {
       DEVLOG_ERROR("[OPC UA LOCAL]: Method doesn't have any FB referencing it\n");
     } else {
       if (paInputSize != localMethodHandle->getReceiveSize() || paOutputSize != localMethodHandle->getSendSize()) {
-        DEVLOG_ERROR("[OPC UA LOCAL]: method call got invalid number of arguments. In: %d==%d, Out: %d==%d\n",
+        DEVLOG_ERROR("[OPC UA LOCAL]: method call of FB %s got invalid number of arguments. In: %d==%d, Out: %d==%d\n",
+                     localMethodHandle->getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
                      localMethodHandle->getReceiveSize(), paInputSize, localMethodHandle->getSendSize(), paOutput);
       } else {
 
@@ -1575,8 +1595,11 @@ namespace forte::com_infra::opc_ua {
           thisHandler->mServerAccessMutex.unlock();
           // wait For semaphore, which will be released by execute Local Method in this handler
           if (!localMethodHandle->getResultReady().timedWait(scmMethodCallTimeoutInNanoSeconds)) {
-            DEVLOG_ERROR("[OPC UA LOCAL]: method call did not get result values within timeout of %u nanoseconds.\n",
-                         scmMethodCallTimeoutInNanoSeconds);
+            DEVLOG_ERROR(
+                "[OPC UA LOCAL]: method call of FB %s did not get result values within timeout of %u "
+                "nanoseconds.\n",
+                localMethodHandle->getLayer().getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str(),
+                scmMethodCallTimeoutInNanoSeconds);
             retVal = UA_STATUSCODE_BADTIMEOUT;
           } else {
             retVal = sendHandle.mFailed ? UA_STATUSCODE_BADUNEXPECTEDERROR : UA_STATUSCODE_GOOD;
@@ -1624,7 +1647,8 @@ namespace forte::com_infra::opc_ua {
 
   void COPC_UA_Local_Handler::onAlarmStateChanged(const void *paData, unsigned int paSize, COPC_UA_Layer *paLayer) {
     if (paLayer->recvData(paData, paSize) != e_ProcessDataOk) {
-      DEVLOG_ERROR("[OPC UA LOCAL]: Receive Alarm Data failed for FB %s!\n", paLayer->getCommFB()->getInstanceName());
+      DEVLOG_ERROR("[OPC UA LOCAL]: Receive Alarm Data failed for FB %s!\n",
+                   paLayer->getCommFB()->getFullQualifiedApplicationInstanceName('.').c_str());
       return;
     }
     paLayer->getCommFB()->interruptCommFB(paLayer);
