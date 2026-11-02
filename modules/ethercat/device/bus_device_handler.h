@@ -15,31 +15,23 @@
 
 #include "handle.h"
 #include "forte/io/mapper/io_mapper.h"
+#include <memory>
 #include <vector>
 
 namespace forte::eclipse4diac::io::ethercat {
 
-	class ECBusHandler;
+  class ECBusHandler;
 
-	class ECBusDeviceHandler {
-		
-		public:
-			friend class ECBusHandler;
+  class ECBusDeviceHandler {
 
-      enum DeviceStatus {
-        NotInitialized = 0,
-        Error = 1,
-        OK = 2
-      };
+    public:
+      friend class ECBusHandler;
 
-      enum DeviceType {
-        ECDevice = 0,
-        ECCoupler = 1,
-        ECModule = 2
-      };
+      enum DeviceStatus { NotInitialized = 0, Error = 1, OK = 2 };
 
-      struct Config{
-      };
+      enum DeviceType { ECDevice = 0, ECCoupler = 1, ECModule = 2 };
+
+      struct Config {};
 
       class Delegate {
         public:
@@ -47,7 +39,12 @@ namespace forte::eclipse4diac::io::ethercat {
           virtual void onDeviceDestroy() = 0;
       };
 
-      virtual void setConfig(Config* paConfig) = 0;
+      ECBusDeviceHandler(const ECBusDeviceHandler &) = delete;
+      ECBusDeviceHandler &operator=(const ECBusDeviceHandler &) = delete;
+      ECBusDeviceHandler(ECBusDeviceHandler &&) = delete;
+      ECBusDeviceHandler &operator=(ECBusDeviceHandler &&) = delete;
+
+      virtual void setConfig(Config *paConfig) = 0;
       Delegate *mDelegate;
 
       size_t index() const {
@@ -74,13 +71,7 @@ namespace forte::eclipse4diac::io::ethercat {
         return getHandle(mOutputs, paIndex);
       }
 
-      void addHandle(ECDeviceHandle *paHandle) {
-        switch (paHandle->getDirection()){
-          case forte::io::IOMapper::In: addHandle(mInputs, paHandle); break;
-          case forte::io::IOMapper::Out: addHandle(mOutputs, paHandle); break;
-          default: break;
-        }
-      }
+      void addHandle(std::unique_ptr<ECDeviceHandle> paHandle);
 
       void dropHandles();
 
@@ -91,11 +82,15 @@ namespace forte::eclipse4diac::io::ethercat {
       void initBuffer(uint16_t paDataSendLength, uint16_t paDataRecvLength);
 
     protected:
-      size_t mDeviceIndex;
-      
       ECBusDeviceHandler(ECBusHandler *paBus, DeviceType paDeviceType, size_t paDeviceIndex);
       virtual ~ECBusDeviceHandler();
 
+    private:
+      void addHandle(std::vector<std::unique_ptr<ECDeviceHandle>> &paList, std::unique_ptr<ECDeviceHandle> paHandle);
+      ECDeviceHandle *getHandle(std::vector<std::unique_ptr<ECDeviceHandle>> &paList, size_t paIndex);
+      void deregisterHandles(forte::io::IOMapper &mapper);
+
+      size_t mDeviceIndex;
       ECBusHandler *mBus;
 
       uint16_t mDataSendLength;
@@ -105,14 +100,7 @@ namespace forte::eclipse4diac::io::ethercat {
       std::vector<unsigned char> mUpdateRecvImageOld;
 
       arch::CSyncObject mHandleMutex;
-      std::vector<ECDeviceHandle *> mInputs;
-      std::vector<ECDeviceHandle *> mOutputs;
-      void addHandle(std::vector<ECDeviceHandle *> &paList, ECDeviceHandle *paHandle);
-      ECDeviceHandle *getHandle(std::vector<ECDeviceHandle *> &paList, size_t paIndex);
-
-    private:
-      //! declared but undefined copy constructor as we don't want devices to be directly copied.
-      ECBusDeviceHandler(const ECBusDeviceHandler &);
-      
-	};
-}
+      std::vector<std::unique_ptr<ECDeviceHandle>> mInputs;
+      std::vector<std::unique_ptr<ECDeviceHandle>> mOutputs;
+  };
+} // namespace forte::eclipse4diac::io::ethercat

@@ -79,7 +79,7 @@ namespace forte::eclipse4diac::io::ethercat {
       return;
     }
 
-    device->addHandle(static_cast<ECDeviceHandle *>(paHandle.release()));
+    device->addHandle(std::unique_ptr<ECDeviceHandle>(static_cast<ECDeviceHandle *>(paHandle.release())));
   }
 
   void ECBusHandler::dropSlaveHandles(size_t paDeviceIndex) {
