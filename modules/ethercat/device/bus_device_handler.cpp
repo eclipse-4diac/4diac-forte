@@ -56,17 +56,25 @@ namespace forte::eclipse4diac::io::ethercat {
   void ECBusDeviceHandler::update(uint8_t *paECDomainData) {
     util::CCriticalRegion critialRegion(mHandleMutex);
 
-    for(ECDeviceHandle *handle : mInputs) {
+    for (auto &handle : mInputs) {
       handle->syncDomainData(paECDomainData);
-      if(handle->hasObserver() && !handle->equal(mUpdateRecvImageOld)){
+      if (handle->hasObserver() && !handle->equal(mUpdateRecvImageOld)) {
         handle->onChange();
       }
     }
 
     std::copy(mUpdateRecvImage.begin(), mUpdateRecvImage.end(), mUpdateRecvImageOld.begin());
 
-    for(ECDeviceHandle *handle : mOutputs) {
+    for (auto &handle : mOutputs) {
       handle->syncDomainData(paECDomainData);
+    }
+  }
+
+  void ECBusDeviceHandler::addHandle(std::unique_ptr<ECDeviceHandle> paHandle) {
+    switch (paHandle->getDirection()) {
+      case forte::io::IOMapper::In: addHandle(mInputs, std::move(paHandle)); break;
+      case forte::io::IOMapper::Out: addHandle(mOutputs, std::move(paHandle)); break;
+      default: break;
     }
   }
 
@@ -75,56 +83,58 @@ namespace forte::eclipse4diac::io::ethercat {
     forte::io::IOMapper &mapper = forte::io::IOMapper::getInstance();
 
     if(mBus != nullptr && mBus->isShuttingDown()) {
-      mInputs.clear();
-      mOutputs.clear();
+      deregisterHandles(mapper);
       return;
     }
 
-    if(mBus != nullptr && mBus->isLoopPrepared()) {
+    if (mBus != nullptr && mBus->isLoopPrepared()) {
       ECDeviceHandler *device = mBus->getParentDevice(this);
-      if(device != nullptr) {
-        auto persistHandleOffset = [&](ECDeviceHandle *handle) {
-          for(EntryReg &reg : device->mECDeviceModel.mEntryRegList) {
-            if(reg.mOffset == &handle->mECDomainDataOffset) {
-              reg.mDomainOffset = handle->mECDomainDataOffset;
+      if (device != nullptr) {
+        auto persistHandleOffset = [&](ECDeviceHandle &handle) {
+          for (EntryReg &reg : device->mECDeviceModel.mEntryRegList) {
+            if (reg.mOffset == &handle.mECDomainDataOffset) {
+              reg.mDomainOffset = handle.mECDomainDataOffset;
               reg.mOffsetValid = true;
             }
           }
         };
-        for(ECDeviceHandle *handle : mInputs) {
-          persistHandleOffset(handle);
+        for (auto &handle : mInputs) {
+          persistHandleOffset(*handle);
         }
-        for(ECDeviceHandle *handle : mOutputs) {
-          persistHandleOffset(handle);
+        for (auto &handle : mOutputs) {
+          persistHandleOffset(*handle);
         }
       }
     }
 
-    for(ECDeviceHandle *it : mInputs) {
+    deregisterHandles(mapper);
+  }
+
+  void ECBusDeviceHandler::deregisterHandles(forte::io::IOMapper &mapper) {
+    for (auto &it : mInputs) {
       mapper.deregisterHandle(it->handleId());
-      delete it;
     }
 
-    for(ECDeviceHandle *it : mOutputs) {
+    for (auto &it : mOutputs) {
       mapper.deregisterHandle(it->handleId());
-      delete it;
     }
 
     mInputs.clear();
     mOutputs.clear();
   }
 
-  void ECBusDeviceHandler::addHandle(std::vector<ECDeviceHandle *> &paList, ECDeviceHandle *paHandle) {
+  void ECBusDeviceHandler::addHandle(std::vector<std::unique_ptr<ECDeviceHandle>> &paList,
+                                     std::unique_ptr<ECDeviceHandle> paHandle) {
     util::CCriticalRegion criticalRegion(mHandleMutex);
-    paList.push_back(paHandle);
+    paList.push_back(std::move(paHandle));
 
-    //TODO Maybe send indication event after connecting
+    // TODO Maybe send indication event after connecting
   }
 
-  ECDeviceHandle *ECBusDeviceHandler::getHandle(std::vector<ECDeviceHandle *> &paList, size_t paIndex) {
+  ECDeviceHandle *ECBusDeviceHandler::getHandle(std::vector<std::unique_ptr<ECDeviceHandle>> &paList, size_t paIndex) {
     if(paList.size() <= paIndex) {
       return nullptr;
     }
-    return paList[paIndex];
+    return paList[paIndex].get();
   }
 }
