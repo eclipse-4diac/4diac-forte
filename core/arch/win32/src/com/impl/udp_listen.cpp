@@ -35,6 +35,21 @@ namespace forte::com::impl {
     return net::open(paConfigString, hints);
   }
 
+  ComResult UDPListenChannel::open(const std::string_view paConfigString,
+                                   const std::span<ComChannelDescriptor> paDescriptors) {
+    const ComResult result = SocketChannel::open(paConfigString, paDescriptors);
+    if (result == ComResult::Ok) {
+      mConnected = false;
+    }
+    return result;
+  }
+
+  ComResult UDPListenChannel::close() {
+    const ComResult result = SocketChannel::close();
+    mConnected = false;
+    return result;
+  }
+
   std::size_t UDPListenChannel::recv() {
     DWORD flags = 0;
     DWORD bytesReceived = 0;
