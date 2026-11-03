@@ -16,12 +16,6 @@ if (NOT FORTE_TESTS)
     return()
 endif ()
 
-# Several stdfblib tests require the IEC61131-3 module, so we need to enable it for the test build
-if (NOT FORTE_MODULE_IEC61131)
-    message(STATUS "Tests are enabled: Forcing FORTE_MODULE_IEC61131 to ON.")
-endif ()
-set(FORTE_MODULE_IEC61131 ON CACHE BOOL "IEC61131-3 Function blocks" FORCE)
-
 if (FORTE_ARCHITECTURE STREQUAL "Posix")
     option(FORTE_TEST_CODE_COVERAGE_ANALYSIS "Perform code coverage analyis with GCOV and presentation with LCOV" OFF)
     mark_as_advanced(FORTE_TEST_CODE_COVERAGE_ANALYSIS)
