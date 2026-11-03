@@ -48,7 +48,7 @@ forte::io::IOHandle *PLCnextDeviceController::createIOHandle(IODeviceController:
   }
 
   switch (desc.mType) {
-    case Bit: return new PLCnextBitSlaveHandle(this, desc.mDirection, desc.mPosition, device);
+    case Bit: return new PLCnextBitSlaveHandle(*this, desc.mDirection, desc.mPosition, device);
     case BitString16: return nullptr; // TODO: implement AnalogSlaveHandle!
   }
 

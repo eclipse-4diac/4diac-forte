@@ -40,11 +40,11 @@ namespace forte::io {
         return CProcessInterfaceFB::getDI(paIndex);
       }
 
-      CIEC_ANY::EDataTypeID getIOObserverDataType() override {
+      CIEC_ANY::EDataTypeID getIOObserverDataType() const override {
         return CDataTypeTrait<T>::scmDataTypeId;
       }
 
-      IOMapper::Direction getDirection() final override {
+      IOMapper::Direction getDirection() const final {
         return IOMapper::Out;
       }
 
@@ -66,14 +66,14 @@ namespace forte::io {
     protected:
       static const SFBInterfaceSpec scmFBInterfaceSpec;
 
-      void onHandle(IOHandle *const paHandle) final override {
+      void onHandle(IOHandle &paHandle) final {
         CProcessInterfaceFB::onHandle(paHandle);
         if (isReady()) {
           var_QO = write();
         }
       }
 
-      CDataConnection **getDIConUnchecked(TPortId paIndex) override final {
+      CDataConnection **getDIConUnchecked(TPortId paIndex) final {
         if (paIndex == 2) {
           return &conn_OUT;
         }

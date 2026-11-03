@@ -79,8 +79,8 @@ namespace forte::io {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
 
-      void onHandle(IOHandle *const paHandle) override;
-      void dropHandle() final override;
+      void onHandle(IOHandle &paHandle) override;
+      void dropHandle() final;
 
       bool isReady() {
         return mIsReady;
