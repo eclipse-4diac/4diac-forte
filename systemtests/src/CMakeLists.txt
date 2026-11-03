@@ -17,6 +17,4 @@ target_sources(forte_systemtest PRIVATE
         MemberAccessTestStruct_dtp.cpp
 )
 
-if (FORTE_MODULE_IEC61131)
-  add_subdirectory(modules)
-endif ()
+add_subdirectory(modules)

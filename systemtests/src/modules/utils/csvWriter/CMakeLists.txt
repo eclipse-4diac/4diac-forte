@@ -38,17 +38,18 @@ FUNCTION(ADD_CSVWRITE_TEST test_name bootFile csvFileName csvFileShouldExist exp
 
 ENDFUNCTION(ADD_CSVWRITE_TEST)
 
-ADD_CSVWRITE_TEST(Test_CSV_Writer_normalExecution_hard normalExecution.fboot "csvWriteTest.csv" 1 "'csvFirstValue'\; \n" 1 5)
-ADD_CSVWRITE_TEST(Test_CSV_Writer_openAndNoClose_hard openAndNoClose.fboot "csvWriteTest.csv" 1 "" 1 5)
-ADD_CSVWRITE_TEST(Test_CSV_Writer_doubleInit_soft doubleInit.fboot "csvWriteTest.csv" 1 "" 0 5)
-ADD_CSVWRITE_TEST(Test_CSV_Writer_initDeinitNoWrite_hard initDeinitNoWrite.fboot "csvWriteTest.csv" 1 "" 1 5)
-ADD_CSVWRITE_TEST(Test_CSV_Writer_closeNotOpened_soft closeNotOpened.fboot "csvWriteTest.csv" 0 "" 0 5)
-ADD_CSVWRITE_TEST(Test_CSV_Writer_writeQIFalse_soft writeQIFalse.fboot "csvWriteTest.csv" 1 "" 0 5)
-ADD_CSVWRITE_TEST(Test_CSV_Writer_writeWithoutInit_soft writeWithoutInit.fboot "csvWriteTest.csv" 0 "" 0 5)
+if (FORTE_MODULE_IEC61131)
+    ADD_CSVWRITE_TEST(Test_CSV_Writer_normalExecution_hard normalExecution.fboot "csvWriteTest.csv" 1 "'csvFirstValue'\; \n" 1 5)
+    ADD_CSVWRITE_TEST(Test_CSV_Writer_openAndNoClose_hard openAndNoClose.fboot "csvWriteTest.csv" 1 "" 1 5)
+    ADD_CSVWRITE_TEST(Test_CSV_Writer_doubleInit_soft doubleInit.fboot "csvWriteTest.csv" 1 "" 0 5)
+    ADD_CSVWRITE_TEST(Test_CSV_Writer_initDeinitNoWrite_hard initDeinitNoWrite.fboot "csvWriteTest.csv" 1 "" 1 5)
+    ADD_CSVWRITE_TEST(Test_CSV_Writer_closeNotOpened_soft closeNotOpened.fboot "csvWriteTest.csv" 0 "" 0 5)
+    ADD_CSVWRITE_TEST(Test_CSV_Writer_writeQIFalse_soft writeQIFalse.fboot "csvWriteTest.csv" 1 "" 0 5)
+    ADD_CSVWRITE_TEST(Test_CSV_Writer_writeWithoutInit_soft writeWithoutInit.fboot "csvWriteTest.csv" 0 "" 0 5)
 
-ADD_CSVWRITE_TEST(Test_CSV_Writer_normalExecutionMultiple_hard normalExecutionMultiple.fboot "csvWriteTest.csv" 1 "'csvFirstValue'\; TRUE\; 1\; \n'csvFirstValue'\; FALSE\; 2\; \n" 1 5)
+    ADD_CSVWRITE_TEST(Test_CSV_Writer_normalExecutionMultiple_hard normalExecutionMultiple.fboot "csvWriteTest.csv" 1 "'csvFirstValue'\; TRUE\; 1\; \n'csvFirstValue'\; FALSE\; 2\; \n" 1 5)
 
-ADD_CSVWRITE_TEST(Test_CSV_Writer_noNameFile_soft writeWithoutInit.fboot "noNameFile.csv" 0 "" 0 5)
-
+    ADD_CSVWRITE_TEST(Test_CSV_Writer_noNameFile_soft writeWithoutInit.fboot "noNameFile.csv" 0 "" 0 5)
+endif ()
 
 

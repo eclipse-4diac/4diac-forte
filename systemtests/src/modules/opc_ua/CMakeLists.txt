@@ -9,6 +9,7 @@
 # *   Jose Cabral  - initial API and implementation and/or initial documentation
 # *******************************************************************************/
 
+if (FORTE_MODULE_IEC61131)
 forte_add_systemtest_soft(OPCUA_WrongParams wrongParameters.fboot 10)
 
 SET_TESTS_PROPERTIES(OPCUA_WrongParams PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR|OPC UA LOCAL") #Local server shouldn't start
@@ -66,5 +67,7 @@ endif(FORTE_COM_OPC_UA_ENCRYPTION AND FORTE_COM_OPC_UA_MASTER_BRANCH)
 # forte_add_multi_systemtests(OPCUA_DoubleResourceDeadlock 30 0 doubleResourceDeadlockClient.fboot " " doubleResourceDeadlockServer.fboot " ") # There's no test in these systems. It only tests that if two resources try to start the local/remote thread at the same time, there won't be a deadlock, thus finishing the test without a timeout
 
 forte_add_multi_systemtests(OPCUA_FastWrite 200 0 fastWriteClient.fboot " " fastWriteServer.fboot " ") # There's no test in these systems. It only tests quick accessing the server with a client subscribed to it, and there won't be any problem, thus finishing the test without a timeout
+
+endif ()
 
 add_subdirectory(namespace)

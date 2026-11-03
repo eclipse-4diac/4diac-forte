@@ -16,13 +16,13 @@ if(FORTE_SYSTEM_TESTS)
 
   #test are soft because of the https://github.com/arrowhead-f/core-java/issues/34  
 
-  if(FORTE_COM_HTTP)
+  if(FORTE_COM_HTTP AND FORTE_MODULE_IEC61131)
     forte_add_systemtest_soft(HTTPArrowheadTests Arrowhead_HTTPTest.fboot 80)
-  endif(FORTE_COM_HTTP) 
+  endif(FORTE_COM_HTTP AND FORTE_MODULE_IEC61131)
  
-   if(FORTE_COM_OPC_UA)
+   if(FORTE_COM_OPC_UA AND FORTE_MODULE_IEC61131)
     forte_add_systemtest_soft(OpcUaArrowheadTests Arrowhead_OpcUaTest.fboot 80)
-  endif(FORTE_COM_OPC_UA) 
+  endif(FORTE_COM_OPC_UA AND FORTE_MODULE_IEC61131)
   
    #after compilation, run "make CTEST_OUTPUT_ON_FAILURE=1 test" on the binary folder
 

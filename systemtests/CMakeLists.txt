@@ -103,7 +103,7 @@ if (FORTE_MODULE_IEC61131)
     forte_add_systemtest_hard(Test_Gathering_Connection gatheringConnection.fboot 5)
     forte_add_systemtest_hard(Test_Member_Connection memberConnection.fboot 5)
 endif ()
-if (FORTE_MODULE_IEC61131 AND FORTE_MODULE_UTILS)
+if (FORTE_MODULE_UTILS)
     forte_add_systemtest_hard(Test_DeInitCommFB deInit_commFb.fboot 5) #check that the de-initialization of a CommFB produce an INITO
 endif ()
 
@@ -136,14 +136,18 @@ if (FORTE_MODULE_IEC61131)
 
 #Test bootfile with a missing semicolon
 ##############################################
+endif ()
+if (FORTE_MODULE_UTILS)
     ADD_TEST(NAME Test_missing_semicolon COMMAND $<TARGET_FILE:forte_systemtest>)
     set_tests_properties(Test_missing_semicolon PROPERTIES TIMEOUT 5)
     forte_add_env_file(Test_missing_semicolon missing_semicolon.fboot)
     SET_TESTS_PROPERTIES(Test_missing_semicolon PROPERTIES PASS_REGULAR_EXPRESSION "Boot file line does not contain separating ';'")
+endif ()
 ##############################################
 
 #Test unkonwn FB
 ##############################################
+if (FORTE_MODULE_IEC61131)
     ADD_TEST(NAME Test_missing_unknown_FB COMMAND $<TARGET_FILE:forte_systemtest>)
     set_tests_properties(Test_missing_unknown_FB PROPERTIES TIMEOUT 5)
     forte_add_env_file(Test_missing_unknown_FB unknown_FB.fboot)
