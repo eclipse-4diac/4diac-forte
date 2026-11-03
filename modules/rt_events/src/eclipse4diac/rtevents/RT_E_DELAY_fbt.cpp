@@ -11,6 +11,7 @@
  *    - initial API and implementation and/or initial documentation
  *******************************************************************************/
 #include "forte/eclipse4diac/rtevents/RT_E_DELAY_fbt.h"
+#include "forte/resource.h"
 
 using namespace forte::literals;
 
@@ -48,7 +49,9 @@ namespace forte::eclipse4diac::rtevents {
       conn_WCET(nullptr),
       conn_QO(*this, 0, var_QO),
       mActive(false),
-      mInitialized(false) {
+      mInitialized(false),
+      mECEO(StringId::insert(std::string(paContainer.getResource()->getInstanceName()) + "." +
+                             CFBContainer::getFullQualifiedApplicationInstanceName('.'))) {
     setEventChainExecutor(&mECEO);
   };
 

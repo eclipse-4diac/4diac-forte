@@ -142,7 +142,8 @@ namespace forte::io {
       mIsListening = false; // we are deregistered !
     }
 
-    return mIsReady ? true_BOOL : false_BOOL;
+    mIsReady = false;
+    return false_BOOL;
   }
 
   bool CProcessInterfaceFB::onChange() {

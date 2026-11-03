@@ -1,6 +1,7 @@
 /*******************************************************************************
- * Copyright (c) 2016, 2022 Johannes Messmer (admin@jomess.com), fortiss GmbH,
- *                          Jonathan Lainer
+ * Copyright (c) 2016 Johannes Messmer (admin@jomess.com), fortiss GmbH,
+ *                    Jonathan Lainer
+ *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,11 +14,9 @@
  *   Jonathan Lainer - Add method for deregistering Handles by ID.
  *******************************************************************************/
 
-#ifndef SRC_CORE_IO_MAPPER_MAPPER_H_
-#define SRC_CORE_IO_MAPPER_MAPPER_H_
+#pragma once
 
 #include "forte/util/singlet.h"
-#include "forte/datatypes/forte_wstring.h"
 #include <map>
 #include <string>
 #include "forte/arch/forte_sync.h"
@@ -58,5 +57,3 @@ namespace forte::io {
   };
 
 } // namespace forte::io
-
-#endif /* SRC_CORE_IO_MAPPER_MAPPER_H_ */

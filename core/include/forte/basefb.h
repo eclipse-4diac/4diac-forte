@@ -31,7 +31,7 @@ namespace forte {
       void toString(std::string &paTargetBuf) const override;
 
 #ifdef FORTE_TRACE_CTF
-      void traceInstanceData() override;
+      void traceInstanceData(CEventChainExecutionThread *paECET) override;
 #endif
 
     protected:

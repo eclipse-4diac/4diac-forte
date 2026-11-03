@@ -80,21 +80,7 @@ namespace forte::trace {
         );
       }
 
-      void traceInputData(const char *const paTypeName,
-                          const char *const paInstanceName,
-                          const uint64_t paDataId,
-                          const char *const paValue) {
-        barectf_default_trace_inputData(&context, paTypeName, paInstanceName, paDataId, paValue);
-      }
-
-      void traceOutputData(const char *const paTypeName,
-                           const char *const paInstanceName,
-                           const uint64_t paDataId,
-                           const char *const paValue) {
-        barectf_default_trace_outputData(&context, paTypeName, paInstanceName, paDataId, paValue);
-      }
-
-      bool isEnabled() {
+      bool isEnabled() const {
         return barectf_is_tracing_enabled(&context);
       }
 

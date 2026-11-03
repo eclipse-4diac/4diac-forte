@@ -16,7 +16,6 @@
 #include "forte/io/configFB/io_master_multi.h"
 #include "forte/datatypes/forte_bool.h"
 #include "forte/datatypes/forte_uint.h"
-#include "forte/datatypes/forte_udint.h"
 #include "forte/datatypes/forte_wstring.h"
 #include "forte/datatypes/forte_time.h"
 #include "ECBusAdapter.h"
@@ -25,7 +24,7 @@ namespace forte::eclipse4diac::io::ethercat {
 
   class FORTE_ECController final : public forte::io::IOConfigFBMultiMaster {
       DECLARE_FIRMWARE_FB(FORTE_ECController)
-    
+
     private:
       static const TEventID scmEventINITID = 0;
       static const TEventID scmEventREQID = 1;
@@ -81,31 +80,5 @@ namespace forte::eclipse4diac::io::ethercat {
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
       forte::IPlugPin *getPlugPinUnchecked(size_t) override;
-
-      void evt_INIT(const CIEC_BOOL &paQI,
-                    const CIEC_BOOL &paEnable,
-                    const CIEC_UINT &paControllerId,
-                    const CIEC_TIME &paUpdateInterval,
-                    CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                    COutputParameter<CIEC_WSTRING> paSTATUS) {
-        COutputGuard guard_paQO(paQO);
-        COutputGuard guard_paSTATUS(paSTATUS);
-        var_QI = paQI;
-        var_Enable = paEnable;
-        var_ControllerId = paControllerId;
-        var_UpdateInterval = paUpdateInterval;
-        receiveInputEvent(scmEventINITID, nullptr);
-        *paQO = var_QO;
-        *paSTATUS = var_STATUS;
-      }
-
-      void operator()(const CIEC_BOOL &paQI,
-                      const CIEC_BOOL &paEnable,
-                      const CIEC_UINT &paControllerId,
-                      const CIEC_TIME &paUpdateInterval,
-                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                      COutputParameter<CIEC_WSTRING> paSTATUS) {
-        evt_INIT(paQI, paEnable, paControllerId, paUpdateInterval, paQO, paSTATUS);
-      }
   };
-}
+} // namespace forte::eclipse4diac::io::ethercat

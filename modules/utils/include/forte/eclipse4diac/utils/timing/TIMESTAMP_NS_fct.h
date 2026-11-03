@@ -6,12 +6,12 @@
  *
  * SPDX-License-Identifier: EPL-2.0
  *
- * This file was generated using the 4DIAC FORTE Export Filter
+ * This file was generated using the 4DIAC FORTE Export Filter 3.3.0.qualifier!
  *
  * Name: TIMESTAMP_NS
- * Description: creates default a Unix-Epoch-Timestamp in nanoseconds use other start dates for other timestamp types
- * Version:
- *     1.0: 2024-10-14/Monika Wenger - initial commit -
+ * Description: Creates by default a Unix-Epoch-Timestamp in nanoseconds. Use other start dates for other timestamp
+ * types. Version: 3.0.1: 2026-09-02/Franz Höpfinger - HR Agrartechnik GmbH - add missing PACKAGE statement, improved
+ * comments 3.0: 2025-04-14/Patrick Aigner -  - changed package 1.0: 2024-10-14/Monika Wenger -  -
  *************************************************************************/
 
 #pragma once
@@ -19,19 +19,14 @@
 #include "forte/funcbloc.h"
 #include "forte/datatypes/forte_date_and_time.h"
 #include "forte/datatypes/forte_ulint.h"
-#include "forte/iec61131_functions.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
 
 namespace forte::eclipse4diac::utils::timing {
   class FORTE_TIMESTAMP_NS final : public CFunctionBlock {
       DECLARE_FIRMWARE_FB(FORTE_TIMESTAMP_NS)
 
     private:
-      static const TEventID scmEventREQID = 0;
       static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventREQID = 0;
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -40,7 +35,7 @@ namespace forte::eclipse4diac::utils::timing {
       void setInitialValues() override;
 
     public:
-      FORTE_TIMESTAMP_NS(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_TIMESTAMP_NS(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_DATE_AND_TIME var_startDate;
 
@@ -57,16 +52,7 @@ namespace forte::eclipse4diac::utils::timing {
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
-
-      void evt_REQ(const CIEC_DATE_AND_TIME &pastartDate) {
-        var_startDate = pastartDate;
-        executeEvent(scmEventREQID, nullptr);
-      }
-
-      void operator()(const CIEC_DATE_AND_TIME &pastartDate) {
-        evt_REQ(pastartDate);
-      }
   };
 
-  CIEC_ULINT func_TIMESTAMP_NS(CIEC_DATE_AND_TIME st_lv_startDate);
+  CIEC_ULINT func_TIMESTAMP_NS(const CIEC_DATE_AND_TIME &st_lv_startDate);
 } // namespace forte::eclipse4diac::utils::timing

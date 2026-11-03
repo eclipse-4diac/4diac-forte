@@ -8,53 +8,59 @@
  ***
  *** FORTE Library Element
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.3.0.qualifier!
  ***
  *** Name: SPLIT_WORD_INTO_BYTES
  *** Description: this Function extracts the 2 BYTE from a word
  *** Version:
- ***     1.0: 2024-02-22/Franz Höpfinger - HR Agrartechnik - initial Implementation
+ ***     3.0.1: 2026-09-29/Martin Jobst -  - fix ST package declaration
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.1: 2024-07-24/Moritz Ortmeier - HR Agrartechnik - rename Function and change Output Variables
+ ***     1.0: 2024-02-22/Franz Höpfinger - HR Agrartechnik - initial Implementation
  *************************************************************************/
 
 #include "forte/eclipse4diac/utils/splitting/SPLIT_WORD_INTO_BYTES_fct.h"
 
-using namespace forte::literals;
-
 #include "forte/datatypes/forte_byte.h"
 #include "forte/datatypes/forte_word.h"
-#include "forte/iec61131_functions.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
+#include "forte/forte_st_util.h"
+
+using namespace std::literals;
+using namespace forte::literals;
 
 namespace forte::eclipse4diac::utils::splitting {
   namespace {
+    constexpr std::string_view TypeHash = ""sv;
+
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
     const auto cDataInputNames = std::array{"IN"_STRID};
     const auto cDataOutputNames = std::array{"BYTE_00"_STRID, "BYTE_01"_STRID};
-    const auto cEventInputNames = std::array{"REQ"_STRID};
-    const auto cEventInputTypeIds = std::array{"Event"_STRID};
-    const auto cEventOutputNames = std::array{"CNF"_STRID};
-    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
     const SFBInterfaceSpec cFBInterfaceSpec = {
         .mEINames = cEventInputNames,
-        .mEITypeNames = cEventInputTypeIds,
+        .mEITypeNames = {},
         .mEONames = cEventOutputNames,
-        .mEOTypeNames = cEventOutputTypeIds,
+        .mEOTypeNames = {},
         .mDINames = cDataInputNames,
         .mDONames = cDataOutputNames,
         .mDIONames = {},
         .mSocketNames = {},
         .mPlugNames = {},
     };
+
+    void
+    func_SPLIT_WORD_INTO_BYTES__impl(const CIEC_WORD &st_lv_IN, CIEC_BYTE &st_lv_BYTE_00, CIEC_BYTE &st_lv_BYTE_01);
   } // namespace
 
-  DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_BYTES, "eclipse4diac::utils::splitting::SPLIT_WORD_INTO_BYTES"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_SPLIT_WORD_INTO_BYTES,
+                     "eclipse4diac::utils::splitting::SPLIT_WORD_INTO_BYTES"_STRID,
+                     TypeHash)
 
-  FORTE_SPLIT_WORD_INTO_BYTES::FORTE_SPLIT_WORD_INTO_BYTES(const forte::StringId paInstanceNameId,
-                                                           CFBContainer &paContainer) :
+  FORTE_SPLIT_WORD_INTO_BYTES::FORTE_SPLIT_WORD_INTO_BYTES(const StringId paInstanceNameId, CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      var_IN(0_WORD),
+      var_BYTE_00(0_BYTE),
+      var_BYTE_01(0_BYTE),
       conn_CNF(*this, 0),
       conn_IN(nullptr),
       conn_BYTE_00(*this, 0, var_BYTE_00),
@@ -62,6 +68,7 @@ namespace forte::eclipse4diac::utils::splitting {
   }
 
   void FORTE_SPLIT_WORD_INTO_BYTES::setInitialValues() {
+    CFunctionBlock::setInitialValues();
     var_IN = 0_WORD;
     var_BYTE_00 = 0_BYTE;
     var_BYTE_01 = 0_BYTE;
@@ -80,8 +87,8 @@ namespace forte::eclipse4diac::utils::splitting {
   void FORTE_SPLIT_WORD_INTO_BYTES::writeOutputData(const TEventID paEIID) {
     switch (paEIID) {
       case scmEventCNFID: {
-        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_BYTE_00, conn_BYTE_00);
-        writeData(cFBInterfaceSpec.getNumDIs() + 1, var_BYTE_01, conn_BYTE_01);
+        writeData(1, var_BYTE_00, conn_BYTE_00);
+        writeData(2, var_BYTE_01, conn_BYTE_01);
         break;
       }
       default: break;
@@ -126,17 +133,28 @@ namespace forte::eclipse4diac::utils::splitting {
   }
 
   void FORTE_SPLIT_WORD_INTO_BYTES::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-    func_SPLIT_WORD_INTO_BYTES(var_IN, var_BYTE_00, var_BYTE_01);
+    func_SPLIT_WORD_INTO_BYTES__impl(var_IN, var_BYTE_00, var_BYTE_01);
     sendOutputEvent(scmEventCNFID, paECET);
   }
 
-  void func_SPLIT_WORD_INTO_BYTES(CIEC_WORD st_lv_IN, CIEC_BYTE &st_lv_BYTE_00, CIEC_BYTE &st_lv_BYTE_01) {
-    st_lv_BYTE_00 = 0_BYTE;
-    st_lv_BYTE_01 = 0_BYTE;
-
-#line 13 "SPLIT_WORD_INTO_BYTES.fct"
-    st_lv_BYTE_00 = st_lv_IN.cpartial<CIEC_BYTE>(0);
-#line 14 "SPLIT_WORD_INTO_BYTES.fct"
-    st_lv_BYTE_01 = st_lv_IN.cpartial<CIEC_BYTE>(1);
+  void func_SPLIT_WORD_INTO_BYTES(const CIEC_WORD &st_lv_IN,
+                                  CAnyBitOutputParameter<CIEC_BYTE> st_lv_BYTE_00,
+                                  CAnyBitOutputParameter<CIEC_BYTE> st_lv_BYTE_01) {
+    COutputGuard st_guard_BYTE_00(st_lv_BYTE_00);
+    COutputGuard st_guard_BYTE_01(st_lv_BYTE_01);
+    func_SPLIT_WORD_INTO_BYTES__impl(st_lv_IN, *st_lv_BYTE_00, *st_lv_BYTE_01);
   }
+
+  namespace {
+    void
+    func_SPLIT_WORD_INTO_BYTES__impl(const CIEC_WORD &st_lv_IN, CIEC_BYTE &st_lv_BYTE_00, CIEC_BYTE &st_lv_BYTE_01) {
+      st_lv_BYTE_00 = 0_BYTE;
+      st_lv_BYTE_01 = 0_BYTE;
+
+#line 15 "SPLIT_WORD_INTO_BYTES.fct"
+      st_lv_BYTE_00 = st_lv_IN.cpartial<CIEC_BYTE>(0);
+#line 16 "SPLIT_WORD_INTO_BYTES.fct"
+      st_lv_BYTE_01 = st_lv_IN.cpartial<CIEC_BYTE>(1);
+    }
+  } // namespace
 } // namespace forte::eclipse4diac::utils::splitting

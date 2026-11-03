@@ -91,9 +91,6 @@ namespace forte::trace::test {
                               0);
     };
 
-    // device resource has no events
-    expectedMessages[std::string(deviceName)] = {};
-
     // default resource in the test device
     expectedMessages["EMB_RES"] = {};
 
@@ -129,10 +126,6 @@ namespace forte::trace::test {
 #endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
                                                                          ),
                                   0);
-    resourceMessages.emplace_back("outputData",
-                                  std::make_unique<FBDataPayload>("iec61499::events::E_CTU", "Counter", 0, "TRUE"), 0);
-    resourceMessages.emplace_back("outputData",
-                                  std::make_unique<FBDataPayload>("iec61499::events::E_CTU", "Counter", 1, "1"), 0);
     eventCounter++;
 
     resourceMessages.emplace_back("receiveInputEvent",
@@ -143,8 +136,6 @@ namespace forte::trace::test {
                                                 std::vector<std::string>{"FALSE"}, std::vector<std::string>{},
                                                 std::vector<std::string>{}, std::vector<std::string>{}),
         0);
-    resourceMessages.emplace_back(
-        "inputData", std::make_unique<FBDataPayload>("iec61499::events::E_SWITCH", "Switch", 0, "TRUE"), 0);
 
     resourceMessages.emplace_back("sendOutputEvent",
                                   std::make_unique<FBOutputEventPayload>("iec61499::events::E_SWITCH", "Switch", 1
@@ -174,10 +165,6 @@ namespace forte::trace::test {
 #endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
                                                                          ),
                                   0);
-    resourceMessages.emplace_back("outputData",
-                                  std::make_unique<FBDataPayload>("iec61499::events::E_CTU", "Counter", 0, "FALSE"), 0);
-    resourceMessages.emplace_back("outputData",
-                                  std::make_unique<FBDataPayload>("iec61499::events::E_CTU", "Counter", 1, "0"), 0);
 
     addInitiaOrFinalEvent(resourceMessages, false);
 

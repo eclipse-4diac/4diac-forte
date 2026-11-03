@@ -147,14 +147,16 @@ namespace forte::arch {
 
   int CBSDSocketInterface::receiveDataFromTCP(TSocketDescriptor paSockD, char *paData, unsigned int paBufSize) {
     int nRetVal;
+    int recvErrno;
     do {
       nRetVal = static_cast<int>(recv(paSockD, paData, paBufSize, 0));
-    } while ((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / receiving again
+      recvErrno = errno; // logging may change errno
+    } while ((-1 == nRetVal) && (EINTR == recvErrno)); // recv got interrupt / receiving again
 
     if (nRetVal == -1) {
-      DEVLOG_ERROR("CBSDSocketInterface: TCP-Socket recv() failed: %s\n", strerror(errno));
+      DEVLOG_ERROR("CBSDSocketInterface: TCP-Socket recv() failed: %s\n", strerror(recvErrno));
     }
-    return handleError(nRetVal, "TCP");
+    return handleError(nRetVal, recvErrno, "TCP");
   }
 
   CBSDSocketInterface::TSocketDescriptor CBSDSocketInterface::openUDPSendPort(char *paIPAddr,
@@ -292,21 +294,23 @@ namespace forte::arch {
 
   int CBSDSocketInterface::receiveDataFromUDP(TSocketDescriptor paSockD, char *paData, unsigned int paBufSize) {
     int nRetVal;
+    int recvErrno;
     do {
       nRetVal = static_cast<int>(recvfrom(paSockD, paData, paBufSize, 0, nullptr, nullptr));
-    } while ((-1 == nRetVal) && (EINTR == errno)); // recv got interrupt / receiving again
+      recvErrno = errno; // logging may change errno
+    } while ((-1 == nRetVal) && (EINTR == recvErrno)); // recv got interrupt / receiving again
 
     if (nRetVal == -1) { //
-      DEVLOG_ERROR("CBSDSocketInterface: UDP-Socket recvfrom() failed: %s\n", strerror(errno));
+      DEVLOG_ERROR("CBSDSocketInterface: UDP-Socket recvfrom() failed: %s\n", strerror(recvErrno));
     }
 
-    return handleError(nRetVal, "UDP");
+    return handleError(nRetVal, recvErrno, "UDP");
   }
 
-  int CBSDSocketInterface::handleError(int nRetVal, const char *msg) {
+  int CBSDSocketInterface::handleError(int paRetVal, int paRecvErrno, const char *paProtocol) {
     // recv only sets errno if res is <= 0
-    if (nRetVal <= 0) {
-      switch (errno) {
+    if (paRetVal <= 0) {
+      switch (paRecvErrno) {
         case EWOULDBLOCK:
         case ENOENT: // caused by vfs
           // connected = true;
@@ -317,16 +321,16 @@ namespace forte::arch {
         case ECONNREFUSED:
         case ECONNABORTED:
           // connected = false;
-          DEVLOG_ERROR("CBSDSocketInterface::receiveDataFrom%s  recv() Disconnected: nRetVal: %d, ERR: %d %s\n", msg,
-                       nRetVal, errno, strerror(errno));
+          DEVLOG_ERROR("CBSDSocketInterface::receiveDataFrom%s  recv() Disconnected: nRetVal: %d, ERR: %d %s\n",
+                       paProtocol, paRetVal, paRecvErrno, strerror(paRecvErrno));
           return 0; // Connection closed by peer
         default:
-          DEVLOG_ERROR("CBSDSocketInterface::receiveDataFrom%s recv() Unexpected: nRetVal: %d, ERR: %d %s\n", msg,
-                       nRetVal, errno, strerror(errno));
+          DEVLOG_ERROR("CBSDSocketInterface::receiveDataFrom%s recv() Unexpected: nRetVal: %d, ERR: %d %s\n",
+                       paProtocol, paRetVal, paRecvErrno, strerror(paRecvErrno));
           // connected = true;
           break;
       }
     }
-    return nRetVal;
+    return paRetVal;
   }
 } // namespace forte::arch

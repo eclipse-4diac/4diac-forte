@@ -8,30 +8,32 @@
  ***
  *** FORTE Library Element
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.3.0.qualifier!
  ***
  *** Name: ASSEMBLE_LWORD_FROM_BOOLS
  *** Description: this Function combines the 64 BOOLS to a LWORD
  *** Version:
- ***     1.0: 2024-02-22/Franz Höpfinger - HR Agrartechnik - initial Implementation
+ ***     3.0.1: 2026-09-29/Martin Jobst -  - fix ST package declaration
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.1: 2024-07-28/Moritz Ortmeier - HR Agrartechnik - rename Function and change Input/Output Variables
+ ***     1.0: 2024-02-22/Franz Höpfinger - HR Agrartechnik - initial Implementation
  *************************************************************************/
 
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_LWORD_FROM_BOOLS_fct.h"
 
-using namespace forte::literals;
-
-#include "forte/datatypes/forte_lword.h"
 #include "forte/datatypes/forte_bool.h"
-#include "forte/iec61131_functions.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_lword.h"
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_LWORD_FROM_BOOLS_fct.h"
+
+using namespace std::literals;
+using namespace forte::literals;
 
 namespace forte::eclipse4diac::utils::assembling {
   namespace {
+    constexpr std::string_view TypeHash = ""sv;
+
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
     const auto cDataInputNames = std::array{
         "BIT_00"_STRID, "BIT_01"_STRID, "BIT_02"_STRID, "BIT_03"_STRID, "BIT_04"_STRID, "BIT_05"_STRID, "BIT_06"_STRID,
         "BIT_07"_STRID, "BIT_08"_STRID, "BIT_09"_STRID, "BIT_10"_STRID, "BIT_11"_STRID, "BIT_12"_STRID, "BIT_13"_STRID,
@@ -44,29 +46,156 @@ namespace forte::eclipse4diac::utils::assembling {
         "BIT_56"_STRID, "BIT_57"_STRID, "BIT_58"_STRID, "BIT_59"_STRID, "BIT_60"_STRID, "BIT_61"_STRID, "BIT_62"_STRID,
         "BIT_63"_STRID};
     const auto cDataOutputNames = std::array{""_STRID};
-    const auto cEventInputNames = std::array{"REQ"_STRID};
-    const auto cEventInputTypeIds = std::array{"Event"_STRID};
-    const auto cEventOutputNames = std::array{"CNF"_STRID};
-    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
     const SFBInterfaceSpec cFBInterfaceSpec = {
         .mEINames = cEventInputNames,
-        .mEITypeNames = cEventInputTypeIds,
+        .mEITypeNames = {},
         .mEONames = cEventOutputNames,
-        .mEOTypeNames = cEventOutputTypeIds,
+        .mEOTypeNames = {},
         .mDINames = cDataInputNames,
         .mDONames = cDataOutputNames,
         .mDIONames = {},
         .mSocketNames = {},
         .mPlugNames = {},
     };
+
+    CIEC_LWORD func_ASSEMBLE_LWORD_FROM_BOOLS__impl(const CIEC_BOOL &st_lv_BIT_00,
+                                                    const CIEC_BOOL &st_lv_BIT_01,
+                                                    const CIEC_BOOL &st_lv_BIT_02,
+                                                    const CIEC_BOOL &st_lv_BIT_03,
+                                                    const CIEC_BOOL &st_lv_BIT_04,
+                                                    const CIEC_BOOL &st_lv_BIT_05,
+                                                    const CIEC_BOOL &st_lv_BIT_06,
+                                                    const CIEC_BOOL &st_lv_BIT_07,
+                                                    const CIEC_BOOL &st_lv_BIT_08,
+                                                    const CIEC_BOOL &st_lv_BIT_09,
+                                                    const CIEC_BOOL &st_lv_BIT_10,
+                                                    const CIEC_BOOL &st_lv_BIT_11,
+                                                    const CIEC_BOOL &st_lv_BIT_12,
+                                                    const CIEC_BOOL &st_lv_BIT_13,
+                                                    const CIEC_BOOL &st_lv_BIT_14,
+                                                    const CIEC_BOOL &st_lv_BIT_15,
+                                                    const CIEC_BOOL &st_lv_BIT_16,
+                                                    const CIEC_BOOL &st_lv_BIT_17,
+                                                    const CIEC_BOOL &st_lv_BIT_18,
+                                                    const CIEC_BOOL &st_lv_BIT_19,
+                                                    const CIEC_BOOL &st_lv_BIT_20,
+                                                    const CIEC_BOOL &st_lv_BIT_21,
+                                                    const CIEC_BOOL &st_lv_BIT_22,
+                                                    const CIEC_BOOL &st_lv_BIT_23,
+                                                    const CIEC_BOOL &st_lv_BIT_24,
+                                                    const CIEC_BOOL &st_lv_BIT_25,
+                                                    const CIEC_BOOL &st_lv_BIT_26,
+                                                    const CIEC_BOOL &st_lv_BIT_27,
+                                                    const CIEC_BOOL &st_lv_BIT_28,
+                                                    const CIEC_BOOL &st_lv_BIT_29,
+                                                    const CIEC_BOOL &st_lv_BIT_30,
+                                                    const CIEC_BOOL &st_lv_BIT_31,
+                                                    const CIEC_BOOL &st_lv_BIT_32,
+                                                    const CIEC_BOOL &st_lv_BIT_33,
+                                                    const CIEC_BOOL &st_lv_BIT_34,
+                                                    const CIEC_BOOL &st_lv_BIT_35,
+                                                    const CIEC_BOOL &st_lv_BIT_36,
+                                                    const CIEC_BOOL &st_lv_BIT_37,
+                                                    const CIEC_BOOL &st_lv_BIT_38,
+                                                    const CIEC_BOOL &st_lv_BIT_39,
+                                                    const CIEC_BOOL &st_lv_BIT_40,
+                                                    const CIEC_BOOL &st_lv_BIT_41,
+                                                    const CIEC_BOOL &st_lv_BIT_42,
+                                                    const CIEC_BOOL &st_lv_BIT_43,
+                                                    const CIEC_BOOL &st_lv_BIT_44,
+                                                    const CIEC_BOOL &st_lv_BIT_45,
+                                                    const CIEC_BOOL &st_lv_BIT_46,
+                                                    const CIEC_BOOL &st_lv_BIT_47,
+                                                    const CIEC_BOOL &st_lv_BIT_48,
+                                                    const CIEC_BOOL &st_lv_BIT_49,
+                                                    const CIEC_BOOL &st_lv_BIT_50,
+                                                    const CIEC_BOOL &st_lv_BIT_51,
+                                                    const CIEC_BOOL &st_lv_BIT_52,
+                                                    const CIEC_BOOL &st_lv_BIT_53,
+                                                    const CIEC_BOOL &st_lv_BIT_54,
+                                                    const CIEC_BOOL &st_lv_BIT_55,
+                                                    const CIEC_BOOL &st_lv_BIT_56,
+                                                    const CIEC_BOOL &st_lv_BIT_57,
+                                                    const CIEC_BOOL &st_lv_BIT_58,
+                                                    const CIEC_BOOL &st_lv_BIT_59,
+                                                    const CIEC_BOOL &st_lv_BIT_60,
+                                                    const CIEC_BOOL &st_lv_BIT_61,
+                                                    const CIEC_BOOL &st_lv_BIT_62,
+                                                    const CIEC_BOOL &st_lv_BIT_63);
   } // namespace
 
   DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_LWORD_FROM_BOOLS,
-                     "eclipse4diac::utils::assembling::ASSEMBLE_LWORD_FROM_BOOLS"_STRID)
+                     "eclipse4diac::utils::assembling::ASSEMBLE_LWORD_FROM_BOOLS"_STRID,
+                     TypeHash)
 
-  FORTE_ASSEMBLE_LWORD_FROM_BOOLS::FORTE_ASSEMBLE_LWORD_FROM_BOOLS(const forte::StringId paInstanceNameId,
+  FORTE_ASSEMBLE_LWORD_FROM_BOOLS::FORTE_ASSEMBLE_LWORD_FROM_BOOLS(const StringId paInstanceNameId,
                                                                    CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      var_BIT_00(0_BOOL),
+      var_BIT_01(0_BOOL),
+      var_BIT_02(0_BOOL),
+      var_BIT_03(0_BOOL),
+      var_BIT_04(0_BOOL),
+      var_BIT_05(0_BOOL),
+      var_BIT_06(0_BOOL),
+      var_BIT_07(0_BOOL),
+      var_BIT_08(0_BOOL),
+      var_BIT_09(0_BOOL),
+      var_BIT_10(0_BOOL),
+      var_BIT_11(0_BOOL),
+      var_BIT_12(0_BOOL),
+      var_BIT_13(0_BOOL),
+      var_BIT_14(0_BOOL),
+      var_BIT_15(0_BOOL),
+      var_BIT_16(0_BOOL),
+      var_BIT_17(0_BOOL),
+      var_BIT_18(0_BOOL),
+      var_BIT_19(0_BOOL),
+      var_BIT_20(0_BOOL),
+      var_BIT_21(0_BOOL),
+      var_BIT_22(0_BOOL),
+      var_BIT_23(0_BOOL),
+      var_BIT_24(0_BOOL),
+      var_BIT_25(0_BOOL),
+      var_BIT_26(0_BOOL),
+      var_BIT_27(0_BOOL),
+      var_BIT_28(0_BOOL),
+      var_BIT_29(0_BOOL),
+      var_BIT_30(0_BOOL),
+      var_BIT_31(0_BOOL),
+      var_BIT_32(0_BOOL),
+      var_BIT_33(0_BOOL),
+      var_BIT_34(0_BOOL),
+      var_BIT_35(0_BOOL),
+      var_BIT_36(0_BOOL),
+      var_BIT_37(0_BOOL),
+      var_BIT_38(0_BOOL),
+      var_BIT_39(0_BOOL),
+      var_BIT_40(0_BOOL),
+      var_BIT_41(0_BOOL),
+      var_BIT_42(0_BOOL),
+      var_BIT_43(0_BOOL),
+      var_BIT_44(0_BOOL),
+      var_BIT_45(0_BOOL),
+      var_BIT_46(0_BOOL),
+      var_BIT_47(0_BOOL),
+      var_BIT_48(0_BOOL),
+      var_BIT_49(0_BOOL),
+      var_BIT_50(0_BOOL),
+      var_BIT_51(0_BOOL),
+      var_BIT_52(0_BOOL),
+      var_BIT_53(0_BOOL),
+      var_BIT_54(0_BOOL),
+      var_BIT_55(0_BOOL),
+      var_BIT_56(0_BOOL),
+      var_BIT_57(0_BOOL),
+      var_BIT_58(0_BOOL),
+      var_BIT_59(0_BOOL),
+      var_BIT_60(0_BOOL),
+      var_BIT_61(0_BOOL),
+      var_BIT_62(0_BOOL),
+      var_BIT_63(0_BOOL),
+      var_(0_LWORD),
       conn_CNF(*this, 0),
       conn_BIT_00(nullptr),
       conn_BIT_01(nullptr),
@@ -136,6 +265,7 @@ namespace forte::eclipse4diac::utils::assembling {
   }
 
   void FORTE_ASSEMBLE_LWORD_FROM_BOOLS::setInitialValues() {
+    CFunctionBlock::setInitialValues();
     var_BIT_00 = 0_BOOL;
     var_BIT_01 = 0_BOOL;
     var_BIT_02 = 0_BOOL;
@@ -279,7 +409,7 @@ namespace forte::eclipse4diac::utils::assembling {
   void FORTE_ASSEMBLE_LWORD_FROM_BOOLS::writeOutputData(const TEventID paEIID) {
     switch (paEIID) {
       case scmEventCNFID: {
-        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
+        writeData(64, var_, conn_);
         break;
       }
       default: break;
@@ -448,7 +578,7 @@ namespace forte::eclipse4diac::utils::assembling {
   }
 
   void FORTE_ASSEMBLE_LWORD_FROM_BOOLS::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-    var_ = func_ASSEMBLE_LWORD_FROM_BOOLS(
+    var_ = func_ASSEMBLE_LWORD_FROM_BOOLS__impl(
         var_BIT_00, var_BIT_01, var_BIT_02, var_BIT_03, var_BIT_04, var_BIT_05, var_BIT_06, var_BIT_07, var_BIT_08,
         var_BIT_09, var_BIT_10, var_BIT_11, var_BIT_12, var_BIT_13, var_BIT_14, var_BIT_15, var_BIT_16, var_BIT_17,
         var_BIT_18, var_BIT_19, var_BIT_20, var_BIT_21, var_BIT_22, var_BIT_23, var_BIT_24, var_BIT_25, var_BIT_26,
@@ -460,201 +590,278 @@ namespace forte::eclipse4diac::utils::assembling {
     sendOutputEvent(scmEventCNFID, paECET);
   }
 
-  CIEC_LWORD func_ASSEMBLE_LWORD_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00,
-                                            CIEC_BOOL st_lv_BIT_01,
-                                            CIEC_BOOL st_lv_BIT_02,
-                                            CIEC_BOOL st_lv_BIT_03,
-                                            CIEC_BOOL st_lv_BIT_04,
-                                            CIEC_BOOL st_lv_BIT_05,
-                                            CIEC_BOOL st_lv_BIT_06,
-                                            CIEC_BOOL st_lv_BIT_07,
-                                            CIEC_BOOL st_lv_BIT_08,
-                                            CIEC_BOOL st_lv_BIT_09,
-                                            CIEC_BOOL st_lv_BIT_10,
-                                            CIEC_BOOL st_lv_BIT_11,
-                                            CIEC_BOOL st_lv_BIT_12,
-                                            CIEC_BOOL st_lv_BIT_13,
-                                            CIEC_BOOL st_lv_BIT_14,
-                                            CIEC_BOOL st_lv_BIT_15,
-                                            CIEC_BOOL st_lv_BIT_16,
-                                            CIEC_BOOL st_lv_BIT_17,
-                                            CIEC_BOOL st_lv_BIT_18,
-                                            CIEC_BOOL st_lv_BIT_19,
-                                            CIEC_BOOL st_lv_BIT_20,
-                                            CIEC_BOOL st_lv_BIT_21,
-                                            CIEC_BOOL st_lv_BIT_22,
-                                            CIEC_BOOL st_lv_BIT_23,
-                                            CIEC_BOOL st_lv_BIT_24,
-                                            CIEC_BOOL st_lv_BIT_25,
-                                            CIEC_BOOL st_lv_BIT_26,
-                                            CIEC_BOOL st_lv_BIT_27,
-                                            CIEC_BOOL st_lv_BIT_28,
-                                            CIEC_BOOL st_lv_BIT_29,
-                                            CIEC_BOOL st_lv_BIT_30,
-                                            CIEC_BOOL st_lv_BIT_31,
-                                            CIEC_BOOL st_lv_BIT_32,
-                                            CIEC_BOOL st_lv_BIT_33,
-                                            CIEC_BOOL st_lv_BIT_34,
-                                            CIEC_BOOL st_lv_BIT_35,
-                                            CIEC_BOOL st_lv_BIT_36,
-                                            CIEC_BOOL st_lv_BIT_37,
-                                            CIEC_BOOL st_lv_BIT_38,
-                                            CIEC_BOOL st_lv_BIT_39,
-                                            CIEC_BOOL st_lv_BIT_40,
-                                            CIEC_BOOL st_lv_BIT_41,
-                                            CIEC_BOOL st_lv_BIT_42,
-                                            CIEC_BOOL st_lv_BIT_43,
-                                            CIEC_BOOL st_lv_BIT_44,
-                                            CIEC_BOOL st_lv_BIT_45,
-                                            CIEC_BOOL st_lv_BIT_46,
-                                            CIEC_BOOL st_lv_BIT_47,
-                                            CIEC_BOOL st_lv_BIT_48,
-                                            CIEC_BOOL st_lv_BIT_49,
-                                            CIEC_BOOL st_lv_BIT_50,
-                                            CIEC_BOOL st_lv_BIT_51,
-                                            CIEC_BOOL st_lv_BIT_52,
-                                            CIEC_BOOL st_lv_BIT_53,
-                                            CIEC_BOOL st_lv_BIT_54,
-                                            CIEC_BOOL st_lv_BIT_55,
-                                            CIEC_BOOL st_lv_BIT_56,
-                                            CIEC_BOOL st_lv_BIT_57,
-                                            CIEC_BOOL st_lv_BIT_58,
-                                            CIEC_BOOL st_lv_BIT_59,
-                                            CIEC_BOOL st_lv_BIT_60,
-                                            CIEC_BOOL st_lv_BIT_61,
-                                            CIEC_BOOL st_lv_BIT_62,
-                                            CIEC_BOOL st_lv_BIT_63) {
-    CIEC_LWORD st_ret_val = 0_LWORD;
-
-#line 71 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(0) = st_lv_BIT_00;
-#line 72 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(1) = st_lv_BIT_01;
-#line 73 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(2) = st_lv_BIT_02;
-#line 74 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(3) = st_lv_BIT_03;
-#line 75 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(4) = st_lv_BIT_04;
-#line 76 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(5) = st_lv_BIT_05;
-#line 77 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(6) = st_lv_BIT_06;
-#line 78 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(7) = st_lv_BIT_07;
-#line 79 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(8) = st_lv_BIT_08;
-#line 80 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(9) = st_lv_BIT_09;
-#line 81 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(10) = st_lv_BIT_10;
-#line 82 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(11) = st_lv_BIT_11;
-#line 83 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(12) = st_lv_BIT_12;
-#line 84 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(13) = st_lv_BIT_13;
-#line 85 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(14) = st_lv_BIT_14;
-#line 86 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(15) = st_lv_BIT_15;
-#line 87 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(16) = st_lv_BIT_16;
-#line 88 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(17) = st_lv_BIT_17;
-#line 89 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(18) = st_lv_BIT_18;
-#line 90 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(19) = st_lv_BIT_19;
-#line 91 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(20) = st_lv_BIT_20;
-#line 92 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(21) = st_lv_BIT_21;
-#line 93 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(22) = st_lv_BIT_22;
-#line 94 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(23) = st_lv_BIT_23;
-#line 95 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(24) = st_lv_BIT_24;
-#line 96 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(25) = st_lv_BIT_25;
-#line 97 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(26) = st_lv_BIT_26;
-#line 98 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(27) = st_lv_BIT_27;
-#line 99 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(28) = st_lv_BIT_28;
-#line 100 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(29) = st_lv_BIT_29;
-#line 101 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(30) = st_lv_BIT_30;
-#line 102 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(31) = st_lv_BIT_31;
-#line 103 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(32) = st_lv_BIT_32;
-#line 104 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(33) = st_lv_BIT_33;
-#line 105 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(34) = st_lv_BIT_34;
-#line 106 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(35) = st_lv_BIT_35;
-#line 107 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(36) = st_lv_BIT_36;
-#line 108 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(37) = st_lv_BIT_37;
-#line 109 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(38) = st_lv_BIT_38;
-#line 110 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(39) = st_lv_BIT_39;
-#line 111 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(40) = st_lv_BIT_40;
-#line 112 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(41) = st_lv_BIT_41;
-#line 113 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(42) = st_lv_BIT_42;
-#line 114 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(43) = st_lv_BIT_43;
-#line 115 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(44) = st_lv_BIT_44;
-#line 116 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(45) = st_lv_BIT_45;
-#line 117 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(46) = st_lv_BIT_46;
-#line 118 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(47) = st_lv_BIT_47;
-#line 119 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(48) = st_lv_BIT_48;
-#line 120 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(49) = st_lv_BIT_49;
-#line 121 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(50) = st_lv_BIT_50;
-#line 122 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(51) = st_lv_BIT_51;
-#line 123 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(52) = st_lv_BIT_52;
-#line 124 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(53) = st_lv_BIT_53;
-#line 125 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(54) = st_lv_BIT_54;
-#line 126 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(55) = st_lv_BIT_55;
-#line 127 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(56) = st_lv_BIT_56;
-#line 128 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(57) = st_lv_BIT_57;
-#line 129 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(58) = st_lv_BIT_58;
-#line 130 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(59) = st_lv_BIT_59;
-#line 131 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(60) = st_lv_BIT_60;
-#line 132 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(61) = st_lv_BIT_61;
-#line 133 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(62) = st_lv_BIT_62;
-#line 134 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(63) = st_lv_BIT_63;
-
-    return st_ret_val;
+  CIEC_LWORD func_ASSEMBLE_LWORD_FROM_BOOLS(const CIEC_BOOL &st_lv_BIT_00,
+                                            const CIEC_BOOL &st_lv_BIT_01,
+                                            const CIEC_BOOL &st_lv_BIT_02,
+                                            const CIEC_BOOL &st_lv_BIT_03,
+                                            const CIEC_BOOL &st_lv_BIT_04,
+                                            const CIEC_BOOL &st_lv_BIT_05,
+                                            const CIEC_BOOL &st_lv_BIT_06,
+                                            const CIEC_BOOL &st_lv_BIT_07,
+                                            const CIEC_BOOL &st_lv_BIT_08,
+                                            const CIEC_BOOL &st_lv_BIT_09,
+                                            const CIEC_BOOL &st_lv_BIT_10,
+                                            const CIEC_BOOL &st_lv_BIT_11,
+                                            const CIEC_BOOL &st_lv_BIT_12,
+                                            const CIEC_BOOL &st_lv_BIT_13,
+                                            const CIEC_BOOL &st_lv_BIT_14,
+                                            const CIEC_BOOL &st_lv_BIT_15,
+                                            const CIEC_BOOL &st_lv_BIT_16,
+                                            const CIEC_BOOL &st_lv_BIT_17,
+                                            const CIEC_BOOL &st_lv_BIT_18,
+                                            const CIEC_BOOL &st_lv_BIT_19,
+                                            const CIEC_BOOL &st_lv_BIT_20,
+                                            const CIEC_BOOL &st_lv_BIT_21,
+                                            const CIEC_BOOL &st_lv_BIT_22,
+                                            const CIEC_BOOL &st_lv_BIT_23,
+                                            const CIEC_BOOL &st_lv_BIT_24,
+                                            const CIEC_BOOL &st_lv_BIT_25,
+                                            const CIEC_BOOL &st_lv_BIT_26,
+                                            const CIEC_BOOL &st_lv_BIT_27,
+                                            const CIEC_BOOL &st_lv_BIT_28,
+                                            const CIEC_BOOL &st_lv_BIT_29,
+                                            const CIEC_BOOL &st_lv_BIT_30,
+                                            const CIEC_BOOL &st_lv_BIT_31,
+                                            const CIEC_BOOL &st_lv_BIT_32,
+                                            const CIEC_BOOL &st_lv_BIT_33,
+                                            const CIEC_BOOL &st_lv_BIT_34,
+                                            const CIEC_BOOL &st_lv_BIT_35,
+                                            const CIEC_BOOL &st_lv_BIT_36,
+                                            const CIEC_BOOL &st_lv_BIT_37,
+                                            const CIEC_BOOL &st_lv_BIT_38,
+                                            const CIEC_BOOL &st_lv_BIT_39,
+                                            const CIEC_BOOL &st_lv_BIT_40,
+                                            const CIEC_BOOL &st_lv_BIT_41,
+                                            const CIEC_BOOL &st_lv_BIT_42,
+                                            const CIEC_BOOL &st_lv_BIT_43,
+                                            const CIEC_BOOL &st_lv_BIT_44,
+                                            const CIEC_BOOL &st_lv_BIT_45,
+                                            const CIEC_BOOL &st_lv_BIT_46,
+                                            const CIEC_BOOL &st_lv_BIT_47,
+                                            const CIEC_BOOL &st_lv_BIT_48,
+                                            const CIEC_BOOL &st_lv_BIT_49,
+                                            const CIEC_BOOL &st_lv_BIT_50,
+                                            const CIEC_BOOL &st_lv_BIT_51,
+                                            const CIEC_BOOL &st_lv_BIT_52,
+                                            const CIEC_BOOL &st_lv_BIT_53,
+                                            const CIEC_BOOL &st_lv_BIT_54,
+                                            const CIEC_BOOL &st_lv_BIT_55,
+                                            const CIEC_BOOL &st_lv_BIT_56,
+                                            const CIEC_BOOL &st_lv_BIT_57,
+                                            const CIEC_BOOL &st_lv_BIT_58,
+                                            const CIEC_BOOL &st_lv_BIT_59,
+                                            const CIEC_BOOL &st_lv_BIT_60,
+                                            const CIEC_BOOL &st_lv_BIT_61,
+                                            const CIEC_BOOL &st_lv_BIT_62,
+                                            const CIEC_BOOL &st_lv_BIT_63) {
+    return func_ASSEMBLE_LWORD_FROM_BOOLS__impl(
+        st_lv_BIT_00, st_lv_BIT_01, st_lv_BIT_02, st_lv_BIT_03, st_lv_BIT_04, st_lv_BIT_05, st_lv_BIT_06, st_lv_BIT_07,
+        st_lv_BIT_08, st_lv_BIT_09, st_lv_BIT_10, st_lv_BIT_11, st_lv_BIT_12, st_lv_BIT_13, st_lv_BIT_14, st_lv_BIT_15,
+        st_lv_BIT_16, st_lv_BIT_17, st_lv_BIT_18, st_lv_BIT_19, st_lv_BIT_20, st_lv_BIT_21, st_lv_BIT_22, st_lv_BIT_23,
+        st_lv_BIT_24, st_lv_BIT_25, st_lv_BIT_26, st_lv_BIT_27, st_lv_BIT_28, st_lv_BIT_29, st_lv_BIT_30, st_lv_BIT_31,
+        st_lv_BIT_32, st_lv_BIT_33, st_lv_BIT_34, st_lv_BIT_35, st_lv_BIT_36, st_lv_BIT_37, st_lv_BIT_38, st_lv_BIT_39,
+        st_lv_BIT_40, st_lv_BIT_41, st_lv_BIT_42, st_lv_BIT_43, st_lv_BIT_44, st_lv_BIT_45, st_lv_BIT_46, st_lv_BIT_47,
+        st_lv_BIT_48, st_lv_BIT_49, st_lv_BIT_50, st_lv_BIT_51, st_lv_BIT_52, st_lv_BIT_53, st_lv_BIT_54, st_lv_BIT_55,
+        st_lv_BIT_56, st_lv_BIT_57, st_lv_BIT_58, st_lv_BIT_59, st_lv_BIT_60, st_lv_BIT_61, st_lv_BIT_62, st_lv_BIT_63);
   }
+
+  namespace {
+    CIEC_LWORD func_ASSEMBLE_LWORD_FROM_BOOLS__impl(const CIEC_BOOL &st_lv_BIT_00,
+                                                    const CIEC_BOOL &st_lv_BIT_01,
+                                                    const CIEC_BOOL &st_lv_BIT_02,
+                                                    const CIEC_BOOL &st_lv_BIT_03,
+                                                    const CIEC_BOOL &st_lv_BIT_04,
+                                                    const CIEC_BOOL &st_lv_BIT_05,
+                                                    const CIEC_BOOL &st_lv_BIT_06,
+                                                    const CIEC_BOOL &st_lv_BIT_07,
+                                                    const CIEC_BOOL &st_lv_BIT_08,
+                                                    const CIEC_BOOL &st_lv_BIT_09,
+                                                    const CIEC_BOOL &st_lv_BIT_10,
+                                                    const CIEC_BOOL &st_lv_BIT_11,
+                                                    const CIEC_BOOL &st_lv_BIT_12,
+                                                    const CIEC_BOOL &st_lv_BIT_13,
+                                                    const CIEC_BOOL &st_lv_BIT_14,
+                                                    const CIEC_BOOL &st_lv_BIT_15,
+                                                    const CIEC_BOOL &st_lv_BIT_16,
+                                                    const CIEC_BOOL &st_lv_BIT_17,
+                                                    const CIEC_BOOL &st_lv_BIT_18,
+                                                    const CIEC_BOOL &st_lv_BIT_19,
+                                                    const CIEC_BOOL &st_lv_BIT_20,
+                                                    const CIEC_BOOL &st_lv_BIT_21,
+                                                    const CIEC_BOOL &st_lv_BIT_22,
+                                                    const CIEC_BOOL &st_lv_BIT_23,
+                                                    const CIEC_BOOL &st_lv_BIT_24,
+                                                    const CIEC_BOOL &st_lv_BIT_25,
+                                                    const CIEC_BOOL &st_lv_BIT_26,
+                                                    const CIEC_BOOL &st_lv_BIT_27,
+                                                    const CIEC_BOOL &st_lv_BIT_28,
+                                                    const CIEC_BOOL &st_lv_BIT_29,
+                                                    const CIEC_BOOL &st_lv_BIT_30,
+                                                    const CIEC_BOOL &st_lv_BIT_31,
+                                                    const CIEC_BOOL &st_lv_BIT_32,
+                                                    const CIEC_BOOL &st_lv_BIT_33,
+                                                    const CIEC_BOOL &st_lv_BIT_34,
+                                                    const CIEC_BOOL &st_lv_BIT_35,
+                                                    const CIEC_BOOL &st_lv_BIT_36,
+                                                    const CIEC_BOOL &st_lv_BIT_37,
+                                                    const CIEC_BOOL &st_lv_BIT_38,
+                                                    const CIEC_BOOL &st_lv_BIT_39,
+                                                    const CIEC_BOOL &st_lv_BIT_40,
+                                                    const CIEC_BOOL &st_lv_BIT_41,
+                                                    const CIEC_BOOL &st_lv_BIT_42,
+                                                    const CIEC_BOOL &st_lv_BIT_43,
+                                                    const CIEC_BOOL &st_lv_BIT_44,
+                                                    const CIEC_BOOL &st_lv_BIT_45,
+                                                    const CIEC_BOOL &st_lv_BIT_46,
+                                                    const CIEC_BOOL &st_lv_BIT_47,
+                                                    const CIEC_BOOL &st_lv_BIT_48,
+                                                    const CIEC_BOOL &st_lv_BIT_49,
+                                                    const CIEC_BOOL &st_lv_BIT_50,
+                                                    const CIEC_BOOL &st_lv_BIT_51,
+                                                    const CIEC_BOOL &st_lv_BIT_52,
+                                                    const CIEC_BOOL &st_lv_BIT_53,
+                                                    const CIEC_BOOL &st_lv_BIT_54,
+                                                    const CIEC_BOOL &st_lv_BIT_55,
+                                                    const CIEC_BOOL &st_lv_BIT_56,
+                                                    const CIEC_BOOL &st_lv_BIT_57,
+                                                    const CIEC_BOOL &st_lv_BIT_58,
+                                                    const CIEC_BOOL &st_lv_BIT_59,
+                                                    const CIEC_BOOL &st_lv_BIT_60,
+                                                    const CIEC_BOOL &st_lv_BIT_61,
+                                                    const CIEC_BOOL &st_lv_BIT_62,
+                                                    const CIEC_BOOL &st_lv_BIT_63) {
+      CIEC_LWORD st_ret_val = 0_LWORD;
+
+#line 73 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(0) = st_lv_BIT_00;
+#line 74 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(1) = st_lv_BIT_01;
+#line 75 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(2) = st_lv_BIT_02;
+#line 76 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(3) = st_lv_BIT_03;
+#line 77 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(4) = st_lv_BIT_04;
+#line 78 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(5) = st_lv_BIT_05;
+#line 79 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(6) = st_lv_BIT_06;
+#line 80 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(7) = st_lv_BIT_07;
+#line 81 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(8) = st_lv_BIT_08;
+#line 82 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(9) = st_lv_BIT_09;
+#line 83 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(10) = st_lv_BIT_10;
+#line 84 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(11) = st_lv_BIT_11;
+#line 85 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(12) = st_lv_BIT_12;
+#line 86 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(13) = st_lv_BIT_13;
+#line 87 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(14) = st_lv_BIT_14;
+#line 88 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(15) = st_lv_BIT_15;
+#line 89 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(16) = st_lv_BIT_16;
+#line 90 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(17) = st_lv_BIT_17;
+#line 91 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(18) = st_lv_BIT_18;
+#line 92 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(19) = st_lv_BIT_19;
+#line 93 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(20) = st_lv_BIT_20;
+#line 94 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(21) = st_lv_BIT_21;
+#line 95 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(22) = st_lv_BIT_22;
+#line 96 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(23) = st_lv_BIT_23;
+#line 97 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(24) = st_lv_BIT_24;
+#line 98 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(25) = st_lv_BIT_25;
+#line 99 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(26) = st_lv_BIT_26;
+#line 100 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(27) = st_lv_BIT_27;
+#line 101 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(28) = st_lv_BIT_28;
+#line 102 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(29) = st_lv_BIT_29;
+#line 103 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(30) = st_lv_BIT_30;
+#line 104 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(31) = st_lv_BIT_31;
+#line 105 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(32) = st_lv_BIT_32;
+#line 106 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(33) = st_lv_BIT_33;
+#line 107 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(34) = st_lv_BIT_34;
+#line 108 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(35) = st_lv_BIT_35;
+#line 109 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(36) = st_lv_BIT_36;
+#line 110 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(37) = st_lv_BIT_37;
+#line 111 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(38) = st_lv_BIT_38;
+#line 112 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(39) = st_lv_BIT_39;
+#line 113 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(40) = st_lv_BIT_40;
+#line 114 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(41) = st_lv_BIT_41;
+#line 115 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(42) = st_lv_BIT_42;
+#line 116 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(43) = st_lv_BIT_43;
+#line 117 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(44) = st_lv_BIT_44;
+#line 118 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(45) = st_lv_BIT_45;
+#line 119 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(46) = st_lv_BIT_46;
+#line 120 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(47) = st_lv_BIT_47;
+#line 121 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(48) = st_lv_BIT_48;
+#line 122 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(49) = st_lv_BIT_49;
+#line 123 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(50) = st_lv_BIT_50;
+#line 124 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(51) = st_lv_BIT_51;
+#line 125 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(52) = st_lv_BIT_52;
+#line 126 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(53) = st_lv_BIT_53;
+#line 127 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(54) = st_lv_BIT_54;
+#line 128 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(55) = st_lv_BIT_55;
+#line 129 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(56) = st_lv_BIT_56;
+#line 130 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(57) = st_lv_BIT_57;
+#line 131 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(58) = st_lv_BIT_58;
+#line 132 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(59) = st_lv_BIT_59;
+#line 133 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(60) = st_lv_BIT_60;
+#line 134 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(61) = st_lv_BIT_61;
+#line 135 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(62) = st_lv_BIT_62;
+#line 136 "ASSEMBLE_LWORD_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(63) = st_lv_BIT_63;
+
+      return st_ret_val;
+    }
+  } // namespace
 } // namespace forte::eclipse4diac::utils::assembling

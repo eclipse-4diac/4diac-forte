@@ -109,43 +109,6 @@ namespace forte::trace::reader {
     }
 
     /**
-     * @brief Read the 'dataId' field
-     *
-     * @param paField The field container to read from
-     * @return the stored data id inside the field
-     */
-    uint64_t getDataId(const bt_field *paField) {
-      auto dataField = bt_field_structure_borrow_member_field_by_name_const(paField, "dataId");
-      if (dataField == nullptr) {
-        std::cout << "Could not find 'dataId' member in field" << std::endl;
-        std::abort();
-      } else if (BT_FIELD_CLASS_TYPE_UNSIGNED_INTEGER != bt_field_get_class_type(dataField)) {
-        std::cout << "dataId field is not of type unsigned integer" << std::endl;
-        std::abort();
-      }
-
-      return bt_field_integer_unsigned_get_value(dataField);
-    }
-
-    /**
-     * @brief Read the 'value' field
-     *
-     * @param paField The field container to read from
-     * @return the stored value inside the field
-     */
-    std::string getValue(const bt_field *paField) {
-      auto valueField = bt_field_structure_borrow_member_field_by_name_const(paField, "value");
-      if (valueField == nullptr) {
-        std::cout << "Could not find 'value' member in field" << std::endl;
-        std::abort();
-      } else if (BT_FIELD_CLASS_TYPE_STRING != bt_field_get_class_type(valueField)) {
-        std::cout << "value field is not of type unsigned string" << std::endl;
-        std::abort();
-      }
-      return bt_field_string_get_value(valueField);
-    }
-
-    /**
      * @brief Create a paylaod from a field
      *
      * @param paEventType the type of payload to create
@@ -169,8 +132,6 @@ namespace forte::trace::reader {
 #else
         result.reset(new FBOutputEventPayload(typeName, instanceName, readUint64Field(paField, "eventId")));
 #endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
-      } else if (paEventType == "inputData" || paEventType == "outputData") {
-        result.reset(new FBDataPayload(typeName, instanceName, getDataId(paField), getValue(paField)));
       } else if (paEventType == "instanceData") {
         std::vector<std::string> inputs;
         std::vector<std::string> outputs;

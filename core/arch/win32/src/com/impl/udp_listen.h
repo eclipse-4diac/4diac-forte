@@ -22,6 +22,9 @@ namespace forte::com::impl {
       explicit UDPListenChannel(ComObserver<ComBuffer> &paObserver) : SocketChannel(paObserver) {
       }
 
+      ComResult open(std::string_view paConfigString, std::span<ComChannelDescriptor> paDescriptors) override;
+      ComResult close() override;
+
       SOCKET socket(std::string_view paConfigString) override;
       std::size_t recv() override;
 

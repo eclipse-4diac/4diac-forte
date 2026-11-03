@@ -65,17 +65,9 @@ namespace forte::trace {
 #endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
       );
 
-      void traceInputData(const char *const paTypeName,
-                          const char *const paInstanceName,
-                          const uint64_t paDataId,
-                          const char *const paValue);
-
-      void traceOutputData(const char *const paTypeName,
-                           const char *const paInstanceName,
-                           const uint64_t paDataId,
-                           const char *const paValue);
-
-      bool isEnabled();
+      bool isEnabled() const {
+        return true;
+      }
 
       /**
        * @brief Get the traced events

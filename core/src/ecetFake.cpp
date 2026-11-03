@@ -23,7 +23,7 @@ namespace forte {
     [[maybe_unused]] const EcetFactory::EntryImpl<CFakeEventExecutionThread> entry("Fake"_STRID);
   }
 
-  CFakeEventExecutionThread::CFakeEventExecutionThread() : CEventChainExecutionThread() {
+  CFakeEventExecutionThread::CFakeEventExecutionThread(StringId paName) : CEventChainExecutionThread(paName) {
     mProcessEventCallback = [this](TEventEntry paEvent) {
       paEvent.getFB().receiveInputEvent(paEvent.getPortId(), this);
     };

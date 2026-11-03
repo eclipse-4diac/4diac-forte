@@ -19,8 +19,8 @@
 
 #include "forte/basefb.h"
 
-#include "forte/resource.h"
-#include "resource_internal.h"
+#include "forte/ecet.h"
+#include "ecet_internal.h"
 #include "forte/util/string_utils.h"
 
 namespace forte {
@@ -80,7 +80,7 @@ namespace forte {
   };
 
 #ifdef FORTE_TRACE_CTF
-  void CBaseFB::traceInstanceData() {
+  void CBaseFB::traceInstanceData(CEventChainExecutionThread *paECET) {
     std::vector<std::string> inputs(getFBInterfaceSpec().getNumDIs());
     std::vector<std::string> outputs(getFBInterfaceSpec().getNumDOs());
     std::vector<std::string> internals(cmVarInternalNames.size());
@@ -120,7 +120,7 @@ namespace forte {
       ++i;
     }
 
-    getResource()->getInternal().getTracer().traceInstanceData(
+    paECET->getInternal().getTracer().traceInstanceData(
         getFBTypeName(), getFullQualifiedApplicationInstanceName('.').c_str(), static_cast<uint32_t>(inputs.size()),
         inputs_c_str.data(), static_cast<uint32_t>(outputs.size()), outputs_c_str.data(),
         static_cast<uint32_t>(internals.size()), internals_c_str.data(), static_cast<uint32_t>(internalFbs.size()),

@@ -76,45 +76,6 @@ namespace forte::eclipse4diac::io::embrick {
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
-
-      void evt_MAP(const CIEC_BOOL &paQI,
-                   const CIEC_WSTRING &paRelay_1,
-                   const CIEC_WSTRING &paRelay_2,
-                   const CIEC_WSTRING &paRelay_3,
-                   const CIEC_WSTRING &paRelay_4,
-                   const CIEC_WSTRING &paRelay_5,
-                   const CIEC_WSTRING &paRelay_6,
-                   const CIEC_UINT &paUpdateInterval,
-                   CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                   COutputParameter<CIEC_WSTRING> paSTATUS) {
-        COutputGuard guard_paQO(paQO);
-        COutputGuard guard_paSTATUS(paSTATUS);
-        var_QI = paQI;
-        var_Relay_1 = paRelay_1;
-        var_Relay_2 = paRelay_2;
-        var_Relay_3 = paRelay_3;
-        var_Relay_4 = paRelay_4;
-        var_Relay_5 = paRelay_5;
-        var_Relay_6 = paRelay_6;
-        var_UpdateInterval = paUpdateInterval;
-        receiveInputEvent(scmEventMAPID, nullptr);
-        *paQO = var_QO;
-        *paSTATUS = var_STATUS;
-      }
-
-      void operator()(const CIEC_BOOL &paQI,
-                      const CIEC_WSTRING &paRelay_1,
-                      const CIEC_WSTRING &paRelay_2,
-                      const CIEC_WSTRING &paRelay_3,
-                      const CIEC_WSTRING &paRelay_4,
-                      const CIEC_WSTRING &paRelay_5,
-                      const CIEC_WSTRING &paRelay_6,
-                      const CIEC_UINT &paUpdateInterval,
-                      CAnyBitOutputParameter<CIEC_BOOL> paQO,
-                      COutputParameter<CIEC_WSTRING> paSTATUS) {
-        evt_MAP(paQI, paRelay_1, paRelay_2, paRelay_3, paRelay_4, paRelay_5, paRelay_6, paUpdateInterval, paQO,
-                paSTATUS);
-      }
   };
 
 } // namespace forte::eclipse4diac::io::embrick

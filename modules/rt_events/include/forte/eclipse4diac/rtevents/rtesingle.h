@@ -13,6 +13,7 @@
 
 #pragma once
 
+#include "forte/resource.h"
 #include "forte/funcbloc.h"
 #include "forte/ecet.h"
 
@@ -65,6 +66,8 @@ namespace forte::eclipse4diac::rtevents {
                      const SFBInterfaceSpec &paInterfaceSpec,
                      const StringId paInstanceNameId) :
           CFunctionBlock(paContainer, paInterfaceSpec, paInstanceNameId),
+          mECEO(StringId::insert(std::string(paContainer.getResource()->getInstanceName()) + "." +
+                                 CFBContainer::getFullQualifiedApplicationInstanceName('.'))),
           mInitialized(false) {};
 
       CIEC_BOOL var_QI;

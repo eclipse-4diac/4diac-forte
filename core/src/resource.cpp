@@ -303,7 +303,7 @@ namespace forte {
                        const StringId paInstanceNameId) :
       CFunctionBlock(paDevice, paInterfaceSpec, paInstanceNameId),
       mInternal(std::make_unique<ResourceInternal>(*this)),
-      mResourceEventExecution(EcetFactory::create()) {
+      mResourceEventExecution(EcetFactory::create(paInstanceNameId)) {
   }
 
   CResource::CResource(const SFBInterfaceSpec &paInterfaceSpec, const StringId paInstanceNameId) :

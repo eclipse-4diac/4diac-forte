@@ -226,7 +226,7 @@ namespace forte {
                     getFBInterfaceSpec().getNumEIs() - 1);
 
 #ifdef FORTE_TRACE_CTF
-        traceInputEvent(paEIID);
+        traceInputEvent(paEIID, paExecEnv);
 #endif // FORTE_TRACE_CTF
         if (E_FBStates::Running == getState()) {
           if (paEIID < getFBInterfaceSpec().getNumEIs()) {
@@ -355,7 +355,7 @@ namespace forte {
       virtual void toString(std::string &paTargetBuf) const;
 
 #ifdef FORTE_TRACE_CTF
-      virtual void traceInstanceData() {
+      virtual void traceInstanceData(CEventChainExecutionThread *paECET) {
       }
 #endif // FORTE_TRACE_CTF
 
@@ -435,9 +435,6 @@ namespace forte {
         if (!isForced(paAbsDataPortNum)) [[likely]] {
           paConn->readData(paValue);
         }
-#ifdef FORTE_TRACE_CTF
-        traceReadData(paAbsDataPortNum, paValue);
-#endif // FORTE_TRACE_CTF
       }
 
       /*!\brief Function to write data to an output connection from a variable of the FB.
@@ -451,9 +448,6 @@ namespace forte {
         if (!isForced(paAbsDataPortNum)) [[likely]] {
           paConn.writeData(paValue);
         }
-#ifdef FORTE_TRACE_CTF
-        traceWriteData(paAbsDataPortNum - mInterfaceSpec.getNumDIs(), paValue);
-#endif // FORTE_TRACE_CTF
       }
 
       /*!\brief Set the initial values of data inputs, outputs, and internal vars.
@@ -579,10 +573,8 @@ namespace forte {
       std::bitset<cgMaxSupportedForceIndex> mForces;
 
 #ifdef FORTE_TRACE_CTF
-      void traceInputEvent(TEventID paEIID);
-      void traceOutputEvent(TEventID paEOID, CEventChainExecutionThread *const paECET);
-      void traceReadData(TPortId paDINum, CIEC_ANY &paValue);
-      void traceWriteData(TPortId paDONum, CIEC_ANY &paValue);
+      void traceInputEvent(TEventID paEIID, CEventChainExecutionThread *paECET);
+      void traceOutputEvent(TEventID paEOID, CEventChainExecutionThread *paECET);
 #endif
 
       /*!\brief Current state of the runnable object.

@@ -8,13 +8,15 @@
  ***
  *** FORTE Library Element
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.3.0.qualifier!
  ***
  *** Name: ASSEMBLE_WORD_FROM_BYTES
  *** Description: this Function combines the 2 BYTES to a WORD
  *** Version:
- ***     1.0: 2024-02-22/Franz Höpfinger - HR Agrartechnik - initial Implementation
+ ***     3.0.1: 2026-09-29/Martin Jobst -  - fix ST package declaration
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.1: 2024-07-28/Moritz Ortmeier - HR Agrartechnik - rename Function and change Input/Output Variables
+ ***     1.0: 2024-02-22/Franz Höpfinger - HR Agrartechnik - initial Implementation
  *************************************************************************/
 
 #pragma once
@@ -22,19 +24,14 @@
 #include "forte/funcbloc.h"
 #include "forte/datatypes/forte_byte.h"
 #include "forte/datatypes/forte_word.h"
-#include "forte/forte_st_util.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
 
 namespace forte::eclipse4diac::utils::assembling {
   class FORTE_ASSEMBLE_WORD_FROM_BYTES final : public CFunctionBlock {
       DECLARE_FIRMWARE_FB(FORTE_ASSEMBLE_WORD_FROM_BYTES)
 
     private:
-      static const TEventID scmEventREQID = 0;
       static const TEventID scmEventCNFID = 0;
+      static const TEventID scmEventREQID = 0;
 
       void executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) override;
 
@@ -43,7 +40,7 @@ namespace forte::eclipse4diac::utils::assembling {
       void setInitialValues() override;
 
     public:
-      FORTE_ASSEMBLE_WORD_FROM_BYTES(forte::StringId paInstanceNameId, CFBContainer &paContainer);
+      FORTE_ASSEMBLE_WORD_FROM_BYTES(StringId paInstanceNameId, CFBContainer &paContainer);
 
       CIEC_BYTE var_BYTE_00;
       CIEC_BYTE var_BYTE_01;
@@ -62,19 +59,7 @@ namespace forte::eclipse4diac::utils::assembling {
       CEventConnection *getEOConUnchecked(TPortId) override;
       CDataConnection **getDIConUnchecked(TPortId) override;
       CDataConnection *getDOConUnchecked(TPortId) override;
-
-      void evt_REQ(const CIEC_BYTE &paBYTE_00, const CIEC_BYTE &paBYTE_01, CAnyBitOutputParameter<CIEC_WORD> pa) {
-        COutputGuard guard_pa(pa);
-        var_BYTE_00 = paBYTE_00;
-        var_BYTE_01 = paBYTE_01;
-        executeEvent(scmEventREQID, nullptr);
-        *pa = var_;
-      }
-
-      void operator()(const CIEC_BYTE &paBYTE_00, const CIEC_BYTE &paBYTE_01, CAnyBitOutputParameter<CIEC_WORD> &pa) {
-        evt_REQ(paBYTE_00, paBYTE_01, pa);
-      }
   };
 
-  CIEC_WORD func_ASSEMBLE_WORD_FROM_BYTES(CIEC_BYTE st_lv_BYTE_00, CIEC_BYTE st_lv_BYTE_01);
+  CIEC_WORD func_ASSEMBLE_WORD_FROM_BYTES(const CIEC_BYTE &st_lv_BYTE_00, const CIEC_BYTE &st_lv_BYTE_01);
 } // namespace forte::eclipse4diac::utils::assembling

@@ -46,7 +46,7 @@ namespace forte {
        */
       typedef std::function<void(TEventEntry)> HandleEvent;
 
-      CFakeEventExecutionThread();
+      explicit CFakeEventExecutionThread(StringId paName);
       ~CFakeEventExecutionThread() override = default;
 
       /**

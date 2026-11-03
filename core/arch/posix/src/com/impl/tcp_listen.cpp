@@ -14,6 +14,7 @@
 #include "tcp_listen.h"
 #include "net.h"
 
+#include <cerrno>
 #include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
@@ -26,6 +27,12 @@ using namespace forte::literals;
 namespace forte::com::impl {
   namespace {
     [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<TCPListenChannel> entry("tcp_listen"_STRID);
+  }
+
+  TCPListenChannel::~TCPListenChannel() {
+    if (mConnectionSocket >= 0) {
+      ::close(mConnectionSocket);
+    }
   }
 
   int TCPListenChannel::socket(const std::string_view paConfigString) {
@@ -46,6 +53,14 @@ namespace forte::com::impl {
     return sock;
   }
 
+  ComResult TCPListenChannel::open(std::string_view paConfigString, std::span<ComChannelDescriptor> paDescriptors) {
+    if (mConnectionSocket >= 0) {
+      ::close(mConnectionSocket);
+      mConnectionSocket = -1;
+    }
+    return SocketChannel::open(paConfigString, paDescriptors);
+  }
+
   ComResult TCPListenChannel::send(ComBuffer paData) {
     const ssize_t bytesSent = ::send(mConnectionSocket, paData.data(), paData.size(), MSG_NOSIGNAL);
     if (bytesSent < 0 || static_cast<std::size_t>(bytesSent) != paData.size()) {
@@ -54,10 +69,34 @@ namespace forte::com::impl {
     return ComResult::Ok;
   }
 
+  ComResult TCPListenChannel::close() {
+    auto connectionResult = ComResult::Ok;
+    if (mConnectionSocket >= 0) {
+      if (::close(mConnectionSocket)) {
+        switch (errno) {
+          case EBADF: connectionResult = ComResult::NoSocket; break;
+          case EIO: connectionResult = ComResult::SendFailed; break;
+          default: connectionResult = ComResult::Unknown; break;
+        }
+      }
+      mConnectionSocket = -1;
+    }
+
+    if (const ComResult result = SocketChannel::close(); result != ComResult::Ok) {
+      return result;
+    }
+    return connectionResult;
+  }
+
   ssize_t TCPListenChannel::recv() {
     if (mConnectionSocket < 0) {
       mConnectionSocket = accept(getSocket(), nullptr, nullptr);
-      if (mConnectionSocket < 0 || net::setNonBlocking(mConnectionSocket)) {
+      if (mConnectionSocket < 0) {
+        return -1;
+      }
+      if (net::setNonBlocking(mConnectionSocket)) {
+        ::close(mConnectionSocket);
+        mConnectionSocket = -1;
         return -1;
       }
     }

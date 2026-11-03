@@ -8,55 +8,73 @@
  ***
  *** FORTE Library Element
  ***
- *** This file was generated using the 4DIAC FORTE Export Filter V1.0.x NG!
+ *** This file was generated using the 4DIAC FORTE Export Filter 3.3.0.qualifier!
  ***
  *** Name: ASSEMBLE_BYTE_FROM_BOOLS
  *** Description: this Function combines the 8 BOOLS to a BYTE
  *** Version:
- ***     1.0: 2024-02-22/Franz Höpfinger - HR Agrartechnik - initial Implementation
+ ***     3.0.1: 2026-09-29/Martin Jobst -  - fix ST package declaration
+ ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
  ***     1.1: 2024-07-28/Moritz Ortmeier - HR Agrartechnik - rename Function and change Input/Output Variables
+ ***     1.0: 2024-02-22/Franz Höpfinger - HR Agrartechnik - initial Implementation
  *************************************************************************/
 
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_BYTE_FROM_BOOLS_fct.h"
 
-using namespace forte::literals;
-
-#include "forte/datatypes/forte_byte.h"
 #include "forte/datatypes/forte_bool.h"
-#include "forte/iec61131_functions.h"
-#include "forte/datatypes/forte_array_common.h"
-#include "forte/datatypes/forte_array.h"
-#include "forte/datatypes/forte_array_fixed.h"
-#include "forte/datatypes/forte_array_variable.h"
+#include "forte/datatypes/forte_byte.h"
 #include "forte/eclipse4diac/utils/assembling/ASSEMBLE_BYTE_FROM_BOOLS_fct.h"
+
+using namespace std::literals;
+using namespace forte::literals;
 
 namespace forte::eclipse4diac::utils::assembling {
   namespace {
+    constexpr std::string_view TypeHash = ""sv;
+
+    const auto cEventInputNames = std::array{"REQ"_STRID};
+    const auto cEventOutputNames = std::array{"CNF"_STRID};
     const auto cDataInputNames = std::array{"BIT_00"_STRID, "BIT_01"_STRID, "BIT_02"_STRID, "BIT_03"_STRID,
                                             "BIT_04"_STRID, "BIT_05"_STRID, "BIT_06"_STRID, "BIT_07"_STRID};
     const auto cDataOutputNames = std::array{""_STRID};
-    const auto cEventInputNames = std::array{"REQ"_STRID};
-    const auto cEventInputTypeIds = std::array{"Event"_STRID};
-    const auto cEventOutputNames = std::array{"CNF"_STRID};
-    const auto cEventOutputTypeIds = std::array{"Event"_STRID};
     const SFBInterfaceSpec cFBInterfaceSpec = {
         .mEINames = cEventInputNames,
-        .mEITypeNames = cEventInputTypeIds,
+        .mEITypeNames = {},
         .mEONames = cEventOutputNames,
-        .mEOTypeNames = cEventOutputTypeIds,
+        .mEOTypeNames = {},
         .mDINames = cDataInputNames,
         .mDONames = cDataOutputNames,
         .mDIONames = {},
         .mSocketNames = {},
         .mPlugNames = {},
     };
+
+    CIEC_BYTE func_ASSEMBLE_BYTE_FROM_BOOLS__impl(const CIEC_BOOL &st_lv_BIT_00,
+                                                  const CIEC_BOOL &st_lv_BIT_01,
+                                                  const CIEC_BOOL &st_lv_BIT_02,
+                                                  const CIEC_BOOL &st_lv_BIT_03,
+                                                  const CIEC_BOOL &st_lv_BIT_04,
+                                                  const CIEC_BOOL &st_lv_BIT_05,
+                                                  const CIEC_BOOL &st_lv_BIT_06,
+                                                  const CIEC_BOOL &st_lv_BIT_07);
   } // namespace
 
-  DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_BOOLS, "eclipse4diac::utils::assembling::ASSEMBLE_BYTE_FROM_BOOLS"_STRID)
+  DEFINE_FIRMWARE_FB(FORTE_ASSEMBLE_BYTE_FROM_BOOLS,
+                     "eclipse4diac::utils::assembling::ASSEMBLE_BYTE_FROM_BOOLS"_STRID,
+                     TypeHash)
 
-  FORTE_ASSEMBLE_BYTE_FROM_BOOLS::FORTE_ASSEMBLE_BYTE_FROM_BOOLS(const forte::StringId paInstanceNameId,
+  FORTE_ASSEMBLE_BYTE_FROM_BOOLS::FORTE_ASSEMBLE_BYTE_FROM_BOOLS(const StringId paInstanceNameId,
                                                                  CFBContainer &paContainer) :
       CFunctionBlock(paContainer, cFBInterfaceSpec, paInstanceNameId),
+      var_BIT_00(0_BOOL),
+      var_BIT_01(0_BOOL),
+      var_BIT_02(0_BOOL),
+      var_BIT_03(0_BOOL),
+      var_BIT_04(0_BOOL),
+      var_BIT_05(0_BOOL),
+      var_BIT_06(0_BOOL),
+      var_BIT_07(0_BOOL),
+      var_(0_BYTE),
       conn_CNF(*this, 0),
       conn_BIT_00(nullptr),
       conn_BIT_01(nullptr),
@@ -70,6 +88,7 @@ namespace forte::eclipse4diac::utils::assembling {
   }
 
   void FORTE_ASSEMBLE_BYTE_FROM_BOOLS::setInitialValues() {
+    CFunctionBlock::setInitialValues();
     var_BIT_00 = 0_BOOL;
     var_BIT_01 = 0_BOOL;
     var_BIT_02 = 0_BOOL;
@@ -101,7 +120,7 @@ namespace forte::eclipse4diac::utils::assembling {
   void FORTE_ASSEMBLE_BYTE_FROM_BOOLS::writeOutputData(const TEventID paEIID) {
     switch (paEIID) {
       case scmEventCNFID: {
-        writeData(cFBInterfaceSpec.getNumDIs() + 0, var_, conn_);
+        writeData(8, var_, conn_);
         break;
       }
       default: break;
@@ -158,38 +177,52 @@ namespace forte::eclipse4diac::utils::assembling {
   }
 
   void FORTE_ASSEMBLE_BYTE_FROM_BOOLS::executeEvent(const TEventID, CEventChainExecutionThread *const paECET) {
-    var_ = func_ASSEMBLE_BYTE_FROM_BOOLS(var_BIT_00, var_BIT_01, var_BIT_02, var_BIT_03, var_BIT_04, var_BIT_05,
-                                         var_BIT_06, var_BIT_07);
+    var_ = func_ASSEMBLE_BYTE_FROM_BOOLS__impl(var_BIT_00, var_BIT_01, var_BIT_02, var_BIT_03, var_BIT_04, var_BIT_05,
+                                               var_BIT_06, var_BIT_07);
     sendOutputEvent(scmEventCNFID, paECET);
   }
 
-  CIEC_BYTE func_ASSEMBLE_BYTE_FROM_BOOLS(CIEC_BOOL st_lv_BIT_00,
-                                          CIEC_BOOL st_lv_BIT_01,
-                                          CIEC_BOOL st_lv_BIT_02,
-                                          CIEC_BOOL st_lv_BIT_03,
-                                          CIEC_BOOL st_lv_BIT_04,
-                                          CIEC_BOOL st_lv_BIT_05,
-                                          CIEC_BOOL st_lv_BIT_06,
-                                          CIEC_BOOL st_lv_BIT_07) {
-    CIEC_BYTE st_ret_val = 0_BYTE;
-
-#line 15 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(0) = st_lv_BIT_00;
-#line 16 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(1) = st_lv_BIT_01;
-#line 17 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(2) = st_lv_BIT_02;
-#line 18 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(3) = st_lv_BIT_03;
-#line 19 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(4) = st_lv_BIT_04;
-#line 20 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(5) = st_lv_BIT_05;
-#line 21 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(6) = st_lv_BIT_06;
-#line 22 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
-    st_ret_val.partial<CIEC_BOOL>(7) = st_lv_BIT_07;
-
-    return st_ret_val;
+  CIEC_BYTE func_ASSEMBLE_BYTE_FROM_BOOLS(const CIEC_BOOL &st_lv_BIT_00,
+                                          const CIEC_BOOL &st_lv_BIT_01,
+                                          const CIEC_BOOL &st_lv_BIT_02,
+                                          const CIEC_BOOL &st_lv_BIT_03,
+                                          const CIEC_BOOL &st_lv_BIT_04,
+                                          const CIEC_BOOL &st_lv_BIT_05,
+                                          const CIEC_BOOL &st_lv_BIT_06,
+                                          const CIEC_BOOL &st_lv_BIT_07) {
+    return func_ASSEMBLE_BYTE_FROM_BOOLS__impl(st_lv_BIT_00, st_lv_BIT_01, st_lv_BIT_02, st_lv_BIT_03, st_lv_BIT_04,
+                                               st_lv_BIT_05, st_lv_BIT_06, st_lv_BIT_07);
   }
+
+  namespace {
+    CIEC_BYTE func_ASSEMBLE_BYTE_FROM_BOOLS__impl(const CIEC_BOOL &st_lv_BIT_00,
+                                                  const CIEC_BOOL &st_lv_BIT_01,
+                                                  const CIEC_BOOL &st_lv_BIT_02,
+                                                  const CIEC_BOOL &st_lv_BIT_03,
+                                                  const CIEC_BOOL &st_lv_BIT_04,
+                                                  const CIEC_BOOL &st_lv_BIT_05,
+                                                  const CIEC_BOOL &st_lv_BIT_06,
+                                                  const CIEC_BOOL &st_lv_BIT_07) {
+      CIEC_BYTE st_ret_val = 0_BYTE;
+
+#line 17 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(0) = st_lv_BIT_00;
+#line 18 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(1) = st_lv_BIT_01;
+#line 19 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(2) = st_lv_BIT_02;
+#line 20 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(3) = st_lv_BIT_03;
+#line 21 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(4) = st_lv_BIT_04;
+#line 22 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(5) = st_lv_BIT_05;
+#line 23 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(6) = st_lv_BIT_06;
+#line 24 "ASSEMBLE_BYTE_FROM_BOOLS.fct"
+      st_ret_val.partial<CIEC_BOOL>(7) = st_lv_BIT_07;
+
+      return st_ret_val;
+    }
+  } // namespace
 } // namespace forte::eclipse4diac::utils::assembling

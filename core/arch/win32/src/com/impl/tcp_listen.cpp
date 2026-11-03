@@ -24,6 +24,12 @@ namespace forte::com::impl {
     [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<TCPListenChannel> entry("tcp_listen"_STRID);
   }
 
+  TCPListenChannel::~TCPListenChannel() {
+    if (mConnectionSocket != INVALID_SOCKET) {
+      ::closesocket(mConnectionSocket);
+    }
+  }
+
   SOCKET TCPListenChannel::socket(const std::string_view paConfigString) {
     ADDRINFOA hints{};
     hints.ai_family = AF_UNSPEC;
@@ -42,6 +48,15 @@ namespace forte::com::impl {
     return sock;
   }
 
+  ComResult TCPListenChannel::open(const std::string_view paConfigString,
+                                   const std::span<ComChannelDescriptor> paDescriptors) {
+    if (mConnectionSocket != INVALID_SOCKET) {
+      ::closesocket(mConnectionSocket);
+      mConnectionSocket = INVALID_SOCKET;
+    }
+    return SocketChannel::open(paConfigString, paDescriptors);
+  }
+
   ComResult TCPListenChannel::send(ComBuffer paData) {
     DWORD bytesSent = 0;
     WSABUF buffer{.len = static_cast<ULONG>(paData.size()), .buf = reinterpret_cast<CHAR *>(paData.data())};
@@ -52,10 +67,34 @@ namespace forte::com::impl {
     return ComResult::Ok;
   }
 
+  ComResult TCPListenChannel::close() {
+    auto connectionResult = ComResult::Ok;
+    if (mConnectionSocket != INVALID_SOCKET) {
+      if (::closesocket(mConnectionSocket)) {
+        switch (WSAGetLastError()) {
+          case WSAENOTSOCK: connectionResult = ComResult::NoSocket; break;
+          case WSAENETDOWN: connectionResult = ComResult::SendFailed; break;
+          default: connectionResult = ComResult::Unknown; break;
+        }
+      }
+      mConnectionSocket = INVALID_SOCKET;
+    }
+
+    if (const ComResult result = SocketChannel::close(); result != ComResult::Ok) {
+      return result;
+    }
+    return connectionResult;
+  }
+
   std::size_t TCPListenChannel::recv() {
     if (mConnectionSocket == INVALID_SOCKET) {
       mConnectionSocket = WSAAccept(getSocket(), nullptr, nullptr, nullptr, 0);
-      if (mConnectionSocket == INVALID_SOCKET || net::setNonBlocking(mConnectionSocket)) {
+      if (mConnectionSocket == INVALID_SOCKET) {
+        return static_cast<std::size_t>(-1);
+      }
+      if (net::setNonBlocking(mConnectionSocket)) {
+        ::closesocket(mConnectionSocket);
+        mConnectionSocket = INVALID_SOCKET;
         return static_cast<std::size_t>(-1);
       }
     }

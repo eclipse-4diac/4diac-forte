@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include "forte/datatypes/forte_bool.h"
 #include "../slave.h"
 #include "../handle.h"
 

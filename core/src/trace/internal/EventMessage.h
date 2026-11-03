@@ -217,26 +217,6 @@ namespace forte::trace {
   };
 
   /**
-   * @brief Payload representation of the data of a Function block. It contains the data ID of the Function Block and
-   * the string representation of its value
-   *
-   */
-  class FBDataPayload : public AbstractPayload {
-    public:
-      FBDataPayload(std::string paTypeName, std::string paInstanceName, uint64_t paDataId, std::string paValue);
-
-    private:
-      std::unique_ptr<AbstractPayload> clone() const override;
-
-      std::string specificPayloadString() const override;
-
-      bool specificPayloadEqual(const AbstractPayload &paOther) const override;
-
-      uint64_t mDataId;
-      std::string mValue;
-  };
-
-  /**
    * @brief Payload representation of the instance of Function block. It contains the values of the inputs, outputs,
    * internal variables and internal Funtion Blocks
    */

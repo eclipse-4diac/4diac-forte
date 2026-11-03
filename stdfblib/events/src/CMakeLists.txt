@@ -47,6 +47,7 @@ target_sources(forte-events PRIVATE
         E_TRAIN_fbt.cpp
         E_TRIG_fbt.cpp
         GEN_E_DEMUX_fbt.cpp
+        GEN_E_D_FF_ANY_fbt.cpp
         GEN_E_MUX_fbt.cpp
         GEN_E_MERGE_fbt.cpp
         GEN_E_REND_fbt.cpp

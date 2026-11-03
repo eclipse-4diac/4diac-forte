@@ -107,6 +107,16 @@ namespace forte {
       CIEC_ANY_VARIANT(const CIEC_ANY_VARIANT &paVal) : CIEC_ANY(), variant(paVal) {
       }
 
+      CIEC_ANY_VARIANT(const CIEC_ARRAY &paVal) :
+          variant(std::in_place_type<CIEC_ANY_UNIQUE_PTR<CIEC_ARRAY>>,
+                  static_cast<CIEC_ARRAY *>(paVal.clone(nullptr))) {
+      }
+
+      CIEC_ANY_VARIANT(const CIEC_STRUCT &paVal) :
+          variant(std::in_place_type<CIEC_ANY_UNIQUE_PTR<CIEC_STRUCT>>,
+                  static_cast<CIEC_STRUCT *>(paVal.clone(nullptr))) {
+      }
+
       CIEC_ANY_VARIANT(const CIEC_ANY &paVal) {
         setValue(paVal.unwrap());
       }

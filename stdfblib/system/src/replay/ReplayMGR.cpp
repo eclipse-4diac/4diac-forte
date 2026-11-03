@@ -90,7 +90,7 @@ namespace forte::iec61499::system {
     auto replayAlgorithmEvents = trace::reader::utils::filterEventsForReplayDevice(events.value(), replayMgr->mDevice);
 
     for (auto &[resourceName, messages] : events.value()) {
-      DEVLOG_INFO("Read %d events (%d sendOutputEvents) for resource %s from traces in %s\n",
+      DEVLOG_INFO("Read %d events (%zu sendOutputEvents) for resource %s from traces in %s\n",
                   static_cast<int>(messages.size()), replayAlgorithmEvents[resourceName].size(), resourceName.c_str(),
                   path.c_str());
     }

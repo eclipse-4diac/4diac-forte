@@ -81,27 +81,6 @@ namespace forte::trace {
 #endif // FORTE_TRACE_CTF_REPLAY_DEBUGGING
   }
 
-  void CInternalTracer::traceInputData(const char *const paTypeName,
-                                       const char *const paInstanceName,
-                                       const uint64_t paDataId,
-                                       const char *const paValue) {
-
-    mEvents.emplace_back("inputData", std::make_unique<FBDataPayload>(paTypeName, paInstanceName, paDataId, paValue),
-                         arch::getNanoSecondsMonotonic());
-  }
-
-  void CInternalTracer::traceOutputData(const char *const paTypeName,
-                                        const char *const paInstanceName,
-                                        const uint64_t paDataId,
-                                        const char *const paValue) {
-    mEvents.emplace_back("outputData", std::make_unique<FBDataPayload>(paTypeName, paInstanceName, paDataId, paValue),
-                         arch::getNanoSecondsMonotonic());
-  }
-
-  bool CInternalTracer::isEnabled() {
-    return true;
-  }
-
   void CInternalTracer::fillStringsVector(const char *const *const paIn,
                                           const uint32_t paLen,
                                           std::vector<std::string> &paOut) {
