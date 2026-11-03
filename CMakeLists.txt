@@ -75,12 +75,8 @@ add_subdirectory(modules)
 if (FORTE_TESTS OR FORTE_SYSTEM_TESTS)
     enable_testing()
 endif ()
-if (FORTE_MODULE_IEC61131)
-    add_subdirectory(systemtests)
-    add_subdirectory(tests)
-elseif (FORTE_TESTS OR FORTE_SYSTEM_TESTS)
-    message(STATUS "Tests require the IEC 61131-3 module and will not be built.")
-endif ()
+add_subdirectory(systemtests)
+add_subdirectory(tests)
 
 #######################################################################################
 # Install support

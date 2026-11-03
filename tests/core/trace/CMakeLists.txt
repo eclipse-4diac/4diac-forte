@@ -20,7 +20,9 @@ if(FORTE_TRACE_CTF_TEST)
   forte_test_add_sourcefile_cpp(common.cpp)
 
   if(FORTE_TRACE_CTF_REPLAY_DEBUGGING)
-    forte_test_add_sourcefile_cpp(replayAlgorithmTest.cpp)
+    if(FORTE_MODULE_IEC61131)
+      forte_test_add_sourcefile_cpp(replayAlgorithmTest.cpp)
+    endif()
     SET(METADATA_FILE ${CMAKE_CURRENT_SOURCE_DIR}/../../../core/src/trace/replay_debugging/generated/metadata)
   else()
     # currently the replay debugging traces a little bit differently from the classic one so the test does not apply
