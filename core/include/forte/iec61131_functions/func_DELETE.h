@@ -62,7 +62,7 @@ namespace forte {
       return paIn;
     }
 
-    if ((P + L) > paIn.length()) {
+    if ((P + L - 1) > paIn.length()) {
       DEVLOG_ERROR("DELETE called with delete length exceeding the length of string!\n");
       return paIn;
     }

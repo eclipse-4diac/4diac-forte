@@ -435,6 +435,19 @@ namespace forte::test {
     BOOST_TEST(sResult == "ABC"_STRING);
   }
 
+  // IEC 61131-3 ed.3 table 34: range P .. P+L-1 may end at LEN(IN).
+  BOOST_AUTO_TEST_CASE(delete_range_ending_at_last_character) {
+    CIEC_STRING sIn1("hello"_STRING);
+    CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(4), CIEC_INT(2)));
+    BOOST_TEST(sResult == "h"_STRING);
+  }
+
+  BOOST_AUTO_TEST_CASE(delete_entire_string_from_first_character) {
+    CIEC_STRING sIn1("hello"_STRING);
+    CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(5), CIEC_INT(1)));
+    BOOST_TEST(sResult == ""_STRING);
+  }
+
   BOOST_AUTO_TEST_CASE(delete_function) {
     CIEC_STRING sIn1("Lorem ipsum dolor sit"_STRING);
     CIEC_STRING sResult(func_DELETE(sIn1, CIEC_INT(6), CIEC_INT(12)));
