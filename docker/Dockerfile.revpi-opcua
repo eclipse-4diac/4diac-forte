@@ -1,0 +1,111 @@
+#*******************************************************************************
+# Copyright (c) 2026 UniversalAutomation.org AISBL
+#
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v2.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v20.html
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#   Israilov Sardor
+#*******************************************************************************
+# FORTE runtime with Revolution Pi IO (IORevPiCore / IORevPiDIO / IORevPiAIO) and
+# OPC UA (FORTE_COM_OPC_UA), to publish IO values to an OPC UA server via PUBLISH_1 FBs
+# (opc_ua[WRITE;...] IDs). See docker/build-revpi-opcua.sh and
+# https://eclipse.dev/4diac/doc/communication/opcua.html.
+#
+# open62541 is built from a *second* build context named "open62541" (a local checkout, see
+# build-revpi-opcua.sh) rather than cloned here, matching the pinned version this FORTE checkout
+# requires (com/opc_ua/CMakeLists.txt: find_package(open62541 1.5.4 REQUIRED), same version
+# .github/workflows/cmake-multi-platform.yml builds for CI). The open62541 checkout must already
+# be at the v1.5.4 tag with the deps/ua-nodeset submodule initialized (NS0 generation needs it);
+# mdnsd/mqtt-c/nodesetLoader submodules are not needed (multicast discovery, PubSub-over-MQTT and
+# the external nodeset loader are all off by default).
+#
+# FORTE_COM_OPC_UA_Events / FORTE_COM_OPC_UA_AC (alarms & conditions) are intentionally left OFF:
+# they need open62541 built with UA_NAMESPACE_ZERO=FULL and UA_ENABLE_SUBSCRIPTIONS_ALARMS_CONDITIONS
+# (see CI), which is a much larger/slower build and is not needed to publish plain variables.
+FROM debian:trixie-slim AS open62541-build
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+        ca-certificates \
+        cmake \
+        gcc \
+        libc6-dev \
+        ninja-build \
+        python3 \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=open62541 . /open62541-src
+
+RUN cmake -S /open62541-src -B /open62541-build -G Ninja \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/opt/open62541 \
+        -DUA_ENABLE_SUBSCRIPTIONS=ON \
+    && cmake --build /open62541-build --parallel \
+    && cmake --install /open62541-build
+
+FROM debian:trixie-slim AS build
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+        ca-certificates \
+        cmake \
+        g++ \
+        ninja-build \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY --from=open62541-build /opt/open62541 /opt/open62541
+
+WORKDIR /src
+COPY . .
+
+# The build directory is a BuildKit cache mount (one per target architecture), so a rebuild after a
+# small source change only recompiles the changed files (an arm64 build under QEMU otherwise takes
+# about an hour). The install step runs in the same RUN, as the mount is not part of the image.
+ARG TARGETARCH
+RUN --mount=type=cache,id=forte-revpi-opcua-build-${TARGETARCH},target=/build \
+    cmake -S . -B /build -G Ninja \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/opt/forte \
+        -DCMAKE_PREFIX_PATH=/opt/open62541 \
+        -DFORTE_LOGLEVEL=LOGINFO \
+        -DFORTE_ARCHITECTURE=Posix \
+        -DFORTE_COM_ETH=ON \
+        -DFORTE_COM_FBDK=ON \
+        -DFORTE_COM_LOCAL=ON \
+        -DFORTE_COM_OPC_UA=ON \
+        -DFORTE_IO=ON \
+        -DFORTE_MODULE_CONVERT=ON \
+        -DFORTE_MODULE_IEC61131=ON \
+        -DFORTE_MODULE_UTILS=ON \
+        -DFORTE_MODULE_REVOLUTIONPI=ON \
+        -DFORTE_TESTS=OFF \
+    && cmake --build /build --parallel \
+    && cmake --install /build
+
+FROM debian:trixie-slim AS runtime
+
+RUN apt-get update \
+    && apt-get install --yes --no-install-recommends \
+        ca-certificates \
+        libstdc++6 \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --gid 10001 forte \
+    && useradd --uid 10001 --gid forte --no-create-home --shell /usr/sbin/nologin forte
+
+# open62541 is built static (BUILD_SHARED_LIBS=OFF, open62541's own default) and linked into the
+# forte binary at build time, so no open62541 runtime library needs copying here.
+COPY --from=build /opt/forte/bin/forte /usr/local/bin/forte
+
+USER forte
+WORKDIR /var/lib/forte
+
+EXPOSE 61499/tcp
+EXPOSE 4840/tcp
+
+ENTRYPOINT ["/usr/local/bin/forte"]
+CMD ["--listen", "0.0.0.0:61499"]
