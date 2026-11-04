@@ -10,11 +10,23 @@
 
 #pragma once
 
+#include <span>
+
 #include "forte/datatypes/forte_ulint.h"
 #include "forte/iec61131_cast_helper.h"
 #include "forte/util/devlog.h"
 
 namespace forte {
+  template<typename T, std::size_t Extent>
+  T func_MUX(const CIEC_ANY_INT &paK, std::span<const T, Extent> paInputs) {
+    const auto index = paK.getUnsignedValue();
+    if (index < paInputs.size()) {
+      return paInputs[index];
+    }
+    DEVLOG_ERROR("MUX selector is out of range.\n");
+    return T();
+  }
+
   template<typename T, typename U>
   auto func_MUX(const CIEC_ANY_INT &paK, const T &paIN0, const U &paIN1) -> mpl::get_castable_type_t<T, U> {
     using ReturnType = mpl::get_castable_type_t<T, U>;

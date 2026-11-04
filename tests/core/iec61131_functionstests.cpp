@@ -118,6 +118,8 @@
 #include "forte/datatypes/forte_lword.h"
 #include "forte/typelib.h"
 
+#include <array>
+
 using namespace std::string_literals;
 
 using namespace forte::literals;
@@ -2697,6 +2699,44 @@ namespace forte::test {
                                                           10_INT, 20_INT, 30_INT)) == 0);
     BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(
                    CIEC_ULINT(std::numeric_limits<CIEC_ULINT::TValueType>::max()), 10_INT, 20_INT, 30_INT)) == 0);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_runtime_span) {
+    const std::array inputs{10_INT, 20_INT, 30_INT};
+    const std::span<const CIEC_INT> values(inputs);
+    static_assert(std::is_same_v<decltype(func_MUX(0_INT, values)), CIEC_INT>);
+    BOOST_TEST(func_EQ(func_MUX(0_INT, values), 10_INT));
+    BOOST_TEST(func_EQ(func_MUX(1_UINT, values), 20_INT));
+    BOOST_TEST(func_EQ(func_MUX(2_ULINT, values), 30_INT));
+    BOOST_TEST(func_EQ(func_MUX(2_INT, std::span(inputs)), 30_INT));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_runtime_span_invalid_selector) {
+    const std::array inputs{10_INT, 20_INT, 30_INT};
+    const std::span<const CIEC_INT> values(inputs);
+    BOOST_TEST(func_EQ(func_MUX(0_INT, std::span<const CIEC_INT>()), 0_INT));
+    BOOST_TEST(func_EQ(func_MUX(3_UINT, values), 0_INT));
+    BOOST_TEST(func_EQ(func_MUX(-1_INT, values), 0_INT));
+    BOOST_TEST(func_EQ(func_MUX(CIEC_LINT(std::numeric_limits<CIEC_LINT::TValueType>::min()), values), 0_INT));
+    BOOST_TEST(func_EQ(func_MUX(CIEC_ULINT(std::numeric_limits<CIEC_ULINT::TValueType>::max()), values), 0_INT));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_runtime_span_variant_types) {
+    const std::array<CIEC_ANY_VARIANT, 3> inputs{10_SINT, 20_DINT, "last"_STRING};
+    const std::span<const CIEC_ANY_VARIANT> values(inputs);
+    auto result = func_MUX(0_INT, values);
+    static_assert(std::is_same_v<decltype(result), CIEC_ANY_VARIANT>);
+    BOOST_REQUIRE_EQUAL(result.unwrap().getDataTypeID(), CIEC_ANY::e_SINT);
+    BOOST_TEST(func_EQ(std::get<CIEC_SINT>(result), 10_SINT));
+    result = func_MUX(1_INT, values);
+    BOOST_REQUIRE_EQUAL(result.unwrap().getDataTypeID(), CIEC_ANY::e_DINT);
+    BOOST_TEST(func_EQ(std::get<CIEC_DINT>(result), 20_DINT));
+    result = func_MUX(2_INT, values);
+    BOOST_REQUIRE_EQUAL(result.unwrap().getDataTypeID(), CIEC_ANY::e_STRING);
+    BOOST_TEST(func_EQ(std::get<CIEC_STRING>(result), "last"_STRING));
+    result = func_MUX(3_INT, values);
+    BOOST_REQUIRE_EQUAL(result.unwrap().getDataTypeID(), CIEC_ANY_VARIANT().unwrap().getDataTypeID());
+    BOOST_TEST(func_EQ(std::get<CIEC_SINT>(result), 0_SINT));
   }
 
   BOOST_AUTO_TEST_CASE(func_min_time) {

@@ -22,7 +22,7 @@
 #include "forte/iec61131/selection/GEN_F_MUX_fbt.h"
 
 #include "forte/util/string_utils.h"
-#include "forte/iec61131_functions.h"
+#include "forte/iec61131_functions/func_MUX.h"
 
 using namespace std::literals;
 using namespace forte::literals;
@@ -42,23 +42,14 @@ namespace forte::iec61131::selection {
       var_OUT(CIEC_ANY_VARIANT()),
       conn_CNF(*this, 0),
       conn_K(nullptr),
-      conn_OUT(*this, 0, var_OUT) {};
-
+      conn_OUT(*this, 0, var_OUT){};
 
   void GEN_F_MUX::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
     switch (paEIID) {
       case scmEventREQID:
         var_OUT = std::visit(
-            [this](auto &&paK) -> CIEC_ANY_VARIANT {
-              using T = std::decay_t<decltype(paK)>;
-              typename T::TValueType valueK = static_cast<typename T::TValueType>(paK);
-
-              if (valueK >= 0 && valueK < getFBInterfaceSpec().getNumDIs() - 1) {
-                return mGenDIs[valueK];
-              }
-              DEVLOG_ERROR("Value of input K is out of range. Expected between 0 and %zu\n",
-                           getFBInterfaceSpec().getNumDIs() - 2);
-              return CIEC_ANY_VARIANT();
+            [this](const auto &paK) {
+              return func_MUX(paK, std::span<const CIEC_ANY_VARIANT>(mGenDIs.get(), getGenDINums()));
             },
             static_cast<CIEC_ANY_INT_VARIANT::variant &>(var_K));
         sendOutputEvent(scmEventCNFID, paECET);
