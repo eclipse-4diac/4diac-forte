@@ -46,14 +46,68 @@ namespace forte::iec61131::selection {
 
   void GEN_F_MUX::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
     switch (paEIID) {
-      case scmEventREQID:
-        var_OUT = std::visit(
-            [this](const auto &paK) {
-              return func_MUX(paK, std::span<const CIEC_ANY_VARIANT>(mGenDIs.get(), getGenDINums()));
-            },
-            static_cast<CIEC_ANY_INT_VARIANT::variant &>(var_K));
+      case scmEventREQID: {
+        const auto index = var_K.unwrap().getUnsignedValue();
+        const auto tryCandidate = [this, index]<typename Target>(const Target &paCandidate) {
+          for (std::size_t i = 0; i < getGenDINums(); ++i) {
+            const bool compatible = std::visit(
+                [&]<typename Source>(const Source &paInput) {
+                  if constexpr (mux_detail::input<Target> && mux_detail::input<Source>) {
+                    return mpl::is_implicitly_castable_v<Source, Target>;
+                  } else if constexpr (std::is_same_v<Target, Source>) {
+                    return paCandidate && paInput && mux_detail::same_type(*paCandidate, *paInput);
+                  } else {
+                    return false;
+                  }
+                },
+                static_cast<const CIEC_ANY_VARIANT::variant &>(mGenDIs[i]));
+            if (!compatible) {
+              return false;
+            }
+          }
+          Target result(paCandidate);
+          if constexpr (mux_detail::input<Target>) {
+            result.reset();
+          } else {
+            result->reset();
+          }
+          if (index < getGenDINums()) {
+            for (std::size_t i = 0; i < getGenDINums(); ++i) {
+              std::visit(
+                  [&]<typename Source>(const Source &paInput) {
+                    if constexpr (mux_detail::input<Target> && mux_detail::input<Source>) {
+                      if constexpr (mpl::is_implicitly_castable_v<Source, Target>) {
+                        result = func_MUX(i == index ? 1_UINT : 0_UINT, result, Target(paInput));
+                      }
+                    } else if constexpr (std::is_same_v<Target, Source>) {
+                      if (i == index) {
+                        result = paInput;
+                      }
+                    }
+                  },
+                  static_cast<const CIEC_ANY_VARIANT::variant &>(mGenDIs[i]));
+            }
+          } else {
+            DEVLOG_ERROR("MUX selector is out of range.\n");
+          }
+          var_OUT = result;
+          return true;
+        };
+        bool resolved = false;
+        for (std::size_t i = 0; i < getGenDINums() && !resolved; ++i) {
+          resolved = std::visit(tryCandidate, static_cast<const CIEC_ANY_VARIANT::variant &>(mGenDIs[i]));
+        }
+        if (!resolved) {
+          resolved = std::apply([&](const auto &...paCandidates) { return (tryCandidate(paCandidates) || ...); },
+                                mux_detail::numeric_candidates{});
+        }
+        if (!resolved) {
+          DEVLOG_ERROR("MUX inputs have incompatible types.\n");
+          var_OUT = CIEC_ANY_VARIANT{};
+        }
         sendOutputEvent(scmEventCNFID, paECET);
         break;
+      }
     }
   }
 
@@ -99,7 +153,9 @@ namespace forte::iec61131::selection {
     // now the number of needed eventInputs and dataOutputs are available in the integer array
     // create the dataInputs
     mDINames.emplace_back("K"_STRID);
-    generateGenericInterfacePointNameArray("IN", mDINames, numDIs);
+    for (unsigned int i = 0; i < numDIs; ++i) {
+      mDINames.emplace_back(StringId::insert("IN" + std::to_string(i)));
+    }
 
     paInterfaceSpec.mEINames = cEventInputNames;
     paInterfaceSpec.mEONames = cEventOutputNames;

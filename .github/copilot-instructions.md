@@ -18,6 +18,13 @@ It follows the **Eclipse Foundation development process** and is licensed under 
 - Use descriptive log messages or provide user feedback where appropriate.
 - Do not fail silently in case of errors.
 
+### IEC 61131-3 Datatypes
+
+- Use the IEC types from `core/include/forte/datatypes/` for IEC selectors, input values, results, and corresponding test values; do not substitute native C/C++ scalar types or cast test results to native values.
+- Determine implicit conversions and common result types using FORTE's IEC casting rules, not the native C++ type system.
+- MUX is a multiplexer: an `ANY_INT` selector `K` selects one of the `ANY` inputs `IN0` through `IN(N-1)`. All inputs must be implicitly castable to one common IEC result type, independent of `K`; reject incompatible inputs.
+- Test both the selected IEC value and its IEC datatype. An `ANY` variant must not allow incompatible inputs or make the output datatype depend on the selected input.
+
 ## PR Review Guidelines
 
 When reviewing pull requests, verify the following:

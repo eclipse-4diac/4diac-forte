@@ -2648,95 +2648,109 @@ namespace forte::test {
   }
 
   BOOST_AUTO_TEST_CASE(func_mux_two_inputs) {
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(0_INT, 10_INT, 20_INT)) == 10);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(1_INT, 10_INT, 20_INT)) == 20);
-    BOOST_TEST(func_MUX(0_UINT, false_BOOL, true_BOOL) == false_BOOL);
-    BOOST_TEST(func_MUX(1_UINT, false_BOOL, true_BOOL) == true_BOOL);
+    BOOST_TEST(func_MUX(0_INT, 10_INT, 20_INT).equals(10_INT));
+    BOOST_TEST(func_MUX(1_INT, 10_INT, 20_INT).equals(20_INT));
+    BOOST_TEST(func_MUX(0_UINT, false_BOOL, true_BOOL).equals(false_BOOL));
+    BOOST_TEST(func_MUX(1_UINT, false_BOOL, true_BOOL).equals(true_BOOL));
   }
 
   BOOST_AUTO_TEST_CASE(func_mux_variadic) {
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(0_INT, 10_INT, 20_INT, 30_INT)) == 10);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(1_INT, 10_INT, 20_INT, 30_INT)) == 20);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(2_INT, 10_INT, 20_INT, 30_INT)) == 30);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(3_INT, 10_INT, 20_INT, 30_INT, 40_INT)) == 40);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX<CIEC_INT>(2_INT, 10_INT, 20_INT, 30_INT)) == 30);
+    BOOST_TEST(func_MUX(0_INT, 10_INT, 20_INT, 30_INT).equals(10_INT));
+    BOOST_TEST(func_MUX(1_INT, 10_INT, 20_INT, 30_INT).equals(20_INT));
+    BOOST_TEST(func_MUX(2_INT, 10_INT, 20_INT, 30_INT).equals(30_INT));
+    BOOST_TEST(func_MUX(3_INT, 10_INT, 20_INT, 30_INT, 40_INT).equals(40_INT));
+    BOOST_TEST(func_MUX<CIEC_INT>(2_INT, 10_INT, 20_INT, 30_INT).equals(30_INT));
   }
 
   BOOST_AUTO_TEST_CASE(func_mux_selector_types) {
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(1_SINT, 10_INT, 20_INT, 30_INT)) == 20);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(1_INT, 10_INT, 20_INT, 30_INT)) == 20);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(1_DINT, 10_INT, 20_INT, 30_INT)) == 20);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(1_LINT, 10_INT, 20_INT, 30_INT)) == 20);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(1_USINT, 10_INT, 20_INT, 30_INT)) == 20);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(1_UINT, 10_INT, 20_INT, 30_INT)) == 20);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(1_UDINT, 10_INT, 20_INT, 30_INT)) == 20);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(1_ULINT, 10_INT, 20_INT, 30_INT)) == 20);
+    BOOST_TEST(func_MUX(1_SINT, 10_INT, 20_INT, 30_INT).equals(20_INT));
+    BOOST_TEST(func_MUX(1_INT, 10_INT, 20_INT, 30_INT).equals(20_INT));
+    BOOST_TEST(func_MUX(1_DINT, 10_INT, 20_INT, 30_INT).equals(20_INT));
+    BOOST_TEST(func_MUX(1_LINT, 10_INT, 20_INT, 30_INT).equals(20_INT));
+    BOOST_TEST(func_MUX(1_USINT, 10_INT, 20_INT, 30_INT).equals(20_INT));
+    BOOST_TEST(func_MUX(1_UINT, 10_INT, 20_INT, 30_INT).equals(20_INT));
+    BOOST_TEST(func_MUX(1_UDINT, 10_INT, 20_INT, 30_INT).equals(20_INT));
+    BOOST_TEST(func_MUX(1_ULINT, 10_INT, 20_INT, 30_INT).equals(20_INT));
   }
 
   BOOST_AUTO_TEST_CASE(func_mux_input_types) {
     static_assert(std::is_same_v<decltype(func_MUX(0_INT, 10_SINT, 200_DINT)), CIEC_DINT>);
     static_assert(std::is_same_v<decltype(func_MUX(0_INT, 10_SINT, 200_INT, 300000_DINT)), CIEC_DINT>);
-    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(func_MUX(0_INT, 10_SINT, 200_DINT)) == 10);
-    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(func_MUX(1_INT, 10_SINT, 200_DINT)) == 200);
-    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(func_MUX(0_INT, 10_SINT, 200_INT, 300000_DINT)) == 10);
-    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(func_MUX(1_INT, 10_SINT, 200_INT, 300000_DINT)) == 200);
-    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(func_MUX(2_INT, 10_SINT, 200_INT, 300000_DINT)) == 300000);
-    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(func_MUX<CIEC_DINT>(1_INT, 0_DINT, -1_SINT, 1_UINT)) == -1);
-    BOOST_TEST(static_cast<CIEC_DINT::TValueType>(func_MUX<CIEC_DINT>(2_INT, 0_DINT, -1_SINT, 1_UINT)) == 1);
-    BOOST_TEST(static_cast<CIEC_REAL::TValueType>(func_MUX(1_INT, 1.0_REAL, 2.0_REAL, 3.0_REAL)) == 2.0f);
-    BOOST_TEST(func_MUX(2_INT, false_BOOL, false_BOOL, true_BOOL) == true_BOOL);
-    BOOST_TEST(func_MUX(1_INT, "first"_STRING, "second"_STRING) == "second"_STRING);
-    BOOST_TEST(func_MUX(2_INT, "first"_STRING, "second"_STRING, "third"_STRING) == "third"_STRING);
-    BOOST_TEST(func_MUX(2_INT, 10_TIME, 20_TIME, 30_TIME) == 30_TIME);
+    BOOST_TEST(func_MUX(0_INT, 10_SINT, 200_DINT).equals(10_DINT));
+    BOOST_TEST(func_MUX(1_INT, 10_SINT, 200_DINT).equals(200_DINT));
+    BOOST_TEST(func_MUX(0_INT, 10_SINT, 200_INT, 300000_DINT).equals(10_DINT));
+    BOOST_TEST(func_MUX(1_INT, 10_SINT, 200_INT, 300000_DINT).equals(200_DINT));
+    BOOST_TEST(func_MUX(2_INT, 10_SINT, 200_INT, 300000_DINT).equals(300000_DINT));
+    BOOST_TEST(func_MUX<CIEC_DINT>(1_INT, 0_DINT, -1_SINT, 1_UINT).equals(-1_DINT));
+    BOOST_TEST(func_MUX<CIEC_DINT>(2_INT, 0_DINT, -1_SINT, 1_UINT).equals(1_DINT));
+    BOOST_TEST(func_MUX(1_INT, 1.0_REAL, 2.0_REAL, 3.0_REAL).equals(2.0_REAL));
+    BOOST_TEST(func_MUX(2_INT, false_BOOL, false_BOOL, true_BOOL).equals(true_BOOL));
+    BOOST_TEST(func_MUX(1_INT, "first"_STRING, "second"_STRING).equals("second"_STRING));
+    BOOST_TEST(func_MUX(2_INT, "first"_STRING, "second"_STRING, "third"_STRING).equals("third"_STRING));
+    BOOST_TEST(func_MUX(2_INT, 10_TIME, 20_TIME, 30_TIME).equals(30_TIME));
+    BOOST_TEST(func_MUX(0_INT, -1_SINT, 200_UINT, 300000_DINT).equals(-1_DINT));
+    BOOST_TEST(func_MUX(1_INT, -1_SINT, 200_UINT, 300000_DINT).equals(200_DINT));
+    BOOST_TEST(func_MUX(2_INT, 300000_DINT, 200_UINT, -1_SINT).equals(-1_DINT));
+    BOOST_TEST(func_MUX(0_INT, -1_SINT, 200_UINT).equals(-1_DINT));
+    BOOST_TEST(func_MUX(1_INT, 200_UINT, -1_SINT).equals(-1_DINT));
+    BOOST_TEST(func_MUX(0_INT, 1_DINT, 2.0_REAL).equals(1.0_LREAL));
   }
 
   BOOST_AUTO_TEST_CASE(func_mux_invalid_selector) {
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(-1_INT, 10_INT, 20_INT)) == 0);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(2_UINT, 10_INT, 20_INT)) == 0);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(-1_LINT, 10_INT, 20_INT, 30_INT)) == 0);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(3_UINT, 10_INT, 20_INT, 30_INT)) == 0);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(CIEC_LINT(std::numeric_limits<CIEC_LINT::TValueType>::min()),
-                                                          10_INT, 20_INT, 30_INT)) == 0);
-    BOOST_TEST(static_cast<CIEC_INT::TValueType>(func_MUX(
-                   CIEC_ULINT(std::numeric_limits<CIEC_ULINT::TValueType>::max()), 10_INT, 20_INT, 30_INT)) == 0);
+    BOOST_TEST(func_MUX(-1_INT, 10_INT, 20_INT).equals(0_INT));
+    BOOST_TEST(func_MUX(2_UINT, 10_INT, 20_INT).equals(0_INT));
+    BOOST_TEST(func_MUX(-1_LINT, 10_INT, 20_INT, 30_INT).equals(0_INT));
+    BOOST_TEST(func_MUX(3_UINT, 10_SINT, 20_INT, 30_DINT).equals(0_DINT));
+    BOOST_TEST(
+        func_MUX(CIEC_LINT(std::numeric_limits<CIEC_LINT::TValueType>::min()), 10_INT, 20_INT, 30_INT).equals(0_INT));
+    BOOST_TEST(
+        func_MUX(CIEC_ULINT(std::numeric_limits<CIEC_ULINT::TValueType>::max()), 10_INT, 20_INT, 30_INT).equals(0_INT));
   }
 
-  BOOST_AUTO_TEST_CASE(func_mux_runtime_span) {
-    const std::array inputs{10_INT, 20_INT, 30_INT};
-    const std::span<const CIEC_INT> values(inputs);
-    static_assert(std::is_same_v<decltype(func_MUX(0_INT, values)), CIEC_INT>);
-    BOOST_TEST(func_EQ(func_MUX(0_INT, values), 10_INT));
-    BOOST_TEST(func_EQ(func_MUX(1_UINT, values), 20_INT));
-    BOOST_TEST(func_EQ(func_MUX(2_ULINT, values), 30_INT));
-    BOOST_TEST(func_EQ(func_MUX(2_INT, std::span(inputs)), 30_INT));
+  template<typename K, typename... Inputs>
+  concept mux_invocable = requires(const K &paK, const Inputs &...paInputs) { func_MUX(paK, paInputs...); };
+
+  BOOST_AUTO_TEST_CASE(func_mux_constraints) {
+    static_assert(!mux_invocable<int, CIEC_INT, CIEC_INT>);
+    static_assert(!mux_invocable<CIEC_REAL, CIEC_INT, CIEC_INT>);
+    static_assert(!mux_invocable<CIEC_INT, int, int>);
+    static_assert(!mux_invocable<CIEC_INT, CIEC_INT, int>);
+    static_assert(!mux_invocable<CIEC_INT, CIEC_ANY_VARIANT, CIEC_ANY_VARIANT>);
+    static_assert(!mux_invocable<CIEC_INT, CIEC_INT, CIEC_STRING>);
+    static_assert(!mux_invocable<CIEC_INT, CIEC_BOOL, CIEC_INT>);
+    static_assert(!mux_invocable<CIEC_INT, CIEC_LINT, CIEC_ULINT>);
+    static_assert(!mux_invocable<CIEC_INT, CIEC_INT>);
+    static_assert(mux_invocable<CIEC_INT, CIEC_SINT, CIEC_UINT, CIEC_DINT>);
+    static_assert(mux_invocable<CIEC_INT, CIEC_ARRAY_DYNAMIC, CIEC_ARRAY_DYNAMIC>);
+    static_assert(mux_invocable<CIEC_INT, CIEC_ARRAY_VARIABLE<CIEC_INT>, CIEC_ARRAY_VARIABLE<CIEC_INT>>);
+    static_assert(!mux_invocable<CIEC_INT, CIEC_ARRAY_FIXED<CIEC_INT, 0, 1>, CIEC_ARRAY_FIXED<CIEC_INT, 1, 2>>);
+    BOOST_TEST(true);
   }
 
-  BOOST_AUTO_TEST_CASE(func_mux_runtime_span_invalid_selector) {
-    const std::array inputs{10_INT, 20_INT, 30_INT};
-    const std::span<const CIEC_INT> values(inputs);
-    BOOST_TEST(func_EQ(func_MUX(0_INT, std::span<const CIEC_INT>()), 0_INT));
-    BOOST_TEST(func_EQ(func_MUX(3_UINT, values), 0_INT));
-    BOOST_TEST(func_EQ(func_MUX(-1_INT, values), 0_INT));
-    BOOST_TEST(func_EQ(func_MUX(CIEC_LINT(std::numeric_limits<CIEC_LINT::TValueType>::min()), values), 0_INT));
-    BOOST_TEST(func_EQ(func_MUX(CIEC_ULINT(std::numeric_limits<CIEC_ULINT::TValueType>::max()), values), 0_INT));
-  }
-
-  BOOST_AUTO_TEST_CASE(func_mux_runtime_span_variant_types) {
-    const std::array<CIEC_ANY_VARIANT, 3> inputs{10_SINT, 20_DINT, "last"_STRING};
-    const std::span<const CIEC_ANY_VARIANT> values(inputs);
-    auto result = func_MUX(0_INT, values);
-    static_assert(std::is_same_v<decltype(result), CIEC_ANY_VARIANT>);
-    BOOST_REQUIRE_EQUAL(result.unwrap().getDataTypeID(), CIEC_ANY::e_SINT);
-    BOOST_TEST(func_EQ(std::get<CIEC_SINT>(result), 10_SINT));
-    result = func_MUX(1_INT, values);
-    BOOST_REQUIRE_EQUAL(result.unwrap().getDataTypeID(), CIEC_ANY::e_DINT);
-    BOOST_TEST(func_EQ(std::get<CIEC_DINT>(result), 20_DINT));
-    result = func_MUX(2_INT, values);
-    BOOST_REQUIRE_EQUAL(result.unwrap().getDataTypeID(), CIEC_ANY::e_STRING);
-    BOOST_TEST(func_EQ(std::get<CIEC_STRING>(result), "last"_STRING));
-    result = func_MUX(3_INT, values);
-    BOOST_REQUIRE_EQUAL(result.unwrap().getDataTypeID(), CIEC_ANY_VARIANT().unwrap().getDataTypeID());
-    BOOST_TEST(func_EQ(std::get<CIEC_SINT>(result), 0_SINT));
+  BOOST_AUTO_TEST_CASE(func_mux_derived_types) {
+    const CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> first{10_INT, 20_INT};
+    const CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> second{30_INT, 40_INT};
+    BOOST_TEST(func_MUX(0_INT, first, second).equals(first));
+    BOOST_TEST(func_MUX(1_ULINT, first, second).equals(second));
+    BOOST_TEST(func_MUX(-1_INT, first, second).equals(CIEC_ARRAY_FIXED<CIEC_INT, 0, 1>{}));
+    const CIEC_ARRAY_VARIABLE<CIEC_INT> firstVariable(first);
+    const CIEC_ARRAY_VARIABLE<CIEC_INT> secondVariable(second);
+    BOOST_TEST(func_MUX(0_INT, firstVariable, secondVariable).equals(firstVariable));
+    BOOST_TEST(func_MUX(1_INT, firstVariable, secondVariable).equals(secondVariable));
+    BOOST_TEST(func_MUX(-1_INT, firstVariable, secondVariable).equals(CIEC_ARRAY_FIXED<CIEC_INT, 0, 1>{}));
+    const CIEC_ARRAY_DYNAMIC firstDynamic(first);
+    const CIEC_ARRAY_DYNAMIC secondDynamic(second);
+    BOOST_TEST(func_MUX(0_INT, firstDynamic, secondDynamic).equals(firstDynamic));
+    BOOST_TEST(func_MUX(1_INT, firstDynamic, secondDynamic).equals(secondDynamic));
+    BOOST_TEST(func_MUX(-1_INT, firstDynamic, secondDynamic).equals(CIEC_ARRAY_FIXED<CIEC_INT, 0, 1>{}));
+    const CIEC_ARRAY_VARIABLE<CIEC_INT> empty;
+    BOOST_TEST(mux_detail::same_type(empty, empty));
+    BOOST_TEST(func_MUX(0_INT, empty, empty).equals(empty));
+    const CIEC_EndianessTestStruct firstStruct(false_BOOL, 10_DINT, 20_LWORD);
+    const CIEC_EndianessTestStruct secondStruct(true_BOOL, 30_DINT, 40_LWORD);
+    BOOST_TEST(func_MUX(0_INT, firstStruct, secondStruct).equals(firstStruct));
+    BOOST_TEST(func_MUX(1_UINT, firstStruct, secondStruct).equals(secondStruct));
+    BOOST_TEST(func_MUX(2_INT, firstStruct, secondStruct).equals(CIEC_EndianessTestStruct{}));
   }
 
   BOOST_AUTO_TEST_CASE(func_min_time) {
