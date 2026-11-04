@@ -70,6 +70,7 @@
 #include "forte/iec61131_functions/func_MUL.h"
 #include "forte/iec61131_functions/func_MUL_LTIME.h"
 #include "forte/iec61131_functions/func_MUL_TIME.h"
+#include "forte/iec61131_functions/func_MUX.h"
 #include "forte/iec61131_functions/func_NE.h"
 #include "forte/iec61131_functions/func_NOT.h"
 #include "forte/iec61131_functions/func_OR.h"
@@ -2642,6 +2643,59 @@ namespace forte::test {
     BOOST_TEST(static_cast<CIEC_LINT::TValueType>(result) == 7);
     result = func_TO_LINT(8_ULINT);
     BOOST_TEST(static_cast<CIEC_LINT::TValueType>(result) == 8);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_two_inputs) {
+    BOOST_TEST(func_MUX(0_INT, 10_INT, 20_INT) == 10_INT);
+    BOOST_TEST(func_MUX(1_INT, 10_INT, 20_INT) == 20_INT);
+    BOOST_TEST(func_MUX(0_UINT, false_BOOL, true_BOOL) == false_BOOL);
+    BOOST_TEST(func_MUX(1_UINT, false_BOOL, true_BOOL) == true_BOOL);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_variadic) {
+    BOOST_TEST(func_MUX(0_INT, 10_INT, 20_INT, 30_INT) == 10_INT);
+    BOOST_TEST(func_MUX(1_INT, 10_INT, 20_INT, 30_INT) == 20_INT);
+    BOOST_TEST(func_MUX(2_INT, 10_INT, 20_INT, 30_INT) == 30_INT);
+    BOOST_TEST(func_MUX(3_INT, 10_INT, 20_INT, 30_INT, 40_INT) == 40_INT);
+    BOOST_TEST(func_MUX<CIEC_INT>(2_INT, 10_INT, 20_INT, 30_INT) == 30_INT);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_selector_types) {
+    BOOST_TEST(func_MUX(1_SINT, 10_INT, 20_INT, 30_INT) == 20_INT);
+    BOOST_TEST(func_MUX(1_INT, 10_INT, 20_INT, 30_INT) == 20_INT);
+    BOOST_TEST(func_MUX(1_DINT, 10_INT, 20_INT, 30_INT) == 20_INT);
+    BOOST_TEST(func_MUX(1_LINT, 10_INT, 20_INT, 30_INT) == 20_INT);
+    BOOST_TEST(func_MUX(1_USINT, 10_INT, 20_INT, 30_INT) == 20_INT);
+    BOOST_TEST(func_MUX(1_UINT, 10_INT, 20_INT, 30_INT) == 20_INT);
+    BOOST_TEST(func_MUX(1_UDINT, 10_INT, 20_INT, 30_INT) == 20_INT);
+    BOOST_TEST(func_MUX(1_ULINT, 10_INT, 20_INT, 30_INT) == 20_INT);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_input_types) {
+    static_assert(std::is_same_v<decltype(func_MUX(0_INT, 10_SINT, 200_DINT)), CIEC_DINT>);
+    static_assert(std::is_same_v<decltype(func_MUX(0_INT, 10_SINT, 200_INT, 300000_DINT)), CIEC_DINT>);
+    BOOST_TEST(func_MUX(0_INT, 10_SINT, 200_DINT) == 10_DINT);
+    BOOST_TEST(func_MUX(1_INT, 10_SINT, 200_DINT) == 200_DINT);
+    BOOST_TEST(func_MUX(0_INT, 10_SINT, 200_INT, 300000_DINT) == 10_DINT);
+    BOOST_TEST(func_MUX(1_INT, 10_SINT, 200_INT, 300000_DINT) == 200_DINT);
+    BOOST_TEST(func_MUX(2_INT, 10_SINT, 200_INT, 300000_DINT) == 300000_DINT);
+    BOOST_TEST(func_MUX<CIEC_DINT>(1_INT, 0_DINT, -1_SINT, 1_UINT) == -1_DINT);
+    BOOST_TEST(func_MUX<CIEC_DINT>(2_INT, 0_DINT, -1_SINT, 1_UINT) == 1_DINT);
+    BOOST_TEST(func_MUX(1_INT, 1.0_REAL, 2.0_REAL, 3.0_REAL) == 2.0_REAL);
+    BOOST_TEST(func_MUX(2_INT, false_BOOL, false_BOOL, true_BOOL) == true_BOOL);
+    BOOST_TEST(func_MUX(1_INT, "first"_STRING, "second"_STRING) == "second"_STRING);
+    BOOST_TEST(func_MUX(2_INT, "first"_STRING, "second"_STRING, "third"_STRING) == "third"_STRING);
+    BOOST_TEST(func_MUX(2_INT, 10_TIME, 20_TIME, 30_TIME) == 30_TIME);
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_invalid_selector) {
+    BOOST_TEST(func_MUX(-1_INT, 10_INT, 20_INT) == 0_INT);
+    BOOST_TEST(func_MUX(2_UINT, 10_INT, 20_INT) == 0_INT);
+    BOOST_TEST(func_MUX(-1_LINT, 10_INT, 20_INT, 30_INT) == 0_INT);
+    BOOST_TEST(func_MUX(3_UINT, 10_INT, 20_INT, 30_INT) == 0_INT);
+    BOOST_TEST(func_MUX(CIEC_LINT(std::numeric_limits<CIEC_LINT::TValueType>::min()), 10_INT, 20_INT, 30_INT) == 0_INT);
+    BOOST_TEST(func_MUX(CIEC_ULINT(std::numeric_limits<CIEC_ULINT::TValueType>::max()), 10_INT, 20_INT, 30_INT) ==
+               0_INT);
   }
 
   BOOST_AUTO_TEST_CASE(func_min_time) {

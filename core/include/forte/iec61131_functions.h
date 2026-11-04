@@ -247,6 +247,7 @@
 #include "forte/iec61131_functions/func_MUL.h"
 #include "forte/iec61131_functions/func_MUL_LTIME.h"
 #include "forte/iec61131_functions/func_MUL_TIME.h"
+#include "forte/iec61131_functions/func_MUX.h"
 #include "forte/iec61131_functions/func_NE.h"
 #include "forte/iec61131_functions/func_NOT.h"
 #include "forte/iec61131_functions/func_NOW.h"
