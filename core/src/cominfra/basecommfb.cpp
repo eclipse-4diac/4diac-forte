@@ -75,15 +75,17 @@ namespace forte::com_infra {
         retVal = e_InitInvalidId;
       } else {
         retVal = createComstack(commID);
+        // e_Nothing means a layer reports the result of the initialization later through an interrupt
+        mInitPending = (e_Nothing == retVal);
         // If any error is going to be returned, delete the layers that were created
-        if (e_InitOk != retVal) {
+        if (e_InitOk != retVal && !mInitPending) {
           closeConnection();
         }
       }
       delete[] commID;
     } else {
-      // If the connection was already opened return ok
-      retVal = e_InitOk;
+      // If the connection was already opened return ok, unless its initialization result is still pending
+      retVal = mInitPending ? e_Nothing : e_InitOk;
     }
     return retVal;
   }
@@ -93,6 +95,7 @@ namespace forte::com_infra {
     CComLayer *newLayer = nullptr;
     CComLayer *previousLayer = nullptr; // Reference to the previous layer as it needs to set the bottom layer
     char *layerParams = nullptr;
+    bool initPending = false;
     while ('\0' != *commID) { // Loop until reaching the end of the ID
       retVal = e_InitInvalidId;
       char *layerID = extractLayerIdAndParams(&commID, &layerParams); // Get the next layer's ID and parameters
@@ -107,6 +110,10 @@ namespace forte::com_infra {
 
           previousLayer = newLayer; // Update the previous layer reference
           retVal = newLayer->openConnection(layerParams); // Open the layer connection
+          if (e_Nothing == retVal) { // the layer will report the result of its initialization later
+            initPending = true;
+            retVal = e_InitOk;
+          }
         }
       }
 
@@ -114,10 +121,11 @@ namespace forte::com_infra {
         break;
       }
     }
-    return retVal;
+    return (e_InitOk == retVal && initPending) ? e_Nothing : retVal;
   }
 
   void CBaseCommFB::closeConnection() {
+    mInitPending = false;
     if (mTopOfComStack != nullptr) {
       mTopOfComStack->closeConnection();
       delete mTopOfComStack; // this will close the whole communication stack

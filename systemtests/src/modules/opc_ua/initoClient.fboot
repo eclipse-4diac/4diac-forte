@@ -1,0 +1,21 @@
+;<Request ID="1" Action="CREATE"><FB Name="InitoClient" Type="iec61499::system::EMB_RES" /></Request>
+InitoClient;<Request ID="2" Action="CREATE"><FB Name="Call" Type="iec61499::net::CLIENT_0" /></Request>
+InitoClient;<Request ID="3" Action="WRITE"><Connection Source="1" Destination="Call.QI" /></Request>
+InitoClient;<Request ID="4" Action="WRITE"><Connection Source="opc_ua[CALL_METHOD;opc.tcp://localhost:4840#;/Objects/initoTest/method]" Destination="Call.ID" /></Request>
+InitoClient;<Request ID="5" Action="CREATE"><FB Name="EndSignal" Type="iec61499::net::PUBLISH_0" /></Request>
+InitoClient;<Request ID="6" Action="WRITE"><Connection Source="1" Destination="EndSignal.QI" /></Request>
+InitoClient;<Request ID="7" Action="WRITE"><Connection Source="239.192.0.2:61502" Destination="EndSignal.ID" /></Request>
+InitoClient;<Request ID="8" Action="CREATE"><FB Name="InitTest" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
+InitoClient;<Request ID="9" Action="CREATE"><FB Name="CallTest" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
+InitoClient;<Request ID="10" Action="CREATE"><FB Name="STEST_END" Type="eclipse4diac::utils::STEST_END" /></Request>
+InitoClient;<Request ID="11" Action="CREATE"><Connection Source="START.COLD" Destination="EndSignal.INIT" /></Request>
+InitoClient;<Request ID="12" Action="CREATE"><Connection Source="START.WARM" Destination="EndSignal.INIT" /></Request>
+InitoClient;<Request ID="13" Action="CREATE"><Connection Source="EndSignal.INITO" Destination="Call.INIT" /></Request>
+InitoClient;<Request ID="14" Action="CREATE"><Connection Source="Call.INITO" Destination="InitTest.REQ" /></Request>
+InitoClient;<Request ID="15" Action="CREATE"><Connection Source="Call.QO" Destination="InitTest.check" /></Request>
+InitoClient;<Request ID="16" Action="CREATE"><Connection Source="InitTest.CNF" Destination="Call.REQ" /></Request>
+InitoClient;<Request ID="17" Action="CREATE"><Connection Source="Call.CNF" Destination="CallTest.REQ" /></Request>
+InitoClient;<Request ID="18" Action="CREATE"><Connection Source="Call.QO" Destination="CallTest.check" /></Request>
+InitoClient;<Request ID="19" Action="CREATE"><Connection Source="CallTest.CNF" Destination="EndSignal.REQ" /></Request>
+InitoClient;<Request ID="20" Action="CREATE"><Connection Source="EndSignal.CNF" Destination="STEST_END.REQ" /></Request>
+InitoClient;<Request ID="21" Action="START"/>
