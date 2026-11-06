@@ -40,7 +40,7 @@ namespace forte::io {
 
   void IODevicePollController::setPollInterval(float paPollInterval) {
     if (paPollInterval <= 0) {
-      DEVLOG_WARNING("[IODevicePollController] Configured PollInterval is set to an invalid value '%d'. Set to 25.\n",
+      DEVLOG_WARNING("[IODevicePollController] Configured PollInterval is set to an invalid value '%f'. Set to 25.\n",
                      paPollInterval);
       paPollInterval = 25;
     }
