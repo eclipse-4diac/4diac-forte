@@ -9,6 +9,7 @@
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *  Martin Melik-Merkumians - updates due to changes in CPThreadSemaphore
+ *  Franz Höpfinger - synchronize the thread handle, fix join after a restart
  *******************************************************************************/
 
 #pragma once
@@ -86,6 +87,7 @@ namespace forte::arch {
       }
 
       TThreadHandleType getThreadHandle() {
+        util::CCriticalRegion criticalRegion(mThreadHandleMutex);
         return mThreadHandle;
       }
 
@@ -159,6 +161,9 @@ namespace forte::arch {
 
       TThreadHandle mThreadHandle;
 
+      //! Protects mThreadHandle, which the thread itself clears when it ends
+      CSyncObject mThreadHandleMutex;
+
       /*! \brief Size of the stack used by this thread.
        */
       long mStackSize;
@@ -205,7 +210,11 @@ namespace forte::arch {
   template<typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
   void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::start() {
     util::CCriticalRegion criticalRegion(mThreadMutex);
+    util::CCriticalRegion handleRegion(mThreadHandleMutex);
     if (nullHandle == mThreadHandle) {
+      // a join of an earlier run left its completion posted, it must not end a join of this run
+      while (mJoinSem.tryNoWait()) {
+      }
       mThreadHandle = createThread(mStackSize);
       if (nullHandle == mThreadHandle) {
         DEVLOG_ERROR("Error could not create the thread!\n");
@@ -216,7 +225,7 @@ namespace forte::arch {
 
   template<typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
   void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::stop() {
-    if (nullHandle != mThreadHandle) {
+    if (nullHandle != getThreadHandle()) {
       setAlive(false);
     }
   }
@@ -224,7 +233,7 @@ namespace forte::arch {
   template<typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
   void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::end() {
     util::CCriticalRegion criticalRegion(mThreadMutex);
-    if (nullHandle != mThreadHandle) {
+    if (nullHandle != getThreadHandle()) {
       stop();
       join();
     }
@@ -232,9 +241,11 @@ namespace forte::arch {
 
   template<typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
   void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::join() {
-    if (nullHandle != mThreadHandle) {
+    if (nullHandle != getThreadHandle()) {
       mJoinSem.waitIndefinitely();
       mJoinSem.inc(); // allow many joins
+      // the thread posts its completion with mThreadHandleMutex held, it is done with this object once it released it
+      util::CCriticalRegion handleRegion(mThreadHandleMutex);
     }
   }
 
@@ -242,12 +253,16 @@ namespace forte::arch {
   void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::runThread(CThreadBase *paThread) {
     // if pointer is ok
     if (nullptr != paThread) {
-      TThreadHandle threadHandle = paThread->mThreadHandle;
+      TThreadHandle threadHandle = paThread->getThreadHandle(); // waits until start() has stored the handle
       paThread->setAlive(true);
       paThread->run();
       paThread->setAlive(false);
-      paThread->mThreadHandle = nullHandle;
-      paThread->mJoinSem.inc();
+      {
+        // one step for start() and join(): a new run can only be started once the completion of this one is posted
+        util::CCriticalRegion handleRegion(paThread->mThreadHandleMutex);
+        paThread->mThreadHandle = nullHandle;
+        paThread->mJoinSem.inc();
+      }
       ThreadDeletePolicy::deleteThread(threadHandle);
     } else {
       DEVLOG_ERROR("pThread pointer is 0!");
