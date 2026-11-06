@@ -16,6 +16,7 @@
 
 #include <open62541/client.h>
 
+#include <map>
 #include <string>
 #include <vector>
 
@@ -201,6 +202,13 @@ namespace forte::com_infra::opc_ua {
                                                 UA_SecureChannelState channelState,
                                                 UA_SessionState sessionState,
                                                 UA_StatusCode connectStatus);
+
+          /**
+           * Function called when a subscription did not receive anything (not even a keep-alive) for longer than its
+           * publishing interval times the keep-alive count plus the client timeout
+           */
+          static void
+          subscriptionInactivityCallback(UA_Client *paClient, UA_UInt32 paSubscriptionId, void *paSubscriptionContext);
       };
 
     private:
@@ -415,6 +423,21 @@ namespace forte::com_infra::opc_ua {
        * an action fails to connect once
        */
       bool mNeedsReconnection{false};
+
+      /**
+       * Set by the inactivity callback of a subscription. executeAsyncCalls() then reports a failure, so the client is
+       * reset, reconnected and its actions (and with them the subscription) are initialized again
+       */
+      bool mSubscriptionInactive{false};
+      struct SSubscriptionActivity {
+          //! The longest time the server may stay silent before open62541 reports the subscription as inactive
+          uint_fast64_t mMaxSilence;
+          //! Time of the last inactivity report of the subscription, 0 if there was none
+          uint_fast64_t mLastInactivity;
+      };
+
+      /*! Every subscription created by this client, as each SUBSCRIBE action can create its own one */
+      std::map<UA_UInt32, SSubscriptionActivity> mSubscriptionActivity;
 
       /**
        * Indicates if the client should wait scmInitializeActionRetryNano before trying to initialize the actions. This

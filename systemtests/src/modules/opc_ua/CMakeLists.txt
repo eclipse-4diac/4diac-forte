@@ -68,3 +68,9 @@ endif(FORTE_COM_OPC_UA_ENCRYPTION AND FORTE_COM_OPC_UA_MASTER_BRANCH)
 forte_add_multi_systemtests(OPCUA_FastWrite 200 0 fastWriteClient.fboot " " fastWriteServer.fboot " ") # There's no test in these systems. It only tests quick accessing the server with a client subscribed to it, and there won't be any problem, thus finishing the test without a timeout
 
 add_subdirectory(namespace)
+
+# a server that stops answering without closing the connection: the client has to notice it and subscribe again
+add_test(NAME OPCUA_ClientRecoversFromInactivity
+        COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/inactivityTest.sh $<TARGET_FILE:forte_systemtest>
+        ${CMAKE_CURRENT_SOURCE_DIR}/inactivityServer.fboot ${CMAKE_CURRENT_SOURCE_DIR}/inactivityClient.fboot)
+set_tests_properties(OPCUA_ClientRecoversFromInactivity PROPERTIES TIMEOUT 120)
