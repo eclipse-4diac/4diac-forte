@@ -295,6 +295,12 @@ namespace forte::com_infra::opc_ua {
       bool initializeAllActions();
 
       /**
+       * Initialize the actions added since the last initialization round, while the failed ones wait
+       * scmInitializeActionRetryNano
+       */
+      void initializeNewActions();
+
+      /**
        * Initialize an action. It looks for the remote node and prepares for future calls
        * @param paActionInfo Action to be initialized
        * @return True if no error occurred, false otherwise
@@ -411,6 +417,12 @@ namespace forte::com_infra::opc_ua {
       std::vector<CActionInfo *> mActionsToBeInitialized;
 
       /**
+       * Actions added since the last initialization round. They are tried at once, the other actions to be initialized
+       * keep waiting scmInitializeActionRetryNano after a failure
+       */
+      std::vector<CActionInfo *> mNewActions;
+
+      /**
        * Indicates if the client should wait scmConnectionRetryTimeoutNano before trying to reconnect. This is true when
        * an action fails to connect once
        */
@@ -418,8 +430,8 @@ namespace forte::com_infra::opc_ua {
 
       /**
        * Indicates if the client should wait scmInitializeActionRetryNano before trying to initialize the actions. This
-       * is true when an action fails, so it doesn't fail too often. If an action is added after another fail, this
-       * becomes false, so the new action can be initialized and doesn't have to wait
+       * is true when an action fails, so it doesn't fail too often. An action added meanwhile doesn't have to wait,
+       * see mNewActions
        */
       bool mWaitToInitializeActions{false};
 
