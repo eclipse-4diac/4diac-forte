@@ -97,16 +97,18 @@ namespace forte::com_infra::opc_ua {
 
   void CUA_ClientInformation::uninitializeClient() {
     DEVLOG_INFO("[OPC UA CLIENT]: Uninitializing client %s\n", mEndpointUrl.c_str());
-    mActionsToBeInitialized.clear();
-    for (auto actionReferencingIt : mActionsReferencingIt) {
-      uninitializeAction(*actionReferencingIt);
-      mActionsToBeInitialized.push_back(actionReferencingIt);
-    }
+    // Deleting the client removes its subscriptions and monitored items locally, and closing the session removes them
+    // on the server. Deleting each of them with a request would wait for the timeout when the server is gone. The
+    // client is deleted before the contexts of the monitored items, so that no notification can reach a freed context
     if (mClient) {
-      UA_Client_disconnect(mClient);
+      UA_Client_disconnectAsync(mClient);
       UA_Client_delete(mClient);
       mClient = nullptr;
     }
+    mSubscriptionInfo.mMonitoredItems.clear();
+    mSubscriptionInfo.mSubscriptionId = 0;
+    mOrphanedMonitoredItems.clear();
+    mActionsToBeInitialized = mActionsReferencingIt;
     mWaitToInitializeActions = false;
     mNeedsReconnection = false;
     mSomeActionWasInitialized = false;
@@ -461,12 +463,7 @@ namespace forte::com_infra::opc_ua {
       } else { // if something failed, remove added monitoring items and fail the whole action
 
         for (auto &newMonitoredInfo : newMonitoredInfos) { // remove items from the library
-          UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo.mSubscriptionId,
-                                                                       newMonitoredInfo->mMonitoringItemId);
-          if (UA_STATUSCODE_GOOD != retVal) {
-            DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete recently added monitored item %u. Error: %s\n",
-                         newMonitoredInfo->mMonitoringItemId, UA_StatusCode_name(retVal));
-          }
+          deleteMonitoredItem(std::move(newMonitoredInfo));
         }
       }
     }
@@ -533,22 +530,29 @@ namespace forte::com_infra::opc_ua {
     for (auto itMonitoringItemInfo = mSubscriptionInfo.mMonitoredItems.begin();
          itMonitoringItemInfo != mSubscriptionInfo.mMonitoredItems.end();) {
       if ((*itMonitoringItemInfo)->mVariableInfo.mActionInfo == &paActionInfo) {
-        UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo.mSubscriptionId,
-                                                                     (*itMonitoringItemInfo)->mMonitoringItemId);
-        if (UA_STATUSCODE_GOOD != retVal) {
-          DEVLOG_ERROR(
-              "[OPC UA CLIENT]: Couldn't delete monitored item %u. No further actions will be taken. Error: %s\n",
-              (*itMonitoringItemInfo)->mMonitoringItemId, UA_StatusCode_name(retVal));
-        }
-
+        auto monitoringItemInfo = std::move(*itMonitoringItemInfo);
         itMonitoringItemInfo = mSubscriptionInfo.mMonitoredItems.erase(itMonitoringItemInfo);
+        deleteMonitoredItem(std::move(monitoringItemInfo));
       } else {
         itMonitoringItemInfo++;
       }
     }
 
-    if (mSubscriptionInfo.mMonitoredItems.empty()) {
+    if (mSubscriptionInfo.mMonitoredItems.empty() && 0 != mSubscriptionInfo.mSubscriptionId) {
       resetSubscription(true);
+    }
+  }
+
+  void CUA_ClientInformation::deleteMonitoredItem(std::unique_ptr<UA_MonitoringItemInfo> paMonitoringItemInfo) {
+    UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo.mSubscriptionId,
+                                                                 paMonitoringItemInfo->mMonitoringItemId);
+    if (UA_STATUSCODE_GOOD != retVal) {
+      DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete monitored item %u. It is ignored until the client is reset. "
+                   "Error: %s\n",
+                   paMonitoringItemInfo->mMonitoringItemId, UA_StatusCode_name(retVal));
+      // the action can be freed after this, but the OPC UA stack can still call the callback with this context
+      paMonitoringItemInfo->mVariableInfo.mActionInfo = nullptr;
+      mOrphanedMonitoredItems.push_back(std::move(paMonitoringItemInfo));
     }
   }
 
@@ -755,6 +759,9 @@ namespace forte::com_infra::opc_ua {
     if (paData->hasValue) {
 
       UA_SubscribeContext_Handle *variableContextHandle = static_cast<UA_SubscribeContext_Handle *>(paMonContext);
+      if (variableContextHandle->mActionInfo == nullptr) { // monitored item whose deletion failed
+        return;
+      }
 
       COPC_UA_Helper::UA_RecvVariable_handle handleRecv;
 

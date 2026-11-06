@@ -353,6 +353,12 @@ namespace forte::com_infra::opc_ua {
       void uninitializeSubscribeAction(const CActionInfo &paActionInfo);
 
       /**
+       * Delete a monitored item from the OPC UA stack. If this fails, the item is kept in mOrphanedMonitoredItems
+       * @param paMonitoringItemInfo Monitored item to be deleted
+       */
+      void deleteMonitoredItem(std::unique_ptr<UA_MonitoringItemInfo> paMonitoringItemInfo);
+
+      /**
        * Reset the subscription information.
        * @param paDeleteSubscription The subscription must be deleted from the OPC UA stack
        */
@@ -392,6 +398,12 @@ namespace forte::com_infra::opc_ua {
        * Information needed for subscription
        */
       UA_subscriptionInfo mSubscriptionInfo;
+
+      /**
+       * Monitored items whose deletion failed. The OPC UA stack still knows them and can call their callback, so their
+       * context is kept, without action, until the client is deleted
+       */
+      std::vector<std::unique_ptr<UA_MonitoringItemInfo>> mOrphanedMonitoredItems;
 
       /**
        * Amount of missing async calls to be performed. Read, write and method call add one when they are called, and
