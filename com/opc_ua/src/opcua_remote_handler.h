@@ -15,6 +15,8 @@
 
 #pragma once
 
+#include <atomic>
+
 #include "forte/arch/forte_thread.h"
 #include "forte/config/forte_config.h"
 #include "opcua_defaults.h"
@@ -153,7 +155,7 @@ namespace forte::com_infra::opc_ua {
       /**
        * Indicates that a new client is present and needs to be added to the main iteration list
        */
-      bool mNewClientsPresent;
+      std::atomic<bool> mNewClientsPresent;
 
       /**
        * Indicates if the iteration should continue

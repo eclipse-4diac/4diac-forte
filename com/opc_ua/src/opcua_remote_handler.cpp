@@ -42,8 +42,9 @@ namespace forte::com_infra::opc_ua {
     if (paClientInformation.isClientValid()) {
       util::CCriticalRegion iterationListRegion(getNewClientsMutex());
       addClientToList(paClientInformation, getNewClients());
-      mNeedsIteration.inc();
+      // set before waking the iteration thread, otherwise it can miss the new client and wait indefinitely
       mNewClientsPresent = true;
+      mNeedsIteration.inc();
     }
   }
 
