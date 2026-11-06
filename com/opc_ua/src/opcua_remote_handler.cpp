@@ -286,6 +286,9 @@ namespace forte::com_infra::opc_ua {
           failedClients.push_back(clientInformation);
         } else {
           asyncIsNeeded = clientInformation->isAsyncNeeded();
+          if (clientInformation->requeueActionsOfLostSubscription()) { // e.g. the server lost the subscription
+            addClientToConnectionHandler(*clientInformation);
+          }
         }
       }
       if (!isAlive()) {

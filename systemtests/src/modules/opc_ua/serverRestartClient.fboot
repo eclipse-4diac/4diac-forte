@@ -1,0 +1,26 @@
+;<Request ID="1" Action="CREATE"><FB Name="serverRestartClient" Type="iec61499::system::EMB_RES" /></Request>
+serverRestartClient;<Request ID="2" Action="CREATE"><FB Name="STEST_END_1" Type="eclipse4diac::utils::STEST_END" /></Request>
+serverRestartClient;<Request ID="3" Action="CREATE"><FB Name="SUBSCRIBE_A" Type="iec61499::net::SUBSCRIBE_1" /></Request>
+serverRestartClient;<Request ID="4" Action="WRITE"><Connection Source="opc_ua[SUBSCRIBE;opc.tcp://localhost:4840#;/Objects/serverRestart/a]" Destination="SUBSCRIBE_A.ID" /></Request>
+serverRestartClient;<Request ID="5" Action="WRITE"><Connection Source="1" Destination="SUBSCRIBE_A.QI" /></Request>
+serverRestartClient;<Request ID="6" Action="CREATE"><FB Name="TYPE_A" Type="iec61499::events::E_CTU" /></Request>
+serverRestartClient;<Request ID="7" Action="CREATE"><Connection Source="SUBSCRIBE_A.RD_1" Destination="TYPE_A.PV" /></Request>
+serverRestartClient;<Request ID="8" Action="CREATE"><FB Name="SUBSCRIBE_B" Type="iec61499::net::SUBSCRIBE_1" /></Request>
+serverRestartClient;<Request ID="9" Action="WRITE"><Connection Source="opc_ua[SUBSCRIBE;opc.tcp://localhost:4840#;/Objects/serverRestart/b]" Destination="SUBSCRIBE_B.ID" /></Request>
+serverRestartClient;<Request ID="10" Action="WRITE"><Connection Source="1" Destination="SUBSCRIBE_B.QI" /></Request>
+serverRestartClient;<Request ID="11" Action="CREATE"><FB Name="TYPE_B" Type="iec61499::events::E_CTU" /></Request>
+serverRestartClient;<Request ID="12" Action="CREATE"><Connection Source="SUBSCRIBE_B.RD_1" Destination="TYPE_B.PV" /></Request>
+serverRestartClient;<Request ID="13" Action="CREATE"><Connection Source="START.COLD" Destination="SUBSCRIBE_A.INIT" /></Request>
+serverRestartClient;<Request ID="14" Action="CREATE"><Connection Source="START.WARM" Destination="SUBSCRIBE_A.INIT" /></Request>
+serverRestartClient;<Request ID="15" Action="CREATE"><Connection Source="SUBSCRIBE_A.INITO" Destination="SUBSCRIBE_B.INIT" /></Request>
+serverRestartClient;<Request ID="16" Action="CREATE"><FB Name="RECEIVED" Type="iec61499::events::E_CTU" /></Request>
+serverRestartClient;<Request ID="17" Action="WRITE"><Connection Source="UINT#40" Destination="RECEIVED.PV" /></Request>
+serverRestartClient;<Request ID="18" Action="CREATE"><FB Name="ENOUGH_SWITCH" Type="iec61499::events::E_SWITCH" /></Request>
+serverRestartClient;<Request ID="19" Action="CREATE"><FB Name="valuesCameAgainAfterServerRestart" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
+serverRestartClient;<Request ID="20" Action="WRITE"><Connection Source="1" Destination="valuesCameAgainAfterServerRestart.check" /></Request>
+serverRestartClient;<Request ID="21" Action="CREATE"><Connection Source="SUBSCRIBE_B.IND" Destination="RECEIVED.CU" /></Request>
+serverRestartClient;<Request ID="22" Action="CREATE"><Connection Source="RECEIVED.CUO" Destination="ENOUGH_SWITCH.EI" /></Request>
+serverRestartClient;<Request ID="23" Action="CREATE"><Connection Source="RECEIVED.Q" Destination="ENOUGH_SWITCH.G" /></Request>
+serverRestartClient;<Request ID="24" Action="CREATE"><Connection Source="ENOUGH_SWITCH.EO1" Destination="valuesCameAgainAfterServerRestart.REQ" /></Request>
+serverRestartClient;<Request ID="25" Action="CREATE"><Connection Source="valuesCameAgainAfterServerRestart.CNF" Destination="STEST_END_1.REQ" /></Request>
+serverRestartClient;<Request ID="26" Action="START"/>
