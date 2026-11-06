@@ -20,20 +20,6 @@ using namespace forte::io;
 
 namespace forte::eclipse4diac::io::wago {
 
-  const char *const WagoDeviceController::scmKBusDeviceName = "libpackbus";
-
-  const char *const WagoDeviceController::scmFailedToGetApplicationInterface = "Failed to get the application Interface";
-  const char *const WagoDeviceController::scmFailedToInitializeKBus =
-      "Failed to initialize the KBus device. Probably there's another program that is using the bus";
-  const char *const WagoDeviceController::scmFailedToScanDevices = "Failed to scan devices on the KBus";
-  const char *const WagoDeviceController::scmFailedToOpenKBusDevice = "Failed to open KBus device.";
-
-  const char *const WagoDeviceController::scmFailedToCreateKBusInfo = "Call to ldkc_KbusInfo_Create() failed";
-  const char *const WagoDeviceController::scmFailedGetTerminalInfo = "Call to ldkc_KbusInfo_GetTerminalInfo() failed";
-  const char *const WagoDeviceController::scmFailedGetTerminalList = "Call to ldkc_KbusInfo_GetTerminalList() failed";
-
-  const char *const WagoDeviceController::scmFailedToGetDeviceList = "Failed to get device list";
-
   WagoDeviceController::WagoDeviceController(CDeviceExecution &paDeviceExecution) :
       IODeviceMultiController(paDeviceExecution),
       mAppDevInterface(0),
@@ -228,21 +214,31 @@ namespace forte::eclipse4diac::io::wago {
       mAppDevInterface->ReadBytes(mKBusDeviceId, mTaskId, mRegComDevice->getOffset_REG_S0() / 8, 1, &lREG_S);
       mAppDevInterface->ReadEnd(mKBusDeviceId, mTaskId);
       lRegComDevice = mRegComDevice;
-      if (!isRegComOn && ((lREG_S & 0x80) == 0x80)) {
-        isRegComOn = true;
-        triggerEvent = true;
-        DEVLOG_DEBUG("[WagoDeviceController] Register communication on.\n");
+      if (!isRegComOn) {
+          mReadCounter += 1;
+          if ((lREG_S & 0x80) == 0x80) {
+              isRegComOn = true;
+              triggerEvent = true;
+              DEVLOG_DEBUG("[WagoDeviceController] Register communication on.\n");
+          }
+          else if (mReadCounter > 50) { // writing on C0.7 obviously failed
+              mReadCounter = scmRegComInitFail;
+              mRegComDevice = nullptr;
+              triggerEvent = true;
+          }
       }
-      else if (isRegComOn && ((lREG_S & 0xBF) == (mREG_C & 0xBF))) {
-        mREG_C = 0x00; // one change approve
-        triggerEvent = true;
-        DEVLOG_DEBUG("[WagoDeviceController] Register communication change.\n");
-      }
-      else if (isRegComOn && ((lREG_S & 0x80) == 0x00)) {
-        isRegComOn = false;
-        triggerEvent = true;
-        DEVLOG_DEBUG("[WagoDeviceController] Register communication off.\n");
-        mRegComDevice = nullptr;
+      else { // isRegComOn is true
+          if ((lREG_S & 0xBF) == (mREG_C & 0xBF)) {
+              mREG_C = 0x00; // one change approve
+              triggerEvent = true;
+              DEVLOG_DEBUG("[WagoDeviceController] Register communication change.\n");
+          }
+          else if ((lREG_S & 0x80) == 0x00) {
+              isRegComOn = false;
+              triggerEvent = true;
+              mRegComDevice = nullptr;
+              DEVLOG_DEBUG("[WagoDeviceController] Register communication off.\n");
+          }
       }
     }
     if (triggerEvent && lRegComDevice != nullptr) {
@@ -250,11 +246,17 @@ namespace forte::eclipse4diac::io::wago {
     }
   }
 
+  bool WagoDeviceController::regComInitFailed(){
+    util::CCriticalRegion criticalRegion(mRegComMutex);
+    return mReadCounter == scmRegComInitFail;
+  }
+
   bool WagoDeviceController::enableRegCom(WagoRegComDevice *paECStartFB) {
     util::CCriticalRegion criticalRegion(mRegComMutex);
-    if (mRegComDevice && isRegComOn) {
+    if (mRegComDevice && isRegComOn) { // register communication is already running
       return false;
     }
+    mReadCounter = 0;
     mAppDevInterface->WriteStart(mKBusDeviceId, mTaskId);
     mAppDevInterface->WriteBool(mKBusDeviceId, mTaskId, paECStartFB->getOffset_REG_C7(), true);
     DEVLOG_DEBUG("[WagoDeviceController] Register communication enabling.\n");
