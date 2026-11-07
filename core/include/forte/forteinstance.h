@@ -29,6 +29,12 @@ namespace forte {
 
       void awaitDeviceShutdown();
 
+      /*! \brief Deinitialize and delete the active device
+       *
+       * Call this after awaitDeviceShutdown() to tear the device down before static objects are destroyed.
+       */
+      void deleteDevice();
+
     private:
       std::unique_ptr<CDevice> mActiveDevice;
   };
