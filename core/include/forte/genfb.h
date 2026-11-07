@@ -193,16 +193,20 @@ namespace forte {
         return 0;
       }
 
+      // The generic connections are created in setupFBInterface(), which some FBs only call in initialize(). Until
+      // then these return nullptr, so that deinitialize() also works on an FB whose initialization failed early.
       CEventConnection *getEOConUnchecked(TPortId paEONum) override {
-        return &mGenEOConns[paEONum - getGenEOOffset()];
+        const size_t index = paEONum - getGenEOOffset();
+        return (index < mGenEOConns.size()) ? &mGenEOConns[index] : nullptr;
       }
 
       CDataConnection *getDOConUnchecked(TPortId paDONum) override {
-        return &mGenDOConns[paDONum - getGenDOOffset()];
+        const size_t index = paDONum - getGenDOOffset();
+        return (index < mGenDOConns.size()) ? &mGenDOConns[index] : nullptr;
       }
 
       CDataConnection **getDIConUnchecked(TPortId paDINum) override {
-        return &mGenDIConns[paDINum - getGenDIOffset()];
+        return mGenDIConns ? &mGenDIConns[paDINum - getGenDIOffset()] : nullptr;
       }
 
       SFBInterfaceSpec &getGenInterfaceSpec() {
