@@ -16,6 +16,7 @@ target_sources(forte-core PUBLIC
         FILE_SET HEADERS
         FILES
         common.h
+        common_type.h
         convert.h
         endianess.h
         func_ABS.h
