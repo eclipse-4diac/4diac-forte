@@ -32,6 +32,7 @@ forte_test_add_sourcefile_cpp(funcbloctests.cpp)
 forte_test_add_sourcefile_cpp(fbcontainermock.cpp)
 
 forte_test_add_subdirectory(datatypes)
+forte_test_add_subdirectory(com)
 forte_test_add_subdirectory(cominfra)
 forte_test_add_subdirectory(fbtests)
 forte_test_add_subdirectory(util)

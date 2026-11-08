@@ -23,12 +23,17 @@
 #include <sys/socket.h>
 
 namespace forte::com::impl {
-#ifndef MSG_NOSIGNAL
-#define MSG_NOSIGNAL 0
-#endif
-
   int Socket::close() noexcept {
     return ::close(release());
+  }
+
+  int Socket::setNoSigPipe() const {
+#if !defined(MSG_NOSIGNAL) && defined(SO_NOSIGPIPE)
+    const int enabled = 1;
+    return setsockopt(mSocket, SOL_SOCKET, SO_NOSIGPIPE, &enabled, sizeof(enabled));
+#else
+    return 0;
+#endif
   }
 
   int Socket::setNonBlocking() const {
@@ -74,6 +79,9 @@ namespace forte::com::impl {
   }
 
   ComResult SocketChannel::setSocket(Socket paSocket) {
+    if (paSocket.setNoSigPipe()) {
+      return net::mapSocketError(errno, ComResult::Unknown);
+    }
     if (paSocket.setNonBlocking()) {
       return net::mapSocketError(errno, ComResult::Unknown);
     }
@@ -88,7 +96,7 @@ namespace forte::com::impl {
     if (!mSocket) {
       return ComResult::NoSocket;
     }
-    const ssize_t bytesSent = ::send(mSocket.get(), paData.data(), paData.size(), MSG_NOSIGNAL);
+    const ssize_t bytesSent = ::send(mSocket.get(), paData.data(), paData.size(), SocketSendFlags);
     if (bytesSent < 0) {
       return net::mapSocketError(errno, ComResult::SendFailed);
     }
