@@ -23,7 +23,7 @@ namespace forte::com::impl {
       }
 
     protected:
-      Socket socket(std::string_view paConfigString) override;
+      ComResultValue<Socket> socket(std::string_view paConfigString) override;
   };
 
 } // namespace forte::com::impl

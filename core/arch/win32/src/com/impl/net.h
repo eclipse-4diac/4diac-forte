@@ -20,8 +20,11 @@
 
 namespace forte::com::impl::net {
 
-  ADDRINFOA *resolve(std::string_view paConfigString, const ADDRINFOA &paHints);
+  ComResult mapSocketError(int paError, ComResult paFallback) noexcept;
+  ComResult mapResolverError(int paResolverError, ComResult paFallback) noexcept;
 
-  Socket open(std::string_view paConfigString, const ADDRINFOA &paHints);
+  ComResultValue<ADDRINFOA *> resolve(std::string_view paConfigString, const ADDRINFOA &paHints);
+
+  ComResultValue<Socket> open(std::string_view paConfigString, const ADDRINFOA &paHints);
 
 } // namespace forte::com::impl::net

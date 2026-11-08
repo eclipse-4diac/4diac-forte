@@ -26,8 +26,8 @@ namespace forte::com::impl {
       ComResult close() override;
 
     protected:
-      Socket socket(std::string_view paConfigString) override;
-      ssize_t recv() override;
+      ComResultValue<Socket> socket(std::string_view paConfigString) override;
+      ComResultValue<std::size_t> recv() override;
 
     private:
       bool mConnected = false;
