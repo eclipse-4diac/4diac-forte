@@ -54,7 +54,7 @@ namespace forte::com::impl {
     if (!mConnectionSocket) {
       return ComResult::NoSocket;
     }
-    const ssize_t bytesSent = ::send(mConnectionSocket.get(), paData.data(), paData.size(), MSG_NOSIGNAL);
+    const ssize_t bytesSent = ::send(mConnectionSocket.get(), paData.data(), paData.size(), SocketSendFlags);
     if (bytesSent < 0) {
       return net::mapSocketError(errno, ComResult::SendFailed);
     }
@@ -83,6 +83,9 @@ namespace forte::com::impl {
       Socket connectionSocket{accept(getSocket().get(), nullptr, nullptr)};
       if (!connectionSocket) {
         return {.mResult = net::mapSocketError(errno, ComResult::RecvFailed)};
+      }
+      if (connectionSocket.setNoSigPipe()) {
+        return {.mResult = net::mapSocketError(errno, ComResult::Unknown)};
       }
       if (connectionSocket.setNonBlocking()) {
         return {.mResult = net::mapSocketError(errno, ComResult::Unknown)};

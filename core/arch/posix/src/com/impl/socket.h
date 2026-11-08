@@ -15,11 +15,18 @@
 
 #include <utility>
 #include <sys/types.h>
+#include <sys/socket.h>
 
 #include "forte/com/buffer.h"
 #include "forte/com/channel.h"
 
 namespace forte::com::impl {
+
+#ifdef MSG_NOSIGNAL
+  inline constexpr int SocketSendFlags = MSG_NOSIGNAL;
+#else
+  inline constexpr int SocketSendFlags = 0;
+#endif
 
   class Socket {
     public:
@@ -57,6 +64,7 @@ namespace forte::com::impl {
       }
 
       int close() noexcept;
+      int setNoSigPipe() const;
       int setNonBlocking() const;
       void reset(int paSocket = -1) noexcept;
 
