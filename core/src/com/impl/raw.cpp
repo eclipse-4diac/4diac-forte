@@ -36,7 +36,7 @@ namespace forte::com::impl {
   } // namespace
 
   ComResult RawChannel::open(const std::string_view paConfigString,
-                             const std::span<ComChannelDescriptor> paDescriptors) {
+                             const std::span<const ComChannelDescriptor> paDescriptors) {
     if (paDescriptors.empty()) {
       return ComResult::InvalidId;
     }

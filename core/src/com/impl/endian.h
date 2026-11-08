@@ -25,7 +25,7 @@ namespace forte::com::impl {
       explicit EndianChannel(ComObserver &paObserver) : ComChannel(paObserver) {
       }
 
-      ComResult open(std::string_view paConfigString, std::span<ComChannelDescriptor> paDescriptors) override;
+      ComResult open(std::string_view paConfigString, std::span<const ComChannelDescriptor> paDescriptors) override;
       ComResult send(std::span<CIEC_ANY_VARIANT> paData) override;
       ComResult poll() override;
       ComResult close() override;

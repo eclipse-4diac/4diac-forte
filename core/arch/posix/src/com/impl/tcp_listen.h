@@ -24,7 +24,7 @@ namespace forte::com::impl {
 
       ~TCPListenChannel() override;
 
-      ComResult open(std::string_view paConfigString, std::span<ComChannelDescriptor> paDescriptors) override;
+      ComResult open(std::string_view paConfigString, std::span<const ComChannelDescriptor> paDescriptors) override;
       ComResult send(ComBuffer paData) override;
       ComResult close() override;
 

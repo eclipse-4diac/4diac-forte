@@ -34,7 +34,7 @@ namespace forte::com {
        * \retval InvalidId The address or descriptors are invalid
        * \retval Overflow There are not enough resources
        */
-      virtual ComResult open(std::string_view paConfigString, std::span<ComChannelDescriptor> paDescriptors) = 0;
+      virtual ComResult open(std::string_view paConfigString, std::span<const ComChannelDescriptor> paDescriptors) = 0;
 
       /**
        * \brief Send data via the channel
@@ -82,7 +82,7 @@ namespace forte::com {
        * \retval Ok The size was set successfully
        * \retval Overflow There are not enough resources
        */
-      virtual ComResult setMinReceiveSize(std::size_t paSize) {
+      virtual ComResult setMinReceiveSize(const std::size_t paSize) {
         mMinReceiveSize = paSize;
         return ComResult::Ok;
       };
@@ -94,7 +94,7 @@ namespace forte::com {
        * \retval Ok The size was set successfully
        * \retval Overflow There are not enough resources
        */
-      virtual ComResult setMaxReceiveSize(std::size_t paSize) {
+      virtual ComResult setMaxReceiveSize(const std::size_t paSize) {
         mMaxReceiveSize = paSize;
         return ComResult::Ok;
       };

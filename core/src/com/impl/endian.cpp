@@ -26,7 +26,7 @@ namespace forte::com::impl {
   } // namespace
 
   ComResult EndianChannel::open(const std::string_view paConfigString,
-                                const std::span<ComChannelDescriptor> paDescriptors) {
+                                const std::span<const ComChannelDescriptor> paDescriptors) {
     if (paConfigString.empty() || paConfigString == "native") {
       mEndian = std::endian::native;
     } else if (paConfigString == "big") {
