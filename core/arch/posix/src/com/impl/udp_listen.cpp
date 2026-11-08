@@ -28,6 +28,10 @@ namespace forte::com::impl {
     [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<UDPListenChannel> entry("udp_listen"_STRID);
   }
 
+  bool UDPListenChannel::supports(const std::span<const ComChannelDescriptor> paDescriptors) const {
+    return supportsChannel("udp_listen"_STRID, paDescriptors);
+  }
+
   ComResultValue<Socket> UDPListenChannel::socket(const std::string_view paConfigString) {
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;
@@ -35,15 +39,6 @@ namespace forte::com::impl {
     hints.ai_protocol = IPPROTO_UDP;
     hints.ai_flags = AI_PASSIVE;
     return net::open(paConfigString, hints);
-  }
-
-  ComResult UDPListenChannel::open(const std::string_view paConfigString,
-                                   const std::span<const ComChannelDescriptor> paDescriptors) {
-    const ComResult result = SocketChannel::open(paConfigString, paDescriptors);
-    if (result == ComResult::Ok) {
-      mConnected = false;
-    }
-    return result;
   }
 
   ComResult UDPListenChannel::close() {

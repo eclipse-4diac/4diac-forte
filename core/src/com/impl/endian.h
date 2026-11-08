@@ -30,6 +30,12 @@ namespace forte::com::impl {
       ComResult poll() override;
       ComResult close() override;
 
+      [[nodiscard]] bool isOpen() const override {
+        return mChannel && mChannel->isOpen();
+      }
+
+      [[nodiscard]] bool supports(std::span<const ComChannelDescriptor> paDescriptors) const override;
+
       ComResult receive(std::span<CIEC_ANY_VARIANT> paData, ComChannel &paChannel) override;
       void sent(ComResult paResult, ComChannel &paChannel) override;
 

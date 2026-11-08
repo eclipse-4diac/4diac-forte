@@ -31,7 +31,7 @@ namespace forte::com {
        * \param paDescriptors Communication channel descriptors for configuration
        * \return The result of opening the channel; channel implementations may provide
        * additional results.
-       * \retval Ok The channel was opened successfully
+       * \retval Ok The channel was opened successfully or was already open and left unchanged
        * \retval InvalidId The channel identifier, address, configuration, or descriptors are invalid
        * \retval Overflow A required size or resource capacity cannot be accommodated
        * \retval DataTypeError The configured data type or required observer data is incompatible or unavailable
@@ -50,6 +50,7 @@ namespace forte::com {
        * \retval WouldBlock The operation cannot proceed under the current conditions; retry when they change
        * \retval Interrupted The operation was interrupted before completion
        * \retval PermissionDenied The operation is not permitted
+       * \note If the channel is already open, the config string and descriptors are ignored.
        */
       virtual ComResult open(std::string_view paConfigString, std::span<const ComChannelDescriptor> paDescriptors) = 0;
 
@@ -114,6 +115,19 @@ namespace forte::com {
       virtual ComResult close() = 0;
 
       /**
+       * \brief Check whether the most recent open operation completed successfully
+       * \return true until the channel is logically closed
+       */
+      [[nodiscard]] virtual bool isOpen() const = 0;
+
+      /**
+       * \brief Check whether the descriptors can be handled by the current channel instance
+       * \param paDescriptors The descriptors to check against
+       * \return true if the channel supports the descriptors
+       */
+      [[nodiscard]] virtual bool supports(std::span<const ComChannelDescriptor> paDescriptors) const = 0;
+
+      /**
        * \brief Get the minimum size of received data
        * \return The current minimum size of received data
        * \retval 0 indicates no minimum
@@ -167,6 +181,11 @@ namespace forte::com {
     protected:
       ComObserver<T> &getObserver() {
         return mObserver;
+      }
+
+      [[nodiscard]] static bool supportsChannel(const StringId paChannel,
+                                                const std::span<const ComChannelDescriptor> paDescriptors) {
+        return !paDescriptors.empty() && paDescriptors.front().mChannel == paChannel;
       }
 
     private:

@@ -29,6 +29,10 @@ namespace forte::com::impl {
     [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<TCPListenChannel> entry("tcp_listen"_STRID);
   }
 
+  bool TCPListenChannel::supports(const std::span<const ComChannelDescriptor> paDescriptors) const {
+    return supportsChannel("tcp_listen"_STRID, paDescriptors);
+  }
+
   ComResultValue<Socket> TCPListenChannel::socket(const std::string_view paConfigString) {
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;
@@ -44,12 +48,6 @@ namespace forte::com::impl {
       return {.mResult = net::mapSocketError(errno, ComResult::InvalidId)};
     }
     return sock;
-  }
-
-  ComResult TCPListenChannel::open(const std::string_view paConfigString,
-                                   const std::span<const ComChannelDescriptor> paDescriptors) {
-    mConnectionSocket.reset();
-    return SocketChannel::open(paConfigString, paDescriptors);
   }
 
   ComResult TCPListenChannel::send(ComBuffer paData) {

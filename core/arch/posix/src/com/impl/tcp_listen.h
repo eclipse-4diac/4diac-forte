@@ -17,12 +17,12 @@
 
 namespace forte::com::impl {
 
-  class TCPListenChannel final : public SocketChannel {
+  class TCPListenChannel : public SocketChannel {
     public:
       explicit TCPListenChannel(ComObserver<ComBuffer> &paObserver) : SocketChannel(paObserver) {
       }
 
-      ComResult open(std::string_view paConfigString, std::span<const ComChannelDescriptor> paDescriptors) override;
+      [[nodiscard]] bool supports(std::span<const ComChannelDescriptor> paDescriptors) const override;
       ComResult send(ComBuffer paData) override;
       ComResult close() override;
 
