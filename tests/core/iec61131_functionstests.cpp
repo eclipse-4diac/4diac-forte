@@ -83,6 +83,7 @@
 #include "forte/iec61131_functions/func_RIGHT.h"
 #include "forte/iec61131_functions/func_ROL.h"
 #include "forte/iec61131_functions/func_ROR.h"
+#include "forte/iec61131_functions/func_SEL.h"
 #include "forte/iec61131_functions/func_SHL.h"
 #include "forte/iec61131_functions/func_SHR.h"
 #include "forte/iec61131_functions/func_SPLIT_DATE.h"
@@ -2946,6 +2947,57 @@ namespace forte::test {
 
   BOOST_AUTO_TEST_CASE(func_mux_negative_selector_returns_default) {
     BOOST_TEST(func_MUX(-1_SINT, 3_SINT, 7_INT, 11_DINT).equals(CIEC_DINT{}));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_sel_sint_and_usint_inputs_select_as_int_in_both_orders) {
+    BOOST_TEST((std::is_same_v<decltype(func_SEL(false_BOOL, -1_SINT, 255_USINT)), CIEC_INT>) );
+    BOOST_TEST((std::is_same_v<decltype(func_SEL(false_BOOL, 255_USINT, -1_SINT)), CIEC_INT>) );
+    BOOST_TEST(func_SEL(false_BOOL, -1_SINT, 255_USINT).equals(-1_INT));
+    BOOST_TEST(func_SEL(true_BOOL, -1_SINT, 255_USINT).equals(255_INT));
+    BOOST_TEST(func_SEL(false_BOOL, 255_USINT, -1_SINT).equals(255_INT));
+    BOOST_TEST(func_SEL(true_BOOL, 255_USINT, -1_SINT).equals(-1_INT));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_sel_signed_integer_inputs_select_as_dint) {
+    BOOST_TEST((std::is_same_v<decltype(func_SEL(false_BOOL, -3_SINT, 7_DINT)), CIEC_DINT>) );
+    BOOST_TEST(func_SEL(false_BOOL, -3_SINT, 7_DINT).equals(-3_DINT));
+    BOOST_TEST(func_SEL(true_BOOL, -3_SINT, 7_DINT).equals(7_DINT));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_sel_bool_and_byte_inputs_select_as_byte) {
+    BOOST_TEST((std::is_same_v<decltype(func_SEL(false_BOOL, false_BOOL, 17_BYTE)), CIEC_BYTE>) );
+    BOOST_TEST(func_SEL(false_BOOL, false_BOOL, 17_BYTE).equals(0_BYTE));
+    BOOST_TEST(func_SEL(true_BOOL, false_BOOL, 17_BYTE).equals(17_BYTE));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_sel_bool_inputs_select_as_bool) {
+    BOOST_TEST(func_SEL(false_BOOL, false_BOOL, true_BOOL).equals(false_BOOL));
+    BOOST_TEST(func_SEL(true_BOOL, false_BOOL, true_BOOL).equals(true_BOOL));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_sel_character_and_string_inputs_select_as_string) {
+    const CIEC_CHAR character('a');
+    const CIEC_STRING text("text", 4);
+    BOOST_TEST((std::is_same_v<decltype(func_SEL(false_BOOL, character, text)), CIEC_STRING>) );
+    BOOST_TEST(func_SEL(false_BOOL, character, text).equals(CIEC_STRING("a", 1)));
+    BOOST_TEST(func_SEL(true_BOOL, character, text).equals(text));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_sel_selects_compatible_fixed_array_values) {
+    using ArrayType = CIEC_ARRAY_FIXED<CIEC_INT, 0, 1>;
+    const ArrayType firstArray{1_INT, 2_INT};
+    const ArrayType secondArray{3_INT, 4_INT};
+    BOOST_TEST((std::is_same_v<decltype(func_SEL(false_BOOL, firstArray, secondArray)), ArrayType>) );
+    BOOST_TEST(func_SEL(false_BOOL, firstArray, secondArray).equals(firstArray));
+    BOOST_TEST(func_SEL(true_BOOL, firstArray, secondArray).equals(secondArray));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_sel_selects_compatible_structure_values) {
+    const CIEC_EndianessTestStruct firstStruct(false_BOOL, 1_DINT, 2_LWORD);
+    const CIEC_EndianessTestStruct secondStruct(true_BOOL, 3_DINT, 4_LWORD);
+    BOOST_TEST((std::is_same_v<decltype(func_SEL(false_BOOL, firstStruct, secondStruct)), CIEC_EndianessTestStruct>) );
+    BOOST_TEST(func_SEL(false_BOOL, firstStruct, secondStruct).equals(firstStruct));
+    BOOST_TEST(func_SEL(true_BOOL, firstStruct, secondStruct).equals(secondStruct));
   }
 
   BOOST_AUTO_TEST_CASE(func_lower_bound1) {
