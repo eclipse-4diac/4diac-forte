@@ -79,8 +79,8 @@ namespace forte::com::impl {
       explicit SocketChannel(ComObserver<ComBuffer> &paObserver) : ComChannel(paObserver) {
       }
 
-      virtual Socket socket(std::string_view paConfigString) = 0;
-      virtual ssize_t recv();
+      virtual ComResultValue<Socket> socket(std::string_view paConfigString) = 0;
+      virtual ComResultValue<std::size_t> recv();
 
       [[nodiscard]] const Socket &getSocket() const {
         return mSocket;

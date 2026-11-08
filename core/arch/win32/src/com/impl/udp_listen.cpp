@@ -26,7 +26,7 @@ namespace forte::com::impl {
     [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<UDPListenChannel> entry("udp_listen"_STRID);
   }
 
-  Socket UDPListenChannel::socket(const std::string_view paConfigString) {
+  ComResultValue<Socket> UDPListenChannel::socket(const std::string_view paConfigString) {
     ADDRINFOA hints{};
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_DGRAM;
@@ -50,7 +50,7 @@ namespace forte::com::impl {
     return result;
   }
 
-  std::size_t UDPListenChannel::recv() {
+  ComResultValue<std::size_t> UDPListenChannel::recv() {
     DWORD flags = 0;
     DWORD bytesReceived = 0;
     sockaddr_storage remoteAddr{};
@@ -59,15 +59,15 @@ namespace forte::com::impl {
                   .buf = reinterpret_cast<CHAR *>(getBuffer().data() + getBuffer().size())};
     if (WSARecvFrom(getSocket().get(), &buffer, 1, &bytesReceived, &flags, reinterpret_cast<sockaddr *>(&remoteAddr),
                     &remoteAddrLen, nullptr, nullptr)) {
-      return static_cast<std::size_t>(-1);
+      return {.mResult = net::mapSocketError(WSAGetLastError(), ComResult::RecvFailed)};
     }
-    if (bytesReceived > 0 && !mConnected) {
+    if (!mConnected) {
       if (WSAConnect(getSocket().get(), reinterpret_cast<sockaddr *>(&remoteAddr), remoteAddrLen, nullptr, nullptr,
                      nullptr, nullptr)) {
-        return -1;
-      };
+        return {.mResult = net::mapSocketError(WSAGetLastError(), ComResult::RecvFailed)};
+      }
       mConnected = true;
     }
-    return static_cast<std::size_t>(bytesReceived);
+    return {.mValue = static_cast<std::size_t>(bytesReceived)};
   }
 } // namespace forte::com::impl

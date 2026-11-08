@@ -12,6 +12,7 @@
  *******************************************************************************/
 
 #include "socket.h"
+#include "net.h"
 
 #include <cstdlib>
 
@@ -45,9 +46,9 @@ namespace forte::com::impl {
       return ComResult::InvalidId;
     }
 
-    Socket sock = socket(paConfigString);
-    if (!sock) {
-      return ComResult::InvalidId;
+    auto [result, sock] = socket(paConfigString);
+    if (result != ComResult::Ok) {
+      return result;
     }
 
     return setSocket(std::move(sock));
@@ -55,7 +56,7 @@ namespace forte::com::impl {
 
   ComResult SocketChannel::setSocket(Socket paSocket) {
     if (paSocket.setNonBlocking()) {
-      return ComResult::Unknown;
+      return net::mapSocketError(WSAGetLastError(), ComResult::Unknown);
     }
 
     mSocket = std::move(paSocket);
@@ -65,30 +66,41 @@ namespace forte::com::impl {
   }
 
   ComResult SocketChannel::send(ComBuffer paData) {
+    if (!mSocket) {
+      return ComResult::NoSocket;
+    }
     DWORD bytesSent = 0;
     WSABUF buffer{.len = static_cast<ULONG>(paData.size()), .buf = reinterpret_cast<CHAR *>(paData.data())};
-    if (WSASend(mSocket.get(), &buffer, 1, &bytesSent, 0, nullptr, nullptr) ||
-        static_cast<std::size_t>(bytesSent) != paData.size()) {
+    if (WSASend(mSocket.get(), &buffer, 1, &bytesSent, 0, nullptr, nullptr)) {
+      return net::mapSocketError(WSAGetLastError(), ComResult::SendFailed);
+    }
+    if (static_cast<std::size_t>(bytesSent) != paData.size()) {
       return ComResult::SendFailed;
     }
     return ComResult::Ok;
   }
 
-  std::size_t SocketChannel::recv() {
+  ComResultValue<std::size_t> SocketChannel::recv() {
     DWORD flags = 0;
     DWORD bytesReceived = 0;
     WSABUF buffer{.len = static_cast<ULONG>(getMaxReceiveSize() - mBuffer.size()),
                   .buf = reinterpret_cast<CHAR *>(mBuffer.data() + mBuffer.size())};
     if (WSARecv(mSocket.get(), &buffer, 1, &bytesReceived, &flags, nullptr, nullptr)) {
-      return static_cast<std::size_t>(-1);
+      return {.mResult = net::mapSocketError(WSAGetLastError(), ComResult::RecvFailed)};
     }
-    return static_cast<std::size_t>(bytesReceived);
+    return {.mValue = static_cast<std::size_t>(bytesReceived)};
   }
 
   ComResult SocketChannel::poll() {
-    const std::size_t bytesReceived = recv();
-    if (bytesReceived == 0 || bytesReceived == static_cast<std::size_t>(-1)) {
-      return ComResult::RecvFailed;
+    if (!mSocket) {
+      return ComResult::NoSocket;
+    }
+    if (mBuffer.size() >= getMaxReceiveSize()) {
+      return ComResult::WouldBlock;
+    }
+    const auto [result, bytesReceived] = recv();
+    if (result != ComResult::Ok) {
+      return result;
     }
     mBuffer.resize(mBuffer.size() + bytesReceived);
     if (mBuffer.size() < getMinReceiveSize()) {
@@ -105,11 +117,7 @@ namespace forte::com::impl {
       return ComResult::NoSocket;
     }
     if (mSocket.close()) {
-      switch (WSAGetLastError()) {
-        case WSAENOTSOCK: return ComResult::NoSocket;
-        case WSAENETDOWN: return ComResult::SendFailed;
-        default: return ComResult::Unknown;
-      }
+      return net::mapSocketError(WSAGetLastError(), ComResult::Unknown);
     }
     return ComResult::Ok;
   }
