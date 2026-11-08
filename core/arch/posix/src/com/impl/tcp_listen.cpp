@@ -53,7 +53,7 @@ namespace forte::com::impl {
     return sock;
   }
 
-  ComResult TCPListenChannel::open(std::string_view paConfigString, std::span<ComChannelDescriptor> paDescriptors) {
+  ComResult TCPListenChannel::open(std::string_view paConfigString, std::span<const ComChannelDescriptor> paDescriptors) {
     if (mConnectionSocket >= 0) {
       ::close(mConnectionSocket);
       mConnectionSocket = -1;

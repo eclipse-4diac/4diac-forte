@@ -37,7 +37,7 @@ namespace forte::com::impl {
   }
 
   ComResult UDPListenChannel::open(const std::string_view paConfigString,
-                                   const std::span<ComChannelDescriptor> paDescriptors) {
+                                   const std::span<const ComChannelDescriptor> paDescriptors) {
     const ComResult result = SocketChannel::open(paConfigString, paDescriptors);
     if (result == ComResult::Ok) {
       mConnected = false;

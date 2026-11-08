@@ -22,7 +22,7 @@ namespace forte::com::impl {
 
   class SocketChannel : public ComChannel<ComBuffer> {
     public:
-      ComResult open(std::string_view paConfigString, std::span<ComChannelDescriptor> paDescriptors) override;
+      ComResult open(std::string_view paConfigString, std::span<const ComChannelDescriptor> paDescriptors) override;
       ComResult send(ComBuffer paData) override;
       ComResult poll() override;
       ComResult close() override;
