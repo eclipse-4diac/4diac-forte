@@ -25,19 +25,36 @@ namespace forte::com::impl {
 
   ComResult NullChannel::open(const std::string_view paConfigString,
                               const std::span<const ComChannelDescriptor> paDescriptors) {
-    return paConfigString.empty() && paDescriptors.empty() ? ComResult::Ok : ComResult::InvalidId;
-  }
+    if (isOpen()) {
+      return ComResult::Ok;
+    }
 
-  ComResult NullChannel::send(ComBuffer) {
+    if (!paConfigString.empty() || !paDescriptors.empty()) {
+      return ComResult::InvalidId;
+    }
+
+    mIsOpen = true;
     return ComResult::Ok;
   }
 
+  bool NullChannel::supports(const std::span<const ComChannelDescriptor> paDescriptors) const {
+    return supportsChannel("null"_STRID, paDescriptors);
+  }
+
+  ComResult NullChannel::send(ComBuffer) {
+    return mIsOpen ? ComResult::Ok : ComResult::NoSocket;
+  }
+
   ComResult NullChannel::poll() {
+    if (!mIsOpen) {
+      return ComResult::NoSocket;
+    }
     getObserver().receive({nullptr, 0}, *this);
     return ComResult::Async;
   }
 
   ComResult NullChannel::close() {
+    mIsOpen = false;
     return ComResult::Ok;
   }
 

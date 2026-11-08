@@ -18,29 +18,37 @@
 
 namespace forte::com {
   ComResult BaseCommunicationFB::open(const std::string_view paID) {
+    if (mChannel && mChannel->isOpen()) {
+      return ComResult::Ok;
+    }
+
     std::vector<ComChannelDescriptor> descriptors = parseComId(paID);
     if (descriptors.empty()) {
       return ComResult::InvalidId;
     }
 
-    mChannel = ComChannelFactory<std::span<CIEC_ANY_VARIANT>>::create(descriptors.front().mChannel, *this);
-    if (!mChannel) {
-      return ComResult::InvalidId;
+    if (!mChannel || !mChannel->supports(descriptors)) {
+      mChannel = ComChannelFactory<std::span<CIEC_ANY_VARIANT>>::create(descriptors.front().mChannel, *this);
+      if (!mChannel) {
+        return ComResult::InvalidId;
+      }
     }
 
-    if (const ComResult result = mChannel->open(descriptors.front().mConfigString, std::span{descriptors}.subspan(1));
-        result != ComResult::Ok) {
-      mChannel.reset();
-      return result;
+    if (const auto receiveBuffer = getReceiveBuffer()) {
+      if (const ComResult result = mChannel->setMaxReceiveSize(receiveBuffer->size()); result != ComResult::Ok) {
+        return result;
+      }
+      if (const ComResult result = mChannel->setMinReceiveSize(receiveBuffer->size()); result != ComResult::Ok) {
+        return result;
+      }
     }
 
-    return ComResult::Ok;
+    return mChannel->open(descriptors.front().mConfigString, std::span{descriptors}.subspan(1));
   }
 
   void BaseCommunicationFB::close() {
     if (mChannel) {
       mChannel->close();
-      mChannel.reset();
     }
   }
 

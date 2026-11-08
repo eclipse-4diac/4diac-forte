@@ -17,12 +17,12 @@
 
 namespace forte::com::impl {
 
-  class UDPListenChannel final : public SocketChannel {
+  class UDPListenChannel : public SocketChannel {
     public:
       explicit UDPListenChannel(ComObserver<ComBuffer> &paObserver) : SocketChannel(paObserver) {
       }
 
-      ComResult open(std::string_view paConfigString, std::span<const ComChannelDescriptor> paDescriptors) override;
+      [[nodiscard]] bool supports(std::span<const ComChannelDescriptor> paDescriptors) const override;
       ComResult close() override;
 
     protected:

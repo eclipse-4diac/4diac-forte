@@ -27,6 +27,10 @@ namespace forte::com::impl {
     [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<TCPChannel> entry("tcp"_STRID);
   }
 
+  bool TCPChannel::supports(const std::span<const ComChannelDescriptor> paDescriptors) const {
+    return supportsChannel("tcp"_STRID, paDescriptors);
+  }
+
   ComResultValue<Socket> TCPChannel::socket(const std::string_view paConfigString) {
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;

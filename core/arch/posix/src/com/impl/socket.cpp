@@ -58,6 +58,9 @@ namespace forte::com::impl {
 
   ComResult SocketChannel::open(const std::string_view paConfigString,
                                 const std::span<const ComChannelDescriptor> paDescriptors) {
+    if (isOpen()) {
+      return ComResult::Ok;
+    }
     if (!paDescriptors.empty()) {
       return ComResult::InvalidId;
     }

@@ -28,7 +28,16 @@ namespace forte::com::impl {
       ComResult poll() override;
       ComResult close() override;
 
+      [[nodiscard]] bool isOpen() const override {
+        return mIsOpen;
+      }
+
+      [[nodiscard]] bool supports(std::span<const ComChannelDescriptor> paDescriptors) const override;
+
       ComResult setMinReceiveSize(std::size_t paSize) override;
+
+    private:
+      bool mIsOpen = false;
   };
 
 } // namespace forte::com::impl

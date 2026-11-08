@@ -71,6 +71,10 @@ namespace forte::com::impl {
       ComResult poll() override;
       ComResult close() override;
 
+      [[nodiscard]] bool isOpen() const override {
+        return static_cast<bool>(mSocket);
+      }
+
       ComResult setMaxReceiveSize(std::size_t paSize) override;
 
       ~SocketChannel() override;
