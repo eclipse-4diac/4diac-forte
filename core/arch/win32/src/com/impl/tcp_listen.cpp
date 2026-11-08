@@ -24,43 +24,33 @@ namespace forte::com::impl {
     [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<TCPListenChannel> entry("tcp_listen"_STRID);
   }
 
-  TCPListenChannel::~TCPListenChannel() {
-    if (mConnectionSocket != INVALID_SOCKET) {
-      ::closesocket(mConnectionSocket);
-    }
-  }
-
-  SOCKET TCPListenChannel::socket(const std::string_view paConfigString) {
+  Socket TCPListenChannel::socket(const std::string_view paConfigString) {
     ADDRINFOA hints{};
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
     hints.ai_flags = AI_PASSIVE;
-    const SOCKET sock = net::open(paConfigString, hints);
-    if (sock == INVALID_SOCKET) {
-      return INVALID_SOCKET;
+    Socket sock = net::open(paConfigString, hints);
+    if (!sock) {
+      return {};
     }
 
-    if (::listen(sock, 1)) {
-      ::closesocket(sock);
-      return INVALID_SOCKET;
+    if (::listen(sock.get(), 1)) {
+      return {};
     }
     return sock;
   }
 
   ComResult TCPListenChannel::open(const std::string_view paConfigString,
                                    const std::span<ComChannelDescriptor> paDescriptors) {
-    if (mConnectionSocket != INVALID_SOCKET) {
-      ::closesocket(mConnectionSocket);
-      mConnectionSocket = INVALID_SOCKET;
-    }
+    mConnectionSocket.reset();
     return SocketChannel::open(paConfigString, paDescriptors);
   }
 
   ComResult TCPListenChannel::send(ComBuffer paData) {
     DWORD bytesSent = 0;
     WSABUF buffer{.len = static_cast<ULONG>(paData.size()), .buf = reinterpret_cast<CHAR *>(paData.data())};
-    if (WSASend(mConnectionSocket, &buffer, 1, &bytesSent, 0, nullptr, nullptr) ||
+    if (WSASend(mConnectionSocket.get(), &buffer, 1, &bytesSent, 0, nullptr, nullptr) ||
         static_cast<std::size_t>(bytesSent) != paData.size()) {
       return ComResult::SendFailed;
     }
@@ -69,15 +59,14 @@ namespace forte::com::impl {
 
   ComResult TCPListenChannel::close() {
     auto connectionResult = ComResult::Ok;
-    if (mConnectionSocket != INVALID_SOCKET) {
-      if (::closesocket(mConnectionSocket)) {
+    if (mConnectionSocket) {
+      if (mConnectionSocket.close()) {
         switch (WSAGetLastError()) {
           case WSAENOTSOCK: connectionResult = ComResult::NoSocket; break;
           case WSAENETDOWN: connectionResult = ComResult::SendFailed; break;
           default: connectionResult = ComResult::Unknown; break;
         }
       }
-      mConnectionSocket = INVALID_SOCKET;
     }
 
     if (const ComResult result = SocketChannel::close(); result != ComResult::Ok) {
@@ -87,22 +76,21 @@ namespace forte::com::impl {
   }
 
   std::size_t TCPListenChannel::recv() {
-    if (mConnectionSocket == INVALID_SOCKET) {
-      mConnectionSocket = WSAAccept(getSocket(), nullptr, nullptr, nullptr, 0);
-      if (mConnectionSocket == INVALID_SOCKET) {
+    if (!mConnectionSocket) {
+      Socket connectionSocket{WSAAccept(getSocket().get(), nullptr, nullptr, nullptr, 0)};
+      if (!connectionSocket) {
         return static_cast<std::size_t>(-1);
       }
-      if (net::setNonBlocking(mConnectionSocket)) {
-        ::closesocket(mConnectionSocket);
-        mConnectionSocket = INVALID_SOCKET;
+      if (connectionSocket.setNonBlocking()) {
         return static_cast<std::size_t>(-1);
       }
+      mConnectionSocket = std::move(connectionSocket);
     }
     DWORD flags = 0;
     DWORD bytesReceived = 0;
     WSABUF buffer{.len = static_cast<ULONG>(getMaxReceiveSize() - getBuffer().size()),
                   .buf = reinterpret_cast<CHAR *>(getBuffer().data() + getBuffer().size())};
-    if (WSARecv(mConnectionSocket, &buffer, 1, &bytesReceived, &flags, nullptr, nullptr)) {
+    if (WSARecv(mConnectionSocket.get(), &buffer, 1, &bytesReceived, &flags, nullptr, nullptr)) {
       return static_cast<std::size_t>(-1);
     }
     return static_cast<std::size_t>(bytesReceived);

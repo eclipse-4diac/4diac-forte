@@ -13,12 +13,56 @@
 
 #pragma once
 
+#include <utility>
 #include <sys/types.h>
 
 #include "forte/com/buffer.h"
 #include "forte/com/channel.h"
 
 namespace forte::com::impl {
+
+  class Socket {
+    public:
+      Socket() noexcept = default;
+      explicit Socket(const int paSocket) noexcept : mSocket(paSocket) {
+      }
+
+      ~Socket() {
+        reset();
+      }
+
+      Socket(const Socket &) = delete;
+      Socket &operator=(const Socket &) = delete;
+
+      Socket(Socket &&paOther) noexcept : mSocket(std::exchange(paOther.mSocket, -1)) {
+      }
+
+      Socket &operator=(Socket &&paOther) noexcept {
+        if (this != &paOther) {
+          reset(std::exchange(paOther.mSocket, -1));
+        }
+        return *this;
+      }
+
+      [[nodiscard]] explicit operator bool() const noexcept {
+        return mSocket >= 0;
+      }
+
+      [[nodiscard]] int get() const noexcept {
+        return mSocket;
+      }
+
+      [[nodiscard]] int release() noexcept {
+        return std::exchange(mSocket, -1);
+      }
+
+      int close() noexcept;
+      int setNonBlocking() const;
+      void reset(int paSocket = -1) noexcept;
+
+    private:
+      int mSocket{-1};
+  };
 
   class SocketChannel : public ComChannel<ComBuffer> {
     public:
@@ -32,22 +76,24 @@ namespace forte::com::impl {
       ~SocketChannel() override;
 
     protected:
-      explicit SocketChannel(ComObserver<ComBuffer> &paObserver) : ComChannel(paObserver), mSocket(-1) {
+      explicit SocketChannel(ComObserver<ComBuffer> &paObserver) : ComChannel(paObserver) {
       }
 
-      virtual int socket(std::string_view paConfigString) = 0;
+      virtual Socket socket(std::string_view paConfigString) = 0;
       virtual ssize_t recv();
 
-      [[nodiscard]] int getSocket() const {
+      [[nodiscard]] const Socket &getSocket() const {
         return mSocket;
       }
+
+      ComResult setSocket(Socket paSocket);
 
       ComBuffer &getBuffer() {
         return mBuffer;
       }
 
     private:
-      int mSocket;
+      Socket mSocket;
       ComBuffer mBuffer;
   };
 

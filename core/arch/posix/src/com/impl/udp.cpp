@@ -27,7 +27,7 @@ namespace forte::com::impl {
     [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<UDPChannel> entry("udp"_STRID);
   }
 
-  int UDPChannel::socket(const std::string_view paConfigString) {
+  Socket UDPChannel::socket(const std::string_view paConfigString) {
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_DGRAM;

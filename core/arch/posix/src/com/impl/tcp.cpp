@@ -27,7 +27,7 @@ namespace forte::com::impl {
     [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<TCPChannel> entry("tcp"_STRID);
   }
 
-  int TCPChannel::socket(const std::string_view paConfigString) {
+  Socket TCPChannel::socket(const std::string_view paConfigString) {
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;

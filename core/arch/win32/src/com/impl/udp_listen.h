@@ -25,7 +25,8 @@ namespace forte::com::impl {
       ComResult open(std::string_view paConfigString, std::span<ComChannelDescriptor> paDescriptors) override;
       ComResult close() override;
 
-      SOCKET socket(std::string_view paConfigString) override;
+    protected:
+      Socket socket(std::string_view paConfigString) override;
       std::size_t recv() override;
 
     private:

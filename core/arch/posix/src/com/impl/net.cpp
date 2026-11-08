@@ -18,47 +18,56 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <unistd.h>
+#include <utility>
 
-int forte::com::impl::net::open(const std::string_view paConfigString, const addrinfo &paHints) {
-  const size_t colonPos = paConfigString.rfind(':');
-  if (colonPos == std::string_view::npos) {
-    return -1;
-  }
+namespace forte::com::impl::net {
+  namespace {
+    Socket open(const addrinfo *rp) {
+      Socket sock{::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol)};
+      if (!sock) {
+        return {};
+      }
 
-  const auto host = std::string{paConfigString.substr(0, colonPos)};
-  const auto portStr = std::string{paConfigString.substr(colonPos + 1)};
+      if (rp->ai_flags & AI_PASSIVE) {
+        if (bind(sock.get(), rp->ai_addr, rp->ai_addrlen)) {
+          return {};
+        }
+      } else if (connect(sock.get(), rp->ai_addr, rp->ai_addrlen)) {
+        return {};
+      }
 
-  addrinfo *result;
-  if (getaddrinfo(host.c_str(), portStr.c_str(), &paHints, &result)) {
-    return -1;
-  }
-
-  for (const addrinfo *rp = result; rp != nullptr; rp = rp->ai_next) {
-    const int sock = socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol);
-    if (sock < 0) {
-      continue;
-    }
-
-    if ((rp->ai_flags & AI_PASSIVE ? bind(sock, rp->ai_addr, rp->ai_addrlen)
-                                   : connect(sock, rp->ai_addr, rp->ai_addrlen)) == 0) {
-      freeaddrinfo(result);
       return sock;
     }
+  } // namespace
 
-    close(sock);
+  addrinfo *resolve(const std::string_view paConfigString, const addrinfo &paHints) {
+    const size_t colonPos = paConfigString.rfind(':');
+    if (colonPos == std::string_view::npos) {
+      return nullptr;
+    }
+
+    const auto host = std::string{paConfigString.substr(0, colonPos)};
+    const auto portStr = std::string{paConfigString.substr(colonPos + 1)};
+
+    addrinfo *result = nullptr;
+    if (getaddrinfo(host.c_str(), portStr.c_str(), &paHints, &result)) {
+      return nullptr;
+    }
+    return result;
   }
 
-  freeaddrinfo(result);
-  return -1;
-}
+  Socket open(const std::string_view paConfigString, const addrinfo &paHints) {
+    addrinfo *result = resolve(paConfigString, paHints);
+    if (!result) {
+      return {};
+    }
 
-int forte::com::impl::net::setNonBlocking(const int paSocket) {
-  const int flags = fcntl(paSocket, F_GETFL, 0);
-  if (flags == -1) {
-    return -1;
+    Socket sock;
+    for (const addrinfo *rp = result; rp != nullptr && !sock; rp = rp->ai_next) {
+      sock = open(rp);
+    }
+
+    freeaddrinfo(result);
+    return sock;
   }
-  if (fcntl(paSocket, F_SETFL, flags | O_NONBLOCK) == -1) {
-    return -1;
-  }
-  return 0;
-}
+} // namespace forte::com::impl::net

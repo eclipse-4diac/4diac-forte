@@ -22,18 +22,16 @@ namespace forte::com::impl {
       explicit TCPListenChannel(ComObserver<ComBuffer> &paObserver) : SocketChannel(paObserver) {
       }
 
-      ~TCPListenChannel() override;
-
       ComResult open(std::string_view paConfigString, std::span<ComChannelDescriptor> paDescriptors) override;
       ComResult send(ComBuffer paData) override;
       ComResult close() override;
 
     protected:
-      SOCKET socket(std::string_view paConfigString) override;
+      Socket socket(std::string_view paConfigString) override;
       std::size_t recv() override;
 
     private:
-      SOCKET mConnectionSocket = INVALID_SOCKET;
+      Socket mConnectionSocket;
   };
 
 } // namespace forte::com::impl
