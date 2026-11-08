@@ -1,5 +1,5 @@
 /*************************************************************************
- *** Copyright (c) 2025 HR Agrartechnik GmbH
+ *** Copyright (c) 2025 HR Agrartechnik GmbH, Martin Melik Merkumians
  ***
  *** This program and the accompanying materials are made
  *** available under the terms of the Eclipse Public License 2.0
@@ -17,6 +17,10 @@
  ***     1.0: 2013-08-30/Monika Wenger - TU Wien ACIN -
  ***     1.1: 2024-07-15/Franz Höpfinger - HR Agrartechnik GmbH - F_MUX_2 copy and added 1 IN
  ***     3.0: 2025-04-14/Patrick Aigner -  - changed package
+ ***
+ *** Contributors:
+ ***    Martin Melik Merkumians
+ ***      - delegate to shared MUX selection and common IEC result typing
  *************************************************************************/
 
 #include "forte/iec61131/selection/GEN_F_MUX_fbt.h"
@@ -48,19 +52,14 @@ namespace forte::iec61131::selection {
   void GEN_F_MUX::executeEvent(const TEventID paEIID, CEventChainExecutionThread *const paECET) {
     switch (paEIID) {
       case scmEventREQID:
-        var_OUT = std::visit(
-            [this](auto &&paK) -> CIEC_ANY_VARIANT {
-              using T = std::decay_t<decltype(paK)>;
-              typename T::TValueType valueK = static_cast<typename T::TValueType>(paK);
-
-              if (valueK >= 0 && valueK < getFBInterfaceSpec().getNumDIs() - 1) {
-                return mGenDIs[valueK];
-              }
-              DEVLOG_ERROR("Value of input K is out of range. Expected between 0 and %zu\n",
-                           getFBInterfaceSpec().getNumDIs() - 2);
-              return CIEC_ANY_VARIANT();
-            },
-            static_cast<CIEC_ANY_INT_VARIANT::variant &>(var_K));
+        if (!std::visit(
+                [this](const auto &paK) {
+                  return mux_detail::select(paK, std::span<const CIEC_ANY_VARIANT>(mGenDIs.get(), getGenDINums()),
+                                            var_OUT);
+                },
+                static_cast<const CIEC_ANY_INT_VARIANT::variant &>(var_K))) {
+          DEVLOG_ERROR("MUX selector is out of range or inputs have no common IEC type\n");
+        }
         sendOutputEvent(scmEventCNFID, paECET);
         break;
     }

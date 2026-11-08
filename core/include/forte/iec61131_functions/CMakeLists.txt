@@ -237,6 +237,7 @@ target_sources(forte-core PUBLIC
         func_MUL.h
         func_MUL_LTIME.h
         func_MUL_TIME.h
+        func_MUX.h
         func_NE.h
         func_NOT.h
         func_NOW.h

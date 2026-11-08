@@ -74,6 +74,7 @@
 #include "forte/iec61131_functions/func_MUL.h"
 #include "forte/iec61131_functions/func_MUL_LTIME.h"
 #include "forte/iec61131_functions/func_MUL_TIME.h"
+#include "forte/iec61131_functions/func_MUX.h"
 #include "forte/iec61131_functions/func_NE.h"
 #include "forte/iec61131_functions/func_NOT.h"
 #include "forte/iec61131_functions/func_OR.h"
@@ -2799,6 +2800,152 @@ namespace forte::test {
 
   BOOST_AUTO_TEST_CASE(mpl_common_type_rejects_distinct_structure_types_despite_cpp_inheritance) {
     BOOST_TEST((std::is_same_v<mpl::common_type_t<CIEC_EndianessTestStruct, CIEC_MuxOtherStruct>, mpl::NullType>) );
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_selects_first_and_last_integer_inputs_as_dint) {
+    BOOST_TEST((std::is_same_v<decltype(func_MUX(0_USINT, 3_SINT, 7_INT, 11_DINT)), CIEC_DINT>) );
+    BOOST_TEST(func_MUX(0_USINT, 3_SINT, 7_INT, 11_DINT).equals(3_DINT));
+    BOOST_TEST(func_MUX(2_USINT, 3_SINT, 7_INT, 11_DINT).equals(11_DINT));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_sint_usint_int_inputs_select_as_int_in_every_order) {
+    BOOST_TEST((std::is_same_v<decltype(func_MUX(0_INT, -1_SINT, 255_USINT, 1000_INT)), CIEC_INT>) );
+    BOOST_TEST((std::is_same_v<decltype(func_MUX(0_INT, -1_SINT, 1000_INT, 255_USINT)), CIEC_INT>) );
+    BOOST_TEST((std::is_same_v<decltype(func_MUX(0_INT, 255_USINT, -1_SINT, 1000_INT)), CIEC_INT>) );
+    BOOST_TEST((std::is_same_v<decltype(func_MUX(0_INT, 255_USINT, 1000_INT, -1_SINT)), CIEC_INT>) );
+    BOOST_TEST((std::is_same_v<decltype(func_MUX(0_INT, 1000_INT, -1_SINT, 255_USINT)), CIEC_INT>) );
+    BOOST_TEST((std::is_same_v<decltype(func_MUX(0_INT, 1000_INT, 255_USINT, -1_SINT)), CIEC_INT>) );
+    BOOST_TEST(func_MUX(0_INT, -1_SINT, 255_USINT, 1000_INT).equals(-1_INT));
+    BOOST_TEST(func_MUX(1_INT, -1_SINT, 255_USINT, 1000_INT).equals(255_INT));
+    BOOST_TEST(func_MUX(2_INT, -1_SINT, 255_USINT, 1000_INT).equals(1000_INT));
+    BOOST_TEST(func_MUX(2_INT, 1000_INT, 255_USINT, -1_SINT).equals(-1_INT));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_sint_and_usint_inputs_select_as_int) {
+    BOOST_TEST((std::is_same_v<decltype(func_MUX(0_INT, -1_SINT, 255_USINT)), CIEC_INT>) );
+    BOOST_TEST((std::is_same_v<decltype(func_MUX(0_INT, 255_USINT, -1_SINT)), CIEC_INT>) );
+    BOOST_TEST(func_MUX(0_INT, -1_SINT, 255_USINT).equals(-1_INT));
+    BOOST_TEST(func_MUX(1_INT, -1_SINT, 255_USINT).equals(255_INT));
+    BOOST_TEST(func_MUX(1_INT, 255_USINT, -1_SINT).equals(-1_INT));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_runtime_integer_inputs_select_as_dint) {
+    const std::array<CIEC_ANY_VARIANT, 3> inputs{CIEC_ANY_VARIANT(3_SINT), CIEC_ANY_VARIANT(7_INT),
+                                                 CIEC_ANY_VARIANT(11_DINT)};
+    CIEC_ANY_VARIANT output;
+    BOOST_TEST(mux_detail::select(0_USINT, std::span<const CIEC_ANY_VARIANT>(inputs), output));
+    BOOST_TEST(output.unwrap().getDataTypeID() == CIEC_ANY::e_DINT);
+    BOOST_TEST(static_cast<const CIEC_DINT &>(output.unwrap()).equals(3_DINT));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_runtime_rejects_integer_and_string_inputs) {
+    const std::array<CIEC_ANY_VARIANT, 2> incompatibleInputs{CIEC_ANY_VARIANT(3_SINT),
+                                                             CIEC_ANY_VARIANT(CIEC_STRING("text", 4))};
+    CIEC_ANY_VARIANT output(3_DINT);
+    BOOST_TEST(!mux_detail::select(0_USINT, std::span<const CIEC_ANY_VARIANT>(incompatibleInputs), output));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_runtime_sint_usint_int_inputs_select_as_int_in_both_orders) {
+    const std::array<CIEC_ANY_VARIANT, 3> inputs{CIEC_ANY_VARIANT(-1_SINT), CIEC_ANY_VARIANT(255_USINT),
+                                                 CIEC_ANY_VARIANT(1000_INT)};
+    const std::array<CIEC_ANY_VARIANT, 3> reversed{inputs[2], inputs[1], inputs[0]};
+    CIEC_ANY_VARIANT output;
+    BOOST_REQUIRE(mux_detail::select(0_INT, std::span<const CIEC_ANY_VARIANT>(inputs), output));
+    BOOST_TEST(output.unwrap().equals(-1_INT));
+    BOOST_REQUIRE(mux_detail::select(2_INT, std::span<const CIEC_ANY_VARIANT>(reversed), output));
+    BOOST_TEST(output.unwrap().equals(-1_INT));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_runtime_sint_and_usint_inputs_select_as_int) {
+    const std::array<CIEC_ANY_VARIANT, 2> inputs{CIEC_ANY_VARIANT(-1_SINT), CIEC_ANY_VARIANT(255_USINT)};
+    const std::span<const CIEC_ANY_VARIANT> pair(inputs);
+    CIEC_ANY_VARIANT output(-1_INT);
+    BOOST_REQUIRE(mux_detail::select(1_INT, pair, output));
+    BOOST_TEST(output.unwrap().equals(255_INT));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_runtime_rejects_maximum_ulint_selector) {
+    const std::array<CIEC_ANY_VARIANT, 2> inputs{CIEC_ANY_VARIANT(-1_SINT), CIEC_ANY_VARIANT(255_USINT)};
+    const std::span<const CIEC_ANY_VARIANT> pair(inputs);
+    CIEC_ANY_VARIANT output(255_INT);
+    BOOST_TEST(!mux_detail::select(18446744073709551615_ULINT, pair, output));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_selects_compatible_fixed_array_values) {
+    using ArrayType = CIEC_ARRAY_FIXED<CIEC_INT, -1, 0>;
+    const ArrayType first{1_INT, 2_INT};
+    const ArrayType second{3_INT, 4_INT};
+    BOOST_TEST((std::is_same_v<decltype(func_MUX(1_INT, first, second)), ArrayType>) );
+    BOOST_TEST(func_MUX(1_INT, first, second).equals(second));
+
+    CIEC_ANY_VARIANT output;
+    const std::array<CIEC_ANY_VARIANT, 2> inputs{CIEC_ANY_VARIANT(first), CIEC_ANY_VARIANT(second)};
+    BOOST_REQUIRE(mux_detail::select(1_INT, std::span<const CIEC_ANY_VARIANT>(inputs), output));
+    BOOST_TEST(output.unwrap().equals(second));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_runtime_rejects_fixed_arrays_with_different_element_types) {
+    const CIEC_ARRAY_FIXED<CIEC_INT, -1, 0> first{1_INT, 2_INT};
+    const CIEC_ARRAY_FIXED<CIEC_DINT, -1, 0> differentElementType{1_DINT, 2_DINT};
+    const std::array<CIEC_ANY_VARIANT, 2> differentTypes{CIEC_ANY_VARIANT(first),
+                                                         CIEC_ANY_VARIANT(differentElementType)};
+    CIEC_ANY_VARIANT output(CIEC_ARRAY_FIXED<CIEC_INT, -1, 0>{3_INT, 4_INT});
+    BOOST_TEST(!mux_detail::select(0_INT, std::span<const CIEC_ANY_VARIANT>(differentTypes), output));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_runtime_rejects_equal_length_fixed_arrays_with_different_bounds) {
+    const CIEC_ARRAY_FIXED<CIEC_INT, -1, 0> first{1_INT, 2_INT};
+    const CIEC_ARRAY_FIXED<CIEC_INT, 0, 1> differentBounds{1_INT, 2_INT};
+    const std::array<CIEC_ANY_VARIANT, 2> differentRanges{CIEC_ANY_VARIANT(first), CIEC_ANY_VARIANT(differentBounds)};
+    CIEC_ANY_VARIANT output;
+    BOOST_TEST(!mux_detail::select(0_INT, std::span<const CIEC_ANY_VARIANT>(differentRanges), output));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_selects_compatible_nested_array_values) {
+    using InnerArray = CIEC_ARRAY_FIXED<CIEC_INT, 0, 1>;
+    using OuterArray = CIEC_ARRAY_FIXED<InnerArray, 1, 2>;
+    const OuterArray first{InnerArray{1_INT, 2_INT}, InnerArray{3_INT, 4_INT}};
+    const OuterArray second{InnerArray{5_INT, 6_INT}, InnerArray{7_INT, 8_INT}};
+    BOOST_TEST(func_MUX(1_INT, first, second).equals(second));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_runtime_rejects_nested_arrays_with_different_inner_bounds) {
+    using InnerArray = CIEC_ARRAY_FIXED<CIEC_INT, 0, 1>;
+    using OuterArray = CIEC_ARRAY_FIXED<InnerArray, 1, 2>;
+    const OuterArray first{InnerArray{1_INT, 2_INT}, InnerArray{3_INT, 4_INT}};
+    using DifferentInnerArray = CIEC_ARRAY_FIXED<CIEC_INT, 0, 2>;
+    const CIEC_ARRAY_FIXED<DifferentInnerArray, 1, 2> differentShape;
+    const std::array<CIEC_ANY_VARIANT, 2> inputs{CIEC_ANY_VARIANT(first), CIEC_ANY_VARIANT(differentShape)};
+    CIEC_ANY_VARIANT output;
+    BOOST_TEST(!mux_detail::select(0_INT, std::span<const CIEC_ANY_VARIANT>(inputs), output));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_selects_compatible_structure_values) {
+    const CIEC_EndianessTestStruct first(false_BOOL, 1_DINT, 2_LWORD);
+    const CIEC_EndianessTestStruct second(true_BOOL, 3_DINT, 4_LWORD);
+    BOOST_TEST((std::is_same_v<decltype(func_MUX(1_INT, first, second)), CIEC_EndianessTestStruct>) );
+    BOOST_TEST(func_MUX(1_INT, first, second).equals(second));
+
+    const std::array<CIEC_ANY_VARIANT, 2> inputs{CIEC_ANY_VARIANT(first), CIEC_ANY_VARIANT(second)};
+    CIEC_ANY_VARIANT output;
+    BOOST_REQUIRE(mux_detail::select(1_INT, std::span<const CIEC_ANY_VARIANT>(inputs), output));
+    BOOST_TEST(output.unwrap().equals(second));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_runtime_rejects_different_structure_type_names) {
+    const CIEC_EndianessTestStruct first(false_BOOL, 1_DINT, 2_LWORD);
+    const std::array<CIEC_ANY_VARIANT, 2> differentTypes{CIEC_ANY_VARIANT(first),
+                                                         CIEC_ANY_VARIANT(CIEC_MuxOtherStruct{})};
+    CIEC_ANY_VARIANT output(CIEC_EndianessTestStruct(true_BOOL, 3_DINT, 4_LWORD));
+    BOOST_TEST(!mux_detail::select(0_INT, std::span<const CIEC_ANY_VARIANT>(differentTypes), output));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_selector_equal_to_input_count_returns_default) {
+    BOOST_TEST(func_MUX(3_USINT, 3_SINT, 7_INT, 11_DINT).equals(CIEC_DINT{}));
+  }
+
+  BOOST_AUTO_TEST_CASE(func_mux_negative_selector_returns_default) {
+    BOOST_TEST(func_MUX(-1_SINT, 3_SINT, 7_INT, 11_DINT).equals(CIEC_DINT{}));
   }
 
   BOOST_AUTO_TEST_CASE(func_lower_bound1) {
