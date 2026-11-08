@@ -12,10 +12,12 @@
  *******************************************************************************/
 
 #include "socket.h"
-#include "net.h"
+
+#include <cstdlib>
 
 #include <fcntl.h>
 #include <unistd.h>
+
 #include <sys/socket.h>
 
 namespace forte::com::impl {
@@ -23,10 +25,32 @@ namespace forte::com::impl {
 #define MSG_NOSIGNAL 0
 #endif
 
-  SocketChannel::~SocketChannel() {
+  int Socket::close() noexcept {
+    return ::close(release());
+  }
+
+  int Socket::setNonBlocking() const {
+    const int flags = fcntl(mSocket, F_GETFL, 0);
+    if (flags == -1) {
+      return -1;
+    }
+    if (fcntl(mSocket, F_SETFL, flags | O_NONBLOCK) == -1) {
+      return -1;
+    }
+    return 0;
+  }
+
+  void Socket::reset(const int paSocket) noexcept {
+    if (mSocket == paSocket) {
+      return;
+    }
     if (mSocket >= 0) {
       ::close(mSocket);
     }
+    mSocket = paSocket;
+  }
+
+  SocketChannel::~SocketChannel() {
     std::free(mBuffer.data());
   }
 
@@ -36,25 +60,27 @@ namespace forte::com::impl {
       return ComResult::InvalidId;
     }
 
-    const int sock = socket(paConfigString);
-    if (sock < 0) {
+    Socket sock = socket(paConfigString);
+    if (!sock) {
       return ComResult::InvalidId;
     }
 
-    if (net::setNonBlocking(sock)) {
+    return setSocket(std::move(sock));
+  }
+
+  ComResult SocketChannel::setSocket(Socket paSocket) {
+    if (paSocket.setNonBlocking()) {
       return ComResult::Unknown;
     }
 
-    if (mSocket >= 0) {
-      ::close(mSocket);
-    }
-    mSocket = sock;
+    mSocket = std::move(paSocket);
+    mBuffer.resize(0);
 
     return ComResult::Ok;
   }
 
   ComResult SocketChannel::send(ComBuffer paData) {
-    const ssize_t bytesSent = ::send(mSocket, paData.data(), paData.size(), MSG_NOSIGNAL);
+    const ssize_t bytesSent = ::send(mSocket.get(), paData.data(), paData.size(), MSG_NOSIGNAL);
     if (bytesSent < 0 || static_cast<std::size_t>(bytesSent) != paData.size()) {
       return ComResult::SendFailed;
     }
@@ -62,7 +88,7 @@ namespace forte::com::impl {
   }
 
   ssize_t SocketChannel::recv() {
-    return ::recv(mSocket, mBuffer.data() + mBuffer.size(), getMaxReceiveSize() - mBuffer.size(), 0);
+    return ::recv(mSocket.get(), mBuffer.data() + mBuffer.size(), getMaxReceiveSize() - mBuffer.size(), 0);
   }
 
   ComResult SocketChannel::poll() {
@@ -81,14 +107,16 @@ namespace forte::com::impl {
   }
 
   ComResult SocketChannel::close() {
-    if (::close(mSocket)) {
+    if (!mSocket) {
+      return ComResult::NoSocket;
+    }
+    if (mSocket.close()) {
       switch (errno) {
         case EBADF: return ComResult::NoSocket;
         case EIO: return ComResult::SendFailed;
         default: return ComResult::Unknown;
       }
-    };
-    mSocket = -1;
+    }
     return ComResult::Ok;
   }
 

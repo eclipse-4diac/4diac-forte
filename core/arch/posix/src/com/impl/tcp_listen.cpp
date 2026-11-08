@@ -15,9 +15,9 @@
 #include "net.h"
 
 #include <cerrno>
-#include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <utility>
 
 #include "forte/stringid.h"
 #include "forte/com/factory.h"
@@ -29,40 +29,31 @@ namespace forte::com::impl {
     [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<TCPListenChannel> entry("tcp_listen"_STRID);
   }
 
-  TCPListenChannel::~TCPListenChannel() {
-    if (mConnectionSocket >= 0) {
-      ::close(mConnectionSocket);
-    }
-  }
-
-  int TCPListenChannel::socket(const std::string_view paConfigString) {
+  Socket TCPListenChannel::socket(const std::string_view paConfigString) {
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
     hints.ai_flags = AI_PASSIVE;
-    const int sock = net::open(paConfigString, hints);
-    if (sock < 0) {
-      return -1;
+    Socket sock = net::open(paConfigString, hints);
+    if (!sock) {
+      return {};
     }
 
-    if (listen(sock, 1)) {
-      ::close(sock);
-      return -1;
+    if (::listen(sock.get(), 1)) {
+      return {};
     }
     return sock;
   }
 
-  ComResult TCPListenChannel::open(std::string_view paConfigString, std::span<const ComChannelDescriptor> paDescriptors) {
-    if (mConnectionSocket >= 0) {
-      ::close(mConnectionSocket);
-      mConnectionSocket = -1;
-    }
+  ComResult TCPListenChannel::open(const std::string_view paConfigString,
+                                   const std::span<const ComChannelDescriptor> paDescriptors) {
+    mConnectionSocket.reset();
     return SocketChannel::open(paConfigString, paDescriptors);
   }
 
   ComResult TCPListenChannel::send(ComBuffer paData) {
-    const ssize_t bytesSent = ::send(mConnectionSocket, paData.data(), paData.size(), MSG_NOSIGNAL);
+    const ssize_t bytesSent = ::send(mConnectionSocket.get(), paData.data(), paData.size(), MSG_NOSIGNAL);
     if (bytesSent < 0 || static_cast<std::size_t>(bytesSent) != paData.size()) {
       return ComResult::SendFailed;
     }
@@ -71,15 +62,14 @@ namespace forte::com::impl {
 
   ComResult TCPListenChannel::close() {
     auto connectionResult = ComResult::Ok;
-    if (mConnectionSocket >= 0) {
-      if (::close(mConnectionSocket)) {
+    if (mConnectionSocket) {
+      if (mConnectionSocket.close()) {
         switch (errno) {
           case EBADF: connectionResult = ComResult::NoSocket; break;
           case EIO: connectionResult = ComResult::SendFailed; break;
           default: connectionResult = ComResult::Unknown; break;
         }
       }
-      mConnectionSocket = -1;
     }
 
     if (const ComResult result = SocketChannel::close(); result != ComResult::Ok) {
@@ -89,18 +79,17 @@ namespace forte::com::impl {
   }
 
   ssize_t TCPListenChannel::recv() {
-    if (mConnectionSocket < 0) {
-      mConnectionSocket = accept(getSocket(), nullptr, nullptr);
-      if (mConnectionSocket < 0) {
+    if (!mConnectionSocket) {
+      Socket connectionSocket{accept(getSocket().get(), nullptr, nullptr)};
+      if (!connectionSocket) {
         return -1;
       }
-      if (net::setNonBlocking(mConnectionSocket)) {
-        ::close(mConnectionSocket);
-        mConnectionSocket = -1;
+      if (connectionSocket.setNonBlocking()) {
         return -1;
       }
+      mConnectionSocket = std::move(connectionSocket);
     }
-    return ::recv(mConnectionSocket, getBuffer().data() + getBuffer().size(), getMaxReceiveSize() - getBuffer().size(),
-                  0);
+    return ::recv(mConnectionSocket.get(), getBuffer().data() + getBuffer().size(),
+                  getMaxReceiveSize() - getBuffer().size(), 0);
   }
 } // namespace forte::com::impl

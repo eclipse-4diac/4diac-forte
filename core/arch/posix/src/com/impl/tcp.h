@@ -22,7 +22,8 @@ namespace forte::com::impl {
       explicit TCPChannel(ComObserver<ComBuffer> &paObserver) : SocketChannel(paObserver) {
       }
 
-      int socket(std::string_view paConfigString) override;
+    protected:
+      Socket socket(std::string_view paConfigString) override;
   };
 
 } // namespace forte::com::impl
