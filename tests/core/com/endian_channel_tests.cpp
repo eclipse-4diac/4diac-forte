@@ -77,6 +77,35 @@ namespace forte::com::test {
     BOOST_TEST(!channel.isOpen());
   }
 
+  BOOST_AUTO_TEST_CASE(OPEN_IN_PROGRESS) {
+    TestChannel::reset();
+    TestChannel::smNextOpenResult = ComResult::InProgress;
+    TestVariantObserver observer;
+    impl::EndianChannel channel(observer);
+
+    BOOST_TEST(channel.open({}, std::array{
+                                    ComChannelDescriptor{.mChannel = "test-channel"_STRID, .mConfigString = "child"},
+                                }) == ComResult::InProgress);
+    BOOST_TEST(TestChannel::smCreated == 1);
+    BOOST_TEST(TestChannel::smOpenCalls == 1);
+    BOOST_TEST(!channel.isOpen());
+
+    BOOST_TEST(channel.open({}, std::array{
+                                    ComChannelDescriptor{.mChannel = "test-channel"_STRID, .mConfigString = "child"},
+                                }) == ComResult::InProgress);
+    BOOST_TEST(TestChannel::smCreated == 1);
+    BOOST_TEST(TestChannel::smOpenCalls == 2);
+    BOOST_TEST(!channel.isOpen());
+
+    TestChannel::smNextOpenResult = ComResult::Ok;
+    BOOST_TEST(channel.open({}, std::array{
+                                    ComChannelDescriptor{.mChannel = "test-channel"_STRID, .mConfigString = "child"},
+                                }) == ComResult::Ok);
+    BOOST_TEST(TestChannel::smCreated == 1);
+    BOOST_TEST(TestChannel::smOpenCalls == 3);
+    BOOST_TEST(channel.isOpen());
+  }
+
   BOOST_AUTO_TEST_CASE(VALID_CONFIG) {
     TestChannel::reset();
     TestVariantObserver observer;

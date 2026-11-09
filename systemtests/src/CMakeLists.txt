@@ -15,6 +15,7 @@ target_sources(forte_systemtest PRIVATE
         GatheringTestStruct_dtp.cpp
         MemberAccessTestStruct_dtp.h
         MemberAccessTestStruct_dtp.cpp
+        $<$<AND:$<BOOL:${FORTE_COM_ETH}>,$<BOOL:${LINUX}>>:${CMAKE_CURRENT_SOURCE_DIR}/tcp_blackhole.cpp>
 )
 
 add_subdirectory(modules)

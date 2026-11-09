@@ -108,6 +108,32 @@ namespace forte::com::test {
     BOOST_TEST(TestChannel::smDestroyed == 0);
   }
 
+  BOOST_FIXTURE_TEST_CASE(OPEN_IN_PROGRESS_REUSE, GEN_SEND_RECV_TestFixture) {
+    TestChannel::smNextOpenResult = ComResult::InProgress;
+    initChannel("test-channel[root]", ComResult::InProgress);
+    BOOST_REQUIRE(TestChannel::smLastChannel != nullptr);
+    const int identity = TestChannel::smLastChannel->identity();
+
+    initChannel("test-channel[changed]", ComResult::InProgress);
+    BOOST_TEST(TestChannel::smLastChannel->identity() == identity);
+    BOOST_TEST(TestChannel::smLastChannel->configString() == "changed");
+    BOOST_TEST(TestChannel::smCreated == 1);
+    BOOST_TEST(TestChannel::smOpenCalls == 2);
+
+    initChannel("", ComResult::InvalidId);
+    BOOST_REQUIRE(TestChannel::smDestroyed == 0);
+    BOOST_TEST(TestChannel::smOpenCalls == 2);
+
+    initChannel("test-channel[after-invalid]", ComResult::InProgress);
+    BOOST_TEST(TestChannel::smLastChannel->identity() == identity);
+    BOOST_TEST(TestChannel::smLastChannel->configString() == "after-invalid");
+    BOOST_TEST(TestChannel::smCreated == 1);
+    BOOST_TEST(TestChannel::smOpenCalls == 3);
+
+    closeChannel();
+    BOOST_TEST(TestChannel::smDestroyed == 0);
+  }
+
   BOOST_FIXTURE_TEST_CASE(REPEATED_OPEN_IGNORES_CHANGED_ID_UNTIL_CLOSED, GEN_SEND_RECV_TestFixture) {
     TestChannel::smNextOpenResult = ComResult::Ok;
     initChannel("test-channel[root]", ComResult::Ok);
@@ -132,6 +158,26 @@ namespace forte::com::test {
     BOOST_TEST(TestChannel::smOpenCalls == 2);
     BOOST_TEST(TestChannel::smCloseCalls == 1);
     closeChannel();
+  }
+
+  BOOST_FIXTURE_TEST_CASE(OPEN_FAILURE_RETAINS_CHANNEL_UNTIL_CLOSED, GEN_SEND_RECV_TestFixture) {
+    TestChannel::smNextOpenResult = ComResult::InProgress;
+    initChannel("test-channel[root]", ComResult::InProgress);
+
+    TestChannel::smNextOpenResult = ComResult::Overflow;
+    initChannel("test-alternate-channel[fresh]", ComResult::Overflow);
+    BOOST_TEST(TestChannel::smCreated == 2);
+    BOOST_TEST(TestChannel::smDestroyed == 1);
+    BOOST_TEST(TestChannel::smLastChannel->configString() == "fresh");
+
+    TestChannel::smNextOpenResult = ComResult::InProgress;
+    initChannel("test-alternate-channel[changed]", ComResult::InProgress);
+    BOOST_TEST(TestChannel::smCreated == 2);
+    BOOST_TEST(TestChannel::smLastChannel->configString() == "changed");
+
+    closeChannel();
+    BOOST_TEST(TestChannel::smCloseCalls == 1);
+    BOOST_TEST(TestChannel::smDestroyed == 1);
   }
 
   BOOST_FIXTURE_TEST_CASE(FACTORY_FAILURE_DISCARDS_CHANNELS, GEN_SEND_RECV_TestFixture) {

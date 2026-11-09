@@ -13,27 +13,37 @@
 
 #include "net.h"
 
+#include "../../../../common/src/com/impl/parallel_state.h"
+
 #include <cerrno>
 #include <string>
 #include <sys/socket.h>
 #include <netdb.h>
 #include <unistd.h>
 #include <utility>
+#include <poll.h>
 
 namespace forte::com::impl::net {
   namespace {
-    ComResultValue<Socket> open(const addrinfo *rp) {
+    ComResultValue<Socket> open(const addrinfo *rp, const bool paPassive, const bool paNonBlocking) {
       Socket sock{::socket(rp->ai_family, rp->ai_socktype, rp->ai_protocol)};
       if (!sock) {
         return {.mResult = mapSocketError(errno, ComResult::Unknown)};
       }
 
-      if (rp->ai_flags & AI_PASSIVE) {
+      if (paNonBlocking && sock.setNonBlocking()) {
+        return {.mResult = mapSocketError(errno, ComResult::Unknown)};
+      }
+
+      if (paPassive) {
         if (bind(sock.get(), rp->ai_addr, rp->ai_addrlen)) {
           return {.mResult = mapSocketError(errno, ComResult::Unknown)};
         }
       } else if (connect(sock.get(), rp->ai_addr, rp->ai_addrlen)) {
-        return {.mResult = mapSocketError(errno, ComResult::Unknown)};
+        if (const int error = errno; error != EINPROGRESS && !(paNonBlocking && error == EINTR)) {
+          return {.mResult = mapSocketError(error, ComResult::Unknown)};
+        }
+        return {.mResult = ComResult::InProgress, .mValue = std::move(sock)};
       }
 
       return {.mValue = std::move(sock)};
@@ -41,6 +51,8 @@ namespace forte::com::impl::net {
   } // namespace
 
   ComResult mapSocketError(const int paError, const ComResult paFallback) noexcept {
+    if (paError == 0)
+      return ComResult::Ok;
 #ifdef EADDRINUSE
     if (paError == EADDRINUSE)
       return ComResult::AddressInUse;
@@ -171,18 +183,97 @@ namespace forte::com::impl::net {
     return {.mValue = result};
   }
 
+  ComResultValue<Socket> open(const addrinfo *paAddresses, const bool paPassive) {
+    ComResultValue<Socket> sock{.mResult = ComResult::InvalidId};
+    for (const addrinfo *rp = paAddresses; rp != nullptr && !sock; rp = rp->ai_next) {
+      sock = open(rp, paPassive, false);
+    }
+    return sock;
+  }
+
   ComResultValue<Socket> open(const std::string_view paConfigString, const addrinfo &paHints) {
     auto [result, addresses] = resolve(paConfigString, paHints);
     if (result != ComResult::Ok) {
       return {.mResult = result};
     }
 
-    ComResultValue<Socket> sock{.mResult = ComResult::InvalidId};
-    for (const addrinfo *rp = addresses; rp != nullptr && !sock; rp = rp->ai_next) {
-      sock = open(rp);
-    }
-
+    auto sock = open(addresses, (paHints.ai_flags & AI_PASSIVE) != 0);
     freeaddrinfo(addresses);
     return sock;
+  }
+
+  ParallelConnectionState<Socket> openParallel(const addrinfo *paAddresses, const bool paPassive) {
+    ParallelConnectionState<Socket> state;
+    for (const addrinfo *rp = paAddresses; rp != nullptr; rp = rp->ai_next) {
+      state.addCandidate(open(rp, paPassive, true));
+    }
+    return state;
+  }
+
+  ComResultValue<ParallelConnectionState<Socket>> openParallel(const std::string_view paConfigString,
+                                                               const addrinfo &paHints) {
+    auto [result, addresses] = resolve(paConfigString, paHints);
+    if (result != ComResult::Ok) {
+      return {.mResult = result};
+    }
+
+    auto state = openParallel(addresses, (paHints.ai_flags & AI_PASSIVE) != 0);
+    freeaddrinfo(addresses);
+    return {.mValue = std::move(state)};
+  }
+
+  ComResultValue<Socket> pollParallel(ParallelConnectionState<Socket> &paState) {
+    if (paState.hasWinner()) {
+      return {.mValue = paState.takeWinner()};
+    }
+    if (!paState.hasPendingCandidates()) {
+      return {.mResult = paState.result()};
+    }
+    std::vector<pollfd> descriptors;
+    std::vector<std::size_t> candidateIndices;
+    descriptors.reserve(paState.candidateCount());
+    candidateIndices.reserve(paState.candidateCount());
+    for (std::size_t candidateIndex = 0; candidateIndex < paState.candidateCount(); ++candidateIndex) {
+      const Socket &candidate = paState.candidateAt(candidateIndex);
+      if (candidate) {
+        descriptors.push_back({.fd = candidate.get(), .events = POLLIN | POLLOUT, .revents = 0});
+        candidateIndices.push_back(candidateIndex);
+      }
+    }
+
+    const int result = ::poll(descriptors.data(), static_cast<nfds_t>(descriptors.size()), 0);
+    if (result < 0) {
+      const auto error = mapSocketError(errno, ComResult::Unknown);
+      return {.mResult = error == ComResult::WouldBlock ? ComResult::InProgress : error};
+    }
+    if (result == 0) {
+      return {.mResult = paState.result()};
+    }
+
+    for (std::size_t i = 0; i < descriptors.size(); ++i) {
+      const std::size_t candidateIndex = candidateIndices[i];
+      const Socket &candidate = paState.candidateAt(candidateIndex);
+      const short events = descriptors[i].revents;
+      if (events & POLLNVAL) {
+        paState.updateCandidate(candidateIndex, ComResult::NoSocket);
+        continue;
+      }
+      if (!(events & (POLLIN | POLLOUT | POLLERR | POLLHUP))) {
+        continue;
+      }
+
+      int socketError = 0;
+      socklen_t socketErrorSize = sizeof(socketError);
+      if (getsockopt(candidate.get(), SOL_SOCKET, SO_ERROR, &socketError, &socketErrorSize) != 0) {
+        paState.updateCandidate(candidateIndex, mapSocketError(errno, ComResult::Unknown));
+        continue;
+      }
+      paState.updateCandidate(candidateIndex, mapSocketError(socketError, ComResult::Unknown));
+      if (paState.hasWinner()) {
+        return {.mValue = paState.takeWinner()};
+      }
+    }
+
+    return {.mResult = paState.result()};
   }
 } // namespace forte::com::impl::net

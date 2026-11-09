@@ -14,6 +14,7 @@
 #pragma once
 
 #include "socket.h"
+#include "../../../../common/src/com/impl/parallel_state.h"
 
 #include <string_view>
 #include <ws2tcpip.h>
@@ -25,6 +26,15 @@ namespace forte::com::impl::net {
 
   ComResultValue<ADDRINFOA *> resolve(std::string_view paConfigString, const ADDRINFOA &paHints);
 
+  ComResultValue<Socket> open(const ADDRINFOA *paAddresses, bool paPassive);
+
   ComResultValue<Socket> open(std::string_view paConfigString, const ADDRINFOA &paHints);
+
+  ParallelConnectionState<Socket> openParallel(const ADDRINFOA *paAddresses, bool paPassive);
+
+  ComResultValue<ParallelConnectionState<Socket>> openParallel(std::string_view paConfigString,
+                                                               const ADDRINFOA &paHints);
+
+  ComResultValue<Socket> pollParallel(ParallelConnectionState<Socket> &paState);
 
 } // namespace forte::com::impl::net

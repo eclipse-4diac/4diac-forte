@@ -14,7 +14,7 @@
 #pragma once
 
 #include <span>
-#include <string>
+#include <string_view>
 #include <utility>
 
 #include "forte/com/common.h"
@@ -50,7 +50,8 @@ namespace forte::com {
        * \retval WouldBlock The operation cannot proceed under the current conditions; retry when they change
        * \retval Interrupted The operation was interrupted before completion
        * \retval PermissionDenied The operation is not permitted
-       * \note If the channel is already open, the config string and descriptors are ignored.
+       * \note If the channel is already open, the config string and descriptors are ignored. While opening is currently
+       * in progress, any changes in either config string or descriptors may be ignored.
        */
       virtual ComResult open(std::string_view paConfigString, std::span<const ComChannelDescriptor> paDescriptors) = 0;
 
