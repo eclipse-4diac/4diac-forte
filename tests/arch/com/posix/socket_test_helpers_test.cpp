@@ -26,6 +26,7 @@ namespace forte::com::test {
     BOOST_TEST_REQUIRE(static_cast<bool>(peer));
     peer.reset();
 
+    BOOST_TEST(waitForSocketEvent(socket.get(), SocketConnectCompletionEvent, Clock::now() + gcReadinessTimeout));
     BOOST_TEST(!waitForSocketEvent(socket.get(), SocketWriteEvent, Clock::now() + gcReadinessTimeout));
     BOOST_TEST(!sendBytes(socket, "message"));
   }
