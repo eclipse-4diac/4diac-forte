@@ -159,6 +159,11 @@ namespace forte::com_infra::opc_ua {
           DEVLOG_ERROR("[OPC UA REMOTE]: Action %d to be executed is unknown or invalid\n", paActionInfo.getAction());
           break;
       }
+      if (UA_STATUSCODE_GOOD != retVal) {
+        // the failed action reconnected the client and its actions are initialized again, which can fail as well
+        // (e.g. the server did not create its nodes yet). The connection handler retries it
+        addClientToConnectionHandler(*clientInfo);
+      }
     } else {
       DEVLOG_ERROR("[OPC UA REMOTE]: Cannot execute action from FB %s. It was not properly initialized\n",
                    paActionInfo.getLayer().getCommFB()->getInstanceName());
