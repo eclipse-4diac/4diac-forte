@@ -59,7 +59,6 @@ FailingServer;<Request ID="58" Action="WRITE"><Connection Source="opc_ua[READ;/O
 FailingServer;<Request ID="59" Action="CREATE"><FB Name="BOOL2BOOL_3" Type="iec61131::selection::F_MOVE_1DINT" /></Request>
 FailingServer;<Request ID="60" Action="CREATE"><FB Name="SameNodeSecondRead" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
 FailingServer;<Request ID="61" Action="CREATE"><FB Name="ReadExistingWritable" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
-FailingServer;<Request ID="62" Action="CREATE"><FB Name="F_NOT_1_1" Type="iec61131::bitwiseOperators::F_NOT" /></Request>
 FailingServer;<Request ID="63" Action="CREATE"><FB Name="F_NOT" Type="iec61131::bitwiseOperators::F_NOT" /></Request>
 FailingServer;<Request ID="64" Action="CREATE"><FB Name="SUBSCRIBE_1_1_1_1" Type="iec61499::net::SUBSCRIBE_1" /></Request>
 FailingServer;<Request ID="65" Action="WRITE"><Connection Source="1" Destination="SUBSCRIBE_1_1_1_1.QI" /></Request>
@@ -352,8 +351,7 @@ FailingServer;<Request ID="358" Action="CREATE"><Connection Source="WorngInputsO
 FailingServer;<Request ID="359" Action="CREATE"><Connection Source="SERVER_0_1_1.IND" Destination="WorngInputsOutputs.REQ" /></Request>
 FailingServer;<Request ID="360" Action="CREATE"><Connection Source="SUBSCRIBE_1_1.INITO" Destination="ReadExistingWritable.REQ" /></Request>
 FailingServer;<Request ID="361" Action="CREATE"><Connection Source="ReadExistingWritable.CNF" Destination="SUBSCRIBE_1_1_1.INIT" /></Request>
-FailingServer;<Request ID="362" Action="CREATE"><Connection Source="SUBSCRIBE_1_1_1.INITO" Destination="F_NOT_1_1.REQ" /></Request>
-FailingServer;<Request ID="363" Action="CREATE"><Connection Source="F_NOT_1_1.CNF" Destination="SameNodeSecondRead.REQ" /></Request>
+FailingServer;<Request ID="362" Action="CREATE"><Connection Source="SUBSCRIBE_1_1_1.INITO" Destination="SameNodeSecondRead.REQ" /></Request>
 FailingServer;<Request ID="364" Action="CREATE"><Connection Source="Writable1_1.INITO" Destination="F_NOT.REQ" /></Request>
 FailingServer;<Request ID="365" Action="CREATE"><Connection Source="F_NOT.CNF" Destination="SameNodeIdWrite.REQ" /></Request>
 FailingServer;<Request ID="366" Action="CREATE"><Connection Source="SERVER_0_2.INITO" Destination="F_NOT_1_2_1_1.REQ" /></Request>
@@ -447,8 +445,7 @@ FailingServer;<Request ID="456" Action="CREATE"><Connection Source="BOOL2BOOL_2_
 FailingServer;<Request ID="457" Action="CREATE"><Connection Source="SUBSCRIBE_1_1_1.RD_1" Destination="BOOL2BOOL_3_1.IN" /></Request>
 FailingServer;<Request ID="458" Action="CREATE"><Connection Source="SUBSCRIBE_1_1.RD_1" Destination="BOOL2BOOL_3.IN" /></Request>
 FailingServer;<Request ID="459" Action="CREATE"><Connection Source="SUBSCRIBE_1_1.QO" Destination="ReadExistingWritable.check" /></Request>
-FailingServer;<Request ID="460" Action="CREATE"><Connection Source="SUBSCRIBE_1_1_1.QO" Destination="F_NOT_1_1.IN" /></Request>
-FailingServer;<Request ID="461" Action="CREATE"><Connection Source="F_NOT_1_1.OUT" Destination="SameNodeSecondRead.check" /></Request>
+FailingServer;<Request ID="461" Action="CREATE"><Connection Source="SUBSCRIBE_1_1_1.QO" Destination="SameNodeSecondRead.check" /></Request>
 FailingServer;<Request ID="462" Action="CREATE"><Connection Source="Writable1_1.QO" Destination="F_NOT.IN" /></Request>
 FailingServer;<Request ID="463" Action="CREATE"><Connection Source="F_NOT.OUT" Destination="SameNodeIdWrite.check" /></Request>
 FailingServer;<Request ID="464" Action="CREATE"><Connection Source="SERVER_0_2.QO" Destination="F_NOT_1_2_1_1.IN" /></Request>
