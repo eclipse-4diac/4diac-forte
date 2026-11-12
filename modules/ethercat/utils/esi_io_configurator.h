@@ -18,8 +18,6 @@
 #include <cstdint>
 #include <string>
 
-class TiXmlElement;
-
 namespace forte::eclipse4diac::io::ethercat {
 
   class ECDeviceHandler;
@@ -31,43 +29,22 @@ namespace forte::eclipse4diac::io::ethercat {
     public:
       explicit EsiIoConfigurator(EsiCatalog &paCatalog);
 
-      bool validateDevice(uint32_t paProductCode, std::string &paErrMsg);
-      bool validateModule(uint32_t paModuleIdent, std::string &paErrMsg);
+      /** Adds the device's PDOs and entries to its model and allocates the process image; only the first call changes anything. */
+      bool configureDevice(uint32_t paProductCode,
+                           ECDeviceHandler *paDeviceHandler,
+                           FORTE_ECDevice &paDevice,
+                           std::string &paErrMsg);
+      /** Like configureDevice, but adds the module's PDOs to the model of its parent device. */
+      bool configureModule(uint32_t paModuleIdent,
+                           ECDeviceHandler *paDeviceHandler,
+                           ECModuleHandler *paModuleHandler,
+                           FORTE_ECModule &paModule,
+                           std::string &paErrMsg);
 
-      void initDeviceIOHandles(uint32_t paProductCode, ECDeviceHandler *paDeviceHandler, FORTE_ECDevice &paDevice);
-      void initModuleIOHandles(uint32_t paModuleIdent,
-                               ECDeviceHandler *paDeviceHandler,
-                               ECModuleHandler *paModuleHandler,
-                               FORTE_ECModule &paDevice);
-
-      void remapDeviceIOHandles(uint32_t paProductCode, ECDeviceHandler *paDeviceHandler, FORTE_ECDevice &paDevice);
-      void remapModuleIOHandles(uint32_t paModuleIdent,
-                                ECDeviceHandler *paDeviceHandler,
-                                ECModuleHandler *paModuleHandler,
-                                FORTE_ECModule &paDevice);
+      void mapDeviceIOHandles(ECDeviceHandler *paDeviceHandler, FORTE_ECDevice &paDevice);
+      void mapModuleIOHandles(ECModuleHandler *paModuleHandler, FORTE_ECModule &paModule);
 
     private:
-      void getPdoSizeInfo(TiXmlElement *paElement,
-                          FORTE_ECDevice &paDevice,
-                          uint16_t &paRcvBufferSize,
-                          uint16_t &paSendBufferSize);
-      void getPdoSizeInfo(TiXmlElement *paElement,
-                          FORTE_ECModule &paDevice,
-                          uint16_t &paRcvBufferSize,
-                          uint16_t &paSendBufferSize);
-
-      void parseDevicePdo(const std::string &paPdoType,
-                          TiXmlElement *paElement,
-                          ECDeviceHandler *paDeviceHandler,
-                          FORTE_ECDevice &paDevice,
-                          bool paRemapOnly = false);
-      void parseModulePdo(const std::string &paPdoType,
-                          TiXmlElement *paElement,
-                          ECDeviceHandler *paDeviceHandler,
-                          ECModuleHandler *paModuleHandler,
-                          FORTE_ECModule &paDevice,
-                          bool paRemapOnly = false);
-
       EsiCatalog &mCatalog;
   };
 

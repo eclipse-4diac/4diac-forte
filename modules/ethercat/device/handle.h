@@ -30,7 +30,10 @@ namespace forte::eclipse4diac::io::ethercat {
       ECDeviceHandle(forte::io::IODeviceController *paController,
                     forte::io::IOMapper::Direction paDirection,
                     CIEC_ANY::EDataTypeID type,
-                    uint8_t paOffset,
+                    uint16_t paOffset,
+                    uint16_t paEntryIndex,
+                    uint8_t paEntrySubIndex,
+                    size_t paEntryRegIndex,
                     const std::string &paHandleId,
                     ECBusDeviceHandler &paDevice);
       ~ECDeviceHandle() override;
@@ -39,7 +42,20 @@ namespace forte::eclipse4diac::io::ethercat {
         return mHandleId;
       }
 
-      /** Domain byte offset for EtherCAT registration (EsiIoConfigurator / ECDeviceModel). */
+      uint16_t entryIndex() const {
+        return mEntryIndex;
+      }
+
+      uint8_t entrySubIndex() const {
+        return mEntrySubIndex;
+      }
+
+      /** Index of the PDO entry registration in the parent device's model. */
+      size_t entryRegIndex() const {
+        return mEntryRegIndex;
+      }
+
+      /** Domain byte offset, written by ECDeviceModel when the handle is bound or the domain is registered. */
       unsigned int *ecDomainOffsetPtr() {
         return &mECDomainDataOffset;
       }
@@ -87,7 +103,10 @@ namespace forte::eclipse4diac::io::ethercat {
 			void syncDomainData(uint8_t *paECDomainData);
 
       std::span<unsigned char> mBuffer;
-      const uint8_t mOffset;
+      const uint16_t mOffset;
+      const uint16_t mEntryIndex;
+      const uint8_t mEntrySubIndex;
+      const size_t mEntryRegIndex;
 
       unsigned int mECDomainDataOffset;
       ECBusDeviceHandler &mDevice;
