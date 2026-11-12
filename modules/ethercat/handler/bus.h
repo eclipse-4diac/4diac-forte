@@ -83,6 +83,8 @@ namespace forte::eclipse4diac::io::ethercat {
 
       void prepareLoop();
       void runLoop() override;
+      void scheduleNextCycle();
+      void checkDomainState();
 
       // Config
       struct  Config mConfig;
@@ -99,8 +101,21 @@ namespace forte::eclipse4diac::io::ethercat {
       uint8_t *mECDomainPd;
 
       struct timespec mWakeupTime;
+      bool mDomainExchangeStarted;
+      bool mDomainLossReported;
+      unsigned int mDomainLostCycles;
+      // Measures the loss in time, cycles are stretched after overruns. Not running while the cycle is paused.
+      bool mDomainLossTiming;
+      struct timespec mDomainLossStart;
       static const long PERIOD_NS = 1000L;      // 1us in nanoseconds
       static const long NSEC_PER_SEC = 1000000000L;
+      // A cycle shorter than the frame round trip makes IgH skip the domain datagram (working counter stays 0),
+      // so output changes no longer reach the slaves. Below this interval that is likely on common setups.
+      static const unsigned int SHORT_UPDATE_INTERVAL_US = 250U;
+      // Single lost cycles are normal jitter on a non-RT kernel, only a longer loss is reported.
+      static const unsigned int DOMAIN_LOSS_REPORT_US = 100000U;
+      // Slaves usually reach OP within a few seconds after the master is activated.
+      static const unsigned int DOMAIN_START_REPORT_US = 10000000U;
 
       bool mInitializedFlag;
       bool mLoopPreparedFlag;

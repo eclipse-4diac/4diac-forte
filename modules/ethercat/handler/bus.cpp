@@ -31,6 +31,20 @@ namespace forte::eclipse4diac::io::ethercat {
     const char *const scmECControllerActivateFailed = "Controller activate failed.";
     const char *const scmECGetDomainProcessDataFailed = "Controller get domain process data failed.";
 
+    constexpr long long cNsPerSec = 1000000000LL;
+
+    void addNs(struct timespec &paTime, long paNs) {
+      paTime.tv_nsec += paNs;
+      while(paTime.tv_nsec >= cNsPerSec) {
+        paTime.tv_nsec -= cNsPerSec;
+        paTime.tv_sec++;
+      }
+    }
+
+    /** Nanoseconds from paFrom to paTo, negative if paTo is earlier. */
+    long long diffNs(const struct timespec &paFrom, const struct timespec &paTo) {
+      return (static_cast<long long>(paTo.tv_sec) - paFrom.tv_sec) * cNsPerSec + (paTo.tv_nsec - paFrom.tv_nsec);
+    }
   }
 
   ECBusHandler::ECBusHandler(CDeviceExecution &paDeviceExecution) :
@@ -38,6 +52,11 @@ namespace forte::eclipse4diac::io::ethercat {
     mECController(nullptr),
     mECDomain(nullptr),
     mECDomainPd(nullptr),
+    mDomainExchangeStarted(false),
+    mDomainLossReported(false),
+    mDomainLostCycles(0),
+    mDomainLossTiming(false),
+    mDomainLossStart{},
     mInitializedFlag(false),
     mLoopPreparedFlag(false),
     mEnableFlag(false),
@@ -53,6 +72,10 @@ namespace forte::eclipse4diac::io::ethercat {
     }
 
     this->mConfig = *static_cast<Config *>(paConfig);
+    if(mConfig.mUpdateInterval < SHORT_UPDATE_INTERVAL_US) {
+      DEVLOG_WARNING("ethercat[BusHandler]: UpdateInterval of %u us may be shorter than the EtherCAT frame round trip, outputs may not reach the slaves.\n",
+                     mConfig.mUpdateInterval);
+    }
   }
 
   void ECBusHandler::addDevice(ECBusDeviceHandler *device) {
@@ -276,6 +299,10 @@ namespace forte::eclipse4diac::io::ethercat {
 
     DEVLOG_INFO("ethercat[BusHandler]: Controller activated successfully.\n");
 
+    mDomainExchangeStarted = false;
+    mDomainLossReported = false;
+    mDomainLostCycles = 0;
+    mDomainLossTiming = false;
     mLoopPreparedFlag = true;
   }
 
@@ -287,6 +314,7 @@ namespace forte::eclipse4diac::io::ethercat {
     while(isAlive()) {
       // Wait until Controller FB enabled.
       while(!mEnableFlag && isAlive()) {
+        mDomainLossTiming = false;
         sleepThread(10);
       }
 
@@ -301,12 +329,9 @@ namespace forte::eclipse4diac::io::ethercat {
 
         //If executed here, then prepareLoop executed successfully.
         clock_gettime(CLOCK_MONOTONIC, &mWakeupTime);
-        mWakeupTime.tv_nsec += static_cast<long>(mConfig.mUpdateInterval) * PERIOD_NS; // µs → ns (PERIOD_NS = 1000)
-        while(mWakeupTime.tv_nsec >= NSEC_PER_SEC) {
-          mWakeupTime.tv_nsec -= NSEC_PER_SEC;
-          mWakeupTime.tv_sec++;
-        }
-        DEVLOG_INFO("ethercat[BusHandler]: PrepareLoop completed, starting cyclic communication...\n");
+        scheduleNextCycle();
+        DEVLOG_INFO("ethercat[BusHandler]: PrepareLoop completed, starting cyclic communication (%u us cycle)...\n",
+                    mConfig.mUpdateInterval);
       }
 
       int ret = clock_nanosleep(CLOCK_MONOTONIC, TIMER_ABSTIME, &mWakeupTime, NULL);
@@ -319,16 +344,13 @@ namespace forte::eclipse4diac::io::ethercat {
       // Check if cycle is still enabled before executing
       if(!mEnableFlag) {
         // Update wakeup time even when paused to avoid time drif
-        mWakeupTime.tv_nsec += static_cast<long>(mConfig.mUpdateInterval) * PERIOD_NS;
-        while(mWakeupTime.tv_nsec >= NSEC_PER_SEC) {
-          mWakeupTime.tv_nsec -= NSEC_PER_SEC;
-          mWakeupTime.tv_sec++;
-        }
+        scheduleNextCycle();
         continue;
       }
 
       ecrt_master_receive(mECController);
       ecrt_domain_process(mECDomain);
+      checkDomainState();
 
       for(ECBusDeviceHandler *handler : mDevices) {
         // Update the device with domain data.
@@ -340,14 +362,65 @@ namespace forte::eclipse4diac::io::ethercat {
       // Send process data to devices.
       ecrt_master_send(mECController);
 
-      // Calculate next wakeup time (same cycle as mUpdateInterval µs).
-      mWakeupTime.tv_nsec += static_cast<long>(mConfig.mUpdateInterval) * PERIOD_NS;
-      while(mWakeupTime.tv_nsec >= NSEC_PER_SEC) {
-        mWakeupTime.tv_nsec -= NSEC_PER_SEC;
-        mWakeupTime.tv_sec++;
-      }
+      scheduleNextCycle();
     }
 
+  }
+
+  void ECBusHandler::scheduleNextCycle() {
+    const long periodNs = static_cast<long>(mConfig.mUpdateInterval) * PERIOD_NS;
+    addNs(mWakeupTime, periodNs);
+
+    // Keep the phase, but leave at least half a period for the frame to return after a late cycle. Catching up
+    // would send frames back to back.
+    struct timespec now;
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    if(diffNs(now, mWakeupTime) < periodNs / 2) {
+      mWakeupTime = now;
+      addNs(mWakeupTime, periodNs);
+    }
+  }
+
+  void ECBusHandler::checkDomainState() {
+    ec_domain_state_t domainState;
+    ecrt_domain_state(mECDomain, &domainState);
+    if(domainState.wc_state == EC_WC_COMPLETE) {
+      if(!mDomainExchangeStarted || mDomainLossReported) {
+        DEVLOG_INFO("ethercat[BusHandler]: Process data exchange %s (working counter %u).\n",
+                    mDomainExchangeStarted ? "recovered" : "established", domainState.working_counter);
+      }
+      mDomainExchangeStarted = true;
+      mDomainLossReported = false;
+      mDomainLostCycles = 0;
+      mDomainLossTiming = false;
+      return;
+    }
+
+    if(mDomainLossReported) {
+      return;
+    }
+    struct timespec now;
+    clock_gettime(CLOCK_MONOTONIC, &now);
+    if(!mDomainLossTiming) {
+      mDomainLossTiming = true;
+      mDomainLossStart = now;
+      mDomainLostCycles = 0;
+    }
+    ++mDomainLostCycles;
+
+    // Slaves are still on their way to OP until the first complete exchange.
+    const long long lossUs = diffNs(mDomainLossStart, now) / PERIOD_NS;
+    const unsigned int reportAfterUs = mDomainExchangeStarted ? DOMAIN_LOSS_REPORT_US : DOMAIN_START_REPORT_US;
+    if(lossUs < reportAfterUs) {
+      return;
+    }
+    const char *const lossKind =
+        !mDomainExchangeStarted ? "not established" : ((domainState.wc_state == EC_WC_ZERO) ? "lost" : "incomplete");
+    DEVLOG_WARNING("ethercat[BusHandler]: Process data exchange %s for %lld ms (%u cycles, working counter %u), outputs do "
+                   "not reach the slaves. Check the slave states and that the UpdateInterval of %u us is longer than the "
+                   "frame round trip.\n",
+                   lossKind, lossUs / 1000, mDomainLostCycles, domainState.working_counter, mConfig.mUpdateInterval);
+    mDomainLossReported = true;
   }
 
   void ECBusHandler::enableECCycle(bool paEnableFlag) {
@@ -355,11 +428,7 @@ namespace forte::eclipse4diac::io::ethercat {
 
     if(paEnableFlag && mLoopPreparedFlag) {
       clock_gettime(CLOCK_MONOTONIC, &mWakeupTime);
-      mWakeupTime.tv_nsec += static_cast<long>(mConfig.mUpdateInterval) * PERIOD_NS;
-      while(mWakeupTime.tv_nsec >= NSEC_PER_SEC) {
-        mWakeupTime.tv_nsec -= NSEC_PER_SEC;
-        mWakeupTime.tv_sec++;
-      }
+      scheduleNextCycle();
       DEVLOG_INFO("[ECBusHandler]: EtherCAT cycle resumed.\n");
     }
   }
