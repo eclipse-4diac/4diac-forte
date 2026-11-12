@@ -302,6 +302,11 @@ namespace forte::com_infra::opc_ua {
       bool initializeAction(CActionInfo &paActionInfo);
 
       /**
+       * Send INITO with QO=FALSE for actions whose first initialization did not finish in time
+       */
+      void reportInitializationTimeouts();
+
+      /**
        * A method call method needs special care. This function takes care of it
        * @param paActionInfo Method call action to be initialized
        * @return True if no error occurred, false otherwise

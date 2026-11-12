@@ -137,6 +137,7 @@ namespace forte {
 
         EComServiceType mCommServiceType;
         CComLayer *mTopOfComStack;
+        bool mInitPending{false}; //!< a layer has not reported the result of its initialization yet
         unsigned int mComInterruptQueueCount; //!< number of triggers pending from the network
         CComLayer *mInterruptQueue[cgCommunicationInterruptQueueSize];
 

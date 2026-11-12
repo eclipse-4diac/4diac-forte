@@ -29,9 +29,15 @@ forte_add_multi_systemtests(OPCUA_WorkingClientServer 60 0 clientWorking.fboot "
 
 forte_add_multi_systemtests(OPCUA_WorkingClientNoSubsServer 60 0 clientWorkingNoSubs.fboot " " serverWorking.fboot " ") #This could be hard, but connections errors sometimes occur which don't affect the TEST_CONDITIONS
 
-forte_add_multi_systemtests(OPCUA_FailingClientServer 60 0 failingClient.fboot " " failingServer.fboot " ")
+forte_add_multi_systemtests(OPCUA_FailingClientServer 60 0 failingClient.fboot "-oi 2000" failingServer.fboot " ")
 
-forte_add_multi_systemtests(OPCUA_DelayedWorking 120 0 delayedClient.fboot " " delayedServer.fboot " ")
+forte_add_multi_systemtests(OPCUA_DelayedWorking 150 0 delayedClient.fboot "-oi 20000" delayedServer.fboot " ")
+
+forte_add_multi_systemtests(OPCUA_InitoAfterInit 60 0 initoServer.fboot " " initoClient.fboot " ") #client last, only the output of the last FORTE is checked
+
+SET_TESTS_PROPERTIES(OPCUA_InitoAfterInit PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR|not properly initialized") #REQ after INITO must find the action initialized
+
+forte_add_multi_systemtests(OPCUA_InitoUnreachable 30 0 initoUnreachable.fboot "-oi 2000") #INITO with QO=FALSE after the timeout, also after a new INIT
 
 forte_add_multi_systemtests(OPCUA_TypesWorking 60 0 typesClient.fboot " " typesServer.fboot " ") #This could be hard, but connections errors sometimes occur which don't affect the TEST_CONDITIONS
 
