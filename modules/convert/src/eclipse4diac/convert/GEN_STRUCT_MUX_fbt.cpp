@@ -73,7 +73,7 @@ namespace forte::eclipse4diac::convert {
     const auto structSize = var_OUT->getStructSize();
     if (structSize == 0 || structSize >= cgInvalidPortId) { // the structure size must be non zero and less than
                                                             // cgInvalidPortId (maximum number of data input)
-      DEVLOG_ERROR("[GEN_STRUCT_MUX]: The structure %s has a size that is not within range > 0 and < %u\n",
+      DEVLOG_ERROR("[GEN_STRUCT_MUX]: The structure %s has a size that is not within range > 0 and < %zu\n",
                    structTypeNameId.data(), cgInvalidPortId);
       return false;
     }

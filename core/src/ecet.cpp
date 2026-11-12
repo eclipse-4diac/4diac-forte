@@ -113,7 +113,7 @@ namespace forte {
   void CEventChainExecutionThread::logFullEventQueue(TEventEntry paEventToAdd) {
     const SFBInterfaceSpec &interfaceSpec = paEventToAdd.getFB().getFBInterfaceSpec();
     if (paEventToAdd.getPortId() >= interfaceSpec.getNumEIs()) {
-      DEVLOG_ERROR("Event queue is full, event dropped! Function Block: %s, event num: %d (maxnum: %d)\n",
+      DEVLOG_ERROR("Event queue is full, event dropped! Function Block: %s, event num: %zu (maxnum: %zu)\n",
                    paEventToAdd.getFB().getFullQualifiedApplicationInstanceName('.').c_str(), paEventToAdd.getPortId(),
                    interfaceSpec.getNumEIs() - 1);
     } else {

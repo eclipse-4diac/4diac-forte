@@ -359,9 +359,9 @@ namespace forte::com_infra::opc_ua {
             retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
           }
         } else {
-          DEVLOG_ERROR("[OPC UA HELPER]: Could not translate browse paths for '%s' to node IDs. resultSize (%d) != "
-                       "expected count (%d)\n",
-                       paNodePathConst, response.resultsSize, folderCnt);
+          DEVLOG_ERROR("[OPC UA HELPER]: Could not translate browse paths for '%s' to node IDs. resultSize (%zu) != "
+                       "expected count (%zu)\n",
+                       paNodePathConst, response.resultsSize, folderCnt * 2);
           retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
         }
       } else {
