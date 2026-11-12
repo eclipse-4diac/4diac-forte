@@ -20,7 +20,12 @@
 #include "forte/util/criticalregion.h"
 
 namespace forte::io {
-  DEFINE_SINGLETON(IOMapper)
+  IOMapper &IOMapper::getInstance() {
+    // Never destroyed: the active device is torn down by a static destructor at exit, which runs after
+    // function-local statics created at runtime are gone, and its IO controllers and observers deregister here.
+    static IOMapper *const instance = new IOMapper();
+    return *instance;
+  }
 
   IOMapper::IOMapper() = default;
 
