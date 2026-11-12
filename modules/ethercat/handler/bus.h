@@ -38,17 +38,26 @@ namespace forte::eclipse4diac::io::ethercat {
 
       class HandleDescriptor : public IODeviceMultiController::HandleDescriptor {
         public:
-          uint8_t mOffset;
+          uint16_t mOffset;
           uint8_t mByteLength;
+          uint16_t mEntryIndex;
+          uint8_t mEntrySubIndex;
+          size_t mEntryRegIndex;
 
           HandleDescriptor(std::string const &paId,
                            forte::io::IOMapper::Direction paDirection,
                            size_t paDeviceIndex,
-                           uint8_t paOffset,
-                           uint8_t paByteLength) : 
+                           uint16_t paOffset,
+                           uint8_t paByteLength,
+                           uint16_t paEntryIndex,
+                           uint8_t paEntrySubIndex,
+                           size_t paEntryRegIndex) :
               IODeviceMultiController::HandleDescriptor(paId, paDirection, paDeviceIndex),
               mOffset(paOffset),
-              mByteLength(paByteLength){
+              mByteLength(paByteLength),
+              mEntryIndex(paEntryIndex),
+              mEntrySubIndex(paEntrySubIndex),
+              mEntryRegIndex(paEntryRegIndex) {
           }
       };
 

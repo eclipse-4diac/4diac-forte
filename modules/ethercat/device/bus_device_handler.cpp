@@ -16,6 +16,7 @@
 #include "../device/ec_device.h"
 #include "forte/io/mapper/io_mapper.h"
 #include "forte/util/criticalregion.h"
+#include "forte/util/devlog.h"
 #include <algorithm>
 
 namespace forte::eclipse4diac::io::ethercat {
@@ -71,38 +72,37 @@ namespace forte::eclipse4diac::io::ethercat {
   }
 
   void ECBusDeviceHandler::addHandle(std::unique_ptr<ECDeviceHandle> paHandle) {
+    std::vector<std::unique_ptr<ECDeviceHandle>> *list = nullptr;
     switch (paHandle->getDirection()) {
-      case forte::io::IOMapper::In: addHandle(mInputs, std::move(paHandle)); break;
-      case forte::io::IOMapper::Out: addHandle(mOutputs, std::move(paHandle)); break;
-      default: break;
+      case forte::io::IOMapper::In: list = &mInputs; break;
+      case forte::io::IOMapper::Out: list = &mOutputs; break;
+      default: return;
     }
+
+    // The domain offset has to be in place before update() can see the handle.
+    ECDeviceHandler *device = (mBus != nullptr) ? mBus->getParentDevice(this) : nullptr;
+    if (device == nullptr ||
+        !device->mECDeviceModel.bindHandleOffset(paHandle->entryRegIndex(), paHandle->ecDomainOffsetPtr())) {
+      DEVLOG_ERROR("ethercat[BusDeviceHandler]: PDO entry 0x%04X:%02X of handle '%s' is not registered or already "
+                   "mapped by another handle.\n",
+                   paHandle->entryIndex(), paHandle->entrySubIndex(), paHandle->handleId().c_str());
+      return;
+    }
+    addHandle(*list, std::move(paHandle));
   }
 
   void ECBusDeviceHandler::dropHandles() {
     util::CCriticalRegion criticalRegion(mHandleMutex);
     forte::io::IOMapper &mapper = forte::io::IOMapper::getInstance();
 
-    if(mBus != nullptr && mBus->isShuttingDown()) {
-      deregisterHandles(mapper);
-      return;
-    }
-
-    if (mBus != nullptr && mBus->isLoopPrepared()) {
-      ECDeviceHandler *device = mBus->getParentDevice(this);
-      if (device != nullptr) {
-        auto persistHandleOffset = [&](ECDeviceHandle &handle) {
-          for (EntryReg &reg : device->mECDeviceModel.mEntryRegList) {
-            if (reg.mOffset == &handle.mECDomainDataOffset) {
-              reg.mDomainOffset = handle.mECDomainDataOffset;
-              reg.mOffsetValid = true;
-            }
-          }
-        };
+    // During shutdown the parent device and its model may already be destroyed.
+    if (mBus != nullptr && !mBus->isShuttingDown()) {
+      if (ECDeviceHandler *device = mBus->getParentDevice(this); device != nullptr) {
         for (auto &handle : mInputs) {
-          persistHandleOffset(*handle);
+          device->mECDeviceModel.unbindHandleOffset(handle->ecDomainOffsetPtr());
         }
         for (auto &handle : mOutputs) {
-          persistHandleOffset(*handle);
+          device->mECDeviceModel.unbindHandleOffset(handle->ecDomainOffsetPtr());
         }
       }
     }
@@ -129,12 +129,5 @@ namespace forte::eclipse4diac::io::ethercat {
     paList.push_back(std::move(paHandle));
 
     // TODO Maybe send indication event after connecting
-  }
-
-  ECDeviceHandle *ECBusDeviceHandler::getHandle(std::vector<std::unique_ptr<ECDeviceHandle>> &paList, size_t paIndex) {
-    if(paList.size() <= paIndex) {
-      return nullptr;
-    }
-    return paList[paIndex].get();
   }
 }
