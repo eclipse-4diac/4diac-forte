@@ -215,11 +215,14 @@ namespace forte::eclipse4diac::io::ethercat {
   }
 
   const char *FORTE_ECModule::init() {
-    const auto moduleIdent = static_cast<TForteUInt32>(Config().ModuleIdent);
-    std::string errMsg;
     auto &bus = *static_cast<ECBusHandler *>(&getController());
-    if (!bus.esiConfigurator().validateModule(moduleIdent, errMsg)) {
-      mLastError = errMsg;
+    auto *module = static_cast<ECModuleHandler *>(bus.getDevice(mIndex));
+    ECDeviceHandler *device = bus.getParentDevice(module);
+    if (nullptr == module || nullptr == device) {
+      mLastError = "Parent EtherCAT device not found";
+      return mLastError.c_str();
+    }
+    if (!bus.esiConfigurator().configureModule(module->moduleIdent(), device, module, *this, mLastError)) {
       return mLastError.c_str();
     }
     return nullptr;
@@ -239,16 +242,7 @@ namespace forte::eclipse4diac::io::ethercat {
     if (nullptr == module) {
       return;
     }
-    ECBusDeviceHandler *parent = bus.getDevice(mIndex / 100 - 1);
-    auto *device = static_cast<ECDeviceHandler *>(parent);
-    if (nullptr == device) {
-      return;
-    }
-    if (bus.isLoopPrepared()) {
-      bus.esiConfigurator().remapModuleIOHandles(module->moduleIdent(), device, module, *this);
-    } else {
-      bus.esiConfigurator().initModuleIOHandles(module->moduleIdent(), device, module, *this);
-    }
+    bus.esiConfigurator().mapModuleIOHandles(module, *this);
   }
 
   void FORTE_ECModule::onDeviceStatus(ECBusDeviceHandler::DeviceStatus paStatus, ECBusDeviceHandler::DeviceStatus) {

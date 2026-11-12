@@ -222,11 +222,14 @@ namespace forte::eclipse4diac::io::ethercat {
   }
 
   const char *FORTE_ECDevice::init() {
-    const auto productCode = static_cast<TForteUInt32>(Config().ProductCode);
-    std::string errMsg;
     auto &bus = *static_cast<ECBusHandler *>(&getController());
-    if (!bus.esiConfigurator().validateDevice(productCode, errMsg)) {
-      mLastError = errMsg;
+    auto *device = static_cast<ECDeviceHandler *>(bus.getDevice(mIndex));
+    if (nullptr == device) {
+      mLastError = "EtherCAT device not found";
+      return mLastError.c_str();
+    }
+    if (!bus.esiConfigurator().configureDevice(static_cast<TForteUInt32>(Config().ProductCode), device, *this,
+                                               mLastError)) {
       return mLastError.c_str();
     }
     return nullptr;
@@ -249,11 +252,7 @@ namespace forte::eclipse4diac::io::ethercat {
     if (nullptr == device) {
       return;
     }
-    if (bus.isLoopPrepared()) {
-      bus.esiConfigurator().remapDeviceIOHandles(static_cast<TForteUInt32>(Config().ProductCode), device, *this);
-    } else {
-      bus.esiConfigurator().initDeviceIOHandles(static_cast<TForteUInt32>(Config().ProductCode), device, *this);
-    }
+    bus.esiConfigurator().mapDeviceIOHandles(device, *this);
   }
 
   void FORTE_ECDevice::onDeviceStatus(ECBusDeviceHandler::DeviceStatus paStatus, ECBusDeviceHandler::DeviceStatus) {
