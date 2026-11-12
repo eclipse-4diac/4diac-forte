@@ -168,7 +168,10 @@ namespace forte::io {
 
   bool IOConfigFBController::deInit(CEventChainExecutionThread *const paECET, bool paIsDestructing) {
     if (nullptr == mController) {
-      DEVLOG_ERROR("[IOConfigFBController] IOConfigFBController has already been stopped.\n");
+      // Derived FBs may already have stopped the controller in their destructor.
+      if (!paIsDestructing) {
+        DEVLOG_ERROR("[IOConfigFBController] IOConfigFBController has already been stopped.\n");
+      }
       return false;
     }
 
