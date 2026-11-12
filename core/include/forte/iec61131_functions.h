@@ -243,6 +243,7 @@
 #include "forte/iec61131_functions/func_MIN.h"
 #include "forte/iec61131_functions/func_MINUS.h"
 #include "forte/iec61131_functions/func_MOD.h"
+#include "forte/iec61131_functions/func_MUX.h"
 #include "forte/iec61131_functions/func_MOVE.h"
 #include "forte/iec61131_functions/func_MUL.h"
 #include "forte/iec61131_functions/func_MUL_LTIME.h"
