@@ -64,12 +64,19 @@ CFunctionBlock::~CFunctionBlock() {
 }
 
 void CFunctionBlock::deinitialize() {
+  // Also called for an FB whose initialize() failed: children, connections and pins that were never created are
+  // skipped (a generic FB creates them only in setupFBInterface(), see CGenFunctionBlock).
   CFBContainer::deinitialize();
 
   // disconnect all event connections
   for (TPortId eoId = 0; eoId < getFBInterfaceSpec().getNumEOs(); eoId++) {
     CEventConnection *eoConn = getEOConUnchecked(eoId);
-    for (auto connPoint : eoConn->getDestinationList()) {
+    if (eoConn == nullptr) {
+      continue;
+    }
+    // copy: disconnect() removes the destination from the list
+    const auto destinations = eoConn->getDestinationList();
+    for (const auto &connPoint : destinations) {
       if ((connPoint.getPortId() & cgInternal2InterfaceMarker) == 0) {
         auto &dstFb = connPoint.getFB();
         eoConn->disconnect(dstFb, std::array{dstFb.getFBInterfaceSpec().mEINames[connPoint.getPortId()]});
@@ -79,7 +86,8 @@ void CFunctionBlock::deinitialize() {
 
   // disconnect all data input connections
   for (TPortId diId = 0; diId < getFBInterfaceSpec().getNumDIs(); diId++) {
-    CDataConnection *diConn = *getDIConUnchecked(diId);
+    CDataConnection **diConnPtr = getDIConUnchecked(diId);
+    CDataConnection *diConn = (diConnPtr != nullptr) ? *diConnPtr : nullptr;
     if (diConn != nullptr) {
       diConn->disconnect(*this, std::array{getFBInterfaceSpec().mDINames[diId]});
       if (diConn->isDelegating()) {
@@ -91,14 +99,15 @@ void CFunctionBlock::deinitialize() {
   // disconnect all adapter input connections
   for (TPortId aiId = 0; aiId < getFBInterfaceSpec().mSocketNames.size(); aiId++) {
     ISocketPin *skt = getSocketPinUnchecked(aiId);
-    if (skt->getAdapterCon() != nullptr) {
+    if (skt != nullptr && skt->getAdapterCon() != nullptr) {
       skt->getAdapterCon()->disconnect(*this, std::array{getFBInterfaceSpec().mSocketNames[aiId]});
     }
   }
 
   // disconnect all dio input connections
   for (TPortId dioId = 0; dioId < getFBInterfaceSpec().getNumDIOs(); dioId++) {
-    CDataConnection *dioConn = *getDIOInConUnchecked(dioId);
+    CInOutDataConnection **dioConnPtr = getDIOInConUnchecked(dioId);
+    CDataConnection *dioConn = (dioConnPtr != nullptr) ? *dioConnPtr : nullptr;
     if (dioConn != nullptr) {
       dioConn->disconnect(*this, std::array{getFBInterfaceSpec().mDIONames[dioId]});
     }
@@ -124,6 +133,9 @@ bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *paDataCon) {
   }
 
   CDataConnection **conn = getDIConUnchecked(paDIPortId);
+  if (conn == nullptr) { // a generic FB without its connections yet (see CGenFunctionBlock)
+    return false;
+  }
   if (!paDataCon) { // disconnect?
     *conn = nullptr;
     return true;
@@ -133,8 +145,14 @@ bool CFunctionBlock::connectDI(TPortId paDIPortId, CDataConnection *paDataCon) {
                  getInstanceName(), getFBInterfaceSpec().mDINames[paDIPortId].data());
     return false;
   }
+  CDataConnection *const previous = *conn;
   *conn = paDataCon;
-  return configureGenericDI(paDIPortId, paDataCon->getValue());
+  if (!configureGenericDI(paDIPortId, paDataCon->getValue())) {
+    // the caller may delete paDataCon on failure: do not leave it behind for deinitialize()
+    *conn = previous;
+    return false;
+  }
+  return true;
 }
 
 bool CFunctionBlock::configureGenericDI(TPortId paDIPortId, const CIEC_ANY &paRefValue) {
@@ -185,7 +203,8 @@ bool CFunctionBlock::configureGenericDIO(TPortId paDIOPortId, const CIEC_ANY &pa
 CDataConnection *CFunctionBlock::getDIConnection(StringId paDINameId) {
   TPortId diPortID = getFBInterfaceSpec().getDIID(paDINameId);
   if (diPortID != cgInvalidPortId) {
-    return *getDIConUnchecked(diPortID);
+    CDataConnection **conn = getDIConUnchecked(diPortID);
+    return (conn != nullptr) ? *conn : nullptr;
   }
   return nullptr;
 }
