@@ -84,6 +84,12 @@ namespace forte::com_infra::opc_ua {
       EComResponse mInterruptResp;
 
       /**
+       * A receive failed since the last processInterrupt(). Kept, so that a later successful receive of another RD
+       * (e.g. several RDs passed one by one for a single event) cannot hide the failure. Guarded by mRDBufferMutex.
+       */
+      bool mRecvFailedPending;
+
+      /**
        * Pointer to the base class of the OPC UA handlers. Depending on the action, the local or remote will be set, and
        * later used to execute the action
        */

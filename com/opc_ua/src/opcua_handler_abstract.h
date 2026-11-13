@@ -63,6 +63,13 @@ namespace forte::com_infra::opc_ua {
       virtual UA_StatusCode uninitializeAction(CActionInfo &paActionInfo) = 0;
 
       /**
+       * Called by the layer after the action was initialized and the layer is ready to receive data
+       * @param paActionInfo Action that was initialized
+       */
+      virtual void actionReady(CActionInfo &) {
+      }
+
+      /**
        * Get the logger used by the the OPC UA stack
        * @return Logger used by the OPC UA stack
        */

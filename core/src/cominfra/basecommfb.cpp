@@ -122,6 +122,9 @@ namespace forte::com_infra {
       mTopOfComStack->closeConnection();
       delete mTopOfComStack; // this will close the whole communication stack
       mTopOfComStack = nullptr;
+      // interrupts that are still queued point to the deleted layers, e.g. a layer that already queued data while a
+      // later layer of the stack failed to open. The closed layers cannot queue new ones.
+      mComInterruptQueueCount = 0;
     }
   }
 
