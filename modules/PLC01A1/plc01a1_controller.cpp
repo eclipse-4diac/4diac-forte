@@ -165,7 +165,7 @@ namespace forte::eclipse4diac::io::plc01a1 {
   forte::io::IOHandle *PLC01A1Controller::createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
     HandleDescriptor &desc = static_cast<HandleDescriptor &>(paHandleDescriptor);
 
-    return new forte::io::IOHandleBit(this, desc.mDirection, desc.mOffset, desc.mPosition,
+    return new forte::io::IOHandleBit(*this, desc.mDirection, desc.mOffset, desc.mPosition,
                                       desc.mDirection == forte::io::IOMapper::In ? mInputArray : mOutputArray);
   }
 

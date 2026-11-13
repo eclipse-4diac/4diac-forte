@@ -19,6 +19,7 @@
  *******************************************************************************/
 
 #include "forte/io/processinterfacefb.h"
+#include "forte/io/mapper/io_handle.h"
 
 using namespace std::string_literals;
 
@@ -28,8 +29,6 @@ namespace forte::io {
   const CIEC_STRING CProcessInterfaceFB::scmFailedToRegister("Failed to register observer."_STRING);
   const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDirectionOutput(
       "Mapped invalid direction. A Q block requires an output handle."_STRING);
-  const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDirectionInput(
-      "Mapped invalid direction. An I block requires an input handle."_STRING);
   const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDataType("Mapped invalid data type."_STRING);
 
   CProcessInterfaceFB::CProcessInterfaceFB(CFBContainer &paContainer,
@@ -113,7 +112,7 @@ namespace forte::io {
     deinitialise();
 
     // Register interface
-    if (!(mIsListening = IOMapper::getInstance().registerObserver(getId(), this))) {
+    if (!(mIsListening = IOMapper::getInstance().registerObserver(getId(), *this))) {
       var_STATUS = scmFailedToRegister;
       return false_BOOL;
     }
@@ -138,7 +137,7 @@ namespace forte::io {
   CIEC_BOOL CProcessInterfaceFB::deinitialise() {
     // Deregister interface
     if (mIsListening) {
-      IOMapper::getInstance().deregisterObserver(this);
+      IOMapper::getInstance().deregisterObserver(*this);
       mIsListening = false; // we are deregistered !
     }
 
@@ -151,16 +150,18 @@ namespace forte::io {
     return true;
   }
 
-  void CProcessInterfaceFB::onHandle(IOHandle *const paHandle) {
-    IOObserver::onHandle(paHandle);
+  void CProcessInterfaceFB::onHandle() {
+    IOObserver::onHandle();
 
-    if (paHandle->getIOHandleDataType() != getIOObserverDataType()) {
+    IOHandle *handle = getHandle();
+
+    if (handle->getIOHandleDataType() != getIOObserverDataType()) {
       var_STATUS = scmMappedWrongDataType;
       return;
     }
 
-    if (paHandle->getDirection() != getDirection()) {
-      var_STATUS = getDirection() == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
+    if (getDirection() == IOMapper::Out && handle->getDirection() != IOMapper::Out) {
+      var_STATUS = scmMappedWrongDirectionOutput;
       return;
     }
 

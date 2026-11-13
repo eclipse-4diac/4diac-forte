@@ -12,7 +12,7 @@
 
 #include "IOHandleGPIO.h"
 
-IOHandleGPIO::IOHandleGPIO(IODeviceController *paDeviceCtrl,
+IOHandleGPIO::IOHandleGPIO(IODeviceController &paDeviceCtrl,
                            IOMapper::Direction paDirection,
                            const gpio_dt_spec *paGPIOSpec,
                            gpio_flags_t paFlags) :
@@ -72,7 +72,6 @@ void IOHandleGPIO::onObserver(IOObserver *paObserver) {
 void IOHandleGPIO::dropObserver() {
   DEVLOG_INFO("IOHandleGPIO::dropObserver\n");
   IOHandle::dropObserver();
-  mDirection = IOMapper::UnknownDirection;
 }
 
 void IOHandleGPIO::get(CIEC_ANY &paState) {
