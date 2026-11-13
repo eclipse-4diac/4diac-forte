@@ -23,6 +23,10 @@ SET_TESTS_PROPERTIES(OPCUA_LocalFirstRead PROPERTIES FAIL_REGULAR_EXPRESSION "ER
 
 forte_add_systemtest_hard(OPCUA_LocalMethdodsCreate localMethodsCreate.fboot 10)
 
+forte_add_systemtest_hard(OPCUA_LocalReadExistingValue localReadExistingValue.fboot 10)
+
+SET_TESTS_PROPERTIES(OPCUA_LocalReadExistingValue PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|ERROR: T|==ERROR|OPC UA REMOTE") #the reader registers after the write and must still get the value
+
 SET_TESTS_PROPERTIES(OPCUA_LocalFirstRead PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR|OPC UA REMOTE") #remote handler shouldn't start
 
 forte_add_multi_systemtests(OPCUA_WorkingClientServer 60 0 clientWorking.fboot " " serverWorking.fboot " ") #This could be hard, but connections errors sometimes occur which don't affect the TEST_CONDITIONS

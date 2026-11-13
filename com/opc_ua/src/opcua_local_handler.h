@@ -171,6 +171,12 @@ namespace forte::com_infra::opc_ua {
        */
       UA_StatusCode uninitializeAction(CActionInfo &paActionInfo) override;
 
+      /**
+       * Passes the current value of every existing node a read action registered at during its initialization, see
+       * deliverCurrentValue()
+       */
+      void actionReady(CActionInfo &paActionInfo) override;
+
     private:
       /**
        * Overridden run() from CThread which loops the UA Server.
@@ -410,6 +416,25 @@ namespace forte::com_infra::opc_ua {
       arch::CSyncObject mServerAccessMutex;
 
       /**
+       * Read actions that registered at an already existing node during their initialization, with the RD index. The
+       * current value of the node is passed to them in actionReady(), when the layer can receive data. Guarded by
+       * mServerAccessMutex.
+       */
+      std::vector<std::pair<CActionInfo *, size_t>> mPendingCurrentValues;
+
+      /**
+       * Nodes whose value was written by an FB or from outside after they were created. Only these are passed to a
+       * reader that registers later (see deliverCurrentValue()); a node that only holds the initial value of the FB
+       * that created it is not passed on. Guarded by mWrittenNodesMutex.
+       */
+      std::vector<UA_NodeId> mWrittenNodes;
+      arch::CSyncObject mWrittenNodesMutex;
+
+      void markNodeWritten(const UA_NodeId &paNodeId);
+      void unmarkNodeWritten(const UA_NodeId &paNodeId);
+      bool isNodeWritten(const UA_NodeId &paNodeId);
+
+      /**
        * Semaphore to tell the server it needs iteration
        */
       arch::CSemaphore mServerNeedsIteration;
@@ -543,6 +568,21 @@ namespace forte::com_infra::opc_ua {
        * @return UA_STATUSCODE_GOOD on success, other value otherwise
        */
       UA_StatusCode registerVariableCallBack(const UA_NodeId &paNodeId, CActionInfo &paActionInfo, size_t paPortIndex);
+
+      /**
+       * Passes the current value of an existing node once to a reader that has just registered at it, if the node was
+       * written since it was created. Without this the reader only gets values that are written after its
+       * registration.
+       * @param paActionInfo The action of the reader
+       * @param paPortIndex Which RD gets the value
+       * @return true if the value was passed to the layer and the FB needs an event. The caller holds
+       *         mServerAccessMutex and triggers the event (see actionReady()).
+       */
+      bool deliverCurrentValue(CActionInfo &paActionInfo, size_t paPortIndex);
+
+      //! removes the pending current values of an action, see mPendingCurrentValues. The caller holds
+      //! mServerAccessMutex.
+      void removePendingCurrentValues(const CActionInfo &paActionInfo);
 
       /**
        * Adds write permission to a node
