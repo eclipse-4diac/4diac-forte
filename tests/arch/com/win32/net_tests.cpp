@@ -24,6 +24,8 @@ namespace forte::com::test {
   BOOST_AUTO_TEST_SUITE(WIN32_SOCKET_ERROR_MAPPING)
 
   BOOST_AUTO_TEST_CASE(SOCKET_ERRORS_MAP_TO_COMMUNICATION_RESULTS) {
+    BOOST_TEST(impl::net::mapSocketError(0, ComResult::Unknown) == ComResult::Ok);
+    BOOST_TEST(impl::net::mapSocketError(0, ComResult::SendFailed) == ComResult::Ok);
     BOOST_TEST(impl::net::mapSocketError(WSAECONNREFUSED, ComResult::Unknown) == ComResult::ConnectionRefused);
     BOOST_TEST(impl::net::mapSocketError(WSAEWOULDBLOCK, ComResult::Unknown) == ComResult::WouldBlock);
     BOOST_TEST(impl::net::mapSocketError(WSAENOTSOCK, ComResult::Unknown) == ComResult::NoSocket);

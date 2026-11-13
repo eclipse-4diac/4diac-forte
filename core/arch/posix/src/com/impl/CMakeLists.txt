@@ -23,6 +23,8 @@ target_sources(forte-core PRIVATE
         socket.h
         tcp.cpp
         tcp.h
+        tcp_parallel.cpp
+        tcp_parallel.h
         tcp_listen.cpp
         tcp_listen.h
         udp.cpp

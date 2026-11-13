@@ -18,6 +18,8 @@
 #include <limits>
 #include <thread>
 
+#include "../../../../core/arch/win32/src/com/impl/net.h"
+
 namespace forte::com::test {
   namespace {
     class WinSockInitializer final {
@@ -144,6 +146,32 @@ namespace forte::com::test {
     return socket;
   }
 
+  Socket acceptLoopbackConnection(const Socket &paListener) {
+    return Socket{::accept(paListener.get(), nullptr, nullptr)};
+  }
+
+  ComResultValue<Socket> openPendingConnection(const LoopbackAddress &paAddress) {
+    const std::string config = std::string(gcLoopbackAddress) + ":" + std::to_string(ntohs(paAddress.sin_port));
+    auto [result, state] = impl::net::openParallel(config, gcTcpAddrInfoHints);
+    if (result != ComResult::Ok) {
+      return {.mResult = result};
+    }
+    if (state.candidateCount() != 1) {
+      return {.mResult = ComResult::InvalidId};
+    }
+    if (state.result() == ComResult::Ok && state.hasWinner()) {
+      return {.mResult = ComResult::InProgress, .mValue = state.takeWinner()};
+    }
+    if (state.result() != ComResult::InProgress || !state.candidateAt(0)) {
+      return {.mResult = ComResult::InvalidId};
+    }
+    return {.mResult = ComResult::InProgress, .mValue = std::move(state.candidateAt(0))};
+  }
+
+  ComResultValue<Socket> pollParallel(impl::ParallelConnectionState<Socket> &paState) {
+    return impl::net::pollParallel(paState);
+  }
+
   bool sendDatagram(const Socket &paSocket, const sockaddr_in &paAddress, const std::string_view paData) {
     if (paData.size() > static_cast<std::size_t>(std::numeric_limits<int>::max())) {
       return false;
@@ -222,8 +250,36 @@ namespace forte::com::test {
     return true;
   }
 
-  bool waitForSocketEvent(const SOCKET paSocket, const short paEvents, const Clock::time_point paDeadline) {
-    if (paSocket == INVALID_SOCKET || (paEvents & static_cast<short>(~(SocketReadEvent | SocketWriteEvent)))) {
+  bool closeWithReset(Socket &paSocket) {
+    const linger resetLinger{.l_onoff = 1, .l_linger = 0};
+    return setsockopt(paSocket.get(), SOL_SOCKET, SO_LINGER, reinterpret_cast<const char *>(&resetLinger),
+                      static_cast<int>(sizeof(resetLinger))) == 0 &&
+           paSocket.close() == 0;
+  }
+
+  ComResult receiveSocketResult(const Socket &paSocket) {
+    const auto deadline = Clock::now() + gcReadinessTimeout;
+    char buffer{};
+    while (Clock::now() < deadline) {
+      if (!waitForSocketEvent(paSocket, SocketReadEvent, deadline)) {
+        return ComResult::WouldBlock;
+      }
+      const int result = ::recv(paSocket.get(), &buffer, static_cast<int>(sizeof(buffer)), 0);
+      if (result == SOCKET_ERROR) {
+        const int socketError = WSAGetLastError();
+        if (socketError == WSAEINTR || socketError == WSAEWOULDBLOCK) {
+          continue;
+        }
+        return impl::net::mapSocketError(socketError, ComResult::RecvFailed);
+      }
+      return result == 0 ? ComResult::ConnectionClosed : ComResult::Ok;
+    }
+    return ComResult::WouldBlock;
+  }
+
+  bool waitForSocketEvent(const NativeSocket paSocket, const short paEvents, const Clock::time_point paDeadline) {
+    if (paSocket == INVALID_SOCKET ||
+        (paEvents & static_cast<short>(~(SocketReadEvent | SocketWriteEvent | SocketErrorEvent)))) {
       return false;
     }
 
@@ -240,7 +296,9 @@ namespace forte::com::test {
       if (paEvents & SocketWriteEvent) {
         FD_SET(paSocket, &writeSet);
       }
-      FD_SET(paSocket, &exceptSet);
+      if (paEvents & SocketErrorEvent) {
+        FD_SET(paSocket, &exceptSet);
+      }
 
       const auto remaining = std::chrono::duration_cast<std::chrono::microseconds>(paDeadline - Clock::now());
       timeval timeout{};
@@ -248,11 +306,9 @@ namespace forte::com::test {
       timeout.tv_usec = static_cast<long>(remaining.count() % 1000000);
       const int result = ::select(0, &readSet, &writeSet, &exceptSet, &timeout);
       if (result > 0) {
-        if (FD_ISSET(paSocket, &exceptSet)) {
-          return false;
-        }
         return ((paEvents & SocketReadEvent) && FD_ISSET(paSocket, &readSet)) ||
-               ((paEvents & SocketWriteEvent) && FD_ISSET(paSocket, &writeSet));
+               ((paEvents & SocketWriteEvent) && FD_ISSET(paSocket, &writeSet)) ||
+               ((paEvents & SocketErrorEvent) && FD_ISSET(paSocket, &exceptSet));
       }
       if (result == 0) {
         return false;
@@ -262,6 +318,18 @@ namespace forte::com::test {
       }
     }
     return false;
+  }
+
+  bool waitForSocketEvent(const Socket &paSocket, const short paEvents, const Clock::time_point paDeadline) {
+    return waitForSocketEvent(paSocket.get(), paEvents, paDeadline);
+  }
+
+  bool nativeSocketIsClosed(const SOCKET paSocket) {
+    int socketType = 0;
+    int socketTypeSize = sizeof(socketType);
+    return getsockopt(paSocket, SOL_SOCKET, SO_TYPE, reinterpret_cast<char *>(&socketType), &socketTypeSize) ==
+               SOCKET_ERROR &&
+           WSAGetLastError() == WSAENOTSOCK;
   }
 
   bool waitForSocketData(const Socket &paSocket, const std::size_t paExpectedSize) {
@@ -280,8 +348,10 @@ namespace forte::com::test {
     return false;
   }
 
-  ComResult openUntilConnected(ComChannel<ComBuffer> &paChannel, const std::string_view paConfig) {
-    const auto deadline = Clock::now() + gcReadinessTimeout;
+  ComResult openUntilConnected(ComChannel<ComBuffer> &paChannel,
+                               const std::string_view paConfig,
+                               const std::chrono::milliseconds paTimeout) {
+    const auto deadline = Clock::now() + paTimeout;
     auto result = ComResult::InProgress;
     while (result == ComResult::InProgress && Clock::now() < deadline) {
       result = paChannel.open(paConfig, std::span<ComChannelDescriptor>{});
