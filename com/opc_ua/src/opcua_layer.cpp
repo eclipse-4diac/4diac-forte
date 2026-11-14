@@ -58,11 +58,14 @@ namespace forte::com_infra::opc_ua {
                      : static_cast<COPC_UA_HandlerAbstract *>(&getExtEvHandler<COPC_UA_Local_Handler>());
       if (checkTypesFromInterface()) {
         if (UA_STATUSCODE_GOOD == mHandler->initializeAction(*mActionInfo)) {
-          util::CCriticalRegion criticalRegion(mRDBufferMutex);
-          response = e_InitOk;
-          for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
-            mRDBuffer.emplace_back(getCommFB()->getRDs()[i]->clone(nullptr));
+          {
+            util::CCriticalRegion criticalRegion(mRDBufferMutex);
+            response = e_InitOk;
+            for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
+              mRDBuffer.emplace_back(getCommFB()->getRDs()[i]->clone(nullptr));
+            }
           }
+          mHandler->actionReady(*mActionInfo);
         }
       } else {
         bool isPublisher;
