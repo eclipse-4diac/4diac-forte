@@ -21,6 +21,10 @@
 #include "forte/arch/forte_printer.h"
 
 namespace forte::com_infra::opc_ua {
+  namespace {
+    constexpr char smSeparator = '.'; // separator for the full FB path in log messages
+  } // namespace
+
   COPC_UA_Client_IterationList::COPC_UA_Client_IterationList() : mNewClientsPresent(false) {
   }
 
@@ -139,7 +143,10 @@ namespace forte::com_infra::opc_ua {
         DEVLOG_ERROR("[OPC UA REMOTE]: Cannot perform action %s remotely. Initialization failed\n",
                      CActionInfo::mActionNames[paActionInfo.getAction()]);
         break;
-      default: DEVLOG_ERROR("[OPC UA REMOTE]: Unknown action %d to be initialized\n", paActionInfo.getAction()); break;
+      default:
+        DEVLOG_ERROR("[OPC UA REMOTE]: Unknown action %d of FB %s to be initialized\n", paActionInfo.getAction(),
+                     paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
+        break;
     }
     return retVal;
   }
@@ -156,12 +163,14 @@ namespace forte::com_infra::opc_ua {
         case CActionInfo::eCallMethod: retVal = clientInfo->executeCallMethod(paActionInfo); break;
         default: // eCreateMethod, eCreateObject, eDeleteObject will never reach here since they weren't initialized.
           // eSubscribe is a Subscribe FB
-          DEVLOG_ERROR("[OPC UA REMOTE]: Action %d to be executed is unknown or invalid\n", paActionInfo.getAction());
+          DEVLOG_ERROR(
+              "[OPC UA REMOTE]: Action %d of FB %s to be executed is unknown or invalid\n", paActionInfo.getAction(),
+              paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
           break;
       }
     } else {
       DEVLOG_ERROR("[OPC UA REMOTE]: Cannot execute action from FB %s. It was not properly initialized\n",
-                   paActionInfo.getLayer().getCommFB()->getInstanceName());
+                   paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
     }
 
     if (UA_STATUSCODE_GOOD == retVal) {
@@ -182,8 +191,9 @@ namespace forte::com_infra::opc_ua {
         retVal = UA_STATUSCODE_GOOD;
         break;
       default:
-        DEVLOG_ERROR("[OPC UA REMOTE]: Action %d to be uninitialized is unknown or invalid\n",
-                     paActionInfo.getAction());
+        DEVLOG_ERROR("[OPC UA REMOTE]: Action %d of FB %s to be uninitialized is unknown or invalid\n",
+                     paActionInfo.getAction(),
+                     paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
         break;
     }
     return retVal;

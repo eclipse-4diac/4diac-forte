@@ -36,8 +36,9 @@ using namespace forte::literals;
 
 namespace forte::com_infra::opc_ua {
   namespace {
+    constexpr char smSeparator = '.'; // separator for the full FB path in log messages
     [[maybe_unused]] const ComLayerManager::EntryImpl<COPC_UA_Layer> entry("opc_ua"_STRID);
-  }
+  } // namespace
 
   COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
       CComLayer(paUpperLayer, paComFB),
@@ -126,7 +127,8 @@ namespace forte::com_infra::opc_ua {
                                         : handleRecv->mOffset + i;
             if (bufferIndex == -1) {
               DEVLOG_ERROR("[OPC UA LAYER]: Received Node ID %d does not match with any registered Node ID for FB %s\n",
-                           handleRecv->mNodeId, getCommFB()->getInstanceName());
+                           handleRecv->mNodeId,
+                           getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
               mInterruptResp = e_ProcessDataRecvFaild;
               break;
             }
@@ -135,7 +137,7 @@ namespace forte::com_infra::opc_ua {
               COPC_UA_Helper::convertFromOPCUAType(handleRecv->mData[i]->data, *mRDBuffer[bufferIndex]);
             } else {
               DEVLOG_ERROR("[OPC UA LAYER]: RD_%d of FB %s has no data, is not a scalar or there is a type mismatch\n",
-                           bufferIndex, getCommFB()->getInstanceName());
+                           bufferIndex, getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
               mInterruptResp = e_ProcessDataRecvFaild;
               break;
             }
@@ -143,8 +145,8 @@ namespace forte::com_infra::opc_ua {
         } else {
           DEVLOG_ERROR("[OPC UA LAYER]: Receiving data for FB %s failed because the response size is %u with an offset "
                        "of %u but the FB has %u RDs\n",
-                       getCommFB()->getInstanceName(), handleRecv->mData.size(), handleRecv->mOffset,
-                       getCommFB()->getNumRD());
+                       getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str(),
+                       handleRecv->mData.size(), handleRecv->mOffset, getCommFB()->getNumRD());
           mInterruptResp = e_ProcessDataRecvFaild;
         }
       } else { // no data received. When remote writing this will happen
@@ -211,7 +213,8 @@ namespace forte::com_infra::opc_ua {
     if (!COPC_UA_Helper::getOPCUATypeFromAny(pin)) {
       if (!COPC_UA_ObjectStruct_Helper::isStructType(*this, paIsSD)) {
         DEVLOG_ERROR("[OPC UA LAYER]: Invalid  type %s in FB %s at pin %s\n", pin.getTypeNameID().data(),
-                     getCommFB()->getInstanceName(), getLocalPortNameId(paPortIndex, paIsSD).data());
+                     getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str(),
+                     getLocalPortNameId(paPortIndex, paIsSD).data());
       }
       return false;
     }
