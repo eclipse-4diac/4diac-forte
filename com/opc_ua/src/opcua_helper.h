@@ -119,12 +119,14 @@ namespace forte {
          * @param paNodePathConst Browsepath of the remote node
          * @param paParentNodeId Place to store the parent node ID of the requested node
          * @param paFoundNodeId Place to store the node ID of the requested node
+         * @param paReportMissing False if a missing node shall not be logged, because it was already reported
          * @return UA_STATUSCODE_GOOD is no problem occurred, other value otherwise
          */
         static UA_StatusCode getRemoteNodeForPath(UA_Client &paClient,
                                                   const char *paNodePathConst,
                                                   UA_NodeId **paParentNodeId,
-                                                  UA_NodeId **paFoundNodeId);
+                                                  UA_NodeId **paFoundNodeId,
+                                                  bool paReportMissing = true);
 
         /**
          * Prepare the browse request from a browsepath
