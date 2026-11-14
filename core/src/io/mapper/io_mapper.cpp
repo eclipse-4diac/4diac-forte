@@ -11,6 +11,7 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
  *   Jonathan Lainer - Add method for deregistering Handles by ID.
+ *   Thomas Oellinger - Keep the mapper alive during static destruction
  *******************************************************************************/
 
 #include "forte/io/mapper/io_mapper.h"
@@ -20,7 +21,15 @@
 #include "forte/util/criticalregion.h"
 
 namespace forte::io {
-  DEFINE_SINGLETON(IOMapper)
+  IOMapper &IOMapper::getInstance() {
+    // The mapper is intentionally never destroyed. IO controller threads are stopped and joined from the
+    // destructors of their configuration FBs, which on shutdown run during static destruction (e.g., from the
+    // destructor of the static FORTE instance). A function-local static mapper is constructed later than such
+    // objects and is therefore destroyed before them, so deregistering handles from the controller thread or
+    // from ~IOHandle would access a freed mapper.
+    static IOMapper &sInstance = *new IOMapper();
+    return sInstance;
+  }
 
   IOMapper::IOMapper() = default;
 
