@@ -321,9 +321,6 @@ namespace forte::com_infra {
         // get ASN1-tag from implementing datatype for STRUCT-datatypes
         paBytes[0] = ((CIEC_STRUCT &) paCIECData).getASN1StructType();
         break;
-#ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
-      case CIEC_ANY::e_External: paBytes[0] = paCIECData.getTag(); break;
-#endif /* FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES */
       default: paBytes[0] = csmDataTags[eDataType][0]; break;
     }
   }
@@ -362,10 +359,6 @@ namespace forte::com_infra {
         case CIEC_ANY::e_STRUCT:
           nRetVal = serializeValueStruct(paBytes, paStreamSize, static_cast<const CIEC_STRUCT &>(paCIECData));
           break;
-#ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
-        case CIEC_ANY::e_External: nRetVal = paCIECData.serializeCustomType(paBytes, paStreamSize); break;
-#endif /* FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES */
-
         default: break;
       }
     }
@@ -586,10 +579,6 @@ namespace forte::com_infra {
         }
         break;
       case CIEC_ANY::e_STRUCT: bRetVal = (static_cast<CIEC_STRUCT &>(paCIECData).getASN1StructType() == paByte); break;
-#ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
-      case CIEC_ANY::e_External: bRetVal = paCIECData.deserializeTag(paByte); break;
-#endif /* FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES */
-
       default: bRetVal = (csmDataTags[eDataType][0] == paByte); break;
     }
     return bRetVal;
@@ -625,10 +614,6 @@ namespace forte::com_infra {
         case CIEC_ANY::e_STRUCT:
           nRetVal = deserializeValueStruct(paBytes, paStreamSize, static_cast<CIEC_STRUCT &>(paCIECData));
           break;
-
-#ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
-        case CIEC_ANY::e_External: nRetVal = paCIECData.deserializeCustomType(paBytes, paStreamSize); break;
-#endif /* FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES */
         default: break;
       }
     }
@@ -854,10 +839,6 @@ namespace forte::com_infra {
           unRetVal -= ((CIEC_ARRAY &) paCIECData).size() - 1;
         }
         break;
-#ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
-      case CIEC_ANY::e_External: unRetVal += paCIECData.getRequiredSerializationSize(); break;
-#endif /* FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES */
-
       default: unRetVal += csmDataTags[paCIECData.getDataTypeID()][1]; break;
     }
     return unRetVal;
