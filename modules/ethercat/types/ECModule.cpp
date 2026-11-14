@@ -9,6 +9,7 @@
  *
  * Contributors:
  *   Zijun Tang - initial API and implementation
+ *   Thomas Oellinger - keep status texts valid during static destruction
  *******************************************************************************/
 
 #include "ECModule.h"
@@ -253,7 +254,7 @@ namespace forte::eclipse4diac::io::ethercat {
 
   void FORTE_ECModule::onDeviceStatus(ECBusDeviceHandler::DeviceStatus paStatus, ECBusDeviceHandler::DeviceStatus) {
     switch (paStatus) {
-      case ECBusDeviceHandler::OK: STATUS() = scmOK; break;
+      case ECBusDeviceHandler::OK: STATUS() = CIEC_WSTRING(scmOK); break;
       case ECBusDeviceHandler::Error: STATUS() = u"Error"_WSTRING; break;
       case ECBusDeviceHandler::NotInitialized: STATUS() = u"NotInitialized"_WSTRING; break;
       default: STATUS() = u"Unknown"_WSTRING; break;

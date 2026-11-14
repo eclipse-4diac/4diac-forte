@@ -9,6 +9,7 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Thomas Oellinger - keep status texts valid during static destruction
  *******************************************************************************/
 
 #include "forte/resource.h"
@@ -18,10 +19,10 @@
 namespace forte::io {
   int IOConfigFBController::smMaxErrors = 5;
 
-  const CIEC_WSTRING IOConfigFBController::scmOK("OK");
-  const CIEC_WSTRING IOConfigFBController::scmInitializing("Waiting for initialization..");
-  const CIEC_WSTRING IOConfigFBController::scmFailedToInit("Failed to initialize controller.");
-  const CIEC_WSTRING IOConfigFBController::scmStopped("Stopped");
+  const char *const IOConfigFBController::scmOK = "OK";
+  const char *const IOConfigFBController::scmInitializing = "Waiting for initialization..";
+  const char *const IOConfigFBController::scmFailedToInit = "Failed to initialize controller.";
+  const char *const IOConfigFBController::scmStopped = "Stopped";
 
   IOConfigFBController::IOConfigFBController(CFBContainer &paContainer,
                                              const SFBInterfaceSpec &paInterfaceSpec,
@@ -65,7 +66,7 @@ namespace forte::io {
         onError(paECET);
         if (mStarting) {
           if (nullptr == paAttachment) {
-            STATUS() = scmFailedToInit;
+            STATUS() = CIEC_WSTRING(scmFailedToInit);
           } else {
             STATUS() = CIEC_WSTRING((const char *) paAttachment);
           }
@@ -124,7 +125,7 @@ namespace forte::io {
     mController->setInitDelay(paDelay);
 
     mStarting = true;
-    STATUS() = scmInitializing;
+    STATUS() = CIEC_WSTRING(scmInitializing);
 
     setConfig();
 
@@ -192,7 +193,7 @@ namespace forte::io {
     mController = nullptr;
     mStarting = false;
 
-    STATUS() = scmStopped;
+    STATUS() = CIEC_WSTRING(scmStopped);
 
     if (mPerformRestart) {
       mPerformRestart = false;

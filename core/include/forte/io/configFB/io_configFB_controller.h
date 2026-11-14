@@ -10,6 +10,7 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Thomas Oellinger - keep status texts valid during static destruction
  *******************************************************************************/
 
 #pragma once
@@ -181,10 +182,12 @@ namespace forte::io {
 
       bool mPerformRestart;
 
-      static const CIEC_WSTRING scmOK;
-      static const CIEC_WSTRING scmInitializing;
-      static const CIEC_WSTRING scmFailedToInit;
-      static const CIEC_WSTRING scmStopped;
+      // Plain character constants instead of CIEC_WSTRING objects: STATUS() is also written while the FB network is
+      // torn down during static destruction, after static CIEC_WSTRING objects may already have been destroyed.
+      static const char *const scmOK;
+      static const char *const scmInitializing;
+      static const char *const scmFailedToInit;
+      static const char *const scmStopped;
   };
 
 } // namespace forte::io

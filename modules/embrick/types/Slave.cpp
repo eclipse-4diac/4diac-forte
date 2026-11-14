@@ -10,6 +10,7 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Thomas Oellinger - keep status texts valid during static destruction
  *******************************************************************************/
 
 #include "Slave.h"
@@ -19,10 +20,10 @@ using namespace forte::literals;
 
 namespace forte::eclipse4diac::io::embrick {
 
-  const CIEC_WSTRING EmbrickSlave::scmSlow("Slow");
-  const CIEC_WSTRING EmbrickSlave::scmInterrupted("Interrupted");
-  const CIEC_WSTRING EmbrickSlave::scmError("Error");
-  const CIEC_WSTRING EmbrickSlave::scmUnknown("Invalid status code");
+  const char *const EmbrickSlave::scmSlow("Slow");
+  const char *const EmbrickSlave::scmInterrupted("Interrupted");
+  const char *const EmbrickSlave::scmError("Error");
+  const char *const EmbrickSlave::scmUnknown("Invalid status code");
 
   EmbrickSlave::EmbrickSlave(const TForteUInt8 *const paSlaveConfigurationIO,
                              const TForteUInt8 paSlaveConfigurationIO_num,
@@ -75,11 +76,11 @@ namespace forte::eclipse4diac::io::embrick {
 
   void EmbrickSlave::onSlaveStatus(EmbrickSlaveHandler::SlaveStatus paStatus, EmbrickSlaveHandler::SlaveStatus) {
     switch (paStatus) {
-      case EmbrickSlaveHandler::OK: STATUS() = scmOK; break;
-      case EmbrickSlaveHandler::Slow: STATUS() = scmSlow; break;
-      case EmbrickSlaveHandler::Interrupted: STATUS() = scmInterrupted; break;
-      case EmbrickSlaveHandler::Error: STATUS() = scmError; break;
-      default: STATUS() = scmUnknown; break;
+      case EmbrickSlaveHandler::OK: STATUS() = CIEC_WSTRING(scmOK); break;
+      case EmbrickSlaveHandler::Slow: STATUS() = CIEC_WSTRING(scmSlow); break;
+      case EmbrickSlaveHandler::Interrupted: STATUS() = CIEC_WSTRING(scmInterrupted); break;
+      case EmbrickSlaveHandler::Error: STATUS() = CIEC_WSTRING(scmError); break;
+      default: STATUS() = CIEC_WSTRING(scmUnknown); break;
     }
 
     sendOutputEvent(scmEventINDID, getEventChainExecutor());
@@ -89,7 +90,7 @@ namespace forte::eclipse4diac::io::embrick {
     deInit();
 
     QO() = false_BOOL;
-    STATUS() = scmError;
+    STATUS() = CIEC_WSTRING(scmError);
   }
 
 } // namespace forte::eclipse4diac::io::embrick

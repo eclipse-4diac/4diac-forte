@@ -10,6 +10,7 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
  *   Zijun Tang - add createSlaveHandler() hook and generic FB constructor
+ *   Thomas Oellinger - keep status texts valid during static destruction
  *******************************************************************************/
 
 #include "forte/io/configFB/io_slave_multi.h"
@@ -18,8 +19,8 @@
 #include "forte/iec61131_functions/func_AND.h"
 
 namespace forte::io {
-  const CIEC_WSTRING IOConfigFBMultiSlave::scmOK("OK");
-  const CIEC_WSTRING IOConfigFBMultiSlave::scmStopped("Stopped");
+  const char *const IOConfigFBMultiSlave::scmOK("OK");
+  const char *const IOConfigFBMultiSlave::scmStopped("Stopped");
   const char *const IOConfigFBMultiSlave::scmMasterNotFound("Master not found");
   const char *const IOConfigFBMultiSlave::scmNotFound("Module not found");
   const char *const IOConfigFBMultiSlave::scmIncorrectType("Module type is incorrect");
@@ -66,7 +67,7 @@ namespace forte::io {
         QO() = CIEC_BOOL(mInitialized = error == nullptr);
 
         if (mInitialized) {
-          STATUS() = scmOK;
+          STATUS() = CIEC_WSTRING(scmOK);
         } else {
           STATUS() = CIEC_WSTRING(error);
         }
@@ -98,7 +99,7 @@ namespace forte::io {
         deInit();
 
         QO() = false_BOOL;
-        STATUS() = scmStopped;
+        STATUS() = CIEC_WSTRING(scmStopped);
 
         if (BusAdapterOut().getPeer() != nullptr) {
           // DeInit next slave

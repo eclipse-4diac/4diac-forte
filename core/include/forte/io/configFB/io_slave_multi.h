@@ -11,6 +11,7 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
  *   Zijun Tang - add createSlaveHandler() hook and generic FB constructor
+ *   Thomas Oellinger - keep status texts valid during static destruction
  *******************************************************************************/
 
 #pragma once
@@ -88,7 +89,8 @@ namespace forte::io {
 
       void initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor);
 
-      static const CIEC_WSTRING scmOK;
+      // Plain character constants: see IOConfigFBController, STATUS() is also written during static destruction.
+      static const char *const scmOK;
       static const char *const scmMasterNotFound;
 
       size_t mIndex;
@@ -107,7 +109,7 @@ namespace forte::io {
 
       const char *handleInitEvent();
 
-      static const CIEC_WSTRING scmStopped;
+      static const char *const scmStopped;
       static const char *const scmNotFound;
       static const char *const scmIncorrectType;
       static const char *const scmCreateSlaveHandlerFailed;

@@ -13,7 +13,8 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral      - Cleaning of namespaces
  *   Thomas Öllinger  - added getId method to detremine Id for reference to I/O
- *                      configuration
+ *                      configuration, keep status texts valid during static
+                      destruction
  *   Alois ZOitl      - removed old process interface structure, added common
  *                      interface elements
  *******************************************************************************/
@@ -28,6 +29,7 @@
 #include "forte/forte_st_util.h"
 
 #include <string>
+#include <string_view>
 
 namespace forte::io {
 
@@ -104,12 +106,15 @@ namespace forte::io {
       bool mIsListening;
       bool mIsReady;
 
-      static const CIEC_STRING scmOK;
-      static const CIEC_STRING scmWaitingForHandle;
-      static const CIEC_STRING scmFailedToRegister;
-      static const CIEC_STRING scmMappedWrongDirectionOutput;
-      static const CIEC_STRING scmMappedWrongDirectionInput;
-      static const CIEC_STRING scmMappedWrongDataType;
+      // Trivially destructible string_view constants instead of CIEC_STRING objects: var_STATUS is also written while
+      // the FB network is torn down during static destruction, after static CIEC_STRING objects may already have been
+      // destroyed. string_view rather than const char* because the CIEC_STRING(const char*) constructor is deprecated.
+      static const std::string_view scmOK;
+      static const std::string_view scmWaitingForHandle;
+      static const std::string_view scmFailedToRegister;
+      static const std::string_view scmMappedWrongDirectionOutput;
+      static const std::string_view scmMappedWrongDirectionInput;
+      static const std::string_view scmMappedWrongDataType;
   };
 
 } // namespace forte::io

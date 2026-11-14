@@ -13,7 +13,8 @@
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral      - cleaning of namespaces
  *   Alois Zoitl      - further clean-ups and performance improvements on IOHandle
- *   Thomas Öllinger  - use PARAMS to reference to I/O configuration
+ *   Thomas Öllinger  - use PARAMS to reference to I/O configuration, keep status
+ *                      texts valid during static destruction
  *   Alois ZOitl      - removed old process interface structure, added common
  *                      interface elements
  *******************************************************************************/
@@ -23,14 +24,20 @@
 using namespace std::string_literals;
 
 namespace forte::io {
-  const CIEC_STRING CProcessInterfaceFB::scmOK("OK"_STRING);
-  const CIEC_STRING CProcessInterfaceFB::scmWaitingForHandle("Waiting for handle.."_STRING);
-  const CIEC_STRING CProcessInterfaceFB::scmFailedToRegister("Failed to register observer."_STRING);
-  const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDirectionOutput(
-      "Mapped invalid direction. A Q block requires an output handle."_STRING);
-  const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDirectionInput(
-      "Mapped invalid direction. An I block requires an input handle."_STRING);
-  const CIEC_STRING CProcessInterfaceFB::scmMappedWrongDataType("Mapped invalid data type."_STRING);
+  const std::string_view CProcessInterfaceFB::scmOK("OK");
+  const std::string_view CProcessInterfaceFB::scmWaitingForHandle("Waiting for handle..");
+  const std::string_view CProcessInterfaceFB::scmFailedToRegister("Failed to register observer.");
+  const std::string_view CProcessInterfaceFB::scmMappedWrongDirectionOutput(
+      "Mapped invalid direction. A Q block requires an output handle.");
+  const std::string_view CProcessInterfaceFB::scmMappedWrongDirectionInput(
+      "Mapped invalid direction. An I block requires an input handle.");
+  const std::string_view CProcessInterfaceFB::scmMappedWrongDataType("Mapped invalid data type.");
+
+  namespace {
+    CIEC_STRING toStatus(const std::string_view paText) {
+      return CIEC_STRING(paText.data(), paText.size());
+    }
+  } // namespace
 
   CProcessInterfaceFB::CProcessInterfaceFB(CFBContainer &paContainer,
                                            const SFBInterfaceSpec &paInterfaceSpec,
@@ -107,14 +114,14 @@ namespace forte::io {
 
   CIEC_BOOL CProcessInterfaceFB::initialise(CEventChainExecutionThread *const paECET) {
     mIsReady = false;
-    var_STATUS = scmWaitingForHandle;
+    var_STATUS = toStatus(scmWaitingForHandle);
 
     // Reset before initialization
     deinitialise();
 
     // Register interface
     if (!(mIsListening = IOMapper::getInstance().registerObserver(getId(), this))) {
-      var_STATUS = scmFailedToRegister;
+      var_STATUS = toStatus(scmFailedToRegister);
       return false_BOOL;
     }
 
@@ -155,16 +162,17 @@ namespace forte::io {
     IOObserver::onHandle(paHandle);
 
     if (paHandle->getIOHandleDataType() != getIOObserverDataType()) {
-      var_STATUS = scmMappedWrongDataType;
+      var_STATUS = toStatus(scmMappedWrongDataType);
       return;
     }
 
     if (paHandle->getDirection() != getDirection()) {
-      var_STATUS = getDirection() == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput;
+      var_STATUS =
+          toStatus(getDirection() == IOMapper::In ? scmMappedWrongDirectionInput : scmMappedWrongDirectionOutput);
       return;
     }
 
-    var_STATUS = scmOK;
+    var_STATUS = toStatus(scmOK);
     mIsReady = true;
   }
 
@@ -220,7 +228,7 @@ namespace forte::io {
   void CProcessInterfaceFB::dropHandle() {
     IOObserver::dropHandle();
     var_QO = false_BOOL;
-    var_STATUS = scmWaitingForHandle;
+    var_STATUS = toStatus(scmWaitingForHandle);
     mIsReady = false;
   }
 } // namespace forte::io

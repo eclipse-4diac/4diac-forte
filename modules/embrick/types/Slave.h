@@ -10,6 +10,7 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Thomas Oellinger - keep status texts valid during static destruction
  *******************************************************************************/
 
 #pragma once
@@ -56,10 +57,10 @@ namespace forte::eclipse4diac::io::embrick {
       const char *init() override;
       void deInit() override;
 
-      static const CIEC_WSTRING scmSlow;
-      static const CIEC_WSTRING scmInterrupted;
-      static const CIEC_WSTRING scmError;
-      static const CIEC_WSTRING scmUnknown;
+      static const char *const scmSlow;
+      static const char *const scmInterrupted;
+      static const char *const scmError;
+      static const char *const scmUnknown;
   };
 
 } // namespace forte::eclipse4diac::io::embrick
