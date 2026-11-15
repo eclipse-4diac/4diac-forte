@@ -13,3 +13,5 @@
 
 forte_test_add_sourcefile_cpp(MCCDaqHatConfig_tester.cpp)
 forte_test_add_sourcefile_cpp(MCCDaqHatBoard_tester.cpp)
+forte_test_add_sourcefile_cpp(MCCDaqHatHandle_tester.cpp)
+forte_test_add_sourcefile_cpp(MCCDaqHatController_tester.cpp)
