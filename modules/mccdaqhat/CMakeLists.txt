@@ -33,6 +33,12 @@ add_library(forte-mccdaqhat
             mccdaqhat_lib_api.cpp
             mccdaqhat_config.h
             mccdaqhat_config.cpp
+            boards/MCCBoard.h
+            boards/MCCBoard.cpp
+            boards/MCC128Board.h
+            boards/MCC128Board.cpp
+            boards/MCC152Board.h
+            boards/MCC152Board.cpp
 )
 # Only mccdaqhat_lib_api.cpp sees the vendor header; everything else uses IMCCDaqHatApi.
 target_include_directories(forte-mccdaqhat PRIVATE ${MCCDAQHAT_INCLUDE_DIR})
