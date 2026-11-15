@@ -67,3 +67,31 @@ FilesAnalyzed: false
 PackageLicenseConcluded: NOASSERTION
 PackageLicenseDeclared: NOASSERTION
 PackageCopyrightText: NOASSERTION
+
+PackageName: daqhats
+SPDXID: SPDXRef-daqhats
+PackageComment: <text>Measurement Computing DAQ HAT library for Raspberry Pi (MCC 128, MCC 152). Used by the optional mccdaqhat IO module; located via find_library.</text>
+ExternalRef: PACKAGE-MANAGER purl pkg:github/mccdaq/daqhats@v1.5.0.1
+PackageVersion: 1.5.0.1
+PackageSupplier: Organization: Measurement Computing Corporation
+Relationship: SPDXRef-daqhats OPTIONAL_DEPENDENCY_OF SPDXRef-4diac-FORTE
+PackageDownloadLocation: https://github.com/mccdaq/daqhats/archive/refs/tags/v1.5.0.1.tar.gz
+PackageChecksum: SHA256: f469a39bd5b11bdce4e4b4626d4ab4a7faa0db53b01be12b456685ae97a9c490
+FilesAnalyzed: false
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: MIT
+PackageCopyrightText: NOASSERTION
+
+PackageName: libgpiod
+SPDXID: SPDXRef-libgpiod
+PackageComment: <text>Linux GPIO character device library. Required by daqhats on Raspberry Pi 5. It is linked statically into the optional mccdaqhat IO module when daqhats is built as a static library. License: LGPL-2.1-or-later.</text>
+ExternalRef: PACKAGE-MANAGER purl pkg:generic/libgpiod@2.2.5?download_url=https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/libgpiod-2.2.5.tar.gz
+PackageVersion: 2.2.5
+PackageSupplier: Organization: Linux kernel GPIO maintainers
+Relationship: SPDXRef-libgpiod DEPENDENCY_OF SPDXRef-daqhats
+PackageDownloadLocation: https://mirrors.edge.kernel.org/pub/software/libs/libgpiod/libgpiod-2.2.5.tar.gz
+PackageChecksum: SHA256: 5cb3d7588393e6b9e1d8dbbbadb807c30dc98adcf5c339d38eba5e73d6cf2de0
+FilesAnalyzed: false
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: LGPL-2.1-or-later
+PackageCopyrightText: NOASSERTION
