@@ -289,6 +289,11 @@ namespace forte::com_infra::opc_ua {
       bool connectClient();
 
       /**
+       * Puts the actions that were initialized with an earlier connection back to the actions to be initialized
+       */
+      void initializeActionsAgain();
+
+      /**
        * Initialize all actions in the client.
        * @return True if all actions were initialized, false otherwise
        */
