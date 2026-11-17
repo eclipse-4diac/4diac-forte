@@ -12,6 +12,7 @@
 SET(SOURCE_GROUP ${SOURCE_GROUP}\\fblib)
 
 add_subdirectory(events)
+add_subdirectory(net)
 add_subdirectory(system)
 
 forte_test_add_sourcefile_cpp(CFB_TEST.cpp)

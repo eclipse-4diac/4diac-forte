@@ -42,7 +42,7 @@ namespace forte::eclipse4diac::io::gpiochip {
   FORTE_GPIOChip::FORTE_GPIOChip(const forte::StringId paInstanceNameId, CFBContainer &paContainer) :
       IOConfigFBController(paContainer, cFBInterfaceSpec, paInstanceNameId),
       var_QI(0_BOOL),
-      var_VALUE(u""_WSTRING),
+      var_VALUE(""_STRING),
       var_ChipNumber(0_UINT),
       var_LineNumber(0_UINT),
       var_ReadWriteMode(0_UINT),
@@ -66,7 +66,7 @@ namespace forte::eclipse4diac::io::gpiochip {
   void FORTE_GPIOChip::setInitialValues() {
     CFunctionBlock::setInitialValues();
     var_QI = 0_BOOL;
-    var_VALUE = u""_WSTRING;
+    var_VALUE = ""_STRING;
     var_ChipNumber = 0_UINT;
     var_LineNumber = 0_UINT;
     var_ReadWriteMode = 0_UINT;
@@ -174,7 +174,7 @@ namespace forte::eclipse4diac::io::gpiochip {
 
   void FORTE_GPIOChip::onStartup(CEventChainExecutionThread *const paECET) {
     GPIOChipController::HandleDescriptor desc = GPIOChipController::HandleDescriptor(
-        var_VALUE.getValue(), TForteUInt16(var_ReadWriteMode) ? forte::io::IOMapper::Out : forte::io::IOMapper::In);
+        var_VALUE.getStorage(), TForteUInt16(var_ReadWriteMode) ? forte::io::IOMapper::Out : forte::io::IOMapper::In);
     initHandle(desc);
     started(paECET);
   }

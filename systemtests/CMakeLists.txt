@@ -109,7 +109,14 @@ forte_add_systemtest_hard(Test_SEND_RECV_null comSendRecvNull.fboot 5)
 
 if (FORTE_COM_ETH)
     forte_add_systemtest_hard(Test_SEND_RECV_tcp comSendRecvTCP.fboot 30)
+    forte_add_systemtest_hard(Test_SEND_RECV_tcp_parallel comSendRecvTCPParallel.fboot 30)
     forte_add_systemtest_hard(Test_SEND_RECV_udp comSendRecvUDP.fboot 30)
+    if (LINUX)
+        forte_add_systemtest_hard(Test_SEND_RECV_tcp_blackhole comSendRecvTCPBlackhole.fboot 30)
+
+        set_tests_properties(Test_SEND_RECV_tcp_blackhole PROPERTIES
+                SKIP_REGULAR_EXPRESSION "tcp_blackhole requires tcp_abort_on_overflow=0")
+    endif ()
 endif ()
 
 #Test using environement variable as bootfile

@@ -14,61 +14,117 @@
 #include "socket.h"
 #include "net.h"
 
+#include <cerrno>
+#include <cstdlib>
+
 #include <fcntl.h>
 #include <unistd.h>
+
 #include <sys/socket.h>
 
 namespace forte::com::impl {
-#ifndef MSG_NOSIGNAL
-#define MSG_NOSIGNAL 0
-#endif
+  int Socket::close() noexcept {
+    return ::close(release());
+  }
 
-  SocketChannel::~SocketChannel() {
+  int Socket::setNoSigPipe() const {
+#if !defined(MSG_NOSIGNAL) && defined(SO_NOSIGPIPE)
+    const int enabled = 1;
+    return setsockopt(mSocket, SOL_SOCKET, SO_NOSIGPIPE, &enabled, sizeof(enabled));
+#else
+    return 0;
+#endif
+  }
+
+  int Socket::setNonBlocking() const {
+    const int flags = fcntl(mSocket, F_GETFL, 0);
+    if (flags == -1) {
+      return -1;
+    }
+    if (fcntl(mSocket, F_SETFL, flags | O_NONBLOCK) == -1) {
+      return -1;
+    }
+    return 0;
+  }
+
+  void Socket::reset(const int paSocket) noexcept {
+    if (mSocket == paSocket) {
+      return;
+    }
     if (mSocket >= 0) {
       ::close(mSocket);
     }
+    mSocket = paSocket;
+  }
+
+  SocketChannel::~SocketChannel() {
     std::free(mBuffer.data());
   }
 
   ComResult SocketChannel::open(const std::string_view paConfigString,
-                                const std::span<ComChannelDescriptor> paDescriptors) {
+                                const std::span<const ComChannelDescriptor> paDescriptors) {
+    if (isOpen()) {
+      return ComResult::Ok;
+    }
     if (!paDescriptors.empty()) {
       return ComResult::InvalidId;
     }
 
-    const int sock = socket(paConfigString);
-    if (sock < 0) {
-      return ComResult::InvalidId;
+    auto [result, sock] = socket(paConfigString);
+    if (result != ComResult::Ok) {
+      return result;
     }
 
-    if (net::setNonBlocking(sock)) {
-      return ComResult::Unknown;
+    return setSocket(std::move(sock));
+  }
+
+  ComResult SocketChannel::setSocket(Socket paSocket) {
+    if (paSocket.setNoSigPipe()) {
+      return net::mapSocketError(errno, ComResult::Unknown);
+    }
+    if (paSocket.setNonBlocking()) {
+      return net::mapSocketError(errno, ComResult::Unknown);
     }
 
-    if (mSocket >= 0) {
-      ::close(mSocket);
-    }
-    mSocket = sock;
+    mSocket = std::move(paSocket);
+    mBuffer.resize(0);
 
     return ComResult::Ok;
   }
 
   ComResult SocketChannel::send(ComBuffer paData) {
-    const ssize_t bytesSent = ::send(mSocket, paData.data(), paData.size(), MSG_NOSIGNAL);
-    if (bytesSent < 0 || static_cast<std::size_t>(bytesSent) != paData.size()) {
+    if (!mSocket) {
+      return ComResult::NoSocket;
+    }
+    const ssize_t bytesSent = ::send(mSocket.get(), paData.data(), paData.size(), SocketSendFlags);
+    if (bytesSent < 0) {
+      return net::mapSocketError(errno, ComResult::SendFailed);
+    }
+    if (static_cast<std::size_t>(bytesSent) != paData.size()) {
       return ComResult::SendFailed;
     }
     return ComResult::Ok;
   }
 
-  ssize_t SocketChannel::recv() {
-    return ::recv(mSocket, mBuffer.data() + mBuffer.size(), getMaxReceiveSize() - mBuffer.size(), 0);
+  ComResultValue<std::size_t> SocketChannel::recv() {
+    const ssize_t bytesReceived =
+        ::recv(mSocket.get(), mBuffer.data() + mBuffer.size(), getMaxReceiveSize() - mBuffer.size(), 0);
+    if (bytesReceived < 0) {
+      return {.mResult = net::mapSocketError(errno, ComResult::RecvFailed)};
+    }
+    return {.mValue = static_cast<std::size_t>(bytesReceived)};
   }
 
   ComResult SocketChannel::poll() {
-    const ssize_t bytesReceived = recv();
-    if (bytesReceived <= 0) {
-      return ComResult::RecvFailed;
+    if (!mSocket) {
+      return ComResult::NoSocket;
+    }
+    if (mBuffer.size() >= getMaxReceiveSize()) {
+      return ComResult::WouldBlock;
+    }
+    const auto [result, bytesReceived] = recv();
+    if (result != ComResult::Ok) {
+      return result;
     }
     mBuffer.resize(mBuffer.size() + bytesReceived);
     if (mBuffer.size() < getMinReceiveSize()) {
@@ -81,14 +137,12 @@ namespace forte::com::impl {
   }
 
   ComResult SocketChannel::close() {
-    if (::close(mSocket)) {
-      switch (errno) {
-        case EBADF: return ComResult::NoSocket;
-        case EIO: return ComResult::SendFailed;
-        default: return ComResult::Unknown;
-      }
-    };
-    mSocket = -1;
+    if (!mSocket) {
+      return ComResult::NoSocket;
+    }
+    if (mSocket.close()) {
+      return net::mapSocketError(errno, ComResult::Unknown);
+    }
     return ComResult::Ok;
   }
 

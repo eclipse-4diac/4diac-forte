@@ -27,6 +27,9 @@
 
 #include "forte/iec61131_cast_helper.h"
 
+#include "func_MAX.h"
+#include "func_MIN.h"
+
 namespace forte {
   template<typename T, typename U, typename V>
   auto func_LIMIT(const T &paMN, const U &paIN, const V &paMX) ->

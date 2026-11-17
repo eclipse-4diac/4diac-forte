@@ -23,12 +23,21 @@ namespace forte::com::impl {
       explicit NullChannel(ComObserver<ComBuffer> &paObserver) : ComChannel(paObserver) {
       }
 
-      ComResult open(std::string_view paConfigString, std::span<ComChannelDescriptor> paDescriptors) override;
+      ComResult open(std::string_view paConfigString, std::span<const ComChannelDescriptor> paDescriptors) override;
       ComResult send(ComBuffer paData) override;
       ComResult poll() override;
       ComResult close() override;
 
+      [[nodiscard]] bool isOpen() const override {
+        return mIsOpen;
+      }
+
+      [[nodiscard]] bool supports(std::span<const ComChannelDescriptor> paDescriptors) const override;
+
       ComResult setMinReceiveSize(std::size_t paSize) override;
+
+    private:
+      bool mIsOpen = false;
   };
 
 } // namespace forte::com::impl

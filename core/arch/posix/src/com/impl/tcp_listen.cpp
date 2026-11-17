@@ -15,9 +15,9 @@
 #include "net.h"
 
 #include <cerrno>
-#include <unistd.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
+#include <utility>
 
 #include "forte/stringid.h"
 #include "forte/com/factory.h"
@@ -29,41 +29,36 @@ namespace forte::com::impl {
     [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<TCPListenChannel> entry("tcp_listen"_STRID);
   }
 
-  TCPListenChannel::~TCPListenChannel() {
-    if (mConnectionSocket >= 0) {
-      ::close(mConnectionSocket);
-    }
+  bool TCPListenChannel::supports(const std::span<const ComChannelDescriptor> paDescriptors) const {
+    return supportsChannel("tcp_listen"_STRID, paDescriptors);
   }
 
-  int TCPListenChannel::socket(const std::string_view paConfigString) {
+  ComResultValue<Socket> TCPListenChannel::socket(const std::string_view paConfigString) {
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
     hints.ai_flags = AI_PASSIVE;
-    const int sock = net::open(paConfigString, hints);
-    if (sock < 0) {
-      return -1;
+    ComResultValue<Socket> sock = net::open(paConfigString, hints);
+    if (!sock) {
+      return sock;
     }
 
-    if (listen(sock, 1)) {
-      ::close(sock);
-      return -1;
+    if (::listen(sock.mValue.get(), 1)) {
+      return {.mResult = net::mapSocketError(errno, ComResult::InvalidId)};
     }
     return sock;
   }
 
-  ComResult TCPListenChannel::open(std::string_view paConfigString, std::span<ComChannelDescriptor> paDescriptors) {
-    if (mConnectionSocket >= 0) {
-      ::close(mConnectionSocket);
-      mConnectionSocket = -1;
-    }
-    return SocketChannel::open(paConfigString, paDescriptors);
-  }
-
   ComResult TCPListenChannel::send(ComBuffer paData) {
-    const ssize_t bytesSent = ::send(mConnectionSocket, paData.data(), paData.size(), MSG_NOSIGNAL);
-    if (bytesSent < 0 || static_cast<std::size_t>(bytesSent) != paData.size()) {
+    if (!mConnectionSocket) {
+      return ComResult::NoSocket;
+    }
+    const ssize_t bytesSent = ::send(mConnectionSocket.get(), paData.data(), paData.size(), SocketSendFlags);
+    if (bytesSent < 0) {
+      return net::mapSocketError(errno, ComResult::SendFailed);
+    }
+    if (static_cast<std::size_t>(bytesSent) != paData.size()) {
       return ComResult::SendFailed;
     }
     return ComResult::Ok;
@@ -71,15 +66,10 @@ namespace forte::com::impl {
 
   ComResult TCPListenChannel::close() {
     auto connectionResult = ComResult::Ok;
-    if (mConnectionSocket >= 0) {
-      if (::close(mConnectionSocket)) {
-        switch (errno) {
-          case EBADF: connectionResult = ComResult::NoSocket; break;
-          case EIO: connectionResult = ComResult::SendFailed; break;
-          default: connectionResult = ComResult::Unknown; break;
-        }
+    if (mConnectionSocket) {
+      if (mConnectionSocket.close()) {
+        connectionResult = net::mapSocketError(errno, ComResult::Unknown);
       }
-      mConnectionSocket = -1;
     }
 
     if (const ComResult result = SocketChannel::close(); result != ComResult::Ok) {
@@ -88,19 +78,28 @@ namespace forte::com::impl {
     return connectionResult;
   }
 
-  ssize_t TCPListenChannel::recv() {
-    if (mConnectionSocket < 0) {
-      mConnectionSocket = accept(getSocket(), nullptr, nullptr);
-      if (mConnectionSocket < 0) {
-        return -1;
+  ComResultValue<std::size_t> TCPListenChannel::recv() {
+    if (!mConnectionSocket) {
+      Socket connectionSocket{accept(getSocket().get(), nullptr, nullptr)};
+      if (!connectionSocket) {
+        return {.mResult = net::mapSocketError(errno, ComResult::RecvFailed)};
       }
-      if (net::setNonBlocking(mConnectionSocket)) {
-        ::close(mConnectionSocket);
-        mConnectionSocket = -1;
-        return -1;
+      if (connectionSocket.setNoSigPipe()) {
+        return {.mResult = net::mapSocketError(errno, ComResult::Unknown)};
       }
+      if (connectionSocket.setNonBlocking()) {
+        return {.mResult = net::mapSocketError(errno, ComResult::Unknown)};
+      }
+      mConnectionSocket = std::move(connectionSocket);
     }
-    return ::recv(mConnectionSocket, getBuffer().data() + getBuffer().size(), getMaxReceiveSize() - getBuffer().size(),
-                  0);
+    const ssize_t bytesReceived = ::recv(mConnectionSocket.get(), getBuffer().data() + getBuffer().size(),
+                                         getMaxReceiveSize() - getBuffer().size(), 0);
+    if (bytesReceived < 0) {
+      return {.mResult = net::mapSocketError(errno, ComResult::RecvFailed)};
+    }
+    if (bytesReceived == 0) {
+      return {.mResult = ComResult::RecvFailed};
+    }
+    return {.mValue = static_cast<std::size_t>(bytesReceived)};
   }
 } // namespace forte::com::impl

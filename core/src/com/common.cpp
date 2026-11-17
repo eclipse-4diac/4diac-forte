@@ -62,6 +62,24 @@ namespace forte::com {
       case ComResult::Async: return "ASYNC";
       case ComResult::More: return "MORE";
       case ComResult::Overflow: return "OVERFLOW";
+      case ComResult::AddressInUse: return "ADDRESS_IN_USE";
+      case ComResult::AddressNotAvailable: return "ADDRESS_NOT_AVAILABLE";
+      case ComResult::ConnectionRefused: return "CONNECTION_REFUSED";
+      case ComResult::ConnectionReset: return "CONNECTION_RESET";
+      case ComResult::ConnectionAborted: return "CONNECTION_ABORTED";
+      case ComResult::ConnectionClosed: return "CONNECTION_CLOSED";
+      case ComResult::NetworkUnreachable: return "NETWORK_UNREACHABLE";
+      case ComResult::HostUnreachable: return "HOST_UNREACHABLE";
+      case ComResult::NetworkDown: return "NETWORK_DOWN";
+      case ComResult::TimedOut: return "TIMED_OUT";
+      case ComResult::WouldBlock: return "WOULD_BLOCK";
+      case ComResult::Interrupted: return "INTERRUPTED";
+      case ComResult::PermissionDenied: return "PERMISSION_DENIED";
+      case ComResult::NotConnected: return "NOT_CONNECTED";
+      case ComResult::MessageTooLarge: return "MESSAGE_TOO_LARGE";
+      case ComResult::NameNotResolved: return "NAME_NOT_RESOLVED";
+      case ComResult::NameResolutionTemporaryFailure: return "NAME_RESOLUTION_TEMPORARY_FAILURE";
+      case ComResult::InProgress: return "IN_PROGRESS";
       default: return "UNKNOWN";
     }
   }

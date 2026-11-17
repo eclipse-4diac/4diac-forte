@@ -36,31 +36,40 @@ namespace forte::com::impl {
   } // namespace
 
   ComResult RawChannel::open(const std::string_view paConfigString,
-                             const std::span<ComChannelDescriptor> paDescriptors) {
-    if (paDescriptors.empty()) {
-      return ComResult::InvalidId;
-    }
-    mChannel = ComChannelFactory<ComBuffer>::create(paDescriptors.front().mChannel, *this);
-    if (!mChannel) {
-      return ComResult::InvalidId;
+                             const std::span<const ComChannelDescriptor> paDescriptors) {
+    if (isOpen()) {
+      return ComResult::Ok;
     }
 
+    std::size_t maxReceiveSize;
+    std::size_t minReceiveSize;
     if (paConfigString.empty()) {
-      if (const ComResult result = mChannel->setMaxReceiveSize(CIEC_ANY_STRING::scmMaxStringLen);
-          result != ComResult::Ok) {
-        return result;
-      }
+      maxReceiveSize = CIEC_ANY_STRING::scmMaxStringLen;
+      minReceiveSize = 0;
     } else {
       const std::size_t size = parseSize(paConfigString);
       if (size == std::string_view::npos) {
         return ComResult::InvalidId;
       }
-      if (const ComResult result = mChannel->setMaxReceiveSize(size); result != ComResult::Ok) {
-        return result;
+      maxReceiveSize = size;
+      minReceiveSize = size;
+    }
+    if (paDescriptors.empty()) {
+      return ComResult::InvalidId;
+    }
+
+    if (!mChannel || !mChannel->supports(paDescriptors)) {
+      mChannel = ComChannelFactory<ComBuffer>::create(paDescriptors.front().mChannel, *this);
+      if (!mChannel) {
+        return ComResult::InvalidId;
       }
-      if (const ComResult result = mChannel->setMinReceiveSize(size); result != ComResult::Ok) {
-        return result;
-      }
+    }
+
+    if (const ComResult result = mChannel->setMaxReceiveSize(maxReceiveSize); result != ComResult::Ok) {
+      return result;
+    }
+    if (const ComResult result = mChannel->setMinReceiveSize(minReceiveSize); result != ComResult::Ok) {
+      return result;
     }
 
     return mChannel->open(paDescriptors.front().mConfigString, paDescriptors.subspan(1));
@@ -110,7 +119,12 @@ namespace forte::com::impl {
   }
 
   ComResult RawChannel::close() {
+    mSendBuffer.clear();
     return mChannel ? mChannel->close() : ComResult::NoSocket;
+  }
+
+  bool RawChannel::supports(const std::span<const ComChannelDescriptor> paDescriptors) const {
+    return supportsChannel("raw"_STRID, paDescriptors);
   }
 
   ComResult RawChannel::setMinReceiveSize(const std::size_t paSize) {

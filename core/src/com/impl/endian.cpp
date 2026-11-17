@@ -26,7 +26,10 @@ namespace forte::com::impl {
   } // namespace
 
   ComResult EndianChannel::open(const std::string_view paConfigString,
-                                const std::span<ComChannelDescriptor> paDescriptors) {
+                                const std::span<const ComChannelDescriptor> paDescriptors) {
+    if (isOpen()) {
+      return ComResult::Ok;
+    }
     if (paConfigString.empty() || paConfigString == "native") {
       mEndian = std::endian::native;
     } else if (paConfigString == "big") {
@@ -45,9 +48,18 @@ namespace forte::com::impl {
       return ComResult::DataTypeError;
     }
 
-    mChannel = ComChannelFactory<std::span<CIEC_ANY_VARIANT>>::create(paDescriptors.front().mChannel, *this);
-    if (!mChannel) {
-      return ComResult::InvalidId;
+    if (!mChannel || !mChannel->supports(paDescriptors)) {
+      mChannel = ComChannelFactory<std::span<CIEC_ANY_VARIANT>>::create(paDescriptors.front().mChannel, *this);
+      if (!mChannel) {
+        return ComResult::InvalidId;
+      }
+    }
+
+    if (const ComResult result = mChannel->setMaxReceiveSize(getMaxReceiveSize()); result != ComResult::Ok) {
+      return result;
+    }
+    if (const ComResult result = mChannel->setMinReceiveSize(getMinReceiveSize()); result != ComResult::Ok) {
+      return result;
     }
 
     return mChannel->open(paDescriptors.front().mConfigString, paDescriptors.subspan(1));
@@ -92,17 +104,21 @@ namespace forte::com::impl {
     return mChannel ? mChannel->close() : ComResult::NoSocket;
   }
 
+  bool EndianChannel::supports(const std::span<const ComChannelDescriptor> paDescriptors) const {
+    return supportsChannel("endian"_STRID, paDescriptors);
+  }
+
   ComResult EndianChannel::setMinReceiveSize(const std::size_t paSize) {
     if (const ComResult result = ComChannel::setMinReceiveSize(paSize); result != ComResult::Ok) {
       return result;
     }
-    return mChannel ? mChannel->setMinReceiveSize(paSize) : ComResult::Ok;
+    return isOpen() ? mChannel->setMinReceiveSize(paSize) : ComResult::Ok;
   }
 
   ComResult EndianChannel::setMaxReceiveSize(const std::size_t paSize) {
     if (const ComResult result = ComChannel::setMaxReceiveSize(paSize); result != ComResult::Ok) {
       return result;
     }
-    return mChannel ? mChannel->setMaxReceiveSize(paSize) : ComResult::Ok;
+    return isOpen() ? mChannel->setMaxReceiveSize(paSize) : ComResult::Ok;
   }
 } // namespace forte::com::impl

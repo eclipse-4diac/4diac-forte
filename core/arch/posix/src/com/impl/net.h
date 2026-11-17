@@ -13,13 +13,29 @@
 
 #pragma once
 
+#include "socket.h"
+
+#include "../../../../common/src/com/impl/parallel_state.h"
+
 #include <string_view>
 #include <netdb.h>
 
 namespace forte::com::impl::net {
 
-  int open(std::string_view paConfigString, const addrinfo &paHints);
+  ComResult mapSocketError(int paError, ComResult paFallback) noexcept;
+  ComResult mapResolverError(int paResolverError, int paSystemError, ComResult paFallback) noexcept;
 
-  int setNonBlocking(int paSocket);
+  ComResultValue<addrinfo *> resolve(std::string_view paConfigString, const addrinfo &paHints);
+
+  ComResultValue<Socket> open(const addrinfo *paAddresses, bool paPassive);
+
+  ComResultValue<Socket> open(std::string_view paConfigString, const addrinfo &paHints);
+
+  ParallelConnectionState<Socket> openParallel(const addrinfo *paAddresses, bool paPassive);
+
+  ComResultValue<ParallelConnectionState<Socket>> openParallel(std::string_view paConfigString,
+                                                               const addrinfo &paHints);
+
+  ComResultValue<Socket> pollParallel(ParallelConnectionState<Socket> &paState);
 
 } // namespace forte::com::impl::net

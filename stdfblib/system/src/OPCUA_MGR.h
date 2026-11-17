@@ -34,6 +34,10 @@ namespace forte {
 
         virtual ~OPCUA_MGR();
 
+        // the manager owns the NodeIds the server returned, a copy would free them twice
+        OPCUA_MGR(const OPCUA_MGR &) = delete;
+        OPCUA_MGR &operator=(const OPCUA_MGR &) = delete;
+
         EMGMResponse initialize();
 
         bool isInitialized();

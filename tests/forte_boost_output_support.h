@@ -33,6 +33,7 @@
 #include "forte/funcbloc.h"
 #include "forte/mgmcmd.h"
 #include "forte/stringid.h"
+#include "forte/com/common.h"
 
 namespace forte {
   inline std::ostream &boost_test_print_type(std::ostream &out, const StringId &variable) {
@@ -149,4 +150,11 @@ namespace forte {
     out << static_cast<std::underlying_type_t<CFunctionBlock::E_FBStates>>(variable);
     return out;
   }
+
+  namespace com {
+    inline std::ostream &boost_test_print_type(std::ostream &out, const ComResult &variable) {
+      out << getComResultString(variable);
+      return out;
+    }
+  } // namespace com
 } // namespace forte

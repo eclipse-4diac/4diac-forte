@@ -27,11 +27,23 @@ namespace forte::com::impl {
     [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<TCPChannel> entry("tcp"_STRID);
   }
 
-  int TCPChannel::socket(const std::string_view paConfigString) {
+  bool TCPChannel::supports(const std::span<const ComChannelDescriptor> paDescriptors) const {
+    return supportsChannel("tcp"_STRID, paDescriptors);
+  }
+
+  ComResultValue<Socket> TCPChannel::socket(const std::string_view paConfigString) {
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_STREAM;
     hints.ai_protocol = IPPROTO_TCP;
     return net::open(paConfigString, hints);
+  }
+
+  ComResultValue<std::size_t> TCPChannel::recv() {
+    auto result = SocketChannel::recv();
+    if (result.mResult == ComResult::Ok && result.mValue == 0) {
+      result.mResult = ComResult::RecvFailed; // socket closed
+    }
+    return result;
   }
 } // namespace forte::com::impl

@@ -14,6 +14,7 @@
 #include "udp_listen.h"
 #include "net.h"
 
+#include <cerrno>
 #include <sys/socket.h>
 #include <netinet/in.h>
 
@@ -27,7 +28,11 @@ namespace forte::com::impl {
     [[maybe_unused]] ComChannelFactory<ComBuffer>::EntryImpl<UDPListenChannel> entry("udp_listen"_STRID);
   }
 
-  int UDPListenChannel::socket(const std::string_view paConfigString) {
+  bool UDPListenChannel::supports(const std::span<const ComChannelDescriptor> paDescriptors) const {
+    return supportsChannel("udp_listen"_STRID, paDescriptors);
+  }
+
+  ComResultValue<Socket> UDPListenChannel::socket(const std::string_view paConfigString) {
     addrinfo hints{};
     hints.ai_family = AF_UNSPEC;
     hints.ai_socktype = SOCK_DGRAM;
@@ -36,33 +41,27 @@ namespace forte::com::impl {
     return net::open(paConfigString, hints);
   }
 
-  ComResult UDPListenChannel::open(const std::string_view paConfigString,
-                                   const std::span<ComChannelDescriptor> paDescriptors) {
-    const ComResult result = SocketChannel::open(paConfigString, paDescriptors);
-    if (result == ComResult::Ok) {
-      mConnected = false;
-    }
-    return result;
-  }
-
   ComResult UDPListenChannel::close() {
     const ComResult result = SocketChannel::close();
     mConnected = false;
     return result;
   }
 
-  ssize_t UDPListenChannel::recv() {
+  ComResultValue<std::size_t> UDPListenChannel::recv() {
     sockaddr_storage remoteAddr{};
     socklen_t remoteAddrLen = sizeof(remoteAddr);
     const ssize_t bytesReceived =
-        recvfrom(getSocket(), getBuffer().data() + getBuffer().size(), getMaxReceiveSize() - getBuffer().size(), 0,
-                 reinterpret_cast<sockaddr *>(&remoteAddr), &remoteAddrLen);
-    if (bytesReceived > 0 && !mConnected) {
-      if (connect(getSocket(), reinterpret_cast<sockaddr *>(&remoteAddr), remoteAddrLen)) {
-        return -1;
-      };
+        recvfrom(getSocket().get(), getBuffer().data() + getBuffer().size(), getMaxReceiveSize() - getBuffer().size(),
+                 0, reinterpret_cast<sockaddr *>(&remoteAddr), &remoteAddrLen);
+    if (bytesReceived < 0) {
+      return {.mResult = net::mapSocketError(errno, ComResult::RecvFailed)};
+    }
+    if (!mConnected) {
+      if (connect(getSocket().get(), reinterpret_cast<sockaddr *>(&remoteAddr), remoteAddrLen)) {
+        return {.mResult = net::mapSocketError(errno, ComResult::RecvFailed)};
+      }
       mConnected = true;
     }
-    return bytesReceived;
+    return {.mValue = static_cast<std::size_t>(bytesReceived)};
   }
 } // namespace forte::com::impl

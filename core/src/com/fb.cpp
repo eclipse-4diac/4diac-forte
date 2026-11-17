@@ -57,25 +57,9 @@ namespace forte::com {
   }
 
   ComResult CommunicationFB::open(const std::string_view paID) {
-    if (const ComResult result = BaseCommunicationFB::open(paID); result != ComResult::Ok) {
-      setStatus(result);
-      return result;
-    }
-
-    if (const ComResult result = getChannel()->setMaxReceiveSize(getGenDONums()); result != ComResult::Ok) {
-      close();
-      setStatus(result);
-      return result;
-    }
-
-    if (const ComResult result = getChannel()->setMinReceiveSize(getGenDONums()); result != ComResult::Ok) {
-      close();
-      setStatus(result);
-      return result;
-    }
-
-    setStatus(ComResult::Ok);
-    return ComResult::Ok;
+    const ComResult result = BaseCommunicationFB::open(paID);
+    setStatus(result);
+    return result;
   }
 
   ComResult CommunicationFB::send(std::span<CIEC_ANY_VARIANT> paData) {
@@ -112,7 +96,7 @@ namespace forte::com {
     } else {
       result = ComResult::DataTypeError;
     }
-    setStatus(ComResult::Ok);
+    setStatus(result);
     getEventChainExecutor()->startEventChain({*this, scmEventReceiveID});
     return result;
   }
