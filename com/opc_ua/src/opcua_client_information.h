@@ -90,6 +90,12 @@ namespace forte::com_infra::opc_ua {
       }
 
       /**
+       * Put the actions of a subscription that was deleted without our request back to be initialized
+       * @return True if actions were put back, false otherwise
+       */
+      bool requeueActionsOfLostSubscription();
+
+      /**
        * Getter of the endpoint
        * @return Endpoint of the clinet
        */
@@ -409,6 +415,12 @@ namespace forte::com_infra::opc_ua {
        * List of actions that need to be initialized
        */
       std::vector<CActionInfo *> mActionsToBeInitialized;
+
+      /**
+       * Actions whose subscription was deleted without our request. They are put back to mActionsToBeInitialized by
+       * requeueActionsOfLostSubscription(), because the deletion can happen while mActionsToBeInitialized is iterated
+       */
+      std::vector<CActionInfo *> mActionsOfLostSubscription;
 
       /**
        * Indicates if the client should wait scmConnectionRetryTimeoutNano before trying to reconnect. This is true when
