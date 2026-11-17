@@ -68,3 +68,11 @@ endif(FORTE_COM_OPC_UA_ENCRYPTION AND FORTE_COM_OPC_UA_MASTER_BRANCH)
 forte_add_multi_systemtests(OPCUA_FastWrite 200 0 fastWriteClient.fboot " " fastWriteServer.fboot " ") # There's no test in these systems. It only tests quick accessing the server with a client subscribed to it, and there won't be any problem, thus finishing the test without a timeout
 
 add_subdirectory(namespace)
+
+# a client that only called a method is the last one in the iteration list: the subscription of the other client
+# has to keep delivering values
+add_test(NAME OPCUA_SubscriptionAfterOtherClientsCall
+        COMMAND sh ${CMAKE_CURRENT_SOURCE_DIR}/iterationTest.sh $<TARGET_FILE:forte_systemtest>
+        ${CMAKE_CURRENT_SOURCE_DIR}/iterationCounterServer.fboot ${CMAKE_CURRENT_SOURCE_DIR}/iterationMethodServer.fboot
+        ${CMAKE_CURRENT_SOURCE_DIR}/iterationClient.fboot)
+set_tests_properties(OPCUA_SubscriptionAfterOtherClientsCall PROPERTIES TIMEOUT 120)
