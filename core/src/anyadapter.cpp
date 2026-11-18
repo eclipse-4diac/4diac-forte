@@ -12,6 +12,7 @@
  *   Martin Melik Merkumians - fixes event chain initialisation, adds typifyAnyAdapter
  *   Alois Zoitl - introduced new CGenFB class for better handling generic FBs
                  - re-implementation for new communication infrastructure
+ *   Pedro Ricardo C. Souza - pins for adapter types known by name
  *******************************************************************************/
 #include "anyadapter.h"
 #include "forte/adapter.h"
@@ -32,15 +33,25 @@ namespace forte {
                                                CFunctionBlock &paParent,
                                                bool paIsPlug,
                                                TForteUInt8 paParentAdapterlistID) {
+    if (createAdapterBlock(paPeer->getFBTypeId(), paParent, paIsPlug, paParentAdapterlistID)) {
+      mConfiguredAdapter->setPeer(paPeer);
+    }
+  }
+
+  bool CAnyAdapterPin::createAdapterBlock(StringId paAdapterTypeId,
+                                          CFunctionBlock &paParent,
+                                          bool paIsPlug,
+                                          TForteUInt8 paParentAdapterlistID) {
     removeConfiguredAdapter();
     EMGMResponse errorMSG;
     mConfiguredAdapter = std::unique_ptr<CAdapter>(
-        createAdapter(mInstanceNameId, paPeer->getFBTypeId(), paParent, paIsPlug, paParentAdapterlistID, errorMSG));
+        createAdapter(mInstanceNameId, paAdapterTypeId, paParent, paIsPlug, paParentAdapterlistID, errorMSG));
 
     if (mConfiguredAdapter) {
       paParent.addFB(*mConfiguredAdapter);
-      mConfiguredAdapter->setPeer(paPeer);
+      return true;
     }
+    return false;
   }
 
   void CAnyAdapterPin::removeConfiguredAdapter() {
@@ -110,5 +121,77 @@ namespace forte {
   void CAnySocketPin::disconnect() {
     removeConfiguredAdapter();
     mAdapterCon = nullptr;
+  }
+
+  CTypedPlugPin::CTypedPlugPin(StringId paInstanceNameId,
+                               CFunctionBlock &paParentFB,
+                               StringId paAdapterTypeId,
+                               TForteUInt8 paParentAdapterlistID) :
+      CAnyAdapterPin(paInstanceNameId),
+      mAdapterTypeId(paAdapterTypeId),
+      mAdapterCon(paParentFB, paParentAdapterlistID, *this) {
+    createAdapterBlock(paAdapterTypeId, paParentFB, true, paParentAdapterlistID);
+  }
+
+  CAdapter *CTypedPlugPin::getAdapterBlock() {
+    return mConfiguredAdapter.get();
+  }
+
+  StringId CTypedPlugPin::getAdapterTypeId() const {
+    return mAdapterTypeId;
+  }
+
+  bool CTypedPlugPin::isCompatible(IAdapterPin &paPeer) {
+    return mConfiguredAdapter && paPeer.getAdapterTypeId() == mAdapterTypeId;
+  }
+
+  CAdapterConnection &CTypedPlugPin::getAdapterCon() {
+    return mAdapterCon;
+  }
+
+  void CTypedPlugPin::setPeer(CAdapter *paPeer) {
+    if (mConfiguredAdapter) {
+      mConfiguredAdapter->setPeer(paPeer);
+    }
+  }
+
+  CTypedSocketPin::CTypedSocketPin(StringId paInstanceNameId,
+                                   CFunctionBlock &paParentFB,
+                                   StringId paAdapterTypeId,
+                                   TForteUInt8 paParentAdapterlistID) :
+      CAnyAdapterPin(paInstanceNameId),
+      mAdapterTypeId(paAdapterTypeId),
+      mAdapterCon(nullptr) {
+    createAdapterBlock(paAdapterTypeId, paParentFB, false, paParentAdapterlistID);
+  }
+
+  CAdapter *CTypedSocketPin::getAdapterBlock() {
+    return mConfiguredAdapter.get();
+  }
+
+  StringId CTypedSocketPin::getAdapterTypeId() const {
+    return mAdapterTypeId;
+  }
+
+  bool CTypedSocketPin::isCompatible(IAdapterPin &paPeer) {
+    return mConfiguredAdapter && paPeer.getAdapterTypeId() == mAdapterTypeId;
+  }
+
+  bool CTypedSocketPin::connect(CAdapterConnection &paConn) {
+    CAdapter *const plugBlock = paConn.getPlug().getAdapterBlock();
+    if (!mConfiguredAdapter || plugBlock == nullptr) {
+      return false;
+    }
+    paConn.getPlug().setPeer(mConfiguredAdapter.get());
+    mAdapterCon = &paConn;
+    mConfiguredAdapter->setPeer(plugBlock);
+    return true;
+  }
+
+  void CTypedSocketPin::disconnect() {
+    mAdapterCon = nullptr;
+    if (mConfiguredAdapter) {
+      mConfiguredAdapter->setPeer(nullptr);
+    }
   }
 } // namespace forte

@@ -51,13 +51,22 @@ add_custom_target(forte-lua-stfunc DEPENDS ${FORTE_STFUNC_HEADER})
 add_dependencies(forte-core forte-lua-stfunc)
 
 set(FORTE_LUA_SOURCES
+        ${CMAKE_CURRENT_SOURCE_DIR}/luaadapter.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/luabfb.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/luabit.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/luacfb.cpp
         ${CMAKE_CURRENT_SOURCE_DIR}/luaengine.cpp
+        ${CMAKE_CURRENT_SOURCE_DIR}/luainterface.cpp
 )
 
 target_sources(forte-core PRIVATE
+        luaadapter.h
+        luabfb.h
         luabit.h
+        luacfb.h
         luaengine.h
+        luainterface.h
+        luatypehash.h
         ${FORTE_LUA_SOURCES}
 )
 
