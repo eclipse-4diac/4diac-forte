@@ -1,0 +1,21 @@
+;<Request ID="1" Action="CREATE"><FBType Name="luatest::Redef">-- REQ sets OUT to the version of this definition and fires CNF&#10;local DO_OUT = 67108864&#10;local VERSION = 1&#10;&#10;return {&#10;  ECC = function(fb, id)&#10;    if id == 0 then&#10;      fb[DO_OUT] = VERSION&#10;      fb(0)&#10;    end&#10;  end,&#10;  interfaceSpec = {&#10;    numEIs = 1, EINames = {&quot;REQ&quot;}, EIWith = {65535}, EIWithIndexes = {-1},&#10;    numEOs = 1, EONames = {&quot;CNF&quot;}, EOWith = {0, 65535}, EOWithIndexes = {0},&#10;    numDIs = 0, DINames = {}, DIDataTypeNames = {},&#10;    numDOs = 1, DONames = {&quot;OUT&quot;}, DODataTypeNames = {&quot;INT&quot;},&#10;    numAdapters = 0, adapterInstanceDefinition = {}&#10;  }&#10;}&#10;</FBType></Request>
+;<Request ID="2" Action="CREATE"><FB Name="LuaRedefOld" Type="iec61499::system::EMB_RES" /></Request>
+LuaRedefOld;<Request ID="3" Action="CREATE"><FB Name="R" Type="luatest::Redef" /></Request>
+LuaRedefOld;<Request ID="4" Action="CREATE"><Connection Source="START.COLD" Destination="R.REQ" /></Request>
+LuaRedefOld;<Request ID="5" Action="START"/>
+;<Request ID="6" Action="KILL"><FB Name="LuaRedefOld" Type="" /></Request>
+;<Request ID="7" Action="DELETE"><FB Name="LuaRedefOld" Type="" /></Request>
+;<Request ID="8" Action="CREATE"><FBType Name="luatest::Redef">-- REQ sets OUT to the version of this definition and fires CNF&#10;local DO_OUT = 67108864&#10;local VERSION = 2&#10;&#10;return {&#10;  ECC = function(fb, id)&#10;    if id == 0 then&#10;      fb[DO_OUT] = VERSION&#10;      fb(0)&#10;    end&#10;  end,&#10;  interfaceSpec = {&#10;    numEIs = 1, EINames = {&quot;REQ&quot;}, EIWith = {65535}, EIWithIndexes = {-1},&#10;    numEOs = 1, EONames = {&quot;CNF&quot;}, EOWith = {0, 65535}, EOWithIndexes = {0},&#10;    numDIs = 0, DINames = {}, DIDataTypeNames = {},&#10;    numDOs = 1, DONames = {&quot;OUT&quot;}, DODataTypeNames = {&quot;INT&quot;},&#10;    numAdapters = 0, adapterInstanceDefinition = {}&#10;  }&#10;}&#10;</FBType></Request>
+;<Request ID="9" Action="CREATE"><FB Name="LuaRedefNew" Type="iec61499::system::EMB_RES" /></Request>
+LuaRedefNew;<Request ID="10" Action="CREATE"><FB Name="R" Type="luatest::Redef" /></Request>
+LuaRedefNew;<Request ID="11" Action="CREATE"><FB Name="EQ" Type="iec61131::comparison::F_EQ" /></Request>
+LuaRedefNew;<Request ID="12" Action="CREATE"><FB Name="CHECK" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
+LuaRedefNew;<Request ID="13" Action="CREATE"><FB Name="STEST_END" Type="eclipse4diac::utils::STEST_END" /></Request>
+LuaRedefNew;<Request ID="14" Action="WRITE"><Connection Source="INT#2" Destination="EQ.IN2" /></Request>
+LuaRedefNew;<Request ID="15" Action="CREATE"><Connection Source="START.COLD" Destination="R.REQ" /></Request>
+LuaRedefNew;<Request ID="16" Action="CREATE"><Connection Source="R.CNF" Destination="EQ.REQ" /></Request>
+LuaRedefNew;<Request ID="17" Action="CREATE"><Connection Source="EQ.CNF" Destination="CHECK.REQ" /></Request>
+LuaRedefNew;<Request ID="18" Action="CREATE"><Connection Source="CHECK.CNF" Destination="STEST_END.REQ" /></Request>
+LuaRedefNew;<Request ID="19" Action="CREATE"><Connection Source="R.OUT" Destination="EQ.IN1" /></Request>
+LuaRedefNew;<Request ID="20" Action="CREATE"><Connection Source="EQ.OUT" Destination="CHECK.check" /></Request>
+LuaRedefNew;<Request ID="21" Action="START"/>

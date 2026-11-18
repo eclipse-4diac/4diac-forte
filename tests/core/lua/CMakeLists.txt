@@ -25,6 +25,8 @@ forte_test_add_sourcefile_cpp(luabfbtests.cpp)
 forte_test_add_sourcefile_cpp(luabittests.cpp)
 forte_test_add_sourcefile_cpp(luacfbtests.cpp)
 forte_test_add_sourcefile_cpp(luaenginetests.cpp)
+forte_test_add_sourcefile_cpp(luamgmtests.cpp)
+forte_test_add_sourcefile_cpp(luaresourcetests.cpp)
 forte_test_add_sourcefile_cpp(stfunctests.cpp)
 
 set_property(GLOBAL APPEND PROPERTY FORTE_TEST_LIBRARIES forte-lua-library)
