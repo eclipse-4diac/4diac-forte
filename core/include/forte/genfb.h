@@ -324,7 +324,7 @@ namespace forte {
       }
     } else {
       DEVLOG_ERROR("CFunctionBlock::generateGenericInterfacePointNameArray won't be able to create all the generics "
-                   "since %s is too long to hold until %d",
+                   "since %s is too long to hold until %zu",
                    paPrefix, paNumGenericDataPoints);
     }
   }

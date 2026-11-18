@@ -71,8 +71,8 @@ namespace forte::com_infra::opc_ua {
         }
       }
     } else {
-      DEVLOG_ERROR("[OPC UA ACTION]: Parameters %s should have at least %d parts, separated by a semicolon\n", paParams,
-                   scmMinimumAmounOfParameters);
+      DEVLOG_ERROR("[OPC UA ACTION]: Parameters %s should have at least %zu parts, separated by a semicolon\n",
+                   paParams, scmMinimumAmounOfParameters);
     }
 
     return retVal;
@@ -150,11 +150,11 @@ namespace forte::com_infra::opc_ua {
                      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead]);
       } else if (getNoOfNodePairs() != paNoOfRDs) {
         DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Remote %s action needs as many BrowseName,NodeId pairs as there are "
-                     "RDs. (have: %i, need: %i)\n",
+                     "RDs. (have: %zu, need: %zu)\n",
                      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead], getNoOfNodePairs(),
                      paNoOfRDs);
       } else if (paNoOfSDs != 0) {
-        DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Remote %s action must have no SDs. (have: %i)\n",
+        DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: Remote %s action must have no SDs. (have: %zu)\n",
                      mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eRead], paNoOfSDs);
       } else {
         retVal = true;
@@ -205,7 +205,7 @@ namespace forte::com_infra::opc_ua {
                    mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod]);
     } else if (getNoOfNodePairs() != 1) {
       DEVLOG_ERROR(
-          "[OPC UA ACTION]: In FB %s: %s action is only allowed with a single BrowseName,NodeId pair. (have: %i)\n",
+          "[OPC UA ACTION]: In FB %s: %s action is only allowed with a single BrowseName,NodeId pair. (have: %zu)\n",
           mLayer.getCommFB()->getInstanceName(), CActionInfo::mActionNames[eCallMethod], getNoOfNodePairs());
     } else if (mNodePair.begin()->getBrowsePath().empty()) {
       DEVLOG_ERROR("[OPC UA ACTION]: In FB %s: %s action is only allowed with a non-empty browsepath\n",

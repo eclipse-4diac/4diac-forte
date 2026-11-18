@@ -73,10 +73,10 @@ namespace forte::iec61499::events {
       } else {
         // Log errors if the number is out of bounds.
         if (numEOs >= scmMaxInterfaceEvents) {
-          DEVLOG_ERROR("Cannot configure FB-Instance E_SPLIT_%d. Number of event outputs exceeds maximum of %d.\n",
+          DEVLOG_ERROR("Cannot configure FB-Instance E_SPLIT_%zu. Number of event outputs exceeds maximum of %zu.\n",
                        numEOs, CFunctionBlock::scmMaxInterfaceEvents);
         } else {
-          DEVLOG_ERROR("Cannot configure FB-Instance E_SPLIT_%d. Number of event outputs smaller than minimum of 2.\n",
+          DEVLOG_ERROR("Cannot configure FB-Instance E_SPLIT_%zu. Number of event outputs smaller than minimum of 2.\n",
                        numEOs);
         }
       }

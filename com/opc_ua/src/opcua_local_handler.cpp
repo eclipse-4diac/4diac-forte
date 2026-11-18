@@ -152,7 +152,7 @@ namespace forte::com_infra::opc_ua {
           DEVLOG_ERROR("[OPC UA LOCAL]: Error starting up the server. Error: %s\n", UA_StatusCode_name(retVal));
         }
       } else {
-        DEVLOG_ERROR("[OPC UA LOCAL]: Couldn't initialize Nodesets\n", gOpcuaServerPort.mArgument);
+        DEVLOG_ERROR("[OPC UA LOCAL]: Couldn't initialize Nodesets\n");
       }
       UA_Server_delete(mUaServer);
       mUaServer = nullptr;
@@ -531,19 +531,19 @@ namespace forte::com_infra::opc_ua {
                            paNodePairInfo.getBrowsePath().c_str(), UA_StatusCode_name(retVal));
             }
           } else {
-            DEVLOG_ERROR("[OPC UA LOCAL]: Cannot set write permission of node for port %d. Error: %s\n",
+            DEVLOG_ERROR("[OPC UA LOCAL]: Cannot set write permission of node for port %zu. Error: %s\n",
                          paIndexOfNodePair, UA_StatusCode_name(retVal));
           }
         }
       } else {
         DEVLOG_ERROR(
-            "[OPC UA LOCAL]: At FB %s index %d there was the type of the existing node doesn't match the new one\n",
+            "[OPC UA LOCAL]: At FB %s index %zu there was the type of the existing node doesn't match the new one\n",
             paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair);
         retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
       }
     } else {
       DEVLOG_ERROR(
-          "[OPC UA LOCAL]: At FB %s index %d there was a problem reading the type of the existing node. Error: %s\n",
+          "[OPC UA LOCAL]: At FB %s index %zu there was a problem reading the type of the existing node. Error: %s\n",
           paActionInfo.getLayer().getCommFB()->getInstanceName(), paIndexOfNodePair, UA_StatusCode_name(retVal));
     }
 
@@ -608,7 +608,7 @@ namespace forte::com_infra::opc_ua {
       DEVLOG_WARNING(
           "[OPC UA LOCAL]: You are creating a variable %.*s in the /Root folder. This is not a good practice. "
           "Try to create them in the /Root/Objects folder\n",
-          paCreateVariableInfo.mBrowseName->name.length,
+          static_cast<int>(paCreateVariableInfo.mBrowseName->name.length),
           reinterpret_cast<const char *>(paCreateVariableInfo.mBrowseName->name.data));
     }
 
@@ -650,7 +650,8 @@ namespace forte::com_infra::opc_ua {
 
     if (UA_STATUSCODE_GOOD != retVal) {
       DEVLOG_ERROR("[OPC UA LOCAL]: AddressSpace adding Variable Node %.*s failed. Error: %s\n",
-                   paCreateVariableInfo.mBrowseName->name.length, paCreateVariableInfo.mBrowseName->name.data,
+                   static_cast<int>(paCreateVariableInfo.mBrowseName->name.length),
+                   reinterpret_cast<const char *>(paCreateVariableInfo.mBrowseName->name.data),
                    UA_StatusCode_name(retVal));
     }
     UA_NodeId_clear(&parentNodeId);
@@ -865,7 +866,7 @@ namespace forte::com_infra::opc_ua {
       parentNodeId = UA_NODEID_NUMERIC(0, UA_NS0ID_ROOTFOLDER);
       DEVLOG_WARNING("[OPC UA LOCAL]: You are creating a Method %.*s in the /Root folder. This is not a good practice. "
                      "Try to create them in the /Root/Objects folder\n",
-                     paCreateMethodInfo.mBrowseName->name.length,
+                     static_cast<int>(paCreateMethodInfo.mBrowseName->name.length),
                      reinterpret_cast<const char *>(paCreateMethodInfo.mBrowseName->name.data));
     }
 
@@ -931,7 +932,7 @@ namespace forte::com_infra::opc_ua {
 
       retVal = updateNodeValue(*it->getNodeId(), dataToSend[indexOfNodePair]);
       if (UA_STATUSCODE_GOOD != retVal) {
-        DEVLOG_ERROR("[OPC UA LOCAL]: Could not convert value to write for port %d at FB %s. Error: %s\n",
+        DEVLOG_ERROR("[OPC UA LOCAL]: Could not convert value to write for port %zu at FB %s. Error: %s\n",
                      indexOfNodePair, paActionInfo.getLayer().getCommFB()->getInstanceName(),
                      UA_StatusCode_name(retVal));
         break;
@@ -1075,7 +1076,7 @@ namespace forte::com_infra::opc_ua {
       DEVLOG_WARNING(
           "[OPC UA LOCAL]: You are creating an Object %.*s in the /Root folder. This is not a good practice. "
           "Try to create them in the /Root/Objects folder\n",
-          paCreateObjectInfo.mBrowseName->name.length,
+          static_cast<int>(paCreateObjectInfo.mBrowseName->name.length),
           reinterpret_cast<const char *>(paCreateObjectInfo.mBrowseName->name.data));
     }
 
@@ -1396,7 +1397,7 @@ namespace forte::com_infra::opc_ua {
 
         if (UA_STATUSCODE_GOOD != retVal) {
           DEVLOG_ERROR("[OPC UA LOCAL]: Could not create folder %.*s in path %s. Error: %s\n",
-                       createInformation.mBrowseName->name.length,
+                       static_cast<int>(createInformation.mBrowseName->name.length),
                        reinterpret_cast<const char *>(createInformation.mBrowseName->name.data), paFolders,
                        UA_StatusCode_name(retVal));
           break;
@@ -1538,8 +1539,8 @@ namespace forte::com_infra::opc_ua {
       DEVLOG_ERROR("[OPC UA LOCAL]: Method doesn't have any FB referencing it\n");
     } else {
       if (paInputSize != localMethodHandle->getReceiveSize() || paOutputSize != localMethodHandle->getSendSize()) {
-        DEVLOG_ERROR("[OPC UA LOCAL]: method call got invalid number of arguments. In: %d==%d, Out: %d==%d\n",
-                     localMethodHandle->getReceiveSize(), paInputSize, localMethodHandle->getSendSize(), paOutput);
+        DEVLOG_ERROR("[OPC UA LOCAL]: method call got invalid number of arguments. In: %zu==%zu, Out: %zu==%zu\n",
+                     localMethodHandle->getReceiveSize(), paInputSize, localMethodHandle->getSendSize(), paOutputSize);
       } else {
 
         COPC_UA_Helper::UA_SendVariable_handle sendHandle;
@@ -1575,7 +1576,7 @@ namespace forte::com_infra::opc_ua {
           thisHandler->mServerAccessMutex.unlock();
           // wait For semaphore, which will be released by execute Local Method in this handler
           if (!localMethodHandle->getResultReady().timedWait(scmMethodCallTimeoutInNanoSeconds)) {
-            DEVLOG_ERROR("[OPC UA LOCAL]: method call did not get result values within timeout of %u nanoseconds.\n",
+            DEVLOG_ERROR("[OPC UA LOCAL]: method call did not get result values within timeout of %zu nanoseconds.\n",
                          scmMethodCallTimeoutInNanoSeconds);
             retVal = UA_STATUSCODE_BADTIMEOUT;
           } else {

@@ -280,7 +280,7 @@ namespace forte {
           return CIEC_CHAR('\0');
         }
         if (paIndex > length()) {
-          DEVLOG_ERROR("String index %d outside of length!\n", paIndex);
+          DEVLOG_ERROR("String index %jd outside of length!\n", paIndex);
           return CIEC_CHAR('\0');
         }
         return CIEC_CHAR(static_cast<CIEC_CHAR::TValueType>(getStorage()[static_cast<size_t>(paIndex - 1)]));
