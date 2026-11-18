@@ -13,6 +13,7 @@ target_sources(forte_systemtest PRIVATE
         fordiacNamespace.cpp
         forte_datatypetest.cpp
         forte_datatypetest.h
+        startupDelayNodeset.cpp
         generated/ua_namespace_fordiacNamespace.c
         generated/ua_namespace_fordiacNamespace.h
         generated/ua_types_fordiacNamespace_generated.c
