@@ -12,6 +12,7 @@
  *   Martin Melik Merkumians
  *               - fixes event chain initialisation, adds typifyAnyAdapter
  *   Alois Zoitl - re-implementation for new communication infrastructure
+ *   Pedro Ricardo C. Souza - pins for adapter types known by name
  *******************************************************************************/
 #pragma once
 
@@ -29,6 +30,10 @@ namespace forte {
                                    CFunctionBlock &paParent,
                                    bool paIsPlug,
                                    TForteUInt8 paParentAdapterlistID);
+      bool createAdapterBlock(StringId paAdapterTypeId,
+                              CFunctionBlock &paParent,
+                              bool paIsPlug,
+                              TForteUInt8 paParentAdapterlistID);
       void removeConfiguredAdapter();
 
       StringId mInstanceNameId;
@@ -79,6 +84,59 @@ namespace forte {
       CAdapterConnection *mAdapterCon;
       CFunctionBlock &mParentFB;
       const TForteUInt8 mParentAdapterlistID;
+  };
+
+  /*!\brief A plug pin whose adapter type is only known by name, e.g. a type defined at run time
+   *
+   * The adapter block is created with the pin. getAdapterBlock() returns nullptr if that failed.
+   */
+  class CTypedPlugPin final : public CAnyAdapterPin, public IPlugPin {
+    public:
+      CTypedPlugPin(StringId paInstanceNameId,
+                    CFunctionBlock &paParentFB,
+                    StringId paAdapterTypeId,
+                    TForteUInt8 paParentAdapterlistID);
+
+      CAdapter *getAdapterBlock() override;
+
+      StringId getAdapterTypeId() const override;
+
+      bool isCompatible(IAdapterPin &paPeer) override;
+
+      CAdapterConnection &getAdapterCon() override;
+
+      void setPeer(CAdapter *paPeer) override;
+
+    private:
+      const StringId mAdapterTypeId;
+      CAdapterConnection mAdapterCon;
+  };
+
+  //! The socket counterpart of CTypedPlugPin
+  class CTypedSocketPin final : public CAnyAdapterPin, public ISocketPin {
+    public:
+      CTypedSocketPin(StringId paInstanceNameId,
+                      CFunctionBlock &paParentFB,
+                      StringId paAdapterTypeId,
+                      TForteUInt8 paParentAdapterlistID);
+
+      CAdapter *getAdapterBlock() override;
+
+      StringId getAdapterTypeId() const override;
+
+      bool isCompatible(IAdapterPin &paPeer) override;
+
+      bool connect(CAdapterConnection &paConn) override;
+
+      void disconnect() override;
+
+      CAdapterConnection *getAdapterCon() override {
+        return mAdapterCon;
+      }
+
+    private:
+      const StringId mAdapterTypeId;
+      CAdapterConnection *mAdapterCon;
   };
 
 } // namespace forte

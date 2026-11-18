@@ -20,7 +20,10 @@ if (NOT FORTE_DYNAMIC_TYPE_LOAD)
     return()
 endif ()
 
+forte_test_add_sourcefile_cpp(luaadaptertests.cpp)
+forte_test_add_sourcefile_cpp(luabfbtests.cpp)
 forte_test_add_sourcefile_cpp(luabittests.cpp)
+forte_test_add_sourcefile_cpp(luacfbtests.cpp)
 forte_test_add_sourcefile_cpp(luaenginetests.cpp)
 forte_test_add_sourcefile_cpp(stfunctests.cpp)
 
