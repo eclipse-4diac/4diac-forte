@@ -9,6 +9,7 @@
  * Contributors:
  *  Alois Zoitl - initial API and implementation and/or initial documentation
  *  Martin Melik-Merkumians - updates due to changes in CPThreadSemaphore
+ *  Pedro Ricardo C. Souza - keep a stop right after start, join before the object is freed
  *******************************************************************************/
 
 #pragma once
@@ -205,11 +206,17 @@ namespace forte::arch {
   template<typename TThreadHandle, TThreadHandle nullHandle, typename ThreadDeletePolicy>
   void CThreadBase<TThreadHandle, nullHandle, ThreadDeletePolicy>::start() {
     util::CCriticalRegion criticalRegion(mThreadMutex);
+    if (nullHandle != mThreadHandle && mJoinSem.tryNoWait()) {
+      // the previous thread has ended
+      mThreadHandle = nullHandle;
+    }
     if (nullHandle == mThreadHandle) {
+      // alive before the thread runs, so that a stop() right after start() is not overwritten by the new thread
+      setAlive(true);
       mThreadHandle = createThread(mStackSize);
       if (nullHandle == mThreadHandle) {
         DEVLOG_ERROR("Error could not create the thread!\n");
-        mJoinSem.inc();
+        setAlive(false);
       }
     }
   }
@@ -243,10 +250,9 @@ namespace forte::arch {
     // if pointer is ok
     if (nullptr != paThread) {
       TThreadHandle threadHandle = paThread->mThreadHandle;
-      paThread->setAlive(true);
       paThread->run();
       paThread->setAlive(false);
-      paThread->mThreadHandle = nullHandle;
+      // the last access to the thread object, a joining thread may delete it right after
       paThread->mJoinSem.inc();
       ThreadDeletePolicy::deleteThread(threadHandle);
     } else {

@@ -10,6 +10,8 @@
  *   Alois Zoitl, Gerhard Ebenhofer, Rene Smodic, Thomas Strasser,
  *   Martin Melik Merkumians, Ingo Hegny
  *    - initial API and implementation and/or initial documentation
+ *   Pedro Ricardo C. Souza
+ *    - end the event chain thread before the internal FBs are destroyed
  *******************************************************************************/
 #include "RMT_RES.h"
 #include "forte/ecet.h"
@@ -98,7 +100,12 @@ namespace forte::iec61499::system {
     return true;
   }
 
-  RMT_RES::~RMT_RES() = default;
+  RMT_RES::~RMT_RES() {
+    // the event chain thread may still run the internal FBs, and CResource ends it only after they are destroyed
+    if (CEventChainExecutionThread *ecet = getResourceEventExecution(); nullptr != ecet) {
+      ecet->end();
+    }
+  }
 
   void RMT_RES::joinResourceThread() const {
     getResourceEventExecution()->joinEventChainExecutionThread();
