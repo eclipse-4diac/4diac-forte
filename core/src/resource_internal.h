@@ -9,6 +9,7 @@
  *
  * Contributors:
  *    Martin Erich Jobst - initial implementation
+ *    Pedro Ricardo C. Souza - Lua states of the Lua types
  *******************************************************************************/
 
 #pragma once
@@ -16,6 +17,8 @@
 #include "monitoring.h"
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
+#include <memory>
+
 #include "lua/luaengine.h"
 #endif
 
@@ -30,8 +33,18 @@ namespace forte {
       }
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-      CLuaEngine &getLuaEngine() {
-        return luaEngine;
+      /*!\brief The Lua state of this resource's Lua FB instances, created on first use
+       *
+       * Instances keep a reference, so the state outlives them however the resource is torn down. A state that
+       * could not be set up, e.g. for lack of memory, is set up again on the next call.
+       * Only called from the management thread, which creates the instances.
+       */
+      const std::shared_ptr<lua::CLuaEngine> &getLuaEngine() {
+        if (!mLuaEngine || !mLuaEngine->isValid()) {
+          mLuaEngine.reset(); // a failed state goes before a new one needs memory
+          mLuaEngine = std::make_shared<lua::CLuaEngine>();
+        }
+        return mLuaEngine;
       }
 #endif
 
@@ -39,7 +52,7 @@ namespace forte {
       CMonitoringHandler mMonitoringHandler;
 
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-      CLuaEngine luaEngine; //!< The Lua engine for this container
+      std::shared_ptr<lua::CLuaEngine> mLuaEngine;
 #endif
   };
 } // namespace forte
