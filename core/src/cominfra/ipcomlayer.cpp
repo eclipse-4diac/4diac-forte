@@ -13,6 +13,7 @@
  *    Martin Melik-Merkumians -  fix typo in forte::com_infra::EComConnectionState, serial communication support for
  *WIN32 Michael Hofmann - fix for fragmented packets Patrik Smejkal - rename interrupt in interruptCCommFB Jörg Walter -
  *improve UDP multicast support
+ *    Pedro Ricardo C. Souza - fix hang on frames larger than the receive buffer
  *******************************************************************************/
 #include "ipcomlayer.h"
 
@@ -75,26 +76,22 @@ namespace forte::com_infra {
   }
 
   EComResponse CIPComLayer::processInterrupt() {
+    util::CCriticalRegion criticalRegion(mFb->getFBLock());
+    EComResponse eRetVal = mInterruptResp;
     if (e_ProcessDataOk == mInterruptResp) {
-      switch (mConnectionState) {
-        case e_Connected:
-          if ((0 < mBufFillSize) && (nullptr != mTopLayer)) {
-            util::CCriticalRegion criticalRegion(mFb->getFBLock());
-            mInterruptResp = mTopLayer->recvData(mRecvBuffer, mBufFillSize);
-            mBufFillSize = 0;
-          }
-          break;
-        case e_Disconnected:
-        case e_Listening:
-        case e_ConnectedAndListening:
-        default: break;
+      eRetVal = e_Nothing;
+      if (e_Connected == mConnectionState && (0 < mBufFillSize) && (nullptr != mTopLayer)) {
+        eRetVal = mTopLayer->recvData(mRecvBuffer, mBufFillSize);
+        mBufFillSize = 0;
       }
     }
-    return mInterruptResp;
+    // the response is consumed here, a second interrupt for already processed data must not repeat it
+    mInterruptResp = e_Nothing;
+    return eRetVal;
   }
 
   EComResponse CIPComLayer::recvData(const void *paData, unsigned int) {
-    mInterruptResp = e_Nothing;
+    EComResponse eRetVal = e_Nothing;
     switch (mConnectionState) {
       case e_Listening:
         // TODO move this to the processInterrupt()
@@ -107,7 +104,7 @@ namespace forte::com_infra {
         break;
       case e_Connected:
         if (mSocketID == *(static_cast<const arch::CIPComSocketHandler::TSocketDescriptor *>(paData))) {
-          handledConnectedDataRecv();
+          eRetVal = handledConnectedDataRecv();
         } else if (mListeningID == *(static_cast<const arch::CIPComSocketHandler::TSocketDescriptor *>(paData))) {
           handleConnectionAttemptInConnected();
         }
@@ -116,7 +113,7 @@ namespace forte::com_infra {
       case e_Disconnected:
       default: break;
     }
-    return mInterruptResp;
+    return eRetVal;
   }
 
   EComResponse CIPComLayer::openConnection(char *paLayerParameter) {
@@ -184,48 +181,54 @@ namespace forte::com_infra {
     }
   }
 
-  void CIPComLayer::handledConnectedDataRecv() {
-    // in case of fragmented packets, it can occur that the buffer is full,
-    // to avoid calling receiveDataFromTCP with a buffer size of 0 wait until buffer is larger 0
-    while ((cgIPLayerRecvBufferSize - mBufFillSize) <= 0) {
-      arch::CThread::sleepThread(0);
+  EComResponse CIPComLayer::handledConnectedDataRecv() {
+    if (arch::CIPComSocketHandler::scmInvalidSocketDescriptor == mSocketID) {
+      return e_Nothing;
     }
-    if (arch::CIPComSocketHandler::scmInvalidSocketDescriptor != mSocketID) {
+    {
       util::CCriticalRegion criticalRegion(mFb->getFBLock());
-      int nRetVal = 0;
-      switch (mFb->getComServiceType()) {
-        case e_Server:
-        case e_Client:
-          nRetVal = arch::CIPComSocketHandler::receiveDataFromTCP(mSocketID, &mRecvBuffer[mBufFillSize],
-                                                                  cgIPLayerRecvBufferSize - mBufFillSize);
-          break;
-        case e_Publisher:
-          // do nothing as publishers cannot receive data
-          break;
-        case e_Subscriber:
-          nRetVal = arch::CIPComSocketHandler::receiveDataFromUDP(mSocketID, &mRecvBuffer[mBufFillSize],
-                                                                  cgIPLayerRecvBufferSize - mBufFillSize);
-          break;
+      if (mBufFillSize < cgIPLayerRecvBufferSize) {
+        int nRetVal = 0;
+        switch (mFb->getComServiceType()) {
+          case e_Server:
+          case e_Client:
+            nRetVal = arch::CIPComSocketHandler::receiveDataFromTCP(mSocketID, &mRecvBuffer[mBufFillSize],
+                                                                    cgIPLayerRecvBufferSize - mBufFillSize);
+            break;
+          case e_Publisher:
+            // do nothing as publishers cannot receive data
+            break;
+          case e_Subscriber:
+            nRetVal = arch::CIPComSocketHandler::receiveDataFromUDP(mSocketID, &mRecvBuffer[mBufFillSize],
+                                                                    cgIPLayerRecvBufferSize - mBufFillSize);
+            break;
+        }
+        switch (nRetVal) {
+          case 0:
+            DEVLOG_INFO("Connection closed by peer\n");
+            mInterruptResp = e_InitTerminated;
+            closeSocket(&mSocketID);
+            if (e_Server == mFb->getComServiceType()) {
+              // Move server into listening mode again
+              mConnectionState = e_Listening;
+            }
+            break;
+          case -1: mInterruptResp = e_ProcessDataRecvFaild; break;
+          default:
+            // we successfully received data
+            mBufFillSize += nRetVal;
+            mInterruptResp = e_ProcessDataOk;
+            break;
+        }
+        mFb->interruptCommFB(this);
+        return mInterruptResp;
       }
-      switch (nRetVal) {
-        case 0:
-          DEVLOG_INFO("Connection closed by peer\n");
-          mInterruptResp = e_InitTerminated;
-          closeSocket(&mSocketID);
-          if (e_Server == mFb->getComServiceType()) {
-            // Move server into listening mode again
-            mConnectionState = e_Listening;
-          }
-          break;
-        case -1: mInterruptResp = e_ProcessDataRecvFaild; break;
-        default:
-          // we successfully received data
-          mBufFillSize += nRetVal;
-          mInterruptResp = e_ProcessDataOk;
-          break;
-      }
-      mFb->interruptCommFB(this);
     }
+    // In case of fragmented packets the buffer can be full while the event chain has not yet processed it. Leave the
+    // rest of the data in the socket and give the event chain time to empty the buffer. The select loop reports the
+    // socket again, and in the meantime it can still be shut down.
+    arch::CThread::sleepThread(1);
+    return e_Nothing;
   }
 
   void CIPComLayer::handleConnectionAttemptInConnected() const {

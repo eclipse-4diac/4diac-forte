@@ -41,7 +41,7 @@ namespace forte {
 
         EComResponse openConnection(char *paLayerParameter) override;
         void closeConnection() override;
-        void handledConnectedDataRecv();
+        EComResponse handledConnectedDataRecv();
         void handleConnectionAttemptInConnected() const;
 
         arch::CIPComSocketHandler::TSocketDescriptor
