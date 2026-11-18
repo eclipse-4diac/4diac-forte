@@ -96,7 +96,7 @@ namespace forte::com_infra::opc_ua {
 
   void COPC_UA_Layer::closeConnection() {
     if (mHandler) {
-      util::CCriticalRegion criticalRegion(mRDBufferMutex);
+      // not under mRDBufferMutex: uninitializing can deliver data to recvData() in this thread
       mHandler->uninitializeAction(*mActionInfo);
       mActionInfo.reset();
 
@@ -104,6 +104,7 @@ namespace forte::com_infra::opc_ua {
         mStructObjectHelper->uninitializeStruct();
       }
       mHandler = nullptr;
+      util::CCriticalRegion criticalRegion(mRDBufferMutex);
       if (mIsObjectNodeStruct) {
         COPC_UA_ObjectStruct_Helper::deleteRDBufferEntries(*getCommFB(), mRDBuffer);
       } else {
