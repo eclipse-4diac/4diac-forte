@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2015, 2023 fortiss GmbH, Johannes Kepler University Linz
+ * Copyright (c) 2015, 2026 fortiss GmbH, Johannes Kepler University Linz, Aimirim STI
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,264 +9,152 @@
  * Contributors:
  *   Martin Jobst - initial API and implementation and/or initial documentation
  *   Alois Zoitl  - upgraded to new FB memory layout
+ *   Pedro Ricardo C. Souza - sandboxed modules, IEC value mapping for ARRAY and STRUCT
  *******************************************************************************/
 
-#ifndef SRC_CORE_LUAENGINE_H_
-#define SRC_CORE_LUAENGINE_H_
+#pragma once
 
-extern "C" {
-#include <lua.h>
-#include <lualib.h>
-#include <lauxlib.h>
+#include <cstdint>
+#include <map>
+#include <memory>
+#include <string>
+#include <string_view>
+#include <vector>
+
+#include "forte/arch/forte_sync.h"
+
+struct lua_State;
+
+namespace forte {
+  class CIEC_ANY;
 }
 
-#include <string>
-#include <algorithm>
+namespace forte::lua {
 
-#if !defined LUA_VERSION_NUM || LUA_VERSION_NUM == 501
-#define lua_rawgetp(L, i, p)                                                                                           \
-  (lua_pushlightuserdata(L, const_cast<void *>(p)), lua_rawget(L, (i)), lua_type(luaState, -1))
-#define lua_rawsetp(L, i, p)                                                                                           \
-  (lua_pushlightuserdata(L, const_cast<void *>(p)), lua_insert(L, -2), lua_rawset(L, (i)), lua_type(luaState, -1))
-#define lua_len(L, i) (lua_objlen(L, (i)))
-#endif
+  /*!\brief One Lua 5.1 state running the Lua modules of run-time types
+   *
+   * Every module runs in its own environment table holding a safe subset of the base library, copies of the
+   * string, table, math and bit libraries, and a require that only knows STfunc. There is no io, os, debug or
+   * package access, and only source text is accepted (no precompiled byte code).
+   *
+   * Calls into Lua must hold getLock(), as instances of one resource are created from the management thread and
+   * executed from the resource's event chain thread.
+   *
+   * Lua errors unwind through C++ frames with longjmp, which skips destructors. Functions called from Lua
+   * (lua_CFunctions) must therefore not hold objects with destructors when they raise an error.
+   */
+  class CLuaEngine {
+    public:
+      //! The default VM instruction budget per call, 0 for none
+      static const unsigned int scmDefaultInstructionLimit;
+      //! The VM instruction budget for running a module while its type is created, so a module cannot hang CREATE
+      static constexpr unsigned int scmDefinitionInstructionLimit = 10000000;
 
-#include "forte/datatypes/forte_any.h"
+      explicit CLuaEngine(unsigned int paInstructionLimit = scmDefaultInstructionLimit);
+      ~CLuaEngine();
 
-#include "forte/datatypes/forte_array.h"
+      CLuaEngine(const CLuaEngine &) = delete;
+      CLuaEngine &operator=(const CLuaEngine &) = delete;
 
-// class CIEC_ARRAY;
-
-class CLuaEngine {
-  private:
-    lua_State *luaState;
-
-  public:
-    enum CLuaType {
-      TNONE = -1,
-      TNIL = 0,
-      TBOOLEAN = 1,
-      TLIGHTUSERDATA = 2,
-      TNUMBER = 3,
-      TSTRING = 4,
-      TTABLE = 5,
-      TFUNCTION = 6,
-      TUSERDATA = 7,
-      TTHREAD = 8
-    };
-
-    CLuaEngine();
-    virtual ~CLuaEngine();
-
-    bool loadString(const std::string &str);
-    bool loadFile(const std::string &path);
-    bool call(int args, int results);
-
-    static bool luaPushAny(lua_State *luaState, const CIEC_ANY &value);
-    static bool luaGetAny(lua_State *luaState, CIEC_ANY &value, int index);
-    static bool luaPushArray(lua_State *luaState, const CIEC_ARRAY &array);
-    static bool luaGetArray(lua_State *luaState, CIEC_ARRAY &array, int index);
-
-    void store(const void *ref) {
-      lua_rawsetp(luaState, LUA_REGISTRYINDEX, ref);
-    }
-
-    bool load(const void *ref) {
-      if (lua_rawgetp(luaState, LUA_REGISTRYINDEX, ref) == LUA_TNIL) {
-        lua_pop(luaState, 1);
-        return false;
+      //! false if the state or the STfunc library could not be set up
+      [[nodiscard]] bool isValid() const {
+        return mValid;
       }
-      return true;
-    }
 
-    template<class T>
-    void registerType() {
-      // create new metatable if it doesn't exist yet (and fill if created)
-      if (luaL_newmetatable(luaState, T::LUA_NAME)) {
-#if LUA_VERSION_NUM > 501
-        luaL_setfuncs(luaState, T::LUA_FUNCS, 0);
-#else
-        luaL_register(luaState, nullptr, T::LUA_FUNCS);
-#endif
-        lua_pop(luaState, 1);
+      [[nodiscard]] lua_State *getState() const {
+        return mState;
       }
-    }
 
-    template<class T>
-    static void luaPushObject(lua_State *luaState, T *value) {
-      T **userdata = static_cast<T **>(lua_newuserdata(luaState, sizeof(T *)));
-      *userdata = value;
-#if LUA_VERSION_NUM > 501
-      luaL_setmetatable(luaState, T::LUA_NAME);
-#else
-      luaL_getmetatable(luaState, T::LUA_NAME);
-      lua_setmetatable(luaState, -2);
-#endif
-    }
-
-    template<class T>
-    void pushObject(T *value) {
-      luaPushObject<T>(luaState, value);
-    }
-
-    template<class T>
-    static T *luaGetObject(lua_State *luaState, int index) {
-      T **userdata = static_cast<T **>(luaL_checkudata(luaState, index, T::LUA_NAME));
-      if (userdata == nullptr) {
-        luaL_argerror(luaState, index, T::LUA_NAME);
+      arch::CSyncObject &getLock() {
+        return mLock;
       }
-      return *userdata;
-    }
 
-    template<class T>
-    T *getObject(int index) {
-      return luaGetObject<T>(luaState, index);
-    }
-
-    void pushBoolean(bool value) {
-      lua_pushboolean(luaState, value);
-    }
-
-    bool getBoolean(int index) {
-      return static_cast<bool>(lua_toboolean(luaState, index));
-    }
-
-    template<class T>
-    void pushInteger(T value) {
-      lua_pushinteger(luaState, static_cast<lua_Integer>(value));
-    }
-
-    template<class T>
-    T getInteger(int index) {
-      return static_cast<T>(lua_tointeger(luaState, index));
-    }
-
-    template<class T>
-    void pushNumber(T value) {
-      lua_pushnumber(luaState, static_cast<lua_Number>(value));
-    }
-
-    template<class T>
-    T getNumber(int index) {
-      return static_cast<T>(lua_tonumber(luaState, index));
-    }
-
-    void pushString(const char *value) {
-      lua_pushstring(luaState, value);
-    }
-
-    const char *getString(int index) {
-      return lua_tostring(luaState, index);
-    }
-
-    void pushStringId(forte::StringId value) {
-      pushString(value.data());
-    }
-
-    forte::StringId getStringId(int index) {
-      return forte::StringId::insert(lua_tostring(luaState, index));
-    }
-
-    template<class T, T (CLuaEngine::*F)(int)>
-    T *getArray(int index, size_t &length) {
-      if (!lua_istable(luaState, index)) {
-        return nullptr;
+      [[nodiscard]] unsigned int getInstructionLimit() const {
+        return mInstructionLimit;
       }
-#if LUA_VERSION_NUM > 501
-      size_t len = lua_rawlen(luaState, index);
-#else
-      size_t len = lua_objlen(luaState, index);
-#endif
-      if (length == SIZE_MAX) {
-        length = len;
-      } else if (len != length) {
-        return nullptr;
+
+      //! Changes the budget of the next calls, e.g. while a state shared with instances reads a type's module
+      void setInstructionLimit(unsigned int paInstructionLimit) {
+        mInstructionLimit = paInstructionLimit;
       }
-      T *array = new T[len];
-      for (size_t i = len; i > 0; i--) {
-        lua_rawgeti(luaState, index, (int) i);
-        T value = (this->*F)(-1);
-        array[i - 1] = value;
-        lua_pop(luaState, 1);
-      }
-      return array;
-    }
 
-    template<class T, bool (*F)(T &, CLuaEngine *, int)>
-    T *getCustomArray(int index, size_t &length) {
-      if (!lua_istable(luaState, index)) {
-        return nullptr;
-      }
-#if LUA_VERSION_NUM > 501
-      size_t len = lua_rawlen(luaState, index);
-#else
-      size_t len = lua_objlen(luaState, index);
-#endif
-      if (length == SIZE_MAX) {
-        length = len;
-      } else if (len != length) {
-        return nullptr;
-      }
-      T *array = new T[len];
-      for (size_t i = len; i > 0; i--) {
-        lua_rawgeti(luaState, index, (int) i);
-        if (!F(array[i - 1], this, -1)) {
-          delete[] array;
-          return nullptr;
-        }
-        lua_pop(luaState, 1);
-      }
-      return array;
-    }
+      /*!\brief Runs a module chunk in a fresh sandbox
+       *
+       * On success the table returned by the chunk is pushed onto the stack.
+       * @param paSource the Lua source text
+       * @param paChunkName name used in error messages, e.g. the type name
+       * @param paError receives the error message on failure
+       */
+      bool loadModule(std::string_view paSource, const char *paChunkName, std::string &paError);
 
-    bool pushField(int index, const char *name, int expectedType) {
-      lua_getfield(luaState, index, name);
-      if (expectedType != LUA_TNONE && lua_type(luaState, -1) != expectedType) {
-        lua_pop(luaState, 1);
-        return false;
-      }
-      return true;
-    }
+      /*!\brief Pushes the module table of a type, running the module in this state on first use
+       *
+       * The table is kept while paType is alive, so all instances of a type in this state share it.
+       * @param paType the type the module belongs to, identifies the cached table
+       */
+      bool pushTypeModule(const std::shared_ptr<const void> &paType,
+                          std::string_view paSource,
+                          const char *paChunkName,
+                          std::string &paError);
 
-    template<class T, T (CLuaEngine::*F)(int)>
-    T getField(int index, const char *name) {
-      lua_getfield(luaState, index, name);
-      T value = (this->*F)(-1);
-      lua_pop(luaState, 1);
-      return value;
-    }
+      /*!\brief Calls the function below paNumArgs arguments on the stack in protected mode
+       *
+       * Applies the instruction budget. On failure nothing is left on the stack and paError holds the message
+       * with a traceback.
+       */
+      bool call(int paNumArgs, int paNumResults, std::string &paError);
 
-    template<class T, T (CLuaEngine::*F)(int)>
-    T *getArrayField(int index, const char *name, size_t &length) {
-      lua_getfield(luaState, index, name);
-      T *value = getArray<T, F>(-1, length);
-      lua_pop(luaState, 1);
-      return value;
-    }
+      //! Pops the top value and stores it in the registry, returns its reference
+      int ref();
+      void unref(int paRef);
+      void pushRef(int paRef);
 
-    template<class T, bool (*F)(T &, CLuaEngine *, int)>
-    T *getCustomArrayField(int index, const char *name, size_t &length) {
-      lua_getfield(luaState, index, name);
-      T *value = getCustomArray<T, F>(-1, length);
-      lua_pop(luaState, 1);
-      return value;
-    }
+      //! Pushes a read only view of the STfunc library
+      void pushSTfunc();
 
-    bool pushAny(CIEC_ANY &value) {
-      return luaPushAny(luaState, value);
-    }
+      //! Runs a full garbage collection cycle
+      void collectGarbage();
 
-    bool getAny(CIEC_ANY &value, int index) {
-      return luaGetAny(luaState, value, index);
-    }
+      /*!\brief Pushes an IEC value as a Lua value
+       *
+       * ARRAYs become tables keyed by their IEC index (lower to upper bound) with the fields lo and up,
+       * STRUCTs become tables keyed by member name, CHAR and WCHAR one character strings, the time types
+       * integers in nanoseconds.
+       */
+      static void pushValue(lua_State *paState, const CIEC_ANY &paValue);
 
-    void pop() {
-      lua_pop(luaState, 1);
-    }
+      /*!\brief Stores the Lua value at paIndex into an IEC value
+       *
+       * Integers wrap to the width of the IEC type, as in a C cast. A Lua value of the wrong kind is rejected.
+       * A missing (nil) array element or struct member leaves the IEC element unchanged.
+       * @return nullptr on success, otherwise a static description of the error (nothing raised)
+       */
+      static const char *getValue(lua_State *paState, int paIndex, CIEC_ANY &paValue);
 
-    CLuaType type(int index) {
-      return static_cast<CLuaType>(lua_type(luaState, index));
-    }
-};
+    private:
+      struct STypeModule {
+          std::weak_ptr<const void> mType;
+          int mRef;
+      };
 
-#endif /* SRC_CORE_LUAENGINE_H_ */
+      bool setUp();
+      void releaseExpiredTypeModules();
+      void armBudget();
+      void disarmBudget();
+
+      static int panic(lua_State *paState);
+      static int traceback(lua_State *paState);
+
+      lua_State *mState;
+      arch::CSyncObject mLock;
+      unsigned int mInstructionLimit;
+      int mSandboxFactoryRef;
+      int mSTfuncRef;
+      bool mValid;
+      std::map<const void *, STypeModule> mTypeModules;
+  };
+
+  //! The names STfunc defines, functions and then aliases, each compiled into a state on first use
+  std::vector<std::string_view> getSTfuncNames();
+
+} // namespace forte::lua
