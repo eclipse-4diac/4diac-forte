@@ -36,7 +36,7 @@ source ${BASH_SCRIPT_PATH}/commonFunctions.sh "$@"
 #   - MBEDTLS_FOLDER_NAME: name of the folder containing the mbetdls repository. Default mbedtls
 #   - OPCUA_FOLDER_NAME: name of the folder containing the open62541 repository. Default open62541
 #   - MQTT_FOLDER_NAME: name of the folder containing the paho mqtt repository. Default paho.mqtt.c
-#   - LUA_FOLDER_NAME: name of the folder containing the luajit repository. Default luajit-2.0
+#   - LUA_FOLDER_NAME: name of the folder containing the Lua 5.1 sources. Default lua-5.1.5
 #   - LINUX32_ARCH: name for the build folder when compiling for linux32 architecture. Default linux32
 #   - ARM_ARCH: name for the build folder when compiling for arm architecture. Default arm
 #   - CLEAN_ALL: if set to 1, it will compile even if the libraries are found. Default 0
@@ -66,7 +66,7 @@ if [ -z "$MQTT_FOLDER_NAME" ]; then
 fi
 
 if [ -z "$LUA_FOLDER_NAME" ]; then
-  LUA_FOLDER_NAME=luajit-2.0
+  LUA_FOLDER_NAME=lua-5.1.5
 fi
 
 if [ -z "$LINUX32_ARCH" ]; then
@@ -135,28 +135,33 @@ function compileOpen62541(){
 }
 
 #################################
-# Compile luajit                #
+# Compile Lua 5.1               #
 #   - $1: architecture to build #
 #################################
-function compileLuajit(){
-   if [ ${CLEAN_ALL} -eq "1" ] || ! [ -f "${REPOS_DIR}${LUA_FOLDER_NAME}_bin/${1}/lib/libluajit-5.1.so" ]; then
+function compileLua(){
+   if [ ${CLEAN_ALL} -eq "1" ] || ! [ -f "${REPOS_DIR}${LUA_FOLDER_NAME}_bin/${1}/lib/liblua.a" ]; then
     #We create a new folder in the repos folder to copy all files to compile.
-    #We don't create inside the luajit repo since it might create problems 
-    #copying recursive itself 
+    #We don't create inside the Lua folder since it might create problems
+    #copying recursive itself
     CURRENT_FOLDER="${REPOS_DIR}${LUA_FOLDER_NAME}_bin/${1}"
-   
-    printMessage "Compiling luajit for ${1}"
-  
+
+    printMessage "Compiling Lua for ${1}"
+
     cleanFolderAndGoThere "${CURRENT_FOLDER}"
-    
-    #The later eval LUA_COMMAND helps avoid expansion problems of LUA_EXTRA_FLAGS related to the debugging information which adds single quoutes
-    LUA_COMMAND="make ${LUA_EXTRA_FLAGS:+"$LUA_EXTRA_FLAGS"} PREFIX=${CURRENT_FOLDER} -j8"
-    
+
+    #The later eval LUA_COMMAND helps avoid expansion problems of LUA_EXTRA_FLAGS, which holds single quotes
+    LUA_COMMAND="make posix ${LUA_EXTRA_FLAGS:+"$LUA_EXTRA_FLAGS"}"
+
+    #FORTE finds Lua 5.1 through pkg-config, the Lua 5.1 sources do not install a pkg-config file
     cp -R ${REPOS_DIR}${LUA_FOLDER_NAME}/* ./ && \
       eval "$LUA_COMMAND" && \
-      make install PREFIX="${CURRENT_FOLDER}" -j8
-  else 
-     printMessage "Library for luajit for $1 already found and won't be recompiled"
+      make install INSTALL_TOP="${CURRENT_FOLDER}" && \
+      mkdir -p "${CURRENT_FOLDER}/lib/pkgconfig" && \
+      printf '%s\n' "prefix=${CURRENT_FOLDER}" \
+        'Name: Lua' 'Description: Lua language engine' 'Version: 5.1.5' \
+        'Libs: -L${prefix}/lib -llua -lm' 'Cflags: -I${prefix}/include' > "${CURRENT_FOLDER}/lib/pkgconfig/lua5.1.pc"
+  else
+     printMessage "Library for Lua for $1 already found and won't be recompiled"
   fi
 }
 
@@ -192,7 +197,7 @@ function compileAll(){
   fi
 
   if [ "${LUA_ENABLED}" -eq "1" ]; then
-    compileLuajit "${1}"
+    compileLua "${1}"
   fi
   
   if [ "${MQTT_ENABLED}" -eq "1" ]; then
@@ -276,22 +281,23 @@ if [ "${OPCUA_ENABLED}" -eq "1" ]; then
 fi
 
 if [ "${LUA_ENABLED}" -eq "1" ]; then
-  ##################
-  # Prepare luajit #
-  ##################
-  
+  ###################
+  # Prepare Lua 5.1 #
+  ###################
+
   CURRENT_FOLDER="${REPOS_DIR}${LUA_FOLDER_NAME}"
-  
+
   if ! [ -d "${CURRENT_FOLDER}" ]
   then
-      printMessage "Creating folder for lua repository"
-      
+      printMessage "Downloading the Lua 5.1.5 sources"
+
+      # Lua is released as source archives only
       mkdir -p "${CURRENT_FOLDER}" && \
-        git clone http://luajit.org/git/luajit-2.0.git "${CURRENT_FOLDER}"
+        curl -fsSL -o "${CURRENT_FOLDER}.tar.gz" https://www.lua.org/ftp/lua-5.1.5.tar.gz && \
+        echo "2640fc56a795f29d28ef15e13c34a47e223960b0240e8cb0a82d9b0738695333  ${CURRENT_FOLDER}.tar.gz" | sha256sum -c - && \
+        tar -xzf "${CURRENT_FOLDER}.tar.gz" -C "${CURRENT_FOLDER}" --strip-components=1 && \
+        rm "${CURRENT_FOLDER}.tar.gz"
   fi
-      
-  cd "${CURRENT_FOLDER}" && \
-  git checkout v2.0 
 
 fi
 
@@ -330,7 +336,7 @@ fi
 ###################################################################
 
 if [ "${ARM_ENABLED}" -eq "1" ]; then
-  LUA_EXTRA_FLAGS="HOST_CC='gcc -m32' CROSS=${ARM_BIN}/arm-linux-gnueabihf-"
+  LUA_EXTRA_FLAGS="CC=${ARM_BIN}/arm-linux-gnueabihf-gcc AR='${ARM_BIN}/arm-linux-gnueabihf-ar rcu' RANLIB=${ARM_BIN}/arm-linux-gnueabihf-ranlib"
   CMAKE_EXTRA_FLAGS="-DCMAKE_C_COMPILER=${ARM_BIN}/arm-linux-gnueabihf-gcc -DCMAKE_CXX_COMPILER=${ARM_BIN}/arm-linux-gnueabihf-g++ -DCMAKE_FIND_ROOT_PATH=${ARM_ROOT}"
   
   export LDFLAGS=-lrt #This flag is needed for mqtt. If can be added to te regular flags, it will be nicer 
