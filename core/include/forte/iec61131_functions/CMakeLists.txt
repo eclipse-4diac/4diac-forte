@@ -16,6 +16,7 @@ target_sources(forte-core PUBLIC
         FILE_SET HEADERS
         FILES
         common.h
+        common_type.h
         convert.h
         endianess.h
         func_ABS.h
@@ -236,6 +237,7 @@ target_sources(forte-core PUBLIC
         func_MUL.h
         func_MUL_LTIME.h
         func_MUL_TIME.h
+        func_MUX.h
         func_NE.h
         func_NOT.h
         func_NOW.h
