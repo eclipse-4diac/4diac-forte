@@ -141,9 +141,9 @@ namespace forte::eclipse4diac::io::embrick {
     }
 
     switch (desc.mType) {
-      case Bit: return new EmbrickBitSlaveHandle(this, desc.mDirection, desc.mOffset, desc.mPosition, slave);
-      case Analog: return new EmbrickAnalogSlaveHandle(this, desc.mDirection, desc.mOffset, slave);
-      case Analog10: return new EmbrickAnalog10SlaveHandle(this, desc.mDirection, desc.mOffset, slave);
+      case Bit: return new EmbrickBitSlaveHandle(*this, desc.mDirection, desc.mOffset, desc.mPosition, slave);
+      case Analog: return new EmbrickAnalogSlaveHandle(*this, desc.mDirection, desc.mOffset, slave);
+      case Analog10: return new EmbrickAnalog10SlaveHandle(*this, desc.mDirection, desc.mOffset, slave);
     }
 
     return nullptr;

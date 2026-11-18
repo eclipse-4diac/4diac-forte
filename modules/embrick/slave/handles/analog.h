@@ -21,15 +21,15 @@ namespace forte::eclipse4diac::io::embrick {
 
   class EmbrickAnalogSlaveHandle : public EmbrickSlaveHandle {
     public:
-      EmbrickAnalogSlaveHandle(forte::io::IODeviceController *paController,
+      EmbrickAnalogSlaveHandle(forte::io::IODeviceController &paController,
                                forte::io::IOMapper::Direction paDirection,
                                uint8_t paOffset,
                                EmbrickSlaveHandler *paSlave);
 
-      virtual void set(const CIEC_ANY &);
-      void get(CIEC_ANY &);
+      void set(const CIEC_ANY &) override;
+      void get(CIEC_ANY &) override;
 
-      bool equal(unsigned char *paOldBuffer);
+      bool equal(unsigned char *paOldBuffer) override;
 
     protected:
       const CIEC_DWORD getValue(const unsigned char *paBuffer);

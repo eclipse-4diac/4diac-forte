@@ -165,21 +165,16 @@ namespace forte::eclipse4diac::io::ethercat {
   forte::io::IOHandle *ECBusHandler::createIOHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
     HandleDescriptor &desc = static_cast<HandleDescriptor &>(paHandleDescriptor);
     ECBusDeviceHandler *device = getDevice(desc.mSlaveIndex);
-    // Remove stale mapper entry left by prior session before creating a new handle with same ID.
-    forte::io::IOMapper::getInstance().deregisterHandle(desc.mId);
-    if(device == nullptr) {
+
+    if (device == nullptr) {
       return nullptr;
     }
 
-    switch (desc.mByteLength){
-      case 1:
-        return new ECDeviceHandle(this, desc.mDirection, CIEC_ANY::EDataTypeID::e_BYTE, desc.mOffset, desc.mId, *device);
-      case 2:
-        return new ECDeviceHandle(this, desc.mDirection, CIEC_ANY::EDataTypeID::e_WORD, desc.mOffset, desc.mId, *device);
-      case 4:
-        return new ECDeviceHandle(this, desc.mDirection, CIEC_ANY::EDataTypeID::e_DWORD, desc.mOffset, desc.mId, *device);
-      case 8:
-        return new ECDeviceHandle(this, desc.mDirection, CIEC_ANY::EDataTypeID::e_LWORD, desc.mOffset, desc.mId, *device);
+    switch (desc.mByteLength) {
+      case 1: return new ECDeviceHandle(*this, desc.mDirection, CIEC_ANY::EDataTypeID::e_BYTE, desc.mOffset, *device);
+      case 2: return new ECDeviceHandle(*this, desc.mDirection, CIEC_ANY::EDataTypeID::e_WORD, desc.mOffset, *device);
+      case 4: return new ECDeviceHandle(*this, desc.mDirection, CIEC_ANY::EDataTypeID::e_DWORD, desc.mOffset, *device);
+      case 8: return new ECDeviceHandle(*this, desc.mDirection, CIEC_ANY::EDataTypeID::e_LWORD, desc.mOffset, *device);
       default:
         DEVLOG_ERROR("ethercat[BusHandler]: Unsupported handle byte length %u at device %zu offset %u.\n",
                      static_cast<unsigned int>(desc.mByteLength),

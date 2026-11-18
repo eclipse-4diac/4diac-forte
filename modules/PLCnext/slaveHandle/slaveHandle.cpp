@@ -15,7 +15,7 @@
 #include "../slaveHandler.h"
 #include "forte/util/devlog.h"
 
-PLCnextSlaveHandle::PLCnextSlaveHandle(forte::io::IODeviceController *paController,
+PLCnextSlaveHandle::PLCnextSlaveHandle(forte::io::IODeviceController &paController,
                                        forte::io::IOMapper::Direction paDirection,
                                        CIEC_ANY::EDataTypeID paType,
                                        PLCnextSlaveHandler *paSlave) :
@@ -24,15 +24,9 @@ PLCnextSlaveHandle::PLCnextSlaveHandle(forte::io::IODeviceController *paControll
     mOffset(paSlave->imageOffset) {
 }
 
-PLCnextSlaveHandle::~PLCnextSlaveHandle() {
-}
+PLCnextSlaveHandle::~PLCnextSlaveHandle() = default;
 
-void PLCnextSlaveHandle::onObserver(forte::io::IOObserver *paObserver) {
+void PLCnextSlaveHandle::onNewObserver(forte::io::IOObserver &paObserver) {
   reset();
-  IOHandle::onObserver(paObserver);
-}
-
-void PLCnextSlaveHandle::dropObserver() {
-  IOHandle::dropObserver();
-  reset();
+  IOHandle::onNewObserver(paObserver);
 }
