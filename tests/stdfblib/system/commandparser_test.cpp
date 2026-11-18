@@ -8,6 +8,7 @@
  *
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
+ *   Pedro Ricardo C. Souza - FB and adapter type definitions
  *******************************************************************************/
 
 #include <boost/test/unit_test.hpp>
@@ -1149,6 +1150,69 @@ namespace forte::iec61499::system::test {
     auto response = parser.parseMGMCommand("", xml);
 
     BOOST_TEST(response == EMGMResponse::Overflow);
+  }
+
+  BOOST_AUTO_TEST_CASE(createFBType) {
+    SManagementCMD cmd;
+    CommandParser parser(cmd);
+
+    auto response = parser.parseMGMCommand(
+        "", "<Request ID=\"7\" Action=\"CREATE\"><FBType Name=\"pkg::Counter\">local a = &quot;x&quot; &lt; "
+            "&apos;y&apos; &amp; z&#10;return {}\n</FBType></Request>");
+
+    BOOST_TEST(response == EMGMResponse::Ready);
+    BOOST_TEST(cmd.mCMD == EMGMCommandType::CreateFBType);
+    BOOST_TEST(nameIdentifierEquals(cmd.mFirstParam, {"pkg::Counter"}));
+    BOOST_TEST(cmd.mAdditionalParams == "local a = \"x\" < 'y' & z\nreturn {}\n");
+    BOOST_TEST(cmd.mID == "7");
+  }
+
+  BOOST_AUTO_TEST_CASE(createAdapterType) {
+    SManagementCMD cmd;
+    CommandParser parser(cmd);
+
+    auto response = parser.parseMGMCommand(
+        "", R"(<Request ID="8" Action="CREATE"><AdapterType Name="ACounter">return {}</AdapterType></Request>)");
+
+    BOOST_TEST(response == EMGMResponse::Ready);
+    BOOST_TEST(cmd.mCMD == EMGMCommandType::CreateAdapterType);
+    BOOST_TEST(nameIdentifierEquals(cmd.mFirstParam, {"ACounter"}));
+    BOOST_TEST(cmd.mAdditionalParams == "return {}");
+  }
+
+  BOOST_AUTO_TEST_CASE(createFBTypeLeavesFBCreationAlone) {
+    SManagementCMD cmd;
+    CommandParser parser(cmd);
+
+    auto response = parser.parseMGMCommand(
+        "", R"(<Request ID="1" Action="CREATE"><FB Name="FBType" Type="pkg::Counter" /></Request>)");
+
+    BOOST_TEST(response == EMGMResponse::Ready);
+    BOOST_TEST(cmd.mCMD == EMGMCommandType::CreateFBInstance);
+    BOOST_TEST(nameIdentifierEquals(cmd.mFirstParam, {"FBType"}));
+  }
+
+  BOOST_AUTO_TEST_CASE(createTypeErrors) {
+    const auto parse = [](const std::string &paRequest) {
+      SManagementCMD cmd;
+      CommandParser parser(cmd);
+      return parser.parseMGMCommand("", paRequest);
+    };
+    BOOST_TEST(parse(R"(<Request ID="1" Action="CREATE"><FBType Name="T"></FBType></Request>)") ==
+               EMGMResponse::BadParams);
+    BOOST_TEST(parse(R"(<Request ID="1" Action="CREATE"><FBType Name="">return {}</FBType></Request>)") ==
+               EMGMResponse::BadParams);
+    BOOST_TEST(parse(R"(<Request ID="1" Action="CREATE"><FBType Name="T#hash">return {}</FBType></Request>)") ==
+               EMGMResponse::BadParams);
+    BOOST_TEST(parse(R"(<Request ID="1" Action="CREATE"><FBType Name="T">return {}</Request>)") ==
+               EMGMResponse::InvalidObject);
+    BOOST_TEST(parse(R"(<Request ID="1" Action="CREATE"><FBType Name="T">return {}</AdapterType></Request>)") ==
+               EMGMResponse::InvalidObject);
+    BOOST_TEST(parse(R"(<Request ID="1" Action="CREATE"><FBType Name="T"/></Request>)") == EMGMResponse::InvalidObject);
+    BOOST_TEST(parse(R"(<Request ID="1" Action="CREATE"><FBType Name="T">return {}</FBType>)") ==
+               EMGMResponse::InvalidObject);
+    BOOST_TEST(parse(R"(<Request ID="1" Action="CREATE"><AdapterTyp Name="T">return {}</AdapterTyp></Request>)") ==
+               EMGMResponse::InvalidObject);
   }
 
   BOOST_AUTO_TEST_SUITE_END()

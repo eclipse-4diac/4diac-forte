@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024 Jose Cabral, Johannes Kepler University Linz
+ * Copyright (c) 2024, 2026 Jose Cabral, Johannes Kepler University Linz, Aimirim STI
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -13,6 +13,7 @@
  *    - fix appendIdentifierName() emitting a duplicated/extra final segment
  *   Franz Höpfinger
  *    - fix parseIdentifier() dropping a trailing empty name segment
+ *   Pedro Ricardo C. Souza - parse FB and adapter type definitions
  *******************************************************************************/
 
 #include "CommandParser.h"
@@ -49,6 +50,16 @@ namespace forte::iec61499::system {
       }
       auto token = mRemaining.substr(0, pos);
       mRemaining = mRemaining.substr(pos + 1);
+      return token;
+    }
+
+    std::string_view CommandScanner::takeUntil(std::string_view paDelimiter) {
+      auto pos = mRemaining.find(paDelimiter);
+      if (pos == std::string_view::npos) {
+        return {};
+      }
+      auto token = mRemaining.substr(0, pos);
+      mRemaining = mRemaining.substr(pos + paDelimiter.size());
       return token;
     }
 
@@ -372,10 +383,25 @@ namespace forte::iec61499::system {
     mCommand.mCMD = EMGMCommandType::INVALID;
     EMGMResponse resp = EMGMResponse::InvalidObject;
     switch (paScanner.peek()) {
-      case 'F': // we have an FB to Create
+      case 'F': // we have an FB or an FB type to Create
+        if (paScanner.consume("FBType ")) {
+          resp = parseTypeDefinition(paScanner, "FBType");
+          if (resp == EMGMResponse::Ready) {
+            mCommand.mCMD = EMGMCommandType::CreateFBType;
+          }
+          break;
+        }
         resp = parseFBData(paScanner);
         if (resp == EMGMResponse::Ready) {
           mCommand.mCMD = EMGMCommandType::CreateFBInstance;
+        }
+        break;
+      case 'A': // we have an adapter type to Create
+        if (paScanner.consume("AdapterType ")) {
+          resp = parseTypeDefinition(paScanner, "AdapterType");
+          if (resp == EMGMResponse::Ready) {
+            mCommand.mCMD = EMGMCommandType::CreateAdapterType;
+          }
         }
         break;
       case 'C': // we have an Connection to Create
@@ -396,6 +422,38 @@ namespace forte::iec61499::system {
       return EMGMResponse::InvalidObject;
     }
     return resp;
+  }
+
+  EMGMResponse CommandParser::parseTypeDefinition(detail::CommandScanner &paScanner, std::string_view paElement) {
+    paScanner.skipWhiteSpace();
+    if (!paScanner.consume(R"(Name=")")) {
+      return EMGMResponse::InvalidObject;
+    }
+    auto typeName = paScanner.takeUntil('"');
+    if (typeName.empty() || typeName.find('#') != std::string_view::npos) {
+      return EMGMResponse::BadParams;
+    }
+    if (!mCommand.mFirstParam.try_push_back(StringId::insert(typeName))) {
+      return EMGMResponse::Overflow;
+    }
+
+    paScanner.skipWhiteSpace();
+    if (!paScanner.consume(">")) {
+      return EMGMResponse::InvalidObject;
+    }
+    // the definition is the element's text, a definition cannot contain '<' unescaped
+    std::string closingTag("</");
+    closingTag.append(paElement);
+    closingTag.append(">");
+    if (paScanner.peek() == '<' && paScanner.consume(closingTag)) {
+      return EMGMResponse::BadParams; // empty definition
+    }
+    auto definition = paScanner.takeUntil(std::string_view(closingTag));
+    if (definition.empty()) {
+      return EMGMResponse::InvalidObject;
+    }
+    util::transformEscapedXMLToNonEscapedText(definition, mCommand.mAdditionalParams);
+    return EMGMResponse::Ready;
   }
 
   EMGMResponse CommandParser::parseDeleteData(detail::CommandScanner &paScanner) {

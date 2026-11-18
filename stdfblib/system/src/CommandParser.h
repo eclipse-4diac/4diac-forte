@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2024, 2025 Jose Cabral
+ * Copyright (c) 2024, 2026 Jose Cabral, Aimirim STI
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
  * http://www.eclipse.org/legal/epl-2.0.
@@ -9,6 +9,7 @@
  * Contributors:
  *   Jose Cabral
  *    - initial API and implementation and/or initial documentation
+ *   Pedro Ricardo C. Souza - parse FB and adapter type definitions
  *******************************************************************************/
 
 #pragma once
@@ -29,6 +30,8 @@ namespace forte::iec61499::system {
         void skipWhiteSpace();
         bool consume(std::string_view paToConsume);
         std::string_view takeUntil(char paDelimiter);
+        //! Takes the text up to paDelimiter and drops the delimiter, empty and nothing taken if it is missing
+        std::string_view takeUntil(std::string_view paDelimiter);
         char peek() const;
         bool empty() const;
 
@@ -85,6 +88,11 @@ namespace forte::iec61499::system {
       EMGMResponse parseConnectionContent(detail::CommandScanner &paScanner);
 
       EMGMResponse parseCreateData(detail::CommandScanner &paScanner);
+      /*! \brief Parse a type definition: Name="type">definition</paElement>
+       *
+       * The XML-escaped definition text is stored unescaped in mAdditionalParams, the type name in mFirstParam.
+       */
+      EMGMResponse parseTypeDefinition(detail::CommandScanner &paScanner, std::string_view paElement);
       EMGMResponse parseDeleteData(detail::CommandScanner &paScanner);
       //! Check if an FB is given for a state change command (i.e., START, STOP, KILL, RESET)
       EMGMResponse parseAdditionalStateCommandData(detail::CommandScanner &paScanner);

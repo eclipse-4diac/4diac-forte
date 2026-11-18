@@ -10,6 +10,7 @@
  * Contributors:
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Alois Zoitl - migrated data type toString to std::string
+ *   Pedro Ricardo C. Souza - numeric character references
  *******************************************************************************/
 #include <boost/test/unit_test.hpp>
 #include "forte/util/string_utils.h"
@@ -574,6 +575,19 @@ namespace forte::util::test {
       std::string result;
       forte::util::transformEscapedXMLToNonEscapedText(sEscapedData[i], result);
       BOOST_TEST(result == sNonEscapedData[i]);
+    }
+  }
+
+  BOOST_AUTO_TEST_CASE(transformNumericCharacterReferences) {
+    std::string result;
+    forte::util::transformEscapedXMLToNonEscapedText("a&#10;b&#x9;c&#X41;&#228;&#x20AC;&#x1F600;", result);
+    BOOST_TEST(result == "a\nb\tcA\xC3\xA4\xE2\x82\xAC\xF0\x9F\x98\x80");
+
+    // invalid references stay as they are
+    for (const std::string_view invalid : {"&#;", "&#x;", "&#12a;", "&#0;", "&#xD800;", "&#x110000;", "&#10"}) {
+      result.clear();
+      forte::util::transformEscapedXMLToNonEscapedText(invalid, result);
+      BOOST_TEST(result == invalid);
     }
   }
 
