@@ -15,6 +15,7 @@
 #include <sys/mman.h>
 #include "forte/timerha.h"
 #include "forte/io/mapper/io_mapper.h"
+#include "forte/util/criticalregion.h"
 #include "bus.h"
 #include "../device/ec_device.h"
 #include "../utils/esi_catalog.h"
@@ -171,24 +172,45 @@ namespace forte::eclipse4diac::io::ethercat {
       return nullptr;
     }
 
+    // Once the bus runs, only entries that received a domain offset can be exchanged.
+    ECDeviceHandler *parent = getParentDevice(device);
+    if(parent == nullptr || !parent->mECDeviceModel.hasEntryReg(desc.mEntryRegIndex, mLoopPreparedFlag)) {
+      DEVLOG_ERROR("ethercat[BusHandler]: PDO entry 0x%04X:%02X of handle '%s' is not registered at device %zu.\n",
+                   static_cast<unsigned int>(desc.mEntryIndex),
+                   static_cast<unsigned int>(desc.mEntrySubIndex),
+                   desc.mId.c_str(),
+                   desc.mSlaveIndex);
+      return nullptr;
+    }
+
+    const size_t imageSize = (desc.mDirection == forte::io::IOMapper::In) ? device->mUpdateRecvImage.size()
+                                                                         : device->mUpdateSendImage.size();
+    if(static_cast<size_t>(desc.mOffset) + desc.mByteLength > imageSize) {
+      DEVLOG_ERROR("ethercat[BusHandler]: Handle '%s' (offset %u, %u bytes) exceeds the process image of device %zu (%zu bytes).\n",
+                   desc.mId.c_str(),
+                   static_cast<unsigned int>(desc.mOffset),
+                   static_cast<unsigned int>(desc.mByteLength),
+                   desc.mSlaveIndex,
+                   imageSize);
+      return nullptr;
+    }
+
+    CIEC_ANY::EDataTypeID type;
     switch (desc.mByteLength){
-      case 1:
-        return new ECDeviceHandle(this, desc.mDirection, CIEC_ANY::EDataTypeID::e_BYTE, desc.mOffset, desc.mId, *device);
-      case 2:
-        return new ECDeviceHandle(this, desc.mDirection, CIEC_ANY::EDataTypeID::e_WORD, desc.mOffset, desc.mId, *device);
-      case 4:
-        return new ECDeviceHandle(this, desc.mDirection, CIEC_ANY::EDataTypeID::e_DWORD, desc.mOffset, desc.mId, *device);
-      case 8:
-        return new ECDeviceHandle(this, desc.mDirection, CIEC_ANY::EDataTypeID::e_LWORD, desc.mOffset, desc.mId, *device);
+      case 1: type = CIEC_ANY::EDataTypeID::e_BYTE; break;
+      case 2: type = CIEC_ANY::EDataTypeID::e_WORD; break;
+      case 4: type = CIEC_ANY::EDataTypeID::e_DWORD; break;
+      case 8: type = CIEC_ANY::EDataTypeID::e_LWORD; break;
       default:
         DEVLOG_ERROR("ethercat[BusHandler]: Unsupported handle byte length %u at device %zu offset %u.\n",
                      static_cast<unsigned int>(desc.mByteLength),
                      desc.mSlaveIndex,
                      static_cast<unsigned int>(desc.mOffset));
-        break;
+        return nullptr;
     }
 
-    return nullptr;
+    return new ECDeviceHandle(this, desc.mDirection, type, desc.mOffset, desc.mEntryIndex, desc.mEntrySubIndex,
+                              desc.mEntryRegIndex, desc.mId, *device);
   }
 
   void ECBusHandler::prepareLoop() {
@@ -218,38 +240,48 @@ namespace forte::eclipse4diac::io::ethercat {
         return;
       }
 
-      if(deviceModel.mSyncList.size() > 0) {
-        ec_sync_info_t *syncInfo = deviceModel.getSyncs();
-        if(ecrt_slave_config_pdos(sc, EC_END, syncInfo)) {
-          DEVLOG_ERROR("ethercat[BusHandler]: %s(Controller ID: %u),Device position:%u.\n"
-                       ,scmECConfigDevicePdoFailed
-                       ,mConfig.mECControllerId
-                       ,deviceModel.mPosition);
-          return;
-        }
-      }
+      {
+        util::CCriticalRegion modelRegion(deviceModel.mMutex);
+        deviceModel.mFrozen = true;
 
-      if(deviceModel.mEntryRegList.size() > 0) {
-        ec_pdo_entry_reg_t *reg = deviceModel.getDomainRegs();
-        if(ecrt_domain_reg_pdo_entry_list(mECDomain, reg)) {
-          DEVLOG_ERROR("ethercat[BusHandler]: %s(Controller ID: %u),Device position:%u.\n"
-                       ,scmECRegisterPdoEntryFailed
-                       ,mConfig.mECControllerId
-                       ,deviceModel.mPosition);
-          return;
-        } else {
-          DEVLOG_INFO("ethercat[BusHandler]: PDO entries registered. Offsets:\n");
-          for(size_t j = 0; j < deviceModel.mEntryRegList.size(); j++) {
-            if(deviceModel.mEntryRegList[j].mOffset) {
-              DEVLOG_INFO("ethercat[BusHandler]: [%zu] 0x%04X:%u → offset=%u\n"
-                          ,j
-                          ,deviceModel.mEntryRegList[j].mIndex
-                          ,deviceModel.mEntryRegList[j].mSubIndex
-                          ,*deviceModel.mEntryRegList[j].mOffset);
-            }
+        if(deviceModel.mSyncList.size() > 0) {
+          ec_sync_info_t *syncInfo = deviceModel.getSyncs();
+          if(ecrt_slave_config_pdos(sc, EC_END, syncInfo)) {
+            DEVLOG_ERROR("ethercat[BusHandler]: %s(Controller ID: %u),Device position:%u.\n"
+                         ,scmECConfigDevicePdoFailed
+                         ,mConfig.mECControllerId
+                         ,deviceModel.mPosition);
+            return;
           }
         }
+
+        for(size_t j = 0; j < deviceModel.mEntryRegList.size(); j++) {
+          EntryReg &entryReg = deviceModel.mEntryRegList[j];
+          const int offset = ecrt_slave_config_reg_pdo_entry_pos(sc,
+                                                                 entryReg.mSyncIndex,
+                                                                 entryReg.mPdoPos,
+                                                                 entryReg.mEntryPos,
+                                                                 mECDomain,
+                                                                 &entryReg.mBitPosition);
+          if(offset < 0) {
+            DEVLOG_ERROR("ethercat[BusHandler]: %s(Controller ID: %u),Device position:%u, PDO entry 0x%04X:%02X.\n"
+                         ,scmECRegisterPdoEntryFailed
+                         ,mConfig.mECControllerId
+                         ,deviceModel.mPosition
+                         ,static_cast<unsigned int>(entryReg.mIndex)
+                         ,static_cast<unsigned int>(entryReg.mSubIndex));
+            return;
+          }
+          entryReg.mDomainOffset = static_cast<unsigned int>(offset);
+          DEVLOG_INFO("ethercat[BusHandler]: [%zu] 0x%04X:%u → offset=%u.%u\n"
+                      ,j
+                      ,entryReg.mIndex
+                      ,entryReg.mSubIndex
+                      ,entryReg.mDomainOffset
+                      ,entryReg.mBitPosition);
+        }
       }
+      deviceModel.commitDomainOffsets();
 
       DEVLOG_INFO("ethercat[BusHandler]: Configured device - Alias: %u, Position: %u, VendorId: 0x%08X, ProductCode: 0x%08X\n"
                   ,deviceModel.mAlias, deviceModel.mPosition, deviceModel.mVendorId, deviceModel.mProductCode);
