@@ -17,7 +17,7 @@
  *         for primitive types
  *    Martin Jobst - add CTF tracing integration
  *    Fabio Gandolfi - send also subapps on requested resources
- *    Pedro Ricardo C. Souza - remove the outdated Lua type creation
+ *    Pedro Ricardo C. Souza - run-time types in type queries
  *******************************************************************************/
 #include "forte/resource.h"
 #include "resource_internal.h"
@@ -54,13 +54,30 @@ namespace forte {
       }
     }
 
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+    void appendTypeNameList(std::string &paValue, const std::vector<StringId> &paTypeNames) {
+      for (const StringId typeName : paTypeNames) {
+        if (!paValue.empty()) {
+          paValue += ", ";
+        }
+        paValue += typeName;
+      }
+    }
+#endif
+
     EMGMResponse queryAllFBTypes(std::string &paValue) {
       appendTypeNameList(paValue, getFBTypeEntries());
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+      appendTypeNameList(paValue, getRuntimeFBTypeNames());
+#endif
       return EMGMResponse::Ready;
     }
 
     EMGMResponse queryAllAdapterTypes(std::string &paValue) {
       appendTypeNameList(paValue, getAdapterTypeEntries());
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+      appendTypeNameList(paValue, getRuntimeAdapterTypeNames());
+#endif
       return EMGMResponse::Ready;
     }
 
@@ -232,6 +249,12 @@ namespace forte {
 
     EMGMResponse
     createFBTypeResponseMessage(const StringId paTypeNameId, std::string_view paTypeHash, std::string &paReqResult) {
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+      if (getFBTypeEntry(paTypeNameId) == nullptr) {
+        return createQueryTypeResponseMessage(getRuntimeFBTypeEntry(paTypeNameId).get(), paTypeHash, paReqResult,
+                                              "FBType");
+      }
+#endif
       return createQueryTypeResponseMessage(getFBTypeEntry(paTypeNameId), paTypeHash, paReqResult, "FBType");
     }
 
@@ -243,6 +266,12 @@ namespace forte {
     EMGMResponse createAdapterTypeResponseMessage(const StringId paTypeNameId,
                                                   std::string_view paTypeHash,
                                                   std::string &paReqResult) {
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+      if (getAdapterTypeEntry(paTypeNameId) == nullptr) {
+        return createQueryTypeResponseMessage(getRuntimeAdapterTypeEntry(paTypeNameId).get(), paTypeHash, paReqResult,
+                                              "AdapterType");
+      }
+#endif
       return createQueryTypeResponseMessage(getAdapterTypeEntry(paTypeNameId), paTypeHash, paReqResult, "AdapterType");
     }
 
