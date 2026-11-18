@@ -84,7 +84,6 @@ namespace forte {
         e_SubrangeData,
         e_ARRAY, // according to the compliance profile
         e_STRUCT,
-        e_External = 256, // Base for CIEC_ANY based types outside of the forte base
         e_Max = 65535 // Guarantees at least 16 bits - otherwise gcc will optimizes on some platforms
       };
 
@@ -258,36 +257,6 @@ namespace forte {
         }
         return nullptr;
       }
-
-#ifdef FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
-      /*! \brief the following methods have to be implemented if a custom datatype is added to the forte which is not
-       * supported by the default seralize mechanism. */
-      /*! \brief returns the required size for serialization */
-      virtual unsigned int getRequiredSerializationSize() const {
-        return 0;
-      }
-
-      /*! \brief returns the tag of the datatype for serialization */
-      virtual TForteByte getTag() const {
-        return 0xFF;
-      }
-
-      /*! \brief serialize the custom type */
-      virtual int serializeCustomType(TForteByte *, int) const {
-        return -1;
-      }
-
-      /*! \brief deserialize the tag */
-      virtual bool deserializeTag(const TForteByte) {
-        return false;
-      }
-
-      /*! \brief deserialize the custom type*/
-      virtual int deserializeCustomType(const TForteByte *, int) {
-        return -1;
-      }
-
-#endif
 
     protected:
       /*! \brief copy the union data

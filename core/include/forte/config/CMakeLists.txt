@@ -49,11 +49,6 @@ else ()
 endif ()
 mark_as_advanced(FORTE_IPLayerRecvBufferSize)
 
-option(FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
-        "Enable Forte Custom Serializeable Datatypes" OFF
-)
-mark_as_advanced(FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES)
-
 set(FORTE_MGM_MAX_SUPPORTED_NAME_HIERARCHY
         "30"
         CACHE STRING

@@ -41,7 +41,6 @@ const TForteUInt32 BE_SVIFB::scmBE_SVI_Types[] = {
     SVI_F_UNKNOWN, //  e_SubrangeData,
     SVI_F_UNKNOWN, //  e_ARRAY, //according to the compliance profile
     SVI_F_UNKNOWN //  e_STRUCT,
-    //     e_External = 256, // Base for CIEC_ANY based types outside of the forte base
     //     e_Max = 65535     // Guarantees at least 16 bits - otherwise gcc will optimizes on some platforms
 };
 
@@ -74,7 +73,6 @@ const TForteUInt32 BE_SVIFB::scmBE_SVI_VarSizes[] = {
     0, //  e_SubrangeData,
     0, //  e_ARRAY, //according to the compliance profile
     0 //  e_STRUCT,
-    //     e_External = 256, // Base for CIEC_ANY based types outside of the forte base
     //     e_Max = 65535     // Guarantees at least 16 bits - otherwise gcc will optimizes on some platforms
 };
 

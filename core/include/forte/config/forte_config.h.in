@@ -42,6 +42,3 @@ namespace forte {
   constexpr bool cgBuildSharedLibs = BUILD_SHARED_LIBS;
 #undef BUILD_SHARED_LIBS
 }
-
-//! Support custom serializable data types
-#cmakedefine FORTE_SUPPORT_CUSTOM_SERIALIZABLE_DATATYPES
