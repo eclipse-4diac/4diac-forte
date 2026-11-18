@@ -138,16 +138,19 @@ namespace forte::com_infra::opc_ua {
     UA_Server *server = localHandler->getUAServer();
     bool activate = getTriggerValue();
     if ((mIsStateActive && activate) || (!mIsStateActive && !activate)) {
+      util::CCriticalRegion criticalRegion(localHandler->getServerAccessMutex());
       readAlarmStateValues(server);
       return e_ProcessDataOk;
     }
-    if (mMemberActionInfo) {
+    if (mMemberActionInfo) { // executeAction() locks the server itself
       if (mHandler->executeAction(*mMemberActionInfo) != UA_STATUSCODE_GOOD) {
         DEVLOG_ERROR("[OPC UA A&C LAYER]: Sending FB Data failed for FB %s!\n",
                      getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
         return e_ProcessDataSendFailed;
       }
     }
+    // the alarm writes call the readers of the written nodes, which must not be removed meanwhile
+    util::CCriticalRegion criticalRegion(localHandler->getServerAccessMutex());
     if (triggerAlarm(server, activate) != UA_STATUSCODE_GOOD) {
       DEVLOG_ERROR("[OPC UA A&C LAYER]: Sending Alarm Data failed for FB %s!\n",
                    getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
