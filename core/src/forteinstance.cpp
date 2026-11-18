@@ -18,9 +18,7 @@
 
 namespace forte {
   C4diacFORTEInstance::~C4diacFORTEInstance() {
-    if (mActiveDevice) {
-      mActiveDevice->deinitialize();
-    }
+    deleteDevice();
   }
 
   bool C4diacFORTEInstance::startupNewDevice(const std::string &paMGRID) {
@@ -47,6 +45,13 @@ namespace forte {
   void C4diacFORTEInstance::awaitDeviceShutdown() {
     if (mActiveDevice) {
       mActiveDevice->awaitShutdown();
+    }
+  }
+
+  void C4diacFORTEInstance::deleteDevice() {
+    if (mActiveDevice) {
+      mActiveDevice->deinitialize();
+      mActiveDevice.reset();
     }
   }
 } // namespace forte
