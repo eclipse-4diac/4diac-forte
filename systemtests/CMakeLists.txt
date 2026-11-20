@@ -111,6 +111,7 @@ if (FORTE_COM_ETH)
     forte_add_systemtest_hard(Test_SEND_RECV_tcp comSendRecvTCP.fboot 30)
     forte_add_systemtest_hard(Test_SEND_RECV_tcp_parallel comSendRecvTCPParallel.fboot 30)
     forte_add_systemtest_hard(Test_SEND_RECV_udp comSendRecvUDP.fboot 30)
+    forte_add_systemtest_hard(Test_SEND_RECV_tcp_large comSendRecvTCPLarge.fboot 30)
     if (LINUX)
         forte_add_systemtest_hard(Test_SEND_RECV_tcp_blackhole comSendRecvTCPBlackhole.fboot 30)
 
