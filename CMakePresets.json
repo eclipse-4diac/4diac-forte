@@ -245,6 +245,31 @@
       }
     },
     {
+      "name": "posix-lua-tests",
+      "displayName": "Tests with Lua Types (Posix)",
+      "inherits": "posix-tests",
+      "cacheVariables": {
+        "FORTE_USE_LUATYPES": {
+          "type": "STRING",
+          "value": "Lua51"
+        }
+      }
+    },
+    {
+      "name": "posix-lua-systemtests",
+      "displayName": "System Tests with Lua Types (Posix)",
+      "inherits": [
+        "systemtests",
+        "posix"
+      ],
+      "cacheVariables": {
+        "FORTE_USE_LUATYPES": {
+          "type": "STRING",
+          "value": "Lua51"
+        }
+      }
+    },
+    {
       "name": "windows",
       "hidden": true,
       "inherits": "base",

@@ -13,6 +13,8 @@
  *      - initial implementation and rework communication infrastructure
  *    zhaoxin
  *      -  fix that external event queue becomes event locker after it is full
+ *    Pedro Ricardo C. Souza
+ *      - end the thread before the object is destroyed
  *******************************************************************************/
 #include "forte/ecet.h"
 #include "forte/ecetfactory.h"
@@ -34,7 +36,10 @@ namespace forte {
     clear();
   }
 
-  CEventChainExecutionThread::~CEventChainExecutionThread() = default;
+  CEventChainExecutionThread::~CEventChainExecutionThread() {
+    // the thread runs members of this class, so it has to end before they are destroyed
+    end();
+  }
 
   void CEventChainExecutionThread::run() {
     while (isAlive()) { // thread is allowed to execute

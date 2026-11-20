@@ -14,6 +14,8 @@
  *      - initial implementation and rework communication infrastructure
  *    Martin Jobst
  *      - add support for data types with different size
+ *    Pedro Ricardo C. Souza
+ *      - registry for types defined at run time
  *******************************************************************************/
 #include "forte/datatypes/forte_any.h"
 #include "typelib_internal.h"
@@ -22,6 +24,12 @@
 #include <stddef.h>
 #include <string_view>
 #include "forte/util/string_utils.h"
+
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+#include <algorithm>
+#include "forte/arch/forte_sync.h"
+#include "forte/util/criticalregion.h"
+#endif
 
 using namespace forte::literals;
 using namespace std::string_literals;
@@ -77,6 +85,36 @@ namespace forte {
     template<typename T>
     T *findGenericTypeEntry(std::vector<T *> &vec, StringId paTypeNameId);
 
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+    /*!\brief The types defined at run time, sorted by name
+     *
+     * Management commands of all resources reach the type library, so it is guarded by a lock.
+     */
+    template<typename T>
+    class CRuntimeTypeLib {
+      public:
+        EMGMResponse add(std::shared_ptr<const T> paEntry, bool paFirmwareTypeExists);
+        std::shared_ptr<const T> find(StringId paTypeNameId);
+        std::vector<StringId> getNames();
+
+      private:
+        typename std::vector<std::shared_ptr<const T>>::iterator lowerBound(StringId paTypeNameId);
+
+        std::vector<std::shared_ptr<const T>> mEntries;
+        arch::CSyncObject mLock;
+    };
+
+    CRuntimeTypeLib<CRuntimeFBTypeEntry> &getRuntimeFBTypeLib() {
+      static CRuntimeTypeLib<CRuntimeFBTypeEntry> runtimeFBTypeLib;
+      return runtimeFBTypeLib;
+    }
+
+    CRuntimeTypeLib<CRuntimeAdapterTypeEntry> &getRuntimeAdapterTypeLib() {
+      static CRuntimeTypeLib<CRuntimeAdapterTypeEntry> runtimeAdapterTypeLib;
+      return runtimeAdapterTypeLib;
+    }
+#endif // FORTE_DYNAMIC_TYPE_LOAD
+
   }; // namespace
 
   constexpr CTypeEntry::CTypeEntry(StringId paTypeNameId, std::string_view paTypeHash) :
@@ -119,14 +157,18 @@ namespace forte {
                           bool paIsPlug,
                           TForteUInt8 paParentAdapterlistID,
                           EMGMResponse &paErrorMSG) {
-    CAdapterTypeEntry *poToCreate = getAdapterTypeEntry(paAdapterTypeId);
-    if (poToCreate == nullptr) {
+    CAdapter *newAdapter = nullptr;
+    if (CAdapterTypeEntry *poToCreate = getAdapterTypeEntry(paAdapterTypeId); poToCreate != nullptr) {
+      newAdapter = poToCreate->createAdapterInstance(paInstanceNameId, paContainer, paIsPlug, paParentAdapterlistID);
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+    } else if (auto runtimeEntry = getRuntimeAdapterTypeEntry(paAdapterTypeId); runtimeEntry != nullptr) {
+      newAdapter = runtimeEntry->createAdapterInstance(paInstanceNameId, paContainer, paIsPlug, paParentAdapterlistID);
+#endif
+    } else {
       paErrorMSG = EMGMResponse::UnsupportedType;
       return nullptr;
     }
 
-    CAdapter *newAdapter =
-        poToCreate->createAdapterInstance(paInstanceNameId, paContainer, paIsPlug, paParentAdapterlistID);
     if (newAdapter == nullptr) {
       paErrorMSG = EMGMResponse::Overflow;
       return nullptr;
@@ -159,6 +201,17 @@ namespace forte {
       if (newFB == nullptr) { // we could not create the requested object
         paErrorMSG = EMGMResponse::Overflow;
       }
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+    } else if (auto runtimeEntry = getRuntimeFBTypeEntry(paFBTypeId); runtimeEntry != nullptr) {
+      if (!paTypeHash.empty() && paTypeHash != runtimeEntry->getTypeHash()) {
+        paErrorMSG = EMGMResponse::UnsupportedType;
+        return nullptr;
+      }
+      newFB = runtimeEntry->createFBInstance(paInstanceNameId, paContainer);
+      if (newFB == nullptr) {
+        paErrorMSG = EMGMResponse::InvalidOperation;
+      }
+#endif
     } else { // check for parameterizable FBs (e.g. SERVER)
       newFB = createGenericFB(paInstanceNameId, paFBTypeId, paContainer, paErrorMSG);
     }
@@ -275,6 +328,38 @@ namespace forte {
     return getGlobalConstTypeLib();
   }
 
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+  CRuntimeTypeEntry::CRuntimeTypeEntry(StringId paTypeNameId, std::string_view paTypeHash) :
+      CTypeEntry(paTypeNameId, paTypeHash) {
+  }
+
+  EMGMResponse registerRuntimeFBType(std::shared_ptr<const CRuntimeFBTypeEntry> paEntry) {
+    const bool firmwareTypeExists = findTypeEntry(getFBTypeLib(), paEntry->getTypeNameId()) != nullptr;
+    return getRuntimeFBTypeLib().add(std::move(paEntry), firmwareTypeExists);
+  }
+
+  EMGMResponse registerRuntimeAdapterType(std::shared_ptr<const CRuntimeAdapterTypeEntry> paEntry) {
+    const bool firmwareTypeExists = findTypeEntry(getAdapterTypeLib(), paEntry->getTypeNameId()) != nullptr;
+    return getRuntimeAdapterTypeLib().add(std::move(paEntry), firmwareTypeExists);
+  }
+
+  std::shared_ptr<const CRuntimeFBTypeEntry> getRuntimeFBTypeEntry(StringId paTypeNameId) {
+    return getRuntimeFBTypeLib().find(paTypeNameId);
+  }
+
+  std::shared_ptr<const CRuntimeAdapterTypeEntry> getRuntimeAdapterTypeEntry(StringId paTypeNameId) {
+    return getRuntimeAdapterTypeLib().find(paTypeNameId);
+  }
+
+  std::vector<StringId> getRuntimeFBTypeNames() {
+    return getRuntimeFBTypeLib().getNames();
+  }
+
+  std::vector<StringId> getRuntimeAdapterTypeNames() {
+    return getRuntimeAdapterTypeLib().getNames();
+  }
+#endif // FORTE_DYNAMIC_TYPE_LOAD
+
   namespace {
 
     CFunctionBlock *createGenericFB(const StringId paInstanceNameId,
@@ -345,6 +430,57 @@ namespace forte {
     void addGlobalConstType(CGlobalConstEntry *paGlobalConstTypeEntry) {
       sortedTypeEntryInsert(getGlobalConstTypeLib(), paGlobalConstTypeEntry);
     }
+
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+    template<typename T>
+    typename std::vector<std::shared_ptr<const T>>::iterator CRuntimeTypeLib<T>::lowerBound(StringId paTypeNameId) {
+      return std::lower_bound(
+          mEntries.begin(), mEntries.end(), paTypeNameId,
+          [](const std::shared_ptr<const T> &paEntry, const StringId paId) { return paEntry->getTypeNameId() < paId; });
+    }
+
+    template<typename T>
+    EMGMResponse CRuntimeTypeLib<T>::add(std::shared_ptr<const T> paEntry, bool paFirmwareTypeExists) {
+      if (paFirmwareTypeExists) {
+        return EMGMResponse::InvalidOperation;
+      }
+      util::CCriticalRegion criticalRegion(mLock);
+      auto pos = lowerBound(paEntry->getTypeNameId());
+      if (pos == mEntries.end() || (*pos)->getTypeNameId() != paEntry->getTypeNameId()) {
+        mEntries.insert(pos, std::move(paEntry));
+        return EMGMResponse::Ready;
+      }
+      if ((*pos)->getDefinition() == paEntry->getDefinition()) {
+        return EMGMResponse::Ready; // the same definition again, keep the registered entry
+      }
+      if ((*pos)->getInstanceCount() != 0) {
+        return EMGMResponse::InvalidState;
+      }
+      *pos = std::move(paEntry);
+      return EMGMResponse::Ready;
+    }
+
+    template<typename T>
+    std::shared_ptr<const T> CRuntimeTypeLib<T>::find(StringId paTypeNameId) {
+      util::CCriticalRegion criticalRegion(mLock);
+      auto pos = lowerBound(paTypeNameId);
+      if (pos != mEntries.end() && (*pos)->getTypeNameId() == paTypeNameId) {
+        return *pos;
+      }
+      return nullptr;
+    }
+
+    template<typename T>
+    std::vector<StringId> CRuntimeTypeLib<T>::getNames() {
+      util::CCriticalRegion criticalRegion(mLock);
+      std::vector<StringId> names;
+      names.reserve(mEntries.size());
+      for (const auto &entry : mEntries) {
+        names.push_back(entry->getTypeNameId());
+      }
+      return names;
+    }
+#endif // FORTE_DYNAMIC_TYPE_LOAD
 
   }; // namespace
 } // namespace forte

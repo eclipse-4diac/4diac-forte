@@ -9,9 +9,12 @@
  * Contributors:
  *   Markus Meingast
  *    - initial API and implementation and/or initial documentation
+ *   Pedro Ricardo C. Souza
+ *    - end the event chain thread before the internal FBs are destroyed
  *******************************************************************************/
 #include "Config_EMB_RES.h"
 
+#include "forte/ecet.h"
 #include "forte/stringid.h"
 
 using namespace forte::literals;
@@ -42,7 +45,12 @@ namespace forte::iec61499::system {
       conn_opcua_namespace_int(*this, 0, u""_WSTRING) {
   }
 
-  Config_EMB_RES::~Config_EMB_RES() = default;
+  Config_EMB_RES::~Config_EMB_RES() {
+    // the event chain thread may still run fb_START, and CResource ends it only after fb_START is destroyed
+    if (CEventChainExecutionThread *ecet = getResourceEventExecution(); nullptr != ecet) {
+      ecet->end();
+    }
+  }
 
   bool Config_EMB_RES::initialize() {
     if (!CResource::initialize()) {

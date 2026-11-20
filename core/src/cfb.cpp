@@ -15,6 +15,7 @@
  *      - initial implementation and rework communication infrastructure
  *    Alois Zoitl - added support for adapter connections in CFBs
  *    Martin Jobst - add smart pointer for internal FBs
+ *    Pedro Ricardo C. Souza - fix count of interface to interface data connections
  *******************************************************************************/
 #include <string.h>
 #include "forte/cfb.h"
@@ -201,9 +202,10 @@ namespace forte {
       if (!establishConnection(conn)) {
         return false;
       }
-      if (!conn.mSrcFBNameId) {
+      if (!conn.mSrcFBNameId && conn.mDstFBNameId) {
         // Data connections track on the source side the number of destinations. For interface to internals we don't
-        // want that. Therefore, we have to revert that ref count change.
+        // want that. Therefore, we have to revert that ref count change. A connection straight to the interface
+        // outputs did not count.
         decConnRefCount();
       }
       return true;

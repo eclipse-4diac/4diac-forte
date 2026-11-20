@@ -17,6 +17,7 @@
  *         for primitive types
  *    Martin Jobst - add CTF tracing integration
  *    Fabio Gandolfi - send also subapps on requested resources
+ *    Pedro Ricardo C. Souza - create Lua types through management commands
  *******************************************************************************/
 #include "forte/resource.h"
 #include "resource_internal.h"
@@ -32,15 +33,11 @@
 #include "monitoring.h"
 #include "typelib_internal.h"
 #include "gatherdataconn.h"
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+#include "lua/luatypes.h"
+#endif
 
 using namespace forte::literals;
-
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
-#include "core/lua/luaadaptertypeentry.h"
-#include "core/lua/luabfbtypeentry.h"
-#include "core/lua/luacfbtypeentry.h"
-#include "core/lua/luaengine.h"
-#endif
 
 #include <string>
 
@@ -60,13 +57,30 @@ namespace forte {
       }
     }
 
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+    void appendTypeNameList(std::string &paValue, const std::vector<StringId> &paTypeNames) {
+      for (const StringId typeName : paTypeNames) {
+        if (!paValue.empty()) {
+          paValue += ", ";
+        }
+        paValue += typeName;
+      }
+    }
+#endif
+
     EMGMResponse queryAllFBTypes(std::string &paValue) {
       appendTypeNameList(paValue, getFBTypeEntries());
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+      appendTypeNameList(paValue, getRuntimeFBTypeNames());
+#endif
       return EMGMResponse::Ready;
     }
 
     EMGMResponse queryAllAdapterTypes(std::string &paValue) {
       appendTypeNameList(paValue, getAdapterTypeEntries());
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+      appendTypeNameList(paValue, getRuntimeAdapterTypeNames());
+#endif
       return EMGMResponse::Ready;
     }
 
@@ -238,6 +252,12 @@ namespace forte {
 
     EMGMResponse
     createFBTypeResponseMessage(const StringId paTypeNameId, std::string_view paTypeHash, std::string &paReqResult) {
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+      if (getFBTypeEntry(paTypeNameId) == nullptr) {
+        return createQueryTypeResponseMessage(getRuntimeFBTypeEntry(paTypeNameId).get(), paTypeHash, paReqResult,
+                                              "FBType");
+      }
+#endif
       return createQueryTypeResponseMessage(getFBTypeEntry(paTypeNameId), paTypeHash, paReqResult, "FBType");
     }
 
@@ -249,6 +269,12 @@ namespace forte {
     EMGMResponse createAdapterTypeResponseMessage(const StringId paTypeNameId,
                                                   std::string_view paTypeHash,
                                                   std::string &paReqResult) {
+#ifdef FORTE_DYNAMIC_TYPE_LOAD
+      if (getAdapterTypeEntry(paTypeNameId) == nullptr) {
+        return createQueryTypeResponseMessage(getRuntimeAdapterTypeEntry(paTypeNameId).get(), paTypeHash, paReqResult,
+                                              "AdapterType");
+      }
+#endif
       return createQueryTypeResponseMessage(getAdapterTypeEntry(paTypeNameId), paTypeHash, paReqResult, "AdapterType");
     }
 
@@ -260,43 +286,6 @@ namespace forte {
     }
 
   } // namespace
-
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
-
-  namespace {
-
-    EMGMResponse createFBTypeFromLua(forte::StringId typeNameId, const std::string &paLuaScriptAsString) {
-      EMGMResponse retVal = EMGMResponse::UnsupportedType;
-
-      if (paLuaScriptAsString.find("internalFBs") != std::string::npos) { // CFBType
-        if (CLuaCFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr) {
-          retVal = EMGMResponse::Ready;
-        } else {
-          retVal = EMGMResponse::InvalidOperation;
-        }
-      } else { // BFBType
-        if (CLuaBFBTypeEntry::createLuaFBTypeEntry(typeNameId, paLuaScriptAsString) != nullptr) {
-          retVal = EMGMResponse::Ready;
-        } else {
-          retVal = EMGMResponse::InvalidOperation;
-        }
-      }
-      return retVal;
-    }
-
-    EMGMResponse createAdapterTypeFromLua(forte::StringId typeNameId, const std::string &paLuaScriptAsString) {
-      EMGMResponse retVal = EMGMResponse::UnsupportedType;
-      if (CLuaAdapterTypeEntry::createLuaAdapterTypeEntry(typeNameId, paLuaScriptAsString) != nullptr) {
-        retVal = EMGMResponse::Ready;
-      } else {
-        retVal = EMGMResponse::InvalidOperation;
-      }
-      return retVal;
-    }
-
-  } // namespace
-
-#endif // FORTE_DYNAMIC_TYPE_LOAD
 
   CResource::CResource(CFBContainer &paDevice,
                        const SFBInterfaceSpec &paInterfaceSpec,
@@ -322,20 +311,25 @@ namespace forte {
         case EMGMCommandType::CreateFBInstance: {
           retVal = createFB(paCommand.mFirstParam, paCommand.mSecondParam.front(), paCommand.mAdditionalParams);
         } break;
-        case EMGMCommandType::CreateFBType:
 #ifdef FORTE_DYNAMIC_TYPE_LOAD
-          retVal = createFBTypeFromLua(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
-#else
-          retVal = EMGMResponse::UnsupportedCmd;
-#endif
+        case EMGMCommandType::CreateFBType:
+          retVal = lua::createFBType(getInternal().getLuaDefinitionEngine(), paCommand.mFirstParam.front(),
+                                     std::move(paCommand.mAdditionalParams));
+          // the definition must not show up in the response
+          paCommand.mAdditionalParams.clear();
           break;
         case EMGMCommandType::CreateAdapterType:
-#ifdef FORTE_DYNAMIC_TYPE_LOAD
-          retVal = createAdapterTypeFromLua(paCommand.mFirstParam.front(), paCommand.mAdditionalParams);
-#else
-          retVal = EMGMResponse::UnsupportedCmd;
-#endif
+          retVal = lua::createAdapterType(getInternal().getLuaDefinitionEngine(), paCommand.mFirstParam.front(),
+                                          std::move(paCommand.mAdditionalParams));
+          paCommand.mAdditionalParams.clear();
           break;
+#else
+        case EMGMCommandType::CreateFBType:
+        case EMGMCommandType::CreateAdapterType:
+          paCommand.mAdditionalParams.clear();
+          retVal = EMGMResponse::UnsupportedCmd;
+          break;
+#endif
         case EMGMCommandType::DeleteFBInstance: {
           retVal = deleteFB(paCommand.mFirstParam);
         } break;

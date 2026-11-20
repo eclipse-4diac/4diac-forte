@@ -1,0 +1,26 @@
+;<Request ID="1" Action="CREATE"><FB Name="LuaInOut" Type="iec61499::system::EMB_RES" /></Request>
+LuaInOut;<Request ID="2" Action="CREATE"><FBType Name="luatest::InOutAdd">-- REQ adds STEP to the in-out variable V and copies the result to OUT&#10;local DI_STEP = 33554432&#10;local DO_OUT = 67108864&#10;local DIO_V = 100663296&#10;&#10;return {&#10;  ECC = function(fb, id)&#10;    if id == 0 then&#10;      fb[DIO_V] = fb[DIO_V] + fb[DI_STEP]&#10;      fb[DO_OUT] = fb[DIO_V]&#10;      fb(0)&#10;    end&#10;  end,&#10;  interfaceSpec = {&#10;    numEIs = 1, EINames = {&quot;REQ&quot;}, EIWith = {0, 1, 65535}, EIWithIndexes = {0},&#10;    numEOs = 1, EONames = {&quot;CNF&quot;}, EOWith = {0, 1, 65535}, EOWithIndexes = {0},&#10;    numDIs = 1, DINames = {&quot;STEP&quot;}, DIDataTypeNames = {&quot;INT&quot;},&#10;    numDOs = 1, DONames = {&quot;OUT&quot;}, DODataTypeNames = {&quot;INT&quot;},&#10;    numDIOs = 1, DIONames = {&quot;V&quot;}, DIODataTypeNames = {&quot;INT&quot;}, DIOInitialValues = {&quot;10&quot;},&#10;    numAdapters = 0, adapterInstanceDefinition = {}&#10;  }&#10;}&#10;</FBType></Request>
+LuaInOut;<Request ID="3" Action="CREATE"><FB Name="A" Type="luatest::InOutAdd" /></Request>
+LuaInOut;<Request ID="4" Action="CREATE"><FB Name="B" Type="luatest::InOutAdd" /></Request>
+LuaInOut;<Request ID="5" Action="CREATE"><FB Name="EQ_B" Type="iec61131::comparison::F_EQ" /></Request>
+LuaInOut;<Request ID="6" Action="CREATE"><FB Name="CHECK_B" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
+LuaInOut;<Request ID="7" Action="CREATE"><FB Name="EQ_A" Type="iec61131::comparison::F_EQ" /></Request>
+LuaInOut;<Request ID="8" Action="CREATE"><FB Name="CHECK_A" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
+LuaInOut;<Request ID="9" Action="CREATE"><FB Name="STEST_END" Type="eclipse4diac::utils::STEST_END" /></Request>
+LuaInOut;<Request ID="10" Action="WRITE"><Connection Source="INT#1" Destination="A.STEP" /></Request>
+LuaInOut;<Request ID="11" Action="WRITE"><Connection Source="INT#5" Destination="B.STEP" /></Request>
+LuaInOut;<Request ID="12" Action="WRITE"><Connection Source="INT#15" Destination="EQ_B.IN2" /></Request>
+LuaInOut;<Request ID="13" Action="WRITE"><Connection Source="INT#16" Destination="EQ_A.IN2" /></Request>
+LuaInOut;<Request ID="14" Action="CREATE"><Connection Source="A.V" Destination="B.V" /></Request>
+LuaInOut;<Request ID="15" Action="CREATE"><Connection Source="START.COLD" Destination="B.REQ" /></Request>
+LuaInOut;<Request ID="16" Action="CREATE"><Connection Source="B.CNF" Destination="A.REQ" /></Request>
+LuaInOut;<Request ID="17" Action="CREATE"><Connection Source="A.CNF" Destination="EQ_B.REQ" /></Request>
+LuaInOut;<Request ID="18" Action="CREATE"><Connection Source="EQ_B.CNF" Destination="CHECK_B.REQ" /></Request>
+LuaInOut;<Request ID="19" Action="CREATE"><Connection Source="CHECK_B.CNF" Destination="EQ_A.REQ" /></Request>
+LuaInOut;<Request ID="20" Action="CREATE"><Connection Source="EQ_A.CNF" Destination="CHECK_A.REQ" /></Request>
+LuaInOut;<Request ID="21" Action="CREATE"><Connection Source="CHECK_A.CNF" Destination="STEST_END.REQ" /></Request>
+LuaInOut;<Request ID="22" Action="CREATE"><Connection Source="B.OUT" Destination="EQ_B.IN1" /></Request>
+LuaInOut;<Request ID="23" Action="CREATE"><Connection Source="EQ_B.OUT" Destination="CHECK_B.check" /></Request>
+LuaInOut;<Request ID="24" Action="CREATE"><Connection Source="A.OUT" Destination="EQ_A.IN1" /></Request>
+LuaInOut;<Request ID="25" Action="CREATE"><Connection Source="EQ_A.OUT" Destination="CHECK_A.check" /></Request>
+LuaInOut;<Request ID="26" Action="START"/>

@@ -9,22 +9,29 @@
  * Contributors:
  *   Patrick Aigner
  *   - initial API and implementation and/or initial documentation
+ *   Pedro Ricardo C. Souza
+ *   - IEC argument order and results of the string, bit and conversion functions
 --]]
 
 
 --[[
-  Use following command to generate Lua byte code for loading (copyright header needs to be inserted manually)
-    luajit -b STfunc.lua luamodule.h
+  The build embeds this file as source text (embed_lua_source.cmake), modules get it with require "STfunc".
 
-  For quicker development (by avoiding unnecessary builds):
-    > comment out this line in luaengine.cpp constructor:
-        lua_setfield(luaState, -2, "STfunc");
-    > copy STfunc.lua into same directory as forte executable
-        this file will be automatically loaded by Lua
+  The functions follow FORTE's compiled IEC 61131-3 functions: the string functions take their arguments in IEC
+  order and count bytes, as FORTE stores STRING and WSTRING (UTF-8) as bytes, and ANY_BIT results of up to 32 bits
+  are unsigned.
 --]]
 
 local bit = require("bit")
 local STfunc = {}
+
+-- 2^32 in decimal: Lua 5.1 reads hexadecimal literals through the C library, which may stop at 32 bits
+local TWO32 = 4294967296
+
+-- 32 bit results of the bit library are signed
+local function u32(a)
+  return a % TWO32
+end
 
 -- Function Wrapper
 function STfunc.wrapfunc(f, fb, env, list, ...)
@@ -97,7 +104,7 @@ local function arraygen(ranges, ini)
   local up = ranges[1][2]
   local arr = {lo = lo, up = up}
   if #ranges > 1 then
-    local subranges = {table.unpack(ranges, 2)}
+    local subranges = {unpack(ranges, 2)}
     for i = lo, up do
       arr[i] = arraygen(subranges, ini)
     end
@@ -141,8 +148,12 @@ function STfunc.DIV(a, b)
   return a / b
 end
 
+-- MOD is for integers: the sign of the dividend, 0 for a zero divisor
 function STfunc.MOD(a, b)
-  return a % b
+  if b == 0 then
+    return 0
+  end
+  return math.fmod(a, b)
 end
 
 function STfunc.EXPT(a, b)
@@ -175,10 +186,16 @@ function STfunc.ROR1(a, b)
 end
 
 function STfunc.SHL8(a, b)
+  if b >= 8 then
+    return 0
+  end
   return bit.band(bit.lshift(a, b), 0x000000ff)
 end
 
 function STfunc.SHR8(a, b)
+  if b >= 8 then
+    return 0
+  end
   return bit.rshift(a, b)
 end
 
@@ -193,10 +210,16 @@ function STfunc.ROR8(a, b)
 end
 
 function STfunc.SHL16(a, b)
+  if b >= 16 then
+    return 0
+  end
   return bit.band(bit.lshift(a, b), 0x0000ffff)
 end
 
 function STfunc.SHR16(a, b)
+  if b >= 16 then
+    return 0
+  end
   return bit.rshift(a, b)
 end
 
@@ -210,29 +233,39 @@ function STfunc.ROR16(a, b)
   return bit.band(bit.bor(bit.rshift(a, r), bit.lshift(a, 16-r)), 0x0000ffff)
 end
 
+-- the bit library shifts by b modulo 32, IEC shifts everything out
 function STfunc.SHL32(a, b)
-  return bit.lshift(a, b)
+  if b >= 32 then
+    return 0
+  end
+  return u32(bit.lshift(a, b))
 end
 
 function STfunc.SHR32(a, b)
-  return bit.rshift(a, b)
+  if b >= 32 then
+    return 0
+  end
+  return u32(bit.rshift(a, b))
 end
 
 function STfunc.ROL32(a, b)
-  return bit.rol(a, b)
+  return u32(bit.rol(a, b))
 end
 
 function STfunc.ROR32(a, b)
-  return bit.ror(a, b)
+  return u32(bit.ror(a, b))
 end
 
 function STfunc.SHL64(a, b)
-  local al = a % 0x0000000100000000
-  local ah = (a - al) / 0x0000000100000000
+  local al = a % TWO32
+  local ah = (a - al) / TWO32
   local oh = 0
   local ol = 0
   if b == 0 then
     return a
+  end
+  if b >= 64 then
+    return 0
   end
   if b < 32 then
     ol = bit.lshift(al, b)
@@ -241,17 +274,20 @@ function STfunc.SHL64(a, b)
     ol = 0
     oh = bit.lshift(al, b-32);
   end
-  ol = ol % 0x0000000100000000
-  return oh * 0x0000000100000000 + ol
+  ol = ol % TWO32
+  return oh * TWO32 + ol
 end
 
 function STfunc.SHR64(a,b)
-  local al = a % 0x0000000100000000
-  local ah = (a - al) / 0x0000000100000000
+  local al = a % TWO32
+  local ah = (a - al) / TWO32
   local oh = 0
   local ol = 0
   if b == 0 then
     return a
+  end
+  if b >= 64 then
+    return 0
   end
   if b < 32 then
     ol = bit.bor(bit.rshift(al, b), bit.lshift(ah, 32-b))
@@ -260,8 +296,8 @@ function STfunc.SHR64(a,b)
     ol = bit.rshift(ah, b-32)
     oh = 0;
   end
-  ol = ol % 0x0000000100000000
-  return oh * 0x0000000100000000 + ol
+  ol = ol % TWO32
+  return oh * TWO32 + ol
 end
 
 function STfunc.ROL64(a,b)
@@ -287,7 +323,7 @@ function STfunc.AND(a, ...)
   for i, val in ipairs(args) do
     o = bit.band(o, val)
   end
-  return o
+  return u32(o)
 end
 
 function STfunc.OR(a, ...)
@@ -296,7 +332,7 @@ function STfunc.OR(a, ...)
   for i, val in ipairs(args) do
     o = bit.bor(o, val)
   end
-  return o
+  return u32(o)
 end
 
 function STfunc.XOR(a, ...)
@@ -305,49 +341,49 @@ function STfunc.XOR(a, ...)
   for i, val in ipairs(args) do
     o = bit.bxor(o, val)
   end
-  return o
+  return u32(o)
 end
 
 function STfunc.AND64(a, ...)
-  local ol = a % 0x0000000100000000
-  local oh = (a - ol) / 0x0000000100000000
+  local ol = a % TWO32
+  local oh = (a - ol) / TWO32
   local args = {...}
   for i, val in ipairs(args) do
-    local vl = val % 0x0000000100000000
-    local vh = (val - vl) / 0x0000000100000000
+    local vl = val % TWO32
+    local vh = (val - vl) / TWO32
     ol = bit.band(ol, vl)
     oh = bit.band(oh, vh)
   end
-  ol = ol % 0x0000000100000000
-  return oh * 0x0000000100000000 + ol
+  ol = ol % TWO32
+  return oh * TWO32 + ol
 end
 
 function STfunc.OR64(a, ...)
-  local ol = a % 0x0000000100000000
-  local oh = (a - ol) / 0x0000000100000000
+  local ol = a % TWO32
+  local oh = (a - ol) / TWO32
   local args = {...}
   for i, val in ipairs(args) do
-    local vl = val % 0x0000000100000000
-    local vh = (val - vl) / 0x0000000100000000
+    local vl = val % TWO32
+    local vh = (val - vl) / TWO32
     ol = bit.bor(ol, vl)
     oh = bit.bor(oh, vh)
   end
-  ol = ol % 0x0000000100000000
-  return oh * 0x0000000100000000 + ol
+  ol = ol % TWO32
+  return oh * TWO32 + ol
 end
 
 function STfunc.XOR64(a, ...)
-  local ol = a % 0x0000000100000000
-  local oh = (a - ol) / 0x0000000100000000
+  local ol = a % TWO32
+  local oh = (a - ol) / TWO32
   local args = {...}
   for i, val in ipairs(args) do
-    local vl = val % 0x0000000100000000
-    local vh = (val - vl) / 0x0000000100000000
+    local vl = val % TWO32
+    local vh = (val - vl) / TWO32
     ol = bit.bxor(ol, vl)
     oh = bit.bxor(oh, vh)
   end
-  ol = ol % 0x0000000100000000
-  return oh * 0x0000000100000000 + ol
+  ol = ol % TWO32
+  return oh * TWO32 + ol
 end
 
 function STfunc.NOT1(a)
@@ -363,16 +399,16 @@ function STfunc.NOT16(a)
 end
 
 function STfunc.NOT32(a)
-  return bit.bnot(a)
+  return u32(bit.bnot(a))
 end
 
 function STfunc.NOT64(a)
-  local al = a % 0x0000000100000000
-  local ah = (a - al) / 0x0000000100000000
+  local al = a % TWO32
+  local ah = (a - al) / TWO32
   al = bit.bnot(al)
   ah = bit.bnot(ah)
-  al = al % 0x0000000100000000
-  return ah * 0x0000000100000000 + al
+  al = al % TWO32
+  return ah * TWO32 + al
 end
 
 --Selection functions
@@ -467,21 +503,33 @@ function STfunc.NE(a, b)
   return a ~= b
 end
 
---String functions
+--String functions, positions count from 1, invalid arguments return the input as FORTE does
 function STfunc.LEN(s)
   return #(s)
 end
 
-function STfunc.LEFT(s, p)
-  return string.sub(s, 1, p)
+function STfunc.LEFT(s, l)
+  if l < 0 or l > #(s) then
+    return s
+  end
+  return string.sub(s, 1, l)
 end
 
-function STfunc.RIGHT(s, p)
-  return string.sub(s, -p)
+function STfunc.RIGHT(s, l)
+  if l < 0 or l > #(s) then
+    return s
+  end
+  if l == 0 then
+    return ''
+  end
+  return string.sub(s, -l)
 end
 
-function STfunc.MID(s, p, n)
-  return string.sub(s, p, p + n - 1)
+function STfunc.MID(s, l, p)
+  if p < 0 then
+    return s
+  end
+  return STfunc.LEFT(STfunc.RIGHT(s, #(s) - p + 1), l)
 end
 
 function STfunc.CONCAT(...)
@@ -489,15 +537,24 @@ function STfunc.CONCAT(...)
 end
 
 function STfunc.INSERT(s1, s2, p)
-  return string.sub(s1, 1, p-1) .. s2 .. string.sub(s1, p)
+  if p <= 0 or p > #(s1) then
+    return s1
+  end
+  return string.sub(s1, 1, p) .. s2 .. string.sub(s1, p + 1)
 end
 
-function STfunc.DELETE(s1, p, n)
-  return string.sub(s1, 1, p-1) .. string.sub(s1, p + n)
+function STfunc.DELETE(s, l, p)
+  if l <= 0 or p <= 0 or p + l > #(s) then
+    return s
+  end
+  return string.sub(s, 1, p - 1) .. string.sub(s, p + l)
 end
 
-function STfunc.REPLACE(s1, s2, p, n)
-  return string.sub(s1, 1, p-1) .. s2 .. string.sub(s1, p + n)
+function STfunc.REPLACE(s1, s2, l, p)
+  if l <= 0 or p <= 0 or p + l - 1 > #(s1) then
+    return s1
+  end
+  return string.sub(s1, 1, p - 1) .. s2 .. string.sub(s1, p + l)
 end
 
 function STfunc.FIND(s1, s2)
@@ -508,49 +565,16 @@ function STfunc.FIND(s1, s2)
   return ind
 end
 
---WString functions
-function STfunc.WLEN(s)
-  return math.floor(#(s) / 2)
-end
-
-function STfunc.WLEFT(s, p)
-  return string.sub(s, 1, p*2)
-end
-
-function STfunc.WRIGHT(s, p)
-  return string.sub(s, -p*2)
-end
-
-function STfunc.WMID(s, p, n)
-  return string.sub(s, p*2 - 1, p*2 + n*2 - 2)
-end
-
-function STfunc.WCONCAT(...)
-  return table.concat({...})
-end
-
-function STfunc.WINSERT(s1, s2, p)
-  return string.sub(s1, 1, p*2-2) .. s2 .. string.sub(s1, p*2-1)
-end
-
-function STfunc.WDELETE(s1, p, n)
-  return string.sub(s1, 1, p*2-2) .. string.sub(s1, p*2 + n*2-1)
-end
-
-function STfunc.WREPLACE(s1, s2, p, n)
-  return string.sub(s1, 1, p*2-2) .. s2 .. string.sub(s1, p*2 + n*2 - 1)
-end
-
-function STfunc.WFIND(s1, s2)
-  local ind, _ = string.find(s1, s2, 1, true)
-  while ind ~= nil and ind % 2 == 0 do
-    ind, _ = string.find(s1, s2, ind + 1, true)
-  end
-  if ind == nil then
-    return 0
-  end
-  return math.floor((ind + 1) / 2)
-end
+--WString functions, WSTRING is UTF-8 and FORTE counts its bytes
+STfunc.WLEN = STfunc.LEN
+STfunc.WLEFT = STfunc.LEFT
+STfunc.WRIGHT = STfunc.RIGHT
+STfunc.WMID = STfunc.MID
+STfunc.WCONCAT = STfunc.CONCAT
+STfunc.WINSERT = STfunc.INSERT
+STfunc.WDELETE = STfunc.DELETE
+STfunc.WREPLACE = STfunc.REPLACE
+STfunc.WFIND = STfunc.FIND
 
 --Conversion functions
 function STfunc.BOOL_TO_INT(b)
@@ -565,36 +589,75 @@ function STfunc.BYTE_TO_BOOL(b)
   return bit.band(b, 1) == 1
 end
 
+-- A WCHAR is one UTF-8 encoded character of up to three bytes
+local function codepoint(c)
+  local b1, b2, b3 = string.byte(c, 1, 3)
+  if b1 == nil then
+    return 0
+  elseif b1 < 0x80 then
+    return b1
+  elseif b1 < 0xE0 then
+    return (b1 - 0xC0) * 64 + (b2 - 0x80)
+  end
+  return (b1 - 0xE0) * 4096 + (b2 - 0x80) * 64 + (b3 - 0x80)
+end
+
+local function utf8char(n)
+  if n < 0x80 then
+    return string.char(n)
+  elseif n < 0x800 then
+    return string.char(0xC0 + math.floor(n / 64), 0x80 + n % 64)
+  end
+  return string.char(0xE0 + math.floor(n / 4096), 0x80 + math.floor(n / 64) % 64, 0x80 + n % 64)
+end
+
 function STfunc.WCHAR_TO_BYTE(c)
-  return string.byte(c, 1, 1) * 256 + string.byte(c, 2, 2)
+  return codepoint(c) % 256
 end
 
 function STfunc.CHAR_TO_WCHAR(c)
-  return string.char(0) .. c
+  return utf8char(string.byte(c))
 end
 
+-- the integer cut to the width, as a cast does
 function STfunc.VAL_TO_BYTE(n)
-  return bit.bor(n, 0x000000ff)
+  return bit.band(n, 0x000000ff)
 end
 
 function STfunc.VAL_TO_WORD(n)
-  return bit.bor(n, 0x0000ffff)
+  return bit.band(n, 0x0000ffff)
 end
 
 function STfunc.VAL_TO_DWORD(n)
-  return bit.bor(n, 0xffffffff)
+  return u32(n)
 end
 
+-- FORTE copies the bytes in both directions
 function STfunc.STRING_TO_WSTRING(s)
-  return string.gsub(s, '.', function(c)
-    return string.char(0) .. c
-    end)
+  return s
 end
 
 function STfunc.WSTRING_TO_STRING(s)
-  return string.gsub(s, '..', function(c)
-    return string.sub(c, 2, 2)
-    end)
+  return s
+end
+
+-- Numeric functions
+function STfunc.TRUNC(x)
+  if x >= 0 then
+    return math.floor(x)
+  end
+  return math.ceil(x)
+end
+
+function STfunc.MOVE(a)
+  if type(a) ~= 'table' then
+    return a
+  end
+  local copy = {}
+  for k, v in pairs(a) do
+    copy[k] = STfunc.MOVE(v)
+  end
+  return copy
 end
 
 return STfunc
