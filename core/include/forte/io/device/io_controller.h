@@ -20,6 +20,7 @@
 #include "forte/arch/forte_sync.h"
 #include "forte/arch/forte_thread.h"
 #include "forte/io/mapper/io_handle.h"
+#include "forte/io/mapper/io_mapper.h"
 
 #include <string>
 
@@ -93,6 +94,8 @@ namespace forte::io {
       void fireIndicationEvent(IOObserver &paObserver);
 
       virtual void handleChangeEvent(IOHandle *paHandle);
+
+      IOMapper &getIOMapper();
 
     protected:
       explicit IODeviceController(CDeviceExecution &paDeviceExecution);

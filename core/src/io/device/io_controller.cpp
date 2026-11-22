@@ -18,6 +18,7 @@
 #include "forte/io/processinterfacefb.h"
 #include "forte/io/configFB/io_configFB_controller.h"
 #include "forte/util/criticalregion.h"
+#include "forte/device.h"
 
 namespace forte::io {
   IODeviceController::IODeviceController(CDeviceExecution &paDeviceExecution) :
@@ -85,6 +86,10 @@ namespace forte::io {
     // EMPTY - Override
   }
 
+  IOMapper &IODeviceController::getIOMapper() {
+    return mDeviceExecution.getDevice().getIOMapper();
+  }
+
   bool IODeviceController::hasError() const {
     return mError != nullptr;
   }
@@ -127,7 +132,7 @@ namespace forte::io {
   void IODeviceController::dropHandles() {
     util::CCriticalRegion criticalRegion(mHandleMutex);
 
-    IOMapper &mapper = IOMapper::getInstance();
+    IOMapper &mapper = getIOMapper();
 
     for (auto &inputHandle : mInputHandles) {
       mapper.deregisterHandle(*inputHandle);
@@ -146,7 +151,7 @@ namespace forte::io {
   }
 
   void IODeviceController::addHandle(THandleList &paList, std::string const &paId, std::unique_ptr<IOHandle> paHandle) {
-    if (!paId.empty() && IOMapper::getInstance().registerHandle(paId, *paHandle)) {
+    if (!paId.empty() && getIOMapper().registerHandle(paId, *paHandle)) {
       util::CCriticalRegion criticalRegion(mHandleMutex);
       paList.push_back(std::move(paHandle));
     }

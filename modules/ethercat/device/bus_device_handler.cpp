@@ -78,7 +78,7 @@ namespace forte::eclipse4diac::io::ethercat {
 
   void ECBusDeviceHandler::dropHandles() {
     util::CCriticalRegion criticalRegion(mHandleMutex);
-    forte::io::IOMapper &mapper = forte::io::IOMapper::getInstance();
+    forte::io::IOMapper &mapper = mBus->getIOMapper();
 
     if (mBus != nullptr && mBus->isShuttingDown()) {
       deregisterHandles(mapper);

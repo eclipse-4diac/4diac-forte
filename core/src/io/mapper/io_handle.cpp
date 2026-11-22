@@ -26,7 +26,7 @@ namespace forte::io {
 
   IOHandle::~IOHandle() {
     if (isBound()) {
-      IOMapper::getInstance().deregisterHandle(*this);
+      mController.getIOMapper().deregisterHandle(*this);
     }
   }
 

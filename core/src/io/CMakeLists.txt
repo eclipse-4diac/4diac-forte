@@ -14,14 +14,6 @@
 # IO
 # ############################################################################
 
-option(FORTE_IO "Enable IO Modules" OFF)
-
-if (NOT FORTE_IO)
-    return()
-endif ()
-
-message(STATUS "Process Interface: Modular IO")
-
 target_sources(forte-core PRIVATE
         processinterfacefb.cpp
         IB_fbt.cpp

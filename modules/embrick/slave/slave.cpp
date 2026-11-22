@@ -144,7 +144,7 @@ namespace forte::eclipse4diac::io::embrick {
   void EmbrickSlaveHandler::dropHandles() {
     util::CCriticalRegion criticalRegion(mHandleMutex);
 
-    forte::io::IOMapper &mapper = forte::io::IOMapper::getInstance();
+    forte::io::IOMapper &mapper = mBus->getIOMapper();
 
     for (EmbrickSlaveHandle *it : mInputs) {
       mapper.deregisterHandle(*it);

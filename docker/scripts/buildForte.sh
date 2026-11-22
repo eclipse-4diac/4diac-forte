@@ -152,7 +152,6 @@ fi
 if [ "${EMBRICK_ENABLED}" -eq "1" ]; then
   EMBRICK_FLAGS="-DFORTE_ARCHITECTURE=Posix \
                 ${ARM_COMPILER} \
-                -DFORTE_IO=ON \
                 -DFORTE_IO_EMBRICK=ON"
  
   compile "${ARM_ARCH}" "embrick" "${EMBRICK_FLAGS}"

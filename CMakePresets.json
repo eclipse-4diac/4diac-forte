@@ -63,10 +63,6 @@
           "type": "BOOL",
           "value": "ON"
         },
-        "FORTE_IO": {
-          "type": "BOOL",
-          "value": "ON"
-        },
         "FORTE_MODULE_RECONFIGURATION": {
           "type": "BOOL",
           "value": "ON"
