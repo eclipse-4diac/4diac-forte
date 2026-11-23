@@ -9,19 +9,29 @@ target_compile_features(forte_systemtest PUBLIC cxx_std_20)
 target_sources(forte_systemtest PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/../core/arch/common/src/main.cpp)
 
 ## forte_add_systemtest_hard (test_name bootfile_name timeout)
+## bootfile_name is relative to this directory unless it is an absolute path
 ## Fails if any error has been logged
 function(forte_add_systemtest_hard arg1 arg2 arg3)
-    file(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${arg2}" file_str)
+    if (IS_ABSOLUTE "${arg2}")
+        file(TO_NATIVE_PATH "${arg2}" file_str)
+    else ()
+        file(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${arg2}" file_str)
+    endif ()
     add_test(NAME ${arg1} COMMAND $<TARGET_FILE:forte_systemtest> -f "${file_str}")
     set_tests_properties(${arg1} PROPERTIES TIMEOUT ${arg3})
     set_tests_properties(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR") #==ERROR is the output when memore leak happens
 endfunction()
 
 ## forte_add_systemtest_soft (test_name bootfile_name timeout)
+## bootfile_name is relative to this directory unless it is an absolute path
 ## Fails only by TEST_CONDITION FBs. This is for the case when a FB has to be tested in all
 ## its cases, and some of the cases produce logging error
 function(forte_add_systemtest_soft arg1 arg2 arg3)
-    file(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${arg2}" file_str)
+    if (IS_ABSOLUTE "${arg2}")
+        file(TO_NATIVE_PATH "${arg2}" file_str)
+    else ()
+        file(TO_NATIVE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/${arg2}" file_str)
+    endif ()
     add_test(NAME ${arg1} COMMAND $<TARGET_FILE:forte_systemtest> -f "${file_str}")
     set_tests_properties(${arg1} PROPERTIES TIMEOUT ${arg3})
     set_tests_properties(${arg1} PROPERTIES FAIL_REGULAR_EXPRESSION "TEST_CONDITION_FAILED|==ERROR") #==ERROR is the output when memore leak happens
@@ -111,6 +121,25 @@ if (FORTE_COM_ETH)
     forte_add_systemtest_hard(Test_SEND_RECV_tcp comSendRecvTCP.fboot 30)
     forte_add_systemtest_hard(Test_SEND_RECV_tcp_parallel comSendRecvTCPParallel.fboot 30)
     forte_add_systemtest_hard(Test_SEND_RECV_udp comSendRecvUDP.fboot 30)
+
+    # The frame must be larger than the IP layer receive buffer, so that the buffer runs full while the rest of the
+    # frame waits in the socket. The buffer size is configurable (it is larger with FORTE_DYNAMIC_TYPE_LOAD), so the
+    # payload is generated from it: three times the buffer, which fills it at least twice, up to the STRING maximum.
+    math(EXPR tcpLargePayloadLength "3 * ${FORTE_IPLayerRecvBufferSize}")
+    if (tcpLargePayloadLength GREATER 65534)
+        set(tcpLargePayloadLength 65534)
+    endif ()
+    if (tcpLargePayloadLength GREATER FORTE_IPLayerRecvBufferSize)
+        math(EXPR tcpLargePayloadRepeats "${tcpLargePayloadLength} / 16 + 1")
+        string(REPEAT "0123456789ABCDEF" ${tcpLargePayloadRepeats} FORTE_TCP_LARGE_PAYLOAD)
+        string(SUBSTRING "${FORTE_TCP_LARGE_PAYLOAD}" 0 ${tcpLargePayloadLength} FORTE_TCP_LARGE_PAYLOAD)
+        configure_file(comSendRecvTCPLarge.fboot.in ${CMAKE_CURRENT_BINARY_DIR}/comSendRecvTCPLarge.fboot @ONLY)
+        forte_add_systemtest_hard(Test_SEND_RECV_tcp_large ${CMAKE_CURRENT_BINARY_DIR}/comSendRecvTCPLarge.fboot 30)
+    else ()
+        message(STATUS "Test_SEND_RECV_tcp_large skipped: a STRING cannot be larger than the "
+                       "${FORTE_IPLayerRecvBufferSize} bytes IP layer receive buffer")
+    endif ()
+
     if (LINUX)
         forte_add_systemtest_hard(Test_SEND_RECV_tcp_blackhole comSendRecvTCPBlackhole.fboot 30)
 
