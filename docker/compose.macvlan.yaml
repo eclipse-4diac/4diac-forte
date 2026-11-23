@@ -1,0 +1,50 @@
+#*******************************************************************************
+# Copyright (c) 2026 UniversalAutomation.org AISBL
+#
+# All rights reserved. This program and the accompanying materials
+# are made available under the terms of the Eclipse Public License v2.0
+# which accompanies this distribution, and is available at
+# http://www.eclipse.org/legal/epl-v20.html
+#
+# SPDX-License-Identifier: EPL-2.0
+#
+# Contributors:
+#   Israilov Sardor
+#*******************************************************************************
+# Run FORTE with its own IP address on the host's LAN (macvlan), so the 4diac IDE
+# can deploy to it like to a physical device. Set the network for your LAN, e.g.
+#   FORTE_MACVLAN_SUBNET=192.168.1.0/24 FORTE_MACVLAN_GATEWAY=192.168.1.1 \
+#   FORTE_IPV4_ADDRESS=192.168.1.50 docker compose -f docker/compose.macvlan.yaml up -d
+# FORTE_MACVLAN_PARENT is the host interface attached to that LAN (default eth0).
+# Note: with macvlan the host itself cannot reach the container's IP directly.
+name: forte
+
+services:
+  forte:
+    image: ${FORTE_IMAGE:-4diac-forte:local}
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile.linux
+    container_name: forte-macvlan
+    tmpfs:
+      - /tmp
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    command:
+      - --listen
+      - 0.0.0.0:61499
+    networks:
+      forte_macvlan:
+        ipv4_address: "${FORTE_IPV4_ADDRESS:?set FORTE_IPV4_ADDRESS to a free IP in FORTE_MACVLAN_SUBNET}"
+
+networks:
+  forte_macvlan:
+    driver: macvlan
+    driver_opts:
+      parent: ${FORTE_MACVLAN_PARENT:-eth0}
+    ipam:
+      config:
+        - subnet: "${FORTE_MACVLAN_SUBNET:?set FORTE_MACVLAN_SUBNET, e.g. 192.168.1.0/24}"
+          gateway: "${FORTE_MACVLAN_GATEWAY:?set FORTE_MACVLAN_GATEWAY, e.g. 192.168.1.1}"
