@@ -13,6 +13,7 @@
  *   Alois Zoitl - initial API and implementation and/or initial documentation
  *   Alois Zoitl  - migrated data type toString to std::string
  *   Martin Jobst - move normalizeToStringRepresentation from CIEC_ANY_REAL
+ *   Pedro Ricardo C. Souza - numeric character references in transformEscapedXMLToNonEscapedText
  *******************************************************************************/
 #include "forte/util/string_utils.h"
 #include "forte/datatypes/forte_dint.h"
@@ -24,6 +25,7 @@
 #include <errno.h>
 #include <string.h>
 #include <array>
+#include <charconv>
 #include <map>
 
 using namespace std::string_literals;
@@ -39,6 +41,42 @@ namespace forte::util {
         {'&', {scCharacters2Escape[2], std::char_traits<char>::length(scCharacters2Escape[2])}},
         {'<', {scCharacters2Escape[3], std::char_traits<char>::length(scCharacters2Escape[3])}},
         {'>', {scCharacters2Escape[4], std::char_traits<char>::length(scCharacters2Escape[4])}}};
+
+    /*! Appends the character of the numeric character reference (&#NN; or &#xHH;) at the start of paSrc as UTF-8
+     *
+     * @return the length of the reference, 0 if paSrc does not start with a valid one
+     */
+    size_t appendNumericCharacterReference(std::string_view paSrc, std::string &paTarget) {
+      const size_t end = paSrc.find(';');
+      if (!paSrc.starts_with("&#") || end == std::string_view::npos) {
+        return 0;
+      }
+      const bool hex = paSrc.size() > 2 && (paSrc[2] == 'x' || paSrc[2] == 'X');
+      const char *const first = paSrc.data() + (hex ? 3 : 2);
+      const char *const last = paSrc.data() + end;
+      uint32_t codePoint = 0;
+      const auto result = std::from_chars(first, last, codePoint, hex ? 16 : 10);
+      if (first == last || result.ec != std::errc() || result.ptr != last || codePoint == 0 || codePoint > 0x10FFFF ||
+          (codePoint >= 0xD800 && codePoint <= 0xDFFF)) {
+        return 0;
+      }
+      if (codePoint < 0x80) {
+        paTarget += static_cast<char>(codePoint);
+      } else if (codePoint < 0x800) {
+        paTarget += static_cast<char>(0xC0 | (codePoint >> 6));
+        paTarget += static_cast<char>(0x80 | (codePoint & 0x3F));
+      } else if (codePoint < 0x10000) {
+        paTarget += static_cast<char>(0xE0 | (codePoint >> 12));
+        paTarget += static_cast<char>(0x80 | ((codePoint >> 6) & 0x3F));
+        paTarget += static_cast<char>(0x80 | (codePoint & 0x3F));
+      } else {
+        paTarget += static_cast<char>(0xF0 | (codePoint >> 18));
+        paTarget += static_cast<char>(0x80 | ((codePoint >> 12) & 0x3F));
+        paTarget += static_cast<char>(0x80 | ((codePoint >> 6) & 0x3F));
+        paTarget += static_cast<char>(0x80 | (codePoint & 0x3F));
+      }
+      return end + 1;
+    }
 
     constexpr std::string_view getEscapedXMLSequence(char paChar) noexcept {
       switch (paChar) {
@@ -301,6 +339,13 @@ namespace forte::util {
             i += escapeSequLen;
             replaced = true;
             break;
+          }
+        }
+
+        if (!replaced) {
+          if (const size_t length = appendNumericCharacterReference(rest, paTarget); length != 0) {
+            i += length;
+            replaced = true;
           }
         }
 

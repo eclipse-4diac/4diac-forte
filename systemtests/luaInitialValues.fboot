@@ -1,0 +1,17 @@
+;<Request ID="1" Action="CREATE"><FB Name="LuaInitialValues" Type="iec61499::system::EMB_RES" /></Request>
+LuaInitialValues;<Request ID="2" Action="CREATE"><FBType Name="luatest::InitialValues">-- Checks the initial values of its input and its STRUCT internal variable, V keeps its initial value&#10;local DI_A = 33554432&#10;local DO_OK = 67108864&#10;local IN_S = 268435456&#10;&#10;return {&#10;  ECC = function(fb, id)&#10;    if id == 0 then&#10;      local s = fb[IN_S]&#10;      fb[DO_OK] = fb[DI_A] == 5 and s.ENABLED and s.VALUE == 2.5 and s.INNER.ID == 7 and s.INNER.LABEL == &quot;in&quot; and&#10;        s.SAMPLES[0] == 1 and s.SAMPLES[3] == 4 and s.ITEMS[1].ID == 8 and s.ITEMS[2].LABEL == &quot;b&quot;&#10;      fb(0)&#10;    end&#10;  end,&#10;  interfaceSpec = {&#10;    numEIs = 1, EINames = {&quot;REQ&quot;}, EIWith = {0, 65535}, EIWithIndexes = {0},&#10;    numEOs = 1, EONames = {&quot;CNF&quot;}, EOWith = {0, 1, 65535}, EOWithIndexes = {0},&#10;    numDIs = 1, DINames = {&quot;A&quot;}, DIDataTypeNames = {&quot;INT&quot;}, DIInitialValues = {&quot;5&quot;},&#10;    numDOs = 2, DONames = {&quot;OK&quot;, &quot;V&quot;}, DODataTypeNames = {&quot;BOOL&quot;, &quot;LREAL&quot;}, DOInitialValues = {&quot;&quot;, &quot;1.25&quot;},&#10;    numAdapters = 0, adapterInstanceDefinition = {}&#10;  },&#10;  internalVarsInformation = {&#10;    numIntVars = 1, intVarsNames = {&quot;S&quot;}, intVarsDataTypeNames = {&quot;luatest::LuaTestStruct&quot;},&#10;    intVarsInitialValues = {&#10;      &quot;(ENABLED:=TRUE,VALUE:=2.5,INNER:=(ID:=7,LABEL:=&apos;in&apos;),SAMPLES:=[1,2,3,4],&quot; ..&#10;      &quot;ITEMS:=[(ID:=8,LABEL:=&apos;a&apos;),(ID:=9,LABEL:=&apos;b&apos;)])&quot;&#10;    }&#10;  }&#10;}&#10;</FBType></Request>
+LuaInitialValues;<Request ID="3" Action="CREATE"><FB Name="INIT" Type="luatest::InitialValues" /></Request>
+LuaInitialValues;<Request ID="4" Action="CREATE"><FB Name="CHECK_OK" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
+LuaInitialValues;<Request ID="5" Action="CREATE"><FB Name="EQ_V" Type="iec61131::comparison::F_EQ" /></Request>
+LuaInitialValues;<Request ID="6" Action="CREATE"><FB Name="CHECK_V" Type="eclipse4diac::utils::TEST_CONDITION" /></Request>
+LuaInitialValues;<Request ID="7" Action="CREATE"><FB Name="STEST_END" Type="eclipse4diac::utils::STEST_END" /></Request>
+LuaInitialValues;<Request ID="8" Action="WRITE"><Connection Source="LREAL#1.25" Destination="EQ_V.IN2" /></Request>
+LuaInitialValues;<Request ID="9" Action="CREATE"><Connection Source="START.COLD" Destination="INIT.REQ" /></Request>
+LuaInitialValues;<Request ID="10" Action="CREATE"><Connection Source="INIT.CNF" Destination="CHECK_OK.REQ" /></Request>
+LuaInitialValues;<Request ID="11" Action="CREATE"><Connection Source="CHECK_OK.CNF" Destination="EQ_V.REQ" /></Request>
+LuaInitialValues;<Request ID="12" Action="CREATE"><Connection Source="EQ_V.CNF" Destination="CHECK_V.REQ" /></Request>
+LuaInitialValues;<Request ID="13" Action="CREATE"><Connection Source="CHECK_V.CNF" Destination="STEST_END.REQ" /></Request>
+LuaInitialValues;<Request ID="14" Action="CREATE"><Connection Source="INIT.OK" Destination="CHECK_OK.check" /></Request>
+LuaInitialValues;<Request ID="15" Action="CREATE"><Connection Source="INIT.V" Destination="EQ_V.IN1" /></Request>
+LuaInitialValues;<Request ID="16" Action="CREATE"><Connection Source="EQ_V.OUT" Destination="CHECK_V.check" /></Request>
+LuaInitialValues;<Request ID="17" Action="START"/>

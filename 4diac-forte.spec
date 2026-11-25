@@ -15,7 +15,7 @@ BuildRequires: open62541-devel >= 0.2
 %endif
 
 %if %{with lua}
-BuildRequires: lua-devel >= 5.1
+BuildRequires: pkgconfig(lua-5.1)
 %endif
 
 %description
@@ -40,7 +40,7 @@ cd bin/posix
        -DFORTE_MODULE_IEC61131=ON \
        %{?_with_sysfs: -DFORTE_MODULE_SysFs=ON } \
        -DFORTE_MODULE_UTILS=ON \
-       %{?_with_lua: -DFORTE_USE_LUATYPES=Lua } \
+       %{?_with_lua: -DFORTE_USE_LUATYPES=Lua51 } \
        -DFORTE_TESTS=OFF \
        ../..
 make %{?_smp_mflags}
