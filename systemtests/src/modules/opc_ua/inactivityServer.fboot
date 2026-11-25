@@ -1,0 +1,15 @@
+;<Request ID="1" Action="CREATE"><FB Name="inactivityServer" Type="iec61499::system::EMB_RES" /></Request>
+inactivityServer;<Request ID="2" Action="CREATE"><FB Name="PUBLISH_1" Type="iec61499::net::PUBLISH_1" /></Request>
+inactivityServer;<Request ID="3" Action="WRITE"><Connection Source="opc_ua[WRITE;/Objects/inactivity/counter]" Destination="PUBLISH_1.ID" /></Request>
+inactivityServer;<Request ID="4" Action="WRITE"><Connection Source="1" Destination="PUBLISH_1.QI" /></Request>
+inactivityServer;<Request ID="5" Action="CREATE"><FB Name="E_CYCLE_1" Type="iec61499::events::E_CYCLE" /></Request>
+inactivityServer;<Request ID="6" Action="WRITE"><Connection Source="T#100ms" Destination="E_CYCLE_1.DT" /></Request>
+inactivityServer;<Request ID="7" Action="CREATE"><FB Name="E_CTU_1" Type="iec61499::events::E_CTU" /></Request>
+inactivityServer;<Request ID="8" Action="WRITE"><Connection Source="UINT#65535" Destination="E_CTU_1.PV" /></Request>
+inactivityServer;<Request ID="9" Action="CREATE"><Connection Source="START.COLD" Destination="PUBLISH_1.INIT" /></Request>
+inactivityServer;<Request ID="10" Action="CREATE"><Connection Source="START.WARM" Destination="PUBLISH_1.INIT" /></Request>
+inactivityServer;<Request ID="11" Action="CREATE"><Connection Source="PUBLISH_1.INITO" Destination="E_CYCLE_1.START" /></Request>
+inactivityServer;<Request ID="12" Action="CREATE"><Connection Source="E_CYCLE_1.EO" Destination="E_CTU_1.CU" /></Request>
+inactivityServer;<Request ID="13" Action="CREATE"><Connection Source="E_CTU_1.CUO" Destination="PUBLISH_1.REQ" /></Request>
+inactivityServer;<Request ID="14" Action="CREATE"><Connection Source="E_CTU_1.CV" Destination="PUBLISH_1.SD_1" /></Request>
+inactivityServer;<Request ID="15" Action="START"/>
