@@ -17,4 +17,7 @@
   forte_test_add_sourcefile_cpp(fbdkasn1layerser_test.cpp)
   forte_test_add_sourcefile_cpp(fbdkasn1layerdeser_test.cpp)
   forte_test_add_sourcefile_cpp(extractLayerAndParamsTest.cpp)
+  if (FORTE_COM_ETH AND (FORTE_ARCHITECTURE STREQUAL "Posix" OR FORTE_ARCHITECTURE STREQUAL "Linux" OR FORTE_ARCHITECTURE STREQUAL "Darwin"))
+    forte_test_add_sourcefile_cpp(ipcomlayer_test.cpp)
+  endif ()
   
