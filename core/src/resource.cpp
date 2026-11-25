@@ -386,7 +386,8 @@ namespace forte {
     if (retVal == EMGMResponse::Ready) {
       if (paCommand == EMGMCommandType::Start) { // on start, sample inputs
         for (TPortId i = 0; i < getFBInterfaceSpec().getNumDIs(); ++i) {
-          CDataConnection *conn = *getDIConUnchecked(i);
+          CDataConnection **connPtr = getDIConUnchecked(i);
+          CDataConnection *conn = (connPtr != nullptr) ? *connPtr : nullptr;
           if (conn != nullptr) {
             conn->readData(*getDI(i));
           }

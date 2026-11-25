@@ -133,7 +133,7 @@ namespace forte {
     }
 
     if (!newAdapter->initialize()) {
-      delete newAdapter;
+      deleteFB(newAdapter); // deinitialize() releases what was set up before the failure
       paErrorMSG = EMGMResponse::Overflow;
       return nullptr;
     }
@@ -164,7 +164,7 @@ namespace forte {
     }
 
     if (newFB != nullptr && !newFB->initialize()) {
-      delete newFB;
+      deleteFB(newFB); // deinitialize() releases what was set up before the failure
       paErrorMSG = EMGMResponse::Overflow;
       newFB = nullptr;
     }

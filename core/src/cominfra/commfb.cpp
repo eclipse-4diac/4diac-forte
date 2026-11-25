@@ -53,12 +53,17 @@ namespace forte::com_infra {
   }
 
   CCommFB::~CCommFB() {
-    for (size_t i = 0; i < getGenDINums(); ++i) {
-      delete mGenDIs[i];
+    // the data points are created in setupFBInterface(), which some FBs (e.g. DEV_MGR) only call in initialize()
+    if (mGenDIs) {
+      for (size_t i = 0; i < getGenDINums(); ++i) {
+        delete mGenDIs[i];
+      }
     }
 
-    for (size_t i = 0; i < getGenDONums(); ++i) {
-      delete mGenDOs[i];
+    if (mGenDOs) {
+      for (size_t i = 0; i < getGenDONums(); ++i) {
+        delete mGenDOs[i];
+      }
     }
   }
 
