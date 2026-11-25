@@ -71,7 +71,7 @@ namespace forte {
       template<util::fixed_string A>
       static constexpr StringId fixed() {
         (void) &Register<A>::scmRegister;
-#ifdef _WIN32
+#if defined(_WIN32) || defined(FORTE_STRINGID_RUNTIME_INTERN)
         return StringId{intern(A)};
 #else
         return StringId{A};
