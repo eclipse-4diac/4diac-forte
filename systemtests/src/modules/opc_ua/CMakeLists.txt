@@ -25,6 +25,10 @@ forte_add_systemtest_hard(OPCUA_LocalMethdodsCreate localMethodsCreate.fboot 10)
 
 SET_TESTS_PROPERTIES(OPCUA_LocalFirstRead PROPERTIES FAIL_REGULAR_EXPRESSION "ERROR: T|==ERROR|OPC UA REMOTE") #remote handler shouldn't start
 
+# a response (RSP) of a local method without a pending call fails; with IND connected to RSP the server must not
+# answer it with an IND, otherwise IND and RSP loop forever
+forte_add_systemtest_soft(OPCUA_ServerRspWithoutCall serverRspWithoutCall.fboot 20)
+
 forte_add_multi_systemtests(OPCUA_WorkingClientServer 60 0 clientWorking.fboot " " serverWorking.fboot " ") #This could be hard, but connections errors sometimes occur which don't affect the TEST_CONDITIONS
 
 forte_add_multi_systemtests(OPCUA_WorkingClientNoSubsServer 60 0 clientWorkingNoSubs.fboot " " serverWorking.fboot " ") #This could be hard, but connections errors sometimes occur which don't affect the TEST_CONDITIONS

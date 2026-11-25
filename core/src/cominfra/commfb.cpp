@@ -99,6 +99,12 @@ namespace forte::com_infra {
       }
     }
 
+    if (mCommServiceType == e_Server && scmSendNotificationEventID == paEIID && (resp & scg_unComNegative)) {
+      // a failed response (RSP) is no new request: an IND here would start the next RSP, which typically fails as well,
+      // and a server with IND connected to RSP would loop forever. The layer reports the reason of the failure.
+      resp = e_Nothing;
+    }
+
     if (e_Nothing != resp) {
       STATUS() = CIEC_WSTRING(scmResponseTexts[resp & 0xF]);
       QO() = CIEC_BOOL(!(resp & scg_unComNegative));
