@@ -162,6 +162,7 @@ namespace forte::com_infra::opc_ua {
         } else { // if connection succeeded, don't break the while and try to handle subscriptions immediately
           mNeedsReconnection = false;
           DEVLOG_INFO("[OPC UA CLIENT]: Client connected to endpoint %s\n", mEndpointUrl.c_str());
+          initializeActionsAgain();
         }
       }
     }
@@ -301,6 +302,8 @@ namespace forte::com_infra::opc_ua {
                    paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str(),
                    UA_StatusCode_name(retVal));
       delete remoteCallHandle;
+      mNeedsReconnection = false;
+      handleClientState(); // force a reconnection, as for read and write. The call failed anyway
     } else {
       addAsyncCall();
     }
@@ -339,6 +342,18 @@ namespace forte::com_infra::opc_ua {
     } else {
       return (UA_STATUSCODE_GOOD ==
               UA_Client_connectUsername(mClient, mEndpointUrl.c_str(), mUsername.c_str(), mPassword.c_str()));
+    }
+  }
+
+  void CUA_ClientInformation::initializeActionsAgain() {
+    // the actions refer to the nodes of the earlier connection. The server can have been restarted since then and
+    // the nodes can have other NodeIds now, so the actions are initialized again
+    for (auto actionReferencingIt : mActionsReferencingIt) {
+      if (std::find(mActionsToBeInitialized.begin(), mActionsToBeInitialized.end(), actionReferencingIt) ==
+          mActionsToBeInitialized.end()) {
+        uninitializeAction(*actionReferencingIt);
+        mActionsToBeInitialized.push_back(actionReferencingIt);
+      }
     }
   }
 
@@ -386,7 +401,9 @@ namespace forte::com_infra::opc_ua {
                 UA_StatusCode_name(retVal));
             somethingFailed = true;
           } else {
-            if (itNodePair->getNodeId() != nullptr) {
+            // a NodeId that was only stored by an earlier initialization can be outdated, e.g. after a restart of
+            // the server, so only a NodeId given in the ID of the FB is checked
+            if (itNodePair->isNodeIdGiven()) {
               if (!UA_NodeId_equal(itNodePair->getNodeId(),
                                    nodeId)) { // if NodeId was provided, check if found is the same
                 DEVLOG_ERROR(
@@ -430,7 +447,9 @@ namespace forte::com_infra::opc_ua {
           UA_StatusCode_name(retVal));
       somethingFailed = true;
     } else {
-      if (itNodePair->getNodeId() != nullptr) {
+      // a NodeId that was only stored by an earlier initialization can be outdated, e.g. after a restart of the
+      // server, so only a NodeId given in the ID of the FB is checked
+      if (itNodePair->isNodeIdGiven()) {
         if (!UA_NodeId_equal(itNodePair->getNodeId(),
                              methodNode)) { // if NodeId of method was provided, check if found is the same
           DEVLOG_ERROR(
@@ -444,8 +463,11 @@ namespace forte::com_infra::opc_ua {
         itNodePair->setNodeId(methodNode);
       }
       if (!somethingFailed) {
-        // store the parentNodeId in the second position. BrowseName is not needed
-        paActionInfo.getNodePairInfo().emplace_back(parentNode, "");
+        // store the parentNodeId in the second position. BrowseName is not needed. The parent of an earlier
+        // initialization is replaced, it can be outdated as well
+        auto &nodePairs = paActionInfo.getNodePairInfo();
+        nodePairs.erase(nodePairs.begin() + 1, nodePairs.end());
+        nodePairs.emplace_back(parentNode, "");
       } else {
         UA_NodeId_delete(parentNode);
       }
@@ -548,7 +570,9 @@ namespace forte::com_infra::opc_ua {
   }
 
   void CUA_ClientInformation::removeAsyncCall() {
-    mMissingAsyncCalls--;
+    if (mMissingAsyncCalls > 0) {
+      mMissingAsyncCalls--;
+    }
   }
 
   void CUA_ClientInformation::uninitializeAction(CActionInfo &paActionInfo) {
@@ -564,8 +588,11 @@ namespace forte::com_infra::opc_ua {
     for (auto itMonitoringItemInfo = mSubscriptionInfo.mMonitoredItems.begin();
          itMonitoringItemInfo != mSubscriptionInfo.mMonitoredItems.end();) {
       if ((*itMonitoringItemInfo)->mVariableInfo.mActionInfo == &paActionInfo) {
-        UA_StatusCode retVal = UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo.mSubscriptionId,
-                                                                     (*itMonitoringItemInfo)->mMonitoringItemId);
+        // without a subscription (the stack already deleted it, e.g. with the session) there is nothing to delete
+        UA_StatusCode retVal = (0 == mSubscriptionInfo.mSubscriptionId)
+                                   ? UA_STATUSCODE_GOOD
+                                   : UA_Client_MonitoredItems_deleteSingle(mClient, mSubscriptionInfo.mSubscriptionId,
+                                                                           (*itMonitoringItemInfo)->mMonitoringItemId);
         if (UA_STATUSCODE_GOOD != retVal) {
           DEVLOG_ERROR(
               "[OPC UA CLIENT]: Couldn't delete monitored item %u. No further actions will be taken. Error: %s\n",
@@ -584,13 +611,20 @@ namespace forte::com_infra::opc_ua {
   }
 
   void CUA_ClientInformation::resetSubscription(bool paDeleteSubscription) {
+    // Called when the last monitored item is removed and from the deletion callback of the stack, which also runs
+    // inside UA_Client_Subscriptions_deleteSingle() and when the session is lost. Count the subscription only once.
+    const UA_UInt32 subscriptionId = mSubscriptionInfo.mSubscriptionId;
+    if (0 == subscriptionId) {
+      return;
+    }
+    mSubscriptionInfo.mSubscriptionId = 0;
     removeAsyncCall();
     if (paDeleteSubscription) {
-      UA_StatusCode retval = UA_Client_Subscriptions_deleteSingle(mClient, mSubscriptionInfo.mSubscriptionId);
+      UA_StatusCode retval = UA_Client_Subscriptions_deleteSingle(mClient, subscriptionId);
       if (UA_STATUSCODE_GOOD != retval) {
         DEVLOG_ERROR("[OPC UA CLIENT]: Couldn't delete subscription %u. Failed with error %s. No further actions will "
                      "be taken\n",
-                     mSubscriptionInfo.mSubscriptionId, UA_StatusCode_name(retval));
+                     subscriptionId, UA_StatusCode_name(retval));
       }
     }
   }
@@ -846,7 +880,9 @@ namespace forte::com_infra::opc_ua {
         clientInformation->mSubscriptionActivity.mSubscriptionId == paSubscriptionId) {
       clientInformation->mSubscriptionActivity = SSubscriptionActivity();
     }
-    static_cast<CUA_ClientInformation *>(paSubscriptionContext)->resetSubscription(false);
+    if (paSubscriptionId == clientInformation->mSubscriptionInfo.mSubscriptionId) {
+      clientInformation->resetSubscription(false);
+    }
   }
 
   void CUA_ClientInformation::CUA_RemoteCallbackFunctions::clientStateChangeCallback( // We omit SONAR only for the
