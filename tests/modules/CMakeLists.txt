@@ -30,3 +30,7 @@ ENDIF()
 IF(FORTE_MODULE_ETHERCAT)
   add_subdirectory(ethercat)
 ENDIF()
+
+IF(FORTE_MODULE_MCCDAQHAT)
+  add_subdirectory(mccdaqhat)
+ENDIF()
