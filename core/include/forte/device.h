@@ -16,6 +16,7 @@
 
 #include "forte/resource.h"
 #include "forte/devexec.h"
+#include "forte/io/mapper/io_mapper.h"
 
 namespace forte {
   /*!\ingroup CORE CDevice represents a device according to IEC 61499. CDevice contains
@@ -73,6 +74,10 @@ namespace forte {
         return mDeviceExecution;
       }
 
+      io::IOMapper &getIOMapper() {
+        return ioMapper;
+      }
+
       CTimerHandler &getTimer() const {
         return mDeviceExecution.getTimer();
       }
@@ -99,5 +104,7 @@ namespace forte {
        *
        */
       CDeviceExecution mDeviceExecution;
+
+      io::IOMapper ioMapper;
   };
 } // namespace forte

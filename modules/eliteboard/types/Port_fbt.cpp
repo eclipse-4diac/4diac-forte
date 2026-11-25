@@ -188,7 +188,7 @@ CDataConnection *FORTE_Port::getDOConUnchecked(TPortId) {
 void FORTE_Port::deregister_handles() {
   for (int i = 0; i < pin_cnt; i++) {
     if (mRegistered[i] != nullptr) {
-      IOMapper::getInstance().deregisterHandle(std::string(*mRegistered[i]));
+      getDevice()->getIOMapper().deregisterHandle(std::string(*mRegistered[i]));
     }
   }
 }

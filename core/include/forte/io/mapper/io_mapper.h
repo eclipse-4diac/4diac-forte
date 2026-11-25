@@ -19,7 +19,6 @@
 
 #pragma once
 
-#include "forte/util/singlet.h"
 #include <memory>
 #include <string_view>
 #include <vector>
@@ -41,10 +40,11 @@ namespace forte::io {
   };
 
   class IOMapper {
-      DECLARE_SINGLETON(IOMapper)
-
     public:
       enum Direction { In, Out };
+
+      IOMapper();
+      ~IOMapper();
 
       bool registerHandle(std::string_view paId, IOHandle &paHandle);
       void deregisterHandle(IOHandle &paHandle);
@@ -61,6 +61,14 @@ namespace forte::io {
 
       MappingDataStorage mMappings;
       arch::CSyncObject mSyncMutex;
+
+    public:
+      // IOMapper is none copyable and non moveable
+      IOMapper(const IOMapper &) = delete;
+      IOMapper &operator=(const IOMapper &) = delete;
+
+      IOMapper(IOMapper &&) = delete;
+      IOMapper &operator=(IOMapper &&) = delete;
   };
 
 } // namespace forte::io

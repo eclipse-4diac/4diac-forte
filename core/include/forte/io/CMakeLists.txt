@@ -12,10 +12,6 @@
 #      - initial API and implementation and/or initial documentation
 #############################################################################
 
-if (NOT FORTE_IO)
-    return()
-endif ()
-
 target_sources(forte-core PUBLIC
         FILE_SET HEADERS
         FILES

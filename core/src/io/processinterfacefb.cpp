@@ -20,6 +20,7 @@
 
 #include "forte/io/processinterfacefb.h"
 #include "forte/io/mapper/io_handle.h"
+#include "forte/device.h"
 
 using namespace std::string_literals;
 
@@ -116,7 +117,7 @@ namespace forte::io {
     deinitialise();
 
     // Register interface
-    if (!(mIsListening = IOMapper::getInstance().registerObserver(getId(), *this))) {
+    if (!(mIsListening = getDevice()->getIOMapper().registerObserver(getId(), *this))) {
       var_STATUS = scmFailedToRegister;
       return false_BOOL;
     }
@@ -141,7 +142,7 @@ namespace forte::io {
   CIEC_BOOL CProcessInterfaceFB::deinitialise() {
     // Deregister interface
     if (mIsListening) {
-      IOMapper::getInstance().deregisterObserver(*this);
+      getDevice()->getIOMapper().deregisterObserver(*this);
       mIsListening = false; // we are deregistered !
     }
 

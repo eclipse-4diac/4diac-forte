@@ -26,8 +26,6 @@
 #include "forte/util/criticalregion.h"
 
 namespace forte::io {
-  DEFINE_SINGLETON(IOMapper)
-
   IOMapper::IOMapper() = default;
 
   IOMapper::~IOMapper() = default;

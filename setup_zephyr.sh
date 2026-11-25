@@ -50,7 +50,6 @@ if [ -d "$forte_bin_dir" ]; then
     -DFORTE_C_INTERFACE=ON \
     -DFORTE_MODULE_CONVERT=ON \
     -DFORTE_MODULE_IEC61131=ON \
-    -DFORTE_IO=ON \
     -DFORTE_IO_ZEPHYR=ON \
     -DFORTE_COM_ETH=ON \
     -DFORTE_COM_FBDK=ON \
