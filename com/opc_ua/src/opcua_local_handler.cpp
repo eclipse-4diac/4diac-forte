@@ -86,6 +86,9 @@ namespace forte::com_infra::opc_ua {
       UA_NodeId_delete(const_cast<UA_NodeId *>(iter->mNodeId));
     }
     mNodesReferences.clear();
+
+    util::CCriticalRegion criticalRegion(mWrittenNodesMutex);
+    clearWrittenNodes();
   }
 
   void COPC_UA_Local_Handler::enableHandler() {
@@ -94,6 +97,13 @@ namespace forte::com_infra::opc_ua {
 
   void COPC_UA_Local_Handler::disableHandler() {
     stopServer();
+    // the remembered NodeIds belong to the stopped server instance
+    {
+      util::CCriticalRegion criticalRegion(mServerAccessMutex);
+      mPendingCurrentValues.clear();
+    }
+    util::CCriticalRegion criticalRegion(mWrittenNodesMutex);
+    clearWrittenNodes();
   }
 
   void COPC_UA_Local_Handler::run() {
@@ -290,6 +300,7 @@ namespace forte::com_infra::opc_ua {
             nodeReferencedToDelete = iterRef;
             if (0 != iterRef->mNodeId->namespaceIndex && mUaServer) {
               UA_Server_deleteNode(mUaServer, *iterRef->mNodeId, UA_TRUE);
+              unmarkNodeWritten(*iterRef->mNodeId);
             }
           }
           break;
@@ -412,6 +423,7 @@ namespace forte::com_infra::opc_ua {
       case CActionInfo::eDeleteObject:
       case CActionInfo::eDeleteVariable:
         referencedNodesDecrement(paActionInfo);
+        removePendingCurrentValues(paActionInfo);
         retVal = UA_STATUSCODE_GOOD;
         break;
       default:
@@ -447,6 +459,10 @@ namespace forte::com_infra::opc_ua {
       if (UA_STATUSCODE_GOOD == retVal) {
         if (nodeExists) {
           retVal = handleExistingVariable(paActionInfo, *itMain, *variables[indexOfNodePair], indexOfNodePair, paWrite);
+          if (UA_STATUSCODE_GOOD == retVal && !paWrite) {
+            // the node may already hold a value written before this reader registered
+            mPendingCurrentValues.emplace_back(&paActionInfo, indexOfNodePair);
+          }
 
           handlePresentNodes(presentNodes, referencedNodes, UA_STATUSCODE_GOOD != retVal);
         } else { // node does not exist
@@ -464,6 +480,7 @@ namespace forte::com_infra::opc_ua {
 
     if (UA_STATUSCODE_GOOD != retVal) {
       referencedNodesDecrement(paActionInfo);
+      removePendingCurrentValues(paActionInfo);
     }
 
     for (auto referenceNode : referencedNodes) {
@@ -682,6 +699,9 @@ namespace forte::com_infra::opc_ua {
     COPC_UA_Helper::convertToOPCUAType(*paData, varValue);
     UA_Variant_setScalarCopy(nodeValue, varValue, dataType);
     UA_StatusCode retVal = UA_Server_writeValue(mUaServer, paNodeId, *nodeValue);
+    if (UA_STATUSCODE_GOOD == retVal) {
+      markNodeWritten(paNodeId);
+    }
     UA_delete(varValue, dataType);
     UA_Variant_delete(nodeValue);
     return retVal;
@@ -1229,6 +1249,9 @@ namespace forte::com_infra::opc_ua {
     if (UA_STATUSCODE_GOOD == retVal) {
       if (nodeExists) {
         retVal = UA_Server_deleteNode(mUaServer, *itInstance->getNodeId(), true);
+        if (UA_STATUSCODE_GOOD == retVal) {
+          unmarkNodeWritten(*itInstance->getNodeId());
+        }
       } else {
         DEVLOG_ERROR("[OPC UA LOCAL]: The instance of the object to delete could not be found for FB %s\n",
                      paActionInfo.getLayer().getCommFB()->getFullQualifiedApplicationInstanceName(smSeparator).c_str());
@@ -1622,6 +1645,99 @@ namespace forte::com_infra::opc_ua {
     return retVal;
   }
 
+  void COPC_UA_Local_Handler::actionReady(CActionInfo &paActionInfo) {
+    // Held for the whole delivery: the server thread calls onWrite() only while holding mServerAccessMutex, so a write
+    // can neither be overwritten by the older value read here nor call recvData() of the layer at the same time.
+    util::CCriticalRegion criticalRegion(mServerAccessMutex);
+    bool eventNeeded = false;
+    for (auto it = mPendingCurrentValues.begin(); it != mPendingCurrentValues.end();) {
+      if (it->first == &paActionInfo) {
+        if (deliverCurrentValue(paActionInfo, it->second)) {
+          eventNeeded = true;
+        }
+        it = mPendingCurrentValues.erase(it);
+      } else {
+        ++it;
+      }
+    }
+    if (eventNeeded) {
+      // one event for all ports, so the reader never sees some ports with the current and some with the old value
+      paActionInfo.getLayer().getCommFB()->interruptCommFB(&paActionInfo.getLayer());
+      startNewEventChain(paActionInfo.getLayer().getCommFB());
+    }
+  }
+
+  void COPC_UA_Local_Handler::removePendingCurrentValues(const CActionInfo &paActionInfo) {
+    std::erase_if(mPendingCurrentValues,
+                  [&paActionInfo](const auto &paEntry) { return paEntry.first == &paActionInfo; });
+  }
+
+  bool COPC_UA_Local_Handler::deliverCurrentValue(CActionInfo &paActionInfo, size_t paPortIndex) {
+    std::vector<CActionInfo::CNodePairInfo> &nodePairs = paActionInfo.getNodePairInfo();
+    if (paPortIndex >= nodePairs.size() || mUaServer == nullptr) {
+      return false;
+    }
+    const UA_NodeId *nodeId = nodePairs[paPortIndex].getNodeId();
+    if (nodeId == nullptr || !isNodeWritten(*nodeId)) {
+      return false; // only the initial value of the FB that created the node, nothing written yet
+    }
+
+    bool eventNeeded = false;
+    UA_Variant value;
+    UA_Variant_init(&value);
+    const UA_StatusCode retVal = UA_Server_readValue(mUaServer, *nodeId, &value);
+    if (UA_STATUSCODE_GOOD != retVal) {
+      DEVLOG_ERROR("[OPC UA LOCAL]: Could not read the current value for RD_%zu of FB %s. Error: %s\n", paPortIndex,
+                   paActionInfo.getLayer().getCommFB()->getInstanceName(), UA_StatusCode_name(retVal));
+    } else if (!UA_Variant_isEmpty(&value)) {
+      COPC_UA_Helper::UA_RecvVariable_handle handleRecv;
+      handleRecv.mData.push_back(&value);
+      handleRecv.mOffset = paPortIndex;
+      handleRecv.mNodeId = nodeId;
+      // same as onWrite(), but only for this reader; the event is triggered by actionReady()
+      eventNeeded = (e_Nothing != paActionInfo.getLayer().recvData(static_cast<const void *>(&handleRecv), 0));
+    }
+    UA_Variant_clear(&value);
+    return eventNeeded;
+  }
+
+  void COPC_UA_Local_Handler::markNodeWritten(const UA_NodeId &paNodeId) {
+    util::CCriticalRegion criticalRegion(mWrittenNodesMutex);
+    if (mWrittenNodes.contains(paNodeId)) {
+      return;
+    }
+    UA_NodeId copy;
+    UA_NodeId_init(&copy);
+    const UA_StatusCode retVal = UA_NodeId_copy(&paNodeId, &copy);
+    if (UA_STATUSCODE_GOOD == retVal) {
+      mWrittenNodes.insert(copy);
+    } else {
+      DEVLOG_ERROR("[OPC UA LOCAL]: Could not remember a written node. Error: %s\n", UA_StatusCode_name(retVal));
+    }
+  }
+
+  void COPC_UA_Local_Handler::unmarkNodeWritten(const UA_NodeId &paNodeId) {
+    util::CCriticalRegion criticalRegion(mWrittenNodesMutex);
+    auto it = mWrittenNodes.find(paNodeId);
+    if (it != mWrittenNodes.end()) {
+      UA_NodeId owned = *it; // shallow copy, takes over the memory of the stored NodeId
+      mWrittenNodes.erase(it);
+      UA_NodeId_clear(&owned);
+    }
+  }
+
+  bool COPC_UA_Local_Handler::isNodeWritten(const UA_NodeId &paNodeId) {
+    util::CCriticalRegion criticalRegion(mWrittenNodesMutex);
+    return mWrittenNodes.contains(paNodeId);
+  }
+
+  void COPC_UA_Local_Handler::clearWrittenNodes() {
+    for (UA_NodeId owned : mWrittenNodes) { // shallow copies, they free the memory of the stored NodeIds
+      UA_NodeId_clear(&owned);
+    }
+    mWrittenNodes.clear();
+  }
+
   void COPC_UA_Local_Handler::CUA_LocalCallbackFunctions::onWrite(UA_Server *,
                                                                   const UA_NodeId *,
                                                                   void *,
@@ -1631,6 +1747,15 @@ namespace forte::com_infra::opc_ua {
                                                                   const UA_DataValue *data) {
 
     UA_VariableContext_Handle *variableCallbackHandle = static_cast<UA_VariableContext_Handle *>(nodeContext);
+    if (variableCallbackHandle == nullptr) {
+      DEVLOG_ERROR("[OPC UA LOCAL]: Write callback without node context\n");
+      return;
+    }
+
+    if (nodeId != nullptr) {
+      util::getExtEvHandler<COPC_UA_Local_Handler>(*variableCallbackHandle->mActionInfo.getLayer().getCommFB())
+          .markNodeWritten(*nodeId);
+    }
 
     COPC_UA_Helper::UA_RecvVariable_handle handleRecv;
 

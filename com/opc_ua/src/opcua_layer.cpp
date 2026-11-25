@@ -43,6 +43,7 @@ namespace forte::com_infra::opc_ua {
   COPC_UA_Layer::COPC_UA_Layer(CComLayer *paUpperLayer, CBaseCommFB *paComFB) :
       CComLayer(paUpperLayer, paComFB),
       mInterruptResp(e_Nothing),
+      mRecvFailedPending(false),
       mHandler(nullptr),
       mDataAlreadyPresent(false),
       mIsObjectNodeStruct(false) {
@@ -59,11 +60,14 @@ namespace forte::com_infra::opc_ua {
                      : static_cast<COPC_UA_HandlerAbstract *>(&getExtEvHandler<COPC_UA_Local_Handler>());
       if (checkTypesFromInterface()) {
         if (UA_STATUSCODE_GOOD == mHandler->initializeAction(*mActionInfo)) {
-          util::CCriticalRegion criticalRegion(mRDBufferMutex);
-          response = e_InitOk;
-          for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
-            mRDBuffer.emplace_back(getCommFB()->getRDs()[i]->clone(nullptr));
+          {
+            util::CCriticalRegion criticalRegion(mRDBufferMutex);
+            response = e_InitOk;
+            for (size_t i = 0; i < getCommFB()->getNumRD(); ++i) {
+              mRDBuffer.emplace_back(getCommFB()->getRDs()[i]->clone(nullptr));
+            }
           }
+          mHandler->actionReady(*mActionInfo);
         }
       } else {
         bool isPublisher;
@@ -156,6 +160,11 @@ namespace forte::com_infra::opc_ua {
       mInterruptResp = e_ProcessDataRecvFaild;
     }
 
+    if (e_ProcessDataRecvFaild == mInterruptResp) {
+      util::CCriticalRegion criticalRegion(mRDBufferMutex);
+      mRecvFailedPending = true;
+    }
+
     if (e_ProcessDataOk == mInterruptResp) {
       if (getDataAlreadyPresentRead()) {
         return e_Nothing; // won't trigger another external event on subscription
@@ -186,7 +195,9 @@ namespace forte::com_infra::opc_ua {
       }
     }
     setDataAlreadyPresentRead(false);
-    return mInterruptResp;
+    const EComResponse response = mRecvFailedPending ? e_ProcessDataRecvFaild : mInterruptResp;
+    mRecvFailedPending = false;
+    return response;
   }
 
   void COPC_UA_Layer::triggerNewEvent() {
