@@ -327,7 +327,8 @@ namespace forte::com_infra::opc_ua {
   UA_StatusCode COPC_UA_Helper::getRemoteNodeForPath(UA_Client &paClient,
                                                      const char *paNodePathConst,
                                                      UA_NodeId **paParentNodeId,
-                                                     UA_NodeId **paFoundNodeId) {
+                                                     UA_NodeId **paFoundNodeId,
+                                                     bool paReportMissing) {
     *paFoundNodeId = nullptr;
     UA_BrowsePath *browsePaths = nullptr;
     size_t folderCnt = 0;
@@ -353,10 +354,12 @@ namespace forte::com_infra::opc_ua {
             // all nodes exist, so just copy the node ids
             copyNodeIds(response.results, folderCnt, foundFolderOffset, paParentNodeId, paFoundNodeId);
           } else {
-            DEVLOG_ERROR(
-                "[OPC UA HELPER]: Could not translate browse paths for '%s' to node IDs. Not all nodes exist\n",
-                paNodePathConst);
-            retVal = UA_STATUSCODE_BADUNEXPECTEDERROR;
+            if (paReportMissing) {
+              DEVLOG_ERROR(
+                  "[OPC UA HELPER]: Could not translate browse paths for '%s' to node IDs. Not all nodes exist\n",
+                  paNodePathConst);
+            }
+            retVal = UA_STATUSCODE_BADNOMATCH; // the server answered, the node does not exist
           }
         } else {
           DEVLOG_ERROR("[OPC UA HELPER]: Could not translate browse paths for '%s' to node IDs. resultSize (%zu) != "
