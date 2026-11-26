@@ -1,0 +1,14 @@
+;<Request ID="1" Action="CREATE"><FB Name="InitoServer" Type="iec61499::system::EMB_RES" /></Request>
+InitoServer;<Request ID="2" Action="CREATE"><FB Name="Method" Type="iec61499::net::SERVER_0" /></Request>
+InitoServer;<Request ID="3" Action="WRITE"><Connection Source="1" Destination="Method.QI" /></Request>
+InitoServer;<Request ID="4" Action="WRITE"><Connection Source="opc_ua[CREATE_METHOD;/Objects/initoTest/method]" Destination="Method.ID" /></Request>
+InitoServer;<Request ID="5" Action="CREATE"><FB Name="EndSignal" Type="iec61499::net::SUBSCRIBE_0" /></Request>
+InitoServer;<Request ID="6" Action="WRITE"><Connection Source="1" Destination="EndSignal.QI" /></Request>
+InitoServer;<Request ID="7" Action="WRITE"><Connection Source="239.192.0.2:61502" Destination="EndSignal.ID" /></Request>
+InitoServer;<Request ID="8" Action="CREATE"><FB Name="STEST_END" Type="eclipse4diac::utils::STEST_END" /></Request>
+InitoServer;<Request ID="9" Action="CREATE"><Connection Source="START.COLD" Destination="Method.INIT" /></Request>
+InitoServer;<Request ID="10" Action="CREATE"><Connection Source="START.WARM" Destination="Method.INIT" /></Request>
+InitoServer;<Request ID="11" Action="CREATE"><Connection Source="Method.INITO" Destination="EndSignal.INIT" /></Request>
+InitoServer;<Request ID="12" Action="CREATE"><Connection Source="Method.IND" Destination="Method.RSP" /></Request>
+InitoServer;<Request ID="13" Action="CREATE"><Connection Source="EndSignal.IND" Destination="STEST_END.REQ" /></Request>
+InitoServer;<Request ID="14" Action="START"/>
