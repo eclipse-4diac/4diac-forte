@@ -69,6 +69,7 @@ int main(int argc, char *arg[]) {
 
   DEVLOG_INFO("FORTE is up and running\n");
   g4diacForteInstance.awaitDeviceShutdown();
+  g4diacForteInstance.deleteDevice();
   DEVLOG_INFO("FORTE finished\n");
 
   return 0;
