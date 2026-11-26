@@ -40,6 +40,10 @@ namespace forte::eclipse4diac::io::ethercat {
         return mNumInPdus;
       }
 
+      size_t numOutMappings() const {
+        return mNumOutPdus;
+      }
+
       CIEC_ECModuleConfig &Config() {
         return var_Config;
       }

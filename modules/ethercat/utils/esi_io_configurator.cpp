@@ -19,14 +19,31 @@
 #include "../types/ECDevice.h"
 #include "../types/ECModule.h"
 #include "esi_xml_utils.h"
-#include "forte/util/string_utils.h"
+#include "forte/util/criticalregion.h"
+#include "forte/util/devlog.h"
 
 #include <string>
 #include <tinyxml.h>
+#include <vector>
 
 namespace forte::eclipse4diac::io::ethercat {
 
   namespace {
+
+    const char *const scmBusAlreadyStarted = "EtherCAT bus already started, process data cannot be changed";
+    const char *const scmParentNotConfigured = "Parent EtherCAT device is not configured";
+
+    struct EsiPdoEntry {
+      uint16_t mIndex;
+      uint8_t mSubIndex;
+      uint8_t mBitLength;
+    };
+
+    struct EsiPdo {
+      uint16_t mIndex;
+      SyncDir mDir;
+      std::vector<EsiPdoEntry> mEntries;
+    };
 
     void applyVendorModulePdoEntryIndexCorrection(const std::string &paVendorName, uint16_t &paEntryIndex) {
       if (paVendorName == "SiChuan Odot Automation System Co.,Ltd.") {
@@ -36,302 +53,262 @@ namespace forte::eclipse4diac::io::ethercat {
       }
     }
 
+    const char *childText(const TiXmlElement *paElement, const char *paName) {
+      const TiXmlElement *child = paElement->FirstChildElement(paName);
+      return (child != nullptr) ? child->GetText() : nullptr;
+    }
+
+    /** IgH treats index 0 as a gap in the PDO mapping and as the end of a registration list. */
+    bool isPadding(const EsiPdoEntry &paEntry) {
+      return paEntry.mIndex == 0;
+    }
+
+    /** Selects PDOs like the IDE's ESI import, so that the n-th non-padding entry of a direction belongs to IN_n/OUT_n. */
+    void readPdos(const TiXmlElement *paElement,
+                  const char *paPdoType,
+                  SyncDir paDir,
+                  bool paModule,
+                  std::vector<EsiPdo> &paPdos) {
+      const uint32_t moduleSm = (paDir == SyncDir::Out) ? 2U : 3U;
+      for (const TiXmlElement *pdoElement = paElement->FirstChildElement(paPdoType); pdoElement != nullptr;
+           pdoElement = pdoElement->NextSiblingElement(paPdoType)) {
+        const char *smText = pdoElement->Attribute("Sm");
+        if (smText == nullptr) {
+          continue;
+        }
+        const uint32_t sm = parseEcNumber(smText);
+        if (paModule ? (sm != moduleSm) : (sm != 2U && sm != 3U)) {
+          continue;
+        }
+
+        EsiPdo pdo{static_cast<uint16_t>(parseEcNumber(childText(pdoElement, "Index"))), paDir, {}};
+        for (const TiXmlElement *entry = pdoElement->FirstChildElement("Entry"); entry != nullptr;
+             entry = entry->NextSiblingElement("Entry")) {
+          pdo.mEntries.push_back({static_cast<uint16_t>(parseEcNumber(childText(entry, "Index"))),
+                                  static_cast<uint8_t>(parseEcNumber(childText(entry, "SubIndex"))),
+                                  static_cast<uint8_t>(parseEcNumber(childText(entry, "BitLen")))});
+        }
+        paPdos.push_back(std::move(pdo));
+      }
+    }
+
+    /** Inputs (TxPdo) come first, matching the order of the FB's IN_x and OUT_x pins. */
+    std::vector<EsiPdo> readDefaultPdos(const TiXmlElement *paElement, bool paModule) {
+      std::vector<EsiPdo> pdos;
+      readPdos(paElement, "TxPdo", SyncDir::In, paModule, pdos);
+      readPdos(paElement, "RxPdo", SyncDir::Out, paModule, pdos);
+      return pdos;
+    }
+
+    bool checkMappingCount(const std::vector<EsiPdo> &paPdos, size_t paNumIn, size_t paNumOut, std::string &paErrMsg) {
+      size_t numIn = 0;
+      size_t numOut = 0;
+      for (const EsiPdo &pdo : paPdos) {
+        for (const EsiPdoEntry &entry : pdo.mEntries) {
+          if (!isPadding(entry)) {
+            ++((pdo.mDir == SyncDir::In) ? numIn : numOut);
+          }
+        }
+      }
+      if (numIn != paNumIn || numOut != paNumOut) {
+        paErrMsg = "ESI defines " + std::to_string(numIn) + " input and " + std::to_string(numOut) +
+                   " output PDO entries, but the FB has " + std::to_string(paNumIn) + " and " +
+                   std::to_string(paNumOut);
+        return false;
+      }
+      return true;
+    }
+
+    bool isMappableBitLength(uint8_t paBitLength) {
+      return paBitLength == 8 || paBitLength == 16 || paBitLength == 32 || paBitLength == 64;
+    }
+
+    /** The caller must hold the model mutex. */
+    void addProcessData(ECDeviceModel &paModel, ECBusDeviceHandler &paHandler, const std::vector<EsiPdo> &paPdos) {
+      // getSyncs() puts all outputs into one SM and all inputs into another, so this is the bit offset inside the SM.
+      unsigned int syncBitOffset[2] = {paModel.syncBitLength(SyncDir::In), paModel.syncBitLength(SyncDir::Out)};
+      uint16_t imageSize[2] = {0, 0};
+      std::vector<ECBusDeviceHandler::ProcessDataEntry> entries;
+
+      for (const EsiPdo &pdo : paPdos) {
+        const size_t dir = (pdo.mDir == SyncDir::In) ? 0 : 1;
+        paModel.addPdo(pdo.mIndex, pdo.mDir);
+        for (const EsiPdoEntry &entry : pdo.mEntries) {
+          paModel.addPdoEntry(pdo.mIndex, entry.mIndex, entry.mSubIndex, entry.mBitLength);
+          if (!isPadding(entry)) {
+            const size_t regIndex = paModel.addEntryReg();
+            const bool mappable = (syncBitOffset[dir] % 8 == 0) && isMappableBitLength(entry.mBitLength);
+            entries.push_back({(pdo.mDir == SyncDir::In) ? forte::io::IOMapper::In : forte::io::IOMapper::Out,
+                               entry.mIndex,
+                               entry.mSubIndex,
+                               entry.mBitLength,
+                               imageSize[dir],
+                               mappable,
+                               regIndex});
+            if (mappable) {
+              imageSize[dir] = static_cast<uint16_t>(imageSize[dir] + entry.mBitLength / 8);
+            }
+          }
+          syncBitOffset[dir] += entry.mBitLength;
+        }
+      }
+
+      paHandler.initBuffer(imageSize[1], imageSize[0]);
+      paHandler.mProcessDataEntries = std::move(entries);
+      paHandler.mProcessDataConfigured = true;
+    }
+
+    template<typename FB>
+    void mapProcessDataEntries(ECBusDeviceHandler &paHandler, FB &paFB) {
+      if (!paHandler.mProcessDataConfigured) {
+        return;
+      }
+      const std::vector<ECBusDeviceHandler::ProcessDataEntry> &entries = paHandler.mProcessDataEntries;
+      if (entries.size() != paFB.numInMappings() + paFB.numOutMappings()) {
+        DEVLOG_ERROR("ethercat[EsiIoConfigurator]: Device %zu has %zu PDO entries, but the FB has %zu pins.\n",
+                     paHandler.index(), entries.size(), paFB.numInMappings() + paFB.numOutMappings());
+        return;
+      }
+
+      for (size_t i = 0; i < entries.size(); ++i) {
+        const auto *idVar = static_cast<const CIEC_WSTRING *>(paFB.mappingDi(static_cast<TPortId>(i)));
+        const char *idText = idVar->getValue();
+        if (nullptr == idText || idText[0] == '\0') {
+          continue;
+        }
+
+        const ECBusDeviceHandler::ProcessDataEntry &entry = entries[i];
+        if (!entry.mMappable) {
+          DEVLOG_ERROR("ethercat[EsiIoConfigurator]: PDO entry 0x%04X:%02X (%u bit) of device %zu is not byte aligned "
+                       "or has no matching IO type, '%s' is not mapped.\n",
+                       static_cast<unsigned int>(entry.mIndex), static_cast<unsigned int>(entry.mSubIndex),
+                       static_cast<unsigned int>(entry.mBitLength), paHandler.index(), idText);
+          continue;
+        }
+
+        std::string handleId{idText};
+        ECBusHandler::HandleDescriptor desc(handleId,
+                                            entry.mDirection,
+                                            paHandler.index(),
+                                            entry.mImageOffset,
+                                            static_cast<uint8_t>(entry.mBitLength / 8),
+                                            entry.mIndex,
+                                            entry.mSubIndex,
+                                            entry.mEntryRegIndex);
+        paFB.registerMappedHandle(desc);
+      }
+    }
+
   } // namespace
 
   EsiIoConfigurator::EsiIoConfigurator(EsiCatalog &paCatalog) : mCatalog(paCatalog) {}
 
-  bool EsiIoConfigurator::validateDevice(uint32_t paProductCode, std::string &paErrMsg) {
-    return mCatalog.validateDevice(paProductCode, paErrMsg);
-  }
-
-  bool EsiIoConfigurator::validateModule(uint32_t paModuleIdent, std::string &paErrMsg) {
-    return mCatalog.validateModule(paModuleIdent, paErrMsg);
-  }
-
-  void EsiIoConfigurator::getPdoSizeInfo(TiXmlElement *paElement,
-                                           FORTE_ECDevice &paDevice,
-                                           uint16_t &paRcvBufferSize,
-                                           uint16_t &paSendBufferSize) {
-    int inputIndex = 0;
-    for (auto *tx = paElement->FirstChildElement("TxPdo"); tx; tx = tx->NextSiblingElement("TxPdo")) {
-      if (!tx->Attribute("Sm")) {
-        continue;
-      }
-      for (auto *entry = tx->FirstChildElement("Entry"); entry; entry = entry->NextSiblingElement("Entry")) {
-        const auto *idVar = static_cast<const CIEC_WSTRING *>(paDevice.mappingDi(inputIndex++));
-        if (!idVar->getValue() || idVar->getValue()[0] == '\0') {
-          continue;
-        }
-        const char *bitLen = entry->FirstChildElement("BitLen")->GetText();
-        paRcvBufferSize += static_cast<uint16_t>(util::strtoul(bitLen, nullptr, 10));
-      }
-    }
-
-    inputIndex = static_cast<int>(paDevice.numInMappings());
-    for (auto *rx = paElement->FirstChildElement("RxPdo"); rx; rx = rx->NextSiblingElement("RxPdo")) {
-      if (!rx->Attribute("Sm")) {
-        continue;
-      }
-      for (auto *entry = rx->FirstChildElement("Entry"); entry; entry = entry->NextSiblingElement("Entry")) {
-        const auto *idVar = static_cast<const CIEC_WSTRING *>(paDevice.mappingDi(inputIndex++));
-        if (!idVar->getValue() || idVar->getValue()[0] == '\0') {
-          continue;
-        }
-        const char *bitLen = entry->FirstChildElement("BitLen")->GetText();
-        paSendBufferSize += static_cast<uint16_t>(util::strtoul(bitLen, nullptr, 10));
-      }
-    }
-    paRcvBufferSize /= 8;
-    paSendBufferSize /= 8;
-  }
-
-  void EsiIoConfigurator::getPdoSizeInfo(TiXmlElement *paElement,
-                                           FORTE_ECModule &paDevice,
-                                           uint16_t &paRcvBufferSize,
-                                           uint16_t &paSendBufferSize) {
-    int inputIndex = 0;
-    for (auto *tx = paElement->FirstChildElement("TxPdo"); tx; tx = tx->NextSiblingElement("TxPdo")) {
-      if (!tx->Attribute("Sm")) {
-        continue;
-      }
-      for (auto *entry = tx->FirstChildElement("Entry"); entry; entry = entry->NextSiblingElement("Entry")) {
-        const auto *idVar = static_cast<const CIEC_WSTRING *>(paDevice.mappingDi(inputIndex++));
-        if (!idVar->getValue() || idVar->getValue()[0] == '\0') {
-          continue;
-        }
-        const char *bitLen = entry->FirstChildElement("BitLen")->GetText();
-        paRcvBufferSize += static_cast<uint16_t>(util::strtoul(bitLen, nullptr, 10));
-      }
-    }
-
-    inputIndex = static_cast<int>(paDevice.numInMappings());
-    for (auto *rx = paElement->FirstChildElement("RxPdo"); rx; rx = rx->NextSiblingElement("RxPdo")) {
-      if (!rx->Attribute("Sm")) {
-        continue;
-      }
-      for (auto *entry = rx->FirstChildElement("Entry"); entry; entry = entry->NextSiblingElement("Entry")) {
-        const auto *idVar = static_cast<const CIEC_WSTRING *>(paDevice.mappingDi(inputIndex++));
-        if (!idVar->getValue() || idVar->getValue()[0] == '\0') {
-          continue;
-        }
-        const char *bitLen = entry->FirstChildElement("BitLen")->GetText();
-        paSendBufferSize += static_cast<uint16_t>(util::strtoul(bitLen, nullptr, 10));
-      }
-    }
-    paRcvBufferSize /= 8;
-    paSendBufferSize /= 8;
-  }
-
-  void EsiIoConfigurator::parseDevicePdo(const std::string &paPdoType,
-                                         TiXmlElement *paElement,
-                                         ECDeviceHandler *paDeviceHandler,
-                                         FORTE_ECDevice &paDevice,
-                                         bool paRemapOnly) {
-    const SyncDir dir = (paPdoType == "RxPdo") ? SyncDir::Out : SyncDir::In;
-    int diIndex = (dir == SyncDir::In) ? 0 : static_cast<int>(paDevice.numInMappings());
-    int handleIndex = 0;
-    int entryIndexInInterface = 0;
-    int offset = 0;
-    for (auto *pdoElement = paElement->FirstChildElement(paPdoType.c_str()); pdoElement;
-         pdoElement = pdoElement->NextSiblingElement(paPdoType.c_str())) {
-      if (!pdoElement->Attribute("Sm")) {
-        continue;
-      }
-      const char *indexStr = pdoElement->FirstChildElement("Index")->GetText();
-      const uint16_t pdoIndex = static_cast<uint16_t>(parseEcNumber(indexStr));
-      if (!paRemapOnly) {
-        paDeviceHandler->mECDeviceModel.addPdo(pdoIndex, dir);
-      }
-
-      for (auto *entry = pdoElement->FirstChildElement("Entry"); entry; entry = entry->NextSiblingElement("Entry")) {
-        const char *entryIndexText = entry->FirstChildElement("Index")->GetText();
-        const uint16_t entryIndex = static_cast<uint16_t>(parseEcNumber(entryIndexText));
-        const uint8_t subIndex =
-            static_cast<uint8_t>(util::strtoul(entry->FirstChildElement("SubIndex")->GetText(), nullptr, 10));
-        const uint8_t bitLen =
-            static_cast<uint8_t>(util::strtoul(entry->FirstChildElement("BitLen")->GetText(), nullptr, 10));
-        if (!paRemapOnly) {
-          paDeviceHandler->mECDeviceModel.addPdoEntry(pdoIndex, entryIndex, subIndex, bitLen);
-        }
-
-        auto *idVar = static_cast<CIEC_WSTRING *>(paDevice.mappingDi(diIndex + entryIndexInInterface++));
-        const char *idText = idVar->getValue();
-        if (nullptr == idText || idText[0] == '\0') {
-          continue;
-        }
-
-        std::string handleId{idText};
-        ECBusHandler::HandleDescriptor desc(handleId,
-                                            dir == SyncDir::In ? forte::io::IOMapper::Direction::In
-                                                               : forte::io::IOMapper::Direction::Out,
-                                            paDeviceHandler->index(),
-                                            static_cast<uint8_t>(offset),
-                                            static_cast<uint8_t>(bitLen / 8));
-        paDevice.registerMappedHandle(desc);
-        offset += bitLen / 8;
-
-        ECDeviceHandle *handle = (dir == SyncDir::In) ? paDeviceHandler->getInputHandle(handleIndex)
-                                                      : paDeviceHandler->getOutputHandle(handleIndex);
-        if (handle) {
-          if (paRemapOnly) {
-            paDeviceHandler->mECDeviceModel.restoreHandleDomainOffset(entryIndex, subIndex, handle->ecDomainOffsetPtr());
-          } else {
-            paDeviceHandler->mECDeviceModel.addEntryReg(entryIndex, subIndex, handle->ecDomainOffsetPtr());
-          }
-        }
-        handleIndex++;
-      }
-    }
-  }
-
-  void EsiIoConfigurator::parseModulePdo(const std::string &paPdoType,
-                                         TiXmlElement *paElement,
-                                         ECDeviceHandler *paDeviceHandler,
-                                         ECModuleHandler *paModuleHandler,
-                                         FORTE_ECModule &paDevice,
-                                         bool paRemapOnly) {
-    const std::string &vendorName = mCatalog.vendorForModule(paModuleHandler->moduleIdent());
-
-    const SyncDir dir = (paPdoType == "RxPdo") ? SyncDir::Out : SyncDir::In;
-    int diIndex = (dir == SyncDir::In) ? 0 : static_cast<int>(paDevice.numInMappings());
-    int handleIndex = 0;
-    int entryIndexInInterface = 0;
-    int offset = 0;
-    for (auto *pdoElement = paElement->FirstChildElement(paPdoType.c_str()); pdoElement;
-         pdoElement = pdoElement->NextSiblingElement(paPdoType.c_str())) {
-      if (!pdoElement->Attribute("Sm")) {
-        continue;
-      }
-      uint16_t pdoIndex = static_cast<uint16_t>(parseEcNumber(pdoElement->FirstChildElement("Index")->GetText()));
-      pdoIndex = static_cast<uint16_t>(pdoIndex + paDeviceHandler->mECDeviceModel.mSlotPdoInc * paModuleHandler->slot());
-      if (!paRemapOnly) {
-        paDeviceHandler->mECDeviceModel.addPdo(pdoIndex, dir);
-      }
-
-      for (auto *entry = pdoElement->FirstChildElement("Entry"); entry; entry = entry->NextSiblingElement("Entry")) {
-        const char *entryIndexText = entry->FirstChildElement("Index")->GetText();
-        uint16_t entryIndex = static_cast<uint16_t>(parseEcNumber(entryIndexText));
-        const uint8_t subIndex =
-            static_cast<uint8_t>(util::strtoul(entry->FirstChildElement("SubIndex")->GetText(), nullptr, 10));
-        const uint8_t bitLen =
-            static_cast<uint8_t>(util::strtoul(entry->FirstChildElement("BitLen")->GetText(), nullptr, 10));
-        applyVendorModulePdoEntryIndexCorrection(vendorName, entryIndex);
-        entryIndex =
-            static_cast<uint16_t>(entryIndex + paDeviceHandler->mECDeviceModel.mSlotIndexInc * paModuleHandler->slot());
-        if (!paRemapOnly) {
-          paDeviceHandler->mECDeviceModel.addPdoEntry(pdoIndex, entryIndex, subIndex, bitLen);
-        }
-
-        auto *idVar = static_cast<CIEC_WSTRING *>(paDevice.mappingDi(diIndex + entryIndexInInterface++));
-        const char *idText = idVar->getValue();
-        if (nullptr == idText || idText[0] == '\0') {
-          continue;
-        }
-
-        std::string handleId{idText};
-        ECBusHandler::HandleDescriptor desc(handleId,
-                                            dir == SyncDir::In ? forte::io::IOMapper::Direction::In
-                                                               : forte::io::IOMapper::Direction::Out,
-                                            paModuleHandler->index(),
-                                            static_cast<uint8_t>(offset),
-                                            static_cast<uint8_t>(bitLen / 8));
-        paDevice.registerMappedHandle(desc);
-        offset += bitLen / 8;
-
-        ECDeviceHandle *handle = (dir == SyncDir::In) ? paModuleHandler->getInputHandle(handleIndex)
-                                                      : paModuleHandler->getOutputHandle(handleIndex);
-        if (handle) {
-          if (paRemapOnly) {
-            paDeviceHandler->mECDeviceModel.restoreHandleDomainOffset(entryIndex, subIndex, handle->ecDomainOffsetPtr());
-          } else {
-            paDeviceHandler->mECDeviceModel.addEntryReg(entryIndex, subIndex, handle->ecDomainOffsetPtr());
-          }
-        }
-        handleIndex++;
-      }
-    }
-  }
-
-  void EsiIoConfigurator::initDeviceIOHandles(uint32_t paProductCode,
-                                              ECDeviceHandler *paDeviceHandler,
-                                              FORTE_ECDevice &paDevice) {
-    std::string errMsg;
-    TiXmlElement *deviceElement = mCatalog.resolveDevice(paProductCode, errMsg);
+  bool EsiIoConfigurator::configureDevice(uint32_t paProductCode,
+                                          ECDeviceHandler *paDeviceHandler,
+                                          FORTE_ECDevice &paDevice,
+                                          std::string &paErrMsg) {
+    TiXmlElement *deviceElement = mCatalog.resolveDevice(paProductCode, paErrMsg);
     if (nullptr == deviceElement) {
-      return;
+      return false;
+    }
+
+    const std::vector<EsiPdo> pdos = readDefaultPdos(deviceElement, false);
+    if (!checkMappingCount(pdos, paDevice.numInMappings(), paDevice.numOutMappings(), paErrMsg)) {
+      DEVLOG_ERROR("ethercat[EsiIoConfigurator]: Device %zu (ProductCode 0x%08X): %s.\n",
+                   paDeviceHandler->index(), paProductCode, paErrMsg.c_str());
+      return false;
+    }
+
+    if (paDeviceHandler->mProcessDataConfigured) {
+      return true;
+    }
+
+    ECDeviceModel &model = paDeviceHandler->mECDeviceModel;
+    util::CCriticalRegion criticalRegion(model.mMutex);
+    if (model.mFrozen) {
+      paErrMsg = scmBusAlreadyStarted;
+      return false;
     }
 
     if (paDeviceHandler->mDeviceType == ECBusDeviceHandler::DeviceType::ECCoupler) {
-      if (auto *slots = deviceElement->FirstChildElement("Slots")) {
-        paDeviceHandler->mECDeviceModel.mSlotIndexInc =
-            static_cast<uint32_t>(util::strtoul(slots->Attribute("SlotIndexIncrement"), nullptr, 10));
-        paDeviceHandler->mECDeviceModel.mSlotPdoInc =
-            static_cast<uint32_t>(util::strtoul(slots->Attribute("SlotPdoIncrement"), nullptr, 10));
+      if (const TiXmlElement *slots = deviceElement->FirstChildElement("Slots")) {
+        model.mSlotIndexInc = parseEcNumber(slots->Attribute("SlotIndexIncrement"));
+        model.mSlotPdoInc = parseEcNumber(slots->Attribute("SlotPdoIncrement"));
       }
     }
 
     uint8_t smIndex = 0;
-    for (auto *sm = deviceElement->FirstChildElement("Sm"); sm; sm = sm->NextSiblingElement("Sm")) {
-      if (!sm->GetText()) {
-        smIndex++;
+    for (const TiXmlElement *sm = deviceElement->FirstChildElement("Sm"); sm != nullptr;
+         sm = sm->NextSiblingElement("Sm"), ++smIndex) {
+      const char *smText = sm->GetText();
+      if (nullptr == smText) {
         continue;
       }
-      const std::string smText = sm->GetText();
-      if (smText == "Outputs" || smText == "Inputs") {
-        paDeviceHandler->mECDeviceModel.addSync(smIndex, smText == "Outputs" ? SyncDir::Out : SyncDir::In);
+      const std::string smType{smText};
+      if (smType == "Outputs" || smType == "Inputs") {
+        model.addSync(smIndex, smType == "Outputs" ? SyncDir::Out : SyncDir::In);
       }
-      smIndex++;
     }
 
-    uint16_t recvSize = 0;
-    uint16_t sendSize = 0;
-    getPdoSizeInfo(deviceElement, paDevice, recvSize, sendSize);
-    paDeviceHandler->initBuffer(sendSize, recvSize);
-    parseDevicePdo("TxPdo", deviceElement, paDeviceHandler, paDevice);
-    parseDevicePdo("RxPdo", deviceElement, paDeviceHandler, paDevice);
+    addProcessData(model, *paDeviceHandler, pdos);
+    return true;
   }
 
-  void EsiIoConfigurator::initModuleIOHandles(uint32_t paModuleIdent,
-                                              ECDeviceHandler *paDeviceHandler,
-                                              ECModuleHandler *paModuleHandler,
-                                              FORTE_ECModule &paDevice) {
-    std::string errMsg;
-    TiXmlElement *moduleElement = mCatalog.resolveModule(paModuleIdent, errMsg);
+  bool EsiIoConfigurator::configureModule(uint32_t paModuleIdent,
+                                          ECDeviceHandler *paDeviceHandler,
+                                          ECModuleHandler *paModuleHandler,
+                                          FORTE_ECModule &paModule,
+                                          std::string &paErrMsg) {
+    TiXmlElement *moduleElement = mCatalog.resolveModule(paModuleIdent, paErrMsg);
     if (nullptr == moduleElement) {
-      return;
+      return false;
     }
 
-    uint16_t recvSize = 0;
-    uint16_t sendSize = 0;
-    getPdoSizeInfo(moduleElement, paDevice, recvSize, sendSize);
-    paModuleHandler->initBuffer(sendSize, recvSize);
-    parseModulePdo("TxPdo", moduleElement, paDeviceHandler, paModuleHandler, paDevice);
-    parseModulePdo("RxPdo", moduleElement, paDeviceHandler, paModuleHandler, paDevice);
+    std::vector<EsiPdo> pdos = readDefaultPdos(moduleElement, true);
+    if (!checkMappingCount(pdos, paModule.numInMappings(), paModule.numOutMappings(), paErrMsg)) {
+      DEVLOG_ERROR("ethercat[EsiIoConfigurator]: Module %zu (ModuleIdent 0x%08X): %s.\n",
+                   paModuleHandler->index(), paModuleIdent, paErrMsg.c_str());
+      return false;
+    }
+
+    if (paModuleHandler->mProcessDataConfigured) {
+      return true;
+    }
+    if (!paDeviceHandler->mProcessDataConfigured) {
+      paErrMsg = scmParentNotConfigured;
+      return false;
+    }
+
+    ECDeviceModel &model = paDeviceHandler->mECDeviceModel;
+    util::CCriticalRegion criticalRegion(model.mMutex);
+    if (model.mFrozen) {
+      paErrMsg = scmBusAlreadyStarted;
+      return false;
+    }
+
+    const std::string &vendorName = mCatalog.vendorForModule(paModuleIdent);
+    const uint32_t slot = paModuleHandler->slot();
+    for (EsiPdo &pdo : pdos) {
+      pdo.mIndex = static_cast<uint16_t>(pdo.mIndex + model.mSlotPdoInc * slot);
+      for (EsiPdoEntry &entry : pdo.mEntries) {
+        if (isPadding(entry)) {
+          continue;
+        }
+        applyVendorModulePdoEntryIndexCorrection(vendorName, entry.mIndex);
+        entry.mIndex = static_cast<uint16_t>(entry.mIndex + model.mSlotIndexInc * slot);
+      }
+    }
+
+    addProcessData(model, *paModuleHandler, pdos);
+    return true;
   }
 
-  void EsiIoConfigurator::remapDeviceIOHandles(uint32_t paProductCode,
-                                               ECDeviceHandler *paDeviceHandler,
-                                               FORTE_ECDevice &paDevice) {
-    std::string errMsg;
-    TiXmlElement *deviceElement = mCatalog.resolveDevice(paProductCode, errMsg);
-    if (nullptr == deviceElement) {
-      return;
-    }
-    parseDevicePdo("TxPdo", deviceElement, paDeviceHandler, paDevice, true);
-    parseDevicePdo("RxPdo", deviceElement, paDeviceHandler, paDevice, true);
+  void EsiIoConfigurator::mapDeviceIOHandles(ECDeviceHandler *paDeviceHandler, FORTE_ECDevice &paDevice) {
+    mapProcessDataEntries(*paDeviceHandler, paDevice);
   }
 
-  void EsiIoConfigurator::remapModuleIOHandles(uint32_t paModuleIdent,
-                                               ECDeviceHandler *paDeviceHandler,
-                                               ECModuleHandler *paModuleHandler,
-                                               FORTE_ECModule &paDevice) {
-    std::string errMsg;
-    TiXmlElement *moduleElement = mCatalog.resolveModule(paModuleIdent, errMsg);
-    if (nullptr == moduleElement) {
-      return;
-    }
-    parseModulePdo("TxPdo", moduleElement, paDeviceHandler, paModuleHandler, paDevice, true);
-    parseModulePdo("RxPdo", moduleElement, paDeviceHandler, paModuleHandler, paDevice, true);
+  void EsiIoConfigurator::mapModuleIOHandles(ECModuleHandler *paModuleHandler, FORTE_ECModule &paModule) {
+    mapProcessDataEntries(*paModuleHandler, paModule);
   }
 
 } // namespace forte::eclipse4diac::io::ethercat

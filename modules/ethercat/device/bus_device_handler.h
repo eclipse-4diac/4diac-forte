@@ -33,6 +33,16 @@ namespace forte::eclipse4diac::io::ethercat {
 
       struct Config {};
 
+      struct ProcessDataEntry {
+        forte::io::IOMapper::Direction mDirection;
+        uint16_t mIndex;
+        uint8_t mSubIndex;
+        uint8_t mBitLength;
+        uint16_t mImageOffset;
+        bool mMappable;
+        size_t mEntryRegIndex;
+      };
+
       class Delegate {
         public:
           virtual void onDeviceStatus(DeviceStatus paStatus, DeviceStatus paOldStatus) = 0;
@@ -63,14 +73,6 @@ namespace forte::eclipse4diac::io::ethercat {
 
       void update(uint8_t *paECDomianPd);
 
-      ECDeviceHandle *getInputHandle(size_t paIndex) {
-        return getHandle(mInputs, paIndex);
-      }
-
-      ECDeviceHandle *getOutputHandle(size_t paIndex) {
-        return getHandle(mOutputs, paIndex);
-      }
-
       void addHandle(std::unique_ptr<ECDeviceHandle> paHandle);
 
       void dropHandles();
@@ -81,13 +83,16 @@ namespace forte::eclipse4diac::io::ethercat {
 
       void initBuffer(uint16_t paDataSendLength, uint16_t paDataRecvLength);
 
+      /** One entry per IN_x/OUT_x pin of the FB (inputs first), filled once together with the process image. */
+      std::vector<ProcessDataEntry> mProcessDataEntries;
+      bool mProcessDataConfigured = false;
+
     protected:
       ECBusDeviceHandler(ECBusHandler *paBus, DeviceType paDeviceType, size_t paDeviceIndex);
       virtual ~ECBusDeviceHandler();
 
     private:
       void addHandle(std::vector<std::unique_ptr<ECDeviceHandle>> &paList, std::unique_ptr<ECDeviceHandle> paHandle);
-      ECDeviceHandle *getHandle(std::vector<std::unique_ptr<ECDeviceHandle>> &paList, size_t paIndex);
       void deregisterHandles(forte::io::IOMapper &mapper);
 
       size_t mDeviceIndex;
