@@ -1,5 +1,6 @@
 #*******************************************************************************
 # Copyright (c) 2018 TU Wien/ACIN
+# Copyright (c) 2026 Martin Melik Merkumians
 # This program and the accompanying materials are made available under the
 # terms of the Eclipse Public License 2.0 which is available at
 # http://www.eclipse.org/legal/epl-2.0.
@@ -8,6 +9,8 @@
 #
 # Contributors:
 #    Martin Melik-Merkumians  - initial API and implementation and/or initial documentation
+#    Martin Melik Merkumians
+#      - register generic MUX regression tests
 # *******************************************************************************/
 
 #############################################################################
@@ -20,6 +23,7 @@ forte_test_add_sourcefile_cpp(F_LOWER_BOUND_tester.cpp)
 forte_test_add_sourcefile_cpp(F_UPPER_BOUND_tester.cpp)
 forte_test_add_sourcefile_cpp(F_TRUNC_tester.cpp)
 forte_test_add_sourcefile_cpp(F_MUX_2_tester.cpp)
+forte_test_add_sourcefile_cpp(GEN_F_MUX_tester.cpp)
 forte_test_add_sourcefile_cpp(GEN_ADD_tester.cpp)
 forte_test_add_sourcefile_cpp(F_TIME_IN_S_TO_LINT_tester.cpp F_TIME_IN_MS_TO_LINT_tester.cpp)
 forte_test_add_sourcefile_cpp(F_TIME_IN_US_TO_LINT_tester.cpp F_TIME_IN_NS_TO_LINT_tester.cpp)
