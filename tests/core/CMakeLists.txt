@@ -5,7 +5,7 @@
 # http://www.eclipse.org/legal/epl-2.0.
 #
 # SPDX-License-Identifier: EPL-2.0
-# 
+#
 # Contributors:
 #    Ingo Hegny, Alois Zoitl, Stanislav Meduna - initial API and implementation and/or initial documentation
 # *******************************************************************************/
@@ -35,5 +35,6 @@ forte_test_add_subdirectory(datatypes)
 forte_test_add_subdirectory(com)
 forte_test_add_subdirectory(cominfra)
 forte_test_add_subdirectory(fbtests)
+forte_test_add_subdirectory(io)
 forte_test_add_subdirectory(util)
 forte_test_add_subdirectory(trace)
