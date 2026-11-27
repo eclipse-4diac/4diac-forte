@@ -61,12 +61,6 @@ namespace forte::eclipse4diac::io::ethercat {
       var_BusAdapterOut("BusAdapterOut"_STRID, *this, 0) {
   };
 
-  FORTE_ECController::~FORTE_ECController() {
-    // var_STATUS is destroyed before ~IOConfigFBController runs. Shut down the bus here while
-    // STATUS()/getDO() are still valid; base destructor deInit() then finds mController == nullptr.
-    deInit(nullptr, true);
-  }
-
   void FORTE_ECController::setInitialValues() {
     var_QI = 0_BOOL;
     var_Enable = 0_BOOL;
@@ -190,5 +184,5 @@ namespace forte::eclipse4diac::io::ethercat {
     }
     IOConfigFBMultiMaster::executeEvent(paEIID, paECET);
   }
-      
+
 }
