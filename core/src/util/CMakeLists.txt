@@ -25,6 +25,8 @@ endif ()
 
 option(FORTE_LOGGER_READABLE_TIME "Logger time in IEC 61131-3 date time literal" OFF)
 
+option(FORTE_LOGGER_INSTANT_FLUSH "Flushes the stderr and stdout buffer immediately" OFF)
+
 option(FORTE_FORMAT_REAL_PRINTF "Use printf instead of std::to_chars for floating-point values" OFF)
 mark_as_advanced(FORTE_FORMAT_REAL_PRINTF)
 
@@ -63,3 +65,12 @@ if (FORTE_STACKTRACE)
         endif ()
     endif ()
 endif ()
+
+
+if(FORTE_LOGGER_INSTANT_FLUSH)
+    if(NOT(WIN32) OR NOT(MINGW))
+        target_compile_definitions(forte-core PRIVATE "FORTE_LOGGER_INSTANT_FLUSH")
+    else()
+        message(WARNING "On Windows the instant flushing of stderr and stdout is the default.")
+    endif()
+endif()

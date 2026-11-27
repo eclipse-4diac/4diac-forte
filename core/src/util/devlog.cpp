@@ -59,7 +59,7 @@ namespace forte::util {
     void printLogMessage(E_MsgLevel paLevel, const char *paMessage) {
       (paLevel == E_MsgLevel::Error ? std::cerr : std::cout)
           << scLogLevel[static_cast<int>(paLevel)] << ": " << arch::getRealtimeString() << ": " << paMessage;
-#ifdef WIN32
+#if defined(WIN32) || defined(FORTE_LOGGER_INSTANT_FLUSH)
       (paLevel == E_MsgLevel::Error ? std::cerr : std::cout) << std::flush;
 #endif
     }
