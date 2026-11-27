@@ -50,9 +50,16 @@ namespace forte::com::impl {
   ComResultValue<std::size_t> UDPListenChannel::recv() {
     sockaddr_storage remoteAddr{};
     socklen_t remoteAddrLen = sizeof(remoteAddr);
-    const ssize_t bytesReceived =
-        recvfrom(getSocket().get(), getBuffer().data() + getBuffer().size(), getMaxReceiveSize() - getBuffer().size(),
-                 0, reinterpret_cast<sockaddr *>(&remoteAddr), &remoteAddrLen);
+    ssize_t bytesReceived;
+    if (getBuffer().size() >= getMaxReceiveSize()) {
+      char byte;
+      bytesReceived = recvfrom(getSocket().get(), &byte, sizeof(byte), MSG_PEEK,
+                               reinterpret_cast<sockaddr *>(&remoteAddr), &remoteAddrLen);
+    } else {
+      bytesReceived =
+          recvfrom(getSocket().get(), getBuffer().data() + getBuffer().size(), getMaxReceiveSize() - getBuffer().size(),
+                   0, reinterpret_cast<sockaddr *>(&remoteAddr), &remoteAddrLen);
+    }
     if (bytesReceived < 0) {
       return {.mResult = net::mapSocketError(errno, ComResult::RecvFailed)};
     }
@@ -61,6 +68,9 @@ namespace forte::com::impl {
         return {.mResult = net::mapSocketError(errno, ComResult::RecvFailed)};
       }
       mConnected = true;
+    }
+    if (getBuffer().size() >= getMaxReceiveSize()) {
+      return {.mResult = ComResult::WouldBlock};
     }
     return {.mValue = static_cast<std::size_t>(bytesReceived)};
   }

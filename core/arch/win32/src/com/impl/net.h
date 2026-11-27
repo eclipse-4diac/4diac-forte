@@ -37,4 +37,5 @@ namespace forte::com::impl::net {
 
   ComResultValue<Socket> pollParallel(ParallelConnectionState<Socket> &paState);
 
+  ComResult probeStreamReceive(const Socket &paSocket) noexcept;
 } // namespace forte::com::impl::net

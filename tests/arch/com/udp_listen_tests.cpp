@@ -72,6 +72,86 @@ namespace forte::com::test {
     BOOST_TEST(mChannel.close() == ComResult::Ok);
   }
 
+  BOOST_AUTO_TEST_CASE(DISABLED_RECEIVING_PRESERVES_PENDING_DATAGRAM) {
+    BOOST_TEST_REQUIRE(mChannel.setMaxReceiveSize(0) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(mChannel.setMinReceiveSize(1) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(mChannel.open("127.0.0.1:0", {}) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(getBoundLoopbackAddress(mChannel.getSocket(), mAddress));
+
+    const Socket client{::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)};
+    BOOST_TEST_REQUIRE(static_cast<bool>(client));
+    BOOST_TEST_REQUIRE(client.setNonBlocking() == 0);
+    const Socket otherClient{::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)};
+    BOOST_TEST_REQUIRE(static_cast<bool>(otherClient));
+    BOOST_TEST_REQUIRE(otherClient.setNonBlocking() == 0);
+    BOOST_TEST_REQUIRE(sendDatagram(client, mAddress, "pending"));
+    BOOST_TEST_REQUIRE(waitForSocketEvent(mChannel.getSocket(), SocketReadEvent, Clock::now() + gcReadinessTimeout));
+    BOOST_TEST(mChannel.poll() == ComResult::WouldBlock);
+
+    std::string response{"reply"};
+    BOOST_TEST(mChannel.send(ComBuffer(response)) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(receiveDatagram(client, response));
+    BOOST_TEST_REQUIRE(sendDatagram(otherClient, mAddress, "other"));
+    response = "first peer";
+    BOOST_TEST(mChannel.send(ComBuffer(response)) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(receiveDatagram(client, response));
+    BOOST_TEST(!waitForSocketEvent(otherClient, SocketReadEvent, Clock::now() + std::chrono::milliseconds(50)));
+
+    BOOST_TEST_REQUIRE(mChannel.setMaxReceiveSize(32) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(waitForChannelData(mChannel));
+    BOOST_TEST(mObserver.mReceived == "pending");
+    BOOST_TEST(mChannel.close() == ComResult::Ok);
+  }
+
+  BOOST_AUTO_TEST_CASE(DISABLED_RECEIVING_IDENTIFIES_EMPTY_DATAGRAM_PEER) {
+    BOOST_TEST_REQUIRE(mChannel.setMaxReceiveSize(0) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(mChannel.setMinReceiveSize(0) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(mChannel.open("127.0.0.1:0", {}) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(getBoundLoopbackAddress(mChannel.getSocket(), mAddress));
+
+    const Socket client{::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)};
+    BOOST_TEST_REQUIRE(static_cast<bool>(client));
+    BOOST_TEST_REQUIRE(client.setNonBlocking() == 0);
+    BOOST_TEST_REQUIRE(sendDatagram(client, mAddress, {}));
+    BOOST_TEST_REQUIRE(waitForSocketEvent(mChannel.getSocket(), SocketReadEvent, Clock::now() + gcReadinessTimeout));
+    BOOST_TEST(mChannel.poll() == ComResult::WouldBlock);
+
+    std::string response{"reply"};
+    BOOST_TEST(mChannel.send(ComBuffer(response)) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(receiveDatagram(client, response));
+
+    BOOST_TEST_REQUIRE(mChannel.setMaxReceiveSize(32) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(waitForChannelData(mChannel));
+    BOOST_TEST(mObserver.mReceived.empty());
+    BOOST_TEST(mChannel.close() == ComResult::Ok);
+  }
+
+  BOOST_AUTO_TEST_CASE(FULL_AND_REDUCED_RECEIVE_LIMIT_PRESERVE_PENDING_DATAGRAM) {
+    BOOST_TEST_REQUIRE(mChannel.setMaxReceiveSize(4) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(mChannel.setMinReceiveSize(4) == ComResult::Ok);
+    mObserver.mReceiveResult = ComResult::More;
+    BOOST_TEST_REQUIRE(mChannel.open("127.0.0.1:0", {}) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(getBoundLoopbackAddress(mChannel.getSocket(), mAddress));
+
+    const Socket client{::socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)};
+    BOOST_TEST_REQUIRE(static_cast<bool>(client));
+    BOOST_TEST_REQUIRE(client.setNonBlocking() == 0);
+    BOOST_TEST_REQUIRE(sendDatagram(client, mAddress, "part"));
+    BOOST_TEST_REQUIRE(waitForChannelData(mChannel));
+    BOOST_TEST(mObserver.mReceived == "part");
+
+    BOOST_TEST_REQUIRE(sendDatagram(client, mAddress, "ial"));
+    BOOST_TEST(mChannel.poll() == ComResult::WouldBlock);
+    BOOST_TEST_REQUIRE(mChannel.setMaxReceiveSize(2) == ComResult::Ok);
+    BOOST_TEST(mChannel.poll() == ComResult::WouldBlock);
+
+    BOOST_TEST_REQUIRE(mChannel.setMaxReceiveSize(16) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(mChannel.setMinReceiveSize(5) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(waitForChannelData(mChannel));
+    BOOST_TEST(mObserver.mReceived == "partial");
+    BOOST_TEST(mChannel.close() == ComResult::Ok);
+  }
+
   BOOST_AUTO_TEST_CASE(RECEIVE_AND_REPLY) {
     BOOST_TEST_REQUIRE(mChannel.setMaxReceiveSize(32) == ComResult::Ok);
     BOOST_TEST_REQUIRE(mChannel.setMinReceiveSize(1) == ComResult::Ok);

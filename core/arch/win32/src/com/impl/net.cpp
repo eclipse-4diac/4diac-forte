@@ -247,4 +247,18 @@ namespace forte::com::impl::net {
 
     return {.mResult = paState.result()};
   }
+
+  ComResult probeStreamReceive(const Socket &paSocket) noexcept {
+    char byte;
+    DWORD flags = MSG_PEEK;
+    DWORD bytesReceived = 0;
+    WSABUF buffer{.len = 1, .buf = &byte};
+    if (WSARecv(paSocket.get(), &buffer, 1, &bytesReceived, &flags, nullptr, nullptr)) {
+      return mapSocketError(WSAGetLastError(), ComResult::RecvFailed);
+    }
+    if (bytesReceived == 0) {
+      return ComResult::RecvFailed;
+    }
+    return ComResult::WouldBlock;
+  }
 } // namespace forte::com::impl::net

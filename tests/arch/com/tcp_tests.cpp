@@ -18,6 +18,7 @@
 #include "forte/com/factory.h"
 #include "forte/stringid.h"
 #include "forte_boost_output_support.h"
+#include "com/impl/tcp.h"
 #include "socket_test_helpers.h"
 
 using namespace forte::literals;
@@ -25,6 +26,12 @@ using namespace forte::literals;
 namespace forte::com::test {
 
   namespace {
+    class TestTCPChannel : public impl::TCPChannel {
+      public:
+        using impl::SocketChannel::getSocket;
+        using impl::TCPChannel::TCPChannel;
+    };
+
     struct TCPClientFixture {
         TCPClientFixture() :
             mListener(createLoopbackListener(mAddress)),
@@ -88,6 +95,64 @@ namespace forte::com::test {
 
     BOOST_TEST_REQUIRE(::shutdown(accepted.get(), SocketShutdownWrite) == 0);
     BOOST_TEST(pollChannelUntilReady(*mChannel) == ComResult::RecvFailed);
+    BOOST_TEST(mChannel->close() == ComResult::Ok);
+  }
+
+  BOOST_AUTO_TEST_CASE(FULL_BUFFER_RETAINS_QUEUED_DATA) {
+    TestTCPChannel channel(mObserver);
+    BOOST_TEST_REQUIRE(channel.setMaxReceiveSize(4) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(channel.setMinReceiveSize(4) == ComResult::Ok);
+    mObserver.mReceiveResult = ComResult::More;
+    BOOST_TEST_REQUIRE(channel.open(mConfig, {}) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(waitForSocketEvent(mListener.get(), SocketReadEvent, Clock::now() + gcReadinessTimeout));
+    const Socket accepted(::accept(mListener.get(), nullptr, nullptr));
+    BOOST_TEST_REQUIRE(static_cast<bool>(accepted));
+    BOOST_TEST_REQUIRE(accepted.setNonBlocking() == 0);
+
+    BOOST_TEST_REQUIRE(sendBytes(accepted, "full"));
+    BOOST_TEST_REQUIRE(waitForChannelData(channel));
+    BOOST_TEST(mObserver.mReceived == "full");
+    BOOST_TEST_REQUIRE(sendBytes(accepted, "er"));
+    BOOST_TEST_REQUIRE(waitForSocketEvent(channel.getSocket(), SocketReadEvent, Clock::now() + gcReadinessTimeout));
+    BOOST_TEST(channel.poll() == ComResult::WouldBlock);
+
+    mObserver.mReceiveResult = ComResult::Ok;
+    BOOST_TEST_REQUIRE(channel.setMaxReceiveSize(6) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(channel.setMinReceiveSize(6) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(waitForChannelData(channel));
+    BOOST_TEST(mObserver.mReceived == "fuller");
+    BOOST_TEST(channel.close() == ComResult::Ok);
+  }
+
+  BOOST_AUTO_TEST_CASE(FULL_BUFFER_DETECTS_ORDERLY_CLOSE) {
+    BOOST_TEST_REQUIRE(mChannel->setMaxReceiveSize(4) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(mChannel->setMinReceiveSize(4) == ComResult::Ok);
+    mObserver.mReceiveResult = ComResult::More;
+    BOOST_TEST_REQUIRE(mChannel->open(mConfig, {}) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(waitForSocketEvent(mListener.get(), SocketReadEvent, Clock::now() + gcReadinessTimeout));
+    const Socket accepted(::accept(mListener.get(), nullptr, nullptr));
+    BOOST_TEST_REQUIRE(static_cast<bool>(accepted));
+
+    BOOST_TEST_REQUIRE(sendBytes(accepted, "full"));
+    BOOST_TEST_REQUIRE(waitForChannelData(*mChannel));
+    BOOST_TEST_REQUIRE(::shutdown(accepted.get(), SocketShutdownWrite) == 0);
+    BOOST_TEST(pollChannelUntilReady(*mChannel) == ComResult::RecvFailed);
+    BOOST_TEST(mChannel->close() == ComResult::Ok);
+  }
+
+  BOOST_AUTO_TEST_CASE(FULL_BUFFER_DETECTS_RESET) {
+    BOOST_TEST_REQUIRE(mChannel->setMaxReceiveSize(4) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(mChannel->setMinReceiveSize(4) == ComResult::Ok);
+    mObserver.mReceiveResult = ComResult::More;
+    BOOST_TEST_REQUIRE(mChannel->open(mConfig, {}) == ComResult::Ok);
+    BOOST_TEST_REQUIRE(waitForSocketEvent(mListener.get(), SocketReadEvent, Clock::now() + gcReadinessTimeout));
+    Socket accepted(::accept(mListener.get(), nullptr, nullptr));
+    BOOST_TEST_REQUIRE(static_cast<bool>(accepted));
+
+    BOOST_TEST_REQUIRE(sendBytes(accepted, "full"));
+    BOOST_TEST_REQUIRE(waitForChannelData(*mChannel));
+    BOOST_TEST_REQUIRE(closeWithReset(accepted));
+    BOOST_TEST(pollChannelUntilReady(*mChannel) == ComResult::ConnectionReset);
     BOOST_TEST(mChannel->close() == ComResult::Ok);
   }
 

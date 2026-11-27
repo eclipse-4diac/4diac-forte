@@ -276,4 +276,16 @@ namespace forte::com::impl::net {
 
     return {.mResult = paState.result()};
   }
+
+  ComResult probeStreamReceive(const Socket &paSocket) noexcept {
+    char byte;
+    const ssize_t result = ::recv(paSocket.get(), &byte, 1, MSG_PEEK);
+    if (result > 0) {
+      return ComResult::WouldBlock;
+    }
+    if (result == 0) {
+      return ComResult::RecvFailed;
+    }
+    return mapSocketError(errno, ComResult::RecvFailed);
+  }
 } // namespace forte::com::impl::net

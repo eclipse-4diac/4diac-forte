@@ -46,15 +46,26 @@ namespace forte::com::impl {
   }
 
   ComResultValue<std::size_t> UDPListenChannel::recv() {
+    char byte;
+    WSABUF buffer;
     DWORD flags = 0;
     DWORD bytesReceived = 0;
     sockaddr_storage remoteAddr{};
     int remoteAddrLen = static_cast<int>(sizeof(remoteAddr));
-    WSABUF buffer{.len = static_cast<ULONG>(getMaxReceiveSize() - getBuffer().size()),
-                  .buf = reinterpret_cast<CHAR *>(getBuffer().data() + getBuffer().size())};
+    if (getBuffer().size() >= getMaxReceiveSize()) {
+      buffer.len = 1;
+      buffer.buf = &byte;
+      flags = MSG_PEEK;
+    } else {
+      buffer.len = static_cast<ULONG>(getMaxReceiveSize() - getBuffer().size());
+      buffer.buf = reinterpret_cast<CHAR *>(getBuffer().data() + getBuffer().size());
+    }
     if (WSARecvFrom(getSocket().get(), &buffer, 1, &bytesReceived, &flags, reinterpret_cast<sockaddr *>(&remoteAddr),
                     &remoteAddrLen, nullptr, nullptr)) {
-      return {.mResult = net::mapSocketError(WSAGetLastError(), ComResult::RecvFailed)};
+      if (const int error = WSAGetLastError(); error != WSAEMSGSIZE) {
+        return {.mResult = net::mapSocketError(error, ComResult::RecvFailed)};
+      }
+      bytesReceived = buffer.len; // truncated message; use full buffer len
     }
     if (!mConnected) {
       if (WSAConnect(getSocket().get(), reinterpret_cast<sockaddr *>(&remoteAddr), remoteAddrLen, nullptr, nullptr,
@@ -62,6 +73,9 @@ namespace forte::com::impl {
         return {.mResult = net::mapSocketError(WSAGetLastError(), ComResult::RecvFailed)};
       }
       mConnected = true;
+    }
+    if (getBuffer().size() >= getMaxReceiveSize()) {
+      return {.mResult = ComResult::WouldBlock};
     }
     return {.mValue = static_cast<std::size_t>(bytesReceived)};
   }

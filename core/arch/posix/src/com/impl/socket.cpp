@@ -107,6 +107,9 @@ namespace forte::com::impl {
   }
 
   ComResultValue<std::size_t> SocketChannel::recv() {
+    if (mBuffer.size() >= getMaxReceiveSize()) {
+      return {.mResult = ComResult::WouldBlock};
+    }
     const ssize_t bytesReceived =
         ::recv(mSocket.get(), mBuffer.data() + mBuffer.size(), getMaxReceiveSize() - mBuffer.size(), 0);
     if (bytesReceived < 0) {
@@ -118,9 +121,6 @@ namespace forte::com::impl {
   ComResult SocketChannel::poll() {
     if (!mSocket) {
       return ComResult::NoSocket;
-    }
-    if (mBuffer.size() >= getMaxReceiveSize()) {
-      return ComResult::WouldBlock;
     }
     const auto [result, bytesReceived] = recv();
     if (result != ComResult::Ok) {

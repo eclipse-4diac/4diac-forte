@@ -37,6 +37,9 @@ namespace forte::com::impl {
   }
 
   ComResultValue<std::size_t> TCPChannel::recv() {
+    if (getBuffer().size() >= getMaxReceiveSize()) {
+      return {.mResult = net::probeStreamReceive(getSocket())};
+    }
     auto result = SocketChannel::recv();
     if (result.mResult == ComResult::Ok && result.mValue == 0) {
       result.mResult = ComResult::RecvFailed; // socket closed

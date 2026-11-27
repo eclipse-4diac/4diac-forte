@@ -31,7 +31,13 @@ namespace forte::com::impl {
       ComResultValue<Socket> socket(std::string_view paConfigString) override;
       ComResultValue<std::size_t> recv() override;
 
+      [[nodiscard]] const Socket &getConnectionSocket() const {
+        return mConnectionSocket;
+      }
+
     private:
+      void resetConnection();
+
       Socket mConnectionSocket;
   };
 
