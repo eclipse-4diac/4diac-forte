@@ -109,6 +109,7 @@ forte_add_systemtest_hard(Test_SEND_RECV_null comSendRecvNull.fboot 5)
 
 if (FORTE_COM_ETH)
     forte_add_systemtest_hard(Test_SEND_RECV_tcp comSendRecvTCP.fboot 30)
+    forte_add_systemtest_hard(Test_SEND_RECV_tcp_reconnect comSendRecvTCPReconnect.fboot 30)
     forte_add_systemtest_hard(Test_SEND_RECV_tcp_parallel comSendRecvTCPParallel.fboot 30)
     forte_add_systemtest_hard(Test_SEND_RECV_udp comSendRecvUDP.fboot 30)
     if (LINUX)

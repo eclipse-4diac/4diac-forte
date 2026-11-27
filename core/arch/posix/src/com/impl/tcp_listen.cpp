@@ -56,9 +56,14 @@ namespace forte::com::impl {
     }
     const ssize_t bytesSent = ::send(mConnectionSocket.get(), paData.data(), paData.size(), SocketSendFlags);
     if (bytesSent < 0) {
-      return net::mapSocketError(errno, ComResult::SendFailed);
+      const auto result = net::mapSocketError(errno, ComResult::SendFailed);
+      if (result != ComResult::WouldBlock && result != ComResult::Interrupted) {
+        resetConnection();
+      }
+      return result;
     }
     if (static_cast<std::size_t>(bytesSent) != paData.size()) {
+      resetConnection();
       return ComResult::SendFailed;
     }
     return ComResult::Ok;
@@ -92,14 +97,31 @@ namespace forte::com::impl {
       }
       mConnectionSocket = std::move(connectionSocket);
     }
+    if (getBuffer().size() >= getMaxReceiveSize()) {
+      const auto result = net::probeStreamReceive(mConnectionSocket);
+      if (result != ComResult::WouldBlock && result != ComResult::Interrupted) {
+        resetConnection();
+      }
+      return {.mResult = result};
+    }
     const ssize_t bytesReceived = ::recv(mConnectionSocket.get(), getBuffer().data() + getBuffer().size(),
                                          getMaxReceiveSize() - getBuffer().size(), 0);
     if (bytesReceived < 0) {
-      return {.mResult = net::mapSocketError(errno, ComResult::RecvFailed)};
+      const auto result = net::mapSocketError(errno, ComResult::RecvFailed);
+      if (result != ComResult::WouldBlock && result != ComResult::Interrupted) {
+        resetConnection();
+      }
+      return {.mResult = result};
     }
     if (bytesReceived == 0) {
+      resetConnection();
       return {.mResult = ComResult::RecvFailed};
     }
     return {.mValue = static_cast<std::size_t>(bytesReceived)};
+  }
+
+  void TCPListenChannel::resetConnection() {
+    mConnectionSocket.reset();
+    getBuffer().resize(0);
   }
 } // namespace forte::com::impl

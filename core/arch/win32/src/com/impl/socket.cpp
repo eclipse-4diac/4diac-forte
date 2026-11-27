@@ -84,6 +84,9 @@ namespace forte::com::impl {
   }
 
   ComResultValue<std::size_t> SocketChannel::recv() {
+    if (mBuffer.size() >= getMaxReceiveSize()) {
+      return {.mResult = ComResult::WouldBlock};
+    }
     DWORD flags = 0;
     DWORD bytesReceived = 0;
     WSABUF buffer{.len = static_cast<ULONG>(getMaxReceiveSize() - mBuffer.size()),
@@ -97,9 +100,6 @@ namespace forte::com::impl {
   ComResult SocketChannel::poll() {
     if (!mSocket) {
       return ComResult::NoSocket;
-    }
-    if (mBuffer.size() >= getMaxReceiveSize()) {
-      return ComResult::WouldBlock;
     }
     const auto [result, bytesReceived] = recv();
     if (result != ComResult::Ok) {

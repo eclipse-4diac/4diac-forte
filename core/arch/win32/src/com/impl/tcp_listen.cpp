@@ -52,9 +52,14 @@ namespace forte::com::impl {
     DWORD bytesSent = 0;
     WSABUF buffer{.len = static_cast<ULONG>(paData.size()), .buf = reinterpret_cast<CHAR *>(paData.data())};
     if (WSASend(mConnectionSocket.get(), &buffer, 1, &bytesSent, 0, nullptr, nullptr)) {
-      return net::mapSocketError(WSAGetLastError(), ComResult::SendFailed);
+      const auto result = net::mapSocketError(WSAGetLastError(), ComResult::SendFailed);
+      if (result != ComResult::WouldBlock && result != ComResult::Interrupted) {
+        resetConnection();
+      }
+      return result;
     }
     if (static_cast<std::size_t>(bytesSent) != paData.size()) {
+      resetConnection();
       return ComResult::SendFailed;
     }
     return ComResult::Ok;
@@ -85,16 +90,33 @@ namespace forte::com::impl {
       }
       mConnectionSocket = std::move(connectionSocket);
     }
+    if (getBuffer().size() >= getMaxReceiveSize()) {
+      const auto result = net::probeStreamReceive(mConnectionSocket);
+      if (result != ComResult::WouldBlock && result != ComResult::Interrupted) {
+        resetConnection();
+      }
+      return {.mResult = result};
+    }
     DWORD flags = 0;
     DWORD bytesReceived = 0;
     WSABUF buffer{.len = static_cast<ULONG>(getMaxReceiveSize() - getBuffer().size()),
                   .buf = reinterpret_cast<CHAR *>(getBuffer().data() + getBuffer().size())};
     if (WSARecv(mConnectionSocket.get(), &buffer, 1, &bytesReceived, &flags, nullptr, nullptr)) {
-      return {.mResult = net::mapSocketError(WSAGetLastError(), ComResult::RecvFailed)};
+      const auto result = net::mapSocketError(WSAGetLastError(), ComResult::RecvFailed);
+      if (result != ComResult::WouldBlock && result != ComResult::Interrupted) {
+        resetConnection();
+      }
+      return {.mResult = result};
     }
     if (bytesReceived == 0) {
+      resetConnection();
       return {.mResult = ComResult::RecvFailed};
     }
     return {.mValue = static_cast<std::size_t>(bytesReceived)};
+  }
+
+  void TCPListenChannel::resetConnection() {
+    mConnectionSocket.reset();
+    getBuffer().resize(0);
   }
 } // namespace forte::com::impl
