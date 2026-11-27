@@ -9,10 +9,12 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Malte Grave - Fixed the destructor cleanup phase
  *******************************************************************************/
 
 #include "forte/resource.h"
 #include "forte/device.h"
+#include "forte/util/devlog.h"
 #include "forte/io/configFB/io_configFB_controller.h"
 
 namespace forte::io {
@@ -33,10 +35,6 @@ namespace forte::io {
       mPerformRestart(false) {
   }
 
-  IOConfigFBController::~IOConfigFBController() {
-    deInit(nullptr, true);
-  }
-
   void IOConfigFBController::executeEvent(TEventID paEIID, CEventChainExecutionThread *const paECET) {
     if (cgExternalEventID == paEIID) {
       if (!(mController->mNotificationHandled =
@@ -51,7 +49,8 @@ namespace forte::io {
           sendOutputEvent(scmEventINITOID, paECET);
         }
       } else {
-        QO() = CIEC_BOOL(deInit(paECET));
+        deInit(paECET);
+        QO() = false_BOOL;
         sendOutputEvent(scmEventINITOID, paECET);
       }
     }
@@ -135,7 +134,6 @@ namespace forte::io {
   }
 
   void IOConfigFBController::initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor) {
-
     if (paHandleDescriptor.mId.empty()) {
       return;
     }
@@ -166,31 +164,28 @@ namespace forte::io {
     stopped(paECET);
   }
 
-  bool IOConfigFBController::deInit(CEventChainExecutionThread *const paECET, bool paIsDestructing) {
+  void IOConfigFBController::deinitialize() {
+    mPerformRestart = false;
+    stopped(nullptr);
+    IOConfigFBBase::deinitialize();
+  }
+
+  void IOConfigFBController::deInit(CEventChainExecutionThread *const paECET) {
     if (nullptr == mController) {
-      // Derived FBs may already have stopped the controller in their destructor.
-      if (!paIsDestructing) {
-        DEVLOG_ERROR("[IOConfigFBController] IOConfigFBController has already been stopped.\n");
-      }
-      return false;
+      DEVLOG_ERROR("[IOConfigFBController] IOConfigFBController has already been stopped.\n");
+      return;
     }
-
-    if (paIsDestructing) {
-      mPerformRestart = false;
-      stopped(paECET);
-    } else {
-      onStop(paECET);
-    }
-
-    return false;
+    onStop(paECET);
   }
 
   void IOConfigFBController::stopped(CEventChainExecutionThread *const paECET) {
+    if (mController == nullptr) {
+      return;
+    }
     mController->mDelegate = nullptr;
     if (mController->isAlive()) {
       mController->end();
     }
-
     delete mController;
     mController = nullptr;
     mStarting = false;

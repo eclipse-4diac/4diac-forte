@@ -47,7 +47,7 @@ namespace forte::eclipse4diac::io::ethercat {
 
     public:
       FORTE_ECController(forte::StringId paInstanceNameId, CFBContainer &paContainer);
-      ~FORTE_ECController() override;
+      ~FORTE_ECController() override = default;
 
       EMGMResponse changeExecutionState(EMGMCommandType paCommand) override;
 

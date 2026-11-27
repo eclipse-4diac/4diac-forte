@@ -10,6 +10,7 @@
  * Contributors:
  *   Johannes Messmer - initial API and implementation and/or initial documentation
  *   Jose Cabral - Cleaning of namespaces
+ *   Malte Grave - Fixed the destructor cleanup phase
  *******************************************************************************/
 
 #pragma once
@@ -37,7 +38,9 @@ namespace forte::io {
       IOConfigFBController(CFBContainer &paContainer,
                            const SFBInterfaceSpec &paInterfaceSpec,
                            const StringId paInstanceNameId);
-      ~IOConfigFBController() override;
+      ~IOConfigFBController() override = default;
+
+      void deinitialize() override;
 
       IODeviceController *getDeviceController() {
         return mController;
@@ -119,16 +122,6 @@ namespace forte::io {
        */
       void initHandle(IODeviceController::HandleDescriptor &paHandleDescriptor);
 
-      /*! @brief Deinitializes the configuration fb
-       *
-       * It is usually called by the INIT- event and after an error.
-       *
-       * @param paECET event chain execution thread for sending any events
-       * @param paIsDestructing True if the deInit is called inside the destructor
-       * @return True if the deinitialization was successful
-       */
-      bool deInit(CEventChainExecutionThread *const paECET, bool paIsDestructing = false);
-
       /*! @brief Used for asynchronous initialization operations
        *
        * The method is called after a successful #init call.
@@ -178,6 +171,16 @@ namespace forte::io {
       IODeviceController *mController;
 
       void onError(CEventChainExecutionThread *const paECET, bool paIsFatal = true);
+
+      /*! @brief Deinitializes the configuration fb
+       *
+       * It is usually called by the INIT- event and after an error.
+       * Stops the controller via #onStop, so derived FBs can stop attached devices first.
+       * Cleanup on destruction is done in #deinitialize.
+       *
+       * @param paECET event chain execution thread for sending any events
+       */
+      void deInit(CEventChainExecutionThread *const paECET);
 
       bool mPerformRestart;
 
